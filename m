@@ -1,35 +1,55 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH net-next 09/12] net: bcmgenet: return EOPNOTSUPP for
- unknown ioctl commands
-Date: Tue, 14 Mar 2017 11:04:54 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6DCFFB052E@AcuExch.aculab.com>
-References: <20170314004142.4746-1-opendmb@gmail.com>
- <20170314004142.4746-10-opendmb@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170314004142.4746-10-opendmb@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Doug Berger' <opendmb@gmail.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "rafal@milecki.pl" <rafal@milecki.pl>, "xow@google.com" <xow@google.com>, "joel@jms.id.au" <joel@jms.id.au>, "jon.mason@broadcom.com" <jon.mason@broadcom.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pgynther@google.com" <pgynther@google.com>, "jaedon.shin@gmail.com" <jaedon.shin@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: ata: add DT bindings for ahci-dm816 SATA controller
+Date: Tue, 14 Mar 2017 12:04:50 +0100
+Message-ID: <1489489491-14195-2-git-send-email-bgolaszewski@baylibre.com>
+References: <1489489491-14195-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489489491-14195-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Doug Berger
-> Sent: 14 March 2017 00:42
-> This commit changes the ioctl handling behavior to return the
-> EOPNOTSUPP error code instead of the EINVAL error code when an
-> unknown ioctl command value is detected.
-> 
-> It also removes some redundant parsing of the ioctl command value
-> and allows the SIOCSHWTSTAMP value to be handled.
+Add DT bindings for the onboard SATA controller present on the DM816x
+SoCs.
 
-A better description would seem to be:
-Remove checks on ioctl command and just forward all ioctl requests
-to phy_mii_ioctl().
+Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/ata/ahci-dm816.txt          | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/ahci-dm816.txt
 
-I also thought the 'generic' response to an unknown ioctl command
-was ENOTTY.
+diff --git a/Documentation/devicetree/bindings/ata/ahci-dm816.txt b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
+new file mode 100644
+index 0000000..f8c535f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
+@@ -0,0 +1,21 @@
++Device tree binding for the TI DM816 AHCI SATA Controller
++---------------------------------------------------------
++
++Required properties:
++  - compatible: must be "ti,dm816-ahci"
++  - reg: physical base address and size of the register region used by
++         the controller (as defined by the AHCI 1.1 standard)
++  - interrupts: interrupt specifier (refer to the interrupt binding)
++  - clocks: list of phandle and clock specifier pairs (or only
++            phandles for clock providers with '0' defined for
++            #clock-cells); two clocks must be specified: the functional
++            clock and an external reference clock
++
++Example:
++
++	sata: sata@4a140000 {
++		compatible = "ti,dm816-ahci";
++		reg = <0x4a140000 0x10000>;
++		interrupts = <16>;
++		clocks = <&sysclk5_ck>, <&sata_refclk>;
++	};
+-- 
+2.9.3
 
-	David
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
