@@ -1,178 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/5] linux: mfd: rk808: add rk805 regs addr and ID
-Date: Wed, 15 Mar 2017 11:04:57 +0000
-Message-ID: <20170315110457.ytpazrj4e6bapzbz@dell>
-References: <1489111252-22175-1-git-send-email-zhangqing@rock-chips.com>
- <1489111252-22175-3-git-send-email-zhangqing@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 4/5] mfd: altr_a10sr: Add Arria10 DevKit Reset
+ Controller
+Date: Wed, 15 Mar 2017 11:06:08 +0000
+Message-ID: <20170315110608.5qgyj5pwsr7lr6zz@dell>
+References: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
+ <1487783419-10912-5-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489111252-22175-3-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, huangtao@rock-chips.com, xxx@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, w.egorov@phytec.de
+In-Reply-To: <1487783419-10912-5-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Subject line should be "mfd: rk808: ..."
+On Wed, 22 Feb 2017, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
 
-On Fri, 10 Mar 2017, Elaine Zhang wrote:
-
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
+> Add Peripheral PHY Reset Controller to the Arria10
+> Development Kit System Resource Chip's MFD.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > ---
->  include/linux/mfd/rk808.h | 115 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 115 insertions(+)
+> v2  Changes to commit header & body for clarification.
+> ---
+>  drivers/mfd/altera-a10sr.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Other than that:
+Sorry for the delay, I've been AFK on vacation and conferences.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-  
-> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-> index 54feb140c210..97f532f625de 100644
-> --- a/include/linux/mfd/rk808.h
-> +++ b/include/linux/mfd/rk808.h
-> @@ -206,6 +206,92 @@ enum rk818_reg {
->  #define RK818_USB_ILMIN_2000MA		0x7
->  #define RK818_USB_CHG_SD_VSEL_MASK	0x70
->  
-> +/* RK805 */
-> +enum rk805_reg {
-> +	RK805_ID_DCDC1,
-> +	RK805_ID_DCDC2,
-> +	RK805_ID_DCDC3,
-> +	RK805_ID_DCDC4,
-> +	RK805_ID_LDO1,
-> +	RK805_ID_LDO2,
-> +	RK805_ID_LDO3,
-> +};
-> +
-> +/* INTERRUPT REGISTER */
-> +#define RK805_INT_STS_REG		0x4C
-> +#define RK805_INT_STS_MSK_REG		0x4D
-> +#define RK805_GPIO_IO_POL_REG		0x50
-> +#define RK805_OUT_REG			0x52
-> +#define RK805_ON_SOURCE_REG		0xAE
-> +#define RK805_OFF_SOURCE_REG		0xAF
-> +
-> +/* POWER CHANNELS ENABLE REGISTER */
-> +#define RK805_DCDC_EN_REG		0x23
-> +#define RK805_SLP_DCDC_EN_REG		0x25
-> +#define RK805_SLP_LDO_EN_REG		0x26
-> +#define RK805_LDO_EN_REG		0x27
-> +
-> +/* CONFIG REGISTER */
-> +#define RK805_THERMAL_REG		0x22
-> +
-> +/* BUCK AND LDO CONFIG REGISTER */
-> +#define RK805_BUCK_LDO_SLP_LP_EN_REG	0x2A
-> +#define RK805_BUCK1_CONFIG_REG		0x2E
-> +#define RK805_BUCK1_ON_VSEL_REG		0x2F
-> +#define RK805_BUCK1_SLP_VSEL_REG	0x30
-> +#define RK805_BUCK2_CONFIG_REG		0x32
-> +#define RK805_BUCK2_ON_VSEL_REG		0x33
-> +#define RK805_BUCK2_SLP_VSEL_REG	0x34
-> +#define RK805_BUCK3_CONFIG_REG		0x36
-> +#define RK805_BUCK4_CONFIG_REG		0x37
-> +#define RK805_BUCK4_ON_VSEL_REG		0x38
-> +#define RK805_BUCK4_SLP_VSEL_REG	0x39
-> +#define RK805_LDO1_ON_VSEL_REG		0x3B
-> +#define RK805_LDO1_SLP_VSEL_REG		0x3C
-> +#define RK805_LDO2_ON_VSEL_REG		0x3D
-> +#define RK805_LDO2_SLP_VSEL_REG		0x3E
-> +#define RK805_LDO3_ON_VSEL_REG		0x3F
-> +#define RK805_LDO3_SLP_VSEL_REG		0x40
-> +#define RK805_OUT_REG			0x52
-> +#define RK805_ON_SOURCE_REG		0xAE
-> +#define RK805_OFF_SOURCE_REG		0xAF
-> +
-> +#define RK805_NUM_REGULATORS		7
-> +
-> +#define RK805_PWRON_FALL_RISE_INT_EN	0x0
-> +#define RK805_PWRON_FALL_RISE_INT_MSK	0x81
-> +
-> +/* RK805 IRQ Definitions */
-> +#define RK805_IRQ_PWRON_RISE		0
-> +#define RK805_IRQ_VB_LOW		1
-> +#define RK805_IRQ_PWRON			2
-> +#define RK805_IRQ_PWRON_LP		3
-> +#define RK805_IRQ_HOTDIE		4
-> +#define RK805_IRQ_RTC_ALARM		5
-> +#define RK805_IRQ_RTC_PERIOD		6
-> +#define RK805_IRQ_PWRON_FALL		7
-> +
-> +#define RK805_IRQ_PWRON_RISE_MSK	BIT(0)
-> +#define RK805_IRQ_VB_LOW_MSK		BIT(1)
-> +#define RK805_IRQ_PWRON_MSK		BIT(2)
-> +#define RK805_IRQ_PWRON_LP_MSK		BIT(3)
-> +#define RK805_IRQ_HOTDIE_MSK		BIT(4)
-> +#define RK805_IRQ_RTC_ALARM_MSK		BIT(5)
-> +#define RK805_IRQ_RTC_PERIOD_MSK	BIT(6)
-> +#define RK805_IRQ_PWRON_FALL_MSK	BIT(7)
-> +
-> +#define RK805_PWR_RISE_INT_STATUS	BIT(0)
-> +#define RK805_VB_LOW_INT_STATUS		BIT(1)
-> +#define RK805_PWRON_INT_STATUS		BIT(2)
-> +#define RK805_PWRON_LP_INT_STATUS	BIT(3)
-> +#define RK805_HOTDIE_INT_STATUS		BIT(4)
-> +#define RK805_ALARM_INT_STATUS		BIT(5)
-> +#define RK805_PERIOD_INT_STATUS		BIT(6)
-> +#define RK805_PWR_FALL_INT_STATUS	BIT(7)
-> +
-> +#define RK805_BUCK1_2_ILMAX_MASK	(3 << 6)
-> +#define RK805_BUCK3_4_ILMAX_MASK        (3 << 3)
-> +
->  /* RK808 IRQ Definitions */
->  #define RK808_IRQ_VOUT_LO	0
->  #define RK808_IRQ_VB_LO		1
-> @@ -298,7 +384,14 @@ enum rk818_reg {
->  #define VOUT_LO_INT	BIT(0)
->  #define CLK32KOUT2_EN	BIT(0)
->  
-> +#define TEMP115C			0x0c
-> +#define TEMP_HOTDIE_MSK			0x0c
-> +#define SLP_SD_MSK			(0x3 << 2)
-> +#define SHUTDOWN_FUN			(0x2 << 2)
-> +#define SLEEP_FUN			(0x1 << 2)
->  #define RK8XX_ID_MSK			0xfff0
-> +#define FPWM_MODE			BIT(7)
-> +
->  enum {
->  	BUCK_ILMIN_50MA,
->  	BUCK_ILMIN_100MA,
-> @@ -322,6 +415,28 @@ enum {
+Applied, thanks.
+
+> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
+> index 06e1f7f..96e7d2c 100644
+> --- a/drivers/mfd/altera-a10sr.c
+> +++ b/drivers/mfd/altera-a10sr.c
+> @@ -33,6 +33,10 @@
+>  		.name = "altr_a10sr_gpio",
+>  		.of_compatible = "altr,a10sr-gpio",
+>  	},
+> +	{
+> +		.name = "altr_a10sr_reset",
+> +		.of_compatible = "altr,a10sr-reset",
+> +	},
 >  };
 >  
->  enum {
-> +	RK805_BUCK1_2_ILMAX_2500MA,
-> +	RK805_BUCK1_2_ILMAX_3000MA,
-> +	RK805_BUCK1_2_ILMAX_3500MA,
-> +	RK805_BUCK1_2_ILMAX_4000MA,
-> +};
-> +
-> +enum {
-> +	RK805_BUCK3_ILMAX_1500MA,
-> +	RK805_BUCK3_ILMAX_2000MA,
-> +	RK805_BUCK3_ILMAX_2500MA,
-> +	RK805_BUCK3_ILMAX_3000MA,
-> +};
-> +
-> +enum {
-> +	RK805_BUCK4_ILMAX_2000MA,
-> +	RK805_BUCK4_ILMAX_2500MA,
-> +	RK805_BUCK4_ILMAX_3000MA,
-> +	RK805_BUCK4_ILMAX_3500MA,
-> +};
-> +
-> +enum {
-> +	RK805_ID = 0x8050,
->  	RK808_ID = 0x0000,
->  	RK818_ID = 0x8181,
->  };
+>  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
 
 -- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
