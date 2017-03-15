@@ -1,92 +1,36 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] pinctrl: meson: gxl: add the missing PWM pin
- definitions
-Date: Wed, 15 Mar 2017 10:59:06 +0100
-Message-ID: <b7430d5f-96a7-2445-1c2a-ccc299bfdda2@baylibre.com>
-References: <20170304212318.27076-1-martin.blumenstingl@googlemail.com>
- <20170304212318.27076-2-martin.blumenstingl@googlemail.com>
- <1488811357.2420.18.camel@baylibre.com>
- <CAFBinCDty8v80tLxHJPR+SHv32LX834dPJUruRNqr6angx3OOQ@mail.gmail.com>
- <CACRpkdbGfGUhnAQz=9xeFnD2hF6m_xXacu8mZiwte-OCSDMo9w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbGfGUhnAQz=9xeFnD2hF6m_xXacu8mZiwte-OCSDMo9w@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+From: <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v1 1/7] include: dt-bindings: Add pin function index definition for rockchip pinctrl
+Date: Wed, 15 Mar 2017 18:03:51 +0800
+Message-ID: <1489572237-6649-2-git-send-email-cl@rock-chips.com>
+References: <1489572237-6649-1-git-send-email-cl@rock-chips.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489572237-6649-1-git-send-email-cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2017 04:42 PM, Linus Walleij wrote:
-> On Thu, Mar 9, 2017 at 8:47 PM, Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->> On Mon, Mar 6, 2017 at 3:42 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
->>> On Sat, 2017-03-04 at 22:23 +0100, Martin Blumenstingl wrote:
-> 
->>>> +     FUNCTION(pwm_f_clk),
->>>> +     FUNCTION(pwm_f_x),
->>>
->>> I wonder if having function named "pwm_f_clk" really makes sense ?
->>> Shouldn't it be just "pwm_f" ? This is real function, isn't it ?
->>> The actual pin used will be provided in the dt. Here, I suppose we
->>> could have this:
->>>
->>> +static const char * const pwm_f_groups[] = {
->>> +       "pwm_f_x", "pwm_f_clk",
->>> +};
->>>
->>> Has far as I can see, on meson arch, the function does not carry much
->>> information anyway, except for prints.
->>>
->>> To be clear, I'm not questioning this change in particular. It looks
->>> good, and follows what has been done in the past on meson. I know we
->>> have been this a lot already, but I'm questioning whether we should
->>> continue to do so ?
->>>
->>> I asking because I also have a lot case like this coming up on audio
->>> for gxl and gxbb, where the same function can use different pins.
->>
->> could you please look into Jerome's question?
->> personally I'm fine with either way, and changing my patch would be
->> quite trivial. but I'd like to know what's "the way to go" before
->> changing anything (and reverting that afterwards again).
-> 
-> I don't understand the question really.
-> 
-> I am not an expert on this system, if the people working with it
-> cannot tell a function from a group I don't know who can... certainly
-> not me.
-> 
-> What I can say is that pincontrol combines functions and groups to
-> states using a mapping. The functions should be something you poke
-> into a register, the groups are looser defined but may also be a
-> character of the hardware, but more usual a character of the
-> intended electronic usecase. Groups contain 1..n pins and can
-> be combined with some applicable functions.
-> 
-> Please re-read Documentation/pinctrl.txt very closely if anything is
-> unclear, I really put a lot of hours into getting that right. Especially
-> reexamine "Pinmux conventions".
+From: Chen Liang <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-The point pushed by Jerome was purely cosmetic since the groups in the meson
-pinctrl driver are purely cosmetic, since only the GPIO group is handled,
-other groups are all handled the same.
+The rk3328 soc need more pin function index for pinctrl.
 
-This is because I pushed all the PWM pins in a separate group, but functionnaly
-the internal signal (i.e. PWM F) is the same for multiple pins and should be
-a single "PWM F" group instead of multiple ones.
+Signed-off-by: Chen Liang <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ include/dt-bindings/pinctrl/rockchip.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-My advice is to leave the PWM groups as is, and push new pins/functions/groups
-grouped with the internal signal name if split on multiple pins.
-
-This will be the case for audio, since the I2S pins can be configures on multiple
-different pins.
-
-Thanks,
-Neil
-
-> 
-> Yours,
-> Linus Walleij
-
+diff --git a/include/dt-bindings/pinctrl/rockchip.h b/include/dt-bindings/pinctrl/rockchip.h
+index aaec8ba..bc2b6af 100644
+--- a/include/dt-bindings/pinctrl/rockchip.h
++++ b/include/dt-bindings/pinctrl/rockchip.h
+@@ -63,5 +63,8 @@
+ #define RK_FUNC_2	2
+ #define RK_FUNC_3	3
+ #define RK_FUNC_4	4
++#define RK_FUNC_5	5
++#define RK_FUNC_6	6
++#define RK_FUNC_7	7
+ 
+ #endif
+-- 
+1.9.1
