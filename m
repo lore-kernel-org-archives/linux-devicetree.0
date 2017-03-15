@@ -1,29 +1,201 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v3 1/2] dt-bindings: i2c: Add Mediatek MT2701 i2c
- binding
-Date: Wed, 15 Mar 2017 15:26:27 -0500
-Message-ID: <20170315202627.nx7dkgjf3lsf2dp7@rob-hp-laptop>
-References: <1489029185-21447-1-git-send-email-jun.gao@mediatek.com>
- <1489029185-21447-2-git-send-email-jun.gao@mediatek.com>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: Re: media / v4l2-mc: wishlist for complex cameras (was Re: [PATCH
+ v4 14/36] [media] v4l2-mc: add a function to inherit controls from a
+ pipeline)
+Date: Wed, 15 Mar 2017 17:26:34 -0300
+Message-ID: <20170315172627.6b7cc955@vento.lan>
+References: <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+        <20170310125342.7f047acf@vento.lan>
+        <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+        <20170311082549.576531d0@vento.lan>
+        <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+        <20170314004533.3b3cd44b@vento.lan>
+        <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+        <20170314072143.498cde9b@vento.lan>
+        <20170314223254.GA7141@amd>
+        <20170314215420.6fc63c67@vento.lan>
+        <20170315180421.GA10206@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1489029185-21447-2-git-send-email-jun.gao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jun Gao <jun.gao@mediatek.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170315180421.GA10206@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus@linux.i
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 09, 2017 at 11:13:04AM +0800, Jun Gao wrote:
-> From: Jun Gao <jun.gao@mediatek.com>
-> 
-> Add MT2701 i2c binding to i2c-mt6577.txt and there is no need to
-> modify i2c driver.
-> 
-> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
-> ---
->  .../devicetree/bindings/i2c/i2c-mt6577.txt         |   11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+Em Wed, 15 Mar 2017 19:04:21 +0100
+Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> escreveu:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> Hi!
+> 
+> > > Well, I believe first question is: what applications would we want to
+> > > run on complex devices? Will sending control from video to subdevs
+> > > actually help?  
+> > 
+> > I would say: camorama, xawtv3, zbar, google talk, skype. If it runs
+> > with those, it will likely run with any other application.  
+> 
+> I'll take a look when I'm at better internet access.
+
+Ok.
+
+> > > mplayer is useful for testing... but that one already works (after you
+> > > setup the pipeline, and configure exposure/gain).
+> > > 
+> > > But thats useful for testing, not really for production. Image will be
+> > > out of focus and with wrong white balance.
+> > > 
+> > > What I would really like is an application to get still photos. For
+> > > taking pictures with manual settings we need
+> > > 
+> > > a) units for controls: user wants to focus on 1m, and take picture
+> > > with ISO200, 1/125 sec. We should also tell him that lens is f/5.6 and
+> > > focal length is 20mm with 5mm chip.
+> > > 
+> > > But... autofocus/autogain would really be good to have. Thus we need:
+> > > 
+> > > b) for each frame, we need exposure settings and focus position at
+> > > time frame was taken. Otherwise autofocus/autogain will be too
+> > > slow. At least focus position is going to be tricky -- either kernel
+> > > would have to compute focus position for us (not trivial) or we'd need
+> > > enough information to compute it in userspace.
+> > > 
+> > > There are more problems: hardware-accelerated preview is not trivial
+> > > to set up (and I'm unsure if it can be done in generic way). Still
+> > > photos application needs to switch resolutions between preview and
+> > > photo capture. Probably hardware-accelerated histograms are needed for
+> > > white balance, auto gain and auto focus, ....
+> > > 
+> > > It seems like there's a _lot_ of stuff to be done before we have
+> > > useful support for complex cameras...  
+> > 
+> > Taking still pictures using a hardware-accelerated preview is
+> > a sophisticated use case. I don't know any userspace application
+> > that does that. Ok, several allow taking snapshots, by simply
+> > storing the image of the current frame.  
+> 
+> Well, there are applications that take still pictures. Android has
+> one. Maemo has another. Then there's fcam-dev. Its open source; with
+> modified kernel it is fully usable. I have version that runs on recent
+> nearly-mainline on N900. 
+
+Hmm... it seems that FCam is specific for N900:
+	http://fcam.garage.maemo.org/
+
+If so, then we have here just the opposite problem, if want it to be
+used as a generic application, as very likely it requires OMAP3-specific
+graph/subdevs.
+
+> So yes, I'd like solution for problems a) and b).
+> 
+> > > (And I'm not sure... when application such as skype is running, is
+> > > there some way to run autogain/autofocus/autowhitebalance? Is that
+> > > something we want to support?)  
+> > 
+> > Autofocus no. Autogain/Autowhite can be done via libv4l, provided that
+> > it can access the device's controls via /dev/video devnode. Other
+> > applications may be using some other similar algorithms.
+> > 
+> > Ok, they don't use histograms provided by the SoC. So, they do it in
+> > software, with is slower. Still, it works fine when the light
+> > conditions don't change too fast.  
+> 
+> I guess it is going to work well enough with higher CPU
+> usage.
+
+Yes.
+
+> Question is if camera without autofocus is usable. I'd say "not
+> really".qv4l2
+
+That actually depends on the sensor and how focus is adjusted.
+
+I'm testing right now this camera module for RPi:
+   https://www.raspberrypi.org/products/camera-module-v2/
+
+I might be wrong, but this sensor doesn't seem to have auto-focus.
+Instead, it seems to use a wide-angle lens. So, except when the
+object is too close, the focus look OK.
+
+> > > I believe other question is: will not having same control on main
+> > > video device and subdevs be confusing? Does it actually help userspace
+> > > in any way? Yes, we can make controls accessible to old application,
+> > > but does it make them more useful?   
+> > 
+> > Yes. As I said, libv4l (and some apps) have logic inside to adjust
+> > the image via bright, contrast and white balance controls, using the
+> > video devnode. They don't talk subdev API. So, if those controls
+> > aren't exported, they won't be able to provide a good quality image.  
+> 
+> Next question is if the libv4l will do the right thing if we just put
+> all controls to one node. For example on N900 you have exposure/gain
+> and brightness. But the brightness is applied at preview phase, so it
+> is "basically useless". You really need to adjust the image using the
+> exposure/gain.
+
+I've no idea, but I suspect it shouldn't be hard to teach libv4l to
+prefer use an exposure/gain instead of brightness when available.
+
+> > > > > In addition, I suspect end-users of these complex devices don't really care
+> > > > > about a plugin: they want full control and won't typically use generic
+> > > > > applications. If they would need support for that, we'd have seen much more
+> > > > > interest. The main reason for having a plugin is to simplify testing and
+> > > > > if this is going to be used on cheap hobbyist devkits.    
+> > > > 
+> > > > What are the needs for a cheap hobbyist devkit owner? Do we currently
+> > > > satisfy those needs? I'd say that having a functional driver when
+> > > > compiled without the subdev API, that implements the ioctl's/controls    
+> > > 
+> > > Having different interface based on config options... is just
+> > > weird. What about poor people (like me) trying to develop complex
+> > > applications?  
+> > 
+> > Well, that could be done using other mechanisms, like a modprobe
+> > parameter or by switching the behaviour if a subdev interface is
+> > opened. I don't see much trouble on allowing accessing a control via
+> > both interfaces.  
+> 
+> If we really want to go that way (is not modifying library to access
+> the right files quite easy?), I believe non-confusing option would be
+> to have '/dev/video0 -- omap3 camera for legacy applications' which
+> would include all the controls.
+
+Yeah, keeping /dev/video0 reserved for generic applications is something
+that could work. Not sure how easy would be to implement it.
+
+> 
+> > > You can get Nokia N900 on aliexpress. If not, they are still available
+> > > between people :-)  
+> > 
+> > I have one. Unfortunately, I never had a chance to use it, as the display
+> > stopped working one week after I get it.  
+> 
+> Well, I guess the easiest option is to just get another one :-).
+
+:-)  Well, I guess very few units of N900 was sold in Brazil. Importing
+one is too expensive, due to taxes.
+
+> But otoh -- N900 is quite usable without the screen. 0xffff tool can
+> be used to boot the kernel, then you can use nfsroot and usb
+> networking. It also has serial port (over strange
+> connector). Connected over ssh over usb network is actually how I do
+> most of the v4l work.
+
+If you pass me the pointers, I can try it when I have some time.
+
+Anyway, I got myself an ISEE IGEPv2, with the expansion board:
+	https://www.isee.biz/products/igep-processor-boards/igepv2-dm3730
+	https://www.isee.biz/products/igep-expansion-boards/igepv2-expansion
+
+The expansion board comes with a tvp5150 analog TV demod. So, with
+this device, I can simply connect it to a composite input signal.
+I have some sources here that I can use to test it.
+
+Thanks,
+Mauro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
