@@ -1,74 +1,35 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] MIPS: NI 169445 board support
-Date: Wed, 15 Mar 2017 10:37:12 +0100
-Message-ID: <CACRpkda0xsm+iN_Kxg4pB43LQ7i2MzfJgqibDAt3V5xCRinHEA@mail.gmail.com>
-References: <1488830761-681-1-git-send-email-nathan.sullivan@ni.com> <1488830761-681-3-git-send-email-nathan.sullivan@ni.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 2/3] gpio: wm831x: Add basic device tree support
+Date: Wed, 15 Mar 2017 09:41:56 +0000
+Message-ID: <20170315094156.GG6986@localhost.localdomain>
+References: <1488818804-9406-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1488818804-9406-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <CACRpkdYE_eOeUPaQXV3avCLxebmOjPqkjkK2PaMCa_2NOTNMpQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488830761-681-3-git-send-email-nathan.sullivan-acOepvfBmUk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYE_eOeUPaQXV3avCLxebmOjPqkjkK2PaMCa_2NOTNMpQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 6, 2017 at 9:06 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
+On Wed, Mar 15, 2017 at 10:18:31AM +0100, Linus Walleij wrote:
+> On Mon, Mar 6, 2017 at 5:46 PM, Charles Keepax
+> <ckeepax@opensource.wolfsonmicro.com> wrote:
+> 
+> > Now the wm831x-core has basic DT support we can update this driver to
+> > allow use of the GPIOs within a device tree system.
+> >
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Patch applied.
+> 
 
-> Support the National Instruments 169445 board.
->
-> Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-(...)
+This needs to go through Lee's tree with the patch above it has a
+build dependency on it.
 
-> +               gpio1:gpio-controller@1f300010 {
-> +                       compatible = "ni,169445-nand-gpio";
-> +                       reg = <0x10 0x4>;
-> +                       reg-names = "dat";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       ngpios = <5>;
-
-Here I would add:
-
-gpio-line-names = "NC", "NCE", "ALE", "CLE", "NWP";
-
-(Dunno about the first one, maybe you have a schematic?)
-
-> +               };
-> +
-> +               gpio2:gpio-controller@1f300014 {
-> +                       compatible = "ni,169445-nand-gpio";
-> +                       reg = <0x14 0x4>;
-> +                       reg-names = "dat";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       ngpios = <1>;
-
-gpio-line-names = "RDY";
-
-> +               };
-> +
-> +               nand@1f300000 {
-> +                       compatible = "gpio-control-nand";
-> +                       nand-on-flash-bbt;
-> +                       nand-ecc-mode = "soft_bch";
-> +                       nand-ecc-step-size = <512>;
-> +                       nand-ecc-strength = <4>;
-> +                       reg = <0x0 4>;
-> +                       gpios = <&gpio2 0 0>, /* rdy */
-> +                               <&gpio1 1 0>, /* nce */
-> +                               <&gpio1 2 0>, /* ale */
-> +                               <&gpio1 3 0>, /* cle */
-> +                               <&gpio1 4 0>; /* nwp */
-> +               };
-
-To reflect this. "lsgpio" gives better info after that.
-
-Other than that:
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Charles
