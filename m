@@ -1,10 +1,8 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [RESEND PATCH v2 2/2] mfd: tps6105x: Add OF device ID table
-Date: Wed, 15 Mar 2017 07:49:57 -0300
-Message-ID: <20170315104958.24919-2-javier@osg.samsung.com>
-References: <20170315104958.24919-1-javier@osg.samsung.com>
+Subject: [RESEND PATCH v2 1/2] mfd: retu: Add OF device ID table
+Date: Wed, 15 Mar 2017 07:49:56 -0300
+Message-ID: <20170315104958.24919-1-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170315104958.24919-1-javier@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lee Jones <lee.jones@linaro.org>
@@ -29,30 +27,30 @@ Resending with DT folks on cc.
 Changes in v2:
 - Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
 
- drivers/mfd/tps6105x.c | 8 ++++++++
+ drivers/mfd/retu-mfd.c | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/drivers/mfd/tps6105x.c b/drivers/mfd/tps6105x.c
-index baa12ea666fb..f8b0505a15e0 100644
---- a/drivers/mfd/tps6105x.c
-+++ b/drivers/mfd/tps6105x.c
-@@ -173,9 +173,17 @@ static const struct i2c_device_id tps6105x_id[] = {
+diff --git a/drivers/mfd/retu-mfd.c b/drivers/mfd/retu-mfd.c
+index d4c114abeb75..f692d0280137 100644
+--- a/drivers/mfd/retu-mfd.c
++++ b/drivers/mfd/retu-mfd.c
+@@ -308,9 +308,17 @@ static const struct i2c_device_id retu_id[] = {
  };
- MODULE_DEVICE_TABLE(i2c, tps6105x_id);
+ MODULE_DEVICE_TABLE(i2c, retu_id);
  
-+static const struct of_device_id tps6105x_of_match[] = {
-+	{ .compatible = "tps61050" },
-+	{ .compatible = "tps61052" },
-+	{ },
++static const struct of_device_id retu_of_match[] = {
++	{ .compatible = "retu-mfd" },
++	{ .compatible = "tahvo-mfd" },
++	{ }
 +};
-+MODULE_DEVICE_TABLE(of, tps6105x_of_match);
++MODULE_DEVICE_TABLE(of, retu_of_match);
 +
- static struct i2c_driver tps6105x_driver = {
- 	.driver = {
- 		.name	= "tps6105x",
-+		.of_match_table = tps6105x_of_match,
+ static struct i2c_driver retu_driver = {
+ 	.driver		= {
+ 		.name = "retu-mfd",
++		.of_match_table = retu_of_match,
  	},
- 	.probe		= tps6105x_probe,
- 	.remove		= tps6105x_remove,
+ 	.probe		= retu_probe,
+ 	.remove		= retu_remove,
 -- 
 2.9.3
