@@ -1,88 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V7 0/7] LPC: legacy ISA I/O support
-Date: Wed, 15 Mar 2017 14:23:12 +0100
-Message-ID: <CAK8P3a3NJCndFJED4wDcvYndiJHbfTEHjTnPjBUQK6UguOswmg@mail.gmail.com>
-References: <1489372963-9000-1-git-send-email-yuanzhichang@hisilicon.com>
- <CAK8P3a1f33ipk3Q8+wj9L6zP=ccn_AuhTfV0CC0+wAqrO-2beg@mail.gmail.com> <58C8BD7D.7040207@hisilicon.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/5] soc/tegra: Enable flowctrl support for Tegra132/210
+Date: Wed, 15 Mar 2017 13:31:50 +0000
+Message-ID: <1489584715-23138-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58C8BD7D.7040207@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rafael Wysocki <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, rjw@rjwysocki.net, Linux ARM <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, linux-serial@vger.kernel.org, Corey Minyard <minyard@acm.org>, liviu.dudau@arm.com, Zou Rongrong <zourongrong@gmail.com>, John Garry <john.ga>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 5:05 AM, zhichang.yuan
-<yuanzhichang@hisilicon.com> wrote:
->> - I think the libio framework is more generic than it needs to be, but as
->>   Alex really liked it this way and it was done like this based on his earlier
->>   comments, I think that's ok.
->>
->> - after we went back and forth on the ACPI implementation, we concluded
->>   that it is correct to do the same as on DT and completely abstract the
->>   number space for I/O ports. No code should rely on a Linux port number
->>   to have any particular relation to the physical address or the the address
->>   on a PCI or LPC bus.
-> Thanks again for your helps in Linaro Connect!
-> I think we are heading for this direction, is it?
+The flowctrl modules is supported by both Tegra132 and Tegra210 devices.
+These devices already have the flowctrl node defined in their respective
+*.dtsi device-tree files. The flowctrl driver is currently located in
+the arch/arm/mach-tegra directory and so can only be used for 32-bit
+Tegra devices. Move this driver into drivers/soc/tegra so that it can
+be used for all Tegra devices that support flowctrl.
 
-Yes, I think so.
+I have also added a couple clean-up patches.
 
->> - I'm pretty sure the current implementation is broken for the ioport_map
->>   function that tries to turn an IORESOURCE_IO number into a pointer.
->>   Forcing CONFIG_GENERIC_IOMAP on would solve this, but also
->>   make all MMIO operations slower, which we probably don't want.
->>   It's probably enough to add a check in ioport_map() to see if the range
->>   is mapped into a virtual address or not.
->
->
-> Yes, I think our LIBIO will break the ioport_map() at this moment.
-> I try to solve this issue. Could you help to check the following ideas?
-> I am not deeper understanding the whole I/O framework, the following maybe not correct:(
->
-> ioport_map seems architecture-dependent. For our LIBIO, we don't want to replace the existing I/O
-> frameworks which support MMIO at this moment. Can we add these two revise to solve this issue?
-> 1) Make LIBIO only target for non GENERIC_IOMAP platforms
->
-> config LIBIO
->         bool "Generic logical IO management"
->         depends on !GENERIC_IOMAP
+Jon Hunter (5):
+  ARM: tegra: WARN if flowctrl is not supported
+  ARM: tegra: Remove unnecessary inclusion of flowctrl header
+  soc/tegra: Move Tegra flowctrl driver
+  dt-bindings: tegra: Update compatible strings for Tegra flowctrl
+  soc/tegra: Add initial flowctrl support for Tegra210
 
-I don't think there is even a problem with GENERIC_IOMAP: If both are
-set, passing a low number as a pointer will turn an ioread32() into an
-inl(), which is implemented by libio.
+ .../bindings/arm/tegra/nvidia,tegra20-flowctrl.txt |   8 +-
+ arch/arm/mach-tegra/Kconfig                        |   1 +
+ arch/arm/mach-tegra/Makefile                       |   1 -
+ arch/arm/mach-tegra/cpuidle-tegra20.c              |   3 +-
+ arch/arm/mach-tegra/flowctrl.c                     | 171 -------------------
+ arch/arm/mach-tegra/flowctrl.h                     |  66 --------
+ arch/arm/mach-tegra/platsmp.c                      |   2 +-
+ arch/arm/mach-tegra/pm.c                           |   2 +-
+ arch/arm/mach-tegra/reset-handler.S                |   2 +-
+ arch/arm/mach-tegra/sleep-tegra20.S                |   3 +-
+ arch/arm/mach-tegra/sleep-tegra30.S                |   2 +-
+ arch/arm/mach-tegra/sleep.S                        |   2 -
+ arch/arm/mach-tegra/tegra.c                        |   2 -
+ drivers/soc/tegra/Kconfig                          |   5 +
+ drivers/soc/tegra/Makefile                         |   1 +
+ drivers/soc/tegra/flowctrl.c                       | 187 +++++++++++++++++++++
+ include/soc/tegra/flowctrl.h                       |  62 +++++++
+ 17 files changed, 271 insertions(+), 249 deletions(-)
+ delete mode 100644 arch/arm/mach-tegra/flowctrl.c
+ delete mode 100644 arch/arm/mach-tegra/flowctrl.h
+ create mode 100644 drivers/soc/tegra/flowctrl.c
+ create mode 100644 include/soc/tegra/flowctrl.h
 
->         def_bool y if PCI && (ARC || MN10300 || UNICORE32 || SPARC || MICROBLAZE || S390 || AVR32 || CRIS || BLACKFIN || XTENSA || ARM64)
-
-I think most of these architectures just use their own inb/outb functions,
-and should not use libio at all.
-
-It's also possible that they use an older way of mapping I/O ports by calling
-ioremap() on the physical address and treating the pointer as a 32-bit
-I/O port number (relying on the PCI_IOBASE=0 default). Architectures doing
-that might have other issues with libio, and I wouldn't try converting those.
-
-> 2) Modify the ioport_map() defined in asm-generic/io.h
-> Add the checks to identify the input 'port' is MMIO, otherwise, return NULL;
-
-This seems fine.
-
->> - We could simplify the lookup a bit by using the trick from arch/ia64
->>   of using an array instead of linked list for walking the port numbers.
->>   There, the upper bits of the port number refer to an address space
->>   number while the lower bits refer to the bus address within that
->>   address space. This should work just as well as the current
->>   implementation but would be a little easier to understand. Maybe
->>   Bjorn can comment on this too, as I think he was involved with the
->>   ia64 implementation.
->>
-> Yes, It will be more efficient.
->
-> But the issue remained here is still how to coexist with the existing I/O frameworks.
-> I will continue to look into.
-
-Ok. Let's wait for Bjorn to reply on this idea before you spend too much time
-on this though.
-
-      Arnd
+-- 
+2.7.4
