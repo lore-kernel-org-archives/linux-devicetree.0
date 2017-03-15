@@ -1,45 +1,61 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: Applied "ASoC: sun8i-codec: Update mixer to use
- SOC_DAPM_DOUBLE" to the asoc tree
-Date: Wed, 15 Mar 2017 22:15:22 +0800
-Message-ID: <CAGb2v67-b+8CM0MqhT_YQeuNxEnVoxG-COZPy8LW32Eb-QE67Q@mail.gmail.com>
-References: <20170210094133.11382-3-mylene.josserand@free-electrons.com>
- <E1clbY9-0000DH-LY@finisterre>
- <CAGb2v6428PpYPzpHngLgaeziwKN8u-TYiNO1bs7TFw-7VrQOAg@mail.gmail.com>
- <20170315134323.i3pvla3pzejmkxwh@sirena.org.uk>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v2 00/17] Move firmware specific code to firmware
+ specific locations
+Date: Wed, 15 Mar 2017 16:19:19 +0200
+Message-ID: <20170315141918.GF10701@valkosipuli.retiisi.org.uk>
+References: <1488814983-25695-1-git-send-email-sakari.ailus@linux.intel.com>
+ <2385585.K4ms5H7miQ@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170315134323.i3pvla3pzejmkxwh@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Linux-ALSA <alsa-devel@alsa-project.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2385585.K4ms5H7miQ@aspire.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 9:43 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Mar 14, 2017 at 12:31:22PM +0800, Chen-Yu Tsai wrote:
->> On Wed, Mar 8, 2017 at 9:22 PM, Mark Brown <broonie@kernel.org> wrote:
->> This patch changes the mixer controls exposed to user space.
->
->> This driver was just introduced in 4.11-rc1. Would it make sense to
->> merge these cleanup patches as fixes for 4.11, so we don't affect
->> userspace across kernel releases?
->
-> It would but it doesn't pick over cleanly, it looks like it depends on
-> some of the other changes.
+On Mon, Mar 13, 2017 at 11:27:40PM +0100, Rafael J. Wysocki wrote:
+> On Monday, March 06, 2017 05:42:46 PM Sakari Ailus wrote:
+> > Hi, 
+> > 
+> > This set moves firmware specific implementations of the device / fwnode
+> > property API to locations that are specific to firmware implementation,
+> > still leaving property set (which isn't really firmware) implementation in
+> > drivers/base/property.c.
+> > 
+> > The set depends on the ACPI graph support v4 patches I posted a moment
+> > ago.
+> > 
+> > The patches may be found with dependencies here:
+> > 
+> > <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph-cleaned>
+> > 
+> > since v1:
+> > 
+> > - Move the three bugfixes in front of the set into a separate patchset.
+> >   There are no dependencies to those from the rest of the patches.
+> > 
+> > - Rebase on current ACPI graph support patches (themselves on PM tree
+> >   4.11-rc1 merge).
+> 
+> To me, all material from patches [1-11/17] can easily go into one patch which
+> would also help to review it quite a bit.
+> 
+> Analogously, all material in patches [12-16/17] can go into one patch too.
+> 
+> The split as is appears quite artificial, honestly.
 
-It depends on the second half of commit 4aa8146c89f3 ("ASoC: sun8i-codec:
-Remove analog "HP" widget"), which is also a cleanup. Would it be OK
-to pick these two over to fixes then? Or should we send a clean version
-instead?
+I believe it's easier to review the way it is. Each patch is simple and it's
+easy to see where a particular piece of code is moved. I'm happy to fold
+them, too, but I'd prefer keep "[PATCH v2 07/17] device property: Read
+strings using string array reading functions" separate, as it changes the
+implementation of reading single strings.
 
-ChenYu
+How about that?
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
