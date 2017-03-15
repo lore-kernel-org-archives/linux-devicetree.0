@@ -1,61 +1,59 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 4/5] mfd: altr_a10sr: Add Arria10 DevKit Reset
- Controller
-Date: Wed, 15 Mar 2017 11:06:08 +0000
-Message-ID: <20170315110608.5qgyj5pwsr7lr6zz@dell>
-References: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
- <1487783419-10912-5-git-send-email-thor.thayer@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 3/4] iio: accel: adxl345: Setup DATA_READY trigger
+Date: Wed, 15 Mar 2017 13:06:18 +0200
+Message-ID: <CAHp75VcUApPamBGTY0zwqeOn+P3G4OcDbS__+=RZ+t_3uAi5Qg@mail.gmail.com>
+References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
+ <1489403497-27849-4-git-send-email-eraretuya@gmail.com> <CAHp75Vcz1RTdncG5L1S7q2LVHK6TEA813pjTpue4n3DDcCrMAg@mail.gmail.com>
+ <20170315094923.GA3080@Socrates-UM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1487783419-10912-5-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170315094923.GA3080@Socrates-UM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Feb 2017, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+On Wed, Mar 15, 2017 at 11:49 AM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
+> On Mon, Mar 13, 2017 at 02:12:54PM +0200, Andy Shevchenko wrote:
+>> On Mon, Mar 13, 2017 at 1:11 PM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
 
-> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> 
-> Add Peripheral PHY Reset Controller to the Arria10
-> Development Kit System Resource Chip's MFD.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
-> v2  Changes to commit header & body for clarification.
-> ---
->  drivers/mfd/altera-a10sr.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> Hello Andy,
+> Thanks for the review.
 
-Sorry for the delay, I've been AFK on vacation and conferences.
+You are welcome!
 
-Applied, thanks.
+>> > +static irqreturn_t adxl345_irq(int irq, void *p)
+>> > +{
+>> > +       struct iio_dev *indio_dev = p;
+>> > +       struct adxl345_data *data = iio_priv(indio_dev);
+>> > +       int ret = IRQ_NONE;
+>> > +       u32 int_stat;
+>> > +
+>>
+>> > +       ret = regmap_read(data->regmap, ADXL345_REG_INT_SOURCE, &int_stat);
+>>
+>> > +       if (ret < 0)
+>> > +               return ret;
+>>
+>> It makes little sense AFAIU.
+>>
+>
+> Can you please elaborate further your comment regarding this?
 
-> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
-> index 06e1f7f..96e7d2c 100644
-> --- a/drivers/mfd/altera-a10sr.c
-> +++ b/drivers/mfd/altera-a10sr.c
-> @@ -33,6 +33,10 @@
->  		.name = "altr_a10sr_gpio",
->  		.of_compatible = "altr,a10sr-gpio",
->  	},
-> +	{
-> +		.name = "altr_a10sr_reset",
-> +		.of_compatible = "altr,a10sr-reset",
-> +	},
->  };
->  
->  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
+It's defined as enum and returned value is not in a range.
+
+Also it would be useful to look at kernel/irq/manage.c for the
+implementation details.
+
+>> P.S. Are you doing this stuff on your own or you are working for some
+>> company? If the latter applies, please, consider to do *internal*
+>> review first.
+
+> I'm doing it on my own as a project for Outreachy and have mentors to ask
+> for advice and/or questions.
+
+Ah, okay, that is fine then!
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With Best Regards,
+Andy Shevchenko
