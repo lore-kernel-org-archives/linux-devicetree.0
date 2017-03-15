@@ -1,76 +1,60 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] power: reset: syscon-poweroff: add a mask property
-Date: Wed, 15 Mar 2017 21:45:13 +0100
-Message-ID: <20170315204513.i3cpl4ptyevtyyp5@earth>
-References: <1486472054-4367-1-git-send-email-guy.shapiro@mobi-wize.com>
- <1486482966-4497-1-git-send-email-guy.shapiro@mobi-wize.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v3 1/2] Documentation: bindings: Introduce scpi,
+ sensors-scale
+Date: Wed, 15 Mar 2017 21:56:09 +0100
+Message-ID: <CAFBinCAde0qWpJsYF8bm-5ex1q+TDZtL73bf5DNoUuFEDhPXpw@mail.gmail.com>
+References: <20170309101759.18081-1-carlo@caione.org>
+ <20170309101759.18081-2-carlo@caione.org>
+ <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wspwyo7wchrwmhxp"
-Return-path: <rtc-linux+bncBDXMLNOH5ANRBX6PU3DAKGQEHTRZIJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1486482966-4497-1-git-send-email-guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, punit.agrawal@arm.com, robh+dt@kernel.org, linux@roeck-us.net, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux@endlessm.com, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@endlessm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 15, 2017 at 7:20 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 09/03/17 10:17, Carlo Caione wrote:
+>> From: Carlo Caione <carlo@endlessm.com>
+>>
+>> Document the new property `scpi,sensors-scale` used by the hwmon-scpi
+>> driver to convert the sensor readings to the correct / expected scale.
+>>
+>
+> I am fine with DT bindings if DT maintainers agree with having one but I
+> would like to add couple of points to get their feedback:
+>
+> 1. ARM recognized the drawbacks of SCPI which started informally with
+>    ARM Ltd platforms and got adopted by few vendors. It's now being
+>    worked on and a much better and scalable replacement protocol is
+>    being discussed with vendors now. So future enhancement to this SCPI
+>    protocol is unlikely.
+>
+> 2. AmLogic has diverted from base protocol in many ways and most of them
+>    are handled with just compatible so far without any need for
+>    additional bindings. Can we avoid it ?
+>
+> So based on these, I prefer not to add more bindings to handle such
+> deviations but make it just AmLogic specific.
+could you please share your idea where this "Amlogic specific
+implementation" fits best?
+- in firmware/arm_scpi to keep a contract (for example: millicelsius)
+to everyone who reads a temperature sensor for example
+- or in hwmon/scpi-hwmon
 
---wspwyo7wchrwmhxp
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 
-Hi,
-
-On Tue, Feb 07, 2017 at 05:56:05PM +0200, Guy Shapiro wrote:
-> Make the syscon-poweroff driver accept value and mask instead of
-> just value.
-> 
-> Prior to this patch, the property name for the value was 'mask'. If
-> only the mask property is defined on a node, maintain compatibility
-> by using it as the value.
-> 
-> Signed-off-by: Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
-
-Thanks, queued with Rob's Acked-By.
-
--- Sebastian
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---wspwyo7wchrwmhxp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljJp9cACgkQ2O7X88g7
-+poUXg//YVvSVFLN+yCg282zEWVPHRSG0sqsj14LykFmOBm6P/x6wlzDRm57AQ6t
-RAwigdpSzPdi7BEjXnvNDv2oHx0xd3h52wSx3NdxUHUxQfa3D0K/eNU+LK4HbdB6
-Whs0gaRYC4D1SjWrZ6+GFWSDSfIW/r8CBEUTF6MG5uIy1F1ErIVzKeX80KOM+I8I
-2eNj6wV2Lq8z5HSrt+Mswmsm5PaKUwucs1zNrl2f56tjkh0DmReXXoB1arYuzoVz
-MiRwPlIZq4MOzAwsHf3sH3SIj4NBeMi4Q14O3aS2BsxmvNSUxV2PuMhmMLZ0FzqB
-K973y9yS4yuKCNONY4AVEFen0d12jzs74UhNCHLcZBDH9ecX8DaHbDGsKEkgPaSX
-BluMFrdBy0kCTkZJKLGVLMwSEtLRmLV4qDjKX4UgW8264uEqJnHV57tMw7LX+BCc
-dIxGBWu/r8PrrfuXwUAzVslTEGbA+Agtp6Asz36ZuS+B55J/Dl3/q/j8XjKhgvSe
-tlBD1ZxVszngAqbhQ4s1xMOWuHWvVNo55asg1MrmTsGMQJfffAOxxqoxTTIMTbw3
-C/h9JJwn/Vm1GPdJaFlMvebKYMDZIu63zKBgbltEc5WkYnSr1yVyiSLWJcUb9AHg
-A2rl70vxMLWglhCSqKNGLmlgY4PMZ9YoPmtsmIvkSQFVv6iQa1M=
-=auno
------END PGP SIGNATURE-----
-
---wspwyo7wchrwmhxp--
+Regards,
+Martin
