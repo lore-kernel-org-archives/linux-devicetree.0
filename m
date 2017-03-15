@@ -1,99 +1,168 @@
-From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] mmc: bcm2835: Add new driver for the sdhost
- controller
-Date: Wed, 15 Mar 2017 09:21:58 +0100
-Message-ID: <1489566118.15659.27.camel@redhat.com>
-References: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
-         <CALeDE9Oaqe_7spH9r5-Bth9AvrwviFsZ4woEyE_Zyrws0jM9Dw@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and
+ endpoints
+Date: Wed, 15 Mar 2017 10:23:51 +0200
+Message-ID: <20170315082351.GA24531@paasikivi.fi.intel.com>
+References: <1629581.fh46rNHz4U@aspire.rjw.lan>
+ <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
+ <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com>
+ <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
+ <cf2ab8be-a351-f1ea-28a9-f5cca57061cd@linux.intel.com>
+ <CAJZ5v0i4pEKkz+3Ob42x96YHpPWasH2O8VnDCz8aKw_wxywLyQ@mail.gmail.com>
+ <dba2ce05-fc0c-3994-118c-a7de6a5afc78@linux.intel.com>
+ <CAJZ5v0hCvcPgYYV0Hysfu0pEYCzzHp7KKdW3nYyjm7RGS3bHoQ@mail.gmail.com>
+ <572ba62c-3168-adcf-f9de-4826b1804f38@linux.intel.com>
+ <CAJZ5v0h+kzycm7y08300DFHUcL23k672-0BdWLwT0AbqgAY6JQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALeDE9Oaqe_7spH9r5-Bth9AvrwviFsZ4woEyE_Zyrws0jM9Dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0h+kzycm7y08300DFHUcL23k672-0BdWLwT0AbqgAY6JQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+On Wed, Mar 15, 2017 at 12:13:45AM +0100, Rafael J. Wysocki wrote:
+> On Tue, Mar 14, 2017 at 11:53 PM, Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> > Rafael J. Wysocki wrote:
+> >>
+> >> On Tue, Mar 14, 2017 at 10:16 PM, Sakari Ailus
+> >> <sakari.ailus@linux.intel.com> wrote:
+> >>>
+> >>> Rafael J. Wysocki wrote:
+> >>>>
+> >>>>
+> >>>> On Tue, Mar 14, 2017 at 6:54 PM, Sakari Ailus
+> >>>> <sakari.ailus@linux.intel.com> wrote:
+> >>>>>
+> >>>>>
+> >>>>> Hi Rafael,
+> >>>>>
+> >>>>> Rafael J. Wysocki wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
+> >>>>>> <sakari.ailus@linux.intel.com> wrote:
+> >>>>>>>
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> On 03/14/17 10:08, Sakari Ailus wrote:
+> >>>>>>>>
+> >>>>>>>>
+> >>>>>>>>
+> >>>>>>>> How about this instead:
+> >>>>>>>>
+> >>>>>>>> All port nodes are located under the device's "_DSD" node in the
+> >>>>>>>> hierarchical data extension tree. The property extension related to
+> >>>>>>>> each port node must contain the key "port" and an integer value
+> >>>>>>>> which
+> >>>>>>>> is the number of the port.
+> >>>>>>>
+> >>>>>>>
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> So with matching strings instead of indices, this will change, too...
+> >>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> It doesn't have to AFAICS, but the number is just redundant IMO.  You
+> >>>>>> only need a boolean property saying "this is a port", so you know that
+> >>>>>> you should expect a list of endpoints in that object.
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>> No, it's not redundant. It's the number of the physical port in the
+> >>>>> device
+> >>>>> --- this is how the driver gets to know where the connection has been
+> >>>>> made.
+> >>>>
+> >>>>
+> >>>>
+> >>>> OK, but what exactly do you mean by "physical port"?
+> >>>
+> >>>
+> >>>
+> >>> The device (or an IP block) has physical interfaces to the world outside.
+> >>> There could be just one, but there may be more. For an ISP, there could
+> >>> be
+> >>> e.g. four CSI-2 receivers to each of which you could connect a camera
+> >>> sensor. So for an ISP device, that number tells which of the receivers a
+> >>> given sensor is connected to.
+> >>>
+> >>> The mapping between this number and what the hardware datasheet refers to
+> >>> needs to be documented per device.
+> >>
+> >>
+> >> OK, so the number actually is an arbitrary piece of data associated
+> >> with the key "port" and the interpretation of that piece of data
+> >> depends on whoever asks for that value.
+> >>
+> >> IOW, the core doesn't care.
+> >>
+> >> With all due respect to whoever invented this on the DT side, this is
+> >> just bad design to me, because it causes the "port" property to serve
+> >> two different purposes at the same time.  First, it tells the core
+> >> that this object is a port.  Second, it is expected to provide a piece
+> >> of data of unspecified interpretation to somebody.  Which means that
+> >> the "port" property is both general and device-specific at the same
+> >> time and the sanity of that is quite questionable IMO.
+> >
+> >
+> > DT uses a node called either "port" or "ports" to store the port nodes. The
+> > reg property tells the number of the port (see
+> > Documentation/devicetree/bindings/graph.txt). I'm no DT expert, but my
+> > understanding is that the node namespace is different from the property
+> > namespace.
+> 
+> So on the DT side it actually looks OK to me.
+> 
+> And the <reg> value is referred to as the port-endpoint identifier, so
+> I guess this is used for referring to the port/endpoint instead of an
+> index or the key value somewhere?
 
-> First the flipping of the mmc host driver for the SD card slot will
-> cause issues for users that build it as a module. When I tested this
-> on Fedora the first update I ended up with a system that didn't boot.
+The remote-endpoint uses phandles; they're a mechanism in DT to refer to
+different nodes in the tree (DT does not differentiate between devices and
+non-device nodes). There's a relatively good example here:
 
-Yep, switching drivers is a pain point here indeed.
+	arch/arm/boot/dts/omap3-n9.dts
 
-Possibly we could fix that by adding a MODULE_SOFTDEP() to the iproc
-driver?  Comments?  Better ideas?
+> 
+> > If you're concerned of possible double meanings, it's entirely possible to
+> > put the port nodes under hierarchical data extension named e.g. "ports", and
+> > document that this is what the node must be called (single port node could
+> > be just called "port"). This way, it should be much more difficult to
+> > interpret a non-port node as a port node --- roughly equivalent of the DT
+> > ports node.
+> >
+> > The drawback with this change is that the size of the data structure in ASL
+> > (and AML) will grow.
+> 
+> The "ports" thing would only be useful if we had the other properties
+> to put in there.
+> 
+> So I guess we can specify that the "port" property value is the
+> identifier of the port and then we will use this in the
+> "remote-endpoint" property on the other end instead of an index.
 
-> Also i often see the device hang for a long period when systemd probes
-> for rfkill status, sometimes it needs to be reset but it generally
-> gets there.
+Makes sense.
 
-What device is that?  rpi3 with wifi?
+> 
+> And analogously for the "enpoint" property value.
 
-> [    6.529079] Hardware name: Generic DT based system
-> [    6.529106] [<c0311708>] (unwind_backtrace) from [<c030c438>]
-> (show_stack+0x18/0x1c)
-> [    6.529122] [<c030c438>] (show_stack) from [<c0639b44>]
-> (dump_stack+0x80/0xa0)
-> [    6.529137] [<c0639b44>] (dump_stack) from [<c034ca3c>] (__warn+0xe4/0x104)
-> [    6.529150] [<c034ca3c>] (__warn) from [<c034ca98>]
-> (warn_slowpath_fmt+0x3c/0x4c)
-> [    6.529166] [<c034ca98>] (warn_slowpath_fmt) from [<c0363b2c>]
-> (check_flush_dependency+0xac/0x134)
-> [    6.529184] [<c0363b2c>] (check_flush_dependency) from [<c036433c>]
-> (flush_work+0xa0/0x178)
-> [    6.529201] [<c036433c>] (flush_work) from [<c0458084>]
-> (drain_all_pages+0x1a8/0x1cc)
-> [    6.529221] [<c0458084>] (drain_all_pages) from [<c04b1d90>]
-> (start_isolate_page_range+0x168/0x1b4)
-> [    6.529239] [<c04b1d90>] (start_isolate_page_range) from
-> [<c045b854>] (alloc_contig_range+0xd4/0x314)
-> [    6.529258] [<c045b854>] (alloc_contig_range) from [<c04b6660>]
-> (cma_alloc+0x188/0x300)
-> [    6.529275] [<c04b6660>] (cma_alloc) from [<c03161e8>]
-> (__alloc_from_contiguous+0x40/0xd8)
-> [    6.529290] [<c03161e8>] (__alloc_from_contiguous) from
-> [<c03162bc>] (cma_allocator_alloc+0x3c/0x44)
-> [    6.529303] [<c03162bc>] (cma_allocator_alloc) from [<c0316504>]
-> (__dma_alloc+0x1d4/0x2f0)
-> [    6.529317] [<c0316504>] (__dma_alloc) from [<c0316698>]
-> (arm_dma_alloc+0x3c/0x48)
-> [    6.529331] [<c0316698>] (arm_dma_alloc) from [<c049d120>]
-> (dma_pool_alloc+0x124/0x240)
-> [    6.529356] [<c049d120>] (dma_pool_alloc) from [<bf009568>]
-> (bcm2835_dma_create_cb_chain+0xb0/0x1dc [bcm2835_dma])
-> [    6.529385] [<bf009568>] (bcm2835_dma_create_cb_chain
-> [bcm2835_dma]) from [<bf009ad4>] (bcm2835_dma_prep_slave_sg+0xf0/0x25c
-> [bcm2835_dma])
-> [    6.529418] [<bf009ad4>] (bcm2835_dma_prep_slave_sg [bcm2835_dma])
-> from [<bf04af04>] (bcm2835_request+0x2a4/0x3f4 [bcm2835])
-> [    6.529548] [<bf04af04>] (bcm2835_request [bcm2835]) from
-> [<bf0145d0>] (mmc_start_request+0x1f8/0x264 [mmc_core])
-> [    6.529756] [<bf0145d0>] (mmc_start_request [mmc_core]) from
-> [<bf016204>] (mmc_start_areq+0x2c8/0x318 [mmc_core])
-> [    6.529890] [<bf016204>] (mmc_start_areq [mmc_core]) from
-> [<bf07fa1c>] (mmc_blk_issue_rw_rq+0xc0/0x308 [mmc_block])
-> [    6.529943] [<bf07fa1c>] (mmc_blk_issue_rw_rq [mmc_block]) from
-> [<bf080f84>] (mmc_blk_issue_rq+0x418/0x428 [mmc_block])
-> [    6.529997] [<bf080f84>] (mmc_blk_issue_rq [mmc_block]) from
-> [<bf081138>] (mmc_queue_thread+0x148/0x1bc [mmc_block])
-> [    6.530031] [<bf081138>] (mmc_queue_thread [mmc_block]) from
-> [<c036ae30>] (kthread+0x120/0x138)
-> [    6.530049] [<c036ae30>] (kthread) from [<c0307e58>]
-> (ret_from_fork+0x14/0x3c)
-> [    6.530055] ---[ end trace 221a5a14ca55fa22 ]---
-> [    6.545765]  mmcblk0: p1 p2 p3 p4
-> [    6.566015] random: fast init done
-> [    6.623699] mmc1: new high speed SDIO card at address 0001
+The endpoint hierarchical data extension node name? There is no endpoint
+property being used by this version of the set anymore; I removed it as it
+was redundant. However a human readable endpoint node name can be chosen
+which that'd be quite practical to identify the endpoint.
 
-Looks more like a cma allocator issue on a quick glance.
+Then the remote-endpoint properties would be:
 
-cheers,
-  Gerd
+	Package () { device, port (integer), endpoint-node-name (string) }
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
