@@ -1,57 +1,65 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH v2 16/23] MAINTAINERS: Add file patterns for powerpc device tree bindings
-Date: Wed, 15 Mar 2017 11:19:45 +1100
-Message-ID: <87a88nv1b2.fsf@concordia.ellerman.id.au>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org> <1489324627-19126-17-git-send-email-geert@linux-m68k.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: omap4-droid4: Configure EHCI so modems can be accessed
+Date: Tue, 14 Mar 2017 17:40:33 -0700
+Message-ID: <20170315004033.28852-1-tony@atomide.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489324627-19126-17-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, qiang.zhao-3arQi8VN3Tc@public.gmane.org, yangbo.lu-3arQi8VN3Tc@public.gmane.org, york.sun-3arQi8VN3Tc@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> writes:
+Droid 4 has two modems, mdm6600 and w3glte. Both are on the HCI USB
+controller.
 
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
->
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
-> Please apply this patch directly if you want to be involved in device
-> tree binding documentation for your subsystem.
->
-> v2:
->   - Rebased on top of commit a42715830d552d7c ("MAINTAINERS: Remove
->     powerpc's "opal" pattern match), which just added "powerpc/opal",
->     while obviously the whole "powerpc" hierarchy is of interest.
->
-> Impact on next-20170310:
+Let's add a configuration for the HCI so the modems can be enabled.
 
-Actual diff ignoring ordering etc:
+Note that the modems still need GPIO based configuration that can
+be done with the test-d4-echi shell script I've posted to:
 
- +Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> (supporter:LINUX FOR POWERPC (32-BIT AND 64-BIT))
- +Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org> (supporter:LINUX FOR POWERPC (32-BIT AND 64-BIT))
- +linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT))
- -Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org> (commit_signer:5/11=45%)
- -Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org> (commit_signer:4/11=36%,authored:4/11=36%)
- -Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> (commit_signer:1/11=9%)
- -yangbo lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org> (authored:1/11=9%)
- -"Otto Kekäläinen" <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org> (authored:1/11=9%)
- -Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (authored:1/11=9%)
- -York Sun <york.sun-3arQi8VN3Tc@public.gmane.org> (authored:1/11=9%)
+http://muru.com/linux/d4/test-d4-ehci
 
-Which looks bad as all the NXP folks get dropped, but they should be
-reading linuxppc-dev. So I think I'll merge this, unless anyone
-disagrees.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
+Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/omap4-droid4-xt894.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-cheers
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -71,6 +71,11 @@
+ 		regulator-always-on;
+ 	};
+ 
++	/* HS USB Host PHY on PORT 1 */
++	hsusb1_phy: hsusb1_phy {
++		compatible = "usb-nop-xceiv";
++	};
++
+ 	/* LCD regulator from sw5 source */
+ 	lcd_regulator: regulator-lcd {
+ 		compatible = "regulator-fixed";
+@@ -475,6 +480,15 @@
+ 			       &omap4_pmx_core 0x17c>;
+ };
+ 
++&usbhsehci {
++	phys = <&hsusb1_phy>;
++};
++
++&usbhshost {
++	port1-mode = "ohci-phy-4pin-dpdm";
++	port2-mode = "ehci-tll";
++};
++
+ /* Internal UTMI+ PHY used for OTG, CPCAP ULPI PHY for detection and charger */
+ &usb_otg_hs {
+ 	interface-type = <1>;
+-- 
+2.11.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
