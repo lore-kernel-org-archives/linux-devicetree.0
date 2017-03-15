@@ -1,20 +1,16 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/4] pinctrl: samsung: Fix the width of PINCFG_TYPE_DRV
- bitfields for Exynos5433
-Date: Wed, 15 Mar 2017 14:52:06 +0100
-Message-ID: <CACRpkdaCzhShH2O2yZmyVB2LfqqXHXjbm9d=Jj0vPa5F2hx87A@mail.gmail.com>
-References: <CGME20161230041426epcas1p1f827d3cee8b607d81e9921b412ddf301@epcas1p1.samsung.com>
- <20161230041421.24448-1-andi.shyti@samsung.com>
- <20161230041421.24448-2-andi.shyti@samsung.com>
- <CACRpkdbR3x14h38Gg7qpeWnswwD9qsS0zDUrrXCEJH-AdEB+cQ@mail.gmail.com>
- <58AF7CCB.5070303@samsung.com>
- <CACRpkda0-k7Vo9Y6yNtLNXu-gGnJW9y83t6W9p032KWjHYdMiw@mail.gmail.com>
- <CAJKOXPd1pRN47Ss5qTHUVAdPwxKqE5vGGevG1OhVH0uSZnotKA@mail.gmail.com>
+From: Ziji Hu <huziji@marvell.com>
+Subject: Re: [PATCH v6 08/14] mmc: sdhci-xenon: Add Marvell Xenon SDHC core
+ functionality
+Date: Wed, 15 Mar 2017 21:58:43 +0800
+Message-ID: <10855817-e693-e007-9499-c4e97936fadb@marvell.com>
+References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
+ <cb885ae19e7c467908cdaa1f1cc8d95a7217d663.1487091464.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFpH+RGAZGoVCuCOKJ2iEa+Y=cNNcM-uKhkYaTpmogXCKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJKOXPd1pRN47Ss5qTHUVAdPwxKqE5vGGevG1OhVH0uSZnotKA@mail.gmail.com>
+In-Reply-To: <CAPDyKFpH+RGAZGoVCuCOKJ2iEa+Y=cNNcM-uKhkYaTpmogXCKA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,42 +20,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Andi Shyti <andi@etezian.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Andi Shyti <andi.shyti@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, stable <stable@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXIgMTQsIDIwMTcgYXQgMzoyNyBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6
-a0BrZXJuZWwub3JnPiB3cm90ZToKPiBPbiBUdWUsIE1hciAxNCwgMjAxNyBhdCAzOjQ3IFBNLCBM
-aW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+PiBPbiBGcmks
-IEZlYiAyNCwgMjAxNyBhdCAxOjIyIEFNLCBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5n
-LmNvbT4gd3JvdGU6Cj4+PiBPbiAyMDE264WEIDEy7JuUIDMw7J28IDIyOjI4LCBMaW51cyBXYWxs
-ZWlqIHdyb3RlOgo+Pj4+IE9uIEZyaSwgRGVjIDMwLCAyMDE2IGF0IDU6MTQgQU0sIEFuZGkgU2h5
-dGkgPGFuZGkuc2h5dGlAc2Ftc3VuZy5jb20+IHdyb3RlOgo+PiBQcm9iYWJseS4gU2VuZCBhIHBh
-dGNoIGZpeGluZyBpdCB1cCBzbyBJIGNhbiBhcHBseSBpdC4KPj4KPj4gVGhlcmUgYXJlIG5vdyBz
-b21ldGhpbmcgbGlrZSA1IGRpZmZlcmVudCBwZW9wbGUgc3VibWl0dGluZyBTYW1zdW5nIHBpbmN0
-cmwKPj4gcGF0Y2hlcyB3aXRob3V0IGNvb3JkaW5hdGlvbiBzbyB0aGlzIHdpbGwgc3RhcnQgdG8g
-aGFwcGVuIGEgbG90IGlmIHlvdSBrZWVwCj4+IHVwIHRoaXMgZGV2ZWxvcG1lbnQgcGFjZS4KPj4K
-Pj4gQXMgSSBqdXN0IHdyb3RlIGluIGFub3RoZXIgbWFpbDogSSB3YW50IHNvbWVvbmUgdG8gc3Rl
-cCB1cCBhbmQgY29sbGVjdAo+PiBTYW1zdW5nIHBhdGNoZXMgYW5kIHNlbmQgdGhlbSB0byBtZSB1
-c2luZyBhIHB1bGwgcmVxdWVzdC4KPgo+IEkgdGhpbmsgd2UgY2FuIGhhbmRsZSBpdCBhcyB0aGVy
-ZSBhcmUgdGhyZWUgb2YgdXMuCgpJIGp1c3QgdGhpcyB3ZWVrIHN0YXJ0ZWQgdG8gZ2V0IHBhdGNo
-ZXMgZnJvbSBDaGFybGVzIEtlZXBheCwgYW5kIEkKdW5kZXJzdGFuZCB0aGF0IFdvbGZzb24gTWlj
-cm8gaGFzIGEgYnVuY2ggb2YgU2Ftc3VuZyBwbGF0Zm9ybQp3b3JrIGdvaW5nIG9uLgoKU28gbm93
-IGl0IGlzIGdldHRpbmcgYSBiaXQgbXVjaC4KCj4+IFNhbXN1bmcgcGVvcGxlIGFsc28gbmVlZCB0
-byBzdGFydCByZXZpZXdpbmcgZWFjaCBvdGhlcidzIHBhdGNoZXMKPj4gbW9yZSBJIGd1ZXNzLCBi
-dXQgbWFpbmx5IEkgbmVlZCBoZWxwIHdpdGggaW50ZWdyYXRpb24uCj4KPiBNb3JlIG9yIGxlc3Mg
-cmVjZW50bHkgd2UgZG8gdGhlIHJldmlld3MuIFN1cmUgd2UgY2FuIGZvY3VzIG1vcmUuLi4gYW5k
-Cj4gYWN0dWFsbHkgaGF2aW5nIGFuIGVudHJ5IGdhdGUgZm9yIHBhdGNoZXMgd291bGQgZW5zdXJl
-IGF0IGxlYXN0IG9uZQo+IG1vcmUgcmV2aWV3IGZyb20gdGhlIGFwcGx5aW5nIHBlcnNvbi4KCklu
-dGVyZXN0ZWQgaW4gdGhlIGpvYj8gOykKCkkgZ290IHB1bGwgcmVxdWVzdHMgZnJvbSB5b3UgYmVm
-b3JlIHNvIEkga25vdyB5b3UgYXJlIGZhbWlsaWFyCndpdGggdGhlIHByb2Nlc3MuCgpJIHdvdWxk
-IHZlcnkgbXVjaCBhcHByZWNpYXRlIGl0IGlmIGFsbCBTYW1zdW5nIHBpbiBjb250cm9sIHBhdGNo
-ZXMKd2VyZSBxdWV1ZWQgYnkgeW91IGFuZCBzZW50IHRvIG1lIHdpdGggcHVsbCByZXF1ZXN0cyBi
-YXNlZCBvbiBteQoiZGV2ZWwiIG9yICJmaXhlcyIgYnJhbmNoLiBJZiB0aGVyZSBpcyBnb2luZyB0
-byBiZSBhIGxvdCBvZiBpdCBhbnl3YXlzLgoKTWF5YmUgbGFzdCBtZXJnZSB3aW5kb3cgd2FzIGEg
-Yml0IHNwZWNpYWwgc2luY2UgTWFyZWsgZGlkIGFsbCB0aGlzCmdydW50IHdvcmsgb2Ygc3dpdGNo
-aW5nIFM1UCAmIGZyaWVuZHMgb3ZlciB0byBwaW4gY29udHJvbCwgaW4gdGhhdApjYXNlIGl0IGlz
-IG5vdCBzdWNoIGEgYmlnIGlzc3VlLgoKWW91cnMsCkxpbnVzIFdhbGxlaWoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Ulf,
+
+On 2017/3/15 21:11, Ulf Hansson wrote:
+> On 14 February 2017 at 18:01, Gregory CLEMENT
+> <gregory.clement@free-electrons.com> wrote:
+>> From: Hu Ziji <huziji@marvell.com>
+<snip>
+>> +config MMC_SDHCI_XENON
+>> +       tristate "Marvell Xenon eMMC/SD/SDIO SDHCI driver"
+>> +       depends on MMC_SDHCI_PLTFM
+>> +       help
+>> +         This selects Marvell Xenon eMMC/SD/SDIO SDHCI.
+>> +         If you have a machine with integrated Marvell Xenon SDHC IP,
+> 
+> /s/SDHC/SDHCI
+> 
+
+	Sorry. I don't get your point.
+	Could you please give more detailed comments?
+
+>> +         say Y or M here.
+>> +         If unsure, say N.
+>> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+>> index ccc9c4cba154..b0a2ab4b256e 100644
+>> --- a/drivers/mmc/host/Makefile
+>> +++ b/drivers/mmc/host/Makefile
+>> @@ -82,3 +82,6 @@ obj-$(CONFIG_MMC_SDHCI_BRCMSTB)               += sdhci-brcmstb.o
+>>  ifeq ($(CONFIG_CB710_DEBUG),y)
+>>         CFLAGS-cb710-mmc        += -DDEBUG
+>>  endif
+>> +
+>> +obj-$(CONFIG_MMC_SDHCI_XENON)  += sdhci-xenon-driver.o
+>> +sdhci-xenon-driver-y           += sdhci-xenon.o
+> 
+> Why not only this:
+> obj-$(CONFIG_MMC_SDHCI_XENON) += sdhci-xenon.o
+> 
+
+	Yes. Will try.
+
+>> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
+>> new file mode 100644
+<snip>
+> 
+> ff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
+>> new file mode 100644
+>> index 000000000000..69de711db9eb
+>> --- /dev/null
+>> +++ b/drivers/mmc/host/sdhci-xenon.h
+> 
+> You should probably put all this in the c-file instead. That is how
+> most other sdhci variants does it.
+> 
+
+	Unfortunately, we have some registers like XENON_SLOT_EMMC_CTRL
+	which are accessed by both sdhci-xenon.c and sdhci-xenon-phy.c
+
+> [...]
+> 
+> Overall this looks good to me, however I think Adrian needs to have a
+> quick look as well.
+> 
+> One additional very minor nitpick. Perhaps you can align on the
+> function names prefix, as those currently varies between "whatever",
+> "xenon_" and "sdhci_xenon_".
+> 
+	Sure. Will fix them as you request.
+
+	Thank you.
+
+Best regards,
+Hu Ziji
+
+> Kind regards
+> Uffe
+> 
