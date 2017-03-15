@@ -1,65 +1,175 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap4-droid4: Configure EHCI so modems can be accessed
-Date: Tue, 14 Mar 2017 17:40:33 -0700
-Message-ID: <20170315004033.28852-1-tony@atomide.com>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: Re: media / v4l2-mc: wishlist for complex cameras (was Re: [PATCH
+ v4 14/36] [media] v4l2-mc: add a function to inherit controls from a
+ pipeline)
+Date: Tue, 14 Mar 2017 21:54:31 -0300
+Message-ID: <20170314215420.6fc63c67@vento.lan>
+References: <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
+        <20170310140124.GV21222@n2100.armlinux.org.uk>
+        <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+        <20170310125342.7f047acf@vento.lan>
+        <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+        <20170311082549.576531d0@vento.lan>
+        <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+        <20170314004533.3b3cd44b@vento.lan>
+        <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+        <20170314072143.498cde9b@vento.lan>
+        <20170314223254.GA7141@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170314223254.GA7141@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus@linux.i
 List-Id: devicetree@vger.kernel.org
 
-Droid 4 has two modems, mdm6600 and w3glte. Both are on the HCI USB
-controller.
+Em Tue, 14 Mar 2017 23:32:54 +0100
+Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> escreveu:
 
-Let's add a configuration for the HCI so the modems can be enabled.
+> Hi!
+> 
+> > > > Even if they were merged, if we keep the same mean time to develop a
+> > > > libv4l plugin, that would mean that a plugin for i.MX6 could take 2-3
+> > > > years to be developed.
+> > > > 
+> > > > There's a clear message on it:
+> > > > 	- we shouldn't keep pushing for a solution via libv4l.    
+> > > 
+> > > Or:
+> > > 
+> > > 	- userspace plugin development had a very a low priority and
+> > > 	  never got the attention it needed.  
+> > 
+> > The end result is the same: we can't count on it.
+> >   
+> > > 
+> > > I know that's *my* reason. I rarely if ever looked at it. I always assumed
+> > > Sakari and/or Laurent would look at it. If this reason is also valid for
+> > > Sakari and Laurent, then it is no wonder nothing has happened in all that
+> > > time.
+> > > 
+> > > We're all very driver-development-driven, and userspace gets very little
+> > > attention in general. So before just throwing in the towel we should take
+> > > a good look at the reasons why there has been little or no development: is
+> > > it because of fundamental design defects, or because nobody paid attention
+> > > to it?  
+> > 
+> > No. We should look it the other way: basically, there are patches
+> > for i.MX6 driver that sends control from videonode to subdevs. 
+> > 
+> > If we nack apply it, who will write the userspace plugin? When
+> > such change will be merged upstream?  
+> 
+> Well, I believe first question is: what applications would we want to
+> run on complex devices? Will sending control from video to subdevs
+> actually help?
 
-Note that the modems still need GPIO based configuration that can
-be done with the test-d4-echi shell script I've posted to:
+I would say: camorama, xawtv3, zbar, google talk, skype. If it runs
+with those, it will likely run with any other application.
 
-http://muru.com/linux/d4/test-d4-ehci
+> mplayer is useful for testing... but that one already works (after you
+> setup the pipeline, and configure exposure/gain).
+> 
+> But thats useful for testing, not really for production. Image will be
+> out of focus and with wrong white balance.
+> 
+> What I would really like is an application to get still photos. For
+> taking pictures with manual settings we need
+> 
+> a) units for controls: user wants to focus on 1m, and take picture
+> with ISO200, 1/125 sec. We should also tell him that lens is f/5.6 and
+> focal length is 20mm with 5mm chip.
+> 
+> But... autofocus/autogain would really be good to have. Thus we need:
+> 
+> b) for each frame, we need exposure settings and focus position at
+> time frame was taken. Otherwise autofocus/autogain will be too
+> slow. At least focus position is going to be tricky -- either kernel
+> would have to compute focus position for us (not trivial) or we'd need
+> enough information to compute it in userspace.
+> 
+> There are more problems: hardware-accelerated preview is not trivial
+> to set up (and I'm unsure if it can be done in generic way). Still
+> photos application needs to switch resolutions between preview and
+> photo capture. Probably hardware-accelerated histograms are needed for
+> white balance, auto gain and auto focus, ....
+> 
+> It seems like there's a _lot_ of stuff to be done before we have
+> useful support for complex cameras...
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
-Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/omap4-droid4-xt894.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Taking still pictures using a hardware-accelerated preview is
+a sophisticated use case. I don't know any userspace application
+that does that. Ok, several allow taking snapshots, by simply
+storing the image of the current frame.
 
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -71,6 +71,11 @@
- 		regulator-always-on;
- 	};
- 
-+	/* HS USB Host PHY on PORT 1 */
-+	hsusb1_phy: hsusb1_phy {
-+		compatible = "usb-nop-xceiv";
-+	};
-+
- 	/* LCD regulator from sw5 source */
- 	lcd_regulator: regulator-lcd {
- 		compatible = "regulator-fixed";
-@@ -475,6 +480,15 @@
- 			       &omap4_pmx_core 0x17c>;
- };
- 
-+&usbhsehci {
-+	phys = <&hsusb1_phy>;
-+};
-+
-+&usbhshost {
-+	port1-mode = "ohci-phy-4pin-dpdm";
-+	port2-mode = "ehci-tll";
-+};
-+
- /* Internal UTMI+ PHY used for OTG, CPCAP ULPI PHY for detection and charger */
- &usb_otg_hs {
- 	interface-type = <1>;
--- 
-2.11.1
+> (And I'm not sure... when application such as skype is running, is
+> there some way to run autogain/autofocus/autowhitebalance? Is that
+> something we want to support?)
+
+Autofocus no. Autogain/Autowhite can be done via libv4l, provided that
+it can access the device's controls via /dev/video devnode. Other
+applications may be using some other similar algorithms.
+
+Ok, they don't use histograms provided by the SoC. So, they do it in
+software, with is slower. Still, it works fine when the light
+conditions don't change too fast.
+
+> > If we don't have answers to any of the above questions, we should not
+> > nack it.
+> > 
+> > That's said, that doesn't prevent merging a libv4l plugin if/when
+> > someone can find time/interest to develop it.  
+> 
+> I believe other question is: will not having same control on main
+> video device and subdevs be confusing? Does it actually help userspace
+> in any way? Yes, we can make controls accessible to old application,
+> but does it make them more useful? 
+
+Yes. As I said, libv4l (and some apps) have logic inside to adjust
+the image via bright, contrast and white balance controls, using the
+video devnode. They don't talk subdev API. So, if those controls
+aren't exported, they won't be able to provide a good quality image.
+
+> > > In addition, I suspect end-users of these complex devices don't really care
+> > > about a plugin: they want full control and won't typically use generic
+> > > applications. If they would need support for that, we'd have seen much more
+> > > interest. The main reason for having a plugin is to simplify testing and
+> > > if this is going to be used on cheap hobbyist devkits.  
+> > 
+> > What are the needs for a cheap hobbyist devkit owner? Do we currently
+> > satisfy those needs? I'd say that having a functional driver when
+> > compiled without the subdev API, that implements the ioctl's/controls  
+> 
+> Having different interface based on config options... is just
+> weird. What about poor people (like me) trying to develop complex
+> applications?
+
+Well, that could be done using other mechanisms, like a modprobe
+parameter or by switching the behaviour if a subdev interface is
+opened. I don't see much trouble on allowing accessing a control via
+both interfaces.
+
+> 
+> > [1] Yet, I might eventually do that for fun, an OMAP3 board with tvp5150
+> > just arrived here last week. It would be nice to have xawtv3 running on it :-)
+> > So, if I have a lot of spare time (with is very unlikely), I might eventually 
+> > do something for it to work.
+> >   
+> > > I know it took me a very long time before I had a working omap3.  
+> > 
+> > My first OMAP3 board with working V4L2 source just arrived last week
+> > :-)  
+> 
+> You can get Nokia N900 on aliexpress. If not, they are still available
+> between people :-)
+
+I have one. Unfortunately, I never had a chance to use it, as the display
+stopped working one week after I get it.
+
+Thanks,
+Mauro
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
