@@ -1,177 +1,231 @@
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for Linksys EA9500
-Date: Wed, 15 Mar 2017 14:19:04 -0700
-Message-ID: <2e4ed52f-4134-9b6a-18c9-7c1f28cd7038@broadcom.com>
-References: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com>
- <20170315185214.GF21021@lunn.ch>
- <CAChtp75xk3LN1-DPVvaHT5qEvrdoFFvXEk-daVCcJ=4rYu_vmw@mail.gmail.com>
- <7f5ddeba-6f79-9de5-2c67-a77e6bec0ef9@broadcom.com>
- <CAChtp75mzHkSg4rVh602vaMotqs6NtaPOD4383Gef8tVPO37FQ@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] iio: accel: adxl345_core: Introduce set_mode, drdy &
+ get_triple functions
+Date: Wed, 15 Mar 2017 21:41:22 +0000
+Message-ID: <2ec21062-9623-88a3-ba75-73122597fab9@kernel.org>
+References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
+ <1489403497-27849-3-git-send-email-eraretuya@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAChtp75mzHkSg4rVh602vaMotqs6NtaPOD4383Gef8tVPO37FQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Unune <npcomplete13@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, hauke@hauke-m.de, zajec5@gmail.com, bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489403497-27849-3-git-send-email-eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2017 01:18 PM, Vivek Unune wrote:
-> Thanks Florian.
+On 13/03/17 11:11, Eva Rachel Retuya wrote:
+> Move code that enables measurement/standby mode into its own function
+> and call that function when appropriate. Previously, we set the sensor
+> to measurement in probe and back to standby during remove. Change it
+> here to only enter measurement mode when request for data is initiated.
 > 
-> Let me try this out. First I'll try to figure out how to add a mdio node.
+> The DATA_READY bit is always set if the corresponding event occurs.
+> Introduce the drdy function that monitors the INT_SOURCE register of
+> this bit. This is done to ensure consistent readings.
 > 
-> Over the weekend I was trying enable DSA driver, but did not see DSA
-> under network. I'm using LEDE source with kernel 4.9. Nor did I see it
-> when I tried 'make kernel_menuconfig'
-
-(please don't top post on public mailing lists)
-
-You need to enable SWITCHDEV to have DSA. AFAIR SWITCHDEV may depend on
-EXPERT/EXPERIMENTAL as of 4.9 (or that was before).
-
+> Make use of drdy in read_raw and also refactor the read to perform an
+> all-axes read instead through get_triple. This function will come in
+> handy when buffered reading is introduced.
 > 
-> Thanks again.
+> Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+A few bits from me to add to Andy's review.
+> ---
+>  drivers/iio/accel/adxl345_core.c | 116 +++++++++++++++++++++++++++++----------
+>  1 file changed, 88 insertions(+), 28 deletions(-)
 > 
-> On Wed, Mar 15, 2017 at 3:49 PM, Florian Fainelli
-> <florian.fainelli@broadcom.com> wrote:
->> On 03/15/2017 12:34 PM, Vivek Unune wrote:
->>> Andrew,
->>>
->>> I'm not entirely sure. But here is what I observed.
->>>
->>> Boot loader sets up both the switches. And I can use all 8 ports of the
->>> router when I boot Lede. Only the internal swich is detected and
->>> configurable via swconfig tool
->>> Internal switch is connected to CPU via port 5 same as Netgear R8000.
->>> The other bit here is that I looked through the GPL source and gpio pin
->>> 10 is labeled as EA9500_RST2LANSW_GPIO10_PIN/ResetSwitch. So when I
->>> performed a robo reset of the pin and 5 (labeled 1 thru 5 on the unit)
->>> of the 8 physical ports stopped working (no packets).
->>>
->>> If the external switch were to be connect via dedicated ethernet
->>> interface it should have shown up during the probe. Is in't it?
->>
->> Not necessarily, and probably not with LEDE which would treat the
->> external 53125 as a dumb switch and not even see it. With a mainline
->> kernel and the B53 DSA driver you would be able to represent both
->> switches in Device Tree and describe how they are cascading from each other.
->>
->> The potential Device Tree changes could look like this (based on your
->> explanation, but I am not sure) for your platform, assuming the 53125 is
->> actually exposing the front panel ports and that we did introduce a
->> "mdio" node which would be required to expose the external BCM53125 switch.
->>
->>
->> /* There is no MDIO node, there should be one */
->> &mdio {
->>         status = "okay";
->>
->>         switch@30 {
->>                 #address-cells = <1>;
->>                 #size-cells = <0>;
->>                 reset-gpios = <&gpio 10>;
->>                 reset-names = "robo_reset";
->>
->>                 ports {
->>                         #address-cells = <1>;
->>                         #size-cells = <0>;
->>
->>                         port@0 {
->>                                 reg = <0>;
->>                                 label = "lan1";
->>                         };
->>
->>                         port@1 {
->>                                 reg = <1>;
->>                                 label = "lan2";
->>                         };
->>
->>                         port@2 {
->>                                 reg = <2>;
->>                                 label = "lan3";
->>                         };
->>
->>                         port@3 {
->>                                 reg = <3>;
->>                                 label = "lan1";
->>                         };
->>
->>                         port@4 {
->>                                 reg = <4>;
->>                                 label = "wan";
->>                         };
->>
->>                        port@5 {
->>                                 reg = <5>;
->>                                 label = "cpu";
->>                                 ethernet = <&sw0port8>;
->>                                 fixed-link {
->>                                         speed = <1000>;
->>                                         full-duplex;
->>                                 };
->>                         };
->>                 };
->>         };
->> };
->>
->> &srab {
->>         status = "okay";
->>
->>         ports {
->>                 #address-cells = <1>;
->>                 #size-cells = <0>;
->>
->>                 port@5 {
->>                         reg = <5>;
->>                         label = "cpu";
->>                         ethernet = <&gmac0>;
->>                         fixed-link {
->>                                 speed = <1000>;
->>                                 full-duplex;
->>                         };
->>                 };
->>
->>                 sw0port8: port@8 {
->>                         reg = <8>;
->>                         label = "extswitch";
->>
->>                         fixed-link {
->>                                 speed = <1000>;
->>                                 full-duplex;
->>                         };
->>                 };
->>         };
->> };
->>
->>>
->>> Thanks,
->>>
->>> Vivek
->>>
->>>
->>> On Wed, Mar 15, 2017 at 2:52 PM Andrew Lunn <andrew@lunn.ch
->>> <mailto:andrew@lunn.ch>> wrote:
->>>
->>>     Hi Vivek
->>>
->>>     > - It has two switches in order to support 8 lan ports. Internal
->>>     switch is
->>>     >   BCM53012. The external switch BCM53125 currently works as "dumb
->>>     switch"
->>>
->>>     Do you know how the second switch is connected? Is it cascaded off the
->>>     internal switch? Or does it have a dedicated Ethernet interface?
->>>
->>>     Thanks
->>>             Andrew
->>>
->>
->>
->> --
->> Florian
-
-
--- 
-Florian
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index 9ccb582..7eee31d 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -8,6 +8,7 @@
+>   * directory of this archive for more details.
+>   */
+>  
+> +#include <linux/delay.h>
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
+>  
+> @@ -17,6 +18,7 @@
+>  
+>  #define ADXL345_REG_DEVID		0x00
+>  #define ADXL345_REG_POWER_CTL		0x2D
+> +#define ADXL345_REG_INT_SOURCE		0x30
+>  #define ADXL345_REG_DATA_FORMAT		0x31
+>  #define ADXL345_REG_DATAX0		0x32
+>  #define ADXL345_REG_DATAY0		0x34
+> @@ -25,6 +27,10 @@
+>  #define ADXL345_POWER_CTL_MEASURE	BIT(3)
+>  #define ADXL345_POWER_CTL_STANDBY	0x00
+>  
+> +/* INT_ENABLE/INT_MAP/INT_SOURCE bits */
+> +#define ADXL345_INT_DATA_READY		BIT(7)
+> +#define ADXL345_INT_OVERRUN		0
+> +
+>  #define ADXL345_DATA_FORMAT_FULL_RES	BIT(3) /* Up to 13-bits resolution */
+>  #define ADXL345_DATA_FORMAT_2G		0
+>  #define ADXL345_DATA_FORMAT_4G		1
+> @@ -47,6 +53,58 @@ struct adxl345_data {
+>  	u8 data_range;
+>  };
+>  
+> +static int adxl345_set_mode(struct adxl345_data *data, u8 mode)
+> +{
+> +	struct device *dev = regmap_get_device(data->regmap);
+> +	int ret;
+> +
+> +	ret = regmap_write(data->regmap, ADXL345_REG_POWER_CTL, mode);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set power mode, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int adxl345_get_triple(struct adxl345_data *data, void *buf)
+> +{
+> +	struct device *dev = regmap_get_device(data->regmap);
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(data->regmap, ADXL345_REG_DATAX0, buf,
+> +			       sizeof(__le16) * 3);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to read the data registers, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int adxl345_drdy(struct adxl345_data *data)
+> +{
+> +	struct device *dev = regmap_get_device(data->regmap);
+> +	int tries = 5;
+> +	u32 regval;
+> +	int ret;
+> +
+> +	while (tries--) {
+> +		ret = regmap_read(data->regmap, ADXL345_REG_INT_SOURCE,
+> +				  &regval);
+> +		if (ret < 0)
+> +			return ret;
+> +		if ((regval & ADXL345_INT_DATA_READY) ==
+> +		    ADXL345_INT_DATA_READY)
+> +			return 0;
+> +
+> +		msleep(20);
+> +	}
+> +	dev_err(dev, "Data is not yet ready\n");
+> +
+Hmm. Does it definitely indicate a hardware failure?  If so fair enough with
+EIO. However, the message should perhaps say this.  Sounds like an EBUSY
+from that error message.
+> +	return -EIO;
+> +}
+> +
+>  #define ADXL345_CHANNEL(reg, axis) {					\
+>  	.type = IIO_ACCEL,						\
+>  	.modified = 1,							\
+> @@ -67,22 +125,37 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
+>  			    int *val, int *val2, long mask)
+>  {
+>  	struct adxl345_data *data = iio_priv(indio_dev);
+> -	__le16 regval;
+> +	s16 regval[3];
+>  	int ret;
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_RAW:
+> -		/*
+> -		 * Data is stored in adjacent registers:
+> -		 * ADXL345_REG_DATA(X0/Y0/Z0) contain the least significant byte
+> -		 * and ADXL345_REG_DATA(X0/Y0/Z0) + 1 the most significant byte
+> -		 */
+> -		ret = regmap_bulk_read(data->regmap, chan->address, &regval,
+> -				       sizeof(regval));
+> +		ret = adxl345_set_mode(data, ADXL345_POWER_CTL_MEASURE);
+> +		if (ret < 0)
+> +			return ret;
+> +		ret = adxl345_drdy(data);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret = adxl345_get_triple(data, &regval);
+>  		if (ret < 0)
+>  			return ret;
+>  
+> -		*val = sign_extend32(le16_to_cpu(regval), 12);
+This function should as Andy pointed out still be returning in
+cpu endianness.  So you can't just drop it like this.
+> +		switch (chan->address) {
+> +		case ADXL345_REG_DATAX0:
+> +			*val = regval[0];
+> +			break;
+> +		case ADXL345_REG_DATAY0:
+> +			*val = regval[1];
+> +			break;
+> +		case ADXL345_REG_DATAZ0:
+> +			*val = regval[2];
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
+> +
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		*val = 0;
+> @@ -126,9 +199,12 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  	data = iio_priv(indio_dev);
+>  	dev_set_drvdata(dev, indio_dev);
+>  	data->regmap = regmap;
+> +	/* Make sure sensor is in standby mode before configuring registers */
+> +	ret = adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
+> +	if (ret < 0)
+> +		return ret;
+Is this one specific to the buffered support?  If not, please break it out
+as a precursor patch.
+>  	/* Enable full-resolution mode */
+>  	data->data_range = ADXL345_DATA_FORMAT_FULL_RES;
+Should be seeing random white space changes in a patch doing other things.
+> -
+>  	ret = regmap_write(data->regmap, ADXL345_REG_DATA_FORMAT,
+>  			   data->data_range);
+>  	if (ret < 0) {
+> @@ -143,22 +219,7 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  	indio_dev->channels = adxl345_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(adxl345_channels);
+>  
+> -	/* Enable measurement mode */
+> -	ret = regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
+> -			   ADXL345_POWER_CTL_MEASURE);
+> -	if (ret < 0) {
+> -		dev_err(dev, "Failed to enable measurement mode: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	ret = iio_device_register(indio_dev);
+> -	if (ret < 0) {
+> -		dev_err(dev, "iio_device_register failed: %d\n", ret);
+> -		regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
+> -			     ADXL345_POWER_CTL_STANDBY);
+> -	}
+> -
+> -	return ret;
+> +	return iio_device_register(indio_dev);
+>  }
+>  EXPORT_SYMBOL_GPL(adxl345_core_probe);
+>  
+> @@ -169,8 +230,7 @@ int adxl345_core_remove(struct device *dev)
+>  
+>  	iio_device_unregister(indio_dev);
+>  
+> -	return regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
+> -			    ADXL345_POWER_CTL_STANDBY);
+> +	return adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
+>  }
+>  EXPORT_SYMBOL_GPL(adxl345_core_remove);
+>  
+> 
