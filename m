@@ -1,40 +1,78 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: phy: add DT bindings for usb2-phy grf
-Date: Wed, 15 Mar 2017 15:05:10 -0500
-Message-ID: <20170315200510.zn7edcftahuorzky@rob-hp-laptop>
-References: <1488763778-27499-1-git-send-email-daniel.meng@rock-chips.com>
- <1488763778-27499-3-git-send-email-daniel.meng@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 1/9] devicetree: power: Add battery.txt
+Date: Wed, 15 Mar 2017 15:10:18 -0500
+Message-ID: <CAL_Jsq+8Y=GtyjVZA-suZLH+ySDshaoU9qh96BF+PeUYK3FZxg@mail.gmail.com>
+References: <20170227071117.18934-1-liam@networkimprov.net>
+ <20170227071117.18934-2-liam@networkimprov.net> <20170302151449.j7i3ecpy2ipxu6tq@rob-hp-laptop>
+ <CAKvHMgR6eVTUp6je3D_YDUMAksWiHx6JnJc8cRHSHp6tj30OPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1488763778-27499-3-git-send-email-daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKvHMgR6eVTUp6je3D_YDUMAksWiHx6JnJc8cRHSHp6tj30OPA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Liam Breck <liam@networkimprov.net>
+Cc: Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Matt Ranostay <matt@ranostay.consulting>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 06, 2017 at 09:29:37AM +0800, Meng Dongyang wrote:
-> Adds the device tree bindings description for usb2-phy grf
-> of RK3328 platform.
-> 
-> Changes in v2:
->  - add usb2-phy grf specification
-> Chagnes in v3:
->  - remove the example of usb2-phy grf
-> 
-> Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/soc/rockchip/grf.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+On Thu, Mar 2, 2017 at 12:31 PM, Liam Breck <liam@networkimprov.net> wrote:
+> Hi Rob,
+>
+> On Thu, Mar 2, 2017 at 7:14 AM, Rob Herring <robh@kernel.org> wrote:
+>> On Sun, Feb 26, 2017 at 11:11:09PM -0800, Liam Breck wrote:
+>>> From: Liam Breck <kernel@networkimprov.net>
+>>>
+>>> Documentation of static battery characteristics that can be defined
+>>> for batteries which cannot self-identify. This information is required
+>>> by fuel-gauge and charger chips for proper handling of the battery.
+>>>
+>>> Cc: Rob Herring <robh@kernel.org>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+>>> Signed-off-by: Liam Breck <kernel@networkimprov.net>
+>>> ---
+>>>  .../devicetree/bindings/power/supply/battery.txt   | 42 ++++++++++++++++++++++
+>>>  1 file changed, 42 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> new file mode 100644
+>>> index 0000000..3d916bd
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> @@ -0,0 +1,42 @@
+>>> +Battery Characteristics
+>>> +
+>>> +Required Properties:
+>>> + - compatible: Must be "fixed-battery"
+>>
+>> Still not liking this name, but I don't have a better suggestion. Please
+>> describe here what is and isn't a "fixed battery".
+>
+> Sebastian...?
+>
+>>> +
+>>> +Optional Properties:
+>>> + - voltage-min-design-microvolt: drained battery voltage
+>>> + - energy-full-design-microwatt-hours: battery design energy
+>>> + - charge-full-design-microamp-hours: battery design capacity
+>>> +
+>>> +Future Properties must be named for the corresponding elements in
+>>> +enum power_supply_property, defined in include/linux/power_supply.h.
+>>
+>> Um, no. That's exactly not how DT bindings should be done.
+>
+> Power supply components surface stats in sysfs using the names in enum
+> power_supply_property. For example,
+> /sys/class/power_supply/.../voltage_min_design. Matching input (DT)
+> and output (sysfs) names is sensible. The above comment is already
+> attached to struct power_supply_battery_info, which is the initial
+> destination for the above DT properties.
+>
+> Shall I mention sysfs in the above comment?
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Absolutely not. Bindings should not reference Linux.
+
+While sometimes things can align, there is no guarantee that they
+will. DT is h/w description. sysfs is user configuration.
+
+Rob
