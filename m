@@ -1,104 +1,131 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v10 03/11] mux: minimal mux subsystem and gpio-based mux
- controller
-Date: Wed, 15 Mar 2017 23:16:22 +0100
-Message-ID: <43afcbb6-5e28-2399-95e2-10b568547c3b@axentia.se>
-References: <1489144205-17427-1-git-send-email-peda@axentia.se>
- <1489144205-17427-4-git-send-email-peda@axentia.se>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH v10 1/8] devicetree: power: Add battery.txt
+Date: Wed, 15 Mar 2017 15:18:17 -0700
+Message-ID: <CAKvHMgSF2rsaAaUqFw1qF+b2NA9CkABYKYOTd2p+imuPAHq9JA@mail.gmail.com>
+References: <20170315192653.26799-1-liam@networkimprov.net>
+ <20170315192653.26799-2-liam@networkimprov.net> <20170315220425.qeidvmanbsmq4wxk@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489144205-17427-4-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170315220425.qeidvmanbsmq4wxk@earth>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-03-10 12:09, Peter Rosin wrote:
-> Add a new minimalistic subsystem that handles multiplexer controllers.
-> When multiplexers are used in various places in the kernel, and the
-> same multiplexer controller can be used for several independent things,
-> there should be one place to implement support for said multiplexer
-> controller.
-> 
-> A single multiplexer controller can also be used to control several
-> parallel multiplexers, that are in turn used by different subsystems
-> in the kernel, leading to a need to coordinate multiplexer accesses.
-> The multiplexer subsystem handles this coordination.
-> 
-> This new mux controller subsystem initially comes with a single backend
-> driver that controls gpio based multiplexers. Even though not needed by
-> this initial driver, the mux controller subsystem is prepared to handle
-> chips with multiple (independent) mux controllers.
-> 
-> Reviewed-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Hey Sebastian, welcome back :-)
 
-I would like to mention a bugfix patch that I have added to the end of
-the series in response to feedback from Dan Carpenter. Can be found
-here: https://lkml.org/lkml/2017/3/14/700
+I've taken over work on this patchset from Matt.
 
-And I have also amended the below editorials to this patch.
+On Wed, Mar 15, 2017 at 3:04 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Hi Liam & Matt,
+>
+> Sorry for my absence in the discussion. I skipped the previous
+> iterations for now and start with this version.
+>
+> On Wed, Mar 15, 2017 at 12:26:46PM -0700, Liam Breck wrote:
+>> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>>
+>> Documentation of static battery characteristics that can be defined
+>> for batteries which cannot self-identify. This information is required
+>> by fuel-gauge and charger chips for proper handling of the battery.
+>>
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+>> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/power/supply/battery.txt   | 45 ++++++++++++++++++++++
+>>  1 file changed, 45 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> new file mode 100644
+>> index 0000000..0278617
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> @@ -0,0 +1,45 @@
+>> +Battery Characteristics
+>
+> Maybe add something like
+>
+> This device provides static battery information, that is usually
+> available in the EEPROM of a smart battery. It's supposed to be
+> used for batteries, which do not have their own EEPROM (or if its
+> unusable).
 
-Cheers,
-peda
+OK.
 
-diff --git a/include/linux/mux.h b/include/linux/mux.h
-index 7ef0864c8f38..febdde4246df 100644
---- a/include/linux/mux.h
-+++ b/include/linux/mux.h
-@@ -20,6 +20,10 @@ struct mux_chip;
- struct mux_control;
- struct platform_device;
+>> +Required Properties:
+>> + - compatible: Must be "fixed-battery"
 
-+/**
-+ * struct mux_control_ops -    Mux controller operations for a mux chip.
-+ * @set:                       Set the state of the given mux controller.
-+ */
- struct mux_control_ops {
-        int (*set)(struct mux_control *mux, int state);
- };
-@@ -29,7 +33,7 @@ struct mux_control_ops {
- #define MUX_IDLE_DISCONNECT (-2)
+Rob questioned the term "fixed". Shall we consider other terms --
+simple-battery, plain-battery...?
 
- /**
-- * struct mux_control - Represents a mux controller.
-+ * struct mux_control -        Represents a mux controller.
-  * @lock:              Protects the mux controller state.
-  * @chip:              The mux chip that is handling this mux controller.
-  * @states:            The number of mux controller states.
-@@ -50,7 +54,7 @@ struct mux_control {
- /**
-  * struct mux_chip -   Represents a chip holding mux controllers.
-  * @controllers:       Number of mux controllers handled by the chip.
-- * @mux:               Array of mux controllers that is handled.
-+ * @mux:               Array of mux controllers that are handled.
-  * @dev:               Device structure.
-  * @id:                        Used to identify the device internally.
-  * @ops:               Mux controller operations.
-@@ -176,7 +180,7 @@ void devm_mux_chip_free(struct device *dev, struct mux_chip *mux_chip);
-  * mux_control_deselect() if mux_control_select() fails.
-  *
-  * Return: 0 if the requested state was already active, or 1 it the
-- * mux-control state was changed to the requested state. Or a negavive
-+ * mux-control state was changed to the requested state. Or a negative
-  * errno on error.
-  *
-  * Note that the difference in return value of zero or one is of
-@@ -192,13 +196,13 @@ int mux_control_select(struct mux_control *mux, int state);
-  *
-  * Return: 0 on success and a negative errno on error. An error can only
-  * occur if the mux has an idle state. Note that even if an error occurs, the
-- * mux-control is unlocked for others to access.
-+ * mux-control is unlocked and is thus free for the next access.
-  */
- int mux_control_deselect(struct mux_control *mux);
+>> +Optional Properties:
+>> + - voltage-min-design-microvolt: drained battery voltage
+>> + - energy-full-design-microwatt-hours: battery design energy
+>> + - charge-full-design-microamp-hours: battery design capacity
+>
+> Looks fine to me.
+>
+>> +Because drivers surface properties in sysfs using names derived
+>> +from enum power_supply_property, e.g.
+>> +/sys/class/power_supply/<device>/charge_full_design, our
+>> +battery properties must be named for the corresponding elements in
+>> +enum power_supply_property, defined in include/linux/power_supply.h.
+>
+> This is Linux/implementation specific and does not belong
+> into a DT binding document.
 
- /**
-  * mux_control_get_index() - Get the index of the given mux controller
-- * @mux: The mux-control to the the index for.
-+ * @mux: The mux-control to get the index for.
-  *
-  * Return: The index of the mux controller within the mux chip the mux
-  * controller is a part of.
+I just wrote on a thread for an earlier version of this patch:
+
+"Sebastian proposed DT:battery specifically to be consumed by
+power_supply_core. Allowing names in DT:battery and
+power_supply_property to diverge would cause confusion and wasted
+time, for no particular benefit. As there is no rationale to
+reconsider the names of these fields for DT:battery, let's write that
+into the docs."
+
+>> +Batteries must be referenced by chargers and/or fuel-gauges
+>> +using a phandle. The phandle's property should be named
+>> +"monitored-battery".
+>
+> This looks fine.
+>
+>> +Driver code should call power_supply_get_battery_info() to obtain
+>> +battery properties via monitored-battery. For details see:
+>> +  drivers/power/supply/power_supply_core.c
+>> +  drivers/power/supply/bq27xxx_battery.c
+>
+> This is also Linux/implementation specific and should be dropped.
+
+We ought to mention how drivers are expected to consume DT:battery.
+
+>> +Example:
+>> +
+>> +     bat: battery {
+>> +             compatible = "fixed-battery";
+>> +             voltage-min-design-microvolt = <3200000>;
+>> +             energy-full-design-microwatt-hours = <5290000>;
+>> +             charge-full-design-microamp-hours = <1430000>;
+>> +     };
+>> +
+>> +     charger: charger@11 {
+>> +             ....
+>> +             monitored-battery = <&bat>;
+>> +             ...
+>> +     };
+>> +
+>> +     fuel_gauge: fuel-gauge@22 {
+>> +             ....
+>> +             monitored-battery = <&bat>;
+>> +             ...
+>> +     };
+>> --
+>> 2.9.3
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
