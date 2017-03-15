@@ -1,117 +1,85 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: iio: introduce trigger providers,
- consumers
-Date: Wed, 15 Mar 2017 14:25:21 -0500
-Message-ID: <20170315192521.l7mb3egh4hbxdpx6@rob-hp-laptop>
-References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
- <1488300679-3259-2-git-send-email-fabrice.gasnier@st.com>
- <20170303062126.5bewa5u6o7wu7sy4@rob-hp-laptop>
- <948e5b96-7a8f-406d-6d03-d129d1b2ce54@kernel.org>
- <12a6a2f8-9ff6-a4f0-c9a2-c7de037019ef@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <12a6a2f8-9ff6-a4f0-c9a2-c7de037019ef-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: [PATCH v10 1/8] devicetree: power: Add battery.txt
+Date: Wed, 15 Mar 2017 12:26:46 -0700
+Message-ID: <20170315192653.26799-2-liam@networkimprov.net>
+References: <20170315192653.26799-1-liam@networkimprov.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170315192653.26799-1-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 05, 2017 at 12:13:36PM +0000, Jonathan Cameron wrote:
-> On 05/03/17 11:43, Jonathan Cameron wrote:
-> > On 03/03/17 06:21, Rob Herring wrote:
-> >> On Tue, Feb 28, 2017 at 05:51:14PM +0100, Fabrice Gasnier wrote:
-> >>> Document iio provider and consumer bindings.
-> >>>
-> >>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> >>> ---
-> >>>  .../devicetree/bindings/iio/iio-bindings.txt       | 38 ++++++++++++++++++++++
-> >>>  1 file changed, 38 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >>> index 68d6f8c..01765e9 100644
-> >>> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >>> @@ -95,3 +95,41 @@ vdd channel is connected to output 0 of the &ref device.
-> >>>  		io-channels = <&adc 10>, <&adc 11>;
-> >>>  		io-channel-names = "adc1", "adc2";
-> >>>  	};
-> >>> +
-> >>> +==IIO trigger providers==
-> >>> +Sources of IIO triggers can be represented by any node in the device
-> >>> +tree. Those nodes are designated as IIO trigger providers. IIO trigger
-> >>> +consumer uses a phandle and an IIO trigger specifier to connect to an
-> >>> +IIO trigger provider.
-> >>> +An IIO trigger specifier is an array of one or more cells identifying
-> >>> +the IIO trigger output on a device. The length of an IIO trigger
-> >>> +specifier is defined by the value of a #io-trigger-cells property in
-> >>> +the IIO trigger provider node.
-> >>> +
-> >>> +Required properties:
-> >>> +#io-trigger-cells:
-> >>> +		Number of cells in an IIO trigger specifier; Typically
-> >>> +		0 for nodes with a simple IIO trigger output.
-> >>> +
-> >>> +Example:
-> >>> +	trig0: interrupt-trigger0 {
-> >>> +		#io-trigger-cells = <0>;
-> >>> +		compatible = "interrupt-trigger";
-> >>> +		interrupts = <11 0>;
-> >>> +		interrupt-parent = <&gpioa>;
-> >>> +	}
-> >>> +
-> >>> +==IIO trigger consumers==
-> >>> +Required properties:
-> >>> +- io-triggers:	List of phandle representing the IIO trigger specifier.
-> >>> +
-> >>> +Optional properties:
-> >>> +- io-trigger-names :
-> >>> +		List of IIO trigger name strings that matches elements
-> >>> +		in 'io-triggers' list property.
-> >>> +
-> >>> +Example:
-> >>> +	some_trigger_consumer {
-> >>> +		io-triggers = <&trig0>;
-> >>> +		io-trigger-names = "mytrig";
-> >>> +	}
-> >>
-> >> I have some reservations about this. We could just as easily add the 
-> >> interrupt directly to the consumer node and use "trigger" for a standard 
-> >> interrupt name. So the question is whether this extra level of 
-> >> indirection is needed? 
-> > 
-> > First thing to note here, is that Fabrice's use of the generic interrupt
-> > trigger is an extremely 'unusual' one! Normal use case is that we have
-> > a random gpio pin providing interrupts to driver triggering on random
-> > devices - there need be no association between the two whatsoever.
-> > So what we are doing here is 'allowing' an interrupt to provide a trigger.
-> > It's not necessarily the one going to be used by any particular device
-> > driver.  The decision of which trigger to use is definitely one for
-> > userspace, not something that should be configured in to the device tree.
-> > 
-> > For this particular case you could in theory just do it by using an interrupt
-> > as you describe.  Ultimately though we should be able to play more complex
-> > games with this device and having it able to handle any trigger - which 
-> > includes those not using the direct hardware route.  It'll be up to the
-> > driver to figure out when it can use the fast method and when it can't.
-> > 
-> > Conversely, even when we are using this hardware route to drive the
-> > triggering it should be possible to hang off a device to be triggered
-> > by the interrupt via the kernel rather than directly. 
-> > 
-> > So from a device tree point of view we are just describing the fact that
-> > there is a pin, which may be used to trigger something.  What that something
-> > is, is a question for userspace not the device tree.
-> > 
-> Ah, I'm half asleep this morning.  Clearly there is a more general follow
-> up question.  If we are arguing these are generic, why are we setting
-> up the mapping in device tree?
-> 
-> My gut feeling is we shouldn't be.  So I think we need the first chunk
-> above but the latter part should be a job for userspace not the devicetree.
+From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 
-So you mean keep the provider side, but get rid of the consumer? That 
-makes sense to me.
+Documentation of static battery characteristics that can be defined
+for batteries which cannot self-identify. This information is required
+by fuel-gauge and charger chips for proper handling of the battery.
 
-Rob
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+---
+ .../devicetree/bindings/power/supply/battery.txt   | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
+
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+new file mode 100644
+index 0000000..0278617
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -0,0 +1,45 @@
++Battery Characteristics
++
++Required Properties:
++ - compatible: Must be "fixed-battery"
++
++Optional Properties:
++ - voltage-min-design-microvolt: drained battery voltage
++ - energy-full-design-microwatt-hours: battery design energy
++ - charge-full-design-microamp-hours: battery design capacity
++
++Because drivers surface properties in sysfs using names derived
++from enum power_supply_property, e.g.
++/sys/class/power_supply/<device>/charge_full_design, our
++battery properties must be named for the corresponding elements in
++enum power_supply_property, defined in include/linux/power_supply.h.
++
++Batteries must be referenced by chargers and/or fuel-gauges
++using a phandle. The phandle's property should be named
++"monitored-battery".
++
++Driver code should call power_supply_get_battery_info() to obtain
++battery properties via monitored-battery. For details see:
++  drivers/power/supply/power_supply_core.c
++  drivers/power/supply/bq27xxx_battery.c
++
++Example:
++
++	bat: battery {
++		compatible = "fixed-battery";
++		voltage-min-design-microvolt = <3200000>;
++		energy-full-design-microwatt-hours = <5290000>;
++		charge-full-design-microamp-hours = <1430000>;
++	};
++
++	charger: charger@11 {
++		....
++		monitored-battery = <&bat>;
++		...
++	};
++
++	fuel_gauge: fuel-gauge@22 {
++		....
++		monitored-battery = <&bat>;
++		...
++	};
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
