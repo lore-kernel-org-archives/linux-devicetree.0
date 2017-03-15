@@ -1,91 +1,49 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] regulator: tps65132: add device-tree binding
-Date: Wed, 15 Mar 2017 12:05:23 -0500
-Message-ID: <20170315170523.rkwbscfh37huopxj@rob-hp-laptop>
-References: <1488818260-25882-1-git-send-email-vreddytalla@nvidia.com>
+Subject: Re: [PATCH 0/3] ASoC: add dio2125 amplifier support
+Date: Wed, 15 Mar 2017 12:07:50 -0500
+Message-ID: <20170315170750.pw3552bwc6fwwpwg@rob-hp-laptop>
+References: <20170306174451.24406-1-jbrunet@baylibre.com>
+ <1488903977.28627.4.camel@baylibre.com>
+ <20170308100020.dop5pno3m2sj6fmv@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1488818260-25882-1-git-send-email-vreddytalla@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, ldewangan@nvidia.com
+In-Reply-To: <20170308100020.dop5pno3m2sj6fmv@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 06, 2017 at 10:07:40PM +0530, Venkat Reddy Talla wrote:
-> Adding tps65132 regulator devicetree binding documentation
+On Wed, Mar 08, 2017 at 11:00:20AM +0100, Mark Brown wrote:
+> On Tue, Mar 07, 2017 at 05:26:17PM +0100, Jerome Brunet wrote:
+> > Hi Mark,
 > 
-> Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
-> ---
->  .../bindings/regulator/tps65132-regulator.txt      | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
+> Please don't top post, reply in line with needed context.  This allows
+> readers to readily follow the flow of conversation and understand what
+> you are talking about and also helps ensure that everything in the
+> discussion is being addressed.
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
-> new file mode 100644
-> index 0000000..1ef6ede
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
-> @@ -0,0 +1,46 @@
-> +TPS65132 regulators
-> +
-> +Required properties:
-> +- compatible: "ti,tps65132"
-> +- reg: I2C slave address
-> +
-> +Optional Subnode:
-> +Device supports two regulators OUTP and OUTN. A sub node within the
-> +   device node descrbe the properties of these regulators. The sub-node
-> +   names must be as follows:
-> +	-For regulator outp, the sub node name should be "outp".
-> +	-For regulator outn, the sub node name should be "outn".
-> +
-> +-ti,enable-gpio: Regulators are controlled by the input pins. If
-> +   it is connected to GPIO through host system then provide the
-> +   gpio number as per gpio.txt.
-
--gpios instead. Also, need to state the active state.
-
-> +-ti,disable-active-discharge: Boolean, presence of this property
-> +   will disable active discharge on the regulator output.
-> +-ti,active-discharge-gpio: Some configurations use delay mechanisms
-
--gpios and active state
-
-> +  on the enable pin, to keep the regulator enabled for some time after
-> +  the enable signal goes low. This GPIO is used to actively discharge
-> +  the delay mechanism. Requires specification of ti,active-discharge-time
-> +-ti,active-discharges-time: how long the active discharge gpio should be
-> +  asserted for during active discharge, in microseconds.
-
-unit suffix.
-
-> +
-> +Each regulator is defined using the standard binding for regulators.
-> +
-> +Example:
-> +
-> +	tps65132@3e {
-> +		compatible = "ti,tps65132";
-
-reg?
-
-> +
-> +		outp {
-> +			regulator-name = "outp";
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +			ti,enable-gpio = <&gpio 23 0>;
-> +		};
-> +
-> +		outn {
-> +			regulator-name = "outn";
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +			ti,enable-gpio = <&gpio 40 0>;
-> +		};
-> +	};
-> -- 
-> 2.1.4
+> > In this series, you applied patch 2 and 3 but not patch 1.
+> > (so the dioo prefix is used but not documented)
 > 
+> > Is it on purpose ?
+> > The patch does not have the "ASoC" prefix, this maybe why it was
+> > missed. Since, the file does no belong to alsa, I wasn't sure whether
+> > to put the prefix or not.
+> 
+> This is a generic DT patch, not part of the bindings, so I'd expect the
+> DT maintainers to take it.
+
+I usually don't if it's part of a series, but I have applied it.
+
+Rob
