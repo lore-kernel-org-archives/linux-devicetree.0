@@ -1,16 +1,20 @@
-From: Ziji Hu <huziji@marvell.com>
-Subject: Re: [PATCH v6 03/14] mmc: core: Add mmc-card dt sub-node parse in
- core layer
-Date: Wed, 15 Mar 2017 21:46:07 +0800
-Message-ID: <f6a64290-47fb-b9c7-384f-ee87c97ce399@marvell.com>
-References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
- <34e51d32c82b57571e061e80df3bbaed731db554.1487091464.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFoqxMCSe-2bt2dz1AM_2X7dtVe4w6e7+oAQ==HO_=XKQw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/4] pinctrl: samsung: Fix the width of PINCFG_TYPE_DRV
+ bitfields for Exynos5433
+Date: Wed, 15 Mar 2017 14:52:06 +0100
+Message-ID: <CACRpkdaCzhShH2O2yZmyVB2LfqqXHXjbm9d=Jj0vPa5F2hx87A@mail.gmail.com>
+References: <CGME20161230041426epcas1p1f827d3cee8b607d81e9921b412ddf301@epcas1p1.samsung.com>
+ <20161230041421.24448-1-andi.shyti@samsung.com>
+ <20161230041421.24448-2-andi.shyti@samsung.com>
+ <CACRpkdbR3x14h38Gg7qpeWnswwD9qsS0zDUrrXCEJH-AdEB+cQ@mail.gmail.com>
+ <58AF7CCB.5070303@samsung.com>
+ <CACRpkda0-k7Vo9Y6yNtLNXu-gGnJW9y83t6W9p032KWjHYdMiw@mail.gmail.com>
+ <CAJKOXPd1pRN47Ss5qTHUVAdPwxKqE5vGGevG1OhVH0uSZnotKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFoqxMCSe-2bt2dz1AM_2X7dtVe4w6e7+oAQ==HO_=XKQw@mail.gmail.com>
+In-Reply-To: <CAJKOXPd1pRN47Ss5qTHUVAdPwxKqE5vGGevG1OhVH0uSZnotKA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,125 +24,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas
+To: Krzysztof Kozlowski <krzk@kernel.org>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Andi Shyti <andi@etezian.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Andi Shyti <andi.shyti@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, stable <stable@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
-
-On 2017/3/15 20:43, Ulf Hansson wrote:
-> On 14 February 2017 at 18:01, Gregory CLEMENT
-> <gregory.clement@free-electrons.com> wrote:
->> From: Hu Ziji <huziji@marvell.com>
->>
->> Some vendor host, like Xenon, can support multiple types.
->> In dts, use mmc-card dt sub-node to indicate eMMC is in use.
->>
->> Add a generic mmc-card parse function in mmc core layer.
->> If mmc-card sub-node is detected, set eMMC common caps, such as
->> MMC_CAP_NONREMOVABLE, MMC_CAP2_NO_SD and MMC_CAP2_NO_SDIO.
->>
->> Since it is likely that struct mmc_card is not allocated yet when
->> this mmc-card parse function is called, it will return true if
->> mmc-card sub-node is detected. Otherwise, return false.
->> It can help vendor host determine if the card type is eMMC.
->>
-<snip>
->> +bool mmc_of_parse_mmc_card(struct mmc_host *host)
->> +{
->> +       struct device_node *np;
->> +       bool ret = false;
->> +
->> +       np = mmc_of_find_child_device(host, 0);
-> 
-> There are already some places in the mmc core where child nodes are
-> being parsed. You may have a look for mmc_of_find_child_device() and
-> find the callers of it.
-> 
-> Additionally, we need a generic method of how to describe in DT, when
-> an mmc host controller has more than one mmc slot. This will also be
-> done using child nodes.
-> 
-
-	I'd like to confirm if you require a universal child node
-	parsing function to deal with all the child node use cases.
-	It might be a little difficult to us.
-
-> So, before starting hacking on this, it seems like we need some
-> consolidation of the code. In principle, I would like to move the APIs
-> for parsing of the child nodes into host.c, along with existing
-> mmc_of_parse() function.
-> 
-
-	I guess that your requirement is like:
-	int mmc_of_pars(struct mmc_host *host)
-	{
-
-		...
-
-		np = mmc_of_find_child_device(host, 0);
-		if (np && of_device_is_compatible(np, "mmc-card")) {
-			...
-		}
-
-		...
-
-	}
-	Am I correct?
-
-	Actually, I previously tried this implementation.
-	But I found that it is difficult to return eMMC card type information
-	to our vendor driver. Our Xenon driver expects to know if the device
-	is eMMC card through this parse.
-
->> +       if (np && of_device_is_compatible(np, "mmc-card")) {
->> +               /* mmc-card sub-node indicates eMMC card is in use. */
->> +               host->caps |= MMC_CAP_NONREMOVABLE;
->> +               host->caps2 |= MMC_CAP2_NO_SDIO | MMC_CAP2_NO_SD;
->> +               ret = true;
->> +       }
->> +
-> 
-> So instead of providing a new mmc OF parse API, let's make
-> mmc_of_parse() call another internal function which deals with child
-> node parsing.
-> 
->> +       of_node_put(np);
->> +       return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(mmc_of_parse_mmc_card);
->> +
->> +/*
->>   * Starting point for MMC card init.
->>   */
->>  int mmc_attach_mmc(struct mmc_host *host)
->> diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
->> index e33cc748dcfe..1b27323f3b6e 100644
->> --- a/include/linux/mmc/core.h
->> +++ b/include/linux/mmc/core.h
->> @@ -234,4 +234,6 @@ struct device_node;
->>  extern u32 mmc_vddrange_to_ocrmask(int vdd_min, int vdd_max);
->>  extern int mmc_of_parse_voltage(struct device_node *np, u32 *mask);
->>
->> +extern bool mmc_of_parse_mmc_card(struct mmc_host *host);
->> +
->>  #endif /* LINUX_MMC_CORE_H */
->> --
->> git-series 0.9.1
-> 
-> If you didn't quite understand my comments, then please tell me. Then
-> I can help out cooking some patches for you.
-
-	Thanks a lot. Actually I'm not sure if our implementation to detect
-	eMMC card type can meet your requirement of child node parsing.
-	Please help provide me some examples or patches.
-
-	Thank you.
-
-Best regards,
-Hu Ziji
-
-> 
-> Kind regards
-> Uffe
-> 
+T24gVHVlLCBNYXIgMTQsIDIwMTcgYXQgMzoyNyBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6
+a0BrZXJuZWwub3JnPiB3cm90ZToKPiBPbiBUdWUsIE1hciAxNCwgMjAxNyBhdCAzOjQ3IFBNLCBM
+aW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+PiBPbiBGcmks
+IEZlYiAyNCwgMjAxNyBhdCAxOjIyIEFNLCBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5n
+LmNvbT4gd3JvdGU6Cj4+PiBPbiAyMDE264WEIDEy7JuUIDMw7J28IDIyOjI4LCBMaW51cyBXYWxs
+ZWlqIHdyb3RlOgo+Pj4+IE9uIEZyaSwgRGVjIDMwLCAyMDE2IGF0IDU6MTQgQU0sIEFuZGkgU2h5
+dGkgPGFuZGkuc2h5dGlAc2Ftc3VuZy5jb20+IHdyb3RlOgo+PiBQcm9iYWJseS4gU2VuZCBhIHBh
+dGNoIGZpeGluZyBpdCB1cCBzbyBJIGNhbiBhcHBseSBpdC4KPj4KPj4gVGhlcmUgYXJlIG5vdyBz
+b21ldGhpbmcgbGlrZSA1IGRpZmZlcmVudCBwZW9wbGUgc3VibWl0dGluZyBTYW1zdW5nIHBpbmN0
+cmwKPj4gcGF0Y2hlcyB3aXRob3V0IGNvb3JkaW5hdGlvbiBzbyB0aGlzIHdpbGwgc3RhcnQgdG8g
+aGFwcGVuIGEgbG90IGlmIHlvdSBrZWVwCj4+IHVwIHRoaXMgZGV2ZWxvcG1lbnQgcGFjZS4KPj4K
+Pj4gQXMgSSBqdXN0IHdyb3RlIGluIGFub3RoZXIgbWFpbDogSSB3YW50IHNvbWVvbmUgdG8gc3Rl
+cCB1cCBhbmQgY29sbGVjdAo+PiBTYW1zdW5nIHBhdGNoZXMgYW5kIHNlbmQgdGhlbSB0byBtZSB1
+c2luZyBhIHB1bGwgcmVxdWVzdC4KPgo+IEkgdGhpbmsgd2UgY2FuIGhhbmRsZSBpdCBhcyB0aGVy
+ZSBhcmUgdGhyZWUgb2YgdXMuCgpJIGp1c3QgdGhpcyB3ZWVrIHN0YXJ0ZWQgdG8gZ2V0IHBhdGNo
+ZXMgZnJvbSBDaGFybGVzIEtlZXBheCwgYW5kIEkKdW5kZXJzdGFuZCB0aGF0IFdvbGZzb24gTWlj
+cm8gaGFzIGEgYnVuY2ggb2YgU2Ftc3VuZyBwbGF0Zm9ybQp3b3JrIGdvaW5nIG9uLgoKU28gbm93
+IGl0IGlzIGdldHRpbmcgYSBiaXQgbXVjaC4KCj4+IFNhbXN1bmcgcGVvcGxlIGFsc28gbmVlZCB0
+byBzdGFydCByZXZpZXdpbmcgZWFjaCBvdGhlcidzIHBhdGNoZXMKPj4gbW9yZSBJIGd1ZXNzLCBi
+dXQgbWFpbmx5IEkgbmVlZCBoZWxwIHdpdGggaW50ZWdyYXRpb24uCj4KPiBNb3JlIG9yIGxlc3Mg
+cmVjZW50bHkgd2UgZG8gdGhlIHJldmlld3MuIFN1cmUgd2UgY2FuIGZvY3VzIG1vcmUuLi4gYW5k
+Cj4gYWN0dWFsbHkgaGF2aW5nIGFuIGVudHJ5IGdhdGUgZm9yIHBhdGNoZXMgd291bGQgZW5zdXJl
+IGF0IGxlYXN0IG9uZQo+IG1vcmUgcmV2aWV3IGZyb20gdGhlIGFwcGx5aW5nIHBlcnNvbi4KCklu
+dGVyZXN0ZWQgaW4gdGhlIGpvYj8gOykKCkkgZ290IHB1bGwgcmVxdWVzdHMgZnJvbSB5b3UgYmVm
+b3JlIHNvIEkga25vdyB5b3UgYXJlIGZhbWlsaWFyCndpdGggdGhlIHByb2Nlc3MuCgpJIHdvdWxk
+IHZlcnkgbXVjaCBhcHByZWNpYXRlIGl0IGlmIGFsbCBTYW1zdW5nIHBpbiBjb250cm9sIHBhdGNo
+ZXMKd2VyZSBxdWV1ZWQgYnkgeW91IGFuZCBzZW50IHRvIG1lIHdpdGggcHVsbCByZXF1ZXN0cyBi
+YXNlZCBvbiBteQoiZGV2ZWwiIG9yICJmaXhlcyIgYnJhbmNoLiBJZiB0aGVyZSBpcyBnb2luZyB0
+byBiZSBhIGxvdCBvZiBpdCBhbnl3YXlzLgoKTWF5YmUgbGFzdCBtZXJnZSB3aW5kb3cgd2FzIGEg
+Yml0IHNwZWNpYWwgc2luY2UgTWFyZWsgZGlkIGFsbCB0aGlzCmdydW50IHdvcmsgb2Ygc3dpdGNo
+aW5nIFM1UCAmIGZyaWVuZHMgb3ZlciB0byBwaW4gY29udHJvbCwgaW4gdGhhdApjYXNlIGl0IGlz
+IG5vdCBzdWNoIGEgYmlnIGlzc3VlLgoKWW91cnMsCkxpbnVzIFdhbGxlaWoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
