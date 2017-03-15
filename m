@@ -1,102 +1,38 @@
-From: Ziji Hu <huziji@marvell.com>
-Subject: Re: [PATCH v6 08/14] mmc: sdhci-xenon: Add Marvell Xenon SDHC core
- functionality
-Date: Wed, 15 Mar 2017 21:58:43 +0800
-Message-ID: <10855817-e693-e007-9499-c4e97936fadb@marvell.com>
-References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
- <cb885ae19e7c467908cdaa1f1cc8d95a7217d663.1487091464.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFpH+RGAZGoVCuCOKJ2iEa+Y=cNNcM-uKhkYaTpmogXCKA@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 11/16] of: No need to include linux/property.h,
+ linux/fwnode.h is sufficient
+Date: Wed, 15 Mar 2017 15:58:56 +0200
+Message-ID: <20170315135856.GE10701@valkosipuli.retiisi.org.uk>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1488809970-25568-12-git-send-email-sakari.ailus@linux.intel.com>
+ <5243740.SuWZqUpGfj@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFpH+RGAZGoVCuCOKJ2iEa+Y=cNNcM-uKhkYaTpmogXCKA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5243740.SuWZqUpGfj@aspire.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+On Mon, Mar 13, 2017 at 10:46:32PM +0100, Rafael J. Wysocki wrote:
+> On Monday, March 06, 2017 04:19:25 PM Sakari Ailus wrote:
+> > of.h requires a definition of struct fwnode_handle, and for that it
+> > includes linux/property.h. struct fwnode_handle, however, is defined in
+> > linux/fwnode.h. Include linux/fwnode.h directly.
+> > 
+> > A number of users were however depending on linux/property.h, thus fix
+> > them by including that header directly as well.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> 
+> How exactly is this related to the rest of the series?  Do any other patches in
+> the series depend on it?
 
-On 2017/3/15 21:11, Ulf Hansson wrote:
-> On 14 February 2017 at 18:01, Gregory CLEMENT
-> <gregory.clement@free-electrons.com> wrote:
->> From: Hu Ziji <huziji@marvell.com>
-<snip>
->> +config MMC_SDHCI_XENON
->> +       tristate "Marvell Xenon eMMC/SD/SDIO SDHCI driver"
->> +       depends on MMC_SDHCI_PLTFM
->> +       help
->> +         This selects Marvell Xenon eMMC/SD/SDIO SDHCI.
->> +         If you have a machine with integrated Marvell Xenon SDHC IP,
-> 
-> /s/SDHC/SDHCI
-> 
+It did; keeping dev_fwnode() in property.c instead of moving it to the
+header removes the need for the patch. I'll drop it.
 
-	Sorry. I don't get your point.
-	Could you please give more detailed comments?
-
->> +         say Y or M here.
->> +         If unsure, say N.
->> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
->> index ccc9c4cba154..b0a2ab4b256e 100644
->> --- a/drivers/mmc/host/Makefile
->> +++ b/drivers/mmc/host/Makefile
->> @@ -82,3 +82,6 @@ obj-$(CONFIG_MMC_SDHCI_BRCMSTB)               += sdhci-brcmstb.o
->>  ifeq ($(CONFIG_CB710_DEBUG),y)
->>         CFLAGS-cb710-mmc        += -DDEBUG
->>  endif
->> +
->> +obj-$(CONFIG_MMC_SDHCI_XENON)  += sdhci-xenon-driver.o
->> +sdhci-xenon-driver-y           += sdhci-xenon.o
-> 
-> Why not only this:
-> obj-$(CONFIG_MMC_SDHCI_XENON) += sdhci-xenon.o
-> 
-
-	Yes. Will try.
-
->> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
->> new file mode 100644
-<snip>
-> 
-> ff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
->> new file mode 100644
->> index 000000000000..69de711db9eb
->> --- /dev/null
->> +++ b/drivers/mmc/host/sdhci-xenon.h
-> 
-> You should probably put all this in the c-file instead. That is how
-> most other sdhci variants does it.
-> 
-
-	Unfortunately, we have some registers like XENON_SLOT_EMMC_CTRL
-	which are accessed by both sdhci-xenon.c and sdhci-xenon-phy.c
-
-> [...]
-> 
-> Overall this looks good to me, however I think Adrian needs to have a
-> quick look as well.
-> 
-> One additional very minor nitpick. Perhaps you can align on the
-> function names prefix, as those currently varies between "whatever",
-> "xenon_" and "sdhci_xenon_".
-> 
-	Sure. Will fix them as you request.
-
-	Thank you.
-
-Best regards,
-Hu Ziji
-
-> Kind regards
-> Uffe
-> 
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
