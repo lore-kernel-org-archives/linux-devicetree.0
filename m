@@ -1,50 +1,54 @@
-From: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/3] ARM64: dts: mediatek: configure some fixed mmc
- parameters
-Date: Wed, 15 Mar 2017 15:26:39 +0800
-Message-ID: <1489562800-27431-3-git-send-email-yong.mao@mediatek.com>
-References: <1489562800-27431-1-git-send-email-yong.mao@mediatek.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
+Date: Wed, 15 Mar 2017 13:32:05 +0530
+Message-ID: <CAALAos9CsqNGX6-fB6vOWhG_7M2CfGTD1gfp-iLcu39aR4oZzw@mail.gmail.com>
+References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com> <CAPcyv4hGGbhF-g8B__9=rsP+QwR6RBi=WqALLgABNb1M4D3rBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1489562800-27431-1-git-send-email-yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <CAPcyv4hGGbhF-g8B__9=rsP+QwR6RBi=WqALLgABNb1M4D3rBw@mail.gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>, Shaohua Li <shli@fb.>
 List-Id: devicetree@vger.kernel.org
 
-From: yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Tue, Mar 14, 2017 at 10:26 PM, Dan Williams <dan.j.williams@intel.com> wrote:
+> On Mon, Mar 6, 2017 at 1:43 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+>> The Broadcom SBA RAID is a stream-based device which provides
+>> RAID5/6 offload.
+>>
+>> It requires a SoC specific ring manager (such as Broadcom FlexRM
+>> ring manager) to provide ring-based programming interface. Due to
+>> this, the Broadcom SBA RAID driver (mailbox client) implements
+>> DMA device having one DMA channel using a set of mailbox channels
+>> provided by Broadcom SoC specific ring manager driver (mailbox
+>> controller).
+>>
+>> The Broadcom SBA RAID hardware requires PQ disk position instead
+>> of PQ disk coefficient. To address this, we have added raid_gflog
+>> table which will help driver to convert PQ disk coefficient to PQ
+>> disk position.
+>>
+>> This patchset is based on Linux-4.11-rc1 and depends on patchset
+>> "[PATCH v5 0/2] Broadcom FlexRM ring manager support"
+>>
+>> It is also available at sba-raid-v6 branch of
+>> https://github.com/Broadcom/arm64-linux.git
+>>
+> [..]
+>>
+>> Anup Patel (4):
+>>   lib/raid6: Add log-of-2 table for RAID6 HW requiring disk position
+>>   async_tx: Fix DMA_PREP_FENCE usage in do_async_gen_syndrome()
+>>   dmaengine: Add Broadcom SBA RAID driver
+>>   dt-bindings: Add DT bindings document for Broadcom SBA RAID driver
+>
+> For the dmaengine and async_tx changes:
+>
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+>
 
-configure some fixed mmc parameters
+Thanks Dan ...
 
-Signed-off-by: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts |    3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 0ecaad4..1c3634f 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -134,6 +134,9 @@
- 	bus-width = <8>;
- 	max-frequency = <50000000>;
- 	cap-mmc-highspeed;
-+	mediatek,hs200-cmd-int-delay=<26>;
-+	mediatek,hs400-cmd-int-delay=<14>;
-+	mediatek,hs400-cmd-resp-sel-rising;
- 	vmmc-supply = <&mt6397_vemc_3v3_reg>;
- 	vqmmc-supply = <&mt6397_vio18_reg>;
- 	non-removable;
--- 
-1.7.9.5
+Regards,
+Anup
