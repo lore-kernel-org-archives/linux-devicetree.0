@@ -1,50 +1,50 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC 1/2] clk: dt: binding for basic divider clock
-Date: Tue, 14 Mar 2017 18:07:10 -0700
-Message-ID: <20170315010710.GJ10239@codeaurora.org>
-References: <20170314202236.39910-1-code@mmayer.net>
- <20170314202236.39910-2-code@mmayer.net>
+From: Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] arm64: dts: updated sata node on ls1012a platform
+Date: Wed, 15 Mar 2017 01:52:06 +0000
+Message-ID: <DB6PR0402MB2837B81D461D89F09A8EC1C4F3270@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+References: <1489458574-5556-1-git-send-email-andy.tang@nxp.com>
+ <20170314081536.GO3618@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170314202236.39910-2-code@mmayer.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Markus Mayer <code@mmayer.net>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Linux Clock Mailing List <linux-clk@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170314081536.GO3618@dragon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/14, Markus Mayer wrote:
-> From: Mike Turquette <mturquette@linaro.org>
-> 
-> Devicetree binding for the basic clock divider, plus the setup function
-> to register the clock.  Based on the existing fixed-clock binding.
-> 
-> Tero Kristo contributed helpful bug fixes to this patch.
-> 
-> Signed-off-by: Mike Turquette <mturquette@linaro.org>
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
 
-These sorts of details should go into C code. Is there any
-difficulty in writing a driver to do so? So far we've avoided
-adding the generic divider, multiplier, mux, bindings because
-those usually need some register level details that we've been
-reluctant to add to DT.
 
-That's because if something is wrong with these register level
-details or we need to make some policy updates, e.g. favor this
-divider over another, we can't really do that with a DT update.
-So we really want to see DT nodes have some hardware specific
-compatible string, and also put the logic for the driver into the
-code so that it can be easily fixed and updated after the fact.
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Tuesday, March 14, 2017 4:16 PM
+> To: Andy Tang
+> Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> catalin.marinas-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Subject: Re: [PATCH] arm64: dts: updated sata node on ls1012a platform
+>=20
+> On Tue, Mar 14, 2017 at 10:29:34AM +0800, Yuantian Tang wrote:
+> > Updated sata node to add ecc register address and dma coherence
+> > property.
+> > Enable sata on ls1012a platforms as well.
+> >
+> > Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+>=20
+> Applied, thanks.
+>=20
+> A side note: we usually use present rather than past tense in patch subje=
+ct.
+>=20
+Point taken, thanks,
 
-The DTS file is there to tell us "I have a divider from company X
-here and it's connected to this and that" and the driver is there
-to do the work of driving that piece of hardware so it works
-properly.
+Regards,
+Yuantian
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
