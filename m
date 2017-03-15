@@ -1,54 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2 v3] dt-bindings: display: imx: entry for AUS mode
-Date: Wed, 15 Mar 2017 15:24:22 -0500
-Message-ID: <20170315202422.7agjocsvwxdi5ha2@rob-hp-laptop>
-References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
- <1488997376-1564-1-git-send-email-martin@kaiser.cx>
- <1488997376-1564-2-git-send-email-martin@kaiser.cx>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v3 1/2] dt-bindings: i2c: Add Mediatek MT2701 i2c
+ binding
+Date: Wed, 15 Mar 2017 15:26:27 -0500
+Message-ID: <20170315202627.nx7dkgjf3lsf2dp7@rob-hp-laptop>
+References: <1489029185-21447-1-git-send-email-jun.gao@mediatek.com>
+ <1489029185-21447-2-git-send-email-jun.gao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1488997376-1564-2-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1489029185-21447-2-git-send-email-jun.gao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jun Gao <jun.gao@mediatek.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 08, 2017 at 07:22:56PM +0100, Martin Kaiser wrote:
-> Allow setting the AUS mode for a display from the device tree.
-> Use an optional boolean property. AUS mode can be set only on imx21
-> and compatible chipsets.
+On Thu, Mar 09, 2017 at 11:13:04AM +0800, Jun Gao wrote:
+> From: Jun Gao <jun.gao@mediatek.com>
 > 
-> Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+> Add MT2701 i2c binding to i2c-mt6577.txt and there is no need to
+> modify i2c driver.
+> 
+> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
 > ---
-> v3:
->    use a boolean DT property instead of the register value
->    separate patches for DT binding and code changes
-> 
-> v2:
->    re-sending DT bindings and code changes as one patch
-> 
->  Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> index 7a5c0e2..cacae0e 100644
-> --- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> @@ -13,6 +13,8 @@ Required nodes:
->  	Additional, the display node has to define properties:
->  	- bits-per-pixel: Bits per pixel
->  	- fsl,pcr: LCDC PCR value
-> +	A display node may optionally define
-> +	- fsl,aus_mode: boolean to enable AUS mode (only for imx21)
+>  .../devicetree/bindings/i2c/i2c-mt6577.txt         |   11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 
-fsl,aus-mode
-
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
