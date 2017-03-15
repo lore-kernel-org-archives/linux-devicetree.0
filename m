@@ -1,47 +1,61 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 1/2] Documentation: DT: Add OV5647 bindings
-Date: Wed, 15 Mar 2017 11:58:25 -0500
-Message-ID: <CAL_Jsq+jYk+12UApckEeytzms3Rzdrq9DE35Jh6gaK8OY7AgrA@mail.gmail.com>
-References: <cover.1488798062.git.roliveir@synopsys.com> <e89902c0c99d0daf9ef821dd7a9c67e866b18a94.1488798062.git.roliveir@synopsys.com>
- <20170315164209.p24r7mpyijbxleja@rob-hp-laptop> <0e89fb01-ce6f-5d61-4da9-fc93c1805c34@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
+ properties
+Date: Wed, 15 Mar 2017 12:01:12 -0500
+Message-ID: <20170315170112.mnhgntbjreheavua@rob-hp-laptop>
+References: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0e89fb01-ce6f-5d61-4da9-fc93c1805c34-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 11:51 AM, Ramiro Oliveira
-<Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob
->
-> On 3/15/2017 4:42 PM, Rob Herring wrote:
->> On Mon, Mar 06, 2017 at 11:16:33AM +0000, Ramiro Oliveira wrote:
->>> Create device tree bindings documentation.
->>>
->>> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
->>>  1 file changed, 35 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>
->> There's no changelog here, so I can't tell if anything is changed, but I
->> acked v7. Please add acks when sending new versions.
->>
->
-> The changelog is in the cover letter, although I didn't specify which changes
-> where made in the driver and which were made in the Documentation.
->
-> The only change was removing the clock name since there was only one clock used.
->
-> Should I keep your ack?
-
-Yes.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBNYXIgMDYsIDIwMTcgYXQgMDU6MjU6NTZQTSArMDEwMCwgR2VlcnQgVXl0dGVyaG9l
+dmVuIHdyb3RlOgo+IERvY3VtZW50IHRoZSBvcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBkZXNjcmli
+aW5nIG1vZHVsZSByZXNldHMsIHRvCj4gc3VwcG9ydCByZXNldHRpbmcgZGlzcGxheSBjaGFubmVs
+cyBhbmQgTFZEUyBlbmNvZGVycyBvbiBSLUNhciBHZW4yIGFuZAo+IEdlbjMuCj4gCj4gU2lnbmVk
+LW9mZi1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4KPiAt
+LS0KPiBTZWUgIlt2MiwxLzRdIGR0LWJpbmRpbmdzOiBjbG9jazogcmVuZXNhczogY3BnLW1zc3I6
+IERvY3VtZW50IHJlc2V0IGNvbnRyb2wKPiBzdXBwb3J0IiAoaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC85NTM2NjI3LykgZm9yIHRoZSBmb3JtYXQgb2YKPiBhIHJlc2V0IHNwZWNp
+ZmllciBpbiB0aGUgUmVuZXNhcyBDUEcvTVNTUiBjYXNlLgo+IAo+IEUuZy4gInJlc2V0cyA9IDwm
+Y3BnIDMxMD47Igo+IAo+IHYyOgo+ICAgLSBzL3BoYW5kbGVzL3BoYW5kbGUvLgo+IC0tLQo+ICBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dCB8
+IDEwICsrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKykKPiAKPiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVu
+ZXNhcyxkdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
+ZW5lc2FzLGR1LnR4dAo+IGluZGV4IDFhMDJmMDk5YTBmZjBhM2EuLjNkYjQxOGM4MjcxOTNlODIg
+MTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cmVuZXNhcyxkdS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+IEBAIC0zNiw2ICszNiwxNiBAQCBSZXF1aXJlZCBQcm9w
+ZXJ0aWVzOgo+ICAgICAgICBXaGVuIHN1cHBsaWVkIHRoZXkgbXVzdCBiZSBuYW1lZCAiZGNsa2lu
+LngiIHdpdGggIngiIGJlaW5nIHRoZSBpbnB1dAo+ICAgICAgICBjbG9jayBudW1lcmljYWwgaW5k
+ZXguCj4gIAo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsgIC0gcmVzZXRzOiBBIGxpc3Qgb2Yg
+cGhhbmRsZSArIHJlc2V0LXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNoIGVudHJ5IGluCj4g
+KyAgICB0aGUgcmVzZXQtbmFtZXMgcHJvcGVydHkuCj4gKyAgLSByZXNldC1uYW1lczogTmFtZXMg
+b2YgdGhlIHJlc2V0cy4gVGhpcyBwcm9wZXJ0eSBpcyBtb2RlbC1kZXBlbmRlbnQuCj4gKyAgICAt
+IFI4QTc3OVswMTIzNDU2XSB1c2Ugb25lIHJlc2V0IGZvciBhIGdyb3VwIG9mIG9uZSBvciBtb3Jl
+IHN1Y2Nlc3NpdmUKPiArICAgICAgY2hhbm5lbHMsIGFuZCBvbmUgcmVzZXQgcGVyIExWRFMgZW5j
+b2RlciAoaWYgYXZhaWxhYmxlKS4gVGhlIHJlc2V0cwo+ICsgICAgICBtdXN0IGJlIG5hbWVkICJk
+dS54IiB3aXRoICJ4IiBiZWluZyB0aGUgbnVtZXJpY2FsIGluZGV4IG9mIHRoZSBsb3dlc3QKPiAr
+ICAgICAgY2hhbm5lbCBpbiB0aGUgZ3JvdXAuIFRoZSBMVkRTIHJlc2V0cyBtdXN0IGJlIG5hbWVk
+ICJsdmRzLngiIHdpdGggIngiCj4gKyAgICAgIGJlaW5nIHRoZSBMVkRTIGVuY29kZXIgbnVtZXJp
+Y2FsIGluZGV4LgoKTFZEUyBpcyBub3QgYSBzZXBhcmF0ZSBibG9jaz8KCj4gKwo+ICBSZXF1aXJl
+ZCBub2RlczoKPiAgCj4gIFRoZSBjb25uZWN0aW9ucyB0byB0aGUgRFUgb3V0cHV0IHZpZGVvIHBv
+cnRzIGFyZSBtb2RlbGVkIHVzaW5nIHRoZSBPRiBncmFwaAo+IC0tIAo+IDIuNy40Cj4gCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
