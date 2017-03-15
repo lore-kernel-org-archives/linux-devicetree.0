@@ -1,13 +1,15 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v2 0/5] Add support for the R_CCU on Allwinner
- H3/A64 SoCs
-Date: Thu, 16 Mar 2017 01:28:03 +0800
-Message-ID: <20170315172808.64011-1-icenowy@aosc.xyz>
+Subject: [PATCH v2 1/5] dt-bindings: update device tree binding
+ for Allwinner PRCM CCUs
+Date: Thu, 16 Mar 2017 01:28:04 +0800
+Message-ID: <20170315172808.64011-2-icenowy@aosc.xyz>
+References: <20170315172808.64011-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBUXTUXDAKGQEWLYWBWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBZHTUXDAKGQEWD4HL4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170315172808.64011-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,41 +20,61 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner SoCs after sun6i-a31 nearly all have a R_CCU in PRCM part.
-(V3s and R40 do not have it, as they have even no PRCM)
+Many Allwinner SoCs after A31 have a CCU in PRCM block.
 
-This patch adds support for the ones on H3/A64.
+Give the ones on H3 and A64 compatible strings.
 
-Some clock/reset values are reserved for easier extending the support to
-A31/A23, but for this I think some changes to the PRCM MFD should be made,
-see [1] (Although this is only a sketch).
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+Changes in v2:
+- Add iosc for R_CCU's on H3/A64. (A31, A23 and A33 seem to have different
+  clock for mux 3 of ar100 clk. Investgations are needed for them.)
 
-The r_pio device node is also added for A64, as the driver is already
-merged, and its depends (r_ccu) is now met.
+ Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-[1] https://github.com/wens/linux/commits/sunxi-ng-prcm
-
-Icenowy Zheng (5):
-  dt-bindings: update device tree binding for Allwinner PRCM CCUs
-  clk: sunxi-ng: add support for PRCM CCUs
-  arm64: allwinner: a64: add r_ccu node
-  ARM: sun8i: h3: switch apb0-related clocks to r_ccu
-  arm64: allwinner: a64: add R_PIO pinctrl node
-
- .../devicetree/bindings/clock/sunxi-ccu.txt        |  18 +-
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  46 ++---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  30 +++
- drivers/clk/sunxi-ng/Kconfig                       |   6 +
- drivers/clk/sunxi-ng/Makefile                      |   1 +
- drivers/clk/sunxi-ng/ccu-sun8i-r.c                 | 211 +++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu-sun8i-r.h                 |  27 +++
- include/dt-bindings/clock/sun8i-r-ccu.h            |  59 ++++++
- include/dt-bindings/reset/sun8i-r-ccu.h            |  53 ++++++
- 9 files changed, 419 insertions(+), 32 deletions(-)
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.h
- create mode 100644 include/dt-bindings/clock/sun8i-r-ccu.h
- create mode 100644 include/dt-bindings/reset/sun8i-r-ccu.h
-
+diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+index 68512aa398a9..4a4addff595d 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+@@ -7,9 +7,11 @@ Required properties :
+ 		- "allwinner,sun8i-a23-ccu"
+ 		- "allwinner,sun8i-a33-ccu"
+ 		- "allwinner,sun8i-h3-ccu"
++		- "allwinner,sun8i-h3-r-ccu"
+ 		- "allwinner,sun8i-v3s-ccu"
+ 		- "allwinner,sun9i-a80-ccu"
+ 		- "allwinner,sun50i-a64-ccu"
++		- "allwinner,sun50i-a64-r-ccu"
+ 		- "allwinner,sun50i-h5-ccu"
+ 
+ - reg: Must contain the registers base address and length
+@@ -20,7 +22,11 @@ Required properties :
+ - #clock-cells : must contain 1
+ - #reset-cells : must contain 1
+ 
+-Example:
++For the PRCM CCUs on H3/A64, one more clock is needed:
++- "iosc": another frequency oscillator used for CPUS (usually at 32000Hz,
++          not the same with losc)
++
++Example for generic CCU:
+ ccu: clock@01c20000 {
+ 	compatible = "allwinner,sun8i-h3-ccu";
+ 	reg = <0x01c20000 0x400>;
+@@ -29,3 +35,13 @@ ccu: clock@01c20000 {
+ 	#clock-cells = <1>;
+ 	#reset-cells = <1>;
+ };
++
++Example for PRCM CCU:
++r_ccu: clock@01f01400 {
++	compatible = "allwinner,sun50i-a64-r-ccu";
++	reg = <0x01f01400 0x100>;
++	clocks = <&osc24M>, <&osc32k>, <&osc32000>;
++	clock-names = "hosc", "losc", "iosc";
++	#clock-cells = <1>;
++	#reset-cells = <1>;
++};
 -- 
 2.12.0
