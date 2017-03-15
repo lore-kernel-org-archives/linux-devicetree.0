@@ -1,78 +1,144 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: Applied "ASoC: sun8i-codec: Update mixer to use
- SOC_DAPM_DOUBLE" to the asoc tree
-Date: Wed, 15 Mar 2017 13:43:23 +0000
-Message-ID: <20170315134323.i3pvla3pzejmkxwh@sirena.org.uk>
-References: <20170210094133.11382-3-mylene.josserand@free-electrons.com>
- <E1clbY9-0000DH-LY@finisterre>
- <CAGb2v6428PpYPzpHngLgaeziwKN8u-TYiNO1bs7TFw-7VrQOAg@mail.gmail.com>
+From: Ziji Hu <huziji@marvell.com>
+Subject: Re: [PATCH v6 03/14] mmc: core: Add mmc-card dt sub-node parse in
+ core layer
+Date: Wed, 15 Mar 2017 21:46:07 +0800
+Message-ID: <f6a64290-47fb-b9c7-384f-ee87c97ce399@marvell.com>
+References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
+ <34e51d32c82b57571e061e80df3bbaed731db554.1487091464.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFoqxMCSe-2bt2dz1AM_2X7dtVe4w6e7+oAQ==HO_=XKQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5360590623768876407=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAGb2v6428PpYPzpHngLgaeziwKN8u-TYiNO1bs7TFw-7VrQOAg@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Linux-ALSA <alsa-devel@alsa-project.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFoqxMCSe-2bt2dz1AM_2X7dtVe4w6e7+oAQ==HO_=XKQw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas
 List-Id: devicetree@vger.kernel.org
 
+Hi Ulf,
 
---===============5360590623768876407==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n2uvbpnnrncu25wb"
-Content-Disposition: inline
+On 2017/3/15 20:43, Ulf Hansson wrote:
+> On 14 February 2017 at 18:01, Gregory CLEMENT
+> <gregory.clement@free-electrons.com> wrote:
+>> From: Hu Ziji <huziji@marvell.com>
+>>
+>> Some vendor host, like Xenon, can support multiple types.
+>> In dts, use mmc-card dt sub-node to indicate eMMC is in use.
+>>
+>> Add a generic mmc-card parse function in mmc core layer.
+>> If mmc-card sub-node is detected, set eMMC common caps, such as
+>> MMC_CAP_NONREMOVABLE, MMC_CAP2_NO_SD and MMC_CAP2_NO_SDIO.
+>>
+>> Since it is likely that struct mmc_card is not allocated yet when
+>> this mmc-card parse function is called, it will return true if
+>> mmc-card sub-node is detected. Otherwise, return false.
+>> It can help vendor host determine if the card type is eMMC.
+>>
+<snip>
+>> +bool mmc_of_parse_mmc_card(struct mmc_host *host)
+>> +{
+>> +       struct device_node *np;
+>> +       bool ret = false;
+>> +
+>> +       np = mmc_of_find_child_device(host, 0);
+> 
+> There are already some places in the mmc core where child nodes are
+> being parsed. You may have a look for mmc_of_find_child_device() and
+> find the callers of it.
+> 
+> Additionally, we need a generic method of how to describe in DT, when
+> an mmc host controller has more than one mmc slot. This will also be
+> done using child nodes.
+> 
 
+	I'd like to confirm if you require a universal child node
+	parsing function to deal with all the child node use cases.
+	It might be a little difficult to us.
 
---n2uvbpnnrncu25wb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> So, before starting hacking on this, it seems like we need some
+> consolidation of the code. In principle, I would like to move the APIs
+> for parsing of the child nodes into host.c, along with existing
+> mmc_of_parse() function.
+> 
 
-On Tue, Mar 14, 2017 at 12:31:22PM +0800, Chen-Yu Tsai wrote:
-> On Wed, Mar 8, 2017 at 9:22 PM, Mark Brown <broonie@kernel.org> wrote:
+	I guess that your requirement is like:
+	int mmc_of_pars(struct mmc_host *host)
+	{
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+		...
 
-> This patch changes the mixer controls exposed to user space.
+		np = mmc_of_find_child_device(host, 0);
+		if (np && of_device_is_compatible(np, "mmc-card")) {
+			...
+		}
 
-> This driver was just introduced in 4.11-rc1. Would it make sense to
-> merge these cleanup patches as fixes for 4.11, so we don't affect
-> userspace across kernel releases?
+		...
 
-It would but it doesn't pick over cleanly, it looks like it depends on
-some of the other changes.
+	}
+	Am I correct?
 
---n2uvbpnnrncu25wb
-Content-Type: application/pgp-signature; name="signature.asc"
+	Actually, I previously tried this implementation.
+	But I found that it is difficult to return eMMC card type information
+	to our vendor driver. Our Xenon driver expects to know if the device
+	is eMMC card through this parse.
 
------BEGIN PGP SIGNATURE-----
+>> +       if (np && of_device_is_compatible(np, "mmc-card")) {
+>> +               /* mmc-card sub-node indicates eMMC card is in use. */
+>> +               host->caps |= MMC_CAP_NONREMOVABLE;
+>> +               host->caps2 |= MMC_CAP2_NO_SDIO | MMC_CAP2_NO_SD;
+>> +               ret = true;
+>> +       }
+>> +
+> 
+> So instead of providing a new mmc OF parse API, let's make
+> mmc_of_parse() call another internal function which deals with child
+> node parsing.
+> 
+>> +       of_node_put(np);
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(mmc_of_parse_mmc_card);
+>> +
+>> +/*
+>>   * Starting point for MMC card init.
+>>   */
+>>  int mmc_attach_mmc(struct mmc_host *host)
+>> diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
+>> index e33cc748dcfe..1b27323f3b6e 100644
+>> --- a/include/linux/mmc/core.h
+>> +++ b/include/linux/mmc/core.h
+>> @@ -234,4 +234,6 @@ struct device_node;
+>>  extern u32 mmc_vddrange_to_ocrmask(int vdd_min, int vdd_max);
+>>  extern int mmc_of_parse_voltage(struct device_node *np, u32 *mask);
+>>
+>> +extern bool mmc_of_parse_mmc_card(struct mmc_host *host);
+>> +
+>>  #endif /* LINUX_MMC_CORE_H */
+>> --
+>> git-series 0.9.1
+> 
+> If you didn't quite understand my comments, then please tell me. Then
+> I can help out cooking some patches for you.
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljJRPsACgkQJNaLcl1U
-h9Dj/wf/SNU2hHs4DgTS+ihcsCYQZJe/qr7Q1z2HfrembKBZDasroMYh41IrKigQ
-/qOT8TVZDNNwONty6k53PVQfOba85BoVtHzgyBr4STtRGAGwNo60NlHS9SYsbLJp
-wT5rt7lC57mSN3Zb8SYq5NAX9gu4sHVZmjajp6FYbhunVHFCVCcMVmi0Es9qmdGL
-ZA7fcm6Eu2swtX9gzny1BYZjKW2fMuFhtj5KaJUookc/SRqtek5vQAmV5sByayw2
-TAXpzsV2bdseEBBHKVn4eVqeuRc7kac/eCSUzheXQz0Kq1twHVH+O0fl9BJFkW7W
-CWEw9l4duWBKscI6UsFp8CGAcdYUog==
-=WuMp
------END PGP SIGNATURE-----
+	Thanks a lot. Actually I'm not sure if our implementation to detect
+	eMMC card type can meet your requirement of child node parsing.
+	Please help provide me some examples or patches.
 
---n2uvbpnnrncu25wb--
+	Thank you.
 
---===============5360590623768876407==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Best regards,
+Hu Ziji
 
-
---===============5360590623768876407==--
+> 
+> Kind regards
+> Uffe
+> 
