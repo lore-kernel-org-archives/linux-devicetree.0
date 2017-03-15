@@ -1,90 +1,177 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 1/2 RESEND] power: reset: Add Gemini poweroff DT bindings
-Date: Wed, 15 Mar 2017 22:11:16 +0100
-Message-ID: <20170315211115.bohi4z5fzwze43tu@earth>
-References: <20170312223601.2952-1-linus.walleij@linaro.org>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for Linksys EA9500
+Date: Wed, 15 Mar 2017 14:19:04 -0700
+Message-ID: <2e4ed52f-4134-9b6a-18c9-7c1f28cd7038@broadcom.com>
+References: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com>
+ <20170315185214.GF21021@lunn.ch>
+ <CAChtp75xk3LN1-DPVvaHT5qEvrdoFFvXEk-daVCcJ=4rYu_vmw@mail.gmail.com>
+ <7f5ddeba-6f79-9de5-2c67-a77e6bec0ef9@broadcom.com>
+ <CAChtp75mzHkSg4rVh602vaMotqs6NtaPOD4383Gef8tVPO37FQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3557619455072879331=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170312223601.2952-1-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, inux-pm@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAChtp75mzHkSg4rVh602vaMotqs6NtaPOD4383Gef8tVPO37FQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Unune <npcomplete13@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, hauke@hauke-m.de, zajec5@gmail.com, bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 03/15/2017 01:18 PM, Vivek Unune wrote:
+> Thanks Florian.
+> 
+> Let me try this out. First I'll try to figure out how to add a mdio node.
+> 
+> Over the weekend I was trying enable DSA driver, but did not see DSA
+> under network. I'm using LEDE source with kernel 4.9. Nor did I see it
+> when I tried 'make kernel_menuconfig'
 
---===============3557619455072879331==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3iir3cxoicpdpdkb"
-Content-Disposition: inline
+(please don't top post on public mailing lists)
+
+You need to enable SWITCHDEV to have DSA. AFAIR SWITCHDEV may depend on
+EXPERT/EXPERIMENTAL as of 4.9 (or that was before).
+
+> 
+> Thanks again.
+> 
+> On Wed, Mar 15, 2017 at 3:49 PM, Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
+>> On 03/15/2017 12:34 PM, Vivek Unune wrote:
+>>> Andrew,
+>>>
+>>> I'm not entirely sure. But here is what I observed.
+>>>
+>>> Boot loader sets up both the switches. And I can use all 8 ports of the
+>>> router when I boot Lede. Only the internal swich is detected and
+>>> configurable via swconfig tool
+>>> Internal switch is connected to CPU via port 5 same as Netgear R8000.
+>>> The other bit here is that I looked through the GPL source and gpio pin
+>>> 10 is labeled as EA9500_RST2LANSW_GPIO10_PIN/ResetSwitch. So when I
+>>> performed a robo reset of the pin and 5 (labeled 1 thru 5 on the unit)
+>>> of the 8 physical ports stopped working (no packets).
+>>>
+>>> If the external switch were to be connect via dedicated ethernet
+>>> interface it should have shown up during the probe. Is in't it?
+>>
+>> Not necessarily, and probably not with LEDE which would treat the
+>> external 53125 as a dumb switch and not even see it. With a mainline
+>> kernel and the B53 DSA driver you would be able to represent both
+>> switches in Device Tree and describe how they are cascading from each other.
+>>
+>> The potential Device Tree changes could look like this (based on your
+>> explanation, but I am not sure) for your platform, assuming the 53125 is
+>> actually exposing the front panel ports and that we did introduce a
+>> "mdio" node which would be required to expose the external BCM53125 switch.
+>>
+>>
+>> /* There is no MDIO node, there should be one */
+>> &mdio {
+>>         status = "okay";
+>>
+>>         switch@30 {
+>>                 #address-cells = <1>;
+>>                 #size-cells = <0>;
+>>                 reset-gpios = <&gpio 10>;
+>>                 reset-names = "robo_reset";
+>>
+>>                 ports {
+>>                         #address-cells = <1>;
+>>                         #size-cells = <0>;
+>>
+>>                         port@0 {
+>>                                 reg = <0>;
+>>                                 label = "lan1";
+>>                         };
+>>
+>>                         port@1 {
+>>                                 reg = <1>;
+>>                                 label = "lan2";
+>>                         };
+>>
+>>                         port@2 {
+>>                                 reg = <2>;
+>>                                 label = "lan3";
+>>                         };
+>>
+>>                         port@3 {
+>>                                 reg = <3>;
+>>                                 label = "lan1";
+>>                         };
+>>
+>>                         port@4 {
+>>                                 reg = <4>;
+>>                                 label = "wan";
+>>                         };
+>>
+>>                        port@5 {
+>>                                 reg = <5>;
+>>                                 label = "cpu";
+>>                                 ethernet = <&sw0port8>;
+>>                                 fixed-link {
+>>                                         speed = <1000>;
+>>                                         full-duplex;
+>>                                 };
+>>                         };
+>>                 };
+>>         };
+>> };
+>>
+>> &srab {
+>>         status = "okay";
+>>
+>>         ports {
+>>                 #address-cells = <1>;
+>>                 #size-cells = <0>;
+>>
+>>                 port@5 {
+>>                         reg = <5>;
+>>                         label = "cpu";
+>>                         ethernet = <&gmac0>;
+>>                         fixed-link {
+>>                                 speed = <1000>;
+>>                                 full-duplex;
+>>                         };
+>>                 };
+>>
+>>                 sw0port8: port@8 {
+>>                         reg = <8>;
+>>                         label = "extswitch";
+>>
+>>                         fixed-link {
+>>                                 speed = <1000>;
+>>                                 full-duplex;
+>>                         };
+>>                 };
+>>         };
+>> };
+>>
+>>>
+>>> Thanks,
+>>>
+>>> Vivek
+>>>
+>>>
+>>> On Wed, Mar 15, 2017 at 2:52 PM Andrew Lunn <andrew@lunn.ch
+>>> <mailto:andrew@lunn.ch>> wrote:
+>>>
+>>>     Hi Vivek
+>>>
+>>>     > - It has two switches in order to support 8 lan ports. Internal
+>>>     switch is
+>>>     >   BCM53012. The external switch BCM53125 currently works as "dumb
+>>>     switch"
+>>>
+>>>     Do you know how the second switch is connected? Is it cascaded off the
+>>>     internal switch? Or does it have a dedicated Ethernet interface?
+>>>
+>>>     Thanks
+>>>             Andrew
+>>>
+>>
+>>
+>> --
+>> Florian
 
 
---3iir3cxoicpdpdkb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Linus,
-
-On Sun, Mar 12, 2017 at 11:36:01PM +0100, Linus Walleij wrote:
-> This adds device tree bindings to the power management controller
-> in the Gemini SoC.
->=20
-> Cc: devicetree@vger.kernel.org
-> Cc: Janos Laube <janos.dev@gmail.com>
-> Cc: Paulius Zaleckas <paulius.zaleckas@gmail.com>
-> Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Sebastian: please just merge this when your are pleased
-> with it. I will funnel the ARM parts through the ARM SoC tree.
-
-DONE.
-
--- Sebastian
-
---3iir3cxoicpdpdkb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljJrfMACgkQ2O7X88g7
-+poIkBAAo+rVrhFRpPdX71PzKxhbLyuLN6l4fFySk61eik8iZ6iG34tcmBKVpByX
-J7eR/onu1bmtRo/Z+Ryr4eIAZ2a32/hpDI0pFxUuXC4f3Ea4kXLvtArC5WMqwq68
-U27dv9kNC8DhBWCoPv+BHs4P11iAXkg5+G1jEkRflmwHJZ+rMO8Mc5mx1SKMEmEE
-V/6cwliQmaN+l3C8F60TuXn1mZOelvN9GpyB6bmVrPKLA6k3wsrBc8fcPq/UVedI
-xgWwfnXlIS8gGeJYLkgDK6GPlT75R+n6y2m84eiEoIN1lfV43pk+wKzpKGJpBtHR
-ir9oVjwkQSGN/mkjv7ou/WRnqJnC/enzOnDBGINjgKLbmfzQKUURSUHbHSSbRjIN
-T/RkGAPseFFF3EbcLDd0MaSHYniijAH7BI6Dn9oZtdZxp6bFzJKtynhNy7NBGHLW
-VcZA1w45H6QY8GbcDVLmoDoBZxbgDkLFwVN0lUyVa9wx+vA0ViF8qQiZac5zYHpz
-26qReUGHon78lCw2I9qZVxHma+9Nlx2T/bOGVD/hHoiyikD82P33PlUt6PyjIpso
-GU11JIOQ/OBBcBk4Khe3vRr1ymoqjQuoSynd9C1p9B/chwhNFBOS0fup9v4q9U9X
-ADKlh6Bj2I7NBQseTRcTztL7VQjErtv5Z83tyQdbGj+nSDrSWEA=
-=Lngv
------END PGP SIGNATURE-----
-
---3iir3cxoicpdpdkb--
-
-
---===============3557619455072879331==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3557619455072879331==--
+-- 
+Florian
