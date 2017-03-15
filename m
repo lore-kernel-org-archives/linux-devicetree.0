@@ -1,78 +1,57 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/5] dt-bindings: mfd: Add Altera Arria10 SR Reset
- Controller bindings
-Date: Wed, 15 Mar 2017 11:06:36 +0000
-Message-ID: <20170315110636.gdqu2tiowfrdacwe@dell>
-References: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
- <1487783419-10912-2-git-send-email-thor.thayer@linux.intel.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v1 0/7] initialize dtsi file and dts file for RK3328 SoCs
+Date: Wed, 15 Mar 2017 12:11:54 +0100
+Message-ID: <2592337.TJConaiLTi@diego>
+References: <1489572237-6649-1-git-send-email-cl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1487783419-10912-2-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1489572237-6649-1-git-send-email-cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, yhx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Feb 2017, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+Hi Liang,
 
-> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> 
-> This patch adds documentation for the Altera A10-SR Reset
-> Controller DT bindings.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
-> v2  No change
-> ---
->  Documentation/devicetree/bindings/mfd/altera-a10sr.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+Am Mittwoch, 15. M=E4rz 2017, 18:03:50 CET schrieb cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org:
+> From: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> =
 
-Applied with Rob's Ack.
+> These patchs depend on pinctrl patchs as below:
+> =
 
-> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> index ea151f2..c8a7365 100644
-> --- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> @@ -18,6 +18,7 @@ The A10SR consists of these sub-devices:
->  Device                   Description
->  ------                   ----------
->  a10sr_gpio               GPIO Controller
-> +a10sr_rst                Reset Controller
->  
->  Arria10 GPIO
->  Required Properties:
-> @@ -27,6 +28,11 @@ Required Properties:
->                        the second cell is used to specify flags.
->                        See ../gpio/gpio.txt for more information.
->  
-> +Arria10 Peripheral PHY Reset
-> +Required Properties:
-> +- compatible        : Should be "altr,a10sr-reset"
-> +- #reset-cells      : Should be one.
-> +
->  Example:
->  
->          resource-manager@0 {
-> @@ -43,4 +49,9 @@ Example:
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  		};
-> +
-> +		a10sr_rst: reset-controller {
-> +			compatible = "altr,a10sr-reset";
-> +			#reset-cells = <1>;
-> +		};
->  	};
+> https://patchwork.kernel.org/patch/9566427/
+> https://patchwork.kernel.org/patch/9566425/
+> https://patchwork.kernel.org/patch/9566431/
+> =
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Chen Liang (7):
+>   include: dt-bindings: Add pin function index definition for rockchip
+>     pinctrl
+>   dt-bindings: iio: rockchip-saradc: add support for rk3328
+>   dt-bindings: i2c: rk3x: add support for rk3328
+>   dt-bindings: soc: rockchip: grf: add support for rk3328
+
+both my inbox as well as the linux-rockchip list did only get patches 1-4 i=
+t =
+
+seems?
+
+>   arm64: dts: rockchip: add core dtsi file for RK3328 SoCs
+>   arm64: dts: rockchip: add dts file for RK3328 evaluation board
+>   dt-bindings: document rockchip rk3328-evb board
+
+So right now I'm missing these next 3. Did something go wrong when sending?
+
+
+Heiko
