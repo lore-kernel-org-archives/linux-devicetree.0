@@ -1,60 +1,39 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v3 1/2] Documentation: bindings: Introduce scpi,
- sensors-scale
-Date: Wed, 15 Mar 2017 21:56:09 +0100
-Message-ID: <CAFBinCAde0qWpJsYF8bm-5ex1q+TDZtL73bf5DNoUuFEDhPXpw@mail.gmail.com>
-References: <20170309101759.18081-1-carlo@caione.org>
- <20170309101759.18081-2-carlo@caione.org>
- <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, punit.agrawal@arm.com, robh+dt@kernel.org, linux@roeck-us.net, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux@endlessm.com, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@endlessm.com>
+From: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM: dts: BCM953012HR: Add ethernet aliases
+Date: Wed, 15 Mar 2017 16:59:35 -0400
+Message-ID: <1489611575-18684-1-git-send-email-steven.lin1@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 7:20 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
->
-> On 09/03/17 10:17, Carlo Caione wrote:
->> From: Carlo Caione <carlo@endlessm.com>
->>
->> Document the new property `scpi,sensors-scale` used by the hwmon-scpi
->> driver to convert the sensor readings to the correct / expected scale.
->>
->
-> I am fine with DT bindings if DT maintainers agree with having one but I
-> would like to add couple of points to get their feedback:
->
-> 1. ARM recognized the drawbacks of SCPI which started informally with
->    ARM Ltd platforms and got adopted by few vendors. It's now being
->    worked on and a much better and scalable replacement protocol is
->    being discussed with vendors now. So future enhancement to this SCPI
->    protocol is unlikely.
->
-> 2. AmLogic has diverted from base protocol in many ways and most of them
->    are handled with just compatible so far without any need for
->    additional bindings. Can we avoid it ?
->
-> So based on these, I prefer not to add more bindings to handle such
-> deviations but make it just AmLogic specific.
-could you please share your idea where this "Amlogic specific
-implementation" fits best?
-- in firmware/arm_scpi to keep a contract (for example: millicelsius)
-to everyone who reads a temperature sensor for example
-- or in hwmon/scpi-hwmon
+Adding ethernet aliases.  These are used, for example, by bootloaders,
+to modify the MAC addresses in the device tree.
 
+Signed-off-by: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm953012hr.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Regards,
-Martin
+diff --git a/arch/arm/boot/dts/bcm953012hr.dts b/arch/arm/boot/dts/bcm953012hr.dts
+index 85f9b0b..766aa71 100644
+--- a/arch/arm/boot/dts/bcm953012hr.dts
++++ b/arch/arm/boot/dts/bcm953012hr.dts
+@@ -41,6 +41,9 @@
+ 
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &gmac0;
++		ethernet1 = &gmac1;
++		ethernet2 = &gmac2;
+ 	};
+ 
+ 	chosen {
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
