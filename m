@@ -1,138 +1,57 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v1.1 3/3] device property: fwnode_property_read_string_array() returns nr of strings
-Date: Wed, 15 Mar 2017 15:31:28 +0200
-Message-ID: <1489584688-15624-1-git-send-email-sakari.ailus@linux.intel.com>
-References: <1488806791-25488-4-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1488806791-25488-4-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/5] ARM: tegra: WARN if flowctrl is not supported
+Date: Wed, 15 Mar 2017 13:31:51 +0000
+Message-ID: <1489584715-23138-2-git-send-email-jonathanh@nvidia.com>
+References: <1489584715-23138-1-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489584715-23138-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Functionally fwnode_property_read_string_array() should match
-of_property_read_string_array() and work as a drop-in substitute for the
-latter. of_property_read_string_array() returns the number of strings read
-if the target string pointer array is non-NULL. Make
-fwnode_property_read_string_array() do the same.
+If we fail to map the IO space for the Tegra flowctrl module in
+tegra_flowctrl_init(), then if any of the public APIs for the Tegra
+flowctrl driver are called we still still attempt to access the
+hardware. Fix this by only accessing the hardware if the
+'tegra_flowctrl_base' address has not been setup correctly and warn
+if we attempt to access the hardware when it has not.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
-This patch replaces v1 3/3 patch in this set.
+ arch/arm/mach-tegra/flowctrl.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Instead of changing the return value of fwnode / device property API
-string array access on OF, change the behaviour on pset and ACPI instead.
-This makes them to return the number of strings read on success.
-
-I can merge this with patch 2/3 which is changing the same part of the
-file, however I'm sending this separately at least for now as I think it's
-easier to review this way, rather than making a bugfix and a change of the
-behaviour in the same patch.
-
-Regards,
-Sakari
-
- drivers/base/property.c | 64 +++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 46 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 8c98390..82187ac 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -340,8 +340,8 @@ EXPORT_SYMBOL_GPL(device_property_read_u64_array);
-  * Function reads an array of string properties with @propname from the device
-  * firmware description and stores them to @val if found.
-  *
-- * Return: number of values if @val was %NULL,
-- *         %0 if the property was found (success),
-+ * Return: number of values read on success if @val is non-NULL,
-+ *	   number of values available on success if @val is NULL,
-  *	   %-EINVAL if given arguments are not valid,
-  *	   %-ENODATA if the property does not have a value,
-  *	   %-EPROTO or %-EILSEQ if the property is not an array of strings,
-@@ -549,29 +549,57 @@ static int __fwnode_property_read_string_array(struct fwnode_handle *fwnode,
- 			of_property_read_string_array(to_of_node(fwnode),
- 						      propname, val, nval) :
- 			of_property_count_strings(to_of_node(fwnode), propname);
--	else if (is_acpi_node(fwnode))
--		return acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
--					   val, nval);
--	else if (is_pset_node(fwnode)) {
-+	else if (is_acpi_node(fwnode)) {
-+		int array_len =
-+			acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
-+					    NULL, nval);
-+		int read_len;
-+		int ret;
-+
-+		/* Return if val is NULL or if there was an error */
-+		if (!val || array_len < 0)
-+			return array_len;
-+
-+		read_len = min_t(int, nval, array_len);
-+
-+		ret = acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
-+					  val, read_len);
-+		if (ret < 0)
-+			return ret;
-+
-+		return read_len;
-+	} else if (is_pset_node(fwnode)) {
- 		struct property_set *node = to_pset_node(fwnode);
- 		const struct property_entry *prop;
--
--		/* Read properties if val is non-NULL */
--		if (val)
--			return pset_prop_read_string_array(node, propname,
--							   val, nval);
-+		/* The array length for a non-array string property is 1. */
-+		int array_len = 1;
-+		int read_len;
-+		int ret;
+diff --git a/arch/arm/mach-tegra/flowctrl.c b/arch/arm/mach-tegra/flowctrl.c
+index 475e783992fd..40b15e39f849 100644
+--- a/arch/arm/mach-tegra/flowctrl.c
++++ b/arch/arm/mach-tegra/flowctrl.c
+@@ -47,6 +47,9 @@ static void __iomem *tegra_flowctrl_base;
  
- 		prop = pset_prop_get(node, propname);
- 		if (!prop)
- 			return -EINVAL;
+ static void flowctrl_update(u8 offset, u32 value)
+ {
++	if (WARN_ONCE(!tegra_flowctrl_base, "Tegra flowctrl not supported!"))
++		return;
++
+ 	writel(value, tegra_flowctrl_base + offset);
  
--		/* The array length for a non-array string property is 1. */
--		if (!prop->is_array)
--			return 1;
-+		/* Read the length of an array property. */
-+		if (prop->is_array)
-+			array_len = pset_prop_count_elems_of_size(
-+				node, propname, sizeof(const char *));
-+
-+
-+		/* Return if val is NULL or if there was an error */
-+		if (!val || array_len < 0)
-+			return array_len;
-+
-+		read_len = min_t(int, nval, array_len);
-+
-+		ret = pset_prop_read_string_array(node, propname, val,
-+						  read_len);
-+
-+		if (ret < 0)
-+			return ret;
+ 	/* ensure the update has reached the flow controller */
+@@ -58,6 +61,9 @@ u32 flowctrl_read_cpu_csr(unsigned int cpuid)
+ {
+ 	u8 offset = flowctrl_offset_cpu_csr[cpuid];
  
- 		/* Return the length of an array. */
--		return pset_prop_count_elems_of_size(node, propname,
--						     sizeof(const char *));
-+		return read_len;
- 	}
- 	return -ENXIO;
++	if (WARN_ONCE(!tegra_flowctrl_base, "Tegra flowctrl not supported!"))
++		return 0;
++
+ 	return readl(tegra_flowctrl_base + offset);
  }
-@@ -599,8 +627,8 @@ static int __fwnode_property_read_string(struct fwnode_handle *fwnode,
-  * Read an string list property @propname from the given firmware node and store
-  * them to @val if found.
-  *
-- * Return: number of values if @val was %NULL,
-- *         %0 if the property was found (success),
-+ * Return: number of values read on success if @val is non-NULL,
-+ *	   number of values available on success if @val is NULL,
-  *	   %-EINVAL if given arguments are not valid,
-  *	   %-ENODATA if the property does not have a value,
-  *	   %-EPROTO or %-EILSEQ if the property is not an array of strings,
+ 
 -- 
 2.7.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
