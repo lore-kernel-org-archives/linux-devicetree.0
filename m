@@ -1,7 +1,7 @@
 From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 1/3] dt-bindings: Add arm64 ARCH_THUNDER2 platform documentation
-Date: Wed, 15 Mar 2017 20:11:00 +0000
-Message-ID: <1489608662-4434-2-git-send-email-jnair@caviumnetworks.com>
+Subject: [PATCH v6 3/3] MAINTAINERS: Broadcom Vulcan is now Cavium ThunderX2
+Date: Wed, 15 Mar 2017 20:11:02 +0000
+Message-ID: <1489608662-4434-4-git-send-email-jnair@caviumnetworks.com>
 References: <1489495634-2920-1-git-send-email-jnair@caviumnetworks.com>
  <1489608662-4434-1-git-send-email-jnair@caviumnetworks.com>
 Mime-Version: 1.0
@@ -13,46 +13,44 @@ To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for Cavium's ThunderX2 CN99XX ARM64 processor. This
-SoC will use "cavium,thunderx2-cn9900" as the compatible property.
+Now that the dts files are moved to the new location, we can remove
+the Broadcom Vulcan entry in the MAINTAINERS.
 
-Also add a documentation entry for the "cavium,thunder2" cpu core
-present in these SoCs.
+Also fix up the Cavium ThunderX2 entry with the correct pattern for
+the new names.
 
 Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/cavium-thunder2.txt | 8 ++++++++
- Documentation/devicetree/bindings/arm/cpus.txt            | 1 +
- 2 files changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+ MAINTAINERS | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-new file mode 100644
-index 0000000..dc5dd65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-@@ -0,0 +1,8 @@
-+Cavium ThunderX2 CN99XX platform tree bindings
-+----------------------------------------------
-+
-+Boards with Cavium ThunderX2 CN99XX SoC shall have the root property:
-+  compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-+
-+These SoC uses the "cavium,thunder2" core which will be compatible
-+with "brcm,vulcan".
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 698ad1f0..1030f5f 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -170,6 +170,7 @@ nodes to be present and contain the properties described below.
- 			    "brcm,brahma-b15"
- 			    "brcm,vulcan"
- 			    "cavium,thunder"
-+			    "cavium,thunder2"
- 			    "faraday,fa526"
- 			    "intel,sa110"
- 			    "intel,sa1100"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c776906..81a1f2b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2838,13 +2838,6 @@ L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Supported
+ F:	drivers/net/ethernet/broadcom/bcmsysport.*
+ 
+-BROADCOM VULCAN ARM64 SOC
+-M:	Jayachandran C. <c.jayachandran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+-M:	bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+-L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+-S:	Maintained
+-F:	arch/arm64/boot/dts/broadcom/vulcan*
+-
+ BROADCOM NETXTREME-E ROCE DRIVER
+ M:	Selvin Xavier <selvin.xavier-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+ M:	Devesh Sharma <devesh.sharma-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+@@ -3030,7 +3023,7 @@ CAVIUM THUNDERX2 ARM64 SOC
+ M:	Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ S:	Maintained
+-F:	arch/arm64/boot/dts/cavium/thunder-99xx*
++F:	arch/arm64/boot/dts/cavium/thunder2-99xx*
+ F:	Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+ 
+ CAVIUM I2C DRIVER
 -- 
 2.7.4
 
