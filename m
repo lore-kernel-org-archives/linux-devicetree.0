@@ -1,121 +1,163 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v6 07/14] dt: bindings: Add bindings for Marvell Xenon SD
- Host Controller
-Date: Wed, 15 Mar 2017 13:48:29 +0100
-Message-ID: <CAPDyKFrmb51cTR7B5S0JkmACH0=bw9+28RmWnjwWkuiT7N4wVw@mail.gmail.com>
-References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
- <3a4ce2fd25ed812482b0fc96f50dd305c8f40fe9.1487091464.git-series.gregory.clement@free-electrons.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [PATCH v2] clk: tegra: add Tegra210 special resets
+Date: Wed, 15 Mar 2017 14:59:32 +0200
+Message-ID: <1489582774-22217-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3a4ce2fd25ed812482b0fc96f50dd305c8f40fe9.1487091464.git-series.gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lis>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
+Tegra210 has 2 special resets which don't follow the normal pattern:
+DVCO and ADSP. Add them in this patch.
 
-> +
-> +Example:
-> +- For eMMC:
-> +
-> +       sdhci@aa0000 {
-> +               compatible = "marvell,armada-ap806-sdhci";
-> +               reg = <0xaa0000 0x1000>;
-> +               interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
-> +               clocks = <&emmc_clk>;
-> +               clock-names = "core";
-> +               bus-width = <4>;
-> +               marvell,xenon-phy-slow-mode;
-> +               marvell,xenon-tun-count = <11>;
+Changelog:
 
-There's no vmmc-supply here.
+v2: add DT bindings file
 
-How do you control power to the eMMC card?
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+---
+ drivers/clk/tegra/clk-tegra210.c         | 85 ++++++++++++++++++++++++++++++++
+ include/dt-bindings/reset/tegra210-car.h | 13 +++++
+ 2 files changed, 98 insertions(+)
+ create mode 100644 include/dt-bindings/reset/tegra210-car.h
 
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               apm_mmccard: mmccard@0 {
-> +                       compatible = "mmc-card";
-> +                       reg = <0>;
-> +               };
-> +       };
-> +
-> +- For SD/SDIO:
-> +
-> +       sdhci@ab0000 {
-> +               compatible = "marvell,armada-cp110-sdhci";
-> +               reg = <0xab0000 0x1000>;
-> +               interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
-> +               vqmmc-supply = <&sd_regulator>;
-
-I guess you know vqmmc is for the I/O voltage.
-
-Again, how do you power the SD/SDIO card? No vmmc?
-
-> +               clocks = <&sdclk>;
-> +               clock-names = "core";
-> +               bus-width = <4>;
-> +               marvell,xenon-tun-count = <9>;
-> +       };
-> +
-> +- For eMMC with compatible "marvell,armada-3700-sdhci":
-> +
-> +       sdhci@aa0000 {
-> +               compatible = "marvell,armada-3700-sdhci";
-> +               reg = <0xaa0000 0x1000>,
-> +                     <phy_addr 0x4>;
-> +               interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
-> +               clocks = <&emmcclk>;
-> +               clock-names = "core";
-> +               bus-width = <8>;
-> +               mmc-ddr-1_8v;
-> +               mmc-hs400-1_8v;
-
-Again, no vmmc?
-
-> +
-> +               marvell,pad-type = "fixed-1-8v";
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               mmccard: mmccard@0 {
-> +                       compatible = "mmc-card";
-> +                       reg = <0>;
-> +               };
-> +       };
-> +
-> +- For SD/SDIO with compatible "marvell,armada-3700-sdhci":
-> +
-> +       sdhci@ab0000 {
-> +               compatible = "marvell,armada-3700-sdhci";
-> +               reg = <0xab0000 0x1000>,
-> +                     <phy_addr 0x4>;
-> +               interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
-> +               vqmmc-supply = <&sd_regulator>;
-
-Again, no vmmc?
-
-> +               clocks = <&sdclk>;
-> +               clock-names = "core";
-> +               bus-width = <4>;
-> +
-> +               marvell,pad-type = "sd";
-> +       };
-> --
-> git-series 0.9.1
-
-
-Kind regards
-Uffe
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 2a84897..a41733d 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -24,6 +24,7 @@
+ #include <linux/export.h>
+ #include <linux/clk/tegra.h>
+ #include <dt-bindings/clock/tegra210-car.h>
++#include <dt-bindings/reset/tegra210-car.h>
+ #include <linux/iopoll.h>
+ 
+ #include "clk.h"
+@@ -218,6 +219,12 @@
+ #define CLK_M_DIVISOR_SHIFT 2
+ #define CLK_M_DIVISOR_MASK 0x3
+ 
++#define RST_DFLL_DVCO 0x2f4
++#define DVFS_DFLL_RESET_SHIFT 0
++
++#define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
++#define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
++
+ /*
+  * SDM fractional divisor is 16-bit 2's complement signed number within
+  * (-2^12 ... 2^12-1) range. Represented in PLL data structure as unsigned
+@@ -2984,6 +2991,81 @@ static void __init tegra210_clock_apply_init_table(void)
+ }
+ 
+ /**
++ * tegra210_car_barrier - wait for pending writes to the CAR to complete
++ *
++ * Wait for any outstanding writes to the CAR MMIO space from this CPU
++ * to complete before continuing execution.  No return value.
++ */
++static void tegra210_car_barrier(void)
++{
++	readl_relaxed(clk_base + RST_DFLL_DVCO);
++}
++
++/**
++ * tegra210_clock_assert_dfll_dvco_reset - assert the DFLL's DVCO reset
++ *
++ * Assert the reset line of the DFLL's DVCO.  No return value.
++ */
++static void tegra210_clock_assert_dfll_dvco_reset(void)
++{
++	u32 v;
++
++	v = readl_relaxed(clk_base + RST_DFLL_DVCO);
++	v |= (1 << DVFS_DFLL_RESET_SHIFT);
++	writel_relaxed(v, clk_base + RST_DFLL_DVCO);
++	tegra210_car_barrier();
++}
++
++/**
++ * tegra210_clock_deassert_dfll_dvco_reset - deassert the DFLL's DVCO reset
++ *
++ * Deassert the reset line of the DFLL's DVCO, allowing the DVCO to
++ * operate.  No return value.
++ */
++static void tegra210_clock_deassert_dfll_dvco_reset(void)
++{
++	u32 v;
++
++	v = readl_relaxed(clk_base + RST_DFLL_DVCO);
++	v &= ~(1 << DVFS_DFLL_RESET_SHIFT);
++	writel_relaxed(v, clk_base + RST_DFLL_DVCO);
++	tegra210_car_barrier();
++}
++
++static int tegra210_reset_assert(unsigned long id)
++{
++	if (id == TEGRA210_RST_DFLL_DVCO)
++		tegra210_clock_assert_dfll_dvco_reset();
++	else if (id == TEGRA210_RST_ADSP)
++		writel(GENMASK(26, 21) | BIT(7),
++			clk_base + CLK_RST_CONTROLLER_RST_DEV_Y_SET);
++	else
++		return -EINVAL;
++
++	return 0;
++}
++
++static int tegra210_reset_deassert(unsigned long id)
++{
++	if (id == TEGRA210_RST_DFLL_DVCO)
++		tegra210_clock_deassert_dfll_dvco_reset();
++	else if (id == TEGRA210_RST_ADSP) {
++		writel(BIT(21), clk_base + CLK_RST_CONTROLLER_RST_DEV_Y_CLR);
++		/*
++		 * Considering adsp cpu clock (min: 12.5MHZ, max: 1GHz)
++		 * a delay of 5us ensures that it's at least
++		 * 6 * adsp_cpu_cycle_period long.
++		 */
++		udelay(5);
++		writel(GENMASK(26, 22) | BIT(7),
++			clk_base + CLK_RST_CONTROLLER_RST_DEV_Y_CLR);
++	} else
++		return -EINVAL;
++
++	return 0;
++}
++
++/**
+  * tegra210_clock_init - Tegra210-specific clock initialization
+  * @np: struct device_node * of the DT node for the SoC CAR IP block
+  *
+@@ -3047,6 +3129,9 @@ static void __init tegra210_clock_init(struct device_node *np)
+ 
+ 	tegra_super_clk_gen5_init(clk_base, pmc_base, tegra210_clks,
+ 				  &pll_x_params);
++	tegra_init_special_resets(2, tegra210_reset_assert,
++				  tegra210_reset_deassert);
++
+ 	tegra_add_of_provider(np);
+ 	tegra_register_devclks(devclks, ARRAY_SIZE(devclks));
+ 
+diff --git a/include/dt-bindings/reset/tegra210-car.h b/include/dt-bindings/reset/tegra210-car.h
+new file mode 100644
+index 0000000..296ec6e
+--- /dev/null
++++ b/include/dt-bindings/reset/tegra210-car.h
+@@ -0,0 +1,13 @@
++/*
++ * This header provides Tegra210-specific constants for binding
++ * nvidia,tegra210-car.
++ */
++
++#ifndef _DT_BINDINGS_RESET_TEGRA210_CAR_H
++#define _DT_BINDINGS_RESET_TEGRA210_CAR_H
++
++#define TEGRA210_RESET(x)		(7 * 32 + (x))
++#define TEGRA210_RST_DFLL_DVCO		TEGRA210_RESET(0)
++#define TEGRA210_RST_ADSP		TEGRA210_RESET(1)
++
++#endif	/* _DT_BINDINGS_RESET_TEGRA210_CAR_H */
+-- 
+1.9.1
