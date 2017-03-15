@@ -1,86 +1,32 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2 16/23] MAINTAINERS: Add file patterns for powerpc device tree bindings
-Date: Wed, 15 Mar 2017 20:30:53 +1100
-Message-ID: <87d1dilwdu.fsf@concordia.ellerman.id.au>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org> <1489324627-19126-17-git-send-email-geert@linux-m68k.org> <87a88nv1b2.fsf@concordia.ellerman.id.au> <CAMuHMdX95zwQUe8XyPpKvv6zsHG+c1Ke=eFBZCt+fNUxgP5O2g@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio: mmio: add support for NI 169445 NAND GPIO
+Date: Wed, 15 Mar 2017 10:33:39 +0100
+Message-ID: <CACRpkdZm1B=ohBp4eOh8j++SWUwa9dU0-PErdj3P0u-+kvrYzg@mail.gmail.com>
+References: <1488830761-681-1-git-send-email-nathan.sullivan@ni.com> <1488830761-681-2-git-send-email-nathan.sullivan@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX95zwQUe8XyPpKvv6zsHG+c1Ke=eFBZCt+fNUxgP5O2g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Scott Wood <oss@buserror.net>, Qiang Zhao <qiang.zhao@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, york.sun@nxp.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488830761-681-2-git-send-email-nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert@linux-m68k.org> writes:
-> On Wed, Mar 15, 2017 at 1:19 AM, Michael Ellerman <mpe@ellerman.id.au> wrote:
->> Geert Uytterhoeven <geert@linux-m68k.org> writes:
->>> Submitters of device tree binding documentation may forget to CC
->>> the subsystem maintainer if this is missing.
->>>
->>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
->>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->>> Cc: Paul Mackerras <paulus@samba.org>
->>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>> Cc: linuxppc-dev@lists.ozlabs.org
->>> ---
->>> Please apply this patch directly if you want to be involved in device
->>> tree binding documentation for your subsystem.
->>>
->>> v2:
->>>   - Rebased on top of commit a42715830d552d7c ("MAINTAINERS: Remove
->>>     powerpc's "opal" pattern match), which just added "powerpc/opal",
->>>     while obviously the whole "powerpc" hierarchy is of interest.
->>>
->>> Impact on next-20170310:
->>
->> Actual diff ignoring ordering etc:
->>
->>  +Benjamin Herrenschmidt <benh@kernel.crashing.org> (supporter:LINUX FOR POWERPC (32-BIT AND 64-BIT))
->>  +Paul Mackerras <paulus@samba.org> (supporter:LINUX FOR POWERPC (32-BIT AND 64-BIT))
->>  +linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT))
->>  -Scott Wood <oss@buserror.net> (commit_signer:5/11=45%)
->>  -Zhao Qiang <qiang.zhao@nxp.com> (commit_signer:4/11=36%,authored:4/11=36%)
->>  -Christian Lamparter <chunkeey@googlemail.com> (commit_signer:1/11=9%)
->>  -yangbo lu <yangbo.lu@nxp.com> (authored:1/11=9%)
->>  -"Otto Kekäläinen" <otto@seravo.fi> (authored:1/11=9%)
->>  -Chris Packham <chris.packham@alliedtelesis.co.nz> (authored:1/11=9%)
->>  -York Sun <york.sun@nxp.com> (authored:1/11=9%)
->>
->> Which looks bad as all the NXP folks get dropped, but they should be
->> reading linuxppc-dev. So I think I'll merge this, unless anyone
->> disagrees.
+On Mon, Mar 6, 2017 at 9:06 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
+
+> The GPIO-based NAND controller on National Instruments 169445 hardware
+> exposes a set of simple lines for the control signals.
 >
-> They got dropped because in the absence of a maintainer entry, the
-> last committers are listed. If they need to be listed, I can send patches to add
-> more specific entries for 4xx and fsl DT bindings, like:
+> Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
 
-This is one is probably worth doing:
+Totally standard ans simple patch, applied.
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0f1c2f96c99aa936..40b392a4f399adbe 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5266,6 +5266,7 @@ M:        Scott Wood <oss@buserror.net>
->  L:     linuxppc-dev@lists.ozlabs.org
->  L:     linux-arm-kernel@lists.infradead.org
->  S:     Maintained
-> +F:     Documentation/devicetree/bindings/powerpc/fsl/
->  F:     drivers/soc/fsl/
->  F:     include/linux/fsl/
+Hint: it's probably nice to use the gpio-line-names attribute
+on these boards to name the lines.
 
-I'll fold it in before applying?
-
-But I wouldn't bother with 4xx, just falling back to linuxppc-dev is
-fine for that.
-
-> @@ -7540,6 +7541,7 @@ M:        Matt Porter <mporter@kernel.crashing.org>
->  W:     http://www.penguinppc.org/
->  L:     linuxppc-dev@lists.ozlabs.org
->  S:     Maintained
-> +F:     Documentation/devicetree/bindings/powerpc/4xx/
->  F:     arch/powerpc/platforms/40x/
->  F:     arch/powerpc/platforms/44x/
-
-cheers
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
