@@ -1,43 +1,93 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 2/2] drivers/serial: Add driver for Aspeed virtual UART
-Date: Sat, 01 Apr 2017 08:29:40 +1100
-Message-ID: <1490995780.3177.245.camel@kernel.crashing.org>
-References: <20170328054458.29341-1-joel@jms.id.au>
-         <20170328054458.29341-3-joel@jms.id.au> <20170331133120.GA26078@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170331133120.GA26078@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>
-Cc: Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=4qpm=2Y=gmail.com=npcomplete13@kernel.org>
+MIME-Version: 1.0
+References: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com> <20170315185214.GF21021@lunn.ch>
+In-Reply-To: <20170315185214.GF21021@lunn.ch>
+From: Vivek Unune <npcomplete13@gmail.com>
+Date: Wed, 15 Mar 2017 19:34:13 +0000
+Message-ID: <CAChtp75xk3LN1-DPVvaHT5qEvrdoFFvXEk-daVCcJ=4rYu_vmw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for Linksys EA9500
+Content-Type: multipart/alternative; boundary=001a113dcec61ce38f054aca08a8
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: hauke@hauke-m.de, zajec5@gmail.com, bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 2017-03-31 at 15:31 +0200, Greg Kroah-Hartman wrote:
-> DEVICE_ATTR_RW()?
-> 
-> And why random sysfs files for a uart?  Where have you documented
-> these?
+--001a113dcec61ce38f054aca08a8
+Content-Type: text/plain; charset=UTF-8
 
-We should stick a file somewhere in Documentation I suppose or
-at least put that in a comment blob at the head of the file.
+Andrew,
 
-FYI:
+I'm not entirely sure. But here is what I observed.
 
-The VUART is basically two UART 'front ends' connected by their FIFO
-(no actual serial line in between). One is on the BMC side (management
-controller) and one is on the host CPU side.
+Boot loader sets up both the switches. And I can use all 8 ports of the
+router when I boot Lede. Only the internal swich is detected and
+configurable via swconfig tool
+Internal switch is connected to CPU via port 5 same as Netgear R8000. The
+other bit here is that I looked through the GPL source and gpio pin 10 is
+labeled as EA9500_RST2LANSW_GPIO10_PIN/ResetSwitch. So when I performed a
+robo reset of the pin and 5 (labeled 1 thru 5 on the unit) of the 8
+physical ports stopped working (no packets).
 
-It allows the BMC to provide to the host a "UART" that pipes into
-the BMC itself and can then be turned by the BMC into a network console
-of some sort for example.
+If the external switch were to be connect via dedicated ethernet interface
+it should have shown up during the probe. Is in't it?
 
-This driver is for the BMC side. The sysfs files allow the BMC
-userspace which owns the system configuration policy, to specify
-at what IO port and interrupt number the host side will appear
-to the host on the Host <-> BMC LPC bus. It could be different on a
-different system (though most of them use 3f8/4).
+Thanks,
 
-Cheers,
-Ben.
+Vivek
+
+
+On Wed, Mar 15, 2017 at 2:52 PM Andrew Lunn <andrew@lunn.ch> wrote:
+
+Hi Vivek
+
+> - It has two switches in order to support 8 lan ports. Internal switch is
+>   BCM53012. The external switch BCM53125 currently works as "dumb switch"
+
+Do you know how the second switch is connected? Is it cascaded off the
+internal switch? Or does it have a dedicated Ethernet interface?
+
+Thanks
+        Andrew
+
+--001a113dcec61ce38f054aca08a8
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr" class=3D"gmail_msg"><div class=3D"gmail_m=
+sg">Andrew,</div><div class=3D"gmail_msg"><br class=3D"gmail_msg"></div>I&#=
+39;m not entirely sure. But here is what I observed.<div class=3D"gmail_msg=
+"><br></div><div class=3D"gmail_msg">Boot loader sets up both the switches.=
+ And I can use all 8 ports of the router when I boot Lede. Only the interna=
+l swich is detected and configurable via swconfig tool<br class=3D"gmail_ms=
+g"></div><div class=3D"gmail_msg">Internal switch is connected to CPU via p=
+ort 5 same as Netgear R8000. The other bit here is that I looked through th=
+e GPL source and gpio pin 10 is labeled as=C2=A0EA9500_RST2LANSW_GPIO10_PIN=
+/ResetSwitch. So when I performed a robo reset of the pin and 5 (labeled 1 =
+thru 5 on the unit) of the 8 physical ports stopped working (no packets).</=
+div><div class=3D"gmail_msg"><br></div><div class=3D"gmail_msg">If the exte=
+rnal switch were to be connect via dedicated ethernet interface it should h=
+ave shown up during the probe. Is in&#39;t it?</div><div class=3D"gmail_msg=
+"><br></div><div class=3D"gmail_msg">Thanks,<br></div><div class=3D"gmail_m=
+sg"><br></div><div class=3D"gmail_msg">Vivek</div><div class=3D"gmail_msg">=
+<br class=3D"gmail_msg"></div></div><br class=3D"gmail_msg"><div class=3D"g=
+mail_quote gmail_msg"><div dir=3D"ltr" class=3D"gmail_msg">On Wed, Mar 15, =
+2017 at 2:52 PM Andrew Lunn &lt;<a href=3D"mailto:andrew@lunn.ch" class=3D"=
+gmail_msg" target=3D"_blank">andrew@lunn.ch</a>&gt; wrote:<br class=3D"gmai=
+l_msg"></div><blockquote class=3D"gmail_quote gmail_msg" style=3D"margin:0 =
+0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi Vivek<br class=3D"=
+gmail_msg">
+<br class=3D"gmail_msg">
+&gt; - It has two switches in order to support 8 lan ports. Internal switch=
+ is<br class=3D"gmail_msg">
+&gt;=C2=A0 =C2=A0BCM53012. The external switch BCM53125 currently works as =
+&quot;dumb switch&quot;<br class=3D"gmail_msg">
+<br class=3D"gmail_msg">
+Do you know how the second switch is connected? Is it cascaded off the<br c=
+lass=3D"gmail_msg">
+internal switch? Or does it have a dedicated Ethernet interface?<br class=
+=3D"gmail_msg">
+<br class=3D"gmail_msg">
+Thanks<br class=3D"gmail_msg">
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Andrew<br class=3D"gmail_msg">
+</blockquote></div></div>
+
+--001a113dcec61ce38f054aca08a8--
