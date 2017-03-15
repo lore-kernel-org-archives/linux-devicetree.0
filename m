@@ -1,450 +1,131 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v2 2/5] clk: sunxi-ng: add support for PRCM CCUs
-Date: Thu, 16 Mar 2017 01:28:05 +0800
-Message-ID: <20170315172808.64011-3-icenowy@aosc.xyz>
-References: <20170315172808.64011-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] mailbox: Add iProc mailbox controller driver
+Date: Wed, 15 Mar 2017 23:00:50 +0530
+Message-ID: <CABb+yY1kbFOKJPO95SRw995zt=fCoA+SkXgECOj774i_hJUCNg@mail.gmail.com>
+References: <1485463082-27067-1-git-send-email-jonathan.richardson@broadcom.com>
+ <1485463082-27067-3-git-send-email-jonathan.richardson@broadcom.com>
+ <CABb+yY0rmAFutskhVkQ926QfsvtJ-WnXrQc=+PQNg=7NZEXC+Q@mail.gmail.com>
+ <09177a6f-0612-1e17-a12e-0b1969f5b2e1@broadcom.com> <CABb+yY1o7QTYLm3HGWNeFDPnfpL7AAJ6+R91Stn-gNvO7afxoA@mail.gmail.com>
+ <22d07bb1-9e93-4ae5-7215-923bde9ebfe5@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBKXUUXDAKGQEOI7ATJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170315172808.64011-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <22d07bb1-9e93-4ae5-7215-923bde9ebfe5-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SoCs after A31 has a clock controller module in the PRCM part.
+On Fri, Mar 3, 2017 at 2:33 AM, Jonathan Richardson
+<jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>
+>
+> On 17-02-23 09:00 PM, Jassi Brar wrote:
+>> On Fri, Feb 24, 2017 at 12:29 AM, Jonathan Richardson
+>> <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>>
+>>> On 17-02-16 10:20 PM, Jassi Brar wrote:
+>>>> On Fri, Jan 27, 2017 at 2:08 AM, Jonathan Richardson
+>>>> <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>>>
+>>>>> +static int iproc_mbox_send_data_m0(struct mbox_chan *chan, void *dat=
+a)
+>>>>> +{
+>>>>> +       struct iproc_mbox *mbox =3D dev_get_drvdata(chan->mbox->dev);
+>>>>> +       struct iproc_mbox_msg *msg =3D (struct iproc_mbox_msg *)data;
+>>>>> +               unsigned long flags;
+>>>>> +       int err =3D 0;
+>>>>> +       const int poll_period_us =3D 5;
+>>>>> +       const int max_retries =3D (MAX_M0_TIMEOUT_MS * 1000) / poll_p=
+eriod_us;
+>>>>> +
+>>>>> +       if (!msg)
+>>>>> +               return -EINVAL;
+>>>>> +
+>>>>> +       spin_lock_irqsave(&mbox->lock, flags);
+>>>>> +
+>>>>> +       dev_dbg(mbox->dev, "Send msg to M0: cmd=3D0x%x, param=3D0x%x,=
+ wait_ack=3D%d\n",
+>>>>> +               msg->cmd, msg->param, msg->wait_ack);
+>>>>> +
+>>>> prints should be outside the spinlocks.
+>>>>
+>>>>> +       writel(msg->cmd, mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
+>>>>> +       writel(msg->param, mbox->base + IPROC_CRMU_MAILBOX1_OFFSET);
+>>>>> +
+>>>>> +       if (msg->wait_ack) {
+>>>>> +               int retries;
+>>>>> +
+>>>> move poll_period_us and max_retries in here or just define' them
+>>>>
+>>>>> +               err =3D msg->reply_code =3D -ETIMEDOUT;
+>>>>> +               for (retries =3D 0; retries < max_retries; retries++)=
+ {
+>>>>> +                       u32 val =3D readl(
+>>>>> +                               mbox->base + IPROC_CRMU_MAILBOX0_OFFS=
+ET);
+>>>>> +                       if (val & M0_IPC_CMD_DONE_MASK) {
+>>>>> +                               /*
+>>>>> +                                * M0 replied - save reply code and
+>>>>> +                                * clear error.
+>>>>> +                                */
+>>>>> +                               msg->reply_code =3D (val &
+>>>>> +                                       M0_IPC_CMD_REPLY_MASK) >>
+>>>>> +                                       M0_IPC_CMD_REPLY_SHIFT;
+>>>>> +                               err =3D 0;
+>>>>> +                               break;
+>>>>> +                       }
+>>>>> +                       udelay(poll_period_us);
+>>>>>
+>>>> potentially 2ms inside spin_lock_irqsave. Alternative is to implement
+>>>> a simple 'peek_data' and call it for requests with 'wait_ack'
+>>> Hi Jassi. The M0 response is normally 25-30 us.
+>>>
+>> You hardcode the behaviour of your protocol in the controller driver.
+>> What if your next platform/protocol has commands that the remote/M0
+>> takes upto 10ms to respond (because they are not critical/trivial)?
+>>
+You overlooked this concern?
 
-Support the clock controller module on H5 and A64 now.
+>> If you don't have some h/w indicator (like irq or bit-flag) for
+>> tx-done and data-rx , you have to use ack-by-client and peek method.
+> There isn't any functionality not in the driver. We write the message to =
+two registers and poll another to know when it's complete. Nothing can touc=
+h the registers again until the operation is complete. We can't even pass d=
+ata back to the controller. We pass pointers to the M0 and it can write to =
+the memory. The only data we sent back to the client is that status code fr=
+om the polled register. When complete, data will already be written into th=
+e clients memory from the M0.
+>> Commands that don't get a response will be immediately followed by
+>> mbox_client_txdone(), while others would need to call peek_data() to
+>> poll for data-rx. Please note, if you implement the tx_prepare
+>> callback, you will know when to start peeking for incoming data.
+> The driver will need to block access to the registers if we remove the sp=
+inlock.
+> If a client sends a message that doesn't get a response and another clien=
+t has
+> already sent a message that does which is pending, it still needs to be b=
+locked.
+>
+> The framework queues messages on a per channel basis. We have several cli=
+ents for
+> various drivers each with their own mbox channel. send_data in the contro=
+ller could
+> return EBUSY if the channel is being used by another channel (ie- transac=
+tion pending).
+> If channel A sends a message, then client B sends one before A is complet=
+e, the
+> controller's send_data must return an error.
+>
+Many platforms have clients sharing channels.
+The right way to do is have a 'server/owner' client that accepts
+requests from various clients and serially queue them to mailbox. That
+way you can keep the controller driver free from quirks (like max wait
+time of 30us) of your present platform.
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
-Changes in v2:
-- Replace all sun6i to sun8i, as this driver currently doesn't really
-  support sun6i(A31).
-- Add osc32000 mux for ar100 clk.
-- Rename some clocks.
-- Add gate of TWD (Trusted Watchdog). There's no reset for TWD.
-- Removed reset of PIO, which doesn't exist really.
-
- drivers/clk/sunxi-ng/Kconfig            |   6 +
- drivers/clk/sunxi-ng/Makefile           |   1 +
- drivers/clk/sunxi-ng/ccu-sun8i-r.c      | 211 ++++++++++++++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu-sun8i-r.h      |  27 ++++
- include/dt-bindings/clock/sun8i-r-ccu.h |  59 +++++++++
- include/dt-bindings/reset/sun8i-r-ccu.h |  53 ++++++++
- 6 files changed, 357 insertions(+)
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.h
- create mode 100644 include/dt-bindings/clock/sun8i-r-ccu.h
- create mode 100644 include/dt-bindings/reset/sun8i-r-ccu.h
-
-diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
-index 213cf64e4fab..056752317aee 100644
---- a/drivers/clk/sunxi-ng/Kconfig
-+++ b/drivers/clk/sunxi-ng/Kconfig
-@@ -150,4 +150,10 @@ config SUN9I_A80_CCU
- 	default MACH_SUN9I
- 	depends on MACH_SUN9I || COMPILE_TEST
- 
-+config SUN8I_R_CCU
-+	bool "Support for Allwinner SoCs' PRCM CCUs"
-+	select SUNXI_CCU_DIV
-+	select SUNXI_CCU_GATE
-+	default MACH_SUN8I || (ARCH_SUNXI && ARM64)
-+
- endif
-diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
-index 6feaac0c5600..0ec02fe14c50 100644
---- a/drivers/clk/sunxi-ng/Makefile
-+++ b/drivers/clk/sunxi-ng/Makefile
-@@ -25,6 +25,7 @@ obj-$(CONFIG_SUN8I_A23_CCU)	+= ccu-sun8i-a23.o
- obj-$(CONFIG_SUN8I_A33_CCU)	+= ccu-sun8i-a33.o
- obj-$(CONFIG_SUN8I_H3_CCU)	+= ccu-sun8i-h3.o
- obj-$(CONFIG_SUN8I_V3S_CCU)	+= ccu-sun8i-v3s.o
-+obj-$(CONFIG_SUN8I_R_CCU)	+= ccu-sun8i-r.o
- obj-$(CONFIG_SUN9I_A80_CCU)	+= ccu-sun9i-a80.o
- obj-$(CONFIG_SUN9I_A80_CCU)	+= ccu-sun9i-a80-de.o
- obj-$(CONFIG_SUN9I_A80_CCU)	+= ccu-sun9i-a80-usb.o
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-new file mode 100644
-index 000000000000..a6884c27c098
---- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-@@ -0,0 +1,211 @@
-+/*
-+ * Copyright (c) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+
-+#include "ccu_common.h"
-+#include "ccu_reset.h"
-+
-+#include "ccu_div.h"
-+#include "ccu_gate.h"
-+#include "ccu_mp.h"
-+#include "ccu_nm.h"
-+
-+#include "ccu-sun8i-r.h"
-+
-+static const char * const ar100_parents[] = { "osc32k", "osc24M",
-+					     "pll-periph0", "osc32000" };
-+
-+static struct ccu_div ar100_clk = {
-+	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
-+
-+	.mux		= {
-+		.shift	= 16,
-+		.width	= 2,
-+
-+		.variable_prediv	= {
-+			.index	= 2,
-+			.shift	= 8,
-+			.width	= 5,
-+		},
-+	},
-+
-+	.common		= {
-+		.reg		= 0x00,
-+		.features	= CCU_FEATURE_VARIABLE_PREDIV,
-+		.hw.init	= CLK_HW_INIT_PARENTS("ar100",
-+						      ar100_parents,
-+						      &ccu_div_ops,
-+						      0),
-+	},
-+};
-+
-+static CLK_FIXED_FACTOR(ahb0_clk, "ahb0", "ar100", 1, 1, 0);
-+
-+static struct ccu_div apb0_clk = {
-+	.div		= _SUNXI_CCU_DIV_FLAGS(0, 2, CLK_DIVIDER_POWER_OF_TWO),
-+
-+	.common		= {
-+		.reg		= 0x0c,
-+		.hw.init	= CLK_HW_INIT("apb0",
-+					      "ahb0",
-+					      &ccu_div_ops,
-+					      0),
-+	},
-+};
-+
-+static SUNXI_CCU_GATE(apb0_pio_clk,	"apb0-pio",	"apb0",
-+		      0x28, BIT(0), 0);
-+static SUNXI_CCU_GATE(apb0_ir_clk,	"apb0-ir",	"apb0",
-+		      0x28, BIT(1), 0);
-+static SUNXI_CCU_GATE(apb0_timer_clk,	"apb0-timer",	"apb0",
-+		      0x28, BIT(2), 0);
-+static SUNXI_CCU_GATE(apb0_rsb_clk,	"apb0-rsb",	"apb0",
-+		      0x28, BIT(3), 0);
-+static SUNXI_CCU_GATE(apb0_uart_clk,	"apb0-uart",	"apb0",
-+		      0x28, BIT(4), 0);
-+static SUNXI_CCU_GATE(apb0_i2c_clk,	"apb0-i2c",	"apb0",
-+		      0x28, BIT(6), 0);
-+static SUNXI_CCU_GATE(apb0_twd_clk,	"apb0-twd",	"apb0",
-+		      0x28, BIT(7), 0);
-+
-+static const char * const r_mod0_default_parents[] = { "osc32K", "osc24M" };
-+static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
-+				  r_mod0_default_parents, 0x54,
-+				  0, 4,		/* M */
-+				  16, 2,	/* P */
-+				  24, 2,	/* mux */
-+				  BIT(31),	/* gate */
-+				  0);
-+
-+static struct ccu_common *sun8i_h3_r_ccu_clks[] = {
-+	&ar100_clk.common,
-+	&apb0_clk.common,
-+	&apb0_pio_clk.common,
-+	&apb0_ir_clk.common,
-+	&apb0_timer_clk.common,
-+	&apb0_uart_clk.common,
-+	&apb0_i2c_clk.common,
-+	&ir_clk.common,
-+};
-+
-+static struct ccu_common *sun50i_a64_r_ccu_clks[] = {
-+	&ar100_clk.common,
-+	&apb0_clk.common,
-+	&apb0_pio_clk.common,
-+	&apb0_ir_clk.common,
-+	&apb0_timer_clk.common,
-+	&apb0_rsb_clk.common,
-+	&apb0_uart_clk.common,
-+	&apb0_i2c_clk.common,
-+	&ir_clk.common,
-+};
-+
-+static struct clk_hw_onecell_data sun8i_h3_r_hw_clks = {
-+	.hws	= {
-+		[CLK_AR100]		= &ar100_clk.common.hw,
-+		[CLK_AHB0]		= &ahb0_clk.hw,
-+		[CLK_APB0]		= &apb0_clk.common.hw,
-+		[CLK_APB0_PIO]		= &apb0_pio_clk.common.hw,
-+		[CLK_APB0_IR]		= &apb0_ir_clk.common.hw,
-+		[CLK_APB0_TIMER]	= &apb0_timer_clk.common.hw,
-+		[CLK_APB0_UART]		= &apb0_uart_clk.common.hw,
-+		[CLK_APB0_I2C]		= &apb0_i2c_clk.common.hw,
-+		[CLK_APB0_TWD]		= &apb0_twd_clk.common.hw,
-+		[CLK_IR]		= &ir_clk.common.hw,
-+	},
-+	.num	= CLK_NUMBER,
-+};
-+
-+static struct clk_hw_onecell_data sun50i_a64_r_hw_clks = {
-+	.hws	= {
-+		[CLK_AR100]		= &ar100_clk.common.hw,
-+		[CLK_AHB0]		= &ahb0_clk.hw,
-+		[CLK_APB0]		= &apb0_clk.common.hw,
-+		[CLK_APB0_PIO]		= &apb0_pio_clk.common.hw,
-+		[CLK_APB0_IR]		= &apb0_ir_clk.common.hw,
-+		[CLK_APB0_TIMER]	= &apb0_timer_clk.common.hw,
-+		[CLK_APB0_RSB]		= &apb0_rsb_clk.common.hw,
-+		[CLK_APB0_UART]		= &apb0_uart_clk.common.hw,
-+		[CLK_APB0_I2C]		= &apb0_i2c_clk.common.hw,
-+		[CLK_APB0_TWD]		= &apb0_twd_clk.common.hw,
-+		[CLK_IR]		= &ir_clk.common.hw,
-+	},
-+	.num	= CLK_NUMBER,
-+};
-+
-+static struct ccu_reset_map sun8i_h3_r_ccu_resets[] = {
-+	[RST_APB0_IR]		=  { 0xb0, BIT(1) },
-+	[RST_APB0_TIMER]	=  { 0xb0, BIT(2) },
-+	[RST_APB0_UART]		=  { 0xb0, BIT(4) },
-+	[RST_APB0_I2C]		=  { 0xb0, BIT(6) },
-+};
-+
-+static struct ccu_reset_map sun50i_a64_r_ccu_resets[] = {
-+	[RST_APB0_IR]		=  { 0xb0, BIT(1) },
-+	[RST_APB0_TIMER]	=  { 0xb0, BIT(2) },
-+	[RST_APB0_RSB]		=  { 0xb0, BIT(3) },
-+	[RST_APB0_UART]		=  { 0xb0, BIT(4) },
-+	[RST_APB0_I2C]		=  { 0xb0, BIT(6) },
-+};
-+
-+static const struct sunxi_ccu_desc sun8i_h3_r_ccu_desc = {
-+	.ccu_clks	= sun8i_h3_r_ccu_clks,
-+	.num_ccu_clks	= ARRAY_SIZE(sun8i_h3_r_ccu_clks),
-+
-+	.hw_clks	= &sun8i_h3_r_hw_clks,
-+
-+	.resets		= sun8i_h3_r_ccu_resets,
-+	.num_resets	= ARRAY_SIZE(sun8i_h3_r_ccu_resets),
-+};
-+
-+static const struct sunxi_ccu_desc sun50i_a64_r_ccu_desc = {
-+	.ccu_clks	= sun50i_a64_r_ccu_clks,
-+	.num_ccu_clks	= ARRAY_SIZE(sun50i_a64_r_ccu_clks),
-+
-+	.hw_clks	= &sun50i_a64_r_hw_clks,
-+
-+	.resets		= sun50i_a64_r_ccu_resets,
-+	.num_resets	= ARRAY_SIZE(sun50i_a64_r_ccu_resets),
-+};
-+
-+static void __init sunxi_r_ccu_init(struct device_node *node,
-+				    const struct sunxi_ccu_desc *desc)
-+{
-+	void __iomem *reg;
-+
-+	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+	if (IS_ERR(reg)) {
-+		pr_err("%s: Could not map the clock registers\n",
-+		       of_node_full_name(node));
-+		return;
-+	}
-+
-+	sunxi_ccu_probe(node, reg, desc);
-+}
-+
-+static void __init sun8i_h3_r_ccu_setup(struct device_node *node)
-+{
-+	sunxi_r_ccu_init(node, &sun8i_h3_r_ccu_desc);
-+}
-+CLK_OF_DECLARE(sun8i_h3_r_ccu, "allwinner,sun8i-h3-r-ccu",
-+	       sun8i_h3_r_ccu_setup);
-+
-+static void __init sun50i_a64_r_ccu_setup(struct device_node *node)
-+{
-+	sunxi_r_ccu_init(node, &sun50i_a64_r_ccu_desc);
-+}
-+CLK_OF_DECLARE(sun50i_a64_r_ccu, "allwinner,sun50i-a64-r-ccu",
-+	       sun50i_a64_r_ccu_setup);
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.h b/drivers/clk/sunxi-ng/ccu-sun8i-r.h
-new file mode 100644
-index 000000000000..eaa431fd1d8f
---- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.h
-@@ -0,0 +1,27 @@
-+/*
-+ * Copyright 2016 Icenowy <icenowy-ymACFijhrKM@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _CCU_SUN8I_R_H
-+#define _CCU_SUN8I_R_H_
-+
-+#include <dt-bindings/clock/sun8i-r-ccu.h>
-+#include <dt-bindings/reset/sun8i-r-ccu.h>
-+
-+/* AHB/APB bus clocks are not exported */
-+#define CLK_AHB0	1
-+#define CLK_APB0	2
-+
-+#define CLK_NUMBER	(CLK_APB0_TWD + 1)
-+
-+#endif /* _CCU_SUN8I_R_H */
-diff --git a/include/dt-bindings/clock/sun8i-r-ccu.h b/include/dt-bindings/clock/sun8i-r-ccu.h
-new file mode 100644
-index 000000000000..779d20aa0d05
---- /dev/null
-+++ b/include/dt-bindings/clock/sun8i-r-ccu.h
-@@ -0,0 +1,59 @@
-+/*
-+ * Copyright (c) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_SUN8I_R_CCU_H_
-+#define _DT_BINDINGS_CLK_SUN8I_R_CCU_H_
-+
-+#define CLK_AR100		0
-+
-+#define CLK_APB0_PIO		3
-+#define CLK_APB0_IR		4
-+#define CLK_APB0_TIMER		5
-+#define CLK_APB0_RSB		6
-+#define CLK_APB0_UART		7
-+/* 8 is reserved for CLK_APB0_W1 on A31 */
-+#define CLK_APB0_I2C		9
-+#define CLK_APB0_TWD		10
-+
-+#define CLK_IR			11
-+
-+#endif /* _DT_BINDINGS_CLK_SUN8I_R_CCU_H_ */
-diff --git a/include/dt-bindings/reset/sun8i-r-ccu.h b/include/dt-bindings/reset/sun8i-r-ccu.h
-new file mode 100644
-index 000000000000..4ba64f3d6fc9
---- /dev/null
-+++ b/include/dt-bindings/reset/sun8i-r-ccu.h
-@@ -0,0 +1,53 @@
-+/*
-+ * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#ifndef _DT_BINDINGS_RST_SUN8I_R_CCU_H_
-+#define _DT_BINDINGS_RST_SUN8I_R_CCU_H_
-+
-+#define RST_APB0_IR		0
-+#define RST_APB0_TIMER		1
-+#define RST_APB0_RSB		2
-+#define RST_APB0_UART		3
-+/* 4 is reserved for RST_APB0_W1 on A31 */
-+#define RST_APB0_I2C		5
-+
-+#endif /* _DT_BINDINGS_RST_SUN8I_R_CCU_H_ */
--- 
-2.12.0
+thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
