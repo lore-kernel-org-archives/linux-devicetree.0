@@ -1,59 +1,54 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 3/4] iio: accel: adxl345: Setup DATA_READY trigger
-Date: Wed, 15 Mar 2017 13:06:18 +0200
-Message-ID: <CAHp75VcUApPamBGTY0zwqeOn+P3G4OcDbS__+=RZ+t_3uAi5Qg@mail.gmail.com>
-References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
- <1489403497-27849-4-git-send-email-eraretuya@gmail.com> <CAHp75Vcz1RTdncG5L1S7q2LVHK6TEA813pjTpue4n3DDcCrMAg@mail.gmail.com>
- <20170315094923.GA3080@Socrates-UM>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 14/20] ARM64: dts: sun50i-a64: Add dt node for the
+ syscon control module
+Date: Wed, 15 Mar 2017 14:06:24 +0300
+Message-ID: <f8d389b4-c98a-684d-9df6-6197458cf1d7@cogentembedded.com>
+References: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+ <20170314141856.24560-15-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170315094923.GA3080@Socrates-UM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170314141856.24560-15-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 11:49 AM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
-> On Mon, Mar 13, 2017 at 02:12:54PM +0200, Andy Shevchenko wrote:
->> On Mon, Mar 13, 2017 at 1:11 PM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
+Hello!
 
-> Hello Andy,
-> Thanks for the review.
+On 3/14/2017 5:18 PM, Corentin Labbe wrote:
 
-You are welcome!
-
->> > +static irqreturn_t adxl345_irq(int irq, void *p)
->> > +{
->> > +       struct iio_dev *indio_dev = p;
->> > +       struct adxl345_data *data = iio_priv(indio_dev);
->> > +       int ret = IRQ_NONE;
->> > +       u32 int_stat;
->> > +
->>
->> > +       ret = regmap_read(data->regmap, ADXL345_REG_INT_SOURCE, &int_stat);
->>
->> > +       if (ret < 0)
->> > +               return ret;
->>
->> It makes little sense AFAIU.
->>
+> This patch add the dt node for the syscon register present on the
+> Allwinner A64.
 >
-> Can you please elaborate further your comment regarding this?
+> Only two register are present in this syscon and the only one useful is
+> the one dedicated to EMAC clock.
+>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 1c64ea2..3b09af2 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -121,6 +121,12 @@
+>  		#size-cells = <1>;
+>  		ranges;
+>
+> +		syscon: syscon@01c00000 {
+> +			compatible = "syscon",
+> +				"allwinner,sun8i-h3-system-controller";
 
-It's defined as enum and returned value is not in a range.
+    the right order of values in this prop is from more to less specific.
 
-Also it would be useful to look at kernel/irq/manage.c for the
-implementation details.
+[...]
 
->> P.S. Are you doing this stuff on your own or you are working for some
->> company? If the latter applies, please, consider to do *internal*
->> review first.
+MBR, Sergei
 
-> I'm doing it on my own as a project for Outreachy and have mentors to ask
-> for advice and/or questions.
-
-Ah, okay, that is fine then!
-
--- 
-With Best Regards,
-Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
