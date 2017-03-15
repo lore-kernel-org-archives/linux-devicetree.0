@@ -1,22 +1,20 @@
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-Subject: Re: media / v4l2-mc: wishlist for complex cameras (was Re: [PATCH
- v4 14/36] [media] v4l2-mc: add a function to inherit controls from a
- pipeline)
-Date: Wed, 15 Mar 2017 14:55:09 -0400
-Message-ID: <1489604109.4593.4.camel@ndufresne.ca>
-References: <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
- <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
- <20170314004533.3b3cd44b@vento.lan>
- <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
- <20170314072143.498cde9b@vento.lan> <20170314223254.GA7141@amd>
- <20170314215420.6fc63c67@vento.lan> <20170315105049.GA12099@frolo.macqel>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/2] pinctrl: meson: gxl: add the missing PWM pin
+ definitions
+Date: Wed, 15 Mar 2017 12:12:03 -0700
+Message-ID: <m237ee8id8.fsf@baylibre.com>
+References: <20170304212318.27076-1-martin.blumenstingl@googlemail.com>
+ <20170304212318.27076-2-martin.blumenstingl@googlemail.com>
+ <1488811357.2420.18.camel@baylibre.com>
+ <CAFBinCDty8v80tLxHJPR+SHv32LX834dPJUruRNqr6angx3OOQ@mail.gmail.com>
+ <CACRpkdbGfGUhnAQz=9xeFnD2hF6m_xXacu8mZiwte-OCSDMo9w@mail.gmail.com>
+ <b7430d5f-96a7-2445-1c2a-ccc299bfdda2@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7947588325951320460=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170315105049.GA12099@frolo.macqel>
+In-Reply-To: <b7430d5f-96a7-2445-1c2a-ccc299bfdda2@baylibre.com> (Neil
+ Armstrong's message of "Wed, 15 Mar 2017 10:59:06 +0100")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,78 +24,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philippe De Muyter <phdm@macq.eu>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Pavel Machek <pavel@ucw.cz>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, p.zabel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.orglinux-
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
---===============7947588325951320460==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-7fq51Td7eGbeBp/kWBM3"
+> On 03/14/2017 04:42 PM, Linus Walleij wrote:
+>> On Thu, Mar 9, 2017 at 8:47 PM, Martin Blumenstingl
+>> <martin.blumenstingl@googlemail.com> wrote:
+>>> On Mon, Mar 6, 2017 at 3:42 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>>>> On Sat, 2017-03-04 at 22:23 +0100, Martin Blumenstingl wrote:
+>> 
+>>>>> +     FUNCTION(pwm_f_clk),
+>>>>> +     FUNCTION(pwm_f_x),
+>>>>
+>>>> I wonder if having function named "pwm_f_clk" really makes sense ?
+>>>> Shouldn't it be just "pwm_f" ? This is real function, isn't it ?
+>>>> The actual pin used will be provided in the dt. Here, I suppose we
+>>>> could have this:
+>>>>
+>>>> +static const char * const pwm_f_groups[] = {
+>>>> +       "pwm_f_x", "pwm_f_clk",
+>>>> +};
+>>>>
+>>>> Has far as I can see, on meson arch, the function does not carry much
+>>>> information anyway, except for prints.
+>>>>
+>>>> To be clear, I'm not questioning this change in particular. It looks
+>>>> good, and follows what has been done in the past on meson. I know we
+>>>> have been this a lot already, but I'm questioning whether we should
+>>>> continue to do so ?
+>>>>
+>>>> I asking because I also have a lot case like this coming up on audio
+>>>> for gxl and gxbb, where the same function can use different pins.
+>>>
+>>> could you please look into Jerome's question?
+>>> personally I'm fine with either way, and changing my patch would be
+>>> quite trivial. but I'd like to know what's "the way to go" before
+>>> changing anything (and reverting that afterwards again).
+>> 
+>> I don't understand the question really.
+>> 
+>> I am not an expert on this system, if the people working with it
+>> cannot tell a function from a group I don't know who can... certainly
+>> not me.
+>> 
+>> What I can say is that pincontrol combines functions and groups to
+>> states using a mapping. The functions should be something you poke
+>> into a register, the groups are looser defined but may also be a
+>> character of the hardware, but more usual a character of the
+>> intended electronic usecase. Groups contain 1..n pins and can
+>> be combined with some applicable functions.
+>> 
+>> Please re-read Documentation/pinctrl.txt very closely if anything is
+>> unclear, I really put a lot of hours into getting that right. Especially
+>> reexamine "Pinmux conventions".
+>
+> The point pushed by Jerome was purely cosmetic since the groups in the meson
+> pinctrl driver are purely cosmetic, since only the GPIO group is handled,
+> other groups are all handled the same.
 
+handled the same... as what?
 
---=-7fq51Td7eGbeBp/kWBM3
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> This is because I pushed all the PWM pins in a separate group, but functionnaly
+> the internal signal (i.e. PWM F) is the same for multiple pins and should be
+> a single "PWM F" group instead of multiple ones.
+>
+> My advice is to leave the PWM groups as is,
 
-Le mercredi 15 mars 2017 =C3=A0 11:50 +0100, Philippe De Muyter a =C3=A9cri=
-t=C2=A0:
-> > I would say: camorama, xawtv3, zbar, google talk, skype. If it runs
-> > with those, it will likely run with any other application.
-> >=20
->=20
-> I would like to add the 'v4l2src' plugin of gstreamer, and on the
-> imx6 its
+Do you mean as we have in mainline today?  or as is proposed in $SUBJECT patch?
 
-While it would be nice if somehow you would get v4l2src to work (in
-some legacy/emulation mode through libv4l2), the longer plan is to
-implement smart bin that handle several v4l2src, that can do the
-required interactions so we can expose similar level of controls as
-found in Android Camera HAL3, and maybe even further assuming userspace
-can change the media tree at run-time. We might be a long way from
-there, specially that some of the features depends on how much the
-hardware can do. Just being able to figure-out how to build the MC tree
-dynamically seems really hard when thinking of generic mechanism. Also,
-Request API will be needed.
+> and push new pins/functions/groups
+> grouped with the internal signal name if split on multiple pins.
 
-I think for this one, we'll need some userspace driver that enable the
-features (not hide them), and that's what I'd be looking for from
-libv4l2 in this regard.
+Can somone do a quick patch for PWM_F for example, also showing how this
+will look in the DT if someone wants to switch between the PWM_F on GPIOX
+or GPIOCLK?
 
-> imx-specific counterpart 'imxv4l2videosrc' from the gstreamer-imx
-> package
-> at https://github.com/Freescale/gstreamer-imx, and 'v4l2-ctl'.
+We shouldalso verify that the driver is detecting/removing conflicts
+properly when something else is already using that pin (e.g. SDIO_IRQ
+shares pin GPIOX_7 with PWM_F)
 
-This one is specific to IMX hardware using vendor driver. You can
-probably ignore that.
-
-Nicolas
---=-7fq51Td7eGbeBp/kWBM3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEABECAAYFAljJjg0ACgkQcVMCLawGqBzWHACfQymBOSCSce0cthYH9b7XZ0jx
-87wAnR09ioCl/7XxAg/iQxU6O3boR99I
-=mn5/
------END PGP SIGNATURE-----
-
---=-7fq51Td7eGbeBp/kWBM3--
-
-
-
---===============7947588325951320460==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7947588325951320460==--
+Kevin
