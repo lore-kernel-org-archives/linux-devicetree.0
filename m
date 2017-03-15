@@ -1,74 +1,90 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: Excluding pins from Linux control
-Date: Wed, 15 Mar 2017 22:03:53 +0100 (CET)
-Message-ID: <453853371.502284.1489611833231@email.1und1.de>
-References: <433834766.313467.1488218521360@email.1und1.de>
- <CACRpkdYB+4=hG4YcUTvyg50cP6SfMhUuUMW7XqJAVxswYBsWng@mail.gmail.com>
- <1588667510.505126.1489522194503@email.1und1.de>
- <CACRpkdbr9-hsFzPvOpwiVg=X=avx8fb14HhWWXNda7gGZaM2Gg@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 1/2 RESEND] power: reset: Add Gemini poweroff DT bindings
+Date: Wed, 15 Mar 2017 22:11:16 +0100
+Message-ID: <20170315211115.bohi4z5fzwze43tu@earth>
+References: <20170312223601.2952-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbr9-hsFzPvOpwiVg=X=avx8fb14HhWWXNda7gGZaM2Gg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============3557619455072879331=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170312223601.2952-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, inux-pm@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-> Linus Walleij <linus.walleij@linaro.org> hat am 15. März 2017 um 09:46 geschrieben:
-> 
-> 
-> On Tue, Mar 14, 2017 at 9:09 PM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> >> Linus Walleij <linus.walleij@linaro.org> hat am 14. März 2017 um 15:39 geschrieben:
-> 
-> >> If you want to do it statically, at boot time:
-> >> Just add some NOOP function (i.e. a function that result in
-> >> zero register writes or anything) named "videocore-reserved" or
-> >> something to the driver in  drivers/pinctrl/bcm/pinctrl-bcm2835.c,
-> >> make it applicable to the affected pins, making it possible
-> >> to create a state that will combine the function "videocore-reserved"
-> >> with these pins, resulting in them being exclusively used for
-> >> that.
-> >
-> > If you speak of a NOOP function, do you mean a "dummy" pin function
-> > which is configured by the device tree? Like extending the "brcm,function"
-> > property from the existing binding?
-> 
-> No, a function for videocore defined by the driver in
-> drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> and then used by the device tree.
-> 
-> Looking at the BCM2835 syntax (hope I get it right), in the end you should
-> be able to do this:
-> 
->     videocore: videocore {
->         brcm,pins = <12, 13, 14, 15, 16, 17, 18, 19, 20>;
->         brcm,function = <BCM2835_FSEL_VIDEOCORE>;
->     };
-> 
-> So BCM2835_FSEL_VIDEOCORE need to be defined in the
-> DT include and made available as a muxing option inside the driver, with
-> the effect that nothing really happens when you select it.
-> 
-> The point is that the pinctrl core will then regard the pin as taken
-> (this can be verified in debugfs) and then no other function can go
-> in and use the pin by mistake.
-> 
-> Something like this:
-> 
-> From d188c03c1fba7d1223c1dafcb8b977e383298ef4 Mon Sep 17 00:00:00 2001
-> From: Linus Walleij <linus.walleij@linaro.org>
-> Date: Wed, 15 Mar 2017 09:45:37 +0100
-> Subject: [PATCH] Stab at videocore function
-> 
+--===============3557619455072879331==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3iir3cxoicpdpdkb"
+Content-Disposition: inline
+
+
+--3iir3cxoicpdpdkb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Linus,
+
+On Sun, Mar 12, 2017 at 11:36:01PM +0100, Linus Walleij wrote:
+> This adds device tree bindings to the power management controller
+> in the Gemini SoC.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Cc: Janos Laube <janos.dev@gmail.com>
+> Cc: Paulius Zaleckas <paulius.zaleckas@gmail.com>
+> Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Sebastian: please just merge this when your are pleased
+> with it. I will funnel the ARM parts through the ARM SoC tree.
 
-Again, thanks a lot
+DONE.
 
-Stefan
+-- Sebastian
 
-> 
-> Yours,
-> Linus Walleij
+--3iir3cxoicpdpdkb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljJrfMACgkQ2O7X88g7
++poIkBAAo+rVrhFRpPdX71PzKxhbLyuLN6l4fFySk61eik8iZ6iG34tcmBKVpByX
+J7eR/onu1bmtRo/Z+Ryr4eIAZ2a32/hpDI0pFxUuXC4f3Ea4kXLvtArC5WMqwq68
+U27dv9kNC8DhBWCoPv+BHs4P11iAXkg5+G1jEkRflmwHJZ+rMO8Mc5mx1SKMEmEE
+V/6cwliQmaN+l3C8F60TuXn1mZOelvN9GpyB6bmVrPKLA6k3wsrBc8fcPq/UVedI
+xgWwfnXlIS8gGeJYLkgDK6GPlT75R+n6y2m84eiEoIN1lfV43pk+wKzpKGJpBtHR
+ir9oVjwkQSGN/mkjv7ou/WRnqJnC/enzOnDBGINjgKLbmfzQKUURSUHbHSSbRjIN
+T/RkGAPseFFF3EbcLDd0MaSHYniijAH7BI6Dn9oZtdZxp6bFzJKtynhNy7NBGHLW
+VcZA1w45H6QY8GbcDVLmoDoBZxbgDkLFwVN0lUyVa9wx+vA0ViF8qQiZac5zYHpz
+26qReUGHon78lCw2I9qZVxHma+9Nlx2T/bOGVD/hHoiyikD82P33PlUt6PyjIpso
+GU11JIOQ/OBBcBk4Khe3vRr1ymoqjQuoSynd9C1p9B/chwhNFBOS0fup9v4q9U9X
+ADKlh6Bj2I7NBQseTRcTztL7VQjErtv5Z83tyQdbGj+nSDrSWEA=
+=Lngv
+-----END PGP SIGNATURE-----
+
+--3iir3cxoicpdpdkb--
+
+
+--===============3557619455072879331==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3557619455072879331==--
