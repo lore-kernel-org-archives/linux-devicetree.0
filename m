@@ -1,131 +1,76 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [v3 3/5] coresight: add support for debug module
-Date: Wed, 15 Mar 2017 14:41:59 -0600
-Message-ID: <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
-References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
- <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com> <20170309175915.GA964@leoy-linaro>
- <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com> <20170313165600.GB32431@linaro.org>
- <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] power: reset: syscon-poweroff: add a mask property
+Date: Wed, 15 Mar 2017 21:45:13 +0100
+Message-ID: <20170315204513.i3cpl4ptyevtyyp5@earth>
+References: <1486472054-4367-1-git-send-email-guy.shapiro@mobi-wize.com>
+ <1486482966-4497-1-git-send-email-guy.shapiro@mobi-wize.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <516f8989-4dde-2686-d549-0761feb14d1b-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wspwyo7wchrwmhxp"
+Return-path: <rtc-linux+bncBDXMLNOH5ANRBX6PU3DAKGQEHTRZIJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1486482966-4497-1-git-send-email-guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 March 2017 at 10:44, Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 13/03/17 16:56, Mathieu Poirier wrote:
->>
->> On Fri, Mar 10, 2017 at 02:29:53PM +0000, Suzuki K Poulose wrote:
->>>>>>
->>>>>> +
->>>>>> +       put_online_cpus();
->>>>>> +
->>>>>> +       if (!debug_count++)
->>>>>> +               atomic_notifier_chain_register(&panic_notifier_list,
->>>>>> +                                              &debug_notifier);
->>>>>> +
->>>>>
->>>>>
->>>>>> +       sprintf(buf, (char *)id->data, drvdata->cpu);
->>>>>> +       dev_info(dev, "%s initialized\n", buf);
->>>>>
->>>>>
->>>>> This could simply be :
->>>>>         dev_info(dev, "Coresight debug-CPU%d initialized\n",
->>>>> drvdata->cpu);
->>>>>
->>>>> and get rid of the static string and the buffer, see below.
->>>
->>>
->>> Also we need pm_runtime_put() here to balance the pm_runtime_get_ from
->>> AMBA
->>> device probe.
->>
->>
->> Good point.
->>
->>> More on that below.
->>>
->>>>>
->>>>>> +       return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static struct amba_id debug_ids[] = {
->>>>>> +       {       /* Debug for Cortex-A53 */
->>>>>> +               .id     = 0x000bbd03,
->>>>>> +               .mask   = 0x000fffff,
->>>>>
->>>>>
->>>>> ...
->>>>>
->>>>>> +               .data   = "Coresight debug-CPU%d",
->>>>>
->>>>>
->>>>> I think this is pointless, as the debug area we are interested in is
->>>>> always associated
->>>>> with a CPU, we could as well figure out what to print from the
->>>>> drvdata->cpu above.
->>>>
->>>>
->>>> I prefer to follow your suggestion for upper two comments; but I'd like
->>>> check with Mathieu, due I followed up Mathieu's suggestion to write
->>>> current code.
->>>
->>>
->>> Btw, I don't see any PM calls to make sure the power domain (at least the
->>> debug domain)
->>> is up, which could cause problems with accesses to some of these
->>> registers (leave alone the
->>> ones in CPU power domain), especially the EDPRSR. We could also do
->>> pm_runtime_get on the
->>> CPU's power domain, if the CPU is online, before we access the pcsr.
->>
->>
->> I thought about PM runtime operations a little while back but wondered if
->> it is
->> really a good thing to have them around.  When this code is called the
->> system
->> has crashed and as such making PM runtimes call isn't a good idea.
->
->
-> You are right. It is not safe to make such calls when we have crashed.
-> The other side effect is, if we don't have the debug power domain up,
-> we could possibly hang the system and prevent other registered notifiers
-> from running, which doesn't sound good either.
->
->>
->> One thing we could do is _not_ call pm_runtime_put() at the end of the
->> probe()
->> operation.  That way we wouldn't have to mess around with PM runtime
->> operations
->> on an unstable system.  This, of course, is costly in terms of power
->> consumption
->> but the system is under test/debug anyway.
->
->
-> May be control the behavior via kernel command line ? Something like
-> coresight_debug={on or 1} or
-> even use the "nohlt" ?
 
-We need to deal with the debug and CPU power domains.
+--wspwyo7wchrwmhxp
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-For the former I suggest we do what coresight does and use the
-"power-domains" binding[1].  For the CPU power domain we can re-use
-the "nohlt" flag.  In the probe function if the "nohlt" cmd line flag
-is not set the code bails out.  If it is set pm_runtime_put() is _not_
-called and the driver can be used without worries of hanging the
-system when the panic handler is invoked.
+Hi,
 
-Am I forgetting something?
+On Tue, Feb 07, 2017 at 05:56:05PM +0200, Guy Shapiro wrote:
+> Make the syscon-poweroff driver accept value and mask instead of
+> just value.
+> 
+> Prior to this patch, the property name for the value was 'mask'. If
+> only the mask property is defined on a node, maintain compatibility
+> by using it as the value.
+> 
+> Signed-off-by: Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
 
-[1]. http://lxr.free-electrons.com/source/arch/arm64/boot/dts/arm/juno-base.dtsi#L137
+Thanks, queued with Rob's Acked-By.
 
->
-> Suzuki
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- Sebastian
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--wspwyo7wchrwmhxp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljJp9cACgkQ2O7X88g7
++poUXg//YVvSVFLN+yCg282zEWVPHRSG0sqsj14LykFmOBm6P/x6wlzDRm57AQ6t
+RAwigdpSzPdi7BEjXnvNDv2oHx0xd3h52wSx3NdxUHUxQfa3D0K/eNU+LK4HbdB6
+Whs0gaRYC4D1SjWrZ6+GFWSDSfIW/r8CBEUTF6MG5uIy1F1ErIVzKeX80KOM+I8I
+2eNj6wV2Lq8z5HSrt+Mswmsm5PaKUwucs1zNrl2f56tjkh0DmReXXoB1arYuzoVz
+MiRwPlIZq4MOzAwsHf3sH3SIj4NBeMi4Q14O3aS2BsxmvNSUxV2PuMhmMLZ0FzqB
+K973y9yS4yuKCNONY4AVEFen0d12jzs74UhNCHLcZBDH9ecX8DaHbDGsKEkgPaSX
+BluMFrdBy0kCTkZJKLGVLMwSEtLRmLV4qDjKX4UgW8264uEqJnHV57tMw7LX+BCc
+dIxGBWu/r8PrrfuXwUAzVslTEGbA+Agtp6Asz36ZuS+B55J/Dl3/q/j8XjKhgvSe
+tlBD1ZxVszngAqbhQ4s1xMOWuHWvVNo55asg1MrmTsGMQJfffAOxxqoxTTIMTbw3
+C/h9JJwn/Vm1GPdJaFlMvebKYMDZIu63zKBgbltEc5WkYnSr1yVyiSLWJcUb9AHg
+A2rl70vxMLWglhCSqKNGLmlgY4PMZ9YoPmtsmIvkSQFVv6iQa1M=
+=auno
+-----END PGP SIGNATURE-----
+
+--wspwyo7wchrwmhxp--
