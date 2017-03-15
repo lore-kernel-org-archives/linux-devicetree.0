@@ -1,176 +1,50 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: Re: media / v4l2-mc: wishlist for complex cameras (was Re: [PATCH
- v4 14/36] [media] v4l2-mc: add a function to inherit controls from a
- pipeline)
-Date: Tue, 14 Mar 2017 21:54:31 -0300
-Message-ID: <20170314215420.6fc63c67@vento.lan>
-References: <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
-        <20170310140124.GV21222@n2100.armlinux.org.uk>
-        <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
-        <20170310125342.7f047acf@vento.lan>
-        <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
-        <20170311082549.576531d0@vento.lan>
-        <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
-        <20170314004533.3b3cd44b@vento.lan>
-        <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
-        <20170314072143.498cde9b@vento.lan>
-        <20170314223254.GA7141@amd>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC 1/2] clk: dt: binding for basic divider clock
+Date: Tue, 14 Mar 2017 18:07:10 -0700
+Message-ID: <20170315010710.GJ10239@codeaurora.org>
+References: <20170314202236.39910-1-code@mmayer.net>
+ <20170314202236.39910-2-code@mmayer.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170314223254.GA7141@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus@linux.i
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170314202236.39910-2-code@mmayer.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Markus Mayer <code@mmayer.net>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Linux Clock Mailing List <linux-clk@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Em Tue, 14 Mar 2017 23:32:54 +0100
-Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> escreveu:
-
-> Hi!
+On 03/14, Markus Mayer wrote:
+> From: Mike Turquette <mturquette@linaro.org>
 > 
-> > > > Even if they were merged, if we keep the same mean time to develop a
-> > > > libv4l plugin, that would mean that a plugin for i.MX6 could take 2-3
-> > > > years to be developed.
-> > > > 
-> > > > There's a clear message on it:
-> > > > 	- we shouldn't keep pushing for a solution via libv4l.    
-> > > 
-> > > Or:
-> > > 
-> > > 	- userspace plugin development had a very a low priority and
-> > > 	  never got the attention it needed.  
-> > 
-> > The end result is the same: we can't count on it.
-> >   
-> > > 
-> > > I know that's *my* reason. I rarely if ever looked at it. I always assumed
-> > > Sakari and/or Laurent would look at it. If this reason is also valid for
-> > > Sakari and Laurent, then it is no wonder nothing has happened in all that
-> > > time.
-> > > 
-> > > We're all very driver-development-driven, and userspace gets very little
-> > > attention in general. So before just throwing in the towel we should take
-> > > a good look at the reasons why there has been little or no development: is
-> > > it because of fundamental design defects, or because nobody paid attention
-> > > to it?  
-> > 
-> > No. We should look it the other way: basically, there are patches
-> > for i.MX6 driver that sends control from videonode to subdevs. 
-> > 
-> > If we nack apply it, who will write the userspace plugin? When
-> > such change will be merged upstream?  
+> Devicetree binding for the basic clock divider, plus the setup function
+> to register the clock.  Based on the existing fixed-clock binding.
 > 
-> Well, I believe first question is: what applications would we want to
-> run on complex devices? Will sending control from video to subdevs
-> actually help?
-
-I would say: camorama, xawtv3, zbar, google talk, skype. If it runs
-with those, it will likely run with any other application.
-
-> mplayer is useful for testing... but that one already works (after you
-> setup the pipeline, and configure exposure/gain).
+> Tero Kristo contributed helpful bug fixes to this patch.
 > 
-> But thats useful for testing, not really for production. Image will be
-> out of focus and with wrong white balance.
-> 
-> What I would really like is an application to get still photos. For
-> taking pictures with manual settings we need
-> 
-> a) units for controls: user wants to focus on 1m, and take picture
-> with ISO200, 1/125 sec. We should also tell him that lens is f/5.6 and
-> focal length is 20mm with 5mm chip.
-> 
-> But... autofocus/autogain would really be good to have. Thus we need:
-> 
-> b) for each frame, we need exposure settings and focus position at
-> time frame was taken. Otherwise autofocus/autogain will be too
-> slow. At least focus position is going to be tricky -- either kernel
-> would have to compute focus position for us (not trivial) or we'd need
-> enough information to compute it in userspace.
-> 
-> There are more problems: hardware-accelerated preview is not trivial
-> to set up (and I'm unsure if it can be done in generic way). Still
-> photos application needs to switch resolutions between preview and
-> photo capture. Probably hardware-accelerated histograms are needed for
-> white balance, auto gain and auto focus, ....
-> 
-> It seems like there's a _lot_ of stuff to be done before we have
-> useful support for complex cameras...
+> Signed-off-by: Mike Turquette <mturquette@linaro.org>
+> Tested-by: Heiko Stuebner <heiko@sntech.de>
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
 
-Taking still pictures using a hardware-accelerated preview is
-a sophisticated use case. I don't know any userspace application
-that does that. Ok, several allow taking snapshots, by simply
-storing the image of the current frame.
+These sorts of details should go into C code. Is there any
+difficulty in writing a driver to do so? So far we've avoided
+adding the generic divider, multiplier, mux, bindings because
+those usually need some register level details that we've been
+reluctant to add to DT.
 
-> (And I'm not sure... when application such as skype is running, is
-> there some way to run autogain/autofocus/autowhitebalance? Is that
-> something we want to support?)
+That's because if something is wrong with these register level
+details or we need to make some policy updates, e.g. favor this
+divider over another, we can't really do that with a DT update.
+So we really want to see DT nodes have some hardware specific
+compatible string, and also put the logic for the driver into the
+code so that it can be easily fixed and updated after the fact.
 
-Autofocus no. Autogain/Autowhite can be done via libv4l, provided that
-it can access the device's controls via /dev/video devnode. Other
-applications may be using some other similar algorithms.
+The DTS file is there to tell us "I have a divider from company X
+here and it's connected to this and that" and the driver is there
+to do the work of driving that piece of hardware so it works
+properly.
 
-Ok, they don't use histograms provided by the SoC. So, they do it in
-software, with is slower. Still, it works fine when the light
-conditions don't change too fast.
-
-> > If we don't have answers to any of the above questions, we should not
-> > nack it.
-> > 
-> > That's said, that doesn't prevent merging a libv4l plugin if/when
-> > someone can find time/interest to develop it.  
-> 
-> I believe other question is: will not having same control on main
-> video device and subdevs be confusing? Does it actually help userspace
-> in any way? Yes, we can make controls accessible to old application,
-> but does it make them more useful? 
-
-Yes. As I said, libv4l (and some apps) have logic inside to adjust
-the image via bright, contrast and white balance controls, using the
-video devnode. They don't talk subdev API. So, if those controls
-aren't exported, they won't be able to provide a good quality image.
-
-> > > In addition, I suspect end-users of these complex devices don't really care
-> > > about a plugin: they want full control and won't typically use generic
-> > > applications. If they would need support for that, we'd have seen much more
-> > > interest. The main reason for having a plugin is to simplify testing and
-> > > if this is going to be used on cheap hobbyist devkits.  
-> > 
-> > What are the needs for a cheap hobbyist devkit owner? Do we currently
-> > satisfy those needs? I'd say that having a functional driver when
-> > compiled without the subdev API, that implements the ioctl's/controls  
-> 
-> Having different interface based on config options... is just
-> weird. What about poor people (like me) trying to develop complex
-> applications?
-
-Well, that could be done using other mechanisms, like a modprobe
-parameter or by switching the behaviour if a subdev interface is
-opened. I don't see much trouble on allowing accessing a control via
-both interfaces.
-
-> 
-> > [1] Yet, I might eventually do that for fun, an OMAP3 board with tvp5150
-> > just arrived here last week. It would be nice to have xawtv3 running on it :-)
-> > So, if I have a lot of spare time (with is very unlikely), I might eventually 
-> > do something for it to work.
-> >   
-> > > I know it took me a very long time before I had a working omap3.  
-> > 
-> > My first OMAP3 board with working V4L2 source just arrived last week
-> > :-)  
-> 
-> You can get Nokia N900 on aliexpress. If not, they are still available
-> between people :-)
-
-I have one. Unfortunately, I never had a chance to use it, as the display
-stopped working one week after I get it.
-
-Thanks,
-Mauro
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
