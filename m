@@ -1,57 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] doc: bindings: Add bindings documentation for mtd
- nvmem
-Date: Wed, 15 Mar 2017 12:24:01 -0500
-Message-ID: <20170315172401.35b5owbme4scqfgn@rob-hp-laptop>
-References: <1488875164-30440-1-git-send-email-albeu@free.fr>
- <1488875164-30440-2-git-send-email-albeu@free.fr>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/15] dt-bindings: display: sun4i: Add HDMI
+ display bindings
+Date: Wed, 15 Mar 2017 12:26:22 -0500
+Message-ID: <20170315172622.lb6vy7cmbwaf7crn@rob-hp-laptop>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <f1d46b79f933df724a6750d557ebe9517b6339b5.1488876832.git-series.maxime.ripard@free-electrons.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBQPSUXDAKGQEYHA4GEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1488875164-30440-2-git-send-email-albeu@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alban <albeu@free.fr>
-Cc: linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Moritz Fischer <moritz.fischer@ettus.com>
+In-Reply-To: <f1d46b79f933df724a6750d557ebe9517b6339b5.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 07, 2017 at 09:26:03AM +0100, Alban wrote:
-> Config data for drivers, like MAC addresses, is often stored in MTD.
-> Add a binding that define how such data storage can be represented in
-> device tree.
+On Tue, Mar 07, 2017 at 09:56:25AM +0100, Maxime Ripard wrote:
+> One of the possible output of the display pipeline, on the SoCs that have
+> it, is the HDMI controller.
 > 
-> Signed-off-by: Alban <albeu@free.fr>
-> ---
-> Changelog:
-> v2: * Added a "Required properties" section with the nvmem-provider
->       property
-> ---
->  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> Add a binding for it.
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> new file mode 100644
-> index 0000000..8ed25e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> @@ -0,0 +1,33 @@
-> += NVMEM in MTD =
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 21 +++++++-
+>  1 file changed, 21 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> index b82c00449468..4b280672658e 100644
+> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> @@ -4,6 +4,27 @@ Allwinner A10 Display Pipeline
+>  The Allwinner A10 Display pipeline is composed of several components
+>  that are going to be documented below:
+>  
+> +HDMI Encoder
+> +------------
 > +
-> +Config data for drivers, like MAC addresses, is often stored in MTD.
-> +This binding define how such data storage can be represented in device tree.
-> +
-> +An MTD can be defined as an NVMEM provider by adding the `nvmem-provider`
-> +property to their node. Data cells can then be defined as child nodes
-> +of the partition as defined in nvmem.txt.
+> +The HDMI Encoder supports the HDMI video and audio outputs, and does
+> +CEC. It is one end of the pipeline.
 > +
 > +Required properties:
-> +nvmem-provider:	Indicate that the device should be registered as
-> +		NVMEM provider
+> +  - compatible: value must be one of:
+> +    * allwinner,sun5i-a10s-hdmi
+> +  - reg: base address and size of memory-mapped region
+> +  - clocks: phandles to the clocks feeding the HDMI encoder
+> +    * ahb: the HDMI interface clock
+> +    * mod: the HDMI module clock
+> +    * pll-0: the first video PLL
+> +    * pll-1: the second video PLL
+> +  - clock-names: the clock names mentioned above
+> +
+> +  - ports: A ports node with endpoint definitions as defined in
+> +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> +    first port should be the input endpoint.
 
-I think we should use a compatible string here (perhaps with a 
-generic fallback), and that can imply it is an nvmem provider. The 
-reason is then the compatible can also imply other information that 
-isn't defined in DT.
+You need an output port to an HDMI connector node and an audio port.
 
-Rob
+> +
+>  TV Encoder
+>  ----------
+>  
+> -- 
+> git-series 0.8.11
