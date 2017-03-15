@@ -1,79 +1,131 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Wed, 15 Mar 2017 08:19:29 +0100
-Message-ID: <15211aa1-7396-391d-de15-b10ff3a3382d@grandegger.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
- <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
- <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
- <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
- <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
- <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v3] arm64: dts: ls1012a: add thermal monitor node
+Date: Wed, 15 Mar 2017 15:10:25 +0800
+Message-ID: <1489561825-42670-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Akshay Bhat <nodeax@gmail.com>
-Cc: Akshay Bhat <akshay.bhat@timesys.com>, mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Akshay,
+There is a thermal monitoring unit on ls1012a soc which can
+monitor and record the temperature of cores so that appropriate actions
+can be taken or alarm the user when the temperature exceeds a programmed
+temperature threshold.
 
-Am 15.03.2017 um 05:44 schrieb Akshay Bhat:
-> Hi Wolfgang,
->
-> On Tue, Mar 14, 2017 at 2:08 PM, Wolfgang Grandegger <wg@grandegger.com> wrote:
-> ...snip....
->>> /////disconnect cable
->>>   can0  20000088   [8]  00 00 00 19 00 00 28 00   ERRORFRAME
->>>         protocol-violation{{}{acknowledge-slot}}
->>>         bus-error
->>>         error-counter-tx-rx{{40}{0}}
->>>   can0  20000088   [8]  00 00 00 19 00 00 58 00   ERRORFRAME
->>>         protocol-violation{{}{acknowledge-slot}}
->>>         bus-error
->>>         error-counter-tx-rx{{88}{0}}
->>>   can0  20000088   [8]  00 00 00 19 00 00 80 00   ERRORFRAME
->>>         protocol-violation{{}{acknowledge-slot}}
->>>         bus-error
->>>         error-counter-tx-rx{{128}{0}}
->>
->>
->> TX error warning is missing.
->>
->
-> This support was missing in the driver, added in V4 patch.
->
->>>   can0  2000008C   [8]  00 20 00 19 00 00 80 00   ERRORFRAME
->>>         controller-problem{tx-error-passive}
->>>         protocol-violation{{}{acknowledge-slot}}
->>>         bus-error
->>>         error-counter-tx-rx{{128}{0}}
->>
->>
->> Here "tx-error-passiv" is packed with a bus error. What I'm looking for are
->> state change messages similar to:
->>
->>    can0  20000204  [8] 00 08 00 00 00 00 60 00   ERRORFRAME
->>         controller-problem{tx-error-warning}
->>         state-change{tx-error-warning}
->>         error-counter-tx-rx{{96}{0}}
->>    can0  20000204  [8] 00 30 00 00 00 00 80 00   ERRORFRAME
->>         controller-problem{tx-error-passive}
->>         state-change{tx-error-passive}
->>         error-counter-tx-rx{{128}{0}
->>
->> They should always come, even with "berr-reporting off".
->>
->
-> HI-3110 has only 1 bus error interrupt. There is no dedicated state
-> change interrupts like other controllers.
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+---
+v3:
+	-- fix alignment and format issue
+v2:
+	-- rebase to latest kernel
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 76 ++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-To double check: Could you please read INTF, ERR and STATF at the 
-beginning of the ISR and print it out (using dev_dbg and fiends). Then 
-run a test with no cable connected and bus error reporting off.
-
-Wolfgang.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index cffebb4..2cceefd 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -43,6 +43,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	compatible = "fsl,ls1012a";
+@@ -127,6 +128,81 @@
+ 			clocks = <&sysclk>;
+ 		};
+ 
++		tmu: tmu@1f00000 {
++			compatible = "fsl,qoriq-tmu";
++			reg = <0x0 0x1f00000 0x0 0x10000>;
++			interrupts = <0 33 0x4>;
++			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
++			fsl,tmu-calibration = <0x00000000 0x00000026
++					       0x00000001 0x0000002d
++					       0x00000002 0x00000032
++					       0x00000003 0x00000039
++					       0x00000004 0x0000003f
++					       0x00000005 0x00000046
++					       0x00000006 0x0000004d
++					       0x00000007 0x00000054
++					       0x00000008 0x0000005a
++					       0x00000009 0x00000061
++					       0x0000000a 0x0000006a
++					       0x0000000b 0x00000071
++
++					       0x00010000 0x00000025
++					       0x00010001 0x0000002c
++					       0x00010002 0x00000035
++					       0x00010003 0x0000003d
++					       0x00010004 0x00000045
++					       0x00010005 0x0000004e
++					       0x00010006 0x00000057
++					       0x00010007 0x00000061
++					       0x00010008 0x0000006b
++					       0x00010009 0x00000076
++
++					       0x00020000 0x00000029
++					       0x00020001 0x00000033
++					       0x00020002 0x0000003d
++					       0x00020003 0x00000049
++					       0x00020004 0x00000056
++					       0x00020005 0x00000061
++					       0x00020006 0x0000006d
++
++					       0x00030000 0x00000021
++					       0x00030001 0x0000002a
++					       0x00030002 0x0000003c
++					       0x00030003 0x0000004e>;
++			big-endian;
++			#thermal-sensor-cells = <1>;
++		};
++
++		thermal-zones {
++			cpu_thermal: cpu-thermal {
++				polling-delay-passive = <1000>;
++				polling-delay = <5000>;
++				thermal-sensors = <&tmu 0>;
++				trips {
++					cpu_alert: cpu-alert {
++						temperature = <85000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
++
++					cpu_crit: cpu-crit {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "critical";
++					};
++				};
++
++				cooling-maps {
++					map0 {
++						trip = <&cpu_alert>;
++						cooling-device =
++							<&cpu0 THERMAL_NO_LIMIT
++							THERMAL_NO_LIMIT>;
++					};
++				};
++			};
++		};
++
+ 		i2c0: i2c@2180000 {
+ 			compatible = "fsl,vf610-i2c";
+ 			#address-cells = <1>;
+-- 
+2.1.0.27.g96db324
