@@ -1,198 +1,71 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and endpoints
-Date: Wed, 15 Mar 2017 12:53:58 +0100
-Message-ID: <2016139.6kLz0hZfFG@aspire.rjw.lan>
-References: <1629581.fh46rNHz4U@aspire.rjw.lan> <1595427.gxrcIpTbyD@aspire.rjw.lan> <de8e9507-6d62-8a3a-5c4c-5eb3a04b8c55@linux.intel.com>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
+ constant-charge-current property
+Date: Wed, 15 Mar 2017 05:08:05 -0700
+Message-ID: <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com>
+References: <20170315105537.22349-1-quentin.schulz@free-electrons.com> <20170315105537.22349-2-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <de8e9507-6d62-8a3a-5c4c-5eb3a04b8c55@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170315105537.22349-2-quentin.schulz@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Sebastian Reichel <sre@kernel.org>, robh+dt@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 15, 2017 01:45:48 PM Sakari Ailus wrote:
-> On 03/15/17 13:28, Rafael J. Wysocki wrote:
-> > On Wednesday, March 15, 2017 11:33:35 AM Sakari Ailus wrote:
-> >> On 03/15/17 10:23, Sakari Ailus wrote:
-> >>> On Wed, Mar 15, 2017 at 12:13:45AM +0100, Rafael J. Wysocki wrote:
-> >>>> On Tue, Mar 14, 2017 at 11:53 PM, Sakari Ailus
-> >>>> <sakari.ailus@linux.intel.com> wrote:
-> >>>>> Rafael J. Wysocki wrote:
-> >>>>>>
-> >>>>>> On Tue, Mar 14, 2017 at 10:16 PM, Sakari Ailus
-> >>>>>> <sakari.ailus@linux.intel.com> wrote:
-> >>>>>>>
-> >>>>>>> Rafael J. Wysocki wrote:
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> On Tue, Mar 14, 2017 at 6:54 PM, Sakari Ailus
-> >>>>>>>> <sakari.ailus@linux.intel.com> wrote:
-> >>>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>> Hi Rafael,
-> >>>>>>>>>
-> >>>>>>>>> Rafael J. Wysocki wrote:
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
-> >>>>>>>>>> <sakari.ailus@linux.intel.com> wrote:
-> >>>>>>>>>>>
-> >>>>>>>>>>>
-> >>>>>>>>>>>
-> >>>>>>>>>>> On 03/14/17 10:08, Sakari Ailus wrote:
-> >>>>>>>>>>>>
-> >>>>>>>>>>>>
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> How about this instead:
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> All port nodes are located under the device's "_DSD" node in the
-> >>>>>>>>>>>> hierarchical data extension tree. The property extension related to
-> >>>>>>>>>>>> each port node must contain the key "port" and an integer value
-> >>>>>>>>>>>> which
-> >>>>>>>>>>>> is the number of the port.
-> >>>>>>>>>>>
-> >>>>>>>>>>>
-> >>>>>>>>>>>
-> >>>>>>>>>>>
-> >>>>>>>>>>> So with matching strings instead of indices, this will change, too...
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> It doesn't have to AFAICS, but the number is just redundant IMO.  You
-> >>>>>>>>>> only need a boolean property saying "this is a port", so you know that
-> >>>>>>>>>> you should expect a list of endpoints in that object.
-> >>>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>> No, it's not redundant. It's the number of the physical port in the
-> >>>>>>>>> device
-> >>>>>>>>> --- this is how the driver gets to know where the connection has been
-> >>>>>>>>> made.
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> OK, but what exactly do you mean by "physical port"?
-> >>>>>>>
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> The device (or an IP block) has physical interfaces to the world outside.
-> >>>>>>> There could be just one, but there may be more. For an ISP, there could
-> >>>>>>> be
-> >>>>>>> e.g. four CSI-2 receivers to each of which you could connect a camera
-> >>>>>>> sensor. So for an ISP device, that number tells which of the receivers a
-> >>>>>>> given sensor is connected to.
-> >>>>>>>
-> >>>>>>> The mapping between this number and what the hardware datasheet refers to
-> >>>>>>> needs to be documented per device.
-> >>>>>>
-> >>>>>>
-> >>>>>> OK, so the number actually is an arbitrary piece of data associated
-> >>>>>> with the key "port" and the interpretation of that piece of data
-> >>>>>> depends on whoever asks for that value.
-> >>>>>>
-> >>>>>> IOW, the core doesn't care.
-> >>>>>>
-> >>>>>> With all due respect to whoever invented this on the DT side, this is
-> >>>>>> just bad design to me, because it causes the "port" property to serve
-> >>>>>> two different purposes at the same time.  First, it tells the core
-> >>>>>> that this object is a port.  Second, it is expected to provide a piece
-> >>>>>> of data of unspecified interpretation to somebody.  Which means that
-> >>>>>> the "port" property is both general and device-specific at the same
-> >>>>>> time and the sanity of that is quite questionable IMO.
-> >>>>>
-> >>>>>
-> >>>>> DT uses a node called either "port" or "ports" to store the port nodes. The
-> >>>>> reg property tells the number of the port (see
-> >>>>> Documentation/devicetree/bindings/graph.txt). I'm no DT expert, but my
-> >>>>> understanding is that the node namespace is different from the property
-> >>>>> namespace.
-> >>>>
-> >>>> So on the DT side it actually looks OK to me.
-> >>>>
-> >>>> And the <reg> value is referred to as the port-endpoint identifier, so
-> >>>> I guess this is used for referring to the port/endpoint instead of an
-> >>>> index or the key value somewhere?
-> >>>
-> >>> The remote-endpoint uses phandles; they're a mechanism in DT to refer to
-> >>> different nodes in the tree (DT does not differentiate between devices and
-> >>> non-device nodes). There's a relatively good example here:
-> >>>
-> >>> 	arch/arm/boot/dts/omap3-n9.dts
-> > 
-> > Yes, I figured that out. :-)
-> > 
-> > Still, the <rev> property value is used for something somewhere in the code I gather.
-> > 
-> >>>>
-> >>>>> If you're concerned of possible double meanings, it's entirely possible to
-> >>>>> put the port nodes under hierarchical data extension named e.g. "ports", and
-> >>>>> document that this is what the node must be called (single port node could
-> >>>>> be just called "port"). This way, it should be much more difficult to
-> >>>>> interpret a non-port node as a port node --- roughly equivalent of the DT
-> >>>>> ports node.
-> >>>>>
-> >>>>> The drawback with this change is that the size of the data structure in ASL
-> >>>>> (and AML) will grow.
-> >>>>
-> >>>> The "ports" thing would only be useful if we had the other properties
-> >>>> to put in there.
-> >>>>
-> >>>> So I guess we can specify that the "port" property value is the
-> >>>> identifier of the port and then we will use this in the
-> >>>> "remote-endpoint" property on the other end instead of an index.
-> >>>
-> >>> Makes sense.
-> >>>
-> >>>>
-> >>>> And analogously for the "enpoint" property value.
-> >>>
-> >>> The endpoint hierarchical data extension node name? There is no endpoint
-> >>> property being used by this version of the set anymore; I removed it as it
-> >>> was redundant. However a human readable endpoint node name can be chosen
-> >>> which that'd be quite practical to identify the endpoint.
-> >>>
-> >>> Then the remote-endpoint properties would be:
-> >>>
-> >>> 	Package () { device, port (integer), endpoint-node-name (string) }
-> >>>
-> >>
-> >> Oh, well... the device is present there already, so the endpoint
-> >> reference would well use an index pretty much equally well. Most of the
-> >> time it'll be zero anyway. I.e.
-> >>
-> >> 	Package() { device, port number (integer), endpoint id (integer }
-> > 
-> > Yes, I would do that, and actually not using the index for the endpoint too.
-> > 
-> > Let ports and endpoints be symmetrical in that respect, that is a port is
-> > required to have a { "port", id } property and an endpoind is required to
-> > have a { "endpoint", id } property and let the ids be used in
-> > "remote-endpoint" properties as per the above.
-> > 
-> > Then, in each case, the id would be whatever the value of the <rev> property
-> > on the DT side would be.
-> 
-> DT graphs only have port numbers, the endpoints are not referred to by
-> IDs --- just phandles. The closest equivalent we have in ACPI is a
-> device reference as far as I can tell, and this is why the port number
-> and some identifier for the endpoint is required.
-> 
-> Adding a numeric ID for the endpoint is somewhat artificial. Most would
-> just have zero there as there are commonly only a single endpoint in a
-> port. And if there were more than one, one of the most sensible
-> approaches to number them would be a monotonically incrementing number
-> from zero --- which is the same than the index.
-> 
-> So my view is that adding an endpoint property simply adds no value.
+I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
+in patch description to direct a patch to interested parties and
+relevant lists. I don't want to see all 19 patches in this series.
 
-But endpoints can have a <rev> property in DT.  What is it used for then?
+On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
+<quentin.schulz@free-electrons.com> wrote:
+> This adds the constant-charge-current property to the list of optional
+> properties of the battery.
+>
+> The constant charge current is critical for batteries as they can't
+> handle all charge currents.
+>
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>
+> v4:
+>  - switch from constant-charge-current-microamp to constant-charge-microamp,
 
-Thanks,
-Rafael
+Must be constant-charge-current-microamp for the reasons discussed in
+battery.txt - consistency with sysfs names.
 
+Also applies to power_supply_core.c patch.
+
+Rob: enum power_supply_property also lists constant-charge-voltage,
+hence the -current
+
+
+> added in v3
+>
+>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 0278617..9594e1e 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -7,6 +7,7 @@ Optional Properties:
+>   - voltage-min-design-microvolt: drained battery voltage
+>   - energy-full-design-microwatt-hours: battery design energy
+>   - charge-full-design-microamp-hours: battery design capacity
+> + - constant-charge-microamp: battery constant charge current
+>
+>  Because drivers surface properties in sysfs using names derived
+>  from enum power_supply_property, e.g.
+> @@ -30,6 +31,7 @@ Example:
+>                 voltage-min-design-microvolt = <3200000>;
+>                 energy-full-design-microwatt-hours = <5290000>;
+>                 charge-full-design-microamp-hours = <1430000>;
+> +               constant-charge-microamp = <300000>;
+>         };
+>
+>         charger: charger@11 {
+> --
+> 2.9.3
+>
