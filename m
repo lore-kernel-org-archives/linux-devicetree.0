@@ -1,106 +1,61 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 16/23] MAINTAINERS: Add file patterns for powerpc
- device tree bindings
-Date: Wed, 15 Mar 2017 09:03:13 +0100
-Message-ID: <CAMuHMdX95zwQUe8XyPpKvv6zsHG+c1Ke=eFBZCt+fNUxgP5O2g@mail.gmail.com>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
- <1489324627-19126-17-git-send-email-geert@linux-m68k.org> <87a88nv1b2.fsf@concordia.ellerman.id.au>
+From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] arm64: dts: move from ARCH_VULCAN to ARCH_THUNDER2
+Date: Wed, 15 Mar 2017 08:15:12 +0000
+Message-ID: <20170315081431.GA2415@localhost>
+References: <1489313015-4783-1-git-send-email-jnair@caviumnetworks.com>
+ <1489495634-2920-1-git-send-email-jnair@caviumnetworks.com>
+ <1489495634-2920-3-git-send-email-jnair@caviumnetworks.com>
+ <8262c276-c39c-17b6-dcb6-d087d68d3df5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87a88nv1b2.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8262c276-c39c-17b6-dcb6-d087d68d3df5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, york.sun-3arQi8VN3Tc@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
+On Tue, Mar 14, 2017 at 11:16:47AM -0700, Florian Fainelli wrote:
+> On 03/14/2017 05:47 AM, Jayachandran C wrote:
+> > Move and update device tree files as part of transition from Broadcom
+> > Vulcan to Cavium ThunderX2.
+> > 
+> > The changes are to:
+> >  * rename dts/broadcom/vulcan.dtsi to cavium/thunder2-99xx.dtsi,
+> >    update cpu cores to be "cavium,thunder2", and update SoC to be
+> >    "cavium,thunderx2-cn9900"
+> >  * move SoC dts/broadcom/vulcan-eval.dtsi to cavium/thunder2-99xx.dtsi
+> >    and update board name string
+> >  * Update dts/broadcom/Makefile not to build vulcan dtbs
+> >  * Update dts/cavium/Makefile to build thunder2 dtbs
+> > 
+> > No changes to the dts contents except the updated "compatible" and
+> > "model" properties.
+> > 
+> > Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> > Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Can you also change the relevant entry in the MAINTAINERS file:
+> 
+> BROADCOM VULCAN ARM64 SOC
+> M:      Jayachandran C. <c.jayachandran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> M:      bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+> L:      linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+> S:      Maintained
+> F:      arch/arm64/boot/dts/broadcom/vulcan*
 
-On Wed, Mar 15, 2017 at 1:19 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrot=
-e:
-> Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> writes:
->> Submitters of device tree binding documentation may forget to CC
->> the subsystem maintainer if this is missing.
->>
->> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
->> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
->> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
->> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> ---
->> Please apply this patch directly if you want to be involved in device
->> tree binding documentation for your subsystem.
->>
->> v2:
->>   - Rebased on top of commit a42715830d552d7c ("MAINTAINERS: Remove
->>     powerpc's "opal" pattern match), which just added "powerpc/opal",
->>     while obviously the whole "powerpc" hierarchy is of interest.
->>
->> Impact on next-20170310:
->
-> Actual diff ignoring ordering etc:
->
->  +Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> (supporter:LINUX FOR =
-POWERPC (32-BIT AND 64-BIT))
->  +Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org> (supporter:LINUX FOR POWERPC (32-BIT =
-AND 64-BIT))
->  +linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org (open list:LINUX FOR POWERPC (32-BIT AND =
-64-BIT))
->  -Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org> (commit_signer:5/11=3D45%)
->  -Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org> (commit_signer:4/11=3D36%,authored:4/11=
-=3D36%)
->  -Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> (commit_signer:1/11=3D9%)
->  -yangbo lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org> (authored:1/11=3D9%)
->  -"Otto Kek=C3=A4l=C3=A4inen" <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org> (authored:1/11=3D9%)
->  -Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (authored:1/11=3D9%)
->  -York Sun <york.sun-3arQi8VN3Tc@public.gmane.org> (authored:1/11=3D9%)
->
-> Which looks bad as all the NXP folks get dropped, but they should be
-> reading linuxppc-dev. So I think I'll merge this, unless anyone
-> disagrees.
+I was planning to remove this entry in the later patchset that removes
+ARCH_VULCAN. But, as you suggest, it makes more sense to do that now.
 
-They got dropped because in the absence of a maintainer entry, the
-last committers are listed. If they need to be listed, I can send patches t=
-o add
-more specific entries for 4xx and fsl DT bindings, like:
+I will post an updated patchset with a new patch to update the entry.
+ 
+> With that fixed:
+> 
+> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0f1c2f96c99aa936..40b392a4f399adbe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5266,6 +5266,7 @@ M:        Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
- L:     linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
- L:     linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
- S:     Maintained
-+F:     Documentation/devicetree/bindings/powerpc/fsl/
- F:     drivers/soc/fsl/
- F:     include/linux/fsl/
-
-@@ -7540,6 +7541,7 @@ M:        Matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
- W:     http://www.penguinppc.org/
- L:     linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
- S:     Maintained
-+F:     Documentation/devicetree/bindings/powerpc/4xx/
- F:     arch/powerpc/platforms/40x/
- F:     arch/powerpc/platforms/44x/
-
-
-OK?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Thanks,
+JC.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
