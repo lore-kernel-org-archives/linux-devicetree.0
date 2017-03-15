@@ -1,60 +1,30 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/3] dt-bindings: add the grf clock for dw-mipi-dsi
-Date: Wed, 15 Mar 2017 11:10:54 +0100
-Message-ID: <2439695.Eb3n5AH02E@diego>
-References: <1489567352-3333-1-git-send-email-zyw@rock-chips.com>
- <3304582.Whtjx7Nypf@diego> <58C90F8B.7070102@rock-chips.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio: mmio: add support for NI 169445 NAND GPIO
+Date: Wed, 15 Mar 2017 11:15:56 +0100
+Message-ID: <CACRpkdYfaigjtzcp6aeiQS5BCLyEQqOuHFzDP52Wmie+cu=fiw@mail.gmail.com>
+References: <1489001744-26545-1-git-send-email-nathan.sullivan@ni.com> <1489001744-26545-2-git-send-email-nathan.sullivan@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <58C90F8B.7070102@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489001744-26545-2-git-send-email-nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gTWl0dHdvY2gsIDE1LiBNw6RyeiAyMDE3LCAxNzo1NToyMyBDRVQgc2NocmllYiBDaHJpcyBa
-aG9uZzoKPiBIaSBIZWlrbwo+IAo+IE9uIDAzLzE1LzIwMTcgMDU6MDMgUE0sIEhlaWtvIFN0w7xi
-bmVyIHdyb3RlOgo+ID4gQW0gTWl0dHdvY2gsIDE1LiBNw6RyeiAyMDE3LCAxNjo0MjozMCBDRVQg
-c2NocmllYiBDaHJpcyBaaG9uZzoKPiA+PiBGb3IgUkszMzk5LCB0aGUgZ3JmIGNsb2NrIHNob3Vs
-ZCBiZSBjb250cm9sbGVkIGJ5IGR3LW1pcGktZHNpIGRyaXZlciwKPiA+PiBhZGQgdGhlIGRlc2Ny
-aXB0aW9uIGZvciB0aGlzIGNsb2NrLgo+ID4+IAo+ID4+IFNpZ25lZC1vZmYtYnk6IENocmlzIFpo
-b25nIDx6eXdAcm9jay1jaGlwcy5jb20+Cj4gPj4gLS0tCj4gPj4gCj4gPj4gICAuLi4vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAg
-ICAgIAo+ID4+ICAgfCAyCj4gPj4gCj4gPj4gKy0gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspLCAxIGRlbGV0aW9uKC0pCj4gPj4gCj4gPj4gZGlmZiAtLWdpdAo+ID4+IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9j
-a2NoaXAKPiA+PiAudAo+ID4+IHh0Cj4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcAo+ID4+IC50Cj4gPj4g
-eHQgaW5kZXggMTg4ZjZmNy4uN2UxN2E2MCAxMDA2NDQKPiA+PiAtLS0KPiA+PiBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3Jv
-Y2tjaGlwCj4gPj4gLnQKPiA+PiB4dCArKysKPiA+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwCj4gPj4gLnQK
-PiA+PiAKPiA+PiB4dCBAQCAtMTAsNyArMTAsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4+
-ICAgLSBpbnRlcnJ1cHRzOiBSZXByZXNlbnQgdGhlIGNvbnRyb2xsZXIncyBpbnRlcnJ1cHQgdG8g
-dGhlIENQVShzKS4KPiA+PiAgIC0gY2xvY2tzLCBjbG9jay1uYW1lczogUGhhbmRsZXMgdG8gdGhl
-IGNvbnRyb2xsZXIncyBwbGwgcmVmZXJlbmNlCj4gPj4gICAKPiA+PiAgICAgY2xvY2socmVmKSBh
-bmQgQVBCIGNsb2NrKHBjbGspLiBGb3IgUkszMzk5LCBhIHBoeSBjb25maWcgY2xvY2sKPiA+PiAK
-PiA+PiAtICAocGh5X2NmZykgaXMgYWRkaXRpb25hbCByZXF1aXJlZC4gQXMgZGVzY3JpYmVkIGlu
-IFsxXS4KPiA+PiArICAocGh5X2NmZykgYW5kIGEgZ3JmIGNsb2NrKGdyZikgYXJlIGFkZGl0aW9u
-YWwgcmVxdWlyZWQuIEFzIGRlc2NyaWJlZAo+ID4+IGluCj4gPj4gWzFdLgo+ID4gCj4gPiB5b3Vy
-ICJncmYiIGNsb2NrIGlzIG9wdGlvbmFsLCBhcyBpdCBpcyBub3QgcHJlc2VudCBvbiBhbGwgc29j
-cyAobGlrZSB0aGUKPiA+IHJrMzI4OCkgc28gc2hvdWxkIHByb2JhYmx5IG1vdmUgdG8gYSBzZXBh
-cmF0ZSBzZWN0aW9uIGFuZCBub3QgYmUgaW4gdGhlCj4gPiByZXF1aXJlZCBwcm9wZXJ0aWVzCj4g
-Cj4gRm9yIFJLMzM5OSwgdGhlIGdyZiBjbG9jayBpcyByZXF1aXJlZCwgYWNjb3JkaW5nIHRvIHRo
-ZSBhZHZpY2UgcHJvdmlkZWQKPiBieSByb2JbMF0sCj4gcHV0IGl0IGludG8gInJlcXVpcmVkIHBy
-b3BlcnRpZXMgIiBpcyBiZXR0ZXIuCj4gWzBdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
-cGF0Y2gvOTIyMDE4Ny8KCm9rLCBidXQgaXQgc2hvdWxkIHByb2JhYmx5IGJlIG1hZGUgY2xlYXIs
-IHRoYXQgdGhpcyBpcyByazMzOTktc3BlY2lmaWMKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Mar 8, 2017 at 8:35 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
+
+> The GPIO-based NAND controller on National Instruments 169445 hardware
+> exposes a set of simple lines for the control signals.
+>
+> Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+
+Oh a newer patch with comments exist. I take out the other patch then
+and wait for v3.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
