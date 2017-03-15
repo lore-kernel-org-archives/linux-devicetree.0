@@ -1,68 +1,178 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] mfd: rk808: fix up the chip id get failed
-Date: Wed, 15 Mar 2017 11:04:19 +0000
-Message-ID: <20170315110419.dshm7xmd7m6sufi7@dell>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/5] linux: mfd: rk808: add rk805 regs addr and ID
+Date: Wed, 15 Mar 2017 11:04:57 +0000
+Message-ID: <20170315110457.ytpazrj4e6bapzbz@dell>
 References: <1489111252-22175-1-git-send-email-zhangqing@rock-chips.com>
- <1489111252-22175-2-git-send-email-zhangqing@rock-chips.com>
+ <1489111252-22175-3-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1489111252-22175-2-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+In-Reply-To: <1489111252-22175-3-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, huangtao@rock-chips.com, xxx@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, w.egorov@phytec.de
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAxMCBNYXIgMjAxNywgRWxhaW5lIFpoYW5nIHdyb3RlOgoKPiB0aGUgcms4eHggY2hp
-cCBpZCBpczoKPiAoKE1TQiA8PCA4KSB8IExTQikgJiAweGZmZjAKPiAKPiBTaWduZWQtb2ZmLWJ5
-OiBFbGFpbmUgWmhhbmcgPHpoYW5ncWluZ0Byb2NrLWNoaXBzLmNvbT4KPiAtLS0KPiAgZHJpdmVy
-cy9tZmQvcms4MDguYyAgICAgICB8IDIxICsrKysrKysrKysrKysrKy0tLS0tLQo+ICBpbmNsdWRl
-L2xpbnV4L21mZC9yazgwOC5oIHwgIDEgKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlv
-bnMoKyksIDYgZGVsZXRpb25zKC0pCgpGb3IgbXkgb3duIHJlZmVyZW5jZToKICBBY2tlZC1mb3It
-TUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgogIAo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL21mZC9yazgwOC5jIGIvZHJpdmVycy9tZmQvcms4MDguYwo+IGluZGV4IGZkMDg3
-Y2JiMGJkZS4uMzMzNGEyYTdmM2ZiIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbWZkL3JrODA4LmMK
-PiArKysgYi9kcml2ZXJzL21mZC9yazgwOC5jCj4gQEAgLTMyNSw3ICszMjUsNyBAQCBzdGF0aWMg
-aW50IHJrODA4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsCj4gIAl2b2lkICgqcG1f
-cHdyb2ZmX2ZuKSh2b2lkKTsKPiAgCWludCBucl9wcmVfaW5pdF9yZWdzOwo+ICAJaW50IG5yX2Nl
-bGxzOwo+IC0JaW50IHBtX29mZiA9IDA7Cj4gKwlpbnQgcG1fb2ZmID0gMCwgbXNiLCBsc2I7Cj4g
-IAlpbnQgcmV0Owo+ICAJaW50IGk7Cj4gIAo+IEBAIC0zMzMsMTQgKzMzMywyMyBAQCBzdGF0aWMg
-aW50IHJrODA4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsCj4gIAlpZiAoIXJrODA4
-KQo+ICAJCXJldHVybiAtRU5PTUVNOwo+ICAKPiAtCXJrODA4LT52YXJpYW50ID0gaTJjX3NtYnVz
-X3JlYWRfd29yZF9kYXRhKGNsaWVudCwgUks4MDhfSURfTVNCKTsKPiAtCWlmIChyazgwOC0+dmFy
-aWFudCA8IDApIHsKPiAtCQlkZXZfZXJyKCZjbGllbnQtPmRldiwgIkZhaWxlZCB0byByZWFkIHRo
-ZSBjaGlwIGlkIGF0IDB4JTAyeFxuIiwKPiArCS8qIHJlYWQgQ2hpcCB2YXJpYW50ICovCj4gKwlt
-c2IgPSBpMmNfc21idXNfcmVhZF9ieXRlX2RhdGEoY2xpZW50LCBSSzgwOF9JRF9NU0IpOwo+ICsJ
-aWYgKG1zYiA8IDApIHsKPiArCQlkZXZfZXJyKCZjbGllbnQtPmRldiwgImZhaWxlZCB0byByZWFk
-IHRoZSBjaGlwIGlkIGF0IDB4JXhcbiIsCj4gIAkJCVJLODA4X0lEX01TQik7Cj4gLQkJcmV0dXJu
-IHJrODA4LT52YXJpYW50Owo+ICsJCXJldHVybiBtc2I7Cj4gIAl9Cj4gIAo+IC0JZGV2X2RiZygm
-Y2xpZW50LT5kZXYsICJDaGlwIGlkOiAweCV4XG4iLCAodW5zaWduZWQgaW50KXJrODA4LT52YXJp
-YW50KTsKPiArCWxzYiA9IGkyY19zbWJ1c19yZWFkX2J5dGVfZGF0YShjbGllbnQsIFJLODA4X0lE
-X0xTQik7Cj4gKwlpZiAobHNiIDwgMCkgewo+ICsJCWRldl9lcnIoJmNsaWVudC0+ZGV2LCAiZmFp
-bGVkIHRvIHJlYWQgdGhlIGNoaXAgaWQgYXQgMHgleFxuIiwKPiArCQkJUks4MDhfSURfTFNCKTsK
-PiArCQlyZXR1cm4gbHNiOwo+ICsJfQo+ICsKPiArCXJrODA4LT52YXJpYW50ID0gKChtc2IgPDwg
-OCkgfCBsc2IpICYgUks4WFhfSURfTVNLOwo+ICsJZGV2X2luZm8oJmNsaWVudC0+ZGV2LCAiQ2hp
-cCBpZDogMHgleFxuIiwgKHVuc2lnbmVkIGludClyazgwOC0+dmFyaWFudCk7Cj4gIAo+ICAJc3dp
-dGNoIChyazgwOC0+dmFyaWFudCkgewo+ICAJY2FzZSBSSzgwOF9JRDoKPiBkaWZmIC0tZ2l0IGEv
-aW5jbHVkZS9saW51eC9tZmQvcms4MDguaCBiL2luY2x1ZGUvbGludXgvbWZkL3JrODA4LmgKPiBp
-bmRleCA4MzcwMWVmN2QzYzcuLjU0ZmViMTQwYzIxMCAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2xp
-bnV4L21mZC9yazgwOC5oCj4gKysrIGIvaW5jbHVkZS9saW51eC9tZmQvcms4MDguaAo+IEBAIC0y
-OTgsNiArMjk4LDcgQEAgZW51bSByazgxOF9yZWcgewo+ICAjZGVmaW5lIFZPVVRfTE9fSU5UCUJJ
-VCgwKQo+ICAjZGVmaW5lIENMSzMyS09VVDJfRU4JQklUKDApCj4gIAo+ICsjZGVmaW5lIFJLOFhY
-X0lEX01TSwkJCTB4ZmZmMAo+ICBlbnVtIHsKPiAgCUJVQ0tfSUxNSU5fNTBNQSwKPiAgCUJVQ0tf
-SUxNSU5fMTAwTUEsCgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFu
-ZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFS
-TSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1h
-aWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+Subject line should be "mfd: rk808: ..."
+
+On Fri, 10 Mar 2017, Elaine Zhang wrote:
+
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  include/linux/mfd/rk808.h | 115 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
+
+Other than that:
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+  
+> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+> index 54feb140c210..97f532f625de 100644
+> --- a/include/linux/mfd/rk808.h
+> +++ b/include/linux/mfd/rk808.h
+> @@ -206,6 +206,92 @@ enum rk818_reg {
+>  #define RK818_USB_ILMIN_2000MA		0x7
+>  #define RK818_USB_CHG_SD_VSEL_MASK	0x70
+>  
+> +/* RK805 */
+> +enum rk805_reg {
+> +	RK805_ID_DCDC1,
+> +	RK805_ID_DCDC2,
+> +	RK805_ID_DCDC3,
+> +	RK805_ID_DCDC4,
+> +	RK805_ID_LDO1,
+> +	RK805_ID_LDO2,
+> +	RK805_ID_LDO3,
+> +};
+> +
+> +/* INTERRUPT REGISTER */
+> +#define RK805_INT_STS_REG		0x4C
+> +#define RK805_INT_STS_MSK_REG		0x4D
+> +#define RK805_GPIO_IO_POL_REG		0x50
+> +#define RK805_OUT_REG			0x52
+> +#define RK805_ON_SOURCE_REG		0xAE
+> +#define RK805_OFF_SOURCE_REG		0xAF
+> +
+> +/* POWER CHANNELS ENABLE REGISTER */
+> +#define RK805_DCDC_EN_REG		0x23
+> +#define RK805_SLP_DCDC_EN_REG		0x25
+> +#define RK805_SLP_LDO_EN_REG		0x26
+> +#define RK805_LDO_EN_REG		0x27
+> +
+> +/* CONFIG REGISTER */
+> +#define RK805_THERMAL_REG		0x22
+> +
+> +/* BUCK AND LDO CONFIG REGISTER */
+> +#define RK805_BUCK_LDO_SLP_LP_EN_REG	0x2A
+> +#define RK805_BUCK1_CONFIG_REG		0x2E
+> +#define RK805_BUCK1_ON_VSEL_REG		0x2F
+> +#define RK805_BUCK1_SLP_VSEL_REG	0x30
+> +#define RK805_BUCK2_CONFIG_REG		0x32
+> +#define RK805_BUCK2_ON_VSEL_REG		0x33
+> +#define RK805_BUCK2_SLP_VSEL_REG	0x34
+> +#define RK805_BUCK3_CONFIG_REG		0x36
+> +#define RK805_BUCK4_CONFIG_REG		0x37
+> +#define RK805_BUCK4_ON_VSEL_REG		0x38
+> +#define RK805_BUCK4_SLP_VSEL_REG	0x39
+> +#define RK805_LDO1_ON_VSEL_REG		0x3B
+> +#define RK805_LDO1_SLP_VSEL_REG		0x3C
+> +#define RK805_LDO2_ON_VSEL_REG		0x3D
+> +#define RK805_LDO2_SLP_VSEL_REG		0x3E
+> +#define RK805_LDO3_ON_VSEL_REG		0x3F
+> +#define RK805_LDO3_SLP_VSEL_REG		0x40
+> +#define RK805_OUT_REG			0x52
+> +#define RK805_ON_SOURCE_REG		0xAE
+> +#define RK805_OFF_SOURCE_REG		0xAF
+> +
+> +#define RK805_NUM_REGULATORS		7
+> +
+> +#define RK805_PWRON_FALL_RISE_INT_EN	0x0
+> +#define RK805_PWRON_FALL_RISE_INT_MSK	0x81
+> +
+> +/* RK805 IRQ Definitions */
+> +#define RK805_IRQ_PWRON_RISE		0
+> +#define RK805_IRQ_VB_LOW		1
+> +#define RK805_IRQ_PWRON			2
+> +#define RK805_IRQ_PWRON_LP		3
+> +#define RK805_IRQ_HOTDIE		4
+> +#define RK805_IRQ_RTC_ALARM		5
+> +#define RK805_IRQ_RTC_PERIOD		6
+> +#define RK805_IRQ_PWRON_FALL		7
+> +
+> +#define RK805_IRQ_PWRON_RISE_MSK	BIT(0)
+> +#define RK805_IRQ_VB_LOW_MSK		BIT(1)
+> +#define RK805_IRQ_PWRON_MSK		BIT(2)
+> +#define RK805_IRQ_PWRON_LP_MSK		BIT(3)
+> +#define RK805_IRQ_HOTDIE_MSK		BIT(4)
+> +#define RK805_IRQ_RTC_ALARM_MSK		BIT(5)
+> +#define RK805_IRQ_RTC_PERIOD_MSK	BIT(6)
+> +#define RK805_IRQ_PWRON_FALL_MSK	BIT(7)
+> +
+> +#define RK805_PWR_RISE_INT_STATUS	BIT(0)
+> +#define RK805_VB_LOW_INT_STATUS		BIT(1)
+> +#define RK805_PWRON_INT_STATUS		BIT(2)
+> +#define RK805_PWRON_LP_INT_STATUS	BIT(3)
+> +#define RK805_HOTDIE_INT_STATUS		BIT(4)
+> +#define RK805_ALARM_INT_STATUS		BIT(5)
+> +#define RK805_PERIOD_INT_STATUS		BIT(6)
+> +#define RK805_PWR_FALL_INT_STATUS	BIT(7)
+> +
+> +#define RK805_BUCK1_2_ILMAX_MASK	(3 << 6)
+> +#define RK805_BUCK3_4_ILMAX_MASK        (3 << 3)
+> +
+>  /* RK808 IRQ Definitions */
+>  #define RK808_IRQ_VOUT_LO	0
+>  #define RK808_IRQ_VB_LO		1
+> @@ -298,7 +384,14 @@ enum rk818_reg {
+>  #define VOUT_LO_INT	BIT(0)
+>  #define CLK32KOUT2_EN	BIT(0)
+>  
+> +#define TEMP115C			0x0c
+> +#define TEMP_HOTDIE_MSK			0x0c
+> +#define SLP_SD_MSK			(0x3 << 2)
+> +#define SHUTDOWN_FUN			(0x2 << 2)
+> +#define SLEEP_FUN			(0x1 << 2)
+>  #define RK8XX_ID_MSK			0xfff0
+> +#define FPWM_MODE			BIT(7)
+> +
+>  enum {
+>  	BUCK_ILMIN_50MA,
+>  	BUCK_ILMIN_100MA,
+> @@ -322,6 +415,28 @@ enum {
+>  };
+>  
+>  enum {
+> +	RK805_BUCK1_2_ILMAX_2500MA,
+> +	RK805_BUCK1_2_ILMAX_3000MA,
+> +	RK805_BUCK1_2_ILMAX_3500MA,
+> +	RK805_BUCK1_2_ILMAX_4000MA,
+> +};
+> +
+> +enum {
+> +	RK805_BUCK3_ILMAX_1500MA,
+> +	RK805_BUCK3_ILMAX_2000MA,
+> +	RK805_BUCK3_ILMAX_2500MA,
+> +	RK805_BUCK3_ILMAX_3000MA,
+> +};
+> +
+> +enum {
+> +	RK805_BUCK4_ILMAX_2000MA,
+> +	RK805_BUCK4_ILMAX_2500MA,
+> +	RK805_BUCK4_ILMAX_3000MA,
+> +	RK805_BUCK4_ILMAX_3500MA,
+> +};
+> +
+> +enum {
+> +	RK805_ID = 0x8050,
+>  	RK808_ID = 0x0000,
+>  	RK818_ID = 0x8181,
+>  };
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
