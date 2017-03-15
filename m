@@ -1,70 +1,35 @@
-From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: Re: [PATCH v10 2/2] media: i2c: Add support for OV5647 sensor.
-Date: Wed, 15 Mar 2017 16:45:16 +0000
-Message-ID: <350cf398-81a9-7174-fd47-1dc5c0daa990@synopsys.com>
-References: <cover.1488798062.git.roliveir@synopsys.com>
- <67b5055a198316f74c5c1339e14a9f18a4106e69.1488798062.git.roliveir@synopsys.com>
- <20170307104545.GI3220@valkosipuli.retiisi.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dma: xilinx: Edit device tree bindings
+ documentation
+Date: Wed, 15 Mar 2017 11:47:40 -0500
+Message-ID: <20170315164740.bhpy5w3jbsjluq77@rob-hp-laptop>
+References: <cover.1488801913.git.roliveir@synopsys.com>
+ <ce2a9ee846013b452e53e05c2be3c7861fa6d169.1488801913.git.roliveir@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170307104545.GI3220@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, vladimir_zapolskiy@mentor.com, CARLOS.PALMINHA@synopsys.com, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <ce2a9ee846013b452e53e05c2be3c7861fa6d169.1488801913.git.roliveir@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Anurag Kumar Vulisha <anuragku@xilinx.com>, linux-kernel@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kedareswara rao Appana <appana.durga.rao@xilinx.com>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari
+On Mon, Mar 06, 2017 at 12:17:38PM +0000, Ramiro Oliveira wrote:
+> Add reset property documentation for Xilinx DMA
+> 
+> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+> ---
+>  Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-On 3/7/2017 10:45 AM, Sakari Ailus wrote:
-> Hi Ramiro,
-> 
-> On Mon, Mar 06, 2017 at 11:16:34AM +0000, Ramiro Oliveira wrote:
-> ...
->> +static int __sensor_init(struct v4l2_subdev *sd)
->> +{
->> +	int ret;
->> +	u8 resetval, rdval;
->> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
->> +
->> +	dev_dbg(&client->dev, "sensor init\n");
-> 
-> This looks like a debugging time leftover. Please remove.
-> 
-
-Should I send a v11 with this change?
-
-> With that,
-> 
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> 
-> ...
-> 
->> +static int ov5647_parse_dt(struct device_node *np)
->> +{
->> +	struct v4l2_of_endpoint bus_cfg;
->> +	struct device_node *ep;
->> +
->> +	int ret;
->> +
->> +	ep = of_graph_get_next_endpoint(np, NULL);
->> +	if (!ep)
->> +		return -EINVAL;
->> +
->> +	ret = v4l2_of_parse_endpoint(ep, &bus_cfg);
->> +
->> +	of_node_put(ep);
->> +	return ret;
->> +}
-> 
-> This will conflict with my fwnode patchset. Let's see in which order the
-> patches will be merged, one of the sets has to be changed. The work is
-> trivial though.
-> 
-
--- 
-Best Regards
-
-Ramiro Oliveira
-Ramiro.Oliveira@synopsys.com
+Acked-by: Rob Herring <robh@kernel.org>
