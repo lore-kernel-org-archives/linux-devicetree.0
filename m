@@ -1,57 +1,27 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 1/2] Documentation: bindings: Introduce
- scpi,sensors-scale
-Date: Wed, 15 Mar 2017 12:30:23 -0700
-Message-ID: <20170315193023.GA7096@roeck-us.net>
-References: <20170309101759.18081-1-carlo@caione.org>
- <20170309101759.18081-2-carlo@caione.org>
- <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] drivers: pwm: pwm-atmel: enable PWM on sama5d2
+Date: Wed, 15 Mar 2017 14:37:39 -0500
+Message-ID: <20170315193739.cebry3tafla5zz5v@rob-hp-laptop>
+References: <1488468525-28726-1-git-send-email-claudiu.beznea@microchip.com>
+ <1488468525-28726-3-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, punit.agrawal@arm.com, robh+dt@kernel.org, Carlo Caione <carlo@endlessm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux@endlessm.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1488468525-28726-3-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: thierry.reding@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 06:20:33PM +0000, Sudeep Holla wrote:
+On Thu, Mar 02, 2017 at 05:28:45PM +0200, Claudiu Beznea wrote:
+> sama5d2 can use the same atmel_pwm_data as sama5d3.
 > 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > 
-> On 09/03/17 10:17, Carlo Caione wrote:
-> > From: Carlo Caione <carlo@endlessm.com>
-> > 
-> > Document the new property `scpi,sensors-scale` used by the hwmon-scpi
-> > driver to convert the sensor readings to the correct / expected scale.
-> > 
-> 
-> I am fine with DT bindings if DT maintainers agree with having one but I
-> would like to add couple of points to get their feedback:
-> 
-> 1. ARM recognized the drawbacks of SCPI which started informally with
->    ARM Ltd platforms and got adopted by few vendors. It's now being
->    worked on and a much better and scalable replacement protocol is
->    being discussed with vendors now. So future enhancement to this SCPI
->    protocol is unlikely.
-> 
-> 2. AmLogic has diverted from base protocol in many ways and most of them
->    are handled with just compatible so far without any need for
->    additional bindings. Can we avoid it ?
-> 
-> So based on these, I prefer not to add more bindings to handle such
-> deviations but make it just AmLogic specific.
-> 
+> ---
+>  Documentation/devicetree/bindings/pwm/atmel-pwm.txt | 1 +
+>  drivers/pwm/pwm-atmel.c                             | 3 +++
+>  2 files changed, 4 insertions(+)
 
-I like the idea.
-
-Guenter
+Acked-by: Rob Herring <robh@kernel.org>
