@@ -1,157 +1,94 @@
-From: Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Wed, 15 Mar 2017 00:44:20 -0400
-Message-ID: <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com> <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
- <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com> <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
- <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: add Gateworks Ventana GW5904 support
+Date: Wed, 15 Mar 2017 14:31:41 +0800
+Message-ID: <20170315063139.GR3618@dragon>
+References: <1489178411-6559-1-git-send-email-tharvey@gateworks.com>
+ <20170314105517.GP3618@dragon>
+ <CAJ+vNU2V4R1qEdowBkyS5OKk15iOEq0vvtW-RwRnHskdb861tg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <41439729-42d0-d883-2801-2d3607f2aeab-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU2V4R1qEdowBkyS5OKk15iOEq0vvtW-RwRnHskdb861tg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Cc: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfgang,
+On Tue, Mar 14, 2017 at 08:05:03AM -0700, Tim Harvey wrote:
+> >> +&ldb {
+> >> +     status = "okay";
+> >> +
+> >> +     lvds-channel@0 {
+> >> +             fsl,data-mapping = "spwg";
+> >> +             fsl,data-width = <18>;
+> >> +             status = "okay";
+> >> +
+> >> +             display-timings {
+> >> +                     native-mode = <&timing0>;
+> >> +                     timing0: hsd100pxn1 {
+> >> +                             clock-frequency = <65000000>;
+> >> +                             hactive = <1024>;
+> >> +                             vactive = <768>;
+> >> +                             hback-porch = <220>;
+> >> +                             hfront-porch = <40>;
+> >> +                             vback-porch = <21>;
+> >> +                             vfront-porch = <7>;
+> >> +                             hsync-len = <60>;
+> >> +                             vsync-len = <10>;
+> >> +                     };
+> >> +             };
+> >> +     };
+> >
+> > Take a look at commit 4dc633e9b019 ("ARM: dts: sabrelite: use
+> > simple-panel instead of display-timings for LVDS0"), and consider to use
+> > simple-panel?
+> 
+> I haven't moved to simple-panel yet because I have bootloader code
+> that allows choosing/altering display timings with the goal being
+> users don't need to recompile their device-tree or kernel to use a
+> display with different timings. It seems to me that moving to
+> simple-panel would make this even more difficult as while the
+> bootloader could find and alter the panel's compatible property (in
+> the case the kernel has a supported simple-panel compiled in) it no
+> longer has access to the raw timings (in case the kernel doesn't have
+> a simple-panel driver built-in already).
+> 
+> I do like the way simple-panel combines display timings with
+> backlight, power supplies, dc bus, and a gpio enable but it doesn't
+> encapsulate touch controller or expose timings to device-tree for easy
+> manipulation.
+> 
+> What are you thoughts on this?
 
-On Tue, Mar 14, 2017 at 2:08 PM, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org> wrote:
-...snip....
->> /////disconnect cable
->>   can0  20000088   [8]  00 00 00 19 00 00 28 00   ERRORFRAME
->>         protocol-violation{{}{acknowledge-slot}}
->>         bus-error
->>         error-counter-tx-rx{{40}{0}}
->>   can0  20000088   [8]  00 00 00 19 00 00 58 00   ERRORFRAME
->>         protocol-violation{{}{acknowledge-slot}}
->>         bus-error
->>         error-counter-tx-rx{{88}{0}}
->>   can0  20000088   [8]  00 00 00 19 00 00 80 00   ERRORFRAME
->>         protocol-violation{{}{acknowledge-slot}}
->>         bus-error
->>         error-counter-tx-rx{{128}{0}}
->
->
-> TX error warning is missing.
->
+I'm fine with it, as you have a reason for that.
 
-This support was missing in the driver, added in V4 patch.
+> 
+> >
+> <snip>
+> >> +
+> >> +&pwm2 {
+> >> +     pinctrl-names = "default";
+> >> +     pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
+> >> +     status = "disabled";
+> >> +};
+> >> +
+> >> +&pwm3 {
+> >> +     pinctrl-names = "default";
+> >> +     pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
+> >> +     status = "disabled";
+> >> +};
+> >
+> > Why do you have these two devices but disable them?
+> 
+> This is because I have a bootloader configuration that allows the user
+> to choose between GPIO and PWM for the non-backlight PWM pins. I
+> should probably add a comment to those nodes specifying that firmware
+> modifies the status property.
 
->>   can0  2000008C   [8]  00 20 00 19 00 00 80 00   ERRORFRAME
->>         controller-problem{tx-error-passive}
->>         protocol-violation{{}{acknowledge-slot}}
->>         bus-error
->>         error-counter-tx-rx{{128}{0}}
->
->
-> Here "tx-error-passiv" is packed with a bus error. What I'm looking for are
-> state change messages similar to:
->
->    can0  20000204  [8] 00 08 00 00 00 00 60 00   ERRORFRAME
->         controller-problem{tx-error-warning}
->         state-change{tx-error-warning}
->         error-counter-tx-rx{{96}{0}}
->    can0  20000204  [8] 00 30 00 00 00 00 80 00   ERRORFRAME
->         controller-problem{tx-error-passive}
->         state-change{tx-error-passive}
->         error-counter-tx-rx{{128}{0}
->
-> They should always come, even with "berr-reporting off".
->
+Ditto
 
-HI-3110 has only 1 bus error interrupt. There is no dedicated state
-change interrupts like other controllers.
-
-So here is my plan:
-- Have the bus error interrupt always enabled
-- If berr-reporting off, then have the isr checks/reports state changes
-- if berr-reporting on, then have the isr checks/reports bus errors
-and state changes (Does it make sense packing the error message, if
-the ISR finds both bus and state changes?)
-
->> write: No buffer space available
->> root@imx6qrom5420b1:~# ip -s -d link show can0
->> 4: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN
->> mode DEFAULT group default qlen 10
->>     link/can  promiscuity 0
->>     can <BERR-REPORTING> state ERROR-PASSIVE (berr-counter tx 128 rx 0)
->> restart-ms 0
->>           bitrate 1000000 sample-point 0.750
->>           tq 62 prop-seg 5 phase-seg1 6 phase-seg2 4 sjw 1
->>           hi3110: tseg1 2..16 tseg2 2..8 sjw 1..4 brp 1..64 brp-inc 1
->>           clock 16000000
->>           re-started bus-errors arbit-lost error-warn error-pass bus-off
->>           0          6          0          1          1          0
->
->
-> The error warning and passive counter increased , though. Also the bus error
-> should come in at a rather hight rate. Looking to the code, maybe
-> you need to test STATF to check for state changes (and not ERR).
->
-
-Apologize, just realized In the above case some error packets were
-lost, because I forgot to set the CPU frequency to max. Will resend
-the log.
-
-..snip...
->
-> After some more messages there should be also:
->
->     can0  20000200  [8] 00 40 00 00 00 00 5F 00   ERRORFRAME
->         state-change{back-to-error-active}
->         error-counter-tx-rx{{95}{0}}
->
-> For each message sent, the error counter decreases by 8.
->
-
-The HI-3110 controller decrements the error counter by 1 for every message sent.
-The error count increments by 8 when there is an error.
-
->
->>
->> root@imx6qrom5420b1:~# ip -s -d link show can0
->> 4: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN
->> mode DEFAULT group default qlen 10
->>     link/can  promiscuity 0
->>     can state ERROR-ACTIVE (berr-counter tx 117 rx 0) restart-ms 0
->>           bitrate 1000000 sample-point 0.750
->>           tq 62 prop-seg 5 phase-seg1 6 phase-seg2 4 sjw 1
->>           hi3110: tseg1 2..16 tseg2 2..8 sjw 1..4 brp 1..64 brp-inc 1
->>           clock 16000000
->>           re-started bus-errors arbit-lost error-warn error-pass bus-off
->>           0          1          0          0          0          0
->
->
-> Strange, some counters got lost.
->
-
-This was a bug introduced when adding berr-reporting, have fixed in v4 patch.
-
->>
->> I have not been able to check the bus-off condition by (short-circuiting
->> CAN low and high). The tec error count remains at 128 when I short the
->> CAN low and high pins and the status never goes BUSOFF.
->
->
-> You also need to send a message and the short-circuit should be at the
-> connector of the sending host. What tranceiver is used? Do you know?
->
-
-ADM3054 transceiver is used with HI-3111. I connected the
-HI-3111/ADM3054 board to kvaser leaf and ran "cangen -i can0" and
-"candump -e any,0:0,#FFFFFFF" on the board. Removed the cable and
-shorted the CAN_H/L pins coming out of ADM3054. I will try your
-suggestion of using a different bit-rate on the Kvaser leaf instead.
-
-I appreciate your continued feedback, it has helped significantly
-improve the error handling of the driver. Looking back I should have
-based it on sja1000 or flexcan driver.
-
-Thanks,
-Akshay
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
