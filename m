@@ -1,49 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 0/3] ASoC: add dio2125 amplifier support
-Date: Wed, 15 Mar 2017 12:07:50 -0500
-Message-ID: <20170315170750.pw3552bwc6fwwpwg@rob-hp-laptop>
-References: <20170306174451.24406-1-jbrunet@baylibre.com>
- <1488903977.28627.4.camel@baylibre.com>
- <20170308100020.dop5pno3m2sj6fmv@sirena.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regulator: fixed, gpio: dt: regulator-name is required
+ property
+Date: Wed, 15 Mar 2017 12:10:09 -0500
+Message-ID: <20170315171009.4raoe35x4mdtsw4w@rob-hp-laptop>
+References: <1488836249-1193-1-git-send-email-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170308100020.dop5pno3m2sj6fmv@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+In-Reply-To: <1488836249-1193-1-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 08, 2017 at 11:00:20AM +0100, Mark Brown wrote:
-> On Tue, Mar 07, 2017 at 05:26:17PM +0100, Jerome Brunet wrote:
-> > Hi Mark,
+On Mon, Mar 06, 2017 at 09:37:29PM +0000, Harald Geyer wrote:
+> These two drivers fail to probe if no name is provided. For details see:
+> https://www.spinics.net/lists/kernel/msg2457515.html
 > 
-> Please don't top post, reply in line with needed context.  This allows
-> readers to readily follow the flow of conversation and understand what
-> you are talking about and also helps ensure that everything in the
-> discussion is being addressed.
-> 
-> > In this series, you applied patch 2 and 3 but not patch 1.
-> > (so the dioo prefix is used but not documented)
-> 
-> > Is it on purpose ?
-> > The patch does not have the "ASoC" prefix, this maybe why it was
-> > missed. Since, the file does no belong to alsa, I wasn't sure whether
-> > to put the prefix or not.
-> 
-> This is a generic DT patch, not part of the bindings, so I'd expect the
-> DT maintainers to take it.
+> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 1 +
+>  Documentation/devicetree/bindings/regulator/gpio-regulator.txt  | 2 ++
+>  2 files changed, 3 insertions(+)
 
-I usually don't if it's part of a series, but I have applied it.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
