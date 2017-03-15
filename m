@@ -1,216 +1,56 @@
-From: Eva Rachel Retuya <eraretuya@gmail.com>
-Subject: Re: [PATCH 3/4] iio: accel: adxl345: Setup DATA_READY trigger
-Date: Wed, 15 Mar 2017 17:49:25 +0800
-Message-ID: <20170315094923.GA3080@Socrates-UM>
-References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
- <1489403497-27849-4-git-send-email-eraretuya@gmail.com>
- <CAHp75Vcz1RTdncG5L1S7q2LVHK6TEA813pjTpue4n3DDcCrMAg@mail.gmail.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH 1/3] dt-bindings: add the grf clock for dw-mipi-dsi
+Date: Wed, 15 Mar 2017 17:55:23 +0800
+Message-ID: <58C90F8B.7070102@rock-chips.com>
+References: <1489567352-3333-1-git-send-email-zyw@rock-chips.com>
+ <3304582.Whtjx7Nypf@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vcz1RTdncG5L1S7q2LVHK6TEA813pjTpue4n3DDcCrMAg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3304582.Whtjx7Nypf@diego>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 02:12:54PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 13, 2017 at 1:11 PM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
-> 
-
-Hello Andy,
-Thanks for the review.
-
-> Missed commit message is no-no!
-> 
-> > Signed-off-by: Eva Rachel Retuya <eraretuya@gmail.com>
-> 
-> > -int adxl345_core_probe(struct device *dev, struct regmap *regmap,
-> > -                      const char *name);
-> > +int adxl345_core_probe(struct device *dev, struct regmap *regmap, int irq,
-> > +                      const char *name, bool use_int2);
-> 
-> Hmm... And tomorrow you will add another flag and another.
-> 
-> No, consider to use something like
-> 
-> struct adxl345_chip {
->  struct device *dev;
->  struct regmap *regmap;
->  const char *name;
-> }
-> 
-> Convert your probe to use it, and after extend for your needs.
-> 
-> >  #define ADXL345_DEVID                  0xE5
-> >
-> > +#define ADXL345_IRQ_NAME               "adxl345_event"
-> 
-> 
-> >  struct adxl345_data {
-> > +       struct iio_trigger *drdy_trig;
-> >         struct regmap *regmap;
-> > +       bool drdy_trig_on;
-> >         u8 data_range;
-> 
-> drdy -> data_ready
-> 
-> > +static irqreturn_t adxl345_irq(int irq, void *p)
-> > +{
-> > +       struct iio_dev *indio_dev = p;
-> > +       struct adxl345_data *data = iio_priv(indio_dev);
-> > +       int ret = IRQ_NONE;
-> > +       u32 int_stat;
-> > +
-> 
-> > +       ret = regmap_read(data->regmap, ADXL345_REG_INT_SOURCE, &int_stat);
-> 
-> > +       if (ret < 0)
-> > +               return ret;
-> 
-> It makes little sense AFAIU.
-> 
-
-Can you please elaborate further your comment regarding this?
-
-> > +
-> > +       if (int_stat & ADXL345_INT_DATA_READY) {
-> > +               iio_trigger_poll(data->drdy_trig);
-> > +               ret = IRQ_HANDLED;
-> > +       }
-> > +
-> > +       return ret;
-> 
-> Useless variable ret. You may return values directly.
-> 
-> > +}
-> > +
-> > +static int adxl345_drdy_trigger_set_state(struct iio_trigger *trig, bool state)
-> > +{
-> > +       struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-> > +       struct adxl345_data *data = iio_priv(indio_dev);
-> > +       struct device *dev;
-> > +       int ret;
-> > +
-> 
-> > +       dev = regmap_get_device(data->regmap);
-> 
-> This may be moved to definition block.
-> 
-> > +       ret = regmap_update_bits(data->regmap, ADXL345_REG_INT_ENABLE,
-> 
-> > +                                ADXL345_INT_DATA_READY, (state ?
-> > +                                ADXL345_INT_DATA_READY : 0));
-> 
-> No way:
->  Don't split lines like this.
->  Remove extra parens.
-> 
-> > +static const struct iio_trigger_ops adxl345_trigger_ops = {
-> 
-> > +       .owner = THIS_MODULE,
-> 
-> I dunno if we still need this.
-> 
-> >  static const struct iio_info adxl345_info = {
-> 
-> >         .driver_module  = THIS_MODULE,
-> 
-> Ditto.
-> 
-> >         .read_raw       = adxl345_read_raw,
-> >  };
-> 
-> > +       /*
-> > +        * Any bits set to 0 send their respective interrupts to the INT1 pin,
-> > +        * whereas bits set to 1 send their respective interrupts to the INT2
-> > +        * pin. Map all interrupts to the specified pin.
-> > +        */
-> 
-> > +       if (!use_int2)
-> > +               ret = regmap_write(data->regmap, ADXL345_REG_INT_MAP, 0x00);
-> > +       else
-> > +               ret = regmap_write(data->regmap, ADXL345_REG_INT_MAP, 0xFF);
-> 
-> I would create a temporary variable to hold the value and call
-> regmap_write() unconditionally.
-> 
-> 
-> > -       return iio_device_register(indio_dev);
-> 
-> You are not supposed to ping-pong changes in your series. Make clear
-> your goal either you do like above or like below. If you choose
-> latter, don't alter it in previous patch.
-> 
-
-Ack. Will revise carefully with consideration to your comments in this
-whole series.
-
-> > +       if (irq > 0) {
-> 
-> > +               ret =
-> > +               devm_request_threaded_irq(dev, irq, NULL, adxl345_irq,
-> 
-> Don't split lines like this.
-> 
-> > +                                         IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> 
-> Are you sure you have threaded IRQ handler?
-> 
-> > +       ret = iio_device_register(indio_dev);
-> > +       if (ret < 0) {
-> > +               dev_err(dev, "iio_device_register failed: %d\n", ret);
-> > +               goto err_trigger_unregister;
-> > +       }
-> > +
-> > +       return ret;
-> 
-> > +err_trigger_unregister:
-> > +       if (data->drdy_trig)
-> > +               iio_trigger_unregister(data->drdy_trig);
-> > +
-> > +       return ret;
-> 
-> So, doesn't devm_iio_*() provide a facility to avoid this?
-> 
-> > @@ -229,6 +334,8 @@ int adxl345_core_remove(struct device *dev)
-> >         struct adxl345_data *data = iio_priv(indio_dev);
-> >
-> >         iio_device_unregister(indio_dev);
-> > +       if (data->drdy_trig)
-> > +               iio_trigger_unregister(data->drdy_trig);
-> 
-> Ditto.
-> 
-> > --- a/drivers/iio/accel/adxl345_i2c.c
-> > +++ b/drivers/iio/accel/adxl345_i2c.c
-> 
-> > -       return adxl345_core_probe(&client->dev, regmap, id ? id->name : NULL);
-> > +       irq = of_irq_get_byname(client->dev.of_node, "INT2");
-> > +       if (irq == client->irq)
-> > +               use_int2 = true;
-> 
-> Can't you use platform_get_irq() instead?
-> 
-> 
-> > -       return adxl345_core_probe(&spi->dev, regmap, id->name);
-> > +       irq = of_irq_get_byname(spi->dev.of_node, "INT2");
-> > +       if (irq == spi->irq)
-> > +               use_int2 = true;
-> 
-> Ditto.
-> 
-> P.S. Are you doing this stuff on your own or you are working for some
-> company? If the latter applies, please, consider to do *internal*
-> review first.
-> 
-
-I'm doing it on my own as a project for Outreachy and have mentors to ask
-for advice and/or questions.
-
-Eva
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+SGkgSGVpa28KCk9uIDAzLzE1LzIwMTcgMDU6MDMgUE0sIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+
+IEFtIE1pdHR3b2NoLCAxNS4gTcOkcnogMjAxNywgMTY6NDI6MzAgQ0VUIHNjaHJpZWIgQ2hyaXMg
+Wmhvbmc6Cj4+IEZvciBSSzMzOTksIHRoZSBncmYgY2xvY2sgc2hvdWxkIGJlIGNvbnRyb2xsZWQg
+YnkgZHctbWlwaS1kc2kgZHJpdmVyLAo+PiBhZGQgdGhlIGRlc2NyaXB0aW9uIGZvciB0aGlzIGNs
+b2NrLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29t
+Pgo+PiAtLS0KPj4KPj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlw
+L2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAgICAgICB8IDIKPj4gKy0gMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4+Cj4+IGRpZmYgLS1naXQKPj4gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2Rz
+aV9yb2NrY2hpcC50Cj4+IHh0Cj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudAo+PiB4dCBpbmRleCAxODhm
+NmY3Li43ZTE3YTYwIDEwMDY0NAo+PiAtLS0KPj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50Cj4+IHh0ICsr
+Kwo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlw
+L2R3X21pcGlfZHNpX3JvY2tjaGlwLnQKPj4geHQgQEAgLTEwLDcgKzEwLDcgQEAgUmVxdWlyZWQg
+cHJvcGVydGllczoKPj4gICAtIGludGVycnVwdHM6IFJlcHJlc2VudCB0aGUgY29udHJvbGxlcidz
+IGludGVycnVwdCB0byB0aGUgQ1BVKHMpLgo+PiAgIC0gY2xvY2tzLCBjbG9jay1uYW1lczogUGhh
+bmRsZXMgdG8gdGhlIGNvbnRyb2xsZXIncyBwbGwgcmVmZXJlbmNlCj4+ICAgICBjbG9jayhyZWYp
+IGFuZCBBUEIgY2xvY2socGNsaykuIEZvciBSSzMzOTksIGEgcGh5IGNvbmZpZyBjbG9jawo+PiAt
+ICAocGh5X2NmZykgaXMgYWRkaXRpb25hbCByZXF1aXJlZC4gQXMgZGVzY3JpYmVkIGluIFsxXS4K
+Pj4gKyAgKHBoeV9jZmcpIGFuZCBhIGdyZiBjbG9jayhncmYpIGFyZSBhZGRpdGlvbmFsIHJlcXVp
+cmVkLiBBcyBkZXNjcmliZWQgaW4KPj4gWzFdLgo+IHlvdXIgImdyZiIgY2xvY2sgaXMgb3B0aW9u
+YWwsIGFzIGl0IGlzIG5vdCBwcmVzZW50IG9uIGFsbCBzb2NzIChsaWtlIHRoZQo+IHJrMzI4OCkg
+c28gc2hvdWxkIHByb2JhYmx5IG1vdmUgdG8gYSBzZXBhcmF0ZSBzZWN0aW9uIGFuZCBub3QgYmUg
+aW4gdGhlCj4gcmVxdWlyZWQgcHJvcGVydGllcwpGb3IgUkszMzk5LCB0aGUgZ3JmIGNsb2NrIGlz
+IHJlcXVpcmVkLCBhY2NvcmRpbmcgdG8gdGhlIGFkdmljZSBwcm92aWRlZCAKYnkgcm9iWzBdLApw
+dXQgaXQgaW50byAicmVxdWlyZWQgcHJvcGVydGllcyAiIGlzIGJldHRlci4KWzBdIGh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTIyMDE4Ny8KPgo+IEhlaWtvCj4KPgo+CgotLSAK
+Q2hyaXMgWmhvbmcKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
