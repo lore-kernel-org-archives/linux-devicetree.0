@@ -1,56 +1,90 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH 1/3] dt-bindings: add the grf clock for dw-mipi-dsi
-Date: Wed, 15 Mar 2017 17:55:23 +0800
-Message-ID: <58C90F8B.7070102@rock-chips.com>
-References: <1489567352-3333-1-git-send-email-zyw@rock-chips.com>
- <3304582.Whtjx7Nypf@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3304582.Whtjx7Nypf@diego>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v33 13/14] Documentation: dt: chosen properties for arm64 kdump
+Date: Wed, 15 Mar 2017 19:00:49 +0900
+Message-ID: <20170315100049.25206-1-takahiro.akashi@linaro.org>
+References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170315095656.24992-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28KCk9uIDAzLzE1LzIwMTcgMDU6MDMgUE0sIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+
-IEFtIE1pdHR3b2NoLCAxNS4gTcOkcnogMjAxNywgMTY6NDI6MzAgQ0VUIHNjaHJpZWIgQ2hyaXMg
-Wmhvbmc6Cj4+IEZvciBSSzMzOTksIHRoZSBncmYgY2xvY2sgc2hvdWxkIGJlIGNvbnRyb2xsZWQg
-YnkgZHctbWlwaS1kc2kgZHJpdmVyLAo+PiBhZGQgdGhlIGRlc2NyaXB0aW9uIGZvciB0aGlzIGNs
-b2NrLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29t
-Pgo+PiAtLS0KPj4KPj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlw
-L2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAgICAgICB8IDIKPj4gKy0gMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4+Cj4+IGRpZmYgLS1naXQKPj4gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2Rz
-aV9yb2NrY2hpcC50Cj4+IHh0Cj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudAo+PiB4dCBpbmRleCAxODhm
-NmY3Li43ZTE3YTYwIDEwMDY0NAo+PiAtLS0KPj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50Cj4+IHh0ICsr
-Kwo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlw
-L2R3X21pcGlfZHNpX3JvY2tjaGlwLnQKPj4geHQgQEAgLTEwLDcgKzEwLDcgQEAgUmVxdWlyZWQg
-cHJvcGVydGllczoKPj4gICAtIGludGVycnVwdHM6IFJlcHJlc2VudCB0aGUgY29udHJvbGxlcidz
-IGludGVycnVwdCB0byB0aGUgQ1BVKHMpLgo+PiAgIC0gY2xvY2tzLCBjbG9jay1uYW1lczogUGhh
-bmRsZXMgdG8gdGhlIGNvbnRyb2xsZXIncyBwbGwgcmVmZXJlbmNlCj4+ICAgICBjbG9jayhyZWYp
-IGFuZCBBUEIgY2xvY2socGNsaykuIEZvciBSSzMzOTksIGEgcGh5IGNvbmZpZyBjbG9jawo+PiAt
-ICAocGh5X2NmZykgaXMgYWRkaXRpb25hbCByZXF1aXJlZC4gQXMgZGVzY3JpYmVkIGluIFsxXS4K
-Pj4gKyAgKHBoeV9jZmcpIGFuZCBhIGdyZiBjbG9jayhncmYpIGFyZSBhZGRpdGlvbmFsIHJlcXVp
-cmVkLiBBcyBkZXNjcmliZWQgaW4KPj4gWzFdLgo+IHlvdXIgImdyZiIgY2xvY2sgaXMgb3B0aW9u
-YWwsIGFzIGl0IGlzIG5vdCBwcmVzZW50IG9uIGFsbCBzb2NzIChsaWtlIHRoZQo+IHJrMzI4OCkg
-c28gc2hvdWxkIHByb2JhYmx5IG1vdmUgdG8gYSBzZXBhcmF0ZSBzZWN0aW9uIGFuZCBub3QgYmUg
-aW4gdGhlCj4gcmVxdWlyZWQgcHJvcGVydGllcwpGb3IgUkszMzk5LCB0aGUgZ3JmIGNsb2NrIGlz
-IHJlcXVpcmVkLCBhY2NvcmRpbmcgdG8gdGhlIGFkdmljZSBwcm92aWRlZCAKYnkgcm9iWzBdLApw
-dXQgaXQgaW50byAicmVxdWlyZWQgcHJvcGVydGllcyAiIGlzIGJldHRlci4KWzBdIGh0dHBzOi8v
-cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTIyMDE4Ny8KPgo+IEhlaWtvCj4KPgo+CgotLSAK
-Q2hyaXMgWmhvbmcKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+
+Add documentation for DT properties:
+	linux,usable-memory-range
+	linux,elfcorehdr
+used by arm64 kdump. Those are, respectively, a usable memory range
+allocated to crash dump kernel and the elfcorehdr's location within it.
+
+Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+[takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: update the text due to recent changes ]
+Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 6ae9d82d4c37..b5e39af4ddc0 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
+ book3e) by some versions of kexec-tools to tell the new kernel that it
+ is being booted by kexec, as the booting environment may differ (e.g.
+ a different secondary CPU release mechanism)
++
++linux,usable-memory-range
++-------------------------
++
++This property (arm64 only) holds a base address and size, describing a
++limited region in which memory may be considered available for use by
++the kernel. Memory outside of this range is not available for use.
++
++This property describes a limitation: memory within this range is only
++valid when also described through another mechanism that the kernel
++would otherwise use to determine available memory (e.g. memory nodes
++or the EFI memory map). Valid memory may be sparse within the range.
++e.g.
++
++/ {
++	chosen {
++		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
++	};
++};
++
++The main usage is for crash dump kernel to identify its own usable
++memory and exclude, at its boot time, any other memory areas that are
++part of the panicked kernel's memory.
++
++While this property does not represent a real hardware, the address
++and the size are expressed in #address-cells and #size-cells,
++respectively, of the root node.
++
++linux,elfcorehdr
++----------------
++
++This property (currently used only on arm64) holds the memory range,
++the address and the size, of the elf core header which mainly describes
++the panicked kernel's memory layout as PT_LOAD segments of elf format.
++e.g.
++
++/ {
++	chosen {
++		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
++	};
++};
++
++While this property does not represent a real hardware, the address
++and the size are expressed in #address-cells and #size-cells,
++respectively, of the root node.
+-- 
+2.11.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
