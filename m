@@ -1,180 +1,113 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and
- endpoints
-Date: Wed, 15 Mar 2017 11:33:35 +0200
-Message-ID: <1773cade-654d-f704-0d4a-44a76699ecab@linux.intel.com>
-References: <1629581.fh46rNHz4U@aspire.rjw.lan>
- <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
- <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com>
- <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
- <cf2ab8be-a351-f1ea-28a9-f5cca57061cd@linux.intel.com>
- <CAJZ5v0i4pEKkz+3Ob42x96YHpPWasH2O8VnDCz8aKw_wxywLyQ@mail.gmail.com>
- <dba2ce05-fc0c-3994-118c-a7de6a5afc78@linux.intel.com>
- <CAJZ5v0hCvcPgYYV0Hysfu0pEYCzzHp7KKdW3nYyjm7RGS3bHoQ@mail.gmail.com>
- <572ba62c-3168-adcf-f9de-4826b1804f38@linux.intel.com>
- <CAJZ5v0h+kzycm7y08300DFHUcL23k672-0BdWLwT0AbqgAY6JQ@mail.gmail.com>
- <20170315082351.GA24531@paasikivi.fi.intel.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 16/23] MAINTAINERS: Add file patterns for powerpc
+ device tree bindings
+Date: Wed, 15 Mar 2017 10:36:44 +0100
+Message-ID: <CAMuHMdWEe4DvVMTHF1QoO-rB3zFjTsYydAGeCdqvAmFok3O6DA@mail.gmail.com>
+References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
+ <1489324627-19126-17-git-send-email-geert@linux-m68k.org> <87a88nv1b2.fsf@concordia.ellerman.id.au>
+ <CAMuHMdX95zwQUe8XyPpKvv6zsHG+c1Ke=eFBZCt+fNUxgP5O2g@mail.gmail.com> <87d1dilwdu.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170315082351.GA24531@paasikivi.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87d1dilwdu.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, york.sun-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/17 10:23, Sakari Ailus wrote:
-> On Wed, Mar 15, 2017 at 12:13:45AM +0100, Rafael J. Wysocki wrote:
->> On Tue, Mar 14, 2017 at 11:53 PM, Sakari Ailus
->> <sakari.ailus@linux.intel.com> wrote:
->>> Rafael J. Wysocki wrote:
+Hi Michael,
+
+On Wed, Mar 15, 2017 at 10:30 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wro=
+te:
+> Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> writes:
+>> On Wed, Mar 15, 2017 at 1:19 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> w=
+rote:
+>>> Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> writes:
+>>>> Submitters of device tree binding documentation may forget to CC
+>>>> the subsystem maintainer if this is missing.
 >>>>
->>>> On Tue, Mar 14, 2017 at 10:16 PM, Sakari Ailus
->>>> <sakari.ailus@linux.intel.com> wrote:
->>>>>
->>>>> Rafael J. Wysocki wrote:
->>>>>>
->>>>>>
->>>>>> On Tue, Mar 14, 2017 at 6:54 PM, Sakari Ailus
->>>>>> <sakari.ailus@linux.intel.com> wrote:
->>>>>>>
->>>>>>>
->>>>>>> Hi Rafael,
->>>>>>>
->>>>>>> Rafael J. Wysocki wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
->>>>>>>> <sakari.ailus@linux.intel.com> wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On 03/14/17 10:08, Sakari Ailus wrote:
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> How about this instead:
->>>>>>>>>>
->>>>>>>>>> All port nodes are located under the device's "_DSD" node in the
->>>>>>>>>> hierarchical data extension tree. The property extension related to
->>>>>>>>>> each port node must contain the key "port" and an integer value
->>>>>>>>>> which
->>>>>>>>>> is the number of the port.
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> So with matching strings instead of indices, this will change, too...
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> It doesn't have to AFAICS, but the number is just redundant IMO.  You
->>>>>>>> only need a boolean property saying "this is a port", so you know that
->>>>>>>> you should expect a list of endpoints in that object.
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> No, it's not redundant. It's the number of the physical port in the
->>>>>>> device
->>>>>>> --- this is how the driver gets to know where the connection has been
->>>>>>> made.
->>>>>>
->>>>>>
->>>>>>
->>>>>> OK, but what exactly do you mean by "physical port"?
->>>>>
->>>>>
->>>>>
->>>>> The device (or an IP block) has physical interfaces to the world outside.
->>>>> There could be just one, but there may be more. For an ISP, there could
->>>>> be
->>>>> e.g. four CSI-2 receivers to each of which you could connect a camera
->>>>> sensor. So for an ISP device, that number tells which of the receivers a
->>>>> given sensor is connected to.
->>>>>
->>>>> The mapping between this number and what the hardware datasheet refers to
->>>>> needs to be documented per device.
+>>>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>>>> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+>>>> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+>>>> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+>>>> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>>> ---
+>>>> Please apply this patch directly if you want to be involved in device
+>>>> tree binding documentation for your subsystem.
 >>>>
+>>>> v2:
+>>>>   - Rebased on top of commit a42715830d552d7c ("MAINTAINERS: Remove
+>>>>     powerpc's "opal" pattern match), which just added "powerpc/opal",
+>>>>     while obviously the whole "powerpc" hierarchy is of interest.
 >>>>
->>>> OK, so the number actually is an arbitrary piece of data associated
->>>> with the key "port" and the interpretation of that piece of data
->>>> depends on whoever asks for that value.
->>>>
->>>> IOW, the core doesn't care.
->>>>
->>>> With all due respect to whoever invented this on the DT side, this is
->>>> just bad design to me, because it causes the "port" property to serve
->>>> two different purposes at the same time.  First, it tells the core
->>>> that this object is a port.  Second, it is expected to provide a piece
->>>> of data of unspecified interpretation to somebody.  Which means that
->>>> the "port" property is both general and device-specific at the same
->>>> time and the sanity of that is quite questionable IMO.
+>>>> Impact on next-20170310:
 >>>
+>>> Actual diff ignoring ordering etc:
 >>>
->>> DT uses a node called either "port" or "ports" to store the port nodes. The
->>> reg property tells the number of the port (see
->>> Documentation/devicetree/bindings/graph.txt). I'm no DT expert, but my
->>> understanding is that the node namespace is different from the property
->>> namespace.
->>
->> So on the DT side it actually looks OK to me.
->>
->> And the <reg> value is referred to as the port-endpoint identifier, so
->> I guess this is used for referring to the port/endpoint instead of an
->> index or the key value somewhere?
-> 
-> The remote-endpoint uses phandles; they're a mechanism in DT to refer to
-> different nodes in the tree (DT does not differentiate between devices and
-> non-device nodes). There's a relatively good example here:
-> 
-> 	arch/arm/boot/dts/omap3-n9.dts
-> 
->>
->>> If you're concerned of possible double meanings, it's entirely possible to
->>> put the port nodes under hierarchical data extension named e.g. "ports", and
->>> document that this is what the node must be called (single port node could
->>> be just called "port"). This way, it should be much more difficult to
->>> interpret a non-port node as a port node --- roughly equivalent of the DT
->>> ports node.
+>>>  +Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> (supporter:LINUX FO=
+R POWERPC (32-BIT AND 64-BIT))
+>>>  +Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org> (supporter:LINUX FOR POWERPC (32-BI=
+T AND 64-BIT))
+>>>  +linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org (open list:LINUX FOR POWERPC (32-BIT AN=
+D 64-BIT))
+>>>  -Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org> (commit_signer:5/11=3D45%)
+>>>  -Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org> (commit_signer:4/11=3D36%,authored:4/=
+11=3D36%)
+>>>  -Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> (commit_signer:1/11=3D9=
+%)
+>>>  -yangbo lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org> (authored:1/11=3D9%)
+>>>  -"Otto Kek=C3=A4l=C3=A4inen" <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org> (authored:1/11=3D9%)
+>>>  -Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (authored:1/11=3D9%=
+)
+>>>  -York Sun <york.sun-3arQi8VN3Tc@public.gmane.org> (authored:1/11=3D9%)
 >>>
->>> The drawback with this change is that the size of the data structure in ASL
->>> (and AML) will grow.
+>>> Which looks bad as all the NXP folks get dropped, but they should be
+>>> reading linuxppc-dev. So I think I'll merge this, unless anyone
+>>> disagrees.
 >>
->> The "ports" thing would only be useful if we had the other properties
->> to put in there.
->>
->> So I guess we can specify that the "port" property value is the
->> identifier of the port and then we will use this in the
->> "remote-endpoint" property on the other end instead of an index.
-> 
-> Makes sense.
-> 
->>
->> And analogously for the "enpoint" property value.
-> 
-> The endpoint hierarchical data extension node name? There is no endpoint
-> property being used by this version of the set anymore; I removed it as it
-> was redundant. However a human readable endpoint node name can be chosen
-> which that'd be quite practical to identify the endpoint.
-> 
-> Then the remote-endpoint properties would be:
-> 
-> 	Package () { device, port (integer), endpoint-node-name (string) }
-> 
+>> They got dropped because in the absence of a maintainer entry, the
+>> last committers are listed. If they need to be listed, I can send patche=
+s to add
+>> more specific entries for 4xx and fsl DT bindings, like:
+>
+> This is one is probably worth doing:
+>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 0f1c2f96c99aa936..40b392a4f399adbe 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -5266,6 +5266,7 @@ M:        Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+>>  L:     linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>  L:     linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>  S:     Maintained
+>> +F:     Documentation/devicetree/bindings/powerpc/fsl/
+>>  F:     drivers/soc/fsl/
+>>  F:     include/linux/fsl/
+>
+> I'll fold it in before applying?
 
-Oh, well... the device is present there already, so the endpoint
-reference would well use an index pretty much equally well. Most of the
-time it'll be zero anyway. I.e.
+Fine (less work) for me! Thanks!
 
-	Package() { device, port number (integer), endpoint id (integer }
+> But I wouldn't bother with 4xx, just falling back to linuxppc-dev is
+> fine for that.
 
-But switching from the port index to the port number is a tangible
-improvement.
+OK.
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
