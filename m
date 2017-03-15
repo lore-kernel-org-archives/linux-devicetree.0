@@ -1,11 +1,13 @@
-From: Vivek Unune <npcomplete13@gmail.com>
-Subject: [PATCH] ARM: dts: BCM5301X: Add support for Linksys EA9500
-Date: Wed, 15 Mar 2017 11:00:33 -0400
-Message-ID: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v2] ARM: dts: imx: add Gateworks Ventana GW5904 support
+Date: Wed, 15 Mar 2017 08:13:54 -0700
+Message-ID: <1489590834-20424-1-git-send-email-tharvey@gateworks.com>
+References: <1489178411-6559-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1489178411-6559-1-git-send-email-tharvey@gateworks.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,86 +17,779 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: hauke@hauke-m.de, zajec5@gmail.com, bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGFyZHdhcmUgSW5mbwotLS0tLS0tLS0tLS0tCgpQcm9jZXNzb3IJLSBCcm9hZGNvbSBCQ000NzA5
-QzBLRkVCRyBkdWFsLWNvcmUgQCAxLjQgR0h6ClN3aXRjaAkJLSBCQ001MzAxMiBpbiBCQ000NzA5
-QzBLRkVCRyAmIGV4dGVybmFsIEJDTTUzMTI1CkREUjMgUkFNCS0gMjU2IE1CCkZsYXNoCQktIDEy
-OCBNQiAoVG9zaGliYSBUQzU4QlZHMFMzSFRBMDApCjIuNEdIegkJLSBCQ000MzY2IDTDlzQgMi40
-LzVHIHNpbmdsZSBjaGlwIDgwMi4xMWFjIFNvQwpQb3dlciBBbXAJLSBTa3l3b3JrcyBTRTI2MjNM
-IDIuNCBHSHogcG93ZXIgYW1wICh4NCkKNUdIeiB4IDIJLSBCQ000MzY2IDTDlzQgMi40LzVHIHNp
-bmdsZSBjaGlwIDgwMi4xMWFjIFNvQwpQb3dlciBBbXAJLSBQTFggVGVjaG5vbG9neSBQRVg4NjAz
-IDMtbGFuZSwgMy1wb3J0IFBDSWUgc3dpdGNoClBvcnRzCQktIDggUG9ydHMsIDEgV0FOIFBvcnRz
-CkFudGVubmFzCS0gOCBBbnRlbm5hcwpTZXJpYWwgUG9ydAktIEBKNiBbR05ELFRYLFJYXSAoVkND
-IE5DKSAgICAxMTUyMDAgOG4xCgpJIHdhcyBhYmxlIHRvIHRlc3QgdGhpcyB3aXRoIExlZGUgd2l0
-aCBmb2xsb3dpbmcgcXVpcmtzLgoKLSBCcm9hZGNvbSA0MzY2YzAgd2lyZWxlc3MgY2hpcCBpcyB1
-c2VkIGFuZCBpdCdzIGZpcm13YXJlIHBhY2thZ2UgZG9lc24ndAogIGV4aXN0IHlldC4gSSB3YXMg
-YWJsZSB0byB0ZXN0IGl0IHdpdGggZmlybXdhcmUgdGhhdCBjYW1lIGJ1cmllZCBpbiB0aGUKICBy
-b3V0ZXIncyBkaGQua28KLSBDUFUgaXMgY29ubmVjdGVkIHRvIHBvcnQgNQotIEl0IGhhcyB0d28g
-c3dpdGNoZXMgaW4gb3JkZXIgdG8gc3VwcG9ydCA4IGxhbiBwb3J0cy4gSW50ZXJuYWwgc3dpdGNo
-IGlzCiAgQkNNNTMwMTIuIFRoZSBleHRlcm5hbCBzd2l0Y2ggQkNNNTMxMjUgY3VycmVudGx5IHdv
-cmtzIGFzICJkdW1iIHN3aXRjaCIKLSBVc2luZyA4IGJpdCBFQ0MgZ2l2ZXMgZXJyb3JzLCBzd2l0
-Y2hpbmcgdG8gMSBiaXQgRUNDIHNvbHZlZCB0aGUgaXNzdWUKLSBJdCB1c2VzIGR1YWwgZmlybXdh
-cmUgKHRyeCkgY29waWVzIGZvciBmYWlsc2FmZSBwdXJwb3Nlcy4KCkluc3RhbGxhdGlvbgotLS0t
-LS0tLS0tLS0KCkxpbmtzeXMgZ3BnLXNpZ25zIHRoZWlyIGZpcm13YXJlIGZvciB0aGlzIHJvdXRl
-ciwgaGVuY2UgaXQgaXMgbm90CnBvc3NpYmxlIHRvIGluc3RhbGwgdXNpbmcgRmFjdG9yeSBVSS4K
-ClRoaXMgcm91dGVyIG5lZWRzIHNlcmlhbCBjYWJsZSBob29rZWQgdXAgdG8gSjYuIFRoZW4gaW50
-ZXJydXB0IHRoZSBib290CiAgIHByb2Nlc3MgYnkgQ3RybCtDIHRvIGVudGVyIENGRSBwcm9tcHQK
-ICAgRnJvbSB0aGVyZSBleGVjdXRlOgogICAgICAgIGBmbGFzaCAtbm9oZWFkZXIgMTkyLjE2OC4x
-LjEwOi9sZWRlLnRyeCBuZmxhc2gwLnRyeGAKICAgd2hlcmUgMTkyLjE2OC4xLjEwIGlzIHdoZXJl
-IHlvdXIgdGZ0cCBzZXJ2ZXIgc2hvdWxkIGlzIHJ1bm5pbmcuCllvdSBtYXkgd2FudCB0byByZXNl
-dCBwYXJ0aWFsIGJvb3RzIHVzaW5nCiAgYG52cmFtIHNldCBwYXJ0aWFsYm9vdD0wICYmIG52cmFt
-IGNvbW1pdCcgd2hpbGUgYXQgQ0ZFIHByb21wdC4KClRPRE8KLS0tLQoKLSBBZGQgQkNNNTMxMjUg
-KHNlY29uZGFyeSBzd2l0Y2gpIHRvIGR0cwotIEFkZCByb2JvX3Jlc2V0IGdwaW8gKHBpbiMgMTAg
-YWN0aXZlIGxvdykgdG8gZHRzCgpTaWduZWQtb2ZmLWJ5OiBWaXZlayBVbnVuZSA8bnBjb21wbGV0
-ZTEzQGdtYWlsLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9iY200NzA5NC1saW5rc3lzLXBh
-bmFtZXJhLmR0cyB8IDk3ICsrKysrKysrKysrKysrKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2Vk
-LCA5NiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvYmNtNDcwOTQtbGlua3N5cy1wYW5hbWVyYS5kdHMgYi9hcmNoL2FybS9ib290L2R0
-cy9iY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0cwppbmRleCBiNjc1MGY3Li43NTUzN2VkIDEw
-MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9iY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0
-cworKysgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0cwpA
-QCAtNyw3ICs3LDcgQEAKIC9kdHMtdjEvOwogCiAjaW5jbHVkZSAiYmNtNDcwOTQuZHRzaSIKLSNp
-bmNsdWRlICJiY201MzAxeC1uYW5kLWNzMC1iY2g4LmR0c2kiCisjaW5jbHVkZSAiYmNtNTMwMXgt
-bmFuZC1jczAtYmNoMS5kdHNpIgogCiAvIHsKIAljb21wYXRpYmxlID0gImxpbmtzeXMscGFuYW1l
-cmEiLCAiYnJjbSxiY200NzA5NCIsICJicmNtLGJjbTQ3MDgiOwpAQCAtMzIsNSArMzIsMTAwIEBA
-CiAJCQlsaW51eCxjb2RlID0gPEtFWV9XUFNfQlVUVE9OPjsKIAkJCWdwaW9zID0gPCZjaGlwY29t
-bW9uIDMgR1BJT19BQ1RJVkVfTE9XPjsKIAkJfTsKKworCQlyZmtpbGwgeworCQlsYWJlbCA9ICJX
-aUZpIjsKKwkJbGludXgsY29kZSA9IDxLRVlfUkZLSUxMPjsKKwkJZ3Bpb3MgPSA8JmNoaXBjb21t
-b24gMTYgR1BJT19BQ1RJVkVfTE9XPjsKKwkJfTsKKworCQlyZXNldCB7CisJCWxhYmVsID0gIlJl
-c2V0IjsKKwkJbGludXgsY29kZSA9IDxLRVlfUkVTVEFSVD47CisJCWdwaW9zID0gPCZjaGlwY29t
-bW9uIDE3IEdQSU9fQUNUSVZFX0xPVz47CisJCX07CisJfTsKKworCWxlZHMgeworCQljb21wYXRp
-YmxlID0gImdwaW8tbGVkcyI7CisKKwkJd3BzIHsKKwkJbGFiZWwgPSAiYmNtNTN4eDp3aGl0ZTp3
-cHMiOworCQlncGlvcyA9IDwmY2hpcGNvbW1vbiAyMiBHUElPX0FDVElWRV9MT1c+OworCQl9Owor
-CisJCXVzYjIgeworCQlsYWJlbCA9ICJiY201M3h4OmdyZWVuOnVzYjIiOworCQlncGlvcyA9IDwm
-Y2hpcGNvbW1vbiAxIEdQSU9fQUNUSVZFX0xPVz47CisJCX07CisKKwkJdXNiMyB7CisJCWxhYmVs
-ID0gImJjbTUzeHg6Z3JlZW46dXNiMyI7CisJCWdwaW9zID0gPCZjaGlwY29tbW9uIDIgR1BJT19B
-Q1RJVkVfTE9XPjsKKwkJfTsKKworCQlwb3dlciB7CisJCWxhYmVsID0gImJjbTUzeHg6d2hpdGU6
-cG93ZXIiOworCQlncGlvcyA9IDwmY2hpcGNvbW1vbiA0IEdQSU9fQUNUSVZFX0hJR0g+OworCQl9
-OworCisJCXdpZmktZGlzYWJsZWQgeworCQlsYWJlbCA9ICJiY201M3h4OmFtYmVyOndpZmktZGlz
-YWJsZWQiOworCQlncGlvcyA9IDwmY2hpcGNvbW1vbiAwIEdQSU9fQUNUSVZFX0xPVz47CisJCX07
-CisKKwkJd2lmaS1lbmFibGVkIHsKKwkJbGFiZWwgPSAiYmNtNTN4eDp3aGl0ZTp3aWZpLWVuYWJs
-ZWQiOworCQlncGlvcyA9IDwmY2hpcGNvbW1vbiA1IEdQSU9fQUNUSVZFX0hJR0g+OworCQl9Owor
-CisJCWJsdWViYXIxIHsKKwkJbGFiZWwgPSAiYmNtNTN4eDp3aGl0ZTpibHVlYmFyMSI7CisJCWdw
-aW9zID0gPCZjaGlwY29tbW9uIDExIEdQSU9fQUNUSVZFX0hJR0g+OworCQl9OworCisJCWJsdWVi
-YXIyIHsKKwkJbGFiZWwgPSAiYmNtNTN4eDp3aGl0ZTpibHVlYmFyMiI7CisJCWdwaW9zID0gPCZj
-aGlwY29tbW9uIDEyIEdQSU9fQUNUSVZFX0hJR0g+OworCQl9OworCisJCWJsdWViYXIzIHsKKwkJ
-bGFiZWwgPSAiYmNtNTN4eDp3aGl0ZTpibHVlYmFyMyI7CisJCWdwaW9zID0gPCZjaGlwY29tbW9u
-IDE1IEdQSU9fQUNUSVZFX0xPVz47CisJCX07CisKKwkJYmx1ZWJhcjQgeworCQlsYWJlbCA9ICJi
-Y201M3h4OndoaXRlOmJsdWViYXI0IjsKKwkJZ3Bpb3MgPSA8JmNoaXBjb21tb24gMTggR1BJT19B
-Q1RJVkVfSElHSD47CisJCX07CisKKwkJYmx1ZWJhcjUgeworCQlsYWJlbCA9ICJiY201M3h4Ondo
-aXRlOmJsdWViYXI1IjsKKwkJZ3Bpb3MgPSA8JmNoaXBjb21tb24gMTkgR1BJT19BQ1RJVkVfSElH
-SD47CisJCX07CisKKwkJYmx1ZWJhcjYgeworCQlsYWJlbCA9ICJiY201M3h4OndoaXRlOmJsdWVi
-YXI2IjsKKwkJZ3Bpb3MgPSA8JmNoaXBjb21tb24gMjAgR1BJT19BQ1RJVkVfSElHSD47CisJCX07
-CisKKwkJYmx1ZWJhcjcgeworCQlsYWJlbCA9ICJiY201M3h4OndoaXRlOmJsdWViYXI3IjsKKwkJ
-Z3Bpb3MgPSA8JmNoaXBjb21tb24gMjEgR1BJT19BQ1RJVkVfSElHSD47CisJCX07CisKKwkJYmx1
-ZWJhcjggeworCQlsYWJlbCA9ICJiY201M3h4OndoaXRlOmJsdWViYXI4IjsKKwkJZ3Bpb3MgPSA8
-JmNoaXBjb21tb24gOCBHUElPX0FDVElWRV9ISUdIPjsKKwkJfTsKKwogCX07CiB9OworCismdXNi
-MiB7CisJdmNjLWdwaW8gPSA8JmNoaXBjb21tb24gMTMgR1BJT19BQ1RJVkVfSElHSD47Cit9Owor
-CismdXNiMyB7CisJdmNjLWdwaW8gPSA8JmNoaXBjb21tb24gMTQgR1BJT19BQ1RJVkVfSElHSD47
-Cit9OwotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+The Gateworks Ventana GW5904 is a single-board computer based on the NXP
+IMX6 SoC with the following features:
+ * IMX6 DualLite Soc (supports IMX6S,IMX6DL,IMX6Q)
+ * 2048MB DDR3 DRAM (4x64bit) (options up to 4GiB)
+ * 8GB eMMC
+ * Gateworks System Controller:
+  - hardware watchdog
+  - hardware monitor
+  - pushbutton controller
+  - EEPROM storage
+  - power control
+ * JTAG programmable
+ * 1x miniPCIe socket (with PCIe, USB)
+ * 1x miniPCIe socket (USB)
+ * 1x M.2 socket (USB, 2x SIM)
+ * Inertial Module (LSM9DS1 9DOF: 3x acc, 3x rate, 3x mag)
+ * GPS (optional uBlox EVA-M8M)
+ * Application headers:
+  - 2x RS232 UART (TX/RX/CTS/RTS)
+  - 8x TTL GPIO (3x configurable as PWM)
+  - 1x LVDS display 3D+C with i2c touch and PWM backlight
+ * MV88E6176 GbE Switch (uplink to IMX FEC)
+ * Front panel connectors:
+  - 1x user programmable LED
+  - 1x configurable user pushbutton
+  - 1x USB OTG
+  - 4x GbE LAN
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+v2:
+ - updated switch to latest dsa bindings
+ - update to GPL/X11 dual license
+ - use stdout-path instead of bootargs
+ - sort devices under i2c by address
+ - fix node/label name on touchscreen node
+ - removed unnecessary status okay for pps node
+ - removed unnecessary container node in iomuxc
+ - replaced deprecated fsl,uart-has-rtscts with uart-has-rtscts
+---
+ arch/arm/boot/dts/Makefile            |   2 +
+ arch/arm/boot/dts/imx6dl-gw5904.dts   |  19 +
+ arch/arm/boot/dts/imx6q-gw5904.dts    |  23 ++
+ arch/arm/boot/dts/imx6qdl-gw5904.dtsi | 641 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 685 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5904.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5904.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ccecd79..7843b65 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -352,6 +352,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-gw551x.dtb \
+ 	imx6dl-gw552x.dtb \
+ 	imx6dl-gw553x.dtb \
++	imx6dl-gw5904.dtb \
+ 	imx6dl-hummingboard.dtb \
+ 	imx6dl-icore.dtb \
+ 	imx6dl-icore-rqs.dtb \
+@@ -395,6 +396,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw551x.dtb \
+ 	imx6q-gw552x.dtb \
+ 	imx6q-gw553x.dtb \
++	imx6q-gw5904.dtb \
+ 	imx6q-h100.dtb \
+ 	imx6q-hummingboard.dtb \
+ 	imx6q-icore.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-gw5904.dts b/arch/arm/boot/dts/imx6dl-gw5904.dts
+new file mode 100644
+index 0000000..2318a55
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-gw5904.dts
+@@ -0,0 +1,19 @@
++/*
++ * Copyright 2017 Gateworks Corporation
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++#include "imx6dl.dtsi"
++#include "imx6qdl-gw5904.dtsi"
++
++/ {
++	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5904";
++	compatible = "gw,imx6dl-gw5904", "gw,ventana", "fsl,imx6dl";
++};
+diff --git a/arch/arm/boot/dts/imx6q-gw5904.dts b/arch/arm/boot/dts/imx6q-gw5904.dts
+new file mode 100644
+index 0000000..357dd7e
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-gw5904.dts
+@@ -0,0 +1,23 @@
++/*
++ * Copyright 2017 Gateworks Corporation
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++#include "imx6q.dtsi"
++#include "imx6qdl-gw5904.dtsi"
++
++/ {
++	model = "Gateworks Ventana i.MX6 Dual/Quad GW5904";
++	compatible = "gw,imx6q-gw5904", "gw,ventana", "fsl,imx6q";
++};
++
++&sata {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5904.dtsi b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+new file mode 100644
+index 0000000..ed1fa97
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+@@ -0,0 +1,641 @@
++/*
++ * Copyright 2017 Gateworks Corporation
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of
++ *     the License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	/* these are used by bootloader for disabling nodes */
++	aliases {
++		led0 = &led0;
++		led1 = &led1;
++		led2 = &led2;
++		usb0 = &usbh1;
++		usb1 = &usbotg;
++	};
++
++	chosen {
++		stdout-path = &uart2;
++	};
++
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm4 0 5000000>;
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <7>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		led0: user1 {
++			label = "user1";
++			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++
++		led1: user2 {
++			label = "user2";
++			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
++			default-state = "off";
++		};
++
++		led2: user3 {
++			label = "user3";
++			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
++			default-state = "off";
++		};
++	};
++
++	memory {
++		reg = <0x10000000 0x40000000>;
++	};
++
++	pps {
++		compatible = "pps-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pps>;
++		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++	};
++
++	reg_1p0v: regulator-1p0v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P0V";
++		regulator-min-microvolt = <1000000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_usb_h1_vbus: regulator-usb-h1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_h1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_usb_otg_vbus: regulator-usb-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++};
++
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
++				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		switch0@0 {
++			compatible = "marvell,mv88e6085";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					label = "lan4";
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "lan3";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "lan2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "lan1";
++				};
++
++				port@5 {
++					reg = <5>;
++					label = "cpu";
++					ethernet = <&fec>;
++				};
++			};
++		};
++	};
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	gpio: pca9555@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	eeprom1: eeprom@50 {
++		compatible = "atmel,24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++
++	eeprom2: eeprom@51 {
++		compatible = "atmel,24c02";
++		reg = <0x51>;
++		pagesize = <16>;
++	};
++
++	eeprom3: eeprom@52 {
++		compatible = "atmel,24c02";
++		reg = <0x52>;
++		pagesize = <16>;
++	};
++
++	eeprom4: eeprom@53 {
++		compatible = "atmel,24c02";
++		reg = <0x53>;
++		pagesize = <16>;
++	};
++
++	rtc: ds1672@68 {
++		compatible = "dallas,ds1672";
++		reg = <0x68>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	ltc3676: pmic@3c {
++		compatible = "lltc,ltc3676";
++		reg = <0x3c>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
++
++		regulators {
++			/* VDD_SOC (1+R1/R2 = 1.635) */
++			reg_vdd_soc: sw1 {
++				regulator-name = "vddsoc";
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <1308000>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_1P8 (1+R1/R2 = 2.505): GbE switch */
++			reg_1p8v: sw2 {
++				regulator-name = "vdd1p8";
++				regulator-min-microvolt = <1033310>;
++				regulator-max-microvolt = <2004000>;
++				lltc,fb-voltage-divider = <301000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_ARM (1+R1/R2 = 1.635) */
++			reg_vdd_arm: sw3 {
++				regulator-name = "vddarm";
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <1308000>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_DDR (1+R1/R2 = 2.105) */
++			reg_vdd_ddr: sw4 {
++				regulator-name = "vddddr";
++				regulator-min-microvolt = <868310>;
++				regulator-max-microvolt = <1684000>;
++				lltc,fb-voltage-divider = <221000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_2P5 (1+R1/R2 = 3.435): PCIe/ENET-PHY */
++			reg_2p5v: ldo2 {
++				regulator-name = "vdd2p5";
++				regulator-min-microvolt = <2490375>;
++				regulator-max-microvolt = <2490375>;
++				lltc,fb-voltage-divider = <487000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_HIGH (1+R1/R2 = 4.17) */
++			reg_3p0v: ldo4 {
++				regulator-name = "vdd3p0";
++				regulator-min-microvolt = <3023250>;
++				regulator-max-microvolt = <3023250>;
++				lltc,fb-voltage-divider = <634000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	egalax_ts: touchscreen@04 {
++		compatible = "eeti,egalax_ts";
++		reg = <0x04>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
++		wakeup-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&ldb {
++	status = "okay";
++
++	lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <18>;
++		status = "okay";
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: hsd100pxn1 {
++				clock-frequency = <65000000>;
++				hactive = <1024>;
++				vactive = <768>;
++				hback-porch = <220>;
++				hfront-porch = <40>;
++				vback-porch = <21>;
++				vfront-porch = <7>;
++				hsync-len = <60>;
++				vsync-len = <10>;
++			};
++		};
++	};
++};
++
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie>;
++	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
++	status = "disabled";
++};
++
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
++	status = "disabled";
++};
++
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	disable-over-current;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	non-removable;
++	vmmc-supply = <&reg_3p3v>;
++	keep-power-in-suspend;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++};
++
++&iomuxc {
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
++			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
++			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x4001b0b0 /* PHY_RST# */
++		>;
++	};
++
++	pinctrl_gpio_leds: gpioledsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
++			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
++			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
++			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
++			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_pcie: pciegrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_0__GPIO1_IO00	0x1b0b0 /* PCIE RST */
++		>;
++	};
++
++	pinctrl_pmic: pmicgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_8__GPIO1_IO08	0x1b0b0 /* PMIC_IRQ# */
++		>;
++	};
++
++	pinctrl_pps: ppsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm2: pwm2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm3: pwm3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm4: pwm4grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
++			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
++			MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D23__UART3_CTS_B         0x1b0b1
++			MX6QDL_PAD_EIM_D24__UART3_TX_DATA       0x1b0b1
++			MX6QDL_PAD_EIM_D25__UART3_RX_DATA       0x1b0b1
++			MX6QDL_PAD_EIM_D31__UART3_RTS_B         0x1b0b1
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA    0x1b0b1
++			MX6QDL_PAD_CSI0_DAT13__UART4_RX_DATA    0x1b0b1
++			MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B      0x1b0b1
++			MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B      0x1b0b1
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0 /* PWR_EN */
++			MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x1b0b0 /* OC */
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
++			MX6QDL_PAD_SD3_RST__SD3_RESET		0x10059
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
++			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17059
++			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17059
++			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17059
++			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17059
++		>;
++	};
++
++	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170b9
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100b9
++			MX6QDL_PAD_SD3_RST__SD3_RESET		0x100b9
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
++			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x170b9
++			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x170b9
++			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x170b9
++			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x170b9
++		>;
++	};
++
++	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170f9
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100f9
++			MX6QDL_PAD_SD3_RST__SD3_RESET		0x100f9
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
++			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x170f9
++			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x170f9
++			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x170f9
++			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x170f9
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
++		>;
++	};
++};
+-- 
+2.7.4
