@@ -1,89 +1,59 @@
-From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Subject: Re: [PATCH v8 1/9] devicetree: power: Add battery.txt
-Date: Wed, 15 Mar 2017 15:04:00 -0700
-Message-ID: <CAKvHMgTpqdNKQoWUsChn4YWTtWaN5un_Vpqp+HtbMrxGV_D-ig@mail.gmail.com>
-References: <20170227071117.18934-1-liam@networkimprov.net>
- <20170227071117.18934-2-liam@networkimprov.net> <20170302151449.j7i3ecpy2ipxu6tq@rob-hp-laptop>
- <CAKvHMgR6eVTUp6je3D_YDUMAksWiHx6JnJc8cRHSHp6tj30OPA@mail.gmail.com> <CAL_Jsq+8Y=GtyjVZA-suZLH+ySDshaoU9qh96BF+PeUYK3FZxg@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v10 2/2] media: i2c: Add support for OV5647 sensor.
+Date: Thu, 16 Mar 2017 00:03:03 +0200
+Message-ID: <20170315220303.GG10701@valkosipuli.retiisi.org.uk>
+References: <cover.1488798062.git.roliveir@synopsys.com>
+ <67b5055a198316f74c5c1339e14a9f18a4106e69.1488798062.git.roliveir@synopsys.com>
+ <20170307104545.GI3220@valkosipuli.retiisi.org.uk>
+ <350cf398-81a9-7174-fd47-1dc5c0daa990@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+8Y=GtyjVZA-suZLH+ySDshaoU9qh96BF+PeUYK3FZxg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <350cf398-81a9-7174-fd47-1dc5c0daa990-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 1:10 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Mar 2, 2017 at 12:31 PM, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> wrote:
->> Hi Rob,
->>
->> On Thu, Mar 2, 2017 at 7:14 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Sun, Feb 26, 2017 at 11:11:09PM -0800, Liam Breck wrote:
->>>> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->>>>
->>>> Documentation of static battery characteristics that can be defined
->>>> for batteries which cannot self-identify. This information is required
->>>> by fuel-gauge and charger chips for proper handling of the battery.
->>>>
->>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
->>>> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/power/supply/battery.txt   | 42 ++++++++++++++++++++++
->>>>  1 file changed, 42 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>> new file mode 100644
->>>> index 0000000..3d916bd
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>> @@ -0,0 +1,42 @@
->>>> +Battery Characteristics
->>>> +
->>>> +Required Properties:
->>>> + - compatible: Must be "fixed-battery"
->>>
->>> Still not liking this name, but I don't have a better suggestion. Please
->>> describe here what is and isn't a "fixed battery".
->>
->> Sebastian...?
->>
->>>> +
->>>> +Optional Properties:
->>>> + - voltage-min-design-microvolt: drained battery voltage
->>>> + - energy-full-design-microwatt-hours: battery design energy
->>>> + - charge-full-design-microamp-hours: battery design capacity
->>>> +
->>>> +Future Properties must be named for the corresponding elements in
->>>> +enum power_supply_property, defined in include/linux/power_supply.h.
->>>
->>> Um, no. That's exactly not how DT bindings should be done.
->>
->> Power supply components surface stats in sysfs using the names in enum
->> power_supply_property. For example,
->> /sys/class/power_supply/.../voltage_min_design. Matching input (DT)
->> and output (sysfs) names is sensible. The above comment is already
->> attached to struct power_supply_battery_info, which is the initial
->> destination for the above DT properties.
->>
->> Shall I mention sysfs in the above comment?
->
-> Absolutely not. Bindings should not reference Linux.
->
-> While sometimes things can align, there is no guarantee that they
-> will. DT is h/w description. sysfs is user configuration.
+Hi Ramiro,
 
-sysfs for power_supply also provides fixed hw characteristics.
+On Wed, Mar 15, 2017 at 04:45:16PM +0000, Ramiro Oliveira wrote:
+> Hi Sakari
+> 
+> On 3/7/2017 10:45 AM, Sakari Ailus wrote:
+> > Hi Ramiro,
+> > 
+> > On Mon, Mar 06, 2017 at 11:16:34AM +0000, Ramiro Oliveira wrote:
+> > ...
+> >> +static int __sensor_init(struct v4l2_subdev *sd)
+> >> +{
+> >> +	int ret;
+> >> +	u8 resetval, rdval;
+> >> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+> >> +
+> >> +	dev_dbg(&client->dev, "sensor init\n");
+> > 
+> > This looks like a debugging time leftover. Please remove.
+> > 
+> 
+> Should I send a v11 with this change?
 
-Sebastian proposed DT:battery specifically to be consumed by
-power_supply_core. Allowing names in DT:battery and
-power_supply_property to diverge would cause confusion and wasted
-time, for no particular benefit. As there is no rationale to
-reconsider the names of these fields for DT:battery, let's write that
-into the docs.
+Please do; you can add my ack on that one.
+
+> 
+> > With that,
+> > 
+> > Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > 
+> > ...
+> > 
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
