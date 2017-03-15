@@ -1,50 +1,130 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] Documentation: bindings: Introduce
- scpi,sensors-scale
-Date: Wed, 15 Mar 2017 15:36:24 -0500
-Message-ID: <20170315203624.iylw2c2nuqb4mrqu@rob-hp-laptop>
-References: <20170309101759.18081-1-carlo@caione.org>
- <20170309101759.18081-2-carlo@caione.org>
- <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [v3 3/5] coresight: add support for debug module
+Date: Wed, 15 Mar 2017 14:41:59 -0600
+Message-ID: <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
+References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
+ <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com> <20170309175915.GA964@leoy-linaro>
+ <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com> <20170313165600.GB32431@linaro.org>
+ <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57ff035a-b462-6f5d-0100-051e99e9a2b6-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <516f8989-4dde-2686-d549-0761feb14d1b-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 06:20:33PM +0000, Sudeep Holla wrote:
-> 
-> 
-> On 09/03/17 10:17, Carlo Caione wrote:
-> > From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> > 
-> > Document the new property `scpi,sensors-scale` used by the hwmon-scpi
-> > driver to convert the sensor readings to the correct / expected scale.
-> > 
-> 
-> I am fine with DT bindings if DT maintainers agree with having one but I
-> would like to add couple of points to get their feedback:
-> 
-> 1. ARM recognized the drawbacks of SCPI which started informally with
->    ARM Ltd platforms and got adopted by few vendors. It's now being
->    worked on and a much better and scalable replacement protocol is
->    being discussed with vendors now. So future enhancement to this SCPI
->    protocol is unlikely.
-> 
-> 2. AmLogic has diverted from base protocol in many ways and most of them
->    are handled with just compatible so far without any need for
->    additional bindings. Can we avoid it ?
-> 
-> So based on these, I prefer not to add more bindings to handle such
-> deviations but make it just AmLogic specific.
+On 15 March 2017 at 10:44, Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 13/03/17 16:56, Mathieu Poirier wrote:
+>>
+>> On Fri, Mar 10, 2017 at 02:29:53PM +0000, Suzuki K Poulose wrote:
+>>>>>>
+>>>>>> +
+>>>>>> +       put_online_cpus();
+>>>>>> +
+>>>>>> +       if (!debug_count++)
+>>>>>> +               atomic_notifier_chain_register(&panic_notifier_list,
+>>>>>> +                                              &debug_notifier);
+>>>>>> +
+>>>>>
+>>>>>
+>>>>>> +       sprintf(buf, (char *)id->data, drvdata->cpu);
+>>>>>> +       dev_info(dev, "%s initialized\n", buf);
+>>>>>
+>>>>>
+>>>>> This could simply be :
+>>>>>         dev_info(dev, "Coresight debug-CPU%d initialized\n",
+>>>>> drvdata->cpu);
+>>>>>
+>>>>> and get rid of the static string and the buffer, see below.
+>>>
+>>>
+>>> Also we need pm_runtime_put() here to balance the pm_runtime_get_ from
+>>> AMBA
+>>> device probe.
+>>
+>>
+>> Good point.
+>>
+>>> More on that below.
+>>>
+>>>>>
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static struct amba_id debug_ids[] = {
+>>>>>> +       {       /* Debug for Cortex-A53 */
+>>>>>> +               .id     = 0x000bbd03,
+>>>>>> +               .mask   = 0x000fffff,
+>>>>>
+>>>>>
+>>>>> ...
+>>>>>
+>>>>>> +               .data   = "Coresight debug-CPU%d",
+>>>>>
+>>>>>
+>>>>> I think this is pointless, as the debug area we are interested in is
+>>>>> always associated
+>>>>> with a CPU, we could as well figure out what to print from the
+>>>>> drvdata->cpu above.
+>>>>
+>>>>
+>>>> I prefer to follow your suggestion for upper two comments; but I'd like
+>>>> check with Mathieu, due I followed up Mathieu's suggestion to write
+>>>> current code.
+>>>
+>>>
+>>> Btw, I don't see any PM calls to make sure the power domain (at least the
+>>> debug domain)
+>>> is up, which could cause problems with accesses to some of these
+>>> registers (leave alone the
+>>> ones in CPU power domain), especially the EDPRSR. We could also do
+>>> pm_runtime_get on the
+>>> CPU's power domain, if the CPU is online, before we access the pcsr.
+>>
+>>
+>> I thought about PM runtime operations a little while back but wondered if
+>> it is
+>> really a good thing to have them around.  When this code is called the
+>> system
+>> has crashed and as such making PM runtimes call isn't a good idea.
+>
+>
+> You are right. It is not safe to make such calls when we have crashed.
+> The other side effect is, if we don't have the debug power domain up,
+> we could possibly hang the system and prevent other registered notifiers
+> from running, which doesn't sound good either.
+>
+>>
+>> One thing we could do is _not_ call pm_runtime_put() at the end of the
+>> probe()
+>> operation.  That way we wouldn't have to mess around with PM runtime
+>> operations
+>> on an unstable system.  This, of course, is costly in terms of power
+>> consumption
+>> but the system is under test/debug anyway.
+>
+>
+> May be control the behavior via kernel command line ? Something like
+> coresight_debug={on or 1} or
+> even use the "nohlt" ?
 
-Agreed.
+We need to deal with the debug and CPU power domains.
 
-Rob
+For the former I suggest we do what coresight does and use the
+"power-domains" binding[1].  For the CPU power domain we can re-use
+the "nohlt" flag.  In the probe function if the "nohlt" cmd line flag
+is not set the code bails out.  If it is set pm_runtime_put() is _not_
+called and the driver can be used without worries of hanging the
+system when the panic handler is invoked.
+
+Am I forgetting something?
+
+[1]. http://lxr.free-electrons.com/source/arch/arm64/boot/dts/arm/juno-base.dtsi#L137
+
+>
+> Suzuki
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
