@@ -1,61 +1,61 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 16/18] ARM: dtsi: axp22x: add battery power
- supply subnode
-Date: Wed, 15 Mar 2017 11:55:35 +0100
-Message-ID: <20170315105537.22349-17-quentin.schulz@free-electrons.com>
-References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
-Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] mfd: rk808: Add RK805 support
+Date: Wed, 15 Mar 2017 11:03:15 +0000
+Message-ID: <20170315110315.dekx7nhb66dmgxxe@dell>
+References: <1489111252-22175-1-git-send-email-zhangqing@rock-chips.com>
+ <1489111252-22175-5-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBB2F3UTDAKGQEBBNWSBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170315105537.22349-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-ymACFijhrKM@public.gmane.org, bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489111252-22175-5-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The X-Powers AXP22X PMIC exposes battery supply various data such as
-the battery status (charging, discharging, full, dead), current max
-limit, current current, battery capacity (in percentage), voltage max
-limit, current voltage, and battery capacity (in Ah).
-
-This adds the battery power supply subnode for AXP22X PMIC.
-
-Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
-
-v2:
- - changed DT node name from battery_power_supply to
- battery-power-supply,
- - removed io-channels and io-channel-names from DT (the IIO mapping is
- done in the IIO ADC driver now),
-
- arch/arm/boot/dts/axp22x.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-index 67331c5..87fb08e 100644
---- a/arch/arm/boot/dts/axp22x.dtsi
-+++ b/arch/arm/boot/dts/axp22x.dtsi
-@@ -57,6 +57,11 @@
- 		status = "disabled";
- 	};
- 
-+	battery_power_supply: battery-power-supply {
-+		compatible = "x-powers,axp221-battery-power-supply";
-+		status = "disabled";
-+	};
-+
- 	regulators {
- 		/* Default work frequency for buck regulators */
- 		x-powers,dcdc-freq = <3000>;
--- 
-2.9.3
+T24gRnJpLCAxMCBNYXIgMjAxNywgRWxhaW5lIFpoYW5nIHdyb3RlOgoKPiBUaGUgUks4MDUgY2hp
+cCBpcyBhIFBvd2VyIE1hbmFnZW1lbnQgSUMgKFBNSUMpIGZvciBtdWx0aW1lZGlhIGFuZCBoYW5k
+aGVsZAo+IGRldmljZXMuIEl0IGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgY29tcG9uZW50czoKPiAK
+PiAgICAgLSBSZWd1bGF0b3JzCj4gICAgIC0gUlRDCj4gICAgIC0gQ2xvY2tpbmcKPiAKPiBCb3Ro
+IFJLODA4IGFuZCBSSzgwNSBjaGlwcyBhcmUgdXNpbmcgYSBzaW1pbGFyIHJlZ2lzdGVyIG1hcCwK
+PiBzbyB3ZSBjYW4gcmV1c2UgdGhlIFJUQyBhbmQgQ2xvY2tpbmcgZnVuY3Rpb25hbGl0eS4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBFbGFpbmUgWmhhbmcgPHpoYW5ncWluZ0Byb2NrLWNoaXBzLmNvbT4K
+PiAtLS0KPiAgZHJpdmVycy9jbGsvS2NvbmZpZyB8ICAgNCArLQoKQWNrZWQtYnk6IExlZSBKb25l
+cyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+Cgo+ICBkcml2ZXJzL21mZC9LY29uZmlnIHwgICA0ICst
+Cj4gIGRyaXZlcnMvbWZkL3JrODA4LmMgfCAxMTcgKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKwoKQ29tbWVudHMgYmVsb3cuCgo+ICBkcml2ZXJzL3J0
+Yy9LY29uZmlnIHwgICA0ICstCgpBY2tlZC1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJv
+Lm9yZz4KCj4gIDQgZmlsZXMgY2hhbmdlZCwgMTIzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25z
+KC0pCgpTcGxpdCB0aGlzIHBhdGNoIHVwIGludG8gc3Vic3lzdGVtcywgaXQnbGwgc2F2ZSBpc3N1
+ZXMuCgpbLi4uXQoKPiAtLS0gYS9kcml2ZXJzL21mZC9yazgwOC5jCj4gKysrIGIvZHJpdmVycy9t
+ZmQvcms4MDguYwoKWy4uLl0KCj4gK3N0YXRpYyB2b2lkIHJrODA1X2RldmljZV9zaHV0ZG93bih2
+b2lkKQo+ICt7Cj4gKwlpbnQgcmV0Owo+ICsJc3RydWN0IHJrODA4ICpyazgwOCA9IGkyY19nZXRf
+Y2xpZW50ZGF0YShyazgwOF9pMmNfY2xpZW50KTsKPiArCj4gKwlpZiAoIXJrODA4KSB7Cj4gKwkJ
+ZGV2X3dhcm4oJnJrODA4X2kyY19jbGllbnQtPmRldiwKPiArCQkJICJoYXZlIG5vIHJrODA4LCBz
+byBkbyBub3RoaW5nIGhlcmVcbiIpOwo+ICsJCXJldHVybjsKPiArCX0KPiArCj4gKwkvKiBjbG9z
+ZSBydGMgaW50IHdoZW4gcG93ZXIgb2ZmICovCj4gKwlyZWdtYXBfdXBkYXRlX2JpdHMocms4MDgt
+PnJlZ21hcCwKPiArCQkJICAgUks4MDhfSU5UX1NUU19NU0tfUkVHMSwKPiArCQkJICAgKDB4MyA8
+PCA1KSwgKDB4MyA8PCA1KSk7CgpObyBtYWdpYyBudW1iZXJzLiAgUGxlYXNlIGRlZmluZSB0aGVz
+ZS4KCj4gKwlyZWdtYXBfdXBkYXRlX2JpdHMocms4MDgtPnJlZ21hcCwKPiArCQkJICAgUks4MDhf
+UlRDX0lOVF9SRUcsCj4gKwkJCSAgICgweDMgPDwgMiksICgweDAgPDwgMikpOwoKTm8gbWFnaWMg
+bnVtYmVycy4gIFBsZWFzZSBkZWZpbmUgdGhlc2UuCgo+ICsKPiArCS8qIHBtaWMgc2xlZXAgc2h1
+dGRvd24gZnVuY3Rpb24gKi8KPiArCXJldCA9IHJlZ21hcF91cGRhdGVfYml0cyhyazgwOC0+cmVn
+bWFwLAo+ICsJCQkJIFJLODA1X0dQSU9fSU9fUE9MX1JFRywKPiArCQkJCSBTTFBfU0RfTVNLLCBT
+SFVURE9XTl9GVU4pOwo+ICsJaWYgKHJldCkKPiArCQlkZXZfZXJyKCZyazgwOF9pMmNfY2xpZW50
+LT5kZXYsICJwb3dlciBvZmYgZXJyb3IhXG4iKTsKPiArfQoKLS0gCkxlZSBKb25lcwpMaW5hcm8g
+U1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4g
+c291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3
+aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LXJvY2tjaGlwCg==
