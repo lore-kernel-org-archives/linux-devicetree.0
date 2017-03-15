@@ -1,72 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/15] dt-bindings: display: sun4i: Add HDMI
- display bindings
-Date: Wed, 15 Mar 2017 12:26:22 -0500
-Message-ID: <20170315172622.lb6vy7cmbwaf7crn@rob-hp-laptop>
-References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
- <f1d46b79f933df724a6750d557ebe9517b6339b5.1488876832.git-series.maxime.ripard@free-electrons.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v2 0/5] Add support for the R_CCU on Allwinner
+ H3/A64 SoCs
+Date: Thu, 16 Mar 2017 01:28:03 +0800
+Message-ID: <20170315172808.64011-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBQPSUXDAKGQEYHA4GEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBUXTUXDAKGQEWLYWBWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <f1d46b79f933df724a6750d557ebe9517b6339b5.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 07, 2017 at 09:56:25AM +0100, Maxime Ripard wrote:
-> One of the possible output of the display pipeline, on the SoCs that have
-> it, is the HDMI controller.
-> 
-> Add a binding for it.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 21 +++++++-
->  1 file changed, 21 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> index b82c00449468..4b280672658e 100644
-> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> @@ -4,6 +4,27 @@ Allwinner A10 Display Pipeline
->  The Allwinner A10 Display pipeline is composed of several components
->  that are going to be documented below:
->  
-> +HDMI Encoder
-> +------------
-> +
-> +The HDMI Encoder supports the HDMI video and audio outputs, and does
-> +CEC. It is one end of the pipeline.
-> +
-> +Required properties:
-> +  - compatible: value must be one of:
-> +    * allwinner,sun5i-a10s-hdmi
-> +  - reg: base address and size of memory-mapped region
-> +  - clocks: phandles to the clocks feeding the HDMI encoder
-> +    * ahb: the HDMI interface clock
-> +    * mod: the HDMI module clock
-> +    * pll-0: the first video PLL
-> +    * pll-1: the second video PLL
-> +  - clock-names: the clock names mentioned above
-> +
-> +  - ports: A ports node with endpoint definitions as defined in
-> +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> +    first port should be the input endpoint.
+Allwinner SoCs after sun6i-a31 nearly all have a R_CCU in PRCM part.
+(V3s and R40 do not have it, as they have even no PRCM)
 
-You need an output port to an HDMI connector node and an audio port.
+This patch adds support for the ones on H3/A64.
 
-> +
->  TV Encoder
->  ----------
->  
-> -- 
-> git-series 0.8.11
+Some clock/reset values are reserved for easier extending the support to
+A31/A23, but for this I think some changes to the PRCM MFD should be made,
+see [1] (Although this is only a sketch).
+
+The r_pio device node is also added for A64, as the driver is already
+merged, and its depends (r_ccu) is now met.
+
+[1] https://github.com/wens/linux/commits/sunxi-ng-prcm
+
+Icenowy Zheng (5):
+  dt-bindings: update device tree binding for Allwinner PRCM CCUs
+  clk: sunxi-ng: add support for PRCM CCUs
+  arm64: allwinner: a64: add r_ccu node
+  ARM: sun8i: h3: switch apb0-related clocks to r_ccu
+  arm64: allwinner: a64: add R_PIO pinctrl node
+
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |  18 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  46 ++---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  30 +++
+ drivers/clk/sunxi-ng/Kconfig                       |   6 +
+ drivers/clk/sunxi-ng/Makefile                      |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c                 | 211 +++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-r.h                 |  27 +++
+ include/dt-bindings/clock/sun8i-r-ccu.h            |  59 ++++++
+ include/dt-bindings/reset/sun8i-r-ccu.h            |  53 ++++++
+ 9 files changed, 419 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.h
+ create mode 100644 include/dt-bindings/clock/sun8i-r-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun8i-r-ccu.h
+
+-- 
+2.12.0
