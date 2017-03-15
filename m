@@ -1,167 +1,117 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: mvebu: linksys: enable buffer manager support
-Date: Wed, 15 Mar 2017 20:17:35 +0100
-Message-ID: <8760jafiy8.fsf@free-electrons.com>
-References: <20170308053312.29243-1-ralph.sennhauser@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: iio: introduce trigger providers,
+ consumers
+Date: Wed, 15 Mar 2017 14:25:21 -0500
+Message-ID: <20170315192521.l7mb3egh4hbxdpx6@rob-hp-laptop>
+References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
+ <1488300679-3259-2-git-send-email-fabrice.gasnier@st.com>
+ <20170303062126.5bewa5u6o7wu7sy4@rob-hp-laptop>
+ <948e5b96-7a8f-406d-6d03-d129d1b2ce54@kernel.org>
+ <12a6a2f8-9ff6-a4f0-c9a2-c7de037019ef@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170308053312.29243-1-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Ralph
-        Sennhauser's message of "Wed, 8 Mar 2017 06:33:12 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/Marvell
-        Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <12a6a2f8-9ff6-a4f0-c9a2-c7de037019ef-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ralph,
- 
- On mer., mars 08 2017, Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Sun, Mar 05, 2017 at 12:13:36PM +0000, Jonathan Cameron wrote:
+> On 05/03/17 11:43, Jonathan Cameron wrote:
+> > On 03/03/17 06:21, Rob Herring wrote:
+> >> On Tue, Feb 28, 2017 at 05:51:14PM +0100, Fabrice Gasnier wrote:
+> >>> Document iio provider and consumer bindings.
+> >>>
+> >>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> >>> ---
+> >>>  .../devicetree/bindings/iio/iio-bindings.txt       | 38 ++++++++++++++++++++++
+> >>>  1 file changed, 38 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> >>> index 68d6f8c..01765e9 100644
+> >>> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> >>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> >>> @@ -95,3 +95,41 @@ vdd channel is connected to output 0 of the &ref device.
+> >>>  		io-channels = <&adc 10>, <&adc 11>;
+> >>>  		io-channel-names = "adc1", "adc2";
+> >>>  	};
+> >>> +
+> >>> +==IIO trigger providers==
+> >>> +Sources of IIO triggers can be represented by any node in the device
+> >>> +tree. Those nodes are designated as IIO trigger providers. IIO trigger
+> >>> +consumer uses a phandle and an IIO trigger specifier to connect to an
+> >>> +IIO trigger provider.
+> >>> +An IIO trigger specifier is an array of one or more cells identifying
+> >>> +the IIO trigger output on a device. The length of an IIO trigger
+> >>> +specifier is defined by the value of a #io-trigger-cells property in
+> >>> +the IIO trigger provider node.
+> >>> +
+> >>> +Required properties:
+> >>> +#io-trigger-cells:
+> >>> +		Number of cells in an IIO trigger specifier; Typically
+> >>> +		0 for nodes with a simple IIO trigger output.
+> >>> +
+> >>> +Example:
+> >>> +	trig0: interrupt-trigger0 {
+> >>> +		#io-trigger-cells = <0>;
+> >>> +		compatible = "interrupt-trigger";
+> >>> +		interrupts = <11 0>;
+> >>> +		interrupt-parent = <&gpioa>;
+> >>> +	}
+> >>> +
+> >>> +==IIO trigger consumers==
+> >>> +Required properties:
+> >>> +- io-triggers:	List of phandle representing the IIO trigger specifier.
+> >>> +
+> >>> +Optional properties:
+> >>> +- io-trigger-names :
+> >>> +		List of IIO trigger name strings that matches elements
+> >>> +		in 'io-triggers' list property.
+> >>> +
+> >>> +Example:
+> >>> +	some_trigger_consumer {
+> >>> +		io-triggers = <&trig0>;
+> >>> +		io-trigger-names = "mytrig";
+> >>> +	}
+> >>
+> >> I have some reservations about this. We could just as easily add the 
+> >> interrupt directly to the consumer node and use "trigger" for a standard 
+> >> interrupt name. So the question is whether this extra level of 
+> >> indirection is needed? 
+> > 
+> > First thing to note here, is that Fabrice's use of the generic interrupt
+> > trigger is an extremely 'unusual' one! Normal use case is that we have
+> > a random gpio pin providing interrupts to driver triggering on random
+> > devices - there need be no association between the two whatsoever.
+> > So what we are doing here is 'allowing' an interrupt to provide a trigger.
+> > It's not necessarily the one going to be used by any particular device
+> > driver.  The decision of which trigger to use is definitely one for
+> > userspace, not something that should be configured in to the device tree.
+> > 
+> > For this particular case you could in theory just do it by using an interrupt
+> > as you describe.  Ultimately though we should be able to play more complex
+> > games with this device and having it able to handle any trigger - which 
+> > includes those not using the direct hardware route.  It'll be up to the
+> > driver to figure out when it can use the fast method and when it can't.
+> > 
+> > Conversely, even when we are using this hardware route to drive the
+> > triggering it should be possible to hang off a device to be triggered
+> > by the interrupt via the kernel rather than directly. 
+> > 
+> > So from a device tree point of view we are just describing the fact that
+> > there is a pin, which may be used to trigger something.  What that something
+> > is, is a question for userspace not the device tree.
+> > 
+> Ah, I'm half asleep this morning.  Clearly there is a more general follow
+> up question.  If we are arguing these are generic, why are we setting
+> up the mapping in device tree?
+> 
+> My gut feeling is we shouldn't be.  So I think we need the first chunk
+> above but the latter part should be a job for userspace not the devicetree.
 
-> Add appropriate properties to devices in the Linksys WRT AC Series for the
-> mvneta driver to use hardware buffer management.
->
-> Also update "soc" ranges property and set the status of bm and bm-bppi
-> to "okay" (SRAM).
->
-> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-385-linksys.dtsi     | 17 ++++++++++++++++-
->  arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 17 ++++++++++++++++-
->  2 files changed, 32 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> index df47bf1..4aac375 100644
-> --- a/arch/arm/boot/dts/armada-385-linksys.dtsi
-> +++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> @@ -59,7 +59,8 @@
->  		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
->  			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
->  			  MBUS_ID(0x09, 0x19) 0 0xf1100000 0x10000
-> -			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000>;
-> +			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000
-> +			  MBUS_ID(0x0c, 0x04) 0 0xf1200000 0x100000>;
->  
->  		internal-regs {
->  			i2c@11000 {
-> @@ -88,6 +89,9 @@
->  			ethernet@70000 {
->  				status = "okay";
->  				phy-mode = "rgmii-id";
-> +				buffer-manager = <&bm>;
-> +				bm,pool-long = <1>;
-> +				bm,pool-short = <3>;
->  				fixed-link {
->  					speed = <1000>;
->  					full-duplex;
-> @@ -97,6 +101,9 @@
->  			ethernet@34000 {
->  				status = "okay";
->  				phy-mode = "sgmii";
-> +				buffer-manager = <&bm>;
-> +				bm,pool-long = <0>;
-> +				bm,pool-short = <3>;
-Any reason to reuse the same pool than the other port?
+So you mean keep the provider side, but get rid of the consumer? That 
+makes sense to me.
 
-As only two ports are used here, then each of them can have use 2 of the
-4 availables pools. 
-
->  				fixed-link {
->  					speed = <1000>;
->  					full-duplex;
-> @@ -159,6 +166,10 @@
->  				status = "okay";
->  			};
->  
-> +			bm@c8000 {
-> +				status = "okay";
-> +			};
-> +
->  			/* USB part of the eSATA/USB 2.0 port */
->  			usb@58000 {
->  				status = "okay";
-> @@ -241,6 +252,10 @@
->  			};
->  		};
->  
-> +		bm-bppi {
-> +			status = "okay";
-> +		};
-> +
->  		pcie-controller {
->  			status = "okay";
->  
-> diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-> index 3744ba3..b188a4dc 100644
-> --- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-> +++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-> @@ -71,7 +71,8 @@
->  		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
->  			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
->  			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
-> -			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
-> +			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000
-> +			  MBUS_ID(0x0c, 0x04) 0 0 0xf1200000 0x100000>;
->  
->  		internal-regs {
->  
-> @@ -95,6 +96,9 @@
->  				pinctrl-names = "default";
->  				status = "okay";
->  				phy-mode = "rgmii-id";
-> +				buffer-manager = <&bm>;
-> +				bm,pool-long = <0>;
-> +				bm,pool-short = <3>;
->  				fixed-link {
->  					speed = <1000>;
->  					full-duplex;
-> @@ -106,6 +110,9 @@
->  				pinctrl-names = "default";
->  				status = "okay";
->  				phy-mode = "rgmii-id";
-> +				buffer-manager = <&bm>;
-> +				bm,pool-long = <1>;
-> +				bm,pool-short = <3>;
-Same question that above.
-
-Gregory
-
->  				fixed-link {
->  					speed = <1000>;
->  					full-duplex;
-> @@ -186,6 +193,10 @@
->  				};
->  			};
->  
-> +			bm@c8000 {
-> +				status = "okay";
-> +			};
-> +
->  			nand@d0000 {
->  				status = "okay";
->  				num-cs = <1>;
-> @@ -259,6 +270,10 @@
->  				};
->  			};
->  		};
-> +
-> +		bm-bppi {
-> +			status = "okay";
-> +		};
->  	};
->  
->  	gpio_keys {
-> -- 
-> 2.10.2
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
