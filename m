@@ -1,132 +1,157 @@
-From: "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH V7 0/7] LPC: legacy ISA I/O support
-Date: Wed, 15 Mar 2017 12:05:17 +0800
-Message-ID: <58C8BD7D.7040207@hisilicon.com>
-References: <1489372963-9000-1-git-send-email-yuanzhichang@hisilicon.com>
- <CAK8P3a1f33ipk3Q8+wj9L6zP=ccn_AuhTfV0CC0+wAqrO-2beg@mail.gmail.com>
+From: Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Wed, 15 Mar 2017 00:44:20 -0400
+Message-ID: <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com> <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
+ <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com> <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
+ <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a1f33ipk3Q8+wj9L6zP=ccn_AuhTfV0CC0+wAqrO-2beg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <41439729-42d0-d883-2801-2d3607f2aeab-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rafael Wysocki <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, liviu.dudau-5wv7dgnIgG8@public.gmane.org, Zou Rongrong <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Cc: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd,
+Hi Wolfgang,
 
-Many thanks for your review!
+On Tue, Mar 14, 2017 at 2:08 PM, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org> wrote:
+...snip....
+>> /////disconnect cable
+>>   can0  20000088   [8]  00 00 00 19 00 00 28 00   ERRORFRAME
+>>         protocol-violation{{}{acknowledge-slot}}
+>>         bus-error
+>>         error-counter-tx-rx{{40}{0}}
+>>   can0  20000088   [8]  00 00 00 19 00 00 58 00   ERRORFRAME
+>>         protocol-violation{{}{acknowledge-slot}}
+>>         bus-error
+>>         error-counter-tx-rx{{88}{0}}
+>>   can0  20000088   [8]  00 00 00 19 00 00 80 00   ERRORFRAME
+>>         protocol-violation{{}{acknowledge-slot}}
+>>         bus-error
+>>         error-counter-tx-rx{{128}{0}}
+>
+>
+> TX error warning is missing.
+>
 
-On 2017/3/14 16:39, Arnd Bergmann wrote:
-> On Mon, Mar 13, 2017 at 3:42 AM, zhichang.yuan
-> <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
->> This patchset supports the IPMI-bt device attached to the Low-Pin-Count
->> interface implemented on Hisilicon Hip06/Hip07 SoC.
->>                         -----------
->>                         | LPC host|
->>                         |         |
->>                         -----------
->>                              |
->>                 _____________V_______________LPC
->>                   |                       |
->>                   V                       V
->>                                      ------------
->>                                      |  BT(ipmi)|
->>                                      ------------
+This support was missing in the driver, added in V4 patch.
+
+>>   can0  2000008C   [8]  00 20 00 19 00 00 80 00   ERRORFRAME
+>>         controller-problem{tx-error-passive}
+>>         protocol-violation{{}{acknowledge-slot}}
+>>         bus-error
+>>         error-counter-tx-rx{{128}{0}}
+>
+>
+> Here "tx-error-passiv" is packed with a bus error. What I'm looking for are
+> state change messages similar to:
+>
+>    can0  20000204  [8] 00 08 00 00 00 00 60 00   ERRORFRAME
+>         controller-problem{tx-error-warning}
+>         state-change{tx-error-warning}
+>         error-counter-tx-rx{{96}{0}}
+>    can0  20000204  [8] 00 30 00 00 00 00 80 00   ERRORFRAME
+>         controller-problem{tx-error-passive}
+>         state-change{tx-error-passive}
+>         error-counter-tx-rx{{128}{0}
+>
+> They should always come, even with "berr-reporting off".
+>
+
+HI-3110 has only 1 bus error interrupt. There is no dedicated state
+change interrupts like other controllers.
+
+So here is my plan:
+- Have the bus error interrupt always enabled
+- If berr-reporting off, then have the isr checks/reports state changes
+- if berr-reporting on, then have the isr checks/reports bus errors
+and state changes (Does it make sense packing the error message, if
+the ISR finds both bus and state changes?)
+
+>> write: No buffer space available
+>> root@imx6qrom5420b1:~# ip -s -d link show can0
+>> 4: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN
+>> mode DEFAULT group default qlen 10
+>>     link/can  promiscuity 0
+>>     can <BERR-REPORTING> state ERROR-PASSIVE (berr-counter tx 128 rx 0)
+>> restart-ms 0
+>>           bitrate 1000000 sample-point 0.750
+>>           tq 62 prop-seg 5 phase-seg1 6 phase-seg2 4 sjw 1
+>>           hi3110: tseg1 2..16 tseg2 2..8 sjw 1..4 brp 1..64 brp-inc 1
+>>           clock 16000000
+>>           re-started bus-errors arbit-lost error-warn error-pass bus-off
+>>           0          6          0          1          1          0
+>
+>
+> The error warning and passive counter increased , though. Also the bus error
+> should come in at a rather hight rate. Looking to the code, maybe
+> you need to test STATF to check for state changes (and not ERR).
+>
+
+Apologize, just realized In the above case some error packets were
+lost, because I forgot to set the CPU frequency to max. Will resend
+the log.
+
+..snip...
+>
+> After some more messages there should be also:
+>
+>     can0  20000200  [8] 00 40 00 00 00 00 5F 00   ERRORFRAME
+>         state-change{back-to-error-active}
+>         error-counter-tx-rx{{95}{0}}
+>
+> For each message sent, the error counter decreases by 8.
+>
+
+The HI-3110 controller decrements the error counter by 1 for every message sent.
+The error count increments by 8 when there is an error.
+
+>
 >>
->> When master accesses those peripherals beneath the Hip06/Hip07 LPC, a specific
->> LPC driver is needed to make LPC host generate the standard LPC I/O cycles with
->> the target peripherals'I/O port addresses. But on curent arm64 world, there is
->> no real I/O accesses. All the I/O operations through in/out pair are based on
->> MMIO which is not satisfied the I/O mechanism on Hip06/Hip07 LPC.
->> To solve this issue and keep the relevant existing peripherals' driver
->> untouched, this patchset implements:
->>   - introduces a generic I/O space management framwork, LIBIO, to support I/O
->>     operations of both MMIO buses and the host controllers which access their
->>     peripherals with host local I/O addresses;
->>   - redefines the in/out accessors to provide unified interfaces for MMIO and
->>     legacy I/O. Based on the LIBIO, the calling of in/out() from upper-layer
->>     drivers, such as ipmi-si, will be redirected to the corresponding
->>     device-specific I/O hooks to perfrom the I/O accesses.
->> Based on this patch-set, all the I/O accesses to Hip06/Hip07 LPC peripherals
->> can be supported without any changes on the existing ipmi-si driver.
-> 
-> Thanks for reposting this. I have a few high-level comments first, based on
-> the walk through the code I did with Gabriele and John last week:
-> 
-> - I think the libio framework is more generic than it needs to be, but as
->   Alex really liked it this way and it was done like this based on his earlier
->   comments, I think that's ok.
-> 
-> - after we went back and forth on the ACPI implementation, we concluded
->   that it is correct to do the same as on DT and completely abstract the
->   number space for I/O ports. No code should rely on a Linux port number
->   to have any particular relation to the physical address or the the address
->   on a PCI or LPC bus.
-Thanks again for your helps in Linaro Connect!
-I think we are heading for this direction, is it?
+>> root@imx6qrom5420b1:~# ip -s -d link show can0
+>> 4: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN
+>> mode DEFAULT group default qlen 10
+>>     link/can  promiscuity 0
+>>     can state ERROR-ACTIVE (berr-counter tx 117 rx 0) restart-ms 0
+>>           bitrate 1000000 sample-point 0.750
+>>           tq 62 prop-seg 5 phase-seg1 6 phase-seg2 4 sjw 1
+>>           hi3110: tseg1 2..16 tseg2 2..8 sjw 1..4 brp 1..64 brp-inc 1
+>>           clock 16000000
+>>           re-started bus-errors arbit-lost error-warn error-pass bus-off
+>>           0          1          0          0          0          0
+>
+>
+> Strange, some counters got lost.
+>
 
-> 
-> - The name "libio" still needs to be changed, this is way too generic, as
->   "I/O" can refer to many things in the kernel, and almost none of them
->   are related to x86 programmed I/O ports in any way. My suggestion
->   would be "generic_ioport", or possibly "libioport", "libpio" or "pci_io". Any
->   of them would work for me, or someone else could come up with a better
->   name that describes what it is.
+This was a bug introduced when adding berr-reporting, have fixed in v4 patch.
 
-Ok. We will make a better name:)
+>>
+>> I have not been able to check the bus-off condition by (short-circuiting
+>> CAN low and high). The tec error count remains at 128 when I short the
+>> CAN low and high pins and the status never goes BUSOFF.
+>
+>
+> You also need to send a message and the short-circuit should be at the
+> connector of the sending host. What tranceiver is used? Do you know?
+>
 
-> 
-> - I'm pretty sure the current implementation is broken for the ioport_map
->   function that tries to turn an IORESOURCE_IO number into a pointer.
->   Forcing CONFIG_GENERIC_IOMAP on would solve this, but also
->   make all MMIO operations slower, which we probably don't want.
->   It's probably enough to add a check in ioport_map() to see if the range
->   is mapped into a virtual address or not.
+ADM3054 transceiver is used with HI-3111. I connected the
+HI-3111/ADM3054 board to kvaser leaf and ran "cangen -i can0" and
+"candump -e any,0:0,#FFFFFFF" on the board. Removed the cable and
+shorted the CAN_H/L pins coming out of ADM3054. I will try your
+suggestion of using a different bit-rate on the Kvaser leaf instead.
 
-
-Yes, I think our LIBIO will break the ioport_map() at this moment.
-I try to solve this issue. Could you help to check the following ideas?
-I am not deeper understanding the whole I/O framework, the following maybe not correct:(
-
-ioport_map seems architecture-dependent. For our LIBIO, we don't want to replace the existing I/O
-frameworks which support MMIO at this moment. Can we add these two revise to solve this issue?
-1) Make LIBIO only target for non GENERIC_IOMAP platforms
-
-config LIBIO
-        bool "Generic logical IO management"
-        depends on !GENERIC_IOMAP
-        def_bool y if PCI && (ARC || MN10300 || UNICORE32 || SPARC || MICROBLAZE || S390 || AVR32 || CRIS || BLACKFIN || XTENSA || ARM64)
-
-2) Modify the ioport_map() defined in asm-generic/io.h
-Add the checks to identify the input 'port' is MMIO, otherwise, return NULL;
-
-Then is it enough to avoid the negative effect on the existing I/O framework?
-
-> 
-> - We could simplify the lookup a bit by using the trick from arch/ia64
->   of using an array instead of linked list for walking the port numbers.
->   There, the upper bits of the port number refer to an address space
->   number while the lower bits refer to the bus address within that
->   address space. This should work just as well as the current
->   implementation but would be a little easier to understand. Maybe
->   Bjorn can comment on this too, as I think he was involved with the
->   ia64 implementation.
-> 
-Yes, It will be more efficient.
-
-But the issue remained here is still how to coexist with the existing I/O frameworks.
-I will continue to look into.
+I appreciate your continued feedback, it has helped significantly
+improve the error handling of the driver. Looking back I should have
+based it on sja1000 or flexcan driver.
 
 Thanks,
-Zhichang
-
->       Arnd
-> 
-> .
-> 
-
+Akshay
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
