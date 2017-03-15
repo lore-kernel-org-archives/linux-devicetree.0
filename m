@@ -1,69 +1,50 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Wed, 15 Mar 2017 15:34:56 -0500
-Message-ID: <20170315203456.pxroh7nir2iwll3o@rob-hp-laptop>
-References: <1489050441-3240-1-git-send-email-vivek.gautam@codeaurora.org>
- <1489050441-3240-4-git-send-email-vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] Documentation: bindings: Introduce
+ scpi,sensors-scale
+Date: Wed, 15 Mar 2017 15:36:24 -0500
+Message-ID: <20170315203624.iylw2c2nuqb4mrqu@rob-hp-laptop>
+References: <20170309101759.18081-1-carlo@caione.org>
+ <20170309101759.18081-2-carlo@caione.org>
+ <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489050441-3240-4-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <57ff035a-b462-6f5d-0100-051e99e9a2b6-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 09, 2017 at 02:37:20PM +0530, Vivek Gautam wrote:
-> Qualcomm chipsets have QMP phy controller that provides
-> support to a number of controller, viz. PCIe, UFS, and USB.
-> Adding dt binding information for the same.
+On Wed, Mar 15, 2017 at 06:20:33PM +0000, Sudeep Holla wrote:
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
 > 
-> Hi Rob,
-> I have removed your Acked-by tag because of the change in bindings.
-> Please consider adding your Ack again if you are fine with these
-> updated bindings.
+> On 09/03/17 10:17, Carlo Caione wrote:
+> > From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> > 
+> > Document the new property `scpi,sensors-scale` used by the hwmon-scpi
+> > driver to convert the sensor readings to the correct / expected scale.
+> > 
 > 
-> Changes since v4:
->  - Added bindings for child nodes. Each phy lane is represented by child
->    node with its own register space (for tx, rx and pcs blocks), and clocks
->    and resets for power control facility.
->  - Removed register space and lane offsets for tx, rx and pcs blocks from
->    qmp phy node.
->  - #phy-cells is now part of each child node and thus must be 0.
->  - Added information on list of mandatory clocks and resets for each phy.
+> I am fine with DT bindings if DT maintainers agree with having one but I
+> would like to add couple of points to get their feedback:
 > 
-> Changes since v3:
->  - Added #clock-cells = <1>, indicating that phy is a clock provider.
+> 1. ARM recognized the drawbacks of SCPI which started informally with
+>    ARM Ltd platforms and got adopted by few vendors. It's now being
+>    worked on and a much better and scalable replacement protocol is
+>    being discussed with vendors now. So future enhancement to this SCPI
+>    protocol is unlikely.
 > 
-> Changes since v2:
->  - Removed binding for "ref_clk_src" since we don't request this
->    clock in the driver.
+> 2. AmLogic has diverted from base protocol in many ways and most of them
+>    are handled with just compatible so far without any need for
+>    additional bindings. Can we avoid it ?
+> 
+> So based on these, I prefer not to add more bindings to handle such
+> deviations but make it just AmLogic specific.
 
-Humm, sounds suspicious. You should describe clocks connected to the h/w 
-block, not what the driver uses (currently).
+Agreed.
 
->  - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
->  - Using 'phy' for the node name.
-> 
-> Changes since v1:
->  - New patch, forked out of the original driver patch:
->    "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
->  - Added 'Acked-by' from Rob.
->  - Updated bindings to include mem resource as a list of
->    offset - length pair for serdes block and for each lane.
->  - Added a new binding for 'lane-offsets' that contains offsets
->    to tx, rx and pcs blocks from each lane base address.
-> 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
