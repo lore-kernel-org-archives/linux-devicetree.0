@@ -1,17 +1,17 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: iio: document interrupt trigger
- support
-Date: Wed, 15 Mar 2017 14:29:28 -0500
-Message-ID: <20170315192928.p35tsixaokqxulwq@rob-hp-laptop>
-References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
- <1488300679-3259-4-git-send-email-fabrice.gasnier@st.com>
- <e6e2f05f-0dc0-f2a3-064b-268776a413c5@kernel.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 1/2] Documentation: bindings: Introduce
+ scpi,sensors-scale
+Date: Wed, 15 Mar 2017 12:30:23 -0700
+Message-ID: <20170315193023.GA7096@roeck-us.net>
+References: <20170309101759.18081-1-carlo@caione.org>
+ <20170309101759.18081-2-carlo@caione.org>
+ <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <e6e2f05f-0dc0-f2a3-064b-268776a413c5@kernel.org>
+In-Reply-To: <57ff035a-b462-6f5d-0100-051e99e9a2b6@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,26 +21,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, Fabrice Gasnier <fabrice.gasnier@st.com>, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, punit.agrawal@arm.com, robh+dt@kernel.org, Carlo Caione <carlo@endlessm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux@endlessm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 05, 2017 at 12:16:28PM +0000, Jonathan Cameron wrote:
-> On 28/02/17 16:51, Fabrice Gasnier wrote:
-> > Document interrupt trigger that takes a generic interrupt, and
-> > can be used as trigger source for sampling devices such as sensors,
-> > ADCs...
+On Wed, Mar 15, 2017 at 06:20:33PM +0000, Sudeep Holla wrote:
+> 
+> 
+> On 09/03/17 10:17, Carlo Caione wrote:
+> > From: Carlo Caione <carlo@endlessm.com>
 > > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> I'm not convinced we want the earlier device tree binding doc at all.
-> In the vast majority of cases that chunk on providers is irrelevant.
-> What matters is to document the specific case as you have done here.
+> > Document the new property `scpi,sensors-scale` used by the hwmon-scpi
+> > driver to convert the sensor readings to the correct / expected scale.
+> > 
 > 
-> So this one I like, the earlier document less so, simply because
-> it repeats what this more specific document has described.
+> I am fine with DT bindings if DT maintainers agree with having one but I
+> would like to add couple of points to get their feedback:
 > 
-> So Rob, what do you think of 'just' this bit?
+> 1. ARM recognized the drawbacks of SCPI which started informally with
+>    ARM Ltd platforms and got adopted by few vendors. It's now being
+>    worked on and a much better and scalable replacement protocol is
+>    being discussed with vendors now. So future enhancement to this SCPI
+>    protocol is unlikely.
+> 
+> 2. AmLogic has diverted from base protocol in many ways and most of them
+>    are handled with just compatible so far without any need for
+>    additional bindings. Can we avoid it ?
+> 
+> So based on these, I prefer not to add more bindings to handle such
+> deviations but make it just AmLogic specific.
+> 
 
-Yeah, it seems fine. Though, the #io-trigger-cells can be dropped.
+I like the idea.
 
-Rob
+Guenter
