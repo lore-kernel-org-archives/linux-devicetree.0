@@ -1,69 +1,104 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 11/18] dt-bindings: power: supply: add
- AXP20X/AXP22X battery DT binding
-Date: Thu, 16 Mar 2017 00:02:29 +0100
-Message-ID: <20170315230229.woqzt6dthzmpuohd@earth>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
+ constant-charge-current property
+Date: Wed, 15 Mar 2017 15:45:15 -0700
+Message-ID: <CAKvHMgSbG4dJ87Bi+pq-TedfVdwqkj3GVEOow-Sf2Q8wgzCO=w@mail.gmail.com>
 References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
- <20170315105537.22349-12-quentin.schulz@free-electrons.com>
- <20170315222852.z2qrwoexcsjt7vs6@earth>
- <761e35fc-932a-953c-cfad-7e967ea3d126@free-electrons.com>
-Reply-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+ <20170315105537.22349-2-quentin.schulz@free-electrons.com>
+ <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com> <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="efz7gnmstlbr6cht"
-Return-path: <linux-sunxi+bncBDXMLNOH5ANRBDMQU7DAKGQEAQNFM6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <761e35fc-932a-953c-cfad-7e967ea3d126-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Sebastian Reichel <sre@kernel.org>, robh+dt@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 15, 2017 at 6:10 AM, Quentin Schulz
+<quentin.schulz@free-electrons.com> wrote:
+> Hi Liam,
+>
+> On 15/03/2017 13:08, Liam Breck wrote:
+>> I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
+>> in patch description to direct a patch to interested parties and
+>> relevant lists. I don't want to see all 19 patches in this series.
+>>
+>> On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
+>> <quentin.schulz@free-electrons.com> wrote:
+>>> This adds the constant-charge-current property to the list of optional
+>>> properties of the battery.
+>>>
+>>> The constant charge current is critical for batteries as they can't
+>>> handle all charge currents.
+>>>
+>>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>
+>>> v4:
+>>>  - switch from constant-charge-current-microamp to constant-charge-microamp,
+>>
+>> Must be constant-charge-current-microamp for the reasons discussed in
+>> battery.txt - consistency with sysfs names.
+>>
+>
+> Hum. Just nitpicking, but I disagree with the use of 'must'. IIRC there
+> is nothing in the code that would require the property to be named after
+> a property from the enum power_supply_property.
+>
+> I would say that you _want_ it to be named like that because it
+> underlines the relation between the DT property and the actual impacted
+> property in the power supply subsystem. I'm fine with this reason but in
+> the end, the maintainer's opinion prevails (if (s)he does not want it,
+> (s)he will not take it). So, basically, I actually don't mind either
+> option and I see arguments on each side.
+>
+> So, just waiting for maintainer's opinion to make the final version of
+> this patch.
 
---efz7gnmstlbr6cht
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+But one should explain one's reasoning to the maintainer if he missed it :-)
 
-Hi,
+And the docs for power_supply_get_battery_info() recommend naming
+alignment with power_supply_property.
 
-On Wed, Mar 15, 2017 at 11:41:07PM +0100, Quentin Schulz wrote:
-> Hi,
-> 
-> On 15/03/2017 23:28, Sebastian Reichel wrote:
-> > Hi,
-> > 
-> > On Wed, Mar 15, 2017 at 11:55:30AM +0100, Quentin Schulz wrote:
-> >> The X-Powers AXP20X and AXP22X PMICs can have a battery as power supply.
-> >>
-> >> This patch adds the DT binding documentation for the battery power
-> >> supply which gets various data from the PMIC, such as the battery status
-> >> (charging, discharging, full, dead), current max limit, current current,
-> >> battery capacity (in percentage), voltage max and min limits, current
-> >> voltage and battery capacity (in Ah).
-> >>
-> >> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > 
-> > I suggest to do "s/battery-power-supply/battery-fuel-gauge/g"
-> > 
-> 
-> The IP is way more than a simple fuel gauge, you have info about the
-> voltage, current, you can set different things, even though you have the
-> percentage of the battery returned by the PMIC.
 
-Most chips sold under the label battery-fuel-gauges actually give
-you that kind of information ;)
-
-> Does it really make sense to rename it that way?
-
-If everybody is fine with it I don't mind too much.
-
--- Sebastian
---efz7gnmstlbr6cht--
+>> Also applies to power_supply_core.c patch.
+>>
+>> Rob: enum power_supply_property also lists constant-charge-voltage,
+>> hence the -current
+>>
+>>
+>>> added in v3
+>>>
+>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> index 0278617..9594e1e 100644
+>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> @@ -7,6 +7,7 @@ Optional Properties:
+>>>   - voltage-min-design-microvolt: drained battery voltage
+>>>   - energy-full-design-microwatt-hours: battery design energy
+>>>   - charge-full-design-microamp-hours: battery design capacity
+>>> + - constant-charge-microamp: battery constant charge current
+>>>
+>>>  Because drivers surface properties in sysfs using names derived
+>>>  from enum power_supply_property, e.g.
+>>> @@ -30,6 +31,7 @@ Example:
+>>>                 voltage-min-design-microvolt = <3200000>;
+>>>                 energy-full-design-microwatt-hours = <5290000>;
+>>>                 charge-full-design-microamp-hours = <1430000>;
+>>> +               constant-charge-microamp = <300000>;
+>>>         };
+>>>
+>>>         charger: charger@11 {
+>>> --
+>>> 2.9.3
+>>>
+>
+> --
+> Quentin Schulz, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
