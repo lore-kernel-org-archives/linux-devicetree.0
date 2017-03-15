@@ -1,134 +1,105 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 1/2] ASoC: stm32: add bindings for SAI
-Date: Wed, 15 Mar 2017 12:46:06 -0500
-Message-ID: <20170315174606.rrvhuuzplzwwucph@rob-hp-laptop>
-References: <1488879872-7839-1-git-send-email-olivier.moysan@st.com>
- <1488879872-7839-2-git-send-email-olivier.moysan@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 3/5] dt-bindings: Add TI SCI PM Domains
+Date: Wed, 15 Mar 2017 12:53:41 -0500
+Message-ID: <20170315175341.alba5snfgz5xyrzf@rob-hp-laptop>
+References: <1488882154-21485-1-git-send-email-d-gerlach@ti.com>
+ <1488882154-21485-4-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1488879872-7839-2-git-send-email-olivier.moysan-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <1488882154-21485-4-git-send-email-d-gerlach@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 07, 2017 at 10:44:31AM +0100, olivier moysan wrote:
-> This patch adds documentation of device tree bindings for the
-> STM32 SAI ASoC driver.
+On Tue, Mar 07, 2017 at 04:22:32AM -0600, Dave Gerlach wrote:
+> Add a generic power domain implementation, TI SCI PM Domains, that
+> will hook into the genpd framework and allow the TI SCI protocol to
+> control device power states.
 > 
-> Signed-off-by: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+> Also, provide macros representing each device index as understood
+> by TI SCI to be used in the device node power-domain references.
+> These are identifiers for the K2G devices managed by the PMMC.
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
 > ---
->  .../devicetree/bindings/sound/st,stm32-sai.txt     | 79 ++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 59 ++++++++++++++
+>  MAINTAINERS                                        |  2 +
+>  include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
+>  3 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>  create mode 100644 include/dt-bindings/genpd/k2g.h
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
 > new file mode 100644
-> index 0000000..b3be26d
+> index 000000000000..86a6a3d52ed6
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-> @@ -0,0 +1,79 @@
-> +STMicroelectronics STM32 Serial Audio Interface (SAI).
+> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> @@ -0,0 +1,59 @@
+> +Texas Instruments TI-SCI Generic Power Domain
+> +---------------------------------------------
 > +
-> +The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
-> +as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
-> +The SAI contains two independent audio sub-blocks. Each sub-block has
-> +its own clock generator and I/O lines controller.
-> +
-> +Required properties:
-> +  - compatible: Should be "st,stm32f4-sai"
-> +  - reg: Base address and size of SAI common register set.
-> +  - clocks: Must contain phandle and clock specifier pairs for each entry
-> +	in clock-names.
-> +  - clock-names: Must contain "clk_x8k" and "clk_x11k"
-> +	"clk_x8k": SAI parent clock for sampling rates multiple of 8kHz.
-> +	"clk_x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
+> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
+> +responsible for controlling the state of the IPs that are present.
+> +Communication between the host processor running an OS and the system
+> +controller happens through a protocol known as TI-SCI [1]. This pm domain
+> +implementation plugs into the generic pm domain framework and makes use of
+> +the TI SCI protocol power on and off each device when needed.
 
-clk_ is redundant.
-
-> +  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
-> +
-> +Note: Each SAI controller should have an alias correctly numbered
-> +in "aliases" node, to provide explicit name to CPU DAI.
-
-No, it shouldn't. Why do you need that?
-
+The last sentence is mostly Linux implementation details. The binding is 
+power domains. The Linux framework is PM domains. Let's keep those 
+distinct and the latter doesn't belong in bindings.
 
 > +
-> +Optional properties:
-> +  - resets: Reference to a reset controller asserting the SAI
+> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
 > +
-> +SAI subnodes:
-> +Two subnodes corresponding to SAI sub-block instances A et B can be defined.
-> +Subnode can be omitted for unsused sub-block.
+> +PM Domain Node
+> +==============
+> +The PM domain node represents the global PM domain managed by the PMMC, which
+> +in this case is the implementation as documented by the generic PM domain
+> +bindings in Documentation/devicetree/bindings/power/power_domain.txt.  Because
+> +this relies on the TI SCI protocol to communicate with the PMMC it must be a
+> +child of the pmmc node.
 > +
-> +SAI subnodes required properties:
-> +  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
-> +	for SAI sub-block A or B respectively.
-> +  - reg: Base address and size of SAI sub-block register set.
-> +  - clocks: Must contain one phandle and clock specifier pair
-> +	for sai_ck which feeds the internal clock generator.
-> +  - clock-names: Must contain "sai_ck".
-> +  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
-> +  - dma-names: identifier string for each DMA request line
-> +	"tx": if sai sub-block is configured as playback DAI
-> +	"rx": if sai sub-block is configured as capture DAI
-> +  - pinctrl-names: should contain only value "default"
-> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
+> +Required Properties:
+> +--------------------
+> +- compatible: should be "ti,sci-pm-domain"
+> +- #power-domain-cells: Must be 1 so that an id can be provided in each
+> +		       device node.
 > +
-> +Example:
-> +sai1: sai1@40015800 {
-> +	compatible = "st,stm32f4-sai";
-> +	reg = <0x40015800 0x400>;
-> +	clocks = <&rcc 1 CLK_SAIQ_PDIV>, <&rcc 1 CLK_I2SQ_PDIV>;
-> +	clock-names = "clk_x8k", "clk_x11k";
-> +	interrupts = <87>;
-> +	resets = <&rcc 310>;
+> +Example (K2G):
+> +-------------
+> +	pmmc: pmmc {
+> +		compatible = "ti,k2g-sci";
+> +		...
 > +
-> +	sai1b: sai@1 {
-
-unit address needs a reg property.
-
-audio-controller@1
-
-> +		#sound-dai-cells = <0>;
-> +		compatible = "st,stm32-sai-sub-b";
-> +		clocks = <&rcc 1 CLK_SAI2>;
-> +		clock-names = "sai_ck";
-> +		dmas = <&dma2 5 0 0x400 0x1>;
-> +		dma-names = "tx";
-> +	};
-> +};
-> +
-> +sound {
-> +	compatible = "simple-audio-card";
-
-Perhaps you want to use the graph-card here. It's getting close to 
-merging.
-
-> +	simple-audio-card,name = "STM32-Sound-Card";
-> +	status = "okay";
-> +
-> +	simple-audio-card,dai-link@0 {
-> +		format = "i2s";
-> +		cpu {
-> +			sound-dai = <&sai1b>;
-> +		};
-> +		codec {
-> +			sound-dai = <&codec>;
+> +		k2g_pds: power-controller {
+> +			compatible = "ti,sci-pm-domain";
+> +			#power-domain-cells = <1>;
 > +		};
 > +	};
-> +};
 > +
-> +aliases {
-> +	sai1 = &sai1;
-> +};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +PM Domain Consumers
+> +===================
+> +Hardware blocks belonging to a PM domain should contain a "power-domains"
+> +property that is a phandle pointing to the corresponding PM domain node
+> +along with an index representing the device id to be passed to the PMMC
+> +for device control.
+> +
+> +Required Properties:
+> +--------------------
+> +- power-domains: phandle pointing to the corresponding PM domain node
+> +		 and an ID representing the device.
+> +
+> +See dt-bindings/genpd/k2g.h for the list of valid identifiers for k2g.
+> +
+> +Example (K2G):
+> +--------------------
+> +	uart0: serial@02530c00 {
+> +		compatible = "ns16550a";
+> +		...
+> +		power-domains = <&k2g_pds K2G_DEV_UART0>;
+> +	};
