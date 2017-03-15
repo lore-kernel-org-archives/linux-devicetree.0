@@ -1,104 +1,151 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
- constant-charge-current property
-Date: Wed, 15 Mar 2017 14:10:37 +0100
-Message-ID: <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com>
-References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
- <20170315105537.22349-2-quentin.schulz@free-electrons.com>
- <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v6 08/14] mmc: sdhci-xenon: Add Marvell Xenon SDHC core
+ functionality
+Date: Wed, 15 Mar 2017 14:11:31 +0100
+Message-ID: <CAPDyKFpH+RGAZGoVCuCOKJ2iEa+Y=cNNcM-uKhkYaTpmogXCKA@mail.gmail.com>
+References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
+ <cb885ae19e7c467908cdaa1f1cc8d95a7217d663.1487091464.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cb885ae19e7c467908cdaa1f1cc8d95a7217d663.1487091464.git-series.gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lis>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liam,
+On 14 February 2017 at 18:01, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
+> From: Hu Ziji <huziji@marvell.com>
+>
+> Add Xenon eMMC/SD/SDIO host controller core functionality.
+> Add Xenon specific initialization process.
+> Add Xenon specific mmc_host_ops APIs.
+> Add Xenon specific register definitions.
+>
+> Add CONFIG_MMC_SDHCI_XENON support in drivers/mmc/host/Kconfig.
+>
+> Marvell Xenon SDHC conforms to SD Physical Layer Specification
+> Version 3.01 and is designed according to the guidelines provided
+> in the SD Host Controller Standard Specification Version 3.00.
+>
+> Signed-off-by: Hu Ziji <huziji@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  drivers/mmc/host/Kconfig       |   9 +-
+>  drivers/mmc/host/Makefile      |   3 +-
+>  drivers/mmc/host/sdhci-xenon.c | 602 ++++++++++++++++++++++++++++++++++-
+>  drivers/mmc/host/sdhci-xenon.h |  70 ++++-
+>  4 files changed, 684 insertions(+)
+>  create mode 100644 drivers/mmc/host/sdhci-xenon.c
+>  create mode 100644 drivers/mmc/host/sdhci-xenon.h
+>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 2eb97014dc3f..1c1a88bfbdad 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -819,3 +819,12 @@ config MMC_SDHCI_BRCMSTB
+>           Broadcom STB SoCs.
+>
+>           If unsure, say Y.
+> +
+> +config MMC_SDHCI_XENON
+> +       tristate "Marvell Xenon eMMC/SD/SDIO SDHCI driver"
+> +       depends on MMC_SDHCI_PLTFM
+> +       help
+> +         This selects Marvell Xenon eMMC/SD/SDIO SDHCI.
+> +         If you have a machine with integrated Marvell Xenon SDHC IP,
 
-On 15/03/2017 13:08, Liam Breck wrote:
-> I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
-> in patch description to direct a patch to interested parties and
-> relevant lists. I don't want to see all 19 patches in this series.
-> 
-> On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
-> <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> This adds the constant-charge-current property to the list of optional
->> properties of the battery.
->>
->> The constant charge current is critical for batteries as they can't
->> handle all charge currents.
->>
->> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->>
->> v4:
->>  - switch from constant-charge-current-microamp to constant-charge-microamp,
-> 
-> Must be constant-charge-current-microamp for the reasons discussed in
-> battery.txt - consistency with sysfs names.
-> 
+/s/SDHC/SDHCI
 
-Hum. Just nitpicking, but I disagree with the use of 'must'. IIRC there
-is nothing in the code that would require the property to be named after
-a property from the enum power_supply_property.
+> +         say Y or M here.
+> +         If unsure, say N.
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index ccc9c4cba154..b0a2ab4b256e 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -82,3 +82,6 @@ obj-$(CONFIG_MMC_SDHCI_BRCMSTB)               += sdhci-brcmstb.o
+>  ifeq ($(CONFIG_CB710_DEBUG),y)
+>         CFLAGS-cb710-mmc        += -DDEBUG
+>  endif
+> +
+> +obj-$(CONFIG_MMC_SDHCI_XENON)  += sdhci-xenon-driver.o
+> +sdhci-xenon-driver-y           += sdhci-xenon.o
 
-I would say that you _want_ it to be named like that because it
-underlines the relation between the DT property and the actual impacted
-property in the power supply subsystem. I'm fine with this reason but in
-the end, the maintainer's opinion prevails (if (s)he does not want it,
-(s)he will not take it). So, basically, I actually don't mind either
-option and I see arguments on each side.
+Why not only this:
+obj-$(CONFIG_MMC_SDHCI_XENON) += sdhci-xenon.o
 
-So, just waiting for maintainer's opinion to make the final version of
-this patch.
+> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
+> new file mode 100644
+> index 000000000000..e633f803907a
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-xenon.c
+> @@ -0,0 +1,602 @@
+> +/*
+> + * Driver for Marvell Xenon SDHC as a platform device
+> + *
+> + * Copyright (C) 2016 Marvell, All Rights Reserved.
+> + *
+> + * Author:     Hu Ziji <huziji@marvell.com>
+> + * Date:       2016-8-24
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * Inspired by Jisheng Zhang <jszhang@marvell.com>
+> + * Special thanks to Video BG4 project team.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +
+> +#include "sdhci-pltfm.h"
+> +#include "sdhci-xenon.h"
+> +
+> +static int enable_xenon_internal_clk(struct sdhci_host *host)
 
-Thanks,
-Quentin
+[...]
 
-> Also applies to power_supply_core.c patch.
-> 
-> Rob: enum power_supply_property also lists constant-charge-voltage,
-> hence the -current
-> 
-> 
->> added in v3
->>
->>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->> index 0278617..9594e1e 100644
->> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->> @@ -7,6 +7,7 @@ Optional Properties:
->>   - voltage-min-design-microvolt: drained battery voltage
->>   - energy-full-design-microwatt-hours: battery design energy
->>   - charge-full-design-microamp-hours: battery design capacity
->> + - constant-charge-microamp: battery constant charge current
->>
->>  Because drivers surface properties in sysfs using names derived
->>  from enum power_supply_property, e.g.
->> @@ -30,6 +31,7 @@ Example:
->>                 voltage-min-design-microvolt = <3200000>;
->>                 energy-full-design-microwatt-hours = <5290000>;
->>                 charge-full-design-microamp-hours = <1430000>;
->> +               constant-charge-microamp = <300000>;
->>         };
->>
->>         charger: charger@11 {
->> --
->> 2.9.3
->>
+> +/* Set SDCLK-off-while-idle */
+> +static void xenon_set_sdclk_off_idle(struct sdhci_host *host,
+> +                                    unsigned char sdhc_id, bool enable)
 
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> +/* Recover the Register Setting cleared during SOFTWARE_RESET_ALL */
+> +static void sdhci_xenon_reset_exit(struct sdhci_host *host,
+> +                                  unsigned char sdhc_id, u8 mask)
+
+[...]
+
+ff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
+> new file mode 100644
+> index 000000000000..69de711db9eb
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-xenon.h
+
+You should probably put all this in the c-file instead. That is how
+most other sdhci variants does it.
+
+[...]
+
+Overall this looks good to me, however I think Adrian needs to have a
+quick look as well.
+
+One additional very minor nitpick. Perhaps you can align on the
+function names prefix, as those currently varies between "whatever",
+"xenon_" and "sdhci_xenon_".
+
+Kind regards
+Uffe
