@@ -1,105 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/5] dt-bindings: Add TI SCI PM Domains
-Date: Wed, 15 Mar 2017 12:53:41 -0500
-Message-ID: <20170315175341.alba5snfgz5xyrzf@rob-hp-laptop>
-References: <1488882154-21485-1-git-send-email-d-gerlach@ti.com>
- <1488882154-21485-4-git-send-email-d-gerlach@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: rng: clocks property on omap_rng is optional
+Date: Wed, 15 Mar 2017 12:57:37 -0500
+Message-ID: <20170315175737.vfy5omissjkyyie7@rob-hp-laptop>
+References: <1488896308-17731-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1488882154-21485-4-git-send-email-d-gerlach@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <1488896308-17731-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Deepak Saxena <dsaxena-k7pgMgclrJvR7s880joybQ@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 07, 2017 at 04:22:32AM -0600, Dave Gerlach wrote:
-> Add a generic power domain implementation, TI SCI PM Domains, that
-> will hook into the genpd framework and allow the TI SCI protocol to
-> control device power states.
+On Tue, Mar 07, 2017 at 03:18:28PM +0100, Thomas Petazzoni wrote:
+> Commit 52060836f79 ("dt-bindings: omap-rng: Document SafeXcel IP-76
+> device variant") update the omap_rng Device Tree binding to add support
+> for the IP-76 variation of the IP. As part of this change, a "clocks"
+> property was added, but is indicated as "Required", while it is in fact
+> "Optional": some SoCs do not require a clock for this IP block.
 > 
-> Also, provide macros representing each device index as understood
-> by TI SCI to be used in the device node power-domain references.
-> These are identifiers for the K2G devices managed by the PMMC.
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> Fixes: 52060836f79 ("dt-bindings: omap-rng: Document SafeXcel IP-76 device variant")
+> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 59 ++++++++++++++
->  MAINTAINERS                                        |  2 +
->  include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
->  3 files changed, 151 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->  create mode 100644 include/dt-bindings/genpd/k2g.h
+>  Documentation/devicetree/bindings/rng/omap_rng.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> new file mode 100644
-> index 000000000000..86a6a3d52ed6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> @@ -0,0 +1,59 @@
-> +Texas Instruments TI-SCI Generic Power Domain
-> +---------------------------------------------
+> diff --git a/Documentation/devicetree/bindings/rng/omap_rng.txt b/Documentation/devicetree/bindings/rng/omap_rng.txt
+> index 4714772..20d435da 100644
+> --- a/Documentation/devicetree/bindings/rng/omap_rng.txt
+> +++ b/Documentation/devicetree/bindings/rng/omap_rng.txt
+> @@ -12,6 +12,9 @@ Required properties:
+>  - reg : Offset and length of the register set for the module
+>  - interrupts : the interrupt number for the RNG module.
+>  		Used for "ti,omap4-rng" and "inside-secure,safexcel-eip76"
 > +
-> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
-> +responsible for controlling the state of the IPs that are present.
-> +Communication between the host processor running an OS and the system
-> +controller happens through a protocol known as TI-SCI [1]. This pm domain
-> +implementation plugs into the generic pm domain framework and makes use of
-> +the TI SCI protocol power on and off each device when needed.
+> +Optional properties:
+> +
 
-The last sentence is mostly Linux implementation details. The binding is 
-power domains. The Linux framework is PM domains. Let's keep those 
-distinct and the latter doesn't belong in bindings.
+Wouldn't just "for ? compatible only" be more correct?
 
-> +
-> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> +
-> +PM Domain Node
-> +==============
-> +The PM domain node represents the global PM domain managed by the PMMC, which
-> +in this case is the implementation as documented by the generic PM domain
-> +bindings in Documentation/devicetree/bindings/power/power_domain.txt.  Because
-> +this relies on the TI SCI protocol to communicate with the PMMC it must be a
-> +child of the pmmc node.
-> +
-> +Required Properties:
-> +--------------------
-> +- compatible: should be "ti,sci-pm-domain"
-> +- #power-domain-cells: Must be 1 so that an id can be provided in each
-> +		       device node.
-> +
-> +Example (K2G):
-> +-------------
-> +	pmmc: pmmc {
-> +		compatible = "ti,k2g-sci";
-> +		...
-> +
-> +		k2g_pds: power-controller {
-> +			compatible = "ti,sci-pm-domain";
-> +			#power-domain-cells = <1>;
-> +		};
-> +	};
-> +
-> +PM Domain Consumers
-> +===================
-> +Hardware blocks belonging to a PM domain should contain a "power-domains"
-> +property that is a phandle pointing to the corresponding PM domain node
-> +along with an index representing the device id to be passed to the PMMC
-> +for device control.
-> +
-> +Required Properties:
-> +--------------------
-> +- power-domains: phandle pointing to the corresponding PM domain node
-> +		 and an ID representing the device.
-> +
-> +See dt-bindings/genpd/k2g.h for the list of valid identifiers for k2g.
-> +
-> +Example (K2G):
-> +--------------------
-> +	uart0: serial@02530c00 {
-> +		compatible = "ns16550a";
-> +		...
-> +		power-domains = <&k2g_pds K2G_DEV_UART0>;
-> +	};
+>  - clocks: the trng clock source
+>  
+>  Example:
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
