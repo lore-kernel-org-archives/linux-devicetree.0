@@ -1,56 +1,27 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH 4/4] ARM: sun8i: v3s: add ns2009 node for Lichee Pi Zero board
-Date: Thu, 16 Mar 2017 00:21:51 +0800
-Message-ID: <20170315162151.54956-1-icenowy@aosc.xyz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v10 1/2] Documentation: DT: Add OV5647 bindings
+Date: Wed, 15 Mar 2017 11:42:09 -0500
+Message-ID: <20170315164209.p24r7mpyijbxleja@rob-hp-laptop>
+References: <cover.1488798062.git.roliveir@synopsys.com>
+ <e89902c0c99d0daf9ef821dd7a9c67e866b18a94.1488798062.git.roliveir@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e89902c0c99d0daf9ef821dd7a9c67e866b18a94.1488798062.git.roliveir@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, vladimir_zapolskiy@mentor.com, CARLOS.PALMINHA@synopsys.com, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The production batch of Lichee Pi Zero board features a NS2009 resistive
-touchscreen controller, which is wired to touch panel pins at 40-pin LCD
-connector, in order to make the board fully compatible to 40-pin LCDs
-with resistive touch panel which are used with Lichee Pi One (with A13's
-integrated resistive touch controller).
+On Mon, Mar 06, 2017 at 11:16:33AM +0000, Ramiro Oliveira wrote:
+> Create device tree bindings documentation.
+> 
+> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
 
-Add the device node for the touchscreen controller.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-index 387fc2aa546d..a8a2081175d3 100644
---- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-@@ -86,6 +86,15 @@
- 	status = "okay";
- };
- 
-+&i2c0 {
-+	status = "okay";
-+
-+	ns2009: ns2009@48 {
-+		compatible = "nsiway,ns2009";
-+		reg = <0x48>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-0 = <&uart0_pins_a>;
- 	pinctrl-names = "default";
--- 
-2.12.0
+There's no changelog here, so I can't tell if anything is changed, but I 
+acked v7. Please add acks when sending new versions.
