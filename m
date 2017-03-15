@@ -1,39 +1,74 @@
-From: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: dts: BCM953012HR: Add ethernet aliases
-Date: Wed, 15 Mar 2017 16:59:35 -0400
-Message-ID: <1489611575-18684-1-git-send-email-steven.lin1@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: Excluding pins from Linux control
+Date: Wed, 15 Mar 2017 22:03:53 +0100 (CET)
+Message-ID: <453853371.502284.1489611833231@email.1und1.de>
+References: <433834766.313467.1488218521360@email.1und1.de>
+ <CACRpkdYB+4=hG4YcUTvyg50cP6SfMhUuUMW7XqJAVxswYBsWng@mail.gmail.com>
+ <1588667510.505126.1489522194503@email.1und1.de>
+ <CACRpkdbr9-hsFzPvOpwiVg=X=avx8fb14HhWWXNda7gGZaM2Gg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbr9-hsFzPvOpwiVg=X=avx8fb14HhWWXNda7gGZaM2Gg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding ethernet aliases.  These are used, for example, by bootloaders,
-to modify the MAC addresses in the device tree.
 
-Signed-off-by: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/bcm953012hr.dts | 3 +++
- 1 file changed, 3 insertions(+)
+> Linus Walleij <linus.walleij@linaro.org> hat am 15. März 2017 um 09:46 geschrieben:
+> 
+> 
+> On Tue, Mar 14, 2017 at 9:09 PM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> >> Linus Walleij <linus.walleij@linaro.org> hat am 14. März 2017 um 15:39 geschrieben:
+> 
+> >> If you want to do it statically, at boot time:
+> >> Just add some NOOP function (i.e. a function that result in
+> >> zero register writes or anything) named "videocore-reserved" or
+> >> something to the driver in  drivers/pinctrl/bcm/pinctrl-bcm2835.c,
+> >> make it applicable to the affected pins, making it possible
+> >> to create a state that will combine the function "videocore-reserved"
+> >> with these pins, resulting in them being exclusively used for
+> >> that.
+> >
+> > If you speak of a NOOP function, do you mean a "dummy" pin function
+> > which is configured by the device tree? Like extending the "brcm,function"
+> > property from the existing binding?
+> 
+> No, a function for videocore defined by the driver in
+> drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> and then used by the device tree.
+> 
+> Looking at the BCM2835 syntax (hope I get it right), in the end you should
+> be able to do this:
+> 
+>     videocore: videocore {
+>         brcm,pins = <12, 13, 14, 15, 16, 17, 18, 19, 20>;
+>         brcm,function = <BCM2835_FSEL_VIDEOCORE>;
+>     };
+> 
+> So BCM2835_FSEL_VIDEOCORE need to be defined in the
+> DT include and made available as a muxing option inside the driver, with
+> the effect that nothing really happens when you select it.
+> 
+> The point is that the pinctrl core will then regard the pin as taken
+> (this can be verified in debugfs) and then no other function can go
+> in and use the pin by mistake.
+> 
+> Something like this:
+> 
+> From d188c03c1fba7d1223c1dafcb8b977e383298ef4 Mon Sep 17 00:00:00 2001
+> From: Linus Walleij <linus.walleij@linaro.org>
+> Date: Wed, 15 Mar 2017 09:45:37 +0100
+> Subject: [PATCH] Stab at videocore function
+> 
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/bcm953012hr.dts b/arch/arm/boot/dts/bcm953012hr.dts
-index 85f9b0b..766aa71 100644
---- a/arch/arm/boot/dts/bcm953012hr.dts
-+++ b/arch/arm/boot/dts/bcm953012hr.dts
-@@ -41,6 +41,9 @@
- 
- 	aliases {
- 		serial0 = &uart0;
-+		ethernet0 = &gmac0;
-+		ethernet1 = &gmac1;
-+		ethernet2 = &gmac2;
- 	};
- 
- 	chosen {
--- 
-2.1.0
+Again, thanks a lot
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+> 
+> Yours,
+> Linus Walleij
