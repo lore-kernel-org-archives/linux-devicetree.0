@@ -1,49 +1,45 @@
 From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 5/8] dt-bindings: input: touchscreen: Add max11801-ts binding
-Date: Thu, 16 Mar 2017 12:35:38 +0530
-Message-ID: <1489647939-4966-1-git-send-email-jagan@openedev.com>
+Subject: [PATCH v6 6/8] ARM: dts: imx6q-icore: Add touchscreen node
+Date: Thu, 16 Mar 2017 12:35:39 +0530
+Message-ID: <1489647939-4966-2-git-send-email-jagan@openedev.com>
+References: <1489647939-4966-1-git-send-email-jagan@openedev.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489647939-4966-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Domenico Acri <domenico.acri-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Add missing documentation of max11801-ts dt-binding details.
+max11801 touchscreen on Engicam iCoreM6 Quad module is
+connected via i2c1, so add tc: max11801@48 on i2c1.
 
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Domenico Acri <domenico.acri-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
 Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v6:
 - Replace the lable and name of the node
    ts: max11801 => max11801: touchscreen@48
 Changes for v5:
+- %s/arm/ARM/g with subject prefix
+Changes for v4:
 - Newly added patch
 
- .../bindings/input/touchscreen/max11801-ts.txt         | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
+ arch/arm/boot/dts/imx6q-icore.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
-new file mode 100644
-index 0000000..4afccbe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
-@@ -0,0 +1,18 @@
-+* MAXI MAX11801 Resistive touch screen controller with i2c interface
-+
-+Required properties:
-+- compatible: must be "max11801"
-+- reg: i2c slave address
-+- interrupt-parent: the phandle for the interrupt controller
-+- interrupts: touch controller interrupt
-+
-+Example:
-+
+diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
+index 73f34d1..8c1a572 100644
+--- a/arch/arm/boot/dts/imx6q-icore.dts
++++ b/arch/arm/boot/dts/imx6q-icore.dts
+@@ -58,6 +58,15 @@
+ 	status = "okay";
+ };
+ 
 +&i2c1 {
 +	max11801: touchscreen@48 {
 +		compatible = "max11801";
@@ -52,6 +48,10 @@ index 0000000..4afccbe
 +		interrupts = <31 2>;
 +	};
 +};
++
+ &ldb {
+ 	status = "okay";
+ 
 -- 
 1.9.1
 
