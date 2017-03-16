@@ -1,83 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
- properties
-Date: Thu, 16 Mar 2017 21:59:04 +0100
-Message-ID: <CAMuHMdU0=WfkUUjXTYpp4JWM4mzFcV3AwSwf_7p+YnQQh=uE-w@mail.gmail.com>
-References: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
- <20170315170112.mnhgntbjreheavua@rob-hp-laptop>
- <CAMuHMdUt_d-kp57v2A18tuf-QQcOXnZ6wBtU9pqAyGJRZ2m3TQ@mail.gmail.com>
- <20170316205639.xufbtbnqgy72bwyc@rob-hp-laptop>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] Documentation: devicetree: move trivial-devices out of
+ I2C realm
+Date: Thu, 16 Mar 2017 21:53:52 +0100
+Message-ID: <20170316205352.kzg7o76ft6g72256@ninjato>
+References: <20170306143859.11881-1-wsa@the-dreams.de>
+ <20170313075457.GA1431@katana>
+ <20170316205111.lpykvpbeaa4mih4n@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170316205639.xufbtbnqgy72bwyc@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ucwxawrtyxpbmii7"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170316205111.lpykvpbeaa4mih4n@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gVGh1LCBNYXIgMTYsIDIwMTcgYXQgOTo1NiBQTSwgUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4gT24gVGh1LCBNYXIgMTYsIDIwMTcgYXQgMDk6MTM6MTZB
-TSArMDEwMCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+PiBPbiBXZWQsIE1hciAxNSwgMjAx
-NyBhdCA2OjAxIFBNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToKPj4gPiBP
-biBNb24sIE1hciAwNiwgMjAxNyBhdCAwNToyNTo1NlBNICswMTAwLCBHZWVydCBVeXR0ZXJob2V2
-ZW4gd3JvdGU6Cj4+ID4+IERvY3VtZW50IHRoZSBvcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBkZXNj
-cmliaW5nIG1vZHVsZSByZXNldHMsIHRvCj4+ID4+IHN1cHBvcnQgcmVzZXR0aW5nIGRpc3BsYXkg
-Y2hhbm5lbHMgYW5kIExWRFMgZW5jb2RlcnMgb24gUi1DYXIgR2VuMiBhbmQKPj4gPj4gR2VuMy4K
-Pj4gPj4KPj4gPj4gU2lnbmVkLW9mZi1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5l
-c2FzQGdsaWRlci5iZT4KPj4gPj4gLS0tCj4+ID4+IFNlZSAiW3YyLDEvNF0gZHQtYmluZGluZ3M6
-IGNsb2NrOiByZW5lc2FzOiBjcGctbXNzcjogRG9jdW1lbnQgcmVzZXQgY29udHJvbAo+PiA+PiBz
-dXBwb3J0IiAoaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTM2NjI3LykgZm9y
-IHRoZSBmb3JtYXQgb2YKPj4gPj4gYSByZXNldCBzcGVjaWZpZXIgaW4gdGhlIFJlbmVzYXMgQ1BH
-L01TU1IgY2FzZS4KPj4gPj4KPj4gPj4gRS5nLiAicmVzZXRzID0gPCZjcGcgMzEwPjsiCj4+ID4+
-Cj4+ID4+IHYyOgo+PiA+PiAgIC0gcy9waGFuZGxlcy9waGFuZGxlLy4KPj4gPj4gLS0tCj4+ID4+
-ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4
-dCB8IDEwICsrKysrKysrKysKPj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCsp
-Cj4+ID4+Cj4+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4+ID4+IGluZGV4IDFhMDJmMDk5YTBmZjBhM2Eu
-LjNkYjQxOGM4MjcxOTNlODIgMTAwNjQ0Cj4+ID4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4+ID4+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4+ID4+IEBA
-IC0zNiw2ICszNiwxNiBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+PiA+PiAgICAgICAgV2hlbiBz
-dXBwbGllZCB0aGV5IG11c3QgYmUgbmFtZWQgImRjbGtpbi54IiB3aXRoICJ4IiBiZWluZyB0aGUg
-aW5wdXQKPj4gPj4gICAgICAgIGNsb2NrIG51bWVyaWNhbCBpbmRleC4KPj4gPj4KPj4gPj4gK09w
-dGlvbmFsIHByb3BlcnRpZXM6Cj4+ID4+ICsgIC0gcmVzZXRzOiBBIGxpc3Qgb2YgcGhhbmRsZSAr
-IHJlc2V0LXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNoIGVudHJ5IGluCj4+ID4+ICsgICAg
-dGhlIHJlc2V0LW5hbWVzIHByb3BlcnR5Lgo+PiA+PiArICAtIHJlc2V0LW5hbWVzOiBOYW1lcyBv
-ZiB0aGUgcmVzZXRzLiBUaGlzIHByb3BlcnR5IGlzIG1vZGVsLWRlcGVuZGVudC4KPj4gPj4gKyAg
-ICAtIFI4QTc3OVswMTIzNDU2XSB1c2Ugb25lIHJlc2V0IGZvciBhIGdyb3VwIG9mIG9uZSBvciBt
-b3JlIHN1Y2Nlc3NpdmUKPj4gPj4gKyAgICAgIGNoYW5uZWxzLCBhbmQgb25lIHJlc2V0IHBlciBM
-VkRTIGVuY29kZXIgKGlmIGF2YWlsYWJsZSkuIFRoZSByZXNldHMKPj4gPj4gKyAgICAgIG11c3Qg
-YmUgbmFtZWQgImR1LngiIHdpdGggIngiIGJlaW5nIHRoZSBudW1lcmljYWwgaW5kZXggb2YgdGhl
-IGxvd2VzdAo+PiA+PiArICAgICAgY2hhbm5lbCBpbiB0aGUgZ3JvdXAuIFRoZSBMVkRTIHJlc2V0
-cyBtdXN0IGJlIG5hbWVkICJsdmRzLngiIHdpdGggIngiCj4+ID4+ICsgICAgICBiZWluZyB0aGUg
-TFZEUyBlbmNvZGVyIG51bWVyaWNhbCBpbmRleC4KPj4gPgo+PiA+IExWRFMgaXMgbm90IGEgc2Vw
-YXJhdGUgYmxvY2s/Cj4+Cj4+IFdlbGwuLi4gZnJvbSBhIGhhcmR3YXJlIHBvaW50IG9mIHZpZXcs
-IHRoZSBMVkRTIGVuY29kZXJzIGFuZCBEVSBjaGFubmVscwo+PiBhcmUgYWxsIHNlcGFyYXRlIGJs
-b2NrcyAodGhleSBoYXZlIHNlcGFyYXRlIHJlZyBibG9ja3MsIGNsb2NrcywgYW5kIHJlc2V0cyku
-Cj4+IEJ1dCBkdWUgdG8gdGhlIGRlcGVuZGVuY2llcyBiZXR3ZWVuIHRoZSBibG9ja3MsIHRoZXkn
-cmUgbW9kZWxlZCBpbiBEVCBhcwo+PiBhIHNpbmdsZSBkZXZpY2UsIHdpdGggbXVsdGlwbGUgcmVn
-LCBjbG9ja3MsIGFuZCByZXNldHMgcHJvcGVydGllcy4KPgo+IERlcGVuZGVuY2llcyBiZWluZyBE
-Uk0gcmVxdWlyZW1lbnQgb2Ygd2FudGluZyBhIHNpbmdsZSBkZXZpY2Ugd2l0aAo+IHN1Yi1kZXZp
-Y2VzIG9yIHNvbWUgaC93IGRlcGVuZGVuY2llcz8gVGhlIGZvcm1lciBzaG91bGRuJ3QgZGVmaW5l
-IHlvdXIKPiBiaW5kaW5nLgoKSGFyZHdhcmUgZGVwZW5kZW5jaWVzLiBMYXVyZW50IGNhbiB0ZWxs
-IHlvdSBtb3JlIGFib3V0IHRoZW0gKHdoZW4gaGUnbGwKYmUgYmFjaykuCgpHcntvZXRqZSxlZXRp
-bmd9cywKCiAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0CgotLQpHZWVydCBVeXR0ZXJob2V2
-ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02
-OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwg
-SSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
-dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--ucwxawrtyxpbmii7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 16, 2017 at 03:51:11PM -0500, Rob Herring wrote:
+> On Mon, Mar 13, 2017 at 08:54:57AM +0100, Wolfram Sang wrote:
+> > On Mon, Mar 06, 2017 at 03:38:59PM +0100, Wolfram Sang wrote:
+> > > The I2C directory is for I2C master controllers, not for clients. So,
+> > > move the file describing trivial devices one layer upwards where it
+> > > fits its generic nature way better.
+> > >=20
+> > > Signed-off-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+=2E..
+> > Rob, shall I take it or do you want?
+>=20
+> I've applied it.
+
+Thanks a ton!
+
+
+--ucwxawrtyxpbmii7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAljK+1wACgkQFA3kzBSg
+KbYwCBAAmLyvKkDXn3MsAYIPqSdqhTO+LmC1h7Sij3FlXPJ0jmrTSgw198WyyNZ7
+WGeiW+djKtLqHinZnIUd4uGe7LF3u4jFBQml4azI/e2EutupMbC8dBCKRcc95hHD
+1BDnMKTnR3xUBeoLy50lfNYQ2KaSqegjudix1Pb0Kpe6GGH6wkQn5q3Tqau6B5OR
+DETfoMZfrVXzUVWNJgTwZ4U25+QeJc5suJI2TmZ89mwSBlV3GVah08xcA/XMv2uN
+TEHDgy6Yt4l1ijrQXcY6tvJYvbCOYt/yq9xQ9WkHsfl62niNZRXfrL44WHKjj9Ae
+HS0vvsTiESVMaOE09Kdz22l5Toc4EpTVDidQs/duWbgkkGJ1g0T+qsssKrvNejxZ
+oVaTY5rWjKmbegA8djwE5eLTOKHE51tajPXk6kLQ9RFACSabDokLCGDtz2tf4h3a
+urnQbtLpH9cL+7U+7bFdWBZAWPseCKhCwmCEoFxURtTvEGGR1K3hv6YhxJS7VYEj
+JC9H900GIohF1DVrISnczcXk98Ls9FsxEMGIHDKuQJ/7vkBXWWBOt7KEOj9W/xL5
++sHQ98cHkN2FbUoTN3OxdA/gLVIpUvOk/ItXPbOAlaIKM87RPDdx9KMlAtrJnXCT
+UZYKkICYzRzsJbyhjzM06G6Ire9Ahx71ar76owzUoAgVHUbhuvk=
+=eXXE
+-----END PGP SIGNATURE-----
+
+--ucwxawrtyxpbmii7--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
