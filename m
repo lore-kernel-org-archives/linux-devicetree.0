@@ -1,65 +1,92 @@
-From: Michal Simek <michal.simek@xilinx.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
  iio-hwmon
-Date: Thu, 16 Mar 2017 17:45:57 +0100
-Message-ID: <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
+Date: Thu, 16 Mar 2017 17:51:30 +0100
+Message-ID: <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
 References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
  <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
  <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
+ <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <moritz.fischer.private@gmail.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Julia Cartwright <julia@ni.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7e4fbe16-8686-5399-748d-af222c630338-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Moritz Fischer <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Julia Cartwright <julia-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYuMy4yMDE3IDE3OjM5LCBNb3JpdHogRmlzY2hlciB3cm90ZToKPiBPbiBUaHUsIE1hciAx
-NiwgMjAxNyBhdCA5OjE2IEFNLCBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29t
-PiB3cm90ZToKPj4gSGksCj4+Cj4+IE9uIDguMy4yMDE3IDIxOjExLCBNb3JpdHogRmlzY2hlciB3
-cm90ZToKPj4+IEZpeAo+Pj4KPj4+IE9GOiAvaWlvX2h3bW9uOiBjb3VsZCBub3QgZ2V0ICNpby1j
-aGFubmVsLWNlbGxzIGZvcgo+Pj4gL2FtYmEvYWRjQGY4MDA3MTAwCj4+PiBPRjogL2lpb19od21v
-bjogY291bGQgbm90IGdldCAjaW8tY2hhbm5lbC1jZWxscyBmb3IKPj4+IC9hbWJhL2FkY0BmODAw
-NzEwMAo+Pj4gT0Y6IC9paW9faHdtb246IGNvdWxkIG5vdCBnZXQgI2lvLWNoYW5uZWwtY2VsbHMg
-Zm9yCj4+PiAvYW1iYS9hZGNAZjgwMDcxMDAKPj4+Cj4+PiBieSBhZGRpbmcgdGhlICNpby1jaGFu
-bmVsLWNlbGxzIHByb3BlcnR5Lgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IE1vcml0eiBGaXNjaGVy
-IDxtZGZAa2VybmVsLm9yZz4KPj4+IENjOiBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxp
-bnguY29tPgo+Pj4gQ2M6IFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxpbngu
-Y29tPgo+Pj4gQ2M6IEp1bGlhIENhcnR3cmlnaHQgPGp1bGlhQG5pLmNvbT4KPj4+IENjOiBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmcKPj4+IC0tLQo+Pj4KPj4+IENoYW5nZXMgZnJvbSB2MToKPj4+IC0gZml4IG1lc3NlZCB1cCBj
-b21taXQgbWVzc2FnZQo+Pj4gLS0tCj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0
-c2kgfCAxICsKPj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPj4+Cj4+PiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgYi9hcmNoL2FybS9ib290
-L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4gaW5kZXggZjNhYzliZi4uOTgyMzNhOCAxMDA2NDQKPj4+
-IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4+PiArKysgYi9hcmNoL2Fy
-bS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4gQEAgLTcyLDYgKzcyLDcgQEAKPj4+ICAgICAg
-ICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgNyA0PjsKPj4+ICAgICAgICAgICAgICAg
-ICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsKPj4+ICAgICAgICAgICAgICAgICAg
-ICAgICBjbG9ja3MgPSA8JmNsa2MgMTI+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICNpby1j
-aGFubmVsLWNlbGxzID0gPDE+Owo+Pj4gICAgICAgICAgICAgICB9Owo+Pj4KPj4+ICAgICAgICAg
-ICAgICAgY2FuMDogY2FuQGUwMDA4MDAwIHsKPj4+Cj4+Cj4+IEkgdGhpbmsgaXQgd2lsbCBiZSBn
-b29kIHRvIHRoZSBuZXh0IHN0ZXAgdG9vLgo+PiBJdCBtZWFucyBhbHNvIGFkZCBpaW8taHdtb24g
-bm9kZSB0b28uCj4+Cj4+IFdoYXQgZG8geW91IHRoaW5rPwo+IAo+IEkgaGFkbid0IHB1dCBpdCBp
-biB0aGVyZSBzaW5jZSBkdHMgaXMgc3VwcG9zZWQgdG8gZGVzY3JpYmUgaHcsCj4gYnV0IG9idmlv
-dXNseSBwdXR0aW5nIHRoZSBhY3R1YWwgaHdtb24gaW4gdGhlcmUgbWFrZXMgaXQgbW9yZSB1c2Vm
-dWwuCgpJIGhhZCBvbmUgZGlzY3Vzc2lvbiBhYm91dCB0aGlzIHdpdGggR3JhbnQgaW4gcGFzdCBh
-bmQgaXQgaXMgY29tbW9uCm1pc3Rha2UuIEl0IGlzIHNpbXBsaWZpY2F0aW9uIG9mIHB1cnBvc2Ug
-b2YgZHRzLgoKPiAKPiBJIGNhbiByZXN1Ym1pdCB3aXRoIHRoZSBod21vbiBub2RlIGluIHRoZXJl
-LgoKSWYgeW91IGdyZXAga2VybmVsIHRyZWUgeW91IHdpbGwgc2VlIHRoYXQgb3RoZXJzIGFyZSB1
-c2luZyBpdCB0b28uCkFsc28gdGhlcmUgaXMgYWNjZXB0ZWQgYmluZGluZyBmb3IgdGhhdCB0aGF0
-J3Mgd2h5IEkgY2FuJ3Qgc2VlIGJpZwpwcm9ibGVtIHdpdGggaXQuCgpUaGFua3MsCk1pY2hhbAoK
-CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+On 03/16/2017 05:45 PM, Michal Simek wrote:
+> On 16.3.2017 17:39, Moritz Fischer wrote:
+>> On Thu, Mar 16, 2017 at 9:16 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>> On 8.3.2017 21:11, Moritz Fischer wrote:
+>>>> Fix
+>>>>
+>>>> OF: /iio_hwmon: could not get #io-channel-cells for
+>>>> /amba/adc@f8007100
+>>>> OF: /iio_hwmon: could not get #io-channel-cells for
+>>>> /amba/adc@f8007100
+>>>> OF: /iio_hwmon: could not get #io-channel-cells for
+>>>> /amba/adc@f8007100
+>>>>
+>>>> by adding the #io-channel-cells property.
+>>>>
+>>>> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>>> Cc: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>>> Cc: Julia Cartwright <julia-acOepvfBmUk@public.gmane.org>
+>>>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> ---
+>>>>
+>>>> Changes from v1:
+>>>> - fix messed up commit message
+>>>> ---
+>>>>  arch/arm/boot/dts/zynq-7000.dtsi | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> index f3ac9bf..98233a8 100644
+>>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> @@ -72,6 +72,7 @@
+>>>>                       interrupts = <0 7 4>;
+>>>>                       interrupt-parent = <&intc>;
+>>>>                       clocks = <&clkc 12>;
+>>>> +                     #io-channel-cells = <1>;
+>>>>               };
+>>>>
+>>>>               can0: can@e0008000 {
+>>>>
+>>>
+>>> I think it will be good to the next step too.
+>>> It means also add iio-hwmon node too.
+>>>
+>>> What do you think?
+>>
+>> I hadn't put it in there since dts is supposed to describe hw,
+>> but obviously putting the actual hwmon in there makes it more useful.
+> 
+> I had one discussion about this with Grant in past and it is common
+> mistake. It is simplification of purpose of dts.
+> 
+
+If the iio-hwmon binding had gone through review it would have been rejected.
+
+>>
+>> I can resubmit with the hwmon node in there.
+> 
+> If you grep kernel tree you will see that others are using it too.
+> Also there is accepted binding for that that's why I can't see big
+> problem with it.
+
+Since this is an application specific binding I wouldn't put it in the
+generic DT include file. It's a bit like adding a gpio-key binding for each
+of the GPIOs just in case somebody wants to use it.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
