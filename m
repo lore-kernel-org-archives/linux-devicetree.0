@@ -1,159 +1,147 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt: bindings: fpga: add xilinx slave-serial
- binding description
-Date: Thu, 16 Mar 2017 12:01:57 +0100
-Message-ID: <10677530-3c57-d3d9-ae9d-e29a6fcf4de7@monstr.eu>
-References: <1488300022-30150-1-git-send-email-agust@denx.de>
- <1488300022-30150-2-git-send-email-agust@denx.de>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 1/2] drivers: pwm: pwm-atmel: switch to atomic PWM
+Date: Thu, 16 Mar 2017 12:14:09 +0100
+Message-ID: <20170316121409.3e910813@bbrezillon>
+References: <1488468525-28726-1-git-send-email-claudiu.beznea@microchip.com>
+        <1488468525-28726-2-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="WDP0eXEs3pgArodcpT5nXvm1pWosEWVAX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488300022-30150-2-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1488468525-28726-2-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, alexandre.belloni@free-electrons.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---WDP0eXEs3pgArodcpT5nXvm1pWosEWVAX
-Content-Type: multipart/mixed; boundary="D3FU5wQChTBJ2Xn28LWtQFKEXOHhCQADs";
- protected-headers="v1"
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>,
- Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
- Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Message-ID: <10677530-3c57-d3d9-ae9d-e29a6fcf4de7-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt: bindings: fpga: add xilinx slave-serial
- binding description
-References: <1488300022-30150-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
- <1488300022-30150-2-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
-In-Reply-To: <1488300022-30150-2-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
+Hi Claudiu,
 
---D3FU5wQChTBJ2Xn28LWtQFKEXOHhCQADs
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2 Mar 2017 17:28:44 +0200
+Claudiu Beznea <claudiu.beznea@microchip.com> wrote:
 
-On 28.2.2017 17:40, Anatolij Gustschin wrote:
-> Add dt binding documentation details for Xilinx FPGA configuration
-> over slave serial interface.
->=20
-> Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-> Acked-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> The currently Atmel PWM controllers supported by this driver
+> could change period or duty factor without channel disable,
+> for regular channels (sama5d3 support this by using period
+> or duty factor update registers, sam9rl support this by
+> writing channel update register and select the corresponding
+> update: period or duty factor). The chip doesn't support run
+> time changings of signal polarity. To take advantage of
+> atomic PWM framework and let controller works without glitches,
+> in this patch only the duty factor could be changed without
+> disabling PWM channel. For period and signal polarity the
+> atomic PWM is simulated by disabling + enabling the right PWM channel.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
 > ---
-> Changes in v4:
->=20
->  - add Acked-by tags
-> =20
-> Changes in v3:
->=20
->  - extend example to show the usage in SPI master node, connected
->    to the fpga-region node
->=20
-> Changes in v2:
->=20
->  - correct gpios properties in example to match above description
->=20
->  - use fpga-mgr@0 instead of fpga-spi@0 in example
->=20
->  .../bindings/fpga/xilinx-slave-serial.txt          | 44 ++++++++++++++=
-++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-slave=
--serial.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial=
-=2Etxt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> new file mode 100644
-> index 0000000..9766f74
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> @@ -0,0 +1,44 @@
-> +Xilinx Slave Serial SPI FPGA Manager
+>  drivers/pwm/pwm-atmel.c | 271 ++++++++++++++++++++++++------------------------
+>  1 file changed, 138 insertions(+), 133 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> index 67a7023..3db82c3 100644
+> --- a/drivers/pwm/pwm-atmel.c
+> +++ b/drivers/pwm/pwm-atmel.c
+> @@ -58,17 +58,30 @@
+>  #define PWM_MAX_PRD		0xFFFF
+>  #define PRD_MAX_PRES		10
+>  
+> +struct atmel_pwm_reg_data {
+> +	u8 period;
+> +	u8 period_upd;
+> +	u8 duty;
+> +	u8 duty_upd;
+> +};
 > +
-> +Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
-> +what is referred to as "slave serial" interface.
-> +The slave serial link is not technically SPI, and might require extra
-> +circuits in order to play nicely with other SPI slaves on the same bus=
-=2E
+> +struct atmel_pwm_data {
+> +	void (*update_cdty)(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			    unsigned long cdty);
+> +	void (*set_cprd_cdty)(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			      unsigned long cprd, unsigned long cdty);
+> +	const struct atmel_pwm_reg_data regs;
+
+If you go for this per-IP reg layout definition approach, you don't need
+the ->update_cdty()/->set_cprd_cdty() hooks anymore.
+
+> +};
 > +
-> +See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf=
+
+[...]
+
+> +static int atmel_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			   struct pwm_state *state)
+> +{
+> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+> +	struct pwm_state cstate;
+> +	unsigned long cprd, cdty;
+> +	u32 pres, val;
+> +	bool pwm_reset = false;
+> +	int ret;
+> +
+> +	pwm_get_state(pwm, &cstate);
+> +
+> +	if (cstate.enabled &&
+> +	    (cstate.polarity != state->polarity ||
+> +	     cstate.period != state->period))
+> +		pwm_reset = true;
+
+You can move that in the 'if (state->enabled)' block, but I'm not even
+sure this is really needed (see below).
 
 > +
-> +Required properties:
-> +- compatible: should contain "xlnx,fpga-slave-serial"
-> +- reg: spi chip select of the FPGA
-> +- prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
-> +- done-gpios: config status pin (referred to as DONE in the manual)
+> +	if (state->enabled) {
+> +		if (cstate.enabled && !pwm_reset) {
+
+		if (cstate.enabled &&
+		    (cstate.polarity != state->polarity ||
+		     cstate.period != state->period)) {
+
+> +			cprd = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm,
+> +						  atmel_pwm->data->regs.period);
+> +			atmel_pwm_calculate_cdty(state, cprd, &cdty);
+> +			atmel_pwm->data->update_cdty(chip, pwm, cdty);
+> +			return 0;
+> +		}
 > +
-> +Example for full FPGA configuration:
+> +		ret = atmel_pwm_calculate_cprd_and_pres(chip, state, &cprd,
+> +							&pres);
+> +		if (ret) {
+> +			dev_err(chip->dev,
+> +				"failed to calculate cprd and prescaler\n");
+> +			return ret;
+> +		}
 > +
-> +	fpga-region0 {
-> +		compatible =3D "fpga-region";
-> +		fpga-mgr =3D <&fpga_mgr_spi>;
-> +		#address-cells =3D <0x1>;
-> +		#size-cells =3D <0x1>;
-> +	};
+> +		atmel_pwm_calculate_cdty(state, cprd, &cdty);
 > +
-> +	spi1: spi@10680 {
-> +		compatible =3D "marvell,armada-xp-spi", "marvell,orion-spi";
-> +		pinctrl-0 =3D <&spi0_pins>;
-> +		pinctrl-names =3D "default";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +		cell-index =3D <1>;
-> +		interrupts =3D <92>;
-> +		clocks =3D <&coreclk 0>;
-> +		status =3D "okay";
+> +		if (pwm_reset) {
+
+		if (cstate.enabled) {
+
+> +			atmel_pwm_disable(chip, pwm, false);
+> +		} else {
+> +			ret = clk_enable(atmel_pwm->clk);
+> +			if (ret) {
+> +				dev_err(chip->dev, "failed to enable clock\n");
+> +				return ret;
+> +			}
+> +		}
 > +
-> +		fpga_mgr_spi: fpga-mgr@0 {
-> +			compatible =3D "xlnx,fpga-slave-serial";
-> +			spi-max-frequency =3D <60000000>;
-> +			spi-cpha;
-> +			reg =3D <0>;
-> +			done-gpios =3D <&gpio0 9 GPIO_ACTIVE_HIGH>;
-> +			prog_b-gpios =3D <&gpio0 29 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
->=20
-
-Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
-
-
-
---D3FU5wQChTBJ2Xn28LWtQFKEXOHhCQADs--
-
---WDP0eXEs3pgArodcpT5nXvm1pWosEWVAX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEARECAAYFAljKcKYACgkQykllyylKDCFIKgCfdrEwOgR9HntCt4QGXXct2cGb
-AEAAnjxhWgOa2xe5vql5No5nXtUAN2sZ
-=YUed
------END PGP SIGNATURE-----
-
---WDP0eXEs3pgArodcpT5nXvm1pWosEWVAX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		/* It is necessary to preserve CPOL, inside CMR */
+> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
+> +		val = (val & ~PWM_CMR_CPRE_MSK) | (pres & PWM_CMR_CPRE_MSK);
+> +		if (state->polarity == PWM_POLARITY_NORMAL)
+> +			val &= ~PWM_CMR_CPOL;
+> +		else
+> +			val |= PWM_CMR_CPOL;
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
+> +		atmel_pwm->data->set_cprd_cdty(chip, pwm, cprd, cdty);
+> +		mutex_lock(&atmel_pwm->isr_lock);
+> +		atmel_pwm->updated_pwms |= atmel_pwm_readl(atmel_pwm, PWM_ISR);
+> +		atmel_pwm->updated_pwms &= ~(1 << pwm->hwpwm);
+> +		mutex_unlock(&atmel_pwm->isr_lock);
+> +		atmel_pwm_writel(atmel_pwm, PWM_ENA, 1 << pwm->hwpwm);
+> +	} else if (cstate.enabled) {
+> +		atmel_pwm_disable(chip, pwm, true);
+> +	}
+> +
+> +	return 0;
+>  }
