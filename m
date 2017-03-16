@@ -1,91 +1,74 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH v2 8/8] ARM: dts: sun8i: enable LCD panel of Lichee Pi Zero
-Date: Fri, 17 Mar 2017 04:47:48 +0800
-Message-ID: <20170316204748.8596-9-icenowy@aosc.xyz>
-References: <20170316204748.8596-1-icenowy@aosc.xyz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
+ properties
+Date: Thu, 16 Mar 2017 15:56:39 -0500
+Message-ID: <20170316205639.xufbtbnqgy72bwyc@rob-hp-laptop>
+References: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
+ <20170315170112.mnhgntbjreheavua@rob-hp-laptop>
+ <CAMuHMdUt_d-kp57v2A18tuf-QQcOXnZ6wBtU9pqAyGJRZ2m3TQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170316204748.8596-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUt_d-kp57v2A18tuf-QQcOXnZ6wBtU9pqAyGJRZ2m3TQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-A 480x272 QiaoDian QD43003C0-40-7LED panel is available from Lichee Pi.
-
-This commit connects this panel to Lichee Pi Zero.
-
-Lichee Pi also provides a 800x480 panel without accurate model number,
-so do not merge this patch. It will finally come as device tree overlay.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 36 +++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-index 387fc2aa546d..7ae72bf63cd0 100644
---- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-@@ -75,6 +75,28 @@
- 			gpios = <&pio 6 2 GPIO_ACTIVE_LOW>; /* PG2 */
- 		};
- 	};
-+
-+	panel: panel {
-+		compatible = "qiaodian,qd43003c0-40", "simple-panel";
-+		enable-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* Should be backlight */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_lcd>;
-+			};
-+		};
-+	};
-+};
-+
-+&de {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -86,6 +108,20 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+	status = "okay";
-+
-+};
-+
-+&tcon0_out {
-+	tcon0_out_lcd: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-0 = <&uart0_pins_a>;
- 	pinctrl-names = "default";
--- 
-2.12.0
+T24gVGh1LCBNYXIgMTYsIDIwMTcgYXQgMDk6MTM6MTZBTSArMDEwMCwgR2VlcnQgVXl0dGVyaG9l
+dmVuIHdyb3RlOgo+IEhpIFJvYiwKPiAKPiBPbiBXZWQsIE1hciAxNSwgMjAxNyBhdCA2OjAxIFBN
+LCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToKPiA+IE9uIE1vbiwgTWFyIDA2
+LCAyMDE3IGF0IDA1OjI1OjU2UE0gKzAxMDAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiA+
+PiBEb2N1bWVudCB0aGUgb3B0aW9uYWwgcHJvcGVydGllcyBmb3IgZGVzY3JpYmluZyBtb2R1bGUg
+cmVzZXRzLCB0bwo+ID4+IHN1cHBvcnQgcmVzZXR0aW5nIGRpc3BsYXkgY2hhbm5lbHMgYW5kIExW
+RFMgZW5jb2RlcnMgb24gUi1DYXIgR2VuMiBhbmQKPiA+PiBHZW4zLgo+ID4+Cj4gPj4gU2lnbmVk
+LW9mZi1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4KPiA+
+PiAtLS0KPiA+PiBTZWUgIlt2MiwxLzRdIGR0LWJpbmRpbmdzOiBjbG9jazogcmVuZXNhczogY3Bn
+LW1zc3I6IERvY3VtZW50IHJlc2V0IGNvbnRyb2wKPiA+PiBzdXBwb3J0IiAoaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTM2NjI3LykgZm9yIHRoZSBmb3JtYXQgb2YKPiA+PiBh
+IHJlc2V0IHNwZWNpZmllciBpbiB0aGUgUmVuZXNhcyBDUEcvTVNTUiBjYXNlLgo+ID4+Cj4gPj4g
+RS5nLiAicmVzZXRzID0gPCZjcGcgMzEwPjsiCj4gPj4KPiA+PiB2MjoKPiA+PiAgIC0gcy9waGFu
+ZGxlcy9waGFuZGxlLy4KPiA+PiAtLS0KPiA+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgfCAxMCArKysrKysrKysrCj4gPj4gIDEgZmls
+ZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+ID4+
+IGluZGV4IDFhMDJmMDk5YTBmZjBhM2EuLjNkYjQxOGM4MjcxOTNlODIgMTAwNjQ0Cj4gPj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50
+eHQKPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
+ZW5lc2FzLGR1LnR4dAo+ID4+IEBAIC0zNiw2ICszNiwxNiBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVz
+Ogo+ID4+ICAgICAgICBXaGVuIHN1cHBsaWVkIHRoZXkgbXVzdCBiZSBuYW1lZCAiZGNsa2luLngi
+IHdpdGggIngiIGJlaW5nIHRoZSBpbnB1dAo+ID4+ICAgICAgICBjbG9jayBudW1lcmljYWwgaW5k
+ZXguCj4gPj4KPiA+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+PiArICAtIHJlc2V0czogQSBs
+aXN0IG9mIHBoYW5kbGUgKyByZXNldC1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFjaCBlbnRy
+eSBpbgo+ID4+ICsgICAgdGhlIHJlc2V0LW5hbWVzIHByb3BlcnR5Lgo+ID4+ICsgIC0gcmVzZXQt
+bmFtZXM6IE5hbWVzIG9mIHRoZSByZXNldHMuIFRoaXMgcHJvcGVydHkgaXMgbW9kZWwtZGVwZW5k
+ZW50Lgo+ID4+ICsgICAgLSBSOEE3NzlbMDEyMzQ1Nl0gdXNlIG9uZSByZXNldCBmb3IgYSBncm91
+cCBvZiBvbmUgb3IgbW9yZSBzdWNjZXNzaXZlCj4gPj4gKyAgICAgIGNoYW5uZWxzLCBhbmQgb25l
+IHJlc2V0IHBlciBMVkRTIGVuY29kZXIgKGlmIGF2YWlsYWJsZSkuIFRoZSByZXNldHMKPiA+PiAr
+ICAgICAgbXVzdCBiZSBuYW1lZCAiZHUueCIgd2l0aCAieCIgYmVpbmcgdGhlIG51bWVyaWNhbCBp
+bmRleCBvZiB0aGUgbG93ZXN0Cj4gPj4gKyAgICAgIGNoYW5uZWwgaW4gdGhlIGdyb3VwLiBUaGUg
+TFZEUyByZXNldHMgbXVzdCBiZSBuYW1lZCAibHZkcy54IiB3aXRoICJ4Igo+ID4+ICsgICAgICBi
+ZWluZyB0aGUgTFZEUyBlbmNvZGVyIG51bWVyaWNhbCBpbmRleC4KPiA+Cj4gPiBMVkRTIGlzIG5v
+dCBhIHNlcGFyYXRlIGJsb2NrPwo+IAo+IFdlbGwuLi4gZnJvbSBhIGhhcmR3YXJlIHBvaW50IG9m
+IHZpZXcsIHRoZSBMVkRTIGVuY29kZXJzIGFuZCBEVSBjaGFubmVscwo+IGFyZSBhbGwgc2VwYXJh
+dGUgYmxvY2tzICh0aGV5IGhhdmUgc2VwYXJhdGUgcmVnIGJsb2NrcywgY2xvY2tzLCBhbmQgcmVz
+ZXRzKS4KPiBCdXQgZHVlIHRvIHRoZSBkZXBlbmRlbmNpZXMgYmV0d2VlbiB0aGUgYmxvY2tzLCB0
+aGV5J3JlIG1vZGVsZWQgaW4gRFQgYXMKPiBhIHNpbmdsZSBkZXZpY2UsIHdpdGggbXVsdGlwbGUg
+cmVnLCBjbG9ja3MsIGFuZCByZXNldHMgcHJvcGVydGllcy4KCkRlcGVuZGVuY2llcyBiZWluZyBE
+Uk0gcmVxdWlyZW1lbnQgb2Ygd2FudGluZyBhIHNpbmdsZSBkZXZpY2Ugd2l0aCAKc3ViLWRldmlj
+ZXMgb3Igc29tZSBoL3cgZGVwZW5kZW5jaWVzPyBUaGUgZm9ybWVyIHNob3VsZG4ndCBkZWZpbmUg
+eW91ciAKYmluZGluZy4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
