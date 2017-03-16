@@ -1,81 +1,164 @@
-From: Akshay Bhat <akshay.bhat@timesys.com>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Thu, 16 Mar 2017 18:29:38 -0400
-Message-ID: <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
- <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
- <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
- <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
- <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
- <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
- <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
- <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
- <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: omap4-droid4: Add HDMI support
+Date: Thu, 16 Mar 2017 23:43:56 +0100
+Message-ID: <20170316224355.dvrxccmywesvyi47@earth>
+References: <20170305054359.8293-1-tony@atomide.com>
+ <20170305054359.8293-6-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>, Akshay Bhat <nodeax@gmail.com>
-Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pfgz6o3nia4oehf2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170305054359.8293-6-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfgang,
 
-On 03/16/2017 04:02 PM, Wolfgang Grandegger wrote:
-> 
-> Looks much better now! There are message for state changes to error
-> warning and passive. Just the following message is not correct:
-> 
->  (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19   ERRORFRAME
->     controller-problem{}
->     error-counter-tx-rx{{95}{25}}
-> 
-> Sorry, forgot to mention... the function can_change_state() [1]
-> should be used for that purpose, if possible. It fixes the issue
-> above as well.
-> 
+--pfgz6o3nia4oehf2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The updated driver (the one used to create the above log) is using
-can_change_state() function. data[1] 40 corresponds to
-CAN_ERR_CRTL_ACTIVE, so looks correct? Could it be that the can-utils I
-am using is old and not reporting state change?
+Hi,
 
-Tentative v4 driver for reference:
-http://pastebin.com/4xFVL1Sj
+On Sat, Mar 04, 2017 at 09:43:58PM -0800, Tony Lindgren wrote:
+> We can get HDMI working as long as the 5V regulator is on. There is
+> probably an encoder chip there too, but so far no idea what it might be.
+> Let's keep the 5V HDMI regulator always enabled for now as otherwise we
+> cannot detect the monitor properly.
 
->> berr-reporting off case:
->> http://pastebin.com/fUn3j7qU
-> 
-> Ditto.
-> 
-> I just had another look to the manual and there is this undocumented
-> STATFE register at offset 0x1E. It's mentioned in some other parts of
-> the doc as interrupt enable register for STATF events. I would assume
-> the same bit layout than STATF. If you set bit 2 (BUSOFF), 3 (ERRP)
-> and 4 (ERRW), you may get interrupts. It's worth a try, I think. If
-> it works, it's the much better solution.
-> 
+Tested-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-The HI-311x has a INT pin and a STAT pin. The hardware I have has only
-the INT pin connected to the processor. If the STAT pin was also
-connected, then like you mentioned it could be a much better solution to
-use STAT for state changes.
+-- Sebastian
 
-Enabling BUSOFF/ERRP/ERRW bits in STATFE did not generate any interrupts
-on the INT pin. Should we make it a requirement that both INT and STAT
-pins need to be connected in hardware for the driver to do the error
-reporting?
+>  arch/arm/boot/dts/omap4-droid4-xt894.dts | 65 ++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 65 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts=
+/omap4-droid4-xt894.dts
+> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> @@ -35,6 +35,37 @@
+>  		gpios =3D <&gpio2 18 GPIO_ACTIVE_LOW>;	/* gpio50 */
+>  	};
+> =20
+> +	hdmi0: connector {
+> +		compatible =3D "hdmi-connector";
+> +		pinctrl-0 =3D <&hdmi_hpd_gpio>;
+> +		pinctrl-names =3D "default";
+> +		label =3D "hdmi";
+> +		type =3D "d";
+> +
+> +		hpd-gpios =3D <&gpio2 31 GPIO_ACTIVE_HIGH>;	/* gpio63 */
+> +
+> +		port {
+> +			hdmi_connector_in: endpoint {
+> +				remote-endpoint =3D <&hdmi_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	/*
+> +	 * HDMI 5V regulator probably sourced from battery. Let's keep
+> +	 * keep this as always enabled for HDMI to work until we've
+> +	 * figured what the encoder chip is.
+> +	 */
+> +	hdmi_regulator: regulator-hdmi {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "hdmi";
+> +		regulator-min-microvolt =3D <5000000>;
+> +		regulator-max-microvolt =3D <5000000>;
+> +		gpio =3D <&gpio2 27 GPIO_ACTIVE_HIGH>;	/* gpio59 */
+> +		enable-active-high;
+> +		regulator-always-on;
+> +	};
+> +
+>  	/* This is probably coming straight from the battery.. */
+>  	wl12xx_vmmc: regulator-wl12xx {
+>  		compatible =3D "regulator-fixed";
+> @@ -67,6 +98,10 @@
+>  	};
+>  };
+> =20
+> +&dss {
+> +	status =3D "okay";
+> +};
+> +
+>  &gpio6 {
+>  	touchscreen_reset {
+>  		gpio-hog;
+> @@ -81,6 +116,20 @@
+>  	status =3D "disabled";
+>  };
+> =20
+> +&hdmi {
+> +	status =3D "okay";
+> +	pinctrl-0 =3D <&dss_hdmi_pins>;
+> +	pinctrl-names =3D "default";
+> +	vdda-supply =3D <&vdac>;
+> +
+> +	port {
+> +		hdmi_out: endpoint {
+> +			remote-endpoint =3D <&hdmi_connector_in>;
+> +			lanes =3D <1 0 3 2 5 4 7 6>;
+> +		};
+> +	};
+> +};
+> +
+>  &i2c1 {
+>  	tmp105@48 {
+>  		compatible =3D "ti,tmp105";
+> @@ -249,6 +298,22 @@
+> =20
+>  &omap4_pmx_core {
+> =20
+> +	/* hdmi_hpd.gpio_63 */
+> +	hdmi_hpd_gpio: pinmux_hdmi_hpd_pins {
+> +		pinctrl-single,pins =3D <
+> +                OMAP4_IOPAD(0x098, PIN_INPUT | MUX_MODE3)
+> +		>;
+> +	};
+> +
+> +	/* hdmi_cec.hdmi_cec, hdmi_scl.hdmi_scl, hdmi_sda.hdmi_sda */
+> +	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+> +		pinctrl-single,pins =3D <
+> +		OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)
+> +		OMAP4_IOPAD(0x09c, PIN_INPUT | MUX_MODE0)
+> +		OMAP4_IOPAD(0x09e, PIN_INPUT | MUX_MODE0)
+> +		>;
+> +	};
+> +
+>  	/* gpmc_ncs0.gpio_50 */
+>  	poweroff_gpio: pinmux_poweroff_pins {
+>  		pinctrl-single,pins =3D <
+> --=20
+> 2.11.1
 
-Thanks,
-Akshay
+--pfgz6o3nia4oehf2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Wolfgang.
-> 
-> [1] http://lxr.free-electrons.com/ident?i=can_change_state
-> 
-> Wolfgang.
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljLFSkACgkQ2O7X88g7
++ppsxhAAh+Ixw6oC/d7+wbgvmiaFxHHiunC7494qRz+V8SNNrxQFsRqWZkAMd1pq
+ANrjqpjclZoQjOT8XJXgxb4UnYhGyn7W239rY2ma4gcgpp++wD4XFXuK4Xf1SQfI
+jMm5oG/LU6HETZ4YdsBtlY1sYgQOkA/K8MW+jTv7Yw16joqm3+z3Y1CvCnHZPihU
+DHmI6YD7qMsBEP+uw7klQXC6WsKORgkC5kDdDp7WMcAg6gTC1UPzl2oef4L293SI
+1twrzJZfO2oyHIyRjSArJhWxbQFvCh632QKFCaC5f976IXhTBrY2l/a0QnwFBrJJ
+d5fbgdRu68zWXA++GvZ1dIImBpz4PttZrCSqR0Ur6Hk8AKwDmIg3UCEpXdkBWFpe
+P9B8QX7PEY1yhxwJJgbiM5i7OVvlySUYyZNGyXhBorYEcgqiy2KcLDm5YLAbkbNW
+Ps7GqJZcUetGKMc/syHTkfPvD3wRgTSWtz26HbIqvD+roBhqvuntzGQHA+YZuj/j
+aS/vlICeROplcnGbdNEjDRkrmGrq8Uer72AhX9LnA1MRIoFmHByEYqXUckxz5Lri
+2+JFkXp4Y9Qda+5YaMJckCl4CeSAPrCQIO6InO7ngucMH7Q1SVjiVDlbOaRGCrBq
+OZLyCPYNNsuL69qvOUFk1uMb7zPsdtdzDOru96c7G2WYyRlMwaw=
+=JCu1
+-----END PGP SIGNATURE-----
+
+--pfgz6o3nia4oehf2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
