@@ -1,95 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/9] devicetree: power: Add battery.txt
-Date: Wed, 15 Mar 2017 18:50:47 -0500
-Message-ID: <CAL_JsqJOFUSRY_KPzwNWrx4FF1_F6XNK8OfkqhqgBpxH9WrZeQ@mail.gmail.com>
-References: <20170227071117.18934-1-liam@networkimprov.net>
- <20170227071117.18934-2-liam@networkimprov.net> <20170302151449.j7i3ecpy2ipxu6tq@rob-hp-laptop>
- <CAKvHMgR6eVTUp6je3D_YDUMAksWiHx6JnJc8cRHSHp6tj30OPA@mail.gmail.com>
- <CAL_Jsq+8Y=GtyjVZA-suZLH+ySDshaoU9qh96BF+PeUYK3FZxg@mail.gmail.com> <CAKvHMgTpqdNKQoWUsChn4YWTtWaN5un_Vpqp+HtbMrxGV_D-ig@mail.gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 2/4] sound: bcm2835-analog-audio: Add
+	driver for bcm2835(Raspberry PI) headphone jack.
+Date: Wed, 15 Mar 2017 17:01:10 -0700
+Message-ID: <871sty1455.fsf@eliezer.anholt.net>
+References: <20170312063820.19313-1-mzoran@crowfest.net>
+ <20170312063820.19313-2-mzoran@crowfest.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKvHMgTpqdNKQoWUsChn4YWTtWaN5un_Vpqp+HtbMrxGV_D-ig@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Liam Breck <kernel@networkimprov.net>
+Content-Type: multipart/mixed; boundary="===============5567183529092391332=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170312063820.19313-2-mzoran@crowfest.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.co, stefan.wahren@i2se.com, alsa-devel@alsa-project.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Michael Zoran <mzoran@crowfest.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 5:04 PM, Liam Breck <liam@networkimprov.net> wrote:
-> On Wed, Mar 15, 2017 at 1:10 PM, Rob Herring <robh@kernel.org> wrote:
->> On Thu, Mar 2, 2017 at 12:31 PM, Liam Breck <liam@networkimprov.net> wrote:
->>> Hi Rob,
->>>
->>> On Thu, Mar 2, 2017 at 7:14 AM, Rob Herring <robh@kernel.org> wrote:
->>>> On Sun, Feb 26, 2017 at 11:11:09PM -0800, Liam Breck wrote:
->>>>> From: Liam Breck <kernel@networkimprov.net>
->>>>>
->>>>> Documentation of static battery characteristics that can be defined
->>>>> for batteries which cannot self-identify. This information is required
->>>>> by fuel-gauge and charger chips for proper handling of the battery.
->>>>>
->>>>> Cc: Rob Herring <robh@kernel.org>
->>>>> Cc: devicetree@vger.kernel.org
->>>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
->>>>> Signed-off-by: Liam Breck <kernel@networkimprov.net>
->>>>> ---
->>>>>  .../devicetree/bindings/power/supply/battery.txt   | 42 ++++++++++++++++++++++
->>>>>  1 file changed, 42 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>> new file mode 100644
->>>>> index 0000000..3d916bd
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>> @@ -0,0 +1,42 @@
->>>>> +Battery Characteristics
->>>>> +
->>>>> +Required Properties:
->>>>> + - compatible: Must be "fixed-battery"
->>>>
->>>> Still not liking this name, but I don't have a better suggestion. Please
->>>> describe here what is and isn't a "fixed battery".
->>>
->>> Sebastian...?
->>>
->>>>> +
->>>>> +Optional Properties:
->>>>> + - voltage-min-design-microvolt: drained battery voltage
->>>>> + - energy-full-design-microwatt-hours: battery design energy
->>>>> + - charge-full-design-microamp-hours: battery design capacity
->>>>> +
->>>>> +Future Properties must be named for the corresponding elements in
->>>>> +enum power_supply_property, defined in include/linux/power_supply.h.
->>>>
->>>> Um, no. That's exactly not how DT bindings should be done.
->>>
->>> Power supply components surface stats in sysfs using the names in enum
->>> power_supply_property. For example,
->>> /sys/class/power_supply/.../voltage_min_design. Matching input (DT)
->>> and output (sysfs) names is sensible. The above comment is already
->>> attached to struct power_supply_battery_info, which is the initial
->>> destination for the above DT properties.
->>>
->>> Shall I mention sysfs in the above comment?
->>
->> Absolutely not. Bindings should not reference Linux.
->>
->> While sometimes things can align, there is no guarantee that they
->> will. DT is h/w description. sysfs is user configuration.
+--===============5567183529092391332==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+
+--=-=-=
+Content-Type: text/plain
+
+Michael Zoran <mzoran@crowfest.net> writes:
+
+> Add driver for the bcm2835 analog/headphone jack which
+> uses the PWM hardware to generate audio.
 >
-> sysfs for power_supply also provides fixed hw characteristics.
->
-> Sebastian proposed DT:battery specifically to be consumed by
-> power_supply_core. Allowing names in DT:battery and
-> power_supply_property to diverge would cause confusion and wasted
-> time, for no particular benefit. As there is no rationale to
-> reconsider the names of these fields for DT:battery, let's write that
-> into the docs.
+> Signed-off-by: Michael Zoran <mzoran@crowfest.net>
 
-Write it into the Linux docs then. The DT docs need to stand on their
-own for the standalone DT tree[1] that other projects import.
+ALSA folks: is a driver like this acceptable?  In particular, I'm
+wondering how you feel about the in-kernel munging of the audio buffers
+to something appropriate for the PWM hardware, before we get into review
+of driver details.
 
-Rob
+This driver isn't quite a replacement for the closed source driver in
+the firmware (couple of notes: firmware seems to have some dithering of
+the audio values in the sigma delta modulation process, and a priority
+bump on the DMA because the PWM's fifo is tiny), but I'm definitely
+interested in us having something like it in open source.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAljJ1cYACgkQtdYpNtH8
+nugQfRAAlg2e3XFcDVnW00ELhBEiAQfdJ6JOCIGLwWJdSmy565r0J3VR2h0rqMyC
+MGgYhdVoH3A2S6lvvADSvnzwRjhNiOGhsh4Qj/pW6tHqz66ULNdhSdxey94RFOUL
+468Wj/fYoSjUP9qOl2DT95BcCkQyyT/w4b98wNk7yV4GaS29wDo5LWJCaX0YiTvJ
+hQ+nluoJiJ609q0QbHvGEw444Fw9iXAsk0FzW/QNOx/OprfJe5d3jaDMnwOM7HJw
+ktxyr6ib4+xNVN7WOVOgZlUEhB+yoHrhWGicTKQGzdv8vnQIgukOgypte38tnH+p
+AkzLn5gZ7gkioI2NOGgm6hBMbdRd8K6ZIdU+9m2Qmeq20wiVS65zf16RPUoIgPDx
+gCxHkASFUxgteINsJ4kg5/0kQ8zDn8KHSDhTNQdpkH19vgx8nBpVsr+l3NR970qN
+6R31PrJS4Wd9AT1m8SSh1gtvoddxVns5QuE92Aau/mHOJ2HBvTfdwfQqrxfv24Pu
+n+lRM3ZzeRcuSOexmg8voujttR6Yga+djeXOS5OXMVt6WYpRGGsXAPVsEKaiH6UK
+t8e+WMZ3OWnqih2KHHIres6XX7ntcVr7KGFFTuGaOitVs+A7S4OzRiJWaKCdcBzi
+wqdwi4PSJ8Qru2PAzMuwStBz5DFYS7c9pmwIXGp7TSo1zCo3pfY=
+=4RZK
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============5567183529092391332==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5567183529092391332==--
