@@ -1,49 +1,117 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
- iio-hwmon
-Date: Thu, 16 Mar 2017 17:16:14 +0100
-Message-ID: <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
-References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v1 6/7] arm64: dts: rockchip: add dts file for RK3328
+ evaluation board
+Date: Thu, 16 Mar 2017 16:18:40 +0000
+Message-ID: <63969127-3fcd-658c-2986-8ded6d93c433@arm.com>
+References: <1489572237-6649-1-git-send-email-cl@rock-chips.com>
+ <1489628711-31271-1-git-send-email-cl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489003884-2489-1-git-send-email-mdf@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <mdf@kernel.org>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Julia Cartwright <julia@ni.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1489628711-31271-1-git-send-email-cl@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: cl@rock-chips.com, heiko@sntech.de
+Cc: mark.rutland@arm.com, wsa@the-dreams.de, linux-iio@vger.kernel.org, catalin.marinas@arm.com, shawn.lin@rock-chips.com, will.deacon@arm.com, kever.yang@rock-chips.com, dianders@chromium.org, yamada.masahiro@socionext.com, tony.xie@rock-chips.com, linux-i2c@vger.kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, zhengxing@rock-chips.com, khilman@baylibre.com, linux-rockchip@lists.infradead.org, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, zhangqing@rock-chips.com, paweljarosz3691@gmail.com, arnd@arndb.de, yhx@rock-chips.com, knaack.h@gmx.de, robh+dt@kernel.org, matthias.bgg@gmail.com, rocky.hao@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, david.wu@rock-chips.com, fabio.estevam@nxp.com, andy.yan@roc
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiA4LjMuMjAxNyAyMToxMSwgTW9yaXR6IEZpc2NoZXIgd3JvdGU6Cj4gRml4Cj4gCj4g
-T0Y6IC9paW9faHdtb246IGNvdWxkIG5vdCBnZXQgI2lvLWNoYW5uZWwtY2VsbHMgZm9yCj4gL2Ft
-YmEvYWRjQGY4MDA3MTAwCj4gT0Y6IC9paW9faHdtb246IGNvdWxkIG5vdCBnZXQgI2lvLWNoYW5u
-ZWwtY2VsbHMgZm9yCj4gL2FtYmEvYWRjQGY4MDA3MTAwCj4gT0Y6IC9paW9faHdtb246IGNvdWxk
-IG5vdCBnZXQgI2lvLWNoYW5uZWwtY2VsbHMgZm9yCj4gL2FtYmEvYWRjQGY4MDA3MTAwCj4gCj4g
-YnkgYWRkaW5nIHRoZSAjaW8tY2hhbm5lbC1jZWxscyBwcm9wZXJ0eS4KPiAKPiBTaWduZWQtb2Zm
-LWJ5OiBNb3JpdHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+Cj4gQ2M6IE1pY2hhbCBTaW1layA8
-bWljaGFsLnNpbWVrQHhpbGlueC5jb20+Cj4gQ2M6IFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJy
-aW5rbWFubkB4aWxpbnguY29tPgo+IENjOiBKdWxpYSBDYXJ0d3JpZ2h0IDxqdWxpYUBuaS5jb20+
-Cj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcKPiBDYzogZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmcKPiAtLS0KPiAKPiBDaGFuZ2VzIGZyb20gdjE6Cj4gLSBmaXggbWVzc2VkIHVw
-IGNvbW1pdCBtZXNzYWdlCj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNp
-IHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+IAo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5
-bnEtNzAwMC5kdHNpCj4gaW5kZXggZjNhYzliZi4uOTgyMzNhOCAxMDA2NDQKPiAtLS0gYS9hcmNo
-L2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5
-bnEtNzAwMC5kdHNpCj4gQEAgLTcyLDYgKzcyLDcgQEAKPiAgCQkJaW50ZXJydXB0cyA9IDwwIDcg
-ND47Cj4gIAkJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+ICAJCQljbG9ja3MgPSA8JmNs
-a2MgMTI+Owo+ICsJCQkjaW8tY2hhbm5lbC1jZWxscyA9IDwxPjsKPiAgCQl9Owo+ICAKPiAgCQlj
-YW4wOiBjYW5AZTAwMDgwMDAgewo+IAoKSSB0aGluayBpdCB3aWxsIGJlIGdvb2QgdG8gdGhlIG5l
-eHQgc3RlcCB0b28uCkl0IG1lYW5zIGFsc28gYWRkIGlpby1od21vbiBub2RlIHRvby4KCldoYXQg
-ZG8geW91IHRoaW5rPwoKVGhhbmtzLApNaWNoYWwKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Chen,
+
+On 16/03/17 01:45, cl@rock-chips.com wrote:
+> From: Chen Liang <cl@rock-chips.com>
+> 
+> This patch add rk3328-evb.dts for RK3328 evaluation board.
+> Tested on RK3328 evb.
+> 
+> Signed-off-by: Chen Liang <cl@rock-chips.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile       |  1 +
+>  arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 57 +++++++++++++++++++++++++++++
+>  2 files changed, 58 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 3a86289..853fc7d 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+>  
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> new file mode 100644
+> index 0000000..cf27239
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> @@ -0,0 +1,57 @@
+> +/*
+> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3328.dtsi"
+> +
+> +/ {
+> +	model = "Rockchip RK3328 EVB";
+> +	compatible = "rockchip,rk3328-evb", "rockchip,rk3328";
+> +
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+
+Is that really 1.5MBit/s?
+
+> +	};
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+
+I don't have the board, but would expect to see more peripherals
+mentioned in the .dtsi enabled here.
+For sure the board has an (micro)SD card slot, possibly even Ethernet?
+
+Cheers,
+Andre.
