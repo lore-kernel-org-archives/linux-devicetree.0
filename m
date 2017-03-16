@@ -1,121 +1,187 @@
-From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
- constant-charge-current property
-Date: Wed, 15 Mar 2017 23:27:27 -0700
-Message-ID: <CAKvHMgR58sDnB-nn386Bd-H0Duevkeoc8eEfz=otLAumc8FD+w@mail.gmail.com>
-References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
- <20170315105537.22349-2-quentin.schulz@free-electrons.com>
- <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com> <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com>
+From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Subject: [PATCH 2/4] mvebu: xp: Add pwm properties to .dtsi files
+Date: Thu, 16 Mar 2017 07:42:16 +0100
+Message-ID: <20170316064218.9169-3-ralph.sennhauser@gmail.com>
+References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ce6f2ddb-f875-0370-ca45-293397d97495-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-gpio@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Ralph Sennhauser <ralph.sennhauser@gmail.com>, Imre Kaloz <kaloz@openwrt.org>, "moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,
+ ..." <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Andrew Lunn <andrew@lunn.ch>
 
-On Wed, Mar 15, 2017 at 6:10 AM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Liam,
->
-> On 15/03/2017 13:08, Liam Breck wrote:
->> I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
->> in patch description to direct a patch to interested parties and
->> relevant lists. I don't want to see all 19 patches in this series.
->>
->> On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
->> <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>> This adds the constant-charge-current property to the list of optional
->>> properties of the battery.
->>>
->>> The constant charge current is critical for batteries as they can't
->>> handle all charge currents.
->>>
->>> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>>
->>> v4:
->>>  - switch from constant-charge-current-microamp to constant-charge-microamp,
+Add properties to the gpio nodes to allow them to be also used as pwm
+lines.
 
-Sebastian is on record supporting name alignment between DT:battery
-properties and enum power_supply_property.
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+URL: https://patchwork.ozlabs.org/patch/427294/
+Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+---
+ arch/arm/boot/dts/armada-370.dtsi        | 10 ++++++++--
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi | 10 ++++++++--
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi |  8 ++++++--
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi | 10 ++++++++--
+ 4 files changed, 30 insertions(+), 8 deletions(-)
 
-Could you OK a change back to constant-charge-current-microamp in this patch?
-
-Note that the following could appear in DT:battery in future:
-
-constant-charge-current-microamp
-constant-charge-current-max-microamp
-constant-charge-voltage-microvolt
-constant-charge-voltage-max-microvolt
-
-Thanks!
-
->> Must be constant-charge-current-microamp for the reasons discussed in
->> battery.txt - consistency with sysfs names.
->>
->
-> Hum. Just nitpicking, but I disagree with the use of 'must'. IIRC there
-> is nothing in the code that would require the property to be named after
-> a property from the enum power_supply_property.
->
-> I would say that you _want_ it to be named like that because it
-> underlines the relation between the DT property and the actual impacted
-> property in the power supply subsystem. I'm fine with this reason but in
-> the end, the maintainer's opinion prevails (if (s)he does not want it,
-> (s)he will not take it). So, basically, I actually don't mind either
-> option and I see arguments on each side.
->
-> So, just waiting for maintainer's opinion to make the final version of
-> this patch.
->
-> Thanks,
-> Quentin
->
->> Also applies to power_supply_core.c patch.
->>
->> Rob: enum power_supply_property also lists constant-charge-voltage,
->> hence the -current
->>
->>
->>> added in v3
->>>
->>>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>> index 0278617..9594e1e 100644
->>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>> @@ -7,6 +7,7 @@ Optional Properties:
->>>   - voltage-min-design-microvolt: drained battery voltage
->>>   - energy-full-design-microwatt-hours: battery design energy
->>>   - charge-full-design-microamp-hours: battery design capacity
->>> + - constant-charge-microamp: battery constant charge current
->>>
->>>  Because drivers surface properties in sysfs using names derived
->>>  from enum power_supply_property, e.g.
->>> @@ -30,6 +31,7 @@ Example:
->>>                 voltage-min-design-microvolt = <3200000>;
->>>                 energy-full-design-microwatt-hours = <5290000>;
->>>                 charge-full-design-microamp-hours = <1430000>;
->>> +               constant-charge-microamp = <300000>;
->>>         };
->>>
->>>         charger: charger@11 {
->>> --
->>> 2.9.3
->>>
->
-> --
-> Quentin Schulz, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index cc011c8..aa9fe72 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -138,24 +138,30 @@
+ 
+ 			gpio0: gpio@18100 {
+ 				compatible = "marvell,orion-gpio";
+-				reg = <0x18100 0x40>;
++				reg = <0x18100 0x40>, <0x181c0 0x08>;
++				reg-names = "gpio", "pwm";
+ 				ngpios = <32>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				#pwm-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				interrupts = <82>, <83>, <84>, <85>;
++				clocks = <&coreclk 0>;
+ 			};
+ 
+ 			gpio1: gpio@18140 {
+ 				compatible = "marvell,orion-gpio";
+-				reg = <0x18140 0x40>;
++				reg = <0x18140 0x40>, <0x181c8 0x08>;
++				reg-names = "gpio", "pwm";
+ 				ngpios = <32>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				#pwm-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				interrupts = <87>, <88>, <89>, <90>;
++				clocks = <&coreclk 0>;
+ 			};
+ 
+ 			gpio2: gpio@18180 {
+diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
+index 07c5090..fc3934f 100644
+--- a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
++++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
+@@ -203,24 +203,30 @@
+ 		internal-regs {
+ 			gpio0: gpio@18100 {
+ 				compatible = "marvell,orion-gpio";
+-				reg = <0x18100 0x40>;
++				reg = <0x18100 0x40>, <0x181c0 0x08>;
++				reg-names = "gpio", "pwm";
+ 				ngpios = <32>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				#pwm-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				interrupts = <82>, <83>, <84>, <85>;
++				clocks = <&coreclk 0>;
+ 			};
+ 
+ 			gpio1: gpio@18140 {
+ 				compatible = "marvell,orion-gpio";
+-				reg = <0x18140 0x40>;
++				reg = <0x18140 0x40>, <0x181c8 0x08>;
++				reg-names = "gpio", "pwm";
+ 				ngpios = <17>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				#pwm-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				interrupts = <87>, <88>, <89>;
++				clocks = <&coreclk 0>;
+ 			};
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
+index 64e936a..04dda6a 100644
+--- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
++++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
+@@ -286,24 +286,28 @@
+ 		internal-regs {
+ 			gpio0: gpio@18100 {
+ 				compatible = "marvell,orion-gpio";
+-				reg = <0x18100 0x40>;
++				reg = <0x18100 0x40>, <0x181c0 0x08>;
++				reg-names = "gpio", "pwm";
+ 				ngpios = <32>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				#pwm-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				interrupts = <82>, <83>, <84>, <85>;
++				clocks = <&coreclk 0>;
+ 			};
+ 
+ 			gpio1: gpio@18140 {
+ 				compatible = "marvell,orion-gpio";
+-				reg = <0x18140 0x40>;
++				reg = <0x18140 0x40>, <0x181c8 0x08>;
+ 				ngpios = <32>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				interrupts = <87>, <88>, <89>, <90>;
++				clocks = <&coreclk 0>;
+ 			};
+ 
+ 			gpio2: gpio@18180 {
+diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
+index d1383dd..fb6d28a 100644
+--- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
++++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
+@@ -324,24 +324,30 @@
+ 		internal-regs {
+ 			gpio0: gpio@18100 {
+ 				compatible = "marvell,orion-gpio";
+-				reg = <0x18100 0x40>;
++				reg = <0x18100 0x40>, <0x181c0 0x08>;
++				reg-names = "gpio", "pwm";
+ 				ngpios = <32>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				#pwm-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				interrupts = <82>, <83>, <84>, <85>;
++				clocks = <&coreclk 0>;
+ 			};
+ 
+ 			gpio1: gpio@18140 {
+ 				compatible = "marvell,orion-gpio";
+-				reg = <0x18140 0x40>;
++				reg = <0x18140 0x40>, <0x181c8 0x08>;
++				reg-names = "gpio", "pwm";
+ 				ngpios = <32>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				#pwm-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				interrupts = <87>, <88>, <89>, <90>;
++				clocks = <&coreclk 0>;
+ 			};
+ 
+ 			gpio2: gpio@18180 {
+-- 
+2.10.2
