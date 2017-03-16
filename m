@@ -1,61 +1,57 @@
-From: "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH V7 5/7] ACPI: Delay the enumeration on the devices whose
- dependency has not met
-Date: Thu, 16 Mar 2017 10:21:58 +0800
-Message-ID: <58C9F6C6.4090700@hisilicon.com>
-References: <1489372963-9000-1-git-send-email-yuanzhichang@hisilicon.com>
- <1489372963-9000-6-git-send-email-yuanzhichang@hisilicon.com>
- <4600523.rWNiWKrYZC@aspire.rjw.lan>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH v6 08/14] mmc: sdhci-xenon: Add Marvell Xenon SDHC core
+ functionality
+Date: Thu, 16 Mar 2017 10:24:17 +0800
+Message-ID: <20170316102417.0909bccc@xhacker>
+References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
+ <cb885ae19e7c467908cdaa1f1cc8d95a7217d663.1487091464.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFpH+RGAZGoVCuCOKJ2iEa+Y=cNNcM-uKhkYaTpmogXCKA@mail.gmail.com>
+ <10855817-e693-e007-9499-c4e97936fadb@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4600523.rWNiWKrYZC-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <10855817-e693-e007-9499-c4e97936fadb@marvell.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ziji Hu <huziji@marvell.com>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, linux-arm-kernel@lists.infradead
 List-Id: devicetree@vger.kernel.org
 
-Hi, Rafael,
+Hi Ziji
 
-Thanks for your review!
+On Wed, 15 Mar 2017 21:58:43 +0800 Ziji Hu wrote:
 
-On 2017/3/14 5:24, Rafael J. Wysocki wrote:
-> On Monday, March 13, 2017 10:42:41 AM zhichang.yuan wrote:
->> In commit 40e7fcb1929(ACPI: Add _DEP support to fix battery issue on Asus
->> T100TA), the '_DEP' was supported to solve the dependency of Asus battery. But
->> this patch is specific to Asus battery device.
->> In the real world, there are other devices which need the dependency to play the
->> role on the enumeration order. For example, all the Hip06 LPC
->> periperals(IPMI-BT, uart, etc) must be scanned after the LPC host driver
->> finished the probing. So, it makes sense to add a checking whether the ACPI
->> device meet all the dependencies during its enumeration slot, if not, the
->> enumeration will be delayed till all dependency master finish their work.
->>
->> This patch adds the dependency checking in ACPI enumeration, also the
->> corresponding handling to retrigger the Hip06 LPC peripherals' scanning.
+> Hi Ulf,
 > 
-> AFAICS, _DEP is generally abused in the wild and cannot be made generic.  Sorry.
+> On 2017/3/15 21:11, Ulf Hansson wrote:
+> > On 14 February 2017 at 18:01, Gregory CLEMENT
+> > <gregory.clement@free-electrons.com> wrote:  
+> >> From: Hu Ziji <huziji@marvell.com>  
+> <snip>
+> >> +config MMC_SDHCI_XENON
+> >> +       tristate "Marvell Xenon eMMC/SD/SDIO SDHCI driver"
+> >> +       depends on MMC_SDHCI_PLTFM
+> >> +       help
+> >> +         This selects Marvell Xenon eMMC/SD/SDIO SDHCI.
+> >> +         If you have a machine with integrated Marvell Xenon SDHC IP,  
+> > 
+> > /s/SDHC/SDHCI
+> >   
 > 
+> 	Sorry. I don't get your point.
+> 	Could you please give more detailed comments?
 
->From the ACPI specification, _DEP is for operation region accesses.
-You are right...
-
-How about we add a ACPI handler for our LPC bus?? Just like amba.
-In this way, we also can solve the issue about LPC enumeration order.
+Ulf want you to s/SDHC/SDHCI in the line "If you have .....", I.E
+change the line to:
+If you have a machine with integrated Marvell Xenon SDHCI IP,
 
 Thanks,
-Zhichang
-
-
-> Thanks,
-> Rafael
-> 
-> 
-> .
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jisheng
