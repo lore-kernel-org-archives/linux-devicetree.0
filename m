@@ -1,52 +1,231 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: Applied "ASoC: sun8i-codec: Update mixer to use SOC_DAPM_DOUBLE"
- to the asoc tree
-Date: Thu, 16 Mar 2017 14:06:53 +0000
-Message-ID: <20170316140653.jjnta4le6kws36l5@sirena.org.uk>
-References: <20170210094133.11382-3-mylene.josserand@free-electrons.com>
- <E1clbY9-0000DH-LY@finisterre>
- <CAGb2v6428PpYPzpHngLgaeziwKN8u-TYiNO1bs7TFw-7VrQOAg@mail.gmail.com>
- <20170315134323.i3pvla3pzejmkxwh@sirena.org.uk>
- <CAGb2v67-b+8CM0MqhT_YQeuNxEnVoxG-COZPy8LW32Eb-QE67Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3jtbdw426c2622qy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67-b+8CM0MqhT_YQeuNxEnVoxG-COZPy8LW32Eb-QE67Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 4/4] ARM: dts: r8a7745: Add reset control properties
+Date: Thu, 16 Mar 2017 15:07:26 +0100
+Message-ID: <1489673246-11015-5-git-send-email-geert+renesas@glider.be>
+References: <1489673246-11015-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489673246-11015-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add properties to describe the reset topology for on-SoC devices:
+  - Add the "#reset-cells" property to the CPG/MSSR device node,
+  - Add resets and reset-names properties to the various device nodes.
 
---3jtbdw426c2622qy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This allows to reset SoC devices using the Reset Controller API.
 
-On Wed, Mar 15, 2017 at 10:15:22PM +0800, Chen-Yu Tsai wrote:
+Note that all resets added match the corresponding module clocks.
 
-> It depends on the second half of commit 4aa8146c89f3 ("ASoC: sun8i-codec:
-> Remove analog "HP" widget"), which is also a cleanup. Would it be OK
-> to pick these two over to fixes then? Or should we send a clean version
-> instead?
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+v2:
+  - No changes.
+---
+ arch/arm/boot/dts/r8a7745.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-That also doesn't pick over cleanly, can you send a new version against
-Linus' tree, that'll be easiest and safest I think.
+diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+index bca88715fadad81b..2feb0084bb3b1b51 100644
+--- a/arch/arm/boot/dts/r8a7745.dtsi
++++ b/arch/arm/boot/dts/r8a7745.dtsi
+@@ -62,6 +62,7 @@
+ 			clocks = <&cpg CPG_MOD 408>;
+ 			clock-names = "clk";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 408>;
+ 		};
+ 
+ 		irqc: interrupt-controller@e61c0000 {
+@@ -81,6 +82,7 @@
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 407>;
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 407>;
+ 		};
+ 
+ 		timer {
+@@ -102,6 +104,7 @@
+ 			clock-names = "extal", "usb_extal";
+ 			#clock-cells = <2>;
+ 			#power-domain-cells = <0>;
++			#reset-cells = <1>;
+ 		};
+ 
+ 		prr: chipid@ff000044 {
+@@ -148,6 +151,7 @@
+ 			clocks = <&cpg CPG_MOD 219>;
+ 			clock-names = "fck";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 219>;
+ 			#dma-cells = <1>;
+ 			dma-channels = <15>;
+ 		};
+@@ -180,6 +184,7 @@
+ 			clocks = <&cpg CPG_MOD 218>;
+ 			clock-names = "fck";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 218>;
+ 			#dma-cells = <1>;
+ 			dma-channels = <15>;
+ 		};
+@@ -195,6 +200,7 @@
+ 			       <&dmac1 0x21>, <&dmac1 0x22>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 204>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -209,6 +215,7 @@
+ 			       <&dmac1 0x25>, <&dmac1 0x26>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 203>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -223,6 +230,7 @@
+ 			       <&dmac1 0x27>, <&dmac1 0x28>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 202>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -237,6 +245,7 @@
+ 			       <&dmac1 0x1b>, <&dmac1 0x1c>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 1106>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -251,6 +260,7 @@
+ 			       <&dmac1 0x1f>, <&dmac1 0x20>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 1107>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -265,6 +275,7 @@
+ 			       <&dmac1 0x23>, <&dmac1 0x24>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 1108>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -279,6 +290,7 @@
+ 			       <&dmac1 0x3d>, <&dmac1 0x3e>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 206>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -293,6 +305,7 @@
+ 			       <&dmac1 0x19>, <&dmac1 0x1a>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 207>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -307,6 +320,7 @@
+ 			       <&dmac1 0x1d>, <&dmac1 0x1e>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 216>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -322,6 +336,7 @@
+ 			       <&dmac1 0x29>, <&dmac1 0x2a>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 721>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -337,6 +352,7 @@
+ 			       <&dmac1 0x2d>, <&dmac1 0x2e>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 720>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -352,6 +368,7 @@
+ 			       <&dmac1 0x2b>, <&dmac1 0x2c>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 719>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -367,6 +384,7 @@
+ 			       <&dmac1 0x2f>, <&dmac1 0x30>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 718>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -382,6 +400,7 @@
+ 			       <&dmac1 0xfb>, <&dmac1 0xfc>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 715>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -397,6 +416,7 @@
+ 			       <&dmac1 0xfd>, <&dmac1 0xfe>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 714>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -412,6 +432,7 @@
+ 			       <&dmac1 0x39>, <&dmac1 0x3a>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 717>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -427,6 +448,7 @@
+ 			       <&dmac1 0x4d>, <&dmac1 0x4e>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 716>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -442,6 +464,7 @@
+ 			       <&dmac1 0x3b>, <&dmac1 0x3c>;
+ 			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 713>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -451,6 +474,7 @@
+ 			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 813>;
+ 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 813>;
+ 			phy-mode = "rmii";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-- 
+2.7.4
 
---3jtbdw426c2622qy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljKm/0ACgkQJNaLcl1U
-h9DIlAf/UTj+suKqDu7tfUUfI0UoxqbDU0X/uYOyL0t3tCb225zmt/K/XGqzUNd6
-KUSKRa9dQP0Wjp+BcW/5imxNcdWmi0SX1Un8iCoNLt6FKNHZ6947jvgaglH60dF5
-yu6Kgg9dlqJ/IL0pRcnfw2k8UFsfwyCqOYF0ZK9C/dr5Cbz+GvHhxMlXubyB6ENq
-Ja0sDn6mtb8QSDpjSXenjyRYw4n+HX/pwmEheC1XYskgWNnPNqHumu+If9SkVcHP
-IhvlAiZSW3pEsa3zJsJ8FjsNWjAxv/iNnUlCJagefA2qV0ypuvLFs3NNdOZXWG/5
-pqCZwbeIaGOnvF7w8FxJFTn29sCx0g==
-=fzGz
------END PGP SIGNATURE-----
-
---3jtbdw426c2622qy--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
