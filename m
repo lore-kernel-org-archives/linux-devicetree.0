@@ -1,43 +1,87 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Documentation: devicetree: move trivial-devices out of
- I2C realm
-Date: Thu, 16 Mar 2017 15:51:11 -0500
-Message-ID: <20170316205111.lpykvpbeaa4mih4n@rob-hp-laptop>
-References: <20170306143859.11881-1-wsa@the-dreams.de>
- <20170313075457.GA1431@katana>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
+ iio-hwmon
+Date: Thu, 16 Mar 2017 22:23:13 +0100
+Message-ID: <1e25520c-acbf-6512-3070-77e3c852e4f8@metafoo.de>
+References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
+ <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
+ <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
+ <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
+ <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
+ <CAJYdmeMg+DtwwbXOM7hPC4ejvkYkR94fcoyvTpx86RSKSswFMg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170313075457.GA1431@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAJYdmeMg+DtwwbXOM7hPC4ejvkYkR94fcoyvTpx86RSKSswFMg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Julia Cartwright <julia@ni.com>, Michal Simek <michal.simek@xilinx.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 08:54:57AM +0100, Wolfram Sang wrote:
-> On Mon, Mar 06, 2017 at 03:38:59PM +0100, Wolfram Sang wrote:
-> > The I2C directory is for I2C master controllers, not for clients. So,
-> > move the file describing trivial devices one layer upwards where it
-> > fits its generic nature way better.
-> > 
-> > Signed-off-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/{i2c => }/trivial-devices.txt | 0
-> >  1 file changed, 0 insertions(+), 0 deletions(-)
-> >  rename Documentation/devicetree/bindings/{i2c => }/trivial-devices.txt (100%)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-> > similarity index 100%
-> > rename from Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > rename to Documentation/devicetree/bindings/trivial-devices.txt
-> 
-> Rob, shall I take it or do you want?
-
-I've applied it.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDMvMTYvMjAxNyAwNjo1NCBQTSwgTW9yaXR6IEZpc2NoZXIgd3JvdGU6Cj4gSGkgTGFycywK
+PiAKPiBPbiBUaHUsIE1hciAxNiwgMjAxNyBhdCA5OjUxIEFNLCBMYXJzLVBldGVyIENsYXVzZW4g
+PGxhcnNAbWV0YWZvby5kZT4gd3JvdGU6Cj4+IE9uIDAzLzE2LzIwMTcgMDU6NDUgUE0sIE1pY2hh
+bCBTaW1layB3cm90ZToKPj4+IE9uIDE2LjMuMjAxNyAxNzozOSwgTW9yaXR6IEZpc2NoZXIgd3Jv
+dGU6Cj4+Pj4gT24gVGh1LCBNYXIgMTYsIDIwMTcgYXQgOToxNiBBTSwgTWljaGFsIFNpbWVrIDxt
+aWNoYWwuc2ltZWtAeGlsaW54LmNvbT4gd3JvdGU6Cj4+Pj4+IEhpLAo+Pj4+Pgo+Pj4+PiBPbiA4
+LjMuMjAxNyAyMToxMSwgTW9yaXR6IEZpc2NoZXIgd3JvdGU6Cj4+Pj4+PiBGaXgKPj4+Pj4+Cj4+
+Pj4+PiBPRjogL2lpb19od21vbjogY291bGQgbm90IGdldCAjaW8tY2hhbm5lbC1jZWxscyBmb3IK
+Pj4+Pj4+IC9hbWJhL2FkY0BmODAwNzEwMAo+Pj4+Pj4gT0Y6IC9paW9faHdtb246IGNvdWxkIG5v
+dCBnZXQgI2lvLWNoYW5uZWwtY2VsbHMgZm9yCj4+Pj4+PiAvYW1iYS9hZGNAZjgwMDcxMDAKPj4+
+Pj4+IE9GOiAvaWlvX2h3bW9uOiBjb3VsZCBub3QgZ2V0ICNpby1jaGFubmVsLWNlbGxzIGZvcgo+
+Pj4+Pj4gL2FtYmEvYWRjQGY4MDA3MTAwCj4+Pj4+Pgo+Pj4+Pj4gYnkgYWRkaW5nIHRoZSAjaW8t
+Y2hhbm5lbC1jZWxscyBwcm9wZXJ0eS4KPj4+Pj4+Cj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBNb3Jp
+dHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+Cj4+Pj4+PiBDYzogTWljaGFsIFNpbWVrIDxtaWNo
+YWwuc2ltZWtAeGlsaW54LmNvbT4KPj4+Pj4+IENjOiBTw7ZyZW4gQnJpbmttYW5uIDxzb3Jlbi5i
+cmlua21hbm5AeGlsaW54LmNvbT4KPj4+Pj4+IENjOiBKdWxpYSBDYXJ0d3JpZ2h0IDxqdWxpYUBu
+aS5jb20+Cj4+Pj4+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+Pj4+Pj4gQ2M6
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+Pj4+PiAtLS0KPj4+Pj4+Cj4+Pj4+PiBDaGFu
+Z2VzIGZyb20gdjE6Cj4+Pj4+PiAtIGZpeCBtZXNzZWQgdXAgY29tbWl0IG1lc3NhZ2UKPj4+Pj4+
+IC0tLQo+Pj4+Pj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpIHwgMSArCj4+Pj4+
+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4+Pj4+Pgo+Pj4+Pj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+enlucS03MDAwLmR0c2kKPj4+Pj4+IGluZGV4IGYzYWM5YmYuLjk4MjMzYTggMTAwNjQ0Cj4+Pj4+
+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4+Pj4gKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kKPj4+Pj4+IEBAIC03Miw2ICs3Miw3IEBACj4+
+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwwIDcgND47Cj4+Pj4+PiAg
+ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47Cj4+Pj4+PiAg
+ICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbGtjIDEyPjsKPj4+Pj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAjaW8tY2hhbm5lbC1jZWxscyA9IDwxPjsKPj4+Pj4+ICAgICAgICAgICAg
+ICAgfTsKPj4+Pj4+Cj4+Pj4+PiAgICAgICAgICAgICAgIGNhbjA6IGNhbkBlMDAwODAwMCB7Cj4+
+Pj4+Pgo+Pj4+Pgo+Pj4+PiBJIHRoaW5rIGl0IHdpbGwgYmUgZ29vZCB0byB0aGUgbmV4dCBzdGVw
+IHRvby4KPj4+Pj4gSXQgbWVhbnMgYWxzbyBhZGQgaWlvLWh3bW9uIG5vZGUgdG9vLgo+Pj4+Pgo+
+Pj4+PiBXaGF0IGRvIHlvdSB0aGluaz8KPj4+Pgo+Pj4+IEkgaGFkbid0IHB1dCBpdCBpbiB0aGVy
+ZSBzaW5jZSBkdHMgaXMgc3VwcG9zZWQgdG8gZGVzY3JpYmUgaHcsCj4+Pj4gYnV0IG9idmlvdXNs
+eSBwdXR0aW5nIHRoZSBhY3R1YWwgaHdtb24gaW4gdGhlcmUgbWFrZXMgaXQgbW9yZSB1c2VmdWwu
+Cj4+Pgo+Pj4gSSBoYWQgb25lIGRpc2N1c3Npb24gYWJvdXQgdGhpcyB3aXRoIEdyYW50IGluIHBh
+c3QgYW5kIGl0IGlzIGNvbW1vbgo+Pj4gbWlzdGFrZS4gSXQgaXMgc2ltcGxpZmljYXRpb24gb2Yg
+cHVycG9zZSBvZiBkdHMuCj4+Pgo+Pgo+PiBJZiB0aGUgaWlvLWh3bW9uIGJpbmRpbmcgaGFkIGdv
+bmUgdGhyb3VnaCByZXZpZXcgaXQgd291bGQgaGF2ZSBiZWVuIHJlamVjdGVkLgo+Pgo+Pj4+Cj4+
+Pj4gSSBjYW4gcmVzdWJtaXQgd2l0aCB0aGUgaHdtb24gbm9kZSBpbiB0aGVyZS4KPj4+Cj4+PiBJ
+ZiB5b3UgZ3JlcCBrZXJuZWwgdHJlZSB5b3Ugd2lsbCBzZWUgdGhhdCBvdGhlcnMgYXJlIHVzaW5n
+IGl0IHRvby4KPj4+IEFsc28gdGhlcmUgaXMgYWNjZXB0ZWQgYmluZGluZyBmb3IgdGhhdCB0aGF0
+J3Mgd2h5IEkgY2FuJ3Qgc2VlIGJpZwo+Pj4gcHJvYmxlbSB3aXRoIGl0Lgo+Pgo+PiBTaW5jZSB0
+aGlzIGlzIGFuIGFwcGxpY2F0aW9uIHNwZWNpZmljIGJpbmRpbmcgSSB3b3VsZG4ndCBwdXQgaXQg
+aW4gdGhlCj4+IGdlbmVyaWMgRFQgaW5jbHVkZSBmaWxlLiBJdCdzIGEgYml0IGxpa2UgYWRkaW5n
+IGEgZ3Bpby1rZXkgYmluZGluZyBmb3IgZWFjaAo+PiBvZiB0aGUgR1BJT3MganVzdCBpbiBjYXNl
+IHNvbWVib2R5IHdhbnRzIHRvIHVzZSBpdC4KPiAKPiBTbyBpcyB5b3VyIHN1Z2dlc3Rpb24gdG8g
+bW92ZSB0aGUgd2hvbGUgdGhpbmcgZnJvbSAuZHRzaSAtPiAuZHRzPwoKVGhlICNpby1jaGFubmVs
+cy1jZWxscyBjYW4gZ28gaW50byB0aGUgZHRzaSwgdGhhdCdzIGEgc2Vuc2libGUgdGhpbmcgdG8g
+ZG8uClRoZSBudW1iZXIgb2YgY2VsbHMgaXMgcGFydCBvZiB0aGUgYmluZGluZyBzcGVjaWZpY2F0
+aW9uIGZvciB0aGUgWEFEQyBhbmQKd29udCBjaGFuZ2UuCgpUaGUgaHdtb24gYnJpZGdlIG9uIHRo
+ZSBvdGhlciBoYW5kIEkgd291bGRuJ3QgcHV0IGludG8gYW55IGRlZmF1bHQKZGV2aWNldHJlZS4g
+SW4gbXkgb3BpbmlvbiBpcyBzaG91bGQgb25seSB1c2VkIGlmIGFuZCBvbmx5IGlmIHRoZXJlIGFy
+ZQpsZWdhY3kgYXBwbGljYXRpb25zIG9uIGEgc3BlY2lmaWMgc3lzdGVtIHRoYXQgbmVlZCB0byB1
+c2UgdGhlIGh3bW9uIGludGVyZmFjZS4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
