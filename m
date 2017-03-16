@@ -1,78 +1,142 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/4] sound: bcm2835-analog-audio: Add
-	driver for bcm2835(Raspberry PI) headphone jack.
-Date: Wed, 15 Mar 2017 17:01:10 -0700
-Message-ID: <871sty1455.fsf@eliezer.anholt.net>
-References: <20170312063820.19313-1-mzoran@crowfest.net>
- <20170312063820.19313-2-mzoran@crowfest.net>
+From: <nkosuta-f+iqBESB6gc@public.gmane.org>
+Subject: 17187 devicetree
+Date: Thu, 16 Mar 2017 00:45:01 -0000
+Message-ID: <148962510165.19795.12551191501688628120@hinet.net>
+Reply-To: <nkosuta-f+iqBESB6gc@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5567183529092391332=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170312063820.19313-2-mzoran@crowfest.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.co, stefan.wahren@i2se.com, alsa-devel@alsa-project.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Michael Zoran <mzoran@crowfest.net>
+Content-Type: application/zip; name="2238663203643.zip"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: attachment
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============5567183529092391332==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
-
-Michael Zoran <mzoran@crowfest.net> writes:
-
-> Add driver for the bcm2835 analog/headphone jack which
-> uses the PWM hardware to generate audio.
->
-> Signed-off-by: Michael Zoran <mzoran@crowfest.net>
-
-ALSA folks: is a driver like this acceptable?  In particular, I'm
-wondering how you feel about the in-kernel munging of the audio buffers
-to something appropriate for the PWM hardware, before we get into review
-of driver details.
-
-This driver isn't quite a replacement for the closed source driver in
-the firmware (couple of notes: firmware seems to have some dithering of
-the audio values in the sigma delta modulation process, and a priority
-bump on the DMA because the PWM's fifo is tiny), but I'm definitely
-interested in us having something like it in open source.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAljJ1cYACgkQtdYpNtH8
-nugQfRAAlg2e3XFcDVnW00ELhBEiAQfdJ6JOCIGLwWJdSmy565r0J3VR2h0rqMyC
-MGgYhdVoH3A2S6lvvADSvnzwRjhNiOGhsh4Qj/pW6tHqz66ULNdhSdxey94RFOUL
-468Wj/fYoSjUP9qOl2DT95BcCkQyyT/w4b98wNk7yV4GaS29wDo5LWJCaX0YiTvJ
-hQ+nluoJiJ609q0QbHvGEw444Fw9iXAsk0FzW/QNOx/OprfJe5d3jaDMnwOM7HJw
-ktxyr6ib4+xNVN7WOVOgZlUEhB+yoHrhWGicTKQGzdv8vnQIgukOgypte38tnH+p
-AkzLn5gZ7gkioI2NOGgm6hBMbdRd8K6ZIdU+9m2Qmeq20wiVS65zf16RPUoIgPDx
-gCxHkASFUxgteINsJ4kg5/0kQ8zDn8KHSDhTNQdpkH19vgx8nBpVsr+l3NR970qN
-6R31PrJS4Wd9AT1m8SSh1gtvoddxVns5QuE92Aau/mHOJ2HBvTfdwfQqrxfv24Pu
-n+lRM3ZzeRcuSOexmg8voujttR6Yga+djeXOS5OXMVt6WYpRGGsXAPVsEKaiH6UK
-t8e+WMZ3OWnqih2KHHIres6XX7ntcVr7KGFFTuGaOitVs+A7S4OzRiJWaKCdcBzi
-wqdwi4PSJ8Qru2PAzMuwStBz5DFYS7c9pmwIXGp7TSo1zCo3pfY=
-=4RZK
------END PGP SIGNATURE-----
---=-=-=--
-
---===============5567183529092391332==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5567183529092391332==--
+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
+AAQAAAAAUEsFBgAAAAABAAEAUwAAABYbAAAAAA==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
