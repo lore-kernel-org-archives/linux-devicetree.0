@@ -1,87 +1,113 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
-Date: Thu, 16 Mar 2017 15:03:25 +0000
-Message-ID: <SG2PR06MB1165846E7C2AA8133FC166538A260@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487610788-6939-4-git-send-email-jacopo+renesas@jmondi.org>
- <SG2PR06MB1165A5A95A54365FF5E43FCF8A210@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <38f7c630-d765-da38-dcdc-fed2c853cf36@jmondi.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
+Date: Thu, 16 Mar 2017 17:03:05 +0100
+Message-ID: <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
+References: <20170316064218.9169-1-ralph.sennhauser@gmail.com> <20170316064218.9169-2-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <38f7c630-d765-da38-dcdc-fed2c853cf36@jmondi.org>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170316064218.9169-2-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "open list:PWM SUBSYSTEM" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Thu, Mar 16, 2017 at 7:42 AM, Ralph Sennhauser
+<ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> > Additionally, according to the RZ/A1 hardware manual:
-> >  "When the output buffer is enabled and the PBDCn.PBDCnm bit is 1, the
-> >   input buffer is enabled regardless of this register setting."
-> >
->=20
-> Yes, I used INPUT_EN to drive PBDC..
-> My assumption was that "users" would have had to decide when a pin was
-> acting as input, when describing it in dts, rather than having to deal
-> with the TRM and learn what bidirectional control is and is consequences
-> (particularly, that it enables the input buffer).
->=20
-> But since I guess this whole driver assumes more detailed knowledge on th=
-e
-> hardware compared to group-based ones, I think using BI_DIR is fine here
+> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>
+> Armada 370/XP devices can 'blink' gpio lines with a configurable on
+> and off period. This can be modelled as a PWM.
+>
+> However, there are only two sets of PWM configuration registers for
+> all the gpio lines. This driver simply allows a single gpio line per
+> gpio chip of 32 lines to be used as a PWM. Attempts to use more return
+> EBUSY.
+>
+> Due to the interleaving of registers it is not simple to separate the
+> PWM driver from the gpio driver. Thus the gpio driver has been
+> extended with a PWM driver.
+>
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> URL: https://patchwork.ozlabs.org/patch/427287/
+> URL: https://patchwork.ozlabs.org/patch/427295/
+> [Ralph Sennhauser:
+>   * port forward
+>   * merge pwm portion into gpio-mvebu.c
+>   * merge doc patch
+>   * update MAINAINERS]
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The reality is, I will be providing DT examples and people will just follow
-them like they copy/paste the code from my rskrza1-board.c file today.
-Of course they still have to look up the 'alternative function' number in t=
-he
-Hardware manual, but that's in an easy to read table.
+In essence I am very positive of this patch set and happy to merge
+it as a PWM driver inside of GPIO if Thierry is OK with it.
 
+DT bindings look fine to me.
 
+> +static void mvebu_pwm_free(struct pwm_chip *chip, struct pwm_device *pwmd)
+> +{
+> +       struct mvebu_pwm *pwm = to_mvebu_pwm(chip);
+> +       struct gpio_desc *desc = gpio_to_desc(pwmd->pwm);
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&pwm->lock, flags);
+> +       gpiod_free(desc);
+> +       pwm->used = false;
+> +       spin_unlock_irqrestore(&pwm->lock, flags);
+> +}
 
-> > So in summary, this is how I think things should look in the DT:
-> >
-> > Example of a 'normal' pin (most of the pins).
-> > 		/* P3_0 as TxD2; P3_2 as RxD2 */
-> > 		renesas,pins =3D <PIN(3, 0) 6>,
-> > 			       <PIN(3, 2) 4>;
->=20
-> Just to make sure I'm following you: why RxD2 (P3_2) is not marked as
-> BI_DIR?
+No need to set the output value to zero or something here?
+And turn off blinking? Or is that done some other way?
 
-Because it doesn't have to be. The pin controller itself knows how to set i=
-t up
-itself as soon as you set the PIPC.
+> +       u = readl_relaxed(mvebu_gpioreg_blink_select(mvchip));
+> +       u &= ~(1 << pwm->pin);
 
-> I would have expected to have the flag specified here, as it
-> requires PIBC enabled (and as you said, BI_DIR drives PBDC that enables
-> PIBC consequentially)
+In GPIO code I usually do this:
 
-PIBC (Port Input Buffer Control) is only valid when you are in GPIO input p=
-ort
-mode (PMCn.PMCnm =3D 0 and PMn.PMnm =3D 1).
+#include <linus/bitops.h>
 
+u &= ~BIT(pwm->pin);
 
-The reality is, it would be nice if the controller could magically know how=
- to
-set all the pins direction, buffers and such depending on their function, b=
-ut
-there were some that needed an extra signals to be manually set (whether it=
- makes
-sense or not). I guess that's the consequence of mixing-and-matching IP fro=
-m
-different product lines. Oh well, we just fix it all in software, right?  ;=
-)
+> +       u |= (pwm->id << pwm->pin);
 
-I'd rather this than the PFC that's in the R-Car....which I think is the re=
-sult
-of trying to make it smarter and just ended up making it more complicated.
+I don't understand this line. Above you mask BIT(pwm->pin)
+so we are only manipulating one bit, and then you ... shift the ID?
+Is the ID always 0 or 1? If that is the case then this
+is easier to understand:
 
+if (pwm->id)
+  u |= BIT(pwm->pin);
 
-Cheers
++ a comment
 
+> +static void mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
+> +{
+> +       struct mvebu_pwm *pwm = mvchip->pwm;
+> +
+> +       pwm->blink_select = readl_relaxed(mvebu_gpioreg_blink_select(mvchip));
+> +       pwm->blink_on_duration =
+> +               readl_relaxed(mvebu_pwmreg_blink_on_duration(pwm));
+> +       pwm->blink_off_duration =
+> +               readl_relaxed(mvebu_pwmreg_blink_off_duration(pwm));
+> +}
+> +
+> +static void mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
+> +{
+> +       struct mvebu_pwm *pwm = mvchip->pwm;
+> +
+> +       writel_relaxed(pwm->blink_select, mvebu_gpioreg_blink_select(mvchip));
+> +       writel_relaxed(pwm->blink_on_duration,
+> +                      mvebu_pwmreg_blink_on_duration(pwm));
+> +       writel_relaxed(pwm->blink_off_duration,
+> +                      mvebu_pwmreg_blink_off_duration(pwm));
+> +}
 
-Chris
+I think both of these need to be tagged __maybe_unused to not give
+noise in randconfig builds.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
