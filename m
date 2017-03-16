@@ -1,70 +1,59 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 1/3] mfd: wm831x: Add basic device tree binding
-Date: Thu, 16 Mar 2017 14:31:44 +0000
-Message-ID: <20170316143144.GL6986@localhost.localdomain>
-References: <1489592384-11510-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170316140019.eoe757vox5wrlkmu@dell>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: tegra: Reformat compatible string list
+Date: Thu, 16 Mar 2017 15:46:31 +0100
+Message-ID: <CAPDyKFo1__Ye8+4AN6U8yp_QToESmyPg+pb1i-gNFPzq2nrYOQ@mail.gmail.com>
+References: <20170314190152.9167-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170316140019.eoe757vox5wrlkmu@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170314190152.9167-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 16, 2017 at 02:00:19PM +0000, Lee Jones wrote:
-> On Wed, 15 Mar 2017, Charles Keepax wrote:
-> 
-> > Add the basic ability to register the device through device tree, more
-> > work is needed to get each individual sub-driver functioning correctly
-> > but this is enough to get the device to probe from device tree.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > ---
-> >  static int wm831x_i2c_probe(struct i2c_client *i2c,
-> >  			    const struct i2c_device_id *id)
-> >  {
-> > +	struct wm831x_pdata *pdata = dev_get_platdata(&i2c->dev);
-> >  	struct wm831x *wm831x;
-> > +	enum wm831x_parent type;
-> >  	int ret;
-> >  
-> > +	if (i2c->dev.of_node) {
-> > +		const struct of_device_id *id = of_match_device(wm831x_of_match,
-> > +								&i2c->dev);
-> 
-> Not keen on this.  Please declare the variable up with the others.
-> 
+On 14 March 2017 at 20:01, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> The list of compatible strings is somewhat difficult to read and extend.
+> Reformat it into a list to make it more easily extensible.
+>
+> While at it, also remove the "plus one of the above" clause because it
+> isn't actually valid.
+>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-They are never going to be used anywhere else in the function.
-Again I can if you feel strongly but isn't it really better to
-limit the scope of the variables if they are only being used
-locally.
+Thanks, applied for next!
 
-> > +		unsigned long of_type = (unsigned long)id->data;
-> 
-> And this one.
-> 
-> > +		type = (enum wm831x_parent)of_type;
-> 
-> Looks like you don't even need of_type.
-> 
-> Just cast id->data straight into wm81x_parent.
-> 
+Kind regards
+Uffe
 
-Pretty sure you will get a warning on 64-bit systems if I do
-that.
-
-> > +	} else {
-> > +		type = (enum wm831x_parent)id->driver_data;
-> > +	}
-> 
-> No need for bracketing here.
-> 
-
-Kernel coding standards if one side  of the if has both should.
-
-Thanks,
-Charles
+> ---
+>  .../devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt          | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+> index 15b8368ee1f2..c15aa22d4570 100644
+> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+> @@ -7,11 +7,12 @@ This file documents differences between the core properties described
+>  by mmc.txt and the properties used by the sdhci-tegra driver.
+>
+>  Required properties:
+> -- compatible : For Tegra20, must contain "nvidia,tegra20-sdhci".
+> -  For Tegra30, must contain "nvidia,tegra30-sdhci".  For Tegra114,
+> -  must contain "nvidia,tegra114-sdhci".  For Tegra124, must contain
+> -  "nvidia,tegra124-sdhci".  Otherwise, must contain "nvidia,<chip>-sdhci",
+> -  plus one of the above, where <chip> is tegra132 or tegra210.
+> +- compatible : should be one of:
+> +  - "nvidia,tegra20-sdhci": for Tegra20
+> +  - "nvidia,tegra30-sdhci": for Tegra30
+> +  - "nvidia,tegra114-sdhci": for Tegra114
+> +  - "nvidia,tegra124-sdhci": for Tegra124 and Tegra132
+> +  - "nvidia,tegra210-sdhci": for Tegra210
+>  - clocks : Must contain one entry, for the module clock.
+>    See ../clocks/clock-bindings.txt for details.
+>  - resets : Must contain an entry for each entry in reset-names.
+> --
+> 2.12.0
+>
