@@ -1,108 +1,40 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
- iio-hwmon
-Date: Thu, 16 Mar 2017 22:20:32 +0100
-Message-ID: <1027ba77-6141-5d6e-e5e8-b15df29957f2@metafoo.de>
-References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
- <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
- <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
- <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
- <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
- <6767a340-b150-c21a-b6cb-5ca1ce2cd721@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 01/39] [media] dt-bindings: Add bindings for
+ video-multiplexer device
+Date: Thu, 16 Mar 2017 16:21:50 -0500
+Message-ID: <20170316212150.jud4xn436rr5meq5@rob-hp-laptop>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-2-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6767a340-b150-c21a-b6cb-5ca1ce2cd721@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Julia Cartwright <julia@ni.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1489121599-23206-2-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.orgsu
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMTYvMjAxNyAwNzowNiBQTSwgTWljaGFsIFNpbWVrIHdyb3RlOgo+IE9uIDE2LjMuMjAx
-NyAxNzo1MSwgTGFycy1QZXRlciBDbGF1c2VuIHdyb3RlOgo+PiBPbiAwMy8xNi8yMDE3IDA1OjQ1
-IFBNLCBNaWNoYWwgU2ltZWsgd3JvdGU6Cj4+PiBPbiAxNi4zLjIwMTcgMTc6MzksIE1vcml0eiBG
-aXNjaGVyIHdyb3RlOgo+Pj4+IE9uIFRodSwgTWFyIDE2LCAyMDE3IGF0IDk6MTYgQU0sIE1pY2hh
-bCBTaW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+IHdyb3RlOgo+Pj4+PiBIaSwKPj4+Pj4K
-Pj4+Pj4gT24gOC4zLjIwMTcgMjE6MTEsIE1vcml0eiBGaXNjaGVyIHdyb3RlOgo+Pj4+Pj4gRml4
-Cj4+Pj4+Pgo+Pj4+Pj4gT0Y6IC9paW9faHdtb246IGNvdWxkIG5vdCBnZXQgI2lvLWNoYW5uZWwt
-Y2VsbHMgZm9yCj4+Pj4+PiAvYW1iYS9hZGNAZjgwMDcxMDAKPj4+Pj4+IE9GOiAvaWlvX2h3bW9u
-OiBjb3VsZCBub3QgZ2V0ICNpby1jaGFubmVsLWNlbGxzIGZvcgo+Pj4+Pj4gL2FtYmEvYWRjQGY4
-MDA3MTAwCj4+Pj4+PiBPRjogL2lpb19od21vbjogY291bGQgbm90IGdldCAjaW8tY2hhbm5lbC1j
-ZWxscyBmb3IKPj4+Pj4+IC9hbWJhL2FkY0BmODAwNzEwMAo+Pj4+Pj4KPj4+Pj4+IGJ5IGFkZGlu
-ZyB0aGUgI2lvLWNoYW5uZWwtY2VsbHMgcHJvcGVydHkuCj4+Pj4+Pgo+Pj4+Pj4gU2lnbmVkLW9m
-Zi1ieTogTW9yaXR6IEZpc2NoZXIgPG1kZkBrZXJuZWwub3JnPgo+Pj4+Pj4gQ2M6IE1pY2hhbCBT
-aW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+Cj4+Pj4+PiBDYzogU8O2cmVuIEJyaW5rbWFu
-biA8c29yZW4uYnJpbmttYW5uQHhpbGlueC5jb20+Cj4+Pj4+PiBDYzogSnVsaWEgQ2FydHdyaWdo
-dCA8anVsaWFAbmkuY29tPgo+Pj4+Pj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcK
-Pj4+Pj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Pj4+Pj4gLS0tCj4+Pj4+Pgo+
-Pj4+Pj4gQ2hhbmdlcyBmcm9tIHYxOgo+Pj4+Pj4gLSBmaXggbWVzc2VkIHVwIGNvbW1pdCBtZXNz
-YWdlCj4+Pj4+PiAtLS0KPj4+Pj4+ICBhcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSB8
-IDEgKwo+Pj4+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+Pj4+Pj4KPj4+Pj4+
-IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4+Pj4+PiBpbmRleCBmM2FjOWJmLi45ODIzM2E4IDEw
-MDY0NAo+Pj4+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kKPj4+Pj4+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4+Pj4+PiBAQCAtNzIsNiAr
-NzIsNyBAQAo+Pj4+Pj4gICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA3IDQ+
-Owo+Pj4+Pj4gICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8JmludGM+
-Owo+Pj4+Pj4gICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xrYyAxMj47Cj4+Pj4+
-PiArICAgICAgICAgICAgICAgICAgICAgI2lvLWNoYW5uZWwtY2VsbHMgPSA8MT47Cj4+Pj4+PiAg
-ICAgICAgICAgICAgIH07Cj4+Pj4+Pgo+Pj4+Pj4gICAgICAgICAgICAgICBjYW4wOiBjYW5AZTAw
-MDgwMDAgewo+Pj4+Pj4KPj4+Pj4KPj4+Pj4gSSB0aGluayBpdCB3aWxsIGJlIGdvb2QgdG8gdGhl
-IG5leHQgc3RlcCB0b28uCj4+Pj4+IEl0IG1lYW5zIGFsc28gYWRkIGlpby1od21vbiBub2RlIHRv
-by4KPj4+Pj4KPj4+Pj4gV2hhdCBkbyB5b3UgdGhpbms/Cj4+Pj4KPj4+PiBJIGhhZG4ndCBwdXQg
-aXQgaW4gdGhlcmUgc2luY2UgZHRzIGlzIHN1cHBvc2VkIHRvIGRlc2NyaWJlIGh3LAo+Pj4+IGJ1
-dCBvYnZpb3VzbHkgcHV0dGluZyB0aGUgYWN0dWFsIGh3bW9uIGluIHRoZXJlIG1ha2VzIGl0IG1v
-cmUgdXNlZnVsLgo+Pj4KPj4+IEkgaGFkIG9uZSBkaXNjdXNzaW9uIGFib3V0IHRoaXMgd2l0aCBH
-cmFudCBpbiBwYXN0IGFuZCBpdCBpcyBjb21tb24KPj4+IG1pc3Rha2UuIEl0IGlzIHNpbXBsaWZp
-Y2F0aW9uIG9mIHB1cnBvc2Ugb2YgZHRzLgo+Pj4KPj4KPj4gSWYgdGhlIGlpby1od21vbiBiaW5k
-aW5nIGhhZCBnb25lIHRocm91Z2ggcmV2aWV3IGl0IHdvdWxkIGhhdmUgYmVlbiByZWplY3RlZC4K
-PiAKPiBJc24ndCBpdCBhIHRpbWUgdG8gZGVwcmVjYXRlIGl0PwoKV2VsbCwgaXQncyBBQkkgbm93
-IGFuZCBoYXMgdG8gc3RheSBmb3JldmVyLiBEZXByZWNhdGluZyBpdCBtYWtlcyBvbmx5IHNlbnNl
-CmlmIHRoZXJlIGlzIGEgcmVwbGFjZW1lbnQsIHdoaWNoIHRoZXJlIGlzIG5vdC4gVGhlIGlpby1o
-d21vbiBicmlkZ2UgaGFzIGl0cwp1c2VjYXNlcyBpdCdzIGp1c3QgaW5zdGFudGlhdGluZyBpdCB2
-aWEgZGV2aWNldHJlZSB3aGljaCBpcyBub3Qgc28gbmljZS4KCj4gCj4+Cj4+Pj4KPj4+PiBJIGNh
-biByZXN1Ym1pdCB3aXRoIHRoZSBod21vbiBub2RlIGluIHRoZXJlLgo+Pj4KPj4+IElmIHlvdSBn
-cmVwIGtlcm5lbCB0cmVlIHlvdSB3aWxsIHNlZSB0aGF0IG90aGVycyBhcmUgdXNpbmcgaXQgdG9v
-Lgo+Pj4gQWxzbyB0aGVyZSBpcyBhY2NlcHRlZCBiaW5kaW5nIGZvciB0aGF0IHRoYXQncyB3aHkg
-SSBjYW4ndCBzZWUgYmlnCj4+PiBwcm9ibGVtIHdpdGggaXQuCj4+Cj4+IFNpbmNlIHRoaXMgaXMg
-YW4gYXBwbGljYXRpb24gc3BlY2lmaWMgYmluZGluZyBJIHdvdWxkbid0IHB1dCBpdCBpbiB0aGUK
-Pj4gZ2VuZXJpYyBEVCBpbmNsdWRlIGZpbGUuIEl0J3MgYSBiaXQgbGlrZSBhZGRpbmcgYSBncGlv
-LWtleSBiaW5kaW5nIGZvciBlYWNoCj4+IG9mIHRoZSBHUElPcyBqdXN0IGluIGNhc2Ugc29tZWJv
-ZHkgd2FudHMgdG8gdXNlIGl0Lgo+IAo+IHBzY2kgaXMgc3lzdGVtIHNwZWNpZmljIHRvby4KPiAK
-PiBJSVJDIHRoaXMgZHJpdmVyIGZvciB6eW5xIHdhcyB3cml0dGVuIGJ5IEFESSBvciB3aXRoIEFE
-SSBoZWxwIHRoYXQncyB3aHkKPiB5b3Uga25vdyBtdWNoIGJldHRlciB0aGFuIEkgd2hhdCdzIHRo
-ZSBjb3JyZWN0IGNvbmZpZ3VyYXRpb24uCj4gCj4gVGhpcyB0YXJnZXRzIFBTIElQIHdoaWNoIHNo
-b3VsZCBiZSBwcmVzZW50IGluIHRoZSBodyBhbGwgdGhlIHRpbWUuCj4gTm90IHN1cmUgaWYgZm9y
-IGFsbCBjb25maWd1cmF0aW9uIGJ1dCBJIGV4cGVjdCBhdCBsZWFzdCB0aGUgcGFydCBvZiBpdAo+
-IGlzIHRoZXJlIGFsbCB0aGVtIHRpbWUuCj4gCj4gSWYgYmluZGluZyBpcyBpbmNvcnJlY3QgdGhl
-biBwbGVhc2UgcmVtb3ZlIGl0IHdpdGggcmVtb3ZpbmcgZnJvbSBhbGwKPiBkdHMvZHRzaSBmaWxl
-cyB3aGljaCBoYXZlIHRoaXMuIFRoZSBzYW1lIGlzIGZvciBvZiBwcm9iZSBmdW5jdGlvbiBpbiB0
-aGUKPiBkcml2ZXIgaXRzZWxmLgo+IElmIHRoaXMgaXMgbm90IGRvbmUgdGhlbiB0aGlzIGlzIGp1
-c3QgKzEgY2FzZS4KPiAKPiBJZiB5b3Ugc3RpbGwgaW5zaXN0IHRoYXQgd2Ugc2hvdWxkbid0IGRv
-IGl0IHRoZW4gcGxlYXNlIGF0IGxlYXN0IGV4dGVuZAo+IGNvbW1pdCBtZXNzYWdlIGFuZCBwdXQg
-dGhlcmUgZXhhbXBsZSBob3cgdG8gd2lyZSBpdCBvbiB6eW5xLgoKVGhlcmUgaXMgYSBJSU8gZHJp
-dmVyIGZvciB0aGUgWEFEQywgdGhpcyBkcml2ZXIgaGFzIGEgdXNlcnNwYWNlIGludGVyZmFjZQp0
-aGF0IGV4cG9zZXMgdGhlIG1lYXN1cmVtZW50cyBwcm92aWRlZCBieSB0aGUgaGFyZHdhcmUuIFVz
-aW5nIHRoZSBod21vbgpicmlkZ2Ugd2lsbCBleHBvc2UgdGhlIHNhbWUgaW5mb3JtYXRpb24ganVz
-dCB0aHJvdWdoIGEgaHdtb24gaW50ZXJmYWNlLgoKT25lIHJlYXNvbiBmb3IgdXNpbmcgdGhlIGlp
-by1od21vbiBicmlkZ2UgaXMgYmVjYXVzZSB5b3UgaGF2ZSBhIGxlZ2FjeQphcHBsaWNhdGlvbiB0
-aGF0IGV4cGVjdHMgdGhlIGEgaHdtb24gaW50ZXJmYWNlLiBCdXQgbmV3IGFwcGxpY2F0aW9ucyB0
-aGF0CndhbnQgdG8gYWNjZXNzIHRoZSBYQURDIHNob3VsZCByZWFsbHkgdXNlIHRoZSBJSU8gaW50
-ZXJmYWNlIGlmIHBvc3NpYmxlLgoKSW4gbXkgb3BpbmlvbiBpbnN0YW50aWF0aW5nIHRoZSBod21v
-biBicmlkZ2UgYnkgZGVmYXVsdCB3aWxsIG9ubHkgY2F1c2UKY29uZnVzaW9uLiBUaGVyZSBhcmUg
-bm93IHJlZHVuZGFudCBpbnRlcmZhY2VzIGFuZCB1c2VycyB3aWxsIHdvbmRlciB3aGF0IGlzCnRo
-ZSBkaWZmZXJlbmNlIGJldHdlZW4gdGhlIHR3by4gSXMgaXQgdGhlIHNhbWUgZGF0YSwgaXMgaXQg
-ZGlmZmVyZW50IGRhdGE/CldoaWNoIGlzIHRoZSBwcmVmZXJyZWQgaW50ZXJmYWNlPyBXaGljaCBv
-bmUgaXMgJ2JldHRlcic/CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Mar 09, 2017 at 08:52:41PM -0800, Steve Longerbeam wrote:
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> Add bindings documentation for the video multiplexer device.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  .../bindings/media/video-multiplexer.txt           | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
+
+Acked-by: Rob Herring <robh@kernel.org>
