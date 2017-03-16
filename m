@@ -1,291 +1,87 @@
-From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] fpga manager: Add Xilinx slave serial SPI driver
-Date: Thu, 16 Mar 2017 07:58:17 -0700
-Message-ID: <CAAtXAHdN=CYMET_8LWvvaSfyDFDCZCh2rJ7ByrNBEV8BnPuvDQ@mail.gmail.com>
-References: <1488300022-30150-1-git-send-email-agust@denx.de> <1488300022-30150-3-git-send-email-agust@denx.de>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
+Date: Thu, 16 Mar 2017 15:03:25 +0000
+Message-ID: <SG2PR06MB1165846E7C2AA8133FC166538A260@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1487610788-6939-4-git-send-email-jacopo+renesas@jmondi.org>
+ <SG2PR06MB1165A5A95A54365FF5E43FCF8A210@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <38f7c630-d765-da38-dcdc-fed2c853cf36@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488300022-30150-3-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <38f7c630-d765-da38-dcdc-fed2c853cf36@jmondi.org>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 8:40 AM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
-> The driver loads FPGA firmware over SPI, using the "slave serial"
-> configuration interface on Xilinx FPGAs.
->
-> Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Reviewed-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> This patch requires patch https://lkml.org/lkml/2017/2/15/667
-> for building
->
-> Changes in v4:
->
->  - increase program latency up to 7.5ms for other Xilinx FPGAs
->  - continue to apply CCLK cycles until specified timeout elapses (to
->    cover more possible configuration DONE scenarios)
->  - apply 8 CCLK cycles afer DONE signal
->  - rebased to apply on top of Kconfig/Makefile changes by queued
->    fpga manager patches
->
-> Changes in v3:
->
->  - use named constant for udelay()/usleep_range() arguments
->  - drop not needed .owner init
->  - correct module licence (GPL v2)
->  - fix build warning with newer gcc (in min() macro)
->
-> Changes in v2:
->
->  - rebased on v4.10
->
->  drivers/fpga/Kconfig      |   7 ++
->  drivers/fpga/Makefile     |   1 +
->  drivers/fpga/xilinx-spi.c | 198 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 206 insertions(+)
->  create mode 100644 drivers/fpga/xilinx-spi.c
->
-> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> index dee470f..c81cb7d 100644
-> --- a/drivers/fpga/Kconfig
-> +++ b/drivers/fpga/Kconfig
-> @@ -46,6 +46,13 @@ config FPGA_MGR_TS73XX
->           FPGA manager driver support for the Altera Cyclone II FPGA
->           present on the TS-73xx SBC boards.
->
-> +config FPGA_MGR_XILINX_SPI
-> +       tristate "Xilinx Configuration over Slave Serial (SPI)"
-> +       depends on SPI
-> +       help
-> +         FPGA manager driver support for Xilinx FPGA configuration
-> +         over slave serial interface.
-> +
->  config FPGA_MGR_ZYNQ_FPGA
->         tristate "Xilinx Zynq FPGA"
->         depends on ARCH_ZYNQ || COMPILE_TEST
-> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> index a5ee3ff..c6f5d74 100644
-> --- a/drivers/fpga/Makefile
-> +++ b/drivers/fpga/Makefile
-> @@ -10,6 +10,7 @@ obj-$(CONFIG_FPGA_MGR_ICE40_SPI)      += ice40-spi.o
->  obj-$(CONFIG_FPGA_MGR_SOCFPGA)         += socfpga.o
->  obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)     += socfpga-a10.o
->  obj-$(CONFIG_FPGA_MGR_TS73XX)          += ts73xx-fpga.o
-> +obj-$(CONFIG_FPGA_MGR_XILINX_SPI)      += xilinx-spi.o
->  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)       += zynq-fpga.o
->
->  # FPGA Bridge Drivers
-> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-> new file mode 100644
-> index 0000000..9b62a4c
-> --- /dev/null
-> +++ b/drivers/fpga/xilinx-spi.c
-> @@ -0,0 +1,198 @@
-> +/*
-> + * Xilinx Spartan6 Slave Serial SPI Driver
-> + *
-> + * Copyright (C) 2017 DENX Software Engineering
-> + *
-> + * Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * Manage Xilinx FPGA firmware that is loaded over SPI using
-> + * the slave serial configuration interface.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/fpga/fpga-mgr.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/of.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/sizes.h>
-> +
-> +struct xilinx_spi_conf {
-> +       struct spi_device *spi;
-> +       struct gpio_desc *prog_b;
-> +       struct gpio_desc *done;
-> +};
-> +
-> +static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
-> +{
-> +       struct xilinx_spi_conf *conf = mgr->priv;
-> +
-> +       if (!gpiod_get_value(conf->done))
-> +               return FPGA_MGR_STATE_RESET;
-> +
-> +       return FPGA_MGR_STATE_UNKNOWN;
-> +}
-> +
-> +static int xilinx_spi_write_init(struct fpga_manager *mgr,
-> +                                struct fpga_image_info *info,
-> +                                const char *buf, size_t count)
-> +{
-> +       struct xilinx_spi_conf *conf = mgr->priv;
-> +       const size_t prog_latency_7500us = 7500;
-> +       const size_t prog_pulse_1us = 1;
-> +
-> +       if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
-> +               dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       gpiod_set_value(conf->prog_b, 1);
-> +
-> +       udelay(prog_pulse_1us); /* min is 500 ns */
-> +
-> +       gpiod_set_value(conf->prog_b, 0);
-> +
-> +       if (gpiod_get_value(conf->done)) {
-> +               dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
-> +               return -EIO;
-> +       }
-> +
-> +       /* program latency */
-> +       usleep_range(prog_latency_7500us, prog_latency_7500us + 100);
-> +       return 0;
-> +}
-> +
-> +static int xilinx_spi_write(struct fpga_manager *mgr, const char *buf,
-> +                           size_t count)
-> +{
-> +       struct xilinx_spi_conf *conf = mgr->priv;
-> +       const char *fw_data = buf;
-> +       const char *fw_data_end = fw_data + count;
-> +
-> +       while (fw_data < fw_data_end) {
-> +               size_t remaining, stride;
-> +               int ret;
-> +
-> +               remaining = fw_data_end - fw_data;
-> +               stride = min_t(size_t, remaining, SZ_4K);
-> +
-> +               ret = spi_write(conf->spi, fw_data, stride);
-> +               if (ret) {
-> +                       dev_err(&mgr->dev, "SPI error in firmware write: %d\n",
-> +                               ret);
-> +                       return ret;
-> +               }
-> +               fw_data += stride;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int xilinx_spi_apply_cclk_cycles(struct xilinx_spi_conf *conf)
-> +{
-> +       struct spi_device *spi = conf->spi;
-> +       const u8 din_data[1] = { 0xff };
-> +       int ret;
-> +
-> +       ret = spi_write(conf->spi, din_data, sizeof(din_data));
-> +       if (ret)
-> +               dev_err(&spi->dev, "applying CCLK cycles failed: %d\n", ret);
-> +
-> +       return ret;
-> +}
-> +
-> +static int xilinx_spi_write_complete(struct fpga_manager *mgr,
-> +                                    struct fpga_image_info *info)
-> +{
-> +       struct xilinx_spi_conf *conf = mgr->priv;
-> +       unsigned long timeout;
-> +       int ret;
-> +
-> +       if (gpiod_get_value(conf->done))
-> +               return xilinx_spi_apply_cclk_cycles(conf);
-> +
-> +       timeout = jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
-> +
-> +       while (time_before(jiffies, timeout)) {
-> +
-> +               ret = xilinx_spi_apply_cclk_cycles(conf);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               if (gpiod_get_value(conf->done))
-> +                       return xilinx_spi_apply_cclk_cycles(conf);
-> +       }
-> +
-> +       dev_err(&mgr->dev, "Timeout after config data transfer.\n");
-> +       return -ETIMEDOUT;
-> +}
-> +
-> +static const struct fpga_manager_ops xilinx_spi_ops = {
-> +       .state = xilinx_spi_state,
-> +       .write_init = xilinx_spi_write_init,
-> +       .write = xilinx_spi_write,
-> +       .write_complete = xilinx_spi_write_complete,
-> +};
-> +
-> +static int xilinx_spi_probe(struct spi_device *spi)
-> +{
-> +       struct xilinx_spi_conf *conf;
-> +
-> +       conf = devm_kzalloc(&spi->dev, sizeof(*conf), GFP_KERNEL);
-> +       if (!conf)
-> +               return -ENOMEM;
-> +
-> +       conf->spi = spi;
-> +
-> +       /* PROGRAM_B is active low */
-> +       conf->prog_b = devm_gpiod_get(&spi->dev, "prog_b", GPIOD_OUT_LOW);
-> +       if (IS_ERR(conf->prog_b)) {
-> +               dev_err(&spi->dev, "Failed to get PROGRAM_B gpio: %ld\n",
-> +                       PTR_ERR(conf->prog_b));
-> +               return PTR_ERR(conf->prog_b);
-> +       }
-> +
-> +       conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
-> +       if (IS_ERR(conf->done)) {
-> +               dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
-> +                       PTR_ERR(conf->done));
-> +               return PTR_ERR(conf->done);
-> +       }
-> +
-> +       return fpga_mgr_register(&spi->dev, "Xilinx Slave Serial FPGA Manager",
-> +                                &xilinx_spi_ops, conf);
-> +}
-> +
-> +static int xilinx_spi_remove(struct spi_device *spi)
-> +{
-> +       fpga_mgr_unregister(&spi->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id xlnx_spi_of_match[] = {
-> +       { .compatible = "xlnx,fpga-slave-serial", },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, xlnx_spi_of_match);
-> +
-> +static struct spi_driver xilinx_slave_spi_driver = {
-> +       .driver = {
-> +               .name = "xlnx-slave-spi",
-> +               .of_match_table = of_match_ptr(xlnx_spi_of_match),
-> +       },
-> +       .probe = xilinx_spi_probe,
-> +       .remove = xilinx_spi_remove,
-> +};
-> +
-> +module_spi_driver(xilinx_slave_spi_driver)
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>");
-> +MODULE_DESCRIPTION("Load Xilinx FPGA firmware over SPI");
-> --
-> 2.7.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Jacopo,
+
+> > Additionally, according to the RZ/A1 hardware manual:
+> >  "When the output buffer is enabled and the PBDCn.PBDCnm bit is 1, the
+> >   input buffer is enabled regardless of this register setting."
+> >
+>=20
+> Yes, I used INPUT_EN to drive PBDC..
+> My assumption was that "users" would have had to decide when a pin was
+> acting as input, when describing it in dts, rather than having to deal
+> with the TRM and learn what bidirectional control is and is consequences
+> (particularly, that it enables the input buffer).
+>=20
+> But since I guess this whole driver assumes more detailed knowledge on th=
+e
+> hardware compared to group-based ones, I think using BI_DIR is fine here
+
+The reality is, I will be providing DT examples and people will just follow
+them like they copy/paste the code from my rskrza1-board.c file today.
+Of course they still have to look up the 'alternative function' number in t=
+he
+Hardware manual, but that's in an easy to read table.
+
+
+
+> > So in summary, this is how I think things should look in the DT:
+> >
+> > Example of a 'normal' pin (most of the pins).
+> > 		/* P3_0 as TxD2; P3_2 as RxD2 */
+> > 		renesas,pins =3D <PIN(3, 0) 6>,
+> > 			       <PIN(3, 2) 4>;
+>=20
+> Just to make sure I'm following you: why RxD2 (P3_2) is not marked as
+> BI_DIR?
+
+Because it doesn't have to be. The pin controller itself knows how to set i=
+t up
+itself as soon as you set the PIPC.
+
+> I would have expected to have the flag specified here, as it
+> requires PIBC enabled (and as you said, BI_DIR drives PBDC that enables
+> PIBC consequentially)
+
+PIBC (Port Input Buffer Control) is only valid when you are in GPIO input p=
+ort
+mode (PMCn.PMCnm =3D 0 and PMn.PMnm =3D 1).
+
+
+The reality is, it would be nice if the controller could magically know how=
+ to
+set all the pins direction, buffers and such depending on their function, b=
+ut
+there were some that needed an extra signals to be manually set (whether it=
+ makes
+sense or not). I guess that's the consequence of mixing-and-matching IP fro=
+m
+different product lines. Oh well, we just fix it all in software, right?  ;=
+)
+
+I'd rather this than the PFC that's in the R-Car....which I think is the re=
+sult
+of trying to make it smarter and just ended up making it more complicated.
+
+
+Cheers
+
+
+Chris
