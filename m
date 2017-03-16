@@ -1,38 +1,36 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] ARM: imx: Add GPCv2 power gating driver bindings
-Date: Thu, 16 Mar 2017 11:29:23 +0800
-Message-ID: <20170316032921.GZ3618@dragon>
-References: <20170314150540.27831-1-andrew.smirnov@gmail.com>
- <20170314150540.27831-2-andrew.smirnov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/4] RK3399 dw-mipi-dsi patches
+Date: Thu, 16 Mar 2017 11:31:43 +0800
+Message-ID: <1489635107-21327-1-git-send-email-zyw@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170314150540.27831-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 08:05:38AM -0700, Andrey Smirnov wrote:
-> Add DT bindings for power domain driver for GPCv2 IP block found in
-> i.MX7 SoCs.
-> 
-> Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi all
 
-Bindings patch should have the subject prefix like 'dt-bindings: ...'
-than 'ARM: imx: ...'.
+This series set the phy_cfg_clk to be a required clock for RK3399, and
+add a grf clock control in dw-mipi-dsi driver. And then correct a
+register name.
 
-Shawn
+
+Changes in v2:
+- check the grf_clk only for RK3399
+
+Chris Zhong (4):
+  drm/rockchip/dsi: check phy_cfg_clk only for RK3399
+  dt-bindings: add the grf clock for dw-mipi-dsi
+  drm/rockchip/dsi: enable the grf clk before writing grf registers
+  drm/rockchip/dsi: correct the grf_switch_reg name
+
+ .../display/rockchip/dw_mipi_dsi_rockchip.txt      |  2 +-
+ drivers/gpu/drm/rockchip/dw-mipi-dsi.c             | 35 +++++++++++++++++-----
+ 2 files changed, 28 insertions(+), 9 deletions(-)
+
+-- 
+2.6.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
