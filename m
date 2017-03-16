@@ -1,62 +1,71 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Philippe De Muyter <phdm@macq.eu>
 Subject: Re: media / v4l2-mc: wishlist for complex cameras (was Re: [PATCH
- v4 14/36] [media] v4l2-mc: add a function to inherit controls from a
- pipeline)
-Date: Thu, 16 Mar 2017 10:26:00 +0100
-Message-ID: <1489656360.2303.2.camel@pengutronix.de>
-References: <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
-         <20170310125342.7f047acf@vento.lan>
-         <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
-         <20170311082549.576531d0@vento.lan>
-         <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
-         <20170314004533.3b3cd44b@vento.lan>
-         <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
-         <20170314072143.498cde9b@vento.lan> <20170314223254.GA7141@amd>
-         <20170314215420.6fc63c67@vento.lan> <20170315105049.GA12099@frolo.macqel>
-         <1489604109.4593.4.camel@ndufresne.ca>
+ v4 14/36] [media] v4l2-mc: add a function to inherit controls from
+ a pipeline)
+Date: Thu, 16 Mar 2017 10:47:29 +0100
+Message-ID: <20170316094729.GA5595@frolo.macqel>
+References: <20170311082549.576531d0@vento.lan>
+ <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+ <20170314004533.3b3cd44b@vento.lan>
+ <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+ <20170314072143.498cde9b@vento.lan> <20170314223254.GA7141@amd>
+ <20170314215420.6fc63c67@vento.lan> <20170315105049.GA12099@frolo.macqel>
+ <1489604109.4593.4.camel@ndufresne.ca>
+ <1489656360.2303.2.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489604109.4593.4.camel-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
-Cc: Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andre
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1489656360.2303.2.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Pavel Machek <pavel@ucw.cz>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Nicolas Dufresne <nicolas@ndufresne.ca>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, nikla
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-03-15 at 14:55 -0400, Nicolas Dufresne wrote:
-> Le mercredi 15 mars 2017 à 11:50 +0100, Philippe De Muyter a écrit :
-> > > I would say: camorama, xawtv3, zbar, google talk, skype. If it runs
-> > > with those, it will likely run with any other application.
-> > > 
-> > 
-> > I would like to add the 'v4l2src' plugin of gstreamer, and on the
-> > imx6 its
-> 
-> While it would be nice if somehow you would get v4l2src to work (in
-> some legacy/emulation mode through libv4l2),
+On Thu, Mar 16, 2017 at 10:26:00AM +0100, Philipp Zabel wrote:
+> On Wed, 2017-03-15 at 14:55 -0400, Nicolas Dufresne wrote:
+> > Le mercredi 15 mars 2017 =E0 11:50 +0100, Philippe De Muyter a =E9crit :
+> > > > I would say: camorama, xawtv3, zbar, google talk, skype. If it runs
+> > > > with those, it will likely run with any other application.
+> > > > =
 
-v4l2src works just fine, provided the pipeline is configured manually in
-advance via media-ctl.
+> > > =
 
->  the longer plan is to
-> implement smart bin that handle several v4l2src, that can do the
-> required interactions so we can expose similar level of controls as
-> found in Android Camera HAL3, and maybe even further assuming userspace
-> can change the media tree at run-time. We might be a long way from
-> there, specially that some of the features depends on how much the
-> hardware can do. Just being able to figure-out how to build the MC tree
-> dynamically seems really hard when thinking of generic mechanism. Also,
-> Request API will be needed.
-> 
-> I think for this one, we'll need some userspace driver that enable the
-> features (not hide them), and that's what I'd be looking for from
-> libv4l2 in this regard.
+> > > I would like to add the 'v4l2src' plugin of gstreamer, and on the
+> > > imx6 its
+> > =
 
-regards
-Philipp
+> > While it would be nice if somehow you would get v4l2src to work (in
+> > some legacy/emulation mode through libv4l2),
+> =
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> v4l2src works just fine, provided the pipeline is configured manually in
+> advance via media-ctl.
+
+Including choosing the framerate ?  Sorry, I have no time these days
+to test it myself.
+
+And I cited imxv4l2videosrc for its ability to provide the physical address
+of the image buffers for further processing by other (not necessarily next
+in gstreamer pipeline, or for all frames) hardware-accelerated plugins likes
+the h.264 video encoder.  As I am stuck with fsl/nxp kernel and driver on t=
+hat
+matter, I don't know how the interfaces have evolved in current linux kerne=
+ls.
+
+BR
+
+Philippe
+
+-- =
+
+Philippe De Muyter +32 2 6101532 Macq SA rue de l'Aeronef 2 B-1140 Bruxelles
