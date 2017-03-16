@@ -1,33 +1,47 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] mtd: nand: Remove unused chip->write_page() hook
-Date: Thu, 16 Mar 2017 17:31:10 +0900
-Message-ID: <CAK7LNAQsvwjrp32bZTV95cGRGa7Tq+hEfF89Z9W66aSrb9rLcg@mail.gmail.com>
-References: <1489651362-17077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1489651362-17077-4-git-send-email-boris.brezillon@free-electrons.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 2/3] Input: add support for the STMicroelectronics
+ FingerTip touchscreen
+Date: Thu, 16 Mar 2017 09:22:16 +0100
+Message-ID: <a78e77c3-7bc5-95a8-fbf9-31baf91cdd56@samsung.com>
+References: <20170210021721.12218-1-andi.shyti@samsung.com>
+ <CGME20170210021729epcas1p3e11cade2daa21d2dd23839975e29acb6@epcas1p3.samsung.com>
+ <20170210021721.12218-3-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489651362-17077-4-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-reply-to: <20170210021721.12218-3-andi.shyti@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-03-16 17:02 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> The last/only user of the chip->write_page() hook (the Atmel NAND
-> controller driver) has been reworked and is no longer specifying a custom
-> ->write_page() implementation.
-> Drop this hook before someone else start abusing it.
->
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi Andi,
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+On 10.02.2017 03:17, Andi Shyti wrote:
+(...)
+> +
+> +	err = devm_request_threaded_irq(&client->dev, client->irq,
+> +					NULL, stmfts_irq_handler,
+> +					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+> +					"stmfts_irq", sdata);
+> +	if (err)
+> +		return err;
+> +
+> +	/*
+> +	 * Disable irq they, they are not needed at this stage.
+> +	 * One possible case when an IRQ can be already rased is e.g. if the
+> +	 * regulator is set as always on and the stmfts device sends an IRQ as
+> +	 * soon as it gets powered, de-synchronizing the power on sequence.
+> +	 * During power on, the device will be reset and all the initialization
+> +	 * IRQ will be resent.
+> +	 */
+> +	disable_irq(sdata->client->irq);
 
+It is safer to set:
+    irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
+before devm_request_threaded_irq
 
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Andrzej
+
