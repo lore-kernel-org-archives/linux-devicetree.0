@@ -1,37 +1,48 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 0/4] RK3399 dw-mipi-dsi patches
-Date: Thu, 16 Mar 2017 11:31:43 +0800
-Message-ID: <1489635107-21327-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v2 2/4] dt-bindings: add the grf clock for dw-mipi-dsi
+Date: Thu, 16 Mar 2017 11:31:45 +0800
+Message-ID: <1489635107-21327-3-git-send-email-zyw@rock-chips.com>
+References: <1489635107-21327-1-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1489635107-21327-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all
-
-This series set the phy_cfg_clk to be a required clock for RK3399, and
-add a grf clock control in dw-mipi-dsi driver. And then correct a
-register name.
-
-
-Changes in v2:
-- check the grf_clk only for RK3399
-
-Chris Zhong (4):
-  drm/rockchip/dsi: check phy_cfg_clk only for RK3399
-  dt-bindings: add the grf clock for dw-mipi-dsi
-  drm/rockchip/dsi: enable the grf clk before writing grf registers
-  drm/rockchip/dsi: correct the grf_switch_reg name
-
- .../display/rockchip/dw_mipi_dsi_rockchip.txt      |  2 +-
- drivers/gpu/drm/rockchip/dw-mipi-dsi.c             | 35 +++++++++++++++++-----
- 2 files changed, 28 insertions(+), 9 deletions(-)
-
--- 
-2.6.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rm9yIFJLMzM5OSwgdGhlIGdyZiBjbG9jayBzaG91bGQgYmUgY29udHJvbGxlZCBieSBkdy1taXBp
+LWRzaSBkcml2ZXIsCmFkZCB0aGUgZGVzY3JpcHRpb24gZm9yIHRoaXMgY2xvY2suCgpTaWduZWQt
+b2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgotLS0KCkNoYW5nZXMgaW4g
+djI6IE5vbmUKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21p
+cGlfZHNpX3JvY2tjaGlwLnR4dCAgICAgICB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2Vy
+dGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21p
+cGlfZHNpX3JvY2tjaGlwLnR4dAppbmRleCAxODhmNmY3Li43ZTE3YTYwIDEwMDY0NAotLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBp
+X2RzaV9yb2NrY2hpcC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0CkBAIC0xMCw3ICsxMCw3
+IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtIGludGVycnVwdHM6IFJlcHJlc2VudCB0aGUgY29u
+dHJvbGxlcidzIGludGVycnVwdCB0byB0aGUgQ1BVKHMpLgogLSBjbG9ja3MsIGNsb2NrLW5hbWVz
+OiBQaGFuZGxlcyB0byB0aGUgY29udHJvbGxlcidzIHBsbCByZWZlcmVuY2UKICAgY2xvY2socmVm
+KSBhbmQgQVBCIGNsb2NrKHBjbGspLiBGb3IgUkszMzk5LCBhIHBoeSBjb25maWcgY2xvY2sKLSAg
+KHBoeV9jZmcpIGlzIGFkZGl0aW9uYWwgcmVxdWlyZWQuIEFzIGRlc2NyaWJlZCBpbiBbMV0uCisg
+IChwaHlfY2ZnKSBhbmQgYSBncmYgY2xvY2soZ3JmKSBhcmUgYWRkaXRpb25hbCByZXF1aXJlZC4g
+QXMgZGVzY3JpYmVkIGluIFsxXS4KIC0gcm9ja2NoaXAsZ3JmOiB0aGlzIHNvYyBzaG91bGQgc2V0
+IEdSRiByZWdzIHRvIG11eCB2b3BsL3ZvcGIuCiAtIHBvcnRzOiBjb250YWluIGEgcG9ydCBub2Rl
+IHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVmaW5lZCBpbiBbMl0uCiAgIEZvciB2b3Bi
+LHNldCB0aGUgcmVnID0gPDA+IGFuZCBzZXQgdGhlIHJlZyA9IDwxPiBmb3Igdm9wbC4KLS0gCjIu
+Ni4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
