@@ -1,12 +1,14 @@
 From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 0/5] rtc: Reuse rtc-sh driver to support RZ/A1
-Date: Thu, 16 Mar 2017 13:51:07 -0400
-Message-ID: <20170316175112.27913-1-chris.brandt@renesas.com>
+Subject: [PATCH 3/5] ARM: dts: r7s72100: add rtc clock to device tree
+Date: Thu, 16 Mar 2017 13:51:10 -0400
+Message-ID: <20170316175112.27913-4-chris.brandt@renesas.com>
+References: <20170316175112.27913-1-chris.brandt@renesas.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXOFUXT2UGBBMVBVPDAKGQESORM6OQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBDXOFUXT2UGBBNNBVPDAKGQE4SLLJWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170316175112.27913-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
@@ -17,35 +19,46 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Basically, the same RTC that was used in SuperH devices is now used in
-RZ/A1 devices. Therefore with some slight changes, that driver can be
-reused.
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r7s72100.dtsi            | 9 +++++++++
+ include/dt-bindings/clock/r7s72100-clock.h | 3 +++
+ 2 files changed, 12 insertions(+)
 
-Additionally, since ARM architectures require Device Tree configurations,
-device tree support has been added.
-
-This was tested on RZ/A1H RSK board. Once the correct time was programmed
-into the RTC running off a 32.768kHz crystal, you can retain an accurate
-system clock between reboots (hard and soft) until power is finally removed
-from the board (there is no batter backup on the RSK board).
-
-
-Chris Brandt (5):
-  rtc: rtc-sh: add support for rza series
-  rtc: Add rtc-sh
-  ARM: dts: r7s72100: add rtc clock to device tree
-  ARM: dts: r7s72100: add rtc to device tree
-  ARM: dts: rskrza1: add rtc DT support
-
- Documentation/devicetree/bindings/rtc/rtc-sh.txt | 19 +++++++++++++++++++
- arch/arm/boot/dts/r7s72100-rskrza1.dts           |  4 ++++
- arch/arm/boot/dts/r7s72100.dtsi                  | 20 ++++++++++++++++++++
- drivers/rtc/Kconfig                              |  4 ++--
- drivers/rtc/rtc-sh.c                             | 20 ++++++++++++++++++++
- include/dt-bindings/clock/r7s72100-clock.h       |  3 +++
- 6 files changed, 68 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-sh.txt
-
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index ed62e19..2a42a79 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -117,6 +117,15 @@
+ 			clock-output-names = "ostm0", "ostm1";
+ 		};
+ 
++		mstp6_clks: mstp6_clks@fcfe042c {
++			#clock-cells = <1>;
++			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
++			reg = <0xfcfe042c 4>;
++			clocks = <&p0_clk>;
++			clock-indices = <R7S72100_CLK_RTC>;
++			clock-output-names = "rtc0";
++		};
++
+ 		mstp7_clks: mstp7_clks@fcfe0430 {
+ 			#clock-cells = <1>;
+ 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+index cd2ed51..bc256d3 100644
+--- a/include/dt-bindings/clock/r7s72100-clock.h
++++ b/include/dt-bindings/clock/r7s72100-clock.h
+@@ -29,6 +29,9 @@
+ #define R7S72100_CLK_OSTM0	1
+ #define R7S72100_CLK_OSTM1	0
+ 
++/* MSTP6 */
++#define R7S72100_CLK_RTC	0
++
+ /* MSTP7 */
+ #define R7S72100_CLK_ETHER	4
+ 
 -- 
 2.10.1
 
