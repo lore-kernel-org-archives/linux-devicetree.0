@@ -1,96 +1,57 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 3/5] drivers: arm-smmu: Add clock support for
- QCOM_SMMUV2
-Date: Thu, 16 Mar 2017 16:10:39 -0500
-Message-ID: <20170316211039.rbqq262syalyfcs6@rob-hp-laptop>
-References: <1489073748-3659-1-git-send-email-sricharan@codeaurora.org>
- <1489073748-3659-4-git-send-email-sricharan@codeaurora.org>
+Subject: Re: [PATCH v4 1/3] usb: orion-echi: Add support for the Armada 3700
+Date: Thu, 16 Mar 2017 16:12:26 -0500
+Message-ID: <20170316211226.krnhlrwk3gd3qpce@rob-hp-laptop>
+References: <20170309175258.20076-1-gregory.clement@free-electrons.com>
+ <20170309175258.20076-2-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1489073748-3659-4-git-send-email-sricharan@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: robin.murphy@arm.com, will.deacon@arm.com, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, linux-clk@vger.kernel.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, mark.rutland@arm.com
+In-Reply-To: <20170309175258.20076-2-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Alan Stern <stern@rowland.harvard.edu>, Neta Zur Hershkovits <neta@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 09, 2017 at 09:05:46PM +0530, Sricharan R wrote:
-> The QCOM_SMMUV2 is an implementation of the arm,smmu-v2 architecture.
-> The qcom,smmu is instantiated for each of the multimedia cores (for eg)
-> Venus (video encoder/decoder), mdp (display) etc, and they are connected
-> to the Multimedia Aggregator Interconnect (MMAGIC). So the access to
-> any of the MMU's registers, as well as MMU's downstream bus access,
-> requires the specified MMAGIC clocks to be enabled. So adding a new
-> binding for the qcom,smmu-v2 and the required mmagic clock bindings for
-> the same. Also adding the support for enabling the qcom,smmu-v2 clocks in
-> the driver.
+On Thu, Mar 09, 2017 at 06:52:56PM +0100, Gregory CLEMENT wrote:
+> From: Hua Jing <jinghua@marvell.com>
+
+s/echi/ehci/ in the subject.
+
 > 
->                -------------  ---------
->                |   VENUS   |  | MDP   |
-> 	       |	   |  |       |
-> 	       -------------  --------
-> 		     |           |
-> 		     |           |
->                   ------      ---------
->                   |SMMU |     | SMMU  |
->                   |	|     |       |
->                   ------      --------
-> 		    |            |
-> 		    |            |
->        -----------------------------------------
->        |	MMAGIC INTERCONNECT (MMSS NOC) |
->        |                                       |
->        -----------------------------------------
->                    |                 |
-> 		   |           ----------------------------------
->                  -----         | 	SYSTEM NOC		|
->                  |DDR|	       |				|
->                  -----         ---------------------------------
-> 		   |		    |
->                    |               ------
-> 		   |<-------------| CPU|
-> 				  ------
+> - Add a new compatible string for the Armada 3700 SoCs
 > 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> - add sbuscfg support for orion usb controller driver. For the SoCs
+>   without hlock, need to program BAWR/BARD/AHBBRST fields in the sbuscfg
+>   register to guarantee the AHB master's burst would not overrun or
+>   underrun the FIFO.
+> 
+> - the sbuscfg register has to be set after the usb controller reset,
+>   otherwise the value would be overridden to 0. In order to do this, the
+>   reset callback is registered.
+> 
+> [gregory.clement@free-electrons.com: - reword commit and comments
+> 				     - fix error path in ehci_orion_drv_reset()
+> 				     - fix checkpatch warning]
+> Signed-off-by: Hua Jing <jinghua@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 > ---
->  .../devicetree/bindings/iommu/arm,smmu.txt         |   8 ++
->  drivers/iommu/arm-smmu.c                           | 124 +++++++++++++++++++++
->  2 files changed, 132 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index b369c13..88e02d6 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -17,6 +17,7 @@ conditions.
->                          "arm,mmu-401"
->                          "arm,mmu-500"
->                          "cavium,smmu-v2"
-> +			"qcom,smmu-v2"
+>  .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
 
-I know Cavium did it, but I'd prefer to see SoC specific compatibles 
-here.
+Otherwise,
 
->  
->                    depending on the particular implementation and/or the
->                    version of the architecture implemented.
-> @@ -74,6 +75,13 @@ conditions.
->                    "cfg_clk" is optional if required to access the TCU's programming
->                    interface, apart from the "tcu_clk".
->  
-> +		  Should have "mmagic_ahb_clk", "mmagic_cfg_ahb_clk",
-> +                              "smmu_core_ahb_clk", "smmu_core_axi_clk",
-> +                              "mmagic_core_axi_clk" for "qcom,smmu-v2"
+Acked-by: Rob Herring <robh@kernel.org>
 
-This is instead of the above clocks?
-
-Are these clocks all really part of the SMMU or are the mmagic clocks 
-working around no proper driver for the mmagic?
-
-> +
-> +		  "mmagic_core_axi_clk" is required for smmu's access to the
-> +                   downstream bus and rest for the smmu's register group access.
-> +
->  - clocks:         Phandles for respective clocks described by clock-names.
->  
->  - power-domains:  Phandles to SMMU's power domain specifier. This is
+>  drivers/usb/host/ehci-orion.c                      | 36 ++++++++++++++++++++++
+>  2 files changed, 39 insertions(+), 1 deletion(-)
