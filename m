@@ -1,141 +1,814 @@
-From: <nkosuta-f+iqBESB6gc@public.gmane.org>
-Subject: 17187 devicetree
-Date: Thu, 16 Mar 2017 00:45:01 -0000
-Message-ID: <148962510165.19795.12551191501688628120@hinet.net>
-Reply-To: <nkosuta-f+iqBESB6gc@public.gmane.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx: add Gateworks Ventana GW5904 support
+Date: Thu, 16 Mar 2017 09:28:43 +0800
+Message-ID: <20170316012839.GS3618@dragon>
+References: <1489178411-6559-1-git-send-email-tharvey@gateworks.com>
+ <1489590834-20424-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="2238663203643.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
+Content-Disposition: inline
+In-Reply-To: <1489590834-20424-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-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
-AAQAAAAAUEsFBgAAAAABAAEAUwAAABYbAAAAAA==
+On Wed, Mar 15, 2017 at 08:13:54AM -0700, Tim Harvey wrote:
+> The Gateworks Ventana GW5904 is a single-board computer based on the NXP
+> IMX6 SoC with the following features:
+>  * IMX6 DualLite Soc (supports IMX6S,IMX6DL,IMX6Q)
+>  * 2048MB DDR3 DRAM (4x64bit) (options up to 4GiB)
+>  * 8GB eMMC
+>  * Gateworks System Controller:
+>   - hardware watchdog
+>   - hardware monitor
+>   - pushbutton controller
+>   - EEPROM storage
+>   - power control
+>  * JTAG programmable
+>  * 1x miniPCIe socket (with PCIe, USB)
+>  * 1x miniPCIe socket (USB)
+>  * 1x M.2 socket (USB, 2x SIM)
+>  * Inertial Module (LSM9DS1 9DOF: 3x acc, 3x rate, 3x mag)
+>  * GPS (optional uBlox EVA-M8M)
+>  * Application headers:
+>   - 2x RS232 UART (TX/RX/CTS/RTS)
+>   - 8x TTL GPIO (3x configurable as PWM)
+>   - 1x LVDS display 3D+C with i2c touch and PWM backlight
+>  * MV88E6176 GbE Switch (uplink to IMX FEC)
+>  * Front panel connectors:
+>   - 1x user programmable LED
+>   - 1x configurable user pushbutton
+>   - 1x USB OTG
+>   - 4x GbE LAN
+> 
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> ---
+> v2:
+>  - updated switch to latest dsa bindings
+>  - update to GPL/X11 dual license
+>  - use stdout-path instead of bootargs
+>  - sort devices under i2c by address
+>  - fix node/label name on touchscreen node
+>  - removed unnecessary status okay for pps node
+>  - removed unnecessary container node in iomuxc
+>  - replaced deprecated fsl,uart-has-rtscts with uart-has-rtscts
+> ---
+>  arch/arm/boot/dts/Makefile            |   2 +
+>  arch/arm/boot/dts/imx6dl-gw5904.dts   |  19 +
+>  arch/arm/boot/dts/imx6q-gw5904.dts    |  23 ++
+>  arch/arm/boot/dts/imx6qdl-gw5904.dtsi | 641 ++++++++++++++++++++++++++++++++++
+>  4 files changed, 685 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-gw5904.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-gw5904.dts
+>  create mode 100644 arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index ccecd79..7843b65 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -352,6 +352,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6dl-gw551x.dtb \
+>  	imx6dl-gw552x.dtb \
+>  	imx6dl-gw553x.dtb \
+> +	imx6dl-gw5904.dtb \
+>  	imx6dl-hummingboard.dtb \
+>  	imx6dl-icore.dtb \
+>  	imx6dl-icore-rqs.dtb \
+> @@ -395,6 +396,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6q-gw551x.dtb \
+>  	imx6q-gw552x.dtb \
+>  	imx6q-gw553x.dtb \
+> +	imx6q-gw5904.dtb \
+>  	imx6q-h100.dtb \
+>  	imx6q-hummingboard.dtb \
+>  	imx6q-icore.dtb \
+> diff --git a/arch/arm/boot/dts/imx6dl-gw5904.dts b/arch/arm/boot/dts/imx6dl-gw5904.dts
+> new file mode 100644
+> index 0000000..2318a55
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6dl-gw5904.dts
+> @@ -0,0 +1,19 @@
+> +/*
+> + * Copyright 2017 Gateworks Corporation
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx6dl.dtsi"
+> +#include "imx6qdl-gw5904.dtsi"
+> +
+> +/ {
+> +	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5904";
+> +	compatible = "gw,imx6dl-gw5904", "gw,ventana", "fsl,imx6dl";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6q-gw5904.dts b/arch/arm/boot/dts/imx6q-gw5904.dts
+> new file mode 100644
+> index 0000000..357dd7e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-gw5904.dts
+> @@ -0,0 +1,23 @@
+> +/*
+> + * Copyright 2017 Gateworks Corporation
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+
+You want to use the same licence as imx6qdl-gw5904.dtsi for above two
+files, don't you?
+
+> +
+> +/dts-v1/;
+> +#include "imx6q.dtsi"
+> +#include "imx6qdl-gw5904.dtsi"
+> +
+> +/ {
+> +	model = "Gateworks Ventana i.MX6 Dual/Quad GW5904";
+> +	compatible = "gw,imx6q-gw5904", "gw,ventana", "fsl,imx6q";
+> +};
+> +
+> +&sata {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw5904.dtsi b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+> new file mode 100644
+> index 0000000..ed1fa97
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+> @@ -0,0 +1,641 @@
+> +/*
+> + * Copyright 2017 Gateworks Corporation
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of
+> + *     the License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this file; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	/* these are used by bootloader for disabling nodes */
+> +	aliases {
+> +		led0 = &led0;
+> +		led1 = &led1;
+> +		led2 = &led2;
+> +		usb0 = &usbh1;
+> +		usb1 = &usbotg;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &uart2;
+> +	};
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm4 0 5000000>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <7>;
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_leds>;
+> +
+> +		led0: user1 {
+> +			label = "user1";
+> +			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
+> +			default-state = "on";
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		led1: user2 {
+> +			label = "user2";
+> +			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
+> +			default-state = "off";
+> +		};
+> +
+> +		led2: user3 {
+> +			label = "user3";
+> +			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
+> +			default-state = "off";
+> +		};
+> +	};
+> +
+> +	memory {
+> +		reg = <0x10000000 0x40000000>;
+> +	};
+> +
+> +	pps {
+> +		compatible = "pps-gpio";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pps>;
+> +		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	reg_1p0v: regulator-1p0v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1P0V";
+> +		regulator-min-microvolt = <1000000>;
+> +		regulator-max-microvolt = <1000000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3P3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_usb_h1_vbus: regulator-usb-h1-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb_h1_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_usb_otg_vbus: regulator-usb-otg-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb_otg_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +};
+> +
+> +&clks {
+> +	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+> +			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+> +	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+> +				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+> +};
+> +
+> +&fec {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet>;
+> +	phy-mode = "rgmii-id";
+> +	status = "okay";
+> +
+> +	fixed-link {
+> +		speed = <1000>;
+> +		full-duplex;
+> +	};
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		switch0@0 {
+
+switch@0
+
+> +			compatible = "marvell,mv88e6085";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					label = "lan4";
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					label = "lan3";
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					label = "lan2";
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					label = "lan1";
+> +				};
+> +
+> +				port@5 {
+> +					reg = <5>;
+> +					label = "cpu";
+> +					ethernet = <&fec>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	gpio: pca9555@23 {
+
+Node name should be generic while label can be specific.  That said,
+switching the names between node and label looks better:
+
+	pca9555: gpio@23 {
+
+> +		compatible = "nxp,pca9555";
+> +		reg = <0x23>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +	};
+> +
+> +	eeprom1: eeprom@50 {
+> +		compatible = "atmel,24c02";
+> +		reg = <0x50>;
+> +		pagesize = <16>;
+> +	};
+> +
+> +	eeprom2: eeprom@51 {
+> +		compatible = "atmel,24c02";
+> +		reg = <0x51>;
+> +		pagesize = <16>;
+> +	};
+> +
+> +	eeprom3: eeprom@52 {
+> +		compatible = "atmel,24c02";
+> +		reg = <0x52>;
+> +		pagesize = <16>;
+> +	};
+> +
+> +	eeprom4: eeprom@53 {
+> +		compatible = "atmel,24c02";
+> +		reg = <0x53>;
+> +		pagesize = <16>;
+> +	};
+> +
+> +	rtc: ds1672@68 {
+
+	ds1672: rtc@68 {
+
+> +		compatible = "dallas,ds1672";
+> +		reg = <0x68>;
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +
+> +	ltc3676: pmic@3c {
+> +		compatible = "lltc,ltc3676";
+> +		reg = <0x3c>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +		regulators {
+> +			/* VDD_SOC (1+R1/R2 = 1.635) */
+> +			reg_vdd_soc: sw1 {
+> +				regulator-name = "vddsoc";
+> +				regulator-min-microvolt = <674400>;
+> +				regulator-max-microvolt = <1308000>;
+> +				lltc,fb-voltage-divider = <127000 200000>;
+> +				regulator-ramp-delay = <7000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			/* VDD_1P8 (1+R1/R2 = 2.505): GbE switch */
+> +			reg_1p8v: sw2 {
+> +				regulator-name = "vdd1p8";
+> +				regulator-min-microvolt = <1033310>;
+> +				regulator-max-microvolt = <2004000>;
+> +				lltc,fb-voltage-divider = <301000 200000>;
+> +				regulator-ramp-delay = <7000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			/* VDD_ARM (1+R1/R2 = 1.635) */
+> +			reg_vdd_arm: sw3 {
+> +				regulator-name = "vddarm";
+> +				regulator-min-microvolt = <674400>;
+> +				regulator-max-microvolt = <1308000>;
+> +				lltc,fb-voltage-divider = <127000 200000>;
+> +				regulator-ramp-delay = <7000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			/* VDD_DDR (1+R1/R2 = 2.105) */
+> +			reg_vdd_ddr: sw4 {
+> +				regulator-name = "vddddr";
+> +				regulator-min-microvolt = <868310>;
+> +				regulator-max-microvolt = <1684000>;
+> +				lltc,fb-voltage-divider = <221000 200000>;
+> +				regulator-ramp-delay = <7000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			/* VDD_2P5 (1+R1/R2 = 3.435): PCIe/ENET-PHY */
+> +			reg_2p5v: ldo2 {
+> +				regulator-name = "vdd2p5";
+> +				regulator-min-microvolt = <2490375>;
+> +				regulator-max-microvolt = <2490375>;
+> +				lltc,fb-voltage-divider = <487000 200000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			/* VDD_HIGH (1+R1/R2 = 4.17) */
+> +			reg_3p0v: ldo4 {
+> +				regulator-name = "vdd3p0";
+> +				regulator-min-microvolt = <3023250>;
+> +				regulator-max-microvolt = <3023250>;
+> +				lltc,fb-voltage-divider = <634000 200000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c3>;
+> +	status = "okay";
+> +
+> +	egalax_ts: touchscreen@04 {
+
+Drop the leading zeros in unit-address.
+
+Shawn
+
+> +		compatible = "eeti,egalax_ts";
+> +		reg = <0x04>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+> +		wakeup-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> +
+> +&ldb {
+> +	status = "okay";
+> +
+> +	lvds-channel@0 {
+> +		fsl,data-mapping = "spwg";
+> +		fsl,data-width = <18>;
+> +		status = "okay";
+> +
+> +		display-timings {
+> +			native-mode = <&timing0>;
+> +			timing0: hsd100pxn1 {
+> +				clock-frequency = <65000000>;
+> +				hactive = <1024>;
+> +				vactive = <768>;
+> +				hback-porch = <220>;
+> +				hfront-porch = <40>;
+> +				vback-porch = <21>;
+> +				vfront-porch = <7>;
+> +				hsync-len = <60>;
+> +				vsync-len = <10>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&pcie {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pcie>;
+> +	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
+> +
+> +&pwm2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
+> +	status = "disabled";
+> +};
+> +
+> +&pwm3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
+> +	status = "disabled";
+> +};
+> +
+> +&pwm4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm4>;
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart3>;
+> +	uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
+> +	uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&uart5 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart5>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg {
+> +	vbus-supply = <&reg_usb_otg_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg>;
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+> +&usbh1 {
+> +	vbus-supply = <&reg_usb_h1_vbus>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc3 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc3>;
+> +	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
+> +	non-removable;
+> +	vmmc-supply = <&reg_3p3v>;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_wdog>;
+> +	fsl,ext-reset-output;
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_enet: enetgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
+> +			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
+> +			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
+> +			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
+> +			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
+> +			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
+> +			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
+> +			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
+> +			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
+> +			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
+> +			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
+> +			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
+> +			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
+> +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
+> +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
+> +			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
+> +			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x4001b0b0 /* PHY_RST# */
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio_leds: gpioledsgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
+> +			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
+> +			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+> +			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c2: i2c2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
+> +			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c3: i2c3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
+> +			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_pcie: pciegrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_0__GPIO1_IO00	0x1b0b0 /* PCIE RST */
+> +		>;
+> +	};
+> +
+> +	pinctrl_pmic: pmicgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_8__GPIO1_IO08	0x1b0b0 /* PMIC_IRQ# */
+> +		>;
+> +	};
+> +
+> +	pinctrl_pps: ppsgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm2: pwm2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm3: pwm3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm4: pwm4grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart3: uart3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D23__UART3_CTS_B         0x1b0b1
+> +			MX6QDL_PAD_EIM_D24__UART3_TX_DATA       0x1b0b1
+> +			MX6QDL_PAD_EIM_D25__UART3_RX_DATA       0x1b0b1
+> +			MX6QDL_PAD_EIM_D31__UART3_RTS_B         0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart4: uart4grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA    0x1b0b1
+> +			MX6QDL_PAD_CSI0_DAT13__UART4_RX_DATA    0x1b0b1
+> +			MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B      0x1b0b1
+> +			MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B      0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart5: uart5grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg: usbotggrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
+> +			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0 /* PWR_EN */
+> +			MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x1b0b0 /* OC */
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc3: usdhc3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
+> +			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
+> +			MX6QDL_PAD_SD3_RST__SD3_RESET		0x10059
+> +			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
+> +			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+> +			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+> +			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+> +			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17059
+> +			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17059
+> +			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17059
+> +			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170b9
+> +			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100b9
+> +			MX6QDL_PAD_SD3_RST__SD3_RESET		0x100b9
+> +			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
+> +			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
+> +			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
+> +			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
+> +			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x170b9
+> +			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x170b9
+> +			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x170b9
+> +			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x170b9
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170f9
+> +			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100f9
+> +			MX6QDL_PAD_SD3_RST__SD3_RESET		0x100f9
+> +			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
+> +			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
+> +			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
+> +			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
+> +			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x170f9
+> +			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x170f9
+> +			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x170f9
+> +			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x170f9
+> +		>;
+> +	};
+> +
+> +	pinctrl_wdog: wdoggrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
