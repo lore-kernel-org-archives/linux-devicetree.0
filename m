@@ -1,68 +1,81 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v5 18/39] [media] v4l: subdev: Add function to validate
- frame interval
-Date: Fri, 17 Mar 2017 00:17:27 +0200
-Message-ID: <20170316221727.GJ10701@valkosipuli.retiisi.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-19-git-send-email-steve_longerbeam@mentor.com>
- <20170311134119.GO3220@valkosipuli.retiisi.org.uk>
- <dc2836e2-c110-4e4f-1717-8df9622fdf04@gmail.com>
+From: Akshay Bhat <akshay.bhat@timesys.com>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Thu, 16 Mar 2017 18:29:38 -0400
+Message-ID: <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
+ <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
+ <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
+ <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
+ <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
+ <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
+ <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
+ <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
+ <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <dc2836e2-c110-4e4f-1717-8df9622fdf04@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Akshay Bhat <nodeax@gmail.com>
+Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 11, 2017 at 12:31:24PM -0800, Steve Longerbeam wrote:
-> 
-> 
-> On 03/11/2017 05:41 AM, Sakari Ailus wrote:
-> >Hi Steve,
-> >
-> >On Thu, Mar 09, 2017 at 08:52:58PM -0800, Steve Longerbeam wrote:
-> >>If the pads on both sides of a link specify a frame interval, then
-> >>those frame intervals should match. Create the exported function
-> >>v4l2_subdev_link_validate_frame_interval() to verify this. This
-> >>function can be called in a subdevice's media_entity_operations
-> >>or v4l2_subdev_pad_ops link_validate callbacks.
-> >>
-> >>Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >
-> >If your only goal is to configure frame dropping on a sub-device, I suggest
-> >to implement s_frame_interval() on the pads of that sub-device only. The
-> >frames are then dropped according to the configured frame rates between the
-> >sink and source pads. Say, configuring sink for 1/30 s and source 1/15 would
-> >drop half of the incoming frames.
-> >
-> >Considering that supporting specific frame interval on most sub-devices adds
-> >no value or is not the interface through which it the frame rate configured,
-> >I think it is overkill to change the link validation to expect otherwise.
-> 
-> 
-> Well, while I think this function might still have validity in the future, I
-> do agree with you that a subdev that has no control over
-> frame rate has no business implementing the get|set ops.
-> 
-> In the imx-media subdevs, the only one that can affect frame rate (via
-> frame skipping) is the CSI. So I'll go ahead and remove the
-> [gs]_frame_interval ops from the others. I can remove this patch as
-> a result.
+Hi Wolfgang,
 
-Agreed.
+On 03/16/2017 04:02 PM, Wolfgang Grandegger wrote:
+> 
+> Looks much better now! There are message for state changes to error
+> warning and passive. Just the following message is not correct:
+> 
+>  (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19   ERRORFRAME
+>     controller-problem{}
+>     error-counter-tx-rx{{95}{25}}
+> 
+> Sorry, forgot to mention... the function can_change_state() [1]
+> should be used for that purpose, if possible. It fixes the issue
+> above as well.
+> 
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+The updated driver (the one used to create the above log) is using
+can_change_state() function. data[1] 40 corresponds to
+CAN_ERR_CRTL_ACTIVE, so looks correct? Could it be that the can-utils I
+am using is old and not reporting state change?
+
+Tentative v4 driver for reference:
+http://pastebin.com/4xFVL1Sj
+
+>> berr-reporting off case:
+>> http://pastebin.com/fUn3j7qU
+> 
+> Ditto.
+> 
+> I just had another look to the manual and there is this undocumented
+> STATFE register at offset 0x1E. It's mentioned in some other parts of
+> the doc as interrupt enable register for STATF events. I would assume
+> the same bit layout than STATF. If you set bit 2 (BUSOFF), 3 (ERRP)
+> and 4 (ERRW), you may get interrupts. It's worth a try, I think. If
+> it works, it's the much better solution.
+> 
+
+The HI-311x has a INT pin and a STAT pin. The hardware I have has only
+the INT pin connected to the processor. If the STAT pin was also
+connected, then like you mentioned it could be a much better solution to
+use STAT for state changes.
+
+Enabling BUSOFF/ERRP/ERRW bits in STATFE did not generate any interrupts
+on the INT pin. Should we make it a requirement that both INT and STAT
+pins need to be connected in hardware for the driver to do the error
+reporting?
+
+Thanks,
+Akshay
+
+> Wolfgang.
+> 
+> [1] http://lxr.free-electrons.com/ident?i=can_change_state
+> 
+> Wolfgang.
+> 
