@@ -1,108 +1,47 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v5 10/13] device property: Add support for fwnode endpoints
-Date: Thu, 16 Mar 2017 14:31:18 +0200
-Message-ID: <1489667481-28521-11-git-send-email-sakari.ailus@linux.intel.com>
-References: <1489667481-28521-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1489667481-28521-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v2 1/2] ARM: dts: qcom: msm8974: Add RPMCC DT node
+Date: Thu, 16 Mar 2017 14:55:09 +0200
+Message-ID: <20170316125509.13717-1-georgi.djakov@linaro.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: bjorn.andersson@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Similar to OF endpoints, endpoint type nodes can be also supported on
-ACPI. In order to make it possible for drivers to ignore the matter,
-add a type for fwnode_endpoint and a function to parse them.
+Add the RPM Clock Controller DT node for msm8974-based platforms, so that
+drivers can use the clocks provided by the RPM processor.
 
-On ACPI, find the child node index instead of relying on the "endpoint"
-property.
-
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/base/property.c  | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/fwnode.h   | 12 ++++++++++++
- include/linux/property.h |  3 +++
- 3 files changed, 53 insertions(+)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 4c7956e..09f348d 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -1353,3 +1353,41 @@ fwnode_graph_get_remote_endpoint(struct fwnode_handle *fwnode)
- 	return endpoint;
- }
- EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_endpoint);
-+
-+/**
-+ * fwnode_graph_parse_endpoint - parse common endpoint node properties
-+ * @fwnode: pointer to endpoint fwnode_handle
-+ * @endpoint: pointer to the fwnode endpoint data structure
-+ *
-+ * Parse @fwnode representing a graph endpoint node and store the
-+ * information in @endpoint. The caller must hold a reference to
-+ * @fwnode.
-+ */
-+int fwnode_graph_parse_endpoint(struct fwnode_handle *fwnode,
-+				struct fwnode_endpoint *endpoint)
-+{
-+	struct fwnode_handle *port_fwnode = fwnode_get_parent(fwnode);
-+
-+	memset(endpoint, 0, sizeof(*endpoint));
-+
-+	endpoint->local_fwnode = fwnode;
-+
-+	if (is_acpi_node(port_fwnode)) {
-+		struct fwnode_handle *iter;
-+
-+		fwnode_property_read_u32(port_fwnode, "port", &endpoint->port);
-+
-+		for (iter = fwnode_get_next_child_node(port_fwnode, NULL);
-+		     iter != fwnode;
-+		     iter = fwnode_get_next_child_node(port_fwnode, iter))
-+			endpoint->id++;
-+	} else {
-+		fwnode_property_read_u32(port_fwnode, "reg", &endpoint->port);
-+		fwnode_property_read_u32(fwnode, "reg", &endpoint->id);
-+	}
-+
-+	fwnode_handle_put(port_fwnode);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(fwnode_graph_parse_endpoint);
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 8bd28ce..3dff239 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -27,4 +27,16 @@ struct fwnode_handle {
- 	struct fwnode_handle *secondary;
- };
- 
-+/**
-+ * struct fwnode_endpoint - Fwnode graph endpoint
-+ * @port: Port number
-+ * @id: Endpoint id
-+ * @local_fwnode: reference to the related fwnode
-+ */
-+struct fwnode_endpoint {
-+	unsigned int port;
-+	unsigned int id;
-+	const struct fwnode_handle *local_fwnode;
-+};
-+
- #endif
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 6e20a12..3a4e435 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -280,4 +280,7 @@ struct fwnode_handle *fwnode_graph_get_remote_port(
- struct fwnode_handle *fwnode_graph_get_remote_endpoint(
- 	struct fwnode_handle *fwnode);
- 
-+int fwnode_graph_parse_endpoint(struct fwnode_handle *fwnode,
-+				struct fwnode_endpoint *endpoint);
-+
- #endif /* _LINUX_PROPERTY_H_ */
--- 
-2.7.4
+Changes since v1 (https://lkml.org/lkml/2017/2/3/492)
+ * Added Bjorn's Reviewed-by
 
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index d3e1a61b8671..4b4c61e2ee35 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -2,6 +2,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8974.h>
++#include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/reset/qcom,gcc-msm8974.h>
+ #include "skeleton.dtsi"
+@@ -760,6 +761,11 @@
+ 				compatible = "qcom,rpm-msm8974";
+ 				qcom,smd-channels = "rpm_requests";
+ 
++				rpmcc: clock-controller {
++					compatible = "qcom,rpmcc-msm8974", "qcom,rpmcc";
++					#clock-cells = <1>;
++				};
++
+ 				pm8841-regulators {
+ 					compatible = "qcom,rpm-pm8841-regulators";
+ 
