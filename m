@@ -1,40 +1,95 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 5/5] ARM: dts: rskrza1: add rtc DT support
-Date: Thu, 16 Mar 2017 13:51:12 -0400
-Message-ID: <20170316175112.27913-6-chris.brandt@renesas.com>
-References: <20170316175112.27913-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170316175112.27913-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for iio-hwmon
+Date: Thu, 16 Mar 2017 10:54:33 -0700
+Message-ID: <CAJYdmeMg+DtwwbXOM7hPC4ejvkYkR94fcoyvTpx86RSKSswFMg@mail.gmail.com>
+References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
+ <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com> <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
+ <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com> <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Julia Cartwright <julia@ni.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi Lars,
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index 6abb929..dfbb028 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -77,6 +77,10 @@
- 	status = "okay";
- };
- 
-+&rtc {
-+	status = "okay";
-+};
-+
- &scif2 {
- 	status = "okay";
- };
--- 
-2.10.1
+On Thu, Mar 16, 2017 at 9:51 AM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+> On 03/16/2017 05:45 PM, Michal Simek wrote:
+>> On 16.3.2017 17:39, Moritz Fischer wrote:
+>>> On Thu, Mar 16, 2017 at 9:16 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+>>>> Hi,
+>>>>
+>>>> On 8.3.2017 21:11, Moritz Fischer wrote:
+>>>>> Fix
+>>>>>
+>>>>> OF: /iio_hwmon: could not get #io-channel-cells for
+>>>>> /amba/adc@f8007100
+>>>>> OF: /iio_hwmon: could not get #io-channel-cells for
+>>>>> /amba/adc@f8007100
+>>>>> OF: /iio_hwmon: could not get #io-channel-cells for
+>>>>> /amba/adc@f8007100
+>>>>>
+>>>>> by adding the #io-channel-cells property.
+>>>>>
+>>>>> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+>>>>> Cc: Michal Simek <michal.simek@xilinx.com>
+>>>>> Cc: Sören Brinkmann <soren.brinkmann@xilinx.com>
+>>>>> Cc: Julia Cartwright <julia@ni.com>
+>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>> Cc: devicetree@vger.kernel.org
+>>>>> ---
+>>>>>
+>>>>> Changes from v1:
+>>>>> - fix messed up commit message
+>>>>> ---
+>>>>>  arch/arm/boot/dts/zynq-7000.dtsi | 1 +
+>>>>>  1 file changed, 1 insertion(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+>>>>> index f3ac9bf..98233a8 100644
+>>>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>>>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>>>>> @@ -72,6 +72,7 @@
+>>>>>                       interrupts = <0 7 4>;
+>>>>>                       interrupt-parent = <&intc>;
+>>>>>                       clocks = <&clkc 12>;
+>>>>> +                     #io-channel-cells = <1>;
+>>>>>               };
+>>>>>
+>>>>>               can0: can@e0008000 {
+>>>>>
+>>>>
+>>>> I think it will be good to the next step too.
+>>>> It means also add iio-hwmon node too.
+>>>>
+>>>> What do you think?
+>>>
+>>> I hadn't put it in there since dts is supposed to describe hw,
+>>> but obviously putting the actual hwmon in there makes it more useful.
+>>
+>> I had one discussion about this with Grant in past and it is common
+>> mistake. It is simplification of purpose of dts.
+>>
+>
+> If the iio-hwmon binding had gone through review it would have been rejected.
+>
+>>>
+>>> I can resubmit with the hwmon node in there.
+>>
+>> If you grep kernel tree you will see that others are using it too.
+>> Also there is accepted binding for that that's why I can't see big
+>> problem with it.
+>
+> Since this is an application specific binding I wouldn't put it in the
+> generic DT include file. It's a bit like adding a gpio-key binding for each
+> of the GPIOs just in case somebody wants to use it.
 
+So is your suggestion to move the whole thing from .dtsi -> .dts?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+Moritz
