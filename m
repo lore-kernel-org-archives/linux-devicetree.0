@@ -1,169 +1,146 @@
-From: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
-Subject: Re: [PATCH v3] hwmon: ads7828 optional parameters from the device
- tree
-Date: Thu, 16 Mar 2017 07:28:11 -0600
-Message-ID: <20170316132811.jsu7pprl4zqeifxz@irascible.povil.us>
-References: <20170312144739.13276-1-kernel.development@povil.us>
- <14108694-9690-15fc-3087-5dbd1ffd5694@roeck-us.net>
- <20170316032127.22yn62pjefcrhnw2@irascible.povil.us>
- <0540770e-6604-f224-9e00-c34e8c5c3c91@roeck-us.net>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v6 1/2] dt-bindings: Add GPCv2 power gating driver
+Date: Thu, 16 Mar 2017 06:30:49 -0700
+Message-ID: <20170316133050.28471-2-andrew.smirnov@gmail.com>
+References: <20170316133050.28471-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0540770e-6604-f224-9e00-c34e8c5c3c91-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170316133050.28471-1-andrew.smirnov@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, yurovsky@gmail.com, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 08:49:19PM -0700, Guenter Roeck wrote:
-> On 03/15/2017 08:21 PM, Sam Povilus wrote:
-> > On Sun, Mar 12, 2017 at 10:57:43AM -0700, Guenter Roeck wrote:
-> > > On 03/12/2017 07:47 AM, Sam Povilus wrote:
-> > > > Adding the ability for the ads7828 and ads7830 to use the device tree to
-> > > > get their optional parameters, instead of using platform devices. This
-> > > > allows people using custom boards to also use the ads7828 in a non-default
-> > > > manner.
-> > > > 
-> > > > Also adding a note to the user if they misconfigure the device's external
-> > > > reference.
-> > > > 
-> > > > v2: conforming to coding style
-> > > > v3: changing from "_" to "-" for device tree entries
-> > > > Signed-off-by: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/hwmon/ads7828.txt    | 18 ++++++++++++++++++
-> > > >  .../devicetree/bindings/i2c/trivial-devices.txt        |  2 --
-> > > >  drivers/hwmon/ads7828.c                                | 15 +++++++++++++++
-> > > >  3 files changed, 33 insertions(+), 2 deletions(-)
-> > > >  create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-> > > > new file mode 100644
-> > > > index 000000000000..0d37cd3fd31b
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-> > > > @@ -0,0 +1,18 @@
-> > > > +ads7828 properties
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible:
-> > > > +	Should be one of
-> > > > +	       ti,ads7828
-> > > > +	       ti,ads7830
-> > > > +- reg: I2C address
-> > > > +
-> > > > +Optional properties:
-> > > > +
-> > > > +- diff-input
-> > > > +  Set to use the device in differential mode.
-> > > 
-> > > I'll wait for Rob to comment, but "differential-input" sounds better to me,
-> > > Also, it would have to have a "ti," prefix.
-> > > 
-> > 
-> > The platform device uses diff_input, are we going for consistancy or
-> > correctness? I am good with either.
-> > 
-> 
-> What does a platform device variable name, ie a Linux implementation detail,
-> have to do with a devicetree property name ?
->
+Add DT bindings for power domain driver for GPCv2 IP block found in
+i.MX7 SoCs.
 
-Isn't the device tree property name also an implementation detail?
+Cc: yurovsky@gmail.com
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
+ include/dt-bindings/power/imx7-power.h             | 18 ++++++
+ 2 files changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+ create mode 100644 include/dt-bindings/power/imx7-power.h
 
-> > > > +- ext-vref
-> > > > +  Set to enable the external voltage reference on the device.
-> > > > +- vref-mv
-> > > > +  The external reference on the device is set to this as an unsigned integer in
-> > > > +  milivolts. Must use "ext_vref" for this to have any meaning.
-> > > 
-> > > ext_vref, though as suggested below I think it would be better to use a standard
-> > > property. Also, it seems to me that ext-vref is really unnecessary; the presence
-> > > of "vref" can imply that the reference voltage is external.
-> > > 
-> > 
-> > I agree, but again, the platform device seperates it. Consistancy or
-> > correctness?
-> > 
-> 
-> Same question.
-> 
-> > > > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > > index cdd7b48826c3..87648909f6ce 100644
-> > > > --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > > +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > > @@ -163,8 +163,6 @@ st,m41t00		Serial real-time clock (RTC)
-> > > >  st,m41t62		Serial real-time clock (RTC) with alarm
-> > > >  st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
-> > > >  taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
-> > > > -ti,ads7828		8-Channels, 12-bit ADC
-> > > > -ti,ads7830		8-Channels, 8-bit ADC
-> > > >  ti,tsc2003		I2C Touch-Screen Controller
-> > > >  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
-> > > >  ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
-> > > > diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
-> > > > index ee396ff167d9..d1f7ba5d7a2b 100644
-> > > > --- a/drivers/hwmon/ads7828.c
-> > > > +++ b/drivers/hwmon/ads7828.c
-> > > > @@ -118,6 +118,7 @@ static int ads7828_probe(struct i2c_client *client,
-> > > >  	struct ads7828_data *data;
-> > > >  	struct device *hwmon_dev;
-> > > >  	unsigned int vref_mv = ADS7828_INT_VREF_MV;
-> > > > +	unsigned int vref_mv_tmp;
-> > > >  	bool diff_input = false;
-> > > >  	bool ext_vref = false;
-> > > >  	unsigned int regval;
-> > > > @@ -131,11 +132,25 @@ static int ads7828_probe(struct i2c_client *client,
-> > > >  		ext_vref = pdata->ext_vref;
-> > > >  		if (ext_vref && pdata->vref_mv)
-> > > >  			vref_mv = pdata->vref_mv;
-> > > > +	} else if (dev->of_node) {
-> > > > +		if (of_get_property(dev->of_node, "diff-input", NULL))
-> > > > +			diff_input = true;
-> > > > +		if (of_get_property(dev->of_node, "ext-vref", NULL))
-> > > > +			ext_vref = true;
-> > > > +		if (!of_property_read_u32(dev->of_node, "vref-mv", &vref_mv_tmp)
-> > > > +		   && ext_vref)
-> > > > +			vref_mv = vref_mv_tmp;
-> > > 
-> > > Please consider using devm_regulator_get_optional() and thus standard properties.
-> > > 
-> > 
-> > I'd have to disagree with this, but not strongly. In my reading of
-> > Documentation/power/regulator/overview.txt it seems like the regulator
-> > subsystem is exclusivly for regulators not for references. I would hope
-> > that most board designers would not use a regulator, and especially not
-> > a switch mode regulator for the input to a reference. Am I reading the
-> > regulator subsystem overview wrong?  or are people using it for things
-> > that it's not quite intended (I will admit it looks like a number of
-> > other adcs use it)? or is there some other explination.
-> > 
-> 
-> A reference voltage is still a voltage which can be enabled or disabled.
-> By using a regulator one leaves it open if that voltage is enabled if
-> the chip is not in use. We also don't usually tell board designers how
-> to design the hardware. Besides, it is quite convenient.
-> 
-> Can you point me to the location in above documentation which states that
-> reference voltages shall not use regulators ? I seem to be unable to find it.
->
-
-"reference voltages shall not use regulators" It's not a shall not it's a
-should not. Regulators are significantly more inaccurate than references,
-subject to far more noise pass-through, and treated very differently by
-the electronics design community. One could use a system wide regulated
-bus for a reference to an ADC, but that would significantly reduce the
-accuracy and precision of your measurements. In almost all cases board
-designers are going to use always on references for this application,
-something that puts them well outside the purpose of the regulator
-subsystem. 
-
-> Thanks,
-> Guenter
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+new file mode 100644
+index 0000000..02f45c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+@@ -0,0 +1,71 @@
++Freescale i.MX General Power Controller v2
++==========================================
++
++The i.MX7S/D General Power Control (GPC) block contains Power Gating
++Control (PGC) for various power domains.
++
++Required properties:
++
++- compatible: Should be "fsl,imx7d-gpc"
++
++- reg: should be register base and length as documented in the
++  datasheet
++
++- interrupts: Should contain GPC interrupt request 1
++
++Power domains contained within GPC node are generic power domain
++providers, documented in
++Documentation/devicetree/bindings/power/power_domain.txt, which are
++described as subnodes of the power gating controller 'pgc' node,
++which, in turn, is expected to contain the following:
++
++Required properties:
++
++- reg: Power domain index. Valid values are defined in
++  include/dt-bindings/power/imx7-power.h
++
++- #power-domain-cells: Should be 0
++
++Optional properties:
++
++- power-supply: Power supply used to power the domain
++
++Example:
++
++	gpc: gpc@303a0000 {
++		compatible = "fsl,imx7d-gpc";
++		reg = <0x303a0000 0x1000>;
++		interrupt-controller;
++		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&intc>;
++
++		pgc {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			pgc_pcie_phy: power-domain@3 {
++				#power-domain-cells = <0>;
++
++				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
++				power-supply = <&reg_1p0d>;
++			};
++		};
++	};
++
++
++Specifying power domain for IP modules
++======================================
++
++IP cores belonging to a power domain should contain a 'power-domains'
++property that is a phandle for PGC node representing the domain.
++
++Example of a device that is part of the PCIE_PHY power domain:
++
++	pcie: pcie@33800000 {
++	      reg = <0x33800000 0x4000>,
++	            <0x4ff00000 0x80000>;
++		/* ... */
++		power-domains = <&pgc_pcie_phy>;
++		/* ... */
++	};
+diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
+new file mode 100644
+index 0000000..eb70023
+--- /dev/null
++++ b/include/dt-bindings/power/imx7-power.h
+@@ -0,0 +1,18 @@
++/*
++ *  Copyright (C) 2017 Impinj
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __DT_BINDINGS_IMX7_POWER_H__
++#define __DT_BINDINGS_IMX7_POWER_H__
++
++#define IMX7_POWER_DOMAIN_USB_HSIC_PHY	0
++#define IMX7_POWER_DOMAIN_USB_OTG2_PHY	1
++#define IMX7_POWER_DOMAIN_USB_OTG1_PHY	2
++#define IMX7_POWER_DOMAIN_PCIE_PHY	3
++#define IMX7_POWER_DOMAIN_MIPI_PHY	4
++
++#endif
+-- 
+2.9.3
