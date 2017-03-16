@@ -1,138 +1,60 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
- constant-charge-current property
-Date: Thu, 16 Mar 2017 08:03:24 +0100
-Message-ID: <765fc3be-23db-0997-85b1-b6c85b3aceef@free-electrons.com>
-References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
- <20170315105537.22349-2-quentin.schulz@free-electrons.com>
- <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com>
- <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com>
- <CAKvHMgR58sDnB-nn386Bd-H0Duevkeoc8eEfz=otLAumc8FD+w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 5/8] dt-bindings: input: touchscreen: Add max11801-ts binding
+Date: Thu, 16 Mar 2017 12:35:38 +0530
+Message-ID: <1489647939-4966-1-git-send-email-jagan@openedev.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKvHMgR58sDnB-nn386Bd-H0Duevkeoc8eEfz=otLAumc8FD+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liam,
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-On 16/03/2017 07:27, Liam Breck wrote:
-> Hi Rob,
-> 
-> On Wed, Mar 15, 2017 at 6:10 AM, Quentin Schulz
-> <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> Hi Liam,
->>
->> On 15/03/2017 13:08, Liam Breck wrote:
->>> I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
->>> in patch description to direct a patch to interested parties and
->>> relevant lists. I don't want to see all 19 patches in this series.
->>>
->>> On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
->>> <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>> This adds the constant-charge-current property to the list of optional
->>>> properties of the battery.
->>>>
->>>> The constant charge current is critical for batteries as they can't
->>>> handle all charge currents.
->>>>
->>>> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>
->>>> v4:
->>>>  - switch from constant-charge-current-microamp to constant-charge-microamp,
-> 
-> Sebastian is on record supporting name alignment between DT:battery
-> properties and enum power_supply_property.
-> 
-> Could you OK a change back to constant-charge-current-microamp in this patch?
-> 
-> Note that the following could appear in DT:battery in future:
-> 
-> constant-charge-current-microamp
-> constant-charge-current-max-microamp
+Add missing documentation of max11801-ts dt-binding details.
 
-OK. I am actually setting max constant charge current and constant
-current charge with the same DT property so I might need to adapt my
-patches.
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v6:
+- Replace the lable and name of the node
+   ts: max11801 => max11801: touchscreen@48
+Changes for v5:
+- Newly added patch
 
-Quentin
+ .../bindings/input/touchscreen/max11801-ts.txt         | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
 
-> constant-charge-voltage-microvolt
-> constant-charge-voltage-max-microvolt
-> 
-> Thanks!
-> 
->>> Must be constant-charge-current-microamp for the reasons discussed in
->>> battery.txt - consistency with sysfs names.
->>>
->>
->> Hum. Just nitpicking, but I disagree with the use of 'must'. IIRC there
->> is nothing in the code that would require the property to be named after
->> a property from the enum power_supply_property.
->>
->> I would say that you _want_ it to be named like that because it
->> underlines the relation between the DT property and the actual impacted
->> property in the power supply subsystem. I'm fine with this reason but in
->> the end, the maintainer's opinion prevails (if (s)he does not want it,
->> (s)he will not take it). So, basically, I actually don't mind either
->> option and I see arguments on each side.
->>
->> So, just waiting for maintainer's opinion to make the final version of
->> this patch.
->>
->> Thanks,
->> Quentin
->>
->>> Also applies to power_supply_core.c patch.
->>>
->>> Rob: enum power_supply_property also lists constant-charge-voltage,
->>> hence the -current
->>>
->>>
->>>> added in v3
->>>>
->>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
->>>>  1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>> index 0278617..9594e1e 100644
->>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>> @@ -7,6 +7,7 @@ Optional Properties:
->>>>   - voltage-min-design-microvolt: drained battery voltage
->>>>   - energy-full-design-microwatt-hours: battery design energy
->>>>   - charge-full-design-microamp-hours: battery design capacity
->>>> + - constant-charge-microamp: battery constant charge current
->>>>
->>>>  Because drivers surface properties in sysfs using names derived
->>>>  from enum power_supply_property, e.g.
->>>> @@ -30,6 +31,7 @@ Example:
->>>>                 voltage-min-design-microvolt = <3200000>;
->>>>                 energy-full-design-microwatt-hours = <5290000>;
->>>>                 charge-full-design-microamp-hours = <1430000>;
->>>> +               constant-charge-microamp = <300000>;
->>>>         };
->>>>
->>>>         charger: charger@11 {
->>>> --
->>>> 2.9.3
->>>>
->>
->> --
->> Quentin Schulz, Free Electrons
->> Embedded Linux and Kernel engineering
->> http://free-electrons.com
-
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
+new file mode 100644
+index 0000000..4afccbe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
+@@ -0,0 +1,18 @@
++* MAXI MAX11801 Resistive touch screen controller with i2c interface
++
++Required properties:
++- compatible: must be "max11801"
++- reg: i2c slave address
++- interrupt-parent: the phandle for the interrupt controller
++- interrupts: touch controller interrupt
++
++Example:
++
++&i2c1 {
++	max11801: touchscreen@48 {
++		compatible = "max11801";
++		reg = <0x48>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <31 2>;
++	};
++};
 -- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
