@@ -1,90 +1,179 @@
-From: Philippe De Muyter <phdm@macq.eu>
-Subject: Re: media / v4l2-mc: wishlist for complex cameras (was Re: [PATCH
- v4 14/36] [media] v4l2-mc: add a function to inherit controls from
- a pipeline)
-Date: Thu, 16 Mar 2017 11:19:06 +0100
-Message-ID: <20170316101906.GA13126@frolo.macqel>
-References: <20170314004533.3b3cd44b@vento.lan>
- <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
- <20170314072143.498cde9b@vento.lan> <20170314223254.GA7141@amd>
- <20170314215420.6fc63c67@vento.lan> <20170315105049.GA12099@frolo.macqel>
- <1489604109.4593.4.camel@ndufresne.ca>
- <1489656360.2303.2.camel@pengutronix.de> <20170316094729.GA5595@frolo.macqel>
- <1489658516.2303.11.camel@pengutronix.de>
+From: Olivier MOYSAN <olivier.moysan@st.com>
+Subject: Re: [RESEND PATCH v2 1/2] ASoC: stm32: add bindings
+	for SAI
+Date: Thu, 16 Mar 2017 10:50:37 +0000
+Message-ID: <ecc50cac-46a6-5e89-d07c-05f34a12d997@st.com>
+References: <1488879872-7839-1-git-send-email-olivier.moysan@st.com>
+ <1488879872-7839-2-git-send-email-olivier.moysan@st.com>
+ <20170315174606.rrvhuuzplzwwucph@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1489658516.2303.11.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Pavel Machek <pavel@ucw.cz>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Nicolas Dufresne <nicolas@ndufresne.ca>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linu
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170315174606.rrvhuuzplzwwucph@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <C564459CBBC2D948949E96710C9E79F7@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 16, 2017 at 11:01:56AM +0100, Philipp Zabel wrote:
-> On Thu, 2017-03-16 at 10:47 +0100, Philippe De Muyter wrote:
-> > On Thu, Mar 16, 2017 at 10:26:00AM +0100, Philipp Zabel wrote:
-> > > On Wed, 2017-03-15 at 14:55 -0400, Nicolas Dufresne wrote:
-> > > > Le mercredi 15 mars 2017 =E0 11:50 +0100, Philippe De Muyter a =E9c=
-rit :
-> > > > > > I would say: camorama, xawtv3, zbar, google talk, skype. If it =
-runs
-> > > > > > with those, it will likely run with any other application.
-> > > > > > =
+Hello Rob,
 
-> > > > > =
+Thanks for your feedback.
 
-> > > > > I would like to add the 'v4l2src' plugin of gstreamer, and on the
-> > > > > imx6 its
-> > > > =
+On 03/15/2017 06:46 PM, Rob Herring wrote:
+> On Tue, Mar 07, 2017 at 10:44:31AM +0100, olivier moysan wrote:
+>> This patch adds documentation of device tree bindings for the
+>> STM32 SAI ASoC driver.
+>>
+>> Signed-off-by: olivier moysan <olivier.moysan@st.com>
+>> ---
+>>  .../devicetree/bindings/sound/st,stm32-sai.txt     | 79 ++++++++++++++++++++++
+>>  1 file changed, 79 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>> new file mode 100644
+>> index 0000000..b3be26d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>> @@ -0,0 +1,79 @@
+>> +STMicroelectronics STM32 Serial Audio Interface (SAI).
+>> +
+>> +The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
+>> +as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
+>> +The SAI contains two independent audio sub-blocks. Each sub-block has
+>> +its own clock generator and I/O lines controller.
+>> +
+>> +Required properties:
+>> +  - compatible: Should be "st,stm32f4-sai"
+>> +  - reg: Base address and size of SAI common register set.
+>> +  - clocks: Must contain phandle and clock specifier pairs for each entry
+>> +	in clock-names.
+>> +  - clock-names: Must contain "clk_x8k" and "clk_x11k"
+>> +	"clk_x8k": SAI parent clock for sampling rates multiple of 8kHz.
+>> +	"clk_x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
+>
+> clk_ is redundant.
+>
 
-> > > > While it would be nice if somehow you would get v4l2src to work (in
-> > > > some legacy/emulation mode through libv4l2),
-> > > =
+Do you mean, removing clk_ prefix ?
 
-> > > v4l2src works just fine, provided the pipeline is configured manually=
- in
-> > > advance via media-ctl.
-> > =
+>> +  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
+>> +
+>> +Note: Each SAI controller should have an alias correctly numbered
+>> +in "aliases" node, to provide explicit name to CPU DAI.
+>
+> No, it shouldn't. Why do you need that?
+>
 
-> > Including choosing the framerate ?  Sorry, I have no time these days
-> > to test it myself.
-> =
+Yes, this is not mandatory. This is convenient to identify sai 
+controller, as we may have up to 8 instances.
+I can make it optional, or remove it if you think it is not relevant.
 
-> No, the framerate is set with media-ctl on the CSI output pad. To really
-> choose the framerate, the element would indeed need a deeper
-> understanding of the pipeline, as the resulting framerate depends on at
-> least the source v4l2_subdevice (sensor) framerate and the CSI frame
-> skipping.
+>
+>> +
+>> +Optional properties:
+>> +  - resets: Reference to a reset controller asserting the SAI
+>> +
+>> +SAI subnodes:
+>> +Two subnodes corresponding to SAI sub-block instances A et B can be defined.
+>> +Subnode can be omitted for unsused sub-block.
+>> +
+>> +SAI subnodes required properties:
+>> +  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
+>> +	for SAI sub-block A or B respectively.
+>> +  - reg: Base address and size of SAI sub-block register set.
+>> +  - clocks: Must contain one phandle and clock specifier pair
+>> +	for sai_ck which feeds the internal clock generator.
+>> +  - clock-names: Must contain "sai_ck".
+>> +  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
+>> +  - dma-names: identifier string for each DMA request line
+>> +	"tx": if sai sub-block is configured as playback DAI
+>> +	"rx": if sai sub-block is configured as capture DAI
+>> +  - pinctrl-names: should contain only value "default"
+>> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
+>> +
+>> +Example:
+>> +sai1: sai1@40015800 {
+>> +	compatible = "st,stm32f4-sai";
+>> +	reg = <0x40015800 0x400>;
 
-Count me in than as a supporter of Steve's "v4l2-mc: add a function to
-inherit controls from a pipeline" patch
+	reg = <0x40015800 0x4>;
 
-> > of the image buffers for further processing by other (not necessarily n=
-ext
-> > in gstreamer pipeline, or for all frames) hardware-accelerated plugins =
-likes
-> > the h.264 video encoder.  As I am stuck with fsl/nxp kernel and driver =
-on that
-> > matter, I don't know how the interfaces have evolved in current linux k=
-ernels.
-> =
+>> +	clocks = <&rcc 1 CLK_SAIQ_PDIV>, <&rcc 1 CLK_I2SQ_PDIV>;
+>> +	clock-names = "clk_x8k", "clk_x11k";
+>> +	interrupts = <87>;
+>> +	resets = <&rcc 310>;
+>> +
+>> +	sai1b: sai@1 {
+>
+> unit address needs a reg property.
+>
+> audio-controller@1
+>
 
-> The physical address of the image buffers is hidden from userspace by
-> dma-buf objects, but those can be passed around to the next driver
-> without copying the image data.
+Right. This needs to be updated as follows:
+	sai1b: sai1b@40015824 {
+		...
+		reg = <0x40015824 0x1C>;
+		...
+	};
 
-OK
+>> +		#sound-dai-cells = <0>;
+>> +		compatible = "st,stm32-sai-sub-b";
+>> +		clocks = <&rcc 1 CLK_SAI2>;
+>> +		clock-names = "sai_ck";
+>> +		dmas = <&dma2 5 0 0x400 0x1>;
+>> +		dma-names = "tx";
+>> +	};
+>> +};
+>> +
+>> +sound {
+>> +	compatible = "simple-audio-card";
+>
+> Perhaps you want to use the graph-card here. It's getting close to
+> merging.
+>
 
-thanks
+mclk-fs property is required when SAI is configured as master.
+It seems that mclk-fs is not supported in current version
+of audio graph card. So I thing I should keep simple card for the time 
+being. Anyway, I plan further updates for SAI, so I will
+have opportunity to change to graph card at that time.
 
-Philippe
+>> +	simple-audio-card,name = "STM32-Sound-Card";
+>> +	status = "okay";
+>> +
+>> +	simple-audio-card,dai-link@0 {
+>> +		format = "i2s";
+
+		mclk-fs = <256>;
+
+>> +		cpu {
+>> +			sound-dai = <&sai1b>;
+>> +		};
+>> +		codec {
+>> +			sound-dai = <&codec>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +aliases {
+>> +	sai1 = &sai1;
+>> +};
+>> --
+>> 1.9.1
+>>
+
+regards
+olivier
