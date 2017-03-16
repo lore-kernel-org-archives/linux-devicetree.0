@@ -1,80 +1,291 @@
-From: "zhichang.yuan" <zhichang.yuan02@gmail.com>
-Subject: Re: [PATCH V7 5/7] ACPI: Delay the enumeration on the devices whose
- dependency has not met
-Date: Thu, 16 Mar 2017 22:56:52 +0800
-Message-ID: <592befcb-8b52-3a3a-323f-55566f61c7df@gmail.com>
-References: <1489372963-9000-1-git-send-email-yuanzhichang@hisilicon.com>
- <1489372963-9000-6-git-send-email-yuanzhichang@hisilicon.com>
- <4600523.rWNiWKrYZC@aspire.rjw.lan> <58C9F6C6.4090700@hisilicon.com>
- <CAK8P3a2QZ_j9RQ0U=4MoAAcRcZyu0L5AiYM22QZkiRxh7Ca-iA@mail.gmail.com>
+From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] fpga manager: Add Xilinx slave serial SPI driver
+Date: Thu, 16 Mar 2017 07:58:17 -0700
+Message-ID: <CAAtXAHdN=CYMET_8LWvvaSfyDFDCZCh2rJ7ByrNBEV8BnPuvDQ@mail.gmail.com>
+References: <1488300022-30150-1-git-send-email-agust@denx.de> <1488300022-30150-3-git-send-email-agust@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a2QZ_j9RQ0U=4MoAAcRcZyu0L5AiYM22QZkiRxh7Ca-iA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Rafael Wysocki <rafael@kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, Frank Rowand <frowand.list@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Wei Xu <xuwei5@hisilicon.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, liviu.dudau@arm.com, John Garry <john.garry@huawei.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, kantyzc@163.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>Zou Rongrong <zo>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488300022-30150-3-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd,
-
-
-
-On 03/16/2017 06:13 PM, Arnd Bergmann wrote:
-> On Thu, Mar 16, 2017 at 3:21 AM, zhichang.yuan
-> <yuanzhichang@hisilicon.com> wrote:
->> Hi, Rafael,
->>
->> Thanks for your review!
->>
->> On 2017/3/14 5:24, Rafael J. Wysocki wrote:
->>> On Monday, March 13, 2017 10:42:41 AM zhichang.yuan wrote:
->>>> In commit 40e7fcb1929(ACPI: Add _DEP support to fix battery issue on Asus
->>>> T100TA), the '_DEP' was supported to solve the dependency of Asus battery. But
->>>> this patch is specific to Asus battery device.
->>>> In the real world, there are other devices which need the dependency to play the
->>>> role on the enumeration order. For example, all the Hip06 LPC
->>>> periperals(IPMI-BT, uart, etc) must be scanned after the LPC host driver
->>>> finished the probing. So, it makes sense to add a checking whether the ACPI
->>>> device meet all the dependencies during its enumeration slot, if not, the
->>>> enumeration will be delayed till all dependency master finish their work.
->>>>
->>>> This patch adds the dependency checking in ACPI enumeration, also the
->>>> corresponding handling to retrigger the Hip06 LPC peripherals' scanning.
->>>
->>> AFAICS, _DEP is generally abused in the wild and cannot be made generic.  Sorry.
->>>
->>
->> From the ACPI specification, _DEP is for operation region accesses.
->> You are right...
->>
->> How about we add a ACPI handler for our LPC bus?? Just like amba.
->> In this way, we also can solve the issue about LPC enumeration order.
-> 
-> As far as I can tell, PCI and LPC have exactly the same requirement here,
-> so whatever you end up doing for one should be used for the other as well.
-> 
-
-Thanks for your remind!
-
-To some extend, our LPC is similar to PCI. We also need to setup the host
-resources before scanning the children. For PCI, there is an ACPI handler of
-pci_root_handler. Although our LPC is not so complicated and powerful as PCI(for
-example, LPC can't probe downside devices), I think, we can still make LPC host
-ready to work in its own ACPI handler callback....
-
-Cheers,
-Zhichang
-
-
->       Arnd
-> 
+On Tue, Feb 28, 2017 at 8:40 AM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
+> The driver loads FPGA firmware over SPI, using the "slave serial"
+> configuration interface on Xilinx FPGAs.
+>
+> Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Reviewed-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> This patch requires patch https://lkml.org/lkml/2017/2/15/667
+> for building
+>
+> Changes in v4:
+>
+>  - increase program latency up to 7.5ms for other Xilinx FPGAs
+>  - continue to apply CCLK cycles until specified timeout elapses (to
+>    cover more possible configuration DONE scenarios)
+>  - apply 8 CCLK cycles afer DONE signal
+>  - rebased to apply on top of Kconfig/Makefile changes by queued
+>    fpga manager patches
+>
+> Changes in v3:
+>
+>  - use named constant for udelay()/usleep_range() arguments
+>  - drop not needed .owner init
+>  - correct module licence (GPL v2)
+>  - fix build warning with newer gcc (in min() macro)
+>
+> Changes in v2:
+>
+>  - rebased on v4.10
+>
+>  drivers/fpga/Kconfig      |   7 ++
+>  drivers/fpga/Makefile     |   1 +
+>  drivers/fpga/xilinx-spi.c | 198 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 206 insertions(+)
+>  create mode 100644 drivers/fpga/xilinx-spi.c
+>
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index dee470f..c81cb7d 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -46,6 +46,13 @@ config FPGA_MGR_TS73XX
+>           FPGA manager driver support for the Altera Cyclone II FPGA
+>           present on the TS-73xx SBC boards.
+>
+> +config FPGA_MGR_XILINX_SPI
+> +       tristate "Xilinx Configuration over Slave Serial (SPI)"
+> +       depends on SPI
+> +       help
+> +         FPGA manager driver support for Xilinx FPGA configuration
+> +         over slave serial interface.
+> +
+>  config FPGA_MGR_ZYNQ_FPGA
+>         tristate "Xilinx Zynq FPGA"
+>         depends on ARCH_ZYNQ || COMPILE_TEST
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index a5ee3ff..c6f5d74 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_FPGA_MGR_ICE40_SPI)      += ice40-spi.o
+>  obj-$(CONFIG_FPGA_MGR_SOCFPGA)         += socfpga.o
+>  obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)     += socfpga-a10.o
+>  obj-$(CONFIG_FPGA_MGR_TS73XX)          += ts73xx-fpga.o
+> +obj-$(CONFIG_FPGA_MGR_XILINX_SPI)      += xilinx-spi.o
+>  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)       += zynq-fpga.o
+>
+>  # FPGA Bridge Drivers
+> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+> new file mode 100644
+> index 0000000..9b62a4c
+> --- /dev/null
+> +++ b/drivers/fpga/xilinx-spi.c
+> @@ -0,0 +1,198 @@
+> +/*
+> + * Xilinx Spartan6 Slave Serial SPI Driver
+> + *
+> + * Copyright (C) 2017 DENX Software Engineering
+> + *
+> + * Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * Manage Xilinx FPGA firmware that is loaded over SPI using
+> + * the slave serial configuration interface.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/fpga/fpga-mgr.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/of.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/sizes.h>
+> +
+> +struct xilinx_spi_conf {
+> +       struct spi_device *spi;
+> +       struct gpio_desc *prog_b;
+> +       struct gpio_desc *done;
+> +};
+> +
+> +static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
+> +{
+> +       struct xilinx_spi_conf *conf = mgr->priv;
+> +
+> +       if (!gpiod_get_value(conf->done))
+> +               return FPGA_MGR_STATE_RESET;
+> +
+> +       return FPGA_MGR_STATE_UNKNOWN;
+> +}
+> +
+> +static int xilinx_spi_write_init(struct fpga_manager *mgr,
+> +                                struct fpga_image_info *info,
+> +                                const char *buf, size_t count)
+> +{
+> +       struct xilinx_spi_conf *conf = mgr->priv;
+> +       const size_t prog_latency_7500us = 7500;
+> +       const size_t prog_pulse_1us = 1;
+> +
+> +       if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
+> +               dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       gpiod_set_value(conf->prog_b, 1);
+> +
+> +       udelay(prog_pulse_1us); /* min is 500 ns */
+> +
+> +       gpiod_set_value(conf->prog_b, 0);
+> +
+> +       if (gpiod_get_value(conf->done)) {
+> +               dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
+> +               return -EIO;
+> +       }
+> +
+> +       /* program latency */
+> +       usleep_range(prog_latency_7500us, prog_latency_7500us + 100);
+> +       return 0;
+> +}
+> +
+> +static int xilinx_spi_write(struct fpga_manager *mgr, const char *buf,
+> +                           size_t count)
+> +{
+> +       struct xilinx_spi_conf *conf = mgr->priv;
+> +       const char *fw_data = buf;
+> +       const char *fw_data_end = fw_data + count;
+> +
+> +       while (fw_data < fw_data_end) {
+> +               size_t remaining, stride;
+> +               int ret;
+> +
+> +               remaining = fw_data_end - fw_data;
+> +               stride = min_t(size_t, remaining, SZ_4K);
+> +
+> +               ret = spi_write(conf->spi, fw_data, stride);
+> +               if (ret) {
+> +                       dev_err(&mgr->dev, "SPI error in firmware write: %d\n",
+> +                               ret);
+> +                       return ret;
+> +               }
+> +               fw_data += stride;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int xilinx_spi_apply_cclk_cycles(struct xilinx_spi_conf *conf)
+> +{
+> +       struct spi_device *spi = conf->spi;
+> +       const u8 din_data[1] = { 0xff };
+> +       int ret;
+> +
+> +       ret = spi_write(conf->spi, din_data, sizeof(din_data));
+> +       if (ret)
+> +               dev_err(&spi->dev, "applying CCLK cycles failed: %d\n", ret);
+> +
+> +       return ret;
+> +}
+> +
+> +static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+> +                                    struct fpga_image_info *info)
+> +{
+> +       struct xilinx_spi_conf *conf = mgr->priv;
+> +       unsigned long timeout;
+> +       int ret;
+> +
+> +       if (gpiod_get_value(conf->done))
+> +               return xilinx_spi_apply_cclk_cycles(conf);
+> +
+> +       timeout = jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
+> +
+> +       while (time_before(jiffies, timeout)) {
+> +
+> +               ret = xilinx_spi_apply_cclk_cycles(conf);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               if (gpiod_get_value(conf->done))
+> +                       return xilinx_spi_apply_cclk_cycles(conf);
+> +       }
+> +
+> +       dev_err(&mgr->dev, "Timeout after config data transfer.\n");
+> +       return -ETIMEDOUT;
+> +}
+> +
+> +static const struct fpga_manager_ops xilinx_spi_ops = {
+> +       .state = xilinx_spi_state,
+> +       .write_init = xilinx_spi_write_init,
+> +       .write = xilinx_spi_write,
+> +       .write_complete = xilinx_spi_write_complete,
+> +};
+> +
+> +static int xilinx_spi_probe(struct spi_device *spi)
+> +{
+> +       struct xilinx_spi_conf *conf;
+> +
+> +       conf = devm_kzalloc(&spi->dev, sizeof(*conf), GFP_KERNEL);
+> +       if (!conf)
+> +               return -ENOMEM;
+> +
+> +       conf->spi = spi;
+> +
+> +       /* PROGRAM_B is active low */
+> +       conf->prog_b = devm_gpiod_get(&spi->dev, "prog_b", GPIOD_OUT_LOW);
+> +       if (IS_ERR(conf->prog_b)) {
+> +               dev_err(&spi->dev, "Failed to get PROGRAM_B gpio: %ld\n",
+> +                       PTR_ERR(conf->prog_b));
+> +               return PTR_ERR(conf->prog_b);
+> +       }
+> +
+> +       conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
+> +       if (IS_ERR(conf->done)) {
+> +               dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
+> +                       PTR_ERR(conf->done));
+> +               return PTR_ERR(conf->done);
+> +       }
+> +
+> +       return fpga_mgr_register(&spi->dev, "Xilinx Slave Serial FPGA Manager",
+> +                                &xilinx_spi_ops, conf);
+> +}
+> +
+> +static int xilinx_spi_remove(struct spi_device *spi)
+> +{
+> +       fpga_mgr_unregister(&spi->dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id xlnx_spi_of_match[] = {
+> +       { .compatible = "xlnx,fpga-slave-serial", },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, xlnx_spi_of_match);
+> +
+> +static struct spi_driver xilinx_slave_spi_driver = {
+> +       .driver = {
+> +               .name = "xlnx-slave-spi",
+> +               .of_match_table = of_match_ptr(xlnx_spi_of_match),
+> +       },
+> +       .probe = xilinx_spi_probe,
+> +       .remove = xilinx_spi_remove,
+> +};
+> +
+> +module_spi_driver(xilinx_slave_spi_driver)
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>");
+> +MODULE_DESCRIPTION("Load Xilinx FPGA firmware over SPI");
+> --
+> 2.7.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
