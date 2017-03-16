@@ -1,88 +1,36 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
- iio-hwmon
-Date: Thu, 16 Mar 2017 19:06:08 +0100
-Message-ID: <6767a340-b150-c21a-b6cb-5ca1ce2cd721@xilinx.com>
-References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
- <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
- <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
- <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
- <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
+Date: Thu, 16 Mar 2017 11:24:31 -0700
+Message-ID: <m2mvcl6pwg.fsf@baylibre.com>
+References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
+        <20170316100743.GA12137@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Julia Cartwright <julia@ni.com>
+Content-Type: text/plain
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20170316100743.GA12137@gondor.apana.org.au> (Herbert Xu's
+        message of "Thu, 16 Mar 2017 18:07:43 +0800")
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYuMy4yMDE3IDE3OjUxLCBMYXJzLVBldGVyIENsYXVzZW4gd3JvdGU6Cj4gT24gMDMvMTYv
-MjAxNyAwNTo0NSBQTSwgTWljaGFsIFNpbWVrIHdyb3RlOgo+PiBPbiAxNi4zLjIwMTcgMTc6Mzks
-IE1vcml0eiBGaXNjaGVyIHdyb3RlOgo+Pj4gT24gVGh1LCBNYXIgMTYsIDIwMTcgYXQgOToxNiBB
-TSwgTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4gd3JvdGU6Cj4+Pj4gSGks
-Cj4+Pj4KPj4+PiBPbiA4LjMuMjAxNyAyMToxMSwgTW9yaXR6IEZpc2NoZXIgd3JvdGU6Cj4+Pj4+
-IEZpeAo+Pj4+Pgo+Pj4+PiBPRjogL2lpb19od21vbjogY291bGQgbm90IGdldCAjaW8tY2hhbm5l
-bC1jZWxscyBmb3IKPj4+Pj4gL2FtYmEvYWRjQGY4MDA3MTAwCj4+Pj4+IE9GOiAvaWlvX2h3bW9u
-OiBjb3VsZCBub3QgZ2V0ICNpby1jaGFubmVsLWNlbGxzIGZvcgo+Pj4+PiAvYW1iYS9hZGNAZjgw
-MDcxMDAKPj4+Pj4gT0Y6IC9paW9faHdtb246IGNvdWxkIG5vdCBnZXQgI2lvLWNoYW5uZWwtY2Vs
-bHMgZm9yCj4+Pj4+IC9hbWJhL2FkY0BmODAwNzEwMAo+Pj4+Pgo+Pj4+PiBieSBhZGRpbmcgdGhl
-ICNpby1jaGFubmVsLWNlbGxzIHByb3BlcnR5Lgo+Pj4+Pgo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBN
-b3JpdHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+Cj4+Pj4+IENjOiBNaWNoYWwgU2ltZWsgPG1p
-Y2hhbC5zaW1la0B4aWxpbnguY29tPgo+Pj4+PiBDYzogU8O2cmVuIEJyaW5rbWFubiA8c29yZW4u
-YnJpbmttYW5uQHhpbGlueC5jb20+Cj4+Pj4+IENjOiBKdWxpYSBDYXJ0d3JpZ2h0IDxqdWxpYUBu
-aS5jb20+Cj4+Pj4+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCj4+Pj4+IENjOiBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Pj4+PiAtLS0KPj4+Pj4KPj4+Pj4gQ2hhbmdlcyBm
-cm9tIHYxOgo+Pj4+PiAtIGZpeCBtZXNzZWQgdXAgY29tbWl0IG1lc3NhZ2UKPj4+Pj4gLS0tCj4+
-Pj4+ICBhcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSB8IDEgKwo+Pj4+PiAgMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4+Pj4+Cj4+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5k
-dHNpCj4+Pj4+IGluZGV4IGYzYWM5YmYuLjk4MjMzYTggMTAwNjQ0Cj4+Pj4+IC0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4+Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3p5bnEtNzAwMC5kdHNpCj4+Pj4+IEBAIC03Miw2ICs3Miw3IEBACj4+Pj4+ICAgICAgICAgICAg
-ICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgNyA0PjsKPj4+Pj4gICAgICAgICAgICAgICAgICAg
-ICAgIGludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+Pj4+PiAgICAgICAgICAgICAgICAgICAg
-ICAgY2xvY2tzID0gPCZjbGtjIDEyPjsKPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICNpby1j
-aGFubmVsLWNlbGxzID0gPDE+Owo+Pj4+PiAgICAgICAgICAgICAgIH07Cj4+Pj4+Cj4+Pj4+ICAg
-ICAgICAgICAgICAgY2FuMDogY2FuQGUwMDA4MDAwIHsKPj4+Pj4KPj4+Pgo+Pj4+IEkgdGhpbmsg
-aXQgd2lsbCBiZSBnb29kIHRvIHRoZSBuZXh0IHN0ZXAgdG9vLgo+Pj4+IEl0IG1lYW5zIGFsc28g
-YWRkIGlpby1od21vbiBub2RlIHRvby4KPj4+Pgo+Pj4+IFdoYXQgZG8geW91IHRoaW5rPwo+Pj4K
-Pj4+IEkgaGFkbid0IHB1dCBpdCBpbiB0aGVyZSBzaW5jZSBkdHMgaXMgc3VwcG9zZWQgdG8gZGVz
-Y3JpYmUgaHcsCj4+PiBidXQgb2J2aW91c2x5IHB1dHRpbmcgdGhlIGFjdHVhbCBod21vbiBpbiB0
-aGVyZSBtYWtlcyBpdCBtb3JlIHVzZWZ1bC4KPj4KPj4gSSBoYWQgb25lIGRpc2N1c3Npb24gYWJv
-dXQgdGhpcyB3aXRoIEdyYW50IGluIHBhc3QgYW5kIGl0IGlzIGNvbW1vbgo+PiBtaXN0YWtlLiBJ
-dCBpcyBzaW1wbGlmaWNhdGlvbiBvZiBwdXJwb3NlIG9mIGR0cy4KPj4KPiAKPiBJZiB0aGUgaWlv
-LWh3bW9uIGJpbmRpbmcgaGFkIGdvbmUgdGhyb3VnaCByZXZpZXcgaXQgd291bGQgaGF2ZSBiZWVu
-IHJlamVjdGVkLgoKSXNuJ3QgaXQgYSB0aW1lIHRvIGRlcHJlY2F0ZSBpdD8KCj4gCj4+Pgo+Pj4g
-SSBjYW4gcmVzdWJtaXQgd2l0aCB0aGUgaHdtb24gbm9kZSBpbiB0aGVyZS4KPj4KPj4gSWYgeW91
-IGdyZXAga2VybmVsIHRyZWUgeW91IHdpbGwgc2VlIHRoYXQgb3RoZXJzIGFyZSB1c2luZyBpdCB0
-b28uCj4+IEFsc28gdGhlcmUgaXMgYWNjZXB0ZWQgYmluZGluZyBmb3IgdGhhdCB0aGF0J3Mgd2h5
-IEkgY2FuJ3Qgc2VlIGJpZwo+PiBwcm9ibGVtIHdpdGggaXQuCj4gCj4gU2luY2UgdGhpcyBpcyBh
-biBhcHBsaWNhdGlvbiBzcGVjaWZpYyBiaW5kaW5nIEkgd291bGRuJ3QgcHV0IGl0IGluIHRoZQo+
-IGdlbmVyaWMgRFQgaW5jbHVkZSBmaWxlLiBJdCdzIGEgYml0IGxpa2UgYWRkaW5nIGEgZ3Bpby1r
-ZXkgYmluZGluZyBmb3IgZWFjaAo+IG9mIHRoZSBHUElPcyBqdXN0IGluIGNhc2Ugc29tZWJvZHkg
-d2FudHMgdG8gdXNlIGl0LgoKcHNjaSBpcyBzeXN0ZW0gc3BlY2lmaWMgdG9vLgoKSUlSQyB0aGlz
-IGRyaXZlciBmb3IgenlucSB3YXMgd3JpdHRlbiBieSBBREkgb3Igd2l0aCBBREkgaGVscCB0aGF0
-J3Mgd2h5CnlvdSBrbm93IG11Y2ggYmV0dGVyIHRoYW4gSSB3aGF0J3MgdGhlIGNvcnJlY3QgY29u
-ZmlndXJhdGlvbi4KClRoaXMgdGFyZ2V0cyBQUyBJUCB3aGljaCBzaG91bGQgYmUgcHJlc2VudCBp
-biB0aGUgaHcgYWxsIHRoZSB0aW1lLgpOb3Qgc3VyZSBpZiBmb3IgYWxsIGNvbmZpZ3VyYXRpb24g
-YnV0IEkgZXhwZWN0IGF0IGxlYXN0IHRoZSBwYXJ0IG9mIGl0CmlzIHRoZXJlIGFsbCB0aGVtIHRp
-bWUuCgpJZiBiaW5kaW5nIGlzIGluY29ycmVjdCB0aGVuIHBsZWFzZSByZW1vdmUgaXQgd2l0aCBy
-ZW1vdmluZyBmcm9tIGFsbApkdHMvZHRzaSBmaWxlcyB3aGljaCBoYXZlIHRoaXMuIFRoZSBzYW1l
-IGlzIGZvciBvZiBwcm9iZSBmdW5jdGlvbiBpbiB0aGUKZHJpdmVyIGl0c2VsZi4KSWYgdGhpcyBp
-cyBub3QgZG9uZSB0aGVuIHRoaXMgaXMganVzdCArMSBjYXNlLgoKSWYgeW91IHN0aWxsIGluc2lz
-dCB0aGF0IHdlIHNob3VsZG4ndCBkbyBpdCB0aGVuIHBsZWFzZSBhdCBsZWFzdCBleHRlbmQKY29t
-bWl0IG1lc3NhZ2UgYW5kIHB1dCB0aGVyZSBleGFtcGxlIGhvdyB0byB3aXJlIGl0IG9uIHp5bnEu
-CgpUaGFua3MsCk1pY2hhbAoKCgoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Herbert,
+
+Herbert Xu <herbert@gondor.apana.org.au> writes:
+
+> On Wed, Feb 22, 2017 at 07:55:24AM +0100, Heiner Kallweit wrote:
+>> Expose clock CLKID_RNG0 which is needed for the HW random number generator.
+>> 
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>
+> All patches applied.  Thanks.
+
+Actually, can you just apply [PATCH 4/4] to your tree?
+
+The clock and DT patches need to go through their respective trees or
+will otherwise have conflicts with other things going in via those
+trees.
+
+Thanks,
+
+Kevin
