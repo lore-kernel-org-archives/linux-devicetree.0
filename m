@@ -1,159 +1,147 @@
-From: Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v3] arm64: dts: ls1012a: add thermal monitor node
-Date: Thu, 16 Mar 2017 03:13:58 +0000
-Message-ID: <DB6PR0402MB2837D999F3B361EE2BA1D46CF3260@DB6PR0402MB2837.eurprd04.prod.outlook.com>
-References: <1489561825-42670-1-git-send-email-andy.tang@nxp.com>
- <20170316031033.GY3618@dragon>
+From: Sam Povilus <kernel.development@povil.us>
+Subject: Re: [PATCH v3] hwmon: ads7828 optional parameters from the device
+ tree
+Date: Wed, 15 Mar 2017 21:21:28 -0600
+Message-ID: <20170316032127.22yn62pjefcrhnw2@irascible.povil.us>
+References: <20170312144739.13276-1-kernel.development@povil.us>
+ <14108694-9690-15fc-3087-5dbd1ffd5694@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170316031033.GY3618@dragon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <14108694-9690-15fc-3087-5dbd1ffd5694@roeck-us.net>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: wsa@the-dreams.de, jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Thursday, March 16, 2017 11:11 AM
-> To: Andy Tang
-> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; catalin.marinas-5wv7dgnIgG8@public.gmane.org;
-> will.deacon-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH v3] arm64: dts: ls1012a: add thermal monitor node
->=20
-> On Wed, Mar 15, 2017 at 03:10:25PM +0800, Yuantian Tang wrote:
-> > There is a thermal monitoring unit on ls1012a soc which can monitor
-> > and record the temperature of cores so that appropriate actions can be
-> > taken or alarm the user when the temperature exceeds a programmed
-> > temperature threshold.
-> >
-> > Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+On Sun, Mar 12, 2017 at 10:57:43AM -0700, Guenter Roeck wrote:
+> On 03/12/2017 07:47 AM, Sam Povilus wrote:
+> > Adding the ability for the ads7828 and ads7830 to use the device tree to
+> > get their optional parameters, instead of using platform devices. This
+> > allows people using custom boards to also use the ads7828 in a non-default
+> > manner.
+> > 
+> > Also adding a note to the user if they misconfigure the device's external
+> > reference.
+> > 
+> > v2: conforming to coding style
+> > v3: changing from "_" to "-" for device tree entries
+> > Signed-off-by: Sam Povilus <kernel.development@povil.us>
 > > ---
-> > v3:
-> > 	-- fix alignment and format issue
-> > v2:
-> > 	-- rebase to latest kernel
-> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 76
-> > ++++++++++++++++++++++++++
-> >  1 file changed, 76 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> > index cffebb4..2cceefd 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> > @@ -43,6 +43,7 @@
-> >   */
-> >
-> >  #include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >
-> >  / {
-> >  	compatible =3D "fsl,ls1012a";
-> > @@ -127,6 +128,81 @@
-> >  			clocks =3D <&sysclk>;
-> >  		};
-> >
-> > +		tmu: tmu@1f00000 {
-> > +			compatible =3D "fsl,qoriq-tmu";
-> > +			reg =3D <0x0 0x1f00000 0x0 0x10000>;
-> > +			interrupts =3D <0 33 0x4>;
-> > +			fsl,tmu-range =3D <0xb0000 0x9002a 0x6004c 0x30062>;
-> > +			fsl,tmu-calibration =3D <0x00000000 0x00000026
-> > +					       0x00000001 0x0000002d
-> > +					       0x00000002 0x00000032
-> > +					       0x00000003 0x00000039
-> > +					       0x00000004 0x0000003f
-> > +					       0x00000005 0x00000046
-> > +					       0x00000006 0x0000004d
-> > +					       0x00000007 0x00000054
-> > +					       0x00000008 0x0000005a
-> > +					       0x00000009 0x00000061
-> > +					       0x0000000a 0x0000006a
-> > +					       0x0000000b 0x00000071
+> >  Documentation/devicetree/bindings/hwmon/ads7828.txt    | 18 ++++++++++++++++++
+> >  .../devicetree/bindings/i2c/trivial-devices.txt        |  2 --
+> >  drivers/hwmon/ads7828.c                                | 15 +++++++++++++++
+> >  3 files changed, 33 insertions(+), 2 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
+> > new file mode 100644
+> > index 000000000000..0d37cd3fd31b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
+> > @@ -0,0 +1,18 @@
+> > +ads7828 properties
 > > +
-> > +					       0x00010000 0x00000025
-> > +					       0x00010001 0x0000002c
-> > +					       0x00010002 0x00000035
-> > +					       0x00010003 0x0000003d
-> > +					       0x00010004 0x00000045
-> > +					       0x00010005 0x0000004e
-> > +					       0x00010006 0x00000057
-> > +					       0x00010007 0x00000061
-> > +					       0x00010008 0x0000006b
-> > +					       0x00010009 0x00000076
+> > +Required properties:
+> > +- compatible:
+> > +	Should be one of
+> > +	       ti,ads7828
+> > +	       ti,ads7830
+> > +- reg: I2C address
 > > +
-> > +					       0x00020000 0x00000029
-> > +					       0x00020001 0x00000033
-> > +					       0x00020002 0x0000003d
-> > +					       0x00020003 0x00000049
-> > +					       0x00020004 0x00000056
-> > +					       0x00020005 0x00000061
-> > +					       0x00020006 0x0000006d
+> > +Optional properties:
 > > +
-> > +					       0x00030000 0x00000021
-> > +					       0x00030001 0x0000002a
-> > +					       0x00030002 0x0000003c
-> > +					       0x00030003 0x0000004e>;
-> > +			big-endian;
-> > +			#thermal-sensor-cells =3D <1>;
-> > +		};
-> > +
-> > +		thermal-zones {
-> > +			cpu_thermal: cpu-thermal {
-> > +				polling-delay-passive =3D <1000>;
-> > +				polling-delay =3D <5000>;
-> > +				thermal-sensors =3D <&tmu 0>;
->=20
-> Please remember to have a newline between property list and child node.
-> I fixed it up and applied the patch.
->=20
-Thanks, Shawn. I will keep it in mind.
+> > +- diff-input
+> > +  Set to use the device in differential mode.
+> 
+> I'll wait for Rob to comment, but "differential-input" sounds better to me,
+> Also, it would have to have a "ti," prefix.
+> 
 
-Regards,
-Andy
+The platform device uses diff_input, are we going for consistancy or
+correctness? I am good with either.
 
-> Shawn
->=20
-> > +				trips {
-> > +					cpu_alert: cpu-alert {
-> > +						temperature =3D <85000>;
-> > +						hysteresis =3D <2000>;
-> > +						type =3D "passive";
-> > +					};
-> > +
-> > +					cpu_crit: cpu-crit {
-> > +						temperature =3D <95000>;
-> > +						hysteresis =3D <2000>;
-> > +						type =3D "critical";
-> > +					};
-> > +				};
-> > +
-> > +				cooling-maps {
-> > +					map0 {
-> > +						trip =3D <&cpu_alert>;
-> > +						cooling-device =3D
-> > +							<&cpu0
-> THERMAL_NO_LIMIT
-> > +
-> 	THERMAL_NO_LIMIT>;
-> > +					};
-> > +				};
-> > +			};
-> > +		};
-> > +
-> >  		i2c0: i2c@2180000 {
-> >  			compatible =3D "fsl,vf610-i2c";
-> >  			#address-cells =3D <1>;
-> > --
-> > 2.1.0.27.g96db324
-> >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +- ext-vref
+> > +  Set to enable the external voltage reference on the device.
+> > +- vref-mv
+> > +  The external reference on the device is set to this as an unsigned integer in
+> > +  milivolts. Must use "ext_vref" for this to have any meaning.
+> 
+> ext_vref, though as suggested below I think it would be better to use a standard
+> property. Also, it seems to me that ext-vref is really unnecessary; the presence
+> of "vref" can imply that the reference voltage is external.
+>
+
+I agree, but again, the platform device seperates it. Consistancy or
+correctness?
+
+> > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > index cdd7b48826c3..87648909f6ce 100644
+> > --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > @@ -163,8 +163,6 @@ st,m41t00		Serial real-time clock (RTC)
+> >  st,m41t62		Serial real-time clock (RTC) with alarm
+> >  st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
+> >  taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
+> > -ti,ads7828		8-Channels, 12-bit ADC
+> > -ti,ads7830		8-Channels, 8-bit ADC
+> >  ti,tsc2003		I2C Touch-Screen Controller
+> >  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+> >  ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+> > diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
+> > index ee396ff167d9..d1f7ba5d7a2b 100644
+> > --- a/drivers/hwmon/ads7828.c
+> > +++ b/drivers/hwmon/ads7828.c
+> > @@ -118,6 +118,7 @@ static int ads7828_probe(struct i2c_client *client,
+> >  	struct ads7828_data *data;
+> >  	struct device *hwmon_dev;
+> >  	unsigned int vref_mv = ADS7828_INT_VREF_MV;
+> > +	unsigned int vref_mv_tmp;
+> >  	bool diff_input = false;
+> >  	bool ext_vref = false;
+> >  	unsigned int regval;
+> > @@ -131,11 +132,25 @@ static int ads7828_probe(struct i2c_client *client,
+> >  		ext_vref = pdata->ext_vref;
+> >  		if (ext_vref && pdata->vref_mv)
+> >  			vref_mv = pdata->vref_mv;
+> > +	} else if (dev->of_node) {
+> > +		if (of_get_property(dev->of_node, "diff-input", NULL))
+> > +			diff_input = true;
+> > +		if (of_get_property(dev->of_node, "ext-vref", NULL))
+> > +			ext_vref = true;
+> > +		if (!of_property_read_u32(dev->of_node, "vref-mv", &vref_mv_tmp)
+> > +		   && ext_vref)
+> > +			vref_mv = vref_mv_tmp;
+> 
+> Please consider using devm_regulator_get_optional() and thus standard properties.
+>
+
+I'd have to disagree with this, but not strongly. In my reading of
+Documentation/power/regulator/overview.txt it seems like the regulator
+subsystem is exclusivly for regulators not for references. I would hope
+that most board designers would not use a regulator, and especially not
+a switch mode regulator for the input to a reference. Am I reading the
+regulator subsystem overview wrong?  or are people using it for things
+that it's not quite intended (I will admit it looks like a number of
+other adcs use it)? or is there some other explination.
+
+> >  	}
+> > 
+> >  	/* Bound Vref with min/max values */
+> > +	vref_mv_tmp = vref_mv;
+> >  	vref_mv = clamp_val(vref_mv, ADS7828_EXT_VREF_MV_MIN,
+> >  			    ADS7828_EXT_VREF_MV_MAX);
+> > +	if (vref_mv_tmp != vref_mv) {
+> > +		pr_info("You used and invalid external vref,"
+> > +			" it has been clamped to %u",
+> > +			vref_mv);
+> > +	}
+> 
+> This is an unrelated change.
+> 
+> > 
+> >  	/* ADS7828 uses 12-bit samples, while ADS7830 is 8-bit */
+> >  	if (id->driver_data == ads7828) {
+> > 
+> 
