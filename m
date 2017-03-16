@@ -1,310 +1,89 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] media: platform: rcar_imr: add IMR-LSX3 support
-Date: Thu, 16 Mar 2017 21:59:50 +0300
-Message-ID: <20170316190000.216761731@cogentembedded.com>
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Thu, 16 Mar 2017 21:02:08 +0100
+Message-ID: <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
+ <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
+ <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
+ <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
+ <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
+ <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
+ <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
+ <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=media-platform-rcar_imr-add-IMR-LSX3-support-v2.patch
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Akshay Bhat <akshay.bhat@timesys.com>, Akshay Bhat <nodeax@gmail.com>
+Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the image renderer light SRAM extended 3 (IMR-LSX3) found
-only in the R-Car V2H (R8A7792) SoC.  It differs  from IMR-LX4 in that it
-supports only planar video formats but can use the video capture data for
-the textures.
+Hello Akshay,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Am 16.03.2017 um 18:06 schrieb Akshay Bhat:
+> Hi Wolfgang,
+> 
+> On 03/15/2017 05:42 AM, Wolfgang Grandegger wrote:
+>> Hello Akshay,
+>>
+> ..snip..
+>>>
+>>> So here is my plan:
+>>> - Have the bus error interrupt always enabled
+>>> - If berr-reporting off, then have the isr checks/reports state changes
+>>
+>> Error state change messages should always be there. These are the
+>> important one.
+>>
+>>> - if berr-reporting on, then have the isr checks/reports bus errors
+>>> and state changes (Does it make sense packing the error message, if
+>>> the ISR finds both bus and state changes?)
+>>
+>> If berr-reporting is off, simply do not create an error message for bus
+>> errors, and only if the state changed. If it's "on" create an additional
+>> bus error message.
+>>
+>> http://lxr.free-electrons.com/source/drivers/net/can/flexcan.c#L334
+>>
+>>
+> 
+> I have fixed the driver to handle the error reporting. Also thanks for
+> your tip for generating bus-off by setting the host device at a
+> different CAN bit rate! Below are logs with the updated driver. Let me
+> know if you have any concerns, if not I will submit the v4 patch.
+> 
+> berr-reporting on case:
+> http://pastebin.com/qDRLERmW
 
----
-This patch  is against the 'media_tree.git' repo's 'master' branch plus the
-latest version of  the Renesas IMR driver...
+Looks much better now! There are message for state changes to error
+warning and passive. Just the following message is not correct:
 
-Changes in version 2:
-- renamed *enum* 'imr_gen' to 'imr_type' and the *struct* field of this type
-  from 'gen' to 'type';
-- rename *struct* 'imr_type' to 'imr_info' and the fields/variables of this type
-  from 'type' to 'info';
-- added comments to IMR-LX4 only CMRCR2 bits;
-- added IMR type check to the WTS instruction writing to CMRCCR2.
+ (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19   ERRORFRAME
+    controller-problem{}
+    error-counter-tx-rx{{95}{25}}
 
- Documentation/devicetree/bindings/media/rcar_imr.txt |   11 +
- drivers/media/platform/rcar_imr.c                    |  106 +++++++++++++++----
- 2 files changed, 97 insertions(+), 20 deletions(-)
+Sorry, forgot to mention... the function can_change_state() [1]
+should be used for that purpose, if possible. It fixes the issue
+above as well.
 
-Index: media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
-===================================================================
---- media_tree.orig/Documentation/devicetree/bindings/media/rcar_imr.txt
-+++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
-@@ -8,9 +8,14 @@ and drawing with respect to any shape th
- 
- Required properties:
- 
--- compatible: "renesas,<soctype>-imr-lx4", "renesas,imr-lx4" as a fallback for
--  the image renderer light extended 4 (IMR-LX4) found in the R-Car gen3 SoCs,
--  where the examples with <soctype> are:
-+- compatible:
-+  "renesas,<soctype>-imr-lsx3", "renesas,imr-lsx3" as a fallback for the image
-+  renderer light SRAM extended 3 (IMR-LSX3) found in the R-Car gen2 SoCs, where
-+  the examples with <soctype> are:
-+  - "renesas,r8a7792-imr-lsx3" for R-Car V2H;
-+  "renesas,<soctype>-imr-lx4", "renesas,imr-lx4" as a fallback for the image
-+  renderer light extended 4 (IMR-LX4) found in the R-Car gen3 SoCs, where the
-+  examples with <soctype> are:
-   - "renesas,r8a7795-imr-lx4" for R-Car H3,
-   - "renesas,r8a7796-imr-lx4" for R-Car M3-W.
- - reg: offset and length of the register block;
-Index: media_tree/drivers/media/platform/rcar_imr.c
-===================================================================
---- media_tree.orig/drivers/media/platform/rcar_imr.c
-+++ media_tree/drivers/media/platform/rcar_imr.c
-@@ -1,5 +1,5 @@
- /*
-- * rcar_imr.c -- R-Car IMR-LX4 Driver
-+ * rcar_imr.c -- R-Car IMR-LSX3/LX4 Driver
-  *
-  * Copyright (C) 2015-2017 Cogent Embedded, Inc. <source@cogentembedded.com>
-  *
-@@ -14,7 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
-+#include <linux/of_device.h>
- #include <linux/rcar_imr.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
-@@ -81,8 +81,21 @@ struct imr_format_info {
- 	u32			flags;
- };
- 
-+enum imr_type {
-+	IMR_LSX3,
-+	IMR_LX4,
-+};
-+
-+/* IMR type specific data */
-+struct imr_info {
-+	enum imr_type		type;
-+	const struct imr_format_info *formats;
-+	unsigned int		num_formats;
-+};
-+
- /* per-device data */
- struct imr_device {
-+	const struct imr_info	*info;
- 	struct device		*dev;
- 	struct clk		*clock;
- 	void __iomem		*mmio;
-@@ -180,6 +193,7 @@ struct imr_ctx {
- #define IMR_IMR_IEM		BIT(1)
- #define IMR_IMR_INM		BIT(2)
- 
-+#define IMR_CMRCR_TXTM		BIT(0)		/* IMR-LSX3 only */
- #define IMR_CMRCR_LUCE		BIT(1)
- #define IMR_CMRCR_CLCE		BIT(2)
- #define IMR_CMRCR_DUV_SHIFT	3
-@@ -219,11 +233,11 @@ struct imr_ctx {
- #define IMR_CPDPOR_YLDPO	GENMASK(10, 8)
- 
- #define IMR_CMRCR2_LUTE		BIT(0)
--#define IMR_CMRCR2_YUV422E	BIT(2)
--#define IMR_CMRCR2_YUV422FORM	BIT(5)
--#define IMR_CMRCR2_UVFORM	BIT(6)
--#define IMR_CMRCR2_TCTE		BIT(12)
--#define IMR_CMRCR2_DCTE		BIT(15)
-+#define IMR_CMRCR2_YUV422E	BIT(2)		/* IMR-LX4 only */
-+#define IMR_CMRCR2_YUV422FORM	BIT(5)		/* IMR-LX4 only */
-+#define IMR_CMRCR2_UVFORM	BIT(6)		/* IMR-LX4 only */
-+#define IMR_CMRCR2_TCTE		BIT(12)		/* IMR-LX4 only */
-+#define IMR_CMRCR2_DCTE		BIT(15)		/* IMR-LX4 only */
- 
- /*******************************************************************************
-  * Display list commands
-@@ -282,6 +296,34 @@ static u32 __imr_flags_common(u32 iflags
- 	return iflags & oflags & IMR_F_PLANES_MASK;
- }
- 
-+static const struct imr_format_info imr_lsx3_formats[] = {
-+	{
-+		.name	= "YUV 4:2:2 semiplanar (NV16)",
-+		.fourcc	= V4L2_PIX_FMT_NV16,
-+		.flags	= IMR_F_Y8 | IMR_F_UV8 | IMR_F_PLANAR,
-+	},
-+	{
-+		.name	= "Greyscale 8-bit",
-+		.fourcc	= V4L2_PIX_FMT_GREY,
-+		.flags	= IMR_F_Y8 | IMR_F_PLANAR,
-+	},
-+	{
-+		.name	= "Greyscale 10-bit",
-+		.fourcc	= V4L2_PIX_FMT_Y10,
-+		.flags	= IMR_F_Y8 | IMR_F_Y10 | IMR_F_PLANAR,
-+	},
-+	{
-+		.name	= "Greyscale 12-bit",
-+		.fourcc	= V4L2_PIX_FMT_Y12,
-+		.flags	= IMR_F_Y8 | IMR_F_Y10 | IMR_F_Y12 | IMR_F_PLANAR,
-+	},
-+	{
-+		.name	= "Chrominance UV 8-bit",
-+		.fourcc	= V4L2_PIX_FMT_UV8,
-+		.flags	= IMR_F_UV8 | IMR_F_PLANAR,
-+	},
-+};
-+
- static const struct imr_format_info imr_lx4_formats[] = {
- 	{
- 		.name	= "YUV 4:2:2 semiplanar (NV16)",
-@@ -335,6 +377,18 @@ static const struct imr_format_info imr_
- 	},
- };
- 
-+static const struct imr_info imr_lsx3 = {
-+	.type		= IMR_LSX3,
-+	.formats	= imr_lsx3_formats,
-+	.num_formats	= ARRAY_SIZE(imr_lsx3_formats),
-+};
-+
-+static const struct imr_info imr_lx4 = {
-+	.type		= IMR_LX4,
-+	.formats	= imr_lx4_formats,
-+	.num_formats	= ARRAY_SIZE(imr_lx4_formats),
-+};
-+
- /* mesh configuration constructor */
- static struct imr_cfg *imr_cfg_create(struct imr_ctx *ctx,
- 				      u32 dl_size, u32 dl_start)
-@@ -767,7 +821,8 @@ static void imr_dl_program_setup(struct
- 		 "setup %ux%u -> %ux%u mapping (type=%x)\n", w, h, W, H, type);
- 
- 	/* set triangle mode register from user-supplied descriptor */
--	*dl++ = IMR_OP_WTS(IMR_TRIMCR, 0x004F);
-+	*dl++ = IMR_OP_WTS(IMR_TRIMCR,
-+			   ctx->imr->info->type == IMR_LX4 ? 0x004F : 0x007F);
- 
- 	/* set automatic source/destination coordinates generation flags */
- 	*dl++ = IMR_OP_WTS(IMR_TRIMSR, __imr_auto_sg_dg_tcm(type) |
-@@ -781,7 +836,8 @@ static void imr_dl_program_setup(struct
- 
- 	/* reset rendering mode registers */
- 	*dl++ = IMR_OP_WTS(IMR_CMRCCR,  0xDBFE);
--	*dl++ = IMR_OP_WTS(IMR_CMRCCR2, 0x9065);
-+	*dl++ = IMR_OP_WTS(IMR_CMRCCR2, ctx->imr->info->type == IMR_LX4 ?
-+			   0x9065 : IMR_CMRCR2_LUTE);
- 
- 	/* set source/destination addresses of Y/UV plane */
- 	*dl++ = IMR_OP_WTL(IMR_DSAR, 2);
-@@ -823,7 +879,7 @@ static void imr_dl_program_setup(struct
- 			*dl++ = IMR_OP_WTS(IMR_SSTR,
- 					   w << (iflags & IMR_F_UV10 ? 1 : 0));
- 		}
--	} else {
-+	} else if (ctx->imr->info->type == IMR_LX4) {
- 		u16 src_fmt = (iflags & IMR_F_UV_SWAP ? IMR_CMRCR2_UVFORM : 0) |
- 			      (iflags & IMR_F_YUV_SWAP ?
- 			       IMR_CMRCR2_YUV422FORM : 0);
-@@ -864,6 +920,9 @@ static void imr_dl_program_setup(struct
- 			*dl++ = IMR_OP_WTS(IMR_DSTR,
- 					   W << (cflags & IMR_F_Y10 ? 2 : 1));
- 		}
-+	} else	{
-+		/* this shouldn't happen! */
-+		BUG();
- 	}
- 
- 	/*
-@@ -1114,6 +1173,7 @@ out:
- /* test if a format is supported */
- static int __imr_try_fmt(struct imr_ctx *ctx, struct v4l2_format *f)
- {
-+	const struct imr_info	*info = ctx->imr->info;
- 	struct v4l2_pix_format	*pix = &f->fmt.pix;
- 	u32			fourcc = pix->pixelformat;
- 	int			i;
-@@ -1122,8 +1182,8 @@ static int __imr_try_fmt(struct imr_ctx
- 	 * both output and capture interface have the same set of
- 	 * supported formats
- 	 */
--	for (i = 0; i < ARRAY_SIZE(imr_lx4_formats); i++) {
--		if (fourcc == imr_lx4_formats[i].fourcc) {
-+	for (i = 0; i < info->num_formats; i++) {
-+		if (fourcc == info->formats[i].fourcc) {
- 			/* fix up format specification as needed */
- 			pix->field = V4L2_FIELD_NONE;
- 
-@@ -1174,9 +1234,12 @@ static int imr_querycap(struct file *fil
- /* enumerate supported formats */
- static int imr_enum_fmt(struct file *file, void *priv, struct v4l2_fmtdesc *f)
- {
-+	struct imr_ctx		*ctx = fh_to_ctx(priv);
-+	const struct imr_info	*info = ctx->imr->info;
-+
- 	/* no distinction between output/capture formats */
--	if (f->index < ARRAY_SIZE(imr_lx4_formats)) {
--		const struct imr_format_info *fmt = &imr_lx4_formats[f->index];
-+	if (f->index < info->num_formats) {
-+		const struct imr_format_info *fmt = &info->formats[f->index];
- 
- 		strlcpy(f->description, fmt->name, sizeof(f->description));
- 		f->pixelformat = fmt->fourcc;
-@@ -1246,7 +1309,7 @@ static int imr_s_fmt(struct file *file,
- 
- 	/* processing is locked? TBD */
- 	q_data->fmt = f->fmt.pix;
--	q_data->flags = imr_lx4_formats[i].flags;
-+	q_data->flags = ctx->imr->info->formats[i].flags;
- 
- 	/* set default crop factors */
- 	if (!V4L2_TYPE_IS_OUTPUT(f->type)) {
-@@ -1622,6 +1685,8 @@ static void imr_device_run(void *priv)
- 	wmb();
- 
- 	/* start rendering operation */
-+	if (imr->info->type != IMR_LX4)
-+		iowrite32(IMR_CMRCR_TXTM, imr->mmio + IMR_CMRCSR);
- 	iowrite32(IMR_CR_RS, imr->mmio + IMR_CR);
- 
- 	/* timestamp input buffer */
-@@ -1776,16 +1841,22 @@ handled:
- 
- static int imr_probe(struct platform_device *pdev)
- {
-+	const struct imr_info	*info;
- 	struct imr_device	*imr;
- 	struct resource		*res;
- 	int			ret;
- 
-+	info = of_device_get_match_data(&pdev->dev);
-+	if (!info)
-+		return -ENODEV;
-+
- 	imr = devm_kzalloc(&pdev->dev, sizeof(*imr), GFP_KERNEL);
- 	if (!imr)
- 		return -ENOMEM;
- 
- 	mutex_init(&imr->mutex);
- 	spin_lock_init(&imr->lock);
-+	imr->info = info;
- 	imr->dev = &pdev->dev;
- 
- 	/* memory-mapped registers */
-@@ -1919,7 +1990,8 @@ static const struct dev_pm_ops imr_pm_op
- 
- /* device table */
- static const struct of_device_id imr_of_match[] = {
--	{ .compatible = "renesas,imr-lx4" },
-+	{ .compatible = "renesas,imr-lsx3", .data = &imr_lsx3, },
-+	{ .compatible = "renesas,imr-lx4",  .data = &imr_lx4,  },
- 	{ },
- };
- 
-@@ -1939,5 +2011,5 @@ module_platform_driver(imr_platform_driv
- 
- MODULE_ALIAS("imr");
- MODULE_AUTHOR("Cogent Embedded Inc. <sources@cogentembedded.com>");
--MODULE_DESCRIPTION("Renesas IMR-LX4 Driver");
-+MODULE_DESCRIPTION("Renesas IMR-LSX3/LX4 Driver");
- MODULE_LICENSE("GPL");
+> berr-reporting off case:
+> http://pastebin.com/fUn3j7qU
+
+Ditto.
+
+I just had another look to the manual and there is this undocumented
+STATFE register at offset 0x1E. It's mentioned in some other parts of
+the doc as interrupt enable register for STATF events. I would assume
+the same bit layout than STATF. If you set bit 2 (BUSOFF), 3 (ERRP)
+and 4 (ERRW), you may get interrupts. It's worth a try, I think. If
+it works, it's the much better solution.
+
+Wolfgang.
+
+[1] http://lxr.free-electrons.com/ident?i=can_change_state
+
+Wolfgang.
