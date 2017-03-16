@@ -1,75 +1,167 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v2 00/17] Move firmware specific code to firmware
- specific locations
-Date: Fri, 17 Mar 2017 00:50:20 +0200
-Message-ID: <20170316225019.GK10701@valkosipuli.retiisi.org.uk>
-References: <1488814983-25695-1-git-send-email-sakari.ailus@linux.intel.com>
- <2385585.K4ms5H7miQ@aspire.rjw.lan>
- <20170315141918.GF10701@valkosipuli.retiisi.org.uk>
- <CAJZ5v0i5o+2FksW+NmYQugD6qL-1QmREd2isATifu9n0g69Q+w@mail.gmail.com>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH v10 1/8] devicetree: power: Add battery.txt
+Date: Thu, 16 Mar 2017 15:58:54 -0700
+Message-ID: <CAKvHMgS4dRm7LfxVFSh9UeeUA=ZFVoArtG8wZOpZyZDjiKkKwQ@mail.gmail.com>
+References: <20170315192653.26799-1-liam@networkimprov.net>
+ <20170315192653.26799-2-liam@networkimprov.net> <20170315220425.qeidvmanbsmq4wxk@earth>
+ <CAKvHMgSF2rsaAaUqFw1qF+b2NA9CkABYKYOTd2p+imuPAHq9JA@mail.gmail.com>
+ <20170315225709.ugjibnoqfukay657@earth> <d548b5e6-af6e-3fa6-e926-b24636a676a8@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0i5o+2FksW+NmYQugD6qL-1QmREd2isATifu9n0g69Q+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <d548b5e6-af6e-3fa6-e926-b24636a676a8@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 03:23:41PM +0100, Rafael J. Wysocki wrote:
-> On Wed, Mar 15, 2017 at 3:19 PM, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> wrote:
-> > On Mon, Mar 13, 2017 at 11:27:40PM +0100, Rafael J. Wysocki wrote:
-> >> On Monday, March 06, 2017 05:42:46 PM Sakari Ailus wrote:
-> >> > Hi,
-> >> >
-> >> > This set moves firmware specific implementations of the device / fwnode
-> >> > property API to locations that are specific to firmware implementation,
-> >> > still leaving property set (which isn't really firmware) implementation in
-> >> > drivers/base/property.c.
-> >> >
-> >> > The set depends on the ACPI graph support v4 patches I posted a moment
-> >> > ago.
-> >> >
-> >> > The patches may be found with dependencies here:
-> >> >
-> >> > <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph-cleaned>
-> >> >
-> >> > since v1:
-> >> >
-> >> > - Move the three bugfixes in front of the set into a separate patchset.
-> >> >   There are no dependencies to those from the rest of the patches.
-> >> >
-> >> > - Rebase on current ACPI graph support patches (themselves on PM tree
-> >> >   4.11-rc1 merge).
-> >>
-> >> To me, all material from patches [1-11/17] can easily go into one patch which
-> >> would also help to review it quite a bit.
-> >>
-> >> Analogously, all material in patches [12-16/17] can go into one patch too.
-> >>
-> >> The split as is appears quite artificial, honestly.
-> >
-> > I believe it's easier to review the way it is. Each patch is simple and it's
-> > easy to see where a particular piece of code is moved. I'm happy to fold
-> > them, too, but I'd prefer keep "[PATCH v2 07/17] device property: Read
-> > strings using string array reading functions" separate, as it changes the
-> > implementation of reading single strings.
-> >
-> > How about that?
-> 
-> That's fine too.
+On Thu, Mar 16, 2017 at 6:21 AM, Andrew F. Davis <afd@ti.com> wrote:
+> On 03/15/2017 05:57 PM, Sebastian Reichel wrote:
+>> Hi,
+>>
+>> On Wed, Mar 15, 2017 at 03:18:17PM -0700, Liam Breck wrote:
+>>> Hey Sebastian, welcome back :-)
+>>>
+>>> I've taken over work on this patchset from Matt.
+>>
+>> Ok.
+>>
+>>> On Wed, Mar 15, 2017 at 3:04 PM, Sebastian Reichel <sre@kernel.org> wrote:
+>>>> Hi Liam & Matt,
+>>>>
+>>>> Sorry for my absence in the discussion. I skipped the previous
+>>>> iterations for now and start with this version.
+>>>>
+>>>> On Wed, Mar 15, 2017 at 12:26:46PM -0700, Liam Breck wrote:
+>>>>> From: Liam Breck <kernel@networkimprov.net>
+>>>>>
+>>>>> Documentation of static battery characteristics that can be defined
+>>>>> for batteries which cannot self-identify. This information is required
+>>>>> by fuel-gauge and charger chips for proper handling of the battery.
+>>>>>
+>>>>> Cc: Rob Herring <robh@kernel.org>
+>>>>> Cc: devicetree@vger.kernel.org
+>>>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+>>>>> Signed-off-by: Liam Breck <kernel@networkimprov.net>
+>>>>> ---
+>>>>>  .../devicetree/bindings/power/supply/battery.txt   | 45 ++++++++++++++++++++++
+>>>>>  1 file changed, 45 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..0278617
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>> @@ -0,0 +1,45 @@
+>>>>> +Battery Characteristics
+>>>>
+>>>> Maybe add something like
+>>>>
+>>>> This device provides static battery information, that is usually
+>>>> available in the EEPROM of a smart battery. It's supposed to be
+>>>> used for batteries, which do not have their own EEPROM (or if its
+>>>> unusable).
+>>>
+>>> OK.
+>>>
+>>>>> +Required Properties:
+>>>>> + - compatible: Must be "fixed-battery"
+>>>
+>>> Rob questioned the term "fixed". Shall we consider other terms --
+>>> simple-battery, plain-battery...?
+>>
+>> I don't like the term either, but it was the best I came up with.
+>> They are known as "dumb" batteries, but that term looks too
+>> colloquial for DT usage. While I think "simple-battery" is not
+>> perfect either, it's better than "fixed-battery", so please switch
+>> to that in the next revision.
+>>
+>
+> I rather like "fixed-battery", it matches the regulator and other power
+> source DTs better. To answer Rob's question on what a non-fixed battery
+> would look like we can think of a future battery that can change its
+> physical properties (chemical or physical perhaps) in response to
+> software. Although I've not seen such a battery I don't think it's too
+> far-fetched.
 
-I kept the last patch (device property: Implement fwnode_get_next_parent()
-using fwnode interface) separate, too, as I noticed it is really separate
-from moving the FW type specific parts behind an ops struct.
+A "fixed" battery sounds like a non-removable one to me. I'll switch
+to "simple-battery" in v11 unless a better idea bubbles up first.
 
-The details are on the cover page of v3 of the set.
+> All the properties described here are "fixed", if we say "simple" then a
+> battery with more properties would be a "complex" battery..
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Simple is not a boolean term; it really doesn't mandate a
+"complex-battery" type.
+
+>>>>> +Optional Properties:
+>>>>> + - voltage-min-design-microvolt: drained battery voltage
+>>>>> + - energy-full-design-microwatt-hours: battery design energy
+>>>>> + - charge-full-design-microamp-hours: battery design capacity
+>>>>
+>>>> Looks fine to me.
+>>>>
+>>>>> +Because drivers surface properties in sysfs using names derived
+>>>>> +from enum power_supply_property, e.g.
+>>>>> +/sys/class/power_supply/<device>/charge_full_design, our
+>>>>> +battery properties must be named for the corresponding elements in
+>>>>> +enum power_supply_property, defined in include/linux/power_supply.h.
+>>>>
+>>>> This is Linux/implementation specific and does not belong
+>>>> into a DT binding document.
+>>>
+>>> I just wrote on a thread for an earlier version of this patch:
+>>>
+>>> "Sebastian proposed DT:battery specifically to be consumed by
+>>> power_supply_core. Allowing names in DT:battery and
+>>> power_supply_property to diverge would cause confusion and wasted
+>>> time, for no particular benefit. As there is no rationale to
+>>> reconsider the names of these fields for DT:battery, let's write that
+>>> into the docs."
+>>
+>> DT bindings are not "Linux hardware information bindings". Of course
+>> there is no need to diverge without a good reason, but that kind of
+>> Documentation just does not belong into the DT bindings.
+>>
+>>>>> +Batteries must be referenced by chargers and/or fuel-gauges
+>>>>> +using a phandle. The phandle's property should be named
+>>>>> +"monitored-battery".
+>>>>
+>>>> This looks fine.
+>>>>
+>>>>> +Driver code should call power_supply_get_battery_info() to obtain
+>>>>> +battery properties via monitored-battery. For details see:
+>>>>> +  drivers/power/supply/power_supply_core.c
+>>>>> +  drivers/power/supply/bq27xxx_battery.c
+>>>>
+>>>> This is also Linux/implementation specific and should be dropped.
+>>>
+>>> We ought to mention how drivers are expected to consume DT:battery.
+>>
+>> That kind of documentation does not belong into
+>> Documentation/devicetree/bindings. We can add something to
+>> Documentation/power/power_supply_class.txt instead.
+>>
+>>>>> +Example:
+>>>>> +
+>>>>> +     bat: battery {
+>>>>> +             compatible = "fixed-battery";
+>>>>> +             voltage-min-design-microvolt = <3200000>;
+>>>>> +             energy-full-design-microwatt-hours = <5290000>;
+>>>>> +             charge-full-design-microamp-hours = <1430000>;
+>>>>> +     };
+>>>>> +
+>>>>> +     charger: charger@11 {
+>>>>> +             ....
+>>>>> +             monitored-battery = <&bat>;
+>>>>> +             ...
+>>>>> +     };
+>>>>> +
+>>>>> +     fuel_gauge: fuel-gauge@22 {
+>>>>> +             ....
+>>>>> +             monitored-battery = <&bat>;
+>>>>> +             ...
+>>>>> +     };
+>>>>> --
+>>>>> 2.9.3
+>>>>>
