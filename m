@@ -1,231 +1,161 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 3/4] ARM: dts: r8a7743: Add reset control properties
-Date: Thu, 16 Mar 2017 15:07:25 +0100
-Message-ID: <1489673246-11015-4-git-send-email-geert+renesas@glider.be>
-References: <1489673246-11015-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489673246-11015-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
+Date: Thu, 16 Mar 2017 15:14:01 +0100
+Message-ID: <38f7c630-d765-da38-dcdc-fed2c853cf36@jmondi.org>
+References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1487610788-6939-4-git-send-email-jacopo+renesas@jmondi.org>
+ <SG2PR06MB1165A5A95A54365FF5E43FCF8A210@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1165A5A95A54365FF5E43FCF8A210@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add properties to describe the reset topology for on-SoC devices:
-  - Add the "#reset-cells" property to the CPG/MSSR device node,
-  - Add resets and reset-names properties to the various device nodes.
+Hi Chris,
 
-This allows to reset SoC devices using the Reset Controller API.
+On 09/03/2017 15:54, Chris Brandt wrote:
+> Hi Jacopo,
+>
+> On Monday, February 20, 2017, Jacopo Mondi wrote:
+>>
+>> Add dt-bindings for Renesas r7s72100 pin controller header file.
+>>
+>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> ---
+>>  include/dt-bindings/pinctrl/r7s72100-pinctrl.h | 30
+>> ++++++++++++++++++++++++++
+>>  1 file changed, 30 insertions(+)
+>>  create mode 100644 include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+>>
+>> diff --git a/include/dt-bindings/pinctrl/r7s72100-pinctrl.h b/include/dt-
+>> bindings/pinctrl/r7s72100-pinctrl.h
+>> new file mode 100644
+>> index 0000000..24759bf
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+>> @@ -0,0 +1,30 @@
+>> +/*
+>> + * Defines macros and constants for Renesas RZ/A1 pin controller pin
+>> + * muxing functions.
+>> + */
+>> +#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
+>> +#define __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
+>> +
+>> +#define RZA1_PINS_PER_PORT	16
+>> +
+>> +/* Create the pin index from it's bank and position numbers */
+>> +#define PIN(b, p)		((b) * RZA1_PINS_PER_PORT + (p))
+>> +
+>> +/* Flags to apply to alternate function configuration */
+>> +/*
+>> + * Pin needs input buffer enabled.
+>> + * This applies to pin which alternate function requires input
+>> capabilities.
+>> + * Eg: RX pin on a serial interface needs this flag to be set.
+>> + */
+>> +#define INPUT_EN		(1 << 3)
+>
+> This is basically talking about the "Port Input Buffer Control Register"
+> (PIBCn) which is actually not that important. But, you are also using it
+> for the special cases where you have to manually define the pin to be either
+> input or output....but I would just remove INPUT_EN.
+>
+> For the PIBCn register, just set it automatically if you are going to
+> use the pin as a GPIO (in or out). I have not really found a case yet where
+> I had to set this bit for another other than GPIO-input.
+>
+> I would prefer to see a different define that talks about the pin being bi-directional
+> which is required for things like I2C, SDHI, etc... and would be directly related
+> to the "Port Bidirection Control Register" (PBDCn) for each pin.
+>
+> #define BI_DIR		(1 << 3)
+>
+>
+> Additionally, according to the RZ/A1 hardware manual:
+>  "When the output buffer is enabled and the PBDCn.PBDCnm bit is 1, the
+>   input buffer is enabled regardless of this register setting."
+>
 
-Note that all resets added match the corresponding module clocks.
+Yes, I used INPUT_EN to drive PBDC..
+My assumption was that "users" would have had to decide when a pin was 
+acting as input, when describing it in dts, rather than having to deal 
+with the TRM and learn what bidirectional control is and is consequences 
+(particularly, that it enables the input buffer).
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-v2:
-  - No changes.
----
- arch/arm/boot/dts/r8a7743.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+But since I guess this whole driver assumes more detailed knowledge on 
+the hardware compared to group-based ones, I think using BI_DIR is fine here
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index cd908796fb3b7c18..0ddac81742e4cdc7 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -62,6 +62,7 @@
- 			clocks = <&cpg CPG_MOD 408>;
- 			clock-names = "clk";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 408>;
- 		};
- 
- 		irqc: interrupt-controller@e61c0000 {
-@@ -81,6 +82,7 @@
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 407>;
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 407>;
- 		};
- 
- 		timer {
-@@ -102,6 +104,7 @@
- 			clock-names = "extal", "usb_extal";
- 			#clock-cells = <2>;
- 			#power-domain-cells = <0>;
-+			#reset-cells = <1>;
- 		};
- 
- 		prr: chipid@ff000044 {
-@@ -148,6 +151,7 @@
- 			clocks = <&cpg CPG_MOD 219>;
- 			clock-names = "fck";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 219>;
- 			#dma-cells = <1>;
- 			dma-channels = <15>;
- 		};
-@@ -180,6 +184,7 @@
- 			clocks = <&cpg CPG_MOD 218>;
- 			clock-names = "fck";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 218>;
- 			#dma-cells = <1>;
- 			dma-channels = <15>;
- 		};
-@@ -195,6 +200,7 @@
- 			       <&dmac1 0x21>, <&dmac1 0x22>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 204>;
- 			status = "disabled";
- 		};
- 
-@@ -209,6 +215,7 @@
- 			       <&dmac1 0x25>, <&dmac1 0x26>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 203>;
- 			status = "disabled";
- 		};
- 
-@@ -223,6 +230,7 @@
- 			       <&dmac1 0x27>, <&dmac1 0x28>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 202>;
- 			status = "disabled";
- 		};
- 
-@@ -237,6 +245,7 @@
- 			       <&dmac1 0x1b>, <&dmac1 0x1c>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 1106>;
- 			status = "disabled";
- 		};
- 
-@@ -251,6 +260,7 @@
- 			       <&dmac1 0x1f>, <&dmac1 0x20>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 1107>;
- 			status = "disabled";
- 		};
- 
-@@ -265,6 +275,7 @@
- 			       <&dmac1 0x23>, <&dmac1 0x24>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 1108>;
- 			status = "disabled";
- 		};
- 
-@@ -279,6 +290,7 @@
- 			       <&dmac1 0x3d>, <&dmac1 0x3e>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 206>;
- 			status = "disabled";
- 		};
- 
-@@ -293,6 +305,7 @@
- 			       <&dmac1 0x19>, <&dmac1 0x1a>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 207>;
- 			status = "disabled";
- 		};
- 
-@@ -307,6 +320,7 @@
- 			       <&dmac1 0x1d>, <&dmac1 0x1e>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 216>;
- 			status = "disabled";
- 		};
- 
-@@ -322,6 +336,7 @@
- 			       <&dmac1 0x29>, <&dmac1 0x2a>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 721>;
- 			status = "disabled";
- 		};
- 
-@@ -337,6 +352,7 @@
- 			       <&dmac1 0x2d>, <&dmac1 0x2e>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 720>;
- 			status = "disabled";
- 		};
- 
-@@ -352,6 +368,7 @@
- 			       <&dmac1 0x2b>, <&dmac1 0x2c>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 719>;
- 			status = "disabled";
- 		};
- 
-@@ -367,6 +384,7 @@
- 			       <&dmac1 0x2f>, <&dmac1 0x30>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 718>;
- 			status = "disabled";
- 		};
- 
-@@ -382,6 +400,7 @@
- 			       <&dmac1 0xfb>, <&dmac1 0xfc>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 715>;
- 			status = "disabled";
- 		};
- 
-@@ -397,6 +416,7 @@
- 			       <&dmac1 0xfd>, <&dmac1 0xfe>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 714>;
- 			status = "disabled";
- 		};
- 
-@@ -412,6 +432,7 @@
- 			       <&dmac1 0x39>, <&dmac1 0x3a>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 717>;
- 			status = "disabled";
- 		};
- 
-@@ -427,6 +448,7 @@
- 			       <&dmac1 0x4d>, <&dmac1 0x4e>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 716>;
- 			status = "disabled";
- 		};
- 
-@@ -442,6 +464,7 @@
- 			       <&dmac1 0x3b>, <&dmac1 0x3c>;
- 			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 713>;
- 			status = "disabled";
- 		};
- 
-@@ -451,6 +474,7 @@
- 			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 813>;
- 			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 813>;
- 			phy-mode = "rmii";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.7.4
+>> +
+>> +/*
+>> + * Let software drive the pin I/O direction overriding the alternate
+>> function
+>> + * configuration.
+>> + * Some alternate function requires software to force I/O direction of a
+>> pin,
+>> + * ovverriding the designated one.
+>> + * Reference to the HW manual to know when this flag shall be used.
+>> + */
+>> +#define SWIO			(1 << 4)
+>
+> For "software I/O" settings, you were using INPUT_EN to determine input or output.
+>
+> To make things simple, I would just define:
+> #define SWIO_IN			(1 << 4)
+> #define SWIO_OUT			(1 << 5)
+>
+>
+> So in summary, this is how I think things should look in the DT:
+>
+> Example of a 'normal' pin (most of the pins).
+> 		/* P3_0 as TxD2; P3_2 as RxD2 */
+> 		renesas,pins = <PIN(3, 0) 6>,
+> 			       <PIN(3, 2) 4>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just to make sure I'm following you: why RxD2 (P3_2) is not marked as 
+BI_DIR? I would have expected to have the flag specified here, as it 
+requires PIBC enabled (and as you said, BI_DIR drives PBDC that enables 
+PIBC consequentially)
+
+>
+> Example of pins that need bi-directional specified:
+> 		/* RIIC2: P1_4 as SCL, P1_5 as SDA */
+> 		renesas,pins = <PIN(1, 4) (1 | BI_DIR)>,
+> 			       <PIN(1, 5) (1 | BI_DIR)>;
+>
+
+nice
+
+>
+> Example of pins that need software I/O manually specified (because they are
+> whacky pins) as defined by Table 54.7:
+>
+> 		/* MTU2 TIOC0A as input capture */
+> 		renesas,pins = <PIN(4, 0) (2 | SWIO_IN)>;
+>
+> 		/* MTU2 TIOC0A as output compare */
+> 		renesas,pins = <PIN(4, 0) (2 | SWIO_OUT)>;
+>
+> 		/* LVDS */
+> 		renesas,pins = <PIN(5, 0) (1 | SWIO_IN)>; /* the spec says to put these as inputs */
+>
+> 		/* SSI Audio */
+> 		renesas,pins = <PIN(2, 11) (4 | SWIO_OUT)>;
+>
+> 		/* Watchdog Overflow */
+> 		renesas,pins = <PIN(3, 7) (8 | SWIO_OUT)>;
+>
+>
+
+Makes total sense, and will got for it.
+
+Thanks
+    j
+
+
+>
+> Chris
+>
