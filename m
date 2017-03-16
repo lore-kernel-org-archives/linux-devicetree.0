@@ -1,89 +1,85 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Thu, 16 Mar 2017 21:02:08 +0100
-Message-ID: <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
- <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
- <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
- <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
- <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
- <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
- <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
- <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH v2 0/8] Initial Allwinner Display Engine 2.0 Support
+Date: Fri, 17 Mar 2017 04:47:40 +0800
+Message-ID: <20170316204748.8596-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Akshay Bhat <akshay.bhat@timesys.com>, Akshay Bhat <nodeax@gmail.com>
-Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Akshay,
+This patchset is the initial patchset for Allwinner DE2 support.
 
-Am 16.03.2017 um 18:06 schrieb Akshay Bhat:
-> Hi Wolfgang,
-> 
-> On 03/15/2017 05:42 AM, Wolfgang Grandegger wrote:
->> Hello Akshay,
->>
-> ..snip..
->>>
->>> So here is my plan:
->>> - Have the bus error interrupt always enabled
->>> - If berr-reporting off, then have the isr checks/reports state changes
->>
->> Error state change messages should always be there. These are the
->> important one.
->>
->>> - if berr-reporting on, then have the isr checks/reports bus errors
->>> and state changes (Does it make sense packing the error message, if
->>> the ISR finds both bus and state changes?)
->>
->> If berr-reporting is off, simply do not create an error message for bus
->> errors, and only if the state changed. If it's "on" create an additional
->> bus error message.
->>
->> http://lxr.free-electrons.com/source/drivers/net/can/flexcan.c#L334
->>
->>
-> 
-> I have fixed the driver to handle the error reporting. Also thanks for
-> your tip for generating bus-off by setting the host device at a
-> different CAN bit rate! Below are logs with the updated driver. Let me
-> know if you have any concerns, if not I will submit the v4 patch.
-> 
-> berr-reporting on case:
-> http://pastebin.com/qDRLERmW
+It contains the support of clocks in DE2 and the mixers in DE2.
 
-Looks much better now! There are message for state changes to error
-warning and passive. Just the following message is not correct:
+The SoC used to develop this patchset is V3s, as V3s is the simplest
+one of the SoCs that have DE2.
+(Allwinner V3s features only one mixer, although its clock control
+unit contains support for second mixer's clock; and its only video
+output is RGB LCD, which is already supported in our TCON driver)
 
- (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19   ERRORFRAME
-    controller-problem{}
-    error-counter-tx-rx{{95}{25}}
+The last patch is only a testing patch, it shouldn't be merged; and
+for the patch to be really usable, the RFC fix of the TCON driver [1]
+is needed.
 
-Sorry, forgot to mention... the function can_change_state() [1]
-should be used for that purpose, if possible. It fixes the issue
-above as well.
+No HDMI, TV encoder or other internal bridges' support is included
+in this patchset, which makes it currently not usable on H3.
 
-> berr-reporting off case:
-> http://pastebin.com/fUn3j7qU
+Thanks to Jean-Francois Moine and Jernej Skrabec for their efforts
+to discover the internal of DE2!
 
-Ditto.
+[1] https://lists.freedesktop.org/archives/dri-devel/2016-December/126264.html
 
-I just had another look to the manual and there is this undocumented
-STATFE register at offset 0x1E. It's mentioned in some other parts of
-the doc as interrupt enable register for STATF events. I would assume
-the same bit layout than STATF. If you set bit 2 (BUSOFF), 3 (ERRP)
-and 4 (ERRW), you may get interrupts. It's worth a try, I think. If
-it works, it's the much better solution.
+Icenowy Zheng (8):
+  dt-bindings: add binding for the Allwinner DE2 CCU
+  clk: sunxi-ng: add support for DE2 CCU
+  dt-bindings: add bindings for DE2 on V3s SoC
+  drm/sun4i: add support for sun8i DE2 mixers and display engines
+  drm/sun4i: tcon: add support for V3s TCON
+  ARM: dts: sun8i: add DE2 nodes for V3s SoC
+  ARM: dts: sun8i: add pinmux for LCD pins of V3s SoC
+  ARM: dts: sun8i: enable LCD panel of Lichee Pi Zero
 
-Wolfgang.
+ .../devicetree/bindings/clock/sun8i-de2.txt        |  31 ++
+ .../bindings/display/sunxi/sun4i-drm.txt           |  37 +-
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts      |  36 ++
+ arch/arm/boot/dts/sun8i-v3s.dtsi                   |  96 +++++
+ drivers/clk/sunxi-ng/Kconfig                       |   5 +
+ drivers/clk/sunxi-ng/Makefile                      |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 204 +++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.h               |  28 ++
+ drivers/gpu/drm/sun4i/Kconfig                      |   9 +
+ drivers/gpu/drm/sun4i/Makefile                     |   3 +-
+ drivers/gpu/drm/sun4i/sun4i_crtc.c                 |  14 +-
+ drivers/gpu/drm/sun4i/sun4i_crtc.h                 |   2 +
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.h                  |   1 +
+ drivers/gpu/drm/sun4i/sun4i_layer.c                |  94 ++++-
+ drivers/gpu/drm/sun4i/sun4i_layer.h                |   3 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 |   7 +-
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                | 385 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.h                | 166 +++++++++
+ include/dt-bindings/clock/sun8i-de2.h              |  54 +++
+ include/dt-bindings/reset/sun8i-de2.h              |  50 +++
+ 21 files changed, 1203 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/sun8i-de2.txt
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-de2.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.h
+ create mode 100644 include/dt-bindings/clock/sun8i-de2.h
+ create mode 100644 include/dt-bindings/reset/sun8i-de2.h
 
-[1] http://lxr.free-electrons.com/ident?i=can_change_state
-
-Wolfgang.
+-- 
+2.12.0
