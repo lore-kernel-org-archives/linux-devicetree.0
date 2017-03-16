@@ -1,50 +1,23 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 0/4] Move firmware specific code to firmware specific       locations
-Date: Thu, 16 Mar 2017 15:34:45 +0200
-Message-ID: <1489671289-20406-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/6] dt-bindings: iio: rockchip-saradc: add support for rk3328
+Date: Thu, 16 Mar 2017 14:36:41 +0100
+Message-ID: <10877116.XTHsEZHMj3@phil>
+References: <1489670244-13328-1-git-send-email-cl@rock-chips.com> <1489670244-13328-2-git-send-email-cl@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1489670244-13328-2-git-send-email-cl@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: cl@rock-chips.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, zhengxing@rock-chips.com, andy.yan@rock-chips.com, jay.xu@rock-chips.com, matthias.bgg@gmail.com, paweljarosz3691@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, wxt@rock-chips.com, david.wu@rock-chips.com, linux-iio@vger.kernel.org, shawn.lin@rock-chips.com, akpm@linux-foundation.org, dianders@chromium.org, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, afaerber@suse.de, shawnguo@kernel.org, khilman@baylibre.com, arnd@arndb.de, fabio.estevam@nxp.com, zhangqing@rock-chips.com, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi folks,
+Am Donnerstag, 16. März 2017, 21:17:19 CET schrieb cl@rock-chips.com:
+> From: Liang Chen <cl@rock-chips.com>
+> 
+> The rk3328 saradc is the same as rk3399.
+> 
+> Signed-off-by: Liang Chen <cl@rock-chips.com>
 
-This set moves firmware specific implementations of the device / fwnode 
-property API to locations that are specific to firmware implementation, 
-still leaving property set (which isn't really firmware) implementation in
-drivers/base/property.c.
-
-The set depends on the ACPI graph support v5 (10/13 v5.1) patches I posted
-a moment ago.
-
-The patches may be found with dependencies here:
-
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph-cleaned>
-
-since v2:
-
-- Move patches changing the implementation of reading strings and
-  implementing fwnode_get_next_parent() using the fwnode interface alone
-  in front of the set. I kept them separate as they do change the
-  implementation of these operations.
-
-- Merge patches adding the fwnode_operations and moving the
-  implementations of the non-graph portions of the fwnode property API to
-  firmware specific locations.
-
-- Merge moving graph operations to the same struct into another patch.
-  The graph operations in the ops struct are also added in this patch now.
-
-since v1: 
-
-- Move the three bugfixes in front of the set into a separate patchset. 
-  There are no dependencies to those from the rest of the patches.
-
-- Rebase on current ACPI graph support patches (themselves on PM tree 
-  4.11-rc1 merge).
-
---
-Kind regards, 
-Sakari
-
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
