@@ -1,46 +1,80 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/2] dt-bindings: mmc: tegra: Document Tegra186 compatible string
-Date: Thu, 16 Mar 2017 15:46:37 +0100
-Message-ID: <CAPDyKFpfa0k35r0kS6C+Px_Tu4McUQKTJv7UMuRAvCzoaXnaKA@mail.gmail.com>
-References: <20170314190152.9167-1-thierry.reding@gmail.com> <20170314190152.9167-2-thierry.reding@gmail.com>
+From: "zhichang.yuan" <zhichang.yuan02@gmail.com>
+Subject: Re: [PATCH V7 5/7] ACPI: Delay the enumeration on the devices whose
+ dependency has not met
+Date: Thu, 16 Mar 2017 22:56:52 +0800
+Message-ID: <592befcb-8b52-3a3a-323f-55566f61c7df@gmail.com>
+References: <1489372963-9000-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1489372963-9000-6-git-send-email-yuanzhichang@hisilicon.com>
+ <4600523.rWNiWKrYZC@aspire.rjw.lan> <58C9F6C6.4090700@hisilicon.com>
+ <CAK8P3a2QZ_j9RQ0U=4MoAAcRcZyu0L5AiYM22QZkiRxh7Ca-iA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20170314190152.9167-2-thierry.reding@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a2QZ_j9RQ0U=4MoAAcRcZyu0L5AiYM22QZkiRxh7Ca-iA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Rafael Wysocki <rafael@kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, Frank Rowand <frowand.list@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Wei Xu <xuwei5@hisilicon.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, liviu.dudau@arm.com, John Garry <john.garry@huawei.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, kantyzc@163.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>Zou Rongrong <zo>
 List-Id: devicetree@vger.kernel.org
 
-On 14 March 2017 at 20:01, Thierry Reding <thierry.reding@gmail.com> wrote:
-> From: Thierry Reding <treding@nvidia.com>
->
-> The SDHCI controller found on Tegra186 in very similar to the controller
-> found on earlier generations of Tegra.
->
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+Hi, Arnd,
 
-Thanks, applied for next!
 
-Kind regards
-Uffe
 
-> ---
->  Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> index c15aa22d4570..9bce57862ed6 100644
-> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> @@ -13,6 +13,7 @@ Required properties:
->    - "nvidia,tegra114-sdhci": for Tegra114
->    - "nvidia,tegra124-sdhci": for Tegra124 and Tegra132
->    - "nvidia,tegra210-sdhci": for Tegra210
-> +  - "nvidia,tegra186-sdhci": for Tegra186
->  - clocks : Must contain one entry, for the module clock.
->    See ../clocks/clock-bindings.txt for details.
->  - resets : Must contain an entry for each entry in reset-names.
-> --
-> 2.12.0
->
+On 03/16/2017 06:13 PM, Arnd Bergmann wrote:
+> On Thu, Mar 16, 2017 at 3:21 AM, zhichang.yuan
+> <yuanzhichang@hisilicon.com> wrote:
+>> Hi, Rafael,
+>>
+>> Thanks for your review!
+>>
+>> On 2017/3/14 5:24, Rafael J. Wysocki wrote:
+>>> On Monday, March 13, 2017 10:42:41 AM zhichang.yuan wrote:
+>>>> In commit 40e7fcb1929(ACPI: Add _DEP support to fix battery issue on Asus
+>>>> T100TA), the '_DEP' was supported to solve the dependency of Asus battery. But
+>>>> this patch is specific to Asus battery device.
+>>>> In the real world, there are other devices which need the dependency to play the
+>>>> role on the enumeration order. For example, all the Hip06 LPC
+>>>> periperals(IPMI-BT, uart, etc) must be scanned after the LPC host driver
+>>>> finished the probing. So, it makes sense to add a checking whether the ACPI
+>>>> device meet all the dependencies during its enumeration slot, if not, the
+>>>> enumeration will be delayed till all dependency master finish their work.
+>>>>
+>>>> This patch adds the dependency checking in ACPI enumeration, also the
+>>>> corresponding handling to retrigger the Hip06 LPC peripherals' scanning.
+>>>
+>>> AFAICS, _DEP is generally abused in the wild and cannot be made generic.  Sorry.
+>>>
+>>
+>> From the ACPI specification, _DEP is for operation region accesses.
+>> You are right...
+>>
+>> How about we add a ACPI handler for our LPC bus?? Just like amba.
+>> In this way, we also can solve the issue about LPC enumeration order.
+> 
+> As far as I can tell, PCI and LPC have exactly the same requirement here,
+> so whatever you end up doing for one should be used for the other as well.
+> 
+
+Thanks for your remind!
+
+To some extend, our LPC is similar to PCI. We also need to setup the host
+resources before scanning the children. For PCI, there is an ACPI handler of
+pci_root_handler. Although our LPC is not so complicated and powerful as PCI(for
+example, LPC can't probe downside devices), I think, we can still make LPC host
+ready to work in its own ACPI handler callback....
+
+Cheers,
+Zhichang
+
+
+>       Arnd
+> 
