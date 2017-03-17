@@ -1,51 +1,47 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 01/10] ARM: dts: N9/N950: add bluetooth
-Date: Fri, 17 Mar 2017 16:25:29 +0100
-Message-ID: <20170317152529.GA8723@amd>
-References: <20170304115833.3538-1-sre@kernel.org>
- <20170304115833.3538-2-sre@kernel.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v4 2/7] coresight: of_get_coresight_platform_data: Add
+ missing of_node_put
+Date: Fri, 17 Mar 2017 23:25:23 +0800
+Message-ID: <20170317152523.GC2020@leoy-linaro>
+References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
+ <1489762943-25849-3-git-send-email-leo.yan@linaro.org>
+ <574d8e6b-cd2d-c1be-6c14-09e8be147e93@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170304115833.3538-2-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <574d8e6b-cd2d-c1be-6c14-09e8be147e93@arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 17, 2017 at 03:09:23PM +0000, Suzuki K Poulose wrote:
+> On 17/03/17 15:02, Leo Yan wrote:
+> >From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >
+> >The of_get_coresight_platform_data iterates over the possible CPU nodes
+> >to find a given cpu phandle. However it does not drop the reference
+> >to the node pointer returned by the of_get_coresight_platform_data.
+> >
+> >[Leo: minor tweaks for of_get_coresight_platform_data]
+> >
+> >Cc: Leo Yan <leo.yan@linaro.org>
+> >Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> You should add your Signed-off-by here when you send somebody's patch, irrespective
+> of whether you have modified it or not.
+> e.g:
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> [Leo: minor tweaks for of_get_coresight_platform_data]
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for pointing out this. Will follow up later.
 
-Hi!
+[...]
 
-> The Nokia N950 and N9 have a wl1271 (with nokia bootloader) bluetooth
-> module connected to second UART.
-
-I don't get it. We are describing hardware, what does it have to do
-with bootloader? Is there something not described here, because it is
-already initialized by bootloader?
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---u3/rZRmxL6MmkK24
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljL/+kACgkQMOfwapXb+vLB3QCgp5TGT0oJLkiY3tuW50h9wTfE
-Pg4An3xAHgySI20T3wZJLlhHMu6gpZTZ
-=7zxc
------END PGP SIGNATURE-----
-
---u3/rZRmxL6MmkK24--
+Thanks,
+Leo Yan
