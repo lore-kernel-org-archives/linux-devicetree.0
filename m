@@ -1,76 +1,89 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 17 Mar 2017 14:49:27 -0300
-Message-ID: <20170317144927.1298d5b3@vento.lan>
-References: <20170310140124.GV21222@n2100.armlinux.org.uk>
- <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
- <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
- <20170314004533.3b3cd44b@vento.lan>
- <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
- <20170317114203.GZ21222@n2100.armlinux.org.uk>
- <1489752127.2905.49.camel@pengutronix.de>
- <20170317121608.GE21222@n2100.armlinux.org.uk>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Fri, 17 Mar 2017 14:28:42 -0400
+Message-ID: <ff5d44d1-3bfe-8dae-2aaa-561ab0cb989c@timesys.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
+ <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
+ <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
+ <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
+ <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
+ <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
+ <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
+ <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
+ <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
+ <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
+ <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
+ <0362316b-ef76-1733-dbfc-8b644f758db9@timesys.com>
+ <7730cff6-6e85-c98d-0315-bd3888d3aeb1@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170317121608.GE21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.orgSakari Ailus <sakari.ailu>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7730cff6-6e85-c98d-0315-bd3888d3aeb1-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RW0gRnJpLCAxNyBNYXIgMjAxNyAxMjoxNjowOCArMDAwMApSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggPGxpbnV4QGFybWxpbnV4Lm9yZy51az4gZXNjcmV2ZXU6Cgo+IE9uIEZyaSwgTWFyIDE3LCAy
-MDE3IGF0IDAxOjAyOjA3UE0gKzAxMDAsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4gPiBJIHRoaW5r
-IG1vc3Qgb2YgdGhlIHNpbXBsZSwgZml4ZWQgcGlwZWxpbmUgdXNlIGNhc2VzIGNvdWxkIGJlIGhh
-bmRsZWQgYnkKPiA+IGxpYnY0bDIsIGJ5IGFsbG93aW5nIHRvIHBhc3MgYSB2NGwyIHN1YmRldmlj
-ZSBwYXRoIHRvIHY0bDJfb3Blbi4gSWYgdGhhdAo+ID4gZnVuY3Rpb24gaW50ZXJuYWxseSB3b3Vs
-ZCBzZXQgdXAgdGhlIG1lZGlhIGxpbmtzIHRvIHRoZQo+ID4gbmVhcmVzdCAvZGV2L3ZpZGVvIGlu
-dGVyZmFjZSwgcHJvcGFnYXRlIGZvcm1hdCwgcmVzb2x1dGlvbiBhbmQgZnJhbWUKPiA+IGludGVy
-dmFscyBpZiBuZWNlc3NhcnksIGFuZCByZXR1cm4gYW4gZmQgdG8gdGhlIHZpZGVvIGRldmljZSwg
-dGhlcmUnZCBiZQo+ID4gbm8gYWRkaXRpb25hbCBjb21wbGV4aXR5IGZvciB0aGUgdXNlcnMgYmV5
-b25kIHNlbGVjdGluZyB0aGUgdjRsMl9zdWJkZXYKPiA+IGluc3RlYWQgb2YgdGhlIHZpZGVvIGRl
-dmljZS4gIAo+IAo+IC4uLiB3aGljaCB3b3VsZCB0aGVuIHJlcXVpcmUgZ3N0cmVhbWVyIHRvIGJl
-IG1vZGlmaWVkIHRvby4gVGhlIGdzdHJlYW1lcgo+IHY0bDIgcGx1Z2luIGxvb2tzIGZvciAvZGV2
-L3ZpZGVvKiBvciAvZGV2L3Y0bDIvdmlkZW8qIGRldmljZXMgYW5kIG1vbml0b3JzCj4gdGhlc2Ug
-Zm9yIGNoYW5nZXMsIHNvIGdzdHJlYW1lciBhcHBsaWNhdGlvbnMga25vdyB3aGljaCBjYXB0dXJl
-IGRldmljZXMKPiBhcmUgYXZhaWxhYmxlOgo+IAo+ICAgY29uc3QgZ2NoYXIgKnBhdGhzW10gPSB7
-ICIvZGV2IiwgIi9kZXYvdjRsMiIsIE5VTEwgfTsKPiAgIGNvbnN0IGdjaGFyICpuYW1lc1tdID0g
-eyAidmlkZW8iLCBOVUxMIH07Cj4gCj4gICAvKiBBZGQgc29tZSBkZXBlZGVuY3ksIHNvIHRoZSBk
-eW5hbWljIGZlYXR1cmVzIGdldCB1cGRhdGVkIHVwb24gY2hhbmdlcyBpbgo+ICAgICogL2Rldi92
-aWRlbyogKi8KPiAgIGdzdF9wbHVnaW5fYWRkX2RlcGVuZGVuY3kgKHBsdWdpbiwKPiAgICAgICBO
-VUxMLCBwYXRocywgbmFtZXMsIEdTVF9QTFVHSU5fREVQRU5ERU5DWV9GTEFHX0ZJTEVfTkFNRV9J
-U19QUkVGSVgpOwo+IAo+IEkgaGF2ZW4ndCBjaGVja2VkIHlldCB3aGV0aGVyIHN5cy92NGwyL2dz
-dHY0bDJkZXZpY2Vwcm92aWRlci5jIGtub3dzCj4gYW55dGhpbmcgYWJvdXQgdGhlIHY0bDIgc3Vi
-ZGV2cy4KCk5vdCBvbmx5IGdzdHJlYW1lciBkbyB0aGF0LCBidXQgYWxsIHNpbXBsZSBWNEwyIGFw
-cGxpY2F0aW9ucywgYWx0aG91Z2gKb24gbW9zdCBvZiB0aGVtLCB5b3UgY2FuIGVpdGhlciBwYXNz
-IGEgY29tbWFuZCBsaW5lIGFyZ3VtZW50IG9yIHNldHVwCnRoZSBwYXRjaCB2aWEgR1VJLgoKQnR3
-LCBJJ3ZlIG5vIGlkZWEgZnJvbSB3aGVyZSBnc3RyZWFtZXIgdG9vayAvZGV2L3Y0bDIgOi0pCkkn
-bSB5ZXQgdG8gZmluZCBhIGRpc3RyaWJ1dGlvbiB1c2luZyBpdC4KCk9uIHRoZSBvdGhlciBoYW5k
-LCAvZGV2L3Y0bC9ieS1wYXRjaCBhbmQgL2Rldi92NGwvYnktaWQgYXJlIHVzdWFsIGRpcmVjdG9y
-aWVzCndoZXJlIFY0TDIgZGV2aWNlcyBjYW4gYmUgZm91bmQsIGFuZCBzaG91bGQgcHJvdmlkZSBw
-ZXJzaXN0ZW50IG5hbWVzLiBTbywgSU1ITywKZ3N0IHNob3VsZCBwcmVmZXIgdGhvc2UgbmFtZXMs
-IHdoZW4gdGhleSBleGlzdDoKCiQgdHJlZSAvZGV2L3Y0bAovZGV2L3Y0bArilJzilIDilIAgYnkt
-aWQK4pSCwqDCoCDilJzilIDilIAgdXNiLTA0NmRfSERfUHJvX1dlYmNhbV9DOTIwXzU1REExQ0NG
-LXZpZGVvLWluZGV4MCAtPiAuLi8uLi92aWRlbzEK4pSCwqDCoCDilJTilIDilIAgdXNiLVN1bnBs
-dXNfbU1vYmlsZV9JbmNfVVNCX1dlYi1DQU0tdmlkZW8taW5kZXgwIC0+IC4uLy4uL3ZpZGVvMAri
-lJTilIDilIAgYnktcGF0aAogICAg4pSc4pSA4pSAIHBsYXRmb3JtLTNmOTgwMDAwLnVzYi11c2It
-MDoxLjI6MS4wLXZpZGVvLWluZGV4MCAtPiAuLi8uLi92aWRlbzEKICAgIOKUlOKUgOKUgCBwbGF0
-Zm9ybS0zZjk4MDAwMC51c2ItdXNiLTA6MS41OjEuMC12aWRlby1pbmRleDAgLT4gLi4vLi4vdmlk
-ZW8wCgoKCgpUaGFua3MsCk1hdXJvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qu
-b3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaXZlcmRldi1kZXZlbAo=
+Hi Wolfgang,
+
+On 03/17/2017 01:04 PM, Wolfgang Grandegger wrote:
+> 
+> Hm, that's unusual. Cable disconnected and then send a message:
+> 
+> $ grep /proc/interrupts; sleep 10; /proc/interrupts
+> 
+> should make things clear. But maybe it's a clever chip and it does stop
+> sending error messages if the error counter does not change any more.
+> After bus-off, the chip is quiet, of course. Should have a closer look
+> to the CAN standard.
+>
+
+The interrupt count does not increment after device reaches
+tx-error-passive (with cable disconnected).
+
+# while true; do grep -i hi3110 /proc/interrupts; sleep 10; done &
+[1] 793
+#
+111:          0          0  gpio-mxc  12 Edge      hi3110
+# candump -t d -e any,0:0,#FFFFFFF &
+[2] 798
+# cansend can0 123#
+#
+ (000.000000)  can0  20000004   [8]  00 08 00 00 00 00 60 00   ERRORFRAME
+	controller-problem{tx-error-warning}
+	error-counter-tx-rx{{96}{0}}
+ (000.002122)  can0  20000004   [8]  00 20 00 00 00 00 80 00   ERRORFRAME
+	controller-problem{tx-error-passive}
+	error-counter-tx-rx{{128}{0}}
+111:         10          0  gpio-mxc  12 Edge      hi3110
+111:         10          0  gpio-mxc  12 Edge      hi3110
+111:         10          0  gpio-mxc  12 Edge      hi3110
+
+>>> So far using NAPI was mandatory. There is the problem of out-of-order
+>>> message reception if handled in the isr on multi processor systems.
+>>> Marc, what is the current policy?
+>>>
+>>
+>> Since this is a SPI based CAN, I am wary for any additional latencies
+>> NAPI might introduce. The RX handling is being done at the very
+>> beginning of the ISR for this reason.
+>>
+>> Can we go ahead with the existing implementation and re-visit this at a
+>> later time?
+> 
+> Likely yes, as Marc has already reviewed the driver once.
+> 
+
+Thanks, I will go ahead and submit v4 patch.
+
+> BTW: what system board/processor are you using?
+> 
+
+It is a custom board using Phytec phyFLEX-i.MX6 Dual SOM.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
