@@ -1,126 +1,89 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 17 Mar 2017 14:37:43 +0000
-Message-ID: <20170317143743.GG21222@n2100.armlinux.org.uk>
-References: <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
- <20170314004533.3b3cd44b@vento.lan>
- <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
- <20170317114203.GZ21222@n2100.armlinux.org.uk>
- <44161453-02f9-0019-3868-7501967a6a82@linux.intel.com>
- <20170317102410.18c966ae@vento.lan>
- <1489758670.2905.52.camel@pengutronix.de>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 3/5] i2c: i2c-stm32f7: add driver
+Date: Fri, 17 Mar 2017 15:53:18 +0100
+Message-ID: <971895d3-2fe6-ecb6-9dc3-ee71193b34ee@baylibre.com>
+References: <1489744738-21632-1-git-send-email-cedric.madianga@gmail.com>
+ <1489744738-21632-4-git-send-email-cedric.madianga@gmail.com>
+ <6ae90186-0e8d-654b-c9e3-2d1b4daf6198@baylibre.com>
+ <CAOAejn0Hs7QOgcrHM2t3NsFQeD9dyvThDK-8iM1Lvb7Qv4fGGQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1489758670.2905.52.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOAejn0Hs7QOgcrHM2t3NsFQeD9dyvThDK-8iM1Lvb7Qv4fGGQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 02:51:10PM +0100, Philipp Zabel wrote:
-> On Fri, 2017-03-17 at 10:24 -0300, Mauro Carvalho Chehab wrote:
-> [...]
-> > The big question, waiting for an answer on the last 8 years is
-> > who would do that? Such person would need to have several different
-> > hardware from different vendors, in order to ensure that it has
-> > a generic solution.
-> > 
-> > It is a way more feasible that the Kernel developers that already 
-> > have a certain hardware on their hands to add support inside the
-> > driver to forward the controls through the pipeline and to setup
-> > a "default" pipeline that would cover the common use cases at
-> > driver's probe.
+On 03/17/2017 02:52 PM, M'boumba Cedric Madianga wrote:
+> Hi,
 > 
-> Actually, would setting pipeline via libv4l2 plugin and letting drivers
-> provide a sane enabled default pipeline configuration be mutually
-> exclusive? Not sure about the control forwarding, but at least a simple
-> link setup and format forwarding would also be possible in the kernel
-> without hindering userspace from doing it themselves later.
+> 
+>>> +static int stm32f7_i2c_hw_config(struct stm32f7_i2c_dev *i2c_dev)
+>>> +{
+>>> +     struct device_node *of_node = i2c_dev->dev->of_node;
+>>> +     u32 timing;
+>>> +     int ret;
+>>> +
+>>> +     ret = of_property_read_u32(of_node, "st,i2c-timing", &timing);
+>>> +     if (ret) {
+>>> +             dev_err(i2c_dev->dev, "Error: missing i2c timing property\n");
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     /* Timing settings */
+>>> +     writel_relaxed(timing, i2c_dev->base + STM32F7_I2C_TIMINGR);
+>>
+>> Hi,
+>>
+>> Using a register value in DT is quite ugly since the requirement to calculate the timings
+>> is quite easy, and well documented.
+>>
+>> I wrote it for Zephyr, you can find it here :
+>> https://github.com/zephyrproject-rtos/zephyr/blob/master/drivers/i2c/i2c_stm32lx.c#L31
+> 
+> Thanks for this code. It is very interesting.
+> With our formula, I just notice that we don't use any i2c rise time or
+> fall time but they have some impacts in i2c timing computation.
+> So, the user could not be able to select these values for him use case. Right ?
 
-I think this is the exact same problem as controls in ALSA.
+Sorry I don't understand.
+The value you use from the DT and the one calculated from the setup/hold/high/low value
+with the algorithm I developed will set the same values.
 
-When ALSA started off in life, the requirement was that all controls
-shall default to minimum, and the user is expected to adjust controls
-after the system is running.
+The main difference is that you won't need the ST tool to calculate these, and even better
+you can provide generic binding for whatever APB frequency the I2C peripheral is running
+on.
 
-After OSS, this gave quite a marked change in system behaviour, and
-led to a lot of "why doesn't my sound work anymore" problems, because
-people then had to figure out which combination of controls had to be
-set to get sound out of their systems.
+> 
+> 
+>>
+>> Another point, maybe you should find a better name for the driver, since this I2C IP is share
+>> with the STM32Lx also and is not tied to STM32F7.
+> 
+> As far as I know, we don't have any STM32Lx SoC integrated in the
+> linux kernel mainline.
+> I choose i2c-stm32f7 name as it is the first Soc integrated in the
+> linux kernel mainline where this IP could be used.
 
-Now it seems to be much better, where install Linux on a platform, and
-you have a working sound system (assuming that the drivers are all there
-which is generally the case for x86.)
+Having the STM32L4 running mainline won't be hard, maybe useless, but not hard.
+My point is that you can somehow consider the STM32F0/F1/F4 I2C IP to be "v1" or "gen1",
+and the L0/L4/F6 (and H7 ?) to be "v2" or "gen2" then prepend a generic compatible to
+have something like :
+compatible = "st,stm32-i2c-v2", "st,stm32f7-i2c"
 
-However, it's still possible to adjust all the controls from userspace.
-All that's changed is the defaults.
+> BR,
+> Cedric
+> 
 
-Why am I mentioning this - because from what I understand Mauro saying,
-it's no different from this situation.  Userspace will still have the
-power to disable all links and setup its own.  The difference is that
-there will be a default configuration that the kernel sets up at boot
-time that will be functional, rather than the current default
-configuration where the system is completely non-functional until
-manually configured.
-
-However, at the end of the day, I don't care _where_ the usability
-problems are solved, only that there is some kind of solution.  It's not
-the _where_ that's the real issue here, but the _how_, and discussion of
-the _how_ is completely missing.
-
-So, let's try kicking off a discussion about _how_ to do things.
-
-_How_ do we setup a media controller system so that we end up with a
-usable configuration - let's start with the obvious bit... which links
-should be enabled.
-
-I think the first pre-requisit is that we stop exposing capture devices
-that can never be functional for the hardware that's present on the board,
-so that there isn't this plentora of useless /dev/video* nodes and useless
-subdevices.
-
-One possible solution to finding a default path may be "find the shortest
-path between the capture device and the sensor and enable intervening
-links".
-
-Then we need to try configuring that path with format/resolution
-information.
-
-However, what if something in the shortest path can't handle the format
-that the sensor produces?  I think at that point, we'd need to drop that
-subdev out of the path resolution, re-run the "find the shortest path"
-algorithm, and try again.
-
-Repeat until success or no path between the capture and sensor exists.
-
-This works fine if you have just one sensor visible from a capture device,
-but not if there's more than one (which I suspect is the case with the
-Sabrelite board with its two cameras and video receiver.)  That breaks
-the "find the shortest path" algorithm.
-
-So, maybe it's a lot better to just let the board people provide via DT
-a default setup for the connectivity of the modules somehow - certainly
-one big step forward would be to disable in DT parts of the capture
-system that can never be used (remembering that boards like the RPi /
-Hummingboard may end up using DT overlays to describe this for different
-cameras, so the capture setup may change after initial boot.)
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Thanks,
+Neil
