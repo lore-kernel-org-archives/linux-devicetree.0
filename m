@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V4 2/4] dt-bindings: arm: Add bindings for SP9860G
-Date: Fri, 17 Mar 2017 13:51:36 +0800
-Message-ID: <1489729898-774-3-git-send-email-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V4 4/4] serial: sprd: adjust TIMEOUT to a big value
+Date: Fri, 17 Mar 2017 13:51:38 +0800
+Message-ID: <1489729898-774-5-git-send-email-chunyan.zhang@spreadtrum.com>
 References: <1489729898-774-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,38 +12,30 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, catali
 Cc: mathieu.poirier@linaro.org, orson.zhai@spreadtrum.com, sudeep.holla@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhang.lyra@gmail.com, chunyan.zhang@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-Added bindings for Spreadtrum SP9860G board and SC9860 SoC.
-This patch also revised bindings of SC9836 to make the format
-more clear.
+From: Wei Qiao <wei.qiao@spreadtrum.com>
 
+SPRD_TIMEOUT was 256, which is too small to wait until the status
+switched to workable in a while loop, so that the earlycon could
+not work correctly.
+
+Signed-off-by: Wei Qiao <wei.qiao@spreadtrum.com>
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
- Documentation/devicetree/bindings/arm/sprd.txt | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/tty/serial/sprd_serial.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
-index 31a629d..3df034b 100644
---- a/Documentation/devicetree/bindings/arm/sprd.txt
-+++ b/Documentation/devicetree/bindings/arm/sprd.txt
-@@ -1,11 +1,14 @@
- Spreadtrum SoC Platforms Device Tree Bindings
- ----------------------------------------------------
+diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
+index d98e3dc..90996ad 100644
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -36,7 +36,7 @@
+ #define SPRD_FIFO_SIZE		128
+ #define SPRD_DEF_RATE		26000000
+ #define SPRD_BAUD_IO_LIMIT	3000000
+-#define SPRD_TIMEOUT		256
++#define SPRD_TIMEOUT		256000
  
--Sharkl64 is a Spreadtrum's SoC Platform which is based
--on ARM 64-bit processor.
-+SC9836 openphone Board
-+Required root node properties:
-+	- compatible = "sprd,sc9836-openphone", "sprd,sc9836";
- 
--SC9836 openphone board with SC9836 SoC based on the
--Sharkl64 Platform shall have the following properties.
-+SC9860 SoC
-+Required root node properties:
-+	- compatible = "sprd,sc9860"
- 
-+SP9860G 3GFHD Board
- Required root node properties:
--        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
-+	- compatible = "sprd,sp9860g-1h10", "sprd,sc9860";
+ /* the offset of serial registers and BITs for them */
+ /* data registers */
 -- 
 2.7.4
