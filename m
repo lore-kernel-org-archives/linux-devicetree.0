@@ -1,123 +1,196 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] regulator: core: add
- regulator_has_continuous_voltage_range()
-Date: Fri, 17 Mar 2017 21:15:47 +0000
-Message-ID: <20170317211547.22jrqud5np4ve2jk@sirena.org.uk>
-References: <20170308200246.126331-1-mka@chromium.org>
- <20170309102819.bx5paxtffvmvmuov@sirena.org.uk>
- <20170309194054.GA15095@google.com>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH v10 1/8] devicetree: power: Add battery.txt
+Date: Fri, 17 Mar 2017 14:43:12 -0700
+Message-ID: <CAKvHMgS92WFoJa=imfAFiEEc0VyiSsDBbuYi4yzZ=LEa7__yKA@mail.gmail.com>
+References: <20170315192653.26799-1-liam@networkimprov.net>
+ <20170315192653.26799-2-liam@networkimprov.net> <20170315220425.qeidvmanbsmq4wxk@earth>
+ <CAKvHMgSF2rsaAaUqFw1qF+b2NA9CkABYKYOTd2p+imuPAHq9JA@mail.gmail.com>
+ <20170315225709.ugjibnoqfukay657@earth> <d548b5e6-af6e-3fa6-e926-b24636a676a8@ti.com>
+ <CAKvHMgS4dRm7LfxVFSh9UeeUA=ZFVoArtG8wZOpZyZDjiKkKwQ@mail.gmail.com> <691553d1-cff7-958f-d9d9-6194210b4f87@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4die3l3bpjqcnc6q"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170309194054.GA15095@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Guenter Roeck <groeck@chromium.org>, Dmitry Torokhov <dtor@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <691553d1-cff7-958f-d9d9-6194210b4f87@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 17, 2017 at 8:21 AM, Andrew F. Davis <afd@ti.com> wrote:
+> On 03/16/2017 05:58 PM, Liam Breck wrote:
+>> On Thu, Mar 16, 2017 at 6:21 AM, Andrew F. Davis <afd@ti.com> wrote:
+>>> On 03/15/2017 05:57 PM, Sebastian Reichel wrote:
+>>>> Hi,
+>>>>
+>>>> On Wed, Mar 15, 2017 at 03:18:17PM -0700, Liam Breck wrote:
+>>>>> Hey Sebastian, welcome back :-)
+>>>>>
+>>>>> I've taken over work on this patchset from Matt.
+>>>>
+>>>> Ok.
+>>>>
+>>>>> On Wed, Mar 15, 2017 at 3:04 PM, Sebastian Reichel <sre@kernel.org> wrote:
+>>>>>> Hi Liam & Matt,
+>>>>>>
+>>>>>> Sorry for my absence in the discussion. I skipped the previous
+>>>>>> iterations for now and start with this version.
+>>>>>>
+>>>>>> On Wed, Mar 15, 2017 at 12:26:46PM -0700, Liam Breck wrote:
+>>>>>>> From: Liam Breck <kernel@networkimprov.net>
+>>>>>>>
+>>>>>>> Documentation of static battery characteristics that can be defined
+>>>>>>> for batteries which cannot self-identify. This information is required
+>>>>>>> by fuel-gauge and charger chips for proper handling of the battery.
+>>>>>>>
+>>>>>>> Cc: Rob Herring <robh@kernel.org>
+>>>>>>> Cc: devicetree@vger.kernel.org
+>>>>>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+>>>>>>> Signed-off-by: Liam Breck <kernel@networkimprov.net>
+>>>>>>> ---
+>>>>>>>  .../devicetree/bindings/power/supply/battery.txt   | 45 ++++++++++++++++++++++
+>>>>>>>  1 file changed, 45 insertions(+)
+>>>>>>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>>>> new file mode 100644
+>>>>>>> index 0000000..0278617
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>>>> @@ -0,0 +1,45 @@
+>>>>>>> +Battery Characteristics
+>>>>>>
+>>>>>> Maybe add something like
+>>>>>>
+>>>>>> This device provides static battery information, that is usually
+>>>>>> available in the EEPROM of a smart battery. It's supposed to be
+>>>>>> used for batteries, which do not have their own EEPROM (or if its
+>>>>>> unusable).
+>>>>>
+>>>>> OK.
+>>>>>
+>>>>>>> +Required Properties:
+>>>>>>> + - compatible: Must be "fixed-battery"
+>>>>>
+>>>>> Rob questioned the term "fixed". Shall we consider other terms --
+>>>>> simple-battery, plain-battery...?
+>>>>
+>>>> I don't like the term either, but it was the best I came up with.
+>>>> They are known as "dumb" batteries, but that term looks too
+>>>> colloquial for DT usage. While I think "simple-battery" is not
+>>>> perfect either, it's better than "fixed-battery", so please switch
+>>>> to that in the next revision.
+>>>>
+>>>
+>>> I rather like "fixed-battery", it matches the regulator and other power
+>>> source DTs better. To answer Rob's question on what a non-fixed battery
+>>> would look like we can think of a future battery that can change its
+>>> physical properties (chemical or physical perhaps) in response to
+>>> software. Although I've not seen such a battery I don't think it's too
+>>> far-fetched.
+>>
+>> A "fixed" battery sounds like a non-removable one to me. I'll switch
+>> to "simple-battery" in v11 unless a better idea bubbles up first.
+>>
+>
+> Are fixed-regulators non-removable, or do most people understand. Also
+> this is for non-removable batteries, if a battery is changeable then
+> this DT is not valid as it would be describing the current configuration
+> of the device. I guess it could be done with overlays for the current
+> battery, not sure, but something to think about.
 
---4die3l3bpjqcnc6q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I know little about regulators, but wikipedia mentions fixed and
+variable/adjustable kinds. We're not contemplating an "adjustable
+battery" type, so the fixed/adjustable dichotomy isn't a natural fit
+here.
 
-On Thu, Mar 09, 2017 at 11:40:54AM -0800, Matthias Kaehlcke wrote:
-> El Thu, Mar 09, 2017 at 11:28:19AM +0100 Mark Brown ha dit:
-> > On Wed, Mar 08, 2017 at 12:02:45PM -0800, Matthias Kaehlcke wrote:
+>>> All the properties described here are "fixed", if we say "simple" then a
+>>> battery with more properties would be a "complex" battery..
+>>
+>> Simple is not a boolean term; it really doesn't mandate a
+>> "complex-battery" type.
+>>
+>
+> Yes, but the spectrum would imply levels of simplicity, what would *you*
+> call a "non-simple" battery?
 
-> > > The new function allows consumers to determine if a regulator is
-> > > continuous or discrete, and whether the results of
+Simple is not an integral term, either :-)
 
-> > Why?  As we discussed at ELC this is an implementation detail of the
-> > regulator and it's to an extent a taste decision if the regulator is
-> > represented as a linear range or a continuous range (in fact given
-> > improvements in the core we could probably just update all continuous
-> > range regulators to linear ones).
+simple-battery, gauged-battery, coin-battery, bare-battery (no
+protection circuit)...
 
-> The second patch of this series is a driver for voltage controlled
-> regulators (vctrl), ie the output voltage of a vctrl regulator is
-> controlled through the voltage of another regulator. The control
-> regulator can be continuous or discrete and I think it makes sense for
-> the vctrl regulator to mirror its control regulator in this aspect.
-> Why should it pretend to have a continuous range when it is actually
-> discrete due to the control regulator?
-
-I don't think we should be providing a consumer facing API which invites
-consumers to peer into the implementation details of regulators, or
-gives them the idea that these concepts exist.  Consumers can already
-enumerate the set of supported voltages via _list_voltage() and so on,
-I'd expect consumers to be able to get what they need from those.  You
-have an incrediblity specialist use case here but this is just a general
-consumer interface that's being added.
-
-> For continuous control regulators we can simply calculate a "safe"
-> voltage for the next step and pass it to the control regulator. In
-> case of a discrete control regulator this calculated voltage may not
-> be directly available, without knowing the available steps the vctrl
-> driver has to try different voltage ranges until it finds one that is
-> accepted by the control regulator. Obviously this can be done but it
-> adds code complexity and runtime overhead which is not necessary if we
-> know the available steps (and regulator_list_voltage() is already
-> there to provide them).
-
-I'm not seeing how knowing if a regulator is continuous is helpful for
-regulators with discrete voltages?
-
-> > > regulator_count_voltages() and regulator_list_voltage() correspond
-> > > to the regulator itself or its supply.
-
-> > Why?
-
-> Please see my explication above on why the vctrl driver needs to know
-> this.
-
-I'm seeing nothing in the above that addresses my question, you don't
-even seem to have mentioned supplies. =20
-
-> In general I think the behavior of these APIs can be confusing for
-> users without intimate knowledge of the regulator core. For me (as a
-> possibly naive user) it isn't clear why regulator_count_voltages() of
-> a continuous regulator would return the voltage count of its supply,
-> instead of a value like 0 or -EINVAL that indicates that it is
-> continuous. Similar for regulator_list_voltage(). I'm sure there are
-> reasons for it, but it's not really intuitive.
-
-This is happening because continuous regulators are an infrequently used
-hack and not every case where they are relevant has been caught.  If the
-abstractions are confusing or not working then let's improve them, not
-just punch holes in the abstraction layers and make the problem worse.
-What you're effectively saying is "I don't really understand what's
-going on but this seems to work for me" which is a fairly big warning
-sign that the solution isn't great.
-
-The reason we report properties of the parent supply if the child supply
-has no control is so that we can pass operations on up to the parent to
-implement them there, supporting things like dumb power switches.  We
-shouldn't be leaking details of the parent regulator for anything that
-does actually regulate.
-
-> Above you characterize discrete vs. continuous as an implementation
-> detail. Aren't we already exposing large parts of it through
-> regulator_count_voltages() and regulator_list_voltage()?
-
-What we should be doing for continuous regulators is allowing people to
-list the supported voltages as they would for other regulators.
-
---4die3l3bpjqcnc6q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljMUgMACgkQJNaLcl1U
-h9BKIwf+Mt+FsMSnhkiq/pOL2LoepkfIO79azGhBawcuPlGdNl+1hQa1ii89soTn
-pTWH51/+Nc7GE786JfzmYKj9YUNhEwK06wXuNgmSWN9fEfgYSQcEkTHdSQ9Vfu0x
-YeDYn3xwFI1idRBrs+EFl8sfIMxpLfZXQNMLnZgqX2trqkp0x8q7VXcGOmDPi3ew
-UlyTSgwz0qgoiykI6WiAREnXxTKnwZii+/o/ejnXYujGm7SGpa9skFY+9ZDPh/4F
-PtABOcYg+1kwH/U67yRwbYlYB/NgqZKNdHaD+yQOCX6jtpyHzAbXTJTymk2u6VHG
-veZuxLdCm+xq/6JX8thSRu02dMKqRw==
-=Anj8
------END PGP SIGNATURE-----
-
---4die3l3bpjqcnc6q--
+>>>>>>> +Optional Properties:
+>>>>>>> + - voltage-min-design-microvolt: drained battery voltage
+>>>>>>> + - energy-full-design-microwatt-hours: battery design energy
+>>>>>>> + - charge-full-design-microamp-hours: battery design capacity
+>>>>>>
+>>>>>> Looks fine to me.
+>>>>>>
+>>>>>>> +Because drivers surface properties in sysfs using names derived
+>>>>>>> +from enum power_supply_property, e.g.
+>>>>>>> +/sys/class/power_supply/<device>/charge_full_design, our
+>>>>>>> +battery properties must be named for the corresponding elements in
+>>>>>>> +enum power_supply_property, defined in include/linux/power_supply.h.
+>>>>>>
+>>>>>> This is Linux/implementation specific and does not belong
+>>>>>> into a DT binding document.
+>>>>>
+>>>>> I just wrote on a thread for an earlier version of this patch:
+>>>>>
+>>>>> "Sebastian proposed DT:battery specifically to be consumed by
+>>>>> power_supply_core. Allowing names in DT:battery and
+>>>>> power_supply_property to diverge would cause confusion and wasted
+>>>>> time, for no particular benefit. As there is no rationale to
+>>>>> reconsider the names of these fields for DT:battery, let's write that
+>>>>> into the docs."
+>>>>
+>>>> DT bindings are not "Linux hardware information bindings". Of course
+>>>> there is no need to diverge without a good reason, but that kind of
+>>>> Documentation just does not belong into the DT bindings.
+>>>>
+>>>>>>> +Batteries must be referenced by chargers and/or fuel-gauges
+>>>>>>> +using a phandle. The phandle's property should be named
+>>>>>>> +"monitored-battery".
+>>>>>>
+>>>>>> This looks fine.
+>>>>>>
+>>>>>>> +Driver code should call power_supply_get_battery_info() to obtain
+>>>>>>> +battery properties via monitored-battery. For details see:
+>>>>>>> +  drivers/power/supply/power_supply_core.c
+>>>>>>> +  drivers/power/supply/bq27xxx_battery.c
+>>>>>>
+>>>>>> This is also Linux/implementation specific and should be dropped.
+>>>>>
+>>>>> We ought to mention how drivers are expected to consume DT:battery.
+>>>>
+>>>> That kind of documentation does not belong into
+>>>> Documentation/devicetree/bindings. We can add something to
+>>>> Documentation/power/power_supply_class.txt instead.
+>>>>
+>>>>>>> +Example:
+>>>>>>> +
+>>>>>>> +     bat: battery {
+>>>>>>> +             compatible = "fixed-battery";
+>>>>>>> +             voltage-min-design-microvolt = <3200000>;
+>>>>>>> +             energy-full-design-microwatt-hours = <5290000>;
+>>>>>>> +             charge-full-design-microamp-hours = <1430000>;
+>>>>>>> +     };
+>>>>>>> +
+>>>>>>> +     charger: charger@11 {
+>>>>>>> +             ....
+>>>>>>> +             monitored-battery = <&bat>;
+>>>>>>> +             ...
+>>>>>>> +     };
+>>>>>>> +
+>>>>>>> +     fuel_gauge: fuel-gauge@22 {
+>>>>>>> +             ....
+>>>>>>> +             monitored-battery = <&bat>;
+>>>>>>> +             ...
+>>>>>>> +     };
+>>>>>>> --
+>>>>>>> 2.9.3
+>>>>>>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
