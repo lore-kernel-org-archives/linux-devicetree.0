@@ -1,313 +1,104 @@
-From: Oza Oza via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Subject: RE: [RFC PATCH] iommu/dma: account pci host bridge dma_mask for IOVA
-	allocation
-Date: Fri, 17 Mar 2017 16:50:47 +0530
-Message-ID: <2590a8ed35af9d95dd5ea3bbded45d39@mail.gmail.com>
-References: <1489731045-6719-1-git-send-email-oza.oza@broadcom.com>
-	d70f83cb517c082ee4ac280b96f1aa60@mail.gmail.com
-Reply-To: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [RESEND PATCH v6 5/6] i2c: designware: add SLAVE mode functions
+Date: Fri, 17 Mar 2017 11:24:03 +0000
+Message-ID: <4296eedb-aede-649c-8035-56342b096d9c@synopsys.com>
+References: <cover.1488383202.git.lolivei@synopsys.com>
+ <07463ebe12af8c88c21c24601cf54b0cd2077e07.1488383202.git.lolivei@synopsys.com>
+ <be10879b-a81b-9047-6c67-45916a85ef31@linux.intel.com>
+ <d6183e8c-5ff8-32c9-44ff-bef038ee0baa@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: d70f83cb517c082ee4ac280b96f1aa60-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <d6183e8c-5ff8-32c9-44ff-bef038ee0baa@synopsys.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
+On 02-Mar-17 15:17, Luis Oliveira wrote:
+> On 02-Mar-17 14:33, Jarkko Nikula wrote:
+>> On 03/01/17 17:59, Luis Oliveira wrote:
+>>> - Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
+>>> - Slave functions added to core library file
+>>> - Slave abort sources added to common source file
+>>> - New driver: i2c-designware-slave added
+>>> - Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
+>>>   when supported by the architecture.
+>>>
+>>> All the SLAVE flow is added but it is not enabled via platform
+>>> driver.
+>>>
+>>> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+>>> ---
+>>> V5->V6
+>>> - Enable Slave mode using a different option (kbuild reported an error)
+>>> - Identation fixes needed
+>>> - Changed debug prints to dev_vdbg
+>>> - Fixed slave enumeration
+>>>
+>>>  drivers/i2c/busses/Kconfig                 |  14 +-
+>>>  drivers/i2c/busses/Makefile                |   1 +
+>>>  drivers/i2c/busses/i2c-designware-common.c |   7 +
+>>>  drivers/i2c/busses/i2c-designware-core.h   |   3 +
+>>>  drivers/i2c/busses/i2c-designware-slave.c  | 403 +++++++++++++++++++++++++++++
+>>>  5 files changed, 427 insertions(+), 1 deletion(-)
+>>>  create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
+>>>
+>> ...
+>>> diff --git a/drivers/i2c/busses/i2c-designware-common.c
+>>> b/drivers/i2c/busses/i2c-designware-common.c
+>>> index 6357c7c78f6d..24641635aa20 100644
+>>> --- a/drivers/i2c/busses/i2c-designware-common.c
+>>> +++ b/drivers/i2c/busses/i2c-designware-common.c
+>>> @@ -56,6 +56,13 @@ static char *abort_sources[] = {
+>>>          "trying to use disabled adapter",
+>>>      [ARB_LOST] =
+>>>          "lost arbitration",
+>>> +    [ABRT_SLAVE_FLUSH_TXFIFO] =
+>>> +        "read command so flush old data in the TX FIFO",
+>>> +    [ABRT_SLAVE_ARBLOST] =
+>>> +        "slave lost the bus while transmitting data to a remote master",
+>>> +    [ABRT_SLAVE_RD_INTX] =
+>>> +        "slave request for data to be transmitted and there is a 1 in "
+>>> +        "bit 8 of IC_DATA_CMD",
+>>>  };
+>>
+>> I know ABRT_SLAVE_RD_INTX case is from the specification but I would prefer here
+>> one-line error text so it will be easier to grep from sources.
+>>
+>> I would like it to be also be more understandable. I don't know did I understood
+>> it correctly but does it occur when attempting to read controller while
+>> transmitting or something like that?
+> 
+> It happens in the "slave-transmitter" mode, when the processor side responds to
+> a request for data to be transmitted and at the same time someone writes 1 to
+> the bit 8 of the IC_DATA_CMD. This bit in "slave-transmitter" mode has to be "0"
+> to indicate the data is to be transmitted.
+> 
+> In "slave-receiver" mode it has no purpose since writes to this register are not
+> required.
 
-Currently this patch involves multiple framework.
-I have coalesced the patch into one to present it as a whole as one RFC.
+If you agree for the v7 I can change it to "incorrect slave-transmitter mode
+configuration", it's not as clear but it gives a clue of where the error comes from.
 
-it involves
-
-1) pcie of framework changes
-2) iommu ops
-3) pci dma-ranges discussion.
-4) also it talks about the bug in device tree framework (dma-ranges) (just
-in the commit message)
-
-There are some minor glitches it remains with, which is open for feedback
-and improvement.
-And this could be split later into separate patches, once you see it as a
-potential scope for solving the problem statement end to end.
-
-Regards,
-Oza.
------Original Message-----
-From: Oza Oza [mailto:oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org]
-Sent: Friday, March 17, 2017 11:45 AM
-To: 'Joerg Roedel'; 'Robin Murphy'
-Cc: 'iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org'; 'linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org';
-'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org'; 'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org';
-'bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org'
-Subject: RE: [RFC PATCH] iommu/dma: account pci host bridge dma_mask for
-IOVA allocation
-
-Hi,
-
-There are certain areas which requires contemplation.
-And this problem requires more attention from Pci of framework and iommu,
-and integration of both.
-
-Regards,
-Oza.
-
------Original Message-----
-From: Oza Pawandeep [mailto:oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org]
-Sent: Friday, March 17, 2017 11:41 AM
-To: Joerg Roedel; Robin Murphy
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org; Oza Pawandeep
-Subject: [RFC PATCH] iommu/dma: account pci host bridge dma_mask for IOVA
-allocation
-
-It is possible that PCI device supports 64-bit DMA addressing, and thus
-it's driver sets device's dma_mask to DMA_BIT_MASK(64), however PCI host
-bridge may have limitations on the inbound transaction addressing. As an
-example, consider NVME SSD device connected to iproc-PCIe controller.
-
-Currently, the IOMMU DMA ops only considers PCI device dma_mask when
-allocating an IOVA. This is particularly problematic on
-ARM/ARM64 SOCs where the IOMMU (i.e. SMMU) translates IOVA to PA for
-in-bound transactions only after PCI Host has forwarded these transactions
-on SOC IO bus. This means on such ARM/ARM64 SOCs the IOVA of in-bound
-transactions has to honor the addressing restrictions of the PCI Host.
-
-this patch is inspired by
-http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1306545.html
-http://www.spinics.net/lists/arm-kernel/msg566947.html
-
-but above inspiraiton solves the half of the problem.
-the rest of the problem is descrbied below, what we face on iproc based
-SOCs.
-
-current pcie frmework and of framework integration assumes dma-ranges in a
-way where memory-mapped devices define their dma-ranges.
-dma-ranges: (child-bus-address, parent-bus-address, length).
-
-but iproc based SOCs and even Rcar based SOCs has PCI world dma-ranges.
-dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
-
-of_dma_configure is specifically witten to take care of memory mapped
-devices.
-but no implementation exists for pci to take care of pcie based memory
-ranges.
-in fact pci world doesnt seem to define standard dma-ranges since there is
-an absense of the same, the dma_mask used to remain 32bit because of
-0 size return (parsed by of_dma_configure())
-
-this patch also implements of_pci_get_dma_ranges to cater to pci world
-dma-ranges.
-so then the returned size get best possible (largest) dma_mask.
-for e.g.
-dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>; we should get
-dev->coherent_dma_mask=0x7fffffffff.
-
-conclusion: there are following problems
-1) linux pci and iommu framework integration has glitches with respect to
-dma-ranges
-2) pci linux framework look very uncertain about dma-ranges, rather
-binding is not defined
-   the way it is defined for memory mapped devices.
-   rcar and iproc based SOCs use their custom one dma-ranges
-   (rather can be standard)
-3) even if in case of default parser of_dma_get_ranges,:
-   it throws and erro"
-   "no dma-ranges found for node"
-   because of the bug which exists.
-   following lines should be moved to the end of while(1)
-	839                 node = of_get_next_parent(node);
-	840                 if (!node)
-	841                         break;
-
-Reviewed-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig index
-8c7c244..20cfff7 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -217,6 +217,9 @@ config NEED_DMA_MAP_STATE  config NEED_SG_DMA_LENGTH
- 	def_bool y
-
-+config ARCH_HAS_DMA_SET_COHERENT_MASK
-+	def_bool y
-+
- config SMP
- 	def_bool y
-
-diff --git a/arch/arm64/include/asm/device.h
-b/arch/arm64/include/asm/device.h index 73d5bab..64b4dc3 100644
---- a/arch/arm64/include/asm/device.h
-+++ b/arch/arm64/include/asm/device.h
-@@ -20,6 +20,7 @@ struct dev_archdata {
- #ifdef CONFIG_IOMMU_API
- 	void *iommu;			/* private IOMMU data */
- #endif
-+	u64 parent_dma_mask;
- 	bool dma_coherent;
- };
-
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index 81cdb2e..5845ecd 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -564,6 +564,7 @@ static void flush_page(struct device *dev, const void
-*virt, phys_addr_t phys)
- 	__dma_flush_area(virt, PAGE_SIZE);
- }
-
-+
- static void *__iommu_alloc_attrs(struct device *dev, size_t size,
- 				 dma_addr_t *handle, gfp_t gfp,
- 				 unsigned long attrs)
-@@ -795,6 +796,20 @@ static void __iommu_unmap_sg_attrs(struct device
-*dev,
- 	iommu_dma_unmap_sg(dev, sgl, nelems, dir, attrs);  }
-
-+static int __iommu_set_dma_mask(struct device *dev, u64 mask) {
-+	/* device is not DMA capable */
-+	if (!dev->dma_mask)
-+		return -EIO;
-+
-+	if (mask > dev->archdata.parent_dma_mask)
-+		mask = dev->archdata.parent_dma_mask;
-+
-+	*dev->dma_mask = mask;
-+
-+	return 0;
-+}
-+
- static const struct dma_map_ops iommu_dma_ops = {
- 	.alloc = __iommu_alloc_attrs,
- 	.free = __iommu_free_attrs,
-@@ -811,8 +826,21 @@ static void __iommu_unmap_sg_attrs(struct device
-*dev,
- 	.map_resource = iommu_dma_map_resource,
- 	.unmap_resource = iommu_dma_unmap_resource,
- 	.mapping_error = iommu_dma_mapping_error,
-+	.set_dma_mask = __iommu_set_dma_mask,
- };
-
-+int dma_set_coherent_mask(struct device *dev, u64 mask) {
-+	if (get_dma_ops(dev) == &iommu_dma_ops &&
-+	    mask > dev->archdata.parent_dma_mask)
-+		mask = dev->archdata.parent_dma_mask;
-+
-+	dev->coherent_dma_mask = mask;
-+	return 0;
-+}
-+EXPORT_SYMBOL(dma_set_coherent_mask);
-+
-+
- /*
-  * TODO: Right now __iommu_setup_dma_ops() gets called too early to do
-  * everything it needs to - the device is only partially created and the
-@@ -975,6 +1003,8 @@ void arch_setup_dma_ops(struct device *dev, u64
-dma_base, u64 size,
- 	if (!dev->dma_ops)
- 		dev->dma_ops = &swiotlb_dma_ops;
-
-+	dev->archdata.parent_dma_mask = size - 1;
-+
- 	dev->archdata.dma_coherent = coherent;
- 	__iommu_setup_dma_ops(dev, dma_base, size, iommu);  } diff --git
-a/drivers/of/of_pci.c b/drivers/of/of_pci.c index 0ee42c3..5804717 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -283,6 +283,51 @@ int of_pci_get_host_bridge_resources(struct
-device_node *dev,
- 	return err;
- }
- EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
-+
-+int of_pci_get_dma_ranges(struct device_node *np, u64 *dma_addr, u64
-+*paddr, u64 *size) {
-+	struct device_node *node = of_node_get(np);
-+	int rlen, naddr, nsize, pna;
-+	int ret = 0;
-+	const int na = 3, ns = 2;
-+	struct of_pci_range_parser parser;
-+	struct of_pci_range range;
-+
-+	if (!node)
-+		return -EINVAL;
-+
-+	parser.node = node;
-+	parser.pna = of_n_addr_cells(node);
-+	parser.np = parser.pna + na + ns;
-+
-+	parser.range = of_get_property(node, "dma-ranges", &rlen);
-+
-+	if (!parser.range) {
-+		pr_debug("pcie device has no dma-ranges defined for
-node(%s)\n", np->full_name);
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	parser.end = parser.range + rlen / sizeof(__be32);
-+
-+	/* how do we take care of multiple dma windows ?. */
-+	for_each_of_pci_range(&parser, &range) {
-+		*dma_addr = range.pci_addr;
-+		*size = range.size;
-+		*paddr = range.cpu_addr;
-+	}
-+
-+	pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
-+		 *dma_addr, *paddr, *size);
-+		 *dma_addr = range.pci_addr;
-+		 *size = range.size;
-+
-+out:
-+	of_node_put(node);
-+	return ret;
-+
-+}
-+EXPORT_SYMBOL_GPL(of_pci_get_dma_ranges);
- #endif /* CONFIG_OF_ADDRESS */
-
- #ifdef CONFIG_PCI_MSI
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h index
-0e0974e..907ace0 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -76,6 +76,7 @@ static inline void of_pci_check_probe_only(void) { }
-int of_pci_get_host_bridge_resources(struct device_node *dev,
- 			unsigned char busno, unsigned char bus_max,
- 			struct list_head *resources, resource_size_t
-*io_base);
-+int of_pci_get_dma_ranges(struct device_node *np, u64 *dma_addr, u64
-+*paddr, u64 *size);
- #else
- static inline int of_pci_get_host_bridge_resources(struct device_node
-*dev,
- 			unsigned char busno, unsigned char bus_max, @@
--83,6 +84,11 @@ static inline int of_pci_get_host_bridge_resources(struct
-device_node *dev,  {
- 	return -EINVAL;
- }
-+
-+static inline int of_pci_get_dma_ranges(struct device_node *np, u64
-+*dma_addr, u64 *paddr, u64 *size) {
-+	return -EINVAL;
-+}
- #endif
-
- #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
---
-1.9.1
+> 
+>>
+>>> diff --git a/drivers/i2c/busses/i2c-designware-core.h
+>>> b/drivers/i2c/busses/i2c-designware-core.h
+>>> index b620d76ffc8d..6c70945cccea 100644
+>>> --- a/drivers/i2c/busses/i2c-designware-core.h
+>>> +++ b/drivers/i2c/busses/i2c-designware-core.h
+>>> @@ -277,6 +277,7 @@ struct dw_i2c_dev {
+>>>      void            (*disable)(struct dw_i2c_dev *dev);
+>>>      void            (*disable_int)(struct dw_i2c_dev *dev);
+>>>      int            (*init)(struct dw_i2c_dev *dev);
+>>> +    bool            mode;
+>>>  };
+>>>
+>>
+>> As I mentioned add here comment for "mode" not in patch 4/6.
+>>
+> Ok, I will.
+> Thanks.
+> 
