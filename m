@@ -1,18 +1,19 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 3/5] i2c: i2c-stm32f7: add driver
-Date: Fri, 17 Mar 2017 16:51:32 +0100
-Message-ID: <5539f058-f2a1-ff78-6dd8-aa2119ce8c49@baylibre.com>
-References: <1489744738-21632-1-git-send-email-cedric.madianga@gmail.com>
- <1489744738-21632-4-git-send-email-cedric.madianga@gmail.com>
- <6ae90186-0e8d-654b-c9e3-2d1b4daf6198@baylibre.com>
- <CAOAejn0Hs7QOgcrHM2t3NsFQeD9dyvThDK-8iM1Lvb7Qv4fGGQ@mail.gmail.com>
- <971895d3-2fe6-ecb6-9dc3-ee71193b34ee@baylibre.com>
- <CAOAejn0ScANyMEWnBfe0G8xQ5TbR-XYwEdXLkNexqC=AigBNJA@mail.gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: iio: introduce trigger providers,
+ consumers
+Date: Fri, 17 Mar 2017 16:59:39 +0100
+Message-ID: <f44cccd8-a607-117d-e444-ea3174eced18@st.com>
+References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
+ <1488300679-3259-2-git-send-email-fabrice.gasnier@st.com>
+ <20170303062126.5bewa5u6o7wu7sy4@rob-hp-laptop>
+ <948e5b96-7a8f-406d-6d03-d129d1b2ce54@kernel.org>
+ <12a6a2f8-9ff6-a4f0-c9a2-c7de037019ef@kernel.org>
+ <20170315192521.l7mb3egh4hbxdpx6@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOAejn0ScANyMEWnBfe0G8xQ5TbR-XYwEdXLkNexqC=AigBNJA@mail.gmail.com>
+In-Reply-To: <20170315192521.l7mb3egh4hbxdpx6@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,81 +23,130 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Cedric,
+On 03/15/2017 08:25 PM, Rob Herring wrote:
+> On Sun, Mar 05, 2017 at 12:13:36PM +0000, Jonathan Cameron wrote:
+>> On 05/03/17 11:43, Jonathan Cameron wrote:
+>>> On 03/03/17 06:21, Rob Herring wrote:
+>>>> On Tue, Feb 28, 2017 at 05:51:14PM +0100, Fabrice Gasnier wrote:
+>>>>> Document iio provider and consumer bindings.
+>>>>>
+>>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>>> ---
+>>>>>  .../devicetree/bindings/iio/iio-bindings.txt       | 38 ++++++++++++++++++++++
+>>>>>  1 file changed, 38 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> index 68d6f8c..01765e9 100644
+>>>>> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> @@ -95,3 +95,41 @@ vdd channel is connected to output 0 of the &ref device.
+>>>>>  		io-channels = <&adc 10>, <&adc 11>;
+>>>>>  		io-channel-names = "adc1", "adc2";
+>>>>>  	};
+>>>>> +
+>>>>> +==IIO trigger providers==
+>>>>> +Sources of IIO triggers can be represented by any node in the device
+>>>>> +tree. Those nodes are designated as IIO trigger providers. IIO trigger
+>>>>> +consumer uses a phandle and an IIO trigger specifier to connect to an
+>>>>> +IIO trigger provider.
+>>>>> +An IIO trigger specifier is an array of one or more cells identifying
+>>>>> +the IIO trigger output on a device. The length of an IIO trigger
+>>>>> +specifier is defined by the value of a #io-trigger-cells property in
+>>>>> +the IIO trigger provider node.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +#io-trigger-cells:
+>>>>> +		Number of cells in an IIO trigger specifier; Typically
+>>>>> +		0 for nodes with a simple IIO trigger output.
+>>>>> +
+>>>>> +Example:
+>>>>> +	trig0: interrupt-trigger0 {
+>>>>> +		#io-trigger-cells = <0>;
+>>>>> +		compatible = "interrupt-trigger";
+>>>>> +		interrupts = <11 0>;
+>>>>> +		interrupt-parent = <&gpioa>;
+>>>>> +	}
+>>>>> +
+>>>>> +==IIO trigger consumers==
+>>>>> +Required properties:
+>>>>> +- io-triggers:	List of phandle representing the IIO trigger specifier.
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +- io-trigger-names :
+>>>>> +		List of IIO trigger name strings that matches elements
+>>>>> +		in 'io-triggers' list property.
+>>>>> +
+>>>>> +Example:
+>>>>> +	some_trigger_consumer {
+>>>>> +		io-triggers = <&trig0>;
+>>>>> +		io-trigger-names = "mytrig";
+>>>>> +	}
+>>>>
+>>>> I have some reservations about this. We could just as easily add the 
+>>>> interrupt directly to the consumer node and use "trigger" for a standard 
+>>>> interrupt name. So the question is whether this extra level of 
+>>>> indirection is needed? 
+>>>
+>>> First thing to note here, is that Fabrice's use of the generic interrupt
+>>> trigger is an extremely 'unusual' one! Normal use case is that we have
+Hi Rob, Jonathan,
 
-On 03/17/2017 04:35 PM, M'boumba Cedric Madianga wrote:
->> Sorry I don't understand.
->> The value you use from the DT and the one calculated from the setup/hold/high/low value
->> with the algorithm I developed will set the same values.
-> 
-> With the ST tool, I could set the following values:
-> I2C speed mode (Master, Fast Mode, Fast Mode Plus)
-> I2C speed frequency
-> I2C clock source frequency
-> I2C rise time
-> I2C fall time
-> 
-> The values set in the DT in this patchset is 0x40202537 for the
-> following input values:
-> I2C speed mode  = Master mode
-> I2C speed frequency= 100 kHz
-> I2C clock source frequency = 48 MHz
-> I2C rise time = 25 ns
-> I2C fall time = 10 ns
-> 
-> If I keep all the above values and just change I2C rise time with 100
-> ns, I will have TIMINGR value at 0x10805E89
->
+Yes, I agree this is unusual.
+
+>>> a random gpio pin providing interrupts to driver triggering on random
+>>> devices - there need be no association between the two whatsoever.
+>>> So what we are doing here is 'allowing' an interrupt to provide a trigger.
+>>> It's not necessarily the one going to be used by any particular device
+>>> driver.  The decision of which trigger to use is definitely one for
+>>> userspace, not something that should be configured in to the device tree.
+>>>
+>>> For this particular case you could in theory just do it by using an interrupt
+>>> as you describe.  Ultimately though we should be able to play more complex
+>>> games with this device and having it able to handle any trigger - which 
+>>> includes those not using the direct hardware route.  It'll be up to the
+>>> driver to figure out when it can use the fast method and when it can't.
+Agreed. Still, to benefit from hw capabilities, driver needs to have a
+way to identify a particular trigger as a direct hardware route, or not
+(and then default software handling, btw, that still needs to be
+addressed in stm32-adc). DT Provider/consumer may help to achieve this.
+
+>>>
+>>> Conversely, even when we are using this hardware route to drive the
+>>> triggering it should be possible to hang off a device to be triggered
+>>> by the interrupt via the kernel rather than directly. 
+>>>
+>>> So from a device tree point of view we are just describing the fact that
+>>> there is a pin, which may be used to trigger something.  What that something
+>>> is, is a question for userspace not the device tree.
+>>>
+>> Ah, I'm half asleep this morning.  Clearly there is a more general follow
+>> up question.  If we are arguing these are generic, why are we setting
+>> up the mapping in device tree?
 >>
->> The main difference is that you won't need the ST tool to calculate these, and even better
->> you can provide generic binding for whatever APB frequency the I2C peripheral is running
->> on.
+>> My gut feeling is we shouldn't be.  So I think we need the first chunk
+>> above but the latter part should be a job for userspace not the devicetree.
 > 
-> As, I2C rise/fall time have some impacts in I2C timings value, the
-> question is: it is very relevant to let customer control these
-> parameters ?
+> So you mean keep the provider side, but get rid of the consumer? That 
+> makes sense to me.
+In case getting rid of the consumer part, I still need one way, on
+consumer side (stm32-adc) to specifically map EXTI signal in ADC
+hardware, do some checks on trigger to validate hardware route.
+I'm not sure how to handle this if I get rid of consumer part.
+Shall I use something else not mentioned here? (put trigger dt node as
+child node of stm32 adc, then use dev bus? ...)
 
-Actually, you could specify a different rise time in DT if it's relevant for
-a specific design, this is why you have the following DT attributes :
-- i2c-scl-falling-time-ns
-- i2c-scl-internal-delay-ns
-- i2c-scl-rising-time-ns
-- i2c-sda-falling-time-ns
+Another way is as suggested by Rob in earlier comment: directly use this
+interrupt in consumer dt node, e.g. in stm32-adc node. And register
+relevant trigger and so on, from stm32-adc driver.
+Please advise.
 
-> If the answer is NO, I agree with you, it is better to use your
-> formula and remove this property from DT.
-> If the answer is YES, I think we should keep ST tool.
-
-Note that the ST tool calculations are tied to the clock source frequency, so either
-you provide a table for all the possible clock source frequencies or calculate dynamically.
-Having a single parameter for a single frequency is, from my point of view, not acceptable.
-
-And, I don't think it's a military secret to have (at least) a simplified algorithm from ST...
-since you have very detailed explanations in the public manuals !
-
+Thanks for reviewing
+Best Regards,
+Fabrice
 > 
->> Having the STM32L4 running mainline won't be hard, maybe useless, but not hard.
->> My point is that you can somehow consider the STM32F0/F1/F4 I2C IP to be "v1" or "gen1",
->> and the L0/L4/F6 (and H7 ?) to be "v2" or "gen2" then prepend a generic compatible to
->> have something like :
->> compatible = "st,stm32-i2c-v2", "st,stm32f7-i2c"
-> 
-> This is not the strategy chosen by the company.
-> They decided to push all driver with ip_name-stm32.c if the driver is
-> common for all Soc.
-> If it not the case, the suffix to be used is the name of the first
-> supported SoC that introduced the IP in the mainline kernel.
-
-OK, but I think the I2C and DT maintainers are also involved in these kind of decisions.
-They should also give their advice.
-
-Neil
-
-> 
-> BR,
-> Cedric
+> Rob
 > 
