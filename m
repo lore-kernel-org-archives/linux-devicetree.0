@@ -1,119 +1,132 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v12 1/9] dt-bindings: mmc: Add Cavium SOCs MMC bindings
-Date: Fri, 17 Mar 2017 09:31:23 +0100
-Message-ID: <CAPDyKFqVHN--=AWttMz_uDEkGTO+aX8APM34enDuVxqM6XKYJg@mail.gmail.com>
-References: <20170310132507.32025-1-jglauber@cavium.com> <20170310132507.32025-2-jglauber@cavium.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v1 6/7] arm64: dts: rockchip: add dts file for RK3328 evaluation board
+Date: Fri, 17 Mar 2017 09:45:52 +0100
+Message-ID: <4559383.EsY2O1vJ7P@phil>
+References: <1489572237-6649-1-git-send-email-cl@rock-chips.com> <63969127-3fcd-658c-2986-8ded6d93c433@arm.com> <58CB4945.9020408@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20170310132507.32025-2-jglauber@cavium.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jan Glauber <jglauber@cavium.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <ddaney@caviumnetworks.com>, "Steven J . Hill" <Steven.Hill@cavium.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58CB4945.9020408-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?6ZmI5Lqu?= <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, yhx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.wu@rock-chips
 List-Id: devicetree@vger.kernel.org
 
-On 10 March 2017 at 14:24, Jan Glauber <jglauber@cavium.com> wrote:
-> Add description of Cavium Octeon and ThunderX SOC device tree bindings.
->
-> CC: Ulf Hansson <ulf.hansson@linaro.org>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: devicetree@vger.kernel.org
->
-> Signed-off-by: Jan Glauber <jglauber@cavium.com>
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> Signed-off-by: Steven J. Hill <steven.hill@cavium.com>
-> Acked-by: Rob Herring <robh+dt@kernel.org>
-> ---
->  .../devicetree/bindings/mmc/cavium-mmc.txt         | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/cavium-mmc.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/cavium-mmc.txt b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
-> new file mode 100644
-> index 0000000..225c2be
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
-> @@ -0,0 +1,58 @@
-> +* Cavium Octeon & ThunderX MMC controller
-> +
-> +The highspeed MMC host controller on Caviums SoCs provides an interface
-> +for MMC and SD types of memory cards.
-> +
-> +Supported maximum speeds are the ones of the eMMC standard 4.41 as well
-> +as the speed of SD standard 4.0. Only 3.3 Volt is supported.
-> +
-> +Required properties:
-> + - compatible : should be one of:
-> +   cavium,octeon-6130-mmc
-> +   cavium,octeon-6130-mmc-slot
-> +   cavium,octeon-7890-mmc
-> +   cavium,octeon-7890-mmc-slot
-> +   cavium,thunder-8190-mmc
-> +   cavium,thunder-8190-mmc-slot
-> +   cavium,thunder-8390-mmc
-> +   cavium,thunder-8390-mmc-slot
-> + - reg : mmc controller base registers
-> + - clocks : phandle
-> +
-> +Optional properties:
-> + - for cd, bus-width and additional generic mmc parameters
-> +   please refer to mmc.txt within this directory
-> + - cavium,cmd-clk-skew : number of coprocessor clocks before sampling command
-> + - cavium,dat-clk-skew : number of coprocessor clocks before sampling data
-> +
-> +Deprecated properties:
-> +- spi-max-frequency : use max-frequency instead
-> +- cavium,bus-max-width : use bus-width instead
-> +
-> +Examples:
-> +       mmc_1_4: mmc@1,4 {
-> +               compatible = "cavium,thunder-8390-mmc";
-> +               reg = <0x0c00 0 0 0 0>; /* DEVFN = 0x0c (1:4) */
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&sclk>;
-> +
-> +               mmc-slot@0 {
-> +                       compatible = "cavium,thunder-8390-mmc-slot";
-> +                       reg = <0>;
+Am Freitag, 17. März 2017, 10:26:13 CET schrieb 陈亮:
+> 在 2017年03月17日 00:18, Andre Przywara 写道:
+> > Hi Chen,
+> > 
+> > On 16/03/17 01:45, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org wrote:
+> >> From: Chen Liang <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >> 
+> >> This patch add rk3328-evb.dts for RK3328 evaluation board.
+> >> Tested on RK3328 evb.
+> >> 
+> >> Signed-off-by: Chen Liang <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >> ---
+> >> 
+> >>   arch/arm64/boot/dts/rockchip/Makefile       |  1 +
+> >>   arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 57
+> >>   +++++++++++++++++++++++++++++ 2 files changed, 58 insertions(+)
+> >>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/rockchip/Makefile
+> >> b/arch/arm64/boot/dts/rockchip/Makefile index 3a86289..853fc7d 100644
+> >> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> >> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> >> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
+> >> 
+> >>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
+> >>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+> >>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
+> >> 
+> >> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+> >> 
+> >>   always		:= $(dtb-y)
+> >>   subdir-y	:= $(dts-dirs)
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> >> b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts new file mode 100644
+> >> index 0000000..cf27239
+> >> --- /dev/null
+> >> +++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> >> @@ -0,0 +1,57 @@
+> >> +/*
+> >> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
+> >> + *
+> >> + * This file is dual-licensed: you can use it either under the terms
+> >> + * of the GPL or the X11 license, at your option. Note that this dual
+> >> + * licensing only applies to this file, and not this project as a
+> >> + * whole.
+> >> + *
+> >> + *  a) This library is free software; you can redistribute it and/or
+> >> + *     modify it under the terms of the GNU General Public License as
+> >> + *     published by the Free Software Foundation; either version 2 of
+> >> the
+> >> + *     License, or (at your option) any later version.
+> >> + *
+> >> + *     This library is distributed in the hope that it will be useful,
+> >> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >> + *     GNU General Public License for more details.
+> >> + *
+> >> + * Or, alternatively,
+> >> + *
+> >> + *  b) Permission is hereby granted, free of charge, to any person
+> >> + *     obtaining a copy of this software and associated documentation
+> >> + *     files (the "Software"), to deal in the Software without
+> >> + *     restriction, including without limitation the rights to use,
+> >> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> >> + *     sell copies of the Software, and to permit persons to whom the
+> >> + *     Software is furnished to do so, subject to the following
+> >> + *     conditions:
+> >> + *
+> >> + *     The above copyright notice and this permission notice shall be
+> >> + *     included in all copies or substantial portions of the Software.
+> >> + *
+> >> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> >> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> >> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> >> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> >> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> >> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> >> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> >> + *     OTHER DEALINGS IN THE SOFTWARE.
+> >> + */
+> >> +
+> >> +/dts-v1/;
+> >> +#include "rk3328.dtsi"
+> >> +
+> >> +/ {
+> >> +	model = "Rockchip RK3328 EVB";
+> >> +	compatible = "rockchip,rk3328-evb", "rockchip,rk3328";
+> >> +
+> >> +	chosen {
+> >> +		stdout-path = "serial2:1500000n8";
+> > 
+> > Is that really 1.5MBit/s?
+> 
+> Yes, the RK3328 EVB board use 1.5MBit/s baud rate.
+> 
+> >> +	};
+> >> +};
+> >> +
+> >> +&uart2 {
+> >> +	status = "okay";
+> >> +};
+> > 
+> > I don't have the board, but would expect to see more peripherals
+> > mentioned in the .dtsi enabled here.
+> > For sure the board has an (micro)SD card slot, possibly even Ethernet?
+> 
+> The codes for other peripherals are not ready now for new kernel, so i
+> push a base dtsi, and other configration will be pushed later if it is ok.
 
-Just realized that I forgotten to follow up about the details for I
-think we should generally describe slots nodes in DT.
+for me that approach is fine in general, but here, you could enable at least 
+the watchdog as well?
 
-Currently we treat a child node of a host device node, with reg=0 as
-being an embedded mmc card [1] (in case it has the "mmc-card"
-compatible set).
-When reg is 1->7, those are reserved for SDIO function nodes [2] (as
-those can be exactly 7, according to the SDIO spec).
+But no need to resend just now, I still need to look at the big dtsi.
 
-Let's take the above into account and consider that a slot node may
-also require a its own child node as to describe an embedded mmc card
-or SDIO funcs. In this context I don't think it makes sense to use SoC
-specific compatibles for slot nodes, instead I suggest we use only
-"mmc-slot".
 
-Does that makes sense?
-
-> +                       vmmc-supply = <&mmc_supply_3v3>;
-> +                       max-frequency = <42000000>;
-> +                       bus-width = <4>;
-> +                       cap-sd-highspeed;
-> +               };
-> +
-> +               mmc-slot@1 {
-> +                       compatible = "cavium,thunder-8390-mmc-slot";
-> +                       reg = <1>;
-> +                       vmmc-supply = <&mmc_supply_3v3>;
-> +                       max-frequency = <42000000>;
-> +                       bus-width = <8>;
-> +                       cap-mmc-highspeed;
-> +                       non-removable;
-> +               };
-> +       };
-> --
-> 2.9.0.rc0.21.g7777322
->
-
-Kind regards
-Uffe
+Heiko
