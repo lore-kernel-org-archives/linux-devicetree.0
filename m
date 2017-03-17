@@ -1,232 +1,94 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 17 Mar 2017 10:24:10 -0300
-Message-ID: <20170317102410.18c966ae@vento.lan>
-References: <20170310130733.GU21222@n2100.armlinux.org.uk>
- <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
- <20170310140124.GV21222@n2100.armlinux.org.uk>
- <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
- <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
- <20170314004533.3b3cd44b@vento.lan>
- <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
- <20170317114203.GZ21222@n2100.armlinux.org.uk>
- <44161453-02f9-0019-3868-7501967a6a82@linux.intel.com>
+From: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [RESEND PATCH v6 5/6] i2c: designware: add SLAVE mode functions
+Date: Fri, 17 Mar 2017 15:29:17 +0200
+Message-ID: <885561e7-ef1e-172d-fe39-7b9effecf175@linux.intel.com>
+References: <cover.1488383202.git.lolivei@synopsys.com>
+ <07463ebe12af8c88c21c24601cf54b0cd2077e07.1488383202.git.lolivei@synopsys.com>
+ <be10879b-a81b-9047-6c67-45916a85ef31@linux.intel.com>
+ <d6183e8c-5ff8-32c9-44ff-bef038ee0baa@synopsys.com>
+ <4296eedb-aede-649c-8035-56342b096d9c@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <44161453-02f9-0019-3868-7501967a6a82@linux.intel.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4296eedb-aede-649c-8035-56342b096d9c-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 17 Mar 2017 13:55:33 +0200
-Sakari Ailus <sakari.ailus@linux.intel.com> escreveu:
+On 03/17/17 13:24, Luis Oliveira wrote:
+> On 02-Mar-17 15:17, Luis Oliveira wrote:
+>> On 02-Mar-17 14:33, Jarkko Nikula wrote:
+>>> On 03/01/17 17:59, Luis Oliveira wrote:
+>>>> - Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
+>>>> - Slave functions added to core library file
+>>>> - Slave abort sources added to common source file
+>>>> - New driver: i2c-designware-slave added
+>>>> - Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
+>>>>   when supported by the architecture.
+>>>>
+>>>> All the SLAVE flow is added but it is not enabled via platform
+>>>> driver.
+>>>>
+>>>> Signed-off-by: Luis Oliveira <lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>>>> ---
+>>>> V5->V6
+>>>> - Enable Slave mode using a different option (kbuild reported an error)
+>>>> - Identation fixes needed
+>>>> - Changed debug prints to dev_vdbg
+>>>> - Fixed slave enumeration
+>>>>
+>>>>  drivers/i2c/busses/Kconfig                 |  14 +-
+>>>>  drivers/i2c/busses/Makefile                |   1 +
+>>>>  drivers/i2c/busses/i2c-designware-common.c |   7 +
+>>>>  drivers/i2c/busses/i2c-designware-core.h   |   3 +
+>>>>  drivers/i2c/busses/i2c-designware-slave.c  | 403 +++++++++++++++++++++++++++++
+>>>>  5 files changed, 427 insertions(+), 1 deletion(-)
+>>>>  create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
+>>>>
+>>> ...
+>>>> diff --git a/drivers/i2c/busses/i2c-designware-common.c
+>>>> b/drivers/i2c/busses/i2c-designware-common.c
+>>>> index 6357c7c78f6d..24641635aa20 100644
+>>>> --- a/drivers/i2c/busses/i2c-designware-common.c
+>>>> +++ b/drivers/i2c/busses/i2c-designware-common.c
+>>>> @@ -56,6 +56,13 @@ static char *abort_sources[] = {
+>>>>          "trying to use disabled adapter",
+>>>>      [ARB_LOST] =
+>>>>          "lost arbitration",
+>>>> +    [ABRT_SLAVE_FLUSH_TXFIFO] =
+>>>> +        "read command so flush old data in the TX FIFO",
+>>>> +    [ABRT_SLAVE_ARBLOST] =
+>>>> +        "slave lost the bus while transmitting data to a remote master",
+>>>> +    [ABRT_SLAVE_RD_INTX] =
+>>>> +        "slave request for data to be transmitted and there is a 1 in "
+>>>> +        "bit 8 of IC_DATA_CMD",
+>>>>  };
+>>>
+>>> I know ABRT_SLAVE_RD_INTX case is from the specification but I would prefer here
+>>> one-line error text so it will be easier to grep from sources.
+>>>
+>>> I would like it to be also be more understandable. I don't know did I understood
+>>> it correctly but does it occur when attempting to read controller while
+>>> transmitting or something like that?
+>>
+>> It happens in the "slave-transmitter" mode, when the processor side responds to
+>> a request for data to be transmitted and at the same time someone writes 1 to
+>> the bit 8 of the IC_DATA_CMD. This bit in "slave-transmitter" mode has to be "0"
+>> to indicate the data is to be transmitted.
+>>
+>> In "slave-receiver" mode it has no purpose since writes to this register are not
+>> required.
+>
+> If you agree for the v7 I can change it to "incorrect slave-transmitter mode
+> configuration", it's not as clear but it gives a clue of where the error comes from.
+>
+I'm fine with it. I think it's more understandable.
 
-> Hi Russell,
-> 
-> On 03/17/17 13:42, Russell King - ARM Linux wrote:
-> > On Tue, Mar 14, 2017 at 08:55:36AM +0100, Hans Verkuil wrote:  
-> >> We're all very driver-development-driven, and userspace gets very little
-> >> attention in general. So before just throwing in the towel we should take
-> >> a good look at the reasons why there has been little or no development: is
-> >> it because of fundamental design defects, or because nobody paid attention
-> >> to it?
-> >>
-> >> I strongly suspect it is the latter.
-> >>
-> >> In addition, I suspect end-users of these complex devices don't really care
-> >> about a plugin: they want full control and won't typically use generic
-> >> applications. If they would need support for that, we'd have seen much more
-> >> interest. The main reason for having a plugin is to simplify testing and
-> >> if this is going to be used on cheap hobbyist devkits.  
-> > 
-> > I think you're looking at it with a programmers hat on, not a users hat.
-
-I fully agree with you: whatever solution is provided, this should be fully
-transparent for the end user, no matter what V4L2 application he's using.
-
-> > 
-> > Are you really telling me that requiring users to 'su' to root, and then
-> > use media-ctl to manually configure the capture device is what most
-> > users "want" ?  
-
-The need of su can easily be fixed with a simple addition at the udev
-rules.d, for it to consider media controller as part of the v4l stuff:
-
---- udev/rules.d/50-udev-default.rules	2017-02-01 19:45:35.000000000 -0200
-+++ udev/rules.d/50-udev-default.rules	2015-08-29 07:54:16.033122614 -0300
-@@ -30,6 +30,7 @@ SUBSYSTEM=="mem", KERNEL=="mem|kmem|port
- SUBSYSTEM=="input", GROUP="input"
- SUBSYSTEM=="input", KERNEL=="js[0-9]*", MODE="0664"
- 
-+SUBSYSTEM=="media", GROUP="video"
- SUBSYSTEM=="video4linux", GROUP="video"
- SUBSYSTEM=="graphics", GROUP="video"
- SUBSYSTEM=="drm", GROUP="video"
-
-Ok, someone should base it on upstream and submit this to
-udev maintainers[1].
-
-[1] On a side note, it would also be possible to have an udev rule that
-    would be automatically setting the pipeline then the media device pops
-    up.
-
-   I wrote something like that for remote controllers, with gets
-   installed together with v4l-utils package: when a remote controller
-   is detected, it checks the driver and the remote controller table
-   that the driver wants and load it on userspace.
-
-   It would be possible to do something like that for MC, but someone 
-   would need to do such task. Of course, that would require to have
-   a way for a generic application to detect the board type and be
-   able to automatically setup the pipelines. So, we'll go back to
-   the initial problem that nobody was able to do that so far.
-
-> It depends on who the user is. I don't think anyone is suggesting a
-> regular end user is the user of all these APIs: it is either an
-> application tailored for that given device, a skilled user with his test
-> scripts 
-
-Test scripts are just test scripts, meant for development purposes.
-We shouldn't even consider this seriously.
-
-> Making use of the full potential of the hardware requires using a more
-> expressive interface. 
-
-That's the core of the problem: most users don't need "full potential
-of the hardware". It is actually worse than that: several boards
-don't allow "full potential" of the SoC capabilities.
-
-Ok, when the user requires "full potential", they may need a complex
-tailored application. But, on most cases, all it is needed is to
-support a simple application that controls a video stream via
-/dev/video0.
-
-> That's what the kernel interface must provide. If
-> we decide to limit ourselves to a small sub-set of that potential on the
-> level of the kernel interface, we have made a wrong decision. It's as
-> simple as that. This is why the functionality (and which requires taking
-> a lot of policy decisions) belongs to the user space. We cannot have
-> multiple drivers providing multiple kernel interfaces for the same hardware.
-
-I strongly disagree. Looking only at the hardware capabilities without
-having a solution to provide what the user wants is *wrong*.
-
-The project decisions should be based on the common use cases, and, if
-possible and not to expensive/complex, covering exotic cases.
-
-The V4L2 API was designed to fulfill the user needs. Drivers should
-take it in consideration when choosing policy decisions.
-
-In order to give you some examples, before the V4L2 API, the bttv driver
-used to have its own set of ioctls, meant to provide functionality based
-on its hardware capabilities (like selecting other standards like PAL/M).
-The end result is that applications written for bttv were not generic
-enough[1]. The V4L2 API was designed to be generic enough to cover the
-common use-cases.
-
-[1] As the bttv board were very popular, most userspace apps didn't
-    work on other hardware. The big advantage of V4L2 API is that it
-    contains a set of functions that it is good enough to control any
-    hardware. Ok, some features are missing. 
-
-   For example, in the past, one could use the bttv hardware to "decrypt"
-   analog cable TV using custom ioctls. Those ioctls got removed during
-   the V4L2 conversion, as they are specific to the way bttv hardware
-   works.
- 
-   Also, the cx88 hardware could be used as a generic fast A/D converter, 
-   using a custom set of ioctls - something similar to SDR. In this
-   specific case, such patchset was never merged upstream.
-
-
-To give you a few examples about policy decisions taken by the drivers
-in order to fulfill the user needs, the Conexant chipsets (supported by
-bttv,  cx88, cx231xx and cx25821 drivers, among others) provide a way 
-more possibilities than what the driver supports.
-
-Basically, they all have fast A/D converters, running at around
-27-30 MHz clock. The samples of the A/D can be passed as-is to
-userspace and/or handled by some IP blocks inside the chips.
-
-Also, even the simplest one (bttv) uses a RISC with a firmware that
-is built dynamically at runtime by the Kernel driver. Such firmware
-needs to setup several DMA pipelines.
-
-For example, the cx88 driver sets those DMA pipelines
-(see drivers/media/pci/cx88/cx88-core.c):
-
- * FIFO space allocations:
- *    channel  21    (y video)  - 10.0k
- *    channel  22    (u video)  -  2.0k
- *    channel  23    (v video)  -  2.0k
- *    channel  24    (vbi)      -  4.0k
- *    channels 25+26 (audio)    -  4.0k
- *    channel  28    (mpeg)     -  4.0k
- *    channel  27    (audio rds)-  3.0k
-
-In order to provide the generic V4L2 API, the driver need to
-take lots of device-specific decisions. 
-
-For example, the DMA from channel 28 is only enabled if the
-device has an IP block to do MPEG, and the user wants to
-receive mpeg data, instead of YUV.
-
-The DMA from channel 27 has samples taken from the audio IF.
-The audio decoding itself are at DMA channels 25 and 26.
-
-The data from DMA channel 27 is used by a software dsp code, 
-implemented at drivers/media/pci/cx88/cx88-dsp.c, with detects 
-if the IF contains AM or FM modulation and what are the carriers,
-in order to identify the audio standard. Once the standard is
-detected, it sets the hardware audio decoder to the right
-standard, and the DMA from channels 25 and 26 will contain
-audio PCM samples.
-
-The net result is that an user of any of the V4L2 drivers
-
-That's a way more complex than deciding if a pipeline would
-require an IP block to convert from Bayer format to YUV.
-
-Another case: the cx25821 hardware supports 12 video streams, 
-consuming almost all available bandwidth of an ePCI bus. Each video 
-stream connector can either be configured to be capture or output, in
-runtime. The hardware vendor chose to hardcode the driver to provide
-8 inputs and 4 outputs. Their decision was based in the fact that
-the driver is already very complex, and it satisfies their customer's 
-needs. The cost/efforts of make the driver to be reconfigured in
-runtime were too high for almost no benefit.
-
-> That said, I'm not trying to provide an excuse for not having libraries
-> available to help the user to configure and control the device more or
-> less automatically even in terms of best effort. It's something that
-> does require attention, a lot more of it than it has received in recent
-> few years.
-
-The big question, waiting for an answer on the last 8 years is
-who would do that? Such person would need to have several different
-hardware from different vendors, in order to ensure that it has
-a generic solution.
-
-It is a way more feasible that the Kernel developers that already 
-have a certain hardware on their hands to add support inside the
-driver to forward the controls through the pipeline and to setup
-a "default" pipeline that would cover the common use cases at
-driver's probe.
-
-Thanks,
-Mauro
+-- 
+Jarkko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
