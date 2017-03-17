@@ -1,89 +1,95 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 17 Mar 2017 13:55:33 +0200
-Message-ID: <44161453-02f9-0019-3868-7501967a6a82@linux.intel.com>
-References: <20170310130733.GU21222@n2100.armlinux.org.uk>
- <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
- <20170310140124.GV21222@n2100.armlinux.org.uk>
- <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
- <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
- <20170314004533.3b3cd44b@vento.lan>
- <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
- <20170317114203.GZ21222@n2100.armlinux.org.uk>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 05/23] MAINTAINERS: Add file patterns for dove device
+ tree bindings
+Date: Fri, 17 Mar 2017 13:02:26 +0100
+Message-ID: <CAMuHMdXYX8kk_EKkX7vS9tWG=JvfKcRGCNYDTnYCk_xZCdMYQg@mail.gmail.com>
+References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
+ <1489324627-19126-6-git-send-email-geert@linux-m68k.org> <20170313130138.GV11350@io.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170317114203.GZ21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.troti
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170313130138.GV11350-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+Hi Jason,
 
-On 03/17/17 13:42, Russell King - ARM Linux wrote:
-> On Tue, Mar 14, 2017 at 08:55:36AM +0100, Hans Verkuil wrote:
->> We're all very driver-development-driven, and userspace gets very little
->> attention in general. So before just throwing in the towel we should take
->> a good look at the reasons why there has been little or no development: is
->> it because of fundamental design defects, or because nobody paid attention
->> to it?
+On Mon, Mar 13, 2017 at 2:01 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> On Sun, Mar 12, 2017 at 02:16:49PM +0100, Geert Uytterhoeven wrote:
+>> Submitters of device tree binding documentation may forget to CC
+>> the subsystem maintainer if this is missing.
 >>
->> I strongly suspect it is the latter.
+>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+>> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> ---
+>> Please apply this patch directly if you want to be involved in device
+>> tree binding documentation for your subsystem.
 >>
->> In addition, I suspect end-users of these complex devices don't really care
->> about a plugin: they want full control and won't typically use generic
->> applications. If they would need support for that, we'd have seen much more
->> interest. The main reason for having a plugin is to simplify testing and
->> if this is going to be used on cheap hobbyist devkits.
-> 
-> I think you're looking at it with a programmers hat on, not a users hat.
-> 
-> Are you really telling me that requiring users to 'su' to root, and then
-> use media-ctl to manually configure the capture device is what most
-> users "want" ?
+>> v2:
+>>   - No changes.
+>>
+>> Impact on next-20170310:
+>>
+>> +Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>> +Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>> +Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>> +Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>>  Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>>  Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>> +linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated list:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>>  devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>>  linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+>> ---
+>>  MAINTAINERS | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 6428d3c82fce9670..ce461fefec6c9463 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -1486,6 +1486,7 @@ M:      Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>  M:   Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>  L:   linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>>  S:   Maintained
+>> +F:   Documentation/devicetree/bindings/soc/dove/
+>
+> I'm not opposed to the idea, but I'm not seeing how we can do this
+> completely.  What you've added only covers dove soc bindings.  There's
+> orion5x, kirkwood, and all the newer mvebu socs.  Not to mention a lot
+> of IP blocks we care about that aren't SoC- or Marvell-specific.
 
-It depends on who the user is. I don't think anyone is suggesting a
-regular end user is the user of all these APIs: it is either an
-application tailored for that given device, a skilled user with his test
-scripts or as suggested previously, a libv4l plugin knowing the device
-or a generic library geared towards providing best effort service. The
-last one of this list does not exist yet and the second last item
-requires help.
+There's no orion5x, kirkwood, mvebu, ... under
+Documentation/devicetree/bindings/soc.
 
-Typically this class of devices is simply not up to provide the level of
-service you're requesting without additional user space control library
-which is responsible for automatic white balance, exposure and focus.
+> The dts files have a much more clear file pattern -> maintainer pairing.
+> Perhaps we should make checkpatch smarter?  e.g. compatible strings
+> found in changed binding docs are searched for in dts{i} files.  Hits
+> are mapped to maintainers.
 
-Making use of the full potential of the hardware requires using a more
-expressive interface. That's what the kernel interface must provide. If
-we decide to limit ourselves to a small sub-set of that potential on the
-level of the kernel interface, we have made a wrong decision. It's as
-simple as that. This is why the functionality (and which requires taking
-a lot of policy decisions) belongs to the user space. We cannot have
-multiple drivers providing multiple kernel interfaces for the same hardware.
+The DTS files are maintained by a platform maintainer, while my patch
+series was about Linux kernel subsystem maintainers.
 
-That said, I'm not trying to provide an excuse for not having libraries
-available to help the user to configure and control the device more or
-less automatically even in terms of best effort. It's something that
-does require attention, a lot more of it than it has received in recent
-few years.
+In this particular case both maintainers are the same, but this is not true in
+general.  Hence deriving a platform maintainer from a Linux subsystem specific
+binding document is the wrong way around.
 
--- 
-Kind regards,
+Gr{oetje,eeting}s,
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
