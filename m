@@ -1,48 +1,76 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v3 4/5] clk: hi6220: add debug APB clock
-Date: Fri, 17 Mar 2017 23:22:24 +0800
-Message-ID: <20170317152224.GB2020@leoy-linaro>
-References: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
- <1488520809-31670-5-git-send-email-leo.yan@linaro.org>
- <20170303235808.GX25384@codeaurora.org>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH 03/10] Bluetooth: hci_uart: add support for word alignment
+Date: Fri, 17 Mar 2017 16:25:38 +0100
+Message-ID: <20170317152538.GB8723@amd>
+References: <20170304115833.3538-1-sre@kernel.org>
+ <20170304115833.3538-4-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="kXdP64Ggrk/fb43R"
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170303235808.GX25384@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
+In-Reply-To: <20170304115833.3538-4-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-On Fri, Mar 03, 2017 at 03:58:08PM -0800, Stephen Boyd wrote:
-> On 03/03, Leo Yan wrote:
-> > The debug APB clock is absent in hi6220 driver, so this patch is to add
-> > support for it.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> 
-> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+--kXdP64Ggrk/fb43R
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I found this patch introduces regression on Hikey, after I enable
-CPUIdle with this patch the kernel booting will hang. I committed a
-new version patch:
-https://patchwork.kernel.org/patch/9630931/
+Hi!
 
-So please drop v3 patch and help review v4 patch. Really Sorry for
-inconvinence.
+> This will be used by Nokia's H4+ protocol, which
+> uses 2-byte aligned packets.
+>=20
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+> --- a/drivers/bluetooth/hci_h4.c
+> +++ b/drivers/bluetooth/hci_h4.c
+> @@ -171,9 +171,20 @@ struct sk_buff *h4_recv_buf(struct hci_dev *hdev, st=
+ruct sk_buff *skb,
+>  			    const unsigned char *buffer, int count,
+>  			    const struct h4_recv_pkt *pkts, int pkts_count)
+>  {
+> +	struct hci_uart *hu =3D hci_get_drvdata(hdev);
+> +	uint8_t alignment =3D hu->alignment;
+
+I'd do u8 here, too, for consistency with struct below (and becuase
+uint8_t is somehow unusual in kernel).
+
+> @@ -92,6 +92,9 @@ struct hci_uart {
+> =20
+>  	unsigned int init_speed;
+>  	unsigned int oper_speed;
+> +
+> +	u8			alignment;
+> +	u8			padding;
+>  };
+> =20
 
 Thanks,
-Leo Yan
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--kXdP64Ggrk/fb43R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljL//IACgkQMOfwapXb+vKVdgCfbmJvP9y9Up37bQKrjnr1ewkv
+13oAn1M/GRkTaeFLnU+jCJUoMePOa4vA
+=ZJTZ
+-----END PGP SIGNATURE-----
+
+--kXdP64Ggrk/fb43R--
