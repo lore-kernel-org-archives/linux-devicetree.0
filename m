@@ -1,47 +1,172 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v4 2/7] coresight: of_get_coresight_platform_data: Add
- missing of_node_put
-Date: Fri, 17 Mar 2017 23:25:23 +0800
-Message-ID: <20170317152523.GC2020@leoy-linaro>
-References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
- <1489762943-25849-3-git-send-email-leo.yan@linaro.org>
- <574d8e6b-cd2d-c1be-6c14-09e8be147e93@arm.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 04/10] Bluetooth: hci_uart: add serdev driver support
+ library
+Date: Fri, 17 Mar 2017 16:26:00 +0100
+Message-ID: <20170317152600.GD8723@amd>
+References: <20170304115833.3538-1-sre@kernel.org>
+ <20170304115833.3538-5-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="76DTJ5CE0DCVQemd"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <574d8e6b-cd2d-c1be-6c14-09e8be147e93@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, sudeep.holla@arm.com
+In-Reply-To: <20170304115833.3538-5-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 03:09:23PM +0000, Suzuki K Poulose wrote:
-> On 17/03/17 15:02, Leo Yan wrote:
-> >From: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >
-> >The of_get_coresight_platform_data iterates over the possible CPU nodes
-> >to find a given cpu phandle. However it does not drop the reference
-> >to the node pointer returned by the of_get_coresight_platform_data.
-> >
-> >[Leo: minor tweaks for of_get_coresight_platform_data]
-> >
-> >Cc: Leo Yan <leo.yan@linaro.org>
-> >Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> You should add your Signed-off-by here when you send somebody's patch, irrespective
-> of whether you have modified it or not.
-> e.g:
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> [Leo: minor tweaks for of_get_coresight_platform_data]
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Thanks for pointing out this. Will follow up later.
+--76DTJ5CE0DCVQemd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+Hi!
+
+> From: Rob Herring <robh@kernel.org>
+>=20
+> This adds library functions for serdev based BT drivers. This is largely
+> copied from hci_ldisc.c and modified to use serdev calls. There's a little
+> bit of duplication, but I avoided intermixing this as the ldisc code shou=
+ld
+> eventually go away.
+>=20
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Marcel Holtmann <marcel@holtmann.org>
+> Cc: Gustavo Padovan <gustavo@padovan.org>
+> Cc: Johan Hedberg <johan.hedberg@gmail.com>
+> Cc: linux-bluetooth@vger.kernel.org
+> Tested-By: Sebastian Reichel <sre@kernel.org>
+
+Trivial comments below.
+
+> @@ -0,0 +1,370 @@
+> +/*
+> + *
+> + *  Bluetooth HCI serdev driver lib
+
+Just one empty line.
+
+> + *  You should have received a copy of the GNU General Public License
+> + *  along with this program; if not, write to the Free Software
+> + *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307=
+  USA
+> + *
+> + */
+
+I don't think we put the address in there any more.
+
+> +static void hci_uart_write_work(struct work_struct *work)
+> +{
+> +	struct hci_uart *hu =3D container_of(work, struct hci_uart, write_work);
+> +	struct serdev_device *serdev =3D hu->serdev;
+> +	struct hci_dev *hdev =3D hu->hdev;
+> +	struct sk_buff *skb;
+> +
+> +	/* REVISIT: should we cope with bad skbs or ->write() returning
+> +	 * and error value ?
+> +	 */
+
+"an error value"? Comment style?
+
+> +restart:
+> +	clear_bit(HCI_UART_TX_WAKEUP, &hu->tx_state);
+> +
+> +	while ((skb =3D hci_uart_dequeue(hu))) {
+> +		int len;
+> +
+> +		len =3D serdev_device_write_buf(serdev, skb->data, skb->len);
+> +		hdev->stat.byte_tx +=3D len;
+> +
+> +		skb_pull(skb, len);
+> +		if (skb->len) {
+> +			hu->tx_skb =3D skb;
+> +			break;
+> +		}
+> +
+> +		hci_uart_tx_complete(hu, hci_skb_pkt_type(skb));
+> +		kfree_skb(skb);
+> +	}
+> +
+> +	if (test_bit(HCI_UART_TX_WAKEUP, &hu->tx_state))
+> +		goto restart;
+
+do {} while () instead of goto?
+
+> +/* ------- Interface to HCI layer ------ */
+> +/* Initialize device */
+
+Comment style?
+
+> +	if (hu->proto->set_baudrate && speed) {
+> +		err =3D hu->proto->set_baudrate(hu, speed);
+> +		if (!err)
+> +			serdev_device_set_baudrate(hu->serdev, speed);
+> +	}
+
+Complain about the error here?
+
+> +	if (skb->len !=3D sizeof(*ver)) {
+> +		BT_ERR("%s: Event length mismatch for version information",
+> +		       hdev->name);
+> +		goto done;
+> +	}
+> +
+> +done:
+
+Get rid of goto and label?
+
+> +/* hci_uart_write_wakeup()
+> + *
+> + *    Callback for transmit wakeup. Called when low level
+> + *    device driver can accept more send data.
+> + *
+> + * Arguments:        tty    pointer to associated tty instance data
+> + * Return Value:    None
+> + */
+
+Kerneldoc? :-)
+
+> +static void hci_uart_write_wakeup(struct serdev_device *serdev)
+> +{
+> +	struct hci_uart *hu =3D serdev_device_get_drvdata(serdev);
+> +
+> +	BT_DBG("");
+> +
+> +	if (!hu)
+> +		return;
+> +
+> +	if (serdev !=3D hu->serdev)
+> +		return;
+
+WARN_ON on both of these? That should not be normal condition...
+
+> +	/* Only when vendor specific setup callback is provided, consider
+> +	 * the manufacturer information valid. This avoids filling in the
+> +	 * value for Ericsson when nothing is specified.
+> +	 */
+
+Is this comment still up-to-date?
 
 Thanks,
-Leo Yan
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--76DTJ5CE0DCVQemd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljMAAgACgkQMOfwapXb+vKrBwCeMuTedU3JXC/6xiNczqFuIXgF
+Z74AnRJ/wltmF0OIzLtPDCGs0JEH0qLb
+=qvqN
+-----END PGP SIGNATURE-----
+
+--76DTJ5CE0DCVQemd--
