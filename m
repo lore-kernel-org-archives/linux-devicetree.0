@@ -1,259 +1,74 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V3 2/5] iommu/arm-smmu: Add support for MMU40x/500 clocks
-Date: Fri, 17 Mar 2017 10:13:38 +0530
-Message-ID: <6d4a47e3-bab7-4dda-c9db-cef6a699adf1@codeaurora.org>
-References: <1489073748-3659-1-git-send-email-sricharan@codeaurora.org>
-	<1489073748-3659-3-git-send-email-sricharan@codeaurora.org>
-	<CAF6AEGv3FAyWfXGT_8=bcn+UL8Ug1pE8EGu=MQC70U++wUOioA@mail.gmail.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V4 0/4] Add Spreadtrum SP9860G support
+Date: Fri, 17 Mar 2017 13:51:34 +0800
+Message-ID: <1489729898-774-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAF6AEGv3FAyWfXGT_8=bcn+UL8Ug1pE8EGu=MQC70U++wUOioA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
+Cc: mathieu.poirier@linaro.org, orson.zhai@spreadtrum.com, sudeep.holla@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhang.lyra@gmail.com, chunyan.zhang@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+SC9860 is a Spreadtrum SoC with eight Cortex A53, which are divided
+into 4 Big cores and 4 little cores.
 
-On 3/17/2017 4:22 AM, Rob Clark wrote:
-> On Thu, Mar 9, 2017 at 10:35 AM, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> The MMU400x/500 is the implementation of the SMMUv2
->> arch specification. It is split in to two blocks
->> TBU, TCU. TBU caches the page table, instantiated
->> for each master locally, clocked by the TBUn_clk.
->> TCU manages the address translation with PTW and has
->> the programming interface as well, clocked using the
->> TCU_CLK. The TBU can also be sharing the same clock
->> domain as TCU, in which case both are clocked using
->> the TCU_CLK.
->>
->> This defines the clock bindings for the same and adds the
->> init, enable and disable functions for handling the
->> clocks.
->>
->> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iommu/arm,smmu.txt         | 27 ++++++
->>  drivers/iommu/arm-smmu.c                           | 95 +++++++++++++++++++++-
->>  2 files changed, 121 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> index 6cdf32d..b369c13 100644
->> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> @@ -60,6 +60,28 @@ conditions.
->>                    aliases of secure registers have to be used during
->>                    SMMU configuration.
->>
->> +- clock-names:    Should be "tbu_clk" and "tcu_clk" and "cfg_clk" for
->> +                  "arm,mmu-400", "arm,mmu-401" and "arm,mmu-500"
->
-> I guess that should be: "Should be "tbu_clk" *or* "tcu_clk" and
-> "cfg_clk" for..."
->
-> Also, possibly we should define our own compat strings for various
-> SoC's that require these clks so we can properly describe when they
-> are required?  I guess that would address Rob H's comment.
->
+This patch-set provides a basic configuration for SC9860 in device tree
+to make it run to console.  After this we will continue to submit other
+device drivers step by step, which are using on most of Spreadtrum's SoCs.
 
-Ok, calling "optional" does not look correct. But i was trying to define
-something which would be right for all implementations of MMU-500, but
-looks like that's not the right way. Making it soc specific would give a
-exact description, except for the number of compatibles and have to
-change the code to not consider any of tbu , tcu, cfg clk as mandatory
-for adding support for other compatibles later which are mostly similar.
-So i am trying to setup the clocks using functions specific for each
-compatible. Not sure, if at this point, some soc specific callback from 
-the driver where these things can be initialized might be good.
+Changes from v3:
+* Rebased v4.11-rc2;
+* Added Reviewed-by of Mathieu;
+* Addressed Rob's comments:
+  - Documented sprd serial competible according to Rob's suggestion
+  - Revised serial node name to match its offset;
+* Added STM device node in dt.
 
-Regards,
-  Sricharan
+Changes from v2:
+* Addressed comments from Mathieu:
+  - Removed CoreSight devices' lables from DT;
+  - Added another level of imbrication for ETFs which have more than one port;
+* Addressed comments from Rob:
+  - Switched to use SPDX-License-Identifier tag instead;
+  - Moved the 26m fixed clock node to top level in DT;
+  - Splited the patch into two, since they were revising two dt-bindings;
+  - Removed redundant space from sprd-usrt.txt;
+  - Removed useless property from the sprd_uart example of DT configuration.
 
+Changes from v1:
+* Removed useless idle-state node 'deep_sleep' from DT
+* Removed useless property 'sc-id' from DT
+* Removed 'clock-frequency' property from the node 'timer'
+* Added another compatible string '"arm,cortex-a53-pmu"' and property
+  'interrupt-affinity' for pmu
+* Kept using the existed compatible string of sprd_serial driver, and added
+  a new one for sc9860 in DT.
 
+Thanks,
+Chunyan
 
-Regards,
-  Sricharan
+Chunyan Zhang (2):
+  dt-bindings: arm: Add bindings for SP9860G
+  dt-bindings: serial: add a new compatible string for SC9860
 
-> BR,
-> -R
->
->> +                  "tcu_clk" is required for smmu's register access using the
->> +                  programming interface and ptw for downstream bus access.
->> +
->> +                  "tbu_clk" is required for access to the TBU connected to the
->> +                  master locally. This clock is optional and not required when
->> +                  TBU is in the same clock domain as the TCU or when the TBU is
->> +                  clocked along with the master.
->> +
->> +                  "cfg_clk" is optional if required to access the TCU's programming
->> +                  interface, apart from the "tcu_clk".
->> +
->> +- clocks:         Phandles for respective clocks described by clock-names.
->> +
->> +- power-domains:  Phandles to SMMU's power domain specifier. This is
->> +                  required even if SMMU belongs to the master's power
->> +                  domain, as the SMMU will have to be enabled and
->> +                  accessed before master gets enabled and linked to its
->> +                  SMMU.
->> +
->>  ** Deprecated properties:
->>
->>  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
->> @@ -84,6 +106,11 @@ conditions.
->>                               <0 36 4>,
->>                               <0 37 4>;
->>                  #iommu-cells = <1>;
->> +                clocks = <&gcc GCC_SMMU_CFG_CLK>,
->> +                         <&gcc GCC_APSS_TCU_CLK>,
->> +                        <&gcc GCC_MDP_TBU_CLK>;
->> +
->> +               clock-names = "cfg_clk", "tcu_clk", "tbu_clk";
->>          };
->>
->>          /* device with two stream IDs, 0 and 7 */
->> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->> index f7e11d3..720a1ef 100644
->> --- a/drivers/iommu/arm-smmu.c
->> +++ b/drivers/iommu/arm-smmu.c
->> @@ -341,6 +341,12 @@ struct arm_smmu_master_cfg {
->>  #define for_each_cfg_sme(fw, i, idx) \
->>         for (i = 0; idx = fwspec_smendx(fw, i), i < fw->num_ids; ++i)
->>
->> +struct mmu500_clk {
->> +       struct clk *cfg_clk;
->> +       struct clk *tcu_clk;
->> +       struct clk *tbu_clk;
->> +};
->> +
->>  struct arm_smmu_clks {
->>         void *clks;
->>         int (*init_clocks)(struct arm_smmu_device *smmu);
->> @@ -455,6 +461,92 @@ static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
->>         return container_of(dom, struct arm_smmu_domain, domain);
->>  }
->>
->> +static int mmu500_enable_clocks(struct arm_smmu_device *smmu)
->> +{
->> +       int ret = 0;
->> +       struct mmu500_clk *sclks = smmu->smmu_clks.clks;
->> +
->> +       if (!sclks)
->> +               return 0;
->> +
->> +       ret = clk_prepare_enable(sclks->cfg_clk);
->> +       if (ret) {
->> +               dev_err(smmu->dev, "Couldn't enable cfg_clk");
->> +               return ret;
->> +       }
->> +
->> +       ret = clk_prepare_enable(sclks->tcu_clk);
->> +       if (ret) {
->> +               dev_err(smmu->dev, "Couldn't enable tcu_clk");
->> +               clk_disable_unprepare(sclks->cfg_clk);
->> +               return ret;
->> +       }
->> +
->> +       ret = clk_prepare_enable(sclks->tbu_clk);
->> +       if (ret) {
->> +               dev_err(smmu->dev, "Couln't enable tbu_clk");
->> +               clk_disable_unprepare(sclks->tcu_clk);
->> +               clk_disable_unprepare(sclks->cfg_clk);
->> +               return ret;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static void mmu500_disable_clocks(struct arm_smmu_device *smmu)
->> +{
->> +       struct mmu500_clk *sclks = smmu->smmu_clks.clks;
->> +
->> +       if (!sclks) {
->> +               clk_disable_unprepare(sclks->tbu_clk);
->> +               clk_disable_unprepare(sclks->tcu_clk);
->> +               clk_disable_unprepare(sclks->cfg_clk);
->> +       }
->> +}
->> +
->> +static int mmu500_init_clocks(struct arm_smmu_device *smmu)
->> +{
->> +       struct device *dev = smmu->dev;
->> +       struct mmu500_clk *sclks;
->> +       int err;
->> +
->> +       if (!of_find_property(dev->of_node, "clocks", NULL))
->> +               return 0;
->> +
->> +       sclks = devm_kzalloc(dev, sizeof(*sclks), GFP_KERNEL);
->> +       if (!sclks)
->> +               return -ENOMEM;
->> +
->> +       sclks->cfg_clk = devm_clk_get(dev, "cfg_clk");
->> +       if (IS_ERR(sclks->cfg_clk)) {
->> +               err = PTR_ERR(sclks->cfg_clk);
->> +               /* Ignore all, except -EPROBE_DEFER for optional clocks */
->> +               if (err == -EPROBE_DEFER)
->> +                       return err;
->> +               else
->> +                       sclks->cfg_clk = NULL;
->> +       }
->> +
->> +       sclks->tcu_clk = devm_clk_get(dev, "tcu_clk");
->> +       if (IS_ERR(sclks->tcu_clk)) {
->> +               dev_err(dev, "Couldn't get tcu_clk");
->> +               return PTR_ERR(sclks->tcu_clk);
->> +       }
->> +
->> +       sclks->tbu_clk = devm_clk_get(dev, "tbu_clk");
->> +       if (IS_ERR(sclks->tbu_clk)) {
->> +               err = PTR_ERR(sclks->tbu_clk);
->> +               /* Ignore all, ecept -EPROBE_DEFER for optional clocks */
->> +               if (err == -EPROBE_DEFER)
->> +                       return err;
->> +               else
->> +                       sclks->tbu_clk = NULL;
->> +       }
->> +
->> +       smmu->smmu_clks.clks = sclks;
->> +       return 0;
->> +}
->> +
->>  static void parse_driver_options(struct arm_smmu_device *smmu)
->>  {
->>         int i = 0;
->> @@ -1981,7 +2073,8 @@ struct arm_smmu_match_data {
->>                     NULL, NULL, NULL);
->>  ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU,
->>                     NULL, NULL, NULL);
->> -ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500, NULL, NULL, NULL);
->> +ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500, mmu500_init_clocks,
->> +                   mmu500_enable_clocks, mmu500_disable_clocks);
->>  ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2,
->>                     NULL, NULL, NULL);
->>
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->>
->> _______________________________________________
->> iommu mailing list
->> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
->> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+Orson Zhai (1):
+  arm64: dts: Add basic DT to support Spreadtrum's SP9860G
+
+Wei Qiao (1):
+  serial: sprd: adjust TIMEOUT to a big value
+
+ Documentation/devicetree/bindings/arm/sprd.txt     |  13 +-
+ .../devicetree/bindings/serial/sprd-uart.txt       |  14 +-
+ arch/arm64/boot/dts/sprd/Makefile                  |   3 +-
+ arch/arm64/boot/dts/sprd/sc9860.dtsi               | 569 +++++++++++++++++++++
+ arch/arm64/boot/dts/sprd/sp9860g-1h10.dts          |  56 ++
+ arch/arm64/boot/dts/sprd/whale2.dtsi               |  71 +++
+ drivers/tty/serial/sprd_serial.c                   |   2 +-
+ 7 files changed, 720 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/sprd/sc9860.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+ create mode 100644 arch/arm64/boot/dts/sprd/whale2.dtsi
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
