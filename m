@@ -1,21 +1,18 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [v3 3/5] coresight: add support for debug module
-Date: Fri, 17 Mar 2017 09:50:07 -0600
-Message-ID: <20170317155007.GA20435@linaro.org>
-References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
- <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
- <20170309175915.GA964@leoy-linaro>
- <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
- <20170313165600.GB32431@linaro.org>
- <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
- <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
- <20170317101328.GA19877@leoy-linaro>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 3/5] i2c: i2c-stm32f7: add driver
+Date: Fri, 17 Mar 2017 16:51:32 +0100
+Message-ID: <5539f058-f2a1-ff78-6dd8-aa2119ce8c49@baylibre.com>
+References: <1489744738-21632-1-git-send-email-cedric.madianga@gmail.com>
+ <1489744738-21632-4-git-send-email-cedric.madianga@gmail.com>
+ <6ae90186-0e8d-654b-c9e3-2d1b4daf6198@baylibre.com>
+ <CAOAejn0Hs7QOgcrHM2t3NsFQeD9dyvThDK-8iM1Lvb7Qv4fGGQ@mail.gmail.com>
+ <971895d3-2fe6-ecb6-9dc3-ee71193b34ee@baylibre.com>
+ <CAOAejn0ScANyMEWnBfe0G8xQ5TbR-XYwEdXLkNexqC=AigBNJA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170317101328.GA19877@leoy-linaro>
+In-Reply-To: <CAOAejn0ScANyMEWnBfe0G8xQ5TbR-XYwEdXLkNexqC=AigBNJA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,93 +22,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Leach <mike.leach@linaro.org>
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 06:13:28PM +0800, Leo Yan wrote:
-> On Wed, Mar 15, 2017 at 02:41:59PM -0600, Mathieu Poirier wrote:
-> > On 15 March 2017 at 10:44, Suzuki K Poulose <Suzuki.Poulose@arm.com> wrote:
-> > > On 13/03/17 16:56, Mathieu Poirier wrote:
-> > >> On Fri, Mar 10, 2017 at 02:29:53PM +0000, Suzuki K Poulose wrote:
-> 
-> [...]
-> 
-> > >>> Btw, I don't see any PM calls to make sure the power domain (at least the
-> > >>> debug domain)
-> > >>> is up, which could cause problems with accesses to some of these
-> > >>> registers (leave alone the
-> > >>> ones in CPU power domain), especially the EDPRSR. We could also do
-> > >>> pm_runtime_get on the
-> > >>> CPU's power domain, if the CPU is online, before we access the pcsr.
-> > >>
-> > >>
-> > >> I thought about PM runtime operations a little while back but wondered if
-> > >> it is
-> > >> really a good thing to have them around.  When this code is called the
-> > >> system
-> > >> has crashed and as such making PM runtimes call isn't a good idea.
-> > >
-> > >
-> > > You are right. It is not safe to make such calls when we have crashed.
-> > > The other side effect is, if we don't have the debug power domain up,
-> > > we could possibly hang the system and prevent other registered notifiers
-> > > from running, which doesn't sound good either.
-> > >
-> > >>
-> > >> One thing we could do is _not_ call pm_runtime_put() at the end of the
-> > >> probe()
-> > >> operation.  That way we wouldn't have to mess around with PM runtime
-> > >> operations
-> > >> on an unstable system.  This, of course, is costly in terms of power
-> > >> consumption
-> > >> but the system is under test/debug anyway.
-> > >
-> > >
-> > > May be control the behavior via kernel command line ? Something like
-> > > coresight_debug={on or 1} or
-> > > even use the "nohlt" ?
-> > 
-> > We need to deal with the debug and CPU power domains.
-> > 
-> > For the former I suggest we do what coresight does and use the
-> > "power-domains" binding[1].  For the CPU power domain we can re-use
-> > the "nohlt" flag.  In the probe function if the "nohlt" cmd line flag
-> > is not set the code bails out.  If it is set pm_runtime_put() is _not_
-> > called and the driver can be used without worries of hanging the
-> > system when the panic handler is invoked.
-> > 
-> > Am I forgetting something?
-> 
-> I tested this drvier on Hikey and DB410c. For Hikey we must pass
-> "nohlt" to disable low power states, otherwise the kernel will hang
-> during initialization. But for DB410c, this driver even can work well
-> without "nohlt" and I checked the CPUIdle has been really enabled with
-> below sysfs entries:
-> 
-> root@linaro-developer:~# cat /sys/devices/system/cpu/cpu*/cpuidle/state*/usage
-> 5992
-> 6988
-> 4225
-> 4547
-> 2790
-> 23696
-> 4202
-> 3899
-> 
-> And from my previous experience, I'm quite sure some SoCs can access
-> the debug module registers with CPUIdle enabled, and it will read
-> back 0xFFFF_FFFF_FFFF_FFFF when the CPU stays in low power state.
-> So I prefer we could keep current method to suggest to use "nohlt" in
-> Kconfig's help description but it's not mandotory to check this in
-> the code. How about you think for this?
+Hi Cedric,
 
-If we don't check for "nohlt" some platform may freeze, others may work.  If we
-mandate that "nohlt" be present on the kernel cmd line it works in all cases.
-As such mandating that "nohlt" be present is a better way to go.
+On 03/17/2017 04:35 PM, M'boumba Cedric Madianga wrote:
+>> Sorry I don't understand.
+>> The value you use from the DT and the one calculated from the setup/hold/high/low value
+>> with the algorithm I developed will set the same values.
+> 
+> With the ST tool, I could set the following values:
+> I2C speed mode (Master, Fast Mode, Fast Mode Plus)
+> I2C speed frequency
+> I2C clock source frequency
+> I2C rise time
+> I2C fall time
+> 
+> The values set in the DT in this patchset is 0x40202537 for the
+> following input values:
+> I2C speed mode  = Master mode
+> I2C speed frequency= 100 kHz
+> I2C clock source frequency = 48 MHz
+> I2C rise time = 25 ns
+> I2C fall time = 10 ns
+> 
+> If I keep all the above values and just change I2C rise time with 100
+> ns, I will have TIMINGR value at 0x10805E89
+>
+>>
+>> The main difference is that you won't need the ST tool to calculate these, and even better
+>> you can provide generic binding for whatever APB frequency the I2C peripheral is running
+>> on.
+> 
+> As, I2C rise/fall time have some impacts in I2C timings value, the
+> question is: it is very relevant to let customer control these
+> parameters ?
 
-Mathieu
+Actually, you could specify a different rise time in DT if it's relevant for
+a specific design, this is why you have the following DT attributes :
+- i2c-scl-falling-time-ns
+- i2c-scl-internal-delay-ns
+- i2c-scl-rising-time-ns
+- i2c-sda-falling-time-ns
+
+> If the answer is NO, I agree with you, it is better to use your
+> formula and remove this property from DT.
+> If the answer is YES, I think we should keep ST tool.
+
+Note that the ST tool calculations are tied to the clock source frequency, so either
+you provide a table for all the possible clock source frequencies or calculate dynamically.
+Having a single parameter for a single frequency is, from my point of view, not acceptable.
+
+And, I don't think it's a military secret to have (at least) a simplified algorithm from ST...
+since you have very detailed explanations in the public manuals !
 
 > 
-> Thanks,
-> Leo Yan
+>> Having the STM32L4 running mainline won't be hard, maybe useless, but not hard.
+>> My point is that you can somehow consider the STM32F0/F1/F4 I2C IP to be "v1" or "gen1",
+>> and the L0/L4/F6 (and H7 ?) to be "v2" or "gen2" then prepend a generic compatible to
+>> have something like :
+>> compatible = "st,stm32-i2c-v2", "st,stm32f7-i2c"
+> 
+> This is not the strategy chosen by the company.
+> They decided to push all driver with ip_name-stm32.c if the driver is
+> common for all Soc.
+> If it not the case, the suffix to be used is the name of the first
+> supported SoC that introduced the IP in the mainline kernel.
+
+OK, but I think the I2C and DT maintainers are also involved in these kind of decisions.
+They should also give their advice.
+
+Neil
+
+> 
+> BR,
+> Cedric
+> 
