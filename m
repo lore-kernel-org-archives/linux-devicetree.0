@@ -1,71 +1,35 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 1/2] doc: Add bindings document for Xilinx LogiCore PR
- Decoupler
-Date: Fri, 17 Mar 2017 10:57:18 +0100
-Message-ID: <9f823c88-ccd5-7534-9999-019c8a9f082a@xilinx.com>
-References: <1489711910-17443-1-git-send-email-mdf@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489711910-17443-1-git-send-email-mdf@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Subject: [PATCH 5/5] ARM: dts: stm32: Add I2C1 support for STM32F746 eval board
+Date: Fri, 17 Mar 2017 10:58:58 +0100
+Message-ID: <1489744738-21632-6-git-send-email-cedric.madianga@gmail.com>
+References: <1489744738-21632-1-git-send-email-cedric.madianga@gmail.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1489744738-21632-1-git-send-email-cedric.madianga@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, pierre-yves.mordret@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcuMy4yMDE3IDAxOjUxLCBNb3JpdHogRmlzY2hlciB3cm90ZToKPiBUaGlzIGFkZHMgdGhl
-IGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIFhpbGlueCBMb2dpQ09SRSBQUgo+IERlY291
-cGxlciBzb2Z0IGNvcmUuCj4gCj4gU2lnbmVkLW9mZi1ieTogTW9yaXR6IEZpc2NoZXIgPG1kZkBr
-ZXJuZWwub3JnPgo+IENjOiBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPgo+
-IENjOiBTw7ZyZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbT4KPiBDYzog
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZwo+IC0tLQo+IAo+IENoYW5nZXMgZnJvbSB2MToKPiAtIEFkZGVkIGNsb2NrIG5hbWVzICYg
-Y2xvY2sgdG8gZXhhbXBsZQo+IC0gTWVyZ2VkIHNvbWUgb2YgdGhlIGRlc2NyaXB0aW9uIGZyb20g
-TWljaGFsJ3MgdmVyc2lvbgo+IAo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZnBnYS94aWxpbngtcHIt
-ZGVjb3VwbGVyLnR4dCAgICAgICAgICB8IDMyICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBm
-aWxlIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9mcGdhL3hpbGlueC1wci1kZWNvdXBsZXIudHh0
-Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9mcGdh
-L3hpbGlueC1wci1kZWNvdXBsZXIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
-IGluZGV4IDAwMDAwMDAuLjIwODAwMDYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci50eHQKPiBA
-QCAtMCwwICsxLDMyIEBACj4gK1hpbGlueCBMb2dpQ09SRSBQYXJ0aWFsIFJlY29uZmlnIERlY291
-cGxlciBTb2Z0Y29yZQo+ICsKPiArVGhlIFhpbGlueCBMb2dpQ09SRSBQYXJ0aWFsIFJlY29uZmln
-IERlY291cGxlciBtYW5hZ2VzIG9uZSBvciBtb3JlCj4gK2RlY291cGxlcnMgLyBmcGdhIGJyaWRn
-ZXMuCj4gK1RoZSBjb250cm9sbGVyIGNhbiBkZWNvdXBsZS9kaXNhYmxlIHRoZSBicmlkZ2VzIHdo
-aWNoIHByZXZlbnRzIHNpZ25hbAo+ICtjaGFuZ2VzIGZyb20gcGFzc2luZyB0aHJvdWdoIHRoZSBi
-cmlkZ2UuICBUaGUgY29udHJvbGxlciBjYW4gYWxzbwo+ICtjb3VwbGUgLyBlbmFibGUgdGhlIGJy
-aWRnZXMgd2hpY2ggYWxsb3dzIHRyYWZmaWMgdG8gcGFzcyB0aHJvdWdoIHRoZQo+ICticmlkZ2Ug
-bm9ybWFsbHkuCj4gKwo+ICtUaGUgRHJpdmVyIHN1cHBvcnRzIG9ubHkgTU1JTyBoYW5kbGluZy4g
-QSBQUiByZWdpb24gY2FuIGhhdmUgbXVsdGlwbGUKPiArUFIgRGVjb3VwbGVzIHdoaWNoIGNhbiBi
-aGUgaGFuZGxlZCBpbmRlcGVuZGVudGx5IG9yIGNoYWluZXMgdmlhIGRlY291cGxlLwo+ICtkZWNv
-dXBsZV9zdGF0dXMgc2lnbmFscy4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29t
-cGF0aWJsZQkJOiBTaG91bGQgY29udGFpbiAieGxueCxwci1kZWNvdXBsZXItMS4wMCIKCnNob3Vs
-ZAoKSSB3b3VsZCB0ZW5kIHRvIGRvIHRoaXMgYXMKInhsbngscHItZGVjb3VwbGVyLTEuMDAiIGFu
-ZC9vciAgInhsbngscHJfZGVjb3VwbGVyIgoKCj4gKy0gcmVncwkJCTogYmFzZSBhZGRyZXNzIGFu
-ZCBzaXplIGZvciBkZWNvdXBsZXIgbW9kdWxlCj4gKy0gY2xvY2tzCQk6IGlucHV0IGNsb2NrIHRv
-IElQCj4gKy0gY2xvY2stbmFtZXMJCTogc2hvdWxkIGNvbnRhaW4gImFjbGsiCj4gKwo+ICtPcHRp
-b25hbCBwcm9wZXJ0aWVzOgo+ICstIGJyaWRnZS1lbmFibGUJCTogMCBpZiBkcml2ZXIgc2hvdWxk
-IGRpc2FibGUgYnJpZGdlIGF0IHN0YXJ0dXAKPiArCQkJICAxIGlmIGRyaXZlciBzaG91bGQgZW5h
-YmxlIGJyaWRnZSBhdCBzdGFydHVwCj4gKwkJCSAgRGVmYXVsdCBpcyB0byBsZWF2ZSBicmlkZ2Ug
-aW4gY3VycmVudCBzdGF0ZS4KCkludGVyZXN0aW5nIHRoYXQgdGhpcyBpcyBub3QgYSBib29sLgpC
-dXQgYW55d2F5IHRoaXMgc2hvdWxkIGJlIGxpbmsgdG8gYnJpZGdlIGJpbmRpbmcgYmVjYXVzZSBJ
-IGV4cGVjdCB0aGlzCmlzIHRoZSBzYW1lIGZvciBhbGwuCgo+ICsKPiArRXhhbXBsZToKPiArCWZw
-Z2EtYnJpZGdlQDEwMDAwMDQ1MCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJ4bG54LHByLWRlY291cGxl
-ci0xLjAwIjsKCiJ4bG54LHByLWRlY291cGxlci0xLjAwIiwgInhsbngscHJfZGVjb3VwbGVyIjsK
-Cj4gKwkJcmVncyA9IDwweDEwMDAgMHgxMD47Cj4gKwkJY2xvY2tzID0gPCZjbGtjIDE1PjsKPiAr
-CQljbG9jay1uYW1lcyA9ICJhY2xrIjsKPiArCQlicmlkZ2UtZW5hYmxlID0gPDA+Owo+ICsJfTsK
-PiAKClRoYW5rcywKTWljaGFsCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This patch adds I2C1 support for STM32F746 eval board
+
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+---
+ arch/arm/boot/dts/stm32746g-eval.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
+index aa03fac..19cb82d 100644
+--- a/arch/arm/boot/dts/stm32746g-eval.dts
++++ b/arch/arm/boot/dts/stm32746g-eval.dts
+@@ -94,3 +94,9 @@
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
++
++&i2c1 {
++	pinctrl-0 = <&i2c1_pins_b>;
++	pinctrl-names = "default";
++	status = "okay";
++};
+-- 
+1.9.1
