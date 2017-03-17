@@ -1,14 +1,13 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 2/2] fpga: Add support for Xilinx LogiCORE PR Decoupler
-Date: Fri, 17 Mar 2017 11:54:23 +0100
-Message-ID: <f2d3ae3f-1f74-1ce6-b7af-f51b383d3a5d@xilinx.com>
-References: <1489711910-17443-1-git-send-email-mdf@kernel.org>
- <1489711910-17443-2-git-send-email-mdf@kernel.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: add dmac nodes for rk3368 SoCs
+Date: Fri, 17 Mar 2017 12:04:19 +0100
+Message-ID: <36338936.qaTCZ9qzt4@phil>
+References: <1488534549-26175-1-git-send-email-huibin.hong@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489711910-17443-2-git-send-email-mdf@kernel.org>
+In-Reply-To: <1488534549-26175-1-git-send-email-huibin.hong@rock-chips.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,90 +17,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+To: Huibin Hong <huibin.hong@rock-chips.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, felipe.balbi@linux.intel.com, johnyoun@synopsys.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, andy.yan@rock-chips.com, jic23@kernel.org, wxt@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcuMy4yMDE3IDAxOjUxLCBNb3JpdHogRmlzY2hlciB3cm90ZToKPiBUaGlzIGFkZHMgc3Vw
-cG9ydCBmb3IgdGhlIFhpbGlueCBMb2dpQ09SRSBQUiBEZWNvdXBsZXIKPiBzb2Z0LWlwIHRoYXQg
-ZG9lcyBkZWNvdXBsaW5nIG9mIFBSIHJlZ2lvbnMgaW4gdGhlIEZQR0EKPiBmYWJyaWMgZHVyaW5n
-IHBhcnRpYWwgcmVjb25maWd1cmF0aW9uLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1vcml0eiBGaXNj
-aGVyIDxtZGZAa2VybmVsLm9yZz4KPiBDYzogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGls
-aW54LmNvbT4KPiBDYzogU8O2cmVuIEJyaW5rbWFubiA8c29yZW4uYnJpbmttYW5uQHhpbGlueC5j
-b20+Cj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcKPiBDYzogZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmcKPiAtLS0KPiAKPiBDaGFuZ2VzIGZyb20gdjE6Cj4gLSBBZGRlZCBNaWNo
-YWwgYXMgQ28tQXV0aG9yIHNpbmNlIEkgcHVsbGVkIGluIHNvbWUgb2YgaGlzIGNvZGUKPiAtIFJl
-d29ya2VkIGNsayBoYW5kbGluZyBpbiBfcmVtb3ZlKCkKPiAtIFB1bGxlZCBpbiBNaWNoYWwncyB2
-ZXJzaW9uIG9mIHNob3dfZW5hYmxlKCksIGRpdGNoZWQgcHJpdi0+ZW5hYmxlZAo+IAo+IC0tLQo+
-ICBkcml2ZXJzL2ZwZ2EvS2NvbmZpZyAgICAgICAgICAgICAgIHwgICA5ICsrKwo+ICBkcml2ZXJz
-L2ZwZ2EvTWFrZWZpbGUgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9mcGdhL3hpbGlu
-eC1wci1kZWNvdXBsZXIuYyB8IDE0NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrCj4gIDMgZmlsZXMgY2hhbmdlZCwgMTU3IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLmMKPiAKPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9mcGdhL0tjb25maWcgYi9kcml2ZXJzL2ZwZ2EvS2NvbmZpZwo+IGluZGV4IDk2
-N2NkYTQuLmU0MmM3ZGMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9mcGdhL0tjb25maWcKPiArKysg
-Yi9kcml2ZXJzL2ZwZ2EvS2NvbmZpZwo+IEBAIC02OSw2ICs2OSwxNSBAQCBjb25maWcgQUxURVJB
-X0ZSRUVaRV9CUklER0UKPiAgCSAgaXNvbGF0ZSBvbmUgcmVnaW9uIG9mIHRoZSBGUEdBIGZyb20g
-dGhlIGJ1c3NlcyB3aGlsZSB0aGF0Cj4gIAkgIHJlZ2lvbiBpcyBiZWluZyByZXByb2dyYW1tZWQu
-Cj4gIAo+ICtjb25maWcgWElMSU5YX1BSX0RFQ09VUExFUgo+ICsJdHJpc3RhdGUgIlhpbGlueCBM
-b2dpQ09SRSBQUiBEZWNvdXBsZXIiCj4gKwlkZXBlbmRzIG9uIEZQR0FfQlJJREdFCj4gKwloZWxw
-Cj4gKwkgIFNheSBZIHRvIGVuYWJsZSBkcml2ZXJzIGZvciBYaWxpbnggTG9naUNPUkUgUFIgRGVj
-b3VwbGVyLgo+ICsJICBUaGUgUFIgRGVjb3VwbGVyIGV4aXN0cyBpbiB0aGUgRlBHQSBmYWJyaWMg
-dG8gaXNvbGF0ZSBvbmUKPiArCSAgcmVnaW9uIG9mIHRoZSBGUEdBIGZyb20gdGhlIGJ1c3NlcyB3
-aGlsZSB0aGF0IHJlZ2lvbiBpcwo+ICsJICBiZWluZyByZXByb2dyYW1tZWQgZHVyaW5nIHBhcnRp
-YWwgcmVjb25maWcuCj4gKwo+ICBlbmRpZiAjIEZQR0EKPiAgCj4gIGVuZG1lbnUKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9mcGdhL01ha2VmaWxlIGIvZHJpdmVycy9mcGdhL01ha2VmaWxlCj4gaW5k
-ZXggY2MwZDM2NC4uM2YwNGJjZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2ZwZ2EvTWFrZWZpbGUK
-PiArKysgYi9kcml2ZXJzL2ZwZ2EvTWFrZWZpbGUKPiBAQCAtMTUsNiArMTUsNyBAQCBvYmotJChD
-T05GSUdfRlBHQV9NR1JfWllOUV9GUEdBKQkrPSB6eW5xLWZwZ2Eubwo+ICBvYmotJChDT05GSUdf
-RlBHQV9CUklER0UpCQkrPSBmcGdhLWJyaWRnZS5vCj4gIG9iai0kKENPTkZJR19TT0NGUEdBX0ZQ
-R0FfQlJJREdFKQkrPSBhbHRlcmEtaHBzMmZwZ2EubyBhbHRlcmEtZnBnYTJzZHJhbS5vCj4gIG9i
-ai0kKENPTkZJR19BTFRFUkFfRlJFRVpFX0JSSURHRSkJKz0gYWx0ZXJhLWZyZWV6ZS1icmlkZ2Uu
-bwo+ICtvYmotJChDT05GSUdfWElMSU5YX1BSX0RFQ09VUExFUikJKz0geGlsaW54LXByLWRlY291
-cGxlci5vCj4gIAo+ICAjIEhpZ2ggTGV2ZWwgSW50ZXJmYWNlcwo+ICBvYmotJChDT05GSUdfRlBH
-QV9SRUdJT04pCQkrPSBmcGdhLXJlZ2lvbi5vCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZnBnYS94
-aWxpbngtcHItZGVjb3VwbGVyLmMgYi9kcml2ZXJzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci5j
-Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi43NjE3MDBjCj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLmMKPiBAQCAt
-MCwwICsxLDE0NyBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTcsIE5hdGlvbmFsIElu
-c3RydW1lbnRzIENvcnAuCj4gKyAqIENvcHlyaWdodCAoYykgMjAxNywgWGlsaXggSW5jCj4gKyAq
-Cj4gKyAqIEZQR0EgQnJpZGdlIERyaXZlciBmb3IgdGhlIFhpbGlueCBMb2dpQ09SRSBQYXJ0aWFs
-IFJlY29uZmlndXJhdGlvbgo+ICsgKiBEZWNvdXBsZXIgSVAgQ29yZS4KPiArICoKPiArICogVGhp
-cyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9v
-ciBtb2RpZnkKPiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJs
-aWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnkKPiArICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRh
-dGlvbjsgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLgo+ICsgKgo+ICsgKiBUaGlzIHByb2dyYW0g
-aXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKPiArICog
-YnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFu
-dHkgb2YKPiArICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQ
-VVJQT1NFLiBTZWUgdGhlCj4gKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3Jl
-IGRldGFpbHMuCj4gKyAqLwo+ICsKPiArI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+ICsjaW5jbHVk
-ZSA8bGludXgvaW8uaD4KPiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgo+ICsjaW5jbHVkZSA8
-bGludXgvb2ZfZGV2aWNlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiArI2luY2x1
-ZGUgPGxpbnV4L2ZwZ2EvZnBnYS1icmlkZ2UuaD4KPiArCj4gKyNkZWZpbmUgQ1RSTF9DTURfREVD
-T1VQTEUJQklUKDApCj4gKyNkZWZpbmUgQ1RSTF9DTURfQ09VUExFCQl+QklUKDApCj4gKwo+ICtz
-dHJ1Y3QgeGxueF9wcl9kZWNvdXBsZXJfZGF0YSB7Cj4gKwl2b2lkIF9faW9tZW0gKmlvX2Jhc2U7
-Cj4gKwlzdHJ1Y3QgY2xrICpjbGs7Cj4gK307Cj4gKwo+ICtzdGF0aWMgaW50IHhsbnhfcHJfZGVj
-b3VwbGVyX2VuYWJsZV9zZXQoc3RydWN0IGZwZ2FfYnJpZGdlICpicmlkZ2UsIGJvb2wgZW5hYmxl
-KQo+ICt7Cj4gKwlpbnQgZXJyOwo+ICsJc3RydWN0IHhsbnhfcHJfZGVjb3VwbGVyX2RhdGEgKnBy
-aXYgPSBicmlkZ2UtPnByaXY7Cj4gKwo+ICsJZXJyID0gY2xrX2VuYWJsZShwcml2LT5jbGspOwo+
-ICsJaWYgKGVycikKPiArCQlyZXR1cm4gZXJyOwo+ICsKPiArCWlmIChlbmFibGUpCj4gKwkJd3Jp
-dGVsKENUUkxfQ01EX0NPVVBMRSwgcHJpdi0+aW9fYmFzZSk7Cj4gKwllbHNlCj4gKwkJd3JpdGVs
-KENUUkxfQ01EX0RFQ09VUExFLCBwcml2LT5pb19iYXNlKTsKPiArCj4gKwljbGtfZGlzYWJsZShw
-cml2LT5jbGspOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IHhsbnhf
-cHJfZGVjb3VwbGVyX2VuYWJsZV9zaG93KHN0cnVjdCBmcGdhX2JyaWRnZSAqYnJpZGdlKQo+ICt7
-Cj4gKwljb25zdCBzdHJ1Y3QgeGxueF9wcl9kZWNvdXBsZXJfZGF0YSAqcHJpdiA9IGJyaWRnZS0+
-cHJpdjsKPiArCXUzMiBzdGF0dXM7Cj4gKwlpbnQgZXJyOwo+ICsKPiArCWVyciA9IGNsa19lbmFi
-bGUocHJpdi0+Y2xrKTsKPiArCWlmIChlcnIpCj4gKwkJcmV0dXJuIGVycjsKPiArCj4gKwlzdGF0
-dXMgPSByZWFkbChwcml2LT5pb19iYXNlKTsKPiArCj4gKwljbGtfZGlzYWJsZShwcml2LT5jbGsp
-Owo+ICsKPiArCXJldHVybiAhc3RhdHVzOwo+ICt9Cj4gKwo+ICtzdGF0aWMgc3RydWN0IGZwZ2Ff
-YnJpZGdlX29wcyB4bG54X3ByX2RlY291cGxlcl9icl9vcHMgPSB7Cj4gKwkuZW5hYmxlX3NldCA9
-IHhsbnhfcHJfZGVjb3VwbGVyX2VuYWJsZV9zZXQsCj4gKwkuZW5hYmxlX3Nob3cgPSB4bG54X3By
-X2RlY291cGxlcl9lbmFibGVfc2hvdywKPiArfTsKPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
-b2ZfZGV2aWNlX2lkIHhsbnhfcHJfZGVjb3VwbGVyX29mX21hdGNoW10gPSB7Cj4gKwl7IC5jb21w
-YXRpYmxlID0gInhsbngscHItZGVjb3VwbGVyLTEuMDAiLCB9LAoKSSB3b3VsZCBhZGQgaGVyZSB0
-aGF0IGdlbmVyaWMgY29tcGF0aWJsZSBzdHJpbmcgdG9vLgoKU2lnbmVkLW9mZi1ieTogTWljaGFs
-IFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4KClRoYW5rcywKTWljaGFsCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Am Freitag, 3. M=E4rz 2017, 17:49:09 CET schrieb Huibin Hong:
+> Addd dmac bus and dmac peri dts nodes for peripherals,
+> such as I2S, SPI, UART and so on.
+> =
+
+> Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
+
+applied for 4.12, with the changes described below
+
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3368.dtsi | 31
+> +++++++++++++++++++++++++++++++ 1 file changed, 31 insertions(+)
+> =
+
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3368.dtsi index a635adc..c9be1b2 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> @@ -204,6 +204,37 @@
+>  				     <&cpu_b2>, <&cpu_b3>;
+>  	};
+> =
+
+> +	amba {
+
+moved "amba" above "arm-pmu", please mind the alphabetical ordering in the =
+
+future.
+
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <2>;
+> +		ranges;
+> +
+> +		dmac_peri: dma-controller@ff250000 {
+> +			compatible =3D "arm,pl330", "arm,primecell";
+> +			reg =3D <0x0 0xff250000 0x0 0x4000>;
+> +			interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +			#dma-cells =3D <1>;
+> +			clocks =3D <&cru ACLK_DMAC_PERI>;
+> +			clock-names =3D "apb_pclk";
+> +			arm,pl330-broken-no-flushp;
+> +			peripherals-req-type-burst;
+
+dropped peripherals-req-type-burst, as it is not part of mainline (yet?).
+Please send a patch readding that if it gets submitted and accepted at some =
+
+point.
+
+
+Heiko
