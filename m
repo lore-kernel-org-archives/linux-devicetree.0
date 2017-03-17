@@ -1,275 +1,115 @@
-From: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: RE: [RFC PATCH] iommu/dma: account pci host bridge dma_mask for IOVA allocation
-Date: Fri, 17 Mar 2017 11:45:12 +0530
-Message-ID: <d70f83cb517c082ee4ac280b96f1aa60@mail.gmail.com>
-References: <1489731045-6719-1-git-send-email-oza.oza@broadcom.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
+ iio-hwmon
+Date: Fri, 17 Mar 2017 07:46:17 +0100
+Message-ID: <1cb2a735-59cd-3d8c-b55e-bd775ded3fc0@xilinx.com>
+References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
+ <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
+ <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
+ <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
+ <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
+ <6767a340-b150-c21a-b6cb-5ca1ce2cd721@xilinx.com>
+ <1027ba77-6141-5d6e-e5e8-b15df29957f2@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489731045-6719-1-git-send-email-oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1027ba77-6141-5d6e-e5e8-b15df29957f2@metafoo.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <moritz.fischer.private@gmail.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Julia Cartwright <julia@ni.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-There are certain areas which requires contemplation.
-And this problem requires more attention from Pci of framework and iommu,
-and integration of both.
-
-Regards,
-Oza.
-
------Original Message-----
-From: Oza Pawandeep [mailto:oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org]
-Sent: Friday, March 17, 2017 11:41 AM
-To: Joerg Roedel; Robin Murphy
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org; Oza Pawandeep
-Subject: [RFC PATCH] iommu/dma: account pci host bridge dma_mask for IOVA
-allocation
-
-It is possible that PCI device supports 64-bit DMA addressing, and thus
-it's driver sets device's dma_mask to DMA_BIT_MASK(64), however PCI host
-bridge may have limitations on the inbound transaction addressing. As an
-example, consider NVME SSD device connected to iproc-PCIe controller.
-
-Currently, the IOMMU DMA ops only considers PCI device dma_mask when
-allocating an IOVA. This is particularly problematic on
-ARM/ARM64 SOCs where the IOMMU (i.e. SMMU) translates IOVA to PA for
-in-bound transactions only after PCI Host has forwarded these transactions
-on SOC IO bus. This means on such ARM/ARM64 SOCs the IOVA of in-bound
-transactions has to honor the addressing restrictions of the PCI Host.
-
-this patch is inspired by
-http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1306545.html
-http://www.spinics.net/lists/arm-kernel/msg566947.html
-
-but above inspiraiton solves the half of the problem.
-the rest of the problem is descrbied below, what we face on iproc based
-SOCs.
-
-current pcie frmework and of framework integration assumes dma-ranges in a
-way where memory-mapped devices define their dma-ranges.
-dma-ranges: (child-bus-address, parent-bus-address, length).
-
-but iproc based SOCs and even Rcar based SOCs has PCI world dma-ranges.
-dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
-
-of_dma_configure is specifically witten to take care of memory mapped
-devices.
-but no implementation exists for pci to take care of pcie based memory
-ranges.
-in fact pci world doesnt seem to define standard dma-ranges since there is
-an absense of the same, the dma_mask used to remain 32bit because of
-0 size return (parsed by of_dma_configure())
-
-this patch also implements of_pci_get_dma_ranges to cater to pci world
-dma-ranges.
-so then the returned size get best possible (largest) dma_mask.
-for e.g.
-dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>; we should get
-dev->coherent_dma_mask=0x7fffffffff.
-
-conclusion: there are following problems
-1) linux pci and iommu framework integration has glitches with respect to
-dma-ranges
-2) pci linux framework look very uncertain about dma-ranges, rather
-binding is not defined
-   the way it is defined for memory mapped devices.
-   rcar and iproc based SOCs use their custom one dma-ranges
-   (rather can be standard)
-3) even if in case of default parser of_dma_get_ranges,:
-   it throws and erro"
-   "no dma-ranges found for node"
-   because of the bug which exists.
-   following lines should be moved to the end of while(1)
-	839                 node = of_get_next_parent(node);
-	840                 if (!node)
-	841                         break;
-
-Reviewed-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig index
-8c7c244..20cfff7 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -217,6 +217,9 @@ config NEED_DMA_MAP_STATE  config NEED_SG_DMA_LENGTH
- 	def_bool y
-
-+config ARCH_HAS_DMA_SET_COHERENT_MASK
-+	def_bool y
-+
- config SMP
- 	def_bool y
-
-diff --git a/arch/arm64/include/asm/device.h
-b/arch/arm64/include/asm/device.h index 73d5bab..64b4dc3 100644
---- a/arch/arm64/include/asm/device.h
-+++ b/arch/arm64/include/asm/device.h
-@@ -20,6 +20,7 @@ struct dev_archdata {
- #ifdef CONFIG_IOMMU_API
- 	void *iommu;			/* private IOMMU data */
- #endif
-+	u64 parent_dma_mask;
- 	bool dma_coherent;
- };
-
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index 81cdb2e..5845ecd 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -564,6 +564,7 @@ static void flush_page(struct device *dev, const void
-*virt, phys_addr_t phys)
- 	__dma_flush_area(virt, PAGE_SIZE);
- }
-
-+
- static void *__iommu_alloc_attrs(struct device *dev, size_t size,
- 				 dma_addr_t *handle, gfp_t gfp,
- 				 unsigned long attrs)
-@@ -795,6 +796,20 @@ static void __iommu_unmap_sg_attrs(struct device
-*dev,
- 	iommu_dma_unmap_sg(dev, sgl, nelems, dir, attrs);  }
-
-+static int __iommu_set_dma_mask(struct device *dev, u64 mask) {
-+	/* device is not DMA capable */
-+	if (!dev->dma_mask)
-+		return -EIO;
-+
-+	if (mask > dev->archdata.parent_dma_mask)
-+		mask = dev->archdata.parent_dma_mask;
-+
-+	*dev->dma_mask = mask;
-+
-+	return 0;
-+}
-+
- static const struct dma_map_ops iommu_dma_ops = {
- 	.alloc = __iommu_alloc_attrs,
- 	.free = __iommu_free_attrs,
-@@ -811,8 +826,21 @@ static void __iommu_unmap_sg_attrs(struct device
-*dev,
- 	.map_resource = iommu_dma_map_resource,
- 	.unmap_resource = iommu_dma_unmap_resource,
- 	.mapping_error = iommu_dma_mapping_error,
-+	.set_dma_mask = __iommu_set_dma_mask,
- };
-
-+int dma_set_coherent_mask(struct device *dev, u64 mask) {
-+	if (get_dma_ops(dev) == &iommu_dma_ops &&
-+	    mask > dev->archdata.parent_dma_mask)
-+		mask = dev->archdata.parent_dma_mask;
-+
-+	dev->coherent_dma_mask = mask;
-+	return 0;
-+}
-+EXPORT_SYMBOL(dma_set_coherent_mask);
-+
-+
- /*
-  * TODO: Right now __iommu_setup_dma_ops() gets called too early to do
-  * everything it needs to - the device is only partially created and the
-@@ -975,6 +1003,8 @@ void arch_setup_dma_ops(struct device *dev, u64
-dma_base, u64 size,
- 	if (!dev->dma_ops)
- 		dev->dma_ops = &swiotlb_dma_ops;
-
-+	dev->archdata.parent_dma_mask = size - 1;
-+
- 	dev->archdata.dma_coherent = coherent;
- 	__iommu_setup_dma_ops(dev, dma_base, size, iommu);  } diff --git
-a/drivers/of/of_pci.c b/drivers/of/of_pci.c index 0ee42c3..5804717 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -283,6 +283,51 @@ int of_pci_get_host_bridge_resources(struct
-device_node *dev,
- 	return err;
- }
- EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
-+
-+int of_pci_get_dma_ranges(struct device_node *np, u64 *dma_addr, u64
-+*paddr, u64 *size) {
-+	struct device_node *node = of_node_get(np);
-+	int rlen, naddr, nsize, pna;
-+	int ret = 0;
-+	const int na = 3, ns = 2;
-+	struct of_pci_range_parser parser;
-+	struct of_pci_range range;
-+
-+	if (!node)
-+		return -EINVAL;
-+
-+	parser.node = node;
-+	parser.pna = of_n_addr_cells(node);
-+	parser.np = parser.pna + na + ns;
-+
-+	parser.range = of_get_property(node, "dma-ranges", &rlen);
-+
-+	if (!parser.range) {
-+		pr_debug("pcie device has no dma-ranges defined for
-node(%s)\n", np->full_name);
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	parser.end = parser.range + rlen / sizeof(__be32);
-+
-+	/* how do we take care of multiple dma windows ?. */
-+	for_each_of_pci_range(&parser, &range) {
-+		*dma_addr = range.pci_addr;
-+		*size = range.size;
-+		*paddr = range.cpu_addr;
-+	}
-+
-+	pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
-+		 *dma_addr, *paddr, *size);
-+		 *dma_addr = range.pci_addr;
-+		 *size = range.size;
-+
-+out:
-+	of_node_put(node);
-+	return ret;
-+
-+}
-+EXPORT_SYMBOL_GPL(of_pci_get_dma_ranges);
- #endif /* CONFIG_OF_ADDRESS */
-
- #ifdef CONFIG_PCI_MSI
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h index
-0e0974e..907ace0 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -76,6 +76,7 @@ static inline void of_pci_check_probe_only(void) { }
-int of_pci_get_host_bridge_resources(struct device_node *dev,
- 			unsigned char busno, unsigned char bus_max,
- 			struct list_head *resources, resource_size_t
-*io_base);
-+int of_pci_get_dma_ranges(struct device_node *np, u64 *dma_addr, u64
-+*paddr, u64 *size);
- #else
- static inline int of_pci_get_host_bridge_resources(struct device_node
-*dev,
- 			unsigned char busno, unsigned char bus_max, @@
--83,6 +84,11 @@ static inline int of_pci_get_host_bridge_resources(struct
-device_node *dev,  {
- 	return -EINVAL;
- }
-+
-+static inline int of_pci_get_dma_ranges(struct device_node *np, u64
-+*dma_addr, u64 *paddr, u64 *size) {
-+	return -EINVAL;
-+}
- #endif
-
- #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
---
-1.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTYuMy4yMDE3IDIyOjIwLCBMYXJzLVBldGVyIENsYXVzZW4gd3JvdGU6Cj4gT24gMDMvMTYv
+MjAxNyAwNzowNiBQTSwgTWljaGFsIFNpbWVrIHdyb3RlOgo+PiBPbiAxNi4zLjIwMTcgMTc6NTEs
+IExhcnMtUGV0ZXIgQ2xhdXNlbiB3cm90ZToKPj4+IE9uIDAzLzE2LzIwMTcgMDU6NDUgUE0sIE1p
+Y2hhbCBTaW1layB3cm90ZToKPj4+PiBPbiAxNi4zLjIwMTcgMTc6MzksIE1vcml0eiBGaXNjaGVy
+IHdyb3RlOgo+Pj4+PiBPbiBUaHUsIE1hciAxNiwgMjAxNyBhdCA5OjE2IEFNLCBNaWNoYWwgU2lt
+ZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPiB3cm90ZToKPj4+Pj4+IEhpLAo+Pj4+Pj4KPj4+
+Pj4+IE9uIDguMy4yMDE3IDIxOjExLCBNb3JpdHogRmlzY2hlciB3cm90ZToKPj4+Pj4+PiBGaXgK
+Pj4+Pj4+Pgo+Pj4+Pj4+IE9GOiAvaWlvX2h3bW9uOiBjb3VsZCBub3QgZ2V0ICNpby1jaGFubmVs
+LWNlbGxzIGZvcgo+Pj4+Pj4+IC9hbWJhL2FkY0BmODAwNzEwMAo+Pj4+Pj4+IE9GOiAvaWlvX2h3
+bW9uOiBjb3VsZCBub3QgZ2V0ICNpby1jaGFubmVsLWNlbGxzIGZvcgo+Pj4+Pj4+IC9hbWJhL2Fk
+Y0BmODAwNzEwMAo+Pj4+Pj4+IE9GOiAvaWlvX2h3bW9uOiBjb3VsZCBub3QgZ2V0ICNpby1jaGFu
+bmVsLWNlbGxzIGZvcgo+Pj4+Pj4+IC9hbWJhL2FkY0BmODAwNzEwMAo+Pj4+Pj4+Cj4+Pj4+Pj4g
+YnkgYWRkaW5nIHRoZSAjaW8tY2hhbm5lbC1jZWxscyBwcm9wZXJ0eS4KPj4+Pj4+Pgo+Pj4+Pj4+
+IFNpZ25lZC1vZmYtYnk6IE1vcml0eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz4KPj4+Pj4+PiBD
+YzogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4KPj4+Pj4+PiBDYzogU8O2
+cmVuIEJyaW5rbWFubiA8c29yZW4uYnJpbmttYW5uQHhpbGlueC5jb20+Cj4+Pj4+Pj4gQ2M6IEp1
+bGlhIENhcnR3cmlnaHQgPGp1bGlhQG5pLmNvbT4KPj4+Pj4+PiBDYzogbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZwo+Pj4+Pj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Pj4+
+Pj4+IC0tLQo+Pj4+Pj4+Cj4+Pj4+Pj4gQ2hhbmdlcyBmcm9tIHYxOgo+Pj4+Pj4+IC0gZml4IG1l
+c3NlZCB1cCBjb21taXQgbWVzc2FnZQo+Pj4+Pj4+IC0tLQo+Pj4+Pj4+ICBhcmNoL2FybS9ib290
+L2R0cy96eW5xLTcwMDAuZHRzaSB8IDEgKwo+Pj4+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
+cnRpb24oKykKPj4+Pj4+Pgo+Pj4+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy96
+eW5xLTcwMDAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4+Pj4+Pj4g
+aW5kZXggZjNhYzliZi4uOTgyMzNhOCAxMDA2NDQKPj4+Pj4+PiAtLS0gYS9hcmNoL2FybS9ib290
+L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4+Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEt
+NzAwMC5kdHNpCj4+Pj4+Pj4gQEAgLTcyLDYgKzcyLDcgQEAKPj4+Pj4+PiAgICAgICAgICAgICAg
+ICAgICAgICAgaW50ZXJydXB0cyA9IDwwIDcgND47Cj4+Pj4+Pj4gICAgICAgICAgICAgICAgICAg
+ICAgIGludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+Pj4+Pj4+ICAgICAgICAgICAgICAgICAg
+ICAgICBjbG9ja3MgPSA8JmNsa2MgMTI+Owo+Pj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAj
+aW8tY2hhbm5lbC1jZWxscyA9IDwxPjsKPj4+Pj4+PiAgICAgICAgICAgICAgIH07Cj4+Pj4+Pj4K
+Pj4+Pj4+PiAgICAgICAgICAgICAgIGNhbjA6IGNhbkBlMDAwODAwMCB7Cj4+Pj4+Pj4KPj4+Pj4+
+Cj4+Pj4+PiBJIHRoaW5rIGl0IHdpbGwgYmUgZ29vZCB0byB0aGUgbmV4dCBzdGVwIHRvby4KPj4+
+Pj4+IEl0IG1lYW5zIGFsc28gYWRkIGlpby1od21vbiBub2RlIHRvby4KPj4+Pj4+Cj4+Pj4+PiBX
+aGF0IGRvIHlvdSB0aGluaz8KPj4+Pj4KPj4+Pj4gSSBoYWRuJ3QgcHV0IGl0IGluIHRoZXJlIHNp
+bmNlIGR0cyBpcyBzdXBwb3NlZCB0byBkZXNjcmliZSBodywKPj4+Pj4gYnV0IG9idmlvdXNseSBw
+dXR0aW5nIHRoZSBhY3R1YWwgaHdtb24gaW4gdGhlcmUgbWFrZXMgaXQgbW9yZSB1c2VmdWwuCj4+
+Pj4KPj4+PiBJIGhhZCBvbmUgZGlzY3Vzc2lvbiBhYm91dCB0aGlzIHdpdGggR3JhbnQgaW4gcGFz
+dCBhbmQgaXQgaXMgY29tbW9uCj4+Pj4gbWlzdGFrZS4gSXQgaXMgc2ltcGxpZmljYXRpb24gb2Yg
+cHVycG9zZSBvZiBkdHMuCj4+Pj4KPj4+Cj4+PiBJZiB0aGUgaWlvLWh3bW9uIGJpbmRpbmcgaGFk
+IGdvbmUgdGhyb3VnaCByZXZpZXcgaXQgd291bGQgaGF2ZSBiZWVuIHJlamVjdGVkLgo+Pgo+PiBJ
+c24ndCBpdCBhIHRpbWUgdG8gZGVwcmVjYXRlIGl0Pwo+IAo+IFdlbGwsIGl0J3MgQUJJIG5vdyBh
+bmQgaGFzIHRvIHN0YXkgZm9yZXZlci4gRGVwcmVjYXRpbmcgaXQgbWFrZXMgb25seSBzZW5zZQo+
+IGlmIHRoZXJlIGlzIGEgcmVwbGFjZW1lbnQsIHdoaWNoIHRoZXJlIGlzIG5vdC4gVGhlIGlpby1o
+d21vbiBicmlkZ2UgaGFzIGl0cwo+IHVzZWNhc2VzIGl0J3MganVzdCBpbnN0YW50aWF0aW5nIGl0
+IHZpYSBkZXZpY2V0cmVlIHdoaWNoIGlzIG5vdCBzbyBuaWNlLgo+IAo+Pgo+Pj4KPj4+Pj4KPj4+
+Pj4gSSBjYW4gcmVzdWJtaXQgd2l0aCB0aGUgaHdtb24gbm9kZSBpbiB0aGVyZS4KPj4+Pgo+Pj4+
+IElmIHlvdSBncmVwIGtlcm5lbCB0cmVlIHlvdSB3aWxsIHNlZSB0aGF0IG90aGVycyBhcmUgdXNp
+bmcgaXQgdG9vLgo+Pj4+IEFsc28gdGhlcmUgaXMgYWNjZXB0ZWQgYmluZGluZyBmb3IgdGhhdCB0
+aGF0J3Mgd2h5IEkgY2FuJ3Qgc2VlIGJpZwo+Pj4+IHByb2JsZW0gd2l0aCBpdC4KPj4+Cj4+PiBT
+aW5jZSB0aGlzIGlzIGFuIGFwcGxpY2F0aW9uIHNwZWNpZmljIGJpbmRpbmcgSSB3b3VsZG4ndCBw
+dXQgaXQgaW4gdGhlCj4+PiBnZW5lcmljIERUIGluY2x1ZGUgZmlsZS4gSXQncyBhIGJpdCBsaWtl
+IGFkZGluZyBhIGdwaW8ta2V5IGJpbmRpbmcgZm9yIGVhY2gKPj4+IG9mIHRoZSBHUElPcyBqdXN0
+IGluIGNhc2Ugc29tZWJvZHkgd2FudHMgdG8gdXNlIGl0Lgo+Pgo+PiBwc2NpIGlzIHN5c3RlbSBz
+cGVjaWZpYyB0b28uCj4+Cj4+IElJUkMgdGhpcyBkcml2ZXIgZm9yIHp5bnEgd2FzIHdyaXR0ZW4g
+YnkgQURJIG9yIHdpdGggQURJIGhlbHAgdGhhdCdzIHdoeQo+PiB5b3Uga25vdyBtdWNoIGJldHRl
+ciB0aGFuIEkgd2hhdCdzIHRoZSBjb3JyZWN0IGNvbmZpZ3VyYXRpb24uCj4+Cj4+IFRoaXMgdGFy
+Z2V0cyBQUyBJUCB3aGljaCBzaG91bGQgYmUgcHJlc2VudCBpbiB0aGUgaHcgYWxsIHRoZSB0aW1l
+Lgo+PiBOb3Qgc3VyZSBpZiBmb3IgYWxsIGNvbmZpZ3VyYXRpb24gYnV0IEkgZXhwZWN0IGF0IGxl
+YXN0IHRoZSBwYXJ0IG9mIGl0Cj4+IGlzIHRoZXJlIGFsbCB0aGVtIHRpbWUuCj4+Cj4+IElmIGJp
+bmRpbmcgaXMgaW5jb3JyZWN0IHRoZW4gcGxlYXNlIHJlbW92ZSBpdCB3aXRoIHJlbW92aW5nIGZy
+b20gYWxsCj4+IGR0cy9kdHNpIGZpbGVzIHdoaWNoIGhhdmUgdGhpcy4gVGhlIHNhbWUgaXMgZm9y
+IG9mIHByb2JlIGZ1bmN0aW9uIGluIHRoZQo+PiBkcml2ZXIgaXRzZWxmLgo+PiBJZiB0aGlzIGlz
+IG5vdCBkb25lIHRoZW4gdGhpcyBpcyBqdXN0ICsxIGNhc2UuCj4+Cj4+IElmIHlvdSBzdGlsbCBp
+bnNpc3QgdGhhdCB3ZSBzaG91bGRuJ3QgZG8gaXQgdGhlbiBwbGVhc2UgYXQgbGVhc3QgZXh0ZW5k
+Cj4+IGNvbW1pdCBtZXNzYWdlIGFuZCBwdXQgdGhlcmUgZXhhbXBsZSBob3cgdG8gd2lyZSBpdCBv
+biB6eW5xLgo+IAo+IFRoZXJlIGlzIGEgSUlPIGRyaXZlciBmb3IgdGhlIFhBREMsIHRoaXMgZHJp
+dmVyIGhhcyBhIHVzZXJzcGFjZSBpbnRlcmZhY2UKPiB0aGF0IGV4cG9zZXMgdGhlIG1lYXN1cmVt
+ZW50cyBwcm92aWRlZCBieSB0aGUgaGFyZHdhcmUuIFVzaW5nIHRoZSBod21vbgo+IGJyaWRnZSB3
+aWxsIGV4cG9zZSB0aGUgc2FtZSBpbmZvcm1hdGlvbiBqdXN0IHRocm91Z2ggYSBod21vbiBpbnRl
+cmZhY2UuCj4gCj4gT25lIHJlYXNvbiBmb3IgdXNpbmcgdGhlIGlpby1od21vbiBicmlkZ2UgaXMg
+YmVjYXVzZSB5b3UgaGF2ZSBhIGxlZ2FjeQo+IGFwcGxpY2F0aW9uIHRoYXQgZXhwZWN0cyB0aGUg
+YSBod21vbiBpbnRlcmZhY2UuIEJ1dCBuZXcgYXBwbGljYXRpb25zIHRoYXQKPiB3YW50IHRvIGFj
+Y2VzcyB0aGUgWEFEQyBzaG91bGQgcmVhbGx5IHVzZSB0aGUgSUlPIGludGVyZmFjZSBpZiBwb3Nz
+aWJsZS4KPiAKPiBJbiBteSBvcGluaW9uIGluc3RhbnRpYXRpbmcgdGhlIGh3bW9uIGJyaWRnZSBi
+eSBkZWZhdWx0IHdpbGwgb25seSBjYXVzZQo+IGNvbmZ1c2lvbi4gVGhlcmUgYXJlIG5vdyByZWR1
+bmRhbnQgaW50ZXJmYWNlcyBhbmQgdXNlcnMgd2lsbCB3b25kZXIgd2hhdCBpcwo+IHRoZSBkaWZm
+ZXJlbmNlIGJldHdlZW4gdGhlIHR3by4gSXMgaXQgdGhlIHNhbWUgZGF0YSwgaXMgaXQgZGlmZmVy
+ZW50IGRhdGE/Cj4gV2hpY2ggaXMgdGhlIHByZWZlcnJlZCBpbnRlcmZhY2U/IFdoaWNoIG9uZSBp
+cyAnYmV0dGVyJz8KCklNSE8gdGhpcyBzaG91bGQgYmUgY292ZXJlZCBieSBkb2N1bWVudGF0aW9u
+LiBPbmUgcGFyYWdyYXBoIGluIGlpby1od21vbgpiaW5kaW5nIGNhbiBoYXZlIGFuc3dlcnMgZm9y
+IHRoaXMgYW5kIGl0IHdpbGwgYmUgdmVyeSBjbGVhciB3aGF0IHBlb3BsZQpzaG91bGQgdXNlLgoK
+VGhhbmtzLApNaWNoYWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
