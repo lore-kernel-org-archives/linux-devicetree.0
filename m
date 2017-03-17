@@ -1,49 +1,46 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v3 2/4] dt-bindings: add the grf clock for dw-mipi-dsi
-Date: Fri, 17 Mar 2017 11:54:22 +0800
-Message-ID: <1489722865-22122-3-git-send-email-zyw@rock-chips.com>
-References: <1489722865-22122-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1489722865-22122-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: omap4-droid4: Add CPCAP PMIC ADC configuration
+Date: Thu, 16 Mar 2017 21:10:10 -0700
+Message-ID: <20170317041012.26800-2-tony@atomide.com>
+References: <20170317041012.26800-1-tony@atomide.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170317041012.26800-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rm9yIFJLMzM5OSwgdGhlIGdyZiBjbG9jayBzaG91bGQgYmUgY29udHJvbGxlZCBieSBkdy1taXBp
-LWRzaSBkcml2ZXIsCmFkZCB0aGUgZGVzY3JpcHRpb24gZm9yIHRoaXMgY2xvY2suCgpTaWduZWQt
-b2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgotLS0KCkNoYW5nZXMgaW4g
-djM6IE5vbmUKQ2hhbmdlcyBpbiB2MjogTm9uZQoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0ICAgICAgIHwgMiArLQogMSBm
-aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlw
-aV9kc2lfcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0CmluZGV4IDE4OGY2ZjcuLjdl
-MTdhNjAgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dAorKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hp
-cC50eHQKQEAgLTEwLDcgKzEwLDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIC0gaW50ZXJydXB0
-czogUmVwcmVzZW50IHRoZSBjb250cm9sbGVyJ3MgaW50ZXJydXB0IHRvIHRoZSBDUFUocykuCiAt
-IGNsb2NrcywgY2xvY2stbmFtZXM6IFBoYW5kbGVzIHRvIHRoZSBjb250cm9sbGVyJ3MgcGxsIHJl
-ZmVyZW5jZQogICBjbG9jayhyZWYpIGFuZCBBUEIgY2xvY2socGNsaykuIEZvciBSSzMzOTksIGEg
-cGh5IGNvbmZpZyBjbG9jawotICAocGh5X2NmZykgaXMgYWRkaXRpb25hbCByZXF1aXJlZC4gQXMg
-ZGVzY3JpYmVkIGluIFsxXS4KKyAgKHBoeV9jZmcpIGFuZCBhIGdyZiBjbG9jayhncmYpIGFyZSBh
-ZGRpdGlvbmFsIHJlcXVpcmVkLiBBcyBkZXNjcmliZWQgaW4gWzFdLgogLSByb2NrY2hpcCxncmY6
-IHRoaXMgc29jIHNob3VsZCBzZXQgR1JGIHJlZ3MgdG8gbXV4IHZvcGwvdm9wYi4KIC0gcG9ydHM6
-IGNvbnRhaW4gYSBwb3J0IG5vZGUgd2l0aCBlbmRwb2ludCBkZWZpbml0aW9ucyBhcyBkZWZpbmVk
-IGluIFsyXS4KICAgRm9yIHZvcGIsc2V0IHRoZSByZWcgPSA8MD4gYW5kIHNldCB0aGUgcmVnID0g
-PDE+IGZvciB2b3BsLgotLSAKMi42LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Add CPCAP PMIC ADC configuration.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
+Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -19,6 +19,13 @@
+ 		spi-max-frequency = <3000000>;
+ 		spi-cs-high;
+ 
++		cpcap_adc: adc {
++			compatible = "motorola,mapphone-cpcap-adc";
++			interrupts-extended = <&cpcap 8 0>;
++			interrupt-names = "adcdone";
++			#io-channel-cells = <1>;
++		};
++
+ 		cpcap_regulator: regulator {
+ 			compatible = "motorola,mapphone-cpcap-regulator";
+ 
+-- 
+2.11.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
