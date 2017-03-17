@@ -1,81 +1,62 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/5] rtc: Add rtc-sh
-Date: Fri, 17 Mar 2017 09:17:20 +0100
-Message-ID: <CAMuHMdVu0dQjptyW0F5YS+V6sixXTM3P6VWq2=8BQ5njUOXf-Q@mail.gmail.com>
-References: <20170316175112.27913-1-chris.brandt@renesas.com> <20170316175112.27913-3-chris.brandt@renesas.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Fri, 17 Mar 2017 09:17:26 +0100
+Message-ID: <803bd0fb-3e23-7b69-ced9-eca5553bf0fe@grandegger.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
+ <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
+ <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
+ <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
+ <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
+ <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
+ <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
+ <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
+ <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
+ <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
+ <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCQJP74GSUDRBEVXV3DAKGQEMDRNKZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-In-Reply-To: <20170316175112.27913-3-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
+Sender: netdev-owner@vger.kernel.org
+To: Akshay Bhat <akshay.bhat@timesys.com>, Akshay Bhat <nodeax@gmail.com>
+Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Hello Akshay,
 
-On Thu, Mar 16, 2017 at 6:51 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> rtc-sh is a RTC for SuperH and RZ/A SoCs.
+Am 17.03.2017 um 08:39 schrieb Wolfgang Grandegger:
+> Hello Akshay,
+>
+> Am 16.03.2017 um 23:29 schrieb Akshay Bhat:
+>> Hi Wolfgang,
+>>
+>> On 03/16/2017 04:02 PM, Wolfgang Grandegger wrote:
+>>>
+>>> Looks much better now! There are message for state changes to error
+>>> warning and passive. Just the following message is not correct:
+>>>
+>>>  (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19
+>>> ERRORFRAME
+>>>     controller-problem{}
+>>>     error-counter-tx-rx{{95}{25}}
+>>>
+>>> Sorry, forgot to mention... the function can_change_state() [1]
+>>> should be used for that purpose, if possible. It fixes the issue
+>>> above as well.
+>>>
+>>
+>> The updated driver (the one used to create the above log) is using
+>> can_change_state() function. data[1] 40 corresponds to
+>> CAN_ERR_CRTL_ACTIVE, so looks correct? Could it be that the can-utils I
+>> am using is old and not reporting state change?
+>
+> Hm, yes. The raw data looks correct. You could download and build a
+> recent version from "https://github.com/linux-can/can-utils" to check.
+> It could also be a bug.
 
-an RTC?
+Support for that flags has been added in December 2014.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-sh.txt
-> @@ -0,0 +1,19 @@
-> +* Real Time Clock for Renesas SH and ARM SoCs
-> +
-> +Required properties:
-> +- compatible: Should be "renesas,r7s72100-rtc" or "renesas,sh-rtc" as a
-
-s/or/and/
-
-> +  fallback.
-> +- reg: physical base address and length of memory mapped region.
-> +- interrupts: 3 interrupts for alarm, period, and carry.
-
-If there's a need for multiple interrupts, it's always a good idea to use
-interrupt-names. The datasheet calls them "arm", "prd", and "cup", but
-I wouldn't object against "alarm", "period", and "carry" ;-)
-
-> +- clocks: the clock source for the RTC controller.
-
-The datasheet mentions 3 possible clock sources?
-
-> +Example:
-> +rtc: rtc@fcff1000 {
-> +       compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
-> +       reg = <0xfcff1000 0x2e>;
-> +       interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
-> +                     GIC_SPI 277 IRQ_TYPE_EDGE_RISING
-> +                     GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
-> +       clocks = <&mstp6_clks R7S72100_CLK_RTC>;
-> +       power-domains = <&cpg_clocks>;
-> +};
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Wolfgang-
