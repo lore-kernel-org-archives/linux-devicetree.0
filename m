@@ -1,7 +1,7 @@
 From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 6/7] rtc: Kconfig: Name RK805 in Kconfig for RTC_DRV_RK808
-Date: Fri, 17 Mar 2017 15:08:28 +0800
-Message-ID: <1489734508-21094-1-git-send-email-zhangqing@rock-chips.com>
+Subject: [PATCH v4 7/7] mfd: dt-bindings: Add RK805 device tree bindings document
+Date: Fri, 17 Mar 2017 15:08:45 +0800
+Message-ID: <1489734525-23310-1-git-send-email-zhangqing@rock-chips.com>
 References: <1489734377-1716-1-git-send-email-zhangqing@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1489734377-1716-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
@@ -10,33 +10,62 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8Avxt
 Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The RK808 and RK805 PMICs are using a similar register map.
-We can reuse the rtc driver for the RK805 PMIC. So let's add
-the RK805 in the Kconfig description.
+Add device tree bindings documentation for Rockchip's RK805 PMIC.
 
 Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- drivers/rtc/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/mfd/rk808.txt | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 5dc673dc9487..47d6a8df06db 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -352,11 +352,11 @@ config RTC_DRV_MAX77686
- 	  will be called rtc-max77686.
+diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+index 9636ae8d8d41..05eb07134483 100644
+--- a/Documentation/devicetree/bindings/mfd/rk808.txt
++++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+@@ -1,11 +1,12 @@
+ RK8XX Power Management Integrated Circuit
  
- config RTC_DRV_RK808
--	tristate "Rockchip RK808/RK818 RTC"
-+	tristate "Rockchip RK805/RK808/RK818 RTC"
- 	depends on MFD_RK808
- 	help
- 	  If you say yes here you will get support for the
--	  RTC of RK808 and RK818 PMIC.
-+	  RTC of RK805, RK808 and RK818 PMIC.
+ The rk8xx family current members:
++rk805
+ rk808
+ rk818
  
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rk808-rtc.
+ Required properties:
+-- compatible: "rockchip,rk808", "rockchip,rk818"
++- compatible: "rockchip,rk805", "rockchip,rk808", "rockchip,rk818"
+ - reg: I2C slave address
+ - interrupt-parent: The parent interrupt controller.
+ - interrupts: the interrupt outputs of the controller.
+@@ -18,6 +19,14 @@ Optional properties:
+ - rockchip,system-power-controller: Telling whether or not this pmic is controlling
+   the system power.
+ 
++Optional RK805 properties:
++- vcc1-supply:  The input supply for DCDC_REG1
++- vcc2-supply:  The input supply for DCDC_REG2
++- vcc3-supply:  The input supply for DCDC_REG3
++- vcc4-supply:  The input supply for DCDC_REG4
++- vcc5-supply:  The input supply for LDO_REG1 and LDO_REG2
++- vcc6-supply:  The input supply for LDO_REG3
++
+ Optional RK808 properties:
+ - vcc1-supply:  The input supply for DCDC_REG1
+ - vcc2-supply:  The input supply for DCDC_REG2
+@@ -56,6 +65,15 @@ by a child node of the 'regulators' node.
+ 		/* standard regulator bindings here */
+ 	};
+ 
++Following regulators of the RK805 PMIC block are supported. Note that
++the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
++number as described in RK805 datasheet.
++
++	- DCDC_REGn
++		- valid values for n are 1 to 4.
++	- LDO_REGn
++		- valid values for n are 1 to 3
++
+ Following regulators of the RK808 PMIC block are supported. Note that
+ the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+ number as described in RK808 datasheet.
 -- 
 1.9.1
 
