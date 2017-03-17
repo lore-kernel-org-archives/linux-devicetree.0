@@ -1,117 +1,46 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 17 Mar 2017 13:02:07 +0100
-Message-ID: <1489752127.2905.49.camel@pengutronix.de>
-References: <20170310130733.GU21222@n2100.armlinux.org.uk>
-         <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
-         <20170310140124.GV21222@n2100.armlinux.org.uk>
-         <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
-         <20170310125342.7f047acf@vento.lan>
-         <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
-         <20170311082549.576531d0@vento.lan>
-         <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
-         <20170314004533.3b3cd44b@vento.lan>
-         <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
-         <20170317114203.GZ21222@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170317114203.GZ21222@n2100.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v5.1 11/13] of: Add nop implementation of of_get_next_parent()
+Date: Fri, 17 Mar 2017 14:08:58 +0200
+Message-ID: <1489752538-23543-1-git-send-email-sakari.ailus@linux.intel.com>
+References: <1489667481-28521-12-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1489667481-28521-12-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-03-17 at 11:42 +0000, Russell King - ARM Linux wrote:
-> On Tue, Mar 14, 2017 at 08:55:36AM +0100, Hans Verkuil wrote:
-> > We're all very driver-development-driven, and userspace gets very little
-> > attention in general. So before just throwing in the towel we should take
-> > a good look at the reasons why there has been little or no development: is
-> > it because of fundamental design defects, or because nobody paid attention
-> > to it?
-> > 
-> > I strongly suspect it is the latter.
-> > 
-> > In addition, I suspect end-users of these complex devices don't really care
-> > about a plugin: they want full control and won't typically use generic
-> > applications. If they would need support for that, we'd have seen much more
-> > interest. The main reason for having a plugin is to simplify testing and
-> > if this is going to be used on cheap hobbyist devkits.
-> 
-> I think you're looking at it with a programmers hat on, not a users hat.
-> 
-> Are you really telling me that requiring users to 'su' to root, and then
-> use media-ctl to manually configure the capture device is what most
-> users "want" ?
-> 
-> Hasn't the way technology has moved towards graphical interfaces,
-> particularly smart phones, taught us that the vast majority of users
-> want is intuitive, easy to use interfaces, and not the command line
-> with reams of documentation?
-> 
-> Why are smart phones soo popular - it's partly because they're flashy,
-> but also because of the wealth of apps, and apps which follow the
-> philosophy of "do one job, do it well" (otherwise they get bad reviews.)
+of_get_next_parent() was only defined if CONFIG_OF was set. Using the
+function thus requires #ifdef CONFIG_OF ... #endif in all cases. Avoid
+having to use pre-processor macros around the function by providing a nop
+implementation of of_get_next_parent().
 
-> > An additional complication is simply that it is hard to find fully supported
-> > MC hardware. omap3 boards are hard to find these days, renesas boards are not
-> > easy to get, freescale isn't the most popular either. Allwinner, mediatek,
-> > amlogic, broadcom and qualcomm all have closed source implementations or no
-> > implementation at all.
-> 
-> Right, and that in itself tells us something - the problem that we're
-> trying to solve is not one that commonly exists in the real world.
-> 
-> Yes, the hardware we have in front of us may be very complex, but if
-> there's very few systems out there which are capable of making use of
-> all that complexity, then we're trying to solve a problem that isn't
-> the common case - and if it's going to take years to solve it (it
-> already has taken years) then it's the wrong problem to be solved.
-> 
-> I bet most of the problem can be eliminated if, rather than exposing
-> all this complexity, we instead expose a simpler capture system where
-> the board designer gets to "wire up" the capture system.
-> 
-> I'll go back to my Bayer example, because that's the simplest.  As
-> I've already said many times in these threads, there is only one
-> possible path through the iMX6 device that such a source can be used
-> with - it's a fixed path.  The actual path depends on the CSI2
-> virtual channel that the camera has been _configured_ to use, but
-> apart from that, it's effectively a well known set of blocks.  Such
-> a configuration could be placed in DT.
-> 
-> For RGB connected to a single parallel CSI, things get a little more
-> complex - capture through the CSI or through two other capture devices
-> for de-interlacing or other features.  However, I'm not convinced that
-> exposing multiple /dev/video* devices for different features for the
-> same video source is a sane approach - I think that's a huge usability
-> problem.  (The user is expected to select the capture device on iMX6
-> depending on the features they want, and if they want to change features,
-> they're expected to shut down their application and start it up on a
-> different capture device.)  For the most part on iMX6, there's one
-> path down to the CSI block, and then there's optional routing through
-> the rest of the IPU depending on what features you want (such as
-> de-interlacing.)
->
-> The complex case is a CSI2 connected camera which produces multiple
-> streams through differing virtual channels - and that's IMHO the only
-> case where we need multiple different /dev/video* capture devices to
-> be present.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+since v5:
 
-I wanted to have the IC PRP outputs separate because the IC PRP should
-support running both the VF and ENC tasks with different parameters from
-the same input. That would allow to capture two different resolutions
-(up to 1024x1024) at the same time.
+- Improved commit message.
 
-I think most of the simple, fixed pipeline use cases could be handled by
-libv4l2, by allowing to pass a v4l2 subdevice path to v4l2_open. If that
-function internally would set up the media links to the
-nearest /dev/video interface, propagate format, resolution and frame
-intervals if necessary, and return an fd to the video device, there'd be
-no additional complexity for the users beyond selecting the v4l2_subdev
-instead of the video device.
+ include/linux/of.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-regards
-Philipp
+diff --git a/include/linux/of.h b/include/linux/of.h
+index e5d4225f..cc212a0 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -586,6 +586,12 @@ static inline struct device_node *of_get_parent(const struct device_node *node)
+ 	return NULL;
+ }
+ 
++static inline struct device_node *of_get_next_parent(
++	const struct device_node *node)
++{
++	return NULL;
++}
++
+ static inline struct device_node *of_get_next_child(
+ 	const struct device_node *node, struct device_node *prev)
+ {
+-- 
+2.7.4
+
