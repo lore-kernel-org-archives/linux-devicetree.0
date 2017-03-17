@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 6/6] ARM: dts: rockchip: rename RK1108-evb to RV1108-evb
-Date: Fri, 17 Mar 2017 18:18:40 +0100
-Message-ID: <20170317171840.4683-7-heiko@sntech.de>
+Subject: [PATCH v2 3/6] dt-bindings: rk1108-cru: rename RK1108 to RV1108
+Date: Fri, 17 Mar 2017 18:18:37 +0100
+Message-ID: <20170317171840.4683-4-heiko@sntech.de>
 References: <20170317171840.4683-1-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170317171840.4683-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
@@ -12,73 +12,66 @@ List-Id: devicetree@vger.kernel.org
 
 From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Rockchip finally named the SOC as RV1108, so change it
-for compatible.
-
-The rk1108/rv1108 is completely new to the market, so there no real
-devices exist in the wild, only the Rockchip internal evaluation
-board. Therefore we're not breaking any existing devices when
-changing compatible values.
+Rockchip finally named the SOC as RV1108, so change it.
 
 Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-[added paragraph about no real devices existing]
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/rockchip.txt   | 4 ++--
- arch/arm/boot/dts/Makefile                           | 2 +-
- arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
- rename arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} (95%)
+ .../{rockchip,rk1108-cru.txt => rockchip,rv1108-cru.txt}     | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+ rename Documentation/devicetree/bindings/clock/{rockchip,rk1108-cru.txt => rockchip,rv1108-cru.txt} (83%)
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index cc4ace6397ab..9901cbd6d11a 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -111,9 +111,9 @@ Rockchip platforms device tree bindings
-     Required root node properties:
-       - compatible = "rockchip,px5-evb", "rockchip,px5", "rockchip,rk3368";
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rv1108-cru.txt
+similarity index 83%
+rename from Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
+rename to Documentation/devicetree/bindings/clock/rockchip,rv1108-cru.txt
+index 4da126116cf0..161326a4f9c1 100644
+--- a/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
++++ b/Documentation/devicetree/bindings/clock/rockchip,rv1108-cru.txt
+@@ -1,12 +1,12 @@
+-* Rockchip RK1108 Clock and Reset Unit
++* Rockchip RV1108 Clock and Reset Unit
  
--- Rockchip RK1108 Evaluation board
-+- Rockchip RV1108 Evaluation board
-     Required root node properties:
--      - compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
-+      - compatible = "rockchip,rv1108-evb", "rockchip,rv1108";
+-The RK1108 clock controller generates and supplies clock to various
++The RV1108 clock controller generates and supplies clock to various
+ controllers within the SoC and also implements a reset controller for SoC
+ peripherals.
  
- - Rockchip RK3368 evb:
-     Required root node properties:
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 011808490fed..d0d37d028790 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -674,7 +674,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pba8.dtb \
- 	arm-realview-pbx-a9.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
--	rk1108-evb.dtb \
-+	rv1108-evb.dtb \
- 	rk3036-evb.dtb \
- 	rk3036-kylin.dtb \
- 	rk3066a-bqcurie2.dtb \
-diff --git a/arch/arm/boot/dts/rk1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-similarity index 95%
-rename from arch/arm/boot/dts/rk1108-evb.dts
-rename to arch/arm/boot/dts/rv1108-evb.dts
-index 88fe0a8c4faa..58cf4ac079c3 100644
---- a/arch/arm/boot/dts/rk1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -43,8 +43,8 @@
- #include "rv1108.dtsi"
+ Required Properties:
  
- / {
--	model = "Rockchip RK1108 Evaluation board";
--	compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
-+	model = "Rockchip RV1108 Evaluation board";
-+	compatible = "rockchip,rv1108-evb", "rockchip,rv1108";
+-- compatible: should be "rockchip,rk1108-cru"
++- compatible: should be "rockchip,rv1108-cru"
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - #clock-cells: should be 1.
+@@ -19,7 +19,7 @@ Optional Properties:
  
- 	memory@60000000 {
- 		device_type = "memory";
+ Each clock is assigned an identifier and client nodes can use this identifier
+ to specify the clock which they consume. All available clocks are defined as
+-preprocessor macros in the dt-bindings/clock/rk1108-cru.h headers and can be
++preprocessor macros in the dt-bindings/clock/rv1108-cru.h headers and can be
+ used in device tree sources. Similar macros exist for the reset sources in
+ these files.
+ 
+@@ -38,7 +38,7 @@ clock-output-names:
+ Example: Clock controller node:
+ 
+ 	cru: cru@20200000 {
+-		compatible = "rockchip,rk1108-cru";
++		compatible = "rockchip,rv1108-cru";
+ 		reg = <0x20200000 0x1000>;
+ 		rockchip,grf = <&grf>;
+ 
+@@ -50,7 +50,7 @@ Example: UART controller node that consumes the clock generated by the clock
+   controller:
+ 
+ 	uart0: serial@10230000 {
+-		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
++		compatible = "rockchip,rv1108-uart", "snps,dw-apb-uart";
+ 		reg = <0x10230000 0x100>;
+ 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg-shift = <2>;
 -- 
 2.11.0
 
