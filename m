@@ -1,16 +1,17 @@
 From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 1/5] rtc: rtc-sh: add support for rza series
-Date: Fri, 17 Mar 2017 13:17:31 +0000
-Message-ID: <SG2PR06MB116511BA2DB66097980C97548A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Subject: RE: [PATCH 3/5] ARM: dts: r7s72100: add rtc clock to
+ device tree
+Date: Fri, 17 Mar 2017 13:20:09 +0000
+Message-ID: <SG2PR06MB1165ECF439A79E31978ACF228A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
 References: <20170316175112.27913-1-chris.brandt@renesas.com>
- <20170316175112.27913-2-chris.brandt@renesas.com>
- <CAMuHMdXXRiUTJJRsrpyFNEwjvjPO2s5Rthn2r+UipaQgVHHMcQ@mail.gmail.com>
+ <20170316175112.27913-4-chris.brandt@renesas.com>
+ <CAMuHMdXAvMoLu5azcBfX5pH_KYApcYSipBktpbfLybvnCG+bwg@mail.gmail.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXOFUXT2UGBB36DV7DAKGQENA3BEXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBDXOFUXT2UGBBDOFV7DAKGQEDCEFICA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMuHMdXXRiUTJJRsrpyFNEwjvjPO2s5Rthn2r+UipaQgVHHMcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAMuHMdXAvMoLu5azcBfX5pH_KYApcYSipBktpbfLybvnCG+bwg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -25,26 +26,50 @@ List-Id: devicetree@vger.kernel.org
 Hi Geert,
 
 On Friday, March 17, 2017, Geert Uytterhoeven wrote:
-> > --- a/drivers/rtc/Kconfig
-> > +++ b/drivers/rtc/Kconfig
-> > @@ -1303,10 +1303,10 @@ config RTC_DRV_SA1100
+> > --- a/arch/arm/boot/dts/r7s72100.dtsi
+> > +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> > @@ -117,6 +117,15 @@
+> >                         clock-output-names = "ostm0", "ostm1";
+> >                 };
 > >
-> >  config RTC_DRV_SH
-> >         tristate "SuperH On-Chip RTC"
-> > -       depends on SUPERH && HAVE_CLK
-> > +       depends on (SUPERH || ARCH_RENESAS) && HAVE_CLK
+> > +               mstp6_clks: mstp6_clks@fcfe042c {
+> > +                       #clock-cells = <1>;
+> > +                       compatible = "renesas,r7s72100-mstp-clocks",
+> "renesas,cpg-mstp-clocks";
+> > +                       reg = <0xfcfe042c 4>;
+> > +                       clocks = <&p0_clk>;
+> > +                       clock-indices = <R7S72100_CLK_RTC>;
+> > +                       clock-output-names = "rtc0";
 > 
-> I believe the dependency on HAVE_CLK is not needed.
-> SuperH selects CLKDEV_LOOKUP, which selects HAVE_CLK.
-> ARM (and ARM64) selects COMMON_CLK, which selects HAVE_CLK.
-> 
-> interestingly, SuperH already did so at the time the dependency was
-> added...
+> "rtc"? There's only one.
 
-OK, I'll take it out.
-I just didn't want to break any SH stuff.
+The rtc-sh.c code wants to have a number at the end. So if I just put "rtc" as the clock name, it does not find it. Again, I didn't want to break any SH builds, so I just changed the DT to match the driver.
 
 
+[ from the rtc-sh.c code ]
+
+	clk_id = pdev->id;
+	/* With a single device, the clock id is still "rtc0" */
+	if (clk_id < 0)
+		clk_id = 0;
+
+	snprintf(clk_name, sizeof(clk_name), "rtc%d", clk_id);
+
+	rtc->clk = devm_clk_get(&pdev->dev, clk_name);
+	if (IS_ERR(rtc->clk)) {
+		/*
+		 * No error handling for rtc->clk intentionally, not all
+		 * platforms will have a unique clock for the RTC, and
+		 * the clk API can handle the struct clk pointer being
+		 * NULL.
+		 */
+		rtc->clk = NULL;
+	}
+
+	clk_enable(rtc->clk);
+
+
+Cheers
 
 Chris
 
