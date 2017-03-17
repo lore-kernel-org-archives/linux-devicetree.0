@@ -1,229 +1,141 @@
-From: Moritz Fischer <mdf@kernel.org>
-Subject: [PATCH v3 2/2] fpga: Add support for Xilinx LogiCORE PR Decoupler
-Date: Fri, 17 Mar 2017 13:11:13 -0700
-Message-ID: <1489781473-30772-2-git-send-email-mdf@kernel.org>
-References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] media: platform: rcar_imr: add IMR-LX3 support
+Date: Fri, 17 Mar 2017 23:59:00 +0300
+Message-ID: <20170317205915.388401869@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489781473-30772-1-git-send-email-mdf@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-fpga@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, Moritz Fischer <mdf@kernel.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline; filename=media-platform-rcar_imr-add-IMR-LX3-support.patch
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Xilinx LogiCORE PR Decoupler
-soft-ip that does decoupling of PR regions in the FPGA
-fabric during partial reconfiguration.
+Add support for the image renderer light extended 3 (IMR-LX3) found only in
+the R-Car V2H (R8A7792) SoC. It's mostly the same as IMR-LSX3 but doesn't
+support video capture data as a source of 2D textures.
 
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: Sören Brinkmann <soren.brinkmann@xilinx.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
-Changes from v2:
-- Added Michal's Signed-off-by
-- Added "xlnx,pr-decoupler" unversioned fallback
-
-Changes from v1:
-- Added Michal as Co-Author since I pulled in some of his code
-- Reworked clk handling in _remove()
-- Pulled in Michal's version of show_enable(), ditched priv->enabled
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
- drivers/fpga/Kconfig               |   9 +++
- drivers/fpga/Makefile              |   1 +
- drivers/fpga/xilinx-pr-decoupler.c | 148 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 158 insertions(+)
- create mode 100644 drivers/fpga/xilinx-pr-decoupler.c
+This patch  is against the 'media_tree.git' repo's 'master' branch plus the
+latest version of  the Renesas IMR driver and the patch adding IMR-LSX3 support.
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index ce861a2..ce0c91d 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -63,6 +63,15 @@ config ALTERA_FREEZE_BRIDGE
- 	  isolate one region of the FPGA from the busses while that
- 	  region is being reprogrammed.
+ Documentation/devicetree/bindings/media/rcar_imr.txt |    4 ++
+ drivers/media/platform/rcar_imr.c                    |   27 ++++++++++++-------
+ 2 files changed, 22 insertions(+), 9 deletions(-)
+
+Index: media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
+===================================================================
+--- media_tree.orig/Documentation/devicetree/bindings/media/rcar_imr.txt
++++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
+@@ -9,6 +9,10 @@ and drawing with respect to any shape th
+ Required properties:
  
-+config XILINX_PR_DECOUPLER
-+	tristate "Xilinx LogiCORE PR Decoupler"
-+	depends on FPGA_BRIDGE
-+	help
-+	  Say Y to enable drivers for Xilinx LogiCORE PR Decoupler.
-+	  The PR Decoupler exists in the FPGA fabric to isolate one
-+	  region of the FPGA from the busses while that region is
-+	  being reprogrammed during partial reconfig.
-+
- endif # FPGA
+ - compatible:
++  "renesas,<soctype>-imr-lx3", "renesas,imr-lx3" as a fallback for the image
++  renderer light extended 3 (IMR-LX3) found in the R-Car gen2 SoCs, where the
++  examples with <soctype> are:
++  - "renesas,r8a7792-imr-lx3" for R-Car V2H;
+   "renesas,<soctype>-imr-lsx3", "renesas,imr-lsx3" as a fallback for the image
+   renderer light SRAM extended 3 (IMR-LSX3) found in the R-Car gen2 SoCs, where
+   the examples with <soctype> are:
+Index: media_tree/drivers/media/platform/rcar_imr.c
+===================================================================
+--- media_tree.orig/drivers/media/platform/rcar_imr.c
++++ media_tree/drivers/media/platform/rcar_imr.c
+@@ -1,5 +1,5 @@
+ /*
+- * rcar_imr.c -- R-Car IMR-LSX3/LX4 Driver
++ * rcar_imr.c -- R-Car IMR-LX3/LSX3/LX4 Driver
+  *
+  * Copyright (C) 2015-2017 Cogent Embedded, Inc. <source@cogentembedded.com>
+  *
+@@ -82,6 +82,7 @@ struct imr_format_info {
+ };
  
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 8df07bc..ba94b79 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
- obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
- obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
- obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)	+= altera-freeze-bridge.o
-+obj-$(CONFIG_XILINX_PR_DECOUPLER)	+= xilinx-pr-decoupler.o
+ enum imr_type {
++	IMR_LX3,
+ 	IMR_LSX3,
+ 	IMR_LX4,
+ };
+@@ -153,7 +154,7 @@ struct imr_ctx {
+ #define IMR_SSAR		0x38
+ #define IMR_DSTR		0x3C
+ #define IMR_SSTR		0x40
+-#define IMR_DSOR		0x50
++#define IMR_DSOR		0x50		/* IMR-LSX3/LX4 only */
+ #define IMR_CMRCR		0x54
+ #define IMR_CMRCSR		0x58
+ #define IMR_CMRCCR		0x5C
+@@ -200,7 +201,7 @@ struct imr_ctx {
+ #define IMR_CMRCR_DUV		GENMASK(4, 3)
+ #define IMR_CMRCR_SUV_SHIFT	5
+ #define IMR_CMRCR_SUV		GENMASK(6, 5)
+-#define IMR_CMRCR_YISM		BIT(7)
++#define IMR_CMRCR_YISM		BIT(7)		/* IMR-LSX3/LX4 only */
+ #define IMR_CMRCR_Y10		BIT(8)
+ #define IMR_CMRCR_Y12		BIT(9)
+ #define IMR_CMRCR_SY10		BIT(11)
+@@ -214,7 +215,7 @@ struct imr_ctx {
+ #define IMR_TRIMR_AUTOSG	BIT(3)
+ #define IMR_TRIMR_TCM		BIT(6)
  
- # High Level Interfaces
- obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
-diff --git a/drivers/fpga/xilinx-pr-decoupler.c b/drivers/fpga/xilinx-pr-decoupler.c
-new file mode 100644
-index 0000000..dd37b1c
---- /dev/null
-+++ b/drivers/fpga/xilinx-pr-decoupler.c
-@@ -0,0 +1,148 @@
-+/*
-+ * Copyright (c) 2017, National Instruments Corp.
-+ * Copyright (c) 2017, Xilix Inc
-+ *
-+ * FPGA Bridge Driver for the Xilinx LogiCORE Partial Reconfiguration
-+ * Decoupler IP Core.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/of_device.h>
-+#include <linux/module.h>
-+#include <linux/fpga/fpga-bridge.h>
-+
-+#define CTRL_CMD_DECOUPLE	BIT(0)
-+#define CTRL_CMD_COUPLE		~BIT(0)
-+
-+struct xlnx_pr_decoupler_data {
-+	void __iomem *io_base;
-+	struct clk *clk;
+-#define IMR_TRICR_YCFORM	BIT(31)
++#define IMR_TRICR_YCFORM	BIT(31)		/* IMR-LSX3/LX4 only */
+ 
+ #define IMR_UVDPOR_UVDPO_SHIFT	0
+ #define IMR_UVDPOR_UVDPO	GENMASK(2, 0)
+@@ -296,7 +297,7 @@ static u32 __imr_flags_common(u32 iflags
+ 	return iflags & oflags & IMR_F_PLANES_MASK;
+ }
+ 
+-static const struct imr_format_info imr_lsx3_formats[] = {
++static const struct imr_format_info imr_lx3_formats[] = {
+ 	{
+ 		.name	= "YUV 4:2:2 semiplanar (NV16)",
+ 		.fourcc	= V4L2_PIX_FMT_NV16,
+@@ -377,10 +378,16 @@ static const struct imr_format_info imr_
+ 	},
+ };
+ 
++static const struct imr_info imr_lx3 = {
++	.type		= IMR_LX3,
++	.formats	= imr_lx3_formats,
++	.num_formats	= ARRAY_SIZE(imr_lx3_formats),
 +};
 +
-+static int xlnx_pr_decoupler_enable_set(struct fpga_bridge *bridge, bool enable)
-+{
-+	int err;
-+	struct xlnx_pr_decoupler_data *priv = bridge->priv;
-+
-+	err = clk_enable(priv->clk);
-+	if (err)
-+		return err;
-+
-+	if (enable)
-+		writel(CTRL_CMD_COUPLE, priv->io_base);
-+	else
-+		writel(CTRL_CMD_DECOUPLE, priv->io_base);
-+
-+	clk_disable(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int xlnx_pr_decoupler_enable_show(struct fpga_bridge *bridge)
-+{
-+	const struct xlnx_pr_decoupler_data *priv = bridge->priv;
-+	u32 status;
-+	int err;
-+
-+	err = clk_enable(priv->clk);
-+	if (err)
-+		return err;
-+
-+	status = readl(priv->io_base);
-+
-+	clk_disable(priv->clk);
-+
-+	return !status;
-+}
-+
-+static struct fpga_bridge_ops xlnx_pr_decoupler_br_ops = {
-+	.enable_set = xlnx_pr_decoupler_enable_set,
-+	.enable_show = xlnx_pr_decoupler_enable_show,
-+};
-+
-+static const struct of_device_id xlnx_pr_decoupler_of_match[] = {
-+	{ .compatible = "xlnx,pr-decoupler-1.00", },
-+	{ .compatible = "xlnx,pr-decoupler", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, xlnx_pr_decoupler_of_match);
-+
-+static int xlnx_pr_decoupler_probe(struct platform_device *pdev)
-+{
-+	struct xlnx_pr_decoupler_data *priv;
-+	int err;
-+	struct resource *res;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->io_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->io_base))
-+		return PTR_ERR(priv->io_base);
-+
-+	priv->clk = devm_clk_get(&pdev->dev, "aclk");
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(&pdev->dev, "input clock not found\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+
-+	err = clk_prepare_enable(priv->clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "unable to enable clock\n");
-+		return err;
-+	}
-+
-+	clk_disable(priv->clk);
-+
-+	err = fpga_bridge_register(&pdev->dev, "Xilinx PR Decoupler",
-+				   &xlnx_pr_decoupler_br_ops, priv);
-+
-+	if (err) {
-+		dev_err(&pdev->dev, "unable to register Xilinx PR Decoupler");
-+		clk_unprepare(priv->clk);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int xlnx_pr_decoupler_remove(struct platform_device *pdev)
-+{
-+	struct fpga_bridge *bridge = platform_get_drvdata(pdev);
-+	struct xlnx_pr_decoupler_data *p = bridge->priv;
-+
-+	fpga_bridge_unregister(&pdev->dev);
-+
-+	clk_unprepare(p->clk);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver xlnx_pr_decoupler_driver = {
-+	.probe = xlnx_pr_decoupler_probe,
-+	.remove = xlnx_pr_decoupler_remove,
-+	.driver = {
-+		.name = "xlnx_pr_decoupler",
-+		.of_match_table = of_match_ptr(xlnx_pr_decoupler_of_match),
-+	},
-+};
-+
-+module_platform_driver(xlnx_pr_decoupler_driver);
-+
-+MODULE_DESCRIPTION("Xilinx Partial Reconfiguration Decoupler");
-+MODULE_AUTHOR("Moritz Fischer <mdf@kernel.org>");
-+MODULE_AUTHOR("Michal Simek <michal.simek@xilinx.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+ static const struct imr_info imr_lsx3 = {
+ 	.type		= IMR_LSX3,
+-	.formats	= imr_lsx3_formats,
+-	.num_formats	= ARRAY_SIZE(imr_lsx3_formats),
++	.formats	= imr_lx3_formats,
++	.num_formats	= ARRAY_SIZE(imr_lx3_formats),
+ };
+ 
+ static const struct imr_info imr_lx4 = {
+@@ -835,7 +842,8 @@ static void imr_dl_program_setup(struct
+ 	*dl++ = IMR_OP_WTS(IMR_CPDPOR, __imr_cpdp(type));
+ 
+ 	/* reset rendering mode registers */
+-	*dl++ = IMR_OP_WTS(IMR_CMRCCR,  0xDBFE);
++	*dl++ = IMR_OP_WTS(IMR_CMRCCR, ctx->imr->info->type >= IMR_LSX3 ?
++			   0xDBFE : 0xDB7E);
+ 	*dl++ = IMR_OP_WTS(IMR_CMRCCR2, ctx->imr->info->type == IMR_LX4 ?
+ 			   0x9065 : IMR_CMRCR2_LUTE);
+ 
+@@ -1990,6 +1998,7 @@ static const struct dev_pm_ops imr_pm_op
+ 
+ /* device table */
+ static const struct of_device_id imr_of_match[] = {
++	{ .compatible = "renesas,imr-lx3",  .data = &imr_lx3, },
+ 	{ .compatible = "renesas,imr-lsx3", .data = &imr_lsx3, },
+ 	{ .compatible = "renesas,imr-lx4",  .data = &imr_lx4,  },
+ 	{ },
+@@ -2011,5 +2020,5 @@ module_platform_driver(imr_platform_driv
+ 
+ MODULE_ALIAS("imr");
+ MODULE_AUTHOR("Cogent Embedded Inc. <sources@cogentembedded.com>");
+-MODULE_DESCRIPTION("Renesas IMR-LSX3/LX4 Driver");
++MODULE_DESCRIPTION("Renesas IMR-LX3/LSX3/LX4 Driver");
+ MODULE_LICENSE("GPL");
