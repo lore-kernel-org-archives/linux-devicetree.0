@@ -1,99 +1,118 @@
-From: Akshay Bhat <akshay.bhat@timesys.com>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Fri, 17 Mar 2017 12:00:32 -0400
-Message-ID: <0362316b-ef76-1733-dbfc-8b644f758db9@timesys.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
- <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
- <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
- <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
- <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
- <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
- <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
- <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
- <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
- <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
- <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v4 1/7] coresight: bindings for CPU debug module
+Date: Fri, 17 Mar 2017 10:13:35 -0600
+Message-ID: <20170317161335.GB20435@linaro.org>
+References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
+ <1489762943-25849-2-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>, Akshay Bhat <nodeax@gmail.com>
-Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1489762943-25849-2-git-send-email-leo.yan@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Suzuki.Poulose@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, sudeep.holla@arm.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfgang,
-
-On 03/17/2017 03:39 AM, Wolfgang Grandegger wrote:
-> Hello Akshay,
+On Fri, Mar 17, 2017 at 11:02:17PM +0800, Leo Yan wrote:
+> According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
+> Chapter 'Part H: External debug', the CPU can integrate debug module
+> and it can support self-hosted debug and external debug. Especially
+> for supporting self-hosted debug, this means the program can access
+> the debug module from mmio region; and usually the mmio region is
+> integrated with coresight.
 > 
-> Am 16.03.2017 um 23:29 schrieb Akshay Bhat:
->> Hi Wolfgang,
->>
->> On 03/16/2017 04:02 PM, Wolfgang Grandegger wrote:
->>>
->>> Looks much better now! There are message for state changes to error
->>> warning and passive. Just the following message is not correct:
->>>
->>>  (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19  
->>> ERRORFRAME
->>>     controller-problem{}
->>>     error-counter-tx-rx{{95}{25}}
->>>
->>> Sorry, forgot to mention... the function can_change_state() [1]
->>> should be used for that purpose, if possible. It fixes the issue
->>> above as well.
->>>
->>
->> The updated driver (the one used to create the above log) is using
->> can_change_state() function. data[1] 40 corresponds to
->> CAN_ERR_CRTL_ACTIVE, so looks correct? Could it be that the can-utils I
->> am using is old and not reporting state change?
+> So add document for binding debug component, includes binding to APB
+> clock; and also need specify the CPU node which the debug module is
+> dedicated to specific CPU.
 > 
-> Hm, yes. The raw data looks correct. You could download and build a
-> recent version from "https://github.com/linux-can/can-utils" to check.
-> It could also be a bug.
+> Suggested-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  .../bindings/arm/coresight-cpu-debug.txt           | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+> new file mode 100644
+> index 0000000..f6855c3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+> @@ -0,0 +1,46 @@
+> +* CoreSight CPU Debug Component:
+> +
+> +CoreSight cpu debug component are compliant with the ARMv8 architecture
+> +reference manual (ARM DDI 0487A.k) Chapter 'Part H: External debug'. The
+> +external debug module is mainly used for two modes: self-hosted debug and
+> +external debug, and it can be accessed from mmio region from Coresight
+> +and eventually the debug module connects with CPU for debugging. And the
+> +debug module provides sample-based profiling extension, which can be used
+> +to sample CPU program counter, secure state and exception level, etc;
+> +usually every CPU has one dedicated debug module to be connected.
+> +
+> +Required properties:
+> +
+> +- compatible : should be
+> +	     * "arm,coresight-cpu-debug"; supplemented with "arm,primecell"
+> +	       since this driver is using the AMBA bus interface.
 
-Turned out to be a old version of can-utils. Using the above git tree
-reports the flag.
+This description needs to be refactored - see my comment from an earlier post
+for more details.
 
- (000.200308)  can0  20000004   [8]  00 40 00 00 00 00 5F 00   ERRORFRAME
-        controller-problem{back-to-error-active}
-        error-counter-tx-rx{{95}{0}}
+> +
+> +- reg : physical base address and length of the register set.
+> +
+> +- clocks : the clock associated to this component.
+> +
+> +- clock-names : the name of the clock referenced by the code. Since we are
+> +                using the AMBA framework, the name of the clock providing
+> +		the interconnect should be "apb_pclk" and the clock is
+> +		mandatory. The interface between the debug logic and the
+> +		processor core is clocked by the internal CPU clock, so it
+> +		is enabled with CPU clock by default.
+> +
+> +- cpu : the cpu phandle the debug module is affined to. When omitted
+> +	the module is considered to belong to CPU0.
+> +
+> +Optional properties:
 
->> Enabling BUSOFF/ERRP/ERRW bits in STATFE did not generate any interrupts
->> on the INT pin. Should we make it a requirement that both INT and STAT
->> pins need to be connected in hardware for the driver to do the error
->> reporting?
+s/properties/property
+
+> +
+> +- power-domains: a phandle to power domain node for debug module. We can
+> +		 use "nohlt" to ensure CPU power domain is enabled.
+
+The "power-domains" property is to take care of the debug power domain.  The
+"nohlt" is to make sure registers in the CPU power domain are accessible - both
+are independent from one another.  As such the description for this binding
+shoudl be:
+
+"a phandle to the debug power domain".
+
+Thanks,
+Mathieu
+
+> +
+> +
+> +Example:
+> +
+> +	debug@f6590000 {
+> +		compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +		reg = <0 0xf6590000 0 0x1000>;
+> +		clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +		clock-names = "apb_pclk";
+> +		cpu = <&cpu0>;
+> +	};
+> -- 
+> 2.7.4
 > 
-> As I said, it's the better solution, especially if interrupt flooding
-> does harm. How does your system behave when bus errors come in due to no
-> cable connected?
->
-
-I did not see any issues on the system with the cable disconnected. In
-my particular setup with the cable disconnected the system goes to
-tx-error-passive and does not get any further interrupts until a state
-change occurs.
-
-> So far using NAPI was mandatory. There is the problem of out-of-order
-> message reception if handled in the isr on multi processor systems.
-> Marc, what is the current policy?
-> 
-
-Since this is a SPI based CAN, I am wary for any additional latencies
-NAPI might introduce. The RX handling is being done at the very
-beginning of the ISR for this reason.
-
-Can we go ahead with the existing implementation and re-visit this at a
-later time?
-
-Thanks again for all your help in reviewing/improving the driver :)
-
-Akshay
-
-> Wolfgang.
