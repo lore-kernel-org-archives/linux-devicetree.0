@@ -1,62 +1,71 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 3/5] ARM: dts: r7s72100: add rtc clock to
- device tree
-Date: Fri, 17 Mar 2017 13:48:00 +0000
-Message-ID: <SG2PR06MB116586A6CF6082C2CF0341AD8A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170316175112.27913-1-chris.brandt@renesas.com>
- <20170316175112.27913-4-chris.brandt@renesas.com>
- <CAMuHMdXAvMoLu5azcBfX5pH_KYApcYSipBktpbfLybvnCG+bwg@mail.gmail.com>
- <SG2PR06MB1165ECF439A79E31978ACF228A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdWm=4My_H-i-fNpXY9knSLpN+-zNarC5Xdq08kgvauM_w@mail.gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXOFUXT2UGBBFOSV7DAKGQEGP2N6TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMuHMdWm=4My_H-i-fNpXY9knSLpN+-zNarC5Xdq08kgvauM_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: Enable sata support on rock2 square
+Date: Fri, 17 Mar 2017 14:51:17 +0100
+Message-ID: <20170317135118.17333-1-sjoerd.simons@collabora.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+The Rock 2 square board has a USB -> SATA converter hooked up to its usb
+host1 connection. Enable the usb controller and always turn on the power
+on the 5V sata power connector (controlled by gpio).
 
-On Friday, March 17, 2017, Geert Uytterhoeven wrote:
-> So in the absence of an "rtc0" clock in the device node (you don't have
-> "clock-names" properties in the rtc devvice node yet), it will fall back
-> to clk_get_sys(), and will find the global "rtc0" clock. Unless you call
-> it "rtc"...
-> 
-> Most drivers using a single clock just pass NULL instead of a name, so it
-> will match the first clock found.
-> 
-> I think the simplest solution is to check if your device is instantiated
-> from DT (pdev->dev.of_node != NULL), and pass NULL (or "fck", when you add
-> multiple clocks to the DT bindings) to devm_clk_get() if that's the case.
+Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
+---
 
-OK, so leave current SuperH code the way it is, but add the case for
-(pdev->dev.of_node != NULL) and do things the 'new way' so I can have
-an RTC clock name of "rtc".
+ arch/arm/boot/dts/rk3288-rock2-square.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Question: Is your idea to add all the clocks (X1, X3, EXTAL), but put the
-first one as the peripheral clock (the one that runs the register interface 'p0')?
-
-
-Chris
-
+diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+index fbf11d410c42..a23a94811be8 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-square.dts
++++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+@@ -81,6 +81,17 @@
+ 		};
+ 	};
+ 
++	sata_pwr: sata-prw-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio0 13 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sata_pwr_en>;
++		/* Always turn on the 5V sata power connector */
++		regulator-always-on;
++		regulator-name = "sata_pwr";
++	};
++
+ 	spdif_out: spdif-out {
+ 		compatible = "linux,spdif-dit";
+ 		#sound-dai-cells = <0>;
+@@ -237,6 +248,12 @@
+ 		};
+ 	};
+ 
++	sata {
++		sata_pwr_en: sata-pwr-en {
++			rockchip,pins = <0 13 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	sdmmc {
+ 		sdmmc_pwr: sdmmc-pwr {
+ 			rockchip,pins = <7 11 RK_FUNC_GPIO &pcfg_pull_none>;
+@@ -265,3 +282,7 @@
+ &usb_host0_ehci {
+ 	status = "okay";
+ };
++
++&usb_host1 {
++	status = "okay";
++};
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
