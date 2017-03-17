@@ -1,87 +1,48 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: dts: r7s72100: add rtc clock to
- device tree
-Date: Fri, 17 Mar 2017 16:16:08 +0100
-Message-ID: <20170317151608.onw67v4qv746albh@piout.net>
-References: <20170316175112.27913-1-chris.brandt@renesas.com>
- <20170316175112.27913-4-chris.brandt@renesas.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v3 4/5] clk: hi6220: add debug APB clock
+Date: Fri, 17 Mar 2017 23:22:24 +0800
+Message-ID: <20170317152224.GB2020@leoy-linaro>
+References: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
+ <1488520809-31670-5-git-send-email-leo.yan@linaro.org>
+ <20170303235808.GX25384@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBOH3V7DAKGQEZTUVAWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170316175112.27913-4-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170303235808.GX25384@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/03/2017 at 13:51:10 -0400, Chris Brandt wrote:
+Hi Stephen,
 
-You should always include a commit message.
-
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/r7s72100.dtsi            | 9 +++++++++
->  include/dt-bindings/clock/r7s72100-clock.h | 3 +++
->  2 files changed, 12 insertions(+)
+On Fri, Mar 03, 2017 at 03:58:08PM -0800, Stephen Boyd wrote:
+> On 03/03, Leo Yan wrote:
+> > The debug APB clock is absent in hi6220 driver, so this patch is to add
+> > support for it.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
 > 
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index ed62e19..2a42a79 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -117,6 +117,15 @@
->  			clock-output-names = "ostm0", "ostm1";
->  		};
->  
-> +		mstp6_clks: mstp6_clks@fcfe042c {
-> +			#clock-cells = <1>;
-> +			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
-> +			reg = <0xfcfe042c 4>;
-> +			clocks = <&p0_clk>;
-> +			clock-indices = <R7S72100_CLK_RTC>;
-> +			clock-output-names = "rtc0";
-> +		};
-> +
->  		mstp7_clks: mstp7_clks@fcfe0430 {
->  			#clock-cells = <1>;
->  			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
-> diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-> index cd2ed51..bc256d3 100644
-> --- a/include/dt-bindings/clock/r7s72100-clock.h
-> +++ b/include/dt-bindings/clock/r7s72100-clock.h
-> @@ -29,6 +29,9 @@
->  #define R7S72100_CLK_OSTM0	1
->  #define R7S72100_CLK_OSTM1	0
->  
-> +/* MSTP6 */
-> +#define R7S72100_CLK_RTC	0
-> +
->  /* MSTP7 */
->  #define R7S72100_CLK_ETHER	4
->  
-> -- 
-> 2.10.1
-> 
-> 
+> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+I found this patch introduces regression on Hikey, after I enable
+CPUIdle with this patch the kernel booting will hang. I committed a
+new version patch:
+https://patchwork.kernel.org/patch/9630931/
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+So please drop v3 patch and help review v4 patch. Really Sorry for
+inconvinence.
+
+Thanks,
+Leo Yan
