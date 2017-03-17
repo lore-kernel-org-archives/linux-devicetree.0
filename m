@@ -1,29 +1,87 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 1/5] rtc: rtc-sh: add support for rza series
-Date: Fri, 17 Mar 2017 16:11:17 +0100
-Message-ID: <20170317151117.a7q4fz4ucqg5ngdi@piout.net>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/5] ARM: dts: r7s72100: add rtc clock to
+ device tree
+Date: Fri, 17 Mar 2017 16:16:08 +0100
+Message-ID: <20170317151608.onw67v4qv746albh@piout.net>
 References: <20170316175112.27913-1-chris.brandt@renesas.com>
- <20170316175112.27913-2-chris.brandt@renesas.com>
+ <20170316175112.27913-4-chris.brandt@renesas.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBOH3V7DAKGQEZTUVAWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170316175112.27913-2-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20170316175112.27913-4-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 16/03/2017 at 13:51:10 -0400, Chris Brandt wrote:
 
-Mostly good, one nitpick:
+You should always include a commit message.
 
-On 16/03/2017 at 13:51:08 -0400, Chris Brandt wrote:
->  	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
-> +	if (res == NULL)
-
-if (!res) is preferred here
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/r7s72100.dtsi            | 9 +++++++++
+>  include/dt-bindings/clock/r7s72100-clock.h | 3 +++
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+> index ed62e19..2a42a79 100644
+> --- a/arch/arm/boot/dts/r7s72100.dtsi
+> +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> @@ -117,6 +117,15 @@
+>  			clock-output-names = "ostm0", "ostm1";
+>  		};
+>  
+> +		mstp6_clks: mstp6_clks@fcfe042c {
+> +			#clock-cells = <1>;
+> +			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+> +			reg = <0xfcfe042c 4>;
+> +			clocks = <&p0_clk>;
+> +			clock-indices = <R7S72100_CLK_RTC>;
+> +			clock-output-names = "rtc0";
+> +		};
+> +
+>  		mstp7_clks: mstp7_clks@fcfe0430 {
+>  			#clock-cells = <1>;
+>  			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+> diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+> index cd2ed51..bc256d3 100644
+> --- a/include/dt-bindings/clock/r7s72100-clock.h
+> +++ b/include/dt-bindings/clock/r7s72100-clock.h
+> @@ -29,6 +29,9 @@
+>  #define R7S72100_CLK_OSTM0	1
+>  #define R7S72100_CLK_OSTM1	0
+>  
+> +/* MSTP6 */
+> +#define R7S72100_CLK_RTC	0
+> +
+>  /* MSTP7 */
+>  #define R7S72100_CLK_ETHER	4
+>  
+> -- 
+> 2.10.1
+> 
+> 
 
 -- 
 Alexandre Belloni, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
