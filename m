@@ -1,110 +1,57 @@
-From: "Y.B. Lu" <yangbo.lu@nxp.com>
-Subject: RE: [v2, 0/7] Add SD UHS-I and eMMC HS200 support for eSDHC
-Date: Fri, 17 Mar 2017 03:01:53 +0000
-Message-ID: <DB6PR0401MB2536C06643318C075620B0E4F8390@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <1488529129-23560-1-git-send-email-yangbo.lu@nxp.com>
- <DB6PR0401MB253672A97F3E14C2BEFF946EF8210@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 7/15] dt-bindings: display: sun4i: Add
+ allwinner,tcon-channel property
+Date: Fri, 17 Mar 2017 11:34:45 +0800
+Message-ID: <CAGb2v67A2T4KeLBttAGLKoo7igBTnQH+5yxN-jJo1k7Ewfd9mQ@mail.gmail.com>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <46fdec2d680d539652f87d79c627973b3a568438.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <20170315173753.6zywfxapdczu2i34@rob-hp-laptop>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB6PR0401MB253672A97F3E14C2BEFF946EF8210@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "'linux-mmc@vger.kernel.org'" <linux-mmc@vger.kernel.org>, "'ulf.hansson@linaro.org'" <ulf.hansson@linaro.org>, 'Adrian Hunter' <adrian.hunter@intel.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will
- Deacon' <will.deacon@arm.com>
-Cc: "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB35SVXDAKGQEIRSUBXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170315173753.6zywfxapdczu2i34@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian,
+On Thu, Mar 16, 2017 at 1:37 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Mar 07, 2017 at 09:56:26AM +0100, Maxime Ripard wrote:
+>> The Allwinner Timings Controller has two, mutually exclusive, channels.
+>> When the binding has been introduced, it was assumed that there would be
+>> only a single user per channel in the system.
+>>
+>> While this is likely for the channel 0 which only connects to LCD displays,
+>> it turns out that the channel 1 can be connected to multiple controllers in
+>> the SoC (HDMI and TV encoders for example). And while the simultaneous use
+>> of HDMI and TV outputs cannot be achieved, switching from one to the other
+>> at runtime definitely sounds plausible.
+>>
+>> Add an extra property, allwinner,tcon-channel, to specify for a given
+>> endpoint which TCON channel it is connected to, while falling back to the
+>> previous mechanism if that property is missing.
+>
+> I think perhaps TCON channels should have been ports rather than
+> endpoints. The fact that the channels are mutually exclusive can be
+> handled in the driver and doesn't really matter in the binding. How
+> painful would it be to rework things to move TCON channel 1 from port 0,
+> endpoint 1 to port 1?
 
-Could you help to review the new version patch-set?
-Thanks a lot.
+Having a separate output port for channel 1 was one option we discussed.
+However it wouldn't work well with the kernel's of_graph based crtc
+detection (drm_of_find_possible_crtcs / drm_of_find_possible_crtcs),
+which has the crtcs bound via the output port. As the logic is used
+by multiple drivers, I'm not sure it's easy to rework or test.
 
+Also, we still have to support old device trees using channel 1 from
+output port 0 endpoint 1. This is the TV encoder on sun5i (A10s/A13/R8).
 
-Best regards,
-Yangbo Lu
-
-> -----Original Message-----
-> From: Y.B. Lu
-> Sent: Thursday, March 09, 2017 10:23 AM
-> To: linux-mmc@vger.kernel.org; ulf.hansson@linaro.org; Adrian Hunter; Rob
-> Herring; Mark Rutland; Catalin Marinas; Will Deacon
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> Xiaobo Xie
-> Subject: RE: [v2, 0/7] Add SD UHS-I and eMMC HS200 support for eSDHC
-> 
-> Any comments on this patchset ?
-> Thanks :)
-> 
-> 
-> Best regards,
-> Yangbo Lu
-> 
-> > -----Original Message-----
-> > From: Yangbo Lu [mailto:yangbo.lu@nxp.com]
-> > Sent: Friday, March 03, 2017 4:19 PM
-> > To: linux-mmc@vger.kernel.org; ulf.hansson@linaro.org; Adrian Hunter;
-> > Rob Herring; Mark Rutland; Catalin Marinas; Will Deacon
-> > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > Xiaobo Xie; Y.B. Lu
-> > Subject: [v2, 0/7] Add SD UHS-I and eMMC HS200 support for eSDHC
-> >
-> > It's complicated to support SD UHS-I and eMMC HS200 for eSDHC because
-> > there're many differences between eSDHC and SD/eMMC spec. Several
-> > differences as below must be considered:
-> > 1. Peripheral clock must be used instead of platform clock.
-> >     - eSDHC could select peripheral clock or platform clock as its
-> clock
-> >       source. According to RM, UHS-I/HS200 must use peripheral clock
-> > since
-> >       it supports higher frequency than platform clock.
-> >     - Patch 1 and patch 6 is to support this.
-> > 2. Signal voltage switching requires a control circuit out of eSDHC.
-> >     - eSDHC supports signal voltage switch from 3.3v to 1.8v by
-> >       eSDHC_PROCTL[VOLT_SEL] bit. This bit changes the value of output
-> >       signal SDHC_VS, and there must be a control circuit out of eSDHC
-> >       to change the signal voltage according to SDHC_VS output signal.
-> >     - Patch 2 is to support this.
-> > 3. eSDHC uses tuning block for tuning procedure.
-> >     - Tuning clock control register must be configured before tuning.
-> >     - Patch 3 is to support this.
-> > 4. Delay is needed between tuning cycles for HS200 tuning.
-> >     - Once a patch removed mdelay between tuning cycles.
-> >       But eSDHC needs it.
-> >     - Patch 4 and patch 5 is to support this.
-> > 5. UHS-I/HS200 modes could be enabled in dts node.
-> >     - Patch 7 is to support this.
-> >
-> > Please review and merge these patches on mmc git tree if no changes
-> > are required.
-> >
-> > Yangbo Lu (7):
-> >   mmc: sdhci-of-esdhc: add peripheral clock support
-> >   mmc: sdhci-of-esdhc: add support for signal voltage switch
-> >   mmc: sdhci-of-esdhc: add tuning support
-> >   mmc: sdhci: add a quirk to restore delay in tuning
-> >   mmc: sdhci-of-esdhc: add delay between tuning cycles
-> >   arm64: dts: ls1046a: add clocks property and compatible for eSDHC
-> node
-> >   arm64: dts: ls1046ardb: add MMC HS200/UHS-1 modes support
-> >
-> >  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts |   8 ++
-> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi    |   3 +-
-> >  drivers/mmc/host/sdhci-esdhc.h                    |   7 +
-> >  drivers/mmc/host/sdhci-of-esdhc.c                 | 167
-> > +++++++++++++++++++++-
-> >  drivers/mmc/host/sdhci.c                          |   3 +-
-> >  drivers/mmc/host/sdhci.h                          |   2 +
-> >  6 files changed, 186 insertions(+), 4 deletions(-)
-> >
-> > --
-> > 2.1.0.27.g96db324
+Regards
+ChenYu
