@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 5/7] clk: hi6220: add debug APB clock
-Date: Fri, 17 Mar 2017 23:02:21 +0800
-Message-ID: <1489762943-25849-6-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v4 7/7] arm64: dts: qcom: msm8916: Add debug unit
+Date: Fri, 17 Mar 2017 23:02:23 +0800
+Message-ID: <1489762943-25849-8-git-send-email-leo.yan@linaro.org>
 References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,42 +20,56 @@ Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Suzuki.Poulose@arm.com, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
-The debug APB clock is absent in hi6220 driver, so this patch is to add
-support for it.
+Add debug unit on Qualcomm msm8916 based platforms, including the
+DragonBoard 410c board.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- drivers/clk/hisilicon/clk-hi6220.c       | 1 +
- include/dt-bindings/clock/hi6220-clock.h | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/clk-hi6220.c
-index c0e8e1f..2ae151c 100644
---- a/drivers/clk/hisilicon/clk-hi6220.c
-+++ b/drivers/clk/hisilicon/clk-hi6220.c
-@@ -134,6 +134,7 @@ static struct hisi_gate_clock hi6220_separated_gate_clks_sys[] __initdata = {
- 	{ HI6220_UART4_PCLK,    "uart4_pclk",    "uart4_src",      CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x230, 8,  0, },
- 	{ HI6220_SPI_CLK,       "spi_clk",       "clk_150m",       CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x230, 9,  0, },
- 	{ HI6220_TSENSOR_CLK,   "tsensor_clk",   "clk_bus",        CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x230, 12, 0, },
-+	{ HI6220_DAPB_CLK,      "dapb_clk",      "cs_dapb",        CLK_SET_RATE_PARENT|CLK_IS_CRITICAL,   0x230, 18, 0, },
- 	{ HI6220_MMU_CLK,       "mmu_clk",       "ddrc_axi1",      CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x240, 11, 0, },
- 	{ HI6220_HIFI_SEL,      "hifi_sel",      "hifi_src",       CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x270, 0,  0, },
- 	{ HI6220_MMC0_SYSPLL,   "mmc0_syspll",   "syspll",         CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x270, 1,  0, },
-diff --git a/include/dt-bindings/clock/hi6220-clock.h b/include/dt-bindings/clock/hi6220-clock.h
-index 6b03c84..b8ba665 100644
---- a/include/dt-bindings/clock/hi6220-clock.h
-+++ b/include/dt-bindings/clock/hi6220-clock.h
-@@ -124,7 +124,10 @@
- #define HI6220_CS_DAPB		57
- #define HI6220_CS_ATB_DIV	58
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 68a8e67..3af814b 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -1104,6 +1104,38 @@
+ 			};
+ 		};
  
--#define HI6220_SYS_NR_CLKS	59
-+/* gate clock */
-+#define HI6220_DAPB_CLK		59
++		debug@850000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0x850000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&CPU0>;
++		};
 +
-+#define HI6220_SYS_NR_CLKS	60
- 
- /* clk in Hi6220 media controller */
- /* gate clocks */
++		debug@852000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0x852000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&CPU1>;
++		};
++
++		debug@854000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0x854000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&CPU2>;
++		};
++
++		debug@856000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0x856000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&CPU3>;
++		};
++
+ 		etm@85c000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85c000 0x1000>;
 -- 
 2.7.4
