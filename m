@@ -1,75 +1,132 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: add dmac nodes for rk3368 SoCs
-Date: Fri, 17 Mar 2017 12:04:19 +0100
-Message-ID: <36338936.qaTCZ9qzt4@phil>
-References: <1488534549-26175-1-git-send-email-huibin.hong@rock-chips.com>
+From: Jan Glauber <jan.glauber-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v12 1/9] dt-bindings: mmc: Add Cavium SOCs MMC bindings
+Date: Fri, 17 Mar 2017 11:51:06 +0100
+Message-ID: <20170317105106.GC3011@hardcore>
+References: <20170310132507.32025-1-jglauber@cavium.com>
+ <20170310132507.32025-2-jglauber@cavium.com>
+ <CAPDyKFqVHN--=AWttMz_uDEkGTO+aX8APM34enDuVxqM6XKYJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488534549-26175-1-git-send-email-huibin.hong@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Huibin Hong <huibin.hong@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, felipe.balbi@linux.intel.com, johnyoun@synopsys.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, andy.yan@rock-chips.com, jic23@kernel.org, wxt@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqVHN--=AWttMz_uDEkGTO+aX8APM34enDuVxqM6XKYJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "Steven J . Hill" <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 3. M=E4rz 2017, 17:49:09 CET schrieb Huibin Hong:
-> Addd dmac bus and dmac peri dts nodes for peripherals,
-> such as I2S, SPI, UART and so on.
-> =
+On Fri, Mar 17, 2017 at 09:31:23AM +0100, Ulf Hansson wrote:
+> On 10 March 2017 at 14:24, Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+> > Add description of Cavium Octeon and ThunderX SOC device tree bindings.
+> >
+> > CC: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >
+> > Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Steven J. Hill <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/mmc/cavium-mmc.txt         | 58 ++++++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/cavium-mmc.txt b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+> > new file mode 100644
+> > index 0000000..225c2be
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+> > @@ -0,0 +1,58 @@
+> > +* Cavium Octeon & ThunderX MMC controller
+> > +
+> > +The highspeed MMC host controller on Caviums SoCs provides an interface
+> > +for MMC and SD types of memory cards.
+> > +
+> > +Supported maximum speeds are the ones of the eMMC standard 4.41 as well
+> > +as the speed of SD standard 4.0. Only 3.3 Volt is supported.
+> > +
+> > +Required properties:
+> > + - compatible : should be one of:
+> > +   cavium,octeon-6130-mmc
+> > +   cavium,octeon-6130-mmc-slot
+> > +   cavium,octeon-7890-mmc
+> > +   cavium,octeon-7890-mmc-slot
+> > +   cavium,thunder-8190-mmc
+> > +   cavium,thunder-8190-mmc-slot
+> > +   cavium,thunder-8390-mmc
+> > +   cavium,thunder-8390-mmc-slot
+> > + - reg : mmc controller base registers
+> > + - clocks : phandle
+> > +
+> > +Optional properties:
+> > + - for cd, bus-width and additional generic mmc parameters
+> > +   please refer to mmc.txt within this directory
+> > + - cavium,cmd-clk-skew : number of coprocessor clocks before sampling command
+> > + - cavium,dat-clk-skew : number of coprocessor clocks before sampling data
+> > +
+> > +Deprecated properties:
+> > +- spi-max-frequency : use max-frequency instead
+> > +- cavium,bus-max-width : use bus-width instead
+> > +
+> > +Examples:
+> > +       mmc_1_4: mmc@1,4 {
+> > +               compatible = "cavium,thunder-8390-mmc";
+> > +               reg = <0x0c00 0 0 0 0>; /* DEVFN = 0x0c (1:4) */
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +               clocks = <&sclk>;
+> > +
+> > +               mmc-slot@0 {
+> > +                       compatible = "cavium,thunder-8390-mmc-slot";
+> > +                       reg = <0>;
+> 
+> Just realized that I forgotten to follow up about the details for I
+> think we should generally describe slots nodes in DT.
+> 
+> Currently we treat a child node of a host device node, with reg=0 as
+> being an embedded mmc card [1] (in case it has the "mmc-card"
+> compatible set).
+> When reg is 1->7, those are reserved for SDIO function nodes [2] (as
+> those can be exactly 7, according to the SDIO spec).
+> 
+> Let's take the above into account and consider that a slot node may
+> also require a its own child node as to describe an embedded mmc card
+> or SDIO funcs. In this context I don't think it makes sense to use SoC
+> specific compatibles for slot nodes, instead I suggest we use only
+> "mmc-slot".
+> 
+> Does that makes sense?
 
-> Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
+The slot compatible is currently not used, setting it to "mmc-slot" 
+looks like good to me.
 
-applied for 4.12, with the changes described below
+--Jan
 
-> ---
->  arch/arm64/boot/dts/rockchip/rk3368.dtsi | 31
-> +++++++++++++++++++++++++++++++ 1 file changed, 31 insertions(+)
-> =
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3368.dtsi index a635adc..c9be1b2 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> @@ -204,6 +204,37 @@
->  				     <&cpu_b2>, <&cpu_b3>;
->  	};
-> =
-
-> +	amba {
-
-moved "amba" above "arm-pmu", please mind the alphabetical ordering in the =
-
-future.
-
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-> +		ranges;
-> +
-> +		dmac_peri: dma-controller@ff250000 {
-> +			compatible =3D "arm,pl330", "arm,primecell";
-> +			reg =3D <0x0 0xff250000 0x0 0x4000>;
-> +			interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +			#dma-cells =3D <1>;
-> +			clocks =3D <&cru ACLK_DMAC_PERI>;
-> +			clock-names =3D "apb_pclk";
-> +			arm,pl330-broken-no-flushp;
-> +			peripherals-req-type-burst;
-
-dropped peripherals-req-type-burst, as it is not part of mainline (yet?).
-Please send a patch readding that if it gets submitted and accepted at some =
-
-point.
-
-
-Heiko
+> > +                       vmmc-supply = <&mmc_supply_3v3>;
+> > +                       max-frequency = <42000000>;
+> > +                       bus-width = <4>;
+> > +                       cap-sd-highspeed;
+> > +               };
+> > +
+> > +               mmc-slot@1 {
+> > +                       compatible = "cavium,thunder-8390-mmc-slot";
+> > +                       reg = <1>;
+> > +                       vmmc-supply = <&mmc_supply_3v3>;
+> > +                       max-frequency = <42000000>;
+> > +                       bus-width = <8>;
+> > +                       cap-mmc-highspeed;
+> > +                       non-removable;
+> > +               };
+> > +       };
+> > --
+> > 2.9.0.rc0.21.g7777322
+> >
+> 
+> Kind regards
+> Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
