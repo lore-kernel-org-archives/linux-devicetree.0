@@ -1,116 +1,88 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Fri, 17 Mar 2017 18:04:42 +0100
-Message-ID: <7730cff6-6e85-c98d-0315-bd3888d3aeb1@grandegger.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
- <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
- <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
- <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
- <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
- <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
- <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
- <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
- <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
- <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
- <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
- <0362316b-ef76-1733-dbfc-8b644f758db9@timesys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <0362316b-ef76-1733-dbfc-8b644f758db9@timesys.com>
-Sender: netdev-owner@vger.kernel.org
-To: Akshay Bhat <akshay.bhat@timesys.com>, Akshay Bhat <nodeax@gmail.com>
-Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 6/6] ARM: dts: rockchip: rename RK1108-evb to RV1108-evb
+Date: Fri, 17 Mar 2017 18:18:40 +0100
+Message-ID: <20170317171840.4683-7-heiko@sntech.de>
+References: <20170317171840.4683-1-heiko@sntech.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170317171840.4683-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Akshay,
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Am 17.03.2017 um 17:00 schrieb Akshay Bhat:
-> Hi Wolfgang,
->
-> On 03/17/2017 03:39 AM, Wolfgang Grandegger wrote:
->> Hello Akshay,
->>
->> Am 16.03.2017 um 23:29 schrieb Akshay Bhat:
->>> Hi Wolfgang,
->>>
->>> On 03/16/2017 04:02 PM, Wolfgang Grandegger wrote:
->>>>
->>>> Looks much better now! There are message for state changes to error
->>>> warning and passive. Just the following message is not correct:
->>>>
->>>>  (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19
->>>> ERRORFRAME
->>>>     controller-problem{}
->>>>     error-counter-tx-rx{{95}{25}}
->>>>
->>>> Sorry, forgot to mention... the function can_change_state() [1]
->>>> should be used for that purpose, if possible. It fixes the issue
->>>> above as well.
->>>>
->>>
->>> The updated driver (the one used to create the above log) is using
->>> can_change_state() function. data[1] 40 corresponds to
->>> CAN_ERR_CRTL_ACTIVE, so looks correct? Could it be that the can-utils I
->>> am using is old and not reporting state change?
->>
->> Hm, yes. The raw data looks correct. You could download and build a
->> recent version from "https://github.com/linux-can/can-utils" to check.
->> It could also be a bug.
->>
->
-> Turned out to be a old version of can-utils. Using the above git tree
-> reports the flag.
->
->  (000.200308)  can0  20000004   [8]  00 40 00 00 00 00 5F 00   ERRORFRAME
->         controller-problem{back-to-error-active}
->         error-counter-tx-rx{{95}{0}}
->
->>> Enabling BUSOFF/ERRP/ERRW bits in STATFE did not generate any interrupts
->>> on the INT pin. Should we make it a requirement that both INT and STAT
->>> pins need to be connected in hardware for the driver to do the error
->>> reporting?
->>
->> As I said, it's the better solution, especially if interrupt flooding
->> does harm. How does your system behave when bus errors come in due to no
->> cable connected?
->>
->
-> I did not see any issues on the system with the cable disconnected. In
-> my particular setup with the cable disconnected the system goes to
-> tx-error-passive and does not get any further interrupts until a state
-> change occurs.
+Rockchip finally named the SOC as RV1108, so change it
+for compatible.
 
-Hm, that's unusual. Cable disconnected and then send a message:
+The rk1108/rv1108 is completely new to the market, so there no real
+devices exist in the wild, only the Rockchip internal evaluation
+board. Therefore we're not breaking any existing devices when
+changing compatible values.
 
-$ grep /proc/interrupts; sleep 10; /proc/interrupts
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-should make things clear. But maybe it's a clever chip and it does stop 
-sending error messages if the error counter does not change any more. 
-After bus-off, the chip is quiet, of course. Should have a closer look 
-to the CAN standard.
+[added paragraph about no real devices existing]
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/rockchip.txt   | 4 ++--
+ arch/arm/boot/dts/Makefile                           | 2 +-
+ arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+ rename arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} (95%)
 
->> So far using NAPI was mandatory. There is the problem of out-of-order
->> message reception if handled in the isr on multi processor systems.
->> Marc, what is the current policy?
->>
->
-> Since this is a SPI based CAN, I am wary for any additional latencies
-> NAPI might introduce. The RX handling is being done at the very
-> beginning of the ISR for this reason.
->
-> Can we go ahead with the existing implementation and re-visit this at a
-> later time?
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index cc4ace6397ab..9901cbd6d11a 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -111,9 +111,9 @@ Rockchip platforms device tree bindings
+     Required root node properties:
+       - compatible = "rockchip,px5-evb", "rockchip,px5", "rockchip,rk3368";
+ 
+-- Rockchip RK1108 Evaluation board
++- Rockchip RV1108 Evaluation board
+     Required root node properties:
+-      - compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
++      - compatible = "rockchip,rv1108-evb", "rockchip,rv1108";
+ 
+ - Rockchip RK3368 evb:
+     Required root node properties:
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 011808490fed..d0d37d028790 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -674,7 +674,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
+ 	arm-realview-pba8.dtb \
+ 	arm-realview-pbx-a9.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+-	rk1108-evb.dtb \
++	rv1108-evb.dtb \
+ 	rk3036-evb.dtb \
+ 	rk3036-kylin.dtb \
+ 	rk3066a-bqcurie2.dtb \
+diff --git a/arch/arm/boot/dts/rk1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
+similarity index 95%
+rename from arch/arm/boot/dts/rk1108-evb.dts
+rename to arch/arm/boot/dts/rv1108-evb.dts
+index 88fe0a8c4faa..58cf4ac079c3 100644
+--- a/arch/arm/boot/dts/rk1108-evb.dts
++++ b/arch/arm/boot/dts/rv1108-evb.dts
+@@ -43,8 +43,8 @@
+ #include "rv1108.dtsi"
+ 
+ / {
+-	model = "Rockchip RK1108 Evaluation board";
+-	compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
++	model = "Rockchip RV1108 Evaluation board";
++	compatible = "rockchip,rv1108-evb", "rockchip,rv1108";
+ 
+ 	memory@60000000 {
+ 		device_type = "memory";
+-- 
+2.11.0
 
-Likely yes, as Marc has already reviewed the driver once.
-
-BTW: what system board/processor are you using?
-
-> Thanks again for all your help in reviewing/improving the driver :)
-
-You are welcome!
-
-Wolfgang.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
