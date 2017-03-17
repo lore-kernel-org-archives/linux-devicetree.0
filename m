@@ -1,117 +1,62 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 3/7] coresight: refactor with function of_coresight_get_cpu
-Date: Fri, 17 Mar 2017 23:02:19 +0800
-Message-ID: <1489762943-25849-4-git-send-email-leo.yan@linaro.org>
-References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/5] rtc: Add rtc-sh
+Date: Fri, 17 Mar 2017 16:05:24 +0100
+Message-ID: <20170317150524.oijto6gtjxycdnwn@piout.net>
+References: <20170316175112.27913-1-chris.brandt@renesas.com>
+ <20170316175112.27913-3-chris.brandt@renesas.com>
+ <CAMuHMdVu0dQjptyW0F5YS+V6sixXTM3P6VWq2=8BQ5njUOXf-Q@mail.gmail.com>
+ <SG2PR06MB1165A9931C930DF9BCD5C0A98A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdW0nHiZkE_RxVLX3G0MuwQLPHVFyNq5C1tx0yAqDQefaA@mail.gmail.com>
+ <SG2PR06MB11653BB788CADBEE78FE4CF58A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdWs3NtKLiBnKCmxGYNBW3zzWYydj=JGKr+mH7ao97L2_Q@mail.gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Suzuki.Poulose@arm.com, sudeep.holla@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBNXWV7DAKGQEWMEFYUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWs3NtKLiBnKCmxGYNBW3zzWYydj=JGKr+mH7ao97L2_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is refactor to add function of_coresight_get_cpu(), so it's used to
-retrieve CPU id for coresight component. Finally can use it as a common
-function for multiple places.
+Hi,
 
-Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- drivers/hwtracing/coresight/of_coresight.c | 42 +++++++++++++++++++-----------
- include/linux/coresight.h                  |  2 ++
- 2 files changed, 29 insertions(+), 15 deletions(-)
+On 17/03/2017 at 14:55:48 +0100, Geert Uytterhoeven wrote:
+> >> it would still be good to have phandles to the external clock sources as
+> >> well, as that describes the hardware topology.
+> >
+> > I'm confused, you mean make new clocks node for RTC_X1 (fixed at 32.768kHZ) and
+> > RTC_X3 (fixed at 4MHz), but then not really do anything with then? (the driver
+> 
+> You still do something with them, as they'll be linked from the rtc device node.
+> 
+> > doesn't need them)
+> 
+> The driver may use them in the future.
+> E.g. to select among X1, X3, or EXTAL, depending on availability.
+> 
 
-diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-index 917ca39..7a60f2b 100644
---- a/drivers/hwtracing/coresight/of_coresight.c
-+++ b/drivers/hwtracing/coresight/of_coresight.c
-@@ -101,15 +101,38 @@ static int of_coresight_alloc_memory(struct device *dev,
- 	return 0;
- }
- 
-+int of_coresight_get_cpu(struct device_node *node)
-+{
-+	int cpu;
-+	bool found;
-+	struct device_node *dn, *np;
-+
-+	dn = of_parse_phandle(node, "cpu", 0);
-+
-+	/* Affinity defaults to CPU0 */
-+	if (!dn)
-+		return 0;
-+
-+	for_each_possible_cpu(cpu) {
-+		np = of_get_cpu_node(cpu, NULL);
-+		found = (dn == np);
-+		of_node_put(np);
-+		if (found)
-+			break;
-+	}
-+	of_node_put(dn);
-+
-+	/* Affinity to CPU0 if no cpu nodes are found */
-+	return found ? cpu : 0;
-+}
-+
- struct coresight_platform_data *of_get_coresight_platform_data(
- 				struct device *dev, struct device_node *node)
- {
--	int i = 0, ret = 0, cpu;
-+	int i = 0, ret = 0;
- 	struct coresight_platform_data *pdata;
- 	struct of_endpoint endpoint, rendpoint;
- 	struct device *rdev;
--	bool found;
--	struct device_node *dn, *np;
- 	struct device_node *ep = NULL;
- 	struct device_node *rparent = NULL;
- 	struct device_node *rport = NULL;
-@@ -176,18 +199,7 @@ struct coresight_platform_data *of_get_coresight_platform_data(
- 		} while (ep);
- 	}
- 
--	dn = of_parse_phandle(node, "cpu", 0);
--	for_each_possible_cpu(cpu) {
--		np = of_get_cpu_node(cpu, NULL);
--		found = (dn == np);
--		of_node_put(np);
--		if (found)
--			break;
--	}
--	of_node_put(dn);
--
--	/* Affinity to CPU0 if no cpu nodes are found */
--	pdata->cpu = found ? cpu : 0;
-+	pdata->cpu = of_coresight_get_cpu(node);
- 
- 	return pdata;
- }
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 2a5982c..7b29743 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -263,9 +263,11 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
- #endif
- 
- #ifdef CONFIG_OF
-+extern int of_coresight_get_cpu(struct device_node *node);
- extern struct coresight_platform_data *of_get_coresight_platform_data(
- 				struct device *dev, struct device_node *node);
- #else
-+static int of_coresight_get_cpu(struct device_node *node) { return 0; }
- static inline struct coresight_platform_data *of_get_coresight_platform_data(
- 	struct device *dev, struct device_node *node) { return NULL; }
- #endif
+I'm on Geert's side here, I wouldn't rely on the bootloader to set
+everything up correctly.
+
 -- 
-2.7.4
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
