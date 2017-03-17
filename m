@@ -1,70 +1,63 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] spi: Add spi-bits-per-word binding.
-Date: Fri, 17 Mar 2017 21:21:43 +0000
-Message-ID: <20170317212143.bogj6efzyvvf24yd@sirena.org.uk>
-References: <20170220153512.6563-1-adrian.fiergolski@cern.ch>
- <20170221190830.xyubgimyc2w5p5v6@sirena.org.uk>
- <983e943b-30f2-7d80-294a-df29bca11738@cern.ch>
- <20170313175504.mpwjxqbhc4yxk434@sirena.org.uk>
- <12c66ecf-8472-c108-d2b4-1d6c3a8e6e74@cern.ch>
- <CAMuHMdVLUrFnTY+swpxd0yUZ3iMR0_Wi1Dn05NQpYc_4=rA19Q@mail.gmail.com>
- <5f86da77-c3f9-24e4-6c9a-3e2554bb49d3@cern.ch>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH] ARM: sun8i: a23/a33: drop bl_en_pin GPIO pinmux in reference
+ design DTSI
+Date: Sat, 18 Mar 2017 05:23:15 +0800
+Message-ID: <20170317212315.2561-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nhvgtzck7k2bdoun"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5f86da77-c3f9-24e4-6c9a-3e2554bb49d3@cern.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Fiergolski <Adrian.Fiergolski@cern.ch>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.xyz>
 List-Id: devicetree@vger.kernel.org
 
+The bl_en_pin GPIO pinmux is configured as "gpio_in", which makes it
+conflicts with the real GPIO usage (out), and makes the backlight not
+usable.
 
---nhvgtzck7k2bdoun
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Drop the GPIO pinmux for it, thus this GPIO can be correctly used.
 
-On Mon, Mar 13, 2017 at 09:26:04PM +0100, Adrian Fiergolski wrote:
-> On 13.03.2017 at 20:57, Geert Uytterhoeven wrote:
-> > On Mon, Mar 13, 2017 at 7:12 PM, Adrian Fiergolski
-d
-> >>> I can't see any way in which it follows from the above that it's a good
-> >>> idea to try to override bits per word settings in the device tree, that
-> >>> just wastes user time and is an abstraction failure.  We need better
-> >>> handling of defaults done purely in the kernel.
+Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+---
 
-> >> If enforcing by device tree specific for a given device driver SPI_CPHA,
-> >> SPIC_CPOL, SPI_CS_HIGH, max_speed_hz, etc. if fine form the abstraction
-> >> point of view, why it doesn't apply to bits_per_word ?
+Please patch latest git tree master too, as this issue affects 4.11-rc.
 
-> > Because unlike polarity, phase, and speed, bits_per_word is a property
-> > of the communication protocol.
+ arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi | 7 -------
+ 1 file changed, 7 deletions(-)
 
-> > E.g. you can talk to the same EEPROM using different polarities, phase, or
-> > speed, but bits_per_word is fixed.
-
-> In this case, currently, what is the proper way to handle SPI
-> controllers (spi-xilinx) without 8-bit transmission support ?
-
-As I said above we should fix the handling of defaults such that it is
-possible to instantiate a 16 bit using device on a 16 bit supporting
-controller; there should be no need to have anything about device tree
-in this.
-
---nhvgtzck7k2bdoun
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljMU2YACgkQJNaLcl1U
-h9AiBAf/USaREgxvBaZGRu4zT+dwv0/+4xF+wfbsHR9pHZ8/kXOdEmmWFXqEH40p
-z88GoIrpr7V0MRzjkGYbT2cgsb1GyC2UN1PmCWbRoHRAaGHuqhVDVEue/sFB8wkJ
-NUqwjW9H5uWCwo1TF2Kxr2BNwbdn5jRu7UKL6pIJijJOIG7s6hVjxV3D/nsRi9uS
-tGOTXtWWIGAISHjQWluRqKvQ0/hl89uU9bEBG2Tp0N36Mr8Nn0WWEaJgPfzFLK+p
-nQP8AEzqxV8Y75bmKK1AKapNxcAFMMay3yhmy6cRySHSRsAEVLGxmZPEzzpMnJMC
-RvqJRPK795ksOWR59nVDbHM7nFxM7g==
-=2nST
------END PGP SIGNATURE-----
-
---nhvgtzck7k2bdoun--
+diff --git a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
+index 9f097a3d723d..4ae638901159 100644
+--- a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
++++ b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
+@@ -50,8 +50,6 @@
+ 
+ 	backlight: backlight {
+ 		compatible = "pwm-backlight";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&bl_en_pin>;
+ 		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+ 		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+ 		default-brightness-level = <8>;
+@@ -83,11 +81,6 @@
+ };
+ 
+ &pio {
+-	bl_en_pin: bl_en_pin@0 {
+-		pins = "PH6";
+-		function = "gpio_in";
+-	};
+-
+ 	mmc0_cd_pin: mmc0_cd_pin@0 {
+ 		pins = "PB4";
+ 		function = "gpio_in";
+-- 
+2.12.0
