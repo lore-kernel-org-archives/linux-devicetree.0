@@ -1,164 +1,91 @@
-From: m18063 <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v2 1/2] drivers: pwm: pwm-atmel: switch to atomic PWM
-Date: Fri, 17 Mar 2017 11:07:43 +0200
-Message-ID: <7947e576-d2fa-9e5a-3b46-8001344218e7@microchip.com>
-References: <1488468525-28726-1-git-send-email-claudiu.beznea@microchip.com>
- <1488468525-28726-2-git-send-email-claudiu.beznea@microchip.com>
- <20170316121409.3e910813@bbrezillon>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] mfd: wm831x: Add basic device tree binding
+Date: Fri, 17 Mar 2017 09:15:02 +0000
+Message-ID: <20170317091502.kzcrhj7vlku5mtq7@dell>
+References: <1489592384-11510-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20170316140019.eoe757vox5wrlkmu@dell>
+ <20170316143144.GL6986@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170316121409.3e910813@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com, alexandre.belloni@free-electrons.com, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170316143144.GL6986-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Thu, 16 Mar 2017, Charles Keepax wrote:
 
+> On Thu, Mar 16, 2017 at 02:00:19PM +0000, Lee Jones wrote:
+> > On Wed, 15 Mar 2017, Charles Keepax wrote:
+> > 
+> > > Add the basic ability to register the device through device tree, more
+> > > work is needed to get each individual sub-driver functioning correctly
+> > > but this is enough to get the device to probe from device tree.
+> > > 
+> > > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> > > ---
+> > >  static int wm831x_i2c_probe(struct i2c_client *i2c,
+> > >  			    const struct i2c_device_id *id)
+> > >  {
+> > > +	struct wm831x_pdata *pdata = dev_get_platdata(&i2c->dev);
+> > >  	struct wm831x *wm831x;
+> > > +	enum wm831x_parent type;
+> > >  	int ret;
+> > >  
+> > > +	if (i2c->dev.of_node) {
+> > > +		const struct of_device_id *id = of_match_device(wm831x_of_match,
+> > > +								&i2c->dev);
+> > 
+> > Not keen on this.  Please declare the variable up with the others.
+> > 
+> 
+> They are never going to be used anywhere else in the function.
+> Again I can if you feel strongly but isn't it really better to
+> limit the scope of the variables if they are only being used
+> locally.
 
-On 16.03.2017 13:14, Boris Brezillon wrote:
-> Hi Claudiu,
->
-> On Thu, 2 Mar 2017 17:28:44 +0200
-> Claudiu Beznea <claudiu.beznea@microchip.com> wrote:
->
->> The currently Atmel PWM controllers supported by this driver
->> could change period or duty factor without channel disable,
->> for regular channels (sama5d3 support this by using period
->> or duty factor update registers, sam9rl support this by
->> writing channel update register and select the corresponding
->> update: period or duty factor). The chip doesn't support run
->> time changings of signal polarity. To take advantage of
->> atomic PWM framework and let controller works without glitches,
->> in this patch only the duty factor could be changed without
->> disabling PWM channel. For period and signal polarity the
->> atomic PWM is simulated by disabling + enabling the right PWM channel.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
->>
->> ---
->>  drivers/pwm/pwm-atmel.c | 271 ++++++++++++++++++++++++------------------------
->>  1 file changed, 138 insertions(+), 133 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
->> index 67a7023..3db82c3 100644
->> --- a/drivers/pwm/pwm-atmel.c
->> +++ b/drivers/pwm/pwm-atmel.c
->> @@ -58,17 +58,30 @@
->>  #define PWM_MAX_PRD		0xFFFF
->>  #define PRD_MAX_PRES		10
->>  
->> +struct atmel_pwm_reg_data {
->> +	u8 period;
->> +	u8 period_upd;
->> +	u8 duty;
->> +	u8 duty_upd;
->> +};
->> +
->> +struct atmel_pwm_data {
->> +	void (*update_cdty)(struct pwm_chip *chip, struct pwm_device *pwm,
->> +			    unsigned long cdty);
->> +	void (*set_cprd_cdty)(struct pwm_chip *chip, struct pwm_device *pwm,
->> +			      unsigned long cprd, unsigned long cdty);
->> +	const struct atmel_pwm_reg_data regs;
-> If you go for this per-IP reg layout definition approach, you don't need
-> the ->update_cdty()/->set_cprd_cdty() hooks anymore.
+I understand the motivation, but if we did that all the time, the code
+would look pretty dire IMHO.
 
-Agree, I will send another version.
+> > > +		unsigned long of_type = (unsigned long)id->data;
+> > 
+> > And this one.
+> > 
+> > > +		type = (enum wm831x_parent)of_type;
+> > 
+> > Looks like you don't even need of_type.
+> > 
+> > Just cast id->data straight into wm81x_parent.
+> 
+> Pretty sure you will get a warning on 64-bit systems if I do
+> that.
 
->
->> +};
->> +
-> [...]
->
->> +static int atmel_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->> +			   struct pwm_state *state)
->> +{
->> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
->> +	struct pwm_state cstate;
->> +	unsigned long cprd, cdty;
->> +	u32 pres, val;
->> +	bool pwm_reset = false;
->> +	int ret;
->> +
->> +	pwm_get_state(pwm, &cstate);
->> +
->> +	if (cstate.enabled &&
->> +	    (cstate.polarity != state->polarity ||
->> +	     cstate.period != state->period))
->> +		pwm_reset = true;
-> You can move that in the 'if (state->enabled)' block, but I'm not even
-> sure this is really needed (see below).
+What makes you think that?
 
-Agree. I will send another version. Sorry for the noise.
+> > > +	} else {
+> > > +		type = (enum wm831x_parent)id->driver_data;
+> > > +	}
+> > 
+> > No need for bracketing here.
+> > 
+> 
+> Kernel coding standards if one side  of the if has both should.
 
->
->> +
->> +	if (state->enabled) {
->> +		if (cstate.enabled && !pwm_reset) {
-> 		if (cstate.enabled &&
-> 		    (cstate.polarity != state->polarity ||
-> 		     cstate.period != state->period)) {
->
->> +			cprd = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm,
->> +						  atmel_pwm->data->regs.period);
->> +			atmel_pwm_calculate_cdty(state, cprd, &cdty);
->> +			atmel_pwm->data->update_cdty(chip, pwm, cdty);
->> +			return 0;
->> +		}
->> +
->> +		ret = atmel_pwm_calculate_cprd_and_pres(chip, state, &cprd,
->> +							&pres);
->> +		if (ret) {
->> +			dev_err(chip->dev,
->> +				"failed to calculate cprd and prescaler\n");
->> +			return ret;
->> +		}
->> +
->> +		atmel_pwm_calculate_cdty(state, cprd, &cdty);
->> +
->> +		if (pwm_reset) {
-> 		if (cstate.enabled) {
->
->> +			atmel_pwm_disable(chip, pwm, false);
->> +		} else {
->> +			ret = clk_enable(atmel_pwm->clk);
->> +			if (ret) {
->> +				dev_err(chip->dev, "failed to enable clock\n");
->> +				return ret;
->> +			}
->> +		}
->> +
->> +		/* It is necessary to preserve CPOL, inside CMR */
->> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
->> +		val = (val & ~PWM_CMR_CPRE_MSK) | (pres & PWM_CMR_CPRE_MSK);
->> +		if (state->polarity == PWM_POLARITY_NORMAL)
->> +			val &= ~PWM_CMR_CPOL;
->> +		else
->> +			val |= PWM_CMR_CPOL;
->> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
->> +		atmel_pwm->data->set_cprd_cdty(chip, pwm, cprd, cdty);
->> +		mutex_lock(&atmel_pwm->isr_lock);
->> +		atmel_pwm->updated_pwms |= atmel_pwm_readl(atmel_pwm, PWM_ISR);
->> +		atmel_pwm->updated_pwms &= ~(1 << pwm->hwpwm);
->> +		mutex_unlock(&atmel_pwm->isr_lock);
->> +		atmel_pwm_writel(atmel_pwm, PWM_ENA, 1 << pwm->hwpwm);
->> +	} else if (cstate.enabled) {
->> +		atmel_pwm_disable(chip, pwm, true);
->> +	}
->> +
->> +	return 0;
->>  }
+Yes, my bad.  I retract this one.
 
-Thank you,
-Claudiu
+/me has been working on Zephyr too much recently (where *everything*
+has to be bracketed -- I guess I'm getting a bit sensitive to
+over-bracketing) :)
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
