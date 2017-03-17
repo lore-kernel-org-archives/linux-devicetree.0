@@ -1,42 +1,76 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [v3 2/3] Documentation: bindings: add description of PHY delays
- for sdhci-cadence
-Date: Sat, 18 Mar 2017 02:29:41 +0900
-Message-ID: <CAK7LNAT5FQY6yQT43SHFYVLVVsimiYtOCe+P9p55zj3+ey4mwQ@mail.gmail.com>
-References: <1489754302-10996-1-git-send-email-piotrs@cadence.com> <1489754417-13639-1-git-send-email-piotrs@cadence.com>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Fri, 17 Mar 2017 14:49:27 -0300
+Message-ID: <20170317144927.1298d5b3@vento.lan>
+References: <20170310140124.GV21222@n2100.armlinux.org.uk>
+ <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+ <20170310125342.7f047acf@vento.lan>
+ <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+ <20170311082549.576531d0@vento.lan>
+ <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+ <20170314004533.3b3cd44b@vento.lan>
+ <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+ <20170317114203.GZ21222@n2100.armlinux.org.uk>
+ <1489752127.2905.49.camel@pengutronix.de>
+ <20170317121608.GE21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489754417-13639-1-git-send-email-piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Piotr Sroka <piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170317121608.GE21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.orgSakari Ailus <sakari.ailu>
 List-Id: devicetree@vger.kernel.org
 
-Hi Piotr,
-
-2017-03-17 21:40 GMT+09:00 Piotr Sroka <piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>:
-> DTS properties are used instead of fixed data
-> because PHY settings can be different for different chips/boards.
-> Add description of new DLL PHY delays.
->
-> Signed-off-by: Piotr Sroka <piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-
-
-I think you have a chance for v4.
-
-Next time, please follow Rob's suggestion
-
-> For the subject: "dt-bindings: mmc: ..."
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RW0gRnJpLCAxNyBNYXIgMjAxNyAxMjoxNjowOCArMDAwMApSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
+dXggPGxpbnV4QGFybWxpbnV4Lm9yZy51az4gZXNjcmV2ZXU6Cgo+IE9uIEZyaSwgTWFyIDE3LCAy
+MDE3IGF0IDAxOjAyOjA3UE0gKzAxMDAsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4gPiBJIHRoaW5r
+IG1vc3Qgb2YgdGhlIHNpbXBsZSwgZml4ZWQgcGlwZWxpbmUgdXNlIGNhc2VzIGNvdWxkIGJlIGhh
+bmRsZWQgYnkKPiA+IGxpYnY0bDIsIGJ5IGFsbG93aW5nIHRvIHBhc3MgYSB2NGwyIHN1YmRldmlj
+ZSBwYXRoIHRvIHY0bDJfb3Blbi4gSWYgdGhhdAo+ID4gZnVuY3Rpb24gaW50ZXJuYWxseSB3b3Vs
+ZCBzZXQgdXAgdGhlIG1lZGlhIGxpbmtzIHRvIHRoZQo+ID4gbmVhcmVzdCAvZGV2L3ZpZGVvIGlu
+dGVyZmFjZSwgcHJvcGFnYXRlIGZvcm1hdCwgcmVzb2x1dGlvbiBhbmQgZnJhbWUKPiA+IGludGVy
+dmFscyBpZiBuZWNlc3NhcnksIGFuZCByZXR1cm4gYW4gZmQgdG8gdGhlIHZpZGVvIGRldmljZSwg
+dGhlcmUnZCBiZQo+ID4gbm8gYWRkaXRpb25hbCBjb21wbGV4aXR5IGZvciB0aGUgdXNlcnMgYmV5
+b25kIHNlbGVjdGluZyB0aGUgdjRsMl9zdWJkZXYKPiA+IGluc3RlYWQgb2YgdGhlIHZpZGVvIGRl
+dmljZS4gIAo+IAo+IC4uLiB3aGljaCB3b3VsZCB0aGVuIHJlcXVpcmUgZ3N0cmVhbWVyIHRvIGJl
+IG1vZGlmaWVkIHRvby4gVGhlIGdzdHJlYW1lcgo+IHY0bDIgcGx1Z2luIGxvb2tzIGZvciAvZGV2
+L3ZpZGVvKiBvciAvZGV2L3Y0bDIvdmlkZW8qIGRldmljZXMgYW5kIG1vbml0b3JzCj4gdGhlc2Ug
+Zm9yIGNoYW5nZXMsIHNvIGdzdHJlYW1lciBhcHBsaWNhdGlvbnMga25vdyB3aGljaCBjYXB0dXJl
+IGRldmljZXMKPiBhcmUgYXZhaWxhYmxlOgo+IAo+ICAgY29uc3QgZ2NoYXIgKnBhdGhzW10gPSB7
+ICIvZGV2IiwgIi9kZXYvdjRsMiIsIE5VTEwgfTsKPiAgIGNvbnN0IGdjaGFyICpuYW1lc1tdID0g
+eyAidmlkZW8iLCBOVUxMIH07Cj4gCj4gICAvKiBBZGQgc29tZSBkZXBlZGVuY3ksIHNvIHRoZSBk
+eW5hbWljIGZlYXR1cmVzIGdldCB1cGRhdGVkIHVwb24gY2hhbmdlcyBpbgo+ICAgICogL2Rldi92
+aWRlbyogKi8KPiAgIGdzdF9wbHVnaW5fYWRkX2RlcGVuZGVuY3kgKHBsdWdpbiwKPiAgICAgICBO
+VUxMLCBwYXRocywgbmFtZXMsIEdTVF9QTFVHSU5fREVQRU5ERU5DWV9GTEFHX0ZJTEVfTkFNRV9J
+U19QUkVGSVgpOwo+IAo+IEkgaGF2ZW4ndCBjaGVja2VkIHlldCB3aGV0aGVyIHN5cy92NGwyL2dz
+dHY0bDJkZXZpY2Vwcm92aWRlci5jIGtub3dzCj4gYW55dGhpbmcgYWJvdXQgdGhlIHY0bDIgc3Vi
+ZGV2cy4KCk5vdCBvbmx5IGdzdHJlYW1lciBkbyB0aGF0LCBidXQgYWxsIHNpbXBsZSBWNEwyIGFw
+cGxpY2F0aW9ucywgYWx0aG91Z2gKb24gbW9zdCBvZiB0aGVtLCB5b3UgY2FuIGVpdGhlciBwYXNz
+IGEgY29tbWFuZCBsaW5lIGFyZ3VtZW50IG9yIHNldHVwCnRoZSBwYXRjaCB2aWEgR1VJLgoKQnR3
+LCBJJ3ZlIG5vIGlkZWEgZnJvbSB3aGVyZSBnc3RyZWFtZXIgdG9vayAvZGV2L3Y0bDIgOi0pCkkn
+bSB5ZXQgdG8gZmluZCBhIGRpc3RyaWJ1dGlvbiB1c2luZyBpdC4KCk9uIHRoZSBvdGhlciBoYW5k
+LCAvZGV2L3Y0bC9ieS1wYXRjaCBhbmQgL2Rldi92NGwvYnktaWQgYXJlIHVzdWFsIGRpcmVjdG9y
+aWVzCndoZXJlIFY0TDIgZGV2aWNlcyBjYW4gYmUgZm91bmQsIGFuZCBzaG91bGQgcHJvdmlkZSBw
+ZXJzaXN0ZW50IG5hbWVzLiBTbywgSU1ITywKZ3N0IHNob3VsZCBwcmVmZXIgdGhvc2UgbmFtZXMs
+IHdoZW4gdGhleSBleGlzdDoKCiQgdHJlZSAvZGV2L3Y0bAovZGV2L3Y0bArilJzilIDilIAgYnkt
+aWQK4pSCwqDCoCDilJzilIDilIAgdXNiLTA0NmRfSERfUHJvX1dlYmNhbV9DOTIwXzU1REExQ0NG
+LXZpZGVvLWluZGV4MCAtPiAuLi8uLi92aWRlbzEK4pSCwqDCoCDilJTilIDilIAgdXNiLVN1bnBs
+dXNfbU1vYmlsZV9JbmNfVVNCX1dlYi1DQU0tdmlkZW8taW5kZXgwIC0+IC4uLy4uL3ZpZGVvMAri
+lJTilIDilIAgYnktcGF0aAogICAg4pSc4pSA4pSAIHBsYXRmb3JtLTNmOTgwMDAwLnVzYi11c2It
+MDoxLjI6MS4wLXZpZGVvLWluZGV4MCAtPiAuLi8uLi92aWRlbzEKICAgIOKUlOKUgOKUgCBwbGF0
+Zm9ybS0zZjk4MDAwMC51c2ItdXNiLTA6MS41OjEuMC12aWRlby1pbmRleDAgLT4gLi4vLi4vdmlk
+ZW8wCgoKCgpUaGFua3MsCk1hdXJvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qu
+b3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaXZlcmRldi1kZXZlbAo=
