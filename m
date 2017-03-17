@@ -1,62 +1,55 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 0/6] Rename RK1108 to RV1108
-Date: Fri, 17 Mar 2017 18:18:34 +0100
-Message-ID: <20170317171840.4683-1-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v2 1/6] dt-bindings: rockchip,pinctrl: rename RK1108 to RV1108
+Date: Fri, 17 Mar 2017 18:18:35 +0100
+Message-ID: <20170317171840.4683-2-heiko@sntech.de>
+References: <20170317171840.4683-1-heiko@sntech.de>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170317171840.4683-1-heiko@sntech.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, andy.yan@rock-chips.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-The former rk1108 got a new name: rv1108. It is still early for its
-development and there are no devices in the wild, except the internal
-evaluation board. So we're somewhat safe in reanming things now,
-before things spread to much.
+From: Andy Yan <andy.yan@rock-chips.com>
 
-My basic idea for merging is the individual changes (pinctrl, clk)
-going through the respective maintainer trees and I've added necessary
-dts glue, so that it doesn't break bisectability or fail to compile
-even though the internal board wouldn't care.
-After the pieces are in mainline (after 4.12-rc1?) we can then just
-do the dts renames.
+Rockchip finally named the SOC as RV1108, so change it.
+Also move the compatible list to one compatible per line.
 
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ .../devicetree/bindings/pinctrl/rockchip,pinctrl.txt    | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-changes in v2:
-- drop mmc binding patch, which got applied
-- rebased pinctrl patches onto pinctrl tree
-- adapted patches, so that they don't break when applied individually
-- fixed recipients (mturquette)
-
-Andy Yan (6):
-  dt-bindings: rockchip,pinctrl: rename RK1108 to RV1108
-  pinctrl: rockchip: rename RK1108 to RV1108
-  dt-bindings: rk1108-cru: rename RK1108 to RV1108
-  clk: rockchip: rename RK1108 to RV1108
-  ARM: dts: rockchip: rename core dtsi from RK1108 to RV1108
-  ARM: dts: rockchip: rename RK1108-evb to RV1108-evb
-
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +-
- ...chip,rk1108-cru.txt => rockchip,rv1108-cru.txt} |  12 +-
- .../bindings/pinctrl/rockchip,pinctrl.txt          |  17 +-
- arch/arm/boot/dts/Makefile                         |   2 +-
- .../boot/dts/{rk1108-evb.dts => rv1108-evb.dts}    |   6 +-
- arch/arm/boot/dts/{rk1108.dtsi => rv1108.dtsi}     |  24 +-
- drivers/clk/rockchip/Makefile                      |   2 +-
- .../clk/rockchip/{clk-rk1108.c => clk-rv1108.c}    | 414 ++++++++++-----------
- drivers/clk/rockchip/clk.h                         |  28 +-
- drivers/pinctrl/pinctrl-rockchip.c                 |  76 ++--
- .../clock/{rk1108-cru.h => rv1108-cru.h}           |   6 +-
- 11 files changed, 299 insertions(+), 292 deletions(-)
- rename Documentation/devicetree/bindings/clock/{rockchip,rk1108-cru.txt => rockchip,rv1108-cru.txt} (83%)
- rename arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} (94%)
- rename arch/arm/boot/dts/{rk1108.dtsi => rv1108.dtsi} (94%)
- rename drivers/clk/rockchip/{clk-rk1108.c => clk-rv1108.c} (57%)
- rename include/dt-bindings/clock/{rk1108-cru.h => rv1108-cru.h} (97%)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+index 403b5a272f56..ee01ab58224d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+@@ -19,11 +19,18 @@ The pins are grouped into up to 5 individual pin banks which need to be
+ defined as gpio sub-nodes of the pinmux controller.
+ 
+ Required properties for iomux controller:
+-  - compatible: one of "rockchip,rk1108-pinctrl", "rockchip,rk2928-pinctrl"
+-		       "rockchip,rk3066a-pinctrl", "rockchip,rk3066b-pinctrl"
+-		       "rockchip,rk3188-pinctrl", "rockchip,rk3228-pinctrl"
+-		       "rockchip,rk3288-pinctrl", "rockchip,rk3328-pinctrl"
+-		       "rockchip,rk3368-pinctrl", "rockchip,rk3399-pinctrl"
++  - compatible: should be
++		"rockchip,rv1108-pinctrl":  for Rockchip RV1108
++		"rockchip,rk2928-pinctrl":  for Rockchip RK2928
++		"rockchip,rk3066a-pinctrl": for Rockchip RK3066a
++		"rockchip,rk3066b-pinctrl": for Rockchip RK3066b
++		"rockchip,rk3188-pinctrl":  for Rockchip RK3188
++		"rockchip,rk3228-pinctrl":  for Rockchip RK3228
++		"rockchip,rk3288-pinctrl":  for Rockchip RK3288
++		"rockchip,rk3328-pinctrl":  for Rockchip RK3328
++		"rockchip,rk3368-pinctrl":  for Rockchip RK3368
++		"rockchip,rk3399-pinctrl":  for Rockchip RK3399
++
+   - rockchip,grf: phandle referencing a syscon providing the
+ 	 "general register files"
+ 
 -- 
 2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
