@@ -1,46 +1,124 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] fix ptr_ret.cocci warnings
-Date: Fri, 17 Mar 2017 22:48:09 +0800
-Message-ID: <20170317144809.GA103304@lkp-hsx03.lkp.intel.com>
-References: <201703172233.osJjGFrP%fengguang.wu@intel.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v4 0/7] coresight: enable debug module
+Date: Fri, 17 Mar 2017 23:02:16 +0800
+Message-ID: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489607133-7870-3-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Suzuki.Poulose@arm.com, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
-drivers/video/backlight/arcxcnn_bl.c:183:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+Sample-based Profiling Extension" has description for sampling
+registers, we can utilize these registers to check program counter
+value with combined CPU exception level, secure state, etc. So this is
+helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+interrupt, so it cannot handle SMP call for stack dump, etc.
+
+This patch series is to enable coresight debug module with sample-based
+registers and register call back notifier for PCSR register dumping
+when panic happens, so we can see below dumping info for panic; and
+this patch series has considered the conditions for access permission
+for debug registers self, so this can avoid access debug registers when
+CPU power domain is off; the driver also try to figure out the CPU is
+in secure or non-secure state.
+
+Patch 0001 is to document the dt binding.
+
+Patch 0002 is used to fix the func of_get_coresight_platform_data()
+doesn't properly drop the reference to the CPU node pointer; and
+patch 0003 is refactor to add new function of_coresight_get_cpu().
+
+Patch 0004 is the driver for CPU debug module, which is Based on
+patches 0002/0003.
+
+Patches 0005/0006 in this series are to enable debug unit on 96boards
+Hikey, patch 0005 is to add apb clock for debug unit and patch 0006
+is to add DT nodes for debug unit. Patch 0007 is to enable debug on
+96boards DB410c. Have verified on both two boards.
+
+As result we can get below log after input command:
+echo c > /proc/sysrq-trigger:
+
+ARM external debug module:
+CPU[0]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff00000808eb54>] handle_IPI+0xe4/0x150
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+CPU[1]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff0000087a64c0>] debug_notifier_call+0x108/0x288
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+
+[...]
+
+Changes from v3:
+* Added Suzuki K Poulose's patch to fix issue for the func
+  of_get_coresight_platform_data() doesn't properly drop the reference
+  to the CPU node pointer.
+* According to Suzuki suggestion, added code to handl the corner case
+  for ARMv8 CPU with aarch32 mode.
+* According to Suzuki suggestion, changed compatible string to
+  "arm,coresight-cpu-debug".
+* According to Mathieu suggestion, added "power-domains" as optional
+  properties.
+
+Changes from v2:
+* According to Mathieu Poirier suggestion, applied some minor fixes.
+* Added two extra patches for enabling debug module on Hikey.
+
+Changes from v1:
+* According to Mike Leach suggestion, removed the binding for debug
+  module clocks which have been directly provided by CPU clocks.
+* According to Mathieu Poirier suggestion, added function
+  of_coresight_get_cpu() and some minor refactors for debug module
+  driver.
+
+Changes from RFC:
+* According to Mike Leach suggestion, added check for EDPRSR to avoid
+  lockup; added supporting EDVIDSR and EDCIDSR registers.
+* According to Mark Rutland and Mathieu Poirier suggestion, rewrote
+  the documentation for DT binding.
+* According to Mark and Mathieu suggestion, refined debug driver.
 
 
- Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+Leo Yan (6):
+  coresight: bindings for CPU debug module
+  coresight: refactor with function of_coresight_get_cpu
+  coresight: add support for CPU debug module
+  clk: hi6220: add debug APB clock
+  arm64: dts: hi6220: register debug module
+  arm64: dts: qcom: msm8916: Add debug unit
 
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
+Suzuki K Poulose (1):
+  coresight: of_get_coresight_platform_data: Add missing of_node_put
 
-CC: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Signed-off-by: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
+ .../bindings/arm/coresight-cpu-debug.txt           |  46 +++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  32 ++
+ drivers/clk/hisilicon/clk-hi6220.c                 |   1 +
+ drivers/hwtracing/coresight/Kconfig                |  10 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  | 407 +++++++++++++++++++++
+ drivers/hwtracing/coresight/of_coresight.c         |  39 +-
+ include/dt-bindings/clock/hi6220-clock.h           |   5 +-
+ include/linux/coresight.h                          |   2 +
+ 10 files changed, 594 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+ create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
 
- arcxcnn_bl.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
---- a/drivers/video/backlight/arcxcnn_bl.c
-+++ b/drivers/video/backlight/arcxcnn_bl.c
-@@ -180,10 +180,7 @@ static int arcxcnn_backlight_register(st
- 
- 	lp->bl = devm_backlight_device_register(lp->dev, name, lp->dev, lp,
- 				       &arcxcnn_bl_ops, props);
--	if (IS_ERR(lp->bl))
--		return PTR_ERR(lp->bl);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(lp->bl);
- }
- 
- static void arcxcnn_parse_dt(struct arcxcnn *lp)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
