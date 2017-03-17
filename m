@@ -1,62 +1,81 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] i2c: i2c-stm32f7: add driver
-Date: Fri, 17 Mar 2017 14:52:44 +0100
-Message-ID: <CAOAejn0Hs7QOgcrHM2t3NsFQeD9dyvThDK-8iM1Lvb7Qv4fGGQ@mail.gmail.com>
-References: <1489744738-21632-1-git-send-email-cedric.madianga@gmail.com>
- <1489744738-21632-4-git-send-email-cedric.madianga@gmail.com> <6ae90186-0e8d-654b-c9e3-2d1b4daf6198@baylibre.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/5] rtc: Add rtc-sh
+Date: Fri, 17 Mar 2017 14:55:48 +0100
+Message-ID: <CAMuHMdWs3NtKLiBnKCmxGYNBW3zzWYydj=JGKr+mH7ao97L2_Q@mail.gmail.com>
+References: <20170316175112.27913-1-chris.brandt@renesas.com>
+ <20170316175112.27913-3-chris.brandt@renesas.com> <CAMuHMdVu0dQjptyW0F5YS+V6sixXTM3P6VWq2=8BQ5njUOXf-Q@mail.gmail.com>
+ <SG2PR06MB1165A9931C930DF9BCD5C0A98A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdW0nHiZkE_RxVLX3G0MuwQLPHVFyNq5C1tx0yAqDQefaA@mail.gmail.com> <SG2PR06MB11653BB788CADBEE78FE4CF58A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6ae90186-0e8d-654b-c9e3-2d1b4daf6198-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <rtc-linux+bncBCQJP74GSUDRBPGWV7DAKGQE7ZT3XQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <SG2PR06MB11653BB788CADBEE78FE4CF58A390-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chris,
 
-
->> +static int stm32f7_i2c_hw_config(struct stm32f7_i2c_dev *i2c_dev)
->> +{
->> +     struct device_node *of_node = i2c_dev->dev->of_node;
->> +     u32 timing;
->> +     int ret;
->> +
->> +     ret = of_property_read_u32(of_node, "st,i2c-timing", &timing);
->> +     if (ret) {
->> +             dev_err(i2c_dev->dev, "Error: missing i2c timing property\n");
->> +             return ret;
->> +     }
->> +
->> +     /* Timing settings */
->> +     writel_relaxed(timing, i2c_dev->base + STM32F7_I2C_TIMINGR);
+On Fri, Mar 17, 2017 at 2:41 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Friday, March 17, 2017, Geert Uytterhoeven wrote:
+>> > On Friday, March 17, 2017, Geert Uytterhoeven wrote:
+>> >> On Thu, Mar 16, 2017 at 6:51 PM, Chris Brandt
+>> >> <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>> >> wrote:
+>> >> > +- clocks: the clock source for the RTC controller.
+>> >>
+>> >> The datasheet mentions 3 possible clock sources?
+>> >
+>> > There is the clock source that does the counting (RTC_X1, RTC_X3, XTAL),
+>> and then a clock source that runs the register interface (run off of the
+>> p0 clock). So I just need to turn on the p0 clock so I can get at the
+>> registers. Note that if you do a hard reset with a RESET button, and all
+>> the registers in the chip go back to their POR state, the counter still
+>> counts off of the 32KHz XTAL even though the "peripheral clock" is stopped
+>> (which just means you can't get to the registers).
+>> >
+>> > In reality, you have to assume the RTC counting source has already been
+>> set up by u-boot, or from a past reboot, so I don't do any of that select
+>> configuration at all.
+>>
+>> it would still be good to have phandles to the external clock sources as
+>> well, as that describes the hardware topology.
 >
-> Hi,
->
-> Using a register value in DT is quite ugly since the requirement to calculate the timings
-> is quite easy, and well documented.
->
-> I wrote it for Zephyr, you can find it here :
-> https://github.com/zephyrproject-rtos/zephyr/blob/master/drivers/i2c/i2c_stm32lx.c#L31
+> I'm confused, you mean make new clocks node for RTC_X1 (fixed at 32.768kHZ) and
+> RTC_X3 (fixed at 4MHz), but then not really do anything with then? (the driver
 
-Thanks for this code. It is very interesting.
-With our formula, I just notice that we don't use any i2c rise time or
-fall time but they have some impacts in i2c timing computation.
-So, the user could not be able to select these values for him use case. Right ?
+You still do something with them, as they'll be linked from the rtc device node.
 
+> doesn't need them)
 
->
-> Another point, maybe you should find a better name for the driver, since this I2C IP is share
-> with the STM32Lx also and is not tied to STM32F7.
+The driver may use them in the future.
+E.g. to select among X1, X3, or EXTAL, depending on availability.
 
-As far as I know, we don't have any STM32Lx SoC integrated in the
-linux kernel mainline.
-I choose i2c-stm32f7 name as it is the first Soc integrated in the
-linux kernel mainline where this IP could be used.
+Gr{oetje,eeting}s,
 
-BR,
-Cedric
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
