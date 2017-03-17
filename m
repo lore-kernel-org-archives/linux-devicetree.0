@@ -1,69 +1,116 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [v3 3/5] coresight: add support for debug module
-Date: Fri, 17 Mar 2017 16:47:54 +0000
-Message-ID: <5995f6a7-08b1-c868-fc88-a145d1748a33@arm.com>
-References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
- <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
- <20170309175915.GA964@leoy-linaro>
- <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
- <20170313165600.GB32431@linaro.org>
- <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
- <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
- <20170317101328.GA19877@leoy-linaro> <20170317155007.GA20435@linaro.org>
- <20170317162836.GD2020@leoy-linaro>
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Fri, 17 Mar 2017 18:04:42 +0100
+Message-ID: <7730cff6-6e85-c98d-0315-bd3888d3aeb1@grandegger.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
+ <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
+ <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
+ <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
+ <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
+ <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
+ <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
+ <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
+ <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
+ <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
+ <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
+ <0362316b-ef76-1733-dbfc-8b644f758db9@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170317162836.GD2020@leoy-linaro>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Yan <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Leach <mike.leach@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <0362316b-ef76-1733-dbfc-8b644f758db9@timesys.com>
+Sender: netdev-owner@vger.kernel.org
+To: Akshay Bhat <akshay.bhat@timesys.com>, Akshay Bhat <nodeax@gmail.com>
+Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/03/17 16:28, Leo Yan wrote:
-> On Fri, Mar 17, 2017 at 09:50:07AM -0600, Mathieu Poirier wrote:
+Hi Akshay,
+
+Am 17.03.2017 um 17:00 schrieb Akshay Bhat:
+> Hi Wolfgang,
 >
-> [...]
+> On 03/17/2017 03:39 AM, Wolfgang Grandegger wrote:
+>> Hello Akshay,
+>>
+>> Am 16.03.2017 um 23:29 schrieb Akshay Bhat:
+>>> Hi Wolfgang,
+>>>
+>>> On 03/16/2017 04:02 PM, Wolfgang Grandegger wrote:
+>>>>
+>>>> Looks much better now! There are message for state changes to error
+>>>> warning and passive. Just the following message is not correct:
+>>>>
+>>>>  (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19
+>>>> ERRORFRAME
+>>>>     controller-problem{}
+>>>>     error-counter-tx-rx{{95}{25}}
+>>>>
+>>>> Sorry, forgot to mention... the function can_change_state() [1]
+>>>> should be used for that purpose, if possible. It fixes the issue
+>>>> above as well.
+>>>>
+>>>
+>>> The updated driver (the one used to create the above log) is using
+>>> can_change_state() function. data[1] 40 corresponds to
+>>> CAN_ERR_CRTL_ACTIVE, so looks correct? Could it be that the can-utils I
+>>> am using is old and not reporting state change?
+>>
+>> Hm, yes. The raw data looks correct. You could download and build a
+>> recent version from "https://github.com/linux-can/can-utils" to check.
+>> It could also be a bug.
+>>
 >
->> If we don't check for "nohlt" some platform may freeze, others may work.  If we
->> mandate that "nohlt" be present on the kernel cmd line it works in all cases.
->> As such mandating that "nohlt" be present is a better way to go.
+> Turned out to be a old version of can-utils. Using the above git tree
+> reports the flag.
 >
-> Sure, so I will add below checking code in the probe function, please
-> let me know if you have alter better way to implement this:
+>  (000.200308)  can0  20000004   [8]  00 40 00 00 00 00 5F 00   ERRORFRAME
+>         controller-problem{back-to-error-active}
+>         error-counter-tx-rx{{95}{0}}
 >
-> +       if (IS_ENABLED(CONFIG_CPU_IDLE) &&
-> +                       !strstr(boot_command_line, "nohlt")) {
-> +               dev_err(dev, "May not be accessible in CPU power domain.\n");
-> +               return -EPERM;
-> +       }
+>>> Enabling BUSOFF/ERRP/ERRW bits in STATFE did not generate any interrupts
+>>> on the INT pin. Should we make it a requirement that both INT and STAT
+>>> pins need to be connected in hardware for the driver to do the error
+>>> reporting?
+>>
+>> As I said, it's the better solution, especially if interrupt flooding
+>> does harm. How does your system behave when bus errors come in due to no
+>> cable connected?
+>>
 >
+> I did not see any issues on the system with the cable disconnected. In
+> my particular setup with the cable disconnected the system goes to
+> tx-error-passive and does not get any further interrupts until a state
+> change occurs.
 
-There is an API which kind of achieves what "nohlt" does at runtime :
+Hm, that's unusual. Cable disconnected and then send a message:
 
-   cpu_idle_poll_ctrl(true)
+$ grep /proc/interrupts; sleep 10; /proc/interrupts
 
-So may be we could use that instead of depending on "nohlt". The other side
-of the issues is "when do we decide to use the API". May be we could add something
-like : enable_debug, which could then trigger the panic notifier registrations
-and the above. That would still leave us with a case where the system crashes
-even before the user gets a terminal. May be the following is the best option :
+should make things clear. But maybe it's a clever chip and it does stop 
+sending error messages if the error counter does not change any more. 
+After bus-off, the chip is quiet, of course. Should have a closer look 
+to the CAN standard.
 
-1) Dedicated kernel command line parameter for enabling the CPU debug at boot/probe.
+>> So far using NAPI was mandatory. There is the problem of out-of-order
+>> message reception if handled in the isr on multi processor systems.
+>> Marc, what is the current policy?
+>>
+>
+> Since this is a SPI based CAN, I am wary for any additional latencies
+> NAPI might introduce. The RX handling is being done at the very
+> beginning of the ISR for this reason.
+>
+> Can we go ahead with the existing implementation and re-visit this at a
+> later time?
 
-and
+Likely yes, as Marc has already reviewed the driver once.
 
-2) Runtime enable method via sysfs.
+BTW: what system board/processor are you using?
 
-What do you think ?
+> Thanks again for all your help in reviewing/improving the driver :)
 
-Suzuki
+You are welcome!
+
+Wolfgang.
