@@ -1,300 +1,108 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v5 1/3] mfd: wm831x: Add basic device tree binding
-Date: Fri, 17 Mar 2017 10:05:18 +0000
-Message-ID: <1489745120-2918-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [v3 3/5] coresight: add support for debug module
+Date: Fri, 17 Mar 2017 18:13:28 +0800
+Message-ID: <20170317101328.GA19877@leoy-linaro>
+References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
+ <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
+ <20170309175915.GA964@leoy-linaro>
+ <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
+ <20170313165600.GB32431@linaro.org>
+ <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
+ <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the basic ability to register the device through device tree, more
-work is needed to get each individual sub-driver functioning correctly
-but this is enough to get the device to probe from device tree.
+On Wed, Mar 15, 2017 at 02:41:59PM -0600, Mathieu Poirier wrote:
+> On 15 March 2017 at 10:44, Suzuki K Poulose <Suzuki.Poulose@arm.com> wrote:
+> > On 13/03/17 16:56, Mathieu Poirier wrote:
+> >> On Fri, Mar 10, 2017 at 02:29:53PM +0000, Suzuki K Poulose wrote:
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
+[...]
 
-Changes since v4:
- - Removed pointless intermediate variable after of_match_device
- - Moved all local variables to start of function rather than in
-   their localised code block
+> >>> Btw, I don't see any PM calls to make sure the power domain (at least the
+> >>> debug domain)
+> >>> is up, which could cause problems with accesses to some of these
+> >>> registers (leave alone the
+> >>> ones in CPU power domain), especially the EDPRSR. We could also do
+> >>> pm_runtime_get on the
+> >>> CPU's power domain, if the CPU is online, before we access the pcsr.
+> >>
+> >>
+> >> I thought about PM runtime operations a little while back but wondered if
+> >> it is
+> >> really a good thing to have them around.  When this code is called the
+> >> system
+> >> has crashed and as such making PM runtimes call isn't a good idea.
+> >
+> >
+> > You are right. It is not safe to make such calls when we have crashed.
+> > The other side effect is, if we don't have the debug power domain up,
+> > we could possibly hang the system and prevent other registered notifiers
+> > from running, which doesn't sound good either.
+> >
+> >>
+> >> One thing we could do is _not_ call pm_runtime_put() at the end of the
+> >> probe()
+> >> operation.  That way we wouldn't have to mess around with PM runtime
+> >> operations
+> >> on an unstable system.  This, of course, is costly in terms of power
+> >> consumption
+> >> but the system is under test/debug anyway.
+> >
+> >
+> > May be control the behavior via kernel command line ? Something like
+> > coresight_debug={on or 1} or
+> > even use the "nohlt" ?
+> 
+> We need to deal with the debug and CPU power domains.
+> 
+> For the former I suggest we do what coresight does and use the
+> "power-domains" binding[1].  For the CPU power domain we can re-use
+> the "nohlt" flag.  In the probe function if the "nohlt" cmd line flag
+> is not set the code bails out.  If it is set pm_runtime_put() is _not_
+> called and the driver can be used without worries of hanging the
+> system when the panic handler is invoked.
+> 
+> Am I forgetting something?
+
+I tested this drvier on Hikey and DB410c. For Hikey we must pass
+"nohlt" to disable low power states, otherwise the kernel will hang
+during initialization. But for DB410c, this driver even can work well
+without "nohlt" and I checked the CPUIdle has been really enabled with
+below sysfs entries:
+
+root@linaro-developer:~# cat /sys/devices/system/cpu/cpu*/cpuidle/state*/usage
+5992
+6988
+4225
+4547
+2790
+23696
+4202
+3899
+
+And from my previous experience, I'm quite sure some SoCs can access
+the debug module registers with CPUIdle enabled, and it will read
+back 0xFFFF_FFFF_FFFF_FFFF when the CPU stays in low power state.
+So I prefer we could keep current method to suggest to use "nohlt" in
+Kconfig's help description but it's not mandotory to check this in
+the code. How about you think for this?
 
 Thanks,
-Charles
-
- drivers/mfd/wm831x-core.c       | 29 +++++++++++++++++++++--------
- drivers/mfd/wm831x-i2c.c        | 19 ++++++++++++++++++-
- drivers/mfd/wm831x-irq.c        |  6 +++---
- drivers/mfd/wm831x-spi.c        | 18 ++++++++++++++++--
- include/linux/mfd/wm831x/core.h |  9 ++++++++-
- 5 files changed, 66 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/mfd/wm831x-core.c b/drivers/mfd/wm831x-core.c
-index 3e0e99e..13a4c11 100644
---- a/drivers/mfd/wm831x-core.c
-+++ b/drivers/mfd/wm831x-core.c
-@@ -19,6 +19,8 @@
- #include <linux/mfd/core.h>
- #include <linux/slab.h>
- #include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include <linux/mfd/wm831x/core.h>
- #include <linux/mfd/wm831x/pdata.h>
-@@ -1613,12 +1615,24 @@ struct regmap_config wm831x_regmap_config = {
- };
- EXPORT_SYMBOL_GPL(wm831x_regmap_config);
- 
-+const struct of_device_id wm831x_of_match[] = {
-+	{ .compatible = "wlf,wm8310", .data = (void *)WM8310 },
-+	{ .compatible = "wlf,wm8311", .data = (void *)WM8311 },
-+	{ .compatible = "wlf,wm8312", .data = (void *)WM8312 },
-+	{ .compatible = "wlf,wm8320", .data = (void *)WM8320 },
-+	{ .compatible = "wlf,wm8321", .data = (void *)WM8321 },
-+	{ .compatible = "wlf,wm8325", .data = (void *)WM8325 },
-+	{ .compatible = "wlf,wm8326", .data = (void *)WM8326 },
-+	{ },
-+};
-+EXPORT_SYMBOL_GPL(wm831x_of_match);
-+
- /*
-  * Instantiate the generic non-control parts of the device.
-  */
--int wm831x_device_init(struct wm831x *wm831x, unsigned long id, int irq)
-+int wm831x_device_init(struct wm831x *wm831x, int irq)
- {
--	struct wm831x_pdata *pdata = dev_get_platdata(wm831x->dev);
-+	struct wm831x_pdata *pdata = &wm831x->pdata;
- 	int rev, wm831x_num;
- 	enum wm831x_parent parent;
- 	int ret, i;
-@@ -1627,8 +1641,7 @@ int wm831x_device_init(struct wm831x *wm831x, unsigned long id, int irq)
- 	mutex_init(&wm831x->key_lock);
- 	dev_set_drvdata(wm831x->dev, wm831x);
- 
--	if (pdata)
--		wm831x->soft_shutdown = pdata->soft_shutdown;
-+	wm831x->soft_shutdown = pdata->soft_shutdown;
- 
- 	ret = wm831x_reg_read(wm831x, WM831X_PARENT_ID);
- 	if (ret < 0) {
-@@ -1663,7 +1676,7 @@ int wm831x_device_init(struct wm831x *wm831x, unsigned long id, int irq)
- 	 */
- 	if (ret == 0) {
- 		dev_info(wm831x->dev, "Device is an engineering sample\n");
--		ret = id;
-+		ret = wm831x->type;
- 	}
- 
- 	switch (ret) {
-@@ -1736,9 +1749,9 @@ int wm831x_device_init(struct wm831x *wm831x, unsigned long id, int irq)
- 	/* This will need revisiting in future but is OK for all
- 	 * current parts.
- 	 */
--	if (parent != id)
--		dev_warn(wm831x->dev, "Device was registered as a WM%lx\n",
--			 id);
-+	if (parent != wm831x->type)
-+		dev_warn(wm831x->dev, "Device was registered as a WM%x\n",
-+			 wm831x->type);
- 
- 	/* Bootstrap the user key */
- 	ret = wm831x_reg_read(wm831x, WM831X_SECURITY_KEY);
-diff --git a/drivers/mfd/wm831x-i2c.c b/drivers/mfd/wm831x-i2c.c
-index 824bcba..781af06 100644
---- a/drivers/mfd/wm831x-i2c.c
-+++ b/drivers/mfd/wm831x-i2c.c
-@@ -19,6 +19,8 @@
- #include <linux/mfd/core.h>
- #include <linux/slab.h>
- #include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/regmap.h>
- 
- #include <linux/mfd/wm831x/core.h>
-@@ -27,15 +29,26 @@
- static int wm831x_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
-+	struct wm831x_pdata *pdata = dev_get_platdata(&i2c->dev);
-+	const struct of_device_id *of_id;
- 	struct wm831x *wm831x;
-+	enum wm831x_parent type;
- 	int ret;
- 
-+	if (i2c->dev.of_node) {
-+		of_id = of_match_device(wm831x_of_match, &i2c->dev);
-+		type = (enum wm831x_parent)of_id->data;
-+	} else {
-+		type = (enum wm831x_parent)id->driver_data;
-+	}
-+
- 	wm831x = devm_kzalloc(&i2c->dev, sizeof(struct wm831x), GFP_KERNEL);
- 	if (wm831x == NULL)
- 		return -ENOMEM;
- 
- 	i2c_set_clientdata(i2c, wm831x);
- 	wm831x->dev = &i2c->dev;
-+	wm831x->type = type;
- 
- 	wm831x->regmap = devm_regmap_init_i2c(i2c, &wm831x_regmap_config);
- 	if (IS_ERR(wm831x->regmap)) {
-@@ -45,7 +58,10 @@ static int wm831x_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
--	return wm831x_device_init(wm831x, id->driver_data, i2c->irq);
-+	if (pdata)
-+		memcpy(&wm831x->pdata, pdata, sizeof(*pdata));
-+
-+	return wm831x_device_init(wm831x, i2c->irq);
- }
- 
- static int wm831x_i2c_remove(struct i2c_client *i2c)
-@@ -94,6 +110,7 @@ static struct i2c_driver wm831x_i2c_driver = {
- 	.driver = {
- 		.name = "wm831x",
- 		.pm = &wm831x_pm_ops,
-+		.of_match_table = of_match_ptr(wm831x_of_match),
- 	},
- 	.probe = wm831x_i2c_probe,
- 	.remove = wm831x_i2c_remove,
-diff --git a/drivers/mfd/wm831x-irq.c b/drivers/mfd/wm831x-irq.c
-index dfea8b9..c01239a 100644
---- a/drivers/mfd/wm831x-irq.c
-+++ b/drivers/mfd/wm831x-irq.c
-@@ -564,7 +564,7 @@ static const struct irq_domain_ops wm831x_irq_domain_ops = {
- 
- int wm831x_irq_init(struct wm831x *wm831x, int irq)
- {
--	struct wm831x_pdata *pdata = dev_get_platdata(wm831x->dev);
-+	struct wm831x_pdata *pdata = &wm831x->pdata;
- 	struct irq_domain *domain;
- 	int i, ret, irq_base;
- 
-@@ -579,7 +579,7 @@ int wm831x_irq_init(struct wm831x *wm831x, int irq)
- 	}
- 
- 	/* Try to dynamically allocate IRQs if no base is specified */
--	if (pdata && pdata->irq_base) {
-+	if (pdata->irq_base) {
- 		irq_base = irq_alloc_descs(pdata->irq_base, 0,
- 					   WM831X_NUM_IRQS, 0);
- 		if (irq_base < 0) {
-@@ -608,7 +608,7 @@ int wm831x_irq_init(struct wm831x *wm831x, int irq)
- 		return -EINVAL;
- 	}
- 
--	if (pdata && pdata->irq_cmos)
-+	if (pdata->irq_cmos)
- 		i = 0;
- 	else
- 		i = WM831X_IRQ_OD;
-diff --git a/drivers/mfd/wm831x-spi.c b/drivers/mfd/wm831x-spi.c
-index 80482ae..c332e28 100644
---- a/drivers/mfd/wm831x-spi.c
-+++ b/drivers/mfd/wm831x-spi.c
-@@ -14,6 +14,8 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/pm.h>
- #include <linux/spi/spi.h>
- #include <linux/regmap.h>
-@@ -23,12 +25,19 @@
- 
- static int wm831x_spi_probe(struct spi_device *spi)
- {
-+	struct wm831x_pdata *pdata = dev_get_platdata(&spi->dev);
- 	const struct spi_device_id *id = spi_get_device_id(spi);
-+	const struct of_device_id *of_id;
- 	struct wm831x *wm831x;
- 	enum wm831x_parent type;
- 	int ret;
- 
--	type = (enum wm831x_parent)id->driver_data;
-+	if (spi->dev.of_node) {
-+		of_id = of_match_device(wm831x_of_match, &spi->dev);
-+		type = (enum wm831x_parent)of_id->data;
-+	} else {
-+		type = (enum wm831x_parent)id->driver_data;
-+	}
- 
- 	wm831x = devm_kzalloc(&spi->dev, sizeof(struct wm831x), GFP_KERNEL);
- 	if (wm831x == NULL)
-@@ -38,6 +47,7 @@ static int wm831x_spi_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, wm831x);
- 	wm831x->dev = &spi->dev;
-+	wm831x->type = type;
- 
- 	wm831x->regmap = devm_regmap_init_spi(spi, &wm831x_regmap_config);
- 	if (IS_ERR(wm831x->regmap)) {
-@@ -47,7 +57,10 @@ static int wm831x_spi_probe(struct spi_device *spi)
- 		return ret;
- 	}
- 
--	return wm831x_device_init(wm831x, type, spi->irq);
-+	if (pdata)
-+		memcpy(&wm831x->pdata, pdata, sizeof(*pdata));
-+
-+	return wm831x_device_init(wm831x, spi->irq);
- }
- 
- static int wm831x_spi_remove(struct spi_device *spi)
-@@ -97,6 +110,7 @@ static struct spi_driver wm831x_spi_driver = {
- 	.driver = {
- 		.name	= "wm831x",
- 		.pm	= &wm831x_spi_pm,
-+		.of_match_table = of_match_ptr(wm831x_of_match),
- 	},
- 	.id_table	= wm831x_spi_ids,
- 	.probe		= wm831x_spi_probe,
-diff --git a/include/linux/mfd/wm831x/core.h b/include/linux/mfd/wm831x/core.h
-index 76c2264..b49fa676 100644
---- a/include/linux/mfd/wm831x/core.h
-+++ b/include/linux/mfd/wm831x/core.h
-@@ -21,6 +21,8 @@
- #include <linux/list.h>
- #include <linux/regmap.h>
- #include <linux/mfd/wm831x/auxadc.h>
-+#include <linux/mfd/wm831x/pdata.h>
-+#include <linux/of.h>
- 
- /*
-  * Register values.
-@@ -367,6 +369,9 @@ struct wm831x {
- 
- 	struct regmap *regmap;
- 
-+	struct wm831x_pdata pdata;
-+	enum wm831x_parent type;
-+
- 	int irq;  /* Our chip IRQ */
- 	struct mutex irq_lock;
- 	struct irq_domain *irq_domain;
-@@ -412,7 +417,7 @@ int wm831x_set_bits(struct wm831x *wm831x, unsigned short reg,
- int wm831x_bulk_read(struct wm831x *wm831x, unsigned short reg,
- 		     int count, u16 *buf);
- 
--int wm831x_device_init(struct wm831x *wm831x, unsigned long id, int irq);
-+int wm831x_device_init(struct wm831x *wm831x, int irq);
- void wm831x_device_exit(struct wm831x *wm831x);
- int wm831x_device_suspend(struct wm831x *wm831x);
- void wm831x_device_shutdown(struct wm831x *wm831x);
-@@ -427,4 +432,6 @@ static inline int wm831x_irq(struct wm831x *wm831x, int irq)
- 
- extern struct regmap_config wm831x_regmap_config;
- 
-+extern const struct of_device_id wm831x_of_match[];
-+
- #endif
--- 
-2.1.4
+Leo Yan
