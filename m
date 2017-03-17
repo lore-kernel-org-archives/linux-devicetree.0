@@ -1,152 +1,99 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: iio: introduce trigger providers,
- consumers
-Date: Fri, 17 Mar 2017 16:59:39 +0100
-Message-ID: <f44cccd8-a607-117d-e444-ea3174eced18@st.com>
-References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
- <1488300679-3259-2-git-send-email-fabrice.gasnier@st.com>
- <20170303062126.5bewa5u6o7wu7sy4@rob-hp-laptop>
- <948e5b96-7a8f-406d-6d03-d129d1b2ce54@kernel.org>
- <12a6a2f8-9ff6-a4f0-c9a2-c7de037019ef@kernel.org>
- <20170315192521.l7mb3egh4hbxdpx6@rob-hp-laptop>
+From: Akshay Bhat <akshay.bhat@timesys.com>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Fri, 17 Mar 2017 12:00:32 -0400
+Message-ID: <0362316b-ef76-1733-dbfc-8b644f758db9@timesys.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
+ <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
+ <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
+ <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
+ <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
+ <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
+ <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
+ <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
+ <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
+ <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
+ <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170315192521.l7mb3egh4hbxdpx6@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Akshay Bhat <nodeax@gmail.com>
+Cc: mkl@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2017 08:25 PM, Rob Herring wrote:
-> On Sun, Mar 05, 2017 at 12:13:36PM +0000, Jonathan Cameron wrote:
->> On 05/03/17 11:43, Jonathan Cameron wrote:
->>> On 03/03/17 06:21, Rob Herring wrote:
->>>> On Tue, Feb 28, 2017 at 05:51:14PM +0100, Fabrice Gasnier wrote:
->>>>> Document iio provider and consumer bindings.
->>>>>
->>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>>>> ---
->>>>>  .../devicetree/bindings/iio/iio-bindings.txt       | 38 ++++++++++++++++++++++
->>>>>  1 file changed, 38 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>> index 68d6f8c..01765e9 100644
->>>>> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>> @@ -95,3 +95,41 @@ vdd channel is connected to output 0 of the &ref device.
->>>>>  		io-channels = <&adc 10>, <&adc 11>;
->>>>>  		io-channel-names = "adc1", "adc2";
->>>>>  	};
->>>>> +
->>>>> +==IIO trigger providers==
->>>>> +Sources of IIO triggers can be represented by any node in the device
->>>>> +tree. Those nodes are designated as IIO trigger providers. IIO trigger
->>>>> +consumer uses a phandle and an IIO trigger specifier to connect to an
->>>>> +IIO trigger provider.
->>>>> +An IIO trigger specifier is an array of one or more cells identifying
->>>>> +the IIO trigger output on a device. The length of an IIO trigger
->>>>> +specifier is defined by the value of a #io-trigger-cells property in
->>>>> +the IIO trigger provider node.
->>>>> +
->>>>> +Required properties:
->>>>> +#io-trigger-cells:
->>>>> +		Number of cells in an IIO trigger specifier; Typically
->>>>> +		0 for nodes with a simple IIO trigger output.
->>>>> +
->>>>> +Example:
->>>>> +	trig0: interrupt-trigger0 {
->>>>> +		#io-trigger-cells = <0>;
->>>>> +		compatible = "interrupt-trigger";
->>>>> +		interrupts = <11 0>;
->>>>> +		interrupt-parent = <&gpioa>;
->>>>> +	}
->>>>> +
->>>>> +==IIO trigger consumers==
->>>>> +Required properties:
->>>>> +- io-triggers:	List of phandle representing the IIO trigger specifier.
->>>>> +
->>>>> +Optional properties:
->>>>> +- io-trigger-names :
->>>>> +		List of IIO trigger name strings that matches elements
->>>>> +		in 'io-triggers' list property.
->>>>> +
->>>>> +Example:
->>>>> +	some_trigger_consumer {
->>>>> +		io-triggers = <&trig0>;
->>>>> +		io-trigger-names = "mytrig";
->>>>> +	}
->>>>
->>>> I have some reservations about this. We could just as easily add the 
->>>> interrupt directly to the consumer node and use "trigger" for a standard 
->>>> interrupt name. So the question is whether this extra level of 
->>>> indirection is needed? 
->>>
->>> First thing to note here, is that Fabrice's use of the generic interrupt
->>> trigger is an extremely 'unusual' one! Normal use case is that we have
-Hi Rob, Jonathan,
+Hi Wolfgang,
 
-Yes, I agree this is unusual.
-
->>> a random gpio pin providing interrupts to driver triggering on random
->>> devices - there need be no association between the two whatsoever.
->>> So what we are doing here is 'allowing' an interrupt to provide a trigger.
->>> It's not necessarily the one going to be used by any particular device
->>> driver.  The decision of which trigger to use is definitely one for
->>> userspace, not something that should be configured in to the device tree.
->>>
->>> For this particular case you could in theory just do it by using an interrupt
->>> as you describe.  Ultimately though we should be able to play more complex
->>> games with this device and having it able to handle any trigger - which 
->>> includes those not using the direct hardware route.  It'll be up to the
->>> driver to figure out when it can use the fast method and when it can't.
-Agreed. Still, to benefit from hw capabilities, driver needs to have a
-way to identify a particular trigger as a direct hardware route, or not
-(and then default software handling, btw, that still needs to be
-addressed in stm32-adc). DT Provider/consumer may help to achieve this.
-
->>>
->>> Conversely, even when we are using this hardware route to drive the
->>> triggering it should be possible to hang off a device to be triggered
->>> by the interrupt via the kernel rather than directly. 
->>>
->>> So from a device tree point of view we are just describing the fact that
->>> there is a pin, which may be used to trigger something.  What that something
->>> is, is a question for userspace not the device tree.
->>>
->> Ah, I'm half asleep this morning.  Clearly there is a more general follow
->> up question.  If we are arguing these are generic, why are we setting
->> up the mapping in device tree?
+On 03/17/2017 03:39 AM, Wolfgang Grandegger wrote:
+> Hello Akshay,
+> 
+> Am 16.03.2017 um 23:29 schrieb Akshay Bhat:
+>> Hi Wolfgang,
 >>
->> My gut feeling is we shouldn't be.  So I think we need the first chunk
->> above but the latter part should be a job for userspace not the devicetree.
+>> On 03/16/2017 04:02 PM, Wolfgang Grandegger wrote:
+>>>
+>>> Looks much better now! There are message for state changes to error
+>>> warning and passive. Just the following message is not correct:
+>>>
+>>>  (000.200824)  can0  20000004   [8]  00 40 00 00 00 00 5F 19  
+>>> ERRORFRAME
+>>>     controller-problem{}
+>>>     error-counter-tx-rx{{95}{25}}
+>>>
+>>> Sorry, forgot to mention... the function can_change_state() [1]
+>>> should be used for that purpose, if possible. It fixes the issue
+>>> above as well.
+>>>
+>>
+>> The updated driver (the one used to create the above log) is using
+>> can_change_state() function. data[1] 40 corresponds to
+>> CAN_ERR_CRTL_ACTIVE, so looks correct? Could it be that the can-utils I
+>> am using is old and not reporting state change?
 > 
-> So you mean keep the provider side, but get rid of the consumer? That 
-> makes sense to me.
-In case getting rid of the consumer part, I still need one way, on
-consumer side (stm32-adc) to specifically map EXTI signal in ADC
-hardware, do some checks on trigger to validate hardware route.
-I'm not sure how to handle this if I get rid of consumer part.
-Shall I use something else not mentioned here? (put trigger dt node as
-child node of stm32 adc, then use dev bus? ...)
+> Hm, yes. The raw data looks correct. You could download and build a
+> recent version from "https://github.com/linux-can/can-utils" to check.
+> It could also be a bug.
+> 
 
-Another way is as suggested by Rob in earlier comment: directly use this
-interrupt in consumer dt node, e.g. in stm32-adc node. And register
-relevant trigger and so on, from stm32-adc driver.
-Please advise.
+Turned out to be a old version of can-utils. Using the above git tree
+reports the flag.
 
-Thanks for reviewing
-Best Regards,
-Fabrice
+ (000.200308)  can0  20000004   [8]  00 40 00 00 00 00 5F 00   ERRORFRAME
+        controller-problem{back-to-error-active}
+        error-counter-tx-rx{{95}{0}}
+
+>> Enabling BUSOFF/ERRP/ERRW bits in STATFE did not generate any interrupts
+>> on the INT pin. Should we make it a requirement that both INT and STAT
+>> pins need to be connected in hardware for the driver to do the error
+>> reporting?
 > 
-> Rob
+> As I said, it's the better solution, especially if interrupt flooding
+> does harm. How does your system behave when bus errors come in due to no
+> cable connected?
+>
+
+I did not see any issues on the system with the cable disconnected. In
+my particular setup with the cable disconnected the system goes to
+tx-error-passive and does not get any further interrupts until a state
+change occurs.
+
+> So far using NAPI was mandatory. There is the problem of out-of-order
+> message reception if handled in the isr on multi processor systems.
+> Marc, what is the current policy?
 > 
+
+Since this is a SPI based CAN, I am wary for any additional latencies
+NAPI might introduce. The RX handling is being done at the very
+beginning of the ISR for this reason.
+
+Can we go ahead with the existing implementation and re-visit this at a
+later time?
+
+Thanks again for all your help in reviewing/improving the driver :)
+
+Akshay
+
+> Wolfgang.
