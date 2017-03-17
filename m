@@ -1,70 +1,79 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 3/6] dt-bindings: rk1108-cru: rename RK1108 to RV1108
-Date: Fri, 17 Mar 2017 18:18:37 +0100
-Message-ID: <20170317171840.4683-4-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v2 5/6] ARM: dts: rockchip: rename core dtsi from RK1108 to RV1108
+Date: Fri, 17 Mar 2017 18:18:39 +0100
+Message-ID: <20170317171840.4683-6-heiko@sntech.de>
 References: <20170317171840.4683-1-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170317171840.4683-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170317171840.4683-1-heiko@sntech.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, andy.yan@rock-chips.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Rockchip finally named the SOC as RV1108, so change it.
+Rockchip finally named the SOC as RV1108, so change it
+for compatible.
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+[adapt include in rk1108-evb.dts to not introduce errors]
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- .../{rockchip,rk1108-cru.txt => rockchip,rv1108-cru.txt}     | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
- rename Documentation/devicetree/bindings/clock/{rockchip,rk1108-cru.txt => rockchip,rv1108-cru.txt} (83%)
+ arch/arm/boot/dts/rk1108-evb.dts               |  2 +-
+ arch/arm/boot/dts/{rk1108.dtsi => rv1108.dtsi} | 20 ++++++++++----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+ rename arch/arm/boot/dts/{rk1108.dtsi => rv1108.dtsi} (95%)
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rv1108-cru.txt
-similarity index 83%
-rename from Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
-rename to Documentation/devicetree/bindings/clock/rockchip,rv1108-cru.txt
-index 4da126116cf0..161326a4f9c1 100644
---- a/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rv1108-cru.txt
-@@ -1,12 +1,12 @@
--* Rockchip RK1108 Clock and Reset Unit
-+* Rockchip RV1108 Clock and Reset Unit
+diff --git a/arch/arm/boot/dts/rk1108-evb.dts b/arch/arm/boot/dts/rk1108-evb.dts
+index 3956cff4ca79..88fe0a8c4faa 100644
+--- a/arch/arm/boot/dts/rk1108-evb.dts
++++ b/arch/arm/boot/dts/rk1108-evb.dts
+@@ -40,7 +40,7 @@
  
--The RK1108 clock controller generates and supplies clock to various
-+The RV1108 clock controller generates and supplies clock to various
- controllers within the SoC and also implements a reset controller for SoC
- peripherals.
+ /dts-v1/;
  
- Required Properties:
+-#include "rk1108.dtsi"
++#include "rv1108.dtsi"
  
--- compatible: should be "rockchip,rk1108-cru"
-+- compatible: should be "rockchip,rv1108-cru"
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - #clock-cells: should be 1.
-@@ -19,7 +19,7 @@ Optional Properties:
+ / {
+ 	model = "Rockchip RK1108 Evaluation board";
+diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+similarity index 95%
+rename from arch/arm/boot/dts/rk1108.dtsi
+rename to arch/arm/boot/dts/rv1108.dtsi
+index 1297924db6ad..437098b556eb 100644
+--- a/arch/arm/boot/dts/rk1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -47,7 +47,7 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
  
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume. All available clocks are defined as
--preprocessor macros in the dt-bindings/clock/rk1108-cru.h headers and can be
-+preprocessor macros in the dt-bindings/clock/rv1108-cru.h headers and can be
- used in device tree sources. Similar macros exist for the reset sources in
- these files.
+-	compatible = "rockchip,rk1108";
++	compatible = "rockchip,rv1108";
  
-@@ -38,7 +38,7 @@ clock-output-names:
- Example: Clock controller node:
+ 	interrupt-parent = <&gic>;
  
- 	cru: cru@20200000 {
--		compatible = "rockchip,rk1108-cru";
-+		compatible = "rockchip,rv1108-cru";
- 		reg = <0x20200000 0x1000>;
- 		rockchip,grf = <&grf>;
+@@ -113,7 +113,7 @@
+ 	};
  
-@@ -50,7 +50,7 @@ Example: UART controller node that consumes the clock generated by the clock
-   controller:
+ 	uart2: serial@10210000 {
+-		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
++		compatible = "rockchip,rv1108-uart", "snps,dw-apb-uart";
+ 		reg = <0x10210000 0x100>;
+ 		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg-shift = <2>;
+@@ -127,7 +127,7 @@
+ 	};
+ 
+ 	uart1: serial@10220000 {
+-		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
++		compatible = "rockchip,rv1108-uart", "snps,dw-apb-uart";
+ 		reg = <0x10220000 0x100>;
+ 		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg-shift = <2>;
+@@ -141,7 +141,7 @@
+ 	};
  
  	uart0: serial@10230000 {
 -		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
@@ -72,10 +81,54 @@ index 4da126116cf0..161326a4f9c1 100644
  		reg = <0x10230000 0x100>;
  		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
  		reg-shift = <2>;
+@@ -155,17 +155,17 @@
+ 	};
+ 
+ 	grf: syscon@10300000 {
+-		compatible = "rockchip,rk1108-grf", "syscon";
++		compatible = "rockchip,rv1108-grf", "syscon";
+ 		reg = <0x10300000 0x1000>;
+ 	};
+ 
+ 	pmugrf: syscon@20060000 {
+-		compatible = "rockchip,rk1108-pmugrf", "syscon";
++		compatible = "rockchip,rv1108-pmugrf", "syscon";
+ 		reg = <0x20060000 0x1000>;
+ 	};
+ 
+ 	cru: clock-controller@20200000 {
+-		compatible = "rockchip,rk1108-cru";
++		compatible = "rockchip,rv1108-cru";
+ 		reg = <0x20200000 0x1000>;
+ 		rockchip,grf = <&grf>;
+ 		#clock-cells = <1>;
+@@ -173,7 +173,7 @@
+ 	};
+ 
+ 	emmc: dwmmc@30110000 {
+-		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
++		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		clock-freq-min-max = <400000 150000000>;
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+@@ -185,7 +185,7 @@
+ 	};
+ 
+ 	sdio: dwmmc@30120000 {
+-		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
++		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		clock-freq-min-max = <400000 150000000>;
+ 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+@@ -197,7 +197,7 @@
+ 	};
+ 
+ 	sdmmc: dwmmc@30130000 {
+-		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
++		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		clock-freq-min-max = <400000 100000000>;
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
 -- 
 2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
