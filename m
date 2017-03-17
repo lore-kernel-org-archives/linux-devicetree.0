@@ -1,12 +1,14 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 0/3] Basical Lichee Pi Zero with Dock support
-Date: Fri, 17 Mar 2017 23:43:40 +0800
-Message-ID: <20170317154343.39921-1-icenowy@aosc.xyz>
+Subject: [PATCH 1/3] ARM: sun8i: v3s: add LRADC device node
+Date: Fri, 17 Mar 2017 23:43:41 +0800
+Message-ID: <20170317154343.39921-2-icenowy@aosc.xyz>
+References: <20170317154343.39921-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB3MIWDDAKGQE6IH7RBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBAUJWDDAKGQEXR2FC5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170317154343.39921-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,23 +19,32 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lichee Pi Zero have an official dock, which makes use of all stamp hole pins.
+Allwinner V3s features a LRADC like the ones in older SoCs.
 
-Some extra functionalities are availble via the dock, e.g. an extra MMC slot
-and some keys connected to LRADC.
+Add a device tree node for it.
 
-This patchset adds the support of these two features of the dock.
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-v3s.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Icenowy Zheng (3):
-  ARM: sun8i: v3s: add LRADC device node
-  ARM: dts: sun8i: add pinmux for V3s mmc1
-  ARM: dts: sun8i: add device tree for Lichee Pi Zero with Dock
-
- arch/arm/boot/dts/Makefile                         |  3 +-
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts | 98 ++++++++++++++++++++++
- arch/arm/boot/dts/sun8i-v3s.dtsi                   | 15 ++++
- 3 files changed, 115 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-
+diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
+index 71075969e5e6..77bbf5ff9548 100644
+--- a/arch/arm/boot/dts/sun8i-v3s.dtsi
++++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+@@ -238,6 +238,13 @@
+ 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		lradc: lradc@01c22800 {
++			compatible = "allwinner,sun4i-a10-lradc-keys";
++			reg = <0x01c22800 0x400>;
++			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		uart0: serial@01c28000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x01c28000 0x400>;
 -- 
 2.12.0
