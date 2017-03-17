@@ -1,77 +1,71 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 1/3] mfd: wm831x: Add basic device tree binding
-Date: Fri, 17 Mar 2017 09:44:57 +0000
-Message-ID: <20170317094457.GN6986@localhost.localdomain>
-References: <1489592384-11510-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170316140019.eoe757vox5wrlkmu@dell>
- <20170316143144.GL6986@localhost.localdomain>
- <20170317091502.kzcrhj7vlku5mtq7@dell>
- <20170317092520.GM6986@localhost.localdomain>
- <20170317093720.ggraoffx6d6rggtw@dell>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v2 1/2] doc: Add bindings document for Xilinx LogiCore PR
+ Decoupler
+Date: Fri, 17 Mar 2017 10:57:18 +0100
+Message-ID: <9f823c88-ccd5-7534-9999-019c8a9f082a@xilinx.com>
+References: <1489711910-17443-1-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170317093720.ggraoffx6d6rggtw@dell>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1489711910-17443-1-git-send-email-mdf@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 09:37:20AM +0000, Lee Jones wrote:
-> On Fri, 17 Mar 2017, Charles Keepax wrote:
-> 
-> > On Fri, Mar 17, 2017 at 09:15:02AM +0000, Lee Jones wrote:
-> > > On Thu, 16 Mar 2017, Charles Keepax wrote:
-> > > 
-> > > > On Thu, Mar 16, 2017 at 02:00:19PM +0000, Lee Jones wrote:
-> > > > > On Wed, 15 Mar 2017, Charles Keepax wrote:
-> > > > > > +	if (i2c->dev.of_node) {
-> > > > > > +		const struct of_device_id *id = of_match_device(wm831x_of_match,
-> > > > > > +								&i2c->dev);
-> > > > > 
-> > > > > Not keen on this.  Please declare the variable up with the others.
-> > > > > 
-> > > > 
-> > > > They are never going to be used anywhere else in the function.
-> > > > Again I can if you feel strongly but isn't it really better to
-> > > > limit the scope of the variables if they are only being used
-> > > > locally.
-> > > 
-> > > I understand the motivation, but if we did that all the time, the code
-> > > would look pretty dire IMHO.
-> > > 
-> > 
-> > Ok I do another spin.
-> > 
-> > > > > > +		unsigned long of_type = (unsigned long)id->data;
-> > > > > 
-> > > > > And this one.
-> > > > > 
-> > > > > > +		type = (enum wm831x_parent)of_type;
-> > > > > 
-> > > > > Looks like you don't even need of_type.
-> > > > > 
-> > > > > Just cast id->data straight into wm81x_parent.
-> > > > 
-> > > > Pretty sure you will get a warning on 64-bit systems if I do
-> > > > that.
-> > > 
-> > > What makes you think that?
-> > > 
-> > 
-> > commit 942786e6e647cef94cf96dcd836d343be55fc452
-> > Author: Lee Jones <lee.jones@linaro.org>
-> > mfd: arizona: Rid data size incompatibility warn when building for 64bit
-> > 
-> > I am fairly sure an enum would get treated the same as an int by
-> > the compiler. I will try it and see.
-> 
-> I already prototyped it.  No warnings seen.
-> 
-
-Cool thanks, the weird corners of C never cease to amaze me I
-will update the patch and resend.
-
-Thanks,
-Charles
+T24gMTcuMy4yMDE3IDAxOjUxLCBNb3JpdHogRmlzY2hlciB3cm90ZToKPiBUaGlzIGFkZHMgdGhl
+IGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIFhpbGlueCBMb2dpQ09SRSBQUgo+IERlY291
+cGxlciBzb2Z0IGNvcmUuCj4gCj4gU2lnbmVkLW9mZi1ieTogTW9yaXR6IEZpc2NoZXIgPG1kZkBr
+ZXJuZWwub3JnPgo+IENjOiBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPgo+
+IENjOiBTw7ZyZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbT4KPiBDYzog
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZwo+IC0tLQo+IAo+IENoYW5nZXMgZnJvbSB2MToKPiAtIEFkZGVkIGNsb2NrIG5hbWVzICYg
+Y2xvY2sgdG8gZXhhbXBsZQo+IC0gTWVyZ2VkIHNvbWUgb2YgdGhlIGRlc2NyaXB0aW9uIGZyb20g
+TWljaGFsJ3MgdmVyc2lvbgo+IAo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZnBnYS94aWxpbngtcHIt
+ZGVjb3VwbGVyLnR4dCAgICAgICAgICB8IDMyICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBm
+aWxlIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9mcGdhL3hpbGlueC1wci1kZWNvdXBsZXIudHh0
+Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9mcGdh
+L3hpbGlueC1wci1kZWNvdXBsZXIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
+IGluZGV4IDAwMDAwMDAuLjIwODAwMDYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci50eHQKPiBA
+QCAtMCwwICsxLDMyIEBACj4gK1hpbGlueCBMb2dpQ09SRSBQYXJ0aWFsIFJlY29uZmlnIERlY291
+cGxlciBTb2Z0Y29yZQo+ICsKPiArVGhlIFhpbGlueCBMb2dpQ09SRSBQYXJ0aWFsIFJlY29uZmln
+IERlY291cGxlciBtYW5hZ2VzIG9uZSBvciBtb3JlCj4gK2RlY291cGxlcnMgLyBmcGdhIGJyaWRn
+ZXMuCj4gK1RoZSBjb250cm9sbGVyIGNhbiBkZWNvdXBsZS9kaXNhYmxlIHRoZSBicmlkZ2VzIHdo
+aWNoIHByZXZlbnRzIHNpZ25hbAo+ICtjaGFuZ2VzIGZyb20gcGFzc2luZyB0aHJvdWdoIHRoZSBi
+cmlkZ2UuICBUaGUgY29udHJvbGxlciBjYW4gYWxzbwo+ICtjb3VwbGUgLyBlbmFibGUgdGhlIGJy
+aWRnZXMgd2hpY2ggYWxsb3dzIHRyYWZmaWMgdG8gcGFzcyB0aHJvdWdoIHRoZQo+ICticmlkZ2Ug
+bm9ybWFsbHkuCj4gKwo+ICtUaGUgRHJpdmVyIHN1cHBvcnRzIG9ubHkgTU1JTyBoYW5kbGluZy4g
+QSBQUiByZWdpb24gY2FuIGhhdmUgbXVsdGlwbGUKPiArUFIgRGVjb3VwbGVzIHdoaWNoIGNhbiBi
+aGUgaGFuZGxlZCBpbmRlcGVuZGVudGx5IG9yIGNoYWluZXMgdmlhIGRlY291cGxlLwo+ICtkZWNv
+dXBsZV9zdGF0dXMgc2lnbmFscy4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29t
+cGF0aWJsZQkJOiBTaG91bGQgY29udGFpbiAieGxueCxwci1kZWNvdXBsZXItMS4wMCIKCnNob3Vs
+ZAoKSSB3b3VsZCB0ZW5kIHRvIGRvIHRoaXMgYXMKInhsbngscHItZGVjb3VwbGVyLTEuMDAiIGFu
+ZC9vciAgInhsbngscHJfZGVjb3VwbGVyIgoKCj4gKy0gcmVncwkJCTogYmFzZSBhZGRyZXNzIGFu
+ZCBzaXplIGZvciBkZWNvdXBsZXIgbW9kdWxlCj4gKy0gY2xvY2tzCQk6IGlucHV0IGNsb2NrIHRv
+IElQCj4gKy0gY2xvY2stbmFtZXMJCTogc2hvdWxkIGNvbnRhaW4gImFjbGsiCj4gKwo+ICtPcHRp
+b25hbCBwcm9wZXJ0aWVzOgo+ICstIGJyaWRnZS1lbmFibGUJCTogMCBpZiBkcml2ZXIgc2hvdWxk
+IGRpc2FibGUgYnJpZGdlIGF0IHN0YXJ0dXAKPiArCQkJICAxIGlmIGRyaXZlciBzaG91bGQgZW5h
+YmxlIGJyaWRnZSBhdCBzdGFydHVwCj4gKwkJCSAgRGVmYXVsdCBpcyB0byBsZWF2ZSBicmlkZ2Ug
+aW4gY3VycmVudCBzdGF0ZS4KCkludGVyZXN0aW5nIHRoYXQgdGhpcyBpcyBub3QgYSBib29sLgpC
+dXQgYW55d2F5IHRoaXMgc2hvdWxkIGJlIGxpbmsgdG8gYnJpZGdlIGJpbmRpbmcgYmVjYXVzZSBJ
+IGV4cGVjdCB0aGlzCmlzIHRoZSBzYW1lIGZvciBhbGwuCgo+ICsKPiArRXhhbXBsZToKPiArCWZw
+Z2EtYnJpZGdlQDEwMDAwMDQ1MCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJ4bG54LHByLWRlY291cGxl
+ci0xLjAwIjsKCiJ4bG54LHByLWRlY291cGxlci0xLjAwIiwgInhsbngscHJfZGVjb3VwbGVyIjsK
+Cj4gKwkJcmVncyA9IDwweDEwMDAgMHgxMD47Cj4gKwkJY2xvY2tzID0gPCZjbGtjIDE1PjsKPiAr
+CQljbG9jay1uYW1lcyA9ICJhY2xrIjsKPiArCQlicmlkZ2UtZW5hYmxlID0gPDA+Owo+ICsJfTsK
+PiAKClRoYW5rcywKTWljaGFsCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
