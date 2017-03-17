@@ -1,75 +1,39 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
-Subject: Re: [PATCH 3/5] i2c: i2c-stm32f7: add driver
-Date: Fri, 17 Mar 2017 16:35:20 +0100
-Message-ID: <CAOAejn0ScANyMEWnBfe0G8xQ5TbR-XYwEdXLkNexqC=AigBNJA@mail.gmail.com>
-References: <1489744738-21632-1-git-send-email-cedric.madianga@gmail.com>
- <1489744738-21632-4-git-send-email-cedric.madianga@gmail.com>
- <6ae90186-0e8d-654b-c9e3-2d1b4daf6198@baylibre.com>
- <CAOAejn0Hs7QOgcrHM2t3NsFQeD9dyvThDK-8iM1Lvb7Qv4fGGQ@mail.gmail.com>
- <971895d3-2fe6-ecb6-9dc3-ee71193b34ee@baylibre.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH 0/3] Basical Lichee Pi Zero with Dock support
+Date: Fri, 17 Mar 2017 23:43:40 +0800
+Message-ID: <20170317154343.39921-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <971895d3-2fe6-ecb6-9dc3-ee71193b34ee@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB3MIWDDAKGQE6IH7RBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Sorry I don't understand.
-> The value you use from the DT and the one calculated from the setup/hold/high/low value
-> with the algorithm I developed will set the same values.
+Lichee Pi Zero have an official dock, which makes use of all stamp hole pins.
 
-With the ST tool, I could set the following values:
-I2C speed mode (Master, Fast Mode, Fast Mode Plus)
-I2C speed frequency
-I2C clock source frequency
-I2C rise time
-I2C fall time
+Some extra functionalities are availble via the dock, e.g. an extra MMC slot
+and some keys connected to LRADC.
 
-The values set in the DT in this patchset is 0x40202537 for the
-following input values:
-I2C speed mode  = Master mode
-I2C speed frequency= 100 kHz
-I2C clock source frequency = 48 MHz
-I2C rise time = 25 ns
-I2C fall time = 10 ns
+This patchset adds the support of these two features of the dock.
 
-If I keep all the above values and just change I2C rise time with 100
-ns, I will have TIMINGR value at 0x10805E89
+Icenowy Zheng (3):
+  ARM: sun8i: v3s: add LRADC device node
+  ARM: dts: sun8i: add pinmux for V3s mmc1
+  ARM: dts: sun8i: add device tree for Lichee Pi Zero with Dock
 
->
-> The main difference is that you won't need the ST tool to calculate these, and even better
-> you can provide generic binding for whatever APB frequency the I2C peripheral is running
-> on.
+ arch/arm/boot/dts/Makefile                         |  3 +-
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts | 98 ++++++++++++++++++++++
+ arch/arm/boot/dts/sun8i-v3s.dtsi                   | 15 ++++
+ 3 files changed, 115 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
 
-As, I2C rise/fall time have some impacts in I2C timings value, the
-question is: it is very relevant to let customer control these
-parameters ?
-If the answer is NO, I agree with you, it is better to use your
-formula and remove this property from DT.
-If the answer is YES, I think we should keep ST tool.
-
-> Having the STM32L4 running mainline won't be hard, maybe useless, but not hard.
-> My point is that you can somehow consider the STM32F0/F1/F4 I2C IP to be "v1" or "gen1",
-> and the L0/L4/F6 (and H7 ?) to be "v2" or "gen2" then prepend a generic compatible to
-> have something like :
-> compatible = "st,stm32-i2c-v2", "st,stm32f7-i2c"
-
-This is not the strategy chosen by the company.
-They decided to push all driver with ip_name-stm32.c if the driver is
-common for all Soc.
-If it not the case, the suffix to be used is the name of the first
-supported SoC that introduced the IP in the mainline kernel.
-
-BR,
-Cedric
+-- 
+2.12.0
