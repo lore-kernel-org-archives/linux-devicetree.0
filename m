@@ -1,105 +1,66 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
-Date: Fri, 17 Mar 2017 10:17:47 +0100
-Message-ID: <20170317101747.67a09ccd@gmail.com>
-References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
- <20170316064218.9169-2-ralph.sennhauser@gmail.com>
- <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 1/3] mfd: wm831x: Add basic device tree binding
+Date: Fri, 17 Mar 2017 09:25:20 +0000
+Message-ID: <20170317092520.GM6986@localhost.localdomain>
+References: <1489592384-11510-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20170316140019.eoe757vox5wrlkmu@dell>
+ <20170316143144.GL6986@localhost.localdomain>
+ <20170317091502.kzcrhj7vlku5mtq7@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170317091502.kzcrhj7vlku5mtq7@dell>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 16 Mar 2017 17:03:05 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
-
+On Fri, Mar 17, 2017 at 09:15:02AM +0000, Lee Jones wrote:
+> On Thu, 16 Mar 2017, Charles Keepax wrote:
 > 
-> In essence I am very positive of this patch set and happy to merge
-> it as a PWM driver inside of GPIO if Thierry is OK with it.
-
-Hi Linus,
-
-thanks for merging the cleanup patches. 
-
-
+> > On Thu, Mar 16, 2017 at 02:00:19PM +0000, Lee Jones wrote:
+> > > On Wed, 15 Mar 2017, Charles Keepax wrote:
+> > > > +	if (i2c->dev.of_node) {
+> > > > +		const struct of_device_id *id = of_match_device(wm831x_of_match,
+> > > > +								&i2c->dev);
+> > > 
+> > > Not keen on this.  Please declare the variable up with the others.
+> > > 
+> > 
+> > They are never going to be used anywhere else in the function.
+> > Again I can if you feel strongly but isn't it really better to
+> > limit the scope of the variables if they are only being used
+> > locally.
 > 
-> > +static void mvebu_pwm_free(struct pwm_chip *chip, struct
-> > pwm_device *pwmd) +{
-> > +       struct mvebu_pwm *pwm = to_mvebu_pwm(chip);
-> > +       struct gpio_desc *desc = gpio_to_desc(pwmd->pwm);
-> > +       unsigned long flags;
-> > +
-> > +       spin_lock_irqsave(&pwm->lock, flags);
-> > +       gpiod_free(desc);
-> > +       pwm->used = false;
-> > +       spin_unlock_irqrestore(&pwm->lock, flags);
-> > +}  
+> I understand the motivation, but if we did that all the time, the code
+> would look pretty dire IMHO.
 > 
-> No need to set the output value to zero or something here?
-> And turn off blinking? Or is that done some other way?
->
 
-Heh, good point, will need to look into this.
+Ok I do another spin.
 
-
+> > > > +		unsigned long of_type = (unsigned long)id->data;
+> > > 
+> > > And this one.
+> > > 
+> > > > +		type = (enum wm831x_parent)of_type;
+> > > 
+> > > Looks like you don't even need of_type.
+> > > 
+> > > Just cast id->data straight into wm81x_parent.
+> > 
+> > Pretty sure you will get a warning on 64-bit systems if I do
+> > that.
 > 
-> > +       u = readl_relaxed(mvebu_gpioreg_blink_select(mvchip));
-> > +       u &= ~(1 << pwm->pin);  
+> What makes you think that?
 > 
-> In GPIO code I usually do this:
-> 
-> #include <linus/bitops.h>
-> 
-> u &= ~BIT(pwm->pin);
->
 
-linus/bitops.h ...
-    ^
-Another one of those nifty macros, sure, can do so for v2, though there
-are many instances of this technique already, I'll send another cleanup
-patch to convert them all for consistency sake.
+commit 942786e6e647cef94cf96dcd836d343be55fc452
+Author: Lee Jones <lee.jones@linaro.org>
+mfd: arizona: Rid data size incompatibility warn when building for 64bit
 
+I am fairly sure an enum would get treated the same as an int by
+the compiler. I will try it and see.
 
-> 
-> > +       u |= (pwm->id << pwm->pin);
-> 
-> I don't understand this line. Above you mask BIT(pwm->pin)
-> so we are only manipulating one bit, and then you ... shift the ID?
-> Is the ID always 0 or 1? If that is the case then this
-> is easier to understand:
-> 
-> if (pwm->id)
->   u |= BIT(pwm->pin);
-> 
-> + a comment
->
-
-mvebu_pwm_probe returns -EINVAL if id isn't 0 or 1.
-
-        if (id < 0 || id > 1)
-                return -EINVAL;
-
-Guess this needs commenting as well then.
-
-> 
-> > +static void mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
-> > +static void mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
-> 
-> I think both of these need to be tagged __maybe_unused to not give
-> noise in randconfig builds.
-
-I haven't seen any warnings with CONFIG_PWM disabled. Which
-configuration you expect to trigger a warning? mvebu_pwm_probe should
-be the same, right?
-
-> 
-> Yours,
-> Linus Walleij
-
-Thanks for the review.
-Ralph
+Thanks,
+Charles
