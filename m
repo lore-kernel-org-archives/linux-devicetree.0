@@ -1,95 +1,117 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 05/23] MAINTAINERS: Add file patterns for dove device
- tree bindings
-Date: Fri, 17 Mar 2017 13:02:26 +0100
-Message-ID: <CAMuHMdXYX8kk_EKkX7vS9tWG=JvfKcRGCNYDTnYCk_xZCdMYQg@mail.gmail.com>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
- <1489324627-19126-6-git-send-email-geert@linux-m68k.org> <20170313130138.GV11350@io.lakedaemon.net>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Fri, 17 Mar 2017 13:02:07 +0100
+Message-ID: <1489752127.2905.49.camel@pengutronix.de>
+References: <20170310130733.GU21222@n2100.armlinux.org.uk>
+         <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
+         <20170310140124.GV21222@n2100.armlinux.org.uk>
+         <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+         <20170310125342.7f047acf@vento.lan>
+         <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+         <20170311082549.576531d0@vento.lan>
+         <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+         <20170314004533.3b3cd44b@vento.lan>
+         <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+         <20170317114203.GZ21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170313130138.GV11350-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170317114203.GZ21222@n2100.armlinux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+On Fri, 2017-03-17 at 11:42 +0000, Russell King - ARM Linux wrote:
+> On Tue, Mar 14, 2017 at 08:55:36AM +0100, Hans Verkuil wrote:
+> > We're all very driver-development-driven, and userspace gets very little
+> > attention in general. So before just throwing in the towel we should take
+> > a good look at the reasons why there has been little or no development: is
+> > it because of fundamental design defects, or because nobody paid attention
+> > to it?
+> > 
+> > I strongly suspect it is the latter.
+> > 
+> > In addition, I suspect end-users of these complex devices don't really care
+> > about a plugin: they want full control and won't typically use generic
+> > applications. If they would need support for that, we'd have seen much more
+> > interest. The main reason for having a plugin is to simplify testing and
+> > if this is going to be used on cheap hobbyist devkits.
+> 
+> I think you're looking at it with a programmers hat on, not a users hat.
+> 
+> Are you really telling me that requiring users to 'su' to root, and then
+> use media-ctl to manually configure the capture device is what most
+> users "want" ?
+> 
+> Hasn't the way technology has moved towards graphical interfaces,
+> particularly smart phones, taught us that the vast majority of users
+> want is intuitive, easy to use interfaces, and not the command line
+> with reams of documentation?
+> 
+> Why are smart phones soo popular - it's partly because they're flashy,
+> but also because of the wealth of apps, and apps which follow the
+> philosophy of "do one job, do it well" (otherwise they get bad reviews.)
 
-On Mon, Mar 13, 2017 at 2:01 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> On Sun, Mar 12, 2017 at 02:16:49PM +0100, Geert Uytterhoeven wrote:
->> Submitters of device tree binding documentation may forget to CC
->> the subsystem maintainer if this is missing.
->>
->> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
->> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
->> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> ---
->> Please apply this patch directly if you want to be involved in device
->> tree binding documentation for your subsystem.
->>
->> v2:
->>   - No changes.
->>
->> Impact on next-20170310:
->>
->> +Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
->> +Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
->> +Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
->> +Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
->>  Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->>  Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->> +linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated list:ARM/Marvell Dove/MV78xx0/Orion SOC support)
->>  devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->>  linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
->> ---
->>  MAINTAINERS | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 6428d3c82fce9670..ce461fefec6c9463 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -1486,6 +1486,7 @@ M:      Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>  M:   Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>  L:   linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
->>  S:   Maintained
->> +F:   Documentation/devicetree/bindings/soc/dove/
+> > An additional complication is simply that it is hard to find fully supported
+> > MC hardware. omap3 boards are hard to find these days, renesas boards are not
+> > easy to get, freescale isn't the most popular either. Allwinner, mediatek,
+> > amlogic, broadcom and qualcomm all have closed source implementations or no
+> > implementation at all.
+> 
+> Right, and that in itself tells us something - the problem that we're
+> trying to solve is not one that commonly exists in the real world.
+> 
+> Yes, the hardware we have in front of us may be very complex, but if
+> there's very few systems out there which are capable of making use of
+> all that complexity, then we're trying to solve a problem that isn't
+> the common case - and if it's going to take years to solve it (it
+> already has taken years) then it's the wrong problem to be solved.
+> 
+> I bet most of the problem can be eliminated if, rather than exposing
+> all this complexity, we instead expose a simpler capture system where
+> the board designer gets to "wire up" the capture system.
+> 
+> I'll go back to my Bayer example, because that's the simplest.  As
+> I've already said many times in these threads, there is only one
+> possible path through the iMX6 device that such a source can be used
+> with - it's a fixed path.  The actual path depends on the CSI2
+> virtual channel that the camera has been _configured_ to use, but
+> apart from that, it's effectively a well known set of blocks.  Such
+> a configuration could be placed in DT.
+> 
+> For RGB connected to a single parallel CSI, things get a little more
+> complex - capture through the CSI or through two other capture devices
+> for de-interlacing or other features.  However, I'm not convinced that
+> exposing multiple /dev/video* devices for different features for the
+> same video source is a sane approach - I think that's a huge usability
+> problem.  (The user is expected to select the capture device on iMX6
+> depending on the features they want, and if they want to change features,
+> they're expected to shut down their application and start it up on a
+> different capture device.)  For the most part on iMX6, there's one
+> path down to the CSI block, and then there's optional routing through
+> the rest of the IPU depending on what features you want (such as
+> de-interlacing.)
 >
-> I'm not opposed to the idea, but I'm not seeing how we can do this
-> completely.  What you've added only covers dove soc bindings.  There's
-> orion5x, kirkwood, and all the newer mvebu socs.  Not to mention a lot
-> of IP blocks we care about that aren't SoC- or Marvell-specific.
+> The complex case is a CSI2 connected camera which produces multiple
+> streams through differing virtual channels - and that's IMHO the only
+> case where we need multiple different /dev/video* capture devices to
+> be present.
 
-There's no orion5x, kirkwood, mvebu, ... under
-Documentation/devicetree/bindings/soc.
+I wanted to have the IC PRP outputs separate because the IC PRP should
+support running both the VF and ENC tasks with different parameters from
+the same input. That would allow to capture two different resolutions
+(up to 1024x1024) at the same time.
 
-> The dts files have a much more clear file pattern -> maintainer pairing.
-> Perhaps we should make checkpatch smarter?  e.g. compatible strings
-> found in changed binding docs are searched for in dts{i} files.  Hits
-> are mapped to maintainers.
+I think most of the simple, fixed pipeline use cases could be handled by
+libv4l2, by allowing to pass a v4l2 subdevice path to v4l2_open. If that
+function internally would set up the media links to the
+nearest /dev/video interface, propagate format, resolution and frame
+intervals if necessary, and return an fd to the video device, there'd be
+no additional complexity for the users beyond selecting the v4l2_subdev
+instead of the video device.
 
-The DTS files are maintained by a platform maintainer, while my patch
-series was about Linux kernel subsystem maintainers.
-
-In this particular case both maintainers are the same, but this is not true in
-general.  Hence deriving a platform maintainer from a Linux subsystem specific
-binding document is the wrong way around.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
