@@ -1,59 +1,224 @@
-From: Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v4 0/7] rk808: Add RK805 support
-Date: Fri, 17 Mar 2017 15:06:10 +0800
-Message-ID: <1489734377-1716-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org
-Cc: huangtao@rock-chips.com, xxx@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, w.egorov@phytec.de, Elaine Zhang <zhangqing@rock-chips.com>
+From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 3/7] regulator: rk808: Add regulator driver for RK805
+Date: Fri, 17 Mar 2017 15:06:13 +0800
+Message-ID: <1489734377-1716-4-git-send-email-zhangqing@rock-chips.com>
+References: <1489734377-1716-1-git-send-email-zhangqing@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1489734377-1716-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-change in v4:
-PATCH V4 1/7: NO change in V4
-PATCH V4 2/7: rename the commit message
-PATCH V4 3/7: NO change in V4
-PATCH V4 4/7: Split this patch up into subsystems patch 5/7 6/7
-PATCH V4 5/7: new added
-PATCH V4 6/7: new added
-PATCH V4 7/7: NO change in V4
+Add support for the rk805 regulator. The regulator module consists
+of 4 DCDCs, 3 LDOs.
 
+The output voltages are configurable and are meant to supply power
+to the main processor and other components.
 
-change in V3:
-PATCH V3 1/5: NO change in V3
-PATCH V3 2/5: add rk805 RTC INT MASK define
-PATCH V3 3/5: RK805 set suspend enable and disable is different from rk808
-              use rk805_regs_ops and rk805_switch_ops
-PATCH V3 4/5: fix up the shutdown func
-              use pm_shutdown_prepare_fn to prepare shutdown
-              and pm_pwroff_fn pull down gpio to shut down rk805
-              it will update in the future(after rk808 support gpio func)
-PATCH V3 5/5: NO change in V3
+Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ drivers/regulator/Kconfig           |   4 +-
+ drivers/regulator/rk808-regulator.c | 130 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+), 2 deletions(-)
 
-change in V2:
-PATCH V2 1/5: NO change in V2
-PATCH V2 2/5: add rk805 BUCK ILMAX define
-PATCH V2 3/5: NO change in V2
-PATCH V2 4/5: setting RK805 BUCK ILMAX in pre init
-PATCH V2 5/5: Add RK805 device tree bindings document
-
-Elaine Zhang (7):
-  mfd: rk808: fix up the chip id get failed
-  mfd: rk808: add rk805 regs addr and ID
-  regulator: rk808: Add regulator driver for RK805
-  mfd: rk808: Add RK805 support
-  clk: Kconfig: Name RK805 in Kconfig for COMMON_CLK_RK808
-  rtc: Kconfig: Name RK805 in Kconfig for RTC_DRV_RK808
-  mfd: dt-bindings: Add RK805 device tree bindings document
-
- Documentation/devicetree/bindings/mfd/rk808.txt |  20 +++-
- drivers/clk/Kconfig                             |   4 +-
- drivers/mfd/Kconfig                             |   4 +-
- drivers/mfd/rk808.c                             | 143 +++++++++++++++++++++++-
- drivers/regulator/Kconfig                       |   4 +-
- drivers/regulator/rk808-regulator.c             | 130 +++++++++++++++++++++
- drivers/rtc/Kconfig                             |   4 +-
- include/linux/mfd/rk808.h                       | 120 ++++++++++++++++++++
- 8 files changed, 414 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index be06eb29c681..285e28051219 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -650,11 +650,11 @@ config REGULATOR_RC5T583
+ 	  outputs which can be controlled by i2c communication.
+ 
+ config REGULATOR_RK808
+-	tristate "Rockchip RK808/RK818 Power regulators"
++	tristate "Rockchip RK805/RK808/RK818 Power regulators"
+ 	depends on MFD_RK808
+ 	help
+ 	  Select this option to enable the power regulator of ROCKCHIP
+-	  PMIC RK808 and RK818.
++	  PMIC RK805,RK808 and RK818.
+ 	  This driver supports the control of different power rails of device
+ 	  through regulator interface. The device supports multiple DCDC/LDO
+ 	  outputs which can be controlled by i2c communication.
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index fb44d5215e30..128c81e19ee8 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -65,6 +65,27 @@
+ /* max steps for increase voltage of Buck1/2, equal 100mv*/
+ #define MAX_STEPS_ONE_TIME 8
+ 
++#define RK805_DESC(_id, _match, _supply, _min, _max, _step, _vreg,      \
++	_vmask, _ereg, _emask, _etime)                                  \
++	[_id] = {                                                       \
++		.name           = (_match),                             \
++		.supply_name    = (_supply),                            \
++		.of_match       = of_match_ptr(_match),                 \
++		.regulators_node = of_match_ptr("regulators"),          \
++		.type           = REGULATOR_VOLTAGE,                    \
++		.id             = (_id),                                \
++		.n_voltages     = (((_max) - (_min)) / (_step) + 1),    \
++		.owner          = THIS_MODULE,                          \
++		.min_uV         = (_min) * 1000,                        \
++		.uV_step        = (_step) * 1000,                       \
++		.vsel_reg       = (_vreg),                              \
++		.vsel_mask      = (_vmask),                             \
++		.enable_reg     = (_ereg),                              \
++		.enable_mask    = (_emask),                             \
++		.enable_time    = (_etime),                             \
++		.ops            = &rk805_reg_ops,                       \
++	}
++
+ #define RK8XX_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
+ 	_vmask, _ereg, _emask, _etime)					\
+ 	[_id] = {							\
+@@ -298,6 +319,28 @@ static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
+ 				  sel);
+ }
+ 
++static int rk805_set_suspend_enable(struct regulator_dev *rdev)
++{
++	unsigned int reg;
++
++	reg = rdev->desc->enable_reg + RK808_SLP_SET_OFF_REG_OFFSET;
++
++	return regmap_update_bits(rdev->regmap, reg,
++				  rdev->desc->enable_mask,
++				  rdev->desc->enable_mask);
++}
++
++static int rk805_set_suspend_disable(struct regulator_dev *rdev)
++{
++	unsigned int reg;
++
++	reg = rdev->desc->enable_reg + RK808_SLP_SET_OFF_REG_OFFSET;
++
++	return regmap_update_bits(rdev->regmap, reg,
++				  rdev->desc->enable_mask,
++				  0);
++}
++
+ static int rk808_set_suspend_enable(struct regulator_dev *rdev)
+ {
+ 	unsigned int reg;
+@@ -320,6 +363,27 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
+ 				  rdev->desc->enable_mask);
+ }
+ 
++static struct regulator_ops rk805_reg_ops = {
++		.list_voltage           = regulator_list_voltage_linear,
++		.map_voltage            = regulator_map_voltage_linear,
++		.get_voltage_sel        = regulator_get_voltage_sel_regmap,
++		.set_voltage_sel        = regulator_set_voltage_sel_regmap,
++		.enable                 = regulator_enable_regmap,
++		.disable                = regulator_disable_regmap,
++		.is_enabled             = regulator_is_enabled_regmap,
++		.set_suspend_voltage    = rk808_set_suspend_voltage,
++		.set_suspend_enable     = rk805_set_suspend_enable,
++		.set_suspend_disable    = rk805_set_suspend_disable,
++};
++
++static struct regulator_ops rk805_switch_ops = {
++		.enable                 = regulator_enable_regmap,
++		.disable                = regulator_disable_regmap,
++		.is_enabled             = regulator_is_enabled_regmap,
++		.set_suspend_enable     = rk805_set_suspend_enable,
++		.set_suspend_disable    = rk805_set_suspend_disable,
++};
++
+ static struct regulator_ops rk808_buck1_2_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear,
+ 	.map_voltage		= regulator_map_voltage_linear,
+@@ -369,6 +433,68 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
+ 	.set_suspend_disable	= rk808_set_suspend_disable,
+ };
+ 
++static const struct regulator_desc rk805_reg[] = {
++	{
++		.name = "DCDC_REG1",
++		.supply_name = "vcc1",
++		.of_match = of_match_ptr("DCDC_REG1"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK805_ID_DCDC1,
++		.ops = &rk805_reg_ops,
++		.type = REGULATOR_VOLTAGE,
++		.min_uV = 712500,
++		.uV_step = 12500,
++		.n_voltages = 64,
++		.vsel_reg = RK805_BUCK1_ON_VSEL_REG,
++		.vsel_mask = RK818_BUCK_VSEL_MASK,
++		.enable_reg = RK805_DCDC_EN_REG,
++		.enable_mask = BIT(0),
++		.owner = THIS_MODULE,
++	}, {
++		.name = "DCDC_REG2",
++		.supply_name = "vcc2",
++		.of_match = of_match_ptr("DCDC_REG2"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK805_ID_DCDC2,
++		.ops = &rk805_reg_ops,
++		.type = REGULATOR_VOLTAGE,
++		.min_uV = 712500,
++		.uV_step = 12500,
++		.n_voltages = 64,
++		.vsel_reg = RK805_BUCK2_ON_VSEL_REG,
++		.vsel_mask = RK818_BUCK_VSEL_MASK,
++		.enable_reg = RK805_DCDC_EN_REG,
++		.enable_mask = BIT(1),
++		.owner = THIS_MODULE,
++	}, {
++		.name = "DCDC_REG3",
++		.supply_name = "vcc3",
++		.of_match = of_match_ptr("DCDC_REG3"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK805_ID_DCDC3,
++		.ops = &rk805_switch_ops,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = 1,
++		.enable_reg = RK805_DCDC_EN_REG,
++		.enable_mask = BIT(2),
++		.owner = THIS_MODULE,
++	},
++
++	RK805_DESC(RK805_ID_DCDC4, "DCDC_REG4", "vcc4", 800, 3400, 100,
++		RK805_BUCK4_ON_VSEL_REG, RK818_BUCK4_VSEL_MASK,
++		RK805_DCDC_EN_REG, BIT(3), 0),
++
++	RK805_DESC(RK805_ID_LDO1, "LDO_REG1", "vcc5", 800, 3400, 100,
++		RK805_LDO1_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
++		BIT(0), 400),
++	RK805_DESC(RK805_ID_LDO2, "LDO_REG2", "vcc5", 800, 3400, 100,
++		RK805_LDO2_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
++		BIT(1), 400),
++	RK805_DESC(RK805_ID_LDO3, "LDO_REG3", "vcc6", 800, 3400, 100,
++		RK805_LDO3_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
++		BIT(2), 400),
++};
++
+ static const struct regulator_desc rk808_reg[] = {
+ 	{
+ 		.name = "DCDC_REG1",
+@@ -625,6 +751,10 @@ static int rk808_regulator_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pdata);
+ 
+ 	switch (rk808->variant) {
++	case RK805_ID:
++		regulators = rk805_reg;
++		nregulators = RK805_NUM_REGULATORS;
++		break;
+ 	case RK808_ID:
+ 		regulators = rk808_reg;
+ 		nregulators = RK808_NUM_REGULATORS;
 -- 
 1.9.1
