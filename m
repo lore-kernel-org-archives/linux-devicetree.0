@@ -1,75 +1,75 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Sat, 18 Mar 2017 13:30:51 +0100
-Message-ID: <9545c361-61e2-0d93-c5a6-c0b3837e1c8d@grandegger.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <234d9e75-0083-b8b4-c781-add653fdb550@grandegger.com>
- <b3ebb569-b50c-39ad-dec5-0059fbfba8fb@timesys.com>
- <eb4e0f6f-14de-3369-0d50-7371ae74f4fb@grandegger.com>
- <3dbf8748-9d04-0f21-0e95-448d7a72e7d5@timesys.com>
- <41439729-42d0-d883-2801-2d3607f2aeab@grandegger.com>
- <CANiP4c8WMeT1Cr7WDXew1ne7DFR04oaA8Uch0zvyyOf5yCa37A@mail.gmail.com>
- <3dba0948-ffcb-8e80-fb32-62bb0aca6627@grandegger.com>
- <54d9a104-8ed1-4bb3-666e-042d3781dbfb@timesys.com>
- <006d9e14-47bf-1add-97c3-24098b43267f@grandegger.com>
- <69173747-cc2e-55f7-acad-4b5ba2a22863@timesys.com>
- <d5182e77-c243-1980-4cb6-39cd95075f4f@grandegger.com>
- <0362316b-ef76-1733-dbfc-8b644f758db9@timesys.com>
- <7730cff6-6e85-c98d-0315-bd3888d3aeb1@grandegger.com>
- <ff5d44d1-3bfe-8dae-2aaa-561ab0cb989c@timesys.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/3] Khadas VIM support (Amlogic Meson GXL S905X)
+Date: Sat, 18 Mar 2017 13:36:54 +0100
+Message-ID: <20170318123657.13798-1-martin.blumenstingl@googlemail.com>
+References: <20170304215126.7020-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ff5d44d1-3bfe-8dae-2aaa-561ab0cb989c-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170304215126.7020-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc: mark.rutland@arm.com, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, gouwa@szwesion.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Akshay,
+This series adds support for the Khadas VIM and Khadas VIM Pro boards
+(both are provided through a single .dts as the only two differences are
+the eMMC size and different SDIO WIFI chips - both are Broadcom brcmfmac
+based though).
+More details can be found on the official website: [0]
 
-Am 17.03.2017 um 19:28 schrieb Akshay Bhat:
-> Hi Wolfgang,
->
-> On 03/17/2017 01:04 PM, Wolfgang Grandegger wrote:
->>
->> Hm, that's unusual. Cable disconnected and then send a message:
->>
->> $ grep /proc/interrupts; sleep 10; /proc/interrupts
->>
->> should make things clear. But maybe it's a clever chip and it does stop
->> sending error messages if the error counter does not change any more.
->> After bus-off, the chip is quiet, of course. Should have a closer look
->> to the CAN standard.
->>
->
-> The interrupt count does not increment after device reaches
-> tx-error-passive (with cable disconnected).
->
-> # while true; do grep -i hi3110 /proc/interrupts; sleep 10; done &
-> [1] 793
-> #
-> 111:          0          0  gpio-mxc  12 Edge      hi3110
-> # candump -t d -e any,0:0,#FFFFFFF &
-> [2] 798
-> # cansend can0 123#
-> #
->  (000.000000)  can0  20000004   [8]  00 08 00 00 00 00 60 00   ERRORFRAME
-> 	controller-problem{tx-error-warning}
-> 	error-counter-tx-rx{{96}{0}}
->  (000.002122)  can0  20000004   [8]  00 20 00 00 00 00 80 00   ERRORFRAME
-> 	controller-problem{tx-error-passive}
-> 	error-counter-tx-rx{{128}{0}}
-> 111:         10          0  gpio-mxc  12 Edge      hi3110
-> 111:         10          0  gpio-mxc  12 Edge      hi3110
-> 111:         10          0  gpio-mxc  12 Edge      hi3110
+I have tested this on a Khadas VIM Pro board. It would be nice if someone
+with a non-Pro board could give it a try as well.
 
-OK, then there is no good reason connecting the STAT interrupt pin.
 
-Wolfgang.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patchset depends on:
+- "meson-gxl pinctrl - add the missing PWM pins" see [2]
+- "ARM64: dts: meson-gxl: improve support for the P212 reference design"
+  see [4] - already merged in v4.12/dt64 of Kevin's Amlogic tree
+- "ARM64: defconfig: enable the leds-pwm driver and default-on trigger"
+  see [1] - already merged in v4.12/defconfig of Kevin's Amlogic tree
+- "brcmfmac: add support for BCM43455 with modalias sdio:c00v02D0dA9BF"
+  see [3], this is NOT a direct dependency (it's only required to get
+  WIFI working on the Khadas VIM Pro) and it's already merged for v4.11
+  (commit a62a77881b1b6708ffeddd9bf0529494f7b199e3)
+
+
+Changes since v1:
+- updated the cover-letter to inclulde the P212 reference design patch
+  as dependency. also re-ordered the dependencies so the PWM series
+  is on top (as it's the only dependency which is not merged yet)
+- rebased onto the v4.12/dt64 branch of Kevin's Amlogic tree
+- added Rob Herring's ACK on patch #1 and #2
+- added Neil Armstrong's Tested-By to patch #3
+
+
+[0] http://khadas.com/vim/
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-February/002474.html
+[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-March/002658.html
+[3] https://www.spinics.net/lists/linux-mmc/msg41627.html
+[4] http://lists.infradead.org/pipermail/linux-amlogic/2017-March/002638.html
+
+
+Martin Blumenstingl (3):
+  devicetree: add vendor prefix for Khadas
+  dt-bindings: amlogic: add the Khadas VIM
+  ARM64: dts: meson-gxl: add support for the Khadas VIM board
+
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   2 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../dts/amlogic/meson-gxl-s905x-khadas-vim.dts     | 114 +++++++++++++++++++++
+ 4 files changed, 118 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+
+-- 
+2.12.0
