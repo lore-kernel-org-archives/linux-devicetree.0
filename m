@@ -1,80 +1,41 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 1/2] ARM: dts: bcm5301x: Add TWD WD Support to DT
-Date: Sat, 18 Mar 2017 09:41:56 -0700
-Message-ID: <171eeda6-76d7-a241-b8cf-19c7e4283ca2@gmail.com>
-References: <1488817485-7503-1-git-send-email-jon.mason@broadcom.com>
- <1488817485-7503-2-git-send-email-jon.mason@broadcom.com>
- <03eb99e1-f18c-d4a3-32bf-d90640b14ab1@gmail.com>
- <ece3845e-fdaf-3d90-6667-790dcfdcbe9c@gmail.com>
+From: Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH v5 4/4] fpga pr ip: Platform driver for Altera Partial
+ Reconfiguration IP.
+Date: Sat, 18 Mar 2017 19:27:50 +0100
+Message-ID: <20170318192750.716e9b28@crub>
+References: <1489174827-6033-1-git-send-email-matthew.gerlach@linux.intel.com>
+        <1489174827-6033-5-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ece3845e-fdaf-3d90-6667-790dcfdcbe9c@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Jon Mason <jon.mason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489174827-6033-5-git-send-email-matthew.gerlach@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthew.gerlach@linux.intel.com
+Cc: atull@kernel.org, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMy8xOC8yMDE3IDAzOjM2IEFNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4gT24gMDMv
-MTUvMjAxNyAxMDo1MyBQTSwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPj4gT24gMDMvMDYvMjAx
-NyAwODoyNCBBTSwgSm9uIE1hc29uIHdyb3RlOgo+Pj4gRnJvbTogSm9uIE1hc29uIDxqb25tYXNv
-bkBicm9hZGNvbS5jb20+Cj4+Pgo+Pj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBBUk0gVFdEIFdhdGNo
-ZG9nIHRvIHRoZSBiY201MzAxeCBkZXZpY2UgdHJlZS4gIFRoZQo+Pj4gQVJNIFRXRCB0aW1lciBh
-bGxvY2F0ZWQgdGhlIHJlZ2lzdGVyIHNwYWNlIGZvciB0aGUgV0RULCBzbyB0aGlzIHBhdGNoCj4+
-PiBuZWNlc3NpdGF0ZWQgc2hyaW5raW5nIHRoYXQuICBBbHNvLCB0aGUgR0lDIG1hc2tzIHdlcmUg
-YWRkZWQgZm9yIHRoZXNlLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IEpvbiBNYXNvbiA8am9ubWFz
-b25AYnJvYWRjb20uY29tPgo+Pgo+PiBUaGVyZSB3ZXJlIHNvbWUgbWlub3IgY29uZmxpY3RzIHRo
-YXQgaGF2ZSBiZWVuIHJlc29sdmVkLCBhcHBsaWVkLCB0aGFua3MhCj4gCj4gU29sdmluZyBjb25m
-bGljdCBieSByZW1vdmluZyBhIHJlZyBwcm9wZXJ0eT8gOykKPiB0aW1lckAyMDYwMCB7Cj4gICAg
-IGNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hOS10d2QtdGltZXIiOwo+ICAgICBpbnRlcnJ1cHRz
-ID0gPEdJQ19QUEkgMTMgKEdJQ19DUFVfTUFTS19TSU1QTEUoMikgfAo+ICAgICAgICAgICAgICAg
-ICAgIElSUV9UWVBFX0VER0VfUklTSU5HKT47Cj4gICAgIGNsb2NrcyA9IDwmcGVyaXBoX2Nsaz47
-Cj4gfTsKClNvcnJ5IGFib3V0IHRoYXQsIHRoZSBuZXcgY29tbWl0IGlzIHB1c2hlZCB0byB0aGUg
-c2FtZSBicmFuY2g6CgpodHRwczovL2dpdGh1Yi5jb20vQnJvYWRjb20vc3RibGludXgvY29tbWl0
-L2YyMmM2MzVlNTg1NDcxZDAxYTM4YjgyOWMwNzUzYzE0NjdiNTA1OGUKCmFuZCBpdCBub3cgaW5j
-b3Jwb3JhdGVzOgoKQVJNOiBkdHM6IEJDTTUzMDFYOiBDb3JyZWN0IEdJQ19QUEkgaW50ZXJydXB0
-IGZsYWdzCgp3aGljaCB3YXMgYXBwbGllZCB0byBkZXZpY2V0cmVlL2ZpeGVzIGFuZCBub3QgZGV2
-aWNldHJlZS9uZXh0LgoKPiAKPiBUaGlzIG1heSBiZSBhIGJhZCBpZGVhIDpQCj4gWyAgICAwLjAy
-MDMzMF0gLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tCj4gWyAgICAwLjAyNTI4
-MF0gV0FSTklORzogQ1BVOiAwIFBJRDogMCBhdCBhcmNoL2FybS9rZXJuZWwvc21wX3R3ZC5jOjQx
-Mgo+IHR3ZF9sb2NhbF90aW1lcl9vZl9yZWdpc3RlcisweDZjLzB4ODAoKQo+IFsgICAgMC4wMzU2
-NTNdIHR3ZF9sb2NhbF90aW1lcl9vZl9yZWdpc3RlciBmYWlsZWQgKC0xMikKPiBbICAgIDAuMDQw
-OTI0XSBNb2R1bGVzIGxpbmtlZCBpbjoKPiBbICAgIDAuMDQ0MTcxXSBDUFU6IDAgUElEOiAwIENv
-bW06IHN3YXBwZXIvMCBOb3QgdGFpbnRlZCA0LjQuNTMgIzAKPiBbICAgIDAuMDUwNDYyXSBIYXJk
-d2FyZSBuYW1lOiBCQ001MzAxWAo+IFsgICAgMC4wNTQxNjFdIEJhY2t0cmFjZToKPiBbICAgIDAu
-MDU2NzgxXSBbPGMwMDE3MDUwPl0gKGR1bXBfYmFja3RyYWNlKSBmcm9tIFs8YzAwMTcyNGM+XQo+
-IChzaG93X3N0YWNrKzB4MTgvMHgxYykKPiBbICAgIDAuMDY0ODMxXSAgcjc6MDAwMDAxOWMgcjY6
-YzAzZWExNWUgcjU6NjAwMDAwZDMgcjQ6MDAwMDAwMDAKPiBbICAgIDAuMDcwOTkyXSBbPGMwMDE3
-MjM0Pl0gKHNob3dfc3RhY2spIGZyb20gWzxjMDE4MTcyND5dCj4gKGR1bXBfc3RhY2srMHg4NC8w
-eGE0KQo+IFsgICAgMC4wNzg2ODhdIFs8YzAxODE2YTA+XSAoZHVtcF9zdGFjaykgZnJvbSBbPGMw
-MDIxNTM0Pl0KPiAod2Fybl9zbG93cGF0aF9jb21tb24rMHg4Yy8weGI4KQo+IFsgICAgMC4wODcy
-OTRdICByNTowMDAwMDAwOSByNDpjMDQ5N2Y0OAo+IFsgICAgMC4wOTExODhdIFs8YzAwMjE0YTg+
-XSAod2Fybl9zbG93cGF0aF9jb21tb24pIGZyb20gWzxjMDAyMTU5OD5dCj4gKHdhcm5fc2xvd3Bh
-dGhfZm10KzB4MzgvMHg0MCkKPiBbICAgIDAuMTAwNDQ0XSAgcjg6YzdmZmU3MDAgcjc6YzA0YjBh
-MTQgcjY6YzA0OTgzYzAgcjU6MDAwMDAwMDIgcjQ6YzZkZTc4ZjAKPiBbICAgIDAuMTA3NzIxXSBb
-PGMwMDIxNTY0Pl0gKHdhcm5fc2xvd3BhdGhfZm10KSBmcm9tIFs8YzA0NjQwMTA+XQo+ICh0d2Rf
-bG9jYWxfdGltZXJfb2ZfcmVnaXN0ZXIrMHg2Yy8weDgwKQo+IFsgICAgMC4xMTc2MjldICByMzpm
-ZmZmZmZmNCByMjpjMDNlYTEzNQo+IFsgICAgMC4xMjE1MTJdIFs8YzA0NjNmYTQ+XSAodHdkX2xv
-Y2FsX3RpbWVyX29mX3JlZ2lzdGVyKSBmcm9tCj4gWzxjMDQ3NjBiMD5dIChjbG9ja3NvdXJjZV9w
-cm9iZSsweDU0LzB4OTQpCj4gWyAgICAwLjEzMTQxMF0gIHI1OjAwMDAwMDAyIHI0OmM2ZGU3OGYw
-Cj4gWyAgICAwLjEzNTI5OV0gWzxjMDQ3NjA1Yz5dIChjbG9ja3NvdXJjZV9wcm9iZSkgZnJvbSBb
-PGMwNDYzNjZjPl0KPiAodGltZV9pbml0KzB4MzAvMHgzOCkKPiBbICAgIDAuMTQzNTMyXSAgcjU6
-ZmZmZmZmZmYgcjQ6MDAwMDAwMDAKPiBbICAgIDAuMTQ3NDEyXSBbPGMwNDYzNjNjPl0gKHRpbWVf
-aW5pdCkgZnJvbSBbPGMwNDYwYmUwPl0KPiAoc3RhcnRfa2VybmVsKzB4Mjc0LzB4M2Y0KQo+IFsg
-ICAgMC4xNTUzNzZdIFs8YzA0NjA5NmM+XSAoc3RhcnRfa2VybmVsKSBmcm9tIFs8MDAwMDgwN2M+
-XSAoMHg4MDdjKQo+IFsgICAgMC4xNjE5NDRdICByMTA6MDAwMDAwMDAgcjk6NDEzZmMwOTAgcjg6
-MDAwMDQwNmEgcjc6YzA0OWFjZDQKPiByNjpjMDQ4OGEyNCByNTpjMDQ5ODQ0NAo+IFsgICAgMC4x
-NzA0NTRdICByNDpjMDRiMGIyMAo+IFsgICAgMC4xNzMyMTNdIC0tLVsgZW5kIHRyYWNlIGYyNGI2
-Yzg4YWUwMGZhOWEgXS0tLQo+IAoKLS0gCkZsb3JpYW4KCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Matthew,
+
+On Fri, 10 Mar 2017 11:40:27 -0800
+matthew.gerlach@linux.intel.com matthew.gerlach@linux.intel.com wrote:
+
+...
+>+#include "altera-pr-ip-core.h"
+
+Shouldn't we put this header to include/linux? Compiling the
+out-of-tree modules using alt_pr_register/alt_pr_unregister
+will not work if this header is in drivers/fpga.
+
+...
+>+
+>+module_platform_driver(alt_pr_platform_driver);
+
+Please add MODULE_LICENSE("GPL v2") here. Otherwise, when built as
+a module it cannot be loaded because the alt_pr register/unregister
+functions are exported as GPL only. Also please add module author
+and description.
+
+Thanks,
+
+Anatolij
