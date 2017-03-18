@@ -1,60 +1,46 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
-Date: Fri, 17 Mar 2017 16:05:26 -0700
-Message-ID: <m2zigj5wsp.fsf@baylibre.com>
-References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
-        <20170316100743.GA12137@gondor.apana.org.au>
-        <m2mvcl6pwg.fsf@baylibre.com>
-        <20170317083032.GA18512@gondor.apana.org.au>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: thermal: add support for Raspberry Pi thermal
+Date: Sat, 18 Mar 2017 01:01:31 +0100
+Message-ID: <20170318000132.9212-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170317083032.GA18512-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> (Herbert Xu's
-        message of "Fri, 17 Mar 2017 16:30:32 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> writes:
-
-> On Thu, Mar 16, 2017 at 11:24:31AM -0700, Kevin Hilman wrote:
->> Hi Herbert,
->> 
->> Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> writes:
->> 
->> > On Wed, Feb 22, 2017 at 07:55:24AM +0100, Heiner Kallweit wrote:
->> >> Expose clock CLKID_RNG0 which is needed for the HW random number generator.
->> >> 
->> >> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >
->> > All patches applied.  Thanks.
->> 
->> Actually, can you just apply [PATCH 4/4] to your tree?
->> 
->> The clock and DT patches need to go through their respective trees or
->> will otherwise have conflicts with other things going in via those
->> trees.
->
-> It's too late now.  Please speak up sooner next time.  These
-> patches were posted a month ago.
-
-Sorry, I didn't realize you would be applying everything.  Also, I'm not
-the original author, just the platform maintainer that noticed it and
-now has to deal with the conflicts. :(
-
-Most other driver maintainers are only applying patches that directly
-apply to their subsystem and leave patches to other drivers (e.g. clk) and
-platform-specific stuff (e.g. DT) to go in via their proper trees, so
-that's what I was expecting to happen here too.
-
-Kevin
-
-
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBjb21taXQgZG9j
+dW1lbnRzIGJpbmRpbmcgZm9yIEJDTTI4MzUgU29DIHRoZXJtYWwgdXNlZCBpbiBSYXNwYmVycnkK
+UGkgZGV2aWNlcy4KClNpZ25lZC1vZmYtYnk6IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNr
+aS5wbD4KLS0tCiAuLi4vYmluZGluZ3MvdGhlcm1hbC9yYXNwYmVycnlwaSxiY20yODM1LXRoZXJt
+YWwgICAgICAgIHwgMTcgKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNl
+cnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3RoZXJtYWwvcmFzcGJlcnJ5cGksYmNtMjgzNS10aGVybWFsCgpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcmFzcGJlcnJ5cGksYmNt
+MjgzNS10aGVybWFsIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwv
+cmFzcGJlcnJ5cGksYmNtMjgzNS10aGVybWFsCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
+MDAwMDAwMDAwMC4uZmJmZmE5MjkxYmE5Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcmFzcGJlcnJ5cGksYmNtMjgzNS10aGVybWFs
+CkBAIC0wLDAgKzEsMTcgQEAKKyogQnJvYWRjb20gQkNNMjgzNSBTb0MgUmFzcGJlcnJ5IFBpIFRo
+ZXJtYWwKKworVGhpcyBiaW5kaW5nIGRlc2NyaWJlcyB0aGVybWFsIHNlbnNvciB0aGF0IGlzIHBh
+cnQgb2YgQkNNMjgzNSBTb0MuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGUg
+OiBNdXN0IGJlICJyYXNwYmVycnlwaSxiY20yODM1LXRoZXJtYWwiCistIGZpcm13YXJlIDogUmVm
+ZXJlbmNlIHRvIHRoZSBSYXNwYmVycnkgUGkgZmlybXdhcmUgZGV2aWNlIG5vZGUsIHNlZQorCXJh
+c3BiZXJyeXBpLGJjbTI4MzUtZmlybXdhcmUgZm9yIGRldGFpbHMKKy0gI3RoZXJtYWwtc2Vuc29y
+LWNlbGxzIDogU2hvdWxkIGJlIDwwPgorCitFeGFtcGxlOgorCit0aGVybWFsIHsKKwljb21wYXRp
+YmxlID0gInJhc3BiZXJyeXBpLGJjbTI4MzUtdGhlcm1hbCI7CisJZmlybXdhcmUgPSA8JmZpcm13
+YXJlPjsKKwkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MD47Cit9OwotLSAKMi4xMS4wCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
