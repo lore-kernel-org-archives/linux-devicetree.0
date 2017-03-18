@@ -1,120 +1,167 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 1/9] devicetree: power: Add battery.txt
-Date: Sat, 18 Mar 2017 15:34:11 -0500
-Message-ID: <CAL_JsqKacL68=0EMPU_ftB2RH6+sX2fss3BWXkrSiJxv289Jng@mail.gmail.com>
-References: <20170227071117.18934-1-liam@networkimprov.net>
- <20170227071117.18934-2-liam@networkimprov.net> <20170302151449.j7i3ecpy2ipxu6tq@rob-hp-laptop>
- <CAKvHMgR6eVTUp6je3D_YDUMAksWiHx6JnJc8cRHSHp6tj30OPA@mail.gmail.com>
- <CAL_Jsq+8Y=GtyjVZA-suZLH+ySDshaoU9qh96BF+PeUYK3FZxg@mail.gmail.com>
- <CAKvHMgTpqdNKQoWUsChn4YWTtWaN5un_Vpqp+HtbMrxGV_D-ig@mail.gmail.com>
- <CAL_JsqJOFUSRY_KPzwNWrx4FF1_F6XNK8OfkqhqgBpxH9WrZeQ@mail.gmail.com> <CAKvHMgQujE4uYNt0vPkt6qUOtVqdvzXs0zXTkDVRq9YLNvunBQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v2 1/2] ASoC: stm32: add bindings
+	for SAI
+Date: Sat, 18 Mar 2017 15:43:35 -0500
+Message-ID: <CAL_JsqKXZFyWV7uPYLBP-Gzen0Cu=wv5Z-1fdkBdPfNOk1Bp3Q@mail.gmail.com>
+References: <1488879872-7839-1-git-send-email-olivier.moysan@st.com>
+ <1488879872-7839-2-git-send-email-olivier.moysan@st.com>
+ <20170315174606.rrvhuuzplzwwucph@rob-hp-laptop>
+ <ecc50cac-46a6-5e89-d07c-05f34a12d997@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKvHMgQujE4uYNt0vPkt6qUOtVqdvzXs0zXTkDVRq9YLNvunBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <ecc50cac-46a6-5e89-d07c-05f34a12d997@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Olivier MOYSAN <olivier.moysan@st.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 16, 2017 at 1:45 AM, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> wrote:
-> On Wed, Mar 15, 2017 at 4:50 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Mar 15, 2017 at 5:04 PM, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> wrote:
->>> On Wed, Mar 15, 2017 at 1:10 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> On Thu, Mar 2, 2017 at 12:31 PM, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> wrote:
->>>>> Hi Rob,
->>>>>
->>>>> On Thu, Mar 2, 2017 at 7:14 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>>>> On Sun, Feb 26, 2017 at 11:11:09PM -0800, Liam Breck wrote:
->>>>>>> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->>>>>>>
->>>>>>> Documentation of static battery characteristics that can be defined
->>>>>>> for batteries which cannot self-identify. This information is required
->>>>>>> by fuel-gauge and charger chips for proper handling of the battery.
->>>>>>>
->>>>>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>>>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
->>>>>>> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->>>>>>> ---
->>>>>>>  .../devicetree/bindings/power/supply/battery.txt   | 42 ++++++++++++++++++++++
->>>>>>>  1 file changed, 42 insertions(+)
->>>>>>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>> new file mode 100644
->>>>>>> index 0000000..3d916bd
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>> @@ -0,0 +1,42 @@
->>>>>>> +Battery Characteristics
->>>>>>> +
->>>>>>> +Required Properties:
->>>>>>> + - compatible: Must be "fixed-battery"
->>>>>>
->>>>>> Still not liking this name, but I don't have a better suggestion. Please
->>>>>> describe here what is and isn't a "fixed battery".
->>>>>
->>>>> Sebastian...?
->>>>>
->>>>>>> +
->>>>>>> +Optional Properties:
->>>>>>> + - voltage-min-design-microvolt: drained battery voltage
->>>>>>> + - energy-full-design-microwatt-hours: battery design energy
->>>>>>> + - charge-full-design-microamp-hours: battery design capacity
->>>>>>> +
->>>>>>> +Future Properties must be named for the corresponding elements in
->>>>>>> +enum power_supply_property, defined in include/linux/power_supply.h.
->>>>>>
->>>>>> Um, no. That's exactly not how DT bindings should be done.
->>>>>
->>>>> Power supply components surface stats in sysfs using the names in enum
->>>>> power_supply_property. For example,
->>>>> /sys/class/power_supply/.../voltage_min_design. Matching input (DT)
->>>>> and output (sysfs) names is sensible. The above comment is already
->>>>> attached to struct power_supply_battery_info, which is the initial
->>>>> destination for the above DT properties.
->>>>>
->>>>> Shall I mention sysfs in the above comment?
->>>>
->>>> Absolutely not. Bindings should not reference Linux.
->>>>
->>>> While sometimes things can align, there is no guarantee that they
->>>> will. DT is h/w description. sysfs is user configuration.
->>>
->>> sysfs for power_supply also provides fixed hw characteristics.
->>>
->>> Sebastian proposed DT:battery specifically to be consumed by
->>> power_supply_core. Allowing names in DT:battery and
->>> power_supply_property to diverge would cause confusion and wasted
->>> time, for no particular benefit. As there is no rationale to
->>> reconsider the names of these fields for DT:battery, let's write that
->>> into the docs.
->>
->> Write it into the Linux docs then. The DT docs need to stand on their
->> own for the standalone DT tree[1] that other projects import.
+On Thu, Mar 16, 2017 at 5:50 AM, Olivier MOYSAN <olivier.moysan@st.com> wrote:
+> Hello Rob,
 >
-> We will document it on the Linux side. But referencing a Linux header
-> file as the origin of property names in DT;battery does not create a
-> Linux dependency for standalone DT. It merely clarifies the naming
-> scheme.
+> Thanks for your feedback.
+>
+> On 03/15/2017 06:46 PM, Rob Herring wrote:
+>> On Tue, Mar 07, 2017 at 10:44:31AM +0100, olivier moysan wrote:
+>>> This patch adds documentation of device tree bindings for the
+>>> STM32 SAI ASoC driver.
+>>>
+>>> Signed-off-by: olivier moysan <olivier.moysan@st.com>
+>>> ---
+>>>  .../devicetree/bindings/sound/st,stm32-sai.txt     | 79 ++++++++++++++++++++++
+>>>  1 file changed, 79 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>>> new file mode 100644
+>>> index 0000000..b3be26d
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>>> @@ -0,0 +1,79 @@
+>>> +STMicroelectronics STM32 Serial Audio Interface (SAI).
+>>> +
+>>> +The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
+>>> +as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
+>>> +The SAI contains two independent audio sub-blocks. Each sub-block has
+>>> +its own clock generator and I/O lines controller.
+>>> +
+>>> +Required properties:
+>>> +  - compatible: Should be "st,stm32f4-sai"
+>>> +  - reg: Base address and size of SAI common register set.
+>>> +  - clocks: Must contain phandle and clock specifier pairs for each entry
+>>> +    in clock-names.
+>>> +  - clock-names: Must contain "clk_x8k" and "clk_x11k"
+>>> +    "clk_x8k": SAI parent clock for sampling rates multiple of 8kHz.
+>>> +    "clk_x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
+>>
+>> clk_ is redundant.
+>>
+>
+> Do you mean, removing clk_ prefix ?
 
-Perhaps, but it doesn't help the perception that bindings located in
-the kernel tree are "kernel bindings". The policy is bindings should
-stand on their own.
+Yes.
 
-> Also a huge number of DT bindings are Linux-specific, as they are
-> implemented by some kernel driver. Do you plan to rip those out of
-> devicetree-rebasing?
+>
+>>> +  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
+>>> +
+>>> +Note: Each SAI controller should have an alias correctly numbered
+>>> +in "aliases" node, to provide explicit name to CPU DAI.
+>>
+>> No, it shouldn't. Why do you need that?
+>>
+>
+> Yes, this is not mandatory. This is convenient to identify sai
+> controller, as we may have up to 8 instances.
+> I can make it optional, or remove it if you think it is not relevant.
 
-Care to highlight some? I'm aware of a few cases, but hardly a "huge
-number". I hear lots of complaints of bindings/dts's being Linux
-specific, but no specific examples nor attempts to fix those cases.
-I'd happily take patches to at least mark bad or linux specific
-bindings.
+Remove it.
+
+>
+>>
+>>> +
+>>> +Optional properties:
+>>> +  - resets: Reference to a reset controller asserting the SAI
+>>> +
+>>> +SAI subnodes:
+>>> +Two subnodes corresponding to SAI sub-block instances A et B can be defined.
+>>> +Subnode can be omitted for unsused sub-block.
+>>> +
+>>> +SAI subnodes required properties:
+>>> +  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
+>>> +    for SAI sub-block A or B respectively.
+>>> +  - reg: Base address and size of SAI sub-block register set.
+>>> +  - clocks: Must contain one phandle and clock specifier pair
+>>> +    for sai_ck which feeds the internal clock generator.
+>>> +  - clock-names: Must contain "sai_ck".
+>>> +  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
+>>> +  - dma-names: identifier string for each DMA request line
+>>> +    "tx": if sai sub-block is configured as playback DAI
+>>> +    "rx": if sai sub-block is configured as capture DAI
+>>> +  - pinctrl-names: should contain only value "default"
+>>> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
+>>> +
+>>> +Example:
+>>> +sai1: sai1@40015800 {
+>>> +    compatible = "st,stm32f4-sai";
+>>> +    reg = <0x40015800 0x400>;
+>
+>         reg = <0x40015800 0x4>;
+>
+>>> +    clocks = <&rcc 1 CLK_SAIQ_PDIV>, <&rcc 1 CLK_I2SQ_PDIV>;
+>>> +    clock-names = "clk_x8k", "clk_x11k";
+>>> +    interrupts = <87>;
+>>> +    resets = <&rcc 310>;
+>>> +
+>>> +    sai1b: sai@1 {
+>>
+>> unit address needs a reg property.
+>>
+>> audio-controller@1
+>>
+>
+> Right. This needs to be updated as follows:
+>         sai1b: sai1b@40015824 {
+
+audio-controller@...
+
+>                 ...
+>                 reg = <0x40015824 0x1C>;
+>                 ...
+>         };
+>
+>>> +            #sound-dai-cells = <0>;
+>>> +            compatible = "st,stm32-sai-sub-b";
+>>> +            clocks = <&rcc 1 CLK_SAI2>;
+>>> +            clock-names = "sai_ck";
+>>> +            dmas = <&dma2 5 0 0x400 0x1>;
+>>> +            dma-names = "tx";
+>>> +    };
+>>> +};
+>>> +
+>>> +sound {
+>>> +    compatible = "simple-audio-card";
+>>
+>> Perhaps you want to use the graph-card here. It's getting close to
+>> merging.
+>>
+>
+> mclk-fs property is required when SAI is configured as master.
+> It seems that mclk-fs is not supported in current version
+> of audio graph card. So I thing I should keep simple card for the time
+> being. Anyway, I plan further updates for SAI, so I will
+> have opportunity to change to graph card at that time.
+
+Well, it's not easy to switch later and maintain compatibility. Is it
+complicated to add mclk-fs property? The intent is graph-card supports
+everything simple-card supports.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
