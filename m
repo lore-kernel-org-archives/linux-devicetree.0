@@ -1,42 +1,38 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
-Subject: [PATCH v3 5/5] ARM: dts: sun8i: Update audio-routing
-	with renamed widgets
-Date: Sat, 18 Mar 2017 08:55:09 +0100
-Message-ID: <20170318075509.3836-6-mylene.josserand@free-electrons.com>
-References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: add support for Raspberry Pi
+ thermal
+Date: Sat, 18 Mar 2017 09:58:45 +0100
+Message-ID: <CACna6ryC9v+Gg4_hDz44KPRR57gAAyAqWN=iNDRN4Bc01zN4fA@mail.gmail.com>
+References: <20170318000132.9212-1-zajec5@gmail.com>
+ <871stvjvj3.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, maxime.ripard@free-electrons.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <871stvjvj3.fsf@eliezer.anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, linux-rpi-kernel@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Zhang Rui <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGRpZ2l0YWwgQUlGIGludGVyZmFjZXMgaGFzIGJlZW4gcmVuYW1lZCBpbiB0aGUgc3VuOGkg
-YXVkaW8gY29kZWMKZHJpdmVyIHNvIHRoZSBhdWRpby1yb3V0aW5nIGluIHRoZSBkZXZpY2UgdHJl
-ZSBtdXN0IGJlIHJlbmFtZWQgdG9vLgoKU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQg
-PG15bGVuZS5qb3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjhpLWEzMy5kdHNpIHwgNCArKy0tCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25z
-KCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhp
-LWEzMy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTMzLmR0c2kKaW5kZXggMThjMTc0
-ZmVmODRmLi4wNDY3ZmIzNjViZmMgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhp
-LWEzMy5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpCkBAIC0xMTMs
-OCArMTEzLDggQEAKIAkJc2ltcGxlLWF1ZGlvLWNhcmQsbWNsay1mcyA9IDw1MTI+OwogCQlzaW1w
-bGUtYXVkaW8tY2FyZCxhdXgtZGV2cyA9IDwmY29kZWNfYW5hbG9nPjsKIAkJc2ltcGxlLWF1ZGlv
-LWNhcmQscm91dGluZyA9Ci0JCQkiTGVmdCBEQUMiLCAiRGlnaXRhbCBMZWZ0IERBQyIsCi0JCQki
-UmlnaHQgREFDIiwgIkRpZ2l0YWwgUmlnaHQgREFDIjsKKwkJCSJMZWZ0IERBQyIsICJBSUYxIFNs
-b3QgMCBMZWZ0IiwKKwkJCSJSaWdodCBEQUMiLCAiQUlGMSBTbG90IDAgUmlnaHQiOwogCQlzdGF0
-dXMgPSAiZGlzYWJsZWQiOwogCiAJCXNpbXBsZS1hdWRpby1jYXJkLGNwdSB7Ci0tIAoyLjExLjAK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2
-ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1h
-bi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+T24gMTggTWFyY2ggMjAxNyBhdCAwMTowOSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4g
+d3JvdGU6Cj4gUmFmYcWCIE1pxYJlY2tpIDx6YWplYzVAZ21haWwuY29tPiB3cml0ZXM6Cj4KPj4g
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+Pgo+PiBUaGlzIGNvbW1p
+dCBkb2N1bWVudHMgYmluZGluZyBmb3IgQkNNMjgzNSBTb0MgdGhlcm1hbCB1c2VkIGluIFJhc3Bi
+ZXJyeQo+PiBQaSBkZXZpY2VzLgo+Cj4gVGhlcmUncyBhbHJlYWR5IGEgbmF0aXZlIChub24tZmly
+bXdhcmUpIHRoZXJtYWwgZHJpdmVyIGp1c3Qgd2FpdGluZyBmb3IKPiB0aGUgbWFpbnRhaW5lciB0
+byBtZXJnZSBpdC4KPgo+IGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwv
+bXNnNTY2MjE3Lmh0bWwKCk9oIG15LCB5b3UgZGlkIGEgbmljZSB3b3JrIHRoZXJlIGd1eXMhIFdl
+bGwsIHRoaXMgcGF0Y2ggY2FuIG9idmlvdXNseQpiZSBkcm9wcGVkLgoKLS0gClJhZmHFggoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
