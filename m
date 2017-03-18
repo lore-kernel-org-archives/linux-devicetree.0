@@ -1,183 +1,60 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 2/2] thermal: broadcom: add Raspberry Pi thermal driver
-Date: Sat, 18 Mar 2017 01:06:03 +0100
-Message-ID: <20170318000603.10158-2-zajec5@gmail.com>
-References: <20170318000132.9212-1-zajec5@gmail.com>
- <20170318000603.10158-1-zajec5@gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v4 5/7] arm64: set CONFIG_MMC_BCM2835=y in defconfig
+Date: Fri, 17 Mar 2017 17:07:17 -0700
+Message-ID: <874lyrjvm2.fsf@eliezer.anholt.net>
+References: <1488964751-22763-1-git-send-email-kraxel@redhat.com> <1488964751-22763-10-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170318000603.10158-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1488964751-22763-10-git-send-email-kraxel@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rpi-kernel@lists.infradead.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lee@kernel.org, stefan.wahren@i2se.com, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+--=-=-=
+Content-Type: text/plain
 
-Raspberry Pi devices use BCM283[567] SoCs with a thermal device inside.
-Querying it is possible using Raspberry specific firmware interface.
-This simple driver allows reading SoC temperature.
+Gerd Hoffmann <kraxel@redhat.com> writes:
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-V2: Update Kconfig help message. I forgot to locally rebase & fixup  before
-    sending, sorry.
----
- drivers/thermal/Kconfig                        |  5 ++
- drivers/thermal/Makefile                       |  1 +
- drivers/thermal/broadcom/Kconfig               |  7 +++
- drivers/thermal/broadcom/Makefile              |  1 +
- drivers/thermal/broadcom/raspberrypi-thermal.c | 85 ++++++++++++++++++++++++++
- 5 files changed, 99 insertions(+)
- create mode 100644 drivers/thermal/broadcom/Kconfig
- create mode 100644 drivers/thermal/broadcom/Makefile
- create mode 100644 drivers/thermal/broadcom/raspberrypi-thermal.c
+> We need to enable this controller so that we can switch the SD card's
+> pinmux over to it by default, which will improve storage performance.
+>
+> Read access (dd with 64k blocks on rpi2):
+>   CONFIG_MMC_SDHCI_IPROC: 11-12 MB/s
+>   CONFIG_MMC_BCM2835:     19-20 MB/s
+>
+> Differences on write access are pretty much in the noise.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 776b34396144..008e173ec825 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -392,6 +392,11 @@ config MTK_THERMAL
- 	  Enable this option if you want to have support for thermal management
- 	  controller present in Mediatek SoCs
- 
-+menu "Broadcom thermal drivers"
-+depends on ARCH_BCM || COMPILE_TEST
-+source "drivers/thermal/broadcom/Kconfig"
-+endmenu
-+
- menu "Texas Instruments thermal drivers"
- depends on ARCH_HAS_BANDGAP || COMPILE_TEST
- depends on HAS_IOMEM
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 7adae2029355..549d81b6363c 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -27,6 +27,7 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
- thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
- 
- # platform thermal drivers
-+obj-y				+= broadcom/
- obj-$(CONFIG_QCOM_SPMI_TEMP_ALARM)	+= qcom-spmi-temp-alarm.o
- obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
- obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
-diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
-new file mode 100644
-index 000000000000..2524b2ff16f6
---- /dev/null
-+++ b/drivers/thermal/broadcom/Kconfig
-@@ -0,0 +1,7 @@
-+config RASPBERRYPI_THERMAL
-+	tristate "Raspberry Pi thermal driver"
-+	depends on ARCH_BCM2835 || COMPILE_TEST
-+	depends on RASPBERRYPI_FIRMWARE=y
-+	help
-+	  This enables support for the RPi thermal that is part of BCM2835 SoC
-+	  and can be accessed using firmware interface.
-diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
-new file mode 100644
-index 000000000000..5ea7f8819b7d
---- /dev/null
-+++ b/drivers/thermal/broadcom/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_RASPBERRYPI_THERMAL)	+= raspberrypi-thermal.o
-diff --git a/drivers/thermal/broadcom/raspberrypi-thermal.c b/drivers/thermal/broadcom/raspberrypi-thermal.c
-new file mode 100644
-index 000000000000..d9c1db06f806
---- /dev/null
-+++ b/drivers/thermal/broadcom/raspberrypi-thermal.c
-@@ -0,0 +1,85 @@
-+/*
-+ * Copyright (C) 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
-+struct rpi_thermal {
-+	struct rpi_firmware *fw;
-+};
-+
-+static int rpi_thermal_get_temp(void *data, int *temp)
-+{
-+	struct rpi_thermal *rpi_thermal = data;
-+	struct {
-+		u32 id;
-+		u32 temp;
-+	} tag_data = {};
-+	int err;
-+
-+	err = rpi_firmware_property(rpi_thermal->fw,
-+				    RPI_FIRMWARE_GET_TEMPERATURE,
-+				    &tag_data, sizeof(tag_data));
-+	if (!err)
-+		*temp = tag_data.temp;
-+
-+	return err;
-+}
-+
-+const struct thermal_zone_of_device_ops rpi_thermal_ops = {
-+	.get_temp = rpi_thermal_get_temp,
-+};
-+
-+static int rpi_thermal_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rpi_thermal *rpi_thermal;
-+	struct device_node *fw_np;
-+	struct thermal_zone_device *tzd;
-+
-+	rpi_thermal = devm_kzalloc(dev, sizeof(*rpi_thermal), GFP_KERNEL);
-+	if (!rpi_thermal)
-+		return -ENOMEM;
-+
-+	fw_np = of_parse_phandle(dev->of_node, "firmware", 0);
-+	if (!fw_np) {
-+		dev_err(dev, "Failed to get firmware phandle\n");
-+		return -ENOENT;
-+	}
-+
-+	rpi_thermal->fw = rpi_firmware_get(fw_np);
-+	of_node_put(fw_np);
-+	if (!rpi_thermal->fw)
-+		return -ENODEV;
-+
-+	tzd = devm_thermal_zone_of_sensor_register(dev, 0, rpi_thermal,
-+						   &rpi_thermal_ops);
-+
-+	return PTR_ERR_OR_ZERO(tzd);
-+}
-+
-+static const struct of_device_id rpi_thermal_of_match[] = {
-+	{ .compatible = "raspberrypi,bcm2835-thermal", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rpi_thermal_of_match);
-+
-+static struct platform_driver rpi_thermal_driver = {
-+	.probe		= rpi_thermal_probe,
-+	.driver = {
-+		.name = "raspberrypi-thermal",
-+		.of_match_table = rpi_thermal_of_match,
-+	},
-+};
-+module_platform_driver(rpi_thermal_driver);
-+
-+MODULE_DESCRIPTION("Raspberry Pi thermal driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+Now that the driver has been merged, I've merged the platform patches up
+to this point.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Unfortunately, sending PRs to arm-soc that merge in branches from other
+trees has failed in the past, so I won't be able to merge 6 and 7 for
+4.12.  That said, it's a whole lot less that the various downstream
+kernels will need to pull for the Pi3 than they've been carrying around
+until now :)
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAljMejUACgkQtdYpNtH8
+nuiLghAAhh7Kv9RWBDFZPP0Ey8kT2ejm0hnr4heoTUSl7qdmgFIyxZW+Gx0XRl/Z
+WVqUxWPI1jsGLpl3xggnbfDyxw+Xt9iRzTQss472ilC5wm4goXw1nqtfnR9G/flC
+4FMzehABwWsIsG6Dkny8z6YlUq6khVl4R5UcK7t+qXpNrK1Oh22dhBZBIJFfR1cq
+8cqaYvofFWN8pvJPIOroubO2lUOroRPwXaP4AD/LVNwyg0KwKL0bkkACSd+Aq2z9
+6DG1G/PO/mu2x/gPa3ZJPWDlXVs6MNHl2re+5xIqXJbUMQKiQs4gN4jCvd4SyY+5
+IUzaA1Cmio7jsqnMzllY2LAlGXVGqsWk3KiWTgJt3R9PgRa4yWvoL43RCCZA+RU0
+145bkOLP/dRjAnxKYq7T7BWp4wZVBjzxVkx0wbRCBFDvoE1+/z+QmwV0e1MKaRdh
+Rx85+4tTBmncuAO6yr1mu3B1K+OoBtw+jlArBjVrFITsDHm35amfbBQgCizvCBe3
+MiFNNkIRRt0cPPjH2SysiJs8J1qDO10Aqw6lxPUGwlCPzGDJDBfoWMB6o3n4O1Vl
+tDEjm6LZ6fm981MDDeM38CzZI9X+XJOIGxTeICgIAIQFYNh40RsMOZB5mFnyYdaW
+grLYolPvVrq6FxTyG4kqR1QmkhM07hwK25x5bMHNdSv6CBfunU0=
+=SdMv
+-----END PGP SIGNATURE-----
+--=-=-=--
