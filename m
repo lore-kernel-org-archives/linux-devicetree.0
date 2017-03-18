@@ -1,185 +1,66 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] thermal: broadcom: add Northstar thermal driver
-Date: Sat, 18 Mar 2017 16:56:32 +0100
-Message-ID: <20170318155632.18099-2-zajec5@gmail.com>
-References: <20170318155632.18099-1-zajec5@gmail.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Sat, 18 Mar 2017 19:22:58 +0000
+Message-ID: <20170318192258.GL21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170318155632.18099-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489121599-23206-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgde
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Hi Steve,
 
-Northstar is a SoC family commonly used in home routers. This commit
-adds a driver for checking CPU temperature.
+I've just been trying to get gstreamer to capture and h264 encode
+video from my camera at various frame rates, and what I've discovered
+does not look good.
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
- drivers/thermal/Kconfig               |  5 ++
- drivers/thermal/Makefile              |  1 +
- drivers/thermal/broadcom/Kconfig      |  7 +++
- drivers/thermal/broadcom/Makefile     |  1 +
- drivers/thermal/broadcom/ns-thermal.c | 93 +++++++++++++++++++++++++++++++++++
- 5 files changed, 107 insertions(+)
- create mode 100644 drivers/thermal/broadcom/Kconfig
- create mode 100644 drivers/thermal/broadcom/Makefile
- create mode 100644 drivers/thermal/broadcom/ns-thermal.c
+1) when setting frame rates, media-ctl _always_ calls
+   VIDIOC_SUBDEV_S_FRAME_INTERVAL with pad=0.
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 776b34396144..008e173ec825 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -392,6 +392,11 @@ config MTK_THERMAL
- 	  Enable this option if you want to have support for thermal management
- 	  controller present in Mediatek SoCs
- 
-+menu "Broadcom thermal drivers"
-+depends on ARCH_BCM || COMPILE_TEST
-+source "drivers/thermal/broadcom/Kconfig"
-+endmenu
-+
- menu "Texas Instruments thermal drivers"
- depends on ARCH_HAS_BANDGAP || COMPILE_TEST
- depends on HAS_IOMEM
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 7adae2029355..549d81b6363c 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -27,6 +27,7 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
- thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
- 
- # platform thermal drivers
-+obj-y				+= broadcom/
- obj-$(CONFIG_QCOM_SPMI_TEMP_ALARM)	+= qcom-spmi-temp-alarm.o
- obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
- obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
-diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
-new file mode 100644
-index 000000000000..08457a461794
---- /dev/null
-+++ b/drivers/thermal/broadcom/Kconfig
-@@ -0,0 +1,7 @@
-+config BCM_NS_THERMAL
-+	tristate "Northstar thermal driver"
-+	depends on ARCH_BCM_5301X || COMPILE_TEST
-+	help
-+	  Northstar's DMU (Device Management Unit) block contains a thermal
-+	  sensor that allows checking CPU temperature. This driver provides
-+	  support for it.
-diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
-new file mode 100644
-index 000000000000..059df9a0ed69
---- /dev/null
-+++ b/drivers/thermal/broadcom/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_BCM_NS_THERMAL)		+= ns-thermal.o
-diff --git a/drivers/thermal/broadcom/ns-thermal.c b/drivers/thermal/broadcom/ns-thermal.c
-new file mode 100644
-index 000000000000..1ec710febc55
---- /dev/null
-+++ b/drivers/thermal/broadcom/ns-thermal.c
-@@ -0,0 +1,93 @@
-+/*
-+ * Copyright (C) 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+#define PVTMON_CONTROL0		0x00
-+#define PVTMON_STATUS		0x08
-+
-+struct ns_thermal {
-+	void __iomem *pvtmon;
-+};
-+
-+static int ns_thermal_get_temp(void *data, int *temp)
-+{
-+	struct ns_thermal *ns_thermal = data;
-+	u32 val;
-+
-+	val = readl(ns_thermal->pvtmon + PVTMON_STATUS);
-+	*temp = 418000 - (val * 556);
-+
-+	return 0;
-+}
-+
-+const struct thermal_zone_of_device_ops ns_thermal_ops = {
-+	.get_temp = ns_thermal_get_temp,
-+};
-+
-+static int ns_thermal_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ns_thermal *ns_thermal;
-+	struct thermal_zone_device *tzd;
-+	u32 val;
-+
-+	ns_thermal = devm_kzalloc(dev, sizeof(*ns_thermal), GFP_KERNEL);
-+	if (!ns_thermal)
-+		return -ENOMEM;
-+
-+	ns_thermal->pvtmon = of_iomap(dev_of_node(dev), 0);
-+	if (WARN_ON(!ns_thermal->pvtmon))
-+		return -ENOENT;
-+
-+	val = readl(ns_thermal->pvtmon + PVTMON_CONTROL0);
-+	if (val & 0xf)
-+		writel(val & ~0xf, ns_thermal->pvtmon + PVTMON_CONTROL0);
-+
-+	tzd = devm_thermal_zone_of_sensor_register(dev, 0, ns_thermal,
-+						   &ns_thermal_ops);
-+	if (IS_ERR(tzd)) {
-+		iounmap(ns_thermal->pvtmon);
-+		return PTR_ERR(tzd);
-+	}
-+
-+	platform_set_drvdata(pdev, ns_thermal);
-+
-+	return 0;
-+}
-+
-+static int ns_thermal_remove(struct platform_device *pdev)
-+{
-+	struct ns_thermal *ns_thermal = platform_get_drvdata(pdev);
-+
-+	iounmap(ns_thermal->pvtmon);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ns_thermal_of_match[] = {
-+	{ .compatible = "brcm,ns-thermal", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ns_thermal_of_match);
-+
-+static struct platform_driver ns_thermal_driver = {
-+	.probe		= ns_thermal_probe,
-+	.remove		= ns_thermal_remove,
-+	.driver = {
-+		.name = "ns-thermal",
-+		.of_match_table = ns_thermal_of_match,
-+	},
-+};
-+module_platform_driver(ns_thermal_driver);
-+
-+MODULE_DESCRIPTION("Northstar thermal driver");
-+MODULE_LICENSE("GPL v2");
+2) media-ctl never retrieves the frame interval information, so there's
+   no way to read it back with standard tools, and no indication that
+   this is going on...
+
+3) gstreamer v4l2src is getting upset, because it can't enumerate the
+   frame sizes (VIDIOC_ENUM_FRAMESIZES fails), which causes it to
+   fallback to using the "tvnorms" to decide about frame rates.  This
+   makes it impossible to use frame rates higher than 30000/1001, and
+   causes the pipeline validation to fail.
+
+0:00:01.937465845 20954  0x15ffe90 DEBUG                   v4l2 gstv4l2object.c:2474:gst_v4l2_object_probe_caps_for_format:<v4l2src0> Enumerating frame sizes for RGGB
+0:00:01.937588518 20954  0x15ffe90 DEBUG                   v4l2 gstv4l2object.c:2601:gst_v4l2_object_probe_caps_for_format:<v4l2src0> Failed to enumerate frame sizes for pixelformat RGGB (Inappropriate ioctl for device)
+0:00:01.937879535 20954  0x15ffe90 LOG                     v4l2 gstv4l2object.c:2708:gst_v4l2_object_get_nearest_size:<v4l2src0> getting nearest size to 1x1 with format RGGB
+0:00:01.937990874 20954  0x15ffe90 LOG                     v4l2 gstv4l2object.c:2724:gst_v4l2_object_get_nearest_size:<v4l2src0> got nearest size 816x616
+0:00:01.938250889 20954  0x15ffe90 ERROR                   v4l2 gstv4l2object.c:1873:gst_v4l2_object_get_interlace_mode: Driver bug detected - check driver with v4l2-compliance from http://git.linuxtv.org/v4l-utils.git
+0:00:01.938326893 20954  0x15ffe90 LOG                     v4l2 gstv4l2object.c:2708:gst_v4l2_object_get_nearest_size:<v4l2src0> getting nearest size to 32768x32768 with format RGGB
+0:00:01.938431566 20954  0x15ffe90 LOG                     v4l2 gstv4l2object.c:2724:gst_v4l2_object_get_nearest_size:<v4l2src0> got nearest size 816x616
+0:00:01.939776641 20954  0x15ffe90 ERROR                   v4l2 gstv4l2object.c:1873:gst_v4l2_object_get_interlace_mode: Driver bug detected - check driver with v4l2-compliance from http://git.linuxtv.org/v4l-utils.git
+0:00:01.940110660 20954  0x15ffe90 DEBUG                   v4l2 gstv4l2object.c:1955:gst_v4l2_object_get_colorspace: Unknown enum v4l2_colorspace 0
+
+   This triggers the "/* Since we can't get framerate directly, try to
+   use the current norm */" code in v4l2object.c, which causes it to
+   select one of the 30000/1001 norms:
+
+0:00:01.955927879 20954  0x15ffe90 INFO                    v4l2 gstv4l2object.c:3811:gst_v4l2_object_get_caps:<v4l2src0> probed caps: video/x-bayer, format=(string)rggb, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)I420, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)YV12, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)BGR, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(stri
+ ng)RGB, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1
+
+   despite the media pipeline actually being configured for 60fps.
+
+   Forcing it by adjusting the pipeline only results in gstreamer
+   failing, because it believes that v4l2 is unable to operate at
+   60fps.
+
+   Also note the complaints from v4l2src about the non-compliance...
+
 -- 
-2.11.0
-
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
