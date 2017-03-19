@@ -1,81 +1,50 @@
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
+From: Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
 Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 19 Mar 2017 10:45:15 -0400
-Message-ID: <1489934715.3388.3.camel@ndufresne.ca>
+Date: Sun, 19 Mar 2017 10:47:17 -0400
+Message-ID: <1489934837.3388.4.camel@ndufresne.ca>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170318204324.GM21222@n2100.armlinux.org.uk>
- <1489884074.21659.7.camel@ndufresne.ca>
- <20170319095558.GP21222@n2100.armlinux.org.uk>
+         <20170318192258.GL21222@n2100.armlinux.org.uk>
+         <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+         <20170318204324.GM21222@n2100.armlinux.org.uk>
+         <4e7f91fa-e1c4-1cbc-2542-2aaf19a35329@mentor.com>
+         <20170319142110.GT21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5297626668664957667=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170319095558.GP21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sud
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-oWbksnctFIVEBK64NC2I"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170319142110.GT21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ker
 List-Id: devicetree@vger.kernel.org
 
 
---===============5297626668664957667==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-8suDICeG6cZZUITLgfbs"
-
-
---=-8suDICeG6cZZUITLgfbs
+--=-oWbksnctFIVEBK64NC2I
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Le dimanche 19 mars 2017 =C3=A0 09:55 +0000, Russell King - ARM Linux a
+Le dimanche 19 mars 2017 =C3=A0 14:21 +0000, Russell King - ARM Linux a
 =C3=A9crit=C2=A0:
-> 2) would it also make sense to allow gstreamer's v4l2src to try
-> setting
-> =C2=A0=C2=A0 a these parameters, and only fail if it's unable to set it?=
-=C2=A0 IOW,
-> if
-> =C2=A0=C2=A0 I use:
+> > Can it be a point of failure?
 >=20
-> gst-launch-1.0 v4l2src device=3D/dev/video10 ! \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0video/x-bayer,format=3DRG=
-GB,framerate=3D20/1 ! ...
+> There's a good reason why I dumped a full debug log using
+> GST_DEBUG=3D*:9,
+> analysed it for the cause of the failure, and tried several different
+> pipelines, including the standard bayer2rgb plugin.
 >=20
-> =C2=A0=C2=A0 where G_PARM says its currently configured for 25fps, but a =
-S_PARM
-> =C2=A0=C2=A0 with 20fps would actually succeed.
+> Please don't blame this on random stuff after analysis of the logs
+> _and_
+> reading the appropriate plugin code has shown where the problem is.=C2=A0
+> I
+> know gstreamer can be very complex, but it's very possible to analyse
+> the cause of problems and pin them down with detailed logs in
+> conjunction
+> with the source code.
 
-In current design, v4l2src will "probe" all possible formats, cache
-this, and use this information for negotiation. So after the caps has
-been probed, there will be no TRY_FMT or anything like this happening
-until it's too late. You have spotted a bug though, it should be
-reading back the parm structure to validate (and probably produce a
-not-negotiated error here).
-
-Recently, specially for the IMX work done by Pengutronix, there was
-contributions to enhance this probing to support probing capabilities
-that are not enumerable (e.g. interlacing, colorimetry) using TRY_FMT.
-There is no TRY_PARM in the API to implement similar fallback. Also,
-those ended up creating a massive disaster for slow cameras. We now
-have UVC cameras that takes 6s or more to start. I have no other choice
-but to rewrite that now. We will negotiate the non-enumerable at the
-last minute with TRY_FMT (when the subset is at it's smallest). This
-will by accident add support for this camera interface, but that wasn't
-the goal. It would still fail with application that enumerates the
-possible resolutions and framerate and let you select them with a drop-
-down (like cheese). In general, I can only conclude that making
-everything that matter enumerable is the only working way to go for
-generic userspace.=20
+I read your analyses with GStreamer, and it was all correct.
 
 Nicolas
---=-8suDICeG6cZZUITLgfbs
+--=-oWbksnctFIVEBK64NC2I
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
@@ -83,23 +52,14 @@ Content-Transfer-Encoding: 7bit
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iEYEABECAAYFAljOmXsACgkQcVMCLawGqBzywACfaIGyd8AYyF0WDYPjUiUxtedm
-ZAQAnAw6U05Pq1IHpxA7QAE1FEee7TXL
-=GsI+
+iEYEABECAAYFAljOmfUACgkQcVMCLawGqBwYkQCdHGmIDjI60X3bEjNEYSdTotbj
+t6wAn08cuWsuuBS7qRy1PejA/n9HwYWS
+=Qm7P
 -----END PGP SIGNATURE-----
 
---=-8suDICeG6cZZUITLgfbs--
+--=-oWbksnctFIVEBK64NC2I--
 
-
---===============5297626668664957667==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============5297626668664957667==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
