@@ -1,171 +1,116 @@
-From: Alban <albeu@free.fr>
-Subject: Re: [PATCH v2 1/2] doc: bindings: Add bindings documentation for
- mtd nvmem
-Date: Sun, 19 Mar 2017 12:16:10 +0100
-Message-ID: <20170319121610.200a1553@tock>
-References: <1488875164-30440-1-git-send-email-albeu@free.fr>
- <1488875164-30440-2-git-send-email-albeu@free.fr>
- <20170315172401.35b5owbme4scqfgn@rob-hp-laptop>
- <20170315204141.1381cd01@tock>
- <CAL_JsqJ=P++NeNCzikBfLy3R_XSX1wzbuuSVinYuD3QkW_Vjqg@mail.gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Sun, 19 Mar 2017 12:14:02 +0000
+Message-ID: <20170319121402.GS21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170318192258.GL21222@n2100.armlinux.org.uk>
+ <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4817134296866619175=="
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJ=P++NeNCzikBfLy3R_XSX1wzbuuSVinYuD3QkW_Vjqg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Moritz Fischer <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Aban Bedel <albeu@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
---===============4817134296866619175==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_//G1k5AbOpLYYRSjGsPw0gLE"; protocol="application/pgp-signature"
-
---Sig_//G1k5AbOpLYYRSjGsPw0gLE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, 18 Mar 2017 15:58:11 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Wed, Mar 15, 2017 at 2:41 PM, Alban <albeu@free.fr> wrote:
-> > On Wed, 15 Mar 2017 12:24:01 -0500
-> > Rob Herring <robh@kernel.org> wrote:
-> > =20
-> >> On Tue, Mar 07, 2017 at 09:26:03AM +0100, Alban wrote: =20
-> >> > Config data for drivers, like MAC addresses, is often stored in MTD.
-> >> > Add a binding that define how such data storage can be represented in
-> >> > device tree.
-> >> >
-> >> > Signed-off-by: Alban <albeu@free.fr>
-> >> > ---
-> >> > Changelog:
-> >> > v2: * Added a "Required properties" section with the nvmem-provider
-> >> >       property
-> >> > ---
-> >> >  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 33 +++++++++++=
-+++++++++++
-> >> >  1 file changed, 33 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvme=
-m.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b=
-/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> >> > new file mode 100644
-> >> > index 0000000..8ed25e6
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> >> > @@ -0,0 +1,33 @@
-> >> > +=3D NVMEM in MTD =3D
-> >> > +
-> >> > +Config data for drivers, like MAC addresses, is often stored in MTD.
-> >> > +This binding define how such data storage can be represented in dev=
-ice tree.
-> >> > +
-> >> > +An MTD can be defined as an NVMEM provider by adding the `nvmem-pro=
-vider`
-> >> > +property to their node. Data cells can then be defined as child nod=
-es
-> >> > +of the partition as defined in nvmem.txt.
-> >> > +
-> >> > +Required properties:
-> >> > +nvmem-provider:    Indicate that the device should be registered as
-> >> > +           NVMEM provider =20
-> >>
-> >> I think we should use a compatible string here (perhaps with a
-> >> generic fallback), and that can imply it is an nvmem provider. The
-> >> reason is then the compatible can also imply other information that
-> >> isn't defined in DT. =20
+On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
+> On 03/18/2017 12:22 PM, Russell King - ARM Linux wrote:
+> >0:00:01.955927879 20954  0x15ffe90 INFO                    v4l2 gstv4l2object.c:3811:gst_v4l2_object_get_caps:<v4l2src0> probed caps: video/x-bayer, format=(string)rggb, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)I420, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)YV12, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)BGR, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(s
+ tring)RGB, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1
 > >
-> > That would work for partitions but not for unpartitioned MTD as these
-> > will already have a compatible string for the MTD hardware. I was also
-> > under the impression that capabilities/services provided by devices
-> > were represented with such properties, like interrupt-controller or
-> > gpio-controller, and not with compatible strings.
+> >    despite the media pipeline actually being configured for 60fps.
 > >
-> > There is also another problem with unpartitioned MTD, earlier MTD
-> > partitions binding allowed to have partitions as direct child nodes
-> > without any compatible strings. The current nvmem binding do the same
-> > for the nvmem cells, so it wouldn't be clear if a child node of the MTD
-> > is a partition using the old binding or an nvmem cell. =20
->=20
-> Perhaps a sign we should not repeat that.
-
-Yes, that's why I think we should "upgrade" the nvmem binding as a whole
-and not just limit this to the MTD case.
-
-> > As I think this problem could happen with some other device types I
-> > suggested to re-work the nvmem binding to be more like the current MTD
-> > partitions. See these threads[1][2], but a short example would look like
-> > this:
+> >    Forcing it by adjusting the pipeline only results in gstreamer
+> >    failing, because it believes that v4l2 is unable to operate at
+> >    60fps.
 > >
-> > flash {
-> >         compatible =3D "vendor,flash-device-model";
-> >         ...
-> >         nvmem-provider;
-> >         nvmem-cells {
-> >                 compatible =3D "nvmem-cells"; =20
->=20
-> Isn't the node name or compatible here enough to imply this is a nvmem pr=
-ovider?
+> >    Also note the complaints from v4l2src about the non-compliance...
+> 
+> Thanks, I've fixed most of v4l2-compliance issues, but this is not
+> done yet. Is that something you can help with?
 
-If there are cells defined yes, but nvmem also allow referencing the
-provider as a whole, so cells are optional. But yes it could be
-removed, in the case of MTD it is only used to filter the relevant
-devices to avoid having too many "useless" nvmem device registered.
+I've looked at this, and IMHO it's yet another media control API mess.
 
-> >                 #address-cells =3D <1>;
-> >                 #size-cells =3D <1>;
-> >
-> >                 cell@100 {
-> >                         label =3D "mac-address";
-> >                         reg =3D <0x100 0x6>;
-> >                 };
-> >         };
-> > }; =20
+- media-ctl itself allows setting the format on subdev pads via
+  struct v4l2_subdev_format.
 
+- struct v4l2_subdev_format contains a struct v4l2_mbus_framefmt.
 
---Sig_//G1k5AbOpLYYRSjGsPw0gLE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+- struct v4l2_mbus_framefmt contains:
+  * @width:      frame width
+  * @height:     frame height
+  * @code:       data format code (from enum v4l2_mbus_pixelcode)
+  * @field:      used interlacing type (from enum v4l2_field)
+  * @colorspace: colorspace of the data (from enum v4l2_colorspace)
+  * @ycbcr_enc:  YCbCr encoding of the data (from enum v4l2_ycbcr_encoding)
+  * @quantization: quantization of the data (from enum v4l2_quantization)
+  * @xfer_func:  transfer function of the data (from enum v4l2_xfer_func)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+- media-ctl sets width, height, code and field, but nothing else.
 
-iQIcBAEBCAAGBQJYzmh6AAoJEHSUmkuduC28g6oP/RVLo2JzDTcJut24LEDt7Amt
-gtlRedoI4ZxC/u6P7+x8521mxCII8O5MpKT60b6WepT5eV3+M18MkYS3sjuBxxwd
-UsTj7Ejp4PDTNpgs9cdyCjbtVXkZmjYD9R07sljmt7dqcUcXwkdCdVIVj4zpGg/X
-5BD1L+wQFxi0q2KKyzR2i58Ar5PzGFynS4YBeUu28+vGfCCK6wobQdJsdbeVnfBe
-rH96jcNyy89lPAq83Jt62Gv+CMgZhILv5pYQuz112l1hbSWOYAjbhKvSGm1tZaPf
-jRSg6wqoSlFfCbNFLZSVueCbjzwS1PBuO1O2/Ui2DtM+EB2JKSmPqxrF9hlOChdh
-0q2b9MGvcj2jxQ9tr/dnXS9xEXZyCK58NcsVwHmRgANM8X1RjfntZFEmEV6RHBEE
-JXzt+ogd5Cg5dASkN0Os5bXVxRuxaeOLbrZjIDnxd5dQETztezWl4INBOpQpksnI
-elh3WTTBEonU2GOH5iu+q7R3BD9vnJoiMQYSXJPbynt/EIMR2EvLdwCNYakOAITH
-vAJcYGZwdh9SVJyfZVpeTP0xcyf19vDdq0rBRjtCvCxUIWqgTIJT9uE9sS/iEYMo
-CzpIs1ja2vSiMlXHAtOptGvmDJBXDjxP1k/GRSIrZw4lsmQqyTwuv4WOmXRjAVMA
-9bjk000cXJucHjwVTx28
-=5HjI
------END PGP SIGNATURE-----
+We're already agreed that the fields that media-ctl are part of the
+format negotiation between the ultimate source, flowing down to the
+capture device.  However, there's no support in media-ctl to deal
+with these other fields - so media-ctl in itself is only half-
+implemented.
 
---Sig_//G1k5AbOpLYYRSjGsPw0gLE--
+>From what I can tell, _we_ are doing the right thing in imx-media-capture.
 
+However, I think part of the problem is the set_fmt implementation.
+When a source pad is configured via set_fmt(), any fields that can
+not be altered (eg, because the subdev doesn't support colorspace
+conversion) need to be preserved from the subdev's sink pad.
 
---===============4817134296866619175==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Right now, CSI doesn't do that - it only looks at the width, height,
+code, and field.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+I think we've got other bugs though that haven't been picked up by any
+review - csi_try_fmt() adjusts the format using the _current_
+configuration of the sink pad, even when using V4L2_SUBDEV_FORMAT_TRY.
+This seems wrong according to the docs: the purpose of the try
+mechanism is to be able to setup the _entire_ pipeline using the TRY
+mechanism to work out whether the configuration works, before then
+setting for real.  If we're validating the TRY formats against the
+live configuration, then we're not doing that.
 
---===============4817134296866619175==--
+There's calls for:
+
+v4l2_subdev_get_try_format
+v4l2_subdev_get_try_crop
+v4l2_subdev_get_try_compose
+
+to get the try configuration - we hardly make use of all of these.  I
+would suggest that we change the approach to implementing the various
+subdevs such that:
+
+1) like __csi_get_fmt(), we have accessors that gets a pointer to the
+   correct state for the TRY/live settings.
+
+2) everywhere we're asked to get or set parameters that can be TRY/live,
+   we use these accessors to retrieve a pointer to the correct state to
+   not only read, but also modify.
+
+3) when we're evaluating parameters against another pad, we use these
+   accessors to obtain the other pad's configuration, rather than poking
+   about in the state saved in the subdev's priv-> (which is irrelevant
+   for the TRY variant.)
+
+4) ensure that all parameters which the subdev itself does not support
+   modification of are correctly propagated from the sink pad to all
+   source pads, and are unable to be modified via the source pad.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
