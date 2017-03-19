@@ -1,71 +1,90 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 19 Mar 2017 15:09:22 +0000
-Message-ID: <20170319150922.GV21222@n2100.armlinux.org.uk>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Sun, 19 Mar 2017 15:22:33 +0000
+Message-ID: <20170319152233.GW21222@n2100.armlinux.org.uk>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170318204324.GM21222@n2100.armlinux.org.uk>
- <4e7f91fa-e1c4-1cbc-2542-2aaf19a35329@mentor.com>
- <20170319142110.GT21222@n2100.armlinux.org.uk>
- <20170319142240.GA23922@n2100.armlinux.org.uk>
- <51e2be34-6fa2-9d91-5111-adcd697b3e3f@mentor.com>
+ <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51e2be34-6fa2-9d91-5111-adcd697b3e3f@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sud
+In-Reply-To: <1489121599-23206-39-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgde
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 19, 2017 at 05:00:08PM +0200, Vladimir Zapolskiy wrote:
-> On 03/19/2017 04:22 PM, Russell King - ARM Linux wrote:
-> > On Sun, Mar 19, 2017 at 02:21:10PM +0000, Russell King - ARM Linux wrote:
-> >> There's a good reason why I dumped a full debug log using GST_DEBUG=*:9,
-> >> analysed it for the cause of the failure, and tried several different
-> >> pipelines, including the standard bayer2rgb plugin.
-> >>
-> >> Please don't blame this on random stuff after analysis of the logs _and_
-> >> reading the appropriate plugin code has shown where the problem is.  I
-> >> know gstreamer can be very complex, but it's very possible to analyse
-> >> the cause of problems and pin them down with detailed logs in conjunction
-> >> with the source code.
-> > 
-> > Oh, and the proof of correct analysis is that fixing the kernel capture
-> > driver to enumerate the frame sizes and intervals fixes the issue, even
-> > with bayer2rgbneon being used.
-> > 
-> > Therefore, there is _no way_ what so ever that it could be caused by that
-> > plugin.
-> > 
+On Thu, Mar 09, 2017 at 08:53:18PM -0800, Steve Longerbeam wrote:
+> From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-> Hey, no blaming of the unknown to me bayer2rgbneon element from my side,
-> I've just asked an innocent question, thanks for reply. I failed to find
-> the source code of the plugin, I was interested to compare its performance
-> and features with mine in-house NEON powered RGGB/BGGR to RGB24 GStreamer
-> conversion element, which is written years ago. My question was offtopic.
+> The csi_try_crop call in set_fmt should compare the cropping rectangle
+> to the currently set input format, not to the previous input format.
 
-If you wanted to know where to get it from, you should've asked that.
-You can find all the bits here:
+Are we really sure that the cropping support is implemented correctly?
 
-	https://git.phytec.de/
+I came across this while looking at what we're doing with the
+V4L2_SEL_FLAG_KEEP_CONFIG flag.
 
-You need bayer2rgb-neon and gst-bayer2rgb-neon, and it requires some
-fixes to the configure script and Makefiles get it to build if you
-don't have gengenopt available.
+Documentation/media/uapi/v4l/dev-subdev.rst defines the behaviour of
+the user API, and "Order of configuration and format propagation" says:
+
+  The coordinates to a step always refer to the actual size of the
+  previous step. The exception to this rule is the source compose
+  rectangle, which refers to the sink compose bounds rectangle --- if it
+  is supported by the hardware.
+  
+  1. Sink pad format. The user configures the sink pad format. This format
+     defines the parameters of the image the entity receives through the
+     pad for further processing.
+  
+  2. Sink pad actual crop selection. The sink pad crop defines the crop
+     performed to the sink pad format.
+  
+  3. Sink pad actual compose selection. The size of the sink pad compose
+     rectangle defines the scaling ratio compared to the size of the sink
+     pad crop rectangle. The location of the compose rectangle specifies
+     the location of the actual sink compose rectangle in the sink compose
+     bounds rectangle.
+  
+  4. Source pad actual crop selection. Crop on the source pad defines crop
+     performed to the image in the sink compose bounds rectangle.
+  
+  5. Source pad format. The source pad format defines the output pixel
+     format of the subdev, as well as the other parameters with the
+     exception of the image width and height. Width and height are defined
+     by the size of the source pad actual crop selection.
+  
+  Accessing any of the above rectangles not supported by the subdev will
+  return ``EINVAL``. Any rectangle referring to a previous unsupported
+  rectangle coordinates will instead refer to the previous supported
+  rectangle. For example, if sink crop is not supported, the compose
+  selection will refer to the sink pad format dimensions instead.
+
+Note step 3 above: scaling is defined by the ratio of the _sink_ crop
+rectangle to the _sink_ compose rectangle.
+
+So, lets say that the camera produces a 1280x720 image, and the sink
+pad format is configured with 1280x720.  That's step 1.
+
+The sink crop operates within that rectangle, cropping it to an area.
+Let's say we're only interested in its centre, so we'd chose 640x360
+with the top-left as 320,180.  This is step 2.
+
+Then, if we want to down-scale by a factor of two, we'd set the sink
+compose selection to 320x180.
+
+This seems to be at odds with how the scaling is done in CSI at
+present: the selection implementations all reject attempts to
+configure the sink pad, instead only supporting crop rectangles on
+the source, and we use the source crop rectangle to define the
+down-scaling.
 
 -- 
 RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
 FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
 according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
