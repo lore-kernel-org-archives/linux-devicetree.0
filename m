@@ -1,87 +1,171 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 19 Mar 2017 10:38:01 +0000
-Message-ID: <20170319103801.GQ21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH v2 1/2] doc: bindings: Add bindings documentation for
+ mtd nvmem
+Date: Sun, 19 Mar 2017 12:16:10 +0100
+Message-ID: <20170319121610.200a1553@tock>
+References: <1488875164-30440-1-git-send-email-albeu@free.fr>
+ <1488875164-30440-2-git-send-email-albeu@free.fr>
+ <20170315172401.35b5owbme4scqfgn@rob-hp-laptop>
+ <20170315204141.1381cd01@tock>
+ <CAL_JsqJ=P++NeNCzikBfLy3R_XSX1wzbuuSVinYuD3QkW_Vjqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <steve_longerbeam@mentor.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: multipart/mixed; boundary="===============4817134296866619175=="
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJ=P++NeNCzikBfLy3R_XSX1wzbuuSVinYuD3QkW_Vjqg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Moritz Fischer <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Aban Bedel <albeu@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
-> Right, imx-media-capture.c (the "standard" v4l2 user interface module)
-> is not implementing VIDIOC_ENUM_FRAMESIZES. It should, but it can only
-> return the single frame size that the pipeline has configured (the mbus
-> format of the attached source pad).
+--===============4817134296866619175==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_//G1k5AbOpLYYRSjGsPw0gLE"; protocol="application/pgp-signature"
 
-I now have a set of patches that enumerate the frame sizes and intervals
-from the source pad of the first subdev (since you're setting the formats
-etc there from the capture device, it seems sensible to return what it
-can support.)  This means my patch set doesn't add to non-CSI subdevs.
+--Sig_//G1k5AbOpLYYRSjGsPw0gLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Can you share your gstreamer pipeline? For now, until
-> VIDIOC_ENUM_FRAMESIZES is implemented, try a pipeline that
-> does not attempt to specify a frame rate. I use the attached
-> script for testing, which works for me.
+On Sat, 18 Mar 2017 15:58:11 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Note that I'm not specifying a frame rate on gstreamer - I'm setting
-the pipeline up for 60fps, but gstreamer in its wisdom is unable to
-enumerate the frame sizes, and therefore is unable to enumerate the
-frame intervals (frame intervals depend on frame sizes), so it
-falls back to the "tvnorms" which are basically 25/1 and 30000/1001.
+> On Wed, Mar 15, 2017 at 2:41 PM, Alban <albeu@free.fr> wrote:
+> > On Wed, 15 Mar 2017 12:24:01 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> > =20
+> >> On Tue, Mar 07, 2017 at 09:26:03AM +0100, Alban wrote: =20
+> >> > Config data for drivers, like MAC addresses, is often stored in MTD.
+> >> > Add a binding that define how such data storage can be represented in
+> >> > device tree.
+> >> >
+> >> > Signed-off-by: Alban <albeu@free.fr>
+> >> > ---
+> >> > Changelog:
+> >> > v2: * Added a "Required properties" section with the nvmem-provider
+> >> >       property
+> >> > ---
+> >> >  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 33 +++++++++++=
++++++++++++
+> >> >  1 file changed, 33 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvme=
+m.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b=
+/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> >> > new file mode 100644
+> >> > index 0000000..8ed25e6
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> >> > @@ -0,0 +1,33 @@
+> >> > +=3D NVMEM in MTD =3D
+> >> > +
+> >> > +Config data for drivers, like MAC addresses, is often stored in MTD.
+> >> > +This binding define how such data storage can be represented in dev=
+ice tree.
+> >> > +
+> >> > +An MTD can be defined as an NVMEM provider by adding the `nvmem-pro=
+vider`
+> >> > +property to their node. Data cells can then be defined as child nod=
+es
+> >> > +of the partition as defined in nvmem.txt.
+> >> > +
+> >> > +Required properties:
+> >> > +nvmem-provider:    Indicate that the device should be registered as
+> >> > +           NVMEM provider =20
+> >>
+> >> I think we should use a compatible string here (perhaps with a
+> >> generic fallback), and that can imply it is an nvmem provider. The
+> >> reason is then the compatible can also imply other information that
+> >> isn't defined in DT. =20
+> >
+> > That would work for partitions but not for unpartitioned MTD as these
+> > will already have a compatible string for the MTD hardware. I was also
+> > under the impression that capabilities/services provided by devices
+> > were represented with such properties, like interrupt-controller or
+> > gpio-controller, and not with compatible strings.
+> >
+> > There is also another problem with unpartitioned MTD, earlier MTD
+> > partitions binding allowed to have partitions as direct child nodes
+> > without any compatible strings. The current nvmem binding do the same
+> > for the nvmem cells, so it wouldn't be clear if a child node of the MTD
+> > is a partition using the old binding or an nvmem cell. =20
+>=20
+> Perhaps a sign we should not repeat that.
 
-It sees 60fps via G_PARM, and then decides to set 30000/1001 via S_PARM.
-So, we end up with most of the pipeline operating at 60fps, with CSI
-doing frame skipping to reduce the frame rate to 30fps.
+Yes, that's why I think we should "upgrade" the nvmem binding as a whole
+and not just limit this to the MTD case.
 
-gstreamer doesn't complain, doesn't issue any warnings, the only way
-you can spot this is to enable debugging and look through the copious
-debug log, or use -v and check the pad capabilities.
+> > As I think this problem could happen with some other device types I
+> > suggested to re-work the nvmem binding to be more like the current MTD
+> > partitions. See these threads[1][2], but a short example would look like
+> > this:
+> >
+> > flash {
+> >         compatible =3D "vendor,flash-device-model";
+> >         ...
+> >         nvmem-provider;
+> >         nvmem-cells {
+> >                 compatible =3D "nvmem-cells"; =20
+>=20
+> Isn't the node name or compatible here enough to imply this is a nvmem pr=
+ovider?
 
-Testing using gstreamer, and only using "does it produce video" is a
-good simple test, but it's just that - it's a simple test.  It doesn't
-tell you that what you're seeing is what you intended to see (such as
-video at the frame rate you expected) without more work.
+If there are cells defined yes, but nvmem also allow referencing the
+provider as a whole, so cells are optional. But yes it could be
+removed, in the case of MTD it is only used to filter the relevant
+devices to avoid having too many "useless" nvmem device registered.
 
-> Thanks, I've fixed most of v4l2-compliance issues, but this is not
-> done yet. Is that something you can help with?
+> >                 #address-cells =3D <1>;
+> >                 #size-cells =3D <1>;
+> >
+> >                 cell@100 {
+> >                         label =3D "mac-address";
+> >                         reg =3D <0x100 0x6>;
+> >                 };
+> >         };
+> > }; =20
 
-What did you do with:
 
-ioctl(3, VIDIOC_REQBUFS, {count=0, type=0 /* V4L2_BUF_TYPE_??? */, memory=0 /* V4L2_MEMORY_??? */}) = -1 EINVAL (Invalid argument)
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-ioctl(3, VIDIOC_EXPBUF, 0xbef405bc)     = -1 EINVAL (Invalid argument)
-                fail: v4l2-test-buffers.cpp(571): q.has_expbuf(node)
-                test VIDIOC_EXPBUF: FAIL
+--Sig_//G1k5AbOpLYYRSjGsPw0gLE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-To me, this looks like a bug in v4l2-compliance (I'm using 1.10.0).
-I'm not sure what buffer VIDIOC_EXPBUF is expected to export, since
-afaics no buffers have been allocated, so of course it's going to fail.
-Either that, or the v4l2 core vb2 code is non-compliant with v4l2's
-interface requirements.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-In any case, it doesn't look like the buffer management is being
-tested at all by v4l2-compliance - we know that gstreamer works, so
-buffers _can_ be allocated, and I've also used dmabufs with gstreamer,
-so I also know that VIDIOC_EXPBUF works there.
+iQIcBAEBCAAGBQJYzmh6AAoJEHSUmkuduC28g6oP/RVLo2JzDTcJut24LEDt7Amt
+gtlRedoI4ZxC/u6P7+x8521mxCII8O5MpKT60b6WepT5eV3+M18MkYS3sjuBxxwd
+UsTj7Ejp4PDTNpgs9cdyCjbtVXkZmjYD9R07sljmt7dqcUcXwkdCdVIVj4zpGg/X
+5BD1L+wQFxi0q2KKyzR2i58Ar5PzGFynS4YBeUu28+vGfCCK6wobQdJsdbeVnfBe
+rH96jcNyy89lPAq83Jt62Gv+CMgZhILv5pYQuz112l1hbSWOYAjbhKvSGm1tZaPf
+jRSg6wqoSlFfCbNFLZSVueCbjzwS1PBuO1O2/Ui2DtM+EB2JKSmPqxrF9hlOChdh
+0q2b9MGvcj2jxQ9tr/dnXS9xEXZyCK58NcsVwHmRgANM8X1RjfntZFEmEV6RHBEE
+JXzt+ogd5Cg5dASkN0Os5bXVxRuxaeOLbrZjIDnxd5dQETztezWl4INBOpQpksnI
+elh3WTTBEonU2GOH5iu+q7R3BD9vnJoiMQYSXJPbynt/EIMR2EvLdwCNYakOAITH
+vAJcYGZwdh9SVJyfZVpeTP0xcyf19vDdq0rBRjtCvCxUIWqgTIJT9uE9sS/iEYMo
+CzpIs1ja2vSiMlXHAtOptGvmDJBXDjxP1k/GRSIrZw4lsmQqyTwuv4WOmXRjAVMA
+9bjk000cXJucHjwVTx28
+=5HjI
+-----END PGP SIGNATURE-----
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+--Sig_//G1k5AbOpLYYRSjGsPw0gLE--
+
+
+--===============4817134296866619175==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+--===============4817134296866619175==--
