@@ -1,160 +1,233 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v4 4/8] phy: sun4i-usb: support automatically
- switch PHY0 route to MUSB/HCI
-Date: Mon, 20 Mar 2017 00:19:47 +0800
-Message-ID: <20170319161951.55834-5-icenowy@aosc.xyz>
-References: <20170319161951.55834-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Sun, 19 Mar 2017 17:17:37 +0100
+Message-ID: <78bf099d-32ad-9981-6ba9-fe56fbcabc3e@grandegger.com>
+References: <1489785040-26477-1-git-send-email-akshay.bhat@timesys.com>
+ <1489785040-26477-2-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBR7AXLDAKGQEXACUT3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170319161951.55834-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489785040-26477-2-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On newer Allwinner SoCs (H3 and after), the PHY0 node is routed to both
-MUSB controller for peripheral and host support (the host support is
-slightly broken), and a pair of EHCI/OHCI controllers, which provide a
-better support for host mode.
+Hello Akshay,
 
-Add support for automatically switch the route of PHY0 according to the
-status of dr_mode and id det pin.
+I still see some improvements...
 
-Only H3 have this function enabled in this patch, as further SoCs will
-be tested later and then have it enabled.
+Am 17.03.2017 um 22:10 schrieb Akshay Bhat:
+> This patch adds support for the Holt HI-311x CAN controller. The HI311x
+> CAN controller is capable of transmitting and receiving standard data
+> frames, extended data frames and remote frames. The HI311x interfaces
+> with the host over SPI.
+>
+> Datasheet: www.holtic.com/documents/371-hi-3110_v-rev-jpdf.do
+>
+> Signed-off-by: Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>
+> v3 -> v4:
+> Address comments from Wolfgang Grandegger:
+> - Add support for CAN warning state reporting
+> - Add support for reporting tx/rx error counts in bus error messages
+> - Keep bus error interrupts enabled to detect CAN state changes
+> - Fix bug in restart code after BUSOFF state
+> - Clean up error handling code
+>
+>  drivers/net/can/spi/Kconfig  |    6 +
+>  drivers/net/can/spi/Makefile |    1 +
+>  drivers/net/can/spi/hi311x.c | 1072 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1079 insertions(+)
+>  create mode 100644 drivers/net/can/spi/hi311x.c
+>
+> diff --git a/drivers/net/can/spi/Kconfig b/drivers/net/can/spi/Kconfig
+> index 148cae5..8f2e0dd 100644
+> --- a/drivers/net/can/spi/Kconfig
+> +++ b/drivers/net/can/spi/Kconfig
+> @@ -1,6 +1,12 @@
+>  menu "CAN SPI interfaces"
+>  	depends on SPI
+>
+> +config CAN_HI311X
+> +	tristate "Holt HI311x SPI CAN controllers"
+> +	depends on CAN_DEV && SPI && HAS_DMA
+> +	---help---
+> +	  Driver for the Holt HI311x SPI CAN controllers.
+> +
+>  config CAN_MCP251X
+>  	tristate "Microchip MCP251x SPI CAN controllers"
+>  	depends on HAS_DMA
+> diff --git a/drivers/net/can/spi/Makefile b/drivers/net/can/spi/Makefile
+> index 0e86040..f59fa37 100644
+> --- a/drivers/net/can/spi/Makefile
+> +++ b/drivers/net/can/spi/Makefile
+> @@ -3,4 +3,5 @@
+>  #
+>
+>
+> +obj-$(CONFIG_CAN_HI311X)	+= hi311x.o
+>  obj-$(CONFIG_CAN_MCP251X)	+= mcp251x.o
+> diff --git a/drivers/net/can/spi/hi311x.c b/drivers/net/can/spi/hi311x.c
+> new file mode 100644
+> index 0000000..2a3d794
+> --- /dev/null
+> +++ b/drivers/net/can/spi/hi311x.c
+> @@ -0,0 +1,1072 @@
+> +/* CAN bus driver for Holt HI3110 CAN Controller with SPI Interface
+> + *
+> + * Copyright(C) Timesys Corporation 2016
+> + *
+> + * Based on Microchip 251x CAN Controller (mcp251x) Linux kernel driver
+> + * Copyright 2009 Christian Pellegrin EVOL S.r.l.
+> + * Copyright 2007 Raymarine UK, Ltd. All Rights Reserved.
+> + * Copyright 2006 Arcom Control Systems Ltd.
+> + *
+> + * Based on CAN bus driver for the CCAN controller written by
+> + * - Sascha Hauer, Marc Kleine-Budde, Pengutronix
+> + * - Simon Kallweit, intefo AG
+> + * Copyright 2007
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
 
-As H5 is reusing the PHY driver of H3, this function is also enabled.
+... snip...
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
-Changes in v3:
-- Add Chen-Yu's ACK. (I made a patch 1 that changes dt binding)
-Changes in v2:
-- Re-route after force session end.
-- Drop id_det based on role code in reroute function, as we already
-  properly set id_det in id_det getting function.
+> +
+> +static irqreturn_t hi3110_can_ist(int irq, void *dev_id)
+> +{
+> +	struct hi3110_priv *priv = dev_id;
+> +	struct spi_device *spi = priv->spi;
+> +	struct net_device *net = priv->net;
+> +
+> +	mutex_lock(&priv->hi3110_lock);
+> +
+> +	while (!priv->force_quit) {
+> +		enum can_state new_state;
+> +		u8 intf, eflag, statf;
+> +
+> +		while (!(HI3110_STAT_RXFMTY &
+> +		       (statf = hi3110_read(spi, HI3110_READ_STATF)))) {
+> +			hi3110_hw_rx(spi);
+> +		}
+> +
+> +		intf = hi3110_read(spi, HI3110_READ_INTF);
 
- drivers/phy/phy-sun4i-usb.c | 50 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 17 deletions(-)
+I think HI3110_READ_ERR is only valid if HI3110_INT_BUSERR is set! 
+Therefore:
 
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index a650f283f6ff..f86a2574b953 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -49,12 +49,14 @@
- #define REG_PHYBIST			0x08
- #define REG_PHYTUNE			0x0c
- #define REG_PHYCTL_A33			0x10
--#define REG_PHY_UNK_H3			0x20
-+#define REG_PHY_OTGCTL			0x20
- 
- #define REG_PMU_UNK1			0x10
- 
- #define PHYCTL_DATA			BIT(7)
- 
-+#define OTGCTL_ROUTE_MUSB		BIT(0)
-+
- #define SUNXI_AHB_ICHR8_EN		BIT(10)
- #define SUNXI_AHB_INCR4_BURST_EN	BIT(9)
- #define SUNXI_AHB_INCRX_ALIGN_EN	BIT(8)
-@@ -110,6 +112,7 @@ struct sun4i_usb_phy_cfg {
- 	u8 phyctl_offset;
- 	bool dedicated_clocks;
- 	bool enable_pmu_unk1;
-+	bool phy0_dual_route;
- };
- 
- struct sun4i_usb_phy_data {
-@@ -269,23 +272,16 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		writel(val & ~2, phy->pmu + REG_PMU_UNK1);
- 	}
- 
--	if (data->cfg->type == sun8i_h3_phy) {
--		if (phy->index == 0) {
--			val = readl(data->base + REG_PHY_UNK_H3);
--			writel(val & ~1, data->base + REG_PHY_UNK_H3);
--		}
--	} else {
--		/* Enable USB 45 Ohm resistor calibration */
--		if (phy->index == 0)
--			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-+	/* Enable USB 45 Ohm resistor calibration */
-+	if (phy->index == 0)
-+		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
- 
--		/* Adjust PHY's magnitude and rate */
--		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-+	/* Adjust PHY's magnitude and rate */
-+	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
- 
--		/* Disconnect threshold adjustment */
--		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
--				    data->cfg->disc_thresh, 2);
--	}
-+	/* Disconnect threshold adjustment */
-+	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-+			    data->cfg->disc_thresh, 2);
- 
- 	sun4i_usb_phy_passby(phy, 1);
- 
-@@ -484,6 +480,21 @@ static const struct phy_ops sun4i_usb_phy_ops = {
- 	.owner		= THIS_MODULE,
- };
- 
-+static void sun4i_usb_phy0_reroute(struct sun4i_usb_phy_data *data, int id_det)
-+{
-+	u32 regval;
-+
-+	regval = readl(data->base + REG_PHY_OTGCTL);
-+	if (id_det == 0) {
-+		/* Host mode. Route phy0 to EHCI/OHCI */
-+		regval &= ~OTGCTL_ROUTE_MUSB;
-+	} else {
-+		/* Peripheral mode. Route phy0 to MUSB */
-+		regval |= OTGCTL_ROUTE_MUSB;
-+	}
-+	writel(regval, data->base + REG_PHY_OTGCTL);
-+}
-+
- static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- {
- 	struct sun4i_usb_phy_data *data =
-@@ -544,6 +555,10 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 			sun4i_usb_phy0_set_vbus_detect(phy0, 1);
- 			mutex_unlock(&phy0->mutex);
- 		}
-+
-+		/* Re-route PHY0 if necessary */
-+		if (data->cfg->phy0_dual_route)
-+			sun4i_usb_phy0_reroute(data, id_det);
- 	}
- 
- 	if (vbus_notify)
-@@ -698,7 +713,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 			return PTR_ERR(phy->reset);
- 		}
- 
--		if (i) { /* No pmu for usbc0 */
-+		if (i || data->cfg->phy0_dual_route) { /* No pmu for musb */
- 			snprintf(name, sizeof(name), "pmu%d", i);
- 			res = platform_get_resource_byname(pdev,
- 							IORESOURCE_MEM, name);
-@@ -824,6 +839,7 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
- 	.phyctl_offset = REG_PHYCTL_A33,
- 	.dedicated_clocks = true,
- 	.enable_pmu_unk1 = true,
-+	.phy0_dual_route = true,
- };
- 
- static const struct sun4i_usb_phy_cfg sun8i_v3s_cfg = {
--- 
-2.12.0
+                 if ((intf & HI3110_INT_BUSERR) {
+
+It saves reading one SPI register in the message processing path. Please 
+check if back-to-error-active still comes.
+
+> +		eflag = hi3110_read(spi, HI3110_READ_ERR);
+> +		/* Update can state */
+> +		if (eflag & HI3110_ERR_BUSOFF)
+> +			new_state = CAN_STATE_BUS_OFF;
+> +		else if (eflag & HI3110_ERR_PASSIVE_MASK)
+> +			new_state = CAN_STATE_ERROR_PASSIVE;
+> +		else if (statf & HI3110_STAT_ERRW)
+> +			new_state = CAN_STATE_ERROR_WARNING;
+> +		else
+> +			new_state = CAN_STATE_ERROR_ACTIVE;
+> +
+> +		if (new_state != priv->can.state) {
+> +			struct can_frame *cf;
+> +			struct sk_buff *skb;
+> +			enum can_state rx_state, tx_state;
+> +			u8 rxerr, txerr;
+> +
+> +			skb = alloc_can_err_skb(net, &cf);
+> +			if (!skb)
+> +				break;
+> +
+> +			txerr = hi3110_read(spi, HI3110_READ_TEC);
+> +			rxerr = hi3110_read(spi, HI3110_READ_REC);
+> +			cf->data[6] = txerr;
+> +			cf->data[7] = rxerr;
+> +			tx_state = txerr >= rxerr ? new_state : 0;
+> +			rx_state = txerr <= rxerr ? new_state : 0;
+> +			can_change_state(net, cf, tx_state, rx_state);
+> +			netif_rx_ni(skb);
+> +
+> +			if (new_state == CAN_STATE_BUS_OFF) {
+> +				can_bus_off(net);
+> +				if (priv->can.restart_ms == 0) {
+> +					priv->force_quit = 1;
+> +					hi3110_hw_sleep(spi);
+> +					break;
+> +				}
+> +			}
+> +		}
+> +
+> +		/* Update bus errors */
+> +		if ((intf & HI3110_INT_BUSERR) &&
+> +		    (priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING)) {
+> +			struct can_frame *cf;
+> +			struct sk_buff *skb;
+> +
+> +			/* Check for protocol errors */
+> +			if (eflag & HI3110_ERR_PROTOCOL_MASK) {
+> +				skb = alloc_can_err_skb(net, &cf);
+> +				if (!skb)
+> +					break;
+> +
+> +				cf->can_id |= CAN_ERR_PROT | CAN_ERR_BUSERROR;
+> +				priv->can.can_stats.bus_error++;
+> +				priv->net->stats.rx_errors++;
+> +				if (eflag & HI3110_ERR_BITERR)
+> +					cf->data[2] |= CAN_ERR_PROT_BIT;
+> +				else if (eflag & HI3110_ERR_FRMERR)
+> +					cf->data[2] |= CAN_ERR_PROT_FORM;
+> +				else if (eflag & HI3110_ERR_STUFERR)
+> +					cf->data[2] |= CAN_ERR_PROT_STUFF;
+> +				else if (eflag & HI3110_ERR_CRCERR)
+> +					cf->data[3] |= CAN_ERR_PROT_LOC_CRC_SEQ;
+> +				else if (eflag & HI3110_ERR_ACKERR)
+> +					cf->data[3] |= CAN_ERR_PROT_LOC_ACK;
+> +
+> +				cf->data[6] = hi3110_read(spi, HI3110_READ_TEC);
+> +				cf->data[7] = hi3110_read(spi, HI3110_READ_REC);
+> +				netdev_dbg(priv->net, "Bus Error\n");
+> +				netif_rx_ni(skb);
+> +			}
+> +		}
+> +
+> +		if (intf == 0)
+> +			break;
+
+I do not see a real benefit of the check above. Just more code.
+
+> +		if (intf & HI3110_INT_TXCPLT) {
+> +			net->stats.tx_packets++;
+> +			net->stats.tx_bytes += priv->tx_len - 1;
+> +			can_led_event(net, CAN_LED_EVENT_TX);
+> +			if (priv->tx_len) {
+> +				can_get_echo_skb(net, 0);
+> +				priv->tx_len = 0;
+> +			}
+> +			netif_wake_queue(net);
+> +		}
+> +	}
+> +	mutex_unlock(&priv->hi3110_lock);
+> +	return IRQ_HANDLED;
+> +}
+
+Apart from that, it looks good now and you can add my:
+
+Acked-by: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+
+Thanks,
+
+Wolfgang.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
