@@ -1,8 +1,8 @@
 From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 08/12] soc: mediatek: avoid using fixed spm power status
- defines
-Date: Sun, 19 Mar 2017 23:26:29 +0800
-Message-ID: <1489937193-2953-9-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH v3 02/12] irqchip: mtk-sysirq: extend intpol base to arbitrary
+ number
+Date: Sun, 19 Mar 2017 23:26:23 +0800
+Message-ID: <1489937193-2953-3-git-send-email-mars.cheng@mediatek.com>
 References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,103 +19,194 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
 Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use variables to replace fixed defines since the offset
-of the status of spm power might be different for some chips
+Originally driver only supports one base. However, MT6797 has
+more than one bases to configure interrupt polarity. To support
+possible design change, here comes a solution to use arbitrary
+number of bases.
 
 Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/soc/mediatek/mtk-scpsys.c |   33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ drivers/irqchip/irq-mtk-sysirq.c |  116 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 95 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index beb7916..eadbf0d 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -107,21 +107,28 @@ struct scp_domain {
- 	struct regulator *supply;
+diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+index 63ac73b..9ba969c 100644
+--- a/drivers/irqchip/irq-mtk-sysirq.c
++++ b/drivers/irqchip/irq-mtk-sysirq.c
+@@ -24,22 +24,29 @@
+ 
+ struct mtk_sysirq_chip_data {
+ 	spinlock_t lock;
+-	void __iomem *intpol_base;
++	u32 nr_intpol_bases;
++	void __iomem **intpol_bases;
++	u32 *intpol_words;
++	u8 *intpol_idx;
++	u16 *which_word;
  };
  
-+struct scp_ctrl_reg {
-+	int pwr_sta_offs;
-+	int pwr_sta2nd_offs;
-+};
-+
- struct scp {
- 	struct scp_domain *domains;
- 	struct genpd_onecell_data pd_data;
- 	struct device *dev;
- 	void __iomem *base;
- 	struct regmap *infracfg;
-+	struct scp_ctrl_reg ctrl_reg;
- };
- 
- static int scpsys_domain_is_on(struct scp_domain *scpd)
+ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
  {
- 	struct scp *scp = scpd->scp;
- 
--	u32 status = readl(scp->base + SPM_PWR_STATUS) & scpd->data->sta_mask;
--	u32 status2 = readl(scp->base + SPM_PWR_STATUS_2ND) &
--				scpd->data->sta_mask;
-+	u32 status = readl(scp->base + scp->ctrl_reg.pwr_sta_offs) &
-+						scpd->data->sta_mask;
-+	u32 status2 = readl(scp->base + scp->ctrl_reg.pwr_sta2nd_offs) &
-+						scpd->data->sta_mask;
- 
- 	/*
- 	 * A domain is on when both status bits are set. If only one is set
-@@ -346,7 +353,8 @@ static void init_clks(struct platform_device *pdev, struct clk **clk)
- }
- 
- static struct scp *init_scp(struct platform_device *pdev,
--			const struct scp_domain_data *scp_domain_data, int num)
-+			const struct scp_domain_data *scp_domain_data, int num,
-+			struct scp_ctrl_reg *scp_ctrl_reg)
- {
- 	struct genpd_onecell_data *pd_data;
- 	struct resource *res;
-@@ -358,6 +366,9 @@ static struct scp *init_scp(struct platform_device *pdev,
- 	if (!scp)
- 		return ERR_PTR(-ENOMEM);
- 
-+	scp->ctrl_reg.pwr_sta_offs = scp_ctrl_reg->pwr_sta_offs;
-+	scp->ctrl_reg.pwr_sta2nd_offs = scp_ctrl_reg->pwr_sta2nd_offs;
-+
- 	scp->dev = &pdev->dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -556,8 +567,13 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- static int __init scpsys_probe_mt2701(struct platform_device *pdev)
- {
- 	struct scp *scp;
-+	struct scp_ctrl_reg scp_reg;
- 
--	scp = init_scp(pdev, scp_domain_data_mt2701, NUM_DOMAINS_MT2701);
-+	scp_reg.pwr_sta_offs = SPM_PWR_STATUS;
-+	scp_reg.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND;
-+
-+	scp = init_scp(pdev, scp_domain_data_mt2701, NUM_DOMAINS_MT2701,
-+		       &scp_reg);
- 	if (IS_ERR(scp))
- 		return PTR_ERR(scp);
- 
-@@ -667,8 +683,13 @@ static int __init scpsys_probe_mt8173(struct platform_device *pdev)
- 	struct scp *scp;
- 	struct genpd_onecell_data *pd_data;
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct mtk_sysirq_chip_data *chip_data = data->chip_data;
++	u8 intpol_idx = chip_data->intpol_idx[hwirq];
++	void __iomem *base;
+ 	u32 offset, reg_index, value;
+ 	unsigned long flags;
  	int ret;
-+	struct scp_ctrl_reg scp_reg;
+ 
++	base = chip_data->intpol_bases[intpol_idx];
++	reg_index = chip_data->which_word[hwirq];
+ 	offset = hwirq & 0x1f;
+-	reg_index = hwirq >> 5;
+ 
+ 	spin_lock_irqsave(&chip_data->lock, flags);
+-	value = readl_relaxed(chip_data->intpol_base + reg_index * 4);
++	value = readl_relaxed(base + reg_index * 4);
+ 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
+ 		if (type == IRQ_TYPE_LEVEL_LOW)
+ 			type = IRQ_TYPE_LEVEL_HIGH;
+@@ -49,7 +56,8 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+ 	} else {
+ 		value &= ~(1 << offset);
+ 	}
+-	writel(value, chip_data->intpol_base + reg_index * 4);
 +
-+	scp_reg.pwr_sta_offs = SPM_PWR_STATUS;
-+	scp_reg.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND;
++	writel(value, base + reg_index * 4);
  
--	scp = init_scp(pdev, scp_domain_data_mt8173, NUM_DOMAINS_MT8173);
-+	scp = init_scp(pdev, scp_domain_data_mt8173, NUM_DOMAINS_MT8173,
-+		       &scp_reg);
- 	if (IS_ERR(scp))
- 		return PTR_ERR(scp);
+ 	data = data->parent_data;
+ 	ret = data->chip->irq_set_type(data, type);
+@@ -124,8 +132,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
+ {
+ 	struct irq_domain *domain, *domain_parent;
+ 	struct mtk_sysirq_chip_data *chip_data;
+-	int ret, size, intpol_num;
+-	struct resource res;
++	int ret, size, intpol_num = 0, nr_intpol_bases = 0, i = 0;
  
+ 	domain_parent = irq_find_host(parent);
+ 	if (!domain_parent) {
+@@ -133,36 +140,103 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = of_address_to_resource(node, 0, &res);
+-	if (ret)
+-		return ret;
+-
+ 	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+ 	if (!chip_data)
+ 		return -ENOMEM;
+ 
+-	size = resource_size(&res);
+-	intpol_num = size * 8;
+-	chip_data->intpol_base = ioremap(res.start, size);
+-	if (!chip_data->intpol_base) {
+-		pr_err("mtk_sysirq: unable to map sysirq register\n");
+-		ret = -ENXIO;
+-		goto out_free;
++	while (of_get_address(node, i++, NULL, NULL))
++		nr_intpol_bases++;
++
++	if (nr_intpol_bases == 0) {
++		pr_err("mtk_sysirq: base address not specified\n");
++		ret = -EINVAL;
++		goto out_free_chip;
++	}
++
++	chip_data->intpol_words = kcalloc(nr_intpol_bases,
++					  sizeof(*chip_data->intpol_words),
++					  GFP_KERNEL);
++	if (!chip_data->intpol_words) {
++		ret = -ENOMEM;
++		goto out_free_chip;
++	}
++
++	chip_data->intpol_bases = kcalloc(nr_intpol_bases,
++					  sizeof(*chip_data->intpol_bases),
++					  GFP_KERNEL);
++	if (!chip_data->intpol_bases) {
++		ret = -ENOMEM;
++		goto out_free_intpol_words;
++	}
++
++	for (i = 0; i < nr_intpol_bases; i++) {
++		struct resource res;
++
++		ret = of_address_to_resource(node, i, &res);
++		size = resource_size(&res);
++		intpol_num += size * 8;
++		chip_data->intpol_words[i] = size / 4;
++		chip_data->intpol_bases[i] = of_iomap(node, i);
++		if (ret || !chip_data->intpol_bases[i]) {
++			pr_err("%s: couldn't map region %d\n",
++			       node->full_name, i);
++			ret = -ENODEV;
++			goto out_free_intpol;
++		}
++	}
++
++	chip_data->intpol_idx = kcalloc(intpol_num,
++					sizeof(*chip_data->intpol_idx),
++					GFP_KERNEL);
++	if (!chip_data->intpol_idx) {
++		ret = -ENOMEM;
++		goto out_free_intpol;
++	}
++
++	chip_data->which_word = kcalloc(intpol_num,
++					sizeof(*chip_data->which_word),
++					GFP_KERNEL);
++	if (!chip_data->which_word) {
++		ret = -ENOMEM;
++		goto out_free_intpol_idx;
++	}
++
++	/*
++	 * assign an index of the intpol_bases for each irq
++	 * to set it fast later
++	 */
++	for (i = 0; i < intpol_num ; i++) {
++		u32 word = i / 32, j;
++
++		for (j = 0; word >= chip_data->intpol_words[j] ; j++)
++			word -= chip_data->intpol_words[j];
++
++		chip_data->intpol_idx[i] = j;
++		chip_data->which_word[i] = word;
+ 	}
+ 
+ 	domain = irq_domain_add_hierarchy(domain_parent, 0, intpol_num, node,
+ 					  &sysirq_domain_ops, chip_data);
+ 	if (!domain) {
+ 		ret = -ENOMEM;
+-		goto out_unmap;
++		goto out_free_which_word;
+ 	}
+ 	spin_lock_init(&chip_data->lock);
+ 
+ 	return 0;
+ 
+-out_unmap:
+-	iounmap(chip_data->intpol_base);
+-out_free:
++out_free_which_word:
++	kfree(chip_data->which_word);
++out_free_intpol_idx:
++	kfree(chip_data->intpol_idx);
++out_free_intpol:
++	for (i = 0; i < nr_intpol_bases; i++)
++		if (chip_data->intpol_bases[i])
++			iounmap(chip_data->intpol_bases[i]);
++	kfree(chip_data->intpol_bases);
++out_free_intpol_words:
++	kfree(chip_data->intpol_words);
++out_free_chip:
+ 	kfree(chip_data);
+ 	return ret;
+ }
 -- 
 1.7.9.5
