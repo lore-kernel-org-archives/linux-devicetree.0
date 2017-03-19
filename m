@@ -1,173 +1,160 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: iio: introduce trigger providers,
- consumers
-Date: Sun, 19 Mar 2017 22:58:41 +0000
-Message-ID: <7c6c0cf8-ca13-a40f-a4f5-d1580a0b6474@kernel.org>
-References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
- <1488300679-3259-2-git-send-email-fabrice.gasnier@st.com>
- <20170303062126.5bewa5u6o7wu7sy4@rob-hp-laptop>
- <948e5b96-7a8f-406d-6d03-d129d1b2ce54@kernel.org>
- <12a6a2f8-9ff6-a4f0-c9a2-c7de037019ef@kernel.org>
- <20170315192521.l7mb3egh4hbxdpx6@rob-hp-laptop>
- <f44cccd8-a607-117d-e444-ea3174eced18@st.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4] hwmon: ads7828 optional parameters from the device
+ tree
+Date: Sun, 19 Mar 2017 16:54:24 -0700
+Message-ID: <18ff1fd5-5d9d-84e5-92eb-90060c223b5d@roeck-us.net>
+References: <20170319193858.24981-1-kernel.development@povil.us>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f44cccd8-a607-117d-e444-ea3174eced18-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20170319193858.24981-1-kernel.development@povil.us>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Sam Povilus <kernel.development@povil.us>, wsa@the-dreams.de, jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/03/17 15:59, Fabrice Gasnier wrote:
-> On 03/15/2017 08:25 PM, Rob Herring wrote:
->> On Sun, Mar 05, 2017 at 12:13:36PM +0000, Jonathan Cameron wrote:
->>> On 05/03/17 11:43, Jonathan Cameron wrote:
->>>> On 03/03/17 06:21, Rob Herring wrote:
->>>>> On Tue, Feb 28, 2017 at 05:51:14PM +0100, Fabrice Gasnier wrote:
->>>>>> Document iio provider and consumer bindings.
->>>>>>
->>>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
->>>>>> ---
->>>>>>  .../devicetree/bindings/iio/iio-bindings.txt       | 38 ++++++++++++++++++++++
->>>>>>  1 file changed, 38 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>>> index 68d6f8c..01765e9 100644
->>>>>> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>>> @@ -95,3 +95,41 @@ vdd channel is connected to output 0 of the &ref device.
->>>>>>  		io-channels = <&adc 10>, <&adc 11>;
->>>>>>  		io-channel-names = "adc1", "adc2";
->>>>>>  	};
->>>>>> +
->>>>>> +==IIO trigger providers==
->>>>>> +Sources of IIO triggers can be represented by any node in the device
->>>>>> +tree. Those nodes are designated as IIO trigger providers. IIO trigger
->>>>>> +consumer uses a phandle and an IIO trigger specifier to connect to an
->>>>>> +IIO trigger provider.
->>>>>> +An IIO trigger specifier is an array of one or more cells identifying
->>>>>> +the IIO trigger output on a device. The length of an IIO trigger
->>>>>> +specifier is defined by the value of a #io-trigger-cells property in
->>>>>> +the IIO trigger provider node.
->>>>>> +
->>>>>> +Required properties:
->>>>>> +#io-trigger-cells:
->>>>>> +		Number of cells in an IIO trigger specifier; Typically
->>>>>> +		0 for nodes with a simple IIO trigger output.
->>>>>> +
->>>>>> +Example:
->>>>>> +	trig0: interrupt-trigger0 {
->>>>>> +		#io-trigger-cells = <0>;
->>>>>> +		compatible = "interrupt-trigger";
->>>>>> +		interrupts = <11 0>;
->>>>>> +		interrupt-parent = <&gpioa>;
->>>>>> +	}
->>>>>> +
->>>>>> +==IIO trigger consumers==
->>>>>> +Required properties:
->>>>>> +- io-triggers:	List of phandle representing the IIO trigger specifier.
->>>>>> +
->>>>>> +Optional properties:
->>>>>> +- io-trigger-names :
->>>>>> +		List of IIO trigger name strings that matches elements
->>>>>> +		in 'io-triggers' list property.
->>>>>> +
->>>>>> +Example:
->>>>>> +	some_trigger_consumer {
->>>>>> +		io-triggers = <&trig0>;
->>>>>> +		io-trigger-names = "mytrig";
->>>>>> +	}
->>>>>
->>>>> I have some reservations about this. We could just as easily add the 
->>>>> interrupt directly to the consumer node and use "trigger" for a standard 
->>>>> interrupt name. So the question is whether this extra level of 
->>>>> indirection is needed? 
->>>>
->>>> First thing to note here, is that Fabrice's use of the generic interrupt
->>>> trigger is an extremely 'unusual' one! Normal use case is that we have
-> Hi Rob, Jonathan,
-> 
-> Yes, I agree this is unusual.
-> 
->>>> a random gpio pin providing interrupts to driver triggering on random
->>>> devices - there need be no association between the two whatsoever.
->>>> So what we are doing here is 'allowing' an interrupt to provide a trigger.
->>>> It's not necessarily the one going to be used by any particular device
->>>> driver.  The decision of which trigger to use is definitely one for
->>>> userspace, not something that should be configured in to the device tree.
->>>>
->>>> For this particular case you could in theory just do it by using an interrupt
->>>> as you describe.  Ultimately though we should be able to play more complex
->>>> games with this device and having it able to handle any trigger - which 
->>>> includes those not using the direct hardware route.  It'll be up to the
->>>> driver to figure out when it can use the fast method and when it can't.
-> Agreed. Still, to benefit from hw capabilities, driver needs to have a
-> way to identify a particular trigger as a direct hardware route, or not
-> (and then default software handling, btw, that still needs to be
-> addressed in stm32-adc). DT Provider/consumer may help to achieve this.
-A simple additional callback that has access to both provider and consumer
-should have sufficient data to figure this out somehow.
-> 
->>>>
->>>> Conversely, even when we are using this hardware route to drive the
->>>> triggering it should be possible to hang off a device to be triggered
->>>> by the interrupt via the kernel rather than directly. 
->>>>
->>>> So from a device tree point of view we are just describing the fact that
->>>> there is a pin, which may be used to trigger something.  What that something
->>>> is, is a question for userspace not the device tree.
->>>>
->>> Ah, I'm half asleep this morning.  Clearly there is a more general follow
->>> up question.  If we are arguing these are generic, why are we setting
->>> up the mapping in device tree?
->>>
->>> My gut feeling is we shouldn't be.  So I think we need the first chunk
->>> above but the latter part should be a job for userspace not the devicetree.
->>
->> So you mean keep the provider side, but get rid of the consumer? That 
->> makes sense to me.
-> In case getting rid of the consumer part, I still need one way, on
-> consumer side (stm32-adc) to specifically map EXTI signal in ADC
-> hardware, do some checks on trigger to validate hardware route.
-> I'm not sure how to handle this if I get rid of consumer part.
-> Shall I use something else not mentioned here? (put trigger dt node as
-> child node of stm32 adc, then use dev bus? ...)
-Something along those lines might work.
-> 
-> Another way is as suggested by Rob in earlier comment: directly use this
-> interrupt in consumer dt node, e.g. in stm32-adc node. And register
-> relevant trigger and so on, from stm32-adc driver.
-> Please advise.
-Also a possible option, be it a little restrictive given in theory at least
-we could have a situation where this trigger had hardware routes to more
-than one driver.
+On 03/19/2017 12:38 PM, Sam Povilus wrote:
+> Adding the ability for the ads7828 and ads7830 to use the device tree to
+> get their optional parameters, instead of using platform devices. This
+> allows people using custom boards to also use the ads7828 in a non-default
+> manner.
+>
+> Because we have made it easy for the user to specify an improper reference
+> voltage, adding a note to the user if they misconfigure the device's
+> external reference.
+>
+> v2: conforming to coding style
+> v3: changing from "_" to "-" for device tree entries
+> v4: using regulator subsystem for voltage source, renaming differential input
+>     property
+>
+> Signed-off-by: Sam Povilus <kernel.development@povil.us>
+> ---
+>  .../devicetree/bindings/hwmon/ads7828.txt          | 27 ++++++++++++++++++++++
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |  2 --
+>  drivers/hwmon/ads7828.c                            | 23 ++++++++++++++++++
+>  3 files changed, 50 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
+>
+> diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
+> new file mode 100644
+> index 000000000000..c71b4005e045
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
+> @@ -0,0 +1,27 @@
+> +ads7828 properties
+> +
+> +Required properties:
+> +- compatible:
 
-So I don't have a answer right now.  Would need to dig a little into the
-actual drivers in question...  Run out of time this weekend, but might
-get some time during the week.
+compatible
 
-Brief thoughts though: the interrupt trigger obviously knows the interrupt
-in question.  Can we provide some access for the ADC to which interrupts
-are valid and then an optional callback like validate_trigger that
-is capable of discovering that there is a hardware route?  Some sort
-of handle that the trigger provides would give the device scope to see
-if it knows it can do 'magic' or not, return value could indicate to
-the trigger whether it is going to be doing it with 'magic' or
-really providing interrupts.
+> +	Should be one of
+> +	       ti,ads7828
+> +	       ti,ads7830
+> +- reg: I2C address
+> +
+> +Optional properties:
+> +
+> +- ti,differential-input
+> +  Set to use the device in differential mode.
+> +- vref
+> +  The external reference on the device is set to this regulators output. If it
+> +  does not exists the internal reference will be used and output by the ads78xx
+> +  on the "external vref" pin.
+> +
+> +  Example ADS7828 node:
+> +
+> +  ads7828: ads@48 {
+> +  	   comatible = "ti,ads7828";
+> +	   reg = <0x48>;
+> +	   vref = <&vref>;
 
-Jonathan
+Shouldn't this be vref-supply ?
 
-> 
-> Thanks for reviewing
-> Best Regards,
-> Fabrice
->>
->> Rob
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> +	   ti,differential-input;
+> +  };
+> +
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index cdd7b48826c3..87648909f6ce 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -163,8 +163,6 @@ st,m41t00		Serial real-time clock (RTC)
+>  st,m41t62		Serial real-time clock (RTC) with alarm
+>  st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
+>  taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
+> -ti,ads7828		8-Channels, 12-bit ADC
+> -ti,ads7830		8-Channels, 8-bit ADC
+>  ti,tsc2003		I2C Touch-Screen Controller
+>  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+>  ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+> diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
+> index ee396ff167d9..4f64141b2997 100644
+> --- a/drivers/hwmon/ads7828.c
+> +++ b/drivers/hwmon/ads7828.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/platform_data/ads7828.h>
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
+> +#include <linux/regulator/consumer.h>
+>
+>  /* The ADS7828 registers */
+>  #define ADS7828_CMD_SD_SE	0x80	/* Single ended inputs */
+> @@ -118,9 +119,13 @@ static int ads7828_probe(struct i2c_client *client,
+>  	struct ads7828_data *data;
+>  	struct device *hwmon_dev;
+>  	unsigned int vref_mv = ADS7828_INT_VREF_MV;
+> +	unsigned int vref_mv_tmp;
+> +	unsigned int vref_uv = -1;
+
+unsigned and -1 doesn't fit well together. Either case, the initialization is unnecessary.
+
+>  	bool diff_input = false;
+>  	bool ext_vref = false;
+>  	unsigned int regval;
+> +	struct regulator *reg;
+> +
+>
+>  	data = devm_kzalloc(dev, sizeof(struct ads7828_data), GFP_KERNEL);
+>  	if (!data)
+> @@ -131,11 +136,29 @@ static int ads7828_probe(struct i2c_client *client,
+>  		ext_vref = pdata->ext_vref;
+>  		if (ext_vref && pdata->vref_mv)
+>  			vref_mv = pdata->vref_mv;
+> +	} else if (dev->of_node) {
+> +		if (of_get_property(dev->of_node, "ti,differential-input",
+> +				    NULL))
+> +			diff_input = true;
+> +		reg = devm_regulator_get_optional(dev, "vref");
+> +		if (!IS_ERR(reg)) {
+> +			vref_uv = regulator_get_voltage(reg);
+> +			if (vref_uv >= 0) {
+
+This is always >= 0 since vref_uv is defined as unsigned int.
+
+> +				vref_mv = DIV_ROUND_CLOSEST(vref_uv, 1000);
+> +				ext_vref = true;
+> +			}
+> +		}
+>  	}
+>
+>  	/* Bound Vref with min/max values */
+> +	vref_mv_tmp = vref_mv;
+>  	vref_mv = clamp_val(vref_mv, ADS7828_EXT_VREF_MV_MIN,
+>  			    ADS7828_EXT_VREF_MV_MAX);
+> +	if (vref_mv_tmp != vref_mv) {
+> +		pr_info("You used and invalid external reference voltage, it has"
+> +			" been clamped to %u mV",
+
+I would prefer if the devicetree code above would check the range
+and return -EINVAL if it is bad. Clamping doesn't really make any sense here,
+since the result is wrong. If you want an error message with that, please
+use dev_err and shorten the message ("Invalid external reference voltage").
+
+> +			vref_mv);
+> +	}
+>
+>  	/* ADS7828 uses 12-bit samples, while ADS7830 is 8-bit */
+>  	if (id->driver_data == ads7828) {
+>
+
