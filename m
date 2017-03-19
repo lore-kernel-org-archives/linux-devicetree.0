@@ -1,113 +1,111 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 19 Mar 2017 00:54:53 +0000
-Message-ID: <20170319005453.GN21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170318204324.GM21222@n2100.armlinux.org.uk>
- <1489884074.21659.7.camel@ndufresne.ca>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/6] ARM: dts: omap4-droid4: Add LCD backlight
+Date: Sun, 19 Mar 2017 02:18:30 +0100
+Message-ID: <20170319011830.4fapdy2jvlfvpljr@earth>
+References: <20170305054359.8293-1-tony@atomide.com>
+ <20170305054359.8293-3-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5a2fveuyy5ewvvsc"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489884074.21659.7.camel@ndufresne.ca>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sud
+In-Reply-To: <20170305054359.8293-3-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 18, 2017 at 08:41:14PM -0400, Nicolas Dufresne wrote:
-> Le samedi 18 mars 2017 =E0 20:43 +0000, Russell King - ARM Linux a
-> =E9crit=A0:
-> > On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
-> > > Can you share your gstreamer pipeline? For now, until
-> > > VIDIOC_ENUM_FRAMESIZES is implemented, try a pipeline that
-> > > does not attempt to specify a frame rate. I use the attached
-> > > script for testing, which works for me.
-> > =
 
-> > It's nothing more than
-> > =
+--5a2fveuyy5ewvvsc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > =A0 gst-launch-1.0 -v v4l2src ! <any needed conversions> ! xvimagesink
-> > =
+Hi,
 
-> > in my case, the conversions are bayer2rgbneon.=A0 However, this only
-> > shows
-> > you the frame rate negotiated on the pads (which is actually good
-> > enough
-> > to show the issue.)
-> > =
+On Sat, Mar 04, 2017 at 09:43:55PM -0800, Tony Lindgren wrote:
+> The TI LMU driver has not yet been merged, but the device
+> tree binding for TI LMU drivers has been acked already
+> earlier by Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>. So it should
+> be safe to apply to cut down the number of pending patches.
+>=20
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
+> Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
-> > How I stumbled across though this was when I was trying to encode:
-> > =
+Tested-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> > =A0gst-launch-1.0 v4l2src device=3D/dev/video9 ! bayer2rgbneon ! \
-> > =A0=A0=A0=A0=A0=A0=A0=A0videoconvert ! x264enc speed-preset=3D1 ! avimu=
-x ! \
-> > =A0=A0=A0=A0=A0=A0=A0=A0filesink location=3Dtest.avi
-> > =
+I had to add https://patchwork.kernel.org/patch/7704601/ in addition
+to the patches recently queued into MFD. It would be nice to get that
+into 4.12 - @Milo Kim: What's your plan on that patch?
 
-> > I noticed that vlc would always say it was playing the resulting AVI
-> > at 30fps.
-> =
+-- Sebastian
 
-> In practice, I have the impression there is a fair reason why framerate
-> enumeration isn't implemented (considering there is only 1 valid rate).
+> ---
+>  arch/arm/boot/dts/omap4-droid4-xt894.dts | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts=
+/omap4-droid4-xt894.dts
+> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> @@ -180,6 +180,25 @@
+>  	};
+>  };
+> =20
+> +&i2c1 {
+> +	lm3532@38 {
+> +		compatible =3D "ti,lm3532";
+> +		reg =3D <0x38>;
+> +
+> +		enable-gpios =3D <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> +
+> +		backlight {
+> +			compatible =3D "ti,lm3532-backlight";
+> +
+> +			lcd {
+> +				led-sources =3D <0 1 2>;
+> +				ramp-up-msec =3D <1>;
+> +				ramp-down-msec =3D <0>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  /*
+>   * REVISIT: Add gpio173 reset pin handling to the driver, see gpio-hog a=
+bove.
+>   * If the GPIO reset is used, we probably need to have /lib/firmware/max=
+touch.fw
+> --=20
+> 2.11.1
 
-That's actually completely incorrect.
+--5a2fveuyy5ewvvsc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-With the capture device interfacing directly with CSI, it's possible
-_today_ to select:
+-----BEGIN PGP SIGNATURE-----
 
-* the CSI sink pad's resolution
-* the CSI sink pad's resolution with the width and/or height halved
-* the CSI sink pad's frame rate
-* the CSI sink pad's frame rate divided by the frame drop factor
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljN3GMACgkQ2O7X88g7
++pprcg//es8CMoBFseetRj6dRaEkmCatqK6tDergwDbUgY67jMcz0irkQSVgFwCY
+xSjuwZhnvVtb1uedOOvL87BEPMh3VOhRYLCbsZCOPvMdkou0QHOWcX74lrVUeqlp
+Yfm2RKN+f9sHhv7HnyByeNXulAQ0Z8EFhbNxvWGTlOYvhDmdG8s99+iAhcLpFaSP
+kfAncHgMSo6WWco/5WFDq5zeFTZFZMZqkTZFmMUTWnUR0b2FSpzFUNdr7vBKlSiZ
+Ih7zEkDTtBbeG3dYl9TpQuTzNIT2weWGKkfnmt1Dmh1b/we+65msiNe7USkV5M5s
+iIL1EgtXfBcPQNSYAz3vYBBGRv2bKSZuqM47k6mCAL+SW2ppLBSUvbd5UqXCBM7R
+bt2ySohOy22Pz+IJq3XOOzsmdCR6lb6OZnYB+PEJDQkbRptgbcezcuZYMeTb8y2n
+GaDa9R8tGapZkRUKlLpQpKSCdq0HAfAmuAchljDnztnvhwiiedliMKvs3IgV0tDD
+XETL2Df7mMFttXqPjs8/ZLeGSD9xZSNjoIhDr30/zIDEzcnnZsNp2J4AP6U0ulTi
+vXEFZWYE2CII443w2m3TV6xNmkW80Ek7HvQN+bPiz4nfECTr5IMJ0jtgwr6jxAVE
+/H8BjAUY2AMt7JZQbLUN5orrtZqBn8FJV2wE+Etj2pLNDNRBni4=
+=CjQ9
+-----END PGP SIGNATURE-----
 
-To put it another way, these are possible:
-
-# v4l2-ctl -d /dev/video10 --list-formats-ext
-ioctl: VIDIOC_ENUM_FMT
-        Index       : 0
-        Type        : Video Capture
-        Pixel Format: 'RGGB'
-        Name        : 8-bit Bayer RGRG/GBGB
-                Size: Discrete 816x616
-                        Interval: Discrete 0.040s (25.000 fps)
-                        Interval: Discrete 0.048s (20.833 fps)
-                        Interval: Discrete 0.050s (20.000 fps)
-                        Interval: Discrete 0.053s (18.750 fps)
-                        Interval: Discrete 0.060s (16.667 fps)
-                        Interval: Discrete 0.067s (15.000 fps)
-                        Interval: Discrete 0.080s (12.500 fps)
-                        Interval: Discrete 0.100s (10.000 fps)
-                        Interval: Discrete 0.120s (8.333 fps)
-                        Interval: Discrete 0.160s (6.250 fps)
-                        Interval: Discrete 0.200s (5.000 fps)
-                        Interval: Discrete 0.240s (4.167 fps)
-                Size: Discrete 408x616
-<same intervals>
-                Size: Discrete 816x308
-<same intervals>
-                Size: Discrete 408x308
-<same intervals>
-
-These don't become possible as a result of implementing the enums,
-they're all already requestable through /dev/video10.
-
--- =
-
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+--5a2fveuyy5ewvvsc--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
