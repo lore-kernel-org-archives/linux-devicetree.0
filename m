@@ -1,115 +1,223 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap4-droid4: Configure EHCI so modems can be
- accessed
-Date: Sun, 19 Mar 2017 06:31:15 +0100
-Message-ID: <20170319053115.yvcoskpnjs7ltd63@earth>
-References: <20170315004033.28852-1-tony@atomide.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] iio: xoadc: augment DT bindings a bit
+Date: Sun, 19 Mar 2017 09:34:48 +0000
+Message-ID: <8d1e7f89-bc55-f9bc-2891-08c211e05e55@kernel.org>
+References: <20170318133358.22314-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7q55rerxwd7raeb6"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170315004033.28852-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170318133358.22314-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 18/03/17 13:33, Linus Walleij wrote:
+> In order to accommodate in a logical manner for the premuxed channels
+> in PM8921 and the similarly addressed channels in later PMICs, we
+> need a twocell arrangement with premux and analog mux setting as
+> a tuple to uniquely identify a hardware channel.
+> 
+> These bindings are not yet in use, so it should be find to augment
+> them before we actually start using it in drivers and device trees.
+> 
+> This scheme came out of lengthy discussions and reverse-engineering
+> and reading of the few information sources we have.
+> 
+> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hmm.. It kind of feels like the relationships between the different mux
+inputs could be nicely described explicitly rather than via describing the
+magic mux settings...
 
---7q55rerxwd7raeb6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But fair enough if not, I guess this isn't that much of a stretch on the
+current binding.
 
-Hi,
+A typo inline.
 
-On Tue, Mar 14, 2017 at 05:40:33PM -0700, Tony Lindgren wrote:
-> Droid 4 has two modems, mdm6600 and w3glte. Both are on the HCI USB
-> controller.
->=20
-> Let's add a configuration for the HCI so the modems can be enabled.
->=20
-> Note that the modems still need GPIO based configuration that can
-> be done with the test-d4-echi shell script I've posted to:
->=20
-> http://muru.com/linux/d4/test-d4-ehci
->=20
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
-> Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
-Tested-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
--- Sebastian
-
+Jonathan
 > ---
->  arch/arm/boot/dts/omap4-droid4-xt894.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts=
-/omap4-droid4-xt894.dts
-> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> @@ -71,6 +71,11 @@
->  		regulator-always-on;
->  	};
-> =20
-> +	/* HS USB Host PHY on PORT 1 */
-> +	hsusb1_phy: hsusb1_phy {
-> +		compatible =3D "usb-nop-xceiv";
-> +	};
+>  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 117 ++++++++++++---------
+>  1 file changed, 69 insertions(+), 48 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> index 53cd146d8096..680bb7a29dd5 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> @@ -19,32 +19,42 @@ Required properties:
+>    with PMIC variant but is typically something like 2.2 or 1.8V.
+>  
+>  The following required properties are standard for IO channels, see
+> -iio-bindings.txt for more details:
+> +iio-bindings.txt for more details, but noitice that this particular
+noitice -> notice (or perhaps note would be better)
+> +ADC has a special adressing scheme that require two cells for
+> +identifying each ADC channel:
+>  
+> -- #address-cells: should be set to <1>
+> +- #address-cells: should be set to <2>, the first cell is the
+> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
+> +  so legal values are 0x00, 0x01 or 0x02. The second cell
+> +  is the main analog mux setting (0x00..0x0f). The combination
+> +  of prescaler/premux and analog mux uniquely addresses a hardware
+> +  channel on all systems.
+>  
+>  - #size-cells: should be set to <0>
+>  
+> -- #io-channel-cells: should be set to <1>
+> +- #io-channel-cells: should be set to <2>, again the cells are
+> +  precaler or premux followed by the analog muxing line.
+>  
+>  - interrupts: should refer to the parent PMIC interrupt controller
+>    and reference the proper ADC interrupt.
+>  
+>  Required subnodes:
+>  
+> -The ADC channels are configured as subnodes of the ADC. Since some of
+> -them are used for calibrating the ADC, these nodes are compulsory:
+> +The ADC channels are configured as subnodes of the ADC.
+>  
+> -adc-channel@c {
+> -	reg = <0x0c>;
+> +Since some of them are used for calibrating the ADC, these nodes are
+> +compulsory:
 > +
->  	/* LCD regulator from sw5 source */
->  	lcd_regulator: regulator-lcd {
->  		compatible =3D "regulator-fixed";
-> @@ -475,6 +480,15 @@
->  			       &omap4_pmx_core 0x17c>;
+> +adc-channel@0c {
+> +	reg = <0x00 0x0c>;
 >  };
-> =20
-> +&usbhsehci {
-> +	phys =3D <&hsusb1_phy>;
-> +};
+>  
+> -adc-channel@d {
+> -	reg = <0x0d>;
+> +adc-channel@0d {
+> +	reg = <0x00 0x0d>;
+>  };
+>  
+> -adc-channel@f {
+> -	reg = <0x0f>;
+> +adc-channel@0f {
+> +	reg = <0x00 0x0f>;
+>  };
+>  
+>  These three nodes are used for absolute and ratiometric calibration
+> @@ -52,13 +62,26 @@ and only need to have these reg values: they are by hardware definition
+>  1:1 ratio converters that sample 625, 1250 and 0 milliV and create
+>  an interpolation calibration for all other ADCs.
+>  
+> -Optional subnodes: any channels other than channel 0x0c, 0x0d and
+> -0x0f are optional.
+> +Optional subnodes: any channels other than channels [0x00 0x0c],
+> +[0x00 0x0d] and [0x00 0x0f] are optional.
+>  
+>  Required channel node properties:
+>  
+>  - reg: should contain the hardware channel number in the range
+> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
+> +  0 .. 0xff (8 bits).
 > +
-> +&usbhshost {
-> +	port1-mode =3D "ohci-phy-4pin-dpdm";
-> +	port2-mode =3D "ehci-tll";
-> +};
+> +  On PM8058 the hardware only supports 16 channels, but we get the same
+> +  channels repeating with its input divided down by 1 or 3. Channels 00,
+> +  10, 20, ... f0 are the raw values, 04, 14, 24 .. f4 are "unity" channels
+> +  divided by 1, and 08, 18, 28 .. f8 are channels divided by 3. Bits 0
+> +  and 1 of the channel index should always be 0.
 > +
->  /* Internal UTMI+ PHY used for OTG, CPCAP ULPI PHY for detection and cha=
-rger */
->  &usb_otg_hs {
->  	interface-type =3D <1>;
-> --=20
-> 2.11.1
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +  On PM8921 the hardware supports more than 16 channels through a complex
+> +  routing matrix using a premux, so 00, 10, 20 .. f0 are the basic raw
+> +  channels while another set of channels appear for 04, 14, 24 .. f4,
+> +  and again some of the same channels appear again divided down by 3
+> +  in 08, 18, 28 .. f8. Again bits 0 and 1 of the channel index should
+> +  always be 0.
+>  
+>  Optional channel node properties:
+>  
+> @@ -94,56 +117,54 @@ Example:
+>  xoadc: xoadc@197 {
+>  	compatible = "qcom,pm8058-adc";
+>  	reg = <0x197>;
+> -	interrupt-parent = <&pm8058>;
+> -	interrupts = <76 1>;
+> -	#address-cells = <1>;
+> +	interrupts-extended = <&pm8058 76 IRQ_TYPE_EDGE_RISING>;
+What has the above got to do with this patch?
 
---7q55rerxwd7raeb6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljOF6EACgkQ2O7X88g7
-+pro3Q//cpZKXbsSWHF8q2Ip9C5hzUYICN8osOeUTXo3Nf1SUtvBglT8M2dZwjdb
-8ZmQT0bHA3QXbl1e0NFZKVlpKu37ovmcLEzjPv+jxwm2xUJTH9vkfweeGuwDzVCF
-hGUorr9lOA48RGKm4SFuuI9IUVHbf/RDqq9aGC/EBAPSZ0w2FYgAJhlyqoEe81Su
-5MqTyAJEoqWgqA1alqpz4/8W0o9m4lmqtRc6YeR/3uE8jIWiddBqqOsR7HpMxO4K
-9MjxZxYvmD1fSFCXfNIKzPu6YR5UtcgUS8L1Rbfdm+4abgdFxQrha1kWo/fuksMH
-+krfgUnHR/3Sw6Vicil7jM15/RnS+6DXpkBxmDEuFXmpcMeGz9uMMTa7KdRntxy6
-0AMf3ZjW39II2+XYKmmCf9FpP6m7UmSykukPAYrad9KFHmHmLpduQcjhMr+YfJ/I
-5kaA0jYG3v/xiF+aegNGAAtEYddFHXm/I9QtUCs6/bodKHRQJ2ORRBEWJMB+Tade
-We4i0uWuNSKe4Q41CKbnWdCDC/PDcYLBlWL5emHQFIlniPtCwkVTgyTNrnyvSeZU
-LZCLgNLPO6TDrfJRzSYXWtLiDWsg0eSiXZmIYnX/O09iFWiYMnmk5paXclxMt5hd
-CsmkNvmJ1XF5dhb0+0c1dJp9/wbEjbG0Cjlt8Pz0d6fV2lfZ5mo=
-=JU39
------END PGP SIGNATURE-----
-
---7q55rerxwd7raeb6--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	#address-cells = <2>;
+>  	#size-cells = <0>;
+> -	#io-channel-cells = <1>;
+> +	#io-channel-cells = <2>;
+>  
+> -	vcoin: adc-channel@0 {
+> -		reg = <0x00>;
+> +	vcoin: adc-channel@00 {
+> +		reg = <0x00 0x00>;
+>  	};
+> -	vbat: adc-channel@1 {
+> -		reg = <0x01>;
+> +	vbat: adc-channel@01 {
+> +		reg = <0x00 0x01>;
+>  	};
+> -	dcin: adc-channel@2 {
+> -		reg = <0x02>;
+> +	dcin: adc-channel@02 {
+> +		reg = <0x00 0x02>;
+>  	};
+> -	ichg: adc-channel@3 {
+> -		reg = <0x03>;
+> +	ichg: adc-channel@30 {
+> +		reg = <0x00 0x03>;
+>  	};
+> -	vph_pwr: adc-channel@4 {
+> -		reg = <0x04>;
+> +	vph_pwr: adc-channel@04 {
+> +		reg = <0x00 0x04>;
+>  	};
+> -	usb_vbus: adc-channel@a {
+> -		reg = <0x0a>;
+> +	usb_vbus: adc-channel@0a {
+> +		reg = <0x00 0x0a>;
+>  	};
+> -	die_temp: adc-channel@b {
+> -		reg = <0x0b>;
+> +	die_temp: adc-channel@0b {
+> +		reg = <0x00 0x0b>;
+>  	};
+> -	ref_625mv: adc-channel@c {
+> -		reg = <0x0c>;
+> +	ref_625mv: adc-channel@0c {
+> +		reg = <0x00 0x0c>;
+>  	};
+> -	ref_1250mv: adc-channel@d {
+> -		reg = <0x0d>;
+> +	ref_1250mv: adc-channel@0d {
+> +		reg = <0x00 0x0d>;
+>  	};
+> -	ref_325mv: adc-channel@e {
+> -		reg = <0x0e>;
+> +	ref_325mv: adc-channel@0e {
+> +		reg = <0x00 0x0e>;
+>  	};
+> -	ref_muxoff: adc-channel@f {
+> -		reg = <0x0f>;
+> +	ref_muxoff: adc-channel@0f {
+> +		reg = <0x00 0x0f>;
+>  	};
+>  };
+>  
+> -
+>  /* IIO client node */
+>  iio-hwmon {
+>  	compatible = "iio-hwmon";
+> -	io-channels = <&xoadc 0x01>, /* Battery */
+> -		    <&xoadc 0x02>, /* DC in (charger) */
+> -		    <&xoadc 0x04>, /* VPH the main system voltage */
+> -		    <&xoadc 0x0b>, /* Die temperature */
+> -		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
+> -		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
+> -		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
+> +	io-channels = <&xoadc 0x00 0x01>, /* Battery */
+> +		    <&xoadc 0x00 0x02>, /* DC in (charger) */
+> +		    <&xoadc 0x00 0x04>, /* VPH the main system voltage */
+> +		    <&xoadc 0x00 0x0b>, /* Die temperature */
+> +		    <&xoadc 0x00 0x0c>, /* Reference voltage 1.25V */
+> +		    <&xoadc 0x00 0x0d>, /* Reference voltage 0.625V */
+> +		    <&xoadc 0x00 0x0e>; /* Reference voltage 0.325V */
+>  };
+> 
