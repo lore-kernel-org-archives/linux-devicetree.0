@@ -1,97 +1,109 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] iio: adc: cpcap: Add minimal support for CPCAP PMIC ADC
-Date: Sun, 19 Mar 2017 10:54:26 -0700
-Message-ID: <20170319175426.GE20572@atomide.com>
-References: <20170317014344.27201-1-tony@atomide.com>
- <fefdc8e7-3780-b149-7898-0a4f3f58efc3@kernel.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Sun, 19 Mar 2017 18:04:57 +0000
+Message-ID: <20170319180457.GX21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170318192258.GL21222@n2100.armlinux.org.uk>
+ <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+ <20170319103801.GQ21222@n2100.armlinux.org.uk>
+ <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <fefdc8e7-3780-b149-7898-0a4f3f58efc3-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, geert@linux-m68k.org, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, mchehab@kernel.org, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-* Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170319 10:08]:
-> On 17/03/17 01:43, Tony Lindgren wrote:
-> > On Motorola phones like droid 4 there is a custom CPCAP PMIC. This PMIC
-> > has ADCs that are used for battery charging and USB PHY VBUS and ID pin
-> > detection.
-> > 
-> > Unfortunately the only documentation for this ADC seems to be the
-> > Motorola mapphone Linux kernel tree. I have tested that reading raw and
-> > scaled values works, but I have not used the timed sampling that the ADC
-> > seems to support.
-> Any link? I'm curious to see just how 'interesting' this was...
-
-Well the Motorola kernel has the CPCAP PMIC registers quite nicely
-documented. I mostly use the "STS-Dev-Team/kernel_mapphone_kexec"
-git tree as a reference as that has the original Motorola patch
-imported into a git tree. Below are few links to selected files
-for fun reading:
-
-https://github.com/STS-Dev-Team/kernel_mapphone_kexec
-https://github.com/STS-Dev-Team/kernel_mapphone_kexec/blob/cm-10.1/drivers/mfd/cpcap-adc.c
-https://github.com/STS-Dev-Team/kernel_mapphone_kexec/blob/cm-10.1/include/linux/spi/cpcap-regbits.h
-https://github.com/STS-Dev-Team/kernel_mapphone_kexec/blob/cm-10.1/include/linux/spi/cpcap.h
-
-> You are a brave person...
-
-Well n950 is too hard to replace.. And n900 is a bit memory limited..
-And there are tons of used droid 4 available for about $35 or so :)
-
-> > +/*
-> > + * Temperature lookup table of register values to milliCelcius.
-> > + * REVISIT: Check the duplicate 0x3ff entry in a freezer
-> :) Best comment I've seen in a driver for a while!
-
-:)
-
-> > +static const struct iio_chan_spec cpcap_adc_channels[] = {
-> > +	CPCAP_CHAN(IIO_TEMP, 0, CPCAP_REG_ADCD0, "battdetb"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 1, CPCAP_REG_ADCD1, "battp"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 2, CPCAP_REG_ADCD2, "vbus"),
-> > +	CPCAP_CHAN(IIO_TEMP, 3, CPCAP_REG_ADCD3, "ad3"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 4, CPCAP_REG_ADCD4, "ad4"),
-> > +	CPCAP_CHAN(IIO_CURRENT, 5, CPCAP_REG_ADCD5, "chg_isense"),
-> > +	CPCAP_CHAN(IIO_CURRENT, 6, CPCAP_REG_ADCD6, "batti"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 7, CPCAP_REG_ADCD7, "usb_id"),
-> > +
-> > +	CPCAP_CHAN(IIO_CURRENT, 8, CPCAP_REG_ADCD0, "ad8"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 9, CPCAP_REG_ADCD1, "ad9"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 10, CPCAP_REG_ADCD2, "licell"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 11, CPCAP_REG_ADCD3, "hv_battp"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 12, CPCAP_REG_ADCD4, "tsx1_ad12"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 13, CPCAP_REG_ADCD5, "tsx2_ad13"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 14, CPCAP_REG_ADCD6, "tsy1_ad14"),
-> > +	CPCAP_CHAN(IIO_VOLTAGE, 15, CPCAP_REG_ADCD7, "tsy2_ad15"),
-> Touch screen kicking around on here as well?  Or am I reading too much into
-> the names?
-
-Yeah so it seems. These do not seem to be wired to anything in
-droid 4, but the Motorola kernel supports a whole family of
-devices, so it was probably used for touch screen on some at some
-point.
-
-> > +		*val = req.result[index];
+On Sun, Mar 19, 2017 at 10:54:22AM -0700, Steve Longerbeam wrote:
 > 
-> This would come in the seriously unusual category if the scale is integer...
-> Could be I suppose, but seems unlikely ;)
-> Note that value in mV should be raw_value * scale.
 > 
-> I'd guess these are what we term _processed channels, i.e. already in mV?
+> On 03/19/2017 03:38 AM, Russell King - ARM Linux wrote:
+> >On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
+> >>Right, imx-media-capture.c (the "standard" v4l2 user interface module)
+> >>is not implementing VIDIOC_ENUM_FRAMESIZES. It should, but it can only
+> >>return the single frame size that the pipeline has configured (the mbus
+> >>format of the attached source pad).
+> >I now have a set of patches that enumerate the frame sizes and intervals
+> >from the source pad of the first subdev (since you're setting the formats
+> >etc there from the capture device, it seems sensible to return what it
+> >can support.)  This means my patch set doesn't add to non-CSI subdevs.
+> >
+> >>Can you share your gstreamer pipeline? For now, until
+> >>VIDIOC_ENUM_FRAMESIZES is implemented, try a pipeline that
+> >>does not attempt to specify a frame rate. I use the attached
+> >>script for testing, which works for me.
+> >Note that I'm not specifying a frame rate on gstreamer - I'm setting
+> >the pipeline up for 60fps, but gstreamer in its wisdom is unable to
+> >enumerate the frame sizes, and therefore is unable to enumerate the
+> >frame intervals (frame intervals depend on frame sizes), so it
+> >falls back to the "tvnorms" which are basically 25/1 and 30000/1001.
+> >
+> >It sees 60fps via G_PARM, and then decides to set 30000/1001 via S_PARM.
+> >So, we end up with most of the pipeline operating at 60fps, with CSI
+> >doing frame skipping to reduce the frame rate to 30fps.
+> >
+> >gstreamer doesn't complain, doesn't issue any warnings, the only way
+> >you can spot this is to enable debugging and look through the copious
+> >debug log, or use -v and check the pad capabilities.
+> >
+> >Testing using gstreamer, and only using "does it produce video" is a
+> >good simple test, but it's just that - it's a simple test.  It doesn't
+> >tell you that what you're seeing is what you intended to see (such as
+> >video at the frame rate you expected) without more work.
+> >
+> >>Thanks, I've fixed most of v4l2-compliance issues, but this is not
+> >>done yet. Is that something you can help with?
+> >What did you do with:
+> >
+> >ioctl(3, VIDIOC_REQBUFS, {count=0, type=0 /* V4L2_BUF_TYPE_??? */, memory=0 /* V4L2_MEMORY_??? */}) = -1 EINVAL (Invalid argument)
+> >                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> >ioctl(3, VIDIOC_EXPBUF, 0xbef405bc)     = -1 EINVAL (Invalid argument)
+> >                 fail: v4l2-test-buffers.cpp(571): q.has_expbuf(node)
+> >                 test VIDIOC_EXPBUF: FAIL
+> >
+> >To me, this looks like a bug in v4l2-compliance (I'm using 1.10.0).
+> >I'm not sure what buffer VIDIOC_EXPBUF is expected to export, since
+> >afaics no buffers have been allocated, so of course it's going to fail.
+> >Either that, or the v4l2 core vb2 code is non-compliant with v4l2's
+> >interface requirements.
+> >
+> >In any case, it doesn't look like the buffer management is being
+> >tested at all by v4l2-compliance - we know that gstreamer works, so
+> >buffers _can_ be allocated, and I've also used dmabufs with gstreamer,
+> >so I also know that VIDIOC_EXPBUF works there.
+> >
+> 
+> I wouldn't be surprised if you hit on a bug in v4l2-compliance. I stopped
+> with v4l2-compliance
+> at a different test failure that also didn't make sense to me:
 
-Oh OK, thanks I'll check, yeah it's already in mV.
+It isn't - the problem is that the results are misleading.  The
+VIDIOC_REQBUFS depends on the GET_FMT test succeeding, so it knows
+which buffer formats are valid.
 
-> If all you have is unregister in remove, it's a fairly sure sign
-> you could have used devm_iio_device_register and dropped the remove
-> entirely.
+Since the GET_FMT test fails due to the colorspace issue, it decides
+that it can't trust the format, so it ends up with no formats to test.
+This causes the "VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF" test to pass,
+but then it moves on to testing "VIDIOC_EXPBUF" with no available
+buffers, which then fails.
 
-Sure. Will also look at the other comments and repost, thanks
-for the review.
+Fixing GET_FMT (which I've done locally) to return proper colorspace
+information results in GET_FMT passing, and also solves the EXPBUF
+problem too.
 
-Regards,
-
-Tony
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
