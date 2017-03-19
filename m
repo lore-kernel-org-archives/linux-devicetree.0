@@ -1,65 +1,162 @@
-From: Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 19 Mar 2017 10:47:17 -0400
-Message-ID: <1489934837.3388.4.camel@ndufresne.ca>
+Date: Sun, 19 Mar 2017 14:51:33 +0000
+Message-ID: <20170319145133.GU21222@n2100.armlinux.org.uk>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
-         <20170318192258.GL21222@n2100.armlinux.org.uk>
-         <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
-         <20170318204324.GM21222@n2100.armlinux.org.uk>
-         <4e7f91fa-e1c4-1cbc-2542-2aaf19a35329@mentor.com>
-         <20170319142110.GT21222@n2100.armlinux.org.uk>
+ <20170318192258.GL21222@n2100.armlinux.org.uk>
+ <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+ <20170318204324.GM21222@n2100.armlinux.org.uk>
+ <1489884074.21659.7.camel@ndufresne.ca>
+ <20170319005453.GN21222@n2100.armlinux.org.uk>
+ <1489934005.3388.1.camel@ndufresne.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-oWbksnctFIVEBK64NC2I"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170319142110.GT21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ker
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1489934005.3388.1.camel@ndufresne.ca>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, mchehab@kernel.org, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kernel.org, sud
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Mar 19, 2017 at 10:33:25AM -0400, Nicolas Dufresne wrote:
+> Le dimanche 19 mars 2017 =E0 00:54 +0000, Russell King - ARM Linux a
+> =E9crit=A0:
+> > > =
 
---=-oWbksnctFIVEBK64NC2I
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> > > In practice, I have the impression there is a fair reason why
+> > > framerate
+> > > enumeration isn't implemented (considering there is only 1 valid
+> > > rate).
+> > =
 
-Le dimanche 19 mars 2017 =C3=A0 14:21 +0000, Russell King - ARM Linux a
-=C3=A9crit=C2=A0:
-> > Can it be a point of failure?
->=20
-> There's a good reason why I dumped a full debug log using
-> GST_DEBUG=3D*:9,
-> analysed it for the cause of the failure, and tried several different
-> pipelines, including the standard bayer2rgb plugin.
->=20
-> Please don't blame this on random stuff after analysis of the logs
-> _and_
-> reading the appropriate plugin code has shown where the problem is.=C2=A0
-> I
-> know gstreamer can be very complex, but it's very possible to analyse
-> the cause of problems and pin them down with detailed logs in
-> conjunction
-> with the source code.
+> > That's actually completely incorrect.
+> > =
 
-I read your analyses with GStreamer, and it was all correct.
+> > With the capture device interfacing directly with CSI, it's possible
+> > _today_ to select:
+> > =
 
-Nicolas
---=-oWbksnctFIVEBK64NC2I
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> > * the CSI sink pad's resolution
+> > * the CSI sink pad's resolution with the width and/or height halved
+> > * the CSI sink pad's frame rate
+> > * the CSI sink pad's frame rate divided by the frame drop factor
+> > =
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> > To put it another way, these are possible:
+> > =
 
-iEYEABECAAYFAljOmfUACgkQcVMCLawGqBwYkQCdHGmIDjI60X3bEjNEYSdTotbj
-t6wAn08cuWsuuBS7qRy1PejA/n9HwYWS
-=Qm7P
------END PGP SIGNATURE-----
+> > # v4l2-ctl -d /dev/video10 --list-formats-ext
+> > ioctl: VIDIOC_ENUM_FMT
+> > =A0=A0=A0=A0=A0=A0=A0 Index=A0=A0=A0=A0=A0=A0 : 0
+> > =A0=A0=A0=A0=A0=A0=A0 Type=A0=A0=A0=A0=A0=A0=A0 : Video Capture
+> > =A0=A0=A0=A0=A0=A0=A0 Pixel Format: 'RGGB'
+> > =A0=A0=A0=A0=A0=A0=A0 Name=A0=A0=A0=A0=A0=A0=A0 : 8-bit Bayer RGRG/GBGB
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Size: Discrete 816x616
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.040s (25.000 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.048s (20.833 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.050s (20.000 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.053s (18.750 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.060s (16.667 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.067s (15.000 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.080s (12.500 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.100s (10.000 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.120s (8.333 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.160s (6.250 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.200s (5.000 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 I=
+nterval: Discrete 0.240s (4.167 fps)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Size: Discrete 408x616
+> > <same intervals>
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Size: Discrete 816x308
+> > <same intervals>
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Size: Discrete 408x308
+> > <same intervals>
+> > =
 
---=-oWbksnctFIVEBK64NC2I--
+> > These don't become possible as a result of implementing the enums,
+> > they're all already requestable through /dev/video10.
+> =
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Ok that wasn't clear. So basically video9 is a front-end to video10,
+> and it does not proxy the enumerations.
+
+No.  We've sent .dot graphs which show the structure of the imx capture
+driver.
+
+What we have wrt video nodes is (eg):
+
+sensor --->  csi2 ----> mux ---> csi ----+------> csi capture
+subdev      subdev    subdev    subdev   |       /dev/video10
+                                         |
+                                         +---------\
+                                         |          \
+                                         +--> vdic ---> ic_prpenc ---> ic_p=
+rpenc
+                                             subdev     subdev         capt=
+ure
+
+... etc ... for full details, see the .dot diagrams that have been
+sent (sorry I can't recall where they are in the threads.)
+
+> I understand this is what you
+> are now fixing. And this has to be fixed, because I can image cases
+> where the front-end could support only a subset of the sub-dev. So
+> having userspace enumerate on another device (and having to find this
+> device by walking the tree) is unlikely to work in all scenarios.
+
+The capture blocks (imx-media-capture) all talk to their immediate
+upstream subdev and configure its source pad according to the formats,
+frame size and frame interval requested by the capture application.
+The subdev source pad decides whether the request is valid, and allows
+it, modifies it or rejects it as appropriate.
+
+Without working enumeration support, there's no way for an application
+to find out what possible settings there are, and, as I've already
+explained, the CSI subdev is capable itself of two things:
+
+* Scaling down the image by a factor of two independently in the
+  horizontal and vertical directions
+* Deterministically dropping frames received from its upstream
+  element, thereby reducing the frame rate.
+
+> p.s. This is why caps negotiation is annoyingly complex in GStreamer,
+> specially that there is no shortcut, you connect pads, and they figure-
+> out what format they will use between each other.
+
+Right, so when you specify video/x-raw,...,framerate=3D60/1 it introduces
+a new element which has one source and sink pad, which only supports
+the specification given.  If the neighbour's pad doesn't support it,
+gstreamer fails because the caps negotiation fails.
+
+So, if v4l2src believes (via the tvnorms, because it's lacking any
+other information) that the capture device can only do 25fps and
+30fps, then trying to set 60fps _even if S_PARM may accept it_ will
+cause gstreamer to fail - because v4l2src can only advertise that
+it supports a source of 25fps and 30fps.
+
+-- =
+
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
