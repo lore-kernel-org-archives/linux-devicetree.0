@@ -1,8 +1,8 @@
 From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 06/12] dt-bindings: arm: mediatek: document clk bindings
- for MT6797
-Date: Sun, 19 Mar 2017 23:26:27 +0800
-Message-ID: <1489937193-2953-7-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH v3 08/12] soc: mediatek: avoid using fixed spm power status
+ defines
+Date: Sun, 19 Mar 2017 23:26:29 +0800
+Message-ID: <1489937193-2953-9-git-send-email-mars.cheng@mediatek.com>
 References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,109 +22,100 @@ To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Use variables to replace fixed defines since the offset
+of the status of spm power might be different for some chips
 
-This patch adds the binding documentation for apmixedsys, imgsys,
-infracfg, mmsys, topckgen, vdecsys and vencsys for MT6797.
-
-Signed-off-by: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
- .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
- .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
- .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
- .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
- .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
- .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 ++-
- 7 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/soc/mediatek/mtk-scpsys.c |   33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-index cb0054a..cd977db 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-@@ -7,6 +7,7 @@ Required Properties:
+diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+index beb7916..eadbf0d 100644
+--- a/drivers/soc/mediatek/mtk-scpsys.c
++++ b/drivers/soc/mediatek/mtk-scpsys.c
+@@ -107,21 +107,28 @@ struct scp_domain {
+ 	struct regulator *supply;
+ };
  
- - compatible: Should be one of:
- 	- "mediatek,mt2701-apmixedsys"
-+	- "mediatek,mt6797-apmixedsys"
- 	- "mediatek,mt8135-apmixedsys"
- 	- "mediatek,mt8173-apmixedsys"
- - #clock-cells: Must be 1
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
-index f6a9166..047b11a 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
-@@ -7,6 +7,7 @@ Required Properties:
++struct scp_ctrl_reg {
++	int pwr_sta_offs;
++	int pwr_sta2nd_offs;
++};
++
+ struct scp {
+ 	struct scp_domain *domains;
+ 	struct genpd_onecell_data pd_data;
+ 	struct device *dev;
+ 	void __iomem *base;
+ 	struct regmap *infracfg;
++	struct scp_ctrl_reg ctrl_reg;
+ };
  
- - compatible: Should be one of:
- 	- "mediatek,mt2701-imgsys", "syscon"
-+	- "mediatek,mt6797-imgsys", "syscon"
- 	- "mediatek,mt8173-imgsys", "syscon"
- - #clock-cells: Must be 1
+ static int scpsys_domain_is_on(struct scp_domain *scpd)
+ {
+ 	struct scp *scp = scpd->scp;
  
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
-index 1620ec2..58d58e2 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
-@@ -8,6 +8,7 @@ Required Properties:
+-	u32 status = readl(scp->base + SPM_PWR_STATUS) & scpd->data->sta_mask;
+-	u32 status2 = readl(scp->base + SPM_PWR_STATUS_2ND) &
+-				scpd->data->sta_mask;
++	u32 status = readl(scp->base + scp->ctrl_reg.pwr_sta_offs) &
++						scpd->data->sta_mask;
++	u32 status2 = readl(scp->base + scp->ctrl_reg.pwr_sta2nd_offs) &
++						scpd->data->sta_mask;
  
- - compatible: Should be one of:
- 	- "mediatek,mt2701-infracfg", "syscon"
-+	- "mediatek,mt6797-infracfg", "syscon"
- 	- "mediatek,mt8135-infracfg", "syscon"
- 	- "mediatek,mt8173-infracfg", "syscon"
- - #clock-cells: Must be 1
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-index 67dd2e4..70529e0 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-@@ -7,6 +7,7 @@ Required Properties:
+ 	/*
+ 	 * A domain is on when both status bits are set. If only one is set
+@@ -346,7 +353,8 @@ static void init_clks(struct platform_device *pdev, struct clk **clk)
+ }
  
- - compatible: Should be one of:
- 	- "mediatek,mt2701-mmsys", "syscon"
-+	- "mediatek,mt6797-mmsys", "syscon"
- 	- "mediatek,mt8173-mmsys", "syscon"
- - #clock-cells: Must be 1
+ static struct scp *init_scp(struct platform_device *pdev,
+-			const struct scp_domain_data *scp_domain_data, int num)
++			const struct scp_domain_data *scp_domain_data, int num,
++			struct scp_ctrl_reg *scp_ctrl_reg)
+ {
+ 	struct genpd_onecell_data *pd_data;
+ 	struct resource *res;
+@@ -358,6 +366,9 @@ static struct scp *init_scp(struct platform_device *pdev,
+ 	if (!scp)
+ 		return ERR_PTR(-ENOMEM);
  
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
-index 9f2fe78..ec93ecb 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
-@@ -7,6 +7,7 @@ Required Properties:
++	scp->ctrl_reg.pwr_sta_offs = scp_ctrl_reg->pwr_sta_offs;
++	scp->ctrl_reg.pwr_sta2nd_offs = scp_ctrl_reg->pwr_sta2nd_offs;
++
+ 	scp->dev = &pdev->dev;
  
- - compatible: Should be one of:
- 	- "mediatek,mt2701-topckgen"
-+	- "mediatek,mt6797-topckgen"
- 	- "mediatek,mt8135-topckgen"
- 	- "mediatek,mt8173-topckgen"
- - #clock-cells: Must be 1
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
-index 2440f73..d150104 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
-@@ -7,6 +7,7 @@ Required Properties:
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -556,8 +567,13 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+ static int __init scpsys_probe_mt2701(struct platform_device *pdev)
+ {
+ 	struct scp *scp;
++	struct scp_ctrl_reg scp_reg;
  
- - compatible: Should be one of:
- 	- "mediatek,mt2701-vdecsys", "syscon"
-+	- "mediatek,mt6797-vdecsys", "syscon"
- 	- "mediatek,mt8173-vdecsys", "syscon"
- - #clock-cells: Must be 1
+-	scp = init_scp(pdev, scp_domain_data_mt2701, NUM_DOMAINS_MT2701);
++	scp_reg.pwr_sta_offs = SPM_PWR_STATUS;
++	scp_reg.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND;
++
++	scp = init_scp(pdev, scp_domain_data_mt2701, NUM_DOMAINS_MT2701,
++		       &scp_reg);
+ 	if (IS_ERR(scp))
+ 		return PTR_ERR(scp);
  
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
-index 5bb2866..8a93be6 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
-@@ -5,7 +5,8 @@ The Mediatek vencsys controller provides various clocks to the system.
+@@ -667,8 +683,13 @@ static int __init scpsys_probe_mt8173(struct platform_device *pdev)
+ 	struct scp *scp;
+ 	struct genpd_onecell_data *pd_data;
+ 	int ret;
++	struct scp_ctrl_reg scp_reg;
++
++	scp_reg.pwr_sta_offs = SPM_PWR_STATUS;
++	scp_reg.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND;
  
- Required Properties:
- 
--- compatible: Should be:
-+- compatible: Should be one of:
-+	- "mediatek,mt6797-vencsys", "syscon"
- 	- "mediatek,mt8173-vencsys", "syscon"
- - #clock-cells: Must be 1
+-	scp = init_scp(pdev, scp_domain_data_mt8173, NUM_DOMAINS_MT8173);
++	scp = init_scp(pdev, scp_domain_data_mt8173, NUM_DOMAINS_MT8173,
++		       &scp_reg);
+ 	if (IS_ERR(scp))
+ 		return PTR_ERR(scp);
  
 -- 
 1.7.9.5
