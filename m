@@ -1,16 +1,22 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 19 Mar 2017 12:14:02 +0000
-Message-ID: <20170319121402.GS21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sun, 19 Mar 2017 14:25:01 +0100
+Message-ID: <20170319132501.GA25673@amd>
+References: <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
+ <20170310140124.GV21222@n2100.armlinux.org.uk>
+ <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+ <20170310125342.7f047acf@vento.lan>
+ <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+ <20170311082549.576531d0@vento.lan>
+ <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+ <20170314004533.3b3cd44b@vento.lan>
+ <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+ <20170317114203.GZ21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============7663213165021492083=="
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+In-Reply-To: <20170317114203.GZ21222@n2100.armlinux.org.uk>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -20,97 +26,87 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <steve_longerbeam@mentor.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakar
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
-> On 03/18/2017 12:22 PM, Russell King - ARM Linux wrote:
-> >0:00:01.955927879 20954  0x15ffe90 INFO                    v4l2 gstv4l2object.c:3811:gst_v4l2_object_get_caps:<v4l2src0> probed caps: video/x-bayer, format=(string)rggb, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)I420, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)YV12, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)BGR, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(s
- tring)RGB, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1
-> >
-> >    despite the media pipeline actually being configured for 60fps.
-> >
-> >    Forcing it by adjusting the pipeline only results in gstreamer
-> >    failing, because it believes that v4l2 is unable to operate at
-> >    60fps.
-> >
-> >    Also note the complaints from v4l2src about the non-compliance...
-> 
-> Thanks, I've fixed most of v4l2-compliance issues, but this is not
-> done yet. Is that something you can help with?
 
-I've looked at this, and IMHO it's yet another media control API mess.
+--===============7663213165021492083==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Content-Disposition: inline
 
-- media-ctl itself allows setting the format on subdev pads via
-  struct v4l2_subdev_format.
 
-- struct v4l2_subdev_format contains a struct v4l2_mbus_framefmt.
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- struct v4l2_mbus_framefmt contains:
-  * @width:      frame width
-  * @height:     frame height
-  * @code:       data format code (from enum v4l2_mbus_pixelcode)
-  * @field:      used interlacing type (from enum v4l2_field)
-  * @colorspace: colorspace of the data (from enum v4l2_colorspace)
-  * @ycbcr_enc:  YCbCr encoding of the data (from enum v4l2_ycbcr_encoding)
-  * @quantization: quantization of the data (from enum v4l2_quantization)
-  * @xfer_func:  transfer function of the data (from enum v4l2_xfer_func)
+On Fri 2017-03-17 11:42:03, Russell King - ARM Linux wrote:
+> On Tue, Mar 14, 2017 at 08:55:36AM +0100, Hans Verkuil wrote:
+> > We're all very driver-development-driven, and userspace gets very little
+> > attention in general. So before just throwing in the towel we should ta=
+ke
+> > a good look at the reasons why there has been little or no development:=
+ is
+> > it because of fundamental design defects, or because nobody paid attent=
+ion
+> > to it?
+> >=20
+> > I strongly suspect it is the latter.
+> >=20
+> > In addition, I suspect end-users of these complex devices don't really =
+care
+> > about a plugin: they want full control and won't typically use generic
+> > applications. If they would need support for that, we'd have seen much =
+more
+> > interest. The main reason for having a plugin is to simplify testing and
+> > if this is going to be used on cheap hobbyist devkits.
+>=20
+> I think you're looking at it with a programmers hat on, not a users hat.
+>=20
+> Are you really telling me that requiring users to 'su' to root, and then
+> use media-ctl to manually configure the capture device is what most
+> users "want" ?
 
-- media-ctl sets width, height, code and field, but nothing else.
+If you want to help users, right way is to improve userland support.=20
 
-We're already agreed that the fields that media-ctl are part of the
-format negotiation between the ultimate source, flowing down to the
-capture device.  However, there's no support in media-ctl to deal
-with these other fields - so media-ctl in itself is only half-
-implemented.
+> Hasn't the way technology has moved towards graphical interfaces,
+> particularly smart phones, taught us that the vast majority of users
+> want is intuitive, easy to use interfaces, and not the command line
+> with reams of documentation?
 
->From what I can tell, _we_ are doing the right thing in imx-media-capture.
+How is it relevant to _kernel_ interfaces?
+									Pavel
 
-However, I think part of the problem is the set_fmt implementation.
-When a source pad is configured via set_fmt(), any fields that can
-not be altered (eg, because the subdev doesn't support colorspace
-conversion) need to be preserved from the subdev's sink pad.
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Right now, CSI doesn't do that - it only looks at the width, height,
-code, and field.
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-I think we've got other bugs though that haven't been picked up by any
-review - csi_try_fmt() adjusts the format using the _current_
-configuration of the sink pad, even when using V4L2_SUBDEV_FORMAT_TRY.
-This seems wrong according to the docs: the purpose of the try
-mechanism is to be able to setup the _entire_ pipeline using the TRY
-mechanism to work out whether the configuration works, before then
-setting for real.  If we're validating the TRY formats against the
-live configuration, then we're not doing that.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-There's calls for:
+iEYEARECAAYFAljOhq0ACgkQMOfwapXb+vJ9ywCgiLbs4zD6qCIbTw4hAUuhMtfs
+Y58An3yuL1bl63dFNji5vJn59vsTQqvq
+=+jHQ
+-----END PGP SIGNATURE-----
 
-v4l2_subdev_get_try_format
-v4l2_subdev_get_try_crop
-v4l2_subdev_get_try_compose
+--u3/rZRmxL6MmkK24--
 
-to get the try configuration - we hardly make use of all of these.  I
-would suggest that we change the approach to implementing the various
-subdevs such that:
+--===============7663213165021492083==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-1) like __csi_get_fmt(), we have accessors that gets a pointer to the
-   correct state for the TRY/live settings.
+_______________________________________________
+devel mailing list
+devel@linuxdriverproject.org
+http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
 
-2) everywhere we're asked to get or set parameters that can be TRY/live,
-   we use these accessors to retrieve a pointer to the correct state to
-   not only read, but also modify.
-
-3) when we're evaluating parameters against another pad, we use these
-   accessors to obtain the other pad's configuration, rather than poking
-   about in the state saved in the subdev's priv-> (which is irrelevant
-   for the TRY variant.)
-
-4) ensure that all parameters which the subdev itself does not support
-   modification of are correctly propagated from the sink pad to all
-   source pads, and are unable to be modified via the source pad.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+--===============7663213165021492083==--
