@@ -1,17 +1,17 @@
 From: Nicolas Dufresne <nicolas@ndufresne.ca>
 Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 19 Mar 2017 10:33:25 -0400
-Message-ID: <1489934005.3388.1.camel@ndufresne.ca>
+Date: Sun, 19 Mar 2017 10:45:15 -0400
+Message-ID: <1489934715.3388.3.camel@ndufresne.ca>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
  <20170318192258.GL21222@n2100.armlinux.org.uk>
  <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
  <20170318204324.GM21222@n2100.armlinux.org.uk>
  <1489884074.21659.7.camel@ndufresne.ca>
- <20170319005453.GN21222@n2100.armlinux.org.uk>
+ <20170319095558.GP21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9168633512843403765=="
+Content-Type: multipart/mixed; boundary="===============5297626668664957667=="
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170319005453.GN21222@n2100.armlinux.org.uk>
+In-Reply-To: <20170319095558.GP21222@n2100.armlinux.org.uk>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -26,71 +26,56 @@ Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.co
 List-Id: devicetree@vger.kernel.org
 
 
---===============9168633512843403765==
+--===============5297626668664957667==
 Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-r7l5c40/e2kGsHLTxxhN"
+	boundary="=-8suDICeG6cZZUITLgfbs"
 
 
---=-r7l5c40/e2kGsHLTxxhN
+--=-8suDICeG6cZZUITLgfbs
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 
-TGUgZGltYW5jaGUgMTkgbWFycyAyMDE3IMOgIDAwOjU0ICswMDAwLCBSdXNzZWxsIEtpbmcgLSBB
-Uk0gTGludXggYQrDqWNyaXTCoDoKPiA+IAo+ID4gSW4gcHJhY3RpY2UsIEkgaGF2ZSB0aGUgaW1w
-cmVzc2lvbiB0aGVyZSBpcyBhIGZhaXIgcmVhc29uIHdoeQo+ID4gZnJhbWVyYXRlCj4gPiBlbnVt
-ZXJhdGlvbiBpc24ndCBpbXBsZW1lbnRlZCAoY29uc2lkZXJpbmcgdGhlcmUgaXMgb25seSAxIHZh
-bGlkCj4gPiByYXRlKS4KPiAKPiBUaGF0J3MgYWN0dWFsbHkgY29tcGxldGVseSBpbmNvcnJlY3Qu
-Cj4gCj4gV2l0aCB0aGUgY2FwdHVyZSBkZXZpY2UgaW50ZXJmYWNpbmcgZGlyZWN0bHkgd2l0aCBD
-U0ksIGl0J3MgcG9zc2libGUKPiBfdG9kYXlfIHRvIHNlbGVjdDoKPiAKPiAqIHRoZSBDU0kgc2lu
-ayBwYWQncyByZXNvbHV0aW9uCj4gKiB0aGUgQ1NJIHNpbmsgcGFkJ3MgcmVzb2x1dGlvbiB3aXRo
-IHRoZSB3aWR0aCBhbmQvb3IgaGVpZ2h0IGhhbHZlZAo+ICogdGhlIENTSSBzaW5rIHBhZCdzIGZy
-YW1lIHJhdGUKPiAqIHRoZSBDU0kgc2luayBwYWQncyBmcmFtZSByYXRlIGRpdmlkZWQgYnkgdGhl
-IGZyYW1lIGRyb3AgZmFjdG9yCj4gCj4gVG8gcHV0IGl0IGFub3RoZXIgd2F5LCB0aGVzZSBhcmUg
-cG9zc2libGU6Cj4gCj4gIyB2NGwyLWN0bCAtZCAvZGV2L3ZpZGVvMTAgLS1saXN0LWZvcm1hdHMt
-ZXh0Cj4gaW9jdGw6IFZJRElPQ19FTlVNX0ZNVAo+IMKgwqDCoMKgwqDCoMKgIEluZGV4wqDCoMKg
-wqDCoMKgIDogMAo+IMKgwqDCoMKgwqDCoMKgIFR5cGXCoMKgwqDCoMKgwqDCoCA6IFZpZGVvIENh
-cHR1cmUKPiDCoMKgwqDCoMKgwqDCoCBQaXhlbCBGb3JtYXQ6ICdSR0dCJwo+IMKgwqDCoMKgwqDC
-oMKgIE5hbWXCoMKgwqDCoMKgwqDCoCA6IDgtYml0IEJheWVyIFJHUkcvR0JHQgo+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTaXplOiBEaXNjcmV0ZSA4MTZ4NjE2Cj4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBJbnRlcnZhbDogRGlzY3JldGUg
-MC4wNDBzICgyNS4wMDAgZnBzKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgSW50ZXJ2YWw6IERpc2NyZXRlIDAuMDQ4cyAoMjAuODMzIGZwcykKPiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEludGVydmFsOiBEaXNj
-cmV0ZSAwLjA1MHMgKDIwLjAwMCBmcHMpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBJbnRlcnZhbDogRGlzY3JldGUgMC4wNTNzICgxOC43NTAgZnBzKQo+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgSW50ZXJ2YWw6
-IERpc2NyZXRlIDAuMDYwcyAoMTYuNjY3IGZwcykKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIEludGVydmFsOiBEaXNjcmV0ZSAwLjA2N3MgKDE1LjAwMCBm
-cHMpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBJbnRl
-cnZhbDogRGlzY3JldGUgMC4wODBzICgxMi41MDAgZnBzKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgSW50ZXJ2YWw6IERpc2NyZXRlIDAuMTAwcyAoMTAu
-MDAwIGZwcykKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IEludGVydmFsOiBEaXNjcmV0ZSAwLjEyMHMgKDguMzMzIGZwcykKPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEludGVydmFsOiBEaXNjcmV0ZSAwLjE2MHMg
-KDYuMjUwIGZwcykKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIEludGVydmFsOiBEaXNjcmV0ZSAwLjIwMHMgKDUuMDAwIGZwcykKPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEludGVydmFsOiBEaXNjcmV0ZSAwLjI0
-MHMgKDQuMTY3IGZwcykKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU2l6ZTogRGlz
-Y3JldGUgNDA4eDYxNgo+IDxzYW1lIGludGVydmFscz4KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgU2l6ZTogRGlzY3JldGUgODE2eDMwOAo+IDxzYW1lIGludGVydmFscz4KPiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU2l6ZTogRGlzY3JldGUgNDA4eDMwOAo+IDxzYW1l
-IGludGVydmFscz4KPiAKPiBUaGVzZSBkb24ndCBiZWNvbWUgcG9zc2libGUgYXMgYSByZXN1bHQg
-b2YgaW1wbGVtZW50aW5nIHRoZSBlbnVtcywKPiB0aGV5J3JlIGFsbCBhbHJlYWR5IHJlcXVlc3Rh
-YmxlIHRocm91Z2ggL2Rldi92aWRlbzEwLgoKT2sgdGhhdCB3YXNuJ3QgY2xlYXIuIFNvIGJhc2lj
-YWxseSB2aWRlbzkgaXMgYSBmcm9udC1lbmQgdG8gdmlkZW8xMCwKYW5kIGl0IGRvZXMgbm90IHBy
-b3h5IHRoZSBlbnVtZXJhdGlvbnMuIEkgdW5kZXJzdGFuZCB0aGlzIGlzIHdoYXQgeW91CmFyZSBu
-b3cgZml4aW5nLiBBbmQgdGhpcyBoYXMgdG8gYmUgZml4ZWQsIGJlY2F1c2UgSSBjYW4gaW1hZ2Ug
-Y2FzZXMKd2hlcmUgdGhlIGZyb250LWVuZCBjb3VsZCBzdXBwb3J0IG9ubHkgYSBzdWJzZXQgb2Yg
-dGhlIHN1Yi1kZXYuIFNvCmhhdmluZyB1c2Vyc3BhY2UgZW51bWVyYXRlIG9uIGFub3RoZXIgZGV2
-aWNlIChhbmQgaGF2aW5nIHRvIGZpbmQgdGhpcwpkZXZpY2UgYnkgd2Fsa2luZyB0aGUgdHJlZSkg
-aXMgdW5saWtlbHkgdG8gd29yayBpbiBhbGwgc2NlbmFyaW9zLgoKcmVnYXJkcywKTmljb2xhcwoK
-cC5zLiBUaGlzIGlzIHdoeSBjYXBzIG5lZ290aWF0aW9uIGlzIGFubm95aW5nbHkgY29tcGxleCBp
-biBHU3RyZWFtZXIsCnNwZWNpYWxseSB0aGF0IHRoZXJlIGlzIG5vIHNob3J0Y3V0LCB5b3UgY29u
-bmVjdCBwYWRzLCBhbmQgdGhleSBmaWd1cmUtCm91dCB3aGF0IGZvcm1hdCB0aGV5IHdpbGwgdXNl
-IGJldHdlZW4gZWFjaCBvdGhlci4=
+Le dimanche 19 mars 2017 =C3=A0 09:55 +0000, Russell King - ARM Linux a
+=C3=A9crit=C2=A0:
+> 2) would it also make sense to allow gstreamer's v4l2src to try
+> setting
+> =C2=A0=C2=A0 a these parameters, and only fail if it's unable to set it?=
+=C2=A0 IOW,
+> if
+> =C2=A0=C2=A0 I use:
+>=20
+> gst-launch-1.0 v4l2src device=3D/dev/video10 ! \
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0video/x-bayer,format=3DRG=
+GB,framerate=3D20/1 ! ...
+>=20
+> =C2=A0=C2=A0 where G_PARM says its currently configured for 25fps, but a =
+S_PARM
+> =C2=A0=C2=A0 with 20fps would actually succeed.
 
+In current design, v4l2src will "probe" all possible formats, cache
+this, and use this information for negotiation. So after the caps has
+been probed, there will be no TRY_FMT or anything like this happening
+until it's too late. You have spotted a bug though, it should be
+reading back the parm structure to validate (and probably produce a
+not-negotiated error here).
 
---=-r7l5c40/e2kGsHLTxxhN
+Recently, specially for the IMX work done by Pengutronix, there was
+contributions to enhance this probing to support probing capabilities
+that are not enumerable (e.g. interlacing, colorimetry) using TRY_FMT.
+There is no TRY_PARM in the API to implement similar fallback. Also,
+those ended up creating a massive disaster for slow cameras. We now
+have UVC cameras that takes 6s or more to start. I have no other choice
+but to rewrite that now. We will negotiate the non-enumerable at the
+last minute with TRY_FMT (when the subset is at it's smallest). This
+will by accident add support for this camera interface, but that wasn't
+the goal. It would still fail with application that enumerates the
+possible resolutions and framerate and let you select them with a drop-
+down (like cheese). In general, I can only conclude that making
+everything that matter enumerable is the only working way to go for
+generic userspace.=20
+
+Nicolas
+--=-8suDICeG6cZZUITLgfbs
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
@@ -98,15 +83,15 @@ Content-Transfer-Encoding: 7bit
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iEYEABECAAYFAljOlrYACgkQcVMCLawGqBxPtgCeKbTvf2JmUywvdGDtou/lqIU2
-hbcAoJBEYAiuiy16CtDBt5fdjga/b/8P
-=BEUO
+iEYEABECAAYFAljOmXsACgkQcVMCLawGqBzywACfaIGyd8AYyF0WDYPjUiUxtedm
+ZAQAnAw6U05Pq1IHpxA7QAE1FEee7TXL
+=GsI+
 -----END PGP SIGNATURE-----
 
---=-r7l5c40/e2kGsHLTxxhN--
+--=-8suDICeG6cZZUITLgfbs--
 
 
---===============9168633512843403765==
+--===============5297626668664957667==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -117,4 +102,4 @@ devel mailing list
 devel@linuxdriverproject.org
 http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
 
---===============9168633512843403765==--
+--===============5297626668664957667==--
