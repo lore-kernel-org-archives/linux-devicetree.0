@@ -1,114 +1,141 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
- sink set_fmt
-Date: Sun, 19 Mar 2017 12:08:02 -0700
-Message-ID: <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
- <20170319152233.GW21222@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170319152233.GW21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+From: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
+Subject: [PATCH v4] hwmon: ads7828 optional parameters from the device tree
+Date: Sun, 19 Mar 2017 13:38:58 -0600
+Message-ID: <20170319193858.24981-1-kernel.development@povil.us>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Adding the ability for the ads7828 and ads7830 to use the device tree to
+get their optional parameters, instead of using platform devices. This
+allows people using custom boards to also use the ads7828 in a non-default
+manner.
 
+Because we have made it easy for the user to specify an improper reference
+voltage, adding a note to the user if they misconfigure the device's
+external reference.
 
-On 03/19/2017 08:22 AM, Russell King - ARM Linux wrote:
-> On Thu, Mar 09, 2017 at 08:53:18PM -0800, Steve Longerbeam wrote:
->> From: Philipp Zabel <p.zabel@pengutronix.de>
->>
->> The csi_try_crop call in set_fmt should compare the cropping rectangle
->> to the currently set input format, not to the previous input format.
-> Are we really sure that the cropping support is implemented correctly?
->
-> I came across this while looking at what we're doing with the
-> V4L2_SEL_FLAG_KEEP_CONFIG flag.
->
-> Documentation/media/uapi/v4l/dev-subdev.rst defines the behaviour of
-> the user API, and "Order of configuration and format propagation" says:
->
->    The coordinates to a step always refer to the actual size of the
->    previous step. The exception to this rule is the source compose
->    rectangle, which refers to the sink compose bounds rectangle --- if it
->    is supported by the hardware.
->    
->    1. Sink pad format. The user configures the sink pad format. This format
->       defines the parameters of the image the entity receives through the
->       pad for further processing.
->    
->    2. Sink pad actual crop selection. The sink pad crop defines the crop
->       performed to the sink pad format.
->    
->    3. Sink pad actual compose selection. The size of the sink pad compose
->       rectangle defines the scaling ratio compared to the size of the sink
->       pad crop rectangle. The location of the compose rectangle specifies
->       the location of the actual sink compose rectangle in the sink compose
->       bounds rectangle.
->    
->    4. Source pad actual crop selection. Crop on the source pad defines crop
->       performed to the image in the sink compose bounds rectangle.
->    
->    5. Source pad format. The source pad format defines the output pixel
->       format of the subdev, as well as the other parameters with the
->       exception of the image width and height. Width and height are defined
->       by the size of the source pad actual crop selection.
->    
->    Accessing any of the above rectangles not supported by the subdev will
->    return ``EINVAL``. Any rectangle referring to a previous unsupported
->    rectangle coordinates will instead refer to the previous supported
->    rectangle. For example, if sink crop is not supported, the compose
->    selection will refer to the sink pad format dimensions instead.
->
-> Note step 3 above: scaling is defined by the ratio of the _sink_ crop
-> rectangle to the _sink_ compose rectangle.
->
-> So, lets say that the camera produces a 1280x720 image, and the sink
-> pad format is configured with 1280x720.  That's step 1.
->
-> The sink crop operates within that rectangle, cropping it to an area.
-> Let's say we're only interested in its centre, so we'd chose 640x360
-> with the top-left as 320,180.  This is step 2.
->
-> Then, if we want to down-scale by a factor of two, we'd set the sink
-> compose selection to 320x180.
->
-> This seems to be at odds with how the scaling is done in CSI at
-> present: the selection implementations all reject attempts to
-> configure the sink pad, instead only supporting crop rectangles on
-> the source,
+v2: conforming to coding style
+v3: changing from "_" to "-" for device tree entries
+v4: using regulator subsystem for voltage source, renaming differential input
+    property
 
-Correct. Currently cropping is only supported at the source pad
-(step 4).
+Signed-off-by: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
+---
+ .../devicetree/bindings/hwmon/ads7828.txt          | 27 ++++++++++++++++++++++
+ .../devicetree/bindings/i2c/trivial-devices.txt    |  2 --
+ drivers/hwmon/ads7828.c                            | 23 ++++++++++++++++++
+ 3 files changed, 50 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
 
-Initially the CSI didn't support down-scaling, so step 3 is not supported,
-so the sink pad format/crop selection rectangle/crop compose rectangle
-are collapsed into the same sink pad format rectangle.
+diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
+new file mode 100644
+index 000000000000..c71b4005e045
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
+@@ -0,0 +1,27 @@
++ads7828 properties
++
++Required properties:
++- compatible:
++	Should be one of
++	       ti,ads7828
++	       ti,ads7830
++- reg: I2C address
++
++Optional properties:
++
++- ti,differential-input
++  Set to use the device in differential mode.
++- vref
++  The external reference on the device is set to this regulators output. If it
++  does not exists the internal reference will be used and output by the ads78xx
++  on the "external vref" pin.
++
++  Example ADS7828 node:
++
++  ads7828: ads@48 {
++  	   comatible = "ti,ads7828";
++	   reg = <0x48>;
++	   vref = <&vref>;
++	   ti,differential-input;
++  };
++
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index cdd7b48826c3..87648909f6ce 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -163,8 +163,6 @@ st,m41t00		Serial real-time clock (RTC)
+ st,m41t62		Serial real-time clock (RTC) with alarm
+ st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
+ taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
+-ti,ads7828		8-Channels, 12-bit ADC
+-ti,ads7830		8-Channels, 8-bit ADC
+ ti,tsc2003		I2C Touch-Screen Controller
+ ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+ ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
+index ee396ff167d9..4f64141b2997 100644
+--- a/drivers/hwmon/ads7828.c
++++ b/drivers/hwmon/ads7828.c
+@@ -34,6 +34,7 @@
+ #include <linux/platform_data/ads7828.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
++#include <linux/regulator/consumer.h>
+ 
+ /* The ADS7828 registers */
+ #define ADS7828_CMD_SD_SE	0x80	/* Single ended inputs */
+@@ -118,9 +119,13 @@ static int ads7828_probe(struct i2c_client *client,
+ 	struct ads7828_data *data;
+ 	struct device *hwmon_dev;
+ 	unsigned int vref_mv = ADS7828_INT_VREF_MV;
++	unsigned int vref_mv_tmp;
++	unsigned int vref_uv = -1;
+ 	bool diff_input = false;
+ 	bool ext_vref = false;
+ 	unsigned int regval;
++	struct regulator *reg;
++
+ 
+ 	data = devm_kzalloc(dev, sizeof(struct ads7828_data), GFP_KERNEL);
+ 	if (!data)
+@@ -131,11 +136,29 @@ static int ads7828_probe(struct i2c_client *client,
+ 		ext_vref = pdata->ext_vref;
+ 		if (ext_vref && pdata->vref_mv)
+ 			vref_mv = pdata->vref_mv;
++	} else if (dev->of_node) {
++		if (of_get_property(dev->of_node, "ti,differential-input",
++				    NULL))
++			diff_input = true;
++		reg = devm_regulator_get_optional(dev, "vref");
++		if (!IS_ERR(reg)) {
++			vref_uv = regulator_get_voltage(reg);
++			if (vref_uv >= 0) {
++				vref_mv = DIV_ROUND_CLOSEST(vref_uv, 1000);
++				ext_vref = true;
++			}
++		}
+ 	}
+ 
+ 	/* Bound Vref with min/max values */
++	vref_mv_tmp = vref_mv;
+ 	vref_mv = clamp_val(vref_mv, ADS7828_EXT_VREF_MV_MIN,
+ 			    ADS7828_EXT_VREF_MV_MAX);
++	if (vref_mv_tmp != vref_mv) {
++		pr_info("You used and invalid external reference voltage, it has"
++			" been clamped to %u mV",
++			vref_mv);
++	}
+ 
+ 	/* ADS7828 uses 12-bit samples, while ADS7830 is 8-bit */
+ 	if (id->driver_data == ads7828) {
+-- 
+2.11.0
 
-Philipp later added support for /2 downscaling, but we didn't put this in
-the correct API, looks like this needs to move into the selection API at
-step 3 (sink pad compose rectangle).
-
-
->   and we use the source crop rectangle to define the
-> down-scaling.
-
-Yes. And maybe there is nothing wrong with that, because scaling is also
-defined by the source/sink _format_ ratios (if I'm not mistaken), so looking
-at this another way, we're just defining scaling in the CSI via another
-legal API.
-
-
-Steve
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
