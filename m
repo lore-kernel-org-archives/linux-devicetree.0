@@ -1,11 +1,14 @@
 From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 00/12] Add Basic SoC support for MT6797
-Date: Sun, 19 Mar 2017 23:26:21 +0800
-Message-ID: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH v3 06/12] dt-bindings: arm: mediatek: document clk bindings
+ for MT6797
+Date: Sun, 19 Mar 2017 23:26:27 +0800
+Message-ID: <1489937193-2953-7-git-send-email-mars.cheng@mediatek.com>
+References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1489937193-2953-1-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
  <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
@@ -16,78 +19,112 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
 Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds basic SoC support for mediatek's first 10-core
-chip, X20, also known as MT6797.
+From: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-- based on 4.11-rc1
-- support multiple base address for sysirq
-- support common clk framework
+This patch adds the binding documentation for apmixedsys, imgsys,
+infracfg, mmsys, topckgen, vdecsys and vencsys for MT6797.
 
-Changes since v2:
-- prevent uncessary #intpol-bases for mtk-sysirq
-- add fast path for mtk-sysirq set_type when introducing multiple bases
-- add acked-by and tested-by
-- remove wrong usage for timer node
-
-Changes since v1:
-- add multiple base addresses support, v1 only allow 2 bases
-- clean up clk driver
-
-
-Kevin-CW Chen (2):
-  dt-bindings: arm: mediatek: document clk bindings for MT6797
-  clk: mediatek: add clk support for MT6797
-
-Mars Cheng (10):
-  dt-bindings: mediatek: multiple bases support for sysirq
-  irqchip: mtk-sysirq: extend intpol base to arbitrary number
-  irqchip: mtk-sysirq: prevent unnecessary visibility when set_type
-  dt-bindings: mediatek: Add bindings for mediatek MT6797 Platform
-  arm64: dts: mediatek: add mt6797 support
-  soc: mediatek: avoid using fixed spm power status defines
-  soc: mediatek: add vdec item for scpsys
-  dt-bindings: mediatek: add MT6797 power dt-bindings
-  soc: mediatek: add MT6797 scysys support
-  arm64: dts: mediatek: add clk and scp nodes for MT6797
-
- Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+Signed-off-by: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
  .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
  .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
  .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
  .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
- .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
- .../interrupt-controller/mediatek,sysirq.txt       |   12 +-
- .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
- .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +-
- arch/arm64/boot/dts/mediatek/Makefile              |    1 +
- arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
- arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  245 +++++++
- drivers/clk/mediatek/Kconfig                       |   32 +
- drivers/clk/mediatek/Makefile                      |    5 +
- drivers/clk/mediatek/clk-mt6797-img.c              |   76 +++
- drivers/clk/mediatek/clk-mt6797-mm.c               |  136 ++++
- drivers/clk/mediatek/clk-mt6797-vdec.c             |   93 +++
- drivers/clk/mediatek/clk-mt6797-venc.c             |   78 +++
- drivers/clk/mediatek/clk-mt6797.c                  |  716 ++++++++++++++++++++
- drivers/irqchip/irq-mtk-sysirq.c                   |  116 +++-
- drivers/soc/mediatek/mtk-scpsys.c                  |  149 +++-
- include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
- include/dt-bindings/power/mt6797-power.h           |   30 +
- 25 files changed, 1993 insertions(+), 33 deletions(-)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
- create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
- create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
- create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
- create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
- create mode 100644 drivers/clk/mediatek/clk-mt6797.c
- create mode 100644 include/dt-bindings/clock/mt6797-clk.h
- create mode 100644 include/dt-bindings/power/mt6797-power.h
+ .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 ++-
+ 7 files changed, 8 insertions(+), 1 deletion(-)
 
---
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+index cb0054a..cd977db 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+@@ -7,6 +7,7 @@ Required Properties:
+ 
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-apmixedsys"
++	- "mediatek,mt6797-apmixedsys"
+ 	- "mediatek,mt8135-apmixedsys"
+ 	- "mediatek,mt8173-apmixedsys"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+index f6a9166..047b11a 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+@@ -7,6 +7,7 @@ Required Properties:
+ 
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-imgsys", "syscon"
++	- "mediatek,mt6797-imgsys", "syscon"
+ 	- "mediatek,mt8173-imgsys", "syscon"
+ - #clock-cells: Must be 1
+ 
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+index 1620ec2..58d58e2 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+@@ -8,6 +8,7 @@ Required Properties:
+ 
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-infracfg", "syscon"
++	- "mediatek,mt6797-infracfg", "syscon"
+ 	- "mediatek,mt8135-infracfg", "syscon"
+ 	- "mediatek,mt8173-infracfg", "syscon"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+index 67dd2e4..70529e0 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+@@ -7,6 +7,7 @@ Required Properties:
+ 
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-mmsys", "syscon"
++	- "mediatek,mt6797-mmsys", "syscon"
+ 	- "mediatek,mt8173-mmsys", "syscon"
+ - #clock-cells: Must be 1
+ 
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+index 9f2fe78..ec93ecb 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+@@ -7,6 +7,7 @@ Required Properties:
+ 
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-topckgen"
++	- "mediatek,mt6797-topckgen"
+ 	- "mediatek,mt8135-topckgen"
+ 	- "mediatek,mt8173-topckgen"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+index 2440f73..d150104 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+@@ -7,6 +7,7 @@ Required Properties:
+ 
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-vdecsys", "syscon"
++	- "mediatek,mt6797-vdecsys", "syscon"
+ 	- "mediatek,mt8173-vdecsys", "syscon"
+ - #clock-cells: Must be 1
+ 
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
+index 5bb2866..8a93be6 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
+@@ -5,7 +5,8 @@ The Mediatek vencsys controller provides various clocks to the system.
+ 
+ Required Properties:
+ 
+-- compatible: Should be:
++- compatible: Should be one of:
++	- "mediatek,mt6797-vencsys", "syscon"
+ 	- "mediatek,mt8173-vencsys", "syscon"
+ - #clock-cells: Must be 1
+ 
+-- 
 1.7.9.5
