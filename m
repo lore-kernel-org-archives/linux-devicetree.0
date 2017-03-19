@@ -1,51 +1,53 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 19 Mar 2017 09:55:58 +0000
-Message-ID: <20170319095558.GP21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170318204324.GM21222@n2100.armlinux.org.uk>
- <1489884074.21659.7.camel@ndufresne.ca>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v1 2/7] dt-bindings: iio: rockchip-saradc: add support for
+ rk3328
+Date: Sun, 19 Mar 2017 10:34:22 +0000
+Message-ID: <fff0d197-c88e-fd04-0f56-c4fbc982bae4@kernel.org>
+References: <1489572237-6649-1-git-send-email-cl@rock-chips.com>
+ <1489572237-6649-3-git-send-email-cl@rock-chips.com>
+ <8664375.8vdE6CQfX9@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489884074.21659.7.camel-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
-Cc: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ker
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <8664375.8vdE6CQfX9@phil>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, cl@rock-chips.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, zhengxing@rock-chips.com, andy.yan@rock-chips.com, jay.xu@rock-chips.com, matthias.bgg@gmail.com, paweljarosz3691@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, wxt@rock-chips.com, david.wu@rock-chips.com, linux-iio@vger.kernel.org, shawn.lin@rock-chips.com, akpm@linux-foundation.org, dianders@chromium.org, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, afaerber@suse.de, shawnguo@kernel.org, khilman@baylibre.com, arnd@arndb.de, fabio.estevam@nxp.com, zhangqing@rock-chips.com, kever.yang@rock-chips.com, tony.xie@rock-chi
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 18, 2017 at 08:41:14PM -0400, Nicolas Dufresne wrote:
-> Along with the norm fallback, GStreamer could could also consider the
-> currently set framerate as returned by VIDIOC_G_PARM. At the same time,
-> implementing that enumeration shall be straightforward, and will make a
-> large amount of existing userspace work.
+On 16/03/17 08:28, Heiko Stuebner wrote:
+> Am Mittwoch, 15. März 2017, 18:03:52 CET schrieb cl@rock-chips.com:
+>> From: Chen Liang <cl@rock-chips.com>
+>>
+>> The rk3328 saradc is the same as rk3399.
+>>
+>> Signed-off-by: Chen Liang <cl@rock-chips.com>
+>> ---
+>>  Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+>> b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt index
+>> 205593f..f81bc20 100644
+>> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+>> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+>> @@ -5,6 +5,7 @@ Required properties:
+>>     - "rockchip,saradc": for rk3188, rk3288
+>>     - "rockchip,rk3066-tsadc": for rk3036
+>>     - "rockchip,rk3399-saradc": for rk3399
+>> +   - "rockchip,rk3328-saradc", "rockchip,rk3399-saradc": for rk3328
+> 
+> not sure how iio people see that, but I would suggest keeping the order, so 
+> put rk3328 above rk3399.
+In my case I'm not that fussed either way. Still if this list keeps growing
+I can see it would be better to keep it in numeric order!
 
-Since, according to v4l2-compliance, providing the enumeration ioctls
-appears to be optional:
-
-1) should v4l2-compliance be checking whether other frame sizes/frame
-   intervals are possible, and failing if the enumeration ioctls are
-   not supported?
-
-2) would it also make sense to allow gstreamer's v4l2src to try setting
-   a these parameters, and only fail if it's unable to set it?  IOW, if
-   I use:
-
-gst-launch-1.0 v4l2src device=/dev/video10 ! \
-	video/x-bayer,format=RGGB,framerate=20/1 ! ...
-
-   where G_PARM says its currently configured for 25fps, but a S_PARM
-   with 20fps would actually succeed.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> 
+> Heiko
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
