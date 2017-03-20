@@ -1,131 +1,86 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Mon, 20 Mar 2017 14:10:30 +0100
-Message-ID: <5b57773a-a747-285b-eb3e-3b3f0acd8079@xs4all.nl>
-References: <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
- <20170314004533.3b3cd44b@vento.lan>
- <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
- <20170317114203.GZ21222@n2100.armlinux.org.uk>
- <44161453-02f9-0019-3868-7501967a6a82@linux.intel.com>
- <20170317102410.18c966ae@vento.lan> <1489758670.2905.52.camel@pengutronix.de>
- <20170317143743.GG21222@n2100.armlinux.org.uk>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 0/6] Add missing Tegra210 clocks
+Date: Mon, 20 Mar 2017 14:08:25 +0100
+Message-ID: <20170320130825.GD22463@ulmo.ba.sec>
+References: <1488292648-16876-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170317143743.GG21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="NklN7DEeGtkPCoo3"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1488292648-16876-1-git-send-email-pdeschrijver@nvidia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2017 03:37 PM, Russell King - ARM Linux wrote:
-> On Fri, Mar 17, 2017 at 02:51:10PM +0100, Philipp Zabel wrote:
->> On Fri, 2017-03-17 at 10:24 -0300, Mauro Carvalho Chehab wrote:
->> [...]
->>> The big question, waiting for an answer on the last 8 years is
->>> who would do that? Such person would need to have several different
->>> hardware from different vendors, in order to ensure that it has
->>> a generic solution.
->>>
->>> It is a way more feasible that the Kernel developers that already 
->>> have a certain hardware on their hands to add support inside the
->>> driver to forward the controls through the pipeline and to setup
->>> a "default" pipeline that would cover the common use cases at
->>> driver's probe.
->>
->> Actually, would setting pipeline via libv4l2 plugin and letting drivers
->> provide a sane enabled default pipeline configuration be mutually
->> exclusive? Not sure about the control forwarding, but at least a simple
->> link setup and format forwarding would also be possible in the kernel
->> without hindering userspace from doing it themselves later.
-> 
-> I think this is the exact same problem as controls in ALSA.
-> 
-> When ALSA started off in life, the requirement was that all controls
-> shall default to minimum, and the user is expected to adjust controls
-> after the system is running.
-> 
-> After OSS, this gave quite a marked change in system behaviour, and
-> led to a lot of "why doesn't my sound work anymore" problems, because
-> people then had to figure out which combination of controls had to be
-> set to get sound out of their systems.
-> 
-> Now it seems to be much better, where install Linux on a platform, and
-> you have a working sound system (assuming that the drivers are all there
-> which is generally the case for x86.)
-> 
-> However, it's still possible to adjust all the controls from userspace.
-> All that's changed is the defaults.
-> 
-> Why am I mentioning this - because from what I understand Mauro saying,
-> it's no different from this situation.  Userspace will still have the
-> power to disable all links and setup its own.  The difference is that
-> there will be a default configuration that the kernel sets up at boot
-> time that will be functional, rather than the current default
-> configuration where the system is completely non-functional until
-> manually configured.
-> 
-> However, at the end of the day, I don't care _where_ the usability
-> problems are solved, only that there is some kind of solution.  It's not
-> the _where_ that's the real issue here, but the _how_, and discussion of
-> the _how_ is completely missing.
-> 
-> So, let's try kicking off a discussion about _how_ to do things.
-> 
-> _How_ do we setup a media controller system so that we end up with a
-> usable configuration - let's start with the obvious bit... which links
-> should be enabled.
-> 
-> I think the first pre-requisit is that we stop exposing capture devices
-> that can never be functional for the hardware that's present on the board,
-> so that there isn't this plentora of useless /dev/video* nodes and useless
-> subdevices.
-> 
-> One possible solution to finding a default path may be "find the shortest
-> path between the capture device and the sensor and enable intervening
-> links".
-> 
-> Then we need to try configuring that path with format/resolution
-> information.
-> 
-> However, what if something in the shortest path can't handle the format
-> that the sensor produces?  I think at that point, we'd need to drop that
-> subdev out of the path resolution, re-run the "find the shortest path"
-> algorithm, and try again.
-> 
-> Repeat until success or no path between the capture and sensor exists.
-> 
-> This works fine if you have just one sensor visible from a capture device,
-> but not if there's more than one (which I suspect is the case with the
-> Sabrelite board with its two cameras and video receiver.)  That breaks
-> the "find the shortest path" algorithm.
-> 
-> So, maybe it's a lot better to just let the board people provide via DT
-> a default setup for the connectivity of the modules somehow - certainly
-> one big step forward would be to disable in DT parts of the capture
-> system that can never be used (remembering that boards like the RPi /
-> Hummingboard may end up using DT overlays to describe this for different
-> cameras, so the capture setup may change after initial boot.)
 
-The MC was developed before the device tree came along. But now that the DT
-is here, I think this could be a sensible idea to let the DT provide an
-initial path.
+--NklN7DEeGtkPCoo3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sakari, Laurent, Mauro: any opinions?
+On Tue, Feb 28, 2017 at 04:37:16PM +0200, Peter De Schrijver wrote:
+> This series adds a number of clocks which were missing from the Tegra210
+> clock definition. It applies on top of the 'Tegra210 clock bug fixes' ser=
+ies
+> posted earlier.
+>=20
+> Change log:
+>=20
+> v3: fixed compiler warnings
+>=20
+> v2: fixed a few useless lines moving around
+>=20
+>=20
+> Peter De Schrijver (6):
+>   clk: tegra: add cec clock
+>   clk: tegra: define Tegra210 DMIC sync clocks
+>   clk: tegra: fix constness for periph clks
+>   clk: tegra: define Tegra210 DMIC clocks
+>   clk: tegra: add super clk mux/div
+>   clk: tegra: add aclk
+>=20
+>  drivers/clk/tegra/clk-id.h                      | 10 +++
+>  drivers/clk/tegra/clk-periph.c                  |  4 +-
+>  drivers/clk/tegra/clk-super.c                   | 87 +++++++++++++++++++=
+++++--
+>  drivers/clk/tegra/clk-tegra-audio.c             | 85 +++++++++++++++++--=
+-----
+>  drivers/clk/tegra/clk-tegra-periph.c            | 22 +++++++
+>  drivers/clk/tegra/clk-tegra114.c                |  1 +
+>  drivers/clk/tegra/clk-tegra124.c                |  1 +
+>  drivers/clk/tegra/clk-tegra210.c                | 20 ++++++
+>  drivers/clk/tegra/clk-tegra30.c                 |  1 +
+>  drivers/clk/tegra/clk.h                         | 11 +++-
+>  include/dt-bindings/clock/tegra114-car.h        |  2 +-
+>  include/dt-bindings/clock/tegra124-car-common.h |  2 +-
+>  include/dt-bindings/clock/tegra210-car.h        | 13 +++-
+>  include/dt-bindings/clock/tegra30-car.h         |  2 +-
+>  14 files changed, 223 insertions(+), 38 deletions(-)
 
-Regards,
+Applied to for-4.12/clk, thanks.
 
-	Hans
+Thierry
+
+--NklN7DEeGtkPCoo3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljP1EgACgkQ3SOs138+
+s6ExFRAArpqwGFG07p0hyU3po5I7Sz0oqb+K/+8tre8JvW8JyK/5XQljU5sulvdf
+lkhDSXNFzr9tprBixr2LZ0E7+4nPhHPn0EhQ6LH+6imAygqxpIgjwFxA+OqIOmEd
+u8wvF4Unc9UXdKkN20JpJ3Rr1iX33YWMFukhWumyYI5WNl/LugNgeeeNaAiTDyZB
+clu6D8DVrDd7au8D1rwfrAQFt/5SFVfAQLP+MJDQxVI8rKFT8dPnafvpgRGVBtip
+AfUNYBRG7ubrp9V9bOlgwWjpHVtgQDGg8Fh7snLvGMavVFYUYQz7SV4F38MajOIf
+WXqbyQpXzGHNPeBqsvJT3oHO+f0o5fY3RP1kUUKnhxA1EvX7YVv+2qRX0paZ7dgA
+skyZ4tKWD0iVqx3ZsiiAk7WjU0TzZmpGyCVT3rF9huhjyGO8wIbWbM5QDbanmUB/
+rvX+6fjDzyycgOvm65MVq7SteC0P9EfiInpu5TvCQfUcKLYDUZACpq3JT++QKKpW
+MXGUVfKTSZLNLlqBtyUvMgrUfWggqbNOMTsz8wP260j7TR/6Alyvu3hKRPVakN7I
+FM1RrJCBidgEQS2uU4me5qz4PgFFMn3pukME8bo1HB+/+g7RX64BH/Q0XhIQo6D9
+Ri3+3oPs8s4ucbdZR2DJPDI4oZXsGY9Px7gcc8Yx6bPsJPiEtdE=
+=UWQr
+-----END PGP SIGNATURE-----
+
+--NklN7DEeGtkPCoo3--
