@@ -1,95 +1,84 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] regulator: core: add
- regulator_has_continuous_voltage_range()
-Date: Mon, 20 Mar 2017 12:06:15 +0000
-Message-ID: <20170320120615.mh3fmcr2cv4dvegf@sirena.org.uk>
-References: <20170308200246.126331-1-mka@chromium.org>
- <20170309102819.bx5paxtffvmvmuov@sirena.org.uk>
- <20170309194054.GA15095@google.com>
- <20170317211547.22jrqud5np4ve2jk@sirena.org.uk>
- <20170318000330.GC50582@google.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Mon, 20 Mar 2017 12:08:55 +0000
+Message-ID: <20170320120855.GH21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+ <20170319152233.GW21222@n2100.armlinux.org.uk>
+ <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+ <1490010926.2917.59.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kaxvcakod4bjzd7b"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20170318000330.GC50582@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Guenter Roeck <groeck@chromium.org>, Dmitry Torokhov <dtor@chromium.org>
+In-Reply-To: <1490010926.2917.59.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 20, 2017 at 12:55:26PM +0100, Philipp Zabel wrote:
+> The above paragraph suggests we skip any rectangles that are not
+> supported. In our case that would be 3. and 4., since the CSI can't
+> compose into a larger frame. I hadn't realised that the crop selection
+> currently happens on the source pad.
 
---kaxvcakod4bjzd7b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'd recommend viewing the documentation in its post-processed version,
+because then you get the examples as pictures, and they say that a
+picture is worth 1000 words.  See
 
-On Fri, Mar 17, 2017 at 05:03:30PM -0700, Matthias Kaehlcke wrote:
+  https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/dev-subdev.html
 
-> In principle I totally agree with you that consumers should be able
-> to enumerate the supported voltages with the existing functions. And
-> they can, as long as they already know (or assume) that the regulator
-> they are using actually has discrete steps, otherwise they might get
-> unexpected results.
+There is almost an exact example of what we're trying to do - it's
+figure 4.6.  Here, we have a sink pad with a cropping rectangle on
+the input, which is then scaled to a composition rectangle (there's
+no bounds rectangle, and it's specified that in such a case the
+top,left of the composition rectangle will always be 0,0 - see quote
+below).
 
-Given the limits of number representation continuous regulators also
-have discrete steps, they just have a lot of them (but so do some
-regulators we currently say aren't continuous so...).
+Where it differs is that the example also supports source cropping
+for two source pads.  We don't support that.
 
-> You are right that my case is very specialist, however I think it is
-> a general problem that a consumer can't know whether the results of
-> _list_voltage(), etc correspond to the regulator itself or to its
-> supplies. E.g. a consumer might have a continuous reg which is
-> supplied by a discrete reg, in this case _list_voltage() would return
-> the steps of the supply reg, which is probably not what most consumers
-> expect.
+The same document says:
 
-No, this is doesn't make much sense!  Why should we be reporting
-properties of the parent regulator when the child regulator is
-regulating away all visibility of those properties?
+  Scaling support is optional. When supported by a subdev, the crop
+  rectangle on the subdev's sink pad is scaled to the size configured
+  using the
+  :ref:`VIDIOC_SUBDEV_S_SELECTION <VIDIOC_SUBDEV_G_SELECTION>` IOCTL
+  using ``V4L2_SEL_TGT_COMPOSE`` selection target on the same pad. If the
+  subdev supports scaling but not composing, the top and left values are
+  not used and must always be set to zero.
 
-> > > Please see my explication above on why the vctrl driver needs to know
-> > > this.
+which in itself describes _exactly_ our hardware here as far as the
+cropping and scaling the hardware supports.
 
-> > I'm seeing nothing in the above that addresses my question, you don't
-> > even seem to have mentioned supplies. =20
+> Except when composing is not supported. If the sink compose and source
+> crop rectangles are not supported, the source pad format takes their
+> place in determining the scaling output resolution. At least that's how
+> I read the documentation.
 
-> Sorry, I really didn't try to evade your question. Does it make more
-> sense with the example above?
+This isn't how I read it.  Scaling is the relationship between the size
+of the sink crop and sink compose rectangle.  Composition requires that
+there be a composition bounds rectangle to define the composition space,
+and the top,left of the composition rectangle be adjustable to place
+the composition rectangle within that space.
 
-No, not at all.
+The above quoted paragraph from the documentation backs up my view in
+its final sentence - it doesn't say "if the subdev supports scaling
+but not composing, there is no composition rectangle" but says that
+there _is_ one but its top,left coordinates are always zero.
 
-> > What we should be doing for continuous regulators is allowing people to
-> > list the supported voltages as they would for other regulators.
-
-> In the overall regulator context this may make sense, at this point I
-> don't really have enough background on the subsystem to have an
-> informed opinion.
-
-> From the vctrl perspective I wouldn't be overly happy, since it
-> wouldn't allow to distinguish between continuous and discrete
-> supplies, and I still think that handling discrete supplies
-> differently is simpler/more efficient. This doesn't mean I argue
-> against your proposal if it is deemed the right thing from a subsystem
-> perspective.
-
-If it helps think of a continuous regulator as a discrete regulator with
-a base voltage of 0 and steps of 1uV.
-
---kaxvcakod4bjzd7b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljPxbcACgkQJNaLcl1U
-h9AvIQf+JRN+QVQNUlJ/a78bB84d+ebctr/hVcfz7U8WsXGG29UfhXwaMiFFZxac
-hXpjUtLDrEwxE2rBRPNpOKWsoj2c5o4/9nOGy1hgOCTCJE+o09ebIxt+AMsAjqQ6
-hcNT7plLqEJCssT/yY3g2KhhWRHL6ZO5n//UjH5Ib9Gpk4euMaK1Klg/VfM3JRec
-GFcX5n6OGqTuJD0T6Uxrny7TCbsWToRNfy4BZ6VUK6meLUfpN2EYWtOzjuL14KgQ
-aIMkIedmGkUCt27n2i7CRRlhT7gYPIMKkoZW8RXNM/1Hu1PryafW34TxkWbUVsy/
-wMtK9bMhuZ2rXpg0fhBJ2kd78FONAw==
-=bYEY
------END PGP SIGNATURE-----
-
---kaxvcakod4bjzd7b--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
