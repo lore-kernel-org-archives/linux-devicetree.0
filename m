@@ -1,71 +1,35 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 5/8] dt-bindings: input: touchscreen: Add max11801-ts
- binding
-Date: Mon, 20 Mar 2017 10:36:25 +0800
-Message-ID: <20170320023622.GA3443@dragon>
-References: <1489647939-4966-1-git-send-email-jagan@openedev.com>
+From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/6] ARM: dts: omap4-droid4: Add LCD backlight
+Date: Mon, 20 Mar 2017 11:30:11 +0900
+Message-ID: <4a8ac532-89a9-30e7-4087-00d840d6b53b@ti.com>
+References: <20170305054359.8293-1-tony@atomide.com>
+ <20170305054359.8293-3-tony@atomide.com>
+ <20170319011830.4fapdy2jvlfvpljr@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1489647939-4966-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@openedev.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170319011830.4fapdy2jvlfvpljr@earth>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 16, 2017 at 12:35:38PM +0530, Jagan Teki wrote:
-> From: Jagan Teki <jagan@amarulasolutions.com>
-> 
-> Add missing documentation of max11801-ts dt-binding details.
-> 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Michael Trimarchi <michael@amarulasolutions.com>
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v6:
-> - Replace the lable and name of the node
->    ts: max11801 => max11801: touchscreen@48
-> Changes for v5:
-> - Newly added patch
-> 
->  .../bindings/input/touchscreen/max11801-ts.txt         | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
-> new file mode 100644
-> index 0000000..4afccbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
-> @@ -0,0 +1,18 @@
-> +* MAXI MAX11801 Resistive touch screen controller with i2c interface
-> +
-> +Required properties:
-> +- compatible: must be "max11801"
+Hi Sebastian,
 
-Shouldn't it have a vendor prefix?
+On 3/19/2017 10:18 AM, Sebastian Reichel wrote:
+> I had to add https://patchwork.kernel.org/patch/7704601/ in addition
+> to the patches recently queued into MFD. It would be nice to get that
+> into 4.12 - @Milo Kim: What's your plan on that patch?
 
-Also I will need Rob's ACK to get this go via IMX tree.
+Thanks for checking this.
 
-Shawn
+I just sent the patch to backlight subsystem maintainers. Nothing new 
+except adding a pwm helper, pwm_apply_args().
 
-> +- reg: i2c slave address
-> +- interrupt-parent: the phandle for the interrupt controller
-> +- interrupts: touch controller interrupt
-> +
-> +Example:
-> +
-> +&i2c1 {
-> +	max11801: touchscreen@48 {
-> +		compatible = "max11801";
-> +		reg = <0x48>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <31 2>;
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+Best regards,
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
