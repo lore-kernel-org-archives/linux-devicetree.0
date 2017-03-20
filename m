@@ -1,98 +1,49 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Mon, 20 Mar 2017 12:16:20 +0100
-Message-ID: <379d8320-f3dd-ea6e-867e-4522aac4216b@xs4all.nl>
-References: <20170310130733.GU21222@n2100.armlinux.org.uk>
- <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
- <20170310140124.GV21222@n2100.armlinux.org.uk>
- <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
- <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
- <20170314004533.3b3cd44b@vento.lan>
- <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
- <20170317114203.GZ21222@n2100.armlinux.org.uk>
- <44161453-02f9-0019-3868-7501967a6a82@linux.intel.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 2/4] dt-bindings: mfd: Add the description for LED as
+ the sub module
+Date: Mon, 20 Mar 2017 10:45:04 +0000
+Message-ID: <20170320104504.mtefoscl355kgxlv@dell>
+References: <1489992447-13007-1-git-send-email-sean.wang@mediatek.com>
+ <1489992447-13007-3-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <44161453-02f9-0019-3868-7501967a6a82@linux.intel.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.troti
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1489992447-13007-3-git-send-email-sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sean.wang@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, keyhaede@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2017 12:55 PM, Sakari Ailus wrote:
-> Hi Russell,
-> 
-> On 03/17/17 13:42, Russell King - ARM Linux wrote:
->> On Tue, Mar 14, 2017 at 08:55:36AM +0100, Hans Verkuil wrote:
->>> We're all very driver-development-driven, and userspace gets very little
->>> attention in general. So before just throwing in the towel we should take
->>> a good look at the reasons why there has been little or no development: is
->>> it because of fundamental design defects, or because nobody paid attention
->>> to it?
->>>
->>> I strongly suspect it is the latter.
->>>
->>> In addition, I suspect end-users of these complex devices don't really care
->>> about a plugin: they want full control and won't typically use generic
->>> applications. If they would need support for that, we'd have seen much more
->>> interest. The main reason for having a plugin is to simplify testing and
->>> if this is going to be used on cheap hobbyist devkits.
->>
->> I think you're looking at it with a programmers hat on, not a users hat.
->>
->> Are you really telling me that requiring users to 'su' to root, and then
->> use media-ctl to manually configure the capture device is what most
->> users "want" ?
-> 
-> It depends on who the user is. I don't think anyone is suggesting a
-> regular end user is the user of all these APIs: it is either an
-> application tailored for that given device, a skilled user with his test
-> scripts or as suggested previously, a libv4l plugin knowing the device
-> or a generic library geared towards providing best effort service. The
-> last one of this list does not exist yet and the second last item
-> requires help.
-> 
-> Typically this class of devices is simply not up to provide the level of
-> service you're requesting without additional user space control library
-> which is responsible for automatic white balance, exposure and focus.
-> 
-> Making use of the full potential of the hardware requires using a more
-> expressive interface. That's what the kernel interface must provide. If
-> we decide to limit ourselves to a small sub-set of that potential on the
-> level of the kernel interface, we have made a wrong decision. It's as
-> simple as that. This is why the functionality (and which requires taking
-> a lot of policy decisions) belongs to the user space. We cannot have
-> multiple drivers providing multiple kernel interfaces for the same hardware.
-
-Right. With my Cisco hat on I can tell you that Cisco would want full low-level
-control. If the driver would limit us we would not be able to use it.
-
-Same with anyone who wants to put Android CameraHAL on top of a V4L2 driver:
-they would need full control. Some simplified interface would be unacceptable.
-
-> 
-> That said, I'm not trying to provide an excuse for not having libraries
-> available to help the user to configure and control the device more or
-> less automatically even in terms of best effort. It's something that
-> does require attention, a lot more of it than it has received in recent
-> few years.
-
-Right.
-
-Regards,
-
-	Hans
+T24gTW9uLCAyMCBNYXIgMjAxNywgc2Vhbi53YW5nQG1lZGlhdGVrLmNvbSB3cm90ZToKCj4gRnJv
+bTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPgo+IAo+IFRoaXMgcGF0Y2ggYWRk
+cyBkZXNjcmlwdGlvbiBmb3IgTEVEIGFzIHRoZSBzdWItbW9kdWxlIG9uIE1UNjM5Ny9NVDYzMjMK
+PiBtdWx0aWZ1bmN0aW9uIGRldmljZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTZWFuIFdhbmcgPHNl
+YW4ud2FuZ0BtZWRpYXRlay5jb20+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZmQvbXQ2Mzk3LnR4dCB8IDEgKwo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
+b24oKykKCkFwcGxpZWQsIHRoYW5rcy4KCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZmQvbXQ2Mzk3LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tZmQvbXQ2Mzk3LnR4dAo+IGluZGV4IGM1NjhkNTIuLjUyMmEzYmIgMTAwNjQ0
+Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9tdDYzOTcudHh0
+Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9tdDYzOTcudHh0
+Cj4gQEAgLTYsNiArNiw3IEBAIE1UNjM5Ny9NVDYzMjMgaXMgYSBtdWx0aWZ1bmN0aW9uIGRldmlj
+ZSB3aXRoIHRoZSBmb2xsb3dpbmcgc3ViIG1vZHVsZXM6Cj4gIC0gQXVkaW8gY29kZWMKPiAgLSBH
+UElPCj4gIC0gQ2xvY2sKPiArLSBMRUQKPiAgCj4gIEl0IGlzIGludGVyZmFjZWQgdG8gaG9zdCBj
+b250cm9sbGVyIHVzaW5nIFNQSSBpbnRlcmZhY2UgYnkgYSBwcm9wcmlldGFyeSBoYXJkd2FyZQo+
+ICBjYWxsZWQgUE1JQyB3cmFwcGVyIG9yIHB3cmFwLiBNVDYzOTcvTVQ2MzIzIE1GRCBpcyBhIGNo
+aWxkIGRldmljZSBvZiBwd3JhcC4KCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVjdHJv
+bmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2Fy
+ZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
