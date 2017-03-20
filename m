@@ -1,40 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/9] gpu: ipu-v3: document valid IPUv3 compatibles and
- extend for i.MX6 QuadPlus
-Date: Mon, 20 Mar 2017 17:12:19 -0500
-Message-ID: <20170320221219.o7qrbjrmxbvcsezw@rob-hp-laptop>
-References: <1489487928-26083-1-git-send-email-p.zabel@pengutronix.de>
- <1489487928-26083-5-git-send-email-p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: ata: add DT bindings for ahci-dm816
+ SATA controller
+Date: Mon, 20 Mar 2017 17:13:33 -0500
+Message-ID: <20170320221333.essgja7mumdhzps2@rob-hp-laptop>
+References: <1489489491-14195-1-git-send-email-bgolaszewski@baylibre.com>
+ <1489489491-14195-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1489487928-26083-5-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de
+In-Reply-To: <1489489491-14195-2-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXIgMTQsIDIwMTcgYXQgMTE6Mzg6NDRBTSArMDEwMCwgUGhpbGlwcCBaYWJlbCB3
-cm90ZToKPiBGcm9tOiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiAKPiBE
-b2N1bWVudCB0aGUgdmFsaWQgY29tcGF0aWJsZSBzdHJpbmdzIGZvciB0aGUgSVBVdjMuCj4gCj4g
-T24gaS5NWDYgUXVhZFBsdXMgdGhlIElQVSBuZWVkcyB0byBrbm93IHdoaWNoIFBSRyBoYXMgdG8g
-YmUKPiB1c2VkIGZvciB0aGlzIElQVSBpbnN0YW5jZS4gQWRkIGEgImZzbCxwcmciIHByb3BlcnR5
-IGNvbnRhaW5pbmcKPiBhIHBoYW5kbGUgcG9pbnRpbmcgdG8gdGhlIGNvcnJlY3QgUFJHIGRldmlj
-ZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5k
-ZT4KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRl
-Pgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgv
-ZnNsLWlteC1kcm0udHh0IHwgOCArKysrKysrLQo+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRp
-b25zKCspLCAxIGRlbGV0aW9uKC0pCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Mar 14, 2017 at 12:04:50PM +0100, Bartosz Golaszewski wrote:
+> Add DT bindings for the onboard SATA controller present on the DM816x
+> SoCs.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../devicetree/bindings/ata/ahci-dm816.txt          | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-dm816.txt
+
+Acked-by: Rob Herring <robh@kernel.org>
