@@ -1,97 +1,77 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Mon, 20 Mar 2017 17:29:07 +0100
-Message-ID: <1490027347.2917.97.camel@pengutronix.de>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170319121402.GS21222@n2100.armlinux.org.uk>
- <1490016016.2917.68.camel@pengutronix.de>
- <20170320154339.GN21222@n2100.armlinux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 5/5] ARM: dts: sun8i: Update
+ audio-routing with renamed widgets
+Date: Mon, 20 Mar 2017 16:30:47 +0000
+Message-ID: <20170320163047.3xizwkq6pogi73gp@sirena.org.uk>
+References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
+ <20170318075509.3836-6-mylene.josserand@free-electrons.com>
+ <20170320113817.rcphcvrizi4yphhe@sirena.org.uk>
+ <CAGb2v66ZLeoSQt0y2QVcDEBujS7JLQAptDq1WL8f8rkwSni6uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170320154339.GN21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: multipart/mixed; boundary="===============3173900721030755844=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAGb2v66ZLeoSQt0y2QVcDEBujS7JLQAptDq1WL8f8rkwSni6uw@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE3LTAzLTIwIGF0IDE1OjQzICswMDAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggd3JvdGU6Cj4gT24gTW9uLCBNYXIgMjAsIDIwMTcgYXQgMDI6MjA6MTZQTSArMDEwMCwgUGhp
-bGlwcCBaYWJlbCB3cm90ZToKPiA+IFRvIHNldCBhbmQgcmVhZCBjb2xvcmltZXRyeSBpbmZvcm1h
-dGlvbjoKPiA+IGh0dHBzOi8vcGF0Y2h3b3JrLmxpbnV4dHYub3JnL3BhdGNoLzM5MzUwLwo+IAo+
-IFRoYW5rcywgSSd2ZSBhcHBsaWVkIGFsbCBmb3VyIG9mIHlvdXIgcGF0Y2hlcywgYnV0IHRoZXJl
-J3MgYSBzaWRlIGVmZmVjdAo+IGZyb20gdGhhdC4gIE9sZCBtZWRpYS1jdGwgKG1vZGlmaWVkIGJ5
-IG1lKToKPiAKPiAtIGVudGl0eSA1MzogaW14MjE5IDAtMDAxMCAoMiBwYWRzLCAyIGxpbmtzKQo+
-ICAgICAgICAgICAgICB0eXBlIFY0TDIgc3ViZGV2IHN1YnR5cGUgVW5rbm93biBmbGFncyAwCj4g
-ICAgICAgICAgICAgIGRldmljZSBub2RlIG5hbWUgL2Rldi92NGwtc3ViZGV2OQo+ICAgICAgICAg
-cGFkMDogU291cmNlCj4gICAgICAgICAgICAgICAgIFtmbXQ6U1JHR0I4LzgxNng2MTYgZmllbGQ6
-bm9uZQo+ICAgICAgICAgICAgICAgICAgZnJhbWVfaW50ZXJ2YWw6MS8yNV0KPiAgICAgICAgICAg
-ICAgICAgLT4gImlteDYtbWlwaS1jc2kyIjowIFtFTkFCTEVEXQo+ICAgICAgICAgcGFkMTogU2lu
-awo+ICAgICAgICAgICAgICAgICBbZm10OlNSR0dCMTAvMzI4MHgyNDY0IGZpZWxkOm5vbmUKPiAg
-ICAgICAgICAgICAgICAgIGNyb3AuYm91bmRzOigwLDApLzMyODB4MjQ2NAo+ICAgICAgICAgICAg
-ICAgICAgY3JvcDooMCwwKS8zMjY0eDI0NjQKPiAgICAgICAgICAgICAgICAgIGNvbXBvc2UuYm91
-bmRzOigwLDApLzMyNjR4MjQ2NAo+ICAgICAgICAgICAgICAgICAgY29tcG9zZTooMCwwKS84MTZ4
-NjE2XQo+ICAgICAgICAgICAgICAgICA8LSAiaW14MjE5IHBpeGVsIDAtMDAxMCI6MCBbRU5BQkxF
-RCxJTU1VVEFCTEVdCj4gCj4gTmV3IG1lZGlhLWN0bDoKPiAKPiAtIGVudGl0eSA1MzogaW14MjE5
-IDAtMDAxMCAoMiBwYWRzLCAyIGxpbmtzKQo+ICAgICAgICAgICAgICB0eXBlIFY0TDIgc3ViZGV2
-IHN1YnR5cGUgVW5rbm93biBmbGFncyAwCj4gICAgICAgICAgICAgIGRldmljZSBub2RlIG5hbWUg
-L2Rldi92NGwtc3ViZGV2OQo+ICAgICAgICAgcGFkMDogU291cmNlCj4gICAgICAgICAgICAgICAg
-IFtmbXQ6U1JHR0I4XzFYOC84MTZ4NjE2QDEvMjUgZmllbGQ6bm9uZSBjb2xvcnNwYWNlOnNyZ2Ig
-eGZlcjpzcmdiXQo+ICAgICAgICAgICAgICAgICAtPiAiaW14Ni1taXBpLWNzaTIiOjAgW0VOQUJM
-RURdCj4gICAgICAgICBwYWQxOiBTaW5rCj4gICAgICAgICAgICAgICAgIDwtICJpbXgyMTkgcGl4
-ZWwgMC0wMDEwIjowIFtFTkFCTEVELElNTVVUQUJMRV0KPiAKPiBJdCBsb29rcyBsaWtlIHdlIHN1
-Y2Nlc3NmdWxseSByZXRyaWV2ZSB0aGUgZnJhbWUgaW50ZXJ2YWwgZm9yIHBhZCAwCj4gYW5kIHBy
-aW50IGl0LCBidXQgd2hlbiB3ZSB0cnkgdG8gcmV0cmlldmUgdGhlIGZyYW1lIGludGVydmFsIGZv
-ciBwYWQgMSwKPiB3ZSBnZXQgRUlOVkFMIChiZWNhdXNlIHRoYXQncyB3aGF0IEknbSByZXR1cm5p
-bmcsIGJ1dCBJJ20gd29uZGVyaW5nIGlmCj4gdGhhdCdzIHRoZSBjb3JyZWN0IHRoaW5nIHRvIGRv
-Li4uKSBhbmQgdGhhdCBwcmV2ZW50cyBfYWxsXyBmb3JtYXQKPiBpbmZvcm1hdGlvbiBiZWluZyBv
-dXRwdXQuCgpBY2NvcmRpbmcgdG8gdGhlIGRvY3VtZW50YXRpb24gWzFdLCB5b3UgYXJlIGRvaW5n
-IHRoZSByaWdodCB0aGluZzoKCiAgICBUaGUgc3RydWN0IHY0bDJfc3ViZGV2X2ZyYW1lX2ludGVy
-dmFsIHBhZCByZWZlcmVuY2VzIGEgbm9uLWV4aXN0aW5nCiAgICBwYWQsIG9yIHRoZSBwYWQgZG9l
-c27igJl0IHN1cHBvcnQgZnJhbWUgaW50ZXJ2YWxzLgoKQnV0IHY0bDJfc3ViZGV2X2NhbGwgcmV0
-dXJucyAtRU5PSU9DVExDTUQgaWYgdGhlIGdfZnJhbWVfaW50ZXJ2YWwgb3AgaXMKbm90IGltcGxl
-bWVudGVkIGF0IGFsbCwgd2hpY2ggaXMgdHVybmVkIGludG8gLUVOT1RUWSBieSB2aWRlb191c2Vy
-Y29weS4KClsxXSBodHRwczovL2xpbnV4dHYub3JnL2Rvd25sb2Fkcy92NGwtZHZiLWFwaXMvdWFw
-aS92NGwvdmlkaW9jLXN1YmRldi1nLWZyYW1lLWludGVydmFsLmh0bWwjcmV0dXJuLXZhbHVlCgo+
-IE1heWJlIHNvbWV0aGluZyBsaWtlIHRoZSBmb2xsb3dpbmcgd291bGQgYmUgYSBiZXR0ZXIgaWRl
-YT8KPiAKPiAgdXRpbHMvbWVkaWEtY3RsL21lZGlhLWN0bC5jIHwgMTAgKysrKystLS0tLQo+ICAx
-IGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYg
-LS1naXQgYS91dGlscy9tZWRpYS1jdGwvbWVkaWEtY3RsLmMgYi91dGlscy9tZWRpYS1jdGwvbWVk
-aWEtY3RsLmMKPiBpbmRleCBmNjE5NjNhLi5hNTBhNTU5IDEwMDY0NAo+IC0tLSBhL3V0aWxzL21l
-ZGlhLWN0bC9tZWRpYS1jdGwuYwo+ICsrKyBiL3V0aWxzL21lZGlhLWN0bC9tZWRpYS1jdGwuYwo+
-IEBAIC04MSwyMiArODEsMjIgQEAgc3RhdGljIHZvaWQgdjRsMl9zdWJkZXZfcHJpbnRfZm9ybWF0
-KHN0cnVjdCBtZWRpYV9lbnRpdHkgKmVudGl0eSwKPiAgCXN0cnVjdCB2NGwyX21idXNfZnJhbWVm
-bXQgZm9ybWF0Owo+ICAJc3RydWN0IHY0bDJfZnJhY3QgaW50ZXJ2YWwgPSB7IDAsIDAgfTsKPiAg
-CXN0cnVjdCB2NGwyX3JlY3QgcmVjdDsKPiAtCWludCByZXQ7Cj4gKwlpbnQgcmV0LCBlcnJfZmk7
-Cj4gIAo+ICAJcmV0ID0gdjRsMl9zdWJkZXZfZ2V0X2Zvcm1hdChlbnRpdHksICZmb3JtYXQsIHBh
-ZCwgd2hpY2gpOwo+ICAJaWYgKHJldCAhPSAwKQo+ICAJCXJldHVybjsKPiAgCj4gLQlyZXQgPSB2
-NGwyX3N1YmRldl9nZXRfZnJhbWVfaW50ZXJ2YWwoZW50aXR5LCAmaW50ZXJ2YWwsIHBhZCk7Cj4g
-LQlpZiAocmV0ICE9IDAgJiYgcmV0ICE9IC1FTk9UVFkpCj4gLQkJcmV0dXJuOwo+ICsJZXJyX2Zp
-ID0gdjRsMl9zdWJkZXZfZ2V0X2ZyYW1lX2ludGVydmFsKGVudGl0eSwgJmludGVydmFsLCBwYWQp
-OwoKTm90IHN1cHBvcnRpbmcgZnJhbWUgaW50ZXJ2YWxzIGRvZXNuJ3Qgd2FycmFudCBhIHZpc2li
-bGUgZXJyb3IgbWVzc2FnZSwKSSB0aGluayAtRUlOVkFMIHNob3VsZCBhbHNvIGJlIGlnbm9yZWQg
-YWJvdmUsIGlmIHRoZSBzcGVjIGlzIHRvIGJlCmJlbGlldmVkLgoKPiAgCj4gIAlwcmludGYoIlx0
-XHRbZm10OiVzLyV1eCV1IiwKPiAgCSAgICAgICB2NGwyX3N1YmRldl9waXhlbGNvZGVfdG9fc3Ry
-aW5nKGZvcm1hdC5jb2RlKSwKPiAgCSAgICAgICBmb3JtYXQud2lkdGgsIGZvcm1hdC5oZWlnaHQp
-Owo+ICAKPiAtCWlmIChpbnRlcnZhbC5udW1lcmF0b3IgfHwgaW50ZXJ2YWwuZGVub21pbmF0b3Ip
-Cj4gKwlpZiAoZXJyX2ZpID09IDAgJiYgKGludGVydmFsLm51bWVyYXRvciB8fCBpbnRlcnZhbC5k
-ZW5vbWluYXRvcikpCj4gIAkJcHJpbnRmKCJAJXUvJXUiLCBpbnRlcnZhbC5udW1lcmF0b3IsIGlu
-dGVydmFsLmRlbm9taW5hdG9yKTsKPiArCWVsc2UgaWYgKGVycl9maSAhPSAtRU5PVFRZKQo+ICsJ
-CXByaW50ZigiQDxlcnJvcjogJXM+Iiwgc3RyZXJyb3IoLWVycl9maSkpOwoKT3IgaGVyZS4KCj4g
-IAo+ICAJaWYgKGZvcm1hdC5maWVsZCkKPiAgCQlwcmludGYoIiBmaWVsZDolcyIsIHY0bDJfc3Vi
-ZGV2X2ZpZWxkX3RvX3N0cmluZyhmb3JtYXQuZmllbGQpKTsKPiAKPiAKCnJlZ2FyZHMKUGhpbGlw
-cAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+
+--===============3173900721030755844==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gyokpzpzpw6uxcee"
+Content-Disposition: inline
+
+
+--gyokpzpzpw6uxcee
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Mar 20, 2017 at 07:53:37PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Mar 20, 2017 at 7:38 PM, Mark Brown <broonie@kernel.org> wrote:
+
+> > Given that these are fixes it probably makes sense that they all go in
+> > together, can I get some acks for this and I'll apply it?
+
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+
+> Though this patch should go in through the arm-soc tree.
+
+Well, ideally but I'm not sure it's a super big deal to get the odd bit
+coming through so long as it doesn't conflict, it's more of a big deal
+to make sure that we don't get the ASoC side without the DT side and
+vice versa.
+
+--gyokpzpzpw6uxcee
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljQA7YACgkQJNaLcl1U
+h9CjoQf+Je6RtQfGkq0vooHmdHRZUzlJTnC4LWrDoC/+zF8ji5CtfqwNFZGD92rH
+U5h3nk52dFH+ucdSOPjtjQp7EFnTo5mJ2U2ufMACFYvidVhZh2Y2NUMpQyjvXF1d
+7kulTZqBJyy+gG77W9vksy/e08gwc67H/9Ykm1Fr6D8y8/WocZ77KWFcTd+eRHf4
+DkqlT0wvDX5dags8ictYr3JXi41uI1Sr2CbrKQtbm9ISo0l8HiMGD/8OhhwUuJL2
+xyASCFWfX5NsiDl+0dy/ww273JKl5LHAvog42KV+LX2tqnKeFYvOR2N22Upk5lxo
+Ej3kNUvcXB/2fpeXlcQ9yMoO3NBhEQ==
+=OOu+
+-----END PGP SIGNATURE-----
+
+--gyokpzpzpw6uxcee--
+
+--===============3173900721030755844==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3173900721030755844==--
