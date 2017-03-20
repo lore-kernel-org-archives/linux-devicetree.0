@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: stm32-dma: Add property to handle STM32
- DMAMUX
-Date: Mon, 20 Mar 2017 16:37:22 -0500
-Message-ID: <20170320213722.oj3ipmslbw2mp27d@rob-hp-laptop>
-References: <1489414561-28912-1-git-send-email-cedric.madianga@gmail.com>
- <1489414561-28912-4-git-send-email-cedric.madianga@gmail.com>
+Subject: Re: [PATCH v4 15/23] dt-bindings: PCI: dra7xx: Add dt bindings to
+ enable unaligned access
+Date: Mon, 20 Mar 2017 16:43:16 -0500
+Message-ID: <20170320214316.yah5cvfdabiceywf@rob-hp-laptop>
+References: <20170313142259.25397-1-kishon@ti.com>
+ <20170313142259.25397-16-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1489414561-28912-4-git-send-email-cedric.madianga@gmail.com>
+In-Reply-To: <20170313142259.25397-16-kishon@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,35 +20,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, vinod.koul@intel.com, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, hch@infradead.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 03:15:59PM +0100, M'boumba Cedric Madianga wrote:
-> This patch adds an optional property needed for STM32 DMA controller
-> addressed via STM32 DMAMUX.
+On Mon, Mar 13, 2017 at 07:52:51PM +0530, Kishon Vijay Abraham I wrote:
+> Update device tree binding documentation of TI's dra7xx PCI
+> controller to include property for enabling unaligned mem access.
 > 
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  Documentation/devicetree/bindings/dma/stm32-dma.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/pci/ti-pci.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
-> index 4408af6..7b5e91a 100644
-> --- a/Documentation/devicetree/bindings/dma/stm32-dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
-> @@ -16,6 +16,9 @@ Optional properties:
->  - resets: Reference to a reset controller asserting the DMA controller
->  - st,mem2mem: boolean; if defined, it indicates that the controller supports
->    memory-to-memory transfer
-> +- st,dmamux: boolean; if defined, it indicates that the controller is behind a
-> +  DMA multiplexer. In that case, using dma instances doesn't work for DMA
-> +  clients. They have to use dma-router instances.
+> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> index 190828a5f32a..b69dd7dbd29e 100644
+> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> @@ -39,6 +39,11 @@ DEVICE MODE
+>   - interrupts : one interrupt entries must be specified for main interrupt.
+>   - num-ib-windows : number of inbound address translation windows
+>   - num-ob-windows : number of outbound address translation windows
+> + - ti,syscon-unaligned-access: phandle to the syscon dt node. The 1st argument
+> +			       should contain the register offset within syscon
+> +			       and the 2nd argument should contain the bit field
+> +			       for setting the bit to enable unaligned
+> +			       access.
 
-This should not be needed for the same reason we don't need anything 
-like this for chained interrupt controllers.
-
-Also, the compatible string should be specific enough to provide this 
-information.
+This should be setup by the firmware/bootloader or some platform code. 
+Why does the PCI host need to configure this?
 
 Rob
