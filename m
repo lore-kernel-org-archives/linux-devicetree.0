@@ -1,104 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/7] Documentation: dt: net: Update the ath9k binding for
- SoC devices
-Date: Mon, 20 Mar 2017 17:06:19 -0500
-Message-ID: <20170320220619.6lybt3wieqqedfuo@rob-hp-laptop>
-References: <1489439116-4233-1-git-send-email-albeu@free.fr>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH net-next 10/12] dt-bindings: net: document bcmgenet WoL
+ interrupt
+Date: Mon, 20 Mar 2017 17:09:43 -0500
+Message-ID: <20170320220943.aubgkguoavuqskih@rob-hp-laptop>
+References: <20170314004142.4746-1-opendmb@gmail.com>
+ <20170314004142.4746-11-opendmb@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489439116-4233-1-git-send-email-albeu@free.fr>
-Sender: netdev-owner@vger.kernel.org
-To: Alban <albeu@free.fr>
-Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>, John Crispin <john@phrozen.org>, Kalle Valo <kvalo@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170314004142.4746-11-opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pgynther-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 10:05:09PM +0100, Alban wrote:
-> The current binding only cover PCI devices so extend it for SoC devices.
+On Mon, Mar 13, 2017 at 05:41:40PM -0700, Doug Berger wrote:
+> A third interrupt cell can be provided to optionally specify
+> the interrupt used for handling Wake on LAN events.
 > 
-> Most SoC platforms use an MTD partition for the calibration data
-> instead of an EEPROM. The qca,no-eeprom property was added to allow
-> loading the EEPROM content using firmware loading. This new binding
-> replace this hack with NVMEM cells, so we also mark the qca,no-eeprom
-> property as deprecated in case anyone ever used it.
+> Typically the wake up handling uses a separate interrupt
+> controller, so the interrupts-extended property is used to
+> accommodate this.
+
+Using interrupts vs. interrupts-extended is beyond the scope of the 
+binding doc. IOW, documenting interrupts is enough and using
+interrupts-extended is allowed.
+
 > 
-> Signed-off-by: Alban <albeu@free.fr>
+> Signed-off-by: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/wireless/qca,ath9k.txt | 41 ++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 3 deletions(-)
-
-For the subject, "dt-bindings: net: ..." and one nit below, otherwise:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
+>  Documentation/devicetree/bindings/net/brcm,bcmgenet.txt | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-> index b7396c8..61f5f6d 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-> @@ -27,16 +27,34 @@ Required properties:
->  			- 0034 for AR9462
->  			- 0036 for AR9565
->  			- 0037 for AR9485
-> +		For SoC devices the compatible should be "qca,<soctype>-wmac"
-> +		and one of the following fallbacks:
-> +			- "qca,ar9100-wmac"
-> +			- "qca,ar9330-wmac"
-> +			- "qca,ar9340-wmac"
-> +			- "qca,qca9550-wmac"
-> +			- "qca,qca9530-wmac"
->  - reg: Address and length of the register set for the device.
->  
-> +Required properties for SoC devices:
-> +- interrupt-parent: phandle of the parent interrupt controller.
-> +- interrupts: Interrupt specifier for the controllers interrupt.
-> +
->  Optional properties:
-> +- mac-address: See ethernet.txt in the parent directory
-> +- local-mac-address: See ethernet.txt in the parent directory
-> +- clock-names: has to be "ref"
-> +- clocks: phandle of the reference clock
-> +- resets: phandle of the reset line
-> +- nvmem-cell-names: has to be "eeprom" and/or "address"
-> +- nvmem-cells: phandle to the eeprom nvmem cell and/or to the mac address
-> +		nvmem cell.
-> +
-> +Deprecated properties:
->  - qca,no-eeprom: Indicates that there is no physical EEPROM connected to the
->  			ath9k wireless chip (in this case the calibration /
->  			EEPROM data will be loaded from userspace using the
->  			kernel firmware loader).
-> -- mac-address: See ethernet.txt in the parent directory
-> -- local-mac-address: See ethernet.txt in the parent directory
-> -
->  
->  In this example, the node is defined as child node of the PCI controller:
->  &pci0 {
-> @@ -46,3 +64,20 @@ In this example, the node is defined as child node of the PCI controller:
->  		qca,no-eeprom;
->  	};
->  };
-> +
-> +In this example it is defined as a SoC device:
-> +	wmac@180c0000 {
+> diff --git a/Documentation/devicetree/bindings/net/brcm,bcmgenet.txt b/Documentation/devicetree/bindings/net/brcm,bcmgenet.txt
+> index 10587bdadbbe..01a70463cbc5 100644
+> --- a/Documentation/devicetree/bindings/net/brcm,bcmgenet.txt
+> +++ b/Documentation/devicetree/bindings/net/brcm,bcmgenet.txt
+> @@ -4,9 +4,12 @@ Required properties:
+>  - compatible: should contain one of "brcm,genet-v1", "brcm,genet-v2",
+>    "brcm,genet-v3", "brcm,genet-v4".
+>  - reg: address and length of the register set for the device
+> -- interrupts: must be two cells, the first cell is the general purpose
+> -  interrupt line, while the second cell is the interrupt for the ring
+> -  RX and TX queues operating in ring mode
+> +- interrupts and/or interrupts-extended: must be two cells, the first cell
+> +  is the general purpose interrupt line, while the second cell is the
+> +  interrupt for the ring RX and TX queues operating in ring mode.  An
+> +  optional third interrupt cell for Wake-on-LAN can be specified.
 
-wifi@...
+Does the generic wakeup source work for this?
 
-> +		compatible = "qca,ar9132-wmac", "qca,ar9100-wmac";
-> +		reg = <0x180c0000 0x30000>;
-> +
-> +		interrupt-parent = <&cpuintc>;
-> +		interrupts = <2>;
-> +
-> +		clock-names = "ref";
-> +		clocks = <&extosc>;
-> +
-> +		nvmem-cell-names = "eeprom", "address";
-> +		nvmem-cells = <&wmac_eeprom>, <&wmac_address>;
-> +
-> +		resets = <&rst 22>;
-> +	};
+> +  See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +  for information on the property specifics.
+>  - phy-mode: see ethernet.txt file in the same directory
+>  - #address-cells: should be 1
+>  - #size-cells: should be 1
 > -- 
-> 2.7.4
+> 2.11.1
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
