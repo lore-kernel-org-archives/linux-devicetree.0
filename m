@@ -1,73 +1,63 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Mon, 20 Mar 2017 14:20:16 +0100
-Message-ID: <1490016016.2917.68.camel@pengutronix.de>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170319121402.GS21222@n2100.armlinux.org.uk>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2] clk: tegra: add Tegra210 special resets
+Date: Mon, 20 Mar 2017 14:21:15 +0100
+Message-ID: <20170320132115.GI22463@ulmo.ba.sec>
+References: <1489582774-22217-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170319121402.GS21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="MFZs98Tklfu0WsCO"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1489582774-22217-1-git-send-email-pdeschrijver@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2017-03-19 at 12:14 +0000, Russell King - ARM Linux wrote:
-> On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
-> > On 03/18/2017 12:22 PM, Russell King - ARM Linux wrote:
-> > >0:00:01.955927879 20954  0x15ffe90 INFO                    v4l2 gstv4l2object.c:3811:gst_v4l2_object_get_caps:<v4l2src0> probed caps: video/x-bayer, format=(string)rggb, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)I420, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)YV12, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)BGR, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=
- (string)RGB, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1
-> > >
-> > >    despite the media pipeline actually being configured for 60fps.
-> > >
-> > >    Forcing it by adjusting the pipeline only results in gstreamer
-> > >    failing, because it believes that v4l2 is unable to operate at
-> > >    60fps.
-> > >
-> > >    Also note the complaints from v4l2src about the non-compliance...
-> > 
-> > Thanks, I've fixed most of v4l2-compliance issues, but this is not
-> > done yet. Is that something you can help with?
-> 
-> I've looked at this, and IMHO it's yet another media control API mess.
-> 
-> - media-ctl itself allows setting the format on subdev pads via
->   struct v4l2_subdev_format.
-> 
-> - struct v4l2_subdev_format contains a struct v4l2_mbus_framefmt.
-> 
-> - struct v4l2_mbus_framefmt contains:
->   * @width:      frame width
->   * @height:     frame height
->   * @code:       data format code (from enum v4l2_mbus_pixelcode)
->   * @field:      used interlacing type (from enum v4l2_field)
->   * @colorspace: colorspace of the data (from enum v4l2_colorspace)
->   * @ycbcr_enc:  YCbCr encoding of the data (from enum v4l2_ycbcr_encoding)
->   * @quantization: quantization of the data (from enum v4l2_quantization)
->   * @xfer_func:  transfer function of the data (from enum v4l2_xfer_func)
-> 
-> - media-ctl sets width, height, code and field, but nothing else.
-> 
-> We're already agreed that the fields that media-ctl are part of the
-> format negotiation between the ultimate source, flowing down to the
-> capture device.  However, there's no support in media-ctl to deal
-> with these other fields - so media-ctl in itself is only half-
-> implemented.
 
-To set and read colorimetry information:
-https://patchwork.linuxtv.org/patch/39350/
+--MFZs98Tklfu0WsCO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-regards
-Philipp
+On Wed, Mar 15, 2017 at 02:59:32PM +0200, Peter De Schrijver wrote:
+> Tegra210 has 2 special resets which don't follow the normal pattern:
+> DVCO and ADSP. Add them in this patch.
+>=20
+> Changelog:
+>=20
+> v2: add DT bindings file
+>=20
+> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-tegra210.c         | 85 ++++++++++++++++++++++++++=
+++++++
+>  include/dt-bindings/reset/tegra210-car.h | 13 +++++
+>  2 files changed, 98 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/tegra210-car.h
+
+Applied to for-4.12/clk, thanks.
+
+Thierry
+
+--MFZs98Tklfu0WsCO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljP10sACgkQ3SOs138+
+s6GG3A//bWuGqGDLQcz7JjgQsAIQ584xtwX9xcvsF/aRJYwFyBq7YL+/h3b10Oeo
+7Ggyg0gWdnUKg19wACRS0cJY9efE1stc0HE2PBJb6brWSN6geazoDacvp3zV6w76
+ugjta6zmvd17A150faXamCdlzQGWjOH1/2zOyxOeyWNzfl84+G+lGnXaZtnt75t8
+vTj6uPY2/Rd17PsfC/fsK73iMvlrdAyqSDp232XdyzrgbzUPdWJ7CWz8zf9I75Y5
+QOPXvFrz1NGXvU4mjtatQOVTGjKLCX87e3gnY57PwCiMBY9U7LH7q4pM5wYGoobf
+3MhrjoU31ZWSauOjRASiwI1n2W/r8llLBvZ2NbBKtR2uT5Dd3C6C5xZ3W4OcyRNm
+b4dE78c3VELVkAU3bhTJARpL9kME3L1y6UHCI1ApWJCBJZyWX+QLMisFwDi9BgB5
+xbE2vEuueIbENX9veQKaehPXQCqushfG7THPHK1iMADHGNxalmMhO1VtY9udEvee
+dagiW2SUqWP7GjW14YVDlzfN6poTsDRVLCL+1PAE/ma4JRj1Sa67LV6mRiEXerZN
+4pxDAaztKsnUEQMd6SQjCnQDG5WljWslLWHeJSZbTPko0zHxPs6HOTM6BEIs49RJ
+ZPDMBc2PbxSJ0jLf10fL8tgeqT+aPeRgQSkD7NqYSoR/yjvHLjk=
+=aJ1q
+-----END PGP SIGNATURE-----
+
+--MFZs98Tklfu0WsCO--
