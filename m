@@ -1,110 +1,155 @@
-From: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: add new dt entry for ath10k calibration variant
-Date: Mon, 20 Mar 2017 17:28:21 +0100
-Message-ID: <1919994.musG4GLznX@bentobox>
-References: <20170310080615.22958-1-sven.eckelmann@openmesh.com> <20170320150733.25bufnzrhh7xabml@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH linux v4 1/2] Documentation: dt-bindings: Document
+ bindings for ASPEED AST2400/AST2500 PWM and Fan tach controller device
+ driver
+Date: Mon, 20 Mar 2017 11:15:31 -0500
+Message-ID: <20170320161531.ob65adnqch47dvyi@rob-hp-laptop>
+References: <20170311015351.23092-1-jaghu@google.com>
+ <20170311015351.23092-2-jaghu@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1747089.KH7Jk6BZzg"; micalg="pgp-sha512"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170320150733.25bufnzrhh7xabml@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170311015351.23092-2-jaghu@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+Cc: joel@jms.id.au, jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart1747089.KH7Jk6BZzg
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+On Fri, Mar 10, 2017 at 05:53:50PM -0800, Jaghathiswari Rankappagounder Natarajan wrote:
+> This binding provides interface for adding values related to ASPEED
+> AST2400/2500 PWM and Fan tach controller support.
+> The PWM controller can support upto 8 PWM output ports.
+> The Fan tach controller can support upto 16 tachometer inputs.
+> 
+> Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+> ---
+>  v4:
+> - Used 'reg'
+> 
+>  v3:
+> - Made the structure more common
+> 
+>  v2:
+> - Removed '_' in node and property names
+> - Gave some explanation for the properties used
+> 
+>  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> new file mode 100644
+> index 000000000000..0dfd2841ace3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> @@ -0,0 +1,86 @@
+> +ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
+> +
+> +The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED Fan Tacho
+> +controller can support upto 16 Fan tachometer inputs.
+> +
+> +There can be upto 8 fans supported. Each fan can have one PWM output and
+> +one/two Fan tach inputs.
+> +
+> +Required properties for pwm-tacho node:
+> +- #address-cells : should be 1.
+> +
+> +- #size-cells : should be 1.
+> +
+> +- reg : address and length of the register set for the device.
+> +
+> +- pinctrl-names : a pinctrl state named "default" must be defined.
+> +
+> +- pinctrl-0 : phandle referencing pin configuration of the PWM ports.
+> +
+> +- compatible : should be "aspeed,aspeed2400-pwm-tacho" for AST2400 or
+> +	       "aspeed,aspeed2500-pwm-tacho" for AST2500.
+> +
+> +- clocks : a fixed clock providing input clock frequency(PWM
+> +	   and Fan Tach clock)
+> +
+> +fan subnode format:
+> +===================
+> +Under fan subnode there can upto 8 child nodes, with each child node
+> +representing a fan. If there are 8 fans each fan can have one PWM port and
+> +one/two Fan tach inputs.
+> +
+> +Required properties for each child node:
+> +- reg : should specify PWM source port.
+> +	integer value in the range 0 to 7 with 0 indicating PWM port A and
+> +	7 indicating PWM port H.
+> +
+> +  Atleast one tach subnode is required. Each tach subnode represents a fan
+> +  tach input.
+> +  tach subnode format:
+> +  --------------------
+> +  Required properties for each child node:
+> +  - fan-ctrl-gpios : should specify the tachometer input GPIO pin on the hardware.
+> +             	     Fan Tachometer function can only work when GPIO is in
+> +		     ”input mode”.
 
-On Montag, 20. M=E4rz 2017 10:07:33 CET Rob Herring wrote:
-> On Fri, Mar 10, 2017 at 09:06:14AM +0100, Sven Eckelmann wrote:
-> > The bus + bmi-chip-id + bmi-board-id is not enough to identify the corr=
-ect
-> > board data file on QCA4019 based devices. Multiple different boards sha=
-re
-> > the same values. Only the original reference designs can currently be
-> > identified and loaded from the board-2.bin. But these will not result in
-> > the correct calibration data when combined with the pre-calibration data
-> > from the device.
-> >=20
-> > An additional "variant" information has to be provided (via SMBIOS or D=
-T)
-> > to select the correct board data for a design which was modified by an =
-ODM.
-> >=20
-> > Signed-off-by: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-> > ---
-> > Since RFC:
-> >=20
-> >  - Split patch in DT doc and ath10k part (thanks Christian Lamparter)
-> >  - Remove the words "bmi-chip-id" and "bmi-board-id" and replace them w=
-ith
-> >    more generic "device specific ids"
-> > ---
-> >  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k=
-=2Etxt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> > index 74d7f0af209c..3d2a031217da 100644
-> > --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> > @@ -41,6 +41,9 @@ Optional properties:
-> >  - qcom,msi_addr: MSI interrupt address.
-> >  - qcom,msi_base: Base value to add before writing MSI data into
-> >  		MSI address register.
-> > +- qcom,ath10k-calibration-variant: string to search for in the board-2=
-=2Ebin
-> > +				   variant list with the same bus and device
-> > +				   specific ids
->=20
-> Sounds like you should use a more specific compatible string.
+As I mentioned on the last version, this sounds like pin-muxing, not 
+actual GPIO usage.
 
-Hm, this would require that each calibration data has an own compatibility
-string - which then has to be supported by ath10k, right? Doesn't sound like
-it would work well when each vendor (with an own calibration variant) would
-have to modify ath10k to get it working. This sounds especially odd because
-nothing else in ath10k has to be changed. Only the board data files which w=
-ill
-be selected by ath10k are different on these devices.
+> +
+> +  - fan-tach-ch : should specify the Fan tach input channel.
+> +	          integer value in the range 0 through 15, with 0 indicating
+> +		  Fan tach channel 0 and 15 indicating Fan tach channel 15.
 
-It would then up with something like this as compatibility string:
+These 2 also need aspeed vendor prefixes.
 
- * qcom,ipq4019-wifi-asus-rt-ac58u
- * qcom,ipq4019-wifi-fritzbox-4040
- * qcom,ipq4019-wifi-netgear-whatever
- * qcom,ipq4019-wifi-openmesh-i-have-no-idea
- * ...
+This could become a property under the fan node as a list of tach 
+channels if fan-ctrl-gpios goes away.
 
-But maybe I misunderstood what you've said.
+> +
+> +Examples:
+> +
+> +pwmtachofixedclk: fixedclk {
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <0>;
+> +	clock-frequency = <24000000>;
+> +}
+> +
+> +pwmtacho: pwmtachocontroller@1e786000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	reg = <0x1E786000 0x1000>;
+> +	compatible = "aspeed,aspeed2500-pwm-tacho";
+> +	clocks = <&pwmtachofixedclk>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+> +
+> +	fan0 {
 
-Kind regards,
-	Sven
---nextPart1747089.KH7Jk6BZzg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+fan@0
 
------BEGIN PGP SIGNATURE-----
+> +		reg = /bits/ 8 <0x00>;
 
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAljQAyUACgkQXYcKB8Em
-e0aEaBAAuZXbcHfv2BRSu08zarjuMlRqEi3DV8ivP46AFnLdt8deKF84vfyNGse5
-XyKXZYXHMdfJ3DNljS0Eg39QpdAzmOpNVi2eqqS0Ij3hu69arEBKL4nqBZwaBEMx
-7gdLMP0G0xi4UjRY5gpqZF2znPxqUuKwXvChCj1B36z74wejiTLWIyxfigTVvg3q
-zILWpzopXiUReGOzKWuQu5tCazBOBjo+nVEbOPMEc96hz1Yepove2uW75hWFnl3k
-PUgrG9FR8bLkUVkP4PHikprgHVF5xI46TmYD0lNfp8iXVJ31w9scnmPiSIC11gxJ
-J1mdCaKuLeDTGRB2gLjd2FUgICVcdZX2kK6Cn5S/WUg9vdLGwyqhYRwEjHKY8b9i
-PPGGtY7qtCoUeD5OZSCrBc64qj9/8jWVOVNpQpnY5zXf6csNVX1czt3FJmgCzqHN
-Vr5GpAYyeDUR3W8RwL35jEjreiWKSgr7AfdN6ZPOY07XyGQ9OiyeBAgYEVbG9QYL
-ZBeLpwHPnEHOd2S2GfBWBEw6izNLURbbWeGVqPHK6xDZpK+JuwcExGOor9NISTTh
-zBeq2pDBFWjwMMflleL7NOqI8iUfTnxb5ezj8fBOLQumgTIZDkVA5OlyiOEALPMQ
-pFjbRgevm8qt3BLxnxAcW3P8Br7E8qEbkrocfR9yVPEoRdB41ws=
-=zeH3
------END PGP SIGNATURE-----
+reg is 32-bits.
 
---nextPart1747089.KH7Jk6BZzg--
+> +		tach0 {
+> +			fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_HIGH>;
+> +			fan-tach-ch = /bits/ 8 <0x00>;
+> +		};
+> +	};
+> +
+> +	fan1 {
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+fan@1
+
+> +		reg = /bits/ 8 <0x01>;
+> +		tach0 {
+> +			fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 1) GPIO_ACTIVE_HIGH>;
+> +			fan-tach-ch = /bits/ 8 <0x01>;
+> +		};
+> +		tach1 {
+> +			fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 2) GPIO_ACTIVE_HIGH>;
+> +			fan-tach-ch = /bits/ 8 <0x02>;
+> +		};
+> +	};
+> +};
+> --
+> 2.12.0.246.ga2ecc84866-goog
+> 
