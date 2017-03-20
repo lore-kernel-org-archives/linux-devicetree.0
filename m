@@ -1,70 +1,74 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v4 4/7] coresight: add support for CPU debug module
-Date: Mon, 20 Mar 2017 20:10:46 +0800
-Message-ID: <20170320121046.GB19581@leoy-linaro>
-References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
- <1489762943-25849-5-git-send-email-leo.yan@linaro.org>
- <74d6fd19-89f0-7edf-ace3-8b07f13e9569@arm.com>
+Subject: Re: [v3 3/5] coresight: add support for debug module
+Date: Mon, 20 Mar 2017 20:30:59 +0800
+Message-ID: <20170320123059.GA30276@leoy-linaro>
+References: <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
+ <20170309175915.GA964@leoy-linaro>
+ <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
+ <20170313165600.GB32431@linaro.org>
+ <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
+ <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
+ <20170317101328.GA19877@leoy-linaro>
+ <20170317155007.GA20435@linaro.org>
+ <20170317162836.GD2020@leoy-linaro>
+ <5995f6a7-08b1-c868-fc88-a145d1748a33@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <74d6fd19-89f0-7edf-ace3-8b07f13e9569@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <5995f6a7-08b1-c868-fc88-a145d1748a33@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, sudeep.holla@arm.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <Sudeep>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 06:44:03PM +0000, Suzuki K Poulose wrote:
-> On 17/03/17 15:02, Leo Yan wrote:
-> >Coresight includes debug module and usually the module connects with CPU
-> >debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
-> >description for related info in "Part H: External Debug".
+On Fri, Mar 17, 2017 at 04:47:54PM +0000, Suzuki K Poulose wrote:
+> On 17/03/17 16:28, Leo Yan wrote:
+> >On Fri, Mar 17, 2017 at 09:50:07AM -0600, Mathieu Poirier wrote:
 > >
-> >Chapter H7 "The Sample-based Profiling Extension" introduces several
-> >sampling registers, e.g. we can check program counter value with
-> >combined CPU exception level, secure state, etc. So this is helpful for
-> >analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
-> >loop with IRQ disabled. In this case the CPU cannot switch context and
-> >handle any interrupt (including IPIs), as the result it cannot handle
-> >SMP call for stack dump.
+> >[...]
 > >
-> >This patch is to enable coresight debug module, so firstly this driver
-> >is to bind apb clock for debug module and this is to ensure the debug
-> >module can be accessed from program or external debugger. And the driver
-> >uses sample-based registers for debug purpose, e.g. when system detects
-> >the CPU lockup and trigger panic, the driver will dump program counter
+> >>If we don't check for "nohlt" some platform may freeze, others may work.  If we
+> >>mandate that "nohlt" be present on the kernel cmd line it works in all cases.
+> >>As such mandating that "nohlt" be present is a better way to go.
+> >
+> >Sure, so I will add below checking code in the probe function, please
+> >let me know if you have alter better way to implement this:
+> >
+> >+       if (IS_ENABLED(CONFIG_CPU_IDLE) &&
+> >+                       !strstr(boot_command_line, "nohlt")) {
+> >+               dev_err(dev, "May not be accessible in CPU power domain.\n");
+> >+               return -EPERM;
+> >+       }
+> >
 > 
-> Do we dump it when the CPU lockup is detected with this change ? If not,
-> we shouldn't claim that here.
-
-Right, the mainline kernel missed Colin Cross's patch to trigger panic
-when detect CPU lockup which used by Android common kernel:
-http://people.linaro.org/~leo.yan/0001-hardlockup-detect-hard-lockups-without-NMIs-using-se.patch
-
-Will fix it.
-
-[...]
-
-> >+	pr_emerg("\tEDPCSR:  [<%p>] %pS\n", (void *)pc, (void *)pc);
+> There is an API which kind of achieves what "nohlt" does at runtime :
 > 
-> Are we safe calling %pS on the PC, when the PC offset in implementation defined ?
+>   cpu_idle_poll_ctrl(true)
+> 
+> So may be we could use that instead of depending on "nohlt". The other side
+> of the issues is "when do we decide to use the API". May be we could add something
+> like : enable_debug, which could then trigger the panic notifier registrations
+> and the above. That would still leave us with a case where the system crashes
+> even before the user gets a terminal. May be the following is the best option :
+> 
+> 1) Dedicated kernel command line parameter for enabling the CPU debug at boot/probe.
+> and
+> 
+> 2) Runtime enable method via sysfs.
 
-I did some quick testing, if cannot find proper kernel symbol for PC
-value, then %pS will directly output pc value rather than symbol value.
+For upper methods, I think the benefit is the user can use very
+explict method to enable debug module and can easily aware this
+will totally disable CPU low power states as sequential result..
 
-Other suggestions are good for me; I will fix for all for them.
+For sysfs, we need send IPIs to all CPUs to ensure all CPUs will not
+stay in low power state anymore.
 
-[...]
+Now I have one questions mainly related with how to registser sysfs
+node. Should register sysfs node based on coresight API
+coresight_register()? If so, we should extend coresight core
+structures to support CPU debug module. Or directly register sysfs
+node by using sysfs node like /sys/bus/coresight/devices/cpu_debug?
 
 Thanks,
 Leo Yan
