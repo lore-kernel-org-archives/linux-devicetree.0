@@ -1,190 +1,64 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCHv5 06/16] atmel-isi: document device tree bindings
-Date: Mon, 20 Mar 2017 17:49:27 +0100
-Message-ID: <7884402a-652b-02c0-a572-d205dc651a8b@xs4all.nl>
-References: <20170311112328.11802-1-hverkuil@xs4all.nl>
- <20170311112328.11802-7-hverkuil@xs4all.nl>
- <20170320164119.cxmson67wdyoww2k@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170320164119.cxmson67wdyoww2k@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
+Date: Mon, 20 Mar 2017 17:14:47 +0100
+Message-ID: <1490026491-21742-4-git-send-email-jacopo+renesas@jmondi.org>
+References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2017 05:41 PM, Rob Herring wrote:
-> On Sat, Mar 11, 2017 at 12:23:18PM +0100, Hans Verkuil wrote:
->> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->>
->> Document the device tree bindings for this hardware.
->>
->> Mostly copied from the atmel-isc bindings.
-> 
-> This commit message doesn't really reflect what you are doing and the 
-> reformatting and fixes really make this a PIA to review.
+Add dt-bindings for Renesas r7s72100 pin controller header file.
 
-I'll improve the commit log.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ include/dt-bindings/pinctrl/r7s72100-pinctrl.h | 36 ++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/r7s72100-pinctrl.h
 
-> 
->>
->> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->> Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/media/atmel-isi.txt        | 96 +++++++++++++---------
->>  1 file changed, 58 insertions(+), 38 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
->> index 251f008f220c..65249bbd5c00 100644
->> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
->> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
->> @@ -1,51 +1,71 @@
->> -Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
->> -----------------------------------------------
->> -
->> -Required properties:
->> -- compatible: must be "atmel,at91sam9g45-isi"
->> -- reg: physical base address and length of the registers set for the device;
->> -- interrupts: should contain IRQ line for the ISI;
->> -- clocks: list of clock specifiers, corresponding to entries in
->> -          the clock-names property;
->> -- clock-names: must contain "isi_clk", which is the isi peripherial clock.
->> -
->> -ISI supports a single port node with parallel bus. It should contain one
->> +Atmel Image Sensor Interface (ISI)
->> +----------------------------------
->> +
->> +Required properties for ISI:
->> +- compatible: must be "atmel,at91sam9g45-isi".
->> +- reg: physical base address and length of the registers set for the device.
->> +- interrupts: should contain IRQ line for the ISI.
->> +- clocks: list of clock specifiers, corresponding to entries in the clock-names
->> +	property; please refer to clock-bindings.txt.
->> +- clock-names: required elements: "isi_clk".
->> +- pinctrl-names, pinctrl-0: please refer to pinctrl-bindings.txt.
->> +
->> +ISI supports a single port node with parallel bus. It shall contain one
->>  'port' child node with child 'endpoint' node. Please refer to the bindings
->>  defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
->>  
->> -Example:
->> -	isi: isi@f0034000 {
->> -		compatible = "atmel,at91sam9g45-isi";
->> -		reg = <0xf0034000 0x4000>;
->> -		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
->> +Endpoint node properties
->> +------------------------
->>  
->> -		clocks = <&isi_clk>;
->> -		clock-names = "isi_clk";
->> +- bus-width: <8> or <10> (mandatory)
->> +- hsync-active (default: active high)
->> +- vsync-active (default: active high)
->> +- pclk-sample (default: sample on falling edge)
->> +- remote-endpoint: A phandle to the bus receiver's endpoint node (mandatory).
->>  
->> -		pinctrl-names = "default";
->> -		pinctrl-0 = <&pinctrl_isi>;
->> -
->> -		port {
->> -			#address-cells = <1>;
->> -			#size-cells = <0>;
->> +Example:
->>  
->> -			isi_0: endpoint {
->> -				remote-endpoint = <&ov2640_0>;
->> -				bus-width = <8>;
->> -			};
->> +isi: isi@f0034000 {
->> +	compatible = "atmel,at91sam9g45-isi";
->> +	reg = <0xf0034000 0x4000>;
->> +	interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_isi_data_0_7>;
->> +	clocks = <&isi_clk>;
->> +	clock-names = "isi_clk";
->> +	status = "ok";
-> 
-> Don't put status in examples.
-
-Will remove.
-
-> 
->> +	port {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
-> 
-> These can be dropped.
-
-Ack.
-
-> 
->> +		isi_0: endpoint {
->> +			remote-endpoint = <&ov2640_0>;
->> +			bus-width = <8>;
->> +			vsync-active = <1>;
->> +			hsync-active = <1>;
->>  		};
->>  	};
->> +};
->> +
->> +i2c1: i2c@f0018000 {
->> +	status = "okay";
->>  
->> -	i2c1: i2c@f0018000 {
->> -		ov2640: camera@0x30 {
->> -			compatible = "ovti,ov2640";
->> -			reg = <0x30>;
->> +	ov2640: camera@30 {
->> +		compatible = "ovti,ov2640";
->> +		reg = <0x30>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
->> +		resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
-> 
-> reset-gpios?
-> 
->> +		pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
-> 
-> powerdown-gpios?
-
-I can't change this: these two properties have been in use for a long time for the ov2640
-driver.
-
-Regards,
-
-	Hans
-
-> 
->> +		clocks = <&pck0>;
->> +		clock-names = "xvclk";
->> +		assigned-clocks = <&pck0>;
->> +		assigned-clock-rates = <25000000>;
->>  
->> -			port {
->> -				ov2640_0: endpoint {
->> -					remote-endpoint = <&isi_0>;
->> -					bus-width = <8>;
->> -				};
->> +		port {
->> +			ov2640_0: endpoint {
->> +				remote-endpoint = <&isi_0>;
->> +				bus-width = <8>;
->>  			};
->>  		};
->>  	};
->> +};
->> -- 
->> 2.11.0
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/include/dt-bindings/pinctrl/r7s72100-pinctrl.h b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+new file mode 100644
+index 0000000..98852d3
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+@@ -0,0 +1,36 @@
++/*
++ * Defines macros and constants for Renesas RZ/A1 pin controller pin
++ * muxing functions.
++ */
++#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
++#define __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
++
++#define RZA1_PINS_PER_PORT	16
++
++/* Create the pin index from it's bank and position numbers */
++#define PIN(b, p)		((b) * RZA1_PINS_PER_PORT + (p))
++
++/*
++ * Flags to apply to alternate function configuration
++ * All of the following are mutually exclusive.
++ */
++
++/*
++ * Pin is bi-directional.
++ * Alternate function that need both input/outpu functionalities shall
++ * be configured as bidirectional.
++ * Eg. SDA/SCL pins of an I2c interface.
++ */
++#define BI_DIR			(1 << 3)
++
++/*
++ * Flags used to ask software drive the pin I/O direction overriding the
++ * alternate function configuration.
++ * Some alternate function requires software to force I/O direction of a pin,
++ * ovverriding the designated one.
++ * Reference to the HW manual to know when this flag shall be used.
++ */
++#define SWIO_IN			(1 << 4)
++#define SWIO_OUT		(1 << 5)
++
++#endif
+-- 
+2.7.4
