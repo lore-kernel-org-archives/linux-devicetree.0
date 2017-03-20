@@ -1,148 +1,151 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Document the STM32 MDMA bindings
-Date: Mon, 20 Mar 2017 16:52:50 -0500
-Message-ID: <20170320215250.wwhq6lzwe45jmwks@rob-hp-laptop>
-References: <1489417599-31308-1-git-send-email-cedric.madianga@gmail.com>
- <1489417599-31308-2-git-send-email-cedric.madianga@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: dsa: add mt7530 binding
+Date: Mon, 20 Mar 2017 17:01:28 -0500
+Message-ID: <20170320220128.cg4zkbzzkddvsrfx@rob-hp-laptop>
+References: <1489420008-30795-1-git-send-email-sean.wang@mediatek.com>
+ <1489420008-30795-2-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489417599-31308-2-git-send-email-cedric.madianga@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, vinod.koul@intel.com, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1489420008-30795-2-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 04:06:38PM +0100, M'boumba Cedric Madianga wrote:
-> This patch adds documentation of device tree bindings for the STM32 MDMA
-> controller.
+On Mon, Mar 13, 2017 at 11:46:45PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
+> Add device-tree binding for Mediatek MT7530 switch.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/dma/stm32-mdma.txt         | 94 ++++++++++++++++++++++
+>  .../devicetree/bindings/net/dsa/mt7530.txt         | 94 ++++++++++++++++++++++
 >  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/stm32-mdma.txt b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+> diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
 > new file mode 100644
-> index 0000000..26a930c
+> index 0000000..0e50dbf
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+> +++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
 > @@ -0,0 +1,94 @@
-> +* STMicroelectronics STM32 MDMA controller
-> +
-> +The STM32 MDMA is a general-purpose direct memory access controller capable of
-> +supporting 64 independent DMA channels with 256 HW requests.
+> +Mediatek MT7530 Ethernet switch
+> +================================
 > +
 > +Required properties:
-> +- compatible: Should be "st,stm32-mdma"
-
-Should be more specific.
-
-> +- reg: Should contain MDMA registers location and length. This should include
-> +  all of the per-channel registers.
-> +- interrupts: Should contain the MDMA interrupt.
-> +- clocks: Should contain the input clock of the DMA instance.
-> +- resets: Reference to a reset controller asserting the DMA controller.
-> +- #dma-cells : Must be <5>. See DMA client paragraph for more details.
 > +
-> +Optional properties:
-> +- dma-channels: Number of DMA channels supported by the controller.
-> +- dma-requests: Number of DMA request signals supported by the controller.
-> +- st,ahb-addr-masks: Array of u32 mask to list memory devices addressed via
-> +  AHB bus.
+> +- compatible: Must be compatible = "mediatek,mt7530";
+> +- #address-cells: Must be 1
+> +- #size-cells: Must be 0
+> +- mediatek,ethsys: Phandle to the syscon node that handles the reset.
 
-I don't understand what this is.
+Use the reset binding?
 
-> +
-> +Example:
+> +- mediatek,ethernet: Phandle to the syscon node that Mediatek ethernet driver
+> +	provides that handles the TRGMII setup used by the switch.
+> +	See
+> +	Documentation/devicetree/bindings/net/mediatek-net.txt for the detailed
+> +	setup on mediatek ethernet.
+> +- mediatek,mcm: String, should be "enabled" or "disabled" to indicate that
 
-Put the 2 examples together.
+boolean instead.
 
+> +	either MT7530 is the part on multi-chip module belong to MT7623A has
+> +	or the remotely standalone chip as the function MT7623N reference board
+> +	provided for.
+> +- core-supply: Phandle to the regulator node necessary for the core power.
+> +- io-supply: Phandle to the regulator node necessary for the I/O power
+> +	See Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+> +	for details for the regulator setup on these boards.
+> +- mediatek,reset-pin: Phandle to the pinctrl node used for the reset. Which
+
+What's wrong with the normal pinctrl binding?
+
+> +	must be required if the property mediatek,mcm of specified as
+> +	"disabled". See
+> +	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt for
+> +	the mediatek pintcrl setting for the details.
 > +
-> +	mdma1: dma@52000000 {
-> +		compatible = "st,stm32-mdma";
-> +		reg = <0x52000000 0x1000>;
-> +		interrupts = <122>;
-> +		clocks = <&clk_dummy>;
-> +		resets = <&rcc 992>;
-> +		#dma-cells = <5>;
-> +		dma-channels = <16>;
-> +		dma-requests = <32>;
-> +		st,ahb-addr-masks = <0x20000000>, <0x00000000>;
-> +	};
+> +Each port children node within ports container must have the following
+
+s/children/child/
+
+> +mandatory properties:
+> +- reg			: Port address described must be 6 for CPU port
+> +			and from 0 to 5 for user ports.
 > +
-> +* DMA client
-> +
-> +DMA clients connected to the STM32 MDMA controller must use the format
-> +described in the dma.txt file, using a six-cell specifier for each channel:
-> +a phandle to the MDMA controller plus the following five integer cells:
-> +
-> +1. The request line number
-> +2. The priority level
-> +	0x00: Low
-> +	0x01: Medium
-> +	0x10: High
-> +	0x11: Very high
-> +3. A 32bit mask specifying the DMA channel configuration
-> + -bit 0-1: Source increment mode
-> +	0x00: Source address pointer is fixed
-> +	0x10: Source address pointer is incremented after each data transfer
-> +	0x11: Source address pointer is decremented after each data transfer
-> + -bit 2-3: Destination increment mode
-> +	0x00: Destination address pointer is fixed
-> +	0x10: Destination address pointer is incremented after each data
-> +	transfer
-> +	0x11: Destination address pointer is decremented after each data
-> +	transfer
-> + -bit 8-9: Source increment offset size
-> +	0x00: byte (8bit)
-> +	0x01: half-word (16bit)
-> +	0x10: word (32bit)
-> +	0x11: double-word (64bit)
-> + -bit 10-11: Destination increment offset size
-> +	0x00: byte (8bit)
-> +	0x01: half-word (16bit)
-> +	0x10: word (32bit)
-> +	0x11: double-word (64bit)
-> +-bit 25-18: The number of bytes to be transferred in a single transfer
-> +	(min = 1 byte, max = 128 bytes)
-> +-bit 29:28: Trigger Mode
-> +	0x00: Each MDMA request triggers a buffer transfer (max 128 bytes)
-> +	0x01: Each MDMA request triggers a block transfer (max 64K bytes)
-> +	0x10: Each MDMA request triggers a repeated block transfer
-> +	0x11: Each MDMA request triggers a linked list transfer
-> +4. A 32bit value specifying the register to be used to acknowledge the request
-> +   if no HW ack signal is used by the MDMA client
-> +5. A 32bit mask specifying the value to be written to acknowledge the request
-> +   if no HW ack signal is used by the MDMA client
+> +See Documentation/devicetree/bindings/dsa/dsa.txt for a list of additional
+> +required, optional properties and how the integrated switch subnodes must
+> +be specified.
 > +
 > +Example:
 > +
-> +	i2c4: i2c@5c002000 {
-> +		compatible = "st,stm32f7-i2c";
-> +		reg = <0x5c002000 0x400>;
-> +		interrupts = <GIC_SPI 95 IRQ_TYPE_NONE>,
-> +			     <GIC_SPI 96 IRQ_TYPE_NONE>;
-> +		clocks = <&clk_hsi>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		dmas = <&mdma1 36 0x0 0x40008 0x0 0x0>,
-> +		       <&mdma1 37 0x0 0x40002 0x0 0x0>;
-> +		dma-names = "rx", "tx";
-> +		status = "disabled";
+> +	&mdio0 {
+> +		switch@0 {
+> +			compatible = "mediatek,mt7530";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +
+> +			mediatek,ethsys = <&ethsys>;
+> +			mediatek,ethernet = <&eth>;
+> +			mediatek,mcm = "enabled";
+> +			core-supply = <&mt6323_vpa_reg>;
+> +			io-supply = <&mt6323_vemc3v3_reg>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <0>;
+> +				port@0 {
+> +					reg = <0>;
+> +					label = "lan0";
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					label = "lan1";
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					label = "lan2";
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					label = "lan3";
+> +				};
+> +
+> +				port@4 {
+> +					reg = <4>;
+> +					label = "wan";
+> +				};
+> +
+> +				port@6 {
+> +					reg = <6>;
+> +					label = "cpu";
+> +					ethernet = <&eth>;
+> +					phy-mode = "trgmii";
+> +					fixed-link {
+> +						speed = <1000>;
+> +						full-duplex;
+> +					};
+> +				};
+> +			};
+> +		};
 > +	};
 > -- 
 > 1.9.1
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
