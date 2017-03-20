@@ -1,81 +1,40 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
- sink set_fmt
-Date: Mon, 20 Mar 2017 15:00:51 +0100
-Message-ID: <1490018451.2917.86.camel@pengutronix.de>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
- <20170319152233.GW21222@n2100.armlinux.org.uk>
- <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
- <1490010926.2917.59.camel@pengutronix.de>
- <20170320120855.GH21222@n2100.armlinux.org.uk>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio playback
+Date: Mon, 20 Mar 2017 14:05:42 +0000
+Message-ID: <1490018741.1092.6.camel@synopsys.com>
+References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
+ <1488481038.2684.14.camel@synopsys.com>
+ <8b441b9d-bc26-091a-ac48-8594952759e8@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170320120855.GH21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8b441b9d-bc26-091a-ac48-8594952759e8@synopsys.com>
+Content-Language: en-US
+Content-ID: <FD18E10794FEBD4BBE98C1F2D6269212@internal.synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-03-20 at 12:08 +0000, Russell King - ARM Linux wrote:
-> On Mon, Mar 20, 2017 at 12:55:26PM +0100, Philipp Zabel wrote:
-> > The above paragraph suggests we skip any rectangles that are not
-> > supported. In our case that would be 3. and 4., since the CSI can't
-> > compose into a larger frame. I hadn't realised that the crop selection
-> > currently happens on the source pad.
-> 
-> I'd recommend viewing the documentation in its post-processed version,
-> because then you get the examples as pictures, and they say that a
-> picture is worth 1000 words.  See
-> 
->   https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/dev-subdev.html
-> 
-> There is almost an exact example of what we're trying to do - it's
-> figure 4.6.  Here, we have a sink pad with a cropping rectangle on
-> the input, which is then scaled to a composition rectangle (there's
-> no bounds rectangle, and it's specified that in such a case the
-> top,left of the composition rectangle will always be 0,0 - see quote
-> below).
-> 
-> Where it differs is that the example also supports source cropping
-> for two source pads.  We don't support that.
->
-> The same document says:
-> 
->   Scaling support is optional. When supported by a subdev, the crop
->   rectangle on the subdev's sink pad is scaled to the size configured
->   using the
->   :ref:`VIDIOC_SUBDEV_S_SELECTION <VIDIOC_SUBDEV_G_SELECTION>` IOCTL
->   using ``V4L2_SEL_TGT_COMPOSE`` selection target on the same pad. If the
->   subdev supports scaling but not composing, the top and left values are
->   not used and must always be set to zero.
-
-Right, this sentence does imply that when scaling is supported, there
-must be a sink compose rectangle, even when composing is not.
-
-I have previously set up scaling like this:
-
-media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
-media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
-
-Does this mean, it should work like this instead?
-
-media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
-media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY2X8/1920x1080@1/60,compose:(0,0)/960x540]"
-media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
-
-I suppose setting the source pad format should not be allowed to modify
-the sink compose rectangle.
-
-regards
-Philipp
+SGkgSm9zZSwNCg0KT24gTW9uLCAyMDE3LTAzLTIwIGF0IDE0OjAyICswMDAwLCBKb3NlIEFicmV1
+IHdyb3RlOg0KPiBIaSBWaW5lZXQsIEFsZXhleSwgUm9iLA0KPsKgDQo+ID4gQWNrZWQtYnk6IEFs
+ZXhleSBCcm9ka2luIDxhYnJvZGtpbkBzeW5vcHN5cy5jb20+DQo+IA0KPiBSb2IsIGNhbiB5b3Ug
+cGxlYXNlIHRha2UgYSBsb29rIGF0IHRoaXMgcGF0Y2ggYW5kIGF0IDIvMj8NCj4gDQo+IEFsZXhl
+eSwgZG8geW91IHN0aWxsIG1haW50YWluIHlvdXIgYWNrIGluIHRoZXNlIHBhdGNoZXM/IChJJ20N
+Cj4gYXNraW5nIGJlY2F1c2UgSSByZW1lbWJlciB5b3Ugd2VyZSBoYXZpbmcgbm8gdmlkZW8gYWZ0
+ZXIgcGF0Y2gNCj4gMi8yIG9mIHRoaXMgc2VyaWVzKS4NCg0KSW5kZWVkIEknbSBzdGlsbCBPSyB3
+aXRoIHlvdXIgYm90aCBwYXRjaGVzLg0KTXkgcHJvYmxlbSB3YXMgZHVlIHRvIGJyb2tlbiBtb25p
+dG9yIHRoYXQgZG9lc24ndCByZXBvcnQgRURJRC4NCldpdGggcHJvcGVyIG1vbml0b3IgeW91ciBw
+YXRjaCB3b3JrcyBwZXJmZWN0bHkgZmluZS4NCg0KLUFsZXhleQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1zbnBzLWFyYyBtYWlsaW5nIGxpc3QK
+bGludXgtc25wcy1hcmNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXNucHMtYXJj
