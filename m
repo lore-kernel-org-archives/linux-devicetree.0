@@ -1,107 +1,129 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Mon, 20 Mar 2017 13:29:30 +0000
-Message-ID: <20170320132930.GJ21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170319103801.GQ21222@n2100.armlinux.org.uk>
- <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
- <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCHv2 2/2] drm/panel: simple: Add support for Winstar WF35LTIACD
+Date: Mon, 20 Mar 2017 14:32:22 +0100
+Message-ID: <20170320133222.21773-1-richard.genoud@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 02:01:58PM +0100, Hans Verkuil wrote:
-> On 03/19/2017 06:54 PM, Steve Longerbeam wrote:
-> > 
-> > 
-> > On 03/19/2017 03:38 AM, Russell King - ARM Linux wrote:
-> >> What did you do with:
-> >>
-> >> ioctl(3, VIDIOC_REQBUFS, {count=0, type=0 /* V4L2_BUF_TYPE_??? */, memory=0 /* V4L2_MEMORY_??? */}) = -1 EINVAL (Invalid argument)
-> >>                  test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> >> ioctl(3, VIDIOC_EXPBUF, 0xbef405bc)     = -1 EINVAL (Invalid argument)
-> >>                  fail: v4l2-test-buffers.cpp(571): q.has_expbuf(node)
-> 
-> This is really a knock-on effect from an earlier issue where the compliance test
-> didn't detect support for MEMORY_MMAP.
+This adds support for the Winstar Display Co. WF35LTIACD 3.5" QVGA TFT
+LCD panel, which can be supported by the simple panel driver.
 
-So why does it succeed when I fix the compliance errors with VIDIOC_G_FMT?
-With that fixed, I now get:
+Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
+---
 
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                test VIDIOC_G/S_PARM: OK
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                test VIDIOC_S_FMT: OK
-                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-                test Cropping: OK (Not Supported)
-                test Composing: OK (Not Supported)
-                test Scaling: OK (Not Supported)
+Changes since v1:
+Add power-supply property and an example in documentation
 
-        Buffer ioctls:
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-                test VIDIOC_EXPBUF: OK
+ .../bindings/display/panel/winstar,wf35ltiacd      | 53 ++++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 28 ++++++++++++
+ 2 files changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
 
-The reason is, if you look at the code, VIDIOC_G_FMT populates a list
-of possible buffer formats "node->valid_buftypes".  If the VIDIOC_G_FMT
-test fails, then node->valid_buftypes is zero.
-
-This causes testReqBufs() to only check for the all-zeroed VIDIOC_REQBUFS
-and declare it conformant, without creating any buffers (it can't, it
-doesn't know which formats are supported.)
-
-This causes node->valid_memorytype to be zero.
-
-We then go on to testExpBuf(), and valid_memorytype zero, claiming (falsely)
-that MMAP is not supported.  The reality is that it _is_ supported, but
-it's just the non-compliant VICIOC_G_FMT call (due to the colorspace
-issue) causes the sequence of tests to fail.
-
-> Always build from the master repo. 1.10 is pretty old.
-
-It's what I have - remember, not everyone is happy to constantly replace
-their distro packages with random new stuff.
-
-> >> In any case, it doesn't look like the buffer management is being
-> >> tested at all by v4l2-compliance - we know that gstreamer works, so
-> >> buffers _can_ be allocated, and I've also used dmabufs with gstreamer,
-> >> so I also know that VIDIOC_EXPBUF works there.
-> 
-> To test actual streaming you need to provide the -s option.
-> 
-> Note: v4l2-compliance has been developed for 'regular' video devices,
-> not MC devices. It may or may not work with the -s option.
-
-Right, and it exists to verify that the establised v4l2 API is correctly
-implemented.  If the v4l2 API is being offered to user applications,
-then it must be conformant, otherwise it's not offering the v4l2 API.
-(That's very much a definition statement in itself.)
-
-So, are we really going to say MC devices do not offer the v4l2 API to
-userspace, but something that might work?  We've already seen today
-one user say that they're not going to use mainline because of the
-crud surrounding MC.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+diff --git a/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd b/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
+new file mode 100644
+index 000000000000..9ff59b868b28
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
+@@ -0,0 +1,53 @@
++Winstar Display Corporation 3.5" QVGA (320x240) TFT LCD panel
++
++Required properties:
++- compatible: should be "winstar,wf35ltiacd"
++- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
++
++Example:
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&hlcdc_pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <0 31 63 95 127 159 191 223 255>;
++		default-brightness-level = <191>;
++		power-supply = <&bl_reg>;
++		status = "okay";
++	};
++
++	bl_reg: backlight_regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "backlight-power-supply";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		status = "okay";
++	};
++
++	panel: panel {
++		compatible = "winstar,wf35ltiacd", "simple-panel";
++		backlight = <&backlight>;
++		power-supply = <&panel_reg>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		port@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			panel_input: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hlcdc_panel_output>;
++			};
++		};
++	};
++
++	panel_reg: panel_regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "panel-power-supply";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		status = "okay";
++	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 06aaf79de8c8..5d45664c6c0e 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1713,6 +1713,31 @@ static const struct panel_desc urt_umsh_8596md_parallel = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ };
+ 
++static const struct drm_display_mode winstar_wf35ltiacd_mode = {
++	.clock = 6410,
++	.hdisplay = 320,
++	.hsync_start = 320 + 20,
++	.hsync_end = 320 + 20 + 30,
++	.htotal = 320 + 20 + 30 + 38,
++	.vdisplay = 240,
++	.vsync_start = 240 + 4,
++	.vsync_end = 240 + 4 + 3,
++	.vtotal = 240 + 4 + 3 + 15,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++};
++
++static const struct panel_desc winstar_wf35ltiacd = {
++	.modes = &winstar_wf35ltiacd_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 70,
++		.height = 53,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++};
++
+ static const struct of_device_id platform_of_match[] = {
+ 	{
+ 		.compatible = "ampire,am800480r3tmqwa1h",
+@@ -1892,6 +1917,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "urt,umsh-8596md-20t",
+ 		.data = &urt_umsh_8596md_parallel,
+ 	}, {
++		.compatible = "winstar,wf35ltiacd",
++		.data = &winstar_wf35ltiacd,
++	}, {
+ 		/* sentinel */
+ 	}
+ };
