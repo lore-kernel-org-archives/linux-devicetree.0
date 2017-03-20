@@ -1,62 +1,49 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v3 1/2] doc: Add bindings document for Xilinx LogiCore PR
- Decoupler
-Date: Mon, 20 Mar 2017 11:03:02 +0100
-Message-ID: <bc6ea50e-321c-3eb4-b1c3-10dadf984d81@xilinx.com>
-References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489781473-30772-1-git-send-email-mdf@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+From: Antonio Borneo <borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] spi: pl022: Document property values
+Date: Mon, 20 Mar 2017 10:59:59 +0100
+Message-ID: <20170320095959.6813-1-borneo.antonio@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Antonio Borneo <borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcuMy4yMDE3IDIxOjExLCBNb3JpdHogRmlzY2hlciB3cm90ZToKPiBUaGlzIGFkZHMgdGhl
-IGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIFhpbGlueCBMb2dpQ09SRSBQUgo+IERlY291
-cGxlciBzb2Z0IGNvcmUuCj4gCj4gU2lnbmVkLW9mZi1ieTogTW9yaXR6IEZpc2NoZXIgPG1kZkBr
-ZXJuZWwub3JnPgo+IENjOiBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPgo+
-IENjOiBTw7ZyZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbT4KPiBDYzog
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZwo+IC0tLQo+IAo+IENoYW5nZXMgZnJvbSB2MjoKPiAtIEFkZGVkIHJlZmVuY2UgdG8gZ2Vu
-ZXJpYyBmcGdhLXJlZ2lvbiBiaW5kaW5ncwo+IC0gRml4ZWQgdXAgcmVnIHByb3BlcnR5IGluIGV4
-YW1wbGUKPiAtIEFkZGVkIGZhbGxiYWNrIHRvICJ4bG54LHByLWRlY291cGxlciIgd2l0aG91dCB2
-ZXJzaW9uCj4gCj4gQ2hhbmdlcyBmcm9tIHYxOgo+IC0gQWRkZWQgY2xvY2sgbmFtZXMgJiBjbG9j
-ayB0byBleGFtcGxlCj4gLSBNZXJnZWQgc29tZSBvZiB0aGUgZGVzY3JpcHRpb24gZnJvbSBNaWNo
-YWwncyB2ZXJzaW9uCj4gCj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9mcGdhL3hpbGlueC1wci1kZWNv
-dXBsZXIudHh0ICAgICAgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci50eHQKPiAK
-PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ZwZ2EveGls
-aW54LXByLWRlY291cGxlci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5k
-ZXggMDAwMDAwMC4uMTYxNDFiZAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLnR4dAo+IEBAIC0w
-LDAgKzEsMzUgQEAKPiArWGlsaW54IExvZ2lDT1JFIFBhcnRpYWwgUmVjb25maWcgRGVjb3VwbGVy
-IFNvZnRjb3JlCj4gKwo+ICtUaGUgWGlsaW54IExvZ2lDT1JFIFBhcnRpYWwgUmVjb25maWcgRGVj
-b3VwbGVyIG1hbmFnZXMgb25lIG9yIG1vcmUKPiArZGVjb3VwbGVycyAvIGZwZ2EgYnJpZGdlcy4K
-PiArVGhlIGNvbnRyb2xsZXIgY2FuIGRlY291cGxlL2Rpc2FibGUgdGhlIGJyaWRnZXMgd2hpY2gg
-cHJldmVudHMgc2lnbmFsCj4gK2NoYW5nZXMgZnJvbSBwYXNzaW5nIHRocm91Z2ggdGhlIGJyaWRn
-ZS4gIFRoZSBjb250cm9sbGVyIGNhbiBhbHNvCj4gK2NvdXBsZSAvIGVuYWJsZSB0aGUgYnJpZGdl
-cyB3aGljaCBhbGxvd3MgdHJhZmZpYyB0byBwYXNzIHRocm91Z2ggdGhlCj4gK2JyaWRnZSBub3Jt
-YWxseS4KPiArCj4gK1RoZSBEcml2ZXIgc3VwcG9ydHMgb25seSBNTUlPIGhhbmRsaW5nLiBBIFBS
-IHJlZ2lvbiBjYW4gaGF2ZSBtdWx0aXBsZQo+ICtQUiBEZWNvdXBsZXMgd2hpY2ggY2FuIGJoZSBo
-YW5kbGVkIGluZGVwZW5kZW50bHkgb3IgY2hhaW5lcyB2aWEgZGVjb3VwbGUvCj4gK2RlY291cGxl
-X3N0YXR1cyBzaWduYWxzLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRp
-YmxlCQk6IFNob3VsZCBjb250YWluICJ4bG54LHByLWRlY291cGxlci0xLjAwIgoKaGVyZSBzaG91
-bGQgYmUgYWxzbyB0aGF0ICJ4bG54LXByLWRlY291cGxlciIgdG9vLgoKT3RoZXIgdGhhbiB0aGlz
-IGFsbCBsb29rcyBnb29kLgoKU2lnbmVkLW9mZi1ieTogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2lt
-ZWtAeGlsaW54LmNvbT4KClRoYW5rcywKTWljaGFsCgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+The property "pl022,com-mode" can only assume one of the values of
+the enum ssp_mode, defined in include/linux/amba/pl022.h
+List the possible numeric values and report the associated meaning.
+
+Signed-off-by: Antonio Borneo <borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ Documentation/devicetree/bindings/spi/spi_pl022.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi_pl022.txt b/Documentation/devicetree/bindings/spi/spi_pl022.txt
+index 2692a5726c3f..7638b4968ddb 100644
+--- a/Documentation/devicetree/bindings/spi/spi_pl022.txt
++++ b/Documentation/devicetree/bindings/spi/spi_pl022.txt
+@@ -30,7 +30,10 @@ contain the following properties.
+ 	0: SPI
+ 	1: Texas Instruments Synchronous Serial Frame Format
+ 	2: Microwire (Half Duplex)
+-- pl022,com-mode : polling, interrupt or dma
++- pl022,com-mode : specifies the transfer mode:
++	0: interrupt mode
++	1: polling mode (default mode if property not present)
++	2: DMA mode
+ - pl022,rx-level-trig : Rx FIFO watermark level
+ - pl022,tx-level-trig : Tx FIFO watermark level
+ - pl022,ctrl-len : Microwire interface: Control length
+-- 
+2.12.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
