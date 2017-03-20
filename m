@@ -1,60 +1,78 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: auxdisplay: Add bindings for Hitachi
- HD44780
-Date: Mon, 20 Mar 2017 16:48:31 +0100
-Message-ID: <20170320154831.GA19564@kroah.com>
-References: <1489155321-25666-1-git-send-email-geert@linux-m68k.org>
- <1489155321-25666-5-git-send-email-geert@linux-m68k.org>
- <20170320151516.dscqfjihoeezzhgi@rob-hp-laptop>
- <CAMuHMdX_9-yze0ErxKxTM0rgLAhWhtfvkW8wvXxR6vMdVXXGbg@mail.gmail.com>
+From: Alan Tull <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v3 1/2] doc: Add bindings document for Xilinx LogiCore PR
+ Decoupler
+Date: Mon, 20 Mar 2017 11:17:29 -0500
+Message-ID: <CANk1AXRD4WVa4qrc4Mh64seu1ha+Kff=sGuZ7t98V1PnnBD9Cg@mail.gmail.com>
+References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdX_9-yze0ErxKxTM0rgLAhWhtfvkW8wvXxR6vMdVXXGbg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Willy Tarreau <willy@haproxy.com>, Ksenija Stanojevic <ksenija.stanojevic@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Akira Tsukamoto <akira.tsukamoto@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1489781473-30772-1-git-send-email-mdf@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-fpga@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 04:27:01PM +0100, Geert Uytterhoeven wrote:
-> Hi Rob, Greg,
-> 
-> On Mon, Mar 20, 2017 at 4:15 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Mar 10, 2017 at 03:15:20PM +0100, Geert Uytterhoeven wrote:
-> >> Add DT bindings for an Hitachi HD44780 Character LCD Controller where
-> >> its M6800 bus interface is connected to GPIOs.
-> >>
-> >> Memory-mapped configurations are not yet supported.
-> >>
-> >> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> 
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
-> 
-> >> +Required properties:
-> >> +  - compatible: Must contain "hit,hd44780",
-> >> +  - data-gpios: Must contain an array of either 4 or 8 GPIO specifiers,
-> >> +    referring to the GPIO pins connected to the data signal lines DB0-DB7
-> >> +    (8-bit mode) or DB4-DB7 (4-bit mode) of the LCD Controller's bus interface,
-> >> +  - enable-gpios: Must contain a GPIO specifier, referring to the GPIO pin
-> >> +    connected to the "E" (Enable) signal line of the LCD Controller's bus
-> >> +    interface,
-> >> +  - rs-gpios: Must contain a GPIO specifier, referring to the GPIO pin
-> >> +    connected to the "RS" (Register Select) signal line of the LCD Controller's
-> >> +    bus interface,
-> >> +  - display-height: Height of the display, in character cells,
-> >> +  - display-width: Width of the display, in character cells.
-> >
-> > display-{width,height}-chars
-> 
-> Makes sense.
-> 
-> Greg: As this is already in char-misc-next, shall I send an update for
-> the bindings and the driver?
-
-Please do.
-
-thanks,
-
-greg k-h
+T24gRnJpLCBNYXIgMTcsIDIwMTcgYXQgMzoxMSBQTSwgTW9yaXR6IEZpc2NoZXIgPG1kZkBrZXJu
+ZWwub3JnPiB3cm90ZToKCkhpIE1vcml0eiwKCk1pbm9yIG5pdHMgYmVsb3cuICBPdGhlcndpc2Us
+IGxvb2tzIGdvb2QuCgo+IFRoaXMgYWRkcyB0aGUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0
+aGUgWGlsaW54IExvZ2lDT1JFIFBSCj4gRGVjb3VwbGVyIHNvZnQgY29yZS4KPgo+IFNpZ25lZC1v
+ZmYtYnk6IE1vcml0eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz4KPiBDYzogTWljaGFsIFNpbWVr
+IDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4KPiBDYzogU8O2cmVuIEJyaW5rbWFubiA8c29yZW4u
+YnJpbmttYW5uQHhpbGlueC5jb20+Cj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcK
+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKCkFja2VkLWJ5OiBBbGFuIFR1bGwgPGF0
+dWxsQGtlcm5lbC5vcmc+Cgo+IC0tLQo+Cj4gQ2hhbmdlcyBmcm9tIHYyOgo+IC0gQWRkZWQgcmVm
+ZW5jZSB0byBnZW5lcmljIGZwZ2EtcmVnaW9uIGJpbmRpbmdzCj4gLSBGaXhlZCB1cCByZWcgcHJv
+cGVydHkgaW4gZXhhbXBsZQo+IC0gQWRkZWQgZmFsbGJhY2sgdG8gInhsbngscHItZGVjb3VwbGVy
+IiB3aXRob3V0IHZlcnNpb24KPgo+IENoYW5nZXMgZnJvbSB2MToKPiAtIEFkZGVkIGNsb2NrIG5h
+bWVzICYgY2xvY2sgdG8gZXhhbXBsZQo+IC0gTWVyZ2VkIHNvbWUgb2YgdGhlIGRlc2NyaXB0aW9u
+IGZyb20gTWljaGFsJ3MgdmVyc2lvbgo+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9mcGdhL3hpbGlu
+eC1wci1kZWNvdXBsZXIudHh0ICAgICAgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwo+
+ICAxIGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ZwZ2EveGlsaW54LXByLWRlY291cGxl
+ci50eHQKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9mcGdhL3hpbGlueC1wci1kZWNvdXBsZXIudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2
+NDQKPiBpbmRleCAwMDAwMDAwLi4xNjE0MWJkCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9mcGdhL3hpbGlueC1wci1kZWNvdXBsZXIudHh0
+Cj4gQEAgLTAsMCArMSwzNSBAQAo+ICtYaWxpbnggTG9naUNPUkUgUGFydGlhbCBSZWNvbmZpZyBE
+ZWNvdXBsZXIgU29mdGNvcmUKPiArCj4gK1RoZSBYaWxpbnggTG9naUNPUkUgUGFydGlhbCBSZWNv
+bmZpZyBEZWNvdXBsZXIgbWFuYWdlcyBvbmUgb3IgbW9yZQo+ICtkZWNvdXBsZXJzIC8gZnBnYSBi
+cmlkZ2VzLgo+ICtUaGUgY29udHJvbGxlciBjYW4gZGVjb3VwbGUvZGlzYWJsZSB0aGUgYnJpZGdl
+cyB3aGljaCBwcmV2ZW50cyBzaWduYWwKPiArY2hhbmdlcyBmcm9tIHBhc3NpbmcgdGhyb3VnaCB0
+aGUgYnJpZGdlLiAgVGhlIGNvbnRyb2xsZXIgY2FuIGFsc28KPiArY291cGxlIC8gZW5hYmxlIHRo
+ZSBicmlkZ2VzIHdoaWNoIGFsbG93cyB0cmFmZmljIHRvIHBhc3MgdGhyb3VnaCB0aGUKPiArYnJp
+ZGdlIG5vcm1hbGx5Lgo+ICsKPiArVGhlIERyaXZlciBzdXBwb3J0cyBvbmx5IE1NSU8gaGFuZGxp
+bmcuIEEgUFIgcmVnaW9uIGNhbiBoYXZlIG11bHRpcGxlCj4gK1BSIERlY291cGxlcyB3aGljaCBj
+YW4gYmhlIGhhbmRsZWQgaW5kZXBlbmRlbnRseSBvciBjaGFpbmVzIHZpYSBkZWNvdXBsZS8KCnMv
+UFIgRGVjb3VwbGVyL1BSIERlY291cGxlcnMvCnMvYmhlL2JlLwpzL2NoYWluZXMvY2hhaW5lZC8K
+Cj4gK2RlY291cGxlX3N0YXR1cyBzaWduYWxzLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoK
+PiArLSBjb21wYXRpYmxlICAgICAgICAgICA6IFNob3VsZCBjb250YWluICJ4bG54LHByLWRlY291
+cGxlci0xLjAwIgo+ICstIHJlZ3MgICAgICAgICAgICAgICAgIDogYmFzZSBhZGRyZXNzIGFuZCBz
+aXplIGZvciBkZWNvdXBsZXIgbW9kdWxlCj4gKy0gY2xvY2tzICAgICAgICAgICAgICAgOiBpbnB1
+dCBjbG9jayB0byBJUAo+ICstIGNsb2NrLW5hbWVzICAgICAgICAgIDogc2hvdWxkIGNvbnRhaW4g
+ImFjbGsiCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGJyaWRnZS1lbmFibGUgICAg
+ICAgICAgICAgICAgOiAwIGlmIGRyaXZlciBzaG91bGQgZGlzYWJsZSBicmlkZ2UgYXQgc3RhcnR1
+cAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgMSBpZiBkcml2ZXIgc2hvdWxkIGVuYWJsZSBi
+cmlkZ2UgYXQgc3RhcnR1cAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgRGVmYXVsdCBpcyB0
+byBsZWF2ZSBicmlkZ2UgaW4gY3VycmVudCBzdGF0ZS4KPiArCj4gK1NlZSBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZnBnYS9mcGdhLXJlZ2lvbi50eHQgZm9yIGdlbmVyaWMgYmlu
+ZGluZ3MuCj4gKwo+ICtFeGFtcGxlOgo+ICsgICAgICAgZnBnYS1icmlkZ2VAMTAwMDAwNDUwIHsK
+PiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ4bG54LHByLWRlY291cGxlci0xLjAwIiwK
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ4bG54LXByLWRlY291cGxlciI7Cj4gKyAg
+ICAgICAgICAgICAgIHJlZ3MgPSA8MHgxMDAwMDA0NSAweDEwPjsKPiArICAgICAgICAgICAgICAg
+Y2xvY2tzID0gPCZjbGtjIDE1PjsKPiArICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYWNs
+ayI7Cj4gKyAgICAgICAgICAgICAgIGJyaWRnZS1lbmFibGUgPSA8MD47Cj4gKyAgICAgICB9Owo+
+IC0tCj4gMi43LjQKPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
