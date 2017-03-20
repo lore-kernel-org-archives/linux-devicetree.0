@@ -1,58 +1,100 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFT PATCH 0/1] Meson GXBB: use pwm-leds on supported devices
-Date: Mon, 20 Mar 2017 09:43:48 +0100
-Message-ID: <a5b18444-6158-7bc2-cb19-0b5a44ea9316@baylibre.com>
-References: <20170318143728.16535-1-martin.blumenstingl@googlemail.com>
+From: "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 05/11] Documentation: DT: bindings: mfd:
+ add A33 GPADC binding
+Date: Mon, 20 Mar 2017 09:45:27 +0100
+Message-ID: <20170320084527.7cah2g7doas7ykyf@lukather>
+References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
+ <20170310103921.19469-6-quentin.schulz@free-electrons.com>
+ <5798131489173902@web12o.yandex.ru>
+ <6d997cc1-585e-e25c-a53f-d7b28613dfbb@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170318143728.16535-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="w3ydkscm76ah7w4j"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMVNX3DAKGQE4VR2EQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <6d997cc1-585e-e25c-a53f-d7b28613dfbb-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/18/2017 03:37 PM, Martin Blumenstingl wrote:
-> This patch enables brightness support through the pwm-leds driver for
-> the GXBB devices which use GPIOAO_13 for their system/status LED.
-> 
-> Affected devices are:
-> - NEXBOX A95X (GXBB, S905 variant)
-> - Odroid-C2
-> - the Tronsmart Vega S95 series (Meta, Pro, Telos)
-> - WeTek Hub
-> - WeTek Play 2
-> 
-> unfortunately my GXBB board (a Tronsmart Vega S95 Meta clone) is not
-> working anymore, so I can't test this at all.
-> if it works on one of the devices then we can probably assume that it
-> works fine on all other devices as well.
-> 
-> 
-> Martin Blumenstingl (1):
->   ARM64: dts: meson-gxbb: convert devices to use pwm-leds
-> 
->  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 18 +++++++++++----
->  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 16 ++++++++++---
->  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 17 ++++++++++----
->  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 19 +++++++++++----
->  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 27 ++++++++++++++++------
->  5 files changed, 74 insertions(+), 23 deletions(-)
-> 
 
-Hi Martin,
+--w3ydkscm76ah7w4j
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I'm concerned about how the LED is managed by the firmware.
-The system led is usually managed by the firmware and color is changed
-when in suspend or poweroff mode.
-But I'm not sure of the behavior if the pin mode is set to PWM.
+Hi,
 
-Can you check this ?
+On Sat, Mar 11, 2017 at 03:07:55PM +0100, Quentin Schulz wrote:
+> Hi Icenowy,
+> 
+> On 10/03/2017 20:25, Icenowy Zheng wrote:
+> > 
+> > 
+> > 10.03.2017, 18:56, "Quentin Schulz" <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> >> This patch adds documentation for the A33 GPADC binding.
+> >>
+> >> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >> ---
+> >>
+> >> added in v2
+> >>
+> >>  .../devicetree/bindings/mfd/sun4i-gpadc.txt | 59 ++++++++++++++++++++++
+> >>  1 file changed, 59 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> >> new file mode 100644
+> >> index 0000000..17242c8
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> >> @@ -0,0 +1,59 @@
+> >> +Allwinner SoCs' GPADC Device Tree bindings
+> >> +------------------------------------------
+> >> +The Allwinner SoCs all have an ADC that can also act as a thermal sensor
+> >> +and sometimes as a touchscreen controller.
+> >> +
+> >> +Required properties:
+> >> + - compatible: "sun8i-a33-gpadc-iio",
+> >> + - reg: mmio address range of the chip,
+> >> + - #thermal-sensor-cells: shall be 0,
+> >> + - #io-channel-cells: shall be 0,
+> >> +
+> >> +Example:
+> >> + rtp: rtp@01c25000 {
+> > 
+> > I think we'd better call it ths.
+> 
+> To match the datasheet, I agree.
 
-Thanks,
-Neil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I agree too.
+
+> > And can you make thermal-sensor-cells become 1?
+> > 
+> > Maxime Ripard wants to base H3/H5/A64 thermal driver on this patchset, and
+> > for H5/A64 there's 2/3 thermal sensors.
+> 
+> Yes, that'll require a specific DT node for those thermal sensors. Then
+> since we would update the possible compatibles in the documentation
+> anyway, that would be a good idea to update to say that
+> thermal-sensor-cells could be different from 0 too.
+> 
+> That was my mindset to set thermal-sensor-cells to 0, since we only
+> support SoC which has only one thermal sensor at the moment.
+
+And I agree here as well.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--w3ydkscm76ah7w4j--
