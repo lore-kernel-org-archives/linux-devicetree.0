@@ -1,151 +1,131 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Mon, 20 Mar 2017 16:57:54 +0100
-Message-ID: <40e08d05-58cd-a295-3174-123147ee2ac5@xs4all.nl>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170319103801.GQ21222@n2100.armlinux.org.uk>
- <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
- <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
- <20170320132930.GJ21222@n2100.armlinux.org.uk>
- <d0e2a9c2-5e94-d810-7ef4-ae089a6b25f5@xs4all.nl>
- <20170320141158.GK21222@n2100.armlinux.org.uk>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/5] rtc: Add rtc-sh
+Date: Mon, 20 Mar 2017 17:03:20 +0100
+Message-ID: <CAMuHMdWxs4Xwc0T5AHL73ZtF6r8pN9v6g-GEzozdLvTc4j4aSw@mail.gmail.com>
+References: <20170316175112.27913-1-chris.brandt@renesas.com>
+ <20170316175112.27913-3-chris.brandt@renesas.com> <CAMuHMdVu0dQjptyW0F5YS+V6sixXTM3P6VWq2=8BQ5njUOXf-Q@mail.gmail.com>
+ <SG2PR06MB1165A9931C930DF9BCD5C0A98A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdW0nHiZkE_RxVLX3G0MuwQLPHVFyNq5C1tx0yAqDQefaA@mail.gmail.com>
+ <SG2PR06MB11653BB788CADBEE78FE4CF58A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdWs3NtKLiBnKCmxGYNBW3zzWYydj=JGKr+mH7ao97L2_Q@mail.gmail.com>
+ <20170317150524.oijto6gtjxycdnwn@piout.net> <SG2PR06MB1165819F41CF40562F44F08B8A3A0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170320141158.GK21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCQJP74GSUDRB7P2X7DAKGQELOT7HUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <SG2PR06MB1165819F41CF40562F44F08B8A3A0-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2017 03:11 PM, Russell King - ARM Linux wrote:
-> On Mon, Mar 20, 2017 at 02:57:03PM +0100, Hans Verkuil wrote:
->> On 03/20/2017 02:29 PM, Russell King - ARM Linux wrote:
->>> It's what I have - remember, not everyone is happy to constantly replace
->>> their distro packages with random new stuff.
+Hi Chris,
+
+On Mon, Mar 20, 2017 at 4:05 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Friday, March 17, 2017, Alexandre Belloni wrote:
+>> On 17/03/2017 at 14:55:48 +0100, Geert Uytterhoeven wrote:
+>> > >> it would still be good to have phandles to the external clock
+>> > >> sources as well, as that describes the hardware topology.
+>> > > I'm confused, you mean make new clocks node for RTC_X1 (fixed at
+>> > > 32.768kHZ) and
+>> > > RTC_X3 (fixed at 4MHz), but then not really do anything with then?
+>> > > (the driver
+>> >
+>> > You still do something with them, as they'll be linked from the rtc
+>> device node.
+>> >
+>> > > doesn't need them)
+>> >
+>> > The driver may use them in the future.
+>> > E.g. to select among X1, X3, or EXTAL, depending on availability.
 >>
->> This is a compliance test, which is continuously developed in tandem with
->> new kernel versions. If you are working with an upstream kernel, then you
->> should also use the corresponding v4l2-compliance test. What's the point
->> of using an old one?
->>
->> I will not support driver developers that use an old version of the
->> compliance test, that's a waste of my time.
-> 
-> The reason that people may _not_ wish to constantly update v4l-utils
-> is that it changes the libraries installed on their systems.
-> 
-> So, the solution to that is not to complain about developers not using
-> the latest version, but instead to de-couple it from the rest of the
-> package, and provide it as a separate, stand-alone package that doesn't
-> come with all the extra baggage.
-> 
-> Now, there's two possible answers to that:
-> 
-> 1. it depends on the libv4l2 version.  If that's so, then you are
->    insisting that people constantly move to the latest libv4l2 because
->    of API changes, and those API changes may upset applications they're
->    using.  So this isn't really on.
-> 
-> 2. it doesn't depend on libv4l2 version, in which case there's no reason
->    for it to be packaged with v4l-utils.
+>> I'm on Geert's side here, I wouldn't rely on the bootloader to set
+>> everything up correctly.
+>
+> Part of my hesitation to putting in the clock source selection was that
+> this RTC block is used in a lot of parts, and it's always the same,
+> except for the last 3 registers which are different from device to
+> device because different SoCs have different clock sources options
+> and ways to set them up. So, making a driver that just 'reads' the
+> time seemed safer/easier.
+> Anyway, I'll add the clock setup in if that's the general consensus.
+>
+> But, before I send out an updated version, what were you thinking
+> my DT should look like?
+>
+> Should I make a "count-source" property for user to select what clock
+> will be used for the actually counting?
+>
+>
+>         clocks {
+>                 ranges;
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+>             . . .
+>
+> +               rtc_x1_clk: rtc_x1 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-clock";
+> +                       /* If clk present, value must be set by board to 32678 */
+> +                       clock-frequency = <0>;
+> +               };
+> +
+> +               rtc_x3_clk: rtc_x3 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-clock";
+> +                       /* If clk present, value must be set by board to 4000000 */
+> +                       clock-frequency = <0>;
+> +               };
+> +
+>
+>
+>
+>
+> +       rtc: rtc@fcff1000 {
+> +               compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
+> +               reg = <0xfcff1000 0x2e>;
+> +               interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
+> +                             GIC_SPI 277 IRQ_TYPE_EDGE_RISING
+> +                             GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
+> +               interrupt-names = "alarm", "period", "carry";
+> +               clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
+> +                         <&extal_clk> , <&rtc_x3_clk>;
+> +               clock-names = "fck", "rtc_x1", "extal", "rtc_x3";
+> +               power-domains = <&cpg_clocks>;
+> +               count-source = "rtc_x1";    <<<<<<< this would be in the board dts file
 
-Run configure with --disable-v4l2-compliance-libv4l.
+IMHO that's software policy, not hardware description, so it doesn't
+belong in DT.
 
-This avoids linking with libv4l and allows you to build it stand-alone.
+However, by scanning the list of allowed clock names, and looking at clock
+rates, the driver can find a suitable clock itself.
 
-Perhaps I should invert this option since in most cases you don't want to
-run v4l2-compliance with libv4l (it's off by default unless you pass the
--w option to v4l2-compliance).
+> +               status = "disabled";
+> +       };
 
-> 
-> The reality is that v4l2-compliance links with libv4l2, so I'm not sure
-> which it is.  What I am sure of is that I don't want to upgrade libv4l2
-> on an ad-hoc basis, potentially causing issues with applications.
-> 
->>>> To test actual streaming you need to provide the -s option.
->>>>
->>>> Note: v4l2-compliance has been developed for 'regular' video devices,
->>>> not MC devices. It may or may not work with the -s option.
->>>
->>> Right, and it exists to verify that the establised v4l2 API is correctly
->>> implemented.  If the v4l2 API is being offered to user applications,
->>> then it must be conformant, otherwise it's not offering the v4l2 API.
->>> (That's very much a definition statement in itself.)
->>>
->>> So, are we really going to say MC devices do not offer the v4l2 API to
->>> userspace, but something that might work?  We've already seen today
->>> one user say that they're not going to use mainline because of the
->>> crud surrounding MC.
->>>
->>
->> Actually, my understanding was that he was stuck on the old kernel code.
-> 
-> Err, sorry, I really don't follow.  Who is "he"?
+Gr{oetje,eeting}s,
 
-"one user say that they're not going to use mainline because of the
-crud surrounding MC."
+                        Geert
 
-> 
-> _I_ was the one who reported the EXPBUF problem.  Your comment makes no
-> sense.
-> 
->> In the case of v4l2-compliance, I never had the time to make it work with
->> MC devices. Same for that matter of certain memory to memory devices.
->>
->> Just like MC devices these too behave differently. They are partially
->> supported in v4l2-compliance, but not fully.
-> 
-> It seems you saying that the API provided by /dev/video* for a MC device
-> breaks the v4l2-compliance tests?
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-There may be tests in the compliance suite that do not apply for MC devices
-and for which I never check. The compliance suite was never written with MC
-devices in mind, and it certainly hasn't been tested much with such devices.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
-It's only very recent that I even got hardware that has MC support...
-
->From what I can tell from the feedback I got it seems to be OKish, but I
-just can't guarantee that the compliance utility is correct for such devices.
-
-In particular I doubt the streaming tests (-s, -f, etc.) will work. The -s
-test *might* work if the pipeline is configured correctly before running
-v4l2-compliance. I can't imagine that the -f option would work at all since
-I would expect pipeline validation errors.
-
-I've been gently pushing Helen Koike to finish her virtual MC driver
-(https://patchwork.kernel.org/patch/9312783/) since having a virtual driver
-makes writing compliance tests much easier.
-
-> _No one_ has mentioned using v4l2-compliance on the subdevs.
-> 
->> Complaining about this really won't help. We know it's a problem and unless
->> someone (me perhaps?) manages to get paid to work on this it's unlikely to
->> change for now.
-> 
-> Like the above comment, your comment makes no sense.  I'm not complaining,
-> I'm trying to find out the details.
-
-Must be me then, it did feel like complaining...
-
-> Yes, MC stuff sucks big time right now, the documentation is poor, there's
-> a lack of understanding on all sides of the issues (which can be seen by
-> the different opinions that people hold.)  The only way to resolve these
-> differences is via discussion, and if you're going to start thinking that
-> everyone is complaining, then there's not going to be any forward progress.
-> 
-
-Regards,
-
-	Hans
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
