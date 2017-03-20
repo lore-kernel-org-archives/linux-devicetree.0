@@ -1,16 +1,15 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 4/4] mfd: mt6397: Align the placement at which the
- mfd_cell of LED is defined
-Date: Mon, 20 Mar 2017 10:45:23 +0000
-Message-ID: <20170320104523.wt7t2rpqegdfqwfo@dell>
-References: <1489992447-13007-1-git-send-email-sean.wang@mediatek.com>
- <1489992447-13007-5-git-send-email-sean.wang@mediatek.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/4] ARM: SPEAr: DT: Remove nonexistent properties
+Date: Mon, 20 Mar 2017 16:35:16 +0530
+Message-ID: <20170320110516.GG25659@vireshk-i7>
+References: <20170320095721.6724-1-borneo.antonio@gmail.com>
+ <20170320095721.6724-2-borneo.antonio@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1489992447-13007-5-git-send-email-sean.wang@mediatek.com>
+In-Reply-To: <20170320095721.6724-2-borneo.antonio@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,27 +19,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sean.wang@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, keyhaede@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Antonio Borneo <borneo.antonio@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>, Brijesh Singh <brijeshkumar.singh@amd.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Viresh Kumar <vireshk@kernel.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, Mark Brown <broonie@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-spi@vger.kernel.org, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMCBNYXIgMjAxNywgc2Vhbi53YW5nQG1lZGlhdGVrLmNvbSB3cm90ZToKCj4gRnJv
-bTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPgo+IAo+IEFsaWduIHRoZSBwbGFj
-ZW1lbnQgYXMgd2hpY2ggdGhlIG1mZF9jZWxsIG9mIExFRCBpcyBkZWZpbmVkIGFzIHRoZSBvdGhl
-cgo+IG1lbWJlcnMgZG9uZSBvbiB0aGUgc3RydWN0dXJlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNl
-YW4gV2FuZyA8c2Vhbi53YW5nQG1lZGlhdGVrLmNvbT4KPiBBY2tlZC1ieTogTGVlIEpvbmVzIDxs
-ZWUuam9uZXNAbGluYXJvLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYyB8
-IDMgKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkK
-CkFwcGxpZWQsIHRoYW5rcy4KCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL210NjM5Ny1jb3Jl
-LmMgYi9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jCj4gaW5kZXggOGU2MDFjOC4uMDRhNjAxZiAx
-MDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jCj4gKysrIGIvZHJpdmVycy9t
-ZmQvbXQ2Mzk3LWNvcmUuYwo+IEBAIC00Nyw4ICs0Nyw3IEBACj4gIAl7Cj4gIAkJLm5hbWUgPSAi
-bXQ2MzIzLXJlZ3VsYXRvciIsCj4gIAkJLm9mX2NvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzIz
-LXJlZ3VsYXRvciIKPiAtCX0sCj4gLQl7Cj4gKwl9LCB7Cj4gIAkJLm5hbWUgPSAibXQ2MzIzLWxl
-ZCIsCj4gIAkJLm9mX2NvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzIzLWxlZCIKPiAgCX0sCgot
-LSAKTGVlIEpvbmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQK
-TGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBM
-aW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 20-03-17, 10:57, Antonio Borneo wrote:
+> The properties "pl022,hierarchy" and "pl022,slave-tx-disable" are
+> not documented in DT binding and don't exist in the driver code.
+> They have no effect and can be removed.
+> 
+> Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+> ---
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> To: Viresh Kumar <vireshk@kernel.org>
+> To: Shiraz Hashim <shiraz.linux.kernel@gmail.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
+> Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: Jon Mason <jonmason@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-spi@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>  arch/arm/boot/dts/spear1310-evb.dts | 6 ------
+>  arch/arm/boot/dts/spear1340-evb.dts | 6 ------
+>  2 files changed, 12 deletions(-)
+
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+-- 
+viresh
