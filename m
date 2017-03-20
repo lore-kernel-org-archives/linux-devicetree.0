@@ -1,83 +1,134 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH v3 5/5] ARM: dts: sun8i: h2+: enable USB OTG
- for Orange Pi Zero board
-Date: Mon, 20 Mar 2017 22:30:01 +0800
-Message-ID: <CAGb2v644jM_R_4BgRWz7vHTaGwtBC_MSJnppbsQtBKf-qAS2hA@mail.gmail.com>
-References: <20170320113931.dPmCTite@smtp2h.mail.yandex.net>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V3 3/5] drivers: arm-smmu: Add clock support for
+	QCOM_SMMUV2
+Date: Mon, 20 Mar 2017 20:01:53 +0530
+Message-ID: <fa0a35be-a717-44ca-1ec5-208827bfb503@codeaurora.org>
+References: <1489073748-3659-1-git-send-email-sricharan@codeaurora.org>
+	<1489073748-3659-4-git-send-email-sricharan@codeaurora.org>
+	<20170316211039.rbqq262syalyfcs6@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170320113931.dPmCTite@smtp2h.mail.yandex.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170316211039.rbqq262syalyfcs6@rob-hp-laptop>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMTUsIDIwMTcgYXQgNTowOSBQTSwgSWNlbm93eSBaaGVuZyA8aWNlbm93eUBh
-b3NjLnh5ej4gd3JvdGU6Cj4KPiAyMDE35bm0M+aciDE15pelIDE1OjE25LqOIENoZW4tWXUgVHNh
-aSA8d2Vuc0Bjc2llLm9yZz7lhpnpgZPvvJoKPj4KPj4gSGksCj4+Cj4+IE9uIFR1ZSwgTWFyIDcs
-IDIwMTcgYXQgNjozNCBBTSwgSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4gd3JvdGU6
-Cj4+ID4gT3JhbmdlIFBpIFplcm8gYm9hcmQgZmVhdHVyZXMgYSBVU0IgT1RHIHBvcnQsIHdoaWNo
-IGhhcyBhIElEIHBpbiwgYW5kCj4+ID4gY2FuIGJlIHVzZWQgdG8gcG93ZXIgdXAgdGhlIGJvYXJk
-LiBIb3dldmVyLCBldmVuIGlmIHRoZSBib2FyZCBpcyBwb3dlcmVkCj4+ID4gdmlhICs1ViBwaW4g
-aW4gR1BJTy9leHBhbnNpb24gaGVhZGVycywgdGhlIFZCVVMgaW4gdGhlIE9URyBwb3J0IGNhbm5v
-dAo+PiA+IGJlIHBvd2VyZWQgdXAsIHRodXMgaXQncyBpbXBvc3NpYmxlIHRvIHVzZSBpdCBpbiBo
-b3N0IG1vZGUgd2l0aCBzaW1wbGUKPj4gPiBPVEcgY2FibGVzLgo+PiA+Cj4+ID4gQWRkIHN1cHBv
-cnQgZm9yIGl0IGluIHBlcmlwaGVyYWwgbW9kZS4KPj4gPgo+PiA+IElmIHNvbWVvbmUgcmVhbGx5
-IHdhbnQgdG8gdXNlIGl0IGluIGhvc3QgbW9kZSwgdGhlIG1vZGUgb2YgUEhZIGNhbiBiZQo+PiA+
-IHN3aXRjaCB2aWEgc3lzZnMsIHRoZW4gdXNlIGEgcG93ZXJlZCBVU0IgT1RHIGNhYmxlIG9yIHBv
-d2VyZWQgVVNCIEhVQiB0bwo+PiA+IHBvd2VyIHVwIGV4dGVybmFsIFVTQiBkZXZpY2VzLgo+PiA+
-Cj4+ID4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KPj4g
-PiAtLS0KPj4gPiBOZXcgcGF0Y2ggaW4gdjMuCj4+ID4KPj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMv
-c3VuOGktaDItcGx1cy1vcmFuZ2VwaS16ZXJvLmR0cyB8IDE0ICsrKysrKysrKysrKysrCj4+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspCj4+ID4KPj4gPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDItcGx1cy1vcmFuZ2VwaS16ZXJvLmR0cyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL3N1bjhpLWgyLXBsdXMtb3JhbmdlcGktemVyby5kdHMKPj4gPiBpbmRleCBi
-N2NhOTE2ZDg3MWQuLjYzZjgxOTM5NGI5OCAxMDA2NDQKPj4gPiAtLS0gYS9hcmNoL2FybS9ib290
-L2R0cy9zdW44aS1oMi1wbHVzLW9yYW5nZXBpLXplcm8uZHRzCj4+ID4gKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvc3VuOGktaDItcGx1cy1vcmFuZ2VwaS16ZXJvLmR0cwo+PiA+IEBAIC05Niw2ICs5
-NiwxMCBAQAo+PiA+ICAgICAgICAgfTsKPj4gPiAgfTsKPj4gPgo+PiA+ICsmZWhjaTAgewo+PiA+
-ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+PiA+ICt9Owo+PiA+ICsKPj4gPiAgJmVoY2kxIHsK
-Pj4gPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gPiAgfTsKPj4gPiBAQCAtMTMyLDYgKzEz
-NiwxMCBAQAo+PiA+ICAgICAgICAgYmlhcy1wdWxsLXVwOwo+PiA+ICB9Owo+PiA+Cj4+ID4gKyZv
-aGNpMCB7Cj4+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7Cj4+ID4gK307Cj4+ID4gKwo+PiA+
-ICAmb2hjaTEgewo+PiA+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+PiA+ICB9Owo+PiA+IEBA
-IC0xNTQsNyArMTYyLDEzIEBACj4+ID4gICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiA+
-ICB9Owo+PiA+Cj4+ID4gKyZ1c2Jfb3RnIHsKPj4gPiArICAgICAgIGRyX21vZGUgPSAicGVyaXBo
-ZXJhbCI7Cj4+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7Cj4+ID4gK307Cj4+ID4gKwo+PiA+
-ICAmdXNicGh5IHsKPj4gPiAgICAgICAgIC8qIFVTQiBWQlVTIGlzIGFsd2F5cyBvbiAqLwo+Pgo+
-PiBUaGlzIGNvbW1lbnQgZG9lcyBub3QgbWF0Y2ggeW91ciBjb21taXQgbWVzc2FnZSwgd2hpY2gg
-c2F5cyBpdCdzIGFsd2F5cyBvZmYuCj4KPiBPaCBJIHNob3VsZCBzYXkgIlVTQiBUeXBlLUEgcG9y
-dCBWQlVTIi4KClllcyB5b3Ugc2hvdWxkIHByb2JhYmx5IHVwZGF0ZSB0aGF0IGNvbW1lbnQsIGFu
-ZCBhbHNvIG1lbnRpb24gdGhlIE9URyBwb3J0J3MKVkJVUyBpcyBhbHdheXMgb2ZmLgoKQ2hlbll1
-Cgo+Pgo+PiBDaGVuWXUKPj4KPj4gPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gPiArICAg
-ICAgIHVzYjBfaWRfZGV0LWdwaW9zID0gPCZwaW8gNiAxMiBHUElPX0FDVElWRV9ISUdIPjsgLyog
-UEcxMiAqLwo+PiA+ICB9Owo+PiA+IC0tCj4+ID4gMi4xMS4xCj4+ID4KPj4gPiAtLQo+PiA+IFlv
-dSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhl
-IEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91cC4KPj4gPiBUbyB1bnN1YnNjcmliZSBm
-cm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5kIGFu
-IGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdyb3Vwcy5jb20uCj4+ID4g
-Rm9yIG1vcmUgb3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91cHMuZ29vZ2xlLmNvbS9kL29wdG91
-dC4KPj4KPj4gLS0KPj4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUg
-c3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAibGludXgtc3VueGkiIGdyb3VwLgo+PiBU
-byB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBm
-cm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdy
-b3Vwcy5jb20uCj4+IEZvciBtb3JlIG9wdGlvbnMsIHZpc2l0IGh0dHBzOi8vZ3JvdXBzLmdvb2ds
-ZS5jb20vZC9vcHRvdXQuCj4KPiAtLQo+IFlvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVz
-ZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBn
-cm91cC4KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5n
-IGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJl
-QGdvb2dsZWdyb3Vwcy5jb20uCj4gRm9yIG1vcmUgb3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91
-cHMuZ29vZ2xlLmNvbS9kL29wdG91dC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Rob,
+
+On 3/17/2017 2:40 AM, Rob Herring wrote:
+> On Thu, Mar 09, 2017 at 09:05:46PM +0530, Sricharan R wrote:
+>> The QCOM_SMMUV2 is an implementation of the arm,smmu-v2 architecture.
+>> The qcom,smmu is instantiated for each of the multimedia cores (for eg)
+>> Venus (video encoder/decoder), mdp (display) etc, and they are connected
+>> to the Multimedia Aggregator Interconnect (MMAGIC). So the access to
+>> any of the MMU's registers, as well as MMU's downstream bus access,
+>> requires the specified MMAGIC clocks to be enabled. So adding a new
+>> binding for the qcom,smmu-v2 and the required mmagic clock bindings for
+>> the same. Also adding the support for enabling the qcom,smmu-v2 clocks in
+>> the driver.
+>>
+>>                -------------  ---------
+>>                |   VENUS   |  | MDP   |
+>> 	       |	   |  |       |
+>> 	       -------------  --------
+>> 		     |           |
+>> 		     |           |
+>>                   ------      ---------
+>>                   |SMMU |     | SMMU  |
+>>                   |	|     |       |
+>>                   ------      --------
+>> 		    |            |
+>> 		    |            |
+>>        -----------------------------------------
+>>        |	MMAGIC INTERCONNECT (MMSS NOC) |
+>>        |                                       |
+>>        -----------------------------------------
+>>                    |                 |
+>> 		   |           ----------------------------------
+>>                  -----         | 	SYSTEM NOC		|
+>>                  |DDR|	       |				|
+>>                  -----         ---------------------------------
+>> 		   |		    |
+>>                    |               ------
+>> 		   |<-------------| CPU|
+>> 				  ------
+>>
+>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iommu/arm,smmu.txt         |   8 ++
+>>  drivers/iommu/arm-smmu.c                           | 124 +++++++++++++++++++++
+>>  2 files changed, 132 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> index b369c13..88e02d6 100644
+>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> @@ -17,6 +17,7 @@ conditions.
+>>                          "arm,mmu-401"
+>>                          "arm,mmu-500"
+>>                          "cavium,smmu-v2"
+>> +			"qcom,smmu-v2"
+>
+> I know Cavium did it, but I'd prefer to see SoC specific compatibles
+> here.
+
+ok, will change it to be soc specific.
+
+>
+>>
+>>                    depending on the particular implementation and/or the
+>>                    version of the architecture implemented.
+>> @@ -74,6 +75,13 @@ conditions.
+>>                    "cfg_clk" is optional if required to access the TCU's programming
+>>                    interface, apart from the "tcu_clk".
+>>
+>> +		  Should have "mmagic_ahb_clk", "mmagic_cfg_ahb_clk",
+>> +                              "smmu_core_ahb_clk", "smmu_core_axi_clk",
+>> +                              "mmagic_core_axi_clk" for "qcom,smmu-v2"
+>
+> This is instead of the above clocks?
+>
+
+These clocks are for 'qcom,smmu-v2'. I should have put
+that first, then the clock names.
+
+> Are these clocks all really part of the SMMU or are the mmagic clocks
+> working around no proper driver for the mmagic?
+>
+
+infact because of the absence of the mmagic driver to handle it.
+But i think, i will have to rework this, because handling mmagic
+clocks is going to pushed elsewhere, to the the gdscs(powerdomains).
+So adding the mmagic clocks should not be required here after that.
+
+Regards,
+  Sricharan
+
+>> +
+>> +		  "mmagic_core_axi_clk" is required for smmu's access to the
+>> +                   downstream bus and rest for the smmu's register group access.
+>> +
+>>  - clocks:         Phandles for respective clocks described by clock-names.
+>>
+>>  - power-domains:  Phandles to SMMU's power domain specifier. This is
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member of Code Aurora Forum, hosted by The Linux Foundation
