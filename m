@@ -1,141 +1,95 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
- sink set_fmt
-Date: Mon, 20 Mar 2017 12:55:26 +0100
-Message-ID: <1490010926.2917.59.camel@pengutronix.de>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
- <20170319152233.GW21222@n2100.armlinux.org.uk>
- <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/2] regulator: core: add
+ regulator_has_continuous_voltage_range()
+Date: Mon, 20 Mar 2017 12:06:15 +0000
+Message-ID: <20170320120615.mh3fmcr2cv4dvegf@sirena.org.uk>
+References: <20170308200246.126331-1-mka@chromium.org>
+ <20170309102819.bx5paxtffvmvmuov@sirena.org.uk>
+ <20170309194054.GA15095@google.com>
+ <20170317211547.22jrqud5np4ve2jk@sirena.org.uk>
+ <20170318000330.GC50582@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gm
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kaxvcakod4bjzd7b"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170318000330.GC50582@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Guenter Roeck <groeck@chromium.org>, Dmitry Torokhov <dtor@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2017-03-19 at 12:08 -0700, Steve Longerbeam wrote:
-> 
-> On 03/19/2017 08:22 AM, Russell King - ARM Linux wrote:
-> > On Thu, Mar 09, 2017 at 08:53:18PM -0800, Steve Longerbeam wrote:
-> >> From: Philipp Zabel <p.zabel@pengutronix.de>
-> >>
-> >> The csi_try_crop call in set_fmt should compare the cropping rectangle
-> >> to the currently set input format, not to the previous input format.
-> > Are we really sure that the cropping support is implemented correctly?
-> >
-> > I came across this while looking at what we're doing with the
-> > V4L2_SEL_FLAG_KEEP_CONFIG flag.
-> >
-> > Documentation/media/uapi/v4l/dev-subdev.rst defines the behaviour of
-> > the user API, and "Order of configuration and format propagation" says:
-> >
-> >    The coordinates to a step always refer to the actual size of the
-> >    previous step. The exception to this rule is the source compose
-> >    rectangle, which refers to the sink compose bounds rectangle --- if it
-> >    is supported by the hardware.
-> >    
-> >    1. Sink pad format. The user configures the sink pad format. This format
-> >       defines the parameters of the image the entity receives through the
-> >       pad for further processing.
-> >    
-> >    2. Sink pad actual crop selection. The sink pad crop defines the crop
-> >       performed to the sink pad format.
-> >    
-> >    3. Sink pad actual compose selection. The size of the sink pad compose
-> >       rectangle defines the scaling ratio compared to the size of the sink
-> >       pad crop rectangle. The location of the compose rectangle specifies
-> >       the location of the actual sink compose rectangle in the sink compose
-> >       bounds rectangle.
-> >    
-> >    4. Source pad actual crop selection. Crop on the source pad defines crop
-> >       performed to the image in the sink compose bounds rectangle.
-> >    
-> >    5. Source pad format. The source pad format defines the output pixel
-> >       format of the subdev, as well as the other parameters with the
-> >       exception of the image width and height. Width and height are defined
-> >       by the size of the source pad actual crop selection.
-> >    
-> >    Accessing any of the above rectangles not supported by the subdev will
-> >    return ``EINVAL``. Any rectangle referring to a previous unsupported
-> >    rectangle coordinates will instead refer to the previous supported
-> >    rectangle. For example, if sink crop is not supported, the compose
-> >    selection will refer to the sink pad format dimensions instead.
-> >
-> > Note step 3 above: scaling is defined by the ratio of the _sink_ crop
-> > rectangle to the _sink_ compose rectangle.
 
-The above paragraph suggests we skip any rectangles that are not
-supported. In our case that would be 3. and 4., since the CSI can't
-compose into a larger frame. I hadn't realised that the crop selection
-currently happens on the source pad.
-The hardware actually only supports cropping of the input (the crop
-rectangle we write into the window registers are before downscaling). So
-the crop rectangle should be moved to the sink pad.
+--kaxvcakod4bjzd7b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > So, lets say that the camera produces a 1280x720 image, and the sink
-> > pad format is configured with 1280x720.  That's step 1.
-> >
-> > The sink crop operates within that rectangle, cropping it to an area.
-> > Let's say we're only interested in its centre, so we'd chose 640x360
-> > with the top-left as 320,180.  This is step 2.
->>
-> > Then, if we want to down-scale by a factor of two, we'd set the sink
-> > compose selection to 320x180.
+On Fri, Mar 17, 2017 at 05:03:30PM -0700, Matthias Kaehlcke wrote:
 
-Except when composing is not supported. If the sink compose and source
-crop rectangles are not supported, the source pad format takes their
-place in determining the scaling output resolution. At least that's how
-I read the documentation.
+> In principle I totally agree with you that consumers should be able
+> to enumerate the supported voltages with the existing functions. And
+> they can, as long as they already know (or assume) that the regulator
+> they are using actually has discrete steps, otherwise they might get
+> unexpected results.
 
-> > This seems to be at odds with how the scaling is done in CSI at
-> > present: the selection implementations all reject attempts to
-> > configure the sink pad, instead only supporting crop rectangles on
-> > the source,
-> 
-> Correct. Currently cropping is only supported at the source pad
-> (step 4).
-> 
-> Initially the CSI didn't support down-scaling, so step 3 is not supported,
-> so the sink pad format/crop selection rectangle/crop compose rectangle
-> are collapsed into the same sink pad format rectangle.
-> 
-> Philipp later added support for /2 downscaling, but we didn't put this in
-> the correct API, looks like this needs to move into the selection API at
-> step 3 (sink pad compose rectangle).
+Given the limits of number representation continuous regulators also
+have discrete steps, they just have a lot of them (but so do some
+regulators we currently say aren't continuous so...).
 
-I am not sure about this. Wouldn't moving the input crop to the sink pad
-be enough? If we added support for the sink pad compose rectangle, that
-wouldn't actually allow to compose the CSI output into a larger frame.
-Since the subdevice can't compose, I'd leave the sink compose rectangle
-disabled.
+> You are right that my case is very specialist, however I think it is
+> a general problem that a consumer can't know whether the results of
+> _list_voltage(), etc correspond to the regulator itself or to its
+> supplies. E.g. a consumer might have a continuous reg which is
+> supplied by a discrete reg, in this case _list_voltage() would return
+> the steps of the supply reg, which is probably not what most consumers
+> expect.
 
-> >   and we use the source crop rectangle to define the
-> > down-scaling.
+No, this is doesn't make much sense!  Why should we be reporting
+properties of the parent regulator when the child regulator is
+regulating away all visibility of those properties?
 
-We use the source pad format to define the downscaling relative to the
-source crop rectangle (which is wrong, it should be relative to the sink
-crop rectangle).
+> > > Please see my explication above on why the vctrl driver needs to know
+> > > this.
 
-> Yes. And maybe there is nothing wrong with that, because scaling is also
-> defined by the source/sink _format_ ratios (if I'm not mistaken), so looking
-> at this another way, we're just defining scaling in the CSI via another
-> legal API.
+> > I'm seeing nothing in the above that addresses my question, you don't
+> > even seem to have mentioned supplies. =20
 
-I didn't touch the crop rectangle at all, just setting the input
-resolution on the sink pad and the desired output resolution on the
-source pad should work.
+> Sorry, I really didn't try to evade your question. Does it make more
+> sense with the example above?
 
-regards
-Philipp
+No, not at all.
+
+> > What we should be doing for continuous regulators is allowing people to
+> > list the supported voltages as they would for other regulators.
+
+> In the overall regulator context this may make sense, at this point I
+> don't really have enough background on the subsystem to have an
+> informed opinion.
+
+> From the vctrl perspective I wouldn't be overly happy, since it
+> wouldn't allow to distinguish between continuous and discrete
+> supplies, and I still think that handling discrete supplies
+> differently is simpler/more efficient. This doesn't mean I argue
+> against your proposal if it is deemed the right thing from a subsystem
+> perspective.
+
+If it helps think of a continuous regulator as a discrete regulator with
+a base voltage of 0 and steps of 1uV.
+
+--kaxvcakod4bjzd7b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljPxbcACgkQJNaLcl1U
+h9AvIQf+JRN+QVQNUlJ/a78bB84d+ebctr/hVcfz7U8WsXGG29UfhXwaMiFFZxac
+hXpjUtLDrEwxE2rBRPNpOKWsoj2c5o4/9nOGy1hgOCTCJE+o09ebIxt+AMsAjqQ6
+hcNT7plLqEJCssT/yY3g2KhhWRHL6ZO5n//UjH5Ib9Gpk4euMaK1Klg/VfM3JRec
+GFcX5n6OGqTuJD0T6Uxrny7TCbsWToRNfy4BZ6VUK6meLUfpN2EYWtOzjuL14KgQ
+aIMkIedmGkUCt27n2i7CRRlhT7gYPIMKkoZW8RXNM/1Hu1PryafW34TxkWbUVsy/
+wMtK9bMhuZ2rXpg0fhBJ2kd78FONAw==
+=bYEY
+-----END PGP SIGNATURE-----
+
+--kaxvcakod4bjzd7b--
