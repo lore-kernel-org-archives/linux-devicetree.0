@@ -1,119 +1,151 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
- iio-hwmon
-Date: Mon, 20 Mar 2017 16:33:28 +0100
-Message-ID: <c7f47571-6f59-302c-92ff-4512e78ff112@xilinx.com>
-References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
- <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
- <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
- <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
- <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
- <6767a340-b150-c21a-b6cb-5ca1ce2cd721@xilinx.com>
- <1027ba77-6141-5d6e-e5e8-b15df29957f2@metafoo.de>
- <1cb2a735-59cd-3d8c-b55e-bd775ded3fc0@xilinx.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Mon, 20 Mar 2017 16:57:54 +0100
+Message-ID: <40e08d05-58cd-a295-3174-123147ee2ac5@xs4all.nl>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170318192258.GL21222@n2100.armlinux.org.uk>
+ <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+ <20170319103801.GQ21222@n2100.armlinux.org.uk>
+ <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
+ <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
+ <20170320132930.GJ21222@n2100.armlinux.org.uk>
+ <d0e2a9c2-5e94-d810-7ef4-ae089a6b25f5@xs4all.nl>
+ <20170320141158.GK21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1cb2a735-59cd-3d8c-b55e-bd775ded3fc0@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>, Lars-Peter Clausen <lars@metafoo.de>, Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Julia Cartwright <julia@ni.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170320141158.GK21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcuMy4yMDE3IDA3OjQ2LCBNaWNoYWwgU2ltZWsgd3JvdGU6Cj4gT24gMTYuMy4yMDE3IDIy
-OjIwLCBMYXJzLVBldGVyIENsYXVzZW4gd3JvdGU6Cj4+IE9uIDAzLzE2LzIwMTcgMDc6MDYgUE0s
-IE1pY2hhbCBTaW1layB3cm90ZToKPj4+IE9uIDE2LjMuMjAxNyAxNzo1MSwgTGFycy1QZXRlciBD
-bGF1c2VuIHdyb3RlOgo+Pj4+IE9uIDAzLzE2LzIwMTcgMDU6NDUgUE0sIE1pY2hhbCBTaW1layB3
-cm90ZToKPj4+Pj4gT24gMTYuMy4yMDE3IDE3OjM5LCBNb3JpdHogRmlzY2hlciB3cm90ZToKPj4+
-Pj4+IE9uIFRodSwgTWFyIDE2LCAyMDE3IGF0IDk6MTYgQU0sIE1pY2hhbCBTaW1layA8bWljaGFs
-LnNpbWVrQHhpbGlueC5jb20+IHdyb3RlOgo+Pj4+Pj4+IEhpLAo+Pj4+Pj4+Cj4+Pj4+Pj4gT24g
-OC4zLjIwMTcgMjE6MTEsIE1vcml0eiBGaXNjaGVyIHdyb3RlOgo+Pj4+Pj4+PiBGaXgKPj4+Pj4+
-Pj4KPj4+Pj4+Pj4gT0Y6IC9paW9faHdtb246IGNvdWxkIG5vdCBnZXQgI2lvLWNoYW5uZWwtY2Vs
-bHMgZm9yCj4+Pj4+Pj4+IC9hbWJhL2FkY0BmODAwNzEwMAo+Pj4+Pj4+PiBPRjogL2lpb19od21v
-bjogY291bGQgbm90IGdldCAjaW8tY2hhbm5lbC1jZWxscyBmb3IKPj4+Pj4+Pj4gL2FtYmEvYWRj
-QGY4MDA3MTAwCj4+Pj4+Pj4+IE9GOiAvaWlvX2h3bW9uOiBjb3VsZCBub3QgZ2V0ICNpby1jaGFu
-bmVsLWNlbGxzIGZvcgo+Pj4+Pj4+PiAvYW1iYS9hZGNAZjgwMDcxMDAKPj4+Pj4+Pj4KPj4+Pj4+
-Pj4gYnkgYWRkaW5nIHRoZSAjaW8tY2hhbm5lbC1jZWxscyBwcm9wZXJ0eS4KPj4+Pj4+Pj4KPj4+
-Pj4+Pj4gU2lnbmVkLW9mZi1ieTogTW9yaXR6IEZpc2NoZXIgPG1kZkBrZXJuZWwub3JnPgo+Pj4+
-Pj4+PiBDYzogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4KPj4+Pj4+Pj4g
-Q2M6IFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tPgo+Pj4+Pj4+
-PiBDYzogSnVsaWEgQ2FydHdyaWdodCA8anVsaWFAbmkuY29tPgo+Pj4+Pj4+PiBDYzogbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZwo+Pj4+Pj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmcKPj4+Pj4+Pj4gLS0tCj4+Pj4+Pj4+Cj4+Pj4+Pj4+IENoYW5nZXMgZnJvbSB2MToKPj4+
-Pj4+Pj4gLSBmaXggbWVzc2VkIHVwIGNvbW1pdCBtZXNzYWdlCj4+Pj4+Pj4+IC0tLQo+Pj4+Pj4+
-PiAgYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgfCAxICsKPj4+Pj4+Pj4gIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+Pj4+Pj4+Pgo+Pj4+Pj4+PiBkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy96eW5x
-LTcwMDAuZHRzaQo+Pj4+Pj4+PiBpbmRleCBmM2FjOWJmLi45ODIzM2E4IDEwMDY0NAo+Pj4+Pj4+
-PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4+Pj4+PiArKysgYi9h
-cmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4+Pj4+PiBAQCAtNzIsNiArNzIsNyBA
-QAo+Pj4+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwwIDcgND47Cj4+
-Pj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsK
-Pj4+Pj4+Pj4gICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xrYyAxMj47Cj4+Pj4+
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAjaW8tY2hhbm5lbC1jZWxscyA9IDwxPjsKPj4+Pj4+
-Pj4gICAgICAgICAgICAgICB9Owo+Pj4+Pj4+Pgo+Pj4+Pj4+PiAgICAgICAgICAgICAgIGNhbjA6
-IGNhbkBlMDAwODAwMCB7Cj4+Pj4+Pj4+Cj4+Pj4+Pj4KPj4+Pj4+PiBJIHRoaW5rIGl0IHdpbGwg
-YmUgZ29vZCB0byB0aGUgbmV4dCBzdGVwIHRvby4KPj4+Pj4+PiBJdCBtZWFucyBhbHNvIGFkZCBp
-aW8taHdtb24gbm9kZSB0b28uCj4+Pj4+Pj4KPj4+Pj4+PiBXaGF0IGRvIHlvdSB0aGluaz8KPj4+
-Pj4+Cj4+Pj4+PiBJIGhhZG4ndCBwdXQgaXQgaW4gdGhlcmUgc2luY2UgZHRzIGlzIHN1cHBvc2Vk
-IHRvIGRlc2NyaWJlIGh3LAo+Pj4+Pj4gYnV0IG9idmlvdXNseSBwdXR0aW5nIHRoZSBhY3R1YWwg
-aHdtb24gaW4gdGhlcmUgbWFrZXMgaXQgbW9yZSB1c2VmdWwuCj4+Pj4+Cj4+Pj4+IEkgaGFkIG9u
-ZSBkaXNjdXNzaW9uIGFib3V0IHRoaXMgd2l0aCBHcmFudCBpbiBwYXN0IGFuZCBpdCBpcyBjb21t
-b24KPj4+Pj4gbWlzdGFrZS4gSXQgaXMgc2ltcGxpZmljYXRpb24gb2YgcHVycG9zZSBvZiBkdHMu
-Cj4+Pj4+Cj4+Pj4KPj4+PiBJZiB0aGUgaWlvLWh3bW9uIGJpbmRpbmcgaGFkIGdvbmUgdGhyb3Vn
-aCByZXZpZXcgaXQgd291bGQgaGF2ZSBiZWVuIHJlamVjdGVkLgo+Pj4KPj4+IElzbid0IGl0IGEg
-dGltZSB0byBkZXByZWNhdGUgaXQ/Cj4+Cj4+IFdlbGwsIGl0J3MgQUJJIG5vdyBhbmQgaGFzIHRv
-IHN0YXkgZm9yZXZlci4gRGVwcmVjYXRpbmcgaXQgbWFrZXMgb25seSBzZW5zZQo+PiBpZiB0aGVy
-ZSBpcyBhIHJlcGxhY2VtZW50LCB3aGljaCB0aGVyZSBpcyBub3QuIFRoZSBpaW8taHdtb24gYnJp
-ZGdlIGhhcyBpdHMKPj4gdXNlY2FzZXMgaXQncyBqdXN0IGluc3RhbnRpYXRpbmcgaXQgdmlhIGRl
-dmljZXRyZWUgd2hpY2ggaXMgbm90IHNvIG5pY2UuCj4+Cj4+Pgo+Pj4+Cj4+Pj4+Pgo+Pj4+Pj4g
-SSBjYW4gcmVzdWJtaXQgd2l0aCB0aGUgaHdtb24gbm9kZSBpbiB0aGVyZS4KPj4+Pj4KPj4+Pj4g
-SWYgeW91IGdyZXAga2VybmVsIHRyZWUgeW91IHdpbGwgc2VlIHRoYXQgb3RoZXJzIGFyZSB1c2lu
-ZyBpdCB0b28uCj4+Pj4+IEFsc28gdGhlcmUgaXMgYWNjZXB0ZWQgYmluZGluZyBmb3IgdGhhdCB0
-aGF0J3Mgd2h5IEkgY2FuJ3Qgc2VlIGJpZwo+Pj4+PiBwcm9ibGVtIHdpdGggaXQuCj4+Pj4KPj4+
-PiBTaW5jZSB0aGlzIGlzIGFuIGFwcGxpY2F0aW9uIHNwZWNpZmljIGJpbmRpbmcgSSB3b3VsZG4n
-dCBwdXQgaXQgaW4gdGhlCj4+Pj4gZ2VuZXJpYyBEVCBpbmNsdWRlIGZpbGUuIEl0J3MgYSBiaXQg
-bGlrZSBhZGRpbmcgYSBncGlvLWtleSBiaW5kaW5nIGZvciBlYWNoCj4+Pj4gb2YgdGhlIEdQSU9z
-IGp1c3QgaW4gY2FzZSBzb21lYm9keSB3YW50cyB0byB1c2UgaXQuCj4+Pgo+Pj4gcHNjaSBpcyBz
-eXN0ZW0gc3BlY2lmaWMgdG9vLgo+Pj4KPj4+IElJUkMgdGhpcyBkcml2ZXIgZm9yIHp5bnEgd2Fz
-IHdyaXR0ZW4gYnkgQURJIG9yIHdpdGggQURJIGhlbHAgdGhhdCdzIHdoeQo+Pj4geW91IGtub3cg
-bXVjaCBiZXR0ZXIgdGhhbiBJIHdoYXQncyB0aGUgY29ycmVjdCBjb25maWd1cmF0aW9uLgo+Pj4K
-Pj4+IFRoaXMgdGFyZ2V0cyBQUyBJUCB3aGljaCBzaG91bGQgYmUgcHJlc2VudCBpbiB0aGUgaHcg
-YWxsIHRoZSB0aW1lLgo+Pj4gTm90IHN1cmUgaWYgZm9yIGFsbCBjb25maWd1cmF0aW9uIGJ1dCBJ
-IGV4cGVjdCBhdCBsZWFzdCB0aGUgcGFydCBvZiBpdAo+Pj4gaXMgdGhlcmUgYWxsIHRoZW0gdGlt
-ZS4KPj4+Cj4+PiBJZiBiaW5kaW5nIGlzIGluY29ycmVjdCB0aGVuIHBsZWFzZSByZW1vdmUgaXQg
-d2l0aCByZW1vdmluZyBmcm9tIGFsbAo+Pj4gZHRzL2R0c2kgZmlsZXMgd2hpY2ggaGF2ZSB0aGlz
-LiBUaGUgc2FtZSBpcyBmb3Igb2YgcHJvYmUgZnVuY3Rpb24gaW4gdGhlCj4+PiBkcml2ZXIgaXRz
-ZWxmLgo+Pj4gSWYgdGhpcyBpcyBub3QgZG9uZSB0aGVuIHRoaXMgaXMganVzdCArMSBjYXNlLgo+
-Pj4KPj4+IElmIHlvdSBzdGlsbCBpbnNpc3QgdGhhdCB3ZSBzaG91bGRuJ3QgZG8gaXQgdGhlbiBw
-bGVhc2UgYXQgbGVhc3QgZXh0ZW5kCj4+PiBjb21taXQgbWVzc2FnZSBhbmQgcHV0IHRoZXJlIGV4
-YW1wbGUgaG93IHRvIHdpcmUgaXQgb24genlucS4KPj4KPj4gVGhlcmUgaXMgYSBJSU8gZHJpdmVy
-IGZvciB0aGUgWEFEQywgdGhpcyBkcml2ZXIgaGFzIGEgdXNlcnNwYWNlIGludGVyZmFjZQo+PiB0
-aGF0IGV4cG9zZXMgdGhlIG1lYXN1cmVtZW50cyBwcm92aWRlZCBieSB0aGUgaGFyZHdhcmUuIFVz
-aW5nIHRoZSBod21vbgo+PiBicmlkZ2Ugd2lsbCBleHBvc2UgdGhlIHNhbWUgaW5mb3JtYXRpb24g
-anVzdCB0aHJvdWdoIGEgaHdtb24gaW50ZXJmYWNlLgo+Pgo+PiBPbmUgcmVhc29uIGZvciB1c2lu
-ZyB0aGUgaWlvLWh3bW9uIGJyaWRnZSBpcyBiZWNhdXNlIHlvdSBoYXZlIGEgbGVnYWN5Cj4+IGFw
-cGxpY2F0aW9uIHRoYXQgZXhwZWN0cyB0aGUgYSBod21vbiBpbnRlcmZhY2UuIEJ1dCBuZXcgYXBw
-bGljYXRpb25zIHRoYXQKPj4gd2FudCB0byBhY2Nlc3MgdGhlIFhBREMgc2hvdWxkIHJlYWxseSB1
-c2UgdGhlIElJTyBpbnRlcmZhY2UgaWYgcG9zc2libGUuCj4+Cj4+IEluIG15IG9waW5pb24gaW5z
-dGFudGlhdGluZyB0aGUgaHdtb24gYnJpZGdlIGJ5IGRlZmF1bHQgd2lsbCBvbmx5IGNhdXNlCj4+
-IGNvbmZ1c2lvbi4gVGhlcmUgYXJlIG5vdyByZWR1bmRhbnQgaW50ZXJmYWNlcyBhbmQgdXNlcnMg
-d2lsbCB3b25kZXIgd2hhdCBpcwo+PiB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZSB0d28uIElz
-IGl0IHRoZSBzYW1lIGRhdGEsIGlzIGl0IGRpZmZlcmVudCBkYXRhPwo+PiBXaGljaCBpcyB0aGUg
-cHJlZmVycmVkIGludGVyZmFjZT8gV2hpY2ggb25lIGlzICdiZXR0ZXInPwo+IAo+IElNSE8gdGhp
-cyBzaG91bGQgYmUgY292ZXJlZCBieSBkb2N1bWVudGF0aW9uLiBPbmUgcGFyYWdyYXBoIGluIGlp
-by1od21vbgo+IGJpbmRpbmcgY2FuIGhhdmUgYW5zd2VycyBmb3IgdGhpcyBhbmQgaXQgd2lsbCBi
-ZSB2ZXJ5IGNsZWFyIHdoYXQgcGVvcGxlCj4gc2hvdWxkIHVzZS4KCkFueSBjb21tZW50IG9uIHRo
-aXMgb25lPwoKVGhhbmtzLApNaWNoYWwKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 03/20/2017 03:11 PM, Russell King - ARM Linux wrote:
+> On Mon, Mar 20, 2017 at 02:57:03PM +0100, Hans Verkuil wrote:
+>> On 03/20/2017 02:29 PM, Russell King - ARM Linux wrote:
+>>> It's what I have - remember, not everyone is happy to constantly replace
+>>> their distro packages with random new stuff.
+>>
+>> This is a compliance test, which is continuously developed in tandem with
+>> new kernel versions. If you are working with an upstream kernel, then you
+>> should also use the corresponding v4l2-compliance test. What's the point
+>> of using an old one?
+>>
+>> I will not support driver developers that use an old version of the
+>> compliance test, that's a waste of my time.
+> 
+> The reason that people may _not_ wish to constantly update v4l-utils
+> is that it changes the libraries installed on their systems.
+> 
+> So, the solution to that is not to complain about developers not using
+> the latest version, but instead to de-couple it from the rest of the
+> package, and provide it as a separate, stand-alone package that doesn't
+> come with all the extra baggage.
+> 
+> Now, there's two possible answers to that:
+> 
+> 1. it depends on the libv4l2 version.  If that's so, then you are
+>    insisting that people constantly move to the latest libv4l2 because
+>    of API changes, and those API changes may upset applications they're
+>    using.  So this isn't really on.
+> 
+> 2. it doesn't depend on libv4l2 version, in which case there's no reason
+>    for it to be packaged with v4l-utils.
+
+Run configure with --disable-v4l2-compliance-libv4l.
+
+This avoids linking with libv4l and allows you to build it stand-alone.
+
+Perhaps I should invert this option since in most cases you don't want to
+run v4l2-compliance with libv4l (it's off by default unless you pass the
+-w option to v4l2-compliance).
+
+> 
+> The reality is that v4l2-compliance links with libv4l2, so I'm not sure
+> which it is.  What I am sure of is that I don't want to upgrade libv4l2
+> on an ad-hoc basis, potentially causing issues with applications.
+> 
+>>>> To test actual streaming you need to provide the -s option.
+>>>>
+>>>> Note: v4l2-compliance has been developed for 'regular' video devices,
+>>>> not MC devices. It may or may not work with the -s option.
+>>>
+>>> Right, and it exists to verify that the establised v4l2 API is correctly
+>>> implemented.  If the v4l2 API is being offered to user applications,
+>>> then it must be conformant, otherwise it's not offering the v4l2 API.
+>>> (That's very much a definition statement in itself.)
+>>>
+>>> So, are we really going to say MC devices do not offer the v4l2 API to
+>>> userspace, but something that might work?  We've already seen today
+>>> one user say that they're not going to use mainline because of the
+>>> crud surrounding MC.
+>>>
+>>
+>> Actually, my understanding was that he was stuck on the old kernel code.
+> 
+> Err, sorry, I really don't follow.  Who is "he"?
+
+"one user say that they're not going to use mainline because of the
+crud surrounding MC."
+
+> 
+> _I_ was the one who reported the EXPBUF problem.  Your comment makes no
+> sense.
+> 
+>> In the case of v4l2-compliance, I never had the time to make it work with
+>> MC devices. Same for that matter of certain memory to memory devices.
+>>
+>> Just like MC devices these too behave differently. They are partially
+>> supported in v4l2-compliance, but not fully.
+> 
+> It seems you saying that the API provided by /dev/video* for a MC device
+> breaks the v4l2-compliance tests?
+
+There may be tests in the compliance suite that do not apply for MC devices
+and for which I never check. The compliance suite was never written with MC
+devices in mind, and it certainly hasn't been tested much with such devices.
+
+It's only very recent that I even got hardware that has MC support...
+
+>From what I can tell from the feedback I got it seems to be OKish, but I
+just can't guarantee that the compliance utility is correct for such devices.
+
+In particular I doubt the streaming tests (-s, -f, etc.) will work. The -s
+test *might* work if the pipeline is configured correctly before running
+v4l2-compliance. I can't imagine that the -f option would work at all since
+I would expect pipeline validation errors.
+
+I've been gently pushing Helen Koike to finish her virtual MC driver
+(https://patchwork.kernel.org/patch/9312783/) since having a virtual driver
+makes writing compliance tests much easier.
+
+> _No one_ has mentioned using v4l2-compliance on the subdevs.
+> 
+>> Complaining about this really won't help. We know it's a problem and unless
+>> someone (me perhaps?) manages to get paid to work on this it's unlikely to
+>> change for now.
+> 
+> Like the above comment, your comment makes no sense.  I'm not complaining,
+> I'm trying to find out the details.
+
+Must be me then, it did feel like complaining...
+
+> Yes, MC stuff sucks big time right now, the documentation is poor, there's
+> a lack of understanding on all sides of the issues (which can be seen by
+> the different opinions that people hold.)  The only way to resolve these
+> differences is via discussion, and if you're going to start thinking that
+> everyone is complaining, then there's not going to be any forward progress.
+> 
+
+Regards,
+
+	Hans
