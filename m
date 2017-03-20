@@ -1,35 +1,54 @@
-From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: dts: omap4-droid4: Add LCD backlight
-Date: Mon, 20 Mar 2017 11:30:11 +0900
-Message-ID: <4a8ac532-89a9-30e7-4087-00d840d6b53b@ti.com>
-References: <20170305054359.8293-1-tony@atomide.com>
- <20170305054359.8293-3-tony@atomide.com>
- <20170319011830.4fapdy2jvlfvpljr@earth>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+Date: Mon, 20 Mar 2017 10:37:22 +0800
+Message-ID: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170319011830.4fapdy2jvlfvpljr@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com
+Cc: sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Scott Wood <oss@buserror.net>, Tang Yuantian <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+From: Scott Wood <oss@buserror.net>
 
-On 3/19/2017 10:18 AM, Sebastian Reichel wrote:
-> I had to add https://patchwork.kernel.org/patch/7704601/ in addition
-> to the patches recently queued into MFD. It would be nice to get that
-> into 4.12 - @Milo Kim: What's your plan on that patch?
+ls1012a has separate input root clocks for core PLLs versus the platform
+PLL, with the latter described as sysclk in the hw docs.
+Update the qoriq-clock binding to allow a second input clock, named
+"coreclk".  If present, this clock will be used for the core PLLs.
 
-Thanks for checking this.
+Signed-off-by: Scott Wood <oss@buserror.net>
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v2:
+	-- change the author to Scott
+ Documentation/devicetree/bindings/clock/qoriq-clock.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I just sent the patch to backlight subsystem maintainers. Nothing new 
-except adding a pwm helper, pwm_apply_args().
-
-Best regards,
-Milo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+index aa3526f..119cafd 100644
+--- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
++++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+@@ -56,6 +56,11 @@ Optional properties:
+ - clocks: If clock-frequency is not specified, sysclk may be provided
+ 	as an input clock.  Either clock-frequency or clocks must be
+ 	provided.
++	A second input clock, called "coreclk", may be provided if
++	core PLLs are based on a different input clock from the
++	platform PLL.
++- clock-names: Required if a coreclk is present.  Valid names are
++	"sysclk" and "coreclk".
+ 
+ 2. Clock Provider
+ 
+@@ -72,6 +77,7 @@ second cell is the clock index for the specified type.
+ 	2	hwaccel		index (n in CLKCGnHWACSR)
+ 	3	fman		0 for fm1, 1 for fm2
+ 	4	platform pll	0=pll, 1=pll/2, 2=pll/3, 3=pll/4
++	5	coreclk		must be 0
+ 
+ 3. Example
+ 
+-- 
+2.1.0.27.g96db324
