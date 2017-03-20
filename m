@@ -1,84 +1,70 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
- sink set_fmt
-Date: Mon, 20 Mar 2017 12:08:55 +0000
-Message-ID: <20170320120855.GH21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
- <20170319152233.GW21222@n2100.armlinux.org.uk>
- <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
- <1490010926.2917.59.camel@pengutronix.de>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v4 4/7] coresight: add support for CPU debug module
+Date: Mon, 20 Mar 2017 20:10:46 +0800
+Message-ID: <20170320121046.GB19581@leoy-linaro>
+References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
+ <1489762943-25849-5-git-send-email-leo.yan@linaro.org>
+ <74d6fd19-89f0-7edf-ace3-8b07f13e9569@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1490010926.2917.59.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+In-Reply-To: <74d6fd19-89f0-7edf-ace3-8b07f13e9569@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, sudeep.holla@arm.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 12:55:26PM +0100, Philipp Zabel wrote:
-> The above paragraph suggests we skip any rectangles that are not
-> supported. In our case that would be 3. and 4., since the CSI can't
-> compose into a larger frame. I hadn't realised that the crop selection
-> currently happens on the source pad.
+On Fri, Mar 17, 2017 at 06:44:03PM +0000, Suzuki K Poulose wrote:
+> On 17/03/17 15:02, Leo Yan wrote:
+> >Coresight includes debug module and usually the module connects with CPU
+> >debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
+> >description for related info in "Part H: External Debug".
+> >
+> >Chapter H7 "The Sample-based Profiling Extension" introduces several
+> >sampling registers, e.g. we can check program counter value with
+> >combined CPU exception level, secure state, etc. So this is helpful for
+> >analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
+> >loop with IRQ disabled. In this case the CPU cannot switch context and
+> >handle any interrupt (including IPIs), as the result it cannot handle
+> >SMP call for stack dump.
+> >
+> >This patch is to enable coresight debug module, so firstly this driver
+> >is to bind apb clock for debug module and this is to ensure the debug
+> >module can be accessed from program or external debugger. And the driver
+> >uses sample-based registers for debug purpose, e.g. when system detects
+> >the CPU lockup and trigger panic, the driver will dump program counter
+> 
+> Do we dump it when the CPU lockup is detected with this change ? If not,
+> we shouldn't claim that here.
 
-I'd recommend viewing the documentation in its post-processed version,
-because then you get the examples as pictures, and they say that a
-picture is worth 1000 words.  See
+Right, the mainline kernel missed Colin Cross's patch to trigger panic
+when detect CPU lockup which used by Android common kernel:
+http://people.linaro.org/~leo.yan/0001-hardlockup-detect-hard-lockups-without-NMIs-using-se.patch
 
-  https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/dev-subdev.html
+Will fix it.
 
-There is almost an exact example of what we're trying to do - it's
-figure 4.6.  Here, we have a sink pad with a cropping rectangle on
-the input, which is then scaled to a composition rectangle (there's
-no bounds rectangle, and it's specified that in such a case the
-top,left of the composition rectangle will always be 0,0 - see quote
-below).
+[...]
 
-Where it differs is that the example also supports source cropping
-for two source pads.  We don't support that.
+> >+	pr_emerg("\tEDPCSR:  [<%p>] %pS\n", (void *)pc, (void *)pc);
+> 
+> Are we safe calling %pS on the PC, when the PC offset in implementation defined ?
 
-The same document says:
+I did some quick testing, if cannot find proper kernel symbol for PC
+value, then %pS will directly output pc value rather than symbol value.
 
-  Scaling support is optional. When supported by a subdev, the crop
-  rectangle on the subdev's sink pad is scaled to the size configured
-  using the
-  :ref:`VIDIOC_SUBDEV_S_SELECTION <VIDIOC_SUBDEV_G_SELECTION>` IOCTL
-  using ``V4L2_SEL_TGT_COMPOSE`` selection target on the same pad. If the
-  subdev supports scaling but not composing, the top and left values are
-  not used and must always be set to zero.
+Other suggestions are good for me; I will fix for all for them.
 
-which in itself describes _exactly_ our hardware here as far as the
-cropping and scaling the hardware supports.
+[...]
 
-> Except when composing is not supported. If the sink compose and source
-> crop rectangles are not supported, the source pad format takes their
-> place in determining the scaling output resolution. At least that's how
-> I read the documentation.
-
-This isn't how I read it.  Scaling is the relationship between the size
-of the sink crop and sink compose rectangle.  Composition requires that
-there be a composition bounds rectangle to define the composition space,
-and the top,left of the composition rectangle be adjustable to place
-the composition rectangle within that space.
-
-The above quoted paragraph from the documentation backs up my view in
-its final sentence - it doesn't say "if the subdev supports scaling
-but not composing, there is no composition rectangle" but says that
-there _is_ one but its top,left coordinates are always zero.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Thanks,
+Leo Yan
