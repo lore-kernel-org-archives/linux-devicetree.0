@@ -1,33 +1,114 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/9] net: stmmac: Rename clk_ptp_ref clock to ptp_ref
-Date: Mon, 20 Mar 2017 10:18:55 -0500
-Message-ID: <20170320151855.32siq45uta6jvjep@rob-hp-laptop>
-References: <20170310163501.31811-1-thierry.reding@gmail.com>
- <20170310163501.31811-2-thierry.reding@gmail.com>
+From: Mylene Josserand <mylene.josserand@free-electrons.com>
+Subject: Re: [PATCH v3 2/5] ASoC: sun8i-codec: Update mixer to
+ use SOC_DAPM_DOUBLE
+Date: Mon, 20 Mar 2017 16:30:32 +0100
+Message-ID: <8183f4bb-497d-2839-fd0c-2527a02dd276@free-electrons.com>
+References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
+ <20170318075509.3836-3-mylene.josserand@free-electrons.com>
+ <CAGb2v65RSi-yxK1aJb8vnMKNTmLmH8nqSzFs1RLxErQyYcL-4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170310163501.31811-2-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Jon Hunter <jonathanh@nvidia.com>, Mikko Perttunen <cyndis@kapsi.fi>, netdev@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAGb2v65RSi-yxK1aJb8vnMKNTmLmH8nqSzFs1RLxErQyYcL-4w@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 05:34:53PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> There aren't currently any users of the "clk_ptp_ref", but there are
-> other references to "ptp_ref", so I'm leaning towards considering that a
-> typo. Fix it.
-> 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/net/stmmac.txt      | 6 +++---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
+SGkgQ2hlbi1ZdSwKCk9uIDIwLzAzLzIwMTcgMTI6NDYsIENoZW4tWXUgVHNhaSB3cm90ZToKPiBP
+biBTYXQsIE1hciAxOCwgMjAxNyBhdCAzOjU1IFBNLCBNeWzDqG5lIEpvc3NlcmFuZAo+IDxteWxl
+bmUuam9zc2VyYW5kQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4+IFVwZGF0ZSB0aGUgZHJp
+dmVyIHRvIHVzZSB0aGUgbmV3IFNPQ19EQVBNX0RPVUJMRSBkZWZpbml0aW9uCj4+IG9uIHRoZSBk
+aWdpdGFsIERBQyBtaXhlci4KPj4gVXBkYXRlIHRoZSBuYW1lcyBhY2NvcmRpbmdseSBhcywgd2hl
+biB0aGV5IGFyZSBzaGFyZWQsIHRoZQo+PiBjb250cm9scyBhcmUgbm90IHByZWZpeGVkIHdpdGgg
+dGhlIHdpZGdldCdzIG5hbWUgYW55bW9yZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogTXlsw6huZSBK
+b3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+PiAtLS0KPj4g
+IHNvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jIHwgNDUgKysrKysrKysrKysrKysrKysrKyst
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMo
+KyksIDI0IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL3N1bnhpL3N1
+bjhpLWNvZGVjLmMgYi9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYwo+PiBpbmRleCBkNjBm
+NmZiZDM2YTIuLjEwN2ZhODIxMzYwMCAxMDA2NDQKPj4gLS0tIGEvc291bmQvc29jL3N1bnhpL3N1
+bjhpLWNvZGVjLmMKPj4gKysrIGIvc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMKPj4gQEAg
+LTI1OSwyNSArMjU5LDIwIEBAIHN0YXRpYyBpbnQgc3VuOGlfY29kZWNfaHdfcGFyYW1zKHN0cnVj
+dCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtLAo+PiAgICAgICAgIHJldHVybiAwOwo+PiAg
+fQo+Pgo+PiAtc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfa2NvbnRyb2xfbmV3IHN1bjhpX291dHB1
+dF9sZWZ0X21peGVyX2NvbnRyb2xzW10gPSB7Cj4+IC0gICAgICAgU09DX0RBUE1fU0lOR0xFKCJM
+U2xvdCAwIiwgU1VOOElfREFDX01YUl9TUkMsCj4+IC0gICAgICAgICAgICAgICAgICAgICAgIFNV
+TjhJX0RBQ19NWFJfU1JDX0RBQ0xfTVhSX1NSQ19BSUYxREEwTCwgMSwgMCksCj4+IC0gICAgICAg
+U09DX0RBUE1fU0lOR0xFKCJMU2xvdCAxIiwgU1VOOElfREFDX01YUl9TUkMsCj4+IC0gICAgICAg
+ICAgICAgICAgICAgICAgIFNVTjhJX0RBQ19NWFJfU1JDX0RBQ0xfTVhSX1NSQ19BSUYxREExTCwg
+MSwgMCksCj4+IC0gICAgICAgU09DX0RBUE1fU0lOR0xFKCJEQUNMIiwgU1VOOElfREFDX01YUl9T
+UkMsCj4+IC0gICAgICAgICAgICAgICAgICAgICAgIFNVTjhJX0RBQ19NWFJfU1JDX0RBQ0xfTVhS
+X1NSQ19BSUYyREFDTCwgMSwgMCksCj4+IC0gICAgICAgU09DX0RBUE1fU0lOR0xFKCJBRENMIiwg
+U1VOOElfREFDX01YUl9TUkMsCj4+IC0gICAgICAgICAgICAgICAgICAgICAgIFNVTjhJX0RBQ19N
+WFJfU1JDX0RBQ0xfTVhSX1NSQ19BRENMLCAxLCAwKSwKPj4gLX07Cj4+IC0KPj4gLXN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgc25kX2tjb250cm9sX25ldyBzdW44aV9vdXRwdXRfcmlnaHRfbWl4ZXJfY29u
+dHJvbHNbXSA9IHsKPj4gLSAgICAgICBTT0NfREFQTV9TSU5HTEUoIlJTbG90IDAiLCBTVU44SV9E
+QUNfTVhSX1NSQywKPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX2tjb250cm9sX25ldyBzdW44
+aV9kYWNfbWl4ZXJfY29udHJvbHNbXSA9IHsKPj4gKyAgICAgICBTT0NfREFQTV9ET1VCTEUoIkFJ
+RjEgU2xvdCAwIERpZ2l0YWwgREFDIFBsYXliYWNrIFN3aXRjaCIsCj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIFNVTjhJX0RBQ19NWFJfU1JDLAo+PiArICAgICAgICAgICAgICAgICAgICAgICBT
+VU44SV9EQUNfTVhSX1NSQ19EQUNMX01YUl9TUkNfQUlGMURBMEwsCj4+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIFNVTjhJX0RBQ19NWFJfU1JDX0RBQ1JfTVhSX1NSQ19BSUYxREEwUiwgMSwgMCks
+Cj4+IC0gICAgICAgU09DX0RBUE1fU0lOR0xFKCJSU2xvdCAxIiwgU1VOOElfREFDX01YUl9TUkMs
+Cj4+ICsgICAgICAgU09DX0RBUE1fRE9VQkxFKCJBSUYxIFNsb3QgMSBEaWdpdGFsIERBQyBQbGF5
+YmFjayBTd2l0Y2giLAo+PiArICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9EQUNfTVhSX1NS
+QywKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfREFDX01YUl9TUkNfREFDTF9NWFJf
+U1JDX0FJRjFEQTFMLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9EQUNfTVhSX1NS
+Q19EQUNSX01YUl9TUkNfQUlGMURBMVIsIDEsIDApLAo+PiAtICAgICAgIFNPQ19EQVBNX1NJTkdM
+RSgiREFDUiIsIFNVTjhJX0RBQ19NWFJfU1JDLAo+PiArICAgICAgIFNPQ19EQVBNX0RPVUJMRSgi
+QUlGMiBEaWdpdGFsIERBQyBQbGF5YmFjayBTd2l0Y2giLCBTVU44SV9EQUNfTVhSX1NSQywKPj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfREFDX01YUl9TUkNfREFDTF9NWFJfU1JDX0FJ
+RjJEQUNMLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9EQUNfTVhSX1NSQ19EQUNS
+X01YUl9TUkNfQUlGMkRBQ1IsIDEsIDApLAo+PiAtICAgICAgIFNPQ19EQVBNX1NJTkdMRSgiQURD
+UiIsIFNVTjhJX0RBQ19NWFJfU1JDLAo+PiArICAgICAgIFNPQ19EQVBNX0RPVUJMRSgiQURDIERp
+Z2l0YWwgREFDIFBsYXliYWNrIFN3aXRjaCIsIFNVTjhJX0RBQ19NWFJfU1JDLAo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICBTVU44SV9EQUNfTVhSX1NSQ19EQUNMX01YUl9TUkNfQURDTCwKPj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfREFDX01YUl9TUkNfREFDUl9NWFJfU1JDX0FE
+Q1IsIDEsIDApLAo+PiAgfTsKPj4KPj4gQEAgLTI5MywxMiArMjg4LDEyIEBAIHN0YXRpYyBjb25z
+dCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBzdW44aV9jb2RlY19kYXBtX3dpZGdldHNbXSA9
+IHsKPj4gICAgICAgICAgICAgICAgICAgICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkxfQUlG
+MV9EQTBSX0VOQSwgMCksCj4+Cj4+ICAgICAgICAgLyogREFDIE1peGVycyAqLwo+PiAtICAgICAg
+IFNORF9TT0NfREFQTV9NSVhFUigiTGVmdCBEQUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAs
+Cj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgIHN1bjhpX291dHB1dF9sZWZ0X21peGVyX2Nv
+bnRyb2xzLAo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICBBUlJBWV9TSVpFKHN1bjhpX291
+dHB1dF9sZWZ0X21peGVyX2NvbnRyb2xzKSksCj4+IC0gICAgICAgU05EX1NPQ19EQVBNX01JWEVS
+KCJSaWdodCBEQUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAsCj4+IC0gICAgICAgICAgICAg
+ICAgICAgICAgICAgIHN1bjhpX291dHB1dF9yaWdodF9taXhlcl9jb250cm9scywKPj4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgQVJSQVlfU0laRShzdW44aV9vdXRwdXRfcmlnaHRfbWl4ZXJf
+Y29udHJvbHMpKSwKPj4gKyAgICAgICBTTkRfU09DX0RBUE1fTUlYRVIoIkxlZnQgRGlnaXRhbCBE
+QUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAsCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHN1bjhpX2RhY19taXhlcl9jb250cm9scywKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgQVJSQVlfU0laRShzdW44aV9kYWNfbWl4ZXJfY29udHJvbHMpKSwKPj4gKyAgICAgICBTTkRf
+U09DX0RBUE1fTUlYRVIoIlJpZ2h0IERpZ2l0YWwgREFDIE1peGVyIiwgU05EX1NPQ19OT1BNLCAw
+LCAwLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICBzdW44aV9kYWNfbWl4ZXJfY29udHJv
+bHMsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIEFSUkFZX1NJWkUoc3VuOGlfZGFjX21p
+eGVyX2NvbnRyb2xzKSksCj4+Cj4+ICAgICAgICAgLyogQ2xvY2tzICovCj4+ICAgICAgICAgU05E
+X1NPQ19EQVBNX1NVUFBMWSgiTU9EQ0xLIEFGSTEiLCBTVU44SV9NT0RfQ0xLX0VOQSwKPj4gQEAg
+LTM0MCw4ICszMzUsMTAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1fcm91dGUg
+c3VuOGlfY29kZWNfZGFwbV9yb3V0ZXNbXSA9IHsKPj4gICAgICAgICB7ICJEaWdpdGFsIFJpZ2h0
+IERBQyIsIE5VTEwsICJEQUMiIH0sCj4+Cj4+ICAgICAgICAgLyogREFDIE1peGVyIFJvdXRlcyAq
+Lwo+PiAtICAgICAgIHsgIkxlZnQgREFDIE1peGVyIiwgIkxTbG90IDAiLCAiRGlnaXRhbCBMZWZ0
+IERBQyJ9LAo+PiAtICAgICAgIHsgIlJpZ2h0IERBQyBNaXhlciIsICJSU2xvdCAwIiwgIkRpZ2l0
+YWwgUmlnaHQgREFDIn0sCj4+ICsgICAgICAgeyAiTGVmdCBEaWdpdGFsIERBQyBNaXhlciIsICJB
+SUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5YmFjayBTd2l0Y2giLAo+PiArICAgICAgICAgIkRp
+Z2l0YWwgTGVmdCBEQUMifSwKPj4gKyAgICAgICB7ICJSaWdodCBEaWdpdGFsIERBQyBNaXhlciIs
+ICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5YmFjayBTd2l0Y2ggIiwKPgo+IFRoZSBleHRy
+YSBzcGFjZSBmaXhlZCBpbiB0aGUgbmV4dCBwYXRjaCBjb3VsZCBiZSBzcXVhc2hlZCBpbnRvIHRo
+aXMKPiBwYXRjaC4gT3RoZXJ3aXNlLAoKT2gsIHllcywgc29ycnkgYWJvdXQgdGhhdC4KCkkgd2ls
+bCBzZW5kIGEgVjQgd2l0aCB0aGUgZml4ZXMgeW91IHBvaW50ZWQgbWUgb24gdGhpcyBzZXJpZXMu
+CgpUaGFua3MhCgpCZXN0IHJlZ2FyZHMsCgotLSAKTXlsw6huZSBKb3NzZXJhbmQsIEZyZWUgRWxl
+Y3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2ZyZWUt
+ZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcK
+aHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2
+ZWwK
