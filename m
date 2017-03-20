@@ -1,68 +1,58 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 5/8] ARM: sunxi: h3/h5: add usb_otg and
- OHCI/EHCI for usbc0 on H3/H5
-Date: Mon, 20 Mar 2017 20:03:21 +0100
-Message-ID: <20170320190321.op76vhg7hrt2gtho@lukather>
-References: <20170319163118.56301-1-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Mon, 20 Mar 2017 15:04:46 -0400
+Message-ID: <31a8e038-f0b8-6854-6ab9-288a79ff91d0@timesys.com>
+References: <1489785040-26477-1-git-send-email-akshay.bhat@timesys.com>
+ <1489785040-26477-2-git-send-email-akshay.bhat@timesys.com>
+ <78bf099d-32ad-9981-6ba9-fe56fbcabc3e@grandegger.com>
+ <7f768a65-bdf0-3b43-17e8-9aaca5997663@timesys.com>
+ <86fb20f6-8a3a-163f-9dc6-ba7f5368b689@grandegger.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kzysz5kkoro36yue"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBGPYDDAKGQEK2S34DI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170319163118.56301-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <86fb20f6-8a3a-163f-9dc6-ba7f5368b689-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Wolfgang,
 
---kzysz5kkoro36yue
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-1;4601;0c
-On Mon, Mar 20, 2017 at 12:31:15AM +0800, Icenowy Zheng wrote:
-> Allwinner H3/H5 have a dual-routed USB PHY0 -- routed to either OHCI/EHCI
-> or MUSB controller.
+On 03/20/2017 12:46 PM, Wolfgang Grandegger wrote:
+..snip..
+>>
+>> The top 3 bits of HI3110_READ_ERR (BUSOFF, TXERRP, RXERRP) are valid
+>> even if HI3110_INT_BUSERR is not set.
 > 
-> Add device nodes for these controllers.
+> I'm confused! If you disable BUSERR interrupts, you do not get the
+> status bits any longer, you said. But the manual says: "Bits 4:0 in the
+> ERR register can be read to determine the source of the error.", which
+> excludes the above bits... but obviously the controller does it that way.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
-> Changes in v4:
-> - Add h5 to commit message.
-> Changes in v3:
-> - Add "h3:" to commit message.
-> 
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> index 2494ea063cd4..213a2befe3af 100644
-> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> @@ -144,6 +144,19 @@
->  			#size-cells = <0>;
->  		};
->  
-> +		usb_otg: usb@01c19000 {
-> +			compatible = "allwinner,sun8i-h3-musb";
-> +			reg = <0x01c19000 0x0400>;
 
-Please drop the size's leading 0.
+I agree this feature could use better documentation.
 
-Thanks!
-Maxime
+Based on testing:
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---kzysz5kkoro36yue--
+If BUSERRIE bit in INTE is clear,
+On cable disconnect: No interrupts related to bus errors are generated.
+So status change messages do not go out.
+
+If BUSERRIE bit in INTE is set,
+On cable disconnect: Interrupts are generated due to ACKERR. The
+interrupt routine reads the BUSOFF/TXERRP/RXERRP bits of ERR register
+and reports the state. If CAN_CTRLMODE_BERR_REPORTING is set, then
+protocol errors are also reported by the interrupt.
+On cable re-connect: Interrupts are generated due to TXCPLT. The
+interrupt routine reads the BUSOFF/TXERRP/RXERRP bits of ERR register
+and reports the state.
+
+Let me know if this helps clear things up :)
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
