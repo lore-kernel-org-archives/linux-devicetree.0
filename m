@@ -1,144 +1,153 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Mon, 20 Mar 2017 14:57:03 +0100
-Message-ID: <d0e2a9c2-5e94-d810-7ef4-ae089a6b25f5@xs4all.nl>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170319103801.GQ21222@n2100.armlinux.org.uk>
- <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
- <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
- <20170320132930.GJ21222@n2100.armlinux.org.uk>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio playback
+Date: Mon, 20 Mar 2017 14:02:00 +0000
+Message-ID: <8b441b9d-bc26-091a-ac48-8594952759e8@synopsys.com>
+References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
+ <1488481038.2684.14.camel@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170320132930.GJ21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488481038.2684.14.camel@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2017 02:29 PM, Russell King - ARM Linux wrote:
-> On Mon, Mar 20, 2017 at 02:01:58PM +0100, Hans Verkuil wrote:
->> On 03/19/2017 06:54 PM, Steve Longerbeam wrote:
->>>
->>>
->>> On 03/19/2017 03:38 AM, Russell King - ARM Linux wrote:
->>>> What did you do with:
->>>>
->>>> ioctl(3, VIDIOC_REQBUFS, {count=0, type=0 /* V4L2_BUF_TYPE_??? */, memory=0 /* V4L2_MEMORY_??? */}) = -1 EINVAL (Invalid argument)
->>>>                  test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->>>> ioctl(3, VIDIOC_EXPBUF, 0xbef405bc)     = -1 EINVAL (Invalid argument)
->>>>                  fail: v4l2-test-buffers.cpp(571): q.has_expbuf(node)
+Hi Vineet, Alexey, Rob,
+
+
+On 02-03-2017 18:57, Alexey Brodkin wrote:
+> Hi Jose,
+>
+> On Wed, 2017-02-22 at 18:19 +0000, Jose Abreu wrote:
+>> This patch adds the necessary DT bindings to get HDMI audio
+>> output in ARC AXS10x SDP. The bindings for I2S controller were
+>> added as well as the bindings for simple audio card.
 >>
->> This is really a knock-on effect from an earlier issue where the compliance test
->> didn't detect support for MEMORY_MMAP.
-> 
-> So why does it succeed when I fix the compliance errors with VIDIOC_G_FMT?
-> With that fixed, I now get:
-> 
->         Format ioctls:
->                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->                 test VIDIOC_G/S_PARM: OK
->                 test VIDIOC_G_FBUF: OK (Not Supported)
->                 test VIDIOC_G_FMT: OK
->                 test VIDIOC_TRY_FMT: OK
->                 test VIDIOC_S_FMT: OK
->                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                 test Cropping: OK (Not Supported)
->                 test Composing: OK (Not Supported)
->                 test Scaling: OK (Not Supported)
-> 
->         Buffer ioctls:
->                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                 test VIDIOC_EXPBUF: OK
-> 
-> The reason is, if you look at the code, VIDIOC_G_FMT populates a list
-> of possible buffer formats "node->valid_buftypes".  If the VIDIOC_G_FMT
-> test fails, then node->valid_buftypes is zero.
-> 
-> This causes testReqBufs() to only check for the all-zeroed VIDIOC_REQBUFS
-> and declare it conformant, without creating any buffers (it can't, it
-> doesn't know which formats are supported.)
-> 
-> This causes node->valid_memorytype to be zero.
-
-It should fail on this and return a more understandable error message.
-
-> 
-> We then go on to testExpBuf(), and valid_memorytype zero, claiming (falsely)
-> that MMAP is not supported.  The reality is that it _is_ supported, but
-> it's just the non-compliant VICIOC_G_FMT call (due to the colorspace
-> issue) causes the sequence of tests to fail.
-
-Yeah, you're not the first to complain about this. I plan on fixing this this
-week.
-
-> 
->> Always build from the master repo. 1.10 is pretty old.
-> 
-> It's what I have - remember, not everyone is happy to constantly replace
-> their distro packages with random new stuff.
-
-This is a compliance test, which is continuously developed in tandem with
-new kernel versions. If you are working with an upstream kernel, then you
-should also use the corresponding v4l2-compliance test. What's the point
-of using an old one?
-
-I will not support driver developers that use an old version of the
-compliance test, that's a waste of my time.
-
-> 
->>>> In any case, it doesn't look like the buffer management is being
->>>> tested at all by v4l2-compliance - we know that gstreamer works, so
->>>> buffers _can_ be allocated, and I've also used dmabufs with gstreamer,
->>>> so I also know that VIDIOC_EXPBUF works there.
+>> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+>> Cc: Carlos Palminha <palminha@synopsys.com>
+>> Cc: Alexey Brodkin <abrodkin@synopsys.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Vineet Gupta <vgupta@synopsys.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-snps-arc@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>  arch/arc/boot/dts/axs10x_mb.dtsi | 22 ++++++++++++++++++----
+>>  1 file changed, 18 insertions(+), 4 deletions(-)
 >>
->> To test actual streaming you need to provide the -s option.
->>
->> Note: v4l2-compliance has been developed for 'regular' video devices,
->> not MC devices. It may or may not work with the -s option.
-> 
-> Right, and it exists to verify that the establised v4l2 API is correctly
-> implemented.  If the v4l2 API is being offered to user applications,
-> then it must be conformant, otherwise it's not offering the v4l2 API.
-> (That's very much a definition statement in itself.)
-> 
-> So, are we really going to say MC devices do not offer the v4l2 API to
-> userspace, but something that might work?  We've already seen today
-> one user say that they're not going to use mainline because of the
-> crud surrounding MC.
-> 
+>> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+>> index d6c1bbc..9d882b1 100644
+>> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
+>> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+>> @@ -149,12 +149,13 @@
+>>  			interrupts = <14>;
+>>  		};
+>>  
+>> -		i2c@0x1e000 {
+>> -			compatible = "snps,designware-i2c";
+>> +		i2s: i2s@1e000 {
+>> +			compatible = "snps,designware-i2s";
+>>  			reg = <0x1e000 0x100>;
+>> -			clock-frequency = <400000>;
+>> -			clocks = <&i2cclk>;
+>> +			clocks = <&i2sclk 0>;
+>> +			clock-names = "i2sclk";
+>>  			interrupts = <15>;
+>> +			#sound-dai-cells = <0>;
+>>  		};
+>>  
+>>  		i2c@0x1f000 {
+>> @@ -174,6 +175,7 @@
+>>  				adi,input-colorspace = "rgb";
+>>  				adi,input-clock = "1x";
+>>  				adi,clock-delay = <0x03>;
+>> +				#sound-dai-cells = <0>;
+>>  
+>>  				ports {
+>>  					#address-cells = <1>;
+>> @@ -295,5 +297,17 @@
+>>  				};
+>>  			};
+>>  		};
+>> +
+>> +		sound_playback {
+>> +			compatible = "simple-audio-card";
+>> +			simple-audio-card,name = "AXS10x HDMI Audio";
+>> +			simple-audio-card,format = "i2s";
+>> +			simple-audio-card,cpu {
+>> +				sound-dai = <&i2s>;
+>> +			};
+>> +			simple-audio-card,codec {
+>> +				sound-dai = <&adv7511>;
+>> +			};
+>> +		};
+>>  	};
+>>  };
+> Just for the sake of history that's my mods to defconfig that allowed me
+> to play .pcm via HDMI from axs103 board:
+> -------------------------------->8-------------------------------
+> diff --git a/arch/arc/configs/axs103_smp_defconfig b/arch/arc/configs/axs103_smp_defconfig
+> index 30a3d4cf53d2..b11362a32e4e 100644
+> --- a/arch/arc/configs/axs103_smp_defconfig
+> +++ b/arch/arc/configs/axs103_smp_defconfig
+> @@ -67,25 +67,29 @@ CONFIG_MOUSE_PS2_TOUCHKIT=y
+>  CONFIG_MOUSE_SERIAL=y
+>  CONFIG_MOUSE_SYNAPTICS_USB=y
+>  # CONFIG_LEGACY_PTYS is not set
+> -# CONFIG_DEVKMEM is not set
+>  CONFIG_SERIAL_8250=y
+>  CONFIG_SERIAL_8250_CONSOLE=y
+>  CONFIG_SERIAL_8250_DW=y
+>  CONFIG_SERIAL_OF_PLATFORM=y
+>  # CONFIG_HW_RANDOM is not set
+> -CONFIG_I2C=y
+>  CONFIG_I2C_CHARDEV=y
+>  CONFIG_I2C_DESIGNWARE_PLATFORM=y
+>  # CONFIG_HWMON is not set
+> -CONFIG_DRM=m
+> -CONFIG_DRM_I2C_ADV7511=m
+> -CONFIG_DRM_ARCPGU=m
+> -CONFIG_FB=y
+> +CONFIG_DRM=y
+> +CONFIG_DRM_I2C_ADV7511=y
+> +CONFIG_DRM_I2C_ADV7511_AUDIO=y
+> +CONFIG_DRM_ARCPGU=y
+>  CONFIG_FRAMEBUFFER_CONSOLE=y
+>  CONFIG_LOGO=y
+>  # CONFIG_LOGO_LINUX_MONO is not set
+>  # CONFIG_LOGO_LINUX_VGA16 is not set
+>  # CONFIG_LOGO_LINUX_CLUT224 is not set
+> +CONFIG_SOUND=y
+> +CONFIG_SND=y
+> +CONFIG_SND_SOC=y
+> +CONFIG_SND_DESIGNWARE_I2S=y
+> +CONFIG_SND_DESIGNWARE_PCM=y
+> +CONFIG_SND_SIMPLE_CARD=y
+>  CONFIG_USB_EHCI_HCD=y
+>  CONFIG_USB_EHCI_HCD_PLATFORM=y
+>  CONFIG_USB_OHCI_HCD=y
+> -------------------------------->8-------------------------------
+>
+> Anyways...
+>
+> Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
 
-Actually, my understanding was that he was stuck on the old kernel code.
+Rob, can you please take a look at this patch and at 2/2?
 
-In the case of v4l2-compliance, I never had the time to make it work with
-MC devices. Same for that matter of certain memory to memory devices.
+Alexey, do you still maintain your ack in these patches? (I'm
+asking because I remember you were having no video after patch
+2/2 of this series). If so, Vineet, can you please pick this up
+and patch 2/2 also?
 
-Just like MC devices these too behave differently. They are partially
-supported in v4l2-compliance, but not fully.
-
-Why? NO TIME.
-
-Be glad there *is* a v4l2-compliance test at all! It's really, really useful
-already, but it took *years* to develop, little bit by little bit. And yes,
-I would really like to update it to fully support codecs and MC devices.
-And with a bit of luck I hope to get permission from my boss to work on
-this (among others) later in the year.
-
-Complaining about this really won't help. We know it's a problem and unless
-someone (me perhaps?) manages to get paid to work on this it's unlikely to
-change for now.
-
-Regards,
-
-	Hans
+Best regards,
+Jose Miguel Abreu
