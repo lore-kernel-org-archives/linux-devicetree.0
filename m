@@ -1,155 +1,156 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux v4 1/2] Documentation: dt-bindings: Document
- bindings for ASPEED AST2400/AST2500 PWM and Fan tach controller device
- driver
-Date: Mon, 20 Mar 2017 11:15:31 -0500
-Message-ID: <20170320161531.ob65adnqch47dvyi@rob-hp-laptop>
-References: <20170311015351.23092-1-jaghu@google.com>
- <20170311015351.23092-2-jaghu@google.com>
+From: Alan Tull <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v3 2/2] fpga: Add support for Xilinx LogiCORE PR Decoupler
+Date: Mon, 20 Mar 2017 11:28:39 -0500
+Message-ID: <CANk1AXT_WetixZndGtT-A8gi+UK754AjnELaH_6f3bxgdpkmfg@mail.gmail.com>
+References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
+ <1489781473-30772-2-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170311015351.23092-2-jaghu@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-Cc: joel@jms.id.au, jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1489781473-30772-2-git-send-email-mdf@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-fpga@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 05:53:50PM -0800, Jaghathiswari Rankappagounder Natarajan wrote:
-> This binding provides interface for adding values related to ASPEED
-> AST2400/2500 PWM and Fan tach controller support.
-> The PWM controller can support upto 8 PWM output ports.
-> The Fan tach controller can support upto 16 tachometer inputs.
-> 
-> Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-> ---
->  v4:
-> - Used 'reg'
-> 
->  v3:
-> - Made the structure more common
-> 
->  v2:
-> - Removed '_' in node and property names
-> - Gave some explanation for the properties used
-> 
->  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> new file mode 100644
-> index 000000000000..0dfd2841ace3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> @@ -0,0 +1,86 @@
-> +ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
-> +
-> +The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED Fan Tacho
-> +controller can support upto 16 Fan tachometer inputs.
-> +
-> +There can be upto 8 fans supported. Each fan can have one PWM output and
-> +one/two Fan tach inputs.
-> +
-> +Required properties for pwm-tacho node:
-> +- #address-cells : should be 1.
-> +
-> +- #size-cells : should be 1.
-> +
-> +- reg : address and length of the register set for the device.
-> +
-> +- pinctrl-names : a pinctrl state named "default" must be defined.
-> +
-> +- pinctrl-0 : phandle referencing pin configuration of the PWM ports.
-> +
-> +- compatible : should be "aspeed,aspeed2400-pwm-tacho" for AST2400 or
-> +	       "aspeed,aspeed2500-pwm-tacho" for AST2500.
-> +
-> +- clocks : a fixed clock providing input clock frequency(PWM
-> +	   and Fan Tach clock)
-> +
-> +fan subnode format:
-> +===================
-> +Under fan subnode there can upto 8 child nodes, with each child node
-> +representing a fan. If there are 8 fans each fan can have one PWM port and
-> +one/two Fan tach inputs.
-> +
-> +Required properties for each child node:
-> +- reg : should specify PWM source port.
-> +	integer value in the range 0 to 7 with 0 indicating PWM port A and
-> +	7 indicating PWM port H.
-> +
-> +  Atleast one tach subnode is required. Each tach subnode represents a fan
-> +  tach input.
-> +  tach subnode format:
-> +  --------------------
-> +  Required properties for each child node:
-> +  - fan-ctrl-gpios : should specify the tachometer input GPIO pin on the hardware.
-> +             	     Fan Tachometer function can only work when GPIO is in
-> +		     ”input mode”.
-
-As I mentioned on the last version, this sounds like pin-muxing, not 
-actual GPIO usage.
-
-> +
-> +  - fan-tach-ch : should specify the Fan tach input channel.
-> +	          integer value in the range 0 through 15, with 0 indicating
-> +		  Fan tach channel 0 and 15 indicating Fan tach channel 15.
-
-These 2 also need aspeed vendor prefixes.
-
-This could become a property under the fan node as a list of tach 
-channels if fan-ctrl-gpios goes away.
-
-> +
-> +Examples:
-> +
-> +pwmtachofixedclk: fixedclk {
-> +	compatible = "fixed-clock";
-> +	#clock-cells = <0>;
-> +	clock-frequency = <24000000>;
-> +}
-> +
-> +pwmtacho: pwmtachocontroller@1e786000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	reg = <0x1E786000 0x1000>;
-> +	compatible = "aspeed,aspeed2500-pwm-tacho";
-> +	clocks = <&pwmtachofixedclk>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +
-> +	fan0 {
-
-fan@0
-
-> +		reg = /bits/ 8 <0x00>;
-
-reg is 32-bits.
-
-> +		tach0 {
-> +			fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_HIGH>;
-> +			fan-tach-ch = /bits/ 8 <0x00>;
-> +		};
-> +	};
-> +
-> +	fan1 {
-
-fan@1
-
-> +		reg = /bits/ 8 <0x01>;
-> +		tach0 {
-> +			fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 1) GPIO_ACTIVE_HIGH>;
-> +			fan-tach-ch = /bits/ 8 <0x01>;
-> +		};
-> +		tach1 {
-> +			fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 2) GPIO_ACTIVE_HIGH>;
-> +			fan-tach-ch = /bits/ 8 <0x02>;
-> +		};
-> +	};
-> +};
-> --
-> 2.12.0.246.ga2ecc84866-goog
-> 
+T24gRnJpLCBNYXIgMTcsIDIwMTcgYXQgMzoxMSBQTSwgTW9yaXR6IEZpc2NoZXIgPG1kZkBrZXJu
+ZWwub3JnPiB3cm90ZToKCkhpIE1vcml0eiwKCkxvb2tzIGdvb2QgZXhjZXB0IGZvciB0aGUga2J1
+aWxkIHJvYm90IHdhcm5pbmdzIHRoYXQgbmVlZCB0byBiZSBmaXhlZC4KCkFsYW4KCj4gVGhpcyBh
+ZGRzIHN1cHBvcnQgZm9yIHRoZSBYaWxpbnggTG9naUNPUkUgUFIgRGVjb3VwbGVyCj4gc29mdC1p
+cCB0aGF0IGRvZXMgZGVjb3VwbGluZyBvZiBQUiByZWdpb25zIGluIHRoZSBGUEdBCj4gZmFicmlj
+IGR1cmluZyBwYXJ0aWFsIHJlY29uZmlndXJhdGlvbi4KPgo+IFNpZ25lZC1vZmYtYnk6IE1vcml0
+eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz4KPiBDYzogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2lt
+ZWtAeGlsaW54LmNvbT4KPiBDYzogU8O2cmVuIEJyaW5rbWFubiA8c29yZW4uYnJpbmttYW5uQHhp
+bGlueC5jb20+Cj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcKPiBDYzogZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiAtLS0KPiBDaGFuZ2VzIGZyb20gdjI6Cj4gLSBBZGRlZCBN
+aWNoYWwncyBTaWduZWQtb2ZmLWJ5Cj4gLSBBZGRlZCAieGxueCxwci1kZWNvdXBsZXIiIHVudmVy
+c2lvbmVkIGZhbGxiYWNrCj4KPiBDaGFuZ2VzIGZyb20gdjE6Cj4gLSBBZGRlZCBNaWNoYWwgYXMg
+Q28tQXV0aG9yIHNpbmNlIEkgcHVsbGVkIGluIHNvbWUgb2YgaGlzIGNvZGUKPiAtIFJld29ya2Vk
+IGNsayBoYW5kbGluZyBpbiBfcmVtb3ZlKCkKPiAtIFB1bGxlZCBpbiBNaWNoYWwncyB2ZXJzaW9u
+IG9mIHNob3dfZW5hYmxlKCksIGRpdGNoZWQgcHJpdi0+ZW5hYmxlZAo+Cj4gLS0tCj4gIGRyaXZl
+cnMvZnBnYS9LY29uZmlnICAgICAgICAgICAgICAgfCAgIDkgKysrCj4gIGRyaXZlcnMvZnBnYS9N
+YWtlZmlsZSAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2ZwZ2EveGlsaW54LXByLWRl
+Y291cGxlci5jIHwgMTQ4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAg
+MyBmaWxlcyBjaGFuZ2VkLCAxNTggaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9mcGdhL3hpbGlueC1wci1kZWNvdXBsZXIuYwo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZnBnYS9LY29uZmlnIGIvZHJpdmVycy9mcGdhL0tjb25maWcKPiBpbmRleCBjZTg2MWEyLi5j
+ZTBjOTFkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZnBnYS9LY29uZmlnCj4gKysrIGIvZHJpdmVy
+cy9mcGdhL0tjb25maWcKPiBAQCAtNjMsNiArNjMsMTUgQEAgY29uZmlnIEFMVEVSQV9GUkVFWkVf
+QlJJREdFCj4gICAgICAgICAgIGlzb2xhdGUgb25lIHJlZ2lvbiBvZiB0aGUgRlBHQSBmcm9tIHRo
+ZSBidXNzZXMgd2hpbGUgdGhhdAo+ICAgICAgICAgICByZWdpb24gaXMgYmVpbmcgcmVwcm9ncmFt
+bWVkLgo+Cj4gK2NvbmZpZyBYSUxJTlhfUFJfREVDT1VQTEVSCj4gKyAgICAgICB0cmlzdGF0ZSAi
+WGlsaW54IExvZ2lDT1JFIFBSIERlY291cGxlciIKPiArICAgICAgIGRlcGVuZHMgb24gRlBHQV9C
+UklER0UKPiArICAgICAgIGhlbHAKPiArICAgICAgICAgU2F5IFkgdG8gZW5hYmxlIGRyaXZlcnMg
+Zm9yIFhpbGlueCBMb2dpQ09SRSBQUiBEZWNvdXBsZXIuCj4gKyAgICAgICAgIFRoZSBQUiBEZWNv
+dXBsZXIgZXhpc3RzIGluIHRoZSBGUEdBIGZhYnJpYyB0byBpc29sYXRlIG9uZQo+ICsgICAgICAg
+ICByZWdpb24gb2YgdGhlIEZQR0EgZnJvbSB0aGUgYnVzc2VzIHdoaWxlIHRoYXQgcmVnaW9uIGlz
+Cj4gKyAgICAgICAgIGJlaW5nIHJlcHJvZ3JhbW1lZCBkdXJpbmcgcGFydGlhbCByZWNvbmZpZy4K
+PiArCj4gIGVuZGlmICMgRlBHQQo+Cj4gIGVuZG1lbnUKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9m
+cGdhL01ha2VmaWxlIGIvZHJpdmVycy9mcGdhL01ha2VmaWxlCj4gaW5kZXggOGRmMDdiYy4uYmE5
+NGI3OSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2ZwZ2EvTWFrZWZpbGUKPiArKysgYi9kcml2ZXJz
+L2ZwZ2EvTWFrZWZpbGUKPiBAQCAtMTQsNiArMTQsNyBAQCBvYmotJChDT05GSUdfRlBHQV9NR1Jf
+WllOUV9GUEdBKSAgICAgICs9IHp5bnEtZnBnYS5vCj4gIG9iai0kKENPTkZJR19GUEdBX0JSSURH
+RSkgICAgICAgICAgICAgICs9IGZwZ2EtYnJpZGdlLm8KPiAgb2JqLSQoQ09ORklHX1NPQ0ZQR0Ff
+RlBHQV9CUklER0UpICAgICAgKz0gYWx0ZXJhLWhwczJmcGdhLm8gYWx0ZXJhLWZwZ2Eyc2RyYW0u
+bwo+ICBvYmotJChDT05GSUdfQUxURVJBX0ZSRUVaRV9CUklER0UpICAgICArPSBhbHRlcmEtZnJl
+ZXplLWJyaWRnZS5vCj4gK29iai0kKENPTkZJR19YSUxJTlhfUFJfREVDT1VQTEVSKSAgICAgICs9
+IHhpbGlueC1wci1kZWNvdXBsZXIubwo+Cj4gICMgSGlnaCBMZXZlbCBJbnRlcmZhY2VzCj4gIG9i
+ai0kKENPTkZJR19GUEdBX1JFR0lPTikgICAgICAgICAgICAgICs9IGZwZ2EtcmVnaW9uLm8KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9mcGdhL3hpbGlueC1wci1kZWNvdXBsZXIuYyBiL2RyaXZlcnMv
+ZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLmMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4
+IDAwMDAwMDAuLmRkMzdiMWMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9mcGdhL3hp
+bGlueC1wci1kZWNvdXBsZXIuYwo+IEBAIC0wLDAgKzEsMTQ4IEBACj4gKy8qCj4gKyAqIENvcHly
+aWdodCAoYykgMjAxNywgTmF0aW9uYWwgSW5zdHJ1bWVudHMgQ29ycC4KPiArICogQ29weXJpZ2h0
+IChjKSAyMDE3LCBYaWxpeCBJbmMKPiArICoKPiArICogRlBHQSBCcmlkZ2UgRHJpdmVyIGZvciB0
+aGUgWGlsaW54IExvZ2lDT1JFIFBhcnRpYWwgUmVjb25maWd1cmF0aW9uCj4gKyAqIERlY291cGxl
+ciBJUCBDb3JlLgo+ICsgKgo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91
+IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQo+ICsgKiBpdCB1bmRlciB0aGUgdGVy
+bXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieQo+ICsg
+KiB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyB2ZXJzaW9uIDIgb2YgdGhlIExpY2Vuc2Uu
+Cj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0
+IGl0IHdpbGwgYmUgdXNlZnVsLAo+ICsgKiBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhv
+dXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZgo+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3Ig
+RklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuIFNlZSB0aGUKPiArICogR05VIEdlbmVy
+YWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPiArICovCj4gKwo+ICsjaW5jbHVk
+ZSA8bGludXgvY2xrLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9pby5oPgo+ICsjaW5jbHVkZSA8bGlu
+dXgva2VybmVsLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KPiArI2luY2x1ZGUg
+PGxpbnV4L21vZHVsZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvZnBnYS9mcGdhLWJyaWRnZS5oPgo+
+ICsKPiArI2RlZmluZSBDVFJMX0NNRF9ERUNPVVBMRSAgICAgIEJJVCgwKQo+ICsjZGVmaW5lIENU
+UkxfQ01EX0NPVVBMRSAgICAgICAgICAgICAgICB+QklUKDApCj4gKwo+ICtzdHJ1Y3QgeGxueF9w
+cl9kZWNvdXBsZXJfZGF0YSB7Cj4gKyAgICAgICB2b2lkIF9faW9tZW0gKmlvX2Jhc2U7Cj4gKyAg
+ICAgICBzdHJ1Y3QgY2xrICpjbGs7Cj4gK307Cj4gKwo+ICtzdGF0aWMgaW50IHhsbnhfcHJfZGVj
+b3VwbGVyX2VuYWJsZV9zZXQoc3RydWN0IGZwZ2FfYnJpZGdlICpicmlkZ2UsIGJvb2wgZW5hYmxl
+KQo+ICt7Cj4gKyAgICAgICBpbnQgZXJyOwo+ICsgICAgICAgc3RydWN0IHhsbnhfcHJfZGVjb3Vw
+bGVyX2RhdGEgKnByaXYgPSBicmlkZ2UtPnByaXY7Cj4gKwo+ICsgICAgICAgZXJyID0gY2xrX2Vu
+YWJsZShwcml2LT5jbGspOwo+ICsgICAgICAgaWYgKGVycikKPiArICAgICAgICAgICAgICAgcmV0
+dXJuIGVycjsKPiArCj4gKyAgICAgICBpZiAoZW5hYmxlKQo+ICsgICAgICAgICAgICAgICB3cml0
+ZWwoQ1RSTF9DTURfQ09VUExFLCBwcml2LT5pb19iYXNlKTsKPiArICAgICAgIGVsc2UKPiArICAg
+ICAgICAgICAgICAgd3JpdGVsKENUUkxfQ01EX0RFQ09VUExFLCBwcml2LT5pb19iYXNlKTsKPiAr
+Cj4gKyAgICAgICBjbGtfZGlzYWJsZShwcml2LT5jbGspOwo+ICsKPiArICAgICAgIHJldHVybiAw
+Owo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IHhsbnhfcHJfZGVjb3VwbGVyX2VuYWJsZV9zaG93KHN0
+cnVjdCBmcGdhX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKyAgICAgICBjb25zdCBzdHJ1Y3QgeGxu
+eF9wcl9kZWNvdXBsZXJfZGF0YSAqcHJpdiA9IGJyaWRnZS0+cHJpdjsKPiArICAgICAgIHUzMiBz
+dGF0dXM7Cj4gKyAgICAgICBpbnQgZXJyOwo+ICsKPiArICAgICAgIGVyciA9IGNsa19lbmFibGUo
+cHJpdi0+Y2xrKTsKPiArICAgICAgIGlmIChlcnIpCj4gKyAgICAgICAgICAgICAgIHJldHVybiBl
+cnI7Cj4gKwo+ICsgICAgICAgc3RhdHVzID0gcmVhZGwocHJpdi0+aW9fYmFzZSk7Cj4gKwo+ICsg
+ICAgICAgY2xrX2Rpc2FibGUocHJpdi0+Y2xrKTsKPiArCj4gKyAgICAgICByZXR1cm4gIXN0YXR1
+czsKPiArfQo+ICsKPiArc3RhdGljIHN0cnVjdCBmcGdhX2JyaWRnZV9vcHMgeGxueF9wcl9kZWNv
+dXBsZXJfYnJfb3BzID0gewo+ICsgICAgICAgLmVuYWJsZV9zZXQgPSB4bG54X3ByX2RlY291cGxl
+cl9lbmFibGVfc2V0LAo+ICsgICAgICAgLmVuYWJsZV9zaG93ID0geGxueF9wcl9kZWNvdXBsZXJf
+ZW5hYmxlX3Nob3csCj4gK307Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
+ZCB4bG54X3ByX2RlY291cGxlcl9vZl9tYXRjaFtdID0gewo+ICsgICAgICAgeyAuY29tcGF0aWJs
+ZSA9ICJ4bG54LHByLWRlY291cGxlci0xLjAwIiwgfSwKPiArICAgICAgIHsgLmNvbXBhdGlibGUg
+PSAieGxueCxwci1kZWNvdXBsZXIiLCB9LAo+ICsgICAgICAge30sCj4gK307Cj4gK01PRFVMRV9E
+RVZJQ0VfVEFCTEUob2YsIHhsbnhfcHJfZGVjb3VwbGVyX29mX21hdGNoKTsKPiArCj4gK3N0YXRp
+YyBpbnQgeGxueF9wcl9kZWNvdXBsZXJfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+dikKPiArewo+ICsgICAgICAgc3RydWN0IHhsbnhfcHJfZGVjb3VwbGVyX2RhdGEgKnByaXY7Cj4g
+KyAgICAgICBpbnQgZXJyOwo+ICsgICAgICAgc3RydWN0IHJlc291cmNlICpyZXM7Cj4gKwo+ICsg
+ICAgICAgcHJpdiA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKnByaXYpLCBHRlBf
+S0VSTkVMKTsKPiArICAgICAgIGlmICghcHJpdikKPiArICAgICAgICAgICAgICAgcmV0dXJuIC1F
+Tk9NRU07Cj4gKwo+ICsgICAgICAgcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElP
+UkVTT1VSQ0VfTUVNLCAwKTsKPiArICAgICAgIHByaXYtPmlvX2Jhc2UgPSBkZXZtX2lvcmVtYXBf
+cmVzb3VyY2UoJnBkZXYtPmRldiwgcmVzKTsKPiArICAgICAgIGlmIChJU19FUlIocHJpdi0+aW9f
+YmFzZSkpCj4gKyAgICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKHByaXYtPmlvX2Jhc2UpOwo+
+ICsKPiArICAgICAgIHByaXYtPmNsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAiYWNsayIp
+Owo+ICsgICAgICAgaWYgKElTX0VSUihwcml2LT5jbGspKSB7Cj4gKyAgICAgICAgICAgICAgIGRl
+dl9lcnIoJnBkZXYtPmRldiwgImlucHV0IGNsb2NrIG5vdCBmb3VuZFxuIik7Cj4gKyAgICAgICAg
+ICAgICAgIHJldHVybiBQVFJfRVJSKHByaXYtPmNsayk7Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAg
+ICAgZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKHByaXYtPmNsayk7Cj4gKyAgICAgICBpZiAoZXJy
+KSB7Cj4gKyAgICAgICAgICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwgInVuYWJsZSB0byBlbmFi
+bGUgY2xvY2tcbiIpOwo+ICsgICAgICAgICAgICAgICByZXR1cm4gZXJyOwo+ICsgICAgICAgfQo+
+ICsKPiArICAgICAgIGNsa19kaXNhYmxlKHByaXYtPmNsayk7Cj4gKwo+ICsgICAgICAgZXJyID0g
+ZnBnYV9icmlkZ2VfcmVnaXN0ZXIoJnBkZXYtPmRldiwgIlhpbGlueCBQUiBEZWNvdXBsZXIiLAo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnhsbnhfcHJfZGVjb3VwbGVyX2Jy
+X29wcywgcHJpdik7Cj4gKwo+ICsgICAgICAgaWYgKGVycikgewo+ICsgICAgICAgICAgICAgICBk
+ZXZfZXJyKCZwZGV2LT5kZXYsICJ1bmFibGUgdG8gcmVnaXN0ZXIgWGlsaW54IFBSIERlY291cGxl
+ciIpOwo+ICsgICAgICAgICAgICAgICBjbGtfdW5wcmVwYXJlKHByaXYtPmNsayk7Cj4gKyAgICAg
+ICAgICAgICAgIHJldHVybiBlcnI7Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAgICAgcmV0dXJuIDA7
+Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgeGxueF9wcl9kZWNvdXBsZXJfcmVtb3ZlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gK3sKPiArICAgICAgIHN0cnVjdCBmcGdhX2JyaWRnZSAq
+YnJpZGdlID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7Cj4gKyAgICAgICBzdHJ1Y3QgeGxu
+eF9wcl9kZWNvdXBsZXJfZGF0YSAqcCA9IGJyaWRnZS0+cHJpdjsKPiArCj4gKyAgICAgICBmcGdh
+X2JyaWRnZV91bnJlZ2lzdGVyKCZwZGV2LT5kZXYpOwo+ICsKPiArICAgICAgIGNsa191bnByZXBh
+cmUocC0+Y2xrKTsKPiArCj4gKyAgICAgICByZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIHN0
+cnVjdCBwbGF0Zm9ybV9kcml2ZXIgeGxueF9wcl9kZWNvdXBsZXJfZHJpdmVyID0gewo+ICsgICAg
+ICAgLnByb2JlID0geGxueF9wcl9kZWNvdXBsZXJfcHJvYmUsCj4gKyAgICAgICAucmVtb3ZlID0g
+eGxueF9wcl9kZWNvdXBsZXJfcmVtb3ZlLAo+ICsgICAgICAgLmRyaXZlciA9IHsKPiArICAgICAg
+ICAgICAgICAgLm5hbWUgPSAieGxueF9wcl9kZWNvdXBsZXIiLAo+ICsgICAgICAgICAgICAgICAu
+b2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIoeGxueF9wcl9kZWNvdXBsZXJfb2ZfbWF0Y2gp
+LAo+ICsgICAgICAgfSwKPiArfTsKPiArCj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoeGxueF9w
+cl9kZWNvdXBsZXJfZHJpdmVyKTsKPiArCj4gK01PRFVMRV9ERVNDUklQVElPTigiWGlsaW54IFBh
+cnRpYWwgUmVjb25maWd1cmF0aW9uIERlY291cGxlciIpOwo+ICtNT0RVTEVfQVVUSE9SKCJNb3Jp
+dHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+Iik7Cj4gK01PRFVMRV9BVVRIT1IoIk1pY2hhbCBT
+aW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+Iik7Cj4gK01PRFVMRV9MSUNFTlNFKCJHUEwg
+djIiKTsKPiAtLQo+IDIuNy40Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
