@@ -1,205 +1,46 @@
-From: Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH 2/2 v2] clk: qoriq: Separate root input clock for core PLLs on ls1012a
-Date: Mon, 20 Mar 2017 10:37:23 +0800
-Message-ID: <1489977443-33582-2-git-send-email-andy.tang@nxp.com>
-References: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
+From: Smitha T Murthy <smitha.t@samsung.com>
+Subject: Re: [Patch v2 02/11] s5p-mfc: Adding initial support for MFC v10.10
+Date: Mon, 20 Mar 2017 10:57:57 +0530
+Message-ID: <1489987677.27807.145.camel@smitha-fedora>
+References: <1488532036-13044-1-git-send-email-smitha.t@samsung.com>
+ <CGME20170303090436epcas1p2097d589d9c5e6f7ee634ab9917cc987e@epcas1p2.samsung.com>
+ <1488532036-13044-3-git-send-email-smitha.t@samsung.com>
+ <20170315195250.kq4tywgzmvnzuy4j@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com
-Cc: sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Scott Wood <oss@buserror.net>, Tang Yuantian <andy.tang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20170315195250.kq4tywgzmvnzuy4j@rob-hp-laptop>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, kamil@wypas.org, jtp.park@samsung.com, a.hajda@samsung.com, mchehab@kernel.org, pankaj.dubey@samsung.com, krzk@kernel.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Scott Wood <oss@buserror.net>
-
-ls1012a has separate input root clocks for core PLLs versus the
-platform PLL, with the latter described as sysclk in the hw docs.
-If a second input clock, named "coreclk", is present, this clock will be
-used for the core PLLs.
-
-Signed-off-by: Scott Wood <oss@buserror.net>
-Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v2:
-	-- change the author to Scott.
- drivers/clk/clk-qoriq.c | 91 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 77 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index d0bf8b1..f3931e3 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -87,7 +87,7 @@ struct clockgen {
- 	struct device_node *node;
- 	void __iomem *regs;
- 	struct clockgen_chipinfo info; /* mutable copy */
--	struct clk *sysclk;
-+	struct clk *sysclk, *coreclk;
- 	struct clockgen_pll pll[6];
- 	struct clk *cmux[NUM_CMUX];
- 	struct clk *hwaccel[NUM_HWACCEL];
-@@ -904,7 +904,12 @@ static void __init create_muxes(struct clockgen *cg)
- 
- static void __init clockgen_init(struct device_node *np);
- 
--/* Legacy nodes may get probed before the parent clockgen node */
-+/*
-+ * Legacy nodes may get probed before the parent clockgen node.
-+ * It is assumed that device trees with legacy nodes will not
-+ * contain a "clocks" property -- otherwise the input clocks may
-+ * not be initialized at this point.
-+ */
- static void __init legacy_init_clockgen(struct device_node *np)
- {
- 	if (!clockgen.node)
-@@ -945,18 +950,13 @@ static struct clk __init
- 	return clk_register_fixed_rate(NULL, name, NULL, 0, rate);
- }
- 
--static struct clk *sysclk_from_parent(const char *name)
-+static struct clk __init *input_clock(const char *name, struct clk *clk)
- {
--	struct clk *clk;
--	const char *parent_name;
--
--	clk = of_clk_get(clockgen.node, 0);
--	if (IS_ERR(clk))
--		return clk;
-+	const char *input_name;
- 
- 	/* Register the input clock under the desired name. */
--	parent_name = __clk_get_name(clk);
--	clk = clk_register_fixed_factor(NULL, name, parent_name,
-+	input_name = __clk_get_name(clk);
-+	clk = clk_register_fixed_factor(NULL, name, input_name,
- 					0, 1, 1);
- 	if (IS_ERR(clk))
- 		pr_err("%s: Couldn't register %s: %ld\n", __func__, name,
-@@ -965,6 +965,29 @@ static struct clk *sysclk_from_parent(const char *name)
- 	return clk;
- }
- 
-+static struct clk __init *input_clock_by_name(const char *name,
-+					      const char *dtname)
-+{
-+	struct clk *clk;
-+
-+	clk = of_clk_get_by_name(clockgen.node, dtname);
-+	if (IS_ERR(clk))
-+		return clk;
-+
-+	return input_clock(name, clk);
-+}
-+
-+static struct clk __init *input_clock_by_index(const char *name, int idx)
-+{
-+	struct clk *clk;
-+
-+	clk = of_clk_get(clockgen.node, 0);
-+	if (IS_ERR(clk))
-+		return clk;
-+
-+	return input_clock(name, clk);
-+}
-+
- static struct clk * __init create_sysclk(const char *name)
- {
- 	struct device_node *sysclk;
-@@ -974,7 +997,11 @@ static struct clk * __init create_sysclk(const char *name)
- 	if (!IS_ERR(clk))
- 		return clk;
- 
--	clk = sysclk_from_parent(name);
-+	clk = input_clock_by_name(name, "sysclk");
-+	if (!IS_ERR(clk))
-+		return clk;
-+
-+	clk = input_clock_by_index(name, 0);
- 	if (!IS_ERR(clk))
- 		return clk;
- 
-@@ -985,7 +1012,27 @@ static struct clk * __init create_sysclk(const char *name)
- 			return clk;
- 	}
- 
--	pr_err("%s: No input clock\n", __func__);
-+	pr_err("%s: No input sysclk\n", __func__);
-+	return NULL;
-+}
-+
-+static struct clk * __init create_coreclk(const char *name)
-+{
-+	struct clk *clk;
-+
-+	clk = input_clock_by_name(name, "coreclk");
-+	if (!IS_ERR(clk))
-+		return clk;
-+
-+	/*
-+	 * This indicates a mix of legacy nodes with the new coreclk
-+	 * mechanism, which should never happen.  If this error occurs,
-+	 * don't use the wrong input clock just because coreclk isn't
-+	 * ready yet.
-+	 */
-+	if (WARN_ON(PTR_ERR(clk) == -EPROBE_DEFER))
-+		return clk;
-+
- 	return NULL;
- }
- 
-@@ -1008,11 +1055,19 @@ static void __init create_one_pll(struct clockgen *cg, int idx)
- 	u32 __iomem *reg;
- 	u32 mult;
- 	struct clockgen_pll *pll = &cg->pll[idx];
-+	const char *input = "cg-sysclk";
- 	int i;
- 
- 	if (!(cg->info.pll_mask & (1 << idx)))
- 		return;
- 
-+	if (cg->coreclk && idx != PLATFORM_PLL) {
-+		if (IS_ERR(cg->coreclk))
-+			return;
-+
-+		input = "cg-coreclk";
-+	}
-+
- 	if (cg->info.flags & CG_VER3) {
- 		switch (idx) {
- 		case PLATFORM_PLL:
-@@ -1063,7 +1118,7 @@ static void __init create_one_pll(struct clockgen *cg, int idx)
- 			 "cg-pll%d-div%d", idx, i + 1);
- 
- 		clk = clk_register_fixed_factor(NULL,
--				pll->div[i].name, "cg-sysclk", 0, mult, i + 1);
-+				pll->div[i].name, input, 0, mult, i + 1);
- 		if (IS_ERR(clk)) {
- 			pr_err("%s: %s: register failed %ld\n",
- 			       __func__, pll->div[i].name, PTR_ERR(clk));
-@@ -1200,6 +1255,13 @@ static struct clk *clockgen_clk_get(struct of_phandle_args *clkspec, void *data)
- 			goto bad_args;
- 		clk = pll->div[idx].clk;
- 		break;
-+	case 5:
-+		if (idx != 0)
-+			goto bad_args;
-+		clk = cg->coreclk;
-+		if (IS_ERR(clk))
-+			clk = NULL;
-+		break;
- 	default:
- 		goto bad_args;
- 	}
-@@ -1311,6 +1373,7 @@ static void __init clockgen_init(struct device_node *np)
- 		clockgen.info.flags |= CG_CMUX_GE_PLAT;
- 
- 	clockgen.sysclk = create_sysclk("cg-sysclk");
-+	clockgen.coreclk = create_coreclk("cg-coreclk");
- 	create_plls(&clockgen);
- 	create_muxes(&clockgen);
- 
--- 
-2.1.0.27.g96db324
+On Wed, 2017-03-15 at 14:52 -0500, Rob Herring wrote:
+> On Fri, Mar 03, 2017 at 02:37:07PM +0530, Smitha T Murthy wrote:
+> > Adding the support for MFC v10.10, with new register file and
+> > necessary hw control, decoder, encoder and structural changes.
+> > 
+> > Signed-off-by: Smitha T Murthy <smitha.t@samsung.com>
+> > CC: Rob Herring <robh+dt@kernel.org>
+> > CC: devicetree@vger.kernel.org
+> > ---
+> >  .../devicetree/bindings/media/s5p-mfc.txt          |    1 +
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+Thank you for the Acked-by.
+Regards,
+Smitha T Murthy
+> >  drivers/media/platform/s5p-mfc/regs-mfc-v10.h      |   36 ++++++++++++++++
+> >  drivers/media/platform/s5p-mfc/s5p_mfc.c           |   30 +++++++++++++
+> >  drivers/media/platform/s5p-mfc/s5p_mfc_common.h    |    4 +-
+> >  drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c      |    4 ++
+> >  drivers/media/platform/s5p-mfc/s5p_mfc_dec.c       |   44 +++++++++++---------
+> >  drivers/media/platform/s5p-mfc/s5p_mfc_enc.c       |   21 +++++----
+> >  drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c    |    9 +++-
+> >  drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h    |    2 +
+> >  9 files changed, 118 insertions(+), 33 deletions(-)
+> >  create mode 100644 drivers/media/platform/s5p-mfc/regs-mfc-v10.h
+> 
+> 
