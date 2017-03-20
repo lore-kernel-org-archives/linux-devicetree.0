@@ -1,153 +1,81 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio playback
-Date: Mon, 20 Mar 2017 14:02:00 +0000
-Message-ID: <8b441b9d-bc26-091a-ac48-8594952759e8@synopsys.com>
-References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
- <1488481038.2684.14.camel@synopsys.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Mon, 20 Mar 2017 15:00:51 +0100
+Message-ID: <1490018451.2917.86.camel@pengutronix.de>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+ <20170319152233.GW21222@n2100.armlinux.org.uk>
+ <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+ <1490010926.2917.59.camel@pengutronix.de>
+ <20170320120855.GH21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488481038.2684.14.camel@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170320120855.GH21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vineet, Alexey, Rob,
-
-
-On 02-03-2017 18:57, Alexey Brodkin wrote:
-> Hi Jose,
+On Mon, 2017-03-20 at 12:08 +0000, Russell King - ARM Linux wrote:
+> On Mon, Mar 20, 2017 at 12:55:26PM +0100, Philipp Zabel wrote:
+> > The above paragraph suggests we skip any rectangles that are not
+> > supported. In our case that would be 3. and 4., since the CSI can't
+> > compose into a larger frame. I hadn't realised that the crop selection
+> > currently happens on the source pad.
+> 
+> I'd recommend viewing the documentation in its post-processed version,
+> because then you get the examples as pictures, and they say that a
+> picture is worth 1000 words.  See
+> 
+>   https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/dev-subdev.html
+> 
+> There is almost an exact example of what we're trying to do - it's
+> figure 4.6.  Here, we have a sink pad with a cropping rectangle on
+> the input, which is then scaled to a composition rectangle (there's
+> no bounds rectangle, and it's specified that in such a case the
+> top,left of the composition rectangle will always be 0,0 - see quote
+> below).
+> 
+> Where it differs is that the example also supports source cropping
+> for two source pads.  We don't support that.
 >
-> On Wed, 2017-02-22 at 18:19 +0000, Jose Abreu wrote:
->> This patch adds the necessary DT bindings to get HDMI audio
->> output in ARC AXS10x SDP. The bindings for I2S controller were
->> added as well as the bindings for simple audio card.
->>
->> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
->> Cc: Carlos Palminha <palminha@synopsys.com>
->> Cc: Alexey Brodkin <abrodkin@synopsys.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Vineet Gupta <vgupta@synopsys.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-snps-arc@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>  arch/arc/boot/dts/axs10x_mb.dtsi | 22 ++++++++++++++++++----
->>  1 file changed, 18 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
->> index d6c1bbc..9d882b1 100644
->> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
->> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
->> @@ -149,12 +149,13 @@
->>  			interrupts = <14>;
->>  		};
->>  
->> -		i2c@0x1e000 {
->> -			compatible = "snps,designware-i2c";
->> +		i2s: i2s@1e000 {
->> +			compatible = "snps,designware-i2s";
->>  			reg = <0x1e000 0x100>;
->> -			clock-frequency = <400000>;
->> -			clocks = <&i2cclk>;
->> +			clocks = <&i2sclk 0>;
->> +			clock-names = "i2sclk";
->>  			interrupts = <15>;
->> +			#sound-dai-cells = <0>;
->>  		};
->>  
->>  		i2c@0x1f000 {
->> @@ -174,6 +175,7 @@
->>  				adi,input-colorspace = "rgb";
->>  				adi,input-clock = "1x";
->>  				adi,clock-delay = <0x03>;
->> +				#sound-dai-cells = <0>;
->>  
->>  				ports {
->>  					#address-cells = <1>;
->> @@ -295,5 +297,17 @@
->>  				};
->>  			};
->>  		};
->> +
->> +		sound_playback {
->> +			compatible = "simple-audio-card";
->> +			simple-audio-card,name = "AXS10x HDMI Audio";
->> +			simple-audio-card,format = "i2s";
->> +			simple-audio-card,cpu {
->> +				sound-dai = <&i2s>;
->> +			};
->> +			simple-audio-card,codec {
->> +				sound-dai = <&adv7511>;
->> +			};
->> +		};
->>  	};
->>  };
-> Just for the sake of history that's my mods to defconfig that allowed me
-> to play .pcm via HDMI from axs103 board:
-> -------------------------------->8-------------------------------
-> diff --git a/arch/arc/configs/axs103_smp_defconfig b/arch/arc/configs/axs103_smp_defconfig
-> index 30a3d4cf53d2..b11362a32e4e 100644
-> --- a/arch/arc/configs/axs103_smp_defconfig
-> +++ b/arch/arc/configs/axs103_smp_defconfig
-> @@ -67,25 +67,29 @@ CONFIG_MOUSE_PS2_TOUCHKIT=y
->  CONFIG_MOUSE_SERIAL=y
->  CONFIG_MOUSE_SYNAPTICS_USB=y
->  # CONFIG_LEGACY_PTYS is not set
-> -# CONFIG_DEVKMEM is not set
->  CONFIG_SERIAL_8250=y
->  CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_8250_DW=y
->  CONFIG_SERIAL_OF_PLATFORM=y
->  # CONFIG_HW_RANDOM is not set
-> -CONFIG_I2C=y
->  CONFIG_I2C_CHARDEV=y
->  CONFIG_I2C_DESIGNWARE_PLATFORM=y
->  # CONFIG_HWMON is not set
-> -CONFIG_DRM=m
-> -CONFIG_DRM_I2C_ADV7511=m
-> -CONFIG_DRM_ARCPGU=m
-> -CONFIG_FB=y
-> +CONFIG_DRM=y
-> +CONFIG_DRM_I2C_ADV7511=y
-> +CONFIG_DRM_I2C_ADV7511_AUDIO=y
-> +CONFIG_DRM_ARCPGU=y
->  CONFIG_FRAMEBUFFER_CONSOLE=y
->  CONFIG_LOGO=y
->  # CONFIG_LOGO_LINUX_MONO is not set
->  # CONFIG_LOGO_LINUX_VGA16 is not set
->  # CONFIG_LOGO_LINUX_CLUT224 is not set
-> +CONFIG_SOUND=y
-> +CONFIG_SND=y
-> +CONFIG_SND_SOC=y
-> +CONFIG_SND_DESIGNWARE_I2S=y
-> +CONFIG_SND_DESIGNWARE_PCM=y
-> +CONFIG_SND_SIMPLE_CARD=y
->  CONFIG_USB_EHCI_HCD=y
->  CONFIG_USB_EHCI_HCD_PLATFORM=y
->  CONFIG_USB_OHCI_HCD=y
-> -------------------------------->8-------------------------------
->
-> Anyways...
->
-> Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+> The same document says:
+> 
+>   Scaling support is optional. When supported by a subdev, the crop
+>   rectangle on the subdev's sink pad is scaled to the size configured
+>   using the
+>   :ref:`VIDIOC_SUBDEV_S_SELECTION <VIDIOC_SUBDEV_G_SELECTION>` IOCTL
+>   using ``V4L2_SEL_TGT_COMPOSE`` selection target on the same pad. If the
+>   subdev supports scaling but not composing, the top and left values are
+>   not used and must always be set to zero.
 
-Rob, can you please take a look at this patch and at 2/2?
+Right, this sentence does imply that when scaling is supported, there
+must be a sink compose rectangle, even when composing is not.
 
-Alexey, do you still maintain your ack in these patches? (I'm
-asking because I remember you were having no video after patch
-2/2 of this series). If so, Vineet, can you please pick this up
-and patch 2/2 also?
+I have previously set up scaling like this:
 
-Best regards,
-Jose Miguel Abreu
+media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
+media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
+
+Does this mean, it should work like this instead?
+
+media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
+media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY2X8/1920x1080@1/60,compose:(0,0)/960x540]"
+media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
+
+I suppose setting the source pad format should not be allowed to modify
+the sink compose rectangle.
+
+regards
+Philipp
