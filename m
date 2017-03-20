@@ -1,103 +1,61 @@
-From: Piotr Sroka <piotrs@cadence.com>
-Subject: [v4 2/3] dt-bindings: mmc: add description of PHY delays for sdhci-cadence
-Date: Mon, 20 Mar 2017 11:20:42 +0000
-Message-ID: <1490008842-26854-1-git-send-email-piotrs@cadence.com>
-References: <1490008372-16372-1-git-send-email-piotrs@cadence.com>
+From: Artur Jedrysek <jartur@cadence.com>
+Subject: [PATCH v3,
+ 4/4] dt-bindings: mtd: Add Octal SPI support to Cadence QSPI.
+Date: Mon, 20 Mar 2017 11:27:34 +0000
+Message-ID: <1490009254-4284-1-git-send-email-jartur@cadence.com>
+References: <1490008935-28900-1-git-send-email-jartur@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1490008372-16372-1-git-send-email-piotrs@cadence.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1490008935-28900-1-git-send-email-jartur@cadence.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Artur Jedrysek <jartur@cadence.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DTS properties are used instead of fixed data
-because PHY settings can be different for different chips/boards.
-Add description of new DLL PHY delays.
+This patch updates Cadence QSPI Device Tree documentation to include
+information about new compatible used to indicate, whether or not
+Octal SPI transfers are supported by the device.
 
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Signed-off-by: Artur Jedrysek <jartur@cadence.com>
 ---
-Changes for v2:
-- file was created in v2. It was a part of driver source file patch.
-- most delays were moved from dts file
-  to data associated with an SoC specific compatible
-- description of delays was updated to be more clearly
+Changelog:
+v2: Use new compatible, instead of boolean property, to indicate
+Octal SPI support.
 ---
-Changes for v3:
-- move all delays back to dts because they are also boards dependent
-- prefix all of the Cadence-specific properties with cdns prefix
+v3: Changes according to comments.
 ---
-Changes for v4:
-- change the beginning of the commit subject
----
- .../devicetree/bindings/mmc/sdhci-cadence.txt      | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-index c0f37cb..c341820 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-@@ -19,6 +19,53 @@ if supported.  See mmc.txt for details.
- - mmc-hs400-1_8v
- - mmc-hs400-1_2v
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+index f248056..298b0a3 100644
+--- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+@@ -1,7 +1,9 @@
+ * Cadence Quad SPI controller
  
-+Some PHY delays can be configured by following properties.
-+PHY DLL input delays:
-+They are used to delay the data valid window, and align the window
-+to sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
-+and it is increased by 2.5ns in each step.
-+- cdns,phy-input-delay-sd-highspeed:
-+  Value of the delay in the input path for SD high-speed timing
-+  Valid range = [0:0x1F].
-+- cdns,phy-input-delay-legacy:
-+  Value of the delay in the input path for SD legacy timing
-+  Valid range = [0:0x1F].
-+- cdns,phy-input-delay-sd-uhs-sdr12:
-+  Value of the delay in the input path for SD UHS SDR12 timing
-+  Valid range = [0:0x1F].
-+- cdns,phy-input-delay-sd-uhs-sdr25:
-+  Value of the delay in the input path for SD UHS SDR25 timing
-+  Valid range = [0:0x1F].
-+- cdns,phy-input-delay-sd-uhs-sdr50:
-+  Value of the delay in the input path for SD UHS SDR50 timing
-+  Valid range = [0:0x1F].
-+- cdns,phy-input-delay-sd-uhs-ddr50:
-+  Value of the delay in the input path for SD UHS DDR50 timing
-+  Valid range = [0:0x1F].
-+- cdns,phy-input-delay-mmc-highspeed:
-+  Value of the delay in the input path for MMC high-speed timing
-+  Valid range = [0:0x1F].
-+- cdns,phy-input-delay-mmc-ddr:
-+  Value of the delay in the input path for eMMC high-speed DDR timing
-+  Valid range = [0:0x1F].
-+
-+PHY DLL clock delays:
-+Each delay property represents the fraction of the clock period.
-+The approximate delay value will be
-+(<delay property value>/128)*sdmclk_clock_period.
-+- cdns,phy-dll-delay-sdclk:
-+  Value of the delay introduced on the sdclk output
-+  for all modes except HS200, HS400 and HS400_ES.
-+  Valid range = [0:0x7F].
-+- cdns,phy-dll-delay-sdclk-hsmmc:
-+  Value of the delay introduced on the sdclk output
-+  for HS200, HS400 and HS400_ES speed modes.
-+  Valid range = [0:0x7F].
-+- cdns,phy-dll-delay-strobe:
-+  Value of the delay introduced on the dat_strobe input
-+  used in HS400 / HS400_ES speed modes.
-+  Valid range = [0:0x7F].
-+
- Example:
- 	emmc: sdhci@5a000000 {
- 		compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
-@@ -29,4 +76,5 @@ Example:
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
- 		mmc-hs400-1_8v;
-+		cdns,phy-dll-delay-sdclk = <0>;
- 	};
+ Required properties:
+-- compatible : Should be "cdns,qspi-nor".
++- compatible : Should be one of:
++  - "cdns,qspi-nor" for Quad SPI controller.
++  - "cdns,ospi-nor", "cdns,qspi-nor" for Octal SPI controller.
+ - reg : Contains two entries, each of which is a tuple consisting of a
+ 	physical address and length. The first entry is the address and
+ 	length of the controller register set. The second entry is the
 -- 
 2.2.2
 
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
