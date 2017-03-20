@@ -1,87 +1,157 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
-Date: Mon, 20 Mar 2017 14:49:21 +0100
-Message-ID: <20170320134921.GO22463@ulmo.ba.sec>
-References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
- <20170316064218.9169-2-ralph.sennhauser@gmail.com>
- <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
- <20170318153753.GA22088@lunn.ch>
+From: jacopo <jacopo@jmondi.org>
+Subject: Re: [PATCH 4/7] arm: dts: r7s72100: Add pin controller node
+Date: Mon, 20 Mar 2017 14:47:55 +0100
+Message-ID: <20170320134755.GB30223@w540>
+References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1487610788-6939-5-git-send-email-jacopo+renesas@jmondi.org>
+ <3dd69ef5-e8a4-b69c-b4fa-1be6ba777cfa@jmondi.org>
+ <SG2PR06MB1165DCCA724AD6A8325862668A280@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdVdiMWNq1or9JgzAKfWXsDg1VD9ehG6U=E_snes04Y1Mg@mail.gmail.com>
+ <SG2PR06MB1165E8FAE15523F7D3EC83718A2B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="S0GG+JvAI2G0KxBG"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170318153753.GA22088@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Ralph Sennhauser <ralph.sennhauser@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Imre Kaloz <kaloz@openwrt.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1165E8FAE15523F7D3EC83718A2B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris, Geert,
 
---S0GG+JvAI2G0KxBG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 03, 2017 at 01:24:51PM +0000, Chris Brandt wrote:
+> Hi Geert,
+> 
+> On Friday, March 03, 2017, Geert Uytterhoeven wrote:
+> > > Is it possible to change the number of port pins in the board dts file?
+> > > For example:
+> > >   RZ/A1H: P5_0 - P5_10
+> > >   RZ/A1L: P5_0 - P5_16
+> > 
+> > That's 17 pins, not 16?
+> 
+> Oops, I meant P5_15
+> 
+> Looking at the parts, here are the differences:
+> 
+> RZ/A1H    RZ/A1L
+> ------------------
+> P2_0:15   P2_0:9
+> P4_0:15   P4_0:7
+> P5_0:10   P5_0:15
+> P7_0:15   P7_0:11
+> P9_0:7    P9_0:5
+> P10_0:15  none
+> P11_0:15  none
+> 
+> > > So, in a rza1l-board.dts file I would put:
+> > >
+> > > &port5 {
+> > >         gpio-ranges = <&pinctrl 0 80 16>;
+> > > }
+> > >
+> > > Will this work?
+> > 
+> > Yes, overriding should work. But the number of pins is an SoC-property,
+> > not
+> > a board-property?
+> 
+> True, but I am trying to figure out how to solve this locally and not make
+> it an upstream problem.
+> 
+> 
+> > Are the differences between RZ/A1H and RZ/A1L just the number of pins?
+> 
+> Yes/No.
+> 
+> Internally, the IP blocks are the same, and located at the same register
+> addresses, but come out to different port pins due to the RZ/A1L having smaller
+> packages.
+> 
+> Also, the L has less channels than the H.
+> For example:
+>  QSPI: H=2, L=1
+>   LCD: H=2, L=1
+>  SCIF: H=8, L=5
+>   CAN: H=5, L=2
+> 
+> Of course there is some IP that only comes in the H.
+> 
+> This is why I didn't want to associate "names" with the pins in a pfc driver.
+> I just wanted the board DT to assign a pin to a 'function number'.
+> 
+> 
+> 
+> > If yes, you could use a hierarchical DTS structure:
+> > 
+> > rza1h-<board>.dts:
+> > 
+> >     #include "rza1h.dtsi"
+> > 
+> >     // board specifics here
+> > 
+> > rza1l-<board>.dts:
+> > 
+> >     #include "rza1l.dtsi"
+> > 
+> >     // board specifics here
+> > 
+> > rza1h.dtsi:
+> > 
+> >     #include "rza.dtsi"  // r7s72100.dtsi?
+> > 
+> >     // base SoC overrides
+> >     &port5 {
+> >         gpio-ranges = <&pinctrl 0 80 11>;
+> >     }
+> > 
+> > rza1l.dtsi:
+> > 
+> >     #include "rza.dtsi"  // r7s72100.dtsi?
+> > 
+> >     // base SoC overrides
+> >     &port5 {
+> >         gpio-ranges = <&pinctrl 0 80 16>;
+> >     }
+> > 
+> > Actual naming of DTS files TBD.
+> 
+> OK, so just put the pin differences in the two files. That's a good idea. But,
+> then that's 2 more files to add upstream.
+> As the RZ/A series continues, they might keep doing this kind of thing, so I
+> don't want to get into the habit of adding more and more DT files.
+> 
+> # I wish there was some type of if-else syntax in Device Tree so in the
+> board file I could just say:
+> 
+> / {
+> 	model = "RSKRZA1";
+> 	compatible = "renesas,rskrza1", "renesas,r7s72100";
+> 
+> 	variant = "rza1l";
+> 
+> 
+> > We could also decide to not have rza1h.dtsi, and assume the base dtsi is
+> > for
+> > RZ/A1H.
+> 
+> Honestly, I'm fine with RZ/A1H being the flagship upstream SoC since it is a
+> superset of all the peripherals in RZ/A1M,/A1L,/A1LU,/A1LC. Meaning, this small
+> difference can be handled in a simple board file addition.
+> 
+> I was thinking I was going to post some DT examples on eLinux.org anyway, so one of
+> them would just be this RZ/A1L fix.
+> 
 
-On Sat, Mar 18, 2017 at 04:37:53PM +0100, Andrew Lunn wrote:
-> > > +static void mvebu_pwm_free(struct pwm_chip *chip, struct pwm_device =
-*pwmd)
-> > > +{
-> > > +       struct mvebu_pwm *pwm =3D to_mvebu_pwm(chip);
-> > > +       struct gpio_desc *desc =3D gpio_to_desc(pwmd->pwm);
-> > > +       unsigned long flags;
-> > > +
-> > > +       spin_lock_irqsave(&pwm->lock, flags);
-> > > +       gpiod_free(desc);
-> > > +       pwm->used =3D false;
-> > > +       spin_unlock_irqrestore(&pwm->lock, flags);
-> > > +}
-> >=20
-> > No need to set the output value to zero or something here?
-> > And turn off blinking? Or is that done some other way?
->=20
-> Hi Linus
->=20
-> The disable op will turn of blinking. I've not checked, but i assume
-> the PWM core will not allow you to free an enabled PWM?
+If we do all agree on having RZ/A1H upstream and let differences
+between SoCs to be handled in the BSP/downstream board files, I'll send
+v2 targeting that specific SoC only
 
-Actually it will. It's probably a good idea to add a WARN_ON() to the
-PWM core if that situation arises. I don't think going as far as
-prohibiting it will do any good, though. It's not like drivers will
-have much of a choice if pwm_put() fails. Typically they'd do that in
-their ->remove() call, at which point failure is difficult to deal with.
+Thanks
+   j
 
-> > I think both of these need to be tagged __maybe_unused to not give
-> > noise in randconfig builds.
->=20
-> I've not seen any 0-day patch emails giving warnings. So i suspect it
-> is O.K.
-
-Linus was probably referring to !PM configurations. I'm not sure how
-often they'll get run, but as long as it doesn't make it into linux-next
-the chances aren't very high (I don't think the 0-day builder executes
-randconfig builds).
-
-Thierry
-
---S0GG+JvAI2G0KxBG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljP3eEACgkQ3SOs138+
-s6FKUxAAhiWb2v/kY5uFn3M4lFcCOoIX1QdIOouOCRKQAzrTGBejMiFCvHSeQRAF
-tATnrMIbvU+TZj7XKuXuVkR2lfHE0V7iz8T4KofmKaA1+21AdGYkBma6qz+DZ6Rq
-S/7hIUD1aFqZBDZyO9jdw6sbEDCeiX0p2X6HH0eiEvg90Wj/zX+BYngsAryYL63r
-/25PV9SZp5XRWPuPizb5COK+KcLUbx4loo+fIvxb4ISjIvlBB/E3VH0y1PdJ2Ss5
-rCXXal7YF+XSKFhH5ze/oNu6DeTq+3mjGyasxpD1bJ6M+E3EgFI7rbMHltSmmJpQ
-GH8ikOHUNLX6EoU+f/LGghUc/ci4PlAnOyygwLV334M07a72VcIs0bX72plowvOn
-+TzAjDZzZB4YBMOnX9L0d4eUOX+YgKLoBPWPSNx1zF22IOGavxzOz+cHVAt8Zi4z
-g5PNLoWkXjHOy/ZimDqW8t56811IrWbNYtEoC29dfeOwO02/Zc3fiz9LELcN6q5G
-SHxh/tAJ2U7RPovzqRjDxLNj6Pvw22TXwd3WyhxFEL/E04pl4cp9VMKKSA8A7roL
-ZU6NSHHWXff9VHHf346vjPv6Z7K1edfMuAsVeRMdTtRZIDxDP/k7M+dhwXqEiMnm
-lAEvQX3mPPWiJoD8a7oTwCKJHPuaoD6nZUvquY4lZdFhA0QAmc0=
-=DilI
------END PGP SIGNATURE-----
-
---S0GG+JvAI2G0KxBG--
+> Cheers
+> 
+> Chris
+> 
