@@ -1,123 +1,143 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 2/5] rtc: Add rtc-sh
-Date: Mon, 20 Mar 2017 15:05:03 +0000
-Message-ID: <SG2PR06MB1165819F41CF40562F44F08B8A3A0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170316175112.27913-1-chris.brandt@renesas.com>
- <20170316175112.27913-3-chris.brandt@renesas.com>
- <CAMuHMdVu0dQjptyW0F5YS+V6sixXTM3P6VWq2=8BQ5njUOXf-Q@mail.gmail.com>
- <SG2PR06MB1165A9931C930DF9BCD5C0A98A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdW0nHiZkE_RxVLX3G0MuwQLPHVFyNq5C1tx0yAqDQefaA@mail.gmail.com>
- <SG2PR06MB11653BB788CADBEE78FE4CF58A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdWs3NtKLiBnKCmxGYNBW3zzWYydj=JGKr+mH7ao97L2_Q@mail.gmail.com>
- <20170317150524.oijto6gtjxycdnwn@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Mon, 20 Mar 2017 12:06:38 -0300
+Message-ID: <20170320120638.09ba5621@vento.lan>
+References: <20170310125342.7f047acf@vento.lan>
+ <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+ <20170311082549.576531d0@vento.lan>
+ <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+ <20170314004533.3b3cd44b@vento.lan>
+ <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+ <20170317114203.GZ21222@n2100.armlinux.org.uk>
+ <44161453-02f9-0019-3868-7501967a6a82@linux.intel.com>
+ <20170317102410.18c966ae@vento.lan>
+ <1489758670.2905.52.camel@pengutronix.de>
+ <20170317143743.GG21222@n2100.armlinux.org.uk>
+ <5b57773a-a747-285b-eb3e-3b3f0acd8079@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXOFUXT2UGBBJO7X7DAKGQEHYBZDCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170317150524.oijto6gtjxycdnwn-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Geert
- Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <5b57773a-a747-285b-eb3e-3b3f0acd8079@xs4all.nl>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacek Anaszewski <j.anaszewski@samsung.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sak>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre and Geert,
+Em Mon, 20 Mar 2017 14:10:30 +0100
+Hans Verkuil <hverkuil@xs4all.nl> escreveu:
 
-
-On Friday, March 17, 2017, Alexandre Belloni wrote:
-> On 17/03/2017 at 14:55:48 +0100, Geert Uytterhoeven wrote:
-> > >> it would still be good to have phandles to the external clock
-> > >> sources as well, as that describes the hardware topology.
-> > >
-> > > I'm confused, you mean make new clocks node for RTC_X1 (fixed at
-> > > 32.768kHZ) and
-> > > RTC_X3 (fixed at 4MHz), but then not really do anything with then?
-> > > (the driver
-> >
-> > You still do something with them, as they'll be linked from the rtc
-> device node.
-> >
-> > > doesn't need them)
-> >
-> > The driver may use them in the future.
-> > E.g. to select among X1, X3, or EXTAL, depending on availability.
-> >
+> On 03/17/2017 03:37 PM, Russell King - ARM Linux wrote:
+> > On Fri, Mar 17, 2017 at 02:51:10PM +0100, Philipp Zabel wrote:  
+> >> On Fri, 2017-03-17 at 10:24 -0300, Mauro Carvalho Chehab wrote:
+> >> [...]  
+> >>> The big question, waiting for an answer on the last 8 years is
+> >>> who would do that? Such person would need to have several different
+> >>> hardware from different vendors, in order to ensure that it has
+> >>> a generic solution.
+> >>>
+> >>> It is a way more feasible that the Kernel developers that already 
+> >>> have a certain hardware on their hands to add support inside the
+> >>> driver to forward the controls through the pipeline and to setup
+> >>> a "default" pipeline that would cover the common use cases at
+> >>> driver's probe.  
+> >>
+> >> Actually, would setting pipeline via libv4l2 plugin and letting drivers
+> >> provide a sane enabled default pipeline configuration be mutually
+> >> exclusive? Not sure about the control forwarding, but at least a simple
+> >> link setup and format forwarding would also be possible in the kernel
+> >> without hindering userspace from doing it themselves later.  
+> > 
+> > I think this is the exact same problem as controls in ALSA.
+> > 
+> > When ALSA started off in life, the requirement was that all controls
+> > shall default to minimum, and the user is expected to adjust controls
+> > after the system is running.
+> > 
+> > After OSS, this gave quite a marked change in system behaviour, and
+> > led to a lot of "why doesn't my sound work anymore" problems, because
+> > people then had to figure out which combination of controls had to be
+> > set to get sound out of their systems.
+> > 
+> > Now it seems to be much better, where install Linux on a platform, and
+> > you have a working sound system (assuming that the drivers are all there
+> > which is generally the case for x86.)
+> > 
+> > However, it's still possible to adjust all the controls from userspace.
+> > All that's changed is the defaults.
+> > 
+> > Why am I mentioning this - because from what I understand Mauro saying,
+> > it's no different from this situation.  Userspace will still have the
+> > power to disable all links and setup its own.  The difference is that
+> > there will be a default configuration that the kernel sets up at boot
+> > time that will be functional, rather than the current default
+> > configuration where the system is completely non-functional until
+> > manually configured.
+> > 
+> > However, at the end of the day, I don't care _where_ the usability
+> > problems are solved, only that there is some kind of solution.  It's not
+> > the _where_ that's the real issue here, but the _how_, and discussion of
+> > the _how_ is completely missing.
+> > 
+> > So, let's try kicking off a discussion about _how_ to do things.
+> > 
+> > _How_ do we setup a media controller system so that we end up with a
+> > usable configuration - let's start with the obvious bit... which links
+> > should be enabled.
+> > 
+> > I think the first pre-requisit is that we stop exposing capture devices
+> > that can never be functional for the hardware that's present on the board,
+> > so that there isn't this plentora of useless /dev/video* nodes and useless
+> > subdevices.
+> > 
+> > One possible solution to finding a default path may be "find the shortest
+> > path between the capture device and the sensor and enable intervening
+> > links".
+> > 
+> > Then we need to try configuring that path with format/resolution
+> > information.
+> > 
+> > However, what if something in the shortest path can't handle the format
+> > that the sensor produces?  I think at that point, we'd need to drop that
+> > subdev out of the path resolution, re-run the "find the shortest path"
+> > algorithm, and try again.
+> > 
+> > Repeat until success or no path between the capture and sensor exists.
+> > 
+> > This works fine if you have just one sensor visible from a capture device,
+> > but not if there's more than one (which I suspect is the case with the
+> > Sabrelite board with its two cameras and video receiver.)  That breaks
+> > the "find the shortest path" algorithm.
+> > 
+> > So, maybe it's a lot better to just let the board people provide via DT
+> > a default setup for the connectivity of the modules somehow - certainly
+> > one big step forward would be to disable in DT parts of the capture
+> > system that can never be used (remembering that boards like the RPi /
+> > Hummingboard may end up using DT overlays to describe this for different
+> > cameras, so the capture setup may change after initial boot.)  
 > 
-> I'm on Geert's side here, I wouldn't rely on the bootloader to set
-> everything up correctly.
+> The MC was developed before the device tree came along. But now that the DT
+> is here, I think this could be a sensible idea to let the DT provide an
+> initial path.
+> 
+> Sakari, Laurent, Mauro: any opinions?
 
-Part of my hesitation to putting in the clock source selection was that
-this RTC block is used in a lot of parts, and it's always the same,
-except for the last 3 registers which are different from device to
-device because different SoCs have different clock sources options
-and ways to set them up. So, making a driver that just 'reads' the
-time seemed safer/easier.
-Anyway, I'll add the clock setup in if that's the general consensus.
+It makes perfect sense to me.
 
+By setting the pipeline via DT on boards with simple configurations,
+e. g. just one CSI physical interface, it can create just one
+devnode (e. g. /dev/video0) with would fully control the device,
+without enabling subdev API for such hardware, making the hardware
+usable with all V4L2 applications.
 
-But, before I send out an updated version, what were you thinking
-my DT should look like?
-
-Should I make a "count-source" property for user to select what clock
-will be used for the actually counting?
-
-
-	clocks {
-		ranges;
-		#address-cells = <1>;
-		#size-cells = <1>;
-            . . .
-
-+		rtc_x1_clk: rtc_x1 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			/* If clk present, value must be set by board to 32678 */
-+			clock-frequency = <0>;
-+		};
-+
-+		rtc_x3_clk: rtc_x3 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			/* If clk present, value must be set by board to 4000000 */
-+			clock-frequency = <0>;
-+		};
-+
-
-
-
-
-+	rtc: rtc@fcff1000 {
-+		compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
-+		reg = <0xfcff1000 0x2e>;
-+		interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
-+			      GIC_SPI 277 IRQ_TYPE_EDGE_RISING
-+			      GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "alarm", "period", "carry";
-+		clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
-+			  <&extal_clk> , <&rtc_x3_clk>;
-+		clock-names = "fck", "rtc_x1", "extal", "rtc_x3";
-+		power-domains = <&cpg_clocks>;
-+		count-source = "rtc_x1";    <<<<<<< this would be in the board dts file
-+		status = "disabled";
-+	};
-
-
-Thank you,
-Chris
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards,
+Mauro
