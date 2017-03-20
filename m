@@ -1,55 +1,77 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 4/5] ASoC: sun8i-codec: Convert to use
-	SND_SOC_DAPM_AIF_IN
-Date: Mon, 20 Mar 2017 19:49:03 +0800
-Message-ID: <CAGb2v6733y=UVXyhsSUK6whjWd_t_eXb1_aqnjyaj-_TFeGZqw@mail.gmail.com>
-References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
- <20170318075509.3836-5-mylene.josserand@free-electrons.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v4 1/7] coresight: bindings for CPU debug module
+Date: Mon, 20 Mar 2017 19:49:53 +0800
+Message-ID: <20170320114953.GA19581@leoy-linaro>
+References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
+ <1489762943-25849-2-git-send-email-leo.yan@linaro.org>
+ <20170317161335.GB20435@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170318075509.3836-5-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170317161335.GB20435@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Suzuki.Poulose@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, sudeep.holla@arm.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBNYXIgMTgsIDIwMTcgYXQgMzo1NSBQTSwgTXlsw6huZSBKb3NzZXJhbmQKPG15bGVu
-ZS5qb3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPiBVcGRhdGUgdGhlIGRyaXZl
-ciB0byB1c2UgU05EX1NPQ19EQVBNX0FJRl9JTiBpbnN0ZWFkIG9mCj4gU05EX1NPQ19EQVBNX0RB
-Qy4KPiBSZW5hbWUgdGhlIGludGVyZmFjZSdzIHdpZGdldHMgdG8gYmUgbW9yZSBwcmVjaXNlIG9u
-IHdoaWNoIHNsb3QKPiB0aGUgaW50ZXJmYWNlIGlzIGNvbm5lY3RlZC4KPgo+IFNpZ25lZC1vZmYt
-Ynk6IE15bMOobmUgSm9zc2VyYW5kIDxteWxlbmUuam9zc2VyYW5kQGZyZWUtZWxlY3Ryb25zLmNv
-bT4KPiAtLS0KPiAgc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMgfCAyMCArKysrKysrKysr
-Ky0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlv
-bnMoLSkKPgo+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYyBiL3Nv
-dW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jCj4gaW5kZXggYWRiMTNmYmQyMDA2Li43NTI3YmEy
-OWE1YTAgMTAwNjQ0Cj4gLS0tIGEvc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMKPiArKysg
-Yi9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYwoKWy4uLl0KCj4gQEAgLTMzMSwxNCArMzMz
-LDE0IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3JvdXRlIHN1bjhpX2NvZGVj
-X2RhcG1fcm91dGVzW10gPSB7Cj4gICAgICAgICB7ICJEQUMiLCBOVUxMLCAiTU9EQ0xLIERBQyIg
-fSwKPgo+ICAgICAgICAgLyogREFDIFJvdXRlcyAqLwo+IC0gICAgICAgeyAiRGlnaXRhbCBMZWZ0
-IERBQyIsIE5VTEwsICJEQUMiIH0sCj4gLSAgICAgICB7ICJEaWdpdGFsIFJpZ2h0IERBQyIsIE5V
-TEwsICJEQUMiIH0sCj4gKyAgICAgICB7ICJBSUYxIFNsb3QgMCBSaWdodCIsIE5VTEwsICJEQUMi
-IH0sCj4gKyAgICAgICB7ICJBSUYxIFNsb3QgMCBMZWZ0IiwgTlVMTCwgIkRBQyIgfSwKCk5pdCBv
-biB0aGUgb3JkZXIgKHNob3VsZCBiZSBsZWZ0IGJlZm9yZSByaWdodCksIGJ1dCBvdGhlcndpc2UK
-CkFja2VkLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cgo+Cj4gICAgICAgICAvKiBE
-QUMgTWl4ZXIgUm91dGVzICovCj4gICAgICAgICB7ICJMZWZ0IERpZ2l0YWwgREFDIE1peGVyIiwg
-IkFJRjEgU2xvdCAwIERpZ2l0YWwgREFDIFBsYXliYWNrIFN3aXRjaCIsCj4gLSAgICAgICAgICJE
-aWdpdGFsIExlZnQgREFDIn0sCj4gKyAgICAgICAgICJBSUYxIFNsb3QgMCBMZWZ0In0sCj4gICAg
-ICAgICB7ICJSaWdodCBEaWdpdGFsIERBQyBNaXhlciIsICJBSUYxIFNsb3QgMCBEaWdpdGFsIERB
-QyBQbGF5YmFjayBTd2l0Y2giLAo+IC0gICAgICAgICAiRGlnaXRhbCBSaWdodCBEQUMifSwKPiAr
-ICAgICAgICAgIkFJRjEgU2xvdCAwIFJpZ2h0In0sCj4gIH07Cj4KPiAgc3RhdGljIHN0cnVjdCBz
-bmRfc29jX2RhaV9vcHMgc3VuOGlfY29kZWNfZGFpX29wcyA9IHsKPiAtLQo+IDIuMTEuMAo+Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwg
-bWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5h
-bHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Hi Mathieu,
+
+On Fri, Mar 17, 2017 at 10:13:35AM -0600, Mathieu Poirier wrote:
+
+[...]
+
+> > +- compatible : should be
+> > +	     * "arm,coresight-cpu-debug"; supplemented with "arm,primecell"
+> > +	       since this driver is using the AMBA bus interface.
+> 
+> This description needs to be refactored - see my comment from an earlier post
+> for more details.
+
+I have refined this description according to your suggestion:
+http://archive.armlinux.org.uk/lurker/message/20170301.154550.f55a09d5.en.html
+
+Am I missing anthing for this?
+
+> > +- reg : physical base address and length of the register set.
+> > +
+> > +- clocks : the clock associated to this component.
+> > +
+> > +- clock-names : the name of the clock referenced by the code. Since we are
+> > +                using the AMBA framework, the name of the clock providing
+> > +		the interconnect should be "apb_pclk" and the clock is
+> > +		mandatory. The interface between the debug logic and the
+> > +		processor core is clocked by the internal CPU clock, so it
+> > +		is enabled with CPU clock by default.
+> > +
+> > +- cpu : the cpu phandle the debug module is affined to. When omitted
+> > +	the module is considered to belong to CPU0.
+> > +
+> > +Optional properties:
+> 
+> s/properties/property
+> 
+> > +
+> > +- power-domains: a phandle to power domain node for debug module. We can
+> > +		 use "nohlt" to ensure CPU power domain is enabled.
+> 
+> The "power-domains" property is to take care of the debug power domain.  The
+> "nohlt" is to make sure registers in the CPU power domain are accessible - both
+> are independent from one another.  As such the description for this binding
+> shoudl be:
+> 
+> "a phandle to the debug power domain".
+
+Will fix for upper two comments.
+
+Thanks,
+Leo Yan
