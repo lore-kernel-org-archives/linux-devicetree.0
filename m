@@ -1,101 +1,106 @@
-From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: Re: [PATCH v5 2/4] fpga pr ip: Core driver support for Altera Partial
- Reconfiguration IP.
-Date: Mon, 20 Mar 2017 16:49:32 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1703201644110.2531@mgerlach-VirtualBox>
-References: <1489174827-6033-1-git-send-email-matthew.gerlach@linux.intel.com> <1489174827-6033-3-git-send-email-matthew.gerlach@linux.intel.com> <20170318195356.19269415@crub>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 0/4] arm64: dts: rockchip: support Google Kevin
+Date: Mon, 20 Mar 2017 16:53:40 -0700
+Message-ID: <20170320235344.126298-1-briannorris@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170318195356.19269415@crub>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
+This is v3, adding basic support for Google Kevin, a board in the Gru device
+family. It has gotten smaller, as pieces have been merged already, and the DT
+bindings have been ack'ed. It gained a new dependency on Heiko's work here:
+
+  [PATCH 2/2] arm64: dts: add arm/arm64 include symlinks
+  https://patchwork.kernel.org/patch/9592177/
+
+Otherwise, there's not a whole lot of note new in this series. Hopefully it'll
+be ready to merge (*crosses fingers*). The rest of this cover letter is
+basically the same as previous revisions. I've updated the changelogs below and
+in each patch.
+
+---
+
+I do not add a leaf .dts board file for Gru, but I have retained the split
+between "things that apply to the Gru family" (rk3399-gru.dtsi) and "things
+that apply to Kevin only" (rk3399-gru-kevin.dtsi).
+
+AFAICT, all these bindings are in -next, except for the root node compatible
+property (added doc in this series).
+
+I elaborate on what's working/not working below, but one of the big missing
+pieces is cpufreq support. We still need some more work on getting good
+bindings and driver support upstream for the PWM regulator + OVP circuit on
+these boards. See patch 5 for more info.
+
+Working and tested (to some extent):
+ * EC support -- including keyboard, battery, PWM, and probably more
+ * UART / console
+ * Thermal
+ * Touchscreen
+ * Touchpad
+ * Digitizer (regulator still WIP; working on this in another series)
+ * PCIe / Wifi
+ * Bluetooth / Webcam
+ * SD card
+ * eMMC
+ * USB2 on TypeC
+   - This works much of the time, but USB3 devices may or may not detect
+     properly. Waiting on proper extcon support for USB3 over TypeC.
+   - Depends on XHCI/DWC3 fixes for ARM64 that still haven't landed
+ * Backlight
+
+Not working:
+ * CPUFreq -- relies on special OVP support for our PWM regulator
+   circuits
+ * EC / extcon support -- and with it, USB3/TypeC/DP
+ * DRM -- won't even build on ARM64, so all display, eDP, etc. is not
+   enabled
+
+Not tested:
+ * Audio
 
 
-On Sat, 18 Mar 2017, Anatolij Gustschin wrote:
+v2 -> v3:
+ * reintroduced the digitizer/regulator patch, as the bindings and driver code
+   have been merged in -next
+ * reference {pmu-,}io-domain nodes from main rk3399.dtsi
+ * drop some now-superfluous comments
+ * use new proposed '#include <arm/...>' DTSI include path (symlink)
 
-> Hi Matthew,
->
+v1 -> v2:
+ * merge the OPP and CPU regulators into 1 patch; don't support them on non-Gru
+   boards yet, as that will break them (and we're not sure if the same table is
+   applicable anyway)
+ * drop some patches that were applied already
+ * update copyrights
+ * match USB bindings more closely
+ * drop digitizer regulator patches; this isn't ready (working on in another
+   series)
 
-Hi Anatolij,
 
-More good feedback.  See below.
+Brian Norris (4):
+  dt-bindings: Document rk3399 Gru/Kevin
+  arm64: dts: rockchip: add Gru/Kevin DTS
+  arm64: dts: rockchip: describe Gru/Kevin OPPs + CPU regulators
+  arm64: dts: rockchip: add regulator info for Kevin digitizer
 
+ Documentation/devicetree/bindings/arm/rockchip.txt |   20 +
+ arch/arm64/boot/dts/rockchip/Makefile              |    1 +
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  |  315 ++++++
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       | 1135 ++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi       |  145 +++
+ 5 files changed, 1616 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
 
-> thanks for the patches. Please see some comments below.
->
-> On Fri, 10 Mar 2017 11:40:25 -0800
-> matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->
-> ...
->> +	if (!(info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
->> +		pr_err("%s Partial Reconfiguration flag not set\n", __func__);
->
-> please use dev_err() here.
->
-> ...
->> +	if (val & ALT_PR_CSR_PR_START) {
->> +		pr_err("%s Partial Reconfiguration already started\n",
->
-> dev_err(), too.
+-- 
+2.12.0.367.g23dc2f6d3c-goog
 
-Good catch on both of these pr_err().  dev_err() would be better.
->
-> ...
->> +static int alt_pr_fpga_write_complete(struct fpga_manager *mgr,
->> +				      struct fpga_image_info *info)
->> +{
->> +	u32 i;
->> +
->> +	for (i = 0; i < info->config_complete_timeout_us; i++) {
->> +		switch (alt_pr_fpga_state(mgr)) {
->> +		case FPGA_MGR_STATE_WRITE_ERR:
->> +			return -EIO;
->> +
->> +		case FPGA_MGR_STATE_OPERATING:
->> +			dev_info(&mgr->dev,
->> +				 "successful partial reconfiguration\n");
->> +			return 0;
->> +
->> +		default:
->> +			break;
->> +		}
->> +		udelay(1);
->> +	}
->> +	dev_err(&mgr->dev, "timed out waiting for write to complete\n");
->> +	return -ETIMEDOUT;
->> +}
->
-> we will always get timed out error if info->config_complete_timeout_us
-> is zero. Can we change to
-> 	u32 i = 0;
-> 	...
-> 	do {
-> 		...
-> 	} while (info->config_complete_timeout_us > i++);
-> ?
-
-This seems more than reasonable to me.
-
->
-> ...
->> diff --git a/drivers/fpga/altera-pr-ip-core.h b/drivers/fpga/altera-pr-ip-core.h
->> new file mode 100644
->> index 0000000..3810a90
->> --- /dev/null
->> +++ b/drivers/fpga/altera-pr-ip-core.h
->
-> Should we move this header to include/linux/? We can use register/
-> unregister functions in other drivers (PCIe) outside drivers/fpga
-> then.
->
-> Thanks,
->
-> Anatolij
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
