@@ -1,139 +1,126 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 3/3] checks: Warn on node name unit-addresses with '0x' or leading 0s
-Date: Mon, 20 Mar 2017 09:44:18 -0500
-Message-ID: <20170320144418.5021-4-robh@kernel.org>
-References: <20170320144418.5021-1-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170320144418.5021-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 02/39] [media] dt-bindings: Add bindings for i.MX
+ media driver
+Date: Mon, 20 Mar 2017 10:02:35 -0500
+Message-ID: <20170320150235.xfd7c3a26au5qmyz@rob-hp-laptop>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-3-git-send-email-steve_longerbeam@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1489121599-23206-3-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Node name unit-addresses should generally never begin with 0x or leading
-0s. Add warnings to check for these cases, but only for nodes without a
-known bus type as there should be better bus specific checks of the
-unit address in those cases. Any unit addresses that don't follow the
-general rule will need to add a new bus type. There aren't any known
-ones ATM.
++Ramiro
 
-Reviewed-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v4:
-- Rebase to 1.4.4
+On Thu, Mar 09, 2017 at 08:52:42PM -0800, Steve Longerbeam wrote:
+> Add bindings documentation for the i.MX media driver.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  Documentation/devicetree/bindings/media/imx.txt | 74 +++++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
+> new file mode 100644
+> index 0000000..3059c06
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/imx.txt
+> @@ -0,0 +1,74 @@
+> +Freescale i.MX Media Video Device
+> +=================================
+> +
+> +Video Media Controller node
+> +---------------------------
+> +
+> +This is the media controller node for video capture support. It is a
+> +virtual device that lists the camera serial interface nodes that the
+> +media device will control.
+> +
+> +Required properties:
+> +- compatible : "fsl,imx-capture-subsystem";
+> +- ports      : Should contain a list of phandles pointing to camera
+> +		sensor interface ports of IPU devices
+> +
+> +example:
+> +
+> +capture-subsystem {
+> +	compatible = "fsl,imx-capture-subsystem";
+> +	ports = <&ipu1_csi0>, <&ipu1_csi1>;
+> +};
+> +
+> +fim child node
+> +--------------
+> +
+> +This is an optional child node of the ipu_csi port nodes. If present and
+> +available, it enables the Frame Interval Monitor. Its properties can be
+> +used to modify the method in which the FIM measures frame intervals.
+> +Refer to Documentation/media/v4l-drivers/imx.rst for more info on the
+> +Frame Interval Monitor.
+> +
+> +Optional properties:
+> +- fsl,input-capture-channel: an input capture channel and channel flags,
+> +			     specified as <chan flags>. The channel number
+> +			     must be 0 or 1. The flags can be
+> +			     IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, or
+> +			     IRQ_TYPE_EDGE_BOTH, and specify which input
+> +			     capture signal edge will trigger the input
+> +			     capture event. If an input capture channel is
+> +			     specified, the FIM will use this method to
+> +			     measure frame intervals instead of via the EOF
+> +			     interrupt. The input capture method is much
+> +			     preferred over EOF as it is not subject to
+> +			     interrupt latency errors. However it requires
+> +			     routing the VSYNC or FIELD output signals of
+> +			     the camera sensor to one of the i.MX input
+> +			     capture pads (SD1_DAT0, SD1_DAT1), which also
+> +			     gives up support for SD1.
+> +
+> +
+> +mipi_csi2 node
+> +--------------
+> +
+> +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
+> +CSI-2 sensors.
+> +
+> +Required properties:
+> +- compatible	: "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
 
-v3:
-- Only run check if bus type is not set (moving to the end of the series
-  as a result). The bus bridge checks also must be a dependency.
+Ramiro is also working on a binding for DW MIPI CSI2 block[1]. We need 1 
+binding for that.
 
-v2:
-- Split into separate check from unit_address_vs_reg
+> +- reg           : physical base address and length of the register set;
+> +- clocks	: the MIPI CSI-2 receiver requires three clocks: hsi_tx
+> +		  (the D-PHY clock), video_27m (D-PHY PLL reference
+> +		  clock), and eim_podf;
+> +- clock-names	: must contain "dphy", "ref", "pix";
+> +- port@*        : five port nodes must exist, containing endpoints
+> +		  connecting to the source and sink devices according to
+> +		  of_graph bindings. The first port is an input port,
+> +		  connecting with a MIPI CSI-2 source, and ports 1
+> +		  through 4 are output ports connecting with parallel
+> +		  bus sink endpoint nodes and correspond to the four
+> +		  MIPI CSI-2 virtual channel outputs.
+> +
+> +Optional properties:
+> +- interrupts	: must contain two level-triggered interrupts,
+> +		  in order: 100 and 101;
+> -- 
+> 2.7.4
+> 
 
- checks.c                       | 25 +++++++++++++++++++++++++
- tests/run_tests.sh             |  2 ++
- tests/unit-addr-leading-0s.dts | 12 ++++++++++++
- tests/unit-addr-leading-0x.dts | 12 ++++++++++++
- 4 files changed, 51 insertions(+)
- create mode 100644 tests/unit-addr-leading-0s.dts
- create mode 100644 tests/unit-addr-leading-0x.dts
-
-diff --git a/checks.c b/checks.c
-index 33036b8dbbc2..7f9232158dd9 100644
---- a/checks.c
-+++ b/checks.c
-@@ -880,6 +880,30 @@ static void check_simple_bus_reg(struct check *c, struct dt_info *dti, struct no
- }
- WARNING(simple_bus_reg, check_simple_bus_reg, NULL, &reg_format, &simple_bus_bridge);
- 
-+static void check_unit_address_format(struct check *c, struct dt_info *dti,
-+				      struct node *node)
-+{
-+	const char *unitname = get_unitname(node);
-+
-+	if (node->parent && node->parent->bus)
-+		return;
-+
-+	if (!unitname[0])
-+		return;
-+
-+	if (!strncmp(unitname, "0x", 2)) {
-+		FAIL(c, dti, "Node %s unit name should not have leading \"0x\"",
-+		    node->fullpath);
-+		/* skip over 0x for next test */
-+		unitname += 2;
-+	}
-+	if (unitname[0] == '0' && isxdigit(unitname[1]))
-+		FAIL(c, dti, "Node %s unit name should not have leading 0s",
-+		    node->fullpath);
-+}
-+WARNING(unit_address_format, check_unit_address_format, NULL,
-+	&node_name_format, &pci_bridge, &simple_bus_bridge);
-+
- /*
-  * Style checks
-  */
-@@ -951,6 +975,7 @@ static struct check *check_table[] = {
- 	&addr_size_cells, &reg_format, &ranges_format,
- 
- 	&unit_address_vs_reg,
-+	&unit_address_format,
- 
- 	&pci_bridge,
- 	&pci_device_reg,
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index ed489dbdd269..0f5c3db79b80 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -540,6 +540,8 @@ dtc_tests () {
-     check_tests obsolete-chosen-interrupt-controller.dts obsolete_chosen_interrupt_controller
-     check_tests reg-without-unit-addr.dts unit_address_vs_reg
-     check_tests unit-addr-without-reg.dts unit_address_vs_reg
-+    check_tests unit-addr-leading-0x.dts unit_address_format
-+    check_tests unit-addr-leading-0s.dts unit_address_format
-     run_sh_test dtc-checkfails.sh node_name_chars -- -I dtb -O dtb bad_node_char.dtb
-     run_sh_test dtc-checkfails.sh node_name_format -- -I dtb -O dtb bad_node_format.dtb
-     run_sh_test dtc-checkfails.sh prop_name_chars -- -I dtb -O dtb bad_prop_char.dtb
-diff --git a/tests/unit-addr-leading-0s.dts b/tests/unit-addr-leading-0s.dts
-new file mode 100644
-index 000000000000..cc017e9431a2
---- /dev/null
-+++ b/tests/unit-addr-leading-0s.dts
-@@ -0,0 +1,12 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	bus {
-+		node@001 {
-+			reg = <1 0>;
-+		};
-+	};
-+};
-diff --git a/tests/unit-addr-leading-0x.dts b/tests/unit-addr-leading-0x.dts
-new file mode 100644
-index 000000000000..74f19678c98c
---- /dev/null
-+++ b/tests/unit-addr-leading-0x.dts
-@@ -0,0 +1,12 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	bus {
-+		node@0x1 {
-+			reg = <1 0>;
-+		};
-+	};
-+};
--- 
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://lkml.org/lkml/2017/3/7/395
