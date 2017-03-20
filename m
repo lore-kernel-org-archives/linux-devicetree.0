@@ -1,69 +1,190 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: Document the dmas and
- dma-names properties for bcm2835-analog-audio
-Date: Mon, 20 Mar 2017 11:50:09 -0500
-Message-ID: <20170320165009.ylrohjwettdy2lgf@rob-hp-laptop>
-References: <20170312063820.19313-1-mzoran@crowfest.net>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCHv5 06/16] atmel-isi: document device tree bindings
+Date: Mon, 20 Mar 2017 17:49:27 +0100
+Message-ID: <7884402a-652b-02c0-a572-d205dc651a8b@xs4all.nl>
+References: <20170311112328.11802-1-hverkuil@xs4all.nl>
+ <20170311112328.11802-7-hverkuil@xs4all.nl>
+ <20170320164119.cxmson67wdyoww2k@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20170312063820.19313-1-mzoran@crowfest.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Michael Zoran <mzoran@crowfest.net>
-Cc: mark.rutland@arm.co, stefan.wahren@i2se.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, tiwai@suse.com, eric@anholt.net, linux-rpi-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320164119.cxmson67wdyoww2k@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 11, 2017 at 10:38:17PM -0800, Michael Zoran wrote:
-> Add documentation for the DMA properties required when using the
-> PWM controller of the bcm2835 for analog audio output.
+On 03/20/2017 05:41 PM, Rob Herring wrote:
+> On Sat, Mar 11, 2017 at 12:23:18PM +0100, Hans Verkuil wrote:
+>> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>>
+>> Document the device tree bindings for this hardware.
+>>
+>> Mostly copied from the atmel-isc bindings.
 > 
-> Signed-off-by: Michael Zoran <mzoran@crowfest.net>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-> index cf573e85b11d..08fc06fc083a 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-> @@ -1,14 +1,21 @@
->  BCM2835 PWM controller (Raspberry Pi controller)
->  
->  Required properties:
-> -- compatible: should be "brcm,bcm2835-pwm"
-> +- compatible: should be "brcm,bcm2835-pwm" or "brcm,bcm2835-analog-audio"
+> This commit message doesn't really reflect what you are doing and the 
+> reformatting and fixes really make this a PIA to review.
 
-Compatibles are not for selecting usage modes. You should describe the 
-connection to the pwm that makes it an audio output rather than change 
-the compatible.
+I'll improve the commit log.
 
->  - reg: physical base address and length of the controller's registers
->  - clocks: This clock defines the base clock frequency of the PWM hardware
->    system, the period and the duty_cycle of the PWM signal is a multiple of
->    the base period.
-> +
-> +Required properties(PWM Output):
->  - #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
->    the cells format.
->  
-> +Required properties(Audio Output):
-> +- dmas: Should contain one entry pointing to the DMA channel used to
-> +	transfer audio data
-> +- dma-names:   Should contain "tx"
-> +
->  Examples:
->  
->  pwm@2020c000 {
-> -- 
-> 2.11.0
 > 
+>>
+>> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/media/atmel-isi.txt        | 96 +++++++++++++---------
+>>  1 file changed, 58 insertions(+), 38 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+>> index 251f008f220c..65249bbd5c00 100644
+>> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
+>> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+>> @@ -1,51 +1,71 @@
+>> -Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
+>> -----------------------------------------------
+>> -
+>> -Required properties:
+>> -- compatible: must be "atmel,at91sam9g45-isi"
+>> -- reg: physical base address and length of the registers set for the device;
+>> -- interrupts: should contain IRQ line for the ISI;
+>> -- clocks: list of clock specifiers, corresponding to entries in
+>> -          the clock-names property;
+>> -- clock-names: must contain "isi_clk", which is the isi peripherial clock.
+>> -
+>> -ISI supports a single port node with parallel bus. It should contain one
+>> +Atmel Image Sensor Interface (ISI)
+>> +----------------------------------
+>> +
+>> +Required properties for ISI:
+>> +- compatible: must be "atmel,at91sam9g45-isi".
+>> +- reg: physical base address and length of the registers set for the device.
+>> +- interrupts: should contain IRQ line for the ISI.
+>> +- clocks: list of clock specifiers, corresponding to entries in the clock-names
+>> +	property; please refer to clock-bindings.txt.
+>> +- clock-names: required elements: "isi_clk".
+>> +- pinctrl-names, pinctrl-0: please refer to pinctrl-bindings.txt.
+>> +
+>> +ISI supports a single port node with parallel bus. It shall contain one
+>>  'port' child node with child 'endpoint' node. Please refer to the bindings
+>>  defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+>>  
+>> -Example:
+>> -	isi: isi@f0034000 {
+>> -		compatible = "atmel,at91sam9g45-isi";
+>> -		reg = <0xf0034000 0x4000>;
+>> -		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+>> +Endpoint node properties
+>> +------------------------
+>>  
+>> -		clocks = <&isi_clk>;
+>> -		clock-names = "isi_clk";
+>> +- bus-width: <8> or <10> (mandatory)
+>> +- hsync-active (default: active high)
+>> +- vsync-active (default: active high)
+>> +- pclk-sample (default: sample on falling edge)
+>> +- remote-endpoint: A phandle to the bus receiver's endpoint node (mandatory).
+>>  
+>> -		pinctrl-names = "default";
+>> -		pinctrl-0 = <&pinctrl_isi>;
+>> -
+>> -		port {
+>> -			#address-cells = <1>;
+>> -			#size-cells = <0>;
+>> +Example:
+>>  
+>> -			isi_0: endpoint {
+>> -				remote-endpoint = <&ov2640_0>;
+>> -				bus-width = <8>;
+>> -			};
+>> +isi: isi@f0034000 {
+>> +	compatible = "atmel,at91sam9g45-isi";
+>> +	reg = <0xf0034000 0x4000>;
+>> +	interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_isi_data_0_7>;
+>> +	clocks = <&isi_clk>;
+>> +	clock-names = "isi_clk";
+>> +	status = "ok";
+> 
+> Don't put status in examples.
+
+Will remove.
+
+> 
+>> +	port {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+> 
+> These can be dropped.
+
+Ack.
+
+> 
+>> +		isi_0: endpoint {
+>> +			remote-endpoint = <&ov2640_0>;
+>> +			bus-width = <8>;
+>> +			vsync-active = <1>;
+>> +			hsync-active = <1>;
+>>  		};
+>>  	};
+>> +};
+>> +
+>> +i2c1: i2c@f0018000 {
+>> +	status = "okay";
+>>  
+>> -	i2c1: i2c@f0018000 {
+>> -		ov2640: camera@0x30 {
+>> -			compatible = "ovti,ov2640";
+>> -			reg = <0x30>;
+>> +	ov2640: camera@30 {
+>> +		compatible = "ovti,ov2640";
+>> +		reg = <0x30>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
+>> +		resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
+> 
+> reset-gpios?
+> 
+>> +		pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
+> 
+> powerdown-gpios?
+
+I can't change this: these two properties have been in use for a long time for the ov2640
+driver.
+
+Regards,
+
+	Hans
+
+> 
+>> +		clocks = <&pck0>;
+>> +		clock-names = "xvclk";
+>> +		assigned-clocks = <&pck0>;
+>> +		assigned-clock-rates = <25000000>;
+>>  
+>> -			port {
+>> -				ov2640_0: endpoint {
+>> -					remote-endpoint = <&isi_0>;
+>> -					bus-width = <8>;
+>> -				};
+>> +		port {
+>> +			ov2640_0: endpoint {
+>> +				remote-endpoint = <&isi_0>;
+>> +				bus-width = <8>;
+>>  			};
+>>  		};
+>>  	};
+>> +};
+>> -- 
+>> 2.11.0
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
