@@ -1,83 +1,123 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
- properties
-Date: Mon, 20 Mar 2017 10:04:06 -0500
-Message-ID: <20170320150406.vu2n4cgp7xyztact@rob-hp-laptop>
-References: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
- <20170315170112.mnhgntbjreheavua@rob-hp-laptop>
- <CAMuHMdUt_d-kp57v2A18tuf-QQcOXnZ6wBtU9pqAyGJRZ2m3TQ@mail.gmail.com>
- <20170316205639.xufbtbnqgy72bwyc@rob-hp-laptop>
- <CAMuHMdU0=WfkUUjXTYpp4JWM4mzFcV3AwSwf_7p+YnQQh=uE-w@mail.gmail.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 2/5] rtc: Add rtc-sh
+Date: Mon, 20 Mar 2017 15:05:03 +0000
+Message-ID: <SG2PR06MB1165819F41CF40562F44F08B8A3A0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170316175112.27913-1-chris.brandt@renesas.com>
+ <20170316175112.27913-3-chris.brandt@renesas.com>
+ <CAMuHMdVu0dQjptyW0F5YS+V6sixXTM3P6VWq2=8BQ5njUOXf-Q@mail.gmail.com>
+ <SG2PR06MB1165A9931C930DF9BCD5C0A98A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdW0nHiZkE_RxVLX3G0MuwQLPHVFyNq5C1tx0yAqDQefaA@mail.gmail.com>
+ <SG2PR06MB11653BB788CADBEE78FE4CF58A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdWs3NtKLiBnKCmxGYNBW3zzWYydj=JGKr+mH7ao97L2_Q@mail.gmail.com>
+ <20170317150524.oijto6gtjxycdnwn@piout.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdU0=WfkUUjXTYpp4JWM4mzFcV3AwSwf_7p+YnQQh=uE-w@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDXOFUXT2UGBBJO7X7DAKGQEHYBZDCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170317150524.oijto6gtjxycdnwn-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Geert
+ Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMTYsIDIwMTcgYXQgMDk6NTk6MDRQTSArMDEwMCwgR2VlcnQgVXl0dGVyaG9l
-dmVuIHdyb3RlOgo+IEhpIFJvYiwKPiAKPiBPbiBUaHUsIE1hciAxNiwgMjAxNyBhdCA5OjU2IFBN
-LCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToKPiA+IE9uIFRodSwgTWFyIDE2
-LCAyMDE3IGF0IDA5OjEzOjE2QU0gKzAxMDAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiA+
-PiBPbiBXZWQsIE1hciAxNSwgMjAxNyBhdCA2OjAxIFBNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJu
-ZWwub3JnPiB3cm90ZToKPiA+PiA+IE9uIE1vbiwgTWFyIDA2LCAyMDE3IGF0IDA1OjI1OjU2UE0g
-KzAxMDAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiA+PiA+PiBEb2N1bWVudCB0aGUgb3B0
-aW9uYWwgcHJvcGVydGllcyBmb3IgZGVzY3JpYmluZyBtb2R1bGUgcmVzZXRzLCB0bwo+ID4+ID4+
-IHN1cHBvcnQgcmVzZXR0aW5nIGRpc3BsYXkgY2hhbm5lbHMgYW5kIExWRFMgZW5jb2RlcnMgb24g
-Ui1DYXIgR2VuMiBhbmQKPiA+PiA+PiBHZW4zLgo+ID4+ID4+Cj4gPj4gPj4gU2lnbmVkLW9mZi1i
-eTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4KPiA+PiA+PiAt
-LS0KPiA+PiA+PiBTZWUgIlt2MiwxLzRdIGR0LWJpbmRpbmdzOiBjbG9jazogcmVuZXNhczogY3Bn
-LW1zc3I6IERvY3VtZW50IHJlc2V0IGNvbnRyb2wKPiA+PiA+PiBzdXBwb3J0IiAoaHR0cHM6Ly9w
-YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTM2NjI3LykgZm9yIHRoZSBmb3JtYXQgb2YKPiA+
-PiA+PiBhIHJlc2V0IHNwZWNpZmllciBpbiB0aGUgUmVuZXNhcyBDUEcvTVNTUiBjYXNlLgo+ID4+
-ID4+Cj4gPj4gPj4gRS5nLiAicmVzZXRzID0gPCZjcGcgMzEwPjsiCj4gPj4gPj4KPiA+PiA+PiB2
-MjoKPiA+PiA+PiAgIC0gcy9waGFuZGxlcy9waGFuZGxlLy4KPiA+PiA+PiAtLS0KPiA+PiA+PiAg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQg
-fCAxMCArKysrKysrKysrCj4gPj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCsp
-Cj4gPj4gPj4KPiA+PiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+ID4+ID4+IGluZGV4IDFhMDJmMDk5YTBm
-ZjBhM2EuLjNkYjQxOGM4MjcxOTNlODIgMTAwNjQ0Cj4gPj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiA+PiA+PiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4
-dAo+ID4+ID4+IEBAIC0zNiw2ICszNiwxNiBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ID4+ID4+
-ICAgICAgICBXaGVuIHN1cHBsaWVkIHRoZXkgbXVzdCBiZSBuYW1lZCAiZGNsa2luLngiIHdpdGgg
-IngiIGJlaW5nIHRoZSBpbnB1dAo+ID4+ID4+ICAgICAgICBjbG9jayBudW1lcmljYWwgaW5kZXgu
-Cj4gPj4gPj4KPiA+PiA+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+PiA+PiArICAtIHJlc2V0
-czogQSBsaXN0IG9mIHBoYW5kbGUgKyByZXNldC1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFj
-aCBlbnRyeSBpbgo+ID4+ID4+ICsgICAgdGhlIHJlc2V0LW5hbWVzIHByb3BlcnR5Lgo+ID4+ID4+
-ICsgIC0gcmVzZXQtbmFtZXM6IE5hbWVzIG9mIHRoZSByZXNldHMuIFRoaXMgcHJvcGVydHkgaXMg
-bW9kZWwtZGVwZW5kZW50Lgo+ID4+ID4+ICsgICAgLSBSOEE3NzlbMDEyMzQ1Nl0gdXNlIG9uZSBy
-ZXNldCBmb3IgYSBncm91cCBvZiBvbmUgb3IgbW9yZSBzdWNjZXNzaXZlCj4gPj4gPj4gKyAgICAg
-IGNoYW5uZWxzLCBhbmQgb25lIHJlc2V0IHBlciBMVkRTIGVuY29kZXIgKGlmIGF2YWlsYWJsZSku
-IFRoZSByZXNldHMKPiA+PiA+PiArICAgICAgbXVzdCBiZSBuYW1lZCAiZHUueCIgd2l0aCAieCIg
-YmVpbmcgdGhlIG51bWVyaWNhbCBpbmRleCBvZiB0aGUgbG93ZXN0Cj4gPj4gPj4gKyAgICAgIGNo
-YW5uZWwgaW4gdGhlIGdyb3VwLiBUaGUgTFZEUyByZXNldHMgbXVzdCBiZSBuYW1lZCAibHZkcy54
-IiB3aXRoICJ4Igo+ID4+ID4+ICsgICAgICBiZWluZyB0aGUgTFZEUyBlbmNvZGVyIG51bWVyaWNh
-bCBpbmRleC4KPiA+PiA+Cj4gPj4gPiBMVkRTIGlzIG5vdCBhIHNlcGFyYXRlIGJsb2NrPwo+ID4+
-Cj4gPj4gV2VsbC4uLiBmcm9tIGEgaGFyZHdhcmUgcG9pbnQgb2YgdmlldywgdGhlIExWRFMgZW5j
-b2RlcnMgYW5kIERVIGNoYW5uZWxzCj4gPj4gYXJlIGFsbCBzZXBhcmF0ZSBibG9ja3MgKHRoZXkg
-aGF2ZSBzZXBhcmF0ZSByZWcgYmxvY2tzLCBjbG9ja3MsIGFuZCByZXNldHMpLgo+ID4+IEJ1dCBk
-dWUgdG8gdGhlIGRlcGVuZGVuY2llcyBiZXR3ZWVuIHRoZSBibG9ja3MsIHRoZXkncmUgbW9kZWxl
-ZCBpbiBEVCBhcwo+ID4+IGEgc2luZ2xlIGRldmljZSwgd2l0aCBtdWx0aXBsZSByZWcsIGNsb2Nr
-cywgYW5kIHJlc2V0cyBwcm9wZXJ0aWVzLgo+ID4KPiA+IERlcGVuZGVuY2llcyBiZWluZyBEUk0g
-cmVxdWlyZW1lbnQgb2Ygd2FudGluZyBhIHNpbmdsZSBkZXZpY2Ugd2l0aAo+ID4gc3ViLWRldmlj
-ZXMgb3Igc29tZSBoL3cgZGVwZW5kZW5jaWVzPyBUaGUgZm9ybWVyIHNob3VsZG4ndCBkZWZpbmUg
-eW91cgo+ID4gYmluZGluZy4KPiAKPiBIYXJkd2FyZSBkZXBlbmRlbmNpZXMuIExhdXJlbnQgY2Fu
-IHRlbGwgeW91IG1vcmUgYWJvdXQgdGhlbSAod2hlbiBoZSdsbAo+IGJlIGJhY2spLgoKT2theSwK
-CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKUm9iCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Alexandre and Geert,
+
+
+On Friday, March 17, 2017, Alexandre Belloni wrote:
+> On 17/03/2017 at 14:55:48 +0100, Geert Uytterhoeven wrote:
+> > >> it would still be good to have phandles to the external clock
+> > >> sources as well, as that describes the hardware topology.
+> > >
+> > > I'm confused, you mean make new clocks node for RTC_X1 (fixed at
+> > > 32.768kHZ) and
+> > > RTC_X3 (fixed at 4MHz), but then not really do anything with then?
+> > > (the driver
+> >
+> > You still do something with them, as they'll be linked from the rtc
+> device node.
+> >
+> > > doesn't need them)
+> >
+> > The driver may use them in the future.
+> > E.g. to select among X1, X3, or EXTAL, depending on availability.
+> >
+> 
+> I'm on Geert's side here, I wouldn't rely on the bootloader to set
+> everything up correctly.
+
+Part of my hesitation to putting in the clock source selection was that
+this RTC block is used in a lot of parts, and it's always the same,
+except for the last 3 registers which are different from device to
+device because different SoCs have different clock sources options
+and ways to set them up. So, making a driver that just 'reads' the
+time seemed safer/easier.
+Anyway, I'll add the clock setup in if that's the general consensus.
+
+
+But, before I send out an updated version, what were you thinking
+my DT should look like?
+
+Should I make a "count-source" property for user to select what clock
+will be used for the actually counting?
+
+
+	clocks {
+		ranges;
+		#address-cells = <1>;
+		#size-cells = <1>;
+            . . .
+
++		rtc_x1_clk: rtc_x1 {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			/* If clk present, value must be set by board to 32678 */
++			clock-frequency = <0>;
++		};
++
++		rtc_x3_clk: rtc_x3 {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			/* If clk present, value must be set by board to 4000000 */
++			clock-frequency = <0>;
++		};
++
+
+
+
+
++	rtc: rtc@fcff1000 {
++		compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
++		reg = <0xfcff1000 0x2e>;
++		interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
++			      GIC_SPI 277 IRQ_TYPE_EDGE_RISING
++			      GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
++		interrupt-names = "alarm", "period", "carry";
++		clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
++			  <&extal_clk> , <&rtc_x3_clk>;
++		clock-names = "fck", "rtc_x1", "extal", "rtc_x3";
++		power-domains = <&cpg_clocks>;
++		count-source = "rtc_x1";    <<<<<<< this would be in the board dts file
++		status = "disabled";
++	};
+
+
+Thank you,
+Chris
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
