@@ -1,123 +1,73 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
- iio-hwmon
-Date: Mon, 20 Mar 2017 16:34:43 +0100
-Message-ID: <7420fc7a-4a65-0ff8-adb8-f2e9815fdeba@metafoo.de>
-References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
- <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
- <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
- <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
- <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
- <6767a340-b150-c21a-b6cb-5ca1ce2cd721@xilinx.com>
- <1027ba77-6141-5d6e-e5e8-b15df29957f2@metafoo.de>
- <1cb2a735-59cd-3d8c-b55e-bd775ded3fc0@xilinx.com>
- <c7f47571-6f59-302c-92ff-4512e78ff112@xilinx.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 4/5] dt-bindings: auxdisplay: Add bindings for Hitachi HD44780
+Date: Mon, 20 Mar 2017 16:27:01 +0100
+Message-ID: <CAMuHMdX_9-yze0ErxKxTM0rgLAhWhtfvkW8wvXxR6vMdVXXGbg@mail.gmail.com>
+References: <1489155321-25666-1-git-send-email-geert@linux-m68k.org>
+ <1489155321-25666-5-git-send-email-geert@linux-m68k.org> <20170320151516.dscqfjihoeezzhgi@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c7f47571-6f59-302c-92ff-4512e78ff112@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Julia Cartwright <julia@ni.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170320151516.dscqfjihoeezzhgi@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Willy Tarreau <willy@haproxy.com>, Ksenija Stanojevic <ksenija.stanojevic@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Akira Tsukamoto <akira.tsukamoto@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMjAvMjAxNyAwNDozMyBQTSwgTWljaGFsIFNpbWVrIHdyb3RlOgo+IE9uIDE3LjMuMjAx
-NyAwNzo0NiwgTWljaGFsIFNpbWVrIHdyb3RlOgo+PiBPbiAxNi4zLjIwMTcgMjI6MjAsIExhcnMt
-UGV0ZXIgQ2xhdXNlbiB3cm90ZToKPj4+IE9uIDAzLzE2LzIwMTcgMDc6MDYgUE0sIE1pY2hhbCBT
-aW1layB3cm90ZToKPj4+PiBPbiAxNi4zLjIwMTcgMTc6NTEsIExhcnMtUGV0ZXIgQ2xhdXNlbiB3
-cm90ZToKPj4+Pj4gT24gMDMvMTYvMjAxNyAwNTo0NSBQTSwgTWljaGFsIFNpbWVrIHdyb3RlOgo+
-Pj4+Pj4gT24gMTYuMy4yMDE3IDE3OjM5LCBNb3JpdHogRmlzY2hlciB3cm90ZToKPj4+Pj4+PiBP
-biBUaHUsIE1hciAxNiwgMjAxNyBhdCA5OjE2IEFNLCBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1l
-a0B4aWxpbnguY29tPiB3cm90ZToKPj4+Pj4+Pj4gSGksCj4+Pj4+Pj4+Cj4+Pj4+Pj4+IE9uIDgu
-My4yMDE3IDIxOjExLCBNb3JpdHogRmlzY2hlciB3cm90ZToKPj4+Pj4+Pj4+IEZpeAo+Pj4+Pj4+
-Pj4KPj4+Pj4+Pj4+IE9GOiAvaWlvX2h3bW9uOiBjb3VsZCBub3QgZ2V0ICNpby1jaGFubmVsLWNl
-bGxzIGZvcgo+Pj4+Pj4+Pj4gL2FtYmEvYWRjQGY4MDA3MTAwCj4+Pj4+Pj4+PiBPRjogL2lpb19o
-d21vbjogY291bGQgbm90IGdldCAjaW8tY2hhbm5lbC1jZWxscyBmb3IKPj4+Pj4+Pj4+IC9hbWJh
-L2FkY0BmODAwNzEwMAo+Pj4+Pj4+Pj4gT0Y6IC9paW9faHdtb246IGNvdWxkIG5vdCBnZXQgI2lv
-LWNoYW5uZWwtY2VsbHMgZm9yCj4+Pj4+Pj4+PiAvYW1iYS9hZGNAZjgwMDcxMDAKPj4+Pj4+Pj4+
-Cj4+Pj4+Pj4+PiBieSBhZGRpbmcgdGhlICNpby1jaGFubmVsLWNlbGxzIHByb3BlcnR5Lgo+Pj4+
-Pj4+Pj4KPj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IE1vcml0eiBGaXNjaGVyIDxtZGZAa2VybmVs
-Lm9yZz4KPj4+Pj4+Pj4+IENjOiBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29t
-Pgo+Pj4+Pj4+Pj4gQ2M6IFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxpbngu
-Y29tPgo+Pj4+Pj4+Pj4gQ2M6IEp1bGlhIENhcnR3cmlnaHQgPGp1bGlhQG5pLmNvbT4KPj4+Pj4+
-Pj4+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCj4+Pj4+Pj4+PiBDYzogZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4+Pj4+Pj4+IC0tLQo+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+IENo
-YW5nZXMgZnJvbSB2MToKPj4+Pj4+Pj4+IC0gZml4IG1lc3NlZCB1cCBjb21taXQgbWVzc2FnZQo+
-Pj4+Pj4+Pj4gLS0tCj4+Pj4+Pj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kg
-fCAxICsKPj4+Pj4+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPj4+Pj4+Pj4+
-Cj4+Pj4+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kg
-Yi9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4+Pj4+Pj4gaW5kZXggZjNhYzli
-Zi4uOTgyMzNhOCAxMDA2NDQKPj4+Pj4+Pj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEt
-NzAwMC5kdHNpCj4+Pj4+Pj4+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRz
-aQo+Pj4+Pj4+Pj4gQEAgLTcyLDYgKzcyLDcgQEAKPj4+Pj4+Pj4+ICAgICAgICAgICAgICAgICAg
-ICAgICBpbnRlcnJ1cHRzID0gPDAgNyA0PjsKPj4+Pj4+Pj4+ICAgICAgICAgICAgICAgICAgICAg
-ICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsKPj4+Pj4+Pj4+ICAgICAgICAgICAgICAgICAg
-ICAgICBjbG9ja3MgPSA8JmNsa2MgMTI+Owo+Pj4+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAg
-ICNpby1jaGFubmVsLWNlbGxzID0gPDE+Owo+Pj4+Pj4+Pj4gICAgICAgICAgICAgICB9Owo+Pj4+
-Pj4+Pj4KPj4+Pj4+Pj4+ICAgICAgICAgICAgICAgY2FuMDogY2FuQGUwMDA4MDAwIHsKPj4+Pj4+
-Pj4+Cj4+Pj4+Pj4+Cj4+Pj4+Pj4+IEkgdGhpbmsgaXQgd2lsbCBiZSBnb29kIHRvIHRoZSBuZXh0
-IHN0ZXAgdG9vLgo+Pj4+Pj4+PiBJdCBtZWFucyBhbHNvIGFkZCBpaW8taHdtb24gbm9kZSB0b28u
-Cj4+Pj4+Pj4+Cj4+Pj4+Pj4+IFdoYXQgZG8geW91IHRoaW5rPwo+Pj4+Pj4+Cj4+Pj4+Pj4gSSBo
-YWRuJ3QgcHV0IGl0IGluIHRoZXJlIHNpbmNlIGR0cyBpcyBzdXBwb3NlZCB0byBkZXNjcmliZSBo
-dywKPj4+Pj4+PiBidXQgb2J2aW91c2x5IHB1dHRpbmcgdGhlIGFjdHVhbCBod21vbiBpbiB0aGVy
-ZSBtYWtlcyBpdCBtb3JlIHVzZWZ1bC4KPj4+Pj4+Cj4+Pj4+PiBJIGhhZCBvbmUgZGlzY3Vzc2lv
-biBhYm91dCB0aGlzIHdpdGggR3JhbnQgaW4gcGFzdCBhbmQgaXQgaXMgY29tbW9uCj4+Pj4+PiBt
-aXN0YWtlLiBJdCBpcyBzaW1wbGlmaWNhdGlvbiBvZiBwdXJwb3NlIG9mIGR0cy4KPj4+Pj4+Cj4+
-Pj4+Cj4+Pj4+IElmIHRoZSBpaW8taHdtb24gYmluZGluZyBoYWQgZ29uZSB0aHJvdWdoIHJldmll
-dyBpdCB3b3VsZCBoYXZlIGJlZW4gcmVqZWN0ZWQuCj4+Pj4KPj4+PiBJc24ndCBpdCBhIHRpbWUg
-dG8gZGVwcmVjYXRlIGl0Pwo+Pj4KPj4+IFdlbGwsIGl0J3MgQUJJIG5vdyBhbmQgaGFzIHRvIHN0
-YXkgZm9yZXZlci4gRGVwcmVjYXRpbmcgaXQgbWFrZXMgb25seSBzZW5zZQo+Pj4gaWYgdGhlcmUg
-aXMgYSByZXBsYWNlbWVudCwgd2hpY2ggdGhlcmUgaXMgbm90LiBUaGUgaWlvLWh3bW9uIGJyaWRn
-ZSBoYXMgaXRzCj4+PiB1c2VjYXNlcyBpdCdzIGp1c3QgaW5zdGFudGlhdGluZyBpdCB2aWEgZGV2
-aWNldHJlZSB3aGljaCBpcyBub3Qgc28gbmljZS4KPj4+Cj4+Pj4KPj4+Pj4KPj4+Pj4+Pgo+Pj4+
-Pj4+IEkgY2FuIHJlc3VibWl0IHdpdGggdGhlIGh3bW9uIG5vZGUgaW4gdGhlcmUuCj4+Pj4+Pgo+
-Pj4+Pj4gSWYgeW91IGdyZXAga2VybmVsIHRyZWUgeW91IHdpbGwgc2VlIHRoYXQgb3RoZXJzIGFy
-ZSB1c2luZyBpdCB0b28uCj4+Pj4+PiBBbHNvIHRoZXJlIGlzIGFjY2VwdGVkIGJpbmRpbmcgZm9y
-IHRoYXQgdGhhdCdzIHdoeSBJIGNhbid0IHNlZSBiaWcKPj4+Pj4+IHByb2JsZW0gd2l0aCBpdC4K
-Pj4+Pj4KPj4+Pj4gU2luY2UgdGhpcyBpcyBhbiBhcHBsaWNhdGlvbiBzcGVjaWZpYyBiaW5kaW5n
-IEkgd291bGRuJ3QgcHV0IGl0IGluIHRoZQo+Pj4+PiBnZW5lcmljIERUIGluY2x1ZGUgZmlsZS4g
-SXQncyBhIGJpdCBsaWtlIGFkZGluZyBhIGdwaW8ta2V5IGJpbmRpbmcgZm9yIGVhY2gKPj4+Pj4g
-b2YgdGhlIEdQSU9zIGp1c3QgaW4gY2FzZSBzb21lYm9keSB3YW50cyB0byB1c2UgaXQuCj4+Pj4K
-Pj4+PiBwc2NpIGlzIHN5c3RlbSBzcGVjaWZpYyB0b28uCj4+Pj4KPj4+PiBJSVJDIHRoaXMgZHJp
-dmVyIGZvciB6eW5xIHdhcyB3cml0dGVuIGJ5IEFESSBvciB3aXRoIEFESSBoZWxwIHRoYXQncyB3
-aHkKPj4+PiB5b3Uga25vdyBtdWNoIGJldHRlciB0aGFuIEkgd2hhdCdzIHRoZSBjb3JyZWN0IGNv
-bmZpZ3VyYXRpb24uCj4+Pj4KPj4+PiBUaGlzIHRhcmdldHMgUFMgSVAgd2hpY2ggc2hvdWxkIGJl
-IHByZXNlbnQgaW4gdGhlIGh3IGFsbCB0aGUgdGltZS4KPj4+PiBOb3Qgc3VyZSBpZiBmb3IgYWxs
-IGNvbmZpZ3VyYXRpb24gYnV0IEkgZXhwZWN0IGF0IGxlYXN0IHRoZSBwYXJ0IG9mIGl0Cj4+Pj4g
-aXMgdGhlcmUgYWxsIHRoZW0gdGltZS4KPj4+Pgo+Pj4+IElmIGJpbmRpbmcgaXMgaW5jb3JyZWN0
-IHRoZW4gcGxlYXNlIHJlbW92ZSBpdCB3aXRoIHJlbW92aW5nIGZyb20gYWxsCj4+Pj4gZHRzL2R0
-c2kgZmlsZXMgd2hpY2ggaGF2ZSB0aGlzLiBUaGUgc2FtZSBpcyBmb3Igb2YgcHJvYmUgZnVuY3Rp
-b24gaW4gdGhlCj4+Pj4gZHJpdmVyIGl0c2VsZi4KPj4+PiBJZiB0aGlzIGlzIG5vdCBkb25lIHRo
-ZW4gdGhpcyBpcyBqdXN0ICsxIGNhc2UuCj4+Pj4KPj4+PiBJZiB5b3Ugc3RpbGwgaW5zaXN0IHRo
-YXQgd2Ugc2hvdWxkbid0IGRvIGl0IHRoZW4gcGxlYXNlIGF0IGxlYXN0IGV4dGVuZAo+Pj4+IGNv
-bW1pdCBtZXNzYWdlIGFuZCBwdXQgdGhlcmUgZXhhbXBsZSBob3cgdG8gd2lyZSBpdCBvbiB6eW5x
-Lgo+Pj4KPj4+IFRoZXJlIGlzIGEgSUlPIGRyaXZlciBmb3IgdGhlIFhBREMsIHRoaXMgZHJpdmVy
-IGhhcyBhIHVzZXJzcGFjZSBpbnRlcmZhY2UKPj4+IHRoYXQgZXhwb3NlcyB0aGUgbWVhc3VyZW1l
-bnRzIHByb3ZpZGVkIGJ5IHRoZSBoYXJkd2FyZS4gVXNpbmcgdGhlIGh3bW9uCj4+PiBicmlkZ2Ug
-d2lsbCBleHBvc2UgdGhlIHNhbWUgaW5mb3JtYXRpb24ganVzdCB0aHJvdWdoIGEgaHdtb24gaW50
-ZXJmYWNlLgo+Pj4KPj4+IE9uZSByZWFzb24gZm9yIHVzaW5nIHRoZSBpaW8taHdtb24gYnJpZGdl
-IGlzIGJlY2F1c2UgeW91IGhhdmUgYSBsZWdhY3kKPj4+IGFwcGxpY2F0aW9uIHRoYXQgZXhwZWN0
-cyB0aGUgYSBod21vbiBpbnRlcmZhY2UuIEJ1dCBuZXcgYXBwbGljYXRpb25zIHRoYXQKPj4+IHdh
-bnQgdG8gYWNjZXNzIHRoZSBYQURDIHNob3VsZCByZWFsbHkgdXNlIHRoZSBJSU8gaW50ZXJmYWNl
-IGlmIHBvc3NpYmxlLgo+Pj4KPj4+IEluIG15IG9waW5pb24gaW5zdGFudGlhdGluZyB0aGUgaHdt
-b24gYnJpZGdlIGJ5IGRlZmF1bHQgd2lsbCBvbmx5IGNhdXNlCj4+PiBjb25mdXNpb24uIFRoZXJl
-IGFyZSBub3cgcmVkdW5kYW50IGludGVyZmFjZXMgYW5kIHVzZXJzIHdpbGwgd29uZGVyIHdoYXQg
-aXMKPj4+IHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gdGhlIHR3by4gSXMgaXQgdGhlIHNhbWUgZGF0
-YSwgaXMgaXQgZGlmZmVyZW50IGRhdGE/Cj4+PiBXaGljaCBpcyB0aGUgcHJlZmVycmVkIGludGVy
-ZmFjZT8gV2hpY2ggb25lIGlzICdiZXR0ZXInPwo+Pgo+PiBJTUhPIHRoaXMgc2hvdWxkIGJlIGNv
-dmVyZWQgYnkgZG9jdW1lbnRhdGlvbi4gT25lIHBhcmFncmFwaCBpbiBpaW8taHdtb24KPj4gYmlu
-ZGluZyBjYW4gaGF2ZSBhbnN3ZXJzIGZvciB0aGlzIGFuZCBpdCB3aWxsIGJlIHZlcnkgY2xlYXIg
-d2hhdCBwZW9wbGUKPj4gc2hvdWxkIHVzZS4KPiAKPiBBbnkgY29tbWVudCBvbiB0aGlzIG9uZT8K
-ClNlbmQgYSBwYXRjaD8gOikKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Rob, Greg,
+
+On Mon, Mar 20, 2017 at 4:15 PM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Mar 10, 2017 at 03:15:20PM +0100, Geert Uytterhoeven wrote:
+>> Add DT bindings for an Hitachi HD44780 Character LCD Controller where
+>> its M6800 bus interface is connected to GPIOs.
+>>
+>> Memory-mapped configurations are not yet supported.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+
+>> +Required properties:
+>> +  - compatible: Must contain "hit,hd44780",
+>> +  - data-gpios: Must contain an array of either 4 or 8 GPIO specifiers,
+>> +    referring to the GPIO pins connected to the data signal lines DB0-DB7
+>> +    (8-bit mode) or DB4-DB7 (4-bit mode) of the LCD Controller's bus interface,
+>> +  - enable-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+>> +    connected to the "E" (Enable) signal line of the LCD Controller's bus
+>> +    interface,
+>> +  - rs-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+>> +    connected to the "RS" (Register Select) signal line of the LCD Controller's
+>> +    bus interface,
+>> +  - display-height: Height of the display, in character cells,
+>> +  - display-width: Width of the display, in character cells.
+>
+> display-{width,height}-chars
+
+Makes sense.
+
+Greg: As this is already in char-misc-next, shall I send an update for
+the bindings
+and the driver?
+
+>> +Optional properties:
+>> +  - rw-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+>> +    connected to the "RW" (Read/Write) signal line of the LCD Controller's bus
+>> +    interface,
+>> +  - backlight-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+>> +    used for enabling the LCD's backlight,
+>
+> Active state?
+
+That's typically handled via the last cell of the GPIO specifier, cfr.
+GPIO_ACTIVE_HIGH / GPIO_ACTIVE_LOW in <dt-bindings/gpio/gpio.h>.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
