@@ -1,50 +1,90 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Mon, 20 Mar 2017 14:15:41 +0100
-Message-ID: <1490015741.2917.66.camel@pengutronix.de>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
-         <20170318192258.GL21222@n2100.armlinux.org.uk>
-         <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <aef6c412-5464-726b-42f6-a24b7323aa9c-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alexander Kochetkov <al.kochet@gmail.com>
+Subject: Re: [PATCH v6 0/5] Implement clocksource for rockchip SoC using
+ rockchip timer
+Date: Mon, 20 Mar 2017 16:18:49 +0300
+Message-ID: <F14EA552-9783-4083-A00F-9151AB7E5C99@gmail.com>
+References: <1485866596-32254-1-git-send-email-al.kochet@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485866596-32254-1-git-send-email-al.kochet@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Huang Tao <huangtao@rock-chips.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-03-18 at 12:58 -0700, Steve Longerbeam wrote:
-> 
-> On 03/18/2017 12:22 PM, Russell King - ARM Linux wrote:
-> > Hi Steve,
-> >
-> > I've just been trying to get gstreamer to capture and h264 encode
-> > video from my camera at various frame rates, and what I've discovered
-> > does not look good.
-> >
-> > 1) when setting frame rates, media-ctl _always_ calls
-> >     VIDIOC_SUBDEV_S_FRAME_INTERVAL with pad=0.
-
-To allow setting pad > 0:
-https://patchwork.linuxtv.org/patch/39348/
-
-> > 2) media-ctl never retrieves the frame interval information, so there's
-> >     no way to read it back with standard tools, and no indication that
-> >     this is going on...
-> 
-> I think Philipp Zabel submitted a patch which addresses these
-> in media-ctl. Check with him.
-
-To read back and propagate the frame interval:
-https://patchwork.linuxtv.org/patch/39349/
-https://patchwork.linuxtv.org/patch/39351/
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8sIERhbmllbC4KClNvcnJ5IGZvciBib3RoZXJpbmcgeW91LCBidXQgY291bGQgeW91IHBs
+ZWFzZSB0YWtlIGEgbG9vayBhdCB2NlsxXSBzZXJpZXMgYW5kIHRlbGwgd2hhdCBkbyB5b3UgdGhp
+bmsgYWJvdXQgaXQ/Ckkgc2VlIHlvdXIgY29tbWl0WzJdIGluIHRoZSBnaXQsIGJ1dCBJIGRvbuKA
+mXQgdW5kZXJzdGFuZCB3ZWxsIGhvdyB0byB1c2UgaXQgaW4gcm9ja2NoaXAgZHJpdmVyLgoKWzFd
+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE3LzEvMzEvNDAxClsyXSBodHRwczovL2dpdC5rZXJu
+ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9uZXh0L2xpbnV4LW5leHQuZ2l0L2NvbW1p
+dC9kcml2ZXJzL2Nsb2Nrc291cmNlP2lkPTM3NmJjMjcxNTBmMTgwZDlmNWVkZGVjNmExNDExNzc4
+MDE3NzU4OWQKClJlZ2FyZHMsCkFsZXhhbmRlci4KCj4gMzEg0Y/QvdCyLiAyMDE3INCzLiwg0LIg
+MTU6NDMsIEFsZXhhbmRlciBLb2NoZXRrb3YgPGFsLmtvY2hldEBnbWFpbC5jb20+INC90LDQv9C4
+0YHQsNC7KNCwKToKPiAKPiBGcm9tOiBBbGV4YW5kZXIgS29jaGV0a292IDxha29jaGV0a292QGxp
+bnRlY2gucnU+Cj4gCj4gSGVsbG8sIERhbmllbCwgSGVpa28uCj4gCj4gSGVyZSBpcyB0cnkgNiA6
+KSBUaGFua3MgYSBsb3QgZm9yIGhlbHBpbmcgbWUgdG8gYnJpbmcgdGhlIGNvZGUKPiBpbnRvIGtl
+cm5lbCEKPiAKPiBUaGlzIHBhdGNoIHNlcmllcyBjb250YWluOgo+IC0gZGV2aWNldHJlZSBiaW5k
+aW5ncyBjbGFyaWZpY2F0aW9uIGZvciByb2NrY2hpcCB0aW1lcnMKPiAtIGR0cyBmaWxlcyBmaXhl
+cyBmb3IgcmszMjI4LWV2YiwgcmszMjI5LWV2YiBhbmQgcmszMTg4Cj4gLSBpbXBsZW1lbnRhdGlv
+biBvZiBjbG9ja3NvdXJjZSBhbmQgc2NoZWQgY2xvY2sgZm9yIHJvY2tjaGlwIFNvQwo+IAo+IFRo
+ZSBjbG9jayBzdXBwbHlpbmcgdGhlIGFybS1nbG9iYWwtdGltZXIgb24gdGhlIHJrMzE4OCBpcyBj
+b21pbmcgZnJvbSB0aGUKPiB0aGUgY3B1IGNsb2NrIGl0c2VsZiBhbmQgdGh1cyBjaGFuZ2VzIGl0
+cyByYXRlIGV2ZXJ5dGltZSBjcHVmcmVxIGFkanVzdHMKPiB0aGUgY3B1IGZyZXF1ZW5jeSBtYWtp
+bmcgdGhpcyB0aW1lciB1bnN1aXRhYmxlIGFzIGEgc3RhYmxlIGNsb2Nrc291cmNlLgo+IAo+IFRo
+ZSByazMxODgsIHJrMzI4OCBhbmQgZm9sbG93aW5nIHNvY3Mgc2hhcmUgYSBzZXBhcmF0ZSB0aW1l
+ciBibG9jayBhbHJlYWR5Cj4gaGFuZGxlZCBieSB0aGUgcm9ja2NoaXAtdGltZXIgZHJpdmVyLiBU
+aGVyZWZvcmUgYWRhcHQgdGhpcyBkcml2ZXIgdG8gYWxzbwo+IGJlIGFibGUgdG8gYWN0IGFzIGNs
+b2Nrc291cmNlIG9uIHJrMzE4OC4KPiAKPiBJbiBvcmRlciB0byB0ZXN0IGNsb2Nrc291cmNlIHlv
+dSBjYW4gcnVuIGZvbGxvd2luZyBjb21tYW5kcyBhbmQgY2hlY2sKPiBob3cgbXVjaCB0aW1lIGl0
+IHRha2UgaW4gcmVhbC4gT24gcmszMTg4IGl0IHRha2UgYWJvdXQgfjQ1IHNlY29uZHMuCj4gCj4g
+ICAgICAgY3B1ZnJlcS1zZXQgLWYgMS42R0haCj4gICAgICAgZGF0ZTsgc2xlZXAgNjA7IGRhdGUK
+PiAKPiByazMyODggKGFuZCBwcm9iYWJseSBhbnl0aGluZyBuZXdlcikgaXMgaXJyZWxldmFudCB0
+byB0aGlzIHBhdGNoLAo+IGFzIGl0IGhhcyB0aGUgYXJjaCB0aW1lciBpbnRlcmZhY2UuIFRoaXMg
+cGF0Y2ggbWF5IGJlIHVzZWZ1bGwKPiBmb3IgQ29ydGV4LUE5L0E1IGJhc2VkIHBhcnRzLgo+IAo+
+IFJlZ2FyZHMsCj4gQWxleGFuZGVyLgo+IAo+IENoYW5nZXMgaW4gdjY6Cj4gLSBSZW1vdmVkIFJl
+dmlld2VkLWJ5OiBIZWlrbyBTdMO8Ym5lciA8aGVpa29Ac250ZWNoLmRlPiB0YWcKPiAtIE1lcmdl
+IDUvOCwgNi84LCA3LzgsIDgvOSBpbnRvIHNpbmdsZSBmaWxlCj4gLSBzcGxpdCBpbml0IHBhdGhz
+IGludG8gcmtfY2xrZXZ0X2luaXQoKSBhbmQgcmtfY2xrc3JjX2luaXQoKQo+ICBzbyB0aGUgZHJp
+dmVyIGNvZGUgY291bGQgYmUgYWRvcHRlZCB0byBDTE9DS0VWRU5UX09GX0RFQ0xBUkUoKQo+IC0g
+Y2xvY2tldmVudHMgaW1wbGVtZW50ZWQgdXNpbmcgY2xvY2tzb3VyY2VfbW1pb19pbml0KCkKPiAt
+IGZpeGVkIGNvbW1pdCBtZXNzYWdlIGZvciA0LzggKHRoYW5rcyBhIGxvdCBEYW5pZWwpCj4gCj4g
+Q2hhbmdlcyBpbiB2NToKPiAtIEFkZCBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmggYXQga2Vy
+bmVsLm9yZz4gdG8gMS84Cj4gIGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9s
+aW51eC1yb2NrY2hpcC8yMDE2LURlY2VtYmVyLzAxMzMwOC5odG1sCj4gLSBBZGQgUmV2aXdlZC1i
+eTogSGVpa28gU3TDvGJuZXIgPGhlaWtvQHNudGVjaC5kZT4gdG8gc2VyaWVzCj4gLSBjaGFuZ2Ug
+dGltZXIgY29tcGF0aWJsZSBwcm9wZXJ0eSBpbiB0aGUgcmszMjJ4LmR0c2kgMi84Cj4gIGh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1yb2NrY2hpcC8yMDE3LUphbnVh
+cnkvMDEzNzg0Lmh0bWwKPiAtIHVwZGF0ZWQgY29tbWVudCBtZXNzYWdlIGZvciA0LzgKPiAgaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LXJvY2tjaGlwLzIwMTctSmFu
+dWFyeS8wMTM3ODYuaHRtbAo+IC0gdXBkYXRlZCBjb21tZW50IG1lc3NhZ2UgZm9yIDUvOAo+ICBo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtcm9ja2NoaXAvMjAxNy1K
+YW51YXJ5LzAxMzc4Ny5odG1sCj4gLSBmaXhlZCBidWlsZCBlcnJvciBmb3IgOC84Cj4gIGh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1yb2NrY2hpcC8yMDE3LUphbnVh
+cnkvMDEzNzg5Lmh0bWwKPiAKPiBBbGV4YW5kZXIgS29jaGV0a292ICg1KToKPiAgZHQtYmluZGlu
+Z3M6IGNsYXJpZnkgY29tcGF0aWJsZSBwcm9wZXJ0eSBmb3Igcm9ja2NoaXAgdGltZXJzCj4gIEFS
+TTogZHRzOiByb2NrY2hpcDogdXBkYXRlIGNvbXBhdGlibGUgcHJvcGVydHkgZm9yIHJrMzIyeCB0
+aW1lcgo+ICBjbG9ja3NvdXJjZS9kcml2ZXJzL3JvY2tjaGlwX3RpbWVyOiBpbXBsZW1lbnQgY2xv
+Y2tzb3VyY2UgdGltZXIKPiAgQVJNOiBkdHM6IHJvY2tjaGlwOiBhZGQgdGltZXIgZW50cmllcyB0
+byByazMxODggU29DCj4gIEFSTTogZHRzOiByb2NrY2hpcDogZGlzYWJsZSBhcm0tZ2xvYmFsLXRp
+bWVyIGZvciByazMxODgKPiAKPiAuLi4vYmluZGluZ3MvdGltZXIvcm9ja2NoaXAscmstdGltZXIu
+dHh0ICAgICAgICAgICB8ICAgMTIgKy0KPiBhcmNoL2FybS9ib290L2R0cy9yazMxODguZHRzaSAg
+ICAgICAgICAgICAgICAgICAgICB8ICAgMTcgKysKPiBhcmNoL2FybS9ib290L2R0cy9yazMyMngu
+ZHRzaSAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKy0KPiBkcml2ZXJzL2Nsb2Nrc291cmNl
+L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+IGRyaXZlcnMvY2xvY2tz
+b3VyY2Uvcm9ja2NoaXBfdGltZXIuYyAgICAgICAgICAgICAgIHwgIDIxOCArKysrKysrKysrKysr
+Ky0tLS0tLQo+IDUgZmlsZXMgY2hhbmdlZCwgMTg1IGluc2VydGlvbnMoKyksIDY1IGRlbGV0aW9u
+cygtKQo+IAo+IC0tIAo+IDEuNy45LjUKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
