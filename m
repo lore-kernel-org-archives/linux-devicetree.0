@@ -1,177 +1,161 @@
-From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Mon, 20 Mar 2017 17:14:46 +0100
-Message-ID: <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Mon, 20 Mar 2017 14:37:15 -0300
+Message-ID: <20170320143715.66860222@vento.lan>
+References: <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+        <20170310125342.7f047acf@vento.lan>
+        <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+        <20170311082549.576531d0@vento.lan>
+        <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+        <20170314004533.3b3cd44b@vento.lan>
+        <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+        <20170314072143.498cde9b@vento.lan>
+        <5c935062-61f4-40e7-0ee9-87655197e661@xs4all.nl>
+        <20170320123938.0503c931@vento.lan>
+        <20170320161003.GO21222@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490026491-21742-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170320161003.GO21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
-controller.
+Em Mon, 20 Mar 2017 16:10:03 +0000
+Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> escreveu:
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
----
- .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 144 +++++++++++++++++++++
- 1 file changed, 144 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+> On Mon, Mar 20, 2017 at 12:39:38PM -0300, Mauro Carvalho Chehab wrote:
+> > Em Mon, 20 Mar 2017 14:24:25 +0100
+> > Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> escreveu:  
+> > > I don't think this control inheritance patch will magically prevent you
+> > > from needed a plugin.  
+> > 
+> > Yeah, it is not just control inheritance. The driver needs to work
+> > without subdev API, e. g. mbus settings should also be done via the
+> > video devnode.
+> > 
+> > Btw, Sakari made a good point on IRC: what happens if some app 
+> > try to change the pipeline or subdev settings while another
+> > application is using the device? The driver should block such 
+> > changes, maybe using the V4L2 priority mechanism.  
+> 
+> My understanding is that there are already mechanisms in place to
+> prevent that, but it's driver dependent - certainly several of the
+> imx driver subdevs check whether they have an active stream, and
+> refuse (eg) all set_fmt calls with -EBUSY if that is so.
+> 
+> (That statement raises another question in my mind: if the subdev is
+> streaming, should it refuse all set_fmt, even for the TRY stuff?)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-new file mode 100644
-index 0000000..0474860
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-@@ -0,0 +1,144 @@
-+Renesas RZ/A1 combined Pin and GPIO controller
-+
-+Renesas SoCs of RZ/A1 family feature a combined Pin and GPIO controller
-+hardware controller, named "Ports" in the hardware reference manual.
-+Pin multiplexing and GPIO configuration is performed on a per-pin basis
-+writing configuration values to per-port register sets.
-+Each "port" features up to 16 pins, each of them configurable for GPIO
-+function (port mode) or in alternate function mode.
-+Up to 8 different alternate function modes exist for each single pin.
-+
-+Pin controller node
-+-------------------
-+
-+Required properties:
-+  - compatible
-+    this shall be "renesas,r7s72100-ports".
-+
-+  - #pinctrl-cells
-+    as defined by pinctrl-bindings.txt, this is the number
-+    of cells (in addition to pin index) required to configure a single pin.
-+    Shall be set to 1.
-+
-+  - reg
-+    address base and length of the memory area where pin controller
-+    hardware is mapped to.
-+
-+Example:
-+Pin controller node for RZ/A1H SoC (r7s72100)
-+
-+pinctrl: pinctrl@fcfe3000 {
-+	compatible = "renesas,r7s72100-ports";
-+
-+	#pinctrl-cells = <1>;
-+
-+	reg = <0xfcfe3000 0x4248>;
-+};
-+
-+Sub-nodes
-+---------
-+
-+The child nodes of the pin controller node describe a pin multiplexing
-+function or a gpio controller alternatively.
-+
-+- Pin multiplexing sub-nodes:
-+  A pin multiplexing sub-node describes how to configure a set of
-+  (or a single) pin in some desired alternate function mode.
-+  A single sub-node may define several pin configurations groups.
-+
-+  Required properties:
-+    - renesas,pins
-+      describes an array of pin multiplexing configurations.
-+      When a pin has to be configured in alternate function mode, use this
-+      property to identify the pin by its global index, and provide its
-+      alternate function configuration description along with it.
-+      When multiple pins are required to be configured as part of the same
-+      alternate function (odds are single-pin alternate functions exist) they
-+      shall be specified as members of the same argument list of a single
-+      "renesas-pins" property.
-+      Helper macros to ease calculating the pin index from its position
-+      (port where it sits on and pin offset), and alternate function
-+      configuration options are provided in pin controller header file at:
-+      include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-+
-+  Example:
-+  A serial communication interface with a TX output pin and a RX input pin.
-+
-+  &pinctrl {
-+	scif2_pins: serial2 {
-+		renesas,pins = <PIN(3, 0) 6>,
-+			       <PIN(3, 2) 4>;
-+	};
-+  }
-+
-+  Pin #0 on port #3 is configured in alternate function #6.
-+  Pin #2 on port #3 is configured in alternate function #4.
-+
-+  Example 2:
-+  I2c master: both SDA and SCL pins need bi-directional operations
-+
-+  &pinctrl {
-+	i2c2_pins: i2c2 {
-+		renesas,pins = <PIN(1, 4) (1 | BI_DIR)>,
-+			       <PIN(1, 5) (1 | BI_DIR)>;
-+	};
-+  }
-+
-+  Pin #4 on port #1 is configured in alternate function #1.
-+  Pin #5 on port #1 is configured in alternate function #1.
-+  Both need to work in bi-directional mode.
-+
-+  Example 3:
-+  Multi-function timer input and output compare pins.
-+  The hardware manual prescribes this pins to have input/output direction
-+  specified by software. Configure TIOC0A as input and TIOC0B as output.
-+
-+  &pinctrl {
-+	tioc0_pins: tioc0 {
-+		renesas,pins = <PIN(4, 0) (2 | SWIO_IN)>,
-+			       <PIN(4, 1) (2 | SWIO_OUT)>;
-+	};
-+  }
-+
-+  Pin #0 on port #4 is configured in alternate function #2 with IO direction
-+  specified by software as input.
-+  Pin #1 on port #4 is configured in alternate function #1 with IO direction
-+  specified by software as output.
-+
-+- GPIO controller sub-nodes:
-+  Each port of r7s72100 pin controller hardware is itself a gpio controller.
-+  Different SoCs have different number of available pins per port, but
-+  generally speaking, each of them can be configured in GPIO ("port") mode
-+  on this hardware.
-+  Describe gpio-controllers using sub-nodes with the following properties.
-+
-+  Required properties:
-+    - gpio-controller
-+      empty property as defined by gpio bindings documentation.
-+    - #gpio-cells
-+      number of cells required to identify and configure a GPIO.
-+      Shall be 2.
-+    - gpio-ranges
-+      Describes a gpio controller specifying its specific pin base, the pin
-+      base in the global pin numbering space, and the number of controlled
-+      pins, as defined by gpio bindings documentation. Refer to this file
-+      for a more detailed description.
-+
-+  Example:
-+  A gpio controller node, controlling 16 pins indexed from 0.
-+  The gpio controller base in the global pin indexing space is pin 48, thus
-+  pins [0 - 15] on this controller map to pins [48 - 63] in the global pin
-+  indexing space.
-+
-+  port3: gpio-3 {
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	gpio-ranges = <&pinctrl 0 48 16>;
-+  };
-+
-+  A device node willing to use pins controlled by this gpio controller, shall
-+  refer to it as follows:
-+
-+  led1 {
-+	gpios = <&port3 10 GPIO_ACTIVE_LOW>;
-+  };
--- 
-2.7.4
+Returning -EBUSY only when streaming is too late, as ioctl's
+may be changing the pipeline configuration and/or buffer allocation,
+while the application is sending other ioctls in order to prepare
+for streaming.
 
+V4L2 has a mechanism of blocking other apps to change such
+parameters via VIDIOC_S_PRIORITY[1]. If an application sets
+priority to V4L2_PRIORITY_RECORD, any other application attempting
+to change the device via some other file descriptor will fail.
+So, it is a sort of "exclusive write access".
+
+On a quick look at V4L2 core, currently, sending a 
+VIDIOC_S_PRIORITY ioctl to a /dev/video device doesn't seem to have
+any effect at either MC or V4L2 subdev API for the subdevs connected
+to it. We'll likely need to add some code at v4l2_prio_change()
+for it to notify the subdevs for them to return -EBUSY if one
+would try to change something there, while the device is priorized.
+
+[1] https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/vidioc-g-priority.html
+
+> > In parallel, someone has to fix libv4l for it to be default on
+> > applications like gstreamer, e. g. adding support for DMABUF
+> > and fixing other issues that are preventing it to be used by
+> > default.  
+> 
+> Hmm, not sure what you mean there - I've used dmabuf with gstreamer's
+> v4l2src linked to libv4l2, importing the buffers into etnaviv using
+> a custom plugin.  There are distros around (ubuntu) where the v4l2
+> plugin is built against libv4l2.
+
+Hmm... I guess some gst developer mentioned that there are/where
+some restrictions at libv4l2 with regards to DMABUF. I may be
+wrong.
+
+> 
+> > My understanding here is that there are developers wanting/needing
+> > to have standard V4L2 apps support for (some) i.MX6 devices. Those are
+> > the ones that may/will allocate some time for it to happen.  
+> 
+> Quite - but we need to first know what is acceptable to the v4l2
+> community before we waste a lot of effort coding something up that
+> may not be suitable.  Like everyone else, there's only a limited
+> amount of effort available, so using it wisely is a very good idea.
+
+Sure. That's why we're discussing here :-)
+
+> Up until recently, it seemed that the only solution was to solve the
+> userspace side of the media controller API via v4l2 plugins and the
+> like.
+> 
+> Much of my time that I have available to look at the imx6 capture
+> stuff at the moment is taken up by triping over UAPI issues with the
+> current code (such as the ones about CSI scaling, colorimetry, etc)
+> and trying to get concensus on what the right solution to fix those
+> issues actually is, and at the moment I don't have spare time to
+> start addressing any kind of v4l2 plugin for user controls nor any
+> other solution.
+
+I hear you. A solution via libv4l could be more elegant, but it
+doesn't seem simple, as nobody did it before, and depends on the
+libv4l plugin mechanism, with is currently unused.
+
+Also, I think it is easier to provide a solution using DT and some
+driver and/or core support for it, specially since, AFAICT,
+currently there's no way request exclusive access to MC and subdevs.
+
+It is probably not possible do to that exclusively in userspace.
+
+> Eg, I spent much of this last weekend sorting out my IMX219 camera
+> sensor driver for my new understanding about how scaling is supposed
+> to work, the frame enumeration issue (which I've posted patches for)
+> and the CSI scaling issue (which I've some half-baked patch for at the
+> moment, but probably by the time I've finished sorting that, Philipp
+> or Steve will already have a solution.)
+> 
+> That said, my new understanding of the scaling impacts the four patches
+> I posted, and probably makes the frame size enumeration in CSI (due to
+> its scaling) rather obsolete.
+
+Yeah, when there's no scaler, it should report just the resolution(s)
+supported by the sensor (actually, at the CSI) via
+V4L2_FRMSIZE_TYPE_DISCRETE.
+
+However, when there's a scaler at the pipeline, it should report the
+range supported by the scaler, e. g.:
+
+- V4L2_FRMSIZE_TYPE_CONTINUOUS - when an entire range of resolutions
+  is supported with step = 1 for both H and V .
+
+- V4L2_FRMSIZE_TYPE_STEPWISE - when there's either a H or V step at
+  the possible values for resolutions. This is actually more common
+  in practice, as several encodings take a 2x2 pixel block. So, the
+  step should be at least 2.
+
+There is something to be considered by the logic that forwards the
+resolution to the CSI: a lower resolution there means a higher number of
+frames per second.
+
+So, if the driver is setting the resolution via a V4L2 device, it
+will provide a higher number of fps if it selects the lowest 
+resolution at CSI that it is greater or equal to the resolution
+set at the scaler. On the other hand, the image quality could be 
+better if it doesn't scale at CSI.
+
+Thanks,
+Mauro
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
