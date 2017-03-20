@@ -1,77 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 5/5] ARM: dts: sun8i: Update
- audio-routing with renamed widgets
-Date: Mon, 20 Mar 2017 16:30:47 +0000
-Message-ID: <20170320163047.3xizwkq6pogi73gp@sirena.org.uk>
-References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
- <20170318075509.3836-6-mylene.josserand@free-electrons.com>
- <20170320113817.rcphcvrizi4yphhe@sirena.org.uk>
- <CAGb2v66ZLeoSQt0y2QVcDEBujS7JLQAptDq1WL8f8rkwSni6uw@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: tegra: WARN if flowctrl is not supported
+Date: Mon, 20 Mar 2017 16:32:06 +0000
+Message-ID: <b870683b-84f1-7cc9-ae9d-d094bef58196@nvidia.com>
+References: <1489584715-23138-1-git-send-email-jonathanh@nvidia.com>
+ <1489584715-23138-2-git-send-email-jonathanh@nvidia.com>
+ <20170320141023.GB28203@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3173900721030755844=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAGb2v66ZLeoSQt0y2QVcDEBujS7JLQAptDq1WL8f8rkwSni6uw@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320141023.GB28203-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============3173900721030755844==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gyokpzpzpw6uxcee"
-Content-Disposition: inline
+On 20/03/17 14:10, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Wed, Mar 15, 2017 at 01:31:51PM +0000, Jon Hunter wrote:
+>> If we fail to map the IO space for the Tegra flowctrl module in
+>> tegra_flowctrl_init(), then if any of the public APIs for the Tegra
+>> flowctrl driver are called we still still attempt to access the
+>> hardware. Fix this by only accessing the hardware if the
+>> 'tegra_flowctrl_base' address has not been setup correctly and warn
+>> if we attempt to access the hardware when it has not.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/mach-tegra/flowctrl.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-tegra/flowctrl.c b/arch/arm/mach-tegra/flowctrl.c
+>> index 475e783992fd..40b15e39f849 100644
+>> --- a/arch/arm/mach-tegra/flowctrl.c
+>> +++ b/arch/arm/mach-tegra/flowctrl.c
+>> @@ -47,6 +47,9 @@ static void __iomem *tegra_flowctrl_base;
+>>  
+>>  static void flowctrl_update(u8 offset, u32 value)
+>>  {
+>> +	if (WARN_ONCE(!tegra_flowctrl_base, "Tegra flowctrl not supported!"))
+> 
+> Technically I think this string needs a terminating "\n" because it is
+> eventually passed to printk(), even though the WARN_ONCE() will probably
+> format the output correctly even without it.
 
+Yes, will fix up.
 
---gyokpzpzpw6uxcee
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Also, "not supported" isn't a very accurate description. This has to do
+> with the flow controller not having been initialized yet.
 
-On Mon, Mar 20, 2017 at 07:53:37PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Mar 20, 2017 at 7:38 PM, Mark Brown <broonie@kernel.org> wrote:
+Will update to 'not initialised'.
 
-> > Given that these are fixes it probably makes sense that they all go in
-> > together, can I get some acks for this and I'll apply it?
+Jon
 
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-
-> Though this patch should go in through the arm-soc tree.
-
-Well, ideally but I'm not sure it's a super big deal to get the odd bit
-coming through so long as it doesn't conflict, it's more of a big deal
-to make sure that we don't get the ASoC side without the DT side and
-vice versa.
-
---gyokpzpzpw6uxcee
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljQA7YACgkQJNaLcl1U
-h9CjoQf+Je6RtQfGkq0vooHmdHRZUzlJTnC4LWrDoC/+zF8ji5CtfqwNFZGD92rH
-U5h3nk52dFH+ucdSOPjtjQp7EFnTo5mJ2U2ufMACFYvidVhZh2Y2NUMpQyjvXF1d
-7kulTZqBJyy+gG77W9vksy/e08gwc67H/9Ykm1Fr6D8y8/WocZ77KWFcTd+eRHf4
-DkqlT0wvDX5dags8ictYr3JXi41uI1Sr2CbrKQtbm9ISo0l8HiMGD/8OhhwUuJL2
-xyASCFWfX5NsiDl+0dy/ww273JKl5LHAvog42KV+LX2tqnKeFYvOR2N22Upk5lxo
-Ej3kNUvcXB/2fpeXlcQ9yMoO3NBhEQ==
-=OOu+
------END PGP SIGNATURE-----
-
---gyokpzpzpw6uxcee--
-
---===============3173900721030755844==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3173900721030755844==--
+-- 
+nvpublic
