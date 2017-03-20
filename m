@@ -1,129 +1,37 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
- sink set_fmt
-Date: Mon, 20 Mar 2017 20:47:06 +0000
-Message-ID: <20170320204705.GT21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
- <20170319152233.GW21222@n2100.armlinux.org.uk>
- <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
- <1490010926.2917.59.camel@pengutronix.de>
- <20170320120855.GH21222@n2100.armlinux.org.uk>
- <1490018451.2917.86.camel@pengutronix.de>
- <20170320141705.GL21222@n2100.armlinux.org.uk>
- <1490030604.2917.103.camel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 3/4] device property: Move FW type specific
+ functionality to FW specific files
+Date: Mon, 20 Mar 2017 15:57:01 -0500
+Message-ID: <CAL_Jsq+HGNCbiHw8dD0R+zj+GfGxaypk7di0sbxNr4bZsjqxbA@mail.gmail.com>
+References: <1489671289-20406-1-git-send-email-sakari.ailus@linux.intel.com> <1489671289-20406-4-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1490030604.2917.103.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1489671289-20406-4-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 06:23:24PM +0100, Philipp Zabel wrote:
-> ----------8<----------
-> >From 2830aebc404bdfc9d7fc1ec94e5282d0b668e8f6 Mon Sep 17 00:00:00 2001
-> From: Philipp Zabel <p.zabel@pengutronix.de>
-> Date: Mon, 20 Mar 2017 17:10:21 +0100
-> Subject: [PATCH] media: imx: csi: add sink selection rectangles
-> 
-> Move the crop rectangle to the sink pad and add a sink compose rectangle
-> to configure scaling. Also propagate rectangles from sink pad to crop
-> rectangle, to compose rectangle, and to the source pads both in ACTIVE
-> and TRY variants of set_fmt/selection, and initialize the default crop
-> and compose rectangles.
+On Thu, Mar 16, 2017 at 8:34 AM, Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> The device and fwnode property API supports Devicetree, ACPI and pset
+> properties. The implementation of this functionality for each firmware
+> type was embedded in the fwnode property core. Move it out to firmware
+> type specific locations, making it easier to maintain.
+>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/acpi/property.c |  87 +++++++++++++++
+>  drivers/acpi/scan.c     |   1 +
+>  drivers/base/property.c | 280 +++++++++++++++++++-----------------------------
+>  drivers/of/base.c       |  99 +++++++++++++++++
 
-Looks fine for the most part.
+This is the opposite direction everything else has been moving. For
+example, I2C parsing is in drivers/i2c. But I guess this is a bit
+different.
 
-> -	/*
-> -	 * Modifying the crop rectangle always changes the format on the source
-> -	 * pad. If the KEEP_CONFIG flag is set, just return the current crop
-> -	 * rectangle.
-> -	 */
-> -	if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
-> -		sel->r = priv->crop;
-> -		if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
-> -			cfg->try_crop = sel->r;
-> +	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sel->which);
-> +	crop = __csi_get_crop(priv, cfg, sel->which);
-> +	compose = __csi_get_compose(priv, cfg, sel->which);
-> +
-> +	switch (sel->target) {
-> +	case V4L2_SEL_TGT_CROP:
-> +		/*
-> +		 * Modifying the crop rectangle always changes the format on
-> +		 * the source pads. If the KEEP_CONFIG flag is set, just return
-> +		 * the current crop rectangle.
-> +		 */
-> +		if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
-> +			sel->r = priv->crop;
+In any case, please move this to drivers/of/property.c (and perhaps
+move all of of_property_* there too).
 
-My understanding of KEEP_CONFIG is that the only thing we're not
-allowed to do is to propagate the change downstream.
-
-Since downstream of the crop is the compose, that means the only
-restriction here is that the width and height of the crop window must
-be either equal to the compose width/height, or double the compose
-width/height.  (Anything else would necessitate the compose window
-changing.)
-
-However, the crop window can move position within the crop bounds,
-provided it's entirely contained within those crop bounds.
-
-The problem is that this becomes rather more complex it deal with
-(as I'm finding out in my imx219 camera driver) and I'm thinking
-that some of this complexity should probably be in a helper in
-generic v4l2 code.
-
-I don't know whether this applies (I hope it doesn't) but there's a
-pile of guidelines in Documentation/media/uapi/v4l/vidioc-g-selection.rst
-which describe how a crop/compose rectangle should be adjusted.  As
-I say, I hope they don't apply, because if they do, we would _really_
-need helpers for this stuff, as I don't think having each driver
-implement all these rules would be too successful!
-
-> +			if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
-> +				*crop = sel->r;
-> +			goto out;
-> +		}
-> +
-> +		csi_try_crop(priv, &sel->r, cfg, infmt, sensor);
-> +
-> +		*crop = sel->r;
-> +
-> +		/* Reset scaling to 1:1 */
-> +		compose->width = crop->width;
-> +		compose->height = crop->height;
-> +		break;
-> +	case V4L2_SEL_TGT_COMPOSE:
-> +		/*
-> +		 * Modifying the compose rectangle always changes the format on
-> +		 * the source pads. If the KEEP_CONFIG flag is set, just return
-> +		 * the current compose rectangle.
-> +		 */
-> +		if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
-> +			sel->r = priv->compose;
-
-I think, with my understanding of how the KEEP_CONFIG flag works, this
-should be:
-			sel->r = *compose;
-
-because if we change the compose rectangle width/height, we would need
-to propagate this to the source pad, and the KEEP_CONFIG description
-says we're not allowed to do that.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Rob
