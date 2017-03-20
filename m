@@ -1,35 +1,83 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 03/39] [media] dt/bindings: Add bindings for OV5640
-Date: Mon, 20 Mar 2017 10:03:52 -0500
-Message-ID: <20170320150352.kej5lrbbd4sohejg@rob-hp-laptop>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-4-git-send-email-steve_longerbeam@mentor.com>
+Subject: Re: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
+ properties
+Date: Mon, 20 Mar 2017 10:04:06 -0500
+Message-ID: <20170320150406.vu2n4cgp7xyztact@rob-hp-laptop>
+References: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
+ <20170315170112.mnhgntbjreheavua@rob-hp-laptop>
+ <CAMuHMdUt_d-kp57v2A18tuf-QQcOXnZ6wBtU9pqAyGJRZ2m3TQ@mail.gmail.com>
+ <20170316205639.xufbtbnqgy72bwyc@rob-hp-laptop>
+ <CAMuHMdU0=WfkUUjXTYpp4JWM4mzFcV3AwSwf_7p+YnQQh=uE-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1489121599-23206-4-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+In-Reply-To: <CAMuHMdU0=WfkUUjXTYpp4JWM4mzFcV3AwSwf_7p+YnQQh=uE-w@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 09, 2017 at 08:52:43PM -0800, Steve Longerbeam wrote:
-> Add device tree binding documentation for the OV5640 camera sensor.
-> 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> ---
->  .../devicetree/bindings/media/i2c/ov5640.txt       | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gVGh1LCBNYXIgMTYsIDIwMTcgYXQgMDk6NTk6MDRQTSArMDEwMCwgR2VlcnQgVXl0dGVyaG9l
+dmVuIHdyb3RlOgo+IEhpIFJvYiwKPiAKPiBPbiBUaHUsIE1hciAxNiwgMjAxNyBhdCA5OjU2IFBN
+LCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToKPiA+IE9uIFRodSwgTWFyIDE2
+LCAyMDE3IGF0IDA5OjEzOjE2QU0gKzAxMDAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiA+
+PiBPbiBXZWQsIE1hciAxNSwgMjAxNyBhdCA2OjAxIFBNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPiB3cm90ZToKPiA+PiA+IE9uIE1vbiwgTWFyIDA2LCAyMDE3IGF0IDA1OjI1OjU2UE0g
+KzAxMDAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiA+PiA+PiBEb2N1bWVudCB0aGUgb3B0
+aW9uYWwgcHJvcGVydGllcyBmb3IgZGVzY3JpYmluZyBtb2R1bGUgcmVzZXRzLCB0bwo+ID4+ID4+
+IHN1cHBvcnQgcmVzZXR0aW5nIGRpc3BsYXkgY2hhbm5lbHMgYW5kIExWRFMgZW5jb2RlcnMgb24g
+Ui1DYXIgR2VuMiBhbmQKPiA+PiA+PiBHZW4zLgo+ID4+ID4+Cj4gPj4gPj4gU2lnbmVkLW9mZi1i
+eTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4KPiA+PiA+PiAt
+LS0KPiA+PiA+PiBTZWUgIlt2MiwxLzRdIGR0LWJpbmRpbmdzOiBjbG9jazogcmVuZXNhczogY3Bn
+LW1zc3I6IERvY3VtZW50IHJlc2V0IGNvbnRyb2wKPiA+PiA+PiBzdXBwb3J0IiAoaHR0cHM6Ly9w
+YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTM2NjI3LykgZm9yIHRoZSBmb3JtYXQgb2YKPiA+
+PiA+PiBhIHJlc2V0IHNwZWNpZmllciBpbiB0aGUgUmVuZXNhcyBDUEcvTVNTUiBjYXNlLgo+ID4+
+ID4+Cj4gPj4gPj4gRS5nLiAicmVzZXRzID0gPCZjcGcgMzEwPjsiCj4gPj4gPj4KPiA+PiA+PiB2
+MjoKPiA+PiA+PiAgIC0gcy9waGFuZGxlcy9waGFuZGxlLy4KPiA+PiA+PiAtLS0KPiA+PiA+PiAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQg
+fCAxMCArKysrKysrKysrCj4gPj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCsp
+Cj4gPj4gPj4KPiA+PiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+ID4+ID4+IGluZGV4IDFhMDJmMDk5YTBm
+ZjBhM2EuLjNkYjQxOGM4MjcxOTNlODIgMTAwNjQ0Cj4gPj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiA+PiA+PiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4
+dAo+ID4+ID4+IEBAIC0zNiw2ICszNiwxNiBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ID4+ID4+
+ICAgICAgICBXaGVuIHN1cHBsaWVkIHRoZXkgbXVzdCBiZSBuYW1lZCAiZGNsa2luLngiIHdpdGgg
+IngiIGJlaW5nIHRoZSBpbnB1dAo+ID4+ID4+ICAgICAgICBjbG9jayBudW1lcmljYWwgaW5kZXgu
+Cj4gPj4gPj4KPiA+PiA+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+PiA+PiArICAtIHJlc2V0
+czogQSBsaXN0IG9mIHBoYW5kbGUgKyByZXNldC1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFj
+aCBlbnRyeSBpbgo+ID4+ID4+ICsgICAgdGhlIHJlc2V0LW5hbWVzIHByb3BlcnR5Lgo+ID4+ID4+
+ICsgIC0gcmVzZXQtbmFtZXM6IE5hbWVzIG9mIHRoZSByZXNldHMuIFRoaXMgcHJvcGVydHkgaXMg
+bW9kZWwtZGVwZW5kZW50Lgo+ID4+ID4+ICsgICAgLSBSOEE3NzlbMDEyMzQ1Nl0gdXNlIG9uZSBy
+ZXNldCBmb3IgYSBncm91cCBvZiBvbmUgb3IgbW9yZSBzdWNjZXNzaXZlCj4gPj4gPj4gKyAgICAg
+IGNoYW5uZWxzLCBhbmQgb25lIHJlc2V0IHBlciBMVkRTIGVuY29kZXIgKGlmIGF2YWlsYWJsZSku
+IFRoZSByZXNldHMKPiA+PiA+PiArICAgICAgbXVzdCBiZSBuYW1lZCAiZHUueCIgd2l0aCAieCIg
+YmVpbmcgdGhlIG51bWVyaWNhbCBpbmRleCBvZiB0aGUgbG93ZXN0Cj4gPj4gPj4gKyAgICAgIGNo
+YW5uZWwgaW4gdGhlIGdyb3VwLiBUaGUgTFZEUyByZXNldHMgbXVzdCBiZSBuYW1lZCAibHZkcy54
+IiB3aXRoICJ4Igo+ID4+ID4+ICsgICAgICBiZWluZyB0aGUgTFZEUyBlbmNvZGVyIG51bWVyaWNh
+bCBpbmRleC4KPiA+PiA+Cj4gPj4gPiBMVkRTIGlzIG5vdCBhIHNlcGFyYXRlIGJsb2NrPwo+ID4+
+Cj4gPj4gV2VsbC4uLiBmcm9tIGEgaGFyZHdhcmUgcG9pbnQgb2YgdmlldywgdGhlIExWRFMgZW5j
+b2RlcnMgYW5kIERVIGNoYW5uZWxzCj4gPj4gYXJlIGFsbCBzZXBhcmF0ZSBibG9ja3MgKHRoZXkg
+aGF2ZSBzZXBhcmF0ZSByZWcgYmxvY2tzLCBjbG9ja3MsIGFuZCByZXNldHMpLgo+ID4+IEJ1dCBk
+dWUgdG8gdGhlIGRlcGVuZGVuY2llcyBiZXR3ZWVuIHRoZSBibG9ja3MsIHRoZXkncmUgbW9kZWxl
+ZCBpbiBEVCBhcwo+ID4+IGEgc2luZ2xlIGRldmljZSwgd2l0aCBtdWx0aXBsZSByZWcsIGNsb2Nr
+cywgYW5kIHJlc2V0cyBwcm9wZXJ0aWVzLgo+ID4KPiA+IERlcGVuZGVuY2llcyBiZWluZyBEUk0g
+cmVxdWlyZW1lbnQgb2Ygd2FudGluZyBhIHNpbmdsZSBkZXZpY2Ugd2l0aAo+ID4gc3ViLWRldmlj
+ZXMgb3Igc29tZSBoL3cgZGVwZW5kZW5jaWVzPyBUaGUgZm9ybWVyIHNob3VsZG4ndCBkZWZpbmUg
+eW91cgo+ID4gYmluZGluZy4KPiAKPiBIYXJkd2FyZSBkZXBlbmRlbmNpZXMuIExhdXJlbnQgY2Fu
+IHRlbGwgeW91IG1vcmUgYWJvdXQgdGhlbSAod2hlbiBoZSdsbAo+IGJlIGJhY2spLgoKT2theSwK
+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKUm9iCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
