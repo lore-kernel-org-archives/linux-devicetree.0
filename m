@@ -1,131 +1,103 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/5] rtc: Add rtc-sh
-Date: Mon, 20 Mar 2017 17:03:20 +0100
-Message-ID: <CAMuHMdWxs4Xwc0T5AHL73ZtF6r8pN9v6g-GEzozdLvTc4j4aSw@mail.gmail.com>
-References: <20170316175112.27913-1-chris.brandt@renesas.com>
- <20170316175112.27913-3-chris.brandt@renesas.com> <CAMuHMdVu0dQjptyW0F5YS+V6sixXTM3P6VWq2=8BQ5njUOXf-Q@mail.gmail.com>
- <SG2PR06MB1165A9931C930DF9BCD5C0A98A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdW0nHiZkE_RxVLX3G0MuwQLPHVFyNq5C1tx0yAqDQefaA@mail.gmail.com>
- <SG2PR06MB11653BB788CADBEE78FE4CF58A390@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdWs3NtKLiBnKCmxGYNBW3zzWYydj=JGKr+mH7ao97L2_Q@mail.gmail.com>
- <20170317150524.oijto6gtjxycdnwn@piout.net> <SG2PR06MB1165819F41CF40562F44F08B8A3A0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Mon, 20 Mar 2017 16:10:03 +0000
+Message-ID: <20170320161003.GO21222@n2100.armlinux.org.uk>
+References: <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+ <20170310125342.7f047acf@vento.lan>
+ <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+ <20170311082549.576531d0@vento.lan>
+ <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+ <20170314004533.3b3cd44b@vento.lan>
+ <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+ <20170314072143.498cde9b@vento.lan>
+ <5c935062-61f4-40e7-0ee9-87655197e661@xs4all.nl>
+ <20170320123938.0503c931@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCQJP74GSUDRB7P2X7DAKGQELOT7HUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-In-Reply-To: <SG2PR06MB1165819F41CF40562F44F08B8A3A0-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20170320123938.0503c931@vento.lan>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Nicolas Dufresne <nicolas@ndufresne.ca>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+On Mon, Mar 20, 2017 at 12:39:38PM -0300, Mauro Carvalho Chehab wrote:
+> Em Mon, 20 Mar 2017 14:24:25 +0100
+> Hans Verkuil <hverkuil@xs4all.nl> escreveu:
+> > I don't think this control inheritance patch will magically prevent you
+> > from needed a plugin.
+> 
+> Yeah, it is not just control inheritance. The driver needs to work
+> without subdev API, e. g. mbus settings should also be done via the
+> video devnode.
+> 
+> Btw, Sakari made a good point on IRC: what happens if some app 
+> try to change the pipeline or subdev settings while another
+> application is using the device? The driver should block such 
+> changes, maybe using the V4L2 priority mechanism.
 
-On Mon, Mar 20, 2017 at 4:05 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Friday, March 17, 2017, Alexandre Belloni wrote:
->> On 17/03/2017 at 14:55:48 +0100, Geert Uytterhoeven wrote:
->> > >> it would still be good to have phandles to the external clock
->> > >> sources as well, as that describes the hardware topology.
->> > > I'm confused, you mean make new clocks node for RTC_X1 (fixed at
->> > > 32.768kHZ) and
->> > > RTC_X3 (fixed at 4MHz), but then not really do anything with then?
->> > > (the driver
->> >
->> > You still do something with them, as they'll be linked from the rtc
->> device node.
->> >
->> > > doesn't need them)
->> >
->> > The driver may use them in the future.
->> > E.g. to select among X1, X3, or EXTAL, depending on availability.
->>
->> I'm on Geert's side here, I wouldn't rely on the bootloader to set
->> everything up correctly.
->
-> Part of my hesitation to putting in the clock source selection was that
-> this RTC block is used in a lot of parts, and it's always the same,
-> except for the last 3 registers which are different from device to
-> device because different SoCs have different clock sources options
-> and ways to set them up. So, making a driver that just 'reads' the
-> time seemed safer/easier.
-> Anyway, I'll add the clock setup in if that's the general consensus.
->
-> But, before I send out an updated version, what were you thinking
-> my DT should look like?
->
-> Should I make a "count-source" property for user to select what clock
-> will be used for the actually counting?
->
->
->         clocks {
->                 ranges;
->                 #address-cells = <1>;
->                 #size-cells = <1>;
->             . . .
->
-> +               rtc_x1_clk: rtc_x1 {
-> +                       #clock-cells = <0>;
-> +                       compatible = "fixed-clock";
-> +                       /* If clk present, value must be set by board to 32678 */
-> +                       clock-frequency = <0>;
-> +               };
-> +
-> +               rtc_x3_clk: rtc_x3 {
-> +                       #clock-cells = <0>;
-> +                       compatible = "fixed-clock";
-> +                       /* If clk present, value must be set by board to 4000000 */
-> +                       clock-frequency = <0>;
-> +               };
-> +
->
->
->
->
-> +       rtc: rtc@fcff1000 {
-> +               compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
-> +               reg = <0xfcff1000 0x2e>;
-> +               interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
-> +                             GIC_SPI 277 IRQ_TYPE_EDGE_RISING
-> +                             GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
-> +               interrupt-names = "alarm", "period", "carry";
-> +               clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
-> +                         <&extal_clk> , <&rtc_x3_clk>;
-> +               clock-names = "fck", "rtc_x1", "extal", "rtc_x3";
-> +               power-domains = <&cpg_clocks>;
-> +               count-source = "rtc_x1";    <<<<<<< this would be in the board dts file
+My understanding is that there are already mechanisms in place to
+prevent that, but it's driver dependent - certainly several of the
+imx driver subdevs check whether they have an active stream, and
+refuse (eg) all set_fmt calls with -EBUSY if that is so.
 
-IMHO that's software policy, not hardware description, so it doesn't
-belong in DT.
+(That statement raises another question in my mind: if the subdev is
+streaming, should it refuse all set_fmt, even for the TRY stuff?)
 
-However, by scanning the list of allowed clock names, and looking at clock
-rates, the driver can find a suitable clock itself.
+> In parallel, someone has to fix libv4l for it to be default on
+> applications like gstreamer, e. g. adding support for DMABUF
+> and fixing other issues that are preventing it to be used by
+> default.
 
-> +               status = "disabled";
-> +       };
+Hmm, not sure what you mean there - I've used dmabuf with gstreamer's
+v4l2src linked to libv4l2, importing the buffers into etnaviv using
+a custom plugin.  There are distros around (ubuntu) where the v4l2
+plugin is built against libv4l2.
 
-Gr{oetje,eeting}s,
+> My understanding here is that there are developers wanting/needing
+> to have standard V4L2 apps support for (some) i.MX6 devices. Those are
+> the ones that may/will allocate some time for it to happen.
 
-                        Geert
+Quite - but we need to first know what is acceptable to the v4l2
+community before we waste a lot of effort coding something up that
+may not be suitable.  Like everyone else, there's only a limited
+amount of effort available, so using it wisely is a very good idea.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Up until recently, it seemed that the only solution was to solve the
+userspace side of the media controller API via v4l2 plugins and the
+like.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Much of my time that I have available to look at the imx6 capture
+stuff at the moment is taken up by triping over UAPI issues with the
+current code (such as the ones about CSI scaling, colorimetry, etc)
+and trying to get concensus on what the right solution to fix those
+issues actually is, and at the moment I don't have spare time to
+start addressing any kind of v4l2 plugin for user controls nor any
+other solution.
+
+Eg, I spent much of this last weekend sorting out my IMX219 camera
+sensor driver for my new understanding about how scaling is supposed
+to work, the frame enumeration issue (which I've posted patches for)
+and the CSI scaling issue (which I've some half-baked patch for at the
+moment, but probably by the time I've finished sorting that, Philipp
+or Steve will already have a solution.)
+
+That said, my new understanding of the scaling impacts the four patches
+I posted, and probably makes the frame size enumeration in CSI (due to
+its scaling) rather obsolete.
 
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
