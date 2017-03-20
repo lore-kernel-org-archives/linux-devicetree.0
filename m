@@ -1,58 +1,51 @@
-From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Mon, 20 Mar 2017 15:04:46 -0400
-Message-ID: <31a8e038-f0b8-6854-6ab9-288a79ff91d0@timesys.com>
-References: <1489785040-26477-1-git-send-email-akshay.bhat@timesys.com>
- <1489785040-26477-2-git-send-email-akshay.bhat@timesys.com>
- <78bf099d-32ad-9981-6ba9-fe56fbcabc3e@grandegger.com>
- <7f768a65-bdf0-3b43-17e8-9aaca5997663@timesys.com>
- <86fb20f6-8a3a-163f-9dc6-ba7f5368b689@grandegger.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 00/18] add support for AXP20X and AXP22X
+ power supply drivers
+Date: Mon, 20 Mar 2017 20:11:37 +0100
+Message-ID: <20170320191136.rs77k6v2jvpqnayc@earth>
+References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
+ <20170315121450.bl5dxdjzazwsrvni@dell>
+ <bc829791-c543-220a-8c42-1023b1a82963@free-electrons.com>
+ <20170315224647.suhnptpczykuoffd@earth>
+ <949439a1-2f66-bdb7-04ae-ff88cb388809@free-electrons.com>
+Reply-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <86fb20f6-8a3a-163f-9dc6-ba7f5368b689-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="stwhadmgpajrvsyz"
+Return-path: <linux-sunxi+bncBDXMLNOH5ANRB4OSYDDAKGQEPZBGJRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <949439a1-2f66-bdb7-04ae-ff88cb388809-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfgang,
 
-On 03/20/2017 12:46 PM, Wolfgang Grandegger wrote:
-..snip..
->>
->> The top 3 bits of HI3110_READ_ERR (BUSOFF, TXERRP, RXERRP) are valid
->> even if HI3110_INT_BUSERR is not set.
-> 
-> I'm confused! If you disable BUSERR interrupts, you do not get the
-> status bits any longer, you said. But the manual says: "Bits 4:0 in the
-> ERR register can be read to determine the source of the error.", which
-> excludes the above bits... but obviously the controller does it that way.
-> 
+--stwhadmgpajrvsyz
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I agree this feature could use better documentation.
+Hi Quentin,
 
-Based on testing:
+On Mon, Mar 20, 2017 at 12:34:03PM +0100, Quentin Schulz wrote:
+> As there are still some discussion going on Liam's patch series on
+> which my patch series depends, I propose to wait for it to be
+> merged and then I'll rework these battery driver patches. Is there
+> anything I can do to help the merging of Liam's patch series?
 
-If BUSERRIE bit in INTE is clear,
-On cable disconnect: No interrupts related to bus errors are generated.
-So status change messages do not go out.
+He just sent an updated version today, that I have not yet reviewed.
 
-If BUSERRIE bit in INTE is set,
-On cable disconnect: Interrupts are generated due to ACKERR. The
-interrupt routine reads the BUSOFF/TXERRP/RXERRP bits of ERR register
-and reports the state. If CAN_CTRLMODE_BERR_REPORTING is set, then
-protocol errors are also reported by the interrupt.
-On cable re-connect: Interrupts are generated due to TXCPLT. The
-interrupt routine reads the BUSOFF/TXERRP/RXERRP bits of ERR register
-and reports the state.
+> Could you ping me when it is merged? The easiest way would be to
+> Cc me to the next version though so I can follow the discussion :)
 
-Let me know if this helps clear things up :)
+I will try to remember pinging you. CC'ing will have to be done by
+Liam.
 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- Sebastian
+--stwhadmgpajrvsyz--
