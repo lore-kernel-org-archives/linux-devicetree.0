@@ -1,125 +1,51 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Mon, 20 Mar 2017 13:49:27 +0100
-Message-ID: <b6cf3479-d0c7-8e28-078a-9e45b25ade34@xs4all.nl>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170319121402.GS21222@n2100.armlinux.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] Basical Lichee Pi Zero with Dock support
+Date: Mon, 20 Mar 2017 13:50:26 +0100
+Message-ID: <20170320125026.t35nyadmeupuckc7@lukather>
+References: <20170317154343.39921-1-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170319121402.GS21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Steve Longerbeam <steve_longerbeam@mentor.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yigwq5xxvyfngiu5"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ5AX7DAKGQEHBQNKBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170317154343.39921-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2017 01:14 PM, Russell King - ARM Linux wrote:
-> On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
->> On 03/18/2017 12:22 PM, Russell King - ARM Linux wrote:
->>> 0:00:01.955927879 20954  0x15ffe90 INFO                    v4l2 gstv4l2object.c:3811:gst_v4l2_object_get_caps:<v4l2src0> probed caps: video/x-bayer, format=(string)rggb, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)I420, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)YV12, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)BGR, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(
- string)RGB, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1
->>>
->>>    despite the media pipeline actually being configured for 60fps.
->>>
->>>    Forcing it by adjusting the pipeline only results in gstreamer
->>>    failing, because it believes that v4l2 is unable to operate at
->>>    60fps.
->>>
->>>    Also note the complaints from v4l2src about the non-compliance...
->>
->> Thanks, I've fixed most of v4l2-compliance issues, but this is not
->> done yet. Is that something you can help with?
-> 
-> I've looked at this, and IMHO it's yet another media control API mess.
-> 
-> - media-ctl itself allows setting the format on subdev pads via
->   struct v4l2_subdev_format.
-> 
-> - struct v4l2_subdev_format contains a struct v4l2_mbus_framefmt.
-> 
-> - struct v4l2_mbus_framefmt contains:
->   * @width:      frame width
->   * @height:     frame height
->   * @code:       data format code (from enum v4l2_mbus_pixelcode)
->   * @field:      used interlacing type (from enum v4l2_field)
->   * @colorspace: colorspace of the data (from enum v4l2_colorspace)
->   * @ycbcr_enc:  YCbCr encoding of the data (from enum v4l2_ycbcr_encoding)
->   * @quantization: quantization of the data (from enum v4l2_quantization)
->   * @xfer_func:  transfer function of the data (from enum v4l2_xfer_func)
-> 
-> - media-ctl sets width, height, code and field, but nothing else.
-> 
-> We're already agreed that the fields that media-ctl are part of the
-> format negotiation between the ultimate source, flowing down to the
-> capture device.  However, there's no support in media-ctl to deal
-> with these other fields - so media-ctl in itself is only half-
-> implemented.
 
-Correct. The colorspace et al fields are in practice unimportant for sensors.
-For HDMI/DP they are very important, though.
+--yigwq5xxvyfngiu5
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-It's the reason why nobody worked on adding support for this to media-ctl,
-it's almost exclusively used with sensors. Not saying that it is right that
-it hasn't been added to media-ctl, just that it never had a high enough prio.
+Hi,
 
-Regards,
+On Fri, Mar 17, 2017 at 11:43:40PM +0800, Icenowy Zheng wrote:
+> Lichee Pi Zero have an official dock, which makes use of all stamp hole pins.
+> 
+> Some extra functionalities are availble via the dock, e.g. an extra
+> MMC slot and some keys connected to LRADC.
+> 
+> This patchset adds the support of these two features of the dock.
 
-	Hans
+I'm a bit skeptical about the whole approach to have a split DTS for
+expansion boards.
 
-> 
-> From what I can tell, _we_ are doing the right thing in imx-media-capture.
-> 
-> However, I think part of the problem is the set_fmt implementation.
-> When a source pad is configured via set_fmt(), any fields that can
-> not be altered (eg, because the subdev doesn't support colorspace
-> conversion) need to be preserved from the subdev's sink pad.
-> 
-> Right now, CSI doesn't do that - it only looks at the width, height,
-> code, and field.
-> 
-> I think we've got other bugs though that haven't been picked up by any
-> review - csi_try_fmt() adjusts the format using the _current_
-> configuration of the sink pad, even when using V4L2_SUBDEV_FORMAT_TRY.
-> This seems wrong according to the docs: the purpose of the try
-> mechanism is to be able to setup the _entire_ pipeline using the TRY
-> mechanism to work out whether the configuration works, before then
-> setting for real.  If we're validating the TRY formats against the
-> live configuration, then we're not doing that.
-> 
-> There's calls for:
-> 
-> v4l2_subdev_get_try_format
-> v4l2_subdev_get_try_crop
-> v4l2_subdev_get_try_compose
-> 
-> to get the try configuration - we hardly make use of all of these.  I
-> would suggest that we change the approach to implementing the various
-> subdevs such that:
-> 
-> 1) like __csi_get_fmt(), we have accessors that gets a pointer to the
->    correct state for the TRY/live settings.
-> 
-> 2) everywhere we're asked to get or set parameters that can be TRY/live,
->    we use these accessors to retrieve a pointer to the correct state to
->    not only read, but also modify.
-> 
-> 3) when we're evaluating parameters against another pad, we use these
->    accessors to obtain the other pad's configuration, rather than poking
->    about in the state saved in the subdev's priv-> (which is irrelevant
->    for the TRY variant.)
-> 
-> 4) ensure that all parameters which the subdev itself does not support
->    modification of are correctly propagated from the sink pad to all
->    source pads, and are unable to be modified via the source pad.
-> 
+This is not fundamentally different than having expansion boards, that
+we already deal with with overlays. This one is just bigger.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--yigwq5xxvyfngiu5--
