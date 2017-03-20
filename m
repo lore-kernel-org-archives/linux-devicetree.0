@@ -1,77 +1,105 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] ASoC: Add support for Maxim Integrated
- MAX98927 Amplifier
-Date: Mon, 20 Mar 2017 14:14:07 +0000
-Message-ID: <20170320141407.GS6986@localhost.localdomain>
-References: <1489970423-29353-1-git-send-email-ryans.lee@maximintegrated.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/5] soc/tegra: Move Tegra flowctrl driver
+Date: Mon, 20 Mar 2017 15:14:34 +0100
+Message-ID: <20170320141434.GC28203@ulmo.ba.sec>
+References: <1489584715-23138-1-git-send-email-jonathanh@nvidia.com>
+ <1489584715-23138-4-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WplhKdTI2c8ulnbP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489970423-29353-1-git-send-email-ryans.lee@maximintegrated.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ryan Lee <ryans.lee@maximintegrated.com>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com, tiwai@suse.com, srinivas.kandagatla@linaro.org, romain.perier@collabora.com, bardliao@realtek.com, lars@metafoo.de, axel.lin@ingics.com, Paul.Handrigan@cirrus.com, devicetree@vger.kernel.org, arnd@arndb.de, nh6z@nh6z.net, robh+dt@kernel.org, dgreid@google.com, oder_chiou@realtek.com, KCHSU0@nuvoton.com, linux-kernel@vger.kernel.org, petr@barix.com, broonie@kernel.org
+In-Reply-To: <1489584715-23138-4-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 09:40:23AM +0900, Ryan Lee wrote:
-> Signed-off-by: Ryan Lee <ryans.lee@maximintegrated.com>
-> ---
-> Resubmit the intial version of MAX98927 driver. Added all fixes into the initial patch.
-<snip>
-> +static int max98927_reg_get(struct snd_kcontrol *kcontrol,
-> +	struct snd_ctl_elem_value *ucontrol, unsigned int reg,
-> +	unsigned int mask, unsigned int shift)
+
+--WplhKdTI2c8ulnbP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Mar 15, 2017 at 01:31:53PM +0000, Jon Hunter wrote:
+[...]
+> +static int __init tegra_flowctrl_init(void)
 > +{
-> +	struct snd_soc_codec *codec = snd_soc_kcontrol_codec(kcontrol);
-> +	struct max98927_priv *max98927 = snd_soc_codec_get_drvdata(codec);
-> +	int data;
+> +	/* hardcoded fallback if device tree node is missing */
+> +	unsigned long base =3D 0x60007000;
+> +	unsigned long size =3D SZ_4K;
+> +	struct device_node *np;
 > +
-> +	regmap_read(max98927->regmap, reg, &data);
-> +	ucontrol->value.integer.value[0] = (data & mask) >> shift;
+> +	if (!soc_is_tegra())
+> +		return 0;
+> +
+> +	np =3D of_find_matching_node(NULL, matches);
+> +	if (np) {
+> +		struct resource res;
+> +
+> +		if (of_address_to_resource(np, 0, &res) =3D=3D 0) {
+> +			size =3D resource_size(&res);
+> +			base =3D res.start;
+> +		}
+> +
+> +		of_node_put(np);
+> +	}
+> +
+> +	tegra_flowctrl_base =3D ioremap_nocache(base, size);
+> +
+> +	if (!tegra_flowctrl_base)
+> +		return -ENXIO;
+> +
 > +	return 0;
 > +}
+> +early_initcall(tegra_flowctrl_init);
+
+Do we want to implement a hand-off to a proper driver at some point,
+similar to what we have for PMC?
+
+> diff --git a/include/soc/tegra/flowctrl.h b/include/soc/tegra/flowctrl.h
+[...]
+> +#ifndef __ASSEMBLY__
+> +u32 flowctrl_read_cpu_csr(unsigned int cpuid);
+> +void flowctrl_write_cpu_csr(unsigned int cpuid, u32 value);
+> +void flowctrl_write_cpu_halt(unsigned int cpuid, u32 value);
 > +
-> +static int max98927_reg_put(struct snd_kcontrol *kcontrol,
-> +	struct snd_ctl_elem_value *ucontrol, unsigned int reg,
-> +	unsigned int mask, unsigned int shift)
-> +{
-> +	struct snd_soc_codec *codec = snd_soc_kcontrol_codec(kcontrol);
-> +	struct max98927_priv *max98927 = snd_soc_codec_get_drvdata(codec);
-> +	unsigned int sel = ucontrol->value.integer.value[0];
+> +void flowctrl_cpu_suspend_enter(unsigned int cpuid);
+> +void flowctrl_cpu_suspend_exit(unsigned int cpuid);
+> +#endif
+
+Perhaps we want the same type of dummy functions scheme here for
+!SOC_TEGRA_FLOWCTRL that Arnd proposed for !SOC_TEGRA_PMC?
+
+
 > +
-> +	regmap_update_bits(max98927->regmap, reg, mask, sel << shift);
-> +	dev_dbg(codec->dev, "%s: register 0x%02X, value 0x%02X\n",
-> +		__func__, reg, sel);
-> +	return 0;
-> +}
+> +#endif
+> --=20
+> 2.7.4
+>=20
 
-These functions look a lot like they duplicate things the ASoC
-core does?
+--WplhKdTI2c8ulnbP
+Content-Type: application/pgp-signature; name="signature.asc"
 
-<snip>
-> +static int max98927_boost_voltage_get(struct snd_kcontrol *kcontrol,
-> +	struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	return max98927_reg_get(kcontrol, ucontrol,
-> +		MAX98927_R0040_BOOST_CTRL0,
-> +		MAX98927_BOOST_CTRL0_VOUT_MASK, 0);
-> +}
-> +
+-----BEGIN PGP SIGNATURE-----
 
-And can't these just be specified in the normal way with the
-register information attached to the control? There doesn't seem
-to be any special behaviour being added here. Apologies if I am
-missing something here.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljP48oACgkQ3SOs138+
+s6EjMw//UjAvA/xaiULMrW77/A0HZpztJb+MUus8BHNMQq0PxO3KVywqa7FcjXlq
+Laue5JiluDWHvGZvnA94XImLaWVIZliLTijFHdzAgmru6uj/AQOibkam9In+PIEu
+awoCt89aSMHyVgUfs2Bvu9S/U4DM38kqAbELoUrAACQY2FHW9OplMa+MIXIb99Zs
+KFGhZfxkN9+dnYYtKFyHCjrTfPOjgeq9nUIl5vjY986o+6ngKKikrjSBdmTmoNnL
+pkNcDHKZUEVf6DoSf6Y5C9ZAAlw/FziI+geKJnXzcoUcrDFEv0rQozSiIixL2brC
+vFgPRFFiFrKZBy92IEDyd9hl8auKRYaVVG3O/2UsTwZV5wOC9TlJuWnccuRGp+Ta
+3/tpuqpTxuKN2s9TaJgVAPcOxr47NU+y6sAx+182b6sdlPsW96gd/46JKmMobwvx
+/MjW1Q39MGRi0ajAUkATrEO5BKesVNSHzMfFob8uyrXp14aBWnCkSaz05jLboZgT
+L7PnzIU1f6ZHt6ezkDddRBq8VgO2Mfb3QI3SVgrKTKB/Sia6SOpAIZsTDLc4hO3v
+Yj0ZajOwso/k4SupabeOvx5kpaPhf1a+0krPpzybOw7x4VhTleRTpkFMTw0TJqhL
+WW1rrkYtRzhqk3PqsIvA/US7uAw5brkIfHBOKRL5Y08aG46b7uk=
+=HmeW
+-----END PGP SIGNATURE-----
 
-Thanks,
-Charles
+--WplhKdTI2c8ulnbP--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
