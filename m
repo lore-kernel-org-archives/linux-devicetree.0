@@ -1,48 +1,54 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 6/7] arm: dts: genmai: Add RIIC2 pin group
-Date: Mon, 20 Mar 2017 17:14:50 +0100
-Message-ID: <1490026491-21742-7-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 7/7] arm: dts: genmai: Add user led device nodes
+Date: Mon, 20 Mar 2017 17:14:51 +0100
+Message-ID: <1490026491-21742-8-git-send-email-jacopo+renesas@jmondi.org>
 References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pin configuration subnode for RIIC2 interface.
+Add device nodes for user leds on Genmai board.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- arch/arm/boot/dts/r7s72100-genmai.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/r7s72100-genmai.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-index 569c86a..30992b1 100644
+index 30992b1..94b9ab7 100644
 --- a/arch/arm/boot/dts/r7s72100-genmai.dts
 +++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-@@ -44,6 +44,12 @@
- 		renesas,pins = <PIN(3, 0) 6>,
- 			       <PIN(3, 2) 4>;
+@@ -11,6 +11,7 @@
+ 
+ /dts-v1/;
+ #include "r7s72100.dtsi"
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
+ 
+ / {
+@@ -35,6 +36,19 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
  	};
 +
-+	i2c2_pins: i2c2 {
-+		/* RIIC2: P1_4 as SCL, P1_5 as SDA */
-+		renesas,pins = <PIN(1, 4) (1 | BI_DIR)>,
-+			       <PIN(1, 5) (1 | BI_DIR)>;
++	leds {
++		status = "okay";
++		compatible = "gpio-leds";
++
++		led1 {
++			gpios = <&port4 10 GPIO_ACTIVE_LOW>;
++		};
++
++		led2 {
++			gpios = <&port4 11 GPIO_ACTIVE_LOW>;
++		};
 +	};
  };
  
- &extal_clk {
-@@ -62,6 +68,9 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
- 
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
- 	eeprom@50 {
- 		compatible = "renesas,24c128";
- 		reg = <0x50>;
+ &pinctrl {
 -- 
 2.7.4
+
