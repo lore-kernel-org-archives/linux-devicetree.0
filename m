@@ -1,38 +1,141 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 5/5] ARM: dts: sun8i: Update
-	audio-routing with renamed widgets
-Date: Mon, 20 Mar 2017 19:53:37 +0800
-Message-ID: <CAGb2v66ZLeoSQt0y2QVcDEBujS7JLQAptDq1WL8f8rkwSni6uw@mail.gmail.com>
-References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
- <20170318075509.3836-6-mylene.josserand@free-electrons.com>
- <20170320113817.rcphcvrizi4yphhe@sirena.org.uk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Mon, 20 Mar 2017 12:55:26 +0100
+Message-ID: <1490010926.2917.59.camel@pengutronix.de>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+ <20170319152233.GW21222@n2100.armlinux.org.uk>
+ <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170320113817.rcphcvrizi4yphhe@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gm
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMjAsIDIwMTcgYXQgNzozOCBQTSwgTWFyayBCcm93biA8YnJvb25pZUBrZXJu
-ZWwub3JnPiB3cm90ZToKPiBPbiBTYXQsIE1hciAxOCwgMjAxNyBhdCAwODo1NTowOUFNICswMTAw
-LCBNeWzDqG5lIEpvc3NlcmFuZCB3cm90ZToKPj4gVGhlIGRpZ2l0YWwgQUlGIGludGVyZmFjZXMg
-aGFzIGJlZW4gcmVuYW1lZCBpbiB0aGUgc3VuOGkgYXVkaW8gY29kZWMKPj4gZHJpdmVyIHNvIHRo
-ZSBhdWRpby1yb3V0aW5nIGluIHRoZSBkZXZpY2UgdHJlZSBtdXN0IGJlIHJlbmFtZWQgdG9vLgo+
-Cj4gR2l2ZW4gdGhhdCB0aGVzZSBhcmUgZml4ZXMgaXQgcHJvYmFibHkgbWFrZXMgc2Vuc2UgdGhh
-dCB0aGV5IGFsbCBnbyBpbgo+IHRvZ2V0aGVyLCBjYW4gSSBnZXQgc29tZSBhY2tzIGZvciB0aGlz
-IGFuZCBJJ2xsIGFwcGx5IGl0PwoKQWNrZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9y
-Zz4KClRob3VnaCB0aGlzIHBhdGNoIHNob3VsZCBnbyBpbiB0aHJvdWdoIHRoZSBhcm0tc29jIHRy
-ZWUuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
-ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
-bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+On Sun, 2017-03-19 at 12:08 -0700, Steve Longerbeam wrote:
+> 
+> On 03/19/2017 08:22 AM, Russell King - ARM Linux wrote:
+> > On Thu, Mar 09, 2017 at 08:53:18PM -0800, Steve Longerbeam wrote:
+> >> From: Philipp Zabel <p.zabel@pengutronix.de>
+> >>
+> >> The csi_try_crop call in set_fmt should compare the cropping rectangle
+> >> to the currently set input format, not to the previous input format.
+> > Are we really sure that the cropping support is implemented correctly?
+> >
+> > I came across this while looking at what we're doing with the
+> > V4L2_SEL_FLAG_KEEP_CONFIG flag.
+> >
+> > Documentation/media/uapi/v4l/dev-subdev.rst defines the behaviour of
+> > the user API, and "Order of configuration and format propagation" says:
+> >
+> >    The coordinates to a step always refer to the actual size of the
+> >    previous step. The exception to this rule is the source compose
+> >    rectangle, which refers to the sink compose bounds rectangle --- if it
+> >    is supported by the hardware.
+> >    
+> >    1. Sink pad format. The user configures the sink pad format. This format
+> >       defines the parameters of the image the entity receives through the
+> >       pad for further processing.
+> >    
+> >    2. Sink pad actual crop selection. The sink pad crop defines the crop
+> >       performed to the sink pad format.
+> >    
+> >    3. Sink pad actual compose selection. The size of the sink pad compose
+> >       rectangle defines the scaling ratio compared to the size of the sink
+> >       pad crop rectangle. The location of the compose rectangle specifies
+> >       the location of the actual sink compose rectangle in the sink compose
+> >       bounds rectangle.
+> >    
+> >    4. Source pad actual crop selection. Crop on the source pad defines crop
+> >       performed to the image in the sink compose bounds rectangle.
+> >    
+> >    5. Source pad format. The source pad format defines the output pixel
+> >       format of the subdev, as well as the other parameters with the
+> >       exception of the image width and height. Width and height are defined
+> >       by the size of the source pad actual crop selection.
+> >    
+> >    Accessing any of the above rectangles not supported by the subdev will
+> >    return ``EINVAL``. Any rectangle referring to a previous unsupported
+> >    rectangle coordinates will instead refer to the previous supported
+> >    rectangle. For example, if sink crop is not supported, the compose
+> >    selection will refer to the sink pad format dimensions instead.
+> >
+> > Note step 3 above: scaling is defined by the ratio of the _sink_ crop
+> > rectangle to the _sink_ compose rectangle.
+
+The above paragraph suggests we skip any rectangles that are not
+supported. In our case that would be 3. and 4., since the CSI can't
+compose into a larger frame. I hadn't realised that the crop selection
+currently happens on the source pad.
+The hardware actually only supports cropping of the input (the crop
+rectangle we write into the window registers are before downscaling). So
+the crop rectangle should be moved to the sink pad.
+
+> > So, lets say that the camera produces a 1280x720 image, and the sink
+> > pad format is configured with 1280x720.  That's step 1.
+> >
+> > The sink crop operates within that rectangle, cropping it to an area.
+> > Let's say we're only interested in its centre, so we'd chose 640x360
+> > with the top-left as 320,180.  This is step 2.
+>>
+> > Then, if we want to down-scale by a factor of two, we'd set the sink
+> > compose selection to 320x180.
+
+Except when composing is not supported. If the sink compose and source
+crop rectangles are not supported, the source pad format takes their
+place in determining the scaling output resolution. At least that's how
+I read the documentation.
+
+> > This seems to be at odds with how the scaling is done in CSI at
+> > present: the selection implementations all reject attempts to
+> > configure the sink pad, instead only supporting crop rectangles on
+> > the source,
+> 
+> Correct. Currently cropping is only supported at the source pad
+> (step 4).
+> 
+> Initially the CSI didn't support down-scaling, so step 3 is not supported,
+> so the sink pad format/crop selection rectangle/crop compose rectangle
+> are collapsed into the same sink pad format rectangle.
+> 
+> Philipp later added support for /2 downscaling, but we didn't put this in
+> the correct API, looks like this needs to move into the selection API at
+> step 3 (sink pad compose rectangle).
+
+I am not sure about this. Wouldn't moving the input crop to the sink pad
+be enough? If we added support for the sink pad compose rectangle, that
+wouldn't actually allow to compose the CSI output into a larger frame.
+Since the subdevice can't compose, I'd leave the sink compose rectangle
+disabled.
+
+> >   and we use the source crop rectangle to define the
+> > down-scaling.
+
+We use the source pad format to define the downscaling relative to the
+source crop rectangle (which is wrong, it should be relative to the sink
+crop rectangle).
+
+> Yes. And maybe there is nothing wrong with that, because scaling is also
+> defined by the source/sink _format_ ratios (if I'm not mistaken), so looking
+> at this another way, we're just defining scaling in the CSI via another
+> legal API.
+
+I didn't touch the crop rectangle at all, just setting the input
+resolution on the sink pad and the desired output resolution on the
+source pad should work.
+
+regards
+Philipp
