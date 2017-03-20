@@ -1,151 +1,104 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: dsa: add mt7530 binding
-Date: Mon, 20 Mar 2017 17:01:28 -0500
-Message-ID: <20170320220128.cg4zkbzzkddvsrfx@rob-hp-laptop>
-References: <1489420008-30795-1-git-send-email-sean.wang@mediatek.com>
- <1489420008-30795-2-git-send-email-sean.wang@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/7] Documentation: dt: net: Update the ath9k binding for
+ SoC devices
+Date: Mon, 20 Mar 2017 17:06:19 -0500
+Message-ID: <20170320220619.6lybt3wieqqedfuo@rob-hp-laptop>
+References: <1489439116-4233-1-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1489420008-30795-2-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1489439116-4233-1-git-send-email-albeu@free.fr>
+Sender: netdev-owner@vger.kernel.org
+To: Alban <albeu@free.fr>
+Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>, John Crispin <john@phrozen.org>, Kalle Valo <kvalo@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 11:46:45PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Mon, Mar 13, 2017 at 10:05:09PM +0100, Alban wrote:
+> The current binding only cover PCI devices so extend it for SoC devices.
 > 
-> Add device-tree binding for Mediatek MT7530 switch.
+> Most SoC platforms use an MTD partition for the calibration data
+> instead of an EEPROM. The qca,no-eeprom property was added to allow
+> loading the EEPROM content using firmware loading. This new binding
+> replace this hack with NVMEM cells, so we also mark the qca,no-eeprom
+> property as deprecated in case anyone ever used it.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Alban <albeu@free.fr>
 > ---
->  .../devicetree/bindings/net/dsa/mt7530.txt         | 94 ++++++++++++++++++++++
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
+>  .../devicetree/bindings/net/wireless/qca,ath9k.txt | 41 ++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 3 deletions(-)
+
+For the subject, "dt-bindings: net: ..." and one nit below, otherwise:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-> new file mode 100644
-> index 0000000..0e50dbf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-> @@ -0,0 +1,94 @@
-> +Mediatek MT7530 Ethernet switch
-> +================================
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> index b7396c8..61f5f6d 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> @@ -27,16 +27,34 @@ Required properties:
+>  			- 0034 for AR9462
+>  			- 0036 for AR9565
+>  			- 0037 for AR9485
+> +		For SoC devices the compatible should be "qca,<soctype>-wmac"
+> +		and one of the following fallbacks:
+> +			- "qca,ar9100-wmac"
+> +			- "qca,ar9330-wmac"
+> +			- "qca,ar9340-wmac"
+> +			- "qca,qca9550-wmac"
+> +			- "qca,qca9530-wmac"
+>  - reg: Address and length of the register set for the device.
+>  
+> +Required properties for SoC devices:
+> +- interrupt-parent: phandle of the parent interrupt controller.
+> +- interrupts: Interrupt specifier for the controllers interrupt.
 > +
-> +Required properties:
+>  Optional properties:
+> +- mac-address: See ethernet.txt in the parent directory
+> +- local-mac-address: See ethernet.txt in the parent directory
+> +- clock-names: has to be "ref"
+> +- clocks: phandle of the reference clock
+> +- resets: phandle of the reset line
+> +- nvmem-cell-names: has to be "eeprom" and/or "address"
+> +- nvmem-cells: phandle to the eeprom nvmem cell and/or to the mac address
+> +		nvmem cell.
 > +
-> +- compatible: Must be compatible = "mediatek,mt7530";
-> +- #address-cells: Must be 1
-> +- #size-cells: Must be 0
-> +- mediatek,ethsys: Phandle to the syscon node that handles the reset.
+> +Deprecated properties:
+>  - qca,no-eeprom: Indicates that there is no physical EEPROM connected to the
+>  			ath9k wireless chip (in this case the calibration /
+>  			EEPROM data will be loaded from userspace using the
+>  			kernel firmware loader).
+> -- mac-address: See ethernet.txt in the parent directory
+> -- local-mac-address: See ethernet.txt in the parent directory
+> -
+>  
+>  In this example, the node is defined as child node of the PCI controller:
+>  &pci0 {
+> @@ -46,3 +64,20 @@ In this example, the node is defined as child node of the PCI controller:
+>  		qca,no-eeprom;
+>  	};
+>  };
+> +
+> +In this example it is defined as a SoC device:
+> +	wmac@180c0000 {
 
-Use the reset binding?
+wifi@...
 
-> +- mediatek,ethernet: Phandle to the syscon node that Mediatek ethernet driver
-> +	provides that handles the TRGMII setup used by the switch.
-> +	See
-> +	Documentation/devicetree/bindings/net/mediatek-net.txt for the detailed
-> +	setup on mediatek ethernet.
-> +- mediatek,mcm: String, should be "enabled" or "disabled" to indicate that
-
-boolean instead.
-
-> +	either MT7530 is the part on multi-chip module belong to MT7623A has
-> +	or the remotely standalone chip as the function MT7623N reference board
-> +	provided for.
-> +- core-supply: Phandle to the regulator node necessary for the core power.
-> +- io-supply: Phandle to the regulator node necessary for the I/O power
-> +	See Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> +	for details for the regulator setup on these boards.
-> +- mediatek,reset-pin: Phandle to the pinctrl node used for the reset. Which
-
-What's wrong with the normal pinctrl binding?
-
-> +	must be required if the property mediatek,mcm of specified as
-> +	"disabled". See
-> +	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt for
-> +	the mediatek pintcrl setting for the details.
+> +		compatible = "qca,ar9132-wmac", "qca,ar9100-wmac";
+> +		reg = <0x180c0000 0x30000>;
 > +
-> +Each port children node within ports container must have the following
-
-s/children/child/
-
-> +mandatory properties:
-> +- reg			: Port address described must be 6 for CPU port
-> +			and from 0 to 5 for user ports.
+> +		interrupt-parent = <&cpuintc>;
+> +		interrupts = <2>;
 > +
-> +See Documentation/devicetree/bindings/dsa/dsa.txt for a list of additional
-> +required, optional properties and how the integrated switch subnodes must
-> +be specified.
+> +		clock-names = "ref";
+> +		clocks = <&extosc>;
 > +
-> +Example:
+> +		nvmem-cell-names = "eeprom", "address";
+> +		nvmem-cells = <&wmac_eeprom>, <&wmac_address>;
 > +
-> +	&mdio0 {
-> +		switch@0 {
-> +			compatible = "mediatek,mt7530";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			mediatek,ethsys = <&ethsys>;
-> +			mediatek,ethernet = <&eth>;
-> +			mediatek,mcm = "enabled";
-> +			core-supply = <&mt6323_vpa_reg>;
-> +			io-supply = <&mt6323_vemc3v3_reg>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				reg = <0>;
-> +				port@0 {
-> +					reg = <0>;
-> +					label = "lan0";
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					label = "lan1";
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					label = "lan2";
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					label = "lan3";
-> +				};
-> +
-> +				port@4 {
-> +					reg = <4>;
-> +					label = "wan";
-> +				};
-> +
-> +				port@6 {
-> +					reg = <6>;
-> +					label = "cpu";
-> +					ethernet = <&eth>;
-> +					phy-mode = "trgmii";
-> +					fixed-link {
-> +						speed = <1000>;
-> +						full-duplex;
-> +					};
-> +				};
-> +			};
-> +		};
+> +		resets = <&rst 22>;
 > +	};
 > -- 
-> 1.9.1
+> 2.7.4
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
