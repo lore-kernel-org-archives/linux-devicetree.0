@@ -1,81 +1,119 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
-Date: Mon, 20 Mar 2017 14:44:40 +0100
-Message-ID: <20170320134440.GN22463@ulmo.ba.sec>
-References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
- <20170316064218.9169-2-ralph.sennhauser@gmail.com>
- <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qi3SIpffvxS/TM8d"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ralph Sennhauser <ralph.sennhauser@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 2/3] checks: Add bus checks for simple-bus buses
+Date: Mon, 20 Mar 2017 09:44:17 -0500
+Message-ID: <20170320144418.5021-3-robh@kernel.org>
+References: <20170320144418.5021-1-robh@kernel.org>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320144418.5021-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add checks to identify simple-bus bus types and checks for child
+devices. Simple-bus type is generally identified by "simple-bus"
+compatible string. We also treat the root as a simple-bus, but only for
+child nodes with reg property.
 
---qi3SIpffvxS/TM8d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+v4:
+- Avoid strlen overrunning property buffer in node_is_compatible
+- Drop assuming root node is a simple-bus
 
-On Thu, Mar 16, 2017 at 05:03:05PM +0100, Linus Walleij wrote:
-> On Thu, Mar 16, 2017 at 7:42 AM, Ralph Sennhauser
-> <ralph.sennhauser@gmail.com> wrote:
->=20
-> > From: Andrew Lunn <andrew@lunn.ch>
-> >
-> > Armada 370/XP devices can 'blink' gpio lines with a configurable on
-> > and off period. This can be modelled as a PWM.
-> >
-> > However, there are only two sets of PWM configuration registers for
-> > all the gpio lines. This driver simply allows a single gpio line per
-> > gpio chip of 32 lines to be used as a PWM. Attempts to use more return
-> > EBUSY.
-> >
-> > Due to the interleaving of registers it is not simple to separate the
-> > PWM driver from the gpio driver. Thus the gpio driver has been
-> > extended with a PWM driver.
-> >
-> > Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> > URL: https://patchwork.ozlabs.org/patch/427287/
-> > URL: https://patchwork.ozlabs.org/patch/427295/
-> > [Ralph Sennhauser:
-> >   * port forward
-> >   * merge pwm portion into gpio-mvebu.c
-> >   * merge doc patch
-> >   * update MAINAINERS]
-> > Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
->=20
-> In essence I am very positive of this patch set and happy to merge
-> it as a PWM driver inside of GPIO if Thierry is OK with it.
+v3:
+- new patch
 
-No objections to the concept of making a GPIO driver implement a PWM
-chip when it makes sense.
+ checks.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-Thierry
-
---qi3SIpffvxS/TM8d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljP3MgACgkQ3SOs138+
-s6HXwhAAk7F5OVxOoRVqzMxZJ1EDc5pOgWJjfIlxkQKT1FUCBu446QLU+HNfXgsm
-xKKVlSvRF83nR1VHhG5qB9m+rNhh2H5Uc4x74xXOwC8od5XflN/+ejUaNlT/BqUN
-LkcIT7Y76kb0qYaMcLFGrJJFK0CZjB7LUVkUDneB+97bRZTH5qmKER3sgzfBxOBL
-87nrlwNhgCYbjPdRwxdsCloEDGXfOE71bn+CHKzARj/TqdQh96FBvvst4XlgSDJN
-/CLcnt/TPXbVlkaOq2k4Flfm3HM29GSKarz3andDacas8LooVMXLiD9X/AlAzZ5D
-X0cYDx7xec2B9eQUja/ecG4RauuvFlodRkWKUEK4PobFkCUc/QiBG8D40xLWdsng
-8FyEj5bUHwfTkZdJ8dEuNVBEEYoHrY0QyJNeoRMJQKaz1c3Sh1E8NK9EpwjzPYza
-HXVl8STRC3PYQ+W2pZaXERht7ZMHKB2AvnvKioJiKzwo0CQAALg9x5tnn5Z4gSYz
-487xF7fTf32TkLOYJB1zZJpr5V+OhojG8ZshS+mLJJ6GC8KlrtTPHUAKEvythr72
-NSCD09MTYGbSMoJcp08B24Jb55L6V45Cg2B7A21lUfHg8ZlQMQoqP2fKRf2BZITw
-ZuasdbcOsB8USXnXUYhU+Gur3i9z6hKDxF0ilDUMK+xf7iyBne8=
-=OBHh
------END PGP SIGNATURE-----
-
---qi3SIpffvxS/TM8d--
+diff --git a/checks.c b/checks.c
+index 427a5787b004..33036b8dbbc2 100644
+--- a/checks.c
++++ b/checks.c
+@@ -813,6 +813,73 @@ static void check_pci_device_reg(struct check *c, struct dt_info *dti, struct no
+ }
+ WARNING(pci_device_reg, check_pci_device_reg, NULL, &reg_format);
+ 
++static const struct bus_type simple_bus = {
++	.name = "simple-bus",
++};
++
++static bool node_is_compatible(struct node *node, const char *compat)
++{
++	struct property *prop;
++	const char *str, *end;
++
++	prop = get_property(node, "compatible");
++	if (!prop)
++		return false;
++
++	for (str = prop->val.val, end = str + prop->val.len; str < end;
++	     str += strnlen(str, end - str) + 1) {
++		if (strneq(str, compat, end - str))
++			return true;
++	}
++	return false;
++}
++
++static void check_simple_bus_bridge(struct check *c, struct dt_info *dti, struct node *node)
++{
++	if (node_is_compatible(node, "simple-bus"))
++		node->bus = &simple_bus;
++}
++WARNING(simple_bus_bridge, check_simple_bus_bridge, NULL, &addr_size_cells);
++
++static void check_simple_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
++{
++	struct property *prop;
++	const char *unitname = get_unitname(node);
++	char unit_addr[17];
++	unsigned int size;
++	uint64_t reg = 0;
++	cell_t *cells = NULL;
++
++	if (!node->parent || (node->parent->bus != &simple_bus))
++		return;
++
++	prop = get_property(node, "reg");
++	if (prop)
++		cells = (cell_t *)prop->val.val;
++	else {
++		prop = get_property(node, "ranges");
++		if (prop && prop->val.len)
++			/* skip of child address */
++			cells = ((cell_t *)prop->val.val) + node_addr_cells(node);
++	}
++
++	if (!cells) {
++		if (node->parent->parent && !(node->bus == &simple_bus))
++			FAIL(c, dti, "Node %s missing or empty reg/ranges property", node->fullpath);
++		return;
++	}
++
++	size = node_addr_cells(node->parent);
++	while (size--)
++		reg = (reg << 32) | fdt32_to_cpu(*(cells++));
++
++	snprintf(unit_addr, sizeof(unit_addr), "%lx", reg);
++	if (!streq(unitname, unit_addr))
++		FAIL(c, dti, "Node %s simple-bus unit address format error, expected \"%s\"",
++		     node->fullpath, unit_addr);
++}
++WARNING(simple_bus_reg, check_simple_bus_reg, NULL, &reg_format, &simple_bus_bridge);
++
+ /*
+  * Style checks
+  */
+@@ -889,6 +956,9 @@ static struct check *check_table[] = {
+ 	&pci_device_reg,
+ 	&pci_device_bus_num,
+ 
++	&simple_bus_bridge,
++	&simple_bus_reg,
++
+ 	&avoid_default_addr_size,
+ 	&obsolete_chosen_interrupt_controller,
+ 
+-- 
+2.10.1
