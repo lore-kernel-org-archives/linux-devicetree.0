@@ -1,75 +1,65 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFT PATCH 0/1] Meson GXBB: use pwm-leds on supported devices
-Date: Mon, 20 Mar 2017 20:56:04 +0100
-Message-ID: <CAFBinCCuNM1LSgtVr18A9=hsLNRYoaatVJ8ZshD9xzy1S1wi3w@mail.gmail.com>
-References: <20170318143728.16535-1-martin.blumenstingl@googlemail.com>
- <a5b18444-6158-7bc2-cb19-0b5a44ea9316@baylibre.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 4/4] iio: accel: adxl345: Add support for triggered buffer
+Date: Mon, 20 Mar 2017 20:46:11 +0100
+Message-ID: <f03e9577-41f9-8f1f-1963-3e8cbac5f979@metafoo.de>
+References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
+ <1489403497-27849-5-git-send-email-eraretuya@gmail.com>
+ <CAHp75VefS18nAH3HkQgNdmo5oUWoaQ7ctj=eXHx9XjwrJtZzuQ@mail.gmail.com>
+ <8da981ed-6ce0-0be5-6b56-c3c1ec0d5dab@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a5b18444-6158-7bc2-cb19-0b5a44ea9316@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8da981ed-6ce0-0be5-6b56-c3c1ec0d5dab@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Eva Rachel Retuya <eraretuya@gmail.com>
+Cc: linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+On 03/15/2017 10:50 PM, Jonathan Cameron wrote:
+> On 13/03/17 12:16, Andy Shevchenko wrote:
+>> On Mon, Mar 13, 2017 at 1:11 PM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
+>>> Provide an all-axes read for triggered buffering.
+>>
+>> Better description is needed.
+>>
+>>> -static int adxl345_get_triple(struct adxl345_data *data, void *buf)
+>>> +static int adxl345_get_triple(struct adxl345_data *data)
+>>
+>> Ping-ponging again. This should be essentially a change in the patch
+>> where you introduce a helper.
+>>
+>>> +err_buffer_cleanup:
+>>> +       iio_triggered_buffer_cleanup(indio_dev);
+>>>  err_trigger_unregister:
+>>>         if (data->drdy_trig)
+>>>                 iio_trigger_unregister(data->drdy_trig);
+>>
+>> devm_iio_*() ?
+>>
+>>> @@ -334,6 +435,7 @@ int adxl345_core_remove(struct device *dev)
+>>>         struct adxl345_data *data = iio_priv(indio_dev);
+>>>
+>>>         iio_device_unregister(indio_dev);
+>>> +       iio_triggered_buffer_cleanup(indio_dev);
+>>>         if (data->drdy_trig)
+>>>                 iio_trigger_unregister(data->drdy_trig);
+>>
+>> Ditto.
+>>
+>>> diff --git a/drivers/iio/accel/adxl345_i2c.c b/drivers/iio/accel/adxl345_i2c.c
+>>> index 8c791b8..1e0f071 100644
+>>> --- a/drivers/iio/accel/adxl345_i2c.c
+>>> +++ b/drivers/iio/accel/adxl345_i2c.c
+>>> @@ -30,6 +30,10 @@ static int adxl345_i2c_probe(struct i2c_client *client,
+>>>         bool use_int2 = false;
+>>>         int irq;
+>>>
+>>> +       if (!i2c_check_functionality(client->adapter,
+>>> +                                    I2C_FUNC_SMBUS_READ_I2C_BLOCK))
+>>> +               return -EOPNOTSUPP;
+>>
+>> And if driver works before, you make a regression here.
+> Absolutely. Need a fallback if it's not supported...
 
-On Mon, Mar 20, 2017 at 9:43 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> On 03/18/2017 03:37 PM, Martin Blumenstingl wrote:
->> This patch enables brightness support through the pwm-leds driver for
->> the GXBB devices which use GPIOAO_13 for their system/status LED.
->>
->> Affected devices are:
->> - NEXBOX A95X (GXBB, S905 variant)
->> - Odroid-C2
->> - the Tronsmart Vega S95 series (Meta, Pro, Telos)
->> - WeTek Hub
->> - WeTek Play 2
->>
->> unfortunately my GXBB board (a Tronsmart Vega S95 Meta clone) is not
->> working anymore, so I can't test this at all.
->> if it works on one of the devices then we can probably assume that it
->> works fine on all other devices as well.
->>
->>
->> Martin Blumenstingl (1):
->>   ARM64: dts: meson-gxbb: convert devices to use pwm-leds
->>
->>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 18 +++++++++++----
->>  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 16 ++++++++++---
->>  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 17 ++++++++++----
->>  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 19 +++++++++++----
->>  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 27 ++++++++++++++++------
->>  5 files changed, 74 insertions(+), 23 deletions(-)
->>
->
-> Hi Martin,
->
-> I'm concerned about how the LED is managed by the firmware.
-> The system led is usually managed by the firmware and color is changed
-> when in suspend or poweroff mode.
-> But I'm not sure of the behavior if the pin mode is set to PWM.
->
-> Can you check this ?
-I have tested this on the Khadas VIM before: it seems to work fine
-(the LED changes it's color when the device is powered off, even if a
-kernel which used pwm-leds was booted before).
-it might depend on the bootloader / firmware though - but I guess the
-only way to find out is by testing this.
-
-
-Regards,
-Martin
-
-
-[0] https://github.com/khadas/linux/commit/94602ef5562978a8d8b5c7770c113074a714dbdb
+I believe regmap has a fallback, so that check could simply be removed, I guess.
