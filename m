@@ -1,54 +1,110 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 7/7] arm: dts: genmai: Add user led device nodes
-Date: Mon, 20 Mar 2017 17:14:51 +0100
-Message-ID: <1490026491-21742-8-git-send-email-jacopo+renesas@jmondi.org>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: bindings: add new dt entry for ath10k calibration variant
+Date: Mon, 20 Mar 2017 17:28:21 +0100
+Message-ID: <1919994.musG4GLznX@bentobox>
+References: <20170310080615.22958-1-sven.eckelmann@openmesh.com> <20170320150733.25bufnzrhh7xabml@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart1747089.KH7Jk6BZzg"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320150733.25bufnzrhh7xabml@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device nodes for user leds on Genmai board.
+--nextPart1747089.KH7Jk6BZzg
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- arch/arm/boot/dts/r7s72100-genmai.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Montag, 20. M=E4rz 2017 10:07:33 CET Rob Herring wrote:
+> On Fri, Mar 10, 2017 at 09:06:14AM +0100, Sven Eckelmann wrote:
+> > The bus + bmi-chip-id + bmi-board-id is not enough to identify the corr=
+ect
+> > board data file on QCA4019 based devices. Multiple different boards sha=
+re
+> > the same values. Only the original reference designs can currently be
+> > identified and loaded from the board-2.bin. But these will not result in
+> > the correct calibration data when combined with the pre-calibration data
+> > from the device.
+> >=20
+> > An additional "variant" information has to be provided (via SMBIOS or D=
+T)
+> > to select the correct board data for a design which was modified by an =
+ODM.
+> >=20
+> > Signed-off-by: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+> > ---
+> > Since RFC:
+> >=20
+> >  - Split patch in DT doc and ath10k part (thanks Christian Lamparter)
+> >  - Remove the words "bmi-chip-id" and "bmi-board-id" and replace them w=
+ith
+> >    more generic "device specific ids"
+> > ---
+> >  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k=
+=2Etxt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> > index 74d7f0af209c..3d2a031217da 100644
+> > --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> > @@ -41,6 +41,9 @@ Optional properties:
+> >  - qcom,msi_addr: MSI interrupt address.
+> >  - qcom,msi_base: Base value to add before writing MSI data into
+> >  		MSI address register.
+> > +- qcom,ath10k-calibration-variant: string to search for in the board-2=
+=2Ebin
+> > +				   variant list with the same bus and device
+> > +				   specific ids
+>=20
+> Sounds like you should use a more specific compatible string.
 
-diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-index 30992b1..94b9ab7 100644
---- a/arch/arm/boot/dts/r7s72100-genmai.dts
-+++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-@@ -11,6 +11,7 @@
- 
- /dts-v1/;
- #include "r7s72100.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
- 
- / {
-@@ -35,6 +36,19 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 	};
-+
-+	leds {
-+		status = "okay";
-+		compatible = "gpio-leds";
-+
-+		led1 {
-+			gpios = <&port4 10 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led2 {
-+			gpios = <&port4 11 GPIO_ACTIVE_LOW>;
-+		};
-+	};
- };
- 
- &pinctrl {
--- 
-2.7.4
+Hm, this would require that each calibration data has an own compatibility
+string - which then has to be supported by ath10k, right? Doesn't sound like
+it would work well when each vendor (with an own calibration variant) would
+have to modify ath10k to get it working. This sounds especially odd because
+nothing else in ath10k has to be changed. Only the board data files which w=
+ill
+be selected by ath10k are different on these devices.
 
+It would then up with something like this as compatibility string:
+
+ * qcom,ipq4019-wifi-asus-rt-ac58u
+ * qcom,ipq4019-wifi-fritzbox-4040
+ * qcom,ipq4019-wifi-netgear-whatever
+ * qcom,ipq4019-wifi-openmesh-i-have-no-idea
+ * ...
+
+But maybe I misunderstood what you've said.
+
+Kind regards,
+	Sven
+--nextPart1747089.KH7Jk6BZzg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAljQAyUACgkQXYcKB8Em
+e0aEaBAAuZXbcHfv2BRSu08zarjuMlRqEi3DV8ivP46AFnLdt8deKF84vfyNGse5
+XyKXZYXHMdfJ3DNljS0Eg39QpdAzmOpNVi2eqqS0Ij3hu69arEBKL4nqBZwaBEMx
+7gdLMP0G0xi4UjRY5gpqZF2znPxqUuKwXvChCj1B36z74wejiTLWIyxfigTVvg3q
+zILWpzopXiUReGOzKWuQu5tCazBOBjo+nVEbOPMEc96hz1Yepove2uW75hWFnl3k
+PUgrG9FR8bLkUVkP4PHikprgHVF5xI46TmYD0lNfp8iXVJ31w9scnmPiSIC11gxJ
+J1mdCaKuLeDTGRB2gLjd2FUgICVcdZX2kK6Cn5S/WUg9vdLGwyqhYRwEjHKY8b9i
+PPGGtY7qtCoUeD5OZSCrBc64qj9/8jWVOVNpQpnY5zXf6csNVX1czt3FJmgCzqHN
+Vr5GpAYyeDUR3W8RwL35jEjreiWKSgr7AfdN6ZPOY07XyGQ9OiyeBAgYEVbG9QYL
+ZBeLpwHPnEHOd2S2GfBWBEw6izNLURbbWeGVqPHK6xDZpK+JuwcExGOor9NISTTh
+zBeq2pDBFWjwMMflleL7NOqI8iUfTnxb5ezj8fBOLQumgTIZDkVA5OlyiOEALPMQ
+pFjbRgevm8qt3BLxnxAcW3P8Br7E8qEbkrocfR9yVPEoRdB41ws=
+=zeH3
+-----END PGP SIGNATURE-----
+
+--nextPart1747089.KH7Jk6BZzg--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
