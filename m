@@ -1,114 +1,89 @@
-From: Mylene Josserand <mylene.josserand@free-electrons.com>
-Subject: Re: [PATCH v3 2/5] ASoC: sun8i-codec: Update mixer to
- use SOC_DAPM_DOUBLE
-Date: Mon, 20 Mar 2017 16:30:32 +0100
-Message-ID: <8183f4bb-497d-2839-fd0c-2527a02dd276@free-electrons.com>
-References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
- <20170318075509.3836-3-mylene.josserand@free-electrons.com>
- <CAGb2v65RSi-yxK1aJb8vnMKNTmLmH8nqSzFs1RLxErQyYcL-4w@mail.gmail.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v4 1/7] coresight: bindings for CPU debug module
+Date: Mon, 20 Mar 2017 09:32:15 -0600
+Message-ID: <20170320153215.GA15068@linaro.org>
+References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
+ <1489762943-25849-2-git-send-email-leo.yan@linaro.org>
+ <20170317161335.GB20435@linaro.org>
+ <20170320114953.GA19581@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAGb2v65RSi-yxK1aJb8vnMKNTmLmH8nqSzFs1RLxErQyYcL-4w@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170320114953.GA19581@leoy-linaro>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Suzuki.Poulose@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, sudeep.holla@arm.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hlbi1ZdSwKCk9uIDIwLzAzLzIwMTcgMTI6NDYsIENoZW4tWXUgVHNhaSB3cm90ZToKPiBP
-biBTYXQsIE1hciAxOCwgMjAxNyBhdCAzOjU1IFBNLCBNeWzDqG5lIEpvc3NlcmFuZAo+IDxteWxl
-bmUuam9zc2VyYW5kQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4+IFVwZGF0ZSB0aGUgZHJp
-dmVyIHRvIHVzZSB0aGUgbmV3IFNPQ19EQVBNX0RPVUJMRSBkZWZpbml0aW9uCj4+IG9uIHRoZSBk
-aWdpdGFsIERBQyBtaXhlci4KPj4gVXBkYXRlIHRoZSBuYW1lcyBhY2NvcmRpbmdseSBhcywgd2hl
-biB0aGV5IGFyZSBzaGFyZWQsIHRoZQo+PiBjb250cm9scyBhcmUgbm90IHByZWZpeGVkIHdpdGgg
-dGhlIHdpZGdldCdzIG5hbWUgYW55bW9yZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogTXlsw6huZSBK
-b3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+PiAtLS0KPj4g
-IHNvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jIHwgNDUgKysrKysrKysrKysrKysrKysrKyst
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMo
-KyksIDI0IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL3N1bnhpL3N1
-bjhpLWNvZGVjLmMgYi9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYwo+PiBpbmRleCBkNjBm
-NmZiZDM2YTIuLjEwN2ZhODIxMzYwMCAxMDA2NDQKPj4gLS0tIGEvc291bmQvc29jL3N1bnhpL3N1
-bjhpLWNvZGVjLmMKPj4gKysrIGIvc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMKPj4gQEAg
-LTI1OSwyNSArMjU5LDIwIEBAIHN0YXRpYyBpbnQgc3VuOGlfY29kZWNfaHdfcGFyYW1zKHN0cnVj
-dCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtLAo+PiAgICAgICAgIHJldHVybiAwOwo+PiAg
-fQo+Pgo+PiAtc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfa2NvbnRyb2xfbmV3IHN1bjhpX291dHB1
-dF9sZWZ0X21peGVyX2NvbnRyb2xzW10gPSB7Cj4+IC0gICAgICAgU09DX0RBUE1fU0lOR0xFKCJM
-U2xvdCAwIiwgU1VOOElfREFDX01YUl9TUkMsCj4+IC0gICAgICAgICAgICAgICAgICAgICAgIFNV
-TjhJX0RBQ19NWFJfU1JDX0RBQ0xfTVhSX1NSQ19BSUYxREEwTCwgMSwgMCksCj4+IC0gICAgICAg
-U09DX0RBUE1fU0lOR0xFKCJMU2xvdCAxIiwgU1VOOElfREFDX01YUl9TUkMsCj4+IC0gICAgICAg
-ICAgICAgICAgICAgICAgIFNVTjhJX0RBQ19NWFJfU1JDX0RBQ0xfTVhSX1NSQ19BSUYxREExTCwg
-MSwgMCksCj4+IC0gICAgICAgU09DX0RBUE1fU0lOR0xFKCJEQUNMIiwgU1VOOElfREFDX01YUl9T
-UkMsCj4+IC0gICAgICAgICAgICAgICAgICAgICAgIFNVTjhJX0RBQ19NWFJfU1JDX0RBQ0xfTVhS
-X1NSQ19BSUYyREFDTCwgMSwgMCksCj4+IC0gICAgICAgU09DX0RBUE1fU0lOR0xFKCJBRENMIiwg
-U1VOOElfREFDX01YUl9TUkMsCj4+IC0gICAgICAgICAgICAgICAgICAgICAgIFNVTjhJX0RBQ19N
-WFJfU1JDX0RBQ0xfTVhSX1NSQ19BRENMLCAxLCAwKSwKPj4gLX07Cj4+IC0KPj4gLXN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgc25kX2tjb250cm9sX25ldyBzdW44aV9vdXRwdXRfcmlnaHRfbWl4ZXJfY29u
-dHJvbHNbXSA9IHsKPj4gLSAgICAgICBTT0NfREFQTV9TSU5HTEUoIlJTbG90IDAiLCBTVU44SV9E
-QUNfTVhSX1NSQywKPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX2tjb250cm9sX25ldyBzdW44
-aV9kYWNfbWl4ZXJfY29udHJvbHNbXSA9IHsKPj4gKyAgICAgICBTT0NfREFQTV9ET1VCTEUoIkFJ
-RjEgU2xvdCAwIERpZ2l0YWwgREFDIFBsYXliYWNrIFN3aXRjaCIsCj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIFNVTjhJX0RBQ19NWFJfU1JDLAo+PiArICAgICAgICAgICAgICAgICAgICAgICBT
-VU44SV9EQUNfTVhSX1NSQ19EQUNMX01YUl9TUkNfQUlGMURBMEwsCj4+ICAgICAgICAgICAgICAg
-ICAgICAgICAgIFNVTjhJX0RBQ19NWFJfU1JDX0RBQ1JfTVhSX1NSQ19BSUYxREEwUiwgMSwgMCks
-Cj4+IC0gICAgICAgU09DX0RBUE1fU0lOR0xFKCJSU2xvdCAxIiwgU1VOOElfREFDX01YUl9TUkMs
-Cj4+ICsgICAgICAgU09DX0RBUE1fRE9VQkxFKCJBSUYxIFNsb3QgMSBEaWdpdGFsIERBQyBQbGF5
-YmFjayBTd2l0Y2giLAo+PiArICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9EQUNfTVhSX1NS
-QywKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfREFDX01YUl9TUkNfREFDTF9NWFJf
-U1JDX0FJRjFEQTFMLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9EQUNfTVhSX1NS
-Q19EQUNSX01YUl9TUkNfQUlGMURBMVIsIDEsIDApLAo+PiAtICAgICAgIFNPQ19EQVBNX1NJTkdM
-RSgiREFDUiIsIFNVTjhJX0RBQ19NWFJfU1JDLAo+PiArICAgICAgIFNPQ19EQVBNX0RPVUJMRSgi
-QUlGMiBEaWdpdGFsIERBQyBQbGF5YmFjayBTd2l0Y2giLCBTVU44SV9EQUNfTVhSX1NSQywKPj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfREFDX01YUl9TUkNfREFDTF9NWFJfU1JDX0FJ
-RjJEQUNMLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9EQUNfTVhSX1NSQ19EQUNS
-X01YUl9TUkNfQUlGMkRBQ1IsIDEsIDApLAo+PiAtICAgICAgIFNPQ19EQVBNX1NJTkdMRSgiQURD
-UiIsIFNVTjhJX0RBQ19NWFJfU1JDLAo+PiArICAgICAgIFNPQ19EQVBNX0RPVUJMRSgiQURDIERp
-Z2l0YWwgREFDIFBsYXliYWNrIFN3aXRjaCIsIFNVTjhJX0RBQ19NWFJfU1JDLAo+PiArICAgICAg
-ICAgICAgICAgICAgICAgICBTVU44SV9EQUNfTVhSX1NSQ19EQUNMX01YUl9TUkNfQURDTCwKPj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfREFDX01YUl9TUkNfREFDUl9NWFJfU1JDX0FE
-Q1IsIDEsIDApLAo+PiAgfTsKPj4KPj4gQEAgLTI5MywxMiArMjg4LDEyIEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBzdW44aV9jb2RlY19kYXBtX3dpZGdldHNbXSA9
-IHsKPj4gICAgICAgICAgICAgICAgICAgICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkxfQUlG
-MV9EQTBSX0VOQSwgMCksCj4+Cj4+ICAgICAgICAgLyogREFDIE1peGVycyAqLwo+PiAtICAgICAg
-IFNORF9TT0NfREFQTV9NSVhFUigiTGVmdCBEQUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAs
-Cj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgIHN1bjhpX291dHB1dF9sZWZ0X21peGVyX2Nv
-bnRyb2xzLAo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICBBUlJBWV9TSVpFKHN1bjhpX291
-dHB1dF9sZWZ0X21peGVyX2NvbnRyb2xzKSksCj4+IC0gICAgICAgU05EX1NPQ19EQVBNX01JWEVS
-KCJSaWdodCBEQUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAsCj4+IC0gICAgICAgICAgICAg
-ICAgICAgICAgICAgIHN1bjhpX291dHB1dF9yaWdodF9taXhlcl9jb250cm9scywKPj4gLSAgICAg
-ICAgICAgICAgICAgICAgICAgICAgQVJSQVlfU0laRShzdW44aV9vdXRwdXRfcmlnaHRfbWl4ZXJf
-Y29udHJvbHMpKSwKPj4gKyAgICAgICBTTkRfU09DX0RBUE1fTUlYRVIoIkxlZnQgRGlnaXRhbCBE
-QUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAsCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHN1bjhpX2RhY19taXhlcl9jb250cm9scywKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgQVJSQVlfU0laRShzdW44aV9kYWNfbWl4ZXJfY29udHJvbHMpKSwKPj4gKyAgICAgICBTTkRf
-U09DX0RBUE1fTUlYRVIoIlJpZ2h0IERpZ2l0YWwgREFDIE1peGVyIiwgU05EX1NPQ19OT1BNLCAw
-LCAwLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICBzdW44aV9kYWNfbWl4ZXJfY29udHJv
-bHMsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIEFSUkFZX1NJWkUoc3VuOGlfZGFjX21p
-eGVyX2NvbnRyb2xzKSksCj4+Cj4+ICAgICAgICAgLyogQ2xvY2tzICovCj4+ICAgICAgICAgU05E
-X1NPQ19EQVBNX1NVUFBMWSgiTU9EQ0xLIEFGSTEiLCBTVU44SV9NT0RfQ0xLX0VOQSwKPj4gQEAg
-LTM0MCw4ICszMzUsMTAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1fcm91dGUg
-c3VuOGlfY29kZWNfZGFwbV9yb3V0ZXNbXSA9IHsKPj4gICAgICAgICB7ICJEaWdpdGFsIFJpZ2h0
-IERBQyIsIE5VTEwsICJEQUMiIH0sCj4+Cj4+ICAgICAgICAgLyogREFDIE1peGVyIFJvdXRlcyAq
-Lwo+PiAtICAgICAgIHsgIkxlZnQgREFDIE1peGVyIiwgIkxTbG90IDAiLCAiRGlnaXRhbCBMZWZ0
-IERBQyJ9LAo+PiAtICAgICAgIHsgIlJpZ2h0IERBQyBNaXhlciIsICJSU2xvdCAwIiwgIkRpZ2l0
-YWwgUmlnaHQgREFDIn0sCj4+ICsgICAgICAgeyAiTGVmdCBEaWdpdGFsIERBQyBNaXhlciIsICJB
-SUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5YmFjayBTd2l0Y2giLAo+PiArICAgICAgICAgIkRp
-Z2l0YWwgTGVmdCBEQUMifSwKPj4gKyAgICAgICB7ICJSaWdodCBEaWdpdGFsIERBQyBNaXhlciIs
-ICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5YmFjayBTd2l0Y2ggIiwKPgo+IFRoZSBleHRy
-YSBzcGFjZSBmaXhlZCBpbiB0aGUgbmV4dCBwYXRjaCBjb3VsZCBiZSBzcXVhc2hlZCBpbnRvIHRo
-aXMKPiBwYXRjaC4gT3RoZXJ3aXNlLAoKT2gsIHllcywgc29ycnkgYWJvdXQgdGhhdC4KCkkgd2ls
-bCBzZW5kIGEgVjQgd2l0aCB0aGUgZml4ZXMgeW91IHBvaW50ZWQgbWUgb24gdGhpcyBzZXJpZXMu
-CgpUaGFua3MhCgpCZXN0IHJlZ2FyZHMsCgotLSAKTXlsw6huZSBKb3NzZXJhbmQsIEZyZWUgRWxl
-Y3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2ZyZWUt
-ZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcK
-aHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2
-ZWwK
+On Mon, Mar 20, 2017 at 07:49:53PM +0800, Leo Yan wrote:
+> Hi Mathieu,
+> 
+> On Fri, Mar 17, 2017 at 10:13:35AM -0600, Mathieu Poirier wrote:
+> 
+> [...]
+> 
+> > > +- compatible : should be
+> > > +	     * "arm,coresight-cpu-debug"; supplemented with "arm,primecell"
+> > > +	       since this driver is using the AMBA bus interface.
+> > 
+> > This description needs to be refactored - see my comment from an earlier post
+> > for more details.
+> 
+> I have refined this description according to your suggestion:
+> http://archive.armlinux.org.uk/lurker/message/20170301.154550.f55a09d5.en.html
+
+My apologies here, I did not express myself properly.  You got the wording right
+but the format is a little bizarre.  The line break after "should be" and the
+sentence that starts with a '*' on the next line feel unatural.  Simply
+
+compatible : should be "arm,coresight-cpu-debug"; supplemented with
+             "arm,primecell" since this driver is using the AMBA bus interface.
+
+will be fine.
+
+> 
+> Am I missing anthing for this?
+> 
+> > > +- reg : physical base address and length of the register set.
+> > > +
+> > > +- clocks : the clock associated to this component.
+> > > +
+> > > +- clock-names : the name of the clock referenced by the code. Since we are
+> > > +                using the AMBA framework, the name of the clock providing
+> > > +		the interconnect should be "apb_pclk" and the clock is
+> > > +		mandatory. The interface between the debug logic and the
+> > > +		processor core is clocked by the internal CPU clock, so it
+> > > +		is enabled with CPU clock by default.
+> > > +
+> > > +- cpu : the cpu phandle the debug module is affined to. When omitted
+> > > +	the module is considered to belong to CPU0.
+> > > +
+> > > +Optional properties:
+> > 
+> > s/properties/property
+> > 
+> > > +
+> > > +- power-domains: a phandle to power domain node for debug module. We can
+> > > +		 use "nohlt" to ensure CPU power domain is enabled.
+> > 
+> > The "power-domains" property is to take care of the debug power domain.  The
+> > "nohlt" is to make sure registers in the CPU power domain are accessible - both
+> > are independent from one another.  As such the description for this binding
+> > shoudl be:
+> > 
+> > "a phandle to the debug power domain".
+> 
+> Will fix for upper two comments.
+> 
+> Thanks,
+> Leo Yan
