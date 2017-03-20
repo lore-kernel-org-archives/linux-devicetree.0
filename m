@@ -1,30 +1,83 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v10 1/2] Documentation: DT: Add OV5647 bindings
-Date: Mon, 20 Mar 2017 16:09:22 +0200
-Message-ID: <d0b09c02-e5c8-175d-f776-575684feef0f@mentor.com>
-References: <cover.1488798062.git.roliveir@synopsys.com>
- <e89902c0c99d0daf9ef821dd7a9c67e866b18a94.1488798062.git.roliveir@synopsys.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH v3 5/5] ARM: dts: sun8i: h2+: enable USB OTG
+ for Orange Pi Zero board
+Date: Mon, 20 Mar 2017 22:30:01 +0800
+Message-ID: <CAGb2v644jM_R_4BgRWz7vHTaGwtBC_MSJnppbsQtBKf-qAS2hA@mail.gmail.com>
+References: <20170320113931.dPmCTite@smtp2h.mail.yandex.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e89902c0c99d0daf9ef821dd7a9c67e866b18a94.1488798062.git.roliveir@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: CARLOS.PALMINHA@synopsys.com, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170320113931.dPmCTite@smtp2h.mail.yandex.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
-
-On 03/06/2017 01:16 PM, Ramiro Oliveira wrote:
-> Create device tree bindings documentation.
-> 
-> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
-
-The device tree binding description looks perfect from my perspective.
-
-Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-
---
-With best wishes,
-Vladimir
+T24gV2VkLCBNYXIgMTUsIDIwMTcgYXQgNTowOSBQTSwgSWNlbm93eSBaaGVuZyA8aWNlbm93eUBh
+b3NjLnh5ej4gd3JvdGU6Cj4KPiAyMDE35bm0M+aciDE15pelIDE1OjE25LqOIENoZW4tWXUgVHNh
+aSA8d2Vuc0Bjc2llLm9yZz7lhpnpgZPvvJoKPj4KPj4gSGksCj4+Cj4+IE9uIFR1ZSwgTWFyIDcs
+IDIwMTcgYXQgNjozNCBBTSwgSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4gd3JvdGU6
+Cj4+ID4gT3JhbmdlIFBpIFplcm8gYm9hcmQgZmVhdHVyZXMgYSBVU0IgT1RHIHBvcnQsIHdoaWNo
+IGhhcyBhIElEIHBpbiwgYW5kCj4+ID4gY2FuIGJlIHVzZWQgdG8gcG93ZXIgdXAgdGhlIGJvYXJk
+LiBIb3dldmVyLCBldmVuIGlmIHRoZSBib2FyZCBpcyBwb3dlcmVkCj4+ID4gdmlhICs1ViBwaW4g
+aW4gR1BJTy9leHBhbnNpb24gaGVhZGVycywgdGhlIFZCVVMgaW4gdGhlIE9URyBwb3J0IGNhbm5v
+dAo+PiA+IGJlIHBvd2VyZWQgdXAsIHRodXMgaXQncyBpbXBvc3NpYmxlIHRvIHVzZSBpdCBpbiBo
+b3N0IG1vZGUgd2l0aCBzaW1wbGUKPj4gPiBPVEcgY2FibGVzLgo+PiA+Cj4+ID4gQWRkIHN1cHBv
+cnQgZm9yIGl0IGluIHBlcmlwaGVyYWwgbW9kZS4KPj4gPgo+PiA+IElmIHNvbWVvbmUgcmVhbGx5
+IHdhbnQgdG8gdXNlIGl0IGluIGhvc3QgbW9kZSwgdGhlIG1vZGUgb2YgUEhZIGNhbiBiZQo+PiA+
+IHN3aXRjaCB2aWEgc3lzZnMsIHRoZW4gdXNlIGEgcG93ZXJlZCBVU0IgT1RHIGNhYmxlIG9yIHBv
+d2VyZWQgVVNCIEhVQiB0bwo+PiA+IHBvd2VyIHVwIGV4dGVybmFsIFVTQiBkZXZpY2VzLgo+PiA+
+Cj4+ID4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KPj4g
+PiAtLS0KPj4gPiBOZXcgcGF0Y2ggaW4gdjMuCj4+ID4KPj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMv
+c3VuOGktaDItcGx1cy1vcmFuZ2VwaS16ZXJvLmR0cyB8IDE0ICsrKysrKysrKysrKysrCj4+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspCj4+ID4KPj4gPiBkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDItcGx1cy1vcmFuZ2VwaS16ZXJvLmR0cyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL3N1bjhpLWgyLXBsdXMtb3JhbmdlcGktemVyby5kdHMKPj4gPiBpbmRleCBi
+N2NhOTE2ZDg3MWQuLjYzZjgxOTM5NGI5OCAxMDA2NDQKPj4gPiAtLS0gYS9hcmNoL2FybS9ib290
+L2R0cy9zdW44aS1oMi1wbHVzLW9yYW5nZXBpLXplcm8uZHRzCj4+ID4gKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvc3VuOGktaDItcGx1cy1vcmFuZ2VwaS16ZXJvLmR0cwo+PiA+IEBAIC05Niw2ICs5
+NiwxMCBAQAo+PiA+ICAgICAgICAgfTsKPj4gPiAgfTsKPj4gPgo+PiA+ICsmZWhjaTAgewo+PiA+
+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+PiA+ICt9Owo+PiA+ICsKPj4gPiAgJmVoY2kxIHsK
+Pj4gPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gPiAgfTsKPj4gPiBAQCAtMTMyLDYgKzEz
+NiwxMCBAQAo+PiA+ICAgICAgICAgYmlhcy1wdWxsLXVwOwo+PiA+ICB9Owo+PiA+Cj4+ID4gKyZv
+aGNpMCB7Cj4+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7Cj4+ID4gK307Cj4+ID4gKwo+PiA+
+ICAmb2hjaTEgewo+PiA+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+PiA+ICB9Owo+PiA+IEBA
+IC0xNTQsNyArMTYyLDEzIEBACj4+ID4gICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiA+
+ICB9Owo+PiA+Cj4+ID4gKyZ1c2Jfb3RnIHsKPj4gPiArICAgICAgIGRyX21vZGUgPSAicGVyaXBo
+ZXJhbCI7Cj4+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7Cj4+ID4gK307Cj4+ID4gKwo+PiA+
+ICAmdXNicGh5IHsKPj4gPiAgICAgICAgIC8qIFVTQiBWQlVTIGlzIGFsd2F5cyBvbiAqLwo+Pgo+
+PiBUaGlzIGNvbW1lbnQgZG9lcyBub3QgbWF0Y2ggeW91ciBjb21taXQgbWVzc2FnZSwgd2hpY2gg
+c2F5cyBpdCdzIGFsd2F5cyBvZmYuCj4KPiBPaCBJIHNob3VsZCBzYXkgIlVTQiBUeXBlLUEgcG9y
+dCBWQlVTIi4KClllcyB5b3Ugc2hvdWxkIHByb2JhYmx5IHVwZGF0ZSB0aGF0IGNvbW1lbnQsIGFu
+ZCBhbHNvIG1lbnRpb24gdGhlIE9URyBwb3J0J3MKVkJVUyBpcyBhbHdheXMgb2ZmLgoKQ2hlbll1
+Cgo+Pgo+PiBDaGVuWXUKPj4KPj4gPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gPiArICAg
+ICAgIHVzYjBfaWRfZGV0LWdwaW9zID0gPCZwaW8gNiAxMiBHUElPX0FDVElWRV9ISUdIPjsgLyog
+UEcxMiAqLwo+PiA+ICB9Owo+PiA+IC0tCj4+ID4gMi4xMS4xCj4+ID4KPj4gPiAtLQo+PiA+IFlv
+dSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhl
+IEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91cC4KPj4gPiBUbyB1bnN1YnNjcmliZSBm
+cm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5kIGFu
+IGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdyb3Vwcy5jb20uCj4+ID4g
+Rm9yIG1vcmUgb3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91cHMuZ29vZ2xlLmNvbS9kL29wdG91
+dC4KPj4KPj4gLS0KPj4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUg
+c3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAibGludXgtc3VueGkiIGdyb3VwLgo+PiBU
+byB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBm
+cm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdy
+b3Vwcy5jb20uCj4+IEZvciBtb3JlIG9wdGlvbnMsIHZpc2l0IGh0dHBzOi8vZ3JvdXBzLmdvb2ds
+ZS5jb20vZC9vcHRvdXQuCj4KPiAtLQo+IFlvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVz
+ZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBn
+cm91cC4KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5n
+IGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJl
+QGdvb2dsZWdyb3Vwcy5jb20uCj4gRm9yIG1vcmUgb3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91
+cHMuZ29vZ2xlLmNvbS9kL29wdG91dC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
