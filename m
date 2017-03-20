@@ -1,71 +1,79 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/5] ASoC: sun8i-codec: Remove analog
-	"HP" widget
-Date: Mon, 20 Mar 2017 17:39:03 +0000
-Message-ID: <20170320173903.fc2m4euobea3npyq@sirena.org.uk>
-References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
- <20170318075509.3836-2-mylene.josserand@free-electrons.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Mon, 20 Mar 2017 18:40:21 +0100
+Message-ID: <1490031621.2917.110.camel@pengutronix.de>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+         <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+         <20170319152233.GW21222@n2100.armlinux.org.uk>
+         <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+         <1490010926.2917.59.camel@pengutronix.de>
+         <20170320120855.GH21222@n2100.armlinux.org.uk>
+         <1490018451.2917.86.camel@pengutronix.de>
+         <20170320141705.GL21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0120400368732098553=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170318075509.3836-2-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, wens@csie.org, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170320141705.GL21222@n2100.armlinux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@v
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2017-03-20 at 14:17 +0000, Russell King - ARM Linux wrote:
+> On Mon, Mar 20, 2017 at 03:00:51PM +0100, Philipp Zabel wrote:
+> > On Mon, 2017-03-20 at 12:08 +0000, Russell King - ARM Linux wrote:
+> > > The same document says:
+> > > 
+> > >   Scaling support is optional. When supported by a subdev, the crop
+> > >   rectangle on the subdev's sink pad is scaled to the size configured
+> > >   using the
+> > >   :ref:`VIDIOC_SUBDEV_S_SELECTION <VIDIOC_SUBDEV_G_SELECTION>` IOCTL
+> > >   using ``V4L2_SEL_TGT_COMPOSE`` selection target on the same pad. If the
+> > >   subdev supports scaling but not composing, the top and left values are
+> > >   not used and must always be set to zero.
+> > 
+> > Right, this sentence does imply that when scaling is supported, there
+> > must be a sink compose rectangle, even when composing is not.
+> > 
+> > I have previously set up scaling like this:
+> > 
+> > media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
+> > media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
+> > 
+> > Does this mean, it should work like this instead?
+> > 
+> > media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
+> > media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY2X8/1920x1080@1/60,compose:(0,0)/960x540]"
+> > media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
+> > 
+> > I suppose setting the source pad format should not be allowed to modify
+> > the sink compose rectangle.
+> 
+> That is what I believe having read these documents several times, but
+> we need v4l2 people to confirm.
+> 
+> Note that setting the format on 'ipu1_csi0':0 should already be done by
+> the previous media-ctl command, so it should be possible to simplify
+> that to:
+> 
+> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
+> media-ctl --set-v4l2 "'ipu1_csi0':0[compose:(0,0)/960x540]"
+> media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
 
---===============0120400368732098553==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hm32663gc5y5olbn"
-Content-Disposition: inline
+Thanks, that works, too.
 
+> I have tripped over a bug in media-ctl when specifying both a crop and
+> compose rectangle - the --help output suggests that "," should be used
+> to separate them.  media-ctl rejects that, telling me the character at
+> the "," should be "]".  Replacing the "," with " " allows media-ctl to
+> accept it and set both rectangles, so it sounds like a parser bug - I've
+> not looked into this any further yet.
 
---hm32663gc5y5olbn
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I can confirm this. I don't see any place in
+v4l2_subdev_parse_pad_format that handles the "," separator. There's
+just whitespace skipping between the v4l2-properties.
 
-On Sat, Mar 18, 2017 at 08:55:05AM +0100, Myl=E8ne Josserand wrote:
-> The "HP" widget is already present and take part to
-> the analog part (sun8i-codec-analog).
->=20
-> Remove it from the digital part as it is unnecessary.
-
-I know I said to send against Linus' tree but it turns out this actually
-conflicts with some of the existing fixes, please see my fixes/sunxi
-branch and resend against that.  Sorry for the hassle here.
-
---hm32663gc5y5olbn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljQE7cACgkQJNaLcl1U
-h9DUIgf8DZoZ9+gTJA//SWv0Fl3ar65cLHQqW2OMNW6J+3w13DtRUN4mHpeEmE1z
-Gzuw4zyFQ+2dUU8ijbw6Icnp3wCk9vnHIeff3PnF/0T9KnyzxdRUgslXbkACsRbo
-fvKO4nvPL5M4rKVlFyXhVQnvTWHGzog0mdEuqInv3ZBmsR6hvh0AvvPa4f8cpXS2
-UcjQUPERz6JVUkR7NiE+Dh6DN+3JQS7K6ECQ0jvi4GOjgwepybvJLJ+Yt6VQ3SL7
-ovoB8mwHu4AzDgF4gsuim+VgtAExM23oTtFXWihifj5rrhv+eCOcxktkiBmFu7k8
-k5p6iE0KolTNFhOY2gWsurdjL37Yvw==
-=fvBj
------END PGP SIGNATURE-----
-
---hm32663gc5y5olbn--
-
---===============0120400368732098553==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0120400368732098553==--
+regards
+Philipp
