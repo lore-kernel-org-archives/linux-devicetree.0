@@ -1,87 +1,119 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v5 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Mon, 20 Mar 2017 13:56:33 +0530
-Message-ID: <CAFp+6iE7JcadaD4zXAt4f3fcYP0O3sAFSW-uu1Rg+2e8DXaVHw@mail.gmail.com>
-References: <1489050441-3240-1-git-send-email-vivek.gautam@codeaurora.org>
- <1489050441-3240-4-git-send-email-vivek.gautam@codeaurora.org> <20170315203456.pxroh7nir2iwll3o@rob-hp-laptop>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/4] arm: renesas: Add reset control properties
+Date: Mon, 20 Mar 2017 09:28:52 +0100
+Message-ID: <20170320082852.GC21538@verge.net.au>
+References: <1489673246-11015-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170315203456.pxroh7nir2iwll3o@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: kishon <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1489673246-11015-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Mar 16, 2017 at 03:07:22PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus, Laurent, Morimoto-san,
+> 
+> This patch series describes the reset control topology for on-SoC devices
+> connected to the Renesas Clock Pulse Generator / Module Standby and
+> Software Reset module on the R-Car H3 and M3-W, RZ/G1M, and RZ/G1E SoCs.
+> 
+> Resets usually match the corresponding module clocks.  Exceptions are:
+>   - The Display Unit has only 2 resets, one per channel pair, cfr.
+>     "[PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
+>     properties" (http://www.spinics.net/lists/dri-devel/msg134637.html),
+>   - The audio module has resets for the Serial Sound Interfaces only.
+>     Adding resets and reset-names properties depends on a DT binding
+>     update for renesas,rsnd (note: the DT binding documentation in
+>     Documentation/devicetree/bindings/sound/renesas,rsnd.txt doesn't
+>     even document clocks and clock-names?).
+> Upon request from Laurent for the DU, and upon a DT bindings update
+> for rcar_sound, the addition of resets (and reset-names) properties for
+> these complex modules is postponed.
+> 
+> Note that this patch series contains hardware description only.
+> Actual reset policy is to be defined and implemented separately.
+> Also, this is an optional feature, to be enabled explicitly using
+> CONFIG_RESET_CONTROLLER=y.  When enabled, an on-SoC device can be reset
+> easily using device_reset(), or by using the reset_control_*() API when
+> more fine-grained control is desired.
+> 
+> Possible use cases are (not exhaustive):
+>   - Reset a device before use, to make sure it's in a predefined state, and
+>     doesn't depend on earlier configuration by e.g. the boot loader,
+>   - Reset a device after detecting an anomaly,
+>   - Reset a device to verify suspend/resume is handled correctly by the
+>     driver in case the device would be part of a power domain on a
+>     different/future SoC.
+> 
+> Dependencies and impact:
+>   - The corresponding driver changes to the CGP/MSSR driver are already
+>     present in v4.11-rc1.
+>   - These patches have no impact as long as CONFIG_RESET_CONTROLLER=n.
+>     However, if CONFIG_RESET_CONTROLLER=y and resets properties are
+>     prsesent in DTS, the EHCI and OHCI drivers already deassert reset as
+>     part of their initialization sequences, and put the devices back
+>     into reset state in case initialization failed, or on unbind.
+>     I'm not aware of other relevant drivers already using reset control.
 
+It appears that for arm64 defconfig CONFIG_RESET_CONTROLLER=y is true so
+by default there will be a behavioural change on arm64. I'd like to
+understand if it is a desirable (or at least not undesirable) change.
 
-On Thu, Mar 16, 2017 at 2:04 AM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Mar 09, 2017 at 02:37:20PM +0530, Vivek Gautam wrote:
->> Qualcomm chipsets have QMP phy controller that provides
->> support to a number of controller, viz. PCIe, UFS, and USB.
->> Adding dt binding information for the same.
->>
->> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->> Cc: Rob Herring <robh@kernel.org>
->> ---
->>
->> Hi Rob,
->> I have removed your Acked-by tag because of the change in bindings.
->> Please consider adding your Ack again if you are fine with these
->> updated bindings.
->>
->> Changes since v4:
->>  - Added bindings for child nodes. Each phy lane is represented by child
->>    node with its own register space (for tx, rx and pcs blocks), and clocks
->>    and resets for power control facility.
->>  - Removed register space and lane offsets for tx, rx and pcs blocks from
->>    qmp phy node.
->>  - #phy-cells is now part of each child node and thus must be 0.
->>  - Added information on list of mandatory clocks and resets for each phy.
->>
->> Changes since v3:
->>  - Added #clock-cells = <1>, indicating that phy is a clock provider.
->>
->> Changes since v2:
->>  - Removed binding for "ref_clk_src" since we don't request this
->>    clock in the driver.
->
-> Humm, sounds suspicious. You should describe clocks connected to the h/w
-> block, not what the driver uses (currently).
-
-The "ref_clk_src" clock is not really going to the phy block. After
-cross-checking
-the hardware documents, we decided to remove this.
-On the SoC, this is an external clock (outside of the clock
-controller) that comes
-to a clock pad that feeds few clock tx blocks. These blocks supply the reference
-clock to each IP blocks.
-Output of these tx blocks is what we refer to as "ref" clock in our bindings.
-
->
->>  - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
->>  - Using 'phy' for the node name.
->>
->> Changes since v1:
->>  - New patch, forked out of the original driver patch:
->>    "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
->>  - Added 'Acked-by' from Rob.
->>  - Updated bindings to include mem resource as a list of
->>    offset - length pair for serdes block and for each lane.
->>  - Added a new binding for 'lane-offsets' that contains offsets
->>    to tx, rx and pcs blocks from each lane base address.
->>
->>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 106 +++++++++++++++++++++
->>  1 file changed, 106 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Thanks for reviewing.
-
-Best Regards
-Vivek
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> For testing, these patches are also available in the
+> topic/renesas-cpg-mssr-reset-dts-v2 branch of my renesas-drivers git
+> repository at
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git
+> 
+> This has been tested on the R-Car Gen3 Salvator-X (H3 and M3-W) and the
+> R-Car M2-W (using out-of-tree driver modifications) Koelsch development
+> boards, by inspecting device register contents before and after reset,
+> and by comparing them with their documented reset values.
+> 
+> Changes compared to v1:
+>   - Break out from "[PATCH 0/8] Renesas CPG/MSSR Reset Control Support"
+>     (https://lkml.org/lkml/2017/1/20/336),
+>   - Postpone adding resets and reset-names properties for complex
+>     devices (du, rcar_sound),
+>   - Rebase on top of renesas-devel-20170313-v4.11-rc2,
+>   - Add reset properties to recently added device nodes.
+> 
+> Thanks for applying!
+> 
+> Geert Uytterhoeven (4):
+>   arm64: dts: r8a7795: Add reset control properties
+>   arm64: dts: r8a7796: Add reset control properties
+>   ARM: dts: r8a7743: Add reset control properties
+>   ARM: dts: r8a7745: Add reset control properties
+> 
+>  arch/arm/boot/dts/r8a7743.dtsi           | 24 +++++++++
+>  arch/arm/boot/dts/r8a7745.dtsi           | 24 +++++++++
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 93 ++++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 46 ++++++++++++++++
+>  4 files changed, 187 insertions(+)
+> 
+> -- 
+> 2.7.4
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+> 
