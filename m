@@ -1,110 +1,119 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Mon, 20 Mar 2017 15:43:39 +0000
-Message-ID: <20170320154339.GN21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170318192258.GL21222@n2100.armlinux.org.uk>
- <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170319121402.GS21222@n2100.armlinux.org.uk>
- <1490016016.2917.68.camel@pengutronix.de>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for
+ iio-hwmon
+Date: Mon, 20 Mar 2017 16:33:28 +0100
+Message-ID: <c7f47571-6f59-302c-92ff-4512e78ff112@xilinx.com>
+References: <1489003884-2489-1-git-send-email-mdf@kernel.org>
+ <e6da3f38-7039-66e5-5b9d-a44ff42aa9c9@xilinx.com>
+ <CAJYdmeNc48=OOvRiUjqPBJhz9RCbzeaRGu1Tfm=hrvzkJrSsag@mail.gmail.com>
+ <7e4fbe16-8686-5399-748d-af222c630338@xilinx.com>
+ <37f29986-6491-67ab-144c-eb485cc1fdcc@metafoo.de>
+ <6767a340-b150-c21a-b6cb-5ca1ce2cd721@xilinx.com>
+ <1027ba77-6141-5d6e-e5e8-b15df29957f2@metafoo.de>
+ <1cb2a735-59cd-3d8c-b55e-bd775ded3fc0@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1490016016.2917.68.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1cb2a735-59cd-3d8c-b55e-bd775ded3fc0@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>, Lars-Peter Clausen <lars@metafoo.de>, Moritz Fischer <moritz.fischer.private@gmail.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Julia Cartwright <julia@ni.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 02:20:16PM +0100, Philipp Zabel wrote:
-> To set and read colorimetry information:
-> https://patchwork.linuxtv.org/patch/39350/
-
-Thanks, I've applied all four of your patches, but there's a side effect
-from that.  Old media-ctl (modified by me):
-
-- entity 53: imx219 0-0010 (2 pads, 2 links)
-             type V4L2 subdev subtype Unknown flags 0
-             device node name /dev/v4l-subdev9
-        pad0: Source
-                [fmt:SRGGB8/816x616 field:none
-                 frame_interval:1/25]
-                -> "imx6-mipi-csi2":0 [ENABLED]
-        pad1: Sink
-                [fmt:SRGGB10/3280x2464 field:none
-                 crop.bounds:(0,0)/3280x2464
-                 crop:(0,0)/3264x2464
-                 compose.bounds:(0,0)/3264x2464
-                 compose:(0,0)/816x616]
-                <- "imx219 pixel 0-0010":0 [ENABLED,IMMUTABLE]
-
-New media-ctl:
-
-- entity 53: imx219 0-0010 (2 pads, 2 links)
-             type V4L2 subdev subtype Unknown flags 0
-             device node name /dev/v4l-subdev9
-        pad0: Source
-                [fmt:SRGGB8_1X8/816x616@1/25 field:none colorspace:srgb xfer:srgb]
-                -> "imx6-mipi-csi2":0 [ENABLED]
-        pad1: Sink
-                <- "imx219 pixel 0-0010":0 [ENABLED,IMMUTABLE]
-
-It looks like we successfully retrieve the frame interval for pad 0
-and print it, but when we try to retrieve the frame interval for pad 1,
-we get EINVAL (because that's what I'm returning, but I'm wondering if
-that's the correct thing to do...) and that prevents _all_ format
-information being output.
-
-Maybe something like the following would be a better idea?
-
- utils/media-ctl/media-ctl.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/utils/media-ctl/media-ctl.c b/utils/media-ctl/media-ctl.c
-index f61963a..a50a559 100644
---- a/utils/media-ctl/media-ctl.c
-+++ b/utils/media-ctl/media-ctl.c
-@@ -81,22 +81,22 @@ static void v4l2_subdev_print_format(struct media_entity *entity,
- 	struct v4l2_mbus_framefmt format;
- 	struct v4l2_fract interval = { 0, 0 };
- 	struct v4l2_rect rect;
--	int ret;
-+	int ret, err_fi;
- 
- 	ret = v4l2_subdev_get_format(entity, &format, pad, which);
- 	if (ret != 0)
- 		return;
- 
--	ret = v4l2_subdev_get_frame_interval(entity, &interval, pad);
--	if (ret != 0 && ret != -ENOTTY)
--		return;
-+	err_fi = v4l2_subdev_get_frame_interval(entity, &interval, pad);
- 
- 	printf("\t\t[fmt:%s/%ux%u",
- 	       v4l2_subdev_pixelcode_to_string(format.code),
- 	       format.width, format.height);
- 
--	if (interval.numerator || interval.denominator)
-+	if (err_fi == 0 && (interval.numerator || interval.denominator))
- 		printf("@%u/%u", interval.numerator, interval.denominator);
-+	else if (err_fi != -ENOTTY)
-+		printf("@<error: %s>", strerror(-err_fi));
- 
- 	if (format.field)
- 		printf(" field:%s", v4l2_subdev_field_to_string(format.field));
-
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+T24gMTcuMy4yMDE3IDA3OjQ2LCBNaWNoYWwgU2ltZWsgd3JvdGU6Cj4gT24gMTYuMy4yMDE3IDIy
+OjIwLCBMYXJzLVBldGVyIENsYXVzZW4gd3JvdGU6Cj4+IE9uIDAzLzE2LzIwMTcgMDc6MDYgUE0s
+IE1pY2hhbCBTaW1layB3cm90ZToKPj4+IE9uIDE2LjMuMjAxNyAxNzo1MSwgTGFycy1QZXRlciBD
+bGF1c2VuIHdyb3RlOgo+Pj4+IE9uIDAzLzE2LzIwMTcgMDU6NDUgUE0sIE1pY2hhbCBTaW1layB3
+cm90ZToKPj4+Pj4gT24gMTYuMy4yMDE3IDE3OjM5LCBNb3JpdHogRmlzY2hlciB3cm90ZToKPj4+
+Pj4+IE9uIFRodSwgTWFyIDE2LCAyMDE3IGF0IDk6MTYgQU0sIE1pY2hhbCBTaW1layA8bWljaGFs
+LnNpbWVrQHhpbGlueC5jb20+IHdyb3RlOgo+Pj4+Pj4+IEhpLAo+Pj4+Pj4+Cj4+Pj4+Pj4gT24g
+OC4zLjIwMTcgMjE6MTEsIE1vcml0eiBGaXNjaGVyIHdyb3RlOgo+Pj4+Pj4+PiBGaXgKPj4+Pj4+
+Pj4KPj4+Pj4+Pj4gT0Y6IC9paW9faHdtb246IGNvdWxkIG5vdCBnZXQgI2lvLWNoYW5uZWwtY2Vs
+bHMgZm9yCj4+Pj4+Pj4+IC9hbWJhL2FkY0BmODAwNzEwMAo+Pj4+Pj4+PiBPRjogL2lpb19od21v
+bjogY291bGQgbm90IGdldCAjaW8tY2hhbm5lbC1jZWxscyBmb3IKPj4+Pj4+Pj4gL2FtYmEvYWRj
+QGY4MDA3MTAwCj4+Pj4+Pj4+IE9GOiAvaWlvX2h3bW9uOiBjb3VsZCBub3QgZ2V0ICNpby1jaGFu
+bmVsLWNlbGxzIGZvcgo+Pj4+Pj4+PiAvYW1iYS9hZGNAZjgwMDcxMDAKPj4+Pj4+Pj4KPj4+Pj4+
+Pj4gYnkgYWRkaW5nIHRoZSAjaW8tY2hhbm5lbC1jZWxscyBwcm9wZXJ0eS4KPj4+Pj4+Pj4KPj4+
+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogTW9yaXR6IEZpc2NoZXIgPG1kZkBrZXJuZWwub3JnPgo+Pj4+
+Pj4+PiBDYzogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4KPj4+Pj4+Pj4g
+Q2M6IFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tPgo+Pj4+Pj4+
+PiBDYzogSnVsaWEgQ2FydHdyaWdodCA8anVsaWFAbmkuY29tPgo+Pj4+Pj4+PiBDYzogbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZwo+Pj4+Pj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmcKPj4+Pj4+Pj4gLS0tCj4+Pj4+Pj4+Cj4+Pj4+Pj4+IENoYW5nZXMgZnJvbSB2MToKPj4+
+Pj4+Pj4gLSBmaXggbWVzc2VkIHVwIGNvbW1pdCBtZXNzYWdlCj4+Pj4+Pj4+IC0tLQo+Pj4+Pj4+
+PiAgYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgfCAxICsKPj4+Pj4+Pj4gIDEgZmls
+ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+Pj4+Pj4+Pgo+Pj4+Pj4+PiBkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy96eW5x
+LTcwMDAuZHRzaQo+Pj4+Pj4+PiBpbmRleCBmM2FjOWJmLi45ODIzM2E4IDEwMDY0NAo+Pj4+Pj4+
+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4+Pj4+PiArKysgYi9h
+cmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+Pj4+Pj4+PiBAQCAtNzIsNiArNzIsNyBA
+QAo+Pj4+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwwIDcgND47Cj4+
+Pj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsK
+Pj4+Pj4+Pj4gICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xrYyAxMj47Cj4+Pj4+
+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAjaW8tY2hhbm5lbC1jZWxscyA9IDwxPjsKPj4+Pj4+
+Pj4gICAgICAgICAgICAgICB9Owo+Pj4+Pj4+Pgo+Pj4+Pj4+PiAgICAgICAgICAgICAgIGNhbjA6
+IGNhbkBlMDAwODAwMCB7Cj4+Pj4+Pj4+Cj4+Pj4+Pj4KPj4+Pj4+PiBJIHRoaW5rIGl0IHdpbGwg
+YmUgZ29vZCB0byB0aGUgbmV4dCBzdGVwIHRvby4KPj4+Pj4+PiBJdCBtZWFucyBhbHNvIGFkZCBp
+aW8taHdtb24gbm9kZSB0b28uCj4+Pj4+Pj4KPj4+Pj4+PiBXaGF0IGRvIHlvdSB0aGluaz8KPj4+
+Pj4+Cj4+Pj4+PiBJIGhhZG4ndCBwdXQgaXQgaW4gdGhlcmUgc2luY2UgZHRzIGlzIHN1cHBvc2Vk
+IHRvIGRlc2NyaWJlIGh3LAo+Pj4+Pj4gYnV0IG9idmlvdXNseSBwdXR0aW5nIHRoZSBhY3R1YWwg
+aHdtb24gaW4gdGhlcmUgbWFrZXMgaXQgbW9yZSB1c2VmdWwuCj4+Pj4+Cj4+Pj4+IEkgaGFkIG9u
+ZSBkaXNjdXNzaW9uIGFib3V0IHRoaXMgd2l0aCBHcmFudCBpbiBwYXN0IGFuZCBpdCBpcyBjb21t
+b24KPj4+Pj4gbWlzdGFrZS4gSXQgaXMgc2ltcGxpZmljYXRpb24gb2YgcHVycG9zZSBvZiBkdHMu
+Cj4+Pj4+Cj4+Pj4KPj4+PiBJZiB0aGUgaWlvLWh3bW9uIGJpbmRpbmcgaGFkIGdvbmUgdGhyb3Vn
+aCByZXZpZXcgaXQgd291bGQgaGF2ZSBiZWVuIHJlamVjdGVkLgo+Pj4KPj4+IElzbid0IGl0IGEg
+dGltZSB0byBkZXByZWNhdGUgaXQ/Cj4+Cj4+IFdlbGwsIGl0J3MgQUJJIG5vdyBhbmQgaGFzIHRv
+IHN0YXkgZm9yZXZlci4gRGVwcmVjYXRpbmcgaXQgbWFrZXMgb25seSBzZW5zZQo+PiBpZiB0aGVy
+ZSBpcyBhIHJlcGxhY2VtZW50LCB3aGljaCB0aGVyZSBpcyBub3QuIFRoZSBpaW8taHdtb24gYnJp
+ZGdlIGhhcyBpdHMKPj4gdXNlY2FzZXMgaXQncyBqdXN0IGluc3RhbnRpYXRpbmcgaXQgdmlhIGRl
+dmljZXRyZWUgd2hpY2ggaXMgbm90IHNvIG5pY2UuCj4+Cj4+Pgo+Pj4+Cj4+Pj4+Pgo+Pj4+Pj4g
+SSBjYW4gcmVzdWJtaXQgd2l0aCB0aGUgaHdtb24gbm9kZSBpbiB0aGVyZS4KPj4+Pj4KPj4+Pj4g
+SWYgeW91IGdyZXAga2VybmVsIHRyZWUgeW91IHdpbGwgc2VlIHRoYXQgb3RoZXJzIGFyZSB1c2lu
+ZyBpdCB0b28uCj4+Pj4+IEFsc28gdGhlcmUgaXMgYWNjZXB0ZWQgYmluZGluZyBmb3IgdGhhdCB0
+aGF0J3Mgd2h5IEkgY2FuJ3Qgc2VlIGJpZwo+Pj4+PiBwcm9ibGVtIHdpdGggaXQuCj4+Pj4KPj4+
+PiBTaW5jZSB0aGlzIGlzIGFuIGFwcGxpY2F0aW9uIHNwZWNpZmljIGJpbmRpbmcgSSB3b3VsZG4n
+dCBwdXQgaXQgaW4gdGhlCj4+Pj4gZ2VuZXJpYyBEVCBpbmNsdWRlIGZpbGUuIEl0J3MgYSBiaXQg
+bGlrZSBhZGRpbmcgYSBncGlvLWtleSBiaW5kaW5nIGZvciBlYWNoCj4+Pj4gb2YgdGhlIEdQSU9z
+IGp1c3QgaW4gY2FzZSBzb21lYm9keSB3YW50cyB0byB1c2UgaXQuCj4+Pgo+Pj4gcHNjaSBpcyBz
+eXN0ZW0gc3BlY2lmaWMgdG9vLgo+Pj4KPj4+IElJUkMgdGhpcyBkcml2ZXIgZm9yIHp5bnEgd2Fz
+IHdyaXR0ZW4gYnkgQURJIG9yIHdpdGggQURJIGhlbHAgdGhhdCdzIHdoeQo+Pj4geW91IGtub3cg
+bXVjaCBiZXR0ZXIgdGhhbiBJIHdoYXQncyB0aGUgY29ycmVjdCBjb25maWd1cmF0aW9uLgo+Pj4K
+Pj4+IFRoaXMgdGFyZ2V0cyBQUyBJUCB3aGljaCBzaG91bGQgYmUgcHJlc2VudCBpbiB0aGUgaHcg
+YWxsIHRoZSB0aW1lLgo+Pj4gTm90IHN1cmUgaWYgZm9yIGFsbCBjb25maWd1cmF0aW9uIGJ1dCBJ
+IGV4cGVjdCBhdCBsZWFzdCB0aGUgcGFydCBvZiBpdAo+Pj4gaXMgdGhlcmUgYWxsIHRoZW0gdGlt
+ZS4KPj4+Cj4+PiBJZiBiaW5kaW5nIGlzIGluY29ycmVjdCB0aGVuIHBsZWFzZSByZW1vdmUgaXQg
+d2l0aCByZW1vdmluZyBmcm9tIGFsbAo+Pj4gZHRzL2R0c2kgZmlsZXMgd2hpY2ggaGF2ZSB0aGlz
+LiBUaGUgc2FtZSBpcyBmb3Igb2YgcHJvYmUgZnVuY3Rpb24gaW4gdGhlCj4+PiBkcml2ZXIgaXRz
+ZWxmLgo+Pj4gSWYgdGhpcyBpcyBub3QgZG9uZSB0aGVuIHRoaXMgaXMganVzdCArMSBjYXNlLgo+
+Pj4KPj4+IElmIHlvdSBzdGlsbCBpbnNpc3QgdGhhdCB3ZSBzaG91bGRuJ3QgZG8gaXQgdGhlbiBw
+bGVhc2UgYXQgbGVhc3QgZXh0ZW5kCj4+PiBjb21taXQgbWVzc2FnZSBhbmQgcHV0IHRoZXJlIGV4
+YW1wbGUgaG93IHRvIHdpcmUgaXQgb24genlucS4KPj4KPj4gVGhlcmUgaXMgYSBJSU8gZHJpdmVy
+IGZvciB0aGUgWEFEQywgdGhpcyBkcml2ZXIgaGFzIGEgdXNlcnNwYWNlIGludGVyZmFjZQo+PiB0
+aGF0IGV4cG9zZXMgdGhlIG1lYXN1cmVtZW50cyBwcm92aWRlZCBieSB0aGUgaGFyZHdhcmUuIFVz
+aW5nIHRoZSBod21vbgo+PiBicmlkZ2Ugd2lsbCBleHBvc2UgdGhlIHNhbWUgaW5mb3JtYXRpb24g
+anVzdCB0aHJvdWdoIGEgaHdtb24gaW50ZXJmYWNlLgo+Pgo+PiBPbmUgcmVhc29uIGZvciB1c2lu
+ZyB0aGUgaWlvLWh3bW9uIGJyaWRnZSBpcyBiZWNhdXNlIHlvdSBoYXZlIGEgbGVnYWN5Cj4+IGFw
+cGxpY2F0aW9uIHRoYXQgZXhwZWN0cyB0aGUgYSBod21vbiBpbnRlcmZhY2UuIEJ1dCBuZXcgYXBw
+bGljYXRpb25zIHRoYXQKPj4gd2FudCB0byBhY2Nlc3MgdGhlIFhBREMgc2hvdWxkIHJlYWxseSB1
+c2UgdGhlIElJTyBpbnRlcmZhY2UgaWYgcG9zc2libGUuCj4+Cj4+IEluIG15IG9waW5pb24gaW5z
+dGFudGlhdGluZyB0aGUgaHdtb24gYnJpZGdlIGJ5IGRlZmF1bHQgd2lsbCBvbmx5IGNhdXNlCj4+
+IGNvbmZ1c2lvbi4gVGhlcmUgYXJlIG5vdyByZWR1bmRhbnQgaW50ZXJmYWNlcyBhbmQgdXNlcnMg
+d2lsbCB3b25kZXIgd2hhdCBpcwo+PiB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZSB0d28uIElz
+IGl0IHRoZSBzYW1lIGRhdGEsIGlzIGl0IGRpZmZlcmVudCBkYXRhPwo+PiBXaGljaCBpcyB0aGUg
+cHJlZmVycmVkIGludGVyZmFjZT8gV2hpY2ggb25lIGlzICdiZXR0ZXInPwo+IAo+IElNSE8gdGhp
+cyBzaG91bGQgYmUgY292ZXJlZCBieSBkb2N1bWVudGF0aW9uLiBPbmUgcGFyYWdyYXBoIGluIGlp
+by1od21vbgo+IGJpbmRpbmcgY2FuIGhhdmUgYW5zd2VycyBmb3IgdGhpcyBhbmQgaXQgd2lsbCBi
+ZSB2ZXJ5IGNsZWFyIHdoYXQgcGVvcGxlCj4gc2hvdWxkIHVzZS4KCkFueSBjb21tZW50IG9uIHRo
+aXMgb25lPwoKVGhhbmtzLApNaWNoYWwKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
