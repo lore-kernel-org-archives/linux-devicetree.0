@@ -1,105 +1,28 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 1/2] soc: qcom: Add device tree binding for GLINK RPM
-Date: Mon, 20 Mar 2017 14:09:55 -0700
-Message-ID: <20170320210956.29641-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] dt-bindings: clock: gxbb-clkc: Add GXL compatible
+ variant
+Date: Mon, 20 Mar 2017 16:17:35 -0500
+Message-ID: <20170320211735.cggjefzbiysp67ve@rob-hp-laptop>
+References: <1489411604-18700-1-git-send-email-narmstrong@baylibre.com>
+ <1489411604-18700-6-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489411604-18700-6-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the Qualcomm GLINK RPM, used
-for communication with the Resource Power Management subsystem in
-various Qualcomm SoCs.
+On Mon, Mar 13, 2017 at 02:26:44PM +0100, Neil Armstrong wrote:
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v1:
-- None
-
- .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-new file mode 100644
-index 000000000000..da92c4f787f3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-@@ -0,0 +1,73 @@
-+Qualcomm RPM GLINK binding
-+
-+This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
-+communication with the Resource Power Management system on various Qualcomm
-+platforms.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "qcom,glink-rpm"
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the IRQ used by the remote processor to
-+		    signal this processor about communication related events
-+
-+- qcom,rpm-msg-ram:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: handle to RPM message memory resource
-+
-+- qcom,ipc:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: three entries specifying the outgoing ipc bit used for
-+		    signaling the remote processor:
-+		    - phandle to a syscon node representing the apcs registers
-+		    - u32 representing offset to the register within the syscon
-+		    - u32 representing the ipc bit within the register
-+
-+= GLINK DEVICES
-+Each subnode of the GLINK node represent function tied to a virtual
-+communication channel. The name of the nodes are not important. The properties
-+of these nodes are defined by the individual bindings for the specific function
-+- but must contain the following property:
-+
-+- qcom,glink-channels:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: a list of channels tied to this function, used for matching
-+		    the function to a set of virtual channels
-+
-+= EXAMPLE
-+The following example represents the GLINK RPM node on a MSM8996 device, with
-+the function for the "rpm_request" channel defined, which is used for
-+regualtors and root clocks.
-+
-+	apcs: syscon@f9011000 {
-+		compatible = "syscon";
-+		reg = <0xf9011000 0x1000>;
-+	};
-+
-+	rpm_msg_ram: memory@68000 {
-+		compatible = "qcom,rpm-msg-ram";
-+		reg = <0x68000 0x6000>;
-+	};
-+
-+        rpm-glink {
-+		compatible = "qcom,glink-rpm";
-+
-+		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-+		qcom,ipc = <&apcs 0x10 0>;
-+
-+		rpm-requests {
-+			compatible = "qcom,rpm-msm8996";
-+			qcom,glink-channels = "rpm_requests";
-+
-+			...
-+		};
-+	};
--- 
-2.12.0
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
