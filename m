@@ -1,71 +1,147 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 0/7] Tegra210 clock bug fixes
-Date: Mon, 20 Mar 2017 13:59:18 +0100
-Message-ID: <20170320125918.GC22463@ulmo.ba.sec>
-References: <1487846686-6388-1-git-send-email-pdeschrijver@nvidia.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Mon, 20 Mar 2017 14:01:58 +0100
+Message-ID: <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170318192258.GL21222@n2100.armlinux.org.uk>
+ <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+ <20170319103801.GQ21222@n2100.armlinux.org.uk>
+ <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1487846686-6388-1-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On 03/19/2017 06:54 PM, Steve Longerbeam wrote:
+> 
+> 
+> On 03/19/2017 03:38 AM, Russell King - ARM Linux wrote:
+>> On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
+>>> Right, imx-media-capture.c (the "standard" v4l2 user interface module)
+>>> is not implementing VIDIOC_ENUM_FRAMESIZES. It should, but it can only
+>>> return the single frame size that the pipeline has configured (the mbus
+>>> format of the attached source pad).
+>> I now have a set of patches that enumerate the frame sizes and intervals
+>> from the source pad of the first subdev (since you're setting the formats
+>> etc there from the capture device, it seems sensible to return what it
+>> can support.)  This means my patch set doesn't add to non-CSI subdevs.
+>>
+>>> Can you share your gstreamer pipeline? For now, until
+>>> VIDIOC_ENUM_FRAMESIZES is implemented, try a pipeline that
+>>> does not attempt to specify a frame rate. I use the attached
+>>> script for testing, which works for me.
+>> Note that I'm not specifying a frame rate on gstreamer - I'm setting
+>> the pipeline up for 60fps, but gstreamer in its wisdom is unable to
+>> enumerate the frame sizes, and therefore is unable to enumerate the
+>> frame intervals (frame intervals depend on frame sizes), so it
+>> falls back to the "tvnorms" which are basically 25/1 and 30000/1001.
+>>
+>> It sees 60fps via G_PARM, and then decides to set 30000/1001 via S_PARM.
+>> So, we end up with most of the pipeline operating at 60fps, with CSI
+>> doing frame skipping to reduce the frame rate to 30fps.
+>>
+>> gstreamer doesn't complain, doesn't issue any warnings, the only way
+>> you can spot this is to enable debugging and look through the copious
+>> debug log, or use -v and check the pad capabilities.
+>>
+>> Testing using gstreamer, and only using "does it produce video" is a
+>> good simple test, but it's just that - it's a simple test.  It doesn't
+>> tell you that what you're seeing is what you intended to see (such as
+>> video at the frame rate you expected) without more work.
+>>
+>>> Thanks, I've fixed most of v4l2-compliance issues, but this is not
+>>> done yet. Is that something you can help with?
+>> What did you do with:
+>>
+>> ioctl(3, VIDIOC_REQBUFS, {count=0, type=0 /* V4L2_BUF_TYPE_??? */, memory=0 /* V4L2_MEMORY_??? */}) = -1 EINVAL (Invalid argument)
+>>                  test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>> ioctl(3, VIDIOC_EXPBUF, 0xbef405bc)     = -1 EINVAL (Invalid argument)
+>>                  fail: v4l2-test-buffers.cpp(571): q.has_expbuf(node)
 
---OBd5C1Lgu00Gd/Tn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is really a knock-on effect from an earlier issue where the compliance test
+didn't detect support for MEMORY_MMAP.
 
-On Thu, Feb 23, 2017 at 12:44:37PM +0200, Peter De Schrijver wrote:
-> A number of bug fixes for the Tegra210 clock implementation.
->=20
-> Changelog:
->=20
-> v2: add better description for 'remove non-existing pll_m_out1 clock'
->=20
-> Peter De Schrijver (7):
->   clk: tegra: fix pll_a1 iddq register, add pll_a1
->   clk: tegra: fix isp clock modelling
->   clk: tegra: correct afi parent
->   clk: tegra: remove non-existing pll_m_out1 clock
->   clk: tegra: don't warn for PLL defaults unnecessarily
->   clk: tegra: correct tegra210_pll_fixed_mdiv_cfg rate calculation
->   clk: tegra: fix type for m field
->=20
->  drivers/clk/tegra/clk-id.h               |  1 +
->  drivers/clk/tegra/clk-tegra-periph.c     | 13 +++++++++---
->  drivers/clk/tegra/clk-tegra210.c         | 35 ++++++++++++++++++++------=
-------
->  drivers/clk/tegra/clk.h                  |  2 +-
->  include/dt-bindings/clock/tegra210-car.h |  4 ++--
->  5 files changed, 36 insertions(+), 19 deletions(-)
+>>                  test VIDIOC_EXPBUF: FAIL
+>>
+>> To me, this looks like a bug in v4l2-compliance (I'm using 1.10.0).
 
-Applied to for-4.12/clk, thanks.
+Always build from the master repo. 1.10 is pretty old.
 
-Thierry
+>> I'm not sure what buffer VIDIOC_EXPBUF is expected to export, since
+>> afaics no buffers have been allocated, so of course it's going to fail.
 
---OBd5C1Lgu00Gd/Tn
-Content-Type: application/pgp-signature; name="signature.asc"
+It just tests if EXPBUF is supported.
 
------BEGIN PGP SIGNATURE-----
+I think I will modify v4l2-compliance to bail out if it doesn't find support
+for MEMORY_MMAP. Even though in theory support for this is optional, in practice
+all applications expect that it is supported. That should fix this
+hard-to-understand error.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljP0iQACgkQ3SOs138+
-s6FUpw/+NH+zuao/5qctvhWnaUZNZUbfmAzwjL8WXsk/u+IMg5/xepOrnmFHbe5L
-68CxBowSPC79r8FB2Bc34mo1iU/F+/vz2mfofOuoN7g05aC4Q9Ki4lRupSie+hpu
-Y5i2GV1TEdcMYW2UdMWXKh8R7ptJtryYJW9ZKiuSHV/lOrnKOMRTTQzzPEHX2DBA
-CtqQY9Px2Bc+JZbRNB1jOQbqVWwxgmUfJsZmXVyN3JmsfJO1MOcAfccVAPqjwL9W
-6Ls7pC2GDDwqv39Qd1gIWSL7HCfAf2RSlFYdUBVjk7vJN25csIeqJZPq0SIDd/B/
-jIYL+8zJwumivA1Vs9deGu37WUgGN1MOAe7XDGRmJJG7IOiXxg6idj01S8Uqrp5Q
-okorjohXlAyp1DYzNiPO3J5PeootofoOTqb6hLKOzj1i8gETkIb8MSSqG7Y2oQCw
-xZB/iKG8lzUGiVUnRlzqH6z36tIu4Bbce5L/lAfOKzAlHeb8zLh1x9xIQNjm/sdh
-yf+s0/myROuEwXwzZLoF4tOTX2g5PFWT1xiEqwcttNn5XSQJBMEH5fjIwiaLZtdk
-Dx0BsvQC9Vw1g0UiJWP2HpL6DIEBSf/7wB//gwdDIobT+zpiQHembpyac/TZ5iSC
-oKmE2AXA6/lpHqvo2uINCjVshuWQKkkmv/z3lkCJg0Ncx3PgNyY=
-=LrXj
------END PGP SIGNATURE-----
+>> Either that, or the v4l2 core vb2 code is non-compliant with v4l2's
+>> interface requirements.
+>>
+>> In any case, it doesn't look like the buffer management is being
+>> tested at all by v4l2-compliance - we know that gstreamer works, so
+>> buffers _can_ be allocated, and I've also used dmabufs with gstreamer,
+>> so I also know that VIDIOC_EXPBUF works there.
 
---OBd5C1Lgu00Gd/Tn--
+To test actual streaming you need to provide the -s option.
+
+Note: v4l2-compliance has been developed for 'regular' video devices,
+not MC devices. It may or may not work with the -s option.
+
+As I think I mentioned somewhere else, creating a compliance test for
+MC devices would help enormously in verifying drivers. I'm not sure if
+it is better to create a new test or integrate it in v4l2-compliance.
+
+I'm leaning towards the latter since there is a lot of overlap.
+
+>>
+> 
+> I wouldn't be surprised if you hit on a bug in v4l2-compliance. I 
+> stopped with v4l2-compliance
+> at a different test failure that also didn't make sense to me:
+> 
+> Streaming ioctls:
+>      test read/write: OK (Not Supported)
+>          Video Capture:
+>          Buffer: 0 Sequence: 0 Field: Any Timestamp: 41.664259s
+>          fail: 
+> .../v4l-utils-1.6.2/utils/v4l2-compliance/v4l2-test-buffers.cpp(281): 
+> !(g_flags() & (V4L2_BUF_FLAG_DONE | V4L2_BUF_FLAG_ERROR))
+>          fail: 
+> .../v4l-utils-1.6.2/utils/v4l2-compliance/v4l2-test-buffers.cpp(610): 
+> buf.check(q, last_seq)
+>          fail: 
+> .../v4l-utils-1.6.2/utils/v4l2-compliance/v4l2-test-buffers.cpp(883): 
+> captureBufs(node, q, m2m_q, frame_count, false)
+>      test MMAP: FAIL
+>      test USERPTR: OK (Not Supported)
+>      test DMABUF: Cannot test, specify --expbuf-device
+> 
+> Total: 42, Succeeded: 38, Failed: 4, Warnings: 0
+> 
+> 
+> In this case the driver completed and returned only one buffer, and it set
+> VB2_BUF_STATE_DONE, so these test failures didn't make sense to me. I
+> was using version 1.6.2 at the time.
+
+I can't do anything with that. Always use the master branch in the v4l-utils
+repo.
+
+Regards,
+
+	Hans
