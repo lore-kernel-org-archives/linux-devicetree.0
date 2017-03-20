@@ -1,67 +1,101 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
-Date: Mon, 20 Mar 2017 14:51:31 +0100
-Message-ID: <20170320135131.GP22463@ulmo.ba.sec>
-References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
- <20170316064218.9169-2-ralph.sennhauser@gmail.com>
- <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
- <20170317101747.67a09ccd@gmail.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH v6 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
+Date: Mon, 20 Mar 2017 19:24:02 +0530
+Message-ID: <1490018046-8549-1-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wg9FEZT+WCTrEXgJ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170317101747.67a09ccd@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: kishon@ti.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, vivek.gautam@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds couple of PHY drivers for Qualcomm chipsets.
+a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
+b) qcom-qmp phy driver: that is a combo phy providing support for
+   USB3, PCIe, UFS and few other controllers.
 
---wg9FEZT+WCTrEXgJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patches are based on next branch of linux-phy tree, and depends
+on phy driver grouping series[1]:
+[PATCH v4 0/3] phy: Group phy drivers based on vendor listing.
 
-On Fri, Mar 17, 2017 at 10:17:47AM +0100, Ralph Sennhauser wrote:
-> On Thu, 16 Mar 2017 17:03:05 +0100
-> Linus Walleij <linus.walleij@linaro.org> wrote:
-[...]
-> > > +static void mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
-> > > +static void mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
-> >=20
-> > I think both of these need to be tagged __maybe_unused to not give
-> > noise in randconfig builds.
->=20
-> I haven't seen any warnings with CONFIG_PWM disabled. Which
-> configuration you expect to trigger a warning? mvebu_pwm_probe should
-> be the same, right?
+These patches have been tested on Dragon board db820c hardware with
+required set of dt patches and the patches to get rpm up on msm8996.
+Couple of other patches [2, 3] fixing DMA config for XHCI are also
+pulled in for testing.
+The complete branch is available in github [4].
 
-It's got nothing to do with CONFIG_PWM and as far as I can tell your
-usage of IS_ENABLED() is fine here. However, if you try building the
-driver with a !PM configuration, both *_suspend() and *_resume() end
-up being unused and giving you a warning.
+Changes since v5:
+ - Addressed review comments from Bjorn:
+   - Removed instances of readl/wirtel_relaxed calls from the drivers.
+     Instead, using simple readl/writel. Inserting a readl after a writel
+     to ensure the write is through to the device.
+   - Replaced regulator handling with regulator_bulk_** apis. This helps
+     in cutting down a lot of regulator handling code.
+   - Fixed minor return statements.
 
-Thierry
+Changes since v4:
+ - Addressed comment to add child nodes for qmp phy driver. Each phy lane
+   now has a separate child node under the main qmp node.
+ - Modified the clock and reset initialization and enable methods.
+   Different phys - pcie, usb and later ufs, have varying number of clocks
+   and resets that are mandatory. So adding provision for clocks and reset
+   lists helps in requesting all mandatory resources for individual phys
+   and handle their failure cases accordingly.
 
---wg9FEZT+WCTrEXgJ
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v3:
+ - Addressed review comments given by Rob and Stephen for qusb2 phy
+   and qmp phy bindings respectively.
+ - Addressed review comments given by Stephen and Bjorn for qmp phy driver.
 
------BEGIN PGP SIGNATURE-----
+Changes since v2:
+ - Addressed review comments given by Rob and Stephen for bindings.
+ - Addressed the review comments given by Stephen for the qusb2 and qmp
+   phy drivers.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljP3mMACgkQ3SOs138+
-s6HzvBAAghBQOT1/tVK3+wouBS6rHP2zZSJoX6EYTqYCzY7M1m5yaCeiqnVrZ1jh
-oD0Z556a+GxjxOIFAyN2hP6+72GZkBGVpkPnGAZ+y9PK25ShJyQM8yCoDu2rtf0w
-K1h2fIX2IVgH+q+08yvKPthu/pgCmni8EIv5Li1BN2ckZD3oOC6wQOWobLE980CE
-nGQaXaKrGbUX1WTPiTN384jTyaVnF0PGlzhMipQDBLNp+VXstjcZhj1nbT6dtb7a
-bkZ3nb9ht+MlWF5rFEw785fFjUtAoCJ0RN7vZ1/BBi1QVHo/pcN1NETZ05tPCraR
-8O1m8/G2dz5661ulEFY31amE6Wa5+tDbLXv2ml5ff2ggnyrrB7jnDEiLTVDN13BE
-wvARhlqScLCtVTLNGYsDkDeRST25MYvgf/v9o6GsIeTJyGGAhpae5EmRKEG9AEFk
-967u17Z1tdj9QLKkUznvceksg2ciP05v0xASPwVWqHygXUoXLhBQrpfWUn/c50PN
-Lb7EU6ABW/l3qq3a3ZPT/TVNvK2dmSnb9d2/TVep/xRql/iQglNWD6tDcH6DCMO1
-ohcGpKAqRcZI5+bUZdEZsXS/SRwNrPvEIEBXGBX6EaP37+qg77bxO/AdINqL4tH8
-uiE3PqMqRzck3DYKkilaB3RZ5ZxoUTnsJBl+rzXSS07KoKZJlt0=
-=bj05
------END PGP SIGNATURE-----
+Changes since v1:
+ - Moved device tree binding documentation to separate patches, as suggested
+   by Rob.
+ - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
+   given by Rob.
+ - Addressed review comments from Kishon.
+ - Addressed review comments from Srinivas for QMP phy driver.
+ - Addressed kbuild warning.
 
---wg9FEZT+WCTrEXgJ--
+Please see individual patches for detailed changelogs.
+
+[1] https://www.spinics.net/lists/arm-kernel/msg569990.html
+[2] https://patchwork.kernel.org/patch/9567767/
+[3] https://patchwork.kernel.org/patch/9567779/
+[4] https://github.com/vivekgautam1/linux/tree/linux-phy-next-qcom-phy-db820c
+
+Vivek Gautam (4):
+  dt-bindings: phy: Add support for QUSB2 phy
+  phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+  dt-bindings: phy: Add support for QMP phy
+  phy: qcom-qmp: new qmp phy driver for qcom-chipsets
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  106 ++
+ .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   45 +
+ drivers/phy/qualcomm/Kconfig                       |   18 +
+ drivers/phy/qualcomm/Makefile                      |    2 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 1153 ++++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qusb2.c              |  491 +++++++++
+ 6 files changed, 1815 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp.c
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qusb2.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
