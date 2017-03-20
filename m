@@ -1,74 +1,87 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [v3 3/5] coresight: add support for debug module
-Date: Mon, 20 Mar 2017 20:30:59 +0800
-Message-ID: <20170320123059.GA30276@leoy-linaro>
-References: <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
- <20170309175915.GA964@leoy-linaro>
- <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
- <20170313165600.GB32431@linaro.org>
- <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
- <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
- <20170317101328.GA19877@leoy-linaro>
- <20170317155007.GA20435@linaro.org>
- <20170317162836.GD2020@leoy-linaro>
- <5995f6a7-08b1-c868-fc88-a145d1748a33@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V4 2/9] PM / Domains: Use OPP tables for power-domains
+Date: Mon, 20 Mar 2017 15:02:14 +0530
+Message-ID: <5619ac7777689f282f8aafabbde22d71b46a979b.1490001099.git.viresh.kumar@linaro.org>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5995f6a7-08b1-c868-fc88-a145d1748a33@arm.com>
+In-Reply-To: <cover.1490001099.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1490001099.git.viresh.kumar@linaro.org>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <Sudeep>
+To: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 04:47:54PM +0000, Suzuki K Poulose wrote:
-> On 17/03/17 16:28, Leo Yan wrote:
-> >On Fri, Mar 17, 2017 at 09:50:07AM -0600, Mathieu Poirier wrote:
-> >
-> >[...]
-> >
-> >>If we don't check for "nohlt" some platform may freeze, others may work.  If we
-> >>mandate that "nohlt" be present on the kernel cmd line it works in all cases.
-> >>As such mandating that "nohlt" be present is a better way to go.
-> >
-> >Sure, so I will add below checking code in the probe function, please
-> >let me know if you have alter better way to implement this:
-> >
-> >+       if (IS_ENABLED(CONFIG_CPU_IDLE) &&
-> >+                       !strstr(boot_command_line, "nohlt")) {
-> >+               dev_err(dev, "May not be accessible in CPU power domain.\n");
-> >+               return -EPERM;
-> >+       }
-> >
-> 
-> There is an API which kind of achieves what "nohlt" does at runtime :
-> 
->   cpu_idle_poll_ctrl(true)
-> 
-> So may be we could use that instead of depending on "nohlt". The other side
-> of the issues is "when do we decide to use the API". May be we could add something
-> like : enable_debug, which could then trigger the panic notifier registrations
-> and the above. That would still leave us with a case where the system crashes
-> even before the user gets a terminal. May be the following is the best option :
-> 
-> 1) Dedicated kernel command line parameter for enabling the CPU debug at boot/probe.
-> and
-> 
-> 2) Runtime enable method via sysfs.
+The OPP table bindings contains all the necessary fields to support
+power-domains now. Update the power-domain bindings to allow
+"operating-points-v2" to be present within the power-domain node.
 
-For upper methods, I think the benefit is the user can use very
-explict method to enable debug module and can easily aware this
-will totally disable CPU low power states as sequential result..
+Also allow consumer devices, that don't use OPP tables, to specify the
+parent power-domain's performance level using the
+"domain-performance-state" property.
 
-For sysfs, we need send IPIs to all CPUs to ensure all CPUs will not
-stay in low power state anymore.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ .../devicetree/bindings/power/power_domain.txt     | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-Now I have one questions mainly related with how to registser sysfs
-node. Should register sysfs node based on coresight API
-coresight_register()? If so, we should extend coresight core
-structures to support CPU debug module. Or directly register sysfs
-node by using sysfs node like /sys/bus/coresight/devices/cpu_debug?
-
-Thanks,
-Leo Yan
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index 723e1ad937da..5db112fa5d7c 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -38,6 +38,9 @@ phandle arguments (so called PM domain specifiers) of length specified by the
+   domain's idle states. In the absence of this property, the domain would be
+   considered as capable of being powered-on or powered-off.
+ 
++- operating-points-v2 : This describes the performance states of a PM domain.
++  Refer to ../opp/opp.txt for more information.
++
+ Example:
+ 
+ 	power: power-controller@12340000 {
+@@ -118,4 +121,43 @@ The node above defines a typical PM domain consumer device, which is located
+ inside a PM domain with index 0 of a power controller represented by a node
+ with the label "power".
+ 
++Optional properties:
++- domain-performance-state: A positive integer value representing the minimum
++  power-domain performance level required by the consumer device. The integer
++  value '0' represents the lowest performance level and the higher values
++  represent higher performance levels. The value of "domain-performance-state"
++  field should match the "domain-performance-state" field of one of the OPP
++  nodes in the parent power-domain's OPP table.
++
++
++
++Example:
++
++	domain_opp_table: opp_table {
++		compatible = "operating-points-v2";
++
++		opp@1 {
++			domain-performance-state = <1>;
++			opp-microvolt = <975000 970000 985000>;
++		};
++		opp@2 {
++			domain-performance-state = <2>;
++			opp-microvolt = <1075000 1000000 1085000>;
++		};
++	};
++
++	parent: power-controller@12340000 {
++		compatible = "foo,power-controller";
++		reg = <0x12340000 0x1000>;
++		#power-domain-cells = <0>;
++		operating-points-v2 = <&domain_opp_table>;
++	};
++
++	leaky-device@12350000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x12350000 0x1000>;
++		power-domains = <&power 0>;
++		domain-performance-state = <2>;
++	};
++
+ [1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
+-- 
+2.12.0.432.g71c3a4f4ba37
