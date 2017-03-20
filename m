@@ -1,92 +1,83 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 0/4] arm: renesas: Add reset control properties
-Date: Mon, 20 Mar 2017 10:31:50 +0100
-Message-ID: <CAMuHMdUdFUBh=2azMLWJ1Bm34pP3OnesqdvR1ZQ14JgMtuqecw@mail.gmail.com>
-References: <1489673246-11015-1-git-send-email-geert+renesas@glider.be>
- <20170320082852.GC21538@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170320082852.GC21538@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: [PATCH v11 01/10] devicetree: power: Add battery.txt
+Date: Mon, 20 Mar 2017 02:43:26 -0700
+Message-ID: <20170320094335.19224-2-liam@networkimprov.net>
+References: <20170320094335.19224-1-liam@networkimprov.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320094335.19224-1-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon, Shimoda-san,
+From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 
-On Mon, Mar 20, 2017 at 9:28 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Thu, Mar 16, 2017 at 03:07:22PM +0100, Geert Uytterhoeven wrote:
->> This patch series describes the reset control topology for on-SoC devices
->> connected to the Renesas Clock Pulse Generator / Module Standby and
->> Software Reset module on the R-Car H3 and M3-W, RZ/G1M, and RZ/G1E SoCs.
->>
->> Resets usually match the corresponding module clocks.  Exceptions are:
->>   - The Display Unit has only 2 resets, one per channel pair, cfr.
->>     "[PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
->>     properties" (http://www.spinics.net/lists/dri-devel/msg134637.html),
->>   - The audio module has resets for the Serial Sound Interfaces only.
->>     Adding resets and reset-names properties depends on a DT binding
->>     update for renesas,rsnd (note: the DT binding documentation in
->>     Documentation/devicetree/bindings/sound/renesas,rsnd.txt doesn't
->>     even document clocks and clock-names?).
->> Upon request from Laurent for the DU, and upon a DT bindings update
->> for rcar_sound, the addition of resets (and reset-names) properties for
->> these complex modules is postponed.
->>
->> Note that this patch series contains hardware description only.
->> Actual reset policy is to be defined and implemented separately.
->> Also, this is an optional feature, to be enabled explicitly using
->> CONFIG_RESET_CONTROLLER=y.  When enabled, an on-SoC device can be reset
->> easily using device_reset(), or by using the reset_control_*() API when
->> more fine-grained control is desired.
->>
->> Possible use cases are (not exhaustive):
->>   - Reset a device before use, to make sure it's in a predefined state, and
->>     doesn't depend on earlier configuration by e.g. the boot loader,
->>   - Reset a device after detecting an anomaly,
->>   - Reset a device to verify suspend/resume is handled correctly by the
->>     driver in case the device would be part of a power domain on a
->>     different/future SoC.
->>
->> Dependencies and impact:
->>   - The corresponding driver changes to the CGP/MSSR driver are already
->>     present in v4.11-rc1.
->>   - These patches have no impact as long as CONFIG_RESET_CONTROLLER=n.
->>     However, if CONFIG_RESET_CONTROLLER=y and resets properties are
->>     prsesent in DTS, the EHCI and OHCI drivers already deassert reset as
->>     part of their initialization sequences, and put the devices back
->>     into reset state in case initialization failed, or on unbind.
->>     I'm not aware of other relevant drivers already using reset control.
->
-> It appears that for arm64 defconfig CONFIG_RESET_CONTROLLER=y is true so
-> by default there will be a behavioural change on arm64. I'd like to
-> understand if it is a desirable (or at least not undesirable) change.
+Documentation of static battery characteristics that can be defined
+for batteries which cannot self-identify. This information is required
+by fuel-gauge and charger chips for proper handling of the battery.
 
-V1 of this patch series has been part of renesas-drivers since
-renesas-drivers-2017-01-24-v4.10-rc5, so I'd hope any negative impact would
-have been discovered by now.
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+---
+ .../devicetree/bindings/power/supply/battery.txt   | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
 
-Shimoda-san: Have you noticed any oddities w.r.t. USB?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+new file mode 100644
+index 0000000..53a68c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -0,0 +1,43 @@
++Battery Characteristics
++
++The devicetree battery node provides static battery characteristics. 
++In smart batteries, these are typically stored in non-volatile memory 
++on a fuel gauge chip. The battery node should be used where there is 
++no appropriate non-volatile memory, or it is unprogrammed/incorrect.
++
++Required Properties:
++ - compatible: Must be "simple-battery"
++
++Optional Properties:
++ - voltage-min-design-microvolt: drained battery voltage
++ - energy-full-design-microwatt-hours: battery design energy
++ - charge-full-design-microamp-hours: battery design capacity
++
++Battery properties are named, where possible, for the corresponding 
++elements in enum power_supply_property, defined in
++https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/power_supply.h#n86
++
++Batteries must be referenced by chargers and/or fuel-gauges
++using a phandle. The phandle's property should be named
++"monitored-battery".
++
++Example:
++
++	bat: battery {
++		compatible = "simple-battery";
++		voltage-min-design-microvolt = <3200000>;
++		energy-full-design-microwatt-hours = <5290000>;
++		charge-full-design-microamp-hours = <1430000>;
++	};
++
++	charger: charger@11 {
++		....
++		monitored-battery = <&bat>;
++		...
++	};
++
++	fuel_gauge: fuel-gauge@22 {
++		....
++		monitored-battery = <&bat>;
++		...
++	};
+-- 
+2.9.3
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
