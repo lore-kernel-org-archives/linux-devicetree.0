@@ -1,45 +1,170 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] irqchip: augment Gemini bindings to reflect Faraday
- origin
-Date: Mon, 20 Mar 2017 11:42:39 -0500
-Message-ID: <20170320164238.2whmughx6nhlpt5b@rob-hp-laptop>
-References: <20170311231350.15857-1-linus.walleij@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv5 06/16] atmel-isi: document device tree bindings
+Date: Mon, 20 Mar 2017 11:41:19 -0500
+Message-ID: <20170320164119.cxmson67wdyoww2k@rob-hp-laptop>
+References: <20170311112328.11802-1-hverkuil@xs4all.nl>
+ <20170311112328.11802-7-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170311231350.15857-1-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Thomas Gleixner <tglx@linutronix.de>, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170311112328.11802-7-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 12, 2017 at 12:13:50AM +0100, Linus Walleij wrote:
-> When we merged the Gemini interrupt controller it was not yet
-> discovered that this IP block is actually a standard Faraday
-> Technology interrupt controller.
+On Sat, Mar 11, 2017 at 12:23:18PM +0100, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > 
-> As the IP block will probably appear in other designs as well,
-> let's augment the DT bindings to reflect that it is first and
-> foremost a standard Faraday part with a function name (FTINTC010)
-> so that people reusing the IP easily find the driver they need.
+> Document the device tree bindings for this hardware.
 > 
-> Sorry for the mistakes due to lack of information.
-> 
-> Greentime Hu <green.hu@gmail.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  ...,gemini-interrupt-controller.txt => faraday,ftintc010.txt} | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->  rename Documentation/devicetree/bindings/interrupt-controller/{cortina,gemini-interrupt-controller.txt => faraday,ftintc010.txt} (63%)
+> Mostly copied from the atmel-isc bindings.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This commit message doesn't really reflect what you are doing and the 
+reformatting and fixes really make this a PIA to review.
+
+>
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/atmel-isi.txt        | 96 +++++++++++++---------
+>  1 file changed, 58 insertions(+), 38 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> index 251f008f220c..65249bbd5c00 100644
+> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
+> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> @@ -1,51 +1,71 @@
+> -Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
+> -----------------------------------------------
+> -
+> -Required properties:
+> -- compatible: must be "atmel,at91sam9g45-isi"
+> -- reg: physical base address and length of the registers set for the device;
+> -- interrupts: should contain IRQ line for the ISI;
+> -- clocks: list of clock specifiers, corresponding to entries in
+> -          the clock-names property;
+> -- clock-names: must contain "isi_clk", which is the isi peripherial clock.
+> -
+> -ISI supports a single port node with parallel bus. It should contain one
+> +Atmel Image Sensor Interface (ISI)
+> +----------------------------------
+> +
+> +Required properties for ISI:
+> +- compatible: must be "atmel,at91sam9g45-isi".
+> +- reg: physical base address and length of the registers set for the device.
+> +- interrupts: should contain IRQ line for the ISI.
+> +- clocks: list of clock specifiers, corresponding to entries in the clock-names
+> +	property; please refer to clock-bindings.txt.
+> +- clock-names: required elements: "isi_clk".
+> +- pinctrl-names, pinctrl-0: please refer to pinctrl-bindings.txt.
+> +
+> +ISI supports a single port node with parallel bus. It shall contain one
+>  'port' child node with child 'endpoint' node. Please refer to the bindings
+>  defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+>  
+> -Example:
+> -	isi: isi@f0034000 {
+> -		compatible = "atmel,at91sam9g45-isi";
+> -		reg = <0xf0034000 0x4000>;
+> -		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+> +Endpoint node properties
+> +------------------------
+>  
+> -		clocks = <&isi_clk>;
+> -		clock-names = "isi_clk";
+> +- bus-width: <8> or <10> (mandatory)
+> +- hsync-active (default: active high)
+> +- vsync-active (default: active high)
+> +- pclk-sample (default: sample on falling edge)
+> +- remote-endpoint: A phandle to the bus receiver's endpoint node (mandatory).
+>  
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_isi>;
+> -
+> -		port {
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> +Example:
+>  
+> -			isi_0: endpoint {
+> -				remote-endpoint = <&ov2640_0>;
+> -				bus-width = <8>;
+> -			};
+> +isi: isi@f0034000 {
+> +	compatible = "atmel,at91sam9g45-isi";
+> +	reg = <0xf0034000 0x4000>;
+> +	interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_isi_data_0_7>;
+> +	clocks = <&isi_clk>;
+> +	clock-names = "isi_clk";
+> +	status = "ok";
+
+Don't put status in examples.
+
+> +	port {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+
+These can be dropped.
+
+> +		isi_0: endpoint {
+> +			remote-endpoint = <&ov2640_0>;
+> +			bus-width = <8>;
+> +			vsync-active = <1>;
+> +			hsync-active = <1>;
+>  		};
+>  	};
+> +};
+> +
+> +i2c1: i2c@f0018000 {
+> +	status = "okay";
+>  
+> -	i2c1: i2c@f0018000 {
+> -		ov2640: camera@0x30 {
+> -			compatible = "ovti,ov2640";
+> -			reg = <0x30>;
+> +	ov2640: camera@30 {
+> +		compatible = "ovti,ov2640";
+> +		reg = <0x30>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
+> +		resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
+
+reset-gpios?
+
+> +		pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
+
+powerdown-gpios?
+
+> +		clocks = <&pck0>;
+> +		clock-names = "xvclk";
+> +		assigned-clocks = <&pck0>;
+> +		assigned-clock-rates = <25000000>;
+>  
+> -			port {
+> -				ov2640_0: endpoint {
+> -					remote-endpoint = <&isi_0>;
+> -					bus-width = <8>;
+> -				};
+> +		port {
+> +			ov2640_0: endpoint {
+> +				remote-endpoint = <&isi_0>;
+> +				bus-width = <8>;
+>  			};
+>  		};
+>  	};
+> +};
+> -- 
+> 2.11.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
