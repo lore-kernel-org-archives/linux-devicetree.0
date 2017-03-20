@@ -1,61 +1,79 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V4 2/9] PM / Domains: Use OPP tables for power-domains
-Date: Mon, 20 Mar 2017 15:02:14 +0530
-Message-ID: <5619ac7777689f282f8aafabbde22d71b46a979b.1490001099.git.viresh.kumar@linaro.org>
+Subject: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for power-domains
+Date: Mon, 20 Mar 2017 15:02:13 +0530
+Message-ID: <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
 References: <cover.1490001099.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 In-Reply-To: <cover.1490001099.git.viresh.kumar@linaro.org>
 In-Reply-To: <cover.1490001099.git.viresh.kumar@linaro.org>
 References: <cover.1490001099.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The OPP table bindings contains all the necessary fields to support
-power-domains now. Update the power-domain bindings to allow
-"operating-points-v2" to be present within the power-domain node.
+Power-domains need to express their active states in DT and what's
+better than OPP table for that.
 
-Also allow consumer devices, that don't use OPP tables, to specify the
-parent power-domain's performance level using the
-"domain-performance-state" property.
+This patch allows power-domains to reuse OPP tables to express their
+active states. The "opp-hz" property isn't a required property anymore
+as power-domains may not always use them.
+
+Add a new property "domain-performance-state", which will contain
+positive integer values to represent performance levels of the
+power-domains as described in this patch.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- .../devicetree/bindings/power/power_domain.txt     | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ Documentation/devicetree/bindings/opp/opp.txt | 73 ++++++++++++++++++++++++++-
+ 1 file changed, 71 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-index 723e1ad937da..5db112fa5d7c 100644
---- a/Documentation/devicetree/bindings/power/power_domain.txt
-+++ b/Documentation/devicetree/bindings/power/power_domain.txt
-@@ -38,6 +38,9 @@ phandle arguments (so called PM domain specifiers) of length specified by the
-   domain's idle states. In the absence of this property, the domain would be
-   considered as capable of being powered-on or powered-off.
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 63725498bd20..d0b95c9e1011 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -76,10 +76,9 @@ This describes the OPPs belonging to a device. This node can have following
+ This defines voltage-current-frequency combinations along with other related
+ properties.
  
-+- operating-points-v2 : This describes the performance states of a PM domain.
-+  Refer to ../opp/opp.txt for more information.
-+
- Example:
- 
- 	power: power-controller@12340000 {
-@@ -118,4 +121,43 @@ The node above defines a typical PM domain consumer device, which is located
- inside a PM domain with index 0 of a power controller represented by a node
- with the label "power".
- 
+-Required properties:
 +Optional properties:
+ - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
+ 
+-Optional properties:
+ - opp-microvolt: voltage in micro Volts.
+ 
+   A single regulator's voltage is specified with an array of size one or three.
+@@ -154,6 +153,19 @@ properties.
+ 
+ - status: Marks the node enabled/disabled.
+ 
 +- domain-performance-state: A positive integer value representing the minimum
-+  power-domain performance level required by the consumer device. The integer
-+  value '0' represents the lowest performance level and the higher values
-+  represent higher performance levels. The value of "domain-performance-state"
-+  field should match the "domain-performance-state" field of one of the OPP
-+  nodes in the parent power-domain's OPP table.
++  power-domain performance level required by the device for the OPP node. The
++  integer value '0' represents the lowest performance level and the higher
++  values represent higher performance levels. When present in the OPP table of a
++  power-domain, it represents the performance level of the domain. When present
++  in the OPP table of a normal device, it represents the performance level of
++  the parent power-domain. The OPP table can contain the
++  "domain-performance-state" property, only if the device node contains the
++  "power-domains" or "#power-domain-cells" property. The OPP nodes aren't
++  allowed to contain the "domain-performance-state" property partially, i.e.
++  Either all OPP nodes in the OPP table have the "domain-performance-state"
++  property or none of them have it.
 +
+ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+ 
+ / {
+@@ -528,3 +540,60 @@ Example 5: opp-supported-hw
+ 		};
+ 	};
+ };
 +
++Example 7: domain-Performance-state:
++(example: For 1GHz require domain state 1 and for 1.1 & 1.2 GHz require state 2)
 +
-+Example:
-+
-+	domain_opp_table: opp_table {
++/ {
++	domain_opp_table: opp_table0 {
 +		compatible = "operating-points-v2";
 +
 +		opp@1 {
@@ -68,20 +86,44 @@ index 723e1ad937da..5db112fa5d7c 100644
 +		};
 +	};
 +
-+	parent: power-controller@12340000 {
++	foo_domain: power-controller@12340000 {
 +		compatible = "foo,power-controller";
 +		reg = <0x12340000 0x1000>;
 +		#power-domain-cells = <0>;
 +		operating-points-v2 = <&domain_opp_table>;
++	}
++
++	cpu0_opp_table: opp_table1 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			domain-performance-state = <1>;
++		};
++		opp@1100000000 {
++			opp-hz = /bits/ 64 <1100000000>;
++			domain-performance-state = <2>;
++		};
++		opp@1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			domain-performance-state = <2>;
++		};
 +	};
 +
-+	leaky-device@12350000 {
-+		compatible = "foo,i-leak-current";
-+		reg = <0x12350000 0x1000>;
-+		power-domains = <&power 0>;
-+		domain-performance-state = <2>;
-+	};
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
- [1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
++		cpu@0 {
++			compatible = "arm,cortex-a9";
++			reg = <0>;
++			clocks = <&clk_controller 0>;
++			clock-names = "cpu";
++			operating-points-v2 = <&cpu0_opp_table>;
++			power-domains = <&foo_domain>;
++		};
++	};
++};
 -- 
 2.12.0.432.g71c3a4f4ba37
