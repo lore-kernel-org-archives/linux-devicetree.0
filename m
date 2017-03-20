@@ -1,403 +1,129 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 9/9] ASoC: add audio-graph-card support
-Date: Mon, 20 Mar 2017 15:32:24 -0500
-Message-ID: <CAL_JsqJFNnBUDN4AjseZN4zWh1dH30c1ay=0sYAnY3-6td0LSg@mail.gmail.com>
-References: <8760jdivfm.wl%kuninori.morimoto.gx@renesas.com>
- <87shmhhghc.wl%kuninori.morimoto.gx@renesas.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Mon, 20 Mar 2017 20:47:06 +0000
+Message-ID: <20170320204705.GT21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+ <20170319152233.GW21222@n2100.armlinux.org.uk>
+ <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+ <1490010926.2917.59.camel@pengutronix.de>
+ <20170320120855.GH21222@n2100.armlinux.org.uk>
+ <1490018451.2917.86.camel@pengutronix.de>
+ <20170320141705.GL21222@n2100.armlinux.org.uk>
+ <1490030604.2917.103.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <87shmhhghc.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Simon <horms@verge.net.au>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1490030604.2917.103.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 12:54 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->
-> OF-graph base DT binding are used on V4L2, and ALSA SoC is using
-> different style of DT today. Now ALSA SoC supports simple-card driver
-> for generic/simple sound card.
-> In the future, V4L2 / ALSA will support HDMI, and then, DT bindings
-> between V4L2 / ALSA should be merged.
-> This patch adds new Audio Graph Card which is OF-graph base of
-> simple-card
->
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
-> v3 -> v4
->
->  - use "label"
->  - use "dai-format"
->  - don't use prefix
->
->  sound/soc/generic/Kconfig            |   8 +
->  sound/soc/generic/Makefile           |   2 +
->  sound/soc/generic/audio-graph-card.c | 301 +++++++++++++++++++++++++++++++++++
->  3 files changed, 311 insertions(+)
->  create mode 100644 sound/soc/generic/audio-graph-card.c
->
-> diff --git a/sound/soc/generic/Kconfig b/sound/soc/generic/Kconfig
-> index d023959..121a48e 100644
-> --- a/sound/soc/generic/Kconfig
-> +++ b/sound/soc/generic/Kconfig
-> @@ -14,3 +14,11 @@ config SND_SIMPLE_SCU_CARD
->         help
->           This option enables generic simple SCU sound card support.
->           It supports DPCM of multi CPU single Codec system.
-> +
-> +config SND_AUDIO_GRAPH_CARD
-> +       tristate "ASoC Audio Graph sound card support"
-> +       depends on OF
-> +       select SND_SIMPLE_CARD_UTILS
-> +       help
-> +         This option enables generic simple simple sound card support
-> +         with OF-graph DT bindings.
-> diff --git a/sound/soc/generic/Makefile b/sound/soc/generic/Makefile
-> index ee750f3..670068f 100644
-> --- a/sound/soc/generic/Makefile
-> +++ b/sound/soc/generic/Makefile
-> @@ -1,7 +1,9 @@
->  snd-soc-simple-card-utils-objs := simple-card-utils.o
->  snd-soc-simple-card-objs       := simple-card.o
->  snd-soc-simple-scu-card-objs   := simple-scu-card.o
-> +snd-soc-audio-graph-card-objs  := audio-graph-card.o
->
->  obj-$(CONFIG_SND_SIMPLE_CARD_UTILS)    += snd-soc-simple-card-utils.o
->  obj-$(CONFIG_SND_SIMPLE_CARD)          += snd-soc-simple-card.o
->  obj-$(CONFIG_SND_SIMPLE_SCU_CARD)      += snd-soc-simple-scu-card.o
-> +obj-$(CONFIG_SND_AUDIO_GRAPH_CARD)     += snd-soc-audio-graph-card.o
-> diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
-> new file mode 100644
-> index 0000000..07afdfa
-> --- /dev/null
-> +++ b/sound/soc/generic/audio-graph-card.c
-> @@ -0,0 +1,301 @@
-> +/*
-> + * ASoC audio graph sound card support
-> + *
-> + * Copyright (C) 2016 Renesas Solutions Corp.
-> + * Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> + *
-> + * based on ${LINUX}/sound/soc/generic/simple-card.c
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/gpio.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/string.h>
-> +#include <sound/jack.h>
-> +#include <sound/simple_card_utils.h>
-> +
-> +struct graph_card_data {
-> +       struct snd_soc_card snd_card;
-> +       struct graph_dai_props {
-> +               struct asoc_simple_dai cpu_dai;
-> +               struct asoc_simple_dai codec_dai;
-> +       } *dai_props;
-> +       struct snd_soc_dai_link *dai_link;
-> +};
-> +
-> +#define graph_priv_to_dev(priv) ((priv)->snd_card.dev)
-> +#define graph_priv_to_link(priv, i) ((priv)->snd_card.dai_link + (i))
-> +#define graph_priv_to_props(priv, i) ((priv)->dai_props + (i))
-> +
-> +static int asoc_graph_card_startup(struct snd_pcm_substream *substream)
-> +{
-> +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +       struct graph_card_data *priv =  snd_soc_card_get_drvdata(rtd->card);
-> +       struct graph_dai_props *dai_props =
-> +               graph_priv_to_props(priv, rtd->num);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(dai_props->cpu_dai.clk);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = clk_prepare_enable(dai_props->codec_dai.clk);
-> +       if (ret)
-> +               clk_disable_unprepare(dai_props->cpu_dai.clk);
-> +
-> +       return ret;
-> +}
-> +
-> +static void asoc_graph_card_shutdown(struct snd_pcm_substream *substream)
-> +{
-> +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +       struct graph_card_data *priv =  snd_soc_card_get_drvdata(rtd->card);
-> +       struct graph_dai_props *dai_props =
-> +               graph_priv_to_props(priv, rtd->num);
-> +
-> +       clk_disable_unprepare(dai_props->cpu_dai.clk);
-> +
-> +       clk_disable_unprepare(dai_props->codec_dai.clk);
-> +}
-> +
-> +static struct snd_soc_ops asoc_graph_card_ops = {
-> +       .startup = asoc_graph_card_startup,
-> +       .shutdown = asoc_graph_card_shutdown,
-> +};
-> +
-> +static int asoc_graph_card_dai_init(struct snd_soc_pcm_runtime *rtd)
-> +{
-> +       struct graph_card_data *priv =  snd_soc_card_get_drvdata(rtd->card);
-> +       struct snd_soc_dai *codec = rtd->codec_dai;
-> +       struct snd_soc_dai *cpu = rtd->cpu_dai;
-> +       struct graph_dai_props *dai_props =
-> +               graph_priv_to_props(priv, rtd->num);
-> +       int ret;
-> +
-> +       ret = asoc_simple_card_init_dai(codec, &dai_props->codec_dai);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = asoc_simple_card_init_dai(cpu, &dai_props->cpu_dai);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       return 0;
-> +}
-> +
-> +static int asoc_graph_card_dai_link_of(struct device_node *cpu_port,
-> +                                       struct graph_card_data *priv,
-> +                                       int idx)
-> +{
-> +       struct device *dev = graph_priv_to_dev(priv);
-> +       struct snd_soc_dai_link *dai_link = graph_priv_to_link(priv, idx);
-> +       struct graph_dai_props *dai_props = graph_priv_to_props(priv, idx);
-> +       struct asoc_simple_dai *cpu_dai = &dai_props->cpu_dai;
-> +       struct asoc_simple_dai *codec_dai = &dai_props->codec_dai;
-> +       struct device_node *cpu_ep    = of_get_next_child(cpu_port, NULL);
-> +       struct device_node *codec_ep = of_graph_get_remote_endpoint(cpu_ep);
-> +       struct device_node *rcpu_ep = of_graph_get_remote_endpoint(codec_ep);
-> +       int ret;
-> +
-> +       if (rcpu_ep != cpu_ep) {
-> +               dev_err(dev, "remote-endpoint missmatch (%s/%s/%s)\n",
-> +                       cpu_ep->name, codec_ep->name, rcpu_ep->name);
-> +               return -EINVAL;
-> +       }
+On Mon, Mar 20, 2017 at 06:23:24PM +0100, Philipp Zabel wrote:
+> ----------8<----------
+> >From 2830aebc404bdfc9d7fc1ec94e5282d0b668e8f6 Mon Sep 17 00:00:00 2001
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+> Date: Mon, 20 Mar 2017 17:10:21 +0100
+> Subject: [PATCH] media: imx: csi: add sink selection rectangles
+> 
+> Move the crop rectangle to the sink pad and add a sink compose rectangle
+> to configure scaling. Also propagate rectangles from sink pad to crop
+> rectangle, to compose rectangle, and to the source pads both in ACTIVE
+> and TRY variants of set_fmt/selection, and initialize the default crop
+> and compose rectangles.
 
-We should have this check in dtc rather than the kernel.
+Looks fine for the most part.
 
+> -	/*
+> -	 * Modifying the crop rectangle always changes the format on the source
+> -	 * pad. If the KEEP_CONFIG flag is set, just return the current crop
+> -	 * rectangle.
+> -	 */
+> -	if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
+> -		sel->r = priv->crop;
+> -		if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
+> -			cfg->try_crop = sel->r;
+> +	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sel->which);
+> +	crop = __csi_get_crop(priv, cfg, sel->which);
+> +	compose = __csi_get_compose(priv, cfg, sel->which);
 > +
-> +       ret = asoc_simple_card_parse_daifmt(dev, cpu_ep, codec_ep,
-> +                                           NULL, &dai_link->dai_fmt);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       /*
-> +        * we need to consider "mclk-fs" around here
-> +        * see simple-card
-> +        */
-> +
-> +       ret = asoc_simple_card_parse_graph_cpu(cpu_ep, dai_link);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       ret = asoc_simple_card_parse_graph_codec(codec_ep, dai_link);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       ret = snd_soc_of_parse_tdm_slot(cpu_ep,
-> +                                       &cpu_dai->tx_slot_mask,
-> +                                       &cpu_dai->rx_slot_mask,
-> +                                       &cpu_dai->slots,
-> +                                       &cpu_dai->slot_width);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       ret = snd_soc_of_parse_tdm_slot(codec_ep,
-> +                                       &codec_dai->tx_slot_mask,
-> +                                       &codec_dai->rx_slot_mask,
-> +                                       &codec_dai->slots,
-> +                                       &codec_dai->slot_width);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       ret = asoc_simple_card_parse_clk_cpu(dev, cpu_ep, dai_link, cpu_dai);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       ret = asoc_simple_card_parse_clk_codec(dev, codec_ep, dai_link, codec_dai);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       ret = asoc_simple_card_canonicalize_dailink(dai_link);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       ret = asoc_simple_card_set_dailink_name(dev, dai_link,
-> +                                               "%s-%s",
-> +                                               dai_link->cpu_dai_name,
-> +                                               dai_link->codec_dai_name);
-> +       if (ret < 0)
-> +               goto dai_link_of_err;
-> +
-> +       dai_link->ops = &asoc_graph_card_ops;
-> +       dai_link->init = asoc_graph_card_dai_init;
-> +
-> +       dev_dbg(dev, "\tname : %s\n", dai_link->stream_name);
-> +       dev_dbg(dev, "\tformat : %04x\n", dai_link->dai_fmt);
-> +       dev_dbg(dev, "\tcpu : %s / %d\n",
-> +               dai_link->cpu_dai_name,
-> +               dai_props->cpu_dai.sysclk);
-> +       dev_dbg(dev, "\tcodec : %s / %d\n",
-> +               dai_link->codec_dai_name,
-> +               dai_props->codec_dai.sysclk);
-> +
-> +       asoc_simple_card_canonicalize_cpu(dai_link,
-> +                                         priv->snd_card.num_links == 1);
-> +
-> +dai_link_of_err:
-> +       of_node_put(codec_ep);
-> +
-> +       return ret;
-> +}
-> +
-> +static int asoc_graph_card_parse_of(struct device *dev,
-> +                                    struct graph_card_data *priv)
-> +{
-> +       struct device_node *node = dev->of_node;
-> +       struct snd_soc_card *card = &priv->snd_card;
-> +       struct device_node *np;
-> +       int idx = 0;
-> +       int ret;
-> +
-> +       /*
-> +        * we need to consider "widgets", "routing", "mclk-fs" around here
-> +        * see simple-card
-> +        */
-> +
-> +       while ((np = of_parse_phandle(node, "dais", idx))) {
+> +	switch (sel->target) {
+> +	case V4L2_SEL_TGT_CROP:
+> +		/*
+> +		 * Modifying the crop rectangle always changes the format on
+> +		 * the source pads. If the KEEP_CONFIG flag is set, just return
+> +		 * the current crop rectangle.
+> +		 */
+> +		if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
+> +			sel->r = priv->crop;
 
-of_for_each_phandle
+My understanding of KEEP_CONFIG is that the only thing we're not
+allowed to do is to propagate the change downstream.
 
-> +               ret = asoc_graph_card_dai_link_of(np, priv, idx++);
-> +               if (ret < 0)
-> +                       return ret;
-> +       }
-> +
-> +       return asoc_simple_card_parse_card_name(card, NULL);
-> +}
-> +
-> +static int asoc_graph_get_dais_count(struct device *dev)
-> +{
-> +       struct device_node *node = dev->of_node;
-> +       int count = 0;
-> +
-> +       if (of_get_property(node, "dais", NULL)) {
-> +               while (of_parse_phandle(node, "dais", count))
+Since downstream of the crop is the compose, that means the only
+restriction here is that the width and height of the crop window must
+be either equal to the compose width/height, or double the compose
+width/height.  (Anything else would necessitate the compose window
+changing.)
 
-of_for_each_phandle
+However, the crop window can move position within the crop bounds,
+provided it's entirely contained within those crop bounds.
 
-> +                       count++;
-> +       } else {
-> +               count = 1;
+The problem is that this becomes rather more complex it deal with
+(as I'm finding out in my imx219 camera driver) and I'm thinking
+that some of this complexity should probably be in a helper in
+generic v4l2 code.
 
-This should be an error or 0, right?
+I don't know whether this applies (I hope it doesn't) but there's a
+pile of guidelines in Documentation/media/uapi/v4l/vidioc-g-selection.rst
+which describe how a crop/compose rectangle should be adjusted.  As
+I say, I hope they don't apply, because if they do, we would _really_
+need helpers for this stuff, as I don't think having each driver
+implement all these rules would be too successful!
 
-> +       }
+> +			if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
+> +				*crop = sel->r;
+> +			goto out;
+> +		}
 > +
-> +       return count;
-> +}
+> +		csi_try_crop(priv, &sel->r, cfg, infmt, sensor);
 > +
-> +static int asoc_graph_card_probe(struct platform_device *pdev)
-> +{
-> +       struct graph_card_data *priv;
-> +       struct snd_soc_dai_link *dai_link;
-> +       struct graph_dai_props *dai_props;
-> +       struct device *dev = &pdev->dev;
-> +       int num, ret;
+> +		*crop = sel->r;
 > +
-> +       /* Allocate the private data and the DAI link array */
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       num = asoc_graph_get_dais_count(dev);
-> +
-> +       dai_props = devm_kzalloc(dev, sizeof(*dai_props) * num, GFP_KERNEL);
-> +       dai_link  = devm_kzalloc(dev, sizeof(*dai_link)  * num, GFP_KERNEL);
-> +       if (!dai_props || !dai_link)
-> +               return -ENOMEM;
-> +
-> +       priv->dai_props                 = dai_props;
-> +       priv->dai_link                  = dai_link;
-> +
-> +       /* Init snd_soc_card */
-> +       priv->snd_card.owner            = THIS_MODULE;
-> +       priv->snd_card.dev              = dev;
-> +       priv->snd_card.dai_link         = dai_link;
-> +       priv->snd_card.num_links        = num;
-> +
-> +       ret = asoc_graph_card_parse_of(dev, priv);
-> +       if (ret < 0) {
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(dev, "parse error %d\n", ret);
-> +               goto err;
-> +       }
-> +
-> +       snd_soc_card_set_drvdata(&priv->snd_card, priv);
-> +
-> +       ret = devm_snd_soc_register_card(dev, &priv->snd_card);
-> +       if (ret >= 0)
-> +               return ret;
-> +err:
-> +       asoc_simple_card_clean_reference(&priv->snd_card);
-> +
-> +       return ret;
-> +}
-> +
-> +static int asoc_graph_card_remove(struct platform_device *pdev)
-> +{
-> +       struct snd_soc_card *card = platform_get_drvdata(pdev);
-> +       struct graph_card_data *priv = snd_soc_card_get_drvdata(card);
-> +
-> +       return asoc_simple_card_clean_reference(&priv->snd_card);
-> +}
-> +
-> +static const struct of_device_id asoc_graph_of_match[] = {
-> +       { .compatible = "audio-graph-card", },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, asoc_graph_of_match);
-> +
-> +static struct platform_driver asoc_graph_card = {
-> +       .driver = {
-> +               .name = "asoc-audio-graph-card",
-> +               .of_match_table = asoc_graph_of_match,
-> +       },
-> +       .probe = asoc_graph_card_probe,
-> +       .remove = asoc_graph_card_remove,
-> +};
-> +module_platform_driver(asoc_graph_card);
-> +
-> +MODULE_ALIAS("platform:asoc-audio-graph-card");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("ASoC Audio Graph Sound Card");
-> +MODULE_AUTHOR("Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>");
-> --
-> 1.9.1
->
+> +		/* Reset scaling to 1:1 */
+> +		compose->width = crop->width;
+> +		compose->height = crop->height;
+> +		break;
+> +	case V4L2_SEL_TGT_COMPOSE:
+> +		/*
+> +		 * Modifying the compose rectangle always changes the format on
+> +		 * the source pads. If the KEEP_CONFIG flag is set, just return
+> +		 * the current compose rectangle.
+> +		 */
+> +		if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
+> +			sel->r = priv->compose;
+
+I think, with my understanding of how the KEEP_CONFIG flag works, this
+should be:
+			sel->r = *compose;
+
+because if we change the compose rectangle width/height, we would need
+to propagate this to the source pad, and the KEEP_CONFIG description
+says we're not allowed to do that.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
