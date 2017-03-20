@@ -1,99 +1,56 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] soc/tegra: Move Tegra flowctrl driver
-Date: Mon, 20 Mar 2017 18:00:40 +0100
-Message-ID: <20170320170040.GC14787@ulmo.ba.sec>
-References: <1489584715-23138-1-git-send-email-jonathanh@nvidia.com>
- <1489584715-23138-4-git-send-email-jonathanh@nvidia.com>
- <20170320141434.GC28203@ulmo.ba.sec>
- <c0b18931-1377-813d-c8a3-60aea4379aa6@nvidia.com>
+From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 1/4] dt-bindings: Document the dmas and
+ dma-names properties for bcm2835-analog-audio
+Date: Mon, 20 Mar 2017 10:07:34 -0700
+Message-ID: <1490029654.11105.7.camel@crowfest.net>
+References: <20170312063820.19313-1-mzoran@crowfest.net>
+         <20170320165009.ylrohjwettdy2lgf@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c0b18931-1377-813d-c8a3-60aea4379aa6-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320165009.ylrohjwettdy2lgf@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-AbSShOkvfpQ@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2017-03-20 at 11:50 -0500, Rob Herring wrote:
+> On Sat, Mar 11, 2017 at 10:38:17PM -0800, Michael Zoran wrote:
+> > Add documentation for the DMA properties required when using the
+> > PWM controller of the bcm2835 for analog audio output.
+> > 
+> > Signed-off-by: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt | 9
+> > ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
+> > b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
+> > index cf573e85b11d..08fc06fc083a 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
+> > @@ -1,14 +1,21 @@
+> >  BCM2835 PWM controller (Raspberry Pi controller)
+> >  
+> >  Required properties:
+> > -- compatible: should be "brcm,bcm2835-pwm"
+> > +- compatible: should be "brcm,bcm2835-pwm" or "brcm,bcm2835-
+> > analog-audio"
+> 
+> Compatibles are not for selecting usage modes. You should describe
+> the 
+> connection to the pwm that makes it an audio output rather than
+> change 
+> the compatible.
+> 
 
---i7F3eY7HS/tUJxUd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 20, 2017 at 04:37:58PM +0000, Jon Hunter wrote:
->=20
->=20
-> On 20/03/17 14:14, Thierry Reding wrote:
-> > * PGP Signed by an unknown key
-> >=20
-> > On Wed, Mar 15, 2017 at 01:31:53PM +0000, Jon Hunter wrote:
-> > [...]
-> >> +static int __init tegra_flowctrl_init(void)
-> >> +{
-> >> +	/* hardcoded fallback if device tree node is missing */
-> >> +	unsigned long base =3D 0x60007000;
-> >> +	unsigned long size =3D SZ_4K;
-> >> +	struct device_node *np;
-> >> +
-> >> +	if (!soc_is_tegra())
-> >> +		return 0;
-> >> +
-> >> +	np =3D of_find_matching_node(NULL, matches);
-> >> +	if (np) {
-> >> +		struct resource res;
-> >> +
-> >> +		if (of_address_to_resource(np, 0, &res) =3D=3D 0) {
-> >> +			size =3D resource_size(&res);
-> >> +			base =3D res.start;
-> >> +		}
-> >> +
-> >> +		of_node_put(np);
-> >> +	}
-> >> +
-> >> +	tegra_flowctrl_base =3D ioremap_nocache(base, size);
-> >> +
-> >> +	if (!tegra_flowctrl_base)
-> >> +		return -ENXIO;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +early_initcall(tegra_flowctrl_init);
-> >=20
-> > Do we want to implement a hand-off to a proper driver at some point,
-> > similar to what we have for PMC?
->=20
-> Yes I can add, it won't do much apart from remap the io-space, but at
-> least it is registered as a device then.
-
-Yeah, the same is true for PMC, but I find it quite convenient to have a
-struct device * around. Ideally, of course, we'd be able to somehow have
-deferred probe take care of the dependencies so that we wouldn't have to
-muck about with these initcalls, but I don't think we're there yet. That
-"partial" driver would at least be some way in the right direction.
-
-Thierry
-
---i7F3eY7HS/tUJxUd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljQCrgACgkQ3SOs138+
-s6EOdhAAo5zy/nNi4ghmUT0bVNKEtmFdTY7N313qNlRH16Fq9AsVkGaKbEEGANkZ
-JJWDXXvKdP8x1OSyJCpETYsozhz5Nh90Teht5BvA3u+8nIFOKPVPAjebxbSeyAFY
-RERLTJ5dxnEMMmwgTg9wYAIf2gUEQsPmy1UZlKhOe7gBoDdy9i/L2hxe3pO9W3YJ
-csuQrLnd13qm+mmQTZSRoKw92HFsh/xScwEcCUFUVczcgXBC4/9eTTEn2CNbk+Bf
-eOLfkn1fhcL0a4PA8GAVtQmp4H5Io+sEeVG8FweYoHVZrC5F3oQGKUBxZebOaVKw
-9qHzN6UmtzvFzxIwH9ev5QQY+zxSSXd1tdTWjTXZ9t18iV//Hs/LzCf2mS9ZmQbQ
-ZF+e9tt46Ym9BpM9NdakNLtkACh4KG0LJv4TUnSsO4pAmaK9Zzf+iKxsgaRfSYjq
-D0QK5e5CVX5Jcke5ZjBtZsfZ06rwI694zdw07SCGBt/3EvDJIUN22Ud27aosF4Z8
-htBNL4aMGkfiNerOl6jCxZqEU2qLARyEHef8Xd08yK96Q3axczesBkVz6Ba7ECEK
-azOE0CWQNavfdEySSxzdggNshHoTxMeDD3Dy/x9gpwwqLZckgadUvXyLasuyKqTP
-Ro4JxAz6qakMPv2Aij0JR/VB53UEfzsHp1IsjeB2BDTj0K+qc0w=
-=jq8r
------END PGP SIGNATURE-----
-
---i7F3eY7HS/tUJxUd--
+Cool, that's good to know that someone let me know after all this time.
+ And please tell how if DT nodes are an exact documentation of the
+hardware how are virtualized DT nodes like firmware getting into the
+DTs?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
