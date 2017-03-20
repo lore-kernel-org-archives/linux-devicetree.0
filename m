@@ -1,16 +1,16 @@
-From: matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH v5 4/4] fpga pr ip: Platform driver for Altera Partial
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: Re: [PATCH v5 2/4] fpga pr ip: Core driver support for Altera Partial
  Reconfiguration IP.
-Date: Mon, 20 Mar 2017 16:42:56 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1703201634030.2531@mgerlach-VirtualBox>
-References: <1489174827-6033-1-git-send-email-matthew.gerlach@linux.intel.com>        <1489174827-6033-5-git-send-email-matthew.gerlach@linux.intel.com> <20170318192750.716e9b28@crub>
+Date: Mon, 20 Mar 2017 16:49:32 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1703201644110.2531@mgerlach-VirtualBox>
+References: <1489174827-6033-1-git-send-email-matthew.gerlach@linux.intel.com> <1489174827-6033-3-git-send-email-matthew.gerlach@linux.intel.com> <20170318195356.19269415@crub>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170318192750.716e9b28@crub>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anatolij Gustschin <agust@denx.de>
-Cc: atull@kernel.org, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170318195356.19269415@crub>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Cc: atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
@@ -22,42 +22,81 @@ On Sat, 18 Mar 2017, Anatolij Gustschin wrote:
 
 Hi Anatolij,
 
-Thanks for all the feedback.  I will create another patch set 
-incorporating your suggestions.
+More good feedback.  See below.
 
 
-> On Fri, 10 Mar 2017 11:40:27 -0800
-> matthew.gerlach@linux.intel.com matthew.gerlach@linux.intel.com wrote:
+> thanks for the patches. Please see some comments below.
+>
+> On Fri, 10 Mar 2017 11:40:25 -0800
+> matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
 >
 > ...
->> +#include "altera-pr-ip-core.h"
+>> +	if (!(info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
+>> +		pr_err("%s Partial Reconfiguration flag not set\n", __func__);
 >
-> Shouldn't we put this header to include/linux? Compiling the
-> out-of-tree modules using alt_pr_register/alt_pr_unregister
-> will not work if this header is in drivers/fpga.
-
-I was not sure if someone would want to access these functions outside of 
-drivers/fpga.  I think it does make sense to move it to 
-include/linux/fpga.
-
+> please use dev_err() here.
 >
 > ...
+>> +	if (val & ALT_PR_CSR_PR_START) {
+>> +		pr_err("%s Partial Reconfiguration already started\n",
+>
+> dev_err(), too.
+
+Good catch on both of these pr_err().  dev_err() would be better.
+>
+> ...
+>> +static int alt_pr_fpga_write_complete(struct fpga_manager *mgr,
+>> +				      struct fpga_image_info *info)
+>> +{
+>> +	u32 i;
 >> +
->> +module_platform_driver(alt_pr_platform_driver);
+>> +	for (i = 0; i < info->config_complete_timeout_us; i++) {
+>> +		switch (alt_pr_fpga_state(mgr)) {
+>> +		case FPGA_MGR_STATE_WRITE_ERR:
+>> +			return -EIO;
+>> +
+>> +		case FPGA_MGR_STATE_OPERATING:
+>> +			dev_info(&mgr->dev,
+>> +				 "successful partial reconfiguration\n");
+>> +			return 0;
+>> +
+>> +		default:
+>> +			break;
+>> +		}
+>> +		udelay(1);
+>> +	}
+>> +	dev_err(&mgr->dev, "timed out waiting for write to complete\n");
+>> +	return -ETIMEDOUT;
+>> +}
 >
-> Please add MODULE_LICENSE("GPL v2") here. Otherwise, when built as
-> a module it cannot be loaded because the alt_pr register/unregister
-> functions are exported as GPL only. Also please add module author
-> and description.
+> we will always get timed out error if info->config_complete_timeout_us
+> is zero. Can we change to
+> 	u32 i = 0;
+> 	...
+> 	do {
+> 		...
+> 	} while (info->config_complete_timeout_us > i++);
+> ?
+
+This seems more than reasonable to me.
+
 >
-
-Got it. Thanks!
-
+> ...
+>> diff --git a/drivers/fpga/altera-pr-ip-core.h b/drivers/fpga/altera-pr-ip-core.h
+>> new file mode 100644
+>> index 0000000..3810a90
+>> --- /dev/null
+>> +++ b/drivers/fpga/altera-pr-ip-core.h
+>
+> Should we move this header to include/linux/? We can use register/
+> unregister functions in other drivers (PCIe) outside drivers/fpga
+> then.
+>
 > Thanks,
 >
 > Anatolij
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
