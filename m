@@ -1,39 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 06/11] Documentation: DT: bindings:
- input: touschcreen: remove sun4i documentation
-Date: Mon, 20 Mar 2017 10:09:06 -0500
-Message-ID: <20170320150906.piixax6ejrpm6ljv@rob-hp-laptop>
-References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
- <20170310103921.19469-7-quentin.schulz@free-electrons.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 4/7] arm: dts: r7s72100: Add pin controller node
+Date: Mon, 20 Mar 2017 15:17:11 +0000
+Message-ID: <SG2PR06MB1165B74ADB66F43FC53FB54A8A3A0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1487610788-6939-5-git-send-email-jacopo+renesas@jmondi.org>
+ <3dd69ef5-e8a4-b69c-b4fa-1be6ba777cfa@jmondi.org>
+ <SG2PR06MB1165DCCA724AD6A8325862668A280@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdVdiMWNq1or9JgzAKfWXsDg1VD9ehG6U=E_snes04Y1Mg@mail.gmail.com>
+ <SG2PR06MB1165E8FAE15523F7D3EC83718A2B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170320134755.GB30223@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBE7BX7DAKGQESNT4WXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170310103921.19469-7-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170320134755.GB30223@w540>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: jacopo <jacopo@jmondi.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 11:39:16AM +0100, Quentin Schulz wrote:
-> This patch removes the sun4i touchscreen controller binding
-> documentation since it has been merged with the sun4i GPADC binding
-> documentation.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> 
-> added in v2
-> 
->  .../bindings/input/touchscreen/sun4i.txt           | 38 ----------------------
->  1 file changed, 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+SGkgSmFjb3BvLA0KDQpNb25kYXksIE1hcmNoIDIwLCAyMDE3LCBqYWNvcG8gd3JvdGU6DQo+ID4g
+SSB3YXMgdGhpbmtpbmcgSSB3YXMgZ29pbmcgdG8gcG9zdCBzb21lIERUIGV4YW1wbGVzIG9uIGVM
+aW51eC5vcmcNCj4gPiBhbnl3YXksIHNvIG9uZSBvZiB0aGVtIHdvdWxkIGp1c3QgYmUgdGhpcyBS
+Wi9BMUwgZml4Lg0KPiA+DQo+IA0KPiBJZiB3ZSBkbyBhbGwgYWdyZWUgb24gaGF2aW5nIFJaL0Ex
+SCB1cHN0cmVhbSBhbmQgbGV0IGRpZmZlcmVuY2VzIGJldHdlZW4NCj4gU29DcyB0byBiZSBoYW5k
+bGVkIGluIHRoZSBCU1AvZG93bnN0cmVhbSBib2FyZCBmaWxlcywgSSdsbCBzZW5kDQo+IHYyIHRh
+cmdldGluZyB0aGF0IHNwZWNpZmljIFNvQyBvbmx5DQoNCg0KSSdtIGZpbmUgd2l0aCB0aGF0Lg0K
+DQogICAgICAuLi5vZiBjb3Vyc2Ugc2luY2UgaXQgd2FzIG15IHN1Z2dlc3Rpb24gOykNCg0KDQpD
+aHJpcw0KDQo=
