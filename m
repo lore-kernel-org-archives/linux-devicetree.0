@@ -1,89 +1,46 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v4 9/9] mfd: axp20x: add
- CHRG_CTRL1/2/3 to writeable regs for AXP20X/AXP22X
-Date: Mon, 20 Mar 2017 10:44:16 +0000
-Message-ID: <20170320104416.ph2wbvsie5tj53up@dell>
-References: <20170320081653.8884-1-quentin.schulz@free-electrons.com>
- <20170320081653.8884-10-quentin.schulz@free-electrons.com>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 4/4] mfd: mt6397: Align the placement at which the
+ mfd_cell of LED is defined
+Date: Mon, 20 Mar 2017 10:45:23 +0000
+Message-ID: <20170320104523.wt7t2rpqegdfqwfo@dell>
+References: <1489992447-13007-1-git-send-email-sean.wang@mediatek.com>
+ <1489992447-13007-5-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBA7FX3DAKGQEHZP46UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170320081653.8884-10-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org, liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1489992447-13007-5-git-send-email-sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sean.wang@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, keyhaede@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Mar 2017, Quentin Schulz wrote:
-
-> The CHRG_CTRL1 and CHRG_CTRL2 registers are made for controlling
-> different battery charging settings such as the constant current charge
-> value.
->=20
-> The AXP22X also have a third register CHRG_CTRL3 which has settings for
-> battery charging too.
->=20
-> This adds the CHRG_CTRL1, CHRG_CTRL2 and CHRG_CTRL3 registers to the
-> list of writeable registers for AXP20X and AXP22X PMICs.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->=20
-> v2:
->  - added AXP20X_CHRG_CTRL2 and AXP20X_CHRG_CTRL3 to the writeable
->  registers table,
->  - removed added reg range for ADC data in volatile regs range,
->=20
->  drivers/mfd/axp20x.c | 2 ++
->  1 file changed, 2 insertions(+)
-
-Applied, thanks.
-
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 37643b1..5ba3b04 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -68,6 +68,7 @@ static const struct regmap_access_table axp152_volatile=
-_table =3D {
-> =20
->  static const struct regmap_range axp20x_writeable_ranges[] =3D {
->  	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
-> +	regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL2),
->  	regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
->  	regmap_reg_range(AXP20X_RDC_H, AXP20X_OCV(AXP20X_OCV_MAX)),
->  };
-> @@ -94,6 +95,7 @@ static const struct regmap_access_table axp20x_volatile=
-_table =3D {
->  /* AXP22x ranges are shared with the AXP809, as they cover the same rang=
-e */
->  static const struct regmap_range axp22x_writeable_ranges[] =3D {
->  	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
-> +	regmap_reg_range(AXP20X_CHRG_CTRL1, AXP22X_CHRG_CTRL3),
->  	regmap_reg_range(AXP20X_DCDC_MODE, AXP22X_BATLOW_THRES1),
->  };
-> =20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+T24gTW9uLCAyMCBNYXIgMjAxNywgc2Vhbi53YW5nQG1lZGlhdGVrLmNvbSB3cm90ZToKCj4gRnJv
+bTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPgo+IAo+IEFsaWduIHRoZSBwbGFj
+ZW1lbnQgYXMgd2hpY2ggdGhlIG1mZF9jZWxsIG9mIExFRCBpcyBkZWZpbmVkIGFzIHRoZSBvdGhl
+cgo+IG1lbWJlcnMgZG9uZSBvbiB0aGUgc3RydWN0dXJlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNl
+YW4gV2FuZyA8c2Vhbi53YW5nQG1lZGlhdGVrLmNvbT4KPiBBY2tlZC1ieTogTGVlIEpvbmVzIDxs
+ZWUuam9uZXNAbGluYXJvLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYyB8
+IDMgKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkK
+CkFwcGxpZWQsIHRoYW5rcy4KCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL210NjM5Ny1jb3Jl
+LmMgYi9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jCj4gaW5kZXggOGU2MDFjOC4uMDRhNjAxZiAx
+MDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jCj4gKysrIGIvZHJpdmVycy9t
+ZmQvbXQ2Mzk3LWNvcmUuYwo+IEBAIC00Nyw4ICs0Nyw3IEBACj4gIAl7Cj4gIAkJLm5hbWUgPSAi
+bXQ2MzIzLXJlZ3VsYXRvciIsCj4gIAkJLm9mX2NvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzIz
+LXJlZ3VsYXRvciIKPiAtCX0sCj4gLQl7Cj4gKwl9LCB7Cj4gIAkJLm5hbWUgPSAibXQ2MzIzLWxl
+ZCIsCj4gIAkJLm9mX2NvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzIzLWxlZCIKPiAgCX0sCgot
+LSAKTGVlIEpvbmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQK
+TGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBM
+aW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
