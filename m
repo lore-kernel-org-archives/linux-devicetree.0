@@ -1,90 +1,73 @@
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: Re: [PATCH v6 0/5] Implement clocksource for rockchip SoC using
- rockchip timer
-Date: Mon, 20 Mar 2017 16:18:49 +0300
-Message-ID: <F14EA552-9783-4083-A00F-9151AB7E5C99@gmail.com>
-References: <1485866596-32254-1-git-send-email-al.kochet@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485866596-32254-1-git-send-email-al.kochet@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Huang Tao <huangtao@rock-chips.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Caesar Wang <wxt@rock-chips.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Mon, 20 Mar 2017 14:20:16 +0100
+Message-ID: <1490016016.2917.68.camel@pengutronix.de>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170318192258.GL21222@n2100.armlinux.org.uk>
+ <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+ <20170319121402.GS21222@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170319121402.GS21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sIERhbmllbC4KClNvcnJ5IGZvciBib3RoZXJpbmcgeW91LCBidXQgY291bGQgeW91IHBs
-ZWFzZSB0YWtlIGEgbG9vayBhdCB2NlsxXSBzZXJpZXMgYW5kIHRlbGwgd2hhdCBkbyB5b3UgdGhp
-bmsgYWJvdXQgaXQ/Ckkgc2VlIHlvdXIgY29tbWl0WzJdIGluIHRoZSBnaXQsIGJ1dCBJIGRvbuKA
-mXQgdW5kZXJzdGFuZCB3ZWxsIGhvdyB0byB1c2UgaXQgaW4gcm9ja2NoaXAgZHJpdmVyLgoKWzFd
-IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE3LzEvMzEvNDAxClsyXSBodHRwczovL2dpdC5rZXJu
-ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9uZXh0L2xpbnV4LW5leHQuZ2l0L2NvbW1p
-dC9kcml2ZXJzL2Nsb2Nrc291cmNlP2lkPTM3NmJjMjcxNTBmMTgwZDlmNWVkZGVjNmExNDExNzc4
-MDE3NzU4OWQKClJlZ2FyZHMsCkFsZXhhbmRlci4KCj4gMzEg0Y/QvdCyLiAyMDE3INCzLiwg0LIg
-MTU6NDMsIEFsZXhhbmRlciBLb2NoZXRrb3YgPGFsLmtvY2hldEBnbWFpbC5jb20+INC90LDQv9C4
-0YHQsNC7KNCwKToKPiAKPiBGcm9tOiBBbGV4YW5kZXIgS29jaGV0a292IDxha29jaGV0a292QGxp
-bnRlY2gucnU+Cj4gCj4gSGVsbG8sIERhbmllbCwgSGVpa28uCj4gCj4gSGVyZSBpcyB0cnkgNiA6
-KSBUaGFua3MgYSBsb3QgZm9yIGhlbHBpbmcgbWUgdG8gYnJpbmcgdGhlIGNvZGUKPiBpbnRvIGtl
-cm5lbCEKPiAKPiBUaGlzIHBhdGNoIHNlcmllcyBjb250YWluOgo+IC0gZGV2aWNldHJlZSBiaW5k
-aW5ncyBjbGFyaWZpY2F0aW9uIGZvciByb2NrY2hpcCB0aW1lcnMKPiAtIGR0cyBmaWxlcyBmaXhl
-cyBmb3IgcmszMjI4LWV2YiwgcmszMjI5LWV2YiBhbmQgcmszMTg4Cj4gLSBpbXBsZW1lbnRhdGlv
-biBvZiBjbG9ja3NvdXJjZSBhbmQgc2NoZWQgY2xvY2sgZm9yIHJvY2tjaGlwIFNvQwo+IAo+IFRo
-ZSBjbG9jayBzdXBwbHlpbmcgdGhlIGFybS1nbG9iYWwtdGltZXIgb24gdGhlIHJrMzE4OCBpcyBj
-b21pbmcgZnJvbSB0aGUKPiB0aGUgY3B1IGNsb2NrIGl0c2VsZiBhbmQgdGh1cyBjaGFuZ2VzIGl0
-cyByYXRlIGV2ZXJ5dGltZSBjcHVmcmVxIGFkanVzdHMKPiB0aGUgY3B1IGZyZXF1ZW5jeSBtYWtp
-bmcgdGhpcyB0aW1lciB1bnN1aXRhYmxlIGFzIGEgc3RhYmxlIGNsb2Nrc291cmNlLgo+IAo+IFRo
-ZSByazMxODgsIHJrMzI4OCBhbmQgZm9sbG93aW5nIHNvY3Mgc2hhcmUgYSBzZXBhcmF0ZSB0aW1l
-ciBibG9jayBhbHJlYWR5Cj4gaGFuZGxlZCBieSB0aGUgcm9ja2NoaXAtdGltZXIgZHJpdmVyLiBU
-aGVyZWZvcmUgYWRhcHQgdGhpcyBkcml2ZXIgdG8gYWxzbwo+IGJlIGFibGUgdG8gYWN0IGFzIGNs
-b2Nrc291cmNlIG9uIHJrMzE4OC4KPiAKPiBJbiBvcmRlciB0byB0ZXN0IGNsb2Nrc291cmNlIHlv
-dSBjYW4gcnVuIGZvbGxvd2luZyBjb21tYW5kcyBhbmQgY2hlY2sKPiBob3cgbXVjaCB0aW1lIGl0
-IHRha2UgaW4gcmVhbC4gT24gcmszMTg4IGl0IHRha2UgYWJvdXQgfjQ1IHNlY29uZHMuCj4gCj4g
-ICAgICAgY3B1ZnJlcS1zZXQgLWYgMS42R0haCj4gICAgICAgZGF0ZTsgc2xlZXAgNjA7IGRhdGUK
-PiAKPiByazMyODggKGFuZCBwcm9iYWJseSBhbnl0aGluZyBuZXdlcikgaXMgaXJyZWxldmFudCB0
-byB0aGlzIHBhdGNoLAo+IGFzIGl0IGhhcyB0aGUgYXJjaCB0aW1lciBpbnRlcmZhY2UuIFRoaXMg
-cGF0Y2ggbWF5IGJlIHVzZWZ1bGwKPiBmb3IgQ29ydGV4LUE5L0E1IGJhc2VkIHBhcnRzLgo+IAo+
-IFJlZ2FyZHMsCj4gQWxleGFuZGVyLgo+IAo+IENoYW5nZXMgaW4gdjY6Cj4gLSBSZW1vdmVkIFJl
-dmlld2VkLWJ5OiBIZWlrbyBTdMO8Ym5lciA8aGVpa29Ac250ZWNoLmRlPiB0YWcKPiAtIE1lcmdl
-IDUvOCwgNi84LCA3LzgsIDgvOSBpbnRvIHNpbmdsZSBmaWxlCj4gLSBzcGxpdCBpbml0IHBhdGhz
-IGludG8gcmtfY2xrZXZ0X2luaXQoKSBhbmQgcmtfY2xrc3JjX2luaXQoKQo+ICBzbyB0aGUgZHJp
-dmVyIGNvZGUgY291bGQgYmUgYWRvcHRlZCB0byBDTE9DS0VWRU5UX09GX0RFQ0xBUkUoKQo+IC0g
-Y2xvY2tldmVudHMgaW1wbGVtZW50ZWQgdXNpbmcgY2xvY2tzb3VyY2VfbW1pb19pbml0KCkKPiAt
-IGZpeGVkIGNvbW1pdCBtZXNzYWdlIGZvciA0LzggKHRoYW5rcyBhIGxvdCBEYW5pZWwpCj4gCj4g
-Q2hhbmdlcyBpbiB2NToKPiAtIEFkZCBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmggYXQga2Vy
-bmVsLm9yZz4gdG8gMS84Cj4gIGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9s
-aW51eC1yb2NrY2hpcC8yMDE2LURlY2VtYmVyLzAxMzMwOC5odG1sCj4gLSBBZGQgUmV2aXdlZC1i
-eTogSGVpa28gU3TDvGJuZXIgPGhlaWtvQHNudGVjaC5kZT4gdG8gc2VyaWVzCj4gLSBjaGFuZ2Ug
-dGltZXIgY29tcGF0aWJsZSBwcm9wZXJ0eSBpbiB0aGUgcmszMjJ4LmR0c2kgMi84Cj4gIGh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1yb2NrY2hpcC8yMDE3LUphbnVh
-cnkvMDEzNzg0Lmh0bWwKPiAtIHVwZGF0ZWQgY29tbWVudCBtZXNzYWdlIGZvciA0LzgKPiAgaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LXJvY2tjaGlwLzIwMTctSmFu
-dWFyeS8wMTM3ODYuaHRtbAo+IC0gdXBkYXRlZCBjb21tZW50IG1lc3NhZ2UgZm9yIDUvOAo+ICBo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtcm9ja2NoaXAvMjAxNy1K
-YW51YXJ5LzAxMzc4Ny5odG1sCj4gLSBmaXhlZCBidWlsZCBlcnJvciBmb3IgOC84Cj4gIGh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1yb2NrY2hpcC8yMDE3LUphbnVh
-cnkvMDEzNzg5Lmh0bWwKPiAKPiBBbGV4YW5kZXIgS29jaGV0a292ICg1KToKPiAgZHQtYmluZGlu
-Z3M6IGNsYXJpZnkgY29tcGF0aWJsZSBwcm9wZXJ0eSBmb3Igcm9ja2NoaXAgdGltZXJzCj4gIEFS
-TTogZHRzOiByb2NrY2hpcDogdXBkYXRlIGNvbXBhdGlibGUgcHJvcGVydHkgZm9yIHJrMzIyeCB0
-aW1lcgo+ICBjbG9ja3NvdXJjZS9kcml2ZXJzL3JvY2tjaGlwX3RpbWVyOiBpbXBsZW1lbnQgY2xv
-Y2tzb3VyY2UgdGltZXIKPiAgQVJNOiBkdHM6IHJvY2tjaGlwOiBhZGQgdGltZXIgZW50cmllcyB0
-byByazMxODggU29DCj4gIEFSTTogZHRzOiByb2NrY2hpcDogZGlzYWJsZSBhcm0tZ2xvYmFsLXRp
-bWVyIGZvciByazMxODgKPiAKPiAuLi4vYmluZGluZ3MvdGltZXIvcm9ja2NoaXAscmstdGltZXIu
-dHh0ICAgICAgICAgICB8ICAgMTIgKy0KPiBhcmNoL2FybS9ib290L2R0cy9yazMxODguZHRzaSAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgMTcgKysKPiBhcmNoL2FybS9ib290L2R0cy9yazMyMngu
-ZHRzaSAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKy0KPiBkcml2ZXJzL2Nsb2Nrc291cmNl
-L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+IGRyaXZlcnMvY2xvY2tz
-b3VyY2Uvcm9ja2NoaXBfdGltZXIuYyAgICAgICAgICAgICAgIHwgIDIxOCArKysrKysrKysrKysr
-Ky0tLS0tLQo+IDUgZmlsZXMgY2hhbmdlZCwgMTg1IGluc2VydGlvbnMoKyksIDY1IGRlbGV0aW9u
-cygtKQo+IAo+IC0tIAo+IDEuNy45LjUKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Sun, 2017-03-19 at 12:14 +0000, Russell King - ARM Linux wrote:
+> On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
+> > On 03/18/2017 12:22 PM, Russell King - ARM Linux wrote:
+> > >0:00:01.955927879 20954  0x15ffe90 INFO                    v4l2 gstv4l2object.c:3811:gst_v4l2_object_get_caps:<v4l2src0> probed caps: video/x-bayer, format=(string)rggb, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)I420, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)YV12, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)BGR, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=
+ (string)RGB, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1
+> > >
+> > >    despite the media pipeline actually being configured for 60fps.
+> > >
+> > >    Forcing it by adjusting the pipeline only results in gstreamer
+> > >    failing, because it believes that v4l2 is unable to operate at
+> > >    60fps.
+> > >
+> > >    Also note the complaints from v4l2src about the non-compliance...
+> > 
+> > Thanks, I've fixed most of v4l2-compliance issues, but this is not
+> > done yet. Is that something you can help with?
+> 
+> I've looked at this, and IMHO it's yet another media control API mess.
+> 
+> - media-ctl itself allows setting the format on subdev pads via
+>   struct v4l2_subdev_format.
+> 
+> - struct v4l2_subdev_format contains a struct v4l2_mbus_framefmt.
+> 
+> - struct v4l2_mbus_framefmt contains:
+>   * @width:      frame width
+>   * @height:     frame height
+>   * @code:       data format code (from enum v4l2_mbus_pixelcode)
+>   * @field:      used interlacing type (from enum v4l2_field)
+>   * @colorspace: colorspace of the data (from enum v4l2_colorspace)
+>   * @ycbcr_enc:  YCbCr encoding of the data (from enum v4l2_ycbcr_encoding)
+>   * @quantization: quantization of the data (from enum v4l2_quantization)
+>   * @xfer_func:  transfer function of the data (from enum v4l2_xfer_func)
+> 
+> - media-ctl sets width, height, code and field, but nothing else.
+> 
+> We're already agreed that the fields that media-ctl are part of the
+> format negotiation between the ultimate source, flowing down to the
+> capture device.  However, there's no support in media-ctl to deal
+> with these other fields - so media-ctl in itself is only half-
+> implemented.
+
+To set and read colorimetry information:
+https://patchwork.linuxtv.org/patch/39350/
+
+regards
+Philipp
