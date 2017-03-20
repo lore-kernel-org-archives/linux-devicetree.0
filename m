@@ -1,86 +1,66 @@
 From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: add arm/arm64 include symlinks
-Date: Mon, 20 Mar 2017 16:03:37 -0700
-Message-ID: <20170320230337.GB78325@google.com>
-References: <20170226060058.5841-1-heiko@sntech.de>
- <20170226060058.5841-2-heiko@sntech.de>
+Subject: Re: [PATCH v2 1/6] arm64: dts: Add symlinks for cros-ec-keyboard and
+ cros-ec-sbs
+Date: Mon, 20 Mar 2017 16:07:48 -0700
+Message-ID: <20170320230748.GA97915@google.com>
+References: <20170210010521.78872-1-briannorris@chromium.org>
+ <20170210010521.78872-2-briannorris@chromium.org>
+ <CAOesGMiim2WFfEAg-bJmWTwWn69=V_GuEg6AxsxPYMyzd3KFUw@mail.gmail.com>
+ <1529949.5djtX72aeJ@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170226060058.5841-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1529949.5djtX72aeJ@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+In case this thread is easier to notice...
 
-On Sun, Feb 26, 2017 at 07:00:58AM +0100, Heiko Stuebner wrote:
-> Allow including of dtsi files in an architecture-independent manner.
-> Some dtsi files may be shared between architectures and one suggestion
-> was to have symlinks and let these includes get accessed via a
->     #include <arm64/foo.dtsi>
-> So add the necessary symlinks for arm32.
+Olof,
+
+On Mon, Feb 27, 2017 at 07:20:48PM +0100, Heiko Stuebner wrote:
+> Am Dienstag, 21. Februar 2017, 15:47:31 CET schrieb Olof Johansson:
+> > On Thu, Feb 9, 2017 at 5:05 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> > > From: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > 
+> > > We'd like to be able to use the cros-ec-keyboard.dtsi and
+> > > cros-ec-sbs.dtsi snippets for arm64 devices.  Currently those files live
+> > > in the arm/boot/dts directory.
+> > > 
+> > > Let's follow the convention set by commit 8ee57b8182c4 ("ARM64: dts:
+> > > vexpress: Use a symlink to vexpress-v2m-rs1.dtsi from arch=arm") and use
+> > > a symlink.  Note that in this case we put the files in a new
+> > > "include/common" directory since these snippets may need to be
+> > > referenced by dts files in many different subdirectories.
+> > 
+> > I'd rather have something like this:
+> > 
+> > https://marc.info/?m=147547436324674&w=2
+> > 
+> > Instead of having everybody move things over. I.e. make it easy to
+> > refer to the arm version from arm64 instead of creating a "common"
+> > layer inbetween.
 > 
-> Suggested-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
-> Suggested by Olof in response to the patch adding direct symlinks
-> for cros-ec includes.
+> just so it gets noticed, I've done and tested [0], which hopefully should
+> implement your suggestions above.
 > 
-> Tested with adapted rk3399-Gru dtsi files and while we only need this arm64
-> version right now, it might make sense to already have both the arm32 and
-> arm64 versions ready.
+> If that looks ok, how do you want that picked up? Should I just include
+> them in my regular rockchip branches or do you to pick them into some
+> immutable branch, if other surprise-users turn up in time for 4.12?
 
-FWIW, tested fine here too (for the same platform).
-
-I guess this works fine, if it makes people happy. It also allows some
-weird #include paths. e.g.:
-
-#include <arm64/include/arm/include/arm64/rockchip/rk3399.dtsi>
-
-I guess we can call that an entertaining feature, and not a bug?
-
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-Where should this go? I'd like not to wait another few months before
-sending my Gru/Kevin DTS again.
+Ping? I suppose we can prevent users in 4.12 by never merging this :)
 
 Brian
 
->  arch/arm64/boot/dts/include/arm   | 1 +
->  arch/arm64/boot/dts/include/arm64 | 1 +
->  2 files changed, 2 insertions(+)
->  create mode 120000 arch/arm64/boot/dts/include/arm
->  create mode 120000 arch/arm64/boot/dts/include/arm64
 > 
-> diff --git a/arch/arm64/boot/dts/include/arm b/arch/arm64/boot/dts/include/arm
-> new file mode 120000
-> index 000000000000..cf63d80e2b93
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/include/arm
-> @@ -0,0 +1 @@
-> +../../../../arm/boot/dts
-> \ No newline at end of file
-> diff --git a/arch/arm64/boot/dts/include/arm64 b/arch/arm64/boot/dts/include/arm64
-> new file mode 120000
-> index 000000000000..a96aa0ea9d8c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/include/arm64
-> @@ -0,0 +1 @@
-> +..
-> \ No newline at end of file
-> -- 
-> 2.11.0
 > 
+> [0] http://lists.infradead.org/pipermail/linux-rockchip/2017-February/014226.html
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
