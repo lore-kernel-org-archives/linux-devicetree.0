@@ -1,77 +1,65 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v4 1/7] coresight: bindings for CPU debug module
-Date: Mon, 20 Mar 2017 19:49:53 +0800
-Message-ID: <20170320114953.GA19581@leoy-linaro>
-References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
- <1489762943-25849-2-git-send-email-leo.yan@linaro.org>
- <20170317161335.GB20435@linaro.org>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH] ASoC: wm8903: add regulator handling
+Date: Mon, 20 Mar 2017 11:51:55 +0000
+Message-ID: <20170320115155.GQ6986@localhost.localdomain>
+References: <20170320091352.4115-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20170317161335.GB20435@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Suzuki.Poulose@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, sudeep.holla@arm.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
+In-Reply-To: <20170320091352.4115-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Stephen Warren <swarren@nvidia.com>, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathieu,
-
-On Fri, Mar 17, 2017 at 10:13:35AM -0600, Mathieu Poirier wrote:
-
-[...]
-
-> > +- compatible : should be
-> > +	     * "arm,coresight-cpu-debug"; supplemented with "arm,primecell"
-> > +	       since this driver is using the AMBA bus interface.
+On Mon, Mar 20, 2017 at 10:13:52AM +0100, Linus Walleij wrote:
+> The WM8903 has four different voltage inputs: AVDD, CPVDD, DBVDD
+> and DCVDD. On the Qualcomm APQ8060 Dragonboard these are all
+> supplied from proper regulators and thus need activating and
+> binding.
 > 
-> This description needs to be refactored - see my comment from an earlier post
-> for more details.
-
-I have refined this description according to your suggestion:
-http://archive.armlinux.org.uk/lurker/message/20170301.154550.f55a09d5.en.html
-
-Am I missing anthing for this?
-
-> > +- reg : physical base address and length of the register set.
-> > +
-> > +- clocks : the clock associated to this component.
-> > +
-> > +- clock-names : the name of the clock referenced by the code. Since we are
-> > +                using the AMBA framework, the name of the clock providing
-> > +		the interconnect should be "apb_pclk" and the clock is
-> > +		mandatory. The interface between the debug logic and the
-> > +		processor core is clocked by the internal CPU clock, so it
-> > +		is enabled with CPU clock by default.
-> > +
-> > +- cpu : the cpu phandle the debug module is affined to. When omitted
-> > +	the module is considered to belong to CPU0.
-> > +
-> > +Optional properties:
+> This is a quick-and-dirty solution just grabbing and enabling the
+> regulator supplies on probe() and disabling them on remove() and
+> the errorpath. More elaborate power management is likely possible.
 > 
-> s/properties/property
+> I assume the nVidia designs using this codec have some hard-wired
+> always-on power and will be happy with using the dummy regulators
+> for this. But someone from the nVidia camp should probably check
+> whether they can bind these to proper regulators instead.
 > 
-> > +
-> > +- power-domains: a phandle to power domain node for debug module. We can
-> > +		 use "nohlt" to ensure CPU power domain is enabled.
+> We also amend the DT binding document. A small change like this
+> does not warrant a separate patch for augmenting these.
 > 
-> The "power-domains" property is to take care of the debug power domain.  The
-> "nohlt" is to make sure registers in the CPU power domain are accessible - both
-> are independent from one another.  As such the description for this binding
-> shoudl be:
-> 
-> "a phandle to the debug power domain".
+> Cc: devicetree@vger.kernel.org
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Stephen Warren <swarren@nvidia.com>
+> Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Mark: I was thinking about adding runtime PM for disabling
+> these regulators when unused, but I'm uncertain about the
+> interaction with DAPM in that regard. This atleast gives us
+> control over the supplies.
 
-Will fix for upper two comments.
+DAPM will hold a pm_runtime reference whilst the chip is active
+so usually there isn't really much interaction to worry about.
+
+I think the patch looks fine for a first pass adding the supplies
+to me, someone can always add the suspend/resume and controlling
+the supplies across that when they need it.
+
+Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 
 Thanks,
-Leo Yan
+Charles
