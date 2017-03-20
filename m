@@ -1,14 +1,16 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] ASoC: wm8903: add regulator handling
-Date: Mon, 20 Mar 2017 11:51:55 +0000
-Message-ID: <20170320115155.GQ6986@localhost.localdomain>
-References: <20170320091352.4115-1-linus.walleij@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 5/5] ARM: dts: sun8i: Update
+	audio-routing with renamed widgets
+Date: Mon, 20 Mar 2017 19:53:37 +0800
+Message-ID: <CAGb2v66ZLeoSQt0y2QVcDEBujS7JLQAptDq1WL8f8rkwSni6uw@mail.gmail.com>
+References: <20170318075509.3836-1-mylene.josserand@free-electrons.com>
+ <20170318075509.3836-6-mylene.josserand@free-electrons.com>
+ <20170320113817.rcphcvrizi4yphhe@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20170320091352.4115-1-linus.walleij@linaro.org>
+In-Reply-To: <20170320113817.rcphcvrizi4yphhe@sirena.org.uk>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -18,48 +20,19 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Stephen Warren <swarren@nvidia.com>, Liam Girdwood <lgirdwood@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 10:13:52AM +0100, Linus Walleij wrote:
-> The WM8903 has four different voltage inputs: AVDD, CPVDD, DBVDD
-> and DCVDD. On the Qualcomm APQ8060 Dragonboard these are all
-> supplied from proper regulators and thus need activating and
-> binding.
-> 
-> This is a quick-and-dirty solution just grabbing and enabling the
-> regulator supplies on probe() and disabling them on remove() and
-> the errorpath. More elaborate power management is likely possible.
-> 
-> I assume the nVidia designs using this codec have some hard-wired
-> always-on power and will be happy with using the dummy regulators
-> for this. But someone from the nVidia camp should probably check
-> whether they can bind these to proper regulators instead.
-> 
-> We also amend the DT binding document. A small change like this
-> does not warrant a separate patch for augmenting these.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Stephen Warren <swarren@nvidia.com>
-> Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Mark: I was thinking about adding runtime PM for disabling
-> these regulators when unused, but I'm uncertain about the
-> interaction with DAPM in that regard. This atleast gives us
-> control over the supplies.
-
-DAPM will hold a pm_runtime reference whilst the chip is active
-so usually there isn't really much interaction to worry about.
-
-I think the patch looks fine for a first pass adding the supplies
-to me, someone can always add the suspend/resume and controlling
-the supplies across that when they need it.
-
-Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-
-Thanks,
-Charles
+T24gTW9uLCBNYXIgMjAsIDIwMTcgYXQgNzozOCBQTSwgTWFyayBCcm93biA8YnJvb25pZUBrZXJu
+ZWwub3JnPiB3cm90ZToKPiBPbiBTYXQsIE1hciAxOCwgMjAxNyBhdCAwODo1NTowOUFNICswMTAw
+LCBNeWzDqG5lIEpvc3NlcmFuZCB3cm90ZToKPj4gVGhlIGRpZ2l0YWwgQUlGIGludGVyZmFjZXMg
+aGFzIGJlZW4gcmVuYW1lZCBpbiB0aGUgc3VuOGkgYXVkaW8gY29kZWMKPj4gZHJpdmVyIHNvIHRo
+ZSBhdWRpby1yb3V0aW5nIGluIHRoZSBkZXZpY2UgdHJlZSBtdXN0IGJlIHJlbmFtZWQgdG9vLgo+
+Cj4gR2l2ZW4gdGhhdCB0aGVzZSBhcmUgZml4ZXMgaXQgcHJvYmFibHkgbWFrZXMgc2Vuc2UgdGhh
+dCB0aGV5IGFsbCBnbyBpbgo+IHRvZ2V0aGVyLCBjYW4gSSBnZXQgc29tZSBhY2tzIGZvciB0aGlz
+IGFuZCBJJ2xsIGFwcGx5IGl0PwoKQWNrZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9y
+Zz4KClRob3VnaCB0aGlzIHBhdGNoIHNob3VsZCBnbyBpbiB0aHJvdWdoIHRoZSBhcm0tc29jIHRy
+ZWUuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
+ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
+bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
