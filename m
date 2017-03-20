@@ -1,56 +1,39 @@
-From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 1/4] dt-bindings: Document the dmas and
- dma-names properties for bcm2835-analog-audio
-Date: Mon, 20 Mar 2017 10:07:34 -0700
-Message-ID: <1490029654.11105.7.camel@crowfest.net>
-References: <20170312063820.19313-1-mzoran@crowfest.net>
-         <20170320165009.ylrohjwettdy2lgf@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv5 06/16] atmel-isi: document device tree bindings
+Date: Mon, 20 Mar 2017 11:57:14 -0500
+Message-ID: <CAL_JsqL=6s5ci2Q0V_Sc0OrCaYrFDErQ1i_ChCH0+NUkWpsKXQ@mail.gmail.com>
+References: <20170311112328.11802-1-hverkuil@xs4all.nl> <20170311112328.11802-7-hverkuil@xs4all.nl>
+ <20170320164119.cxmson67wdyoww2k@rob-hp-laptop> <7884402a-652b-02c0-a572-d205dc651a8b@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170320165009.ylrohjwettdy2lgf@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-AbSShOkvfpQ@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <7884402a-652b-02c0-a572-d205dc651a8b@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-03-20 at 11:50 -0500, Rob Herring wrote:
-> On Sat, Mar 11, 2017 at 10:38:17PM -0800, Michael Zoran wrote:
-> > Add documentation for the DMA properties required when using the
-> > PWM controller of the bcm2835 for analog audio output.
-> > 
-> > Signed-off-by: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt | 9
-> > ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-> > b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-> > index cf573e85b11d..08fc06fc083a 100644
-> > --- a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-> > +++ b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-> > @@ -1,14 +1,21 @@
-> >  BCM2835 PWM controller (Raspberry Pi controller)
-> >  
-> >  Required properties:
-> > -- compatible: should be "brcm,bcm2835-pwm"
-> > +- compatible: should be "brcm,bcm2835-pwm" or "brcm,bcm2835-
-> > analog-audio"
-> 
-> Compatibles are not for selecting usage modes. You should describe
-> the 
-> connection to the pwm that makes it an audio output rather than
-> change 
-> the compatible.
-> 
+On Mon, Mar 20, 2017 at 11:49 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> On 03/20/2017 05:41 PM, Rob Herring wrote:
+>> On Sat, Mar 11, 2017 at 12:23:18PM +0100, Hans Verkuil wrote:
+>>> From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Cool, that's good to know that someone let me know after all this time.
- And please tell how if DT nodes are an exact documentation of the
-hardware how are virtualized DT nodes like firmware getting into the
-DTs?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> +    ov2640: camera@30 {
+>>> +            compatible = "ovti,ov2640";
+>>> +            reg = <0x30>;
+>>> +            pinctrl-names = "default";
+>>> +            pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
+>>> +            resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
+>>
+>> reset-gpios?
+>>
+>>> +            pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
+>>
+>> powerdown-gpios?
+>
+> I can't change this: these two properties have been in use for a long time for the ov2640
+> driver.
+
+NM. I was thinking this was the ov7670 you just added.
+
+Rob
