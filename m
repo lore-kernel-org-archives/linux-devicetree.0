@@ -1,13 +1,14 @@
-From: Antonio Borneo <borneo.antonio@gmail.com>
-Subject: [PATCH 3/4] arm64: dts: amd: Remove nonexistent property
-Date: Mon, 20 Mar 2017 10:57:20 +0100
-Message-ID: <20170320095721.6724-3-borneo.antonio@gmail.com>
-References: <20170320095721.6724-1-borneo.antonio@gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v3 2/2] fpga: Add support for Xilinx LogiCORE PR Decoupler
+Date: Mon, 20 Mar 2017 11:02:16 +0100
+Message-ID: <ce16ea40-bf9b-7aa3-b7ac-07c05932cd99@xilinx.com>
+References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
+ <1489781473-30772-2-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170320095721.6724-1-borneo.antonio@gmail.com>
+In-Reply-To: <1489781473-30772-2-git-send-email-mdf@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,89 +18,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Brijesh Singh <brijeshkumar.singh@amd.com>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Viresh Kumar <vireshk@kernel.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, Antonio Borneo <borneo.antonio@gmail.com>, Mark Brown <broonie@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, linux-spi@vger.kernel.org, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, linux-kernel@vger.kernel.org
+To: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-The property "pl022,hierarchy" is not documented in DT binding
-and doesn't exist in the driver code.
-It has no effect and can be removed.
-
-Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
----
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Viresh Kumar <vireshk@kernel.org>
-Cc: Shiraz Hashim <shiraz.linux.kernel@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>
-To: Brijesh Singh <brijeshkumar.singh@amd.com>
-To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: Jon Mason <jonmason@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Cc: linux-spi@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts | 1 -
- arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts | 1 -
- arch/arm64/boot/dts/amd/amd-overdrive.dts        | 1 -
- arch/arm64/boot/dts/amd/husky.dts                | 1 -
- 4 files changed, 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts b/arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts
-index 8e3074a4947d..399baf4040e3 100644
---- a/arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts
-+++ b/arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts
-@@ -70,7 +70,6 @@
- 		reg = <0>;
- 		spi-max-frequency = <20000000>;
- 		voltage-ranges = <3200 3400>;
--		pl022,hierarchy = <0>;
- 		pl022,interface = <0>;
- 		pl022,com-mode = <0x0>;
- 		pl022,rx-level-trig = <0>;
-diff --git a/arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts b/arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts
-index ed5e043f37aa..be60accbcaf7 100644
---- a/arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts
-+++ b/arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts
-@@ -74,7 +74,6 @@
- 		reg = <0>;
- 		spi-max-frequency = <20000000>;
- 		voltage-ranges = <3200 3400>;
--		pl022,hierarchy = <0>;
- 		pl022,interface = <0>;
- 		pl022,com-mode = <0x0>;
- 		pl022,rx-level-trig = <0>;
-diff --git a/arch/arm64/boot/dts/amd/amd-overdrive.dts b/arch/arm64/boot/dts/amd/amd-overdrive.dts
-index 128fa942f09e..940cc33f3a69 100644
---- a/arch/arm64/boot/dts/amd/amd-overdrive.dts
-+++ b/arch/arm64/boot/dts/amd/amd-overdrive.dts
-@@ -51,7 +51,6 @@
- 		gpios = <&gpio0 7 0>;
- 		interrupt-parent = <&gpio0>;
- 		interrupts = <7 3>;
--		pl022,hierarchy = <0>;
- 		pl022,interface = <0>;
- 		pl022,com-mode = <0x0>;
- 		pl022,rx-level-trig = <0>;
-diff --git a/arch/arm64/boot/dts/amd/husky.dts b/arch/arm64/boot/dts/amd/husky.dts
-index 1381d4b2bf1b..e4a6a9122671 100644
---- a/arch/arm64/boot/dts/amd/husky.dts
-+++ b/arch/arm64/boot/dts/amd/husky.dts
-@@ -70,7 +70,6 @@
- 		reg = <0>;
- 		spi-max-frequency = <20000000>;
- 		voltage-ranges = <3200 3400>;
--		pl022,hierarchy = <0>;
- 		pl022,interface = <0>;
- 		pl022,com-mode = <0x0>;
- 		pl022,rx-level-trig = <0>;
--- 
-2.12.0
+T24gMTcuMy4yMDE3IDIxOjExLCBNb3JpdHogRmlzY2hlciB3cm90ZToKPiBUaGlzIGFkZHMgc3Vw
+cG9ydCBmb3IgdGhlIFhpbGlueCBMb2dpQ09SRSBQUiBEZWNvdXBsZXIKPiBzb2Z0LWlwIHRoYXQg
+ZG9lcyBkZWNvdXBsaW5nIG9mIFBSIHJlZ2lvbnMgaW4gdGhlIEZQR0EKPiBmYWJyaWMgZHVyaW5n
+IHBhcnRpYWwgcmVjb25maWd1cmF0aW9uLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1vcml0eiBGaXNj
+aGVyIDxtZGZAa2VybmVsLm9yZz4KPiBDYzogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGls
+aW54LmNvbT4KPiBDYzogU8O2cmVuIEJyaW5rbWFubiA8c29yZW4uYnJpbmttYW5uQHhpbGlueC5j
+b20+Cj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcKPiBDYzogZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmcKPiAtLS0KPiBDaGFuZ2VzIGZyb20gdjI6Cj4gLSBBZGRlZCBNaWNoYWwn
+cyBTaWduZWQtb2ZmLWJ5CgpidHc6IHlvdSBmb3Jnb3QgdG8gYWRkIGl0IGFib3ZlLiA6LSkKCj4g
+LSBBZGRlZCAieGxueCxwci1kZWNvdXBsZXIiIHVudmVyc2lvbmVkIGZhbGxiYWNrCj4gCj4gQ2hh
+bmdlcyBmcm9tIHYxOgo+IC0gQWRkZWQgTWljaGFsIGFzIENvLUF1dGhvciBzaW5jZSBJIHB1bGxl
+ZCBpbiBzb21lIG9mIGhpcyBjb2RlCj4gLSBSZXdvcmtlZCBjbGsgaGFuZGxpbmcgaW4gX3JlbW92
+ZSgpCj4gLSBQdWxsZWQgaW4gTWljaGFsJ3MgdmVyc2lvbiBvZiBzaG93X2VuYWJsZSgpLCBkaXRj
+aGVkIHByaXYtPmVuYWJsZWQKPiAKPiAtLS0KPiAgZHJpdmVycy9mcGdhL0tjb25maWcgICAgICAg
+ICAgICAgICB8ICAgOSArKysKPiAgZHJpdmVycy9mcGdhL01ha2VmaWxlICAgICAgICAgICAgICB8
+ICAgMSArCj4gIGRyaXZlcnMvZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLmMgfCAxNDggKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDE1OCBp
+bnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2ZwZ2EveGlsaW54LXBy
+LWRlY291cGxlci5jCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZnBnYS9LY29uZmlnIGIvZHJp
+dmVycy9mcGdhL0tjb25maWcKPiBpbmRleCBjZTg2MWEyLi5jZTBjOTFkIDEwMDY0NAo+IC0tLSBh
+L2RyaXZlcnMvZnBnYS9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9mcGdhL0tjb25maWcKPiBAQCAt
+NjMsNiArNjMsMTUgQEAgY29uZmlnIEFMVEVSQV9GUkVFWkVfQlJJREdFCj4gIAkgIGlzb2xhdGUg
+b25lIHJlZ2lvbiBvZiB0aGUgRlBHQSBmcm9tIHRoZSBidXNzZXMgd2hpbGUgdGhhdAo+ICAJICBy
+ZWdpb24gaXMgYmVpbmcgcmVwcm9ncmFtbWVkLgo+ICAKPiArY29uZmlnIFhJTElOWF9QUl9ERUNP
+VVBMRVIKPiArCXRyaXN0YXRlICJYaWxpbnggTG9naUNPUkUgUFIgRGVjb3VwbGVyIgo+ICsJZGVw
+ZW5kcyBvbiBGUEdBX0JSSURHRQo+ICsJaGVscAo+ICsJICBTYXkgWSB0byBlbmFibGUgZHJpdmVy
+cyBmb3IgWGlsaW54IExvZ2lDT1JFIFBSIERlY291cGxlci4KPiArCSAgVGhlIFBSIERlY291cGxl
+ciBleGlzdHMgaW4gdGhlIEZQR0EgZmFicmljIHRvIGlzb2xhdGUgb25lCj4gKwkgIHJlZ2lvbiBv
+ZiB0aGUgRlBHQSBmcm9tIHRoZSBidXNzZXMgd2hpbGUgdGhhdCByZWdpb24gaXMKPiArCSAgYmVp
+bmcgcmVwcm9ncmFtbWVkIGR1cmluZyBwYXJ0aWFsIHJlY29uZmlnLgo+ICsKPiAgZW5kaWYgIyBG
+UEdBCj4gIAo+ICBlbmRtZW51Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZnBnYS9NYWtlZmlsZSBi
+L2RyaXZlcnMvZnBnYS9NYWtlZmlsZQo+IGluZGV4IDhkZjA3YmMuLmJhOTRiNzkgMTAwNjQ0Cj4g
+LS0tIGEvZHJpdmVycy9mcGdhL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9mcGdhL01ha2VmaWxl
+Cj4gQEAgLTE0LDYgKzE0LDcgQEAgb2JqLSQoQ09ORklHX0ZQR0FfTUdSX1pZTlFfRlBHQSkJKz0g
+enlucS1mcGdhLm8KPiAgb2JqLSQoQ09ORklHX0ZQR0FfQlJJREdFKQkJKz0gZnBnYS1icmlkZ2Uu
+bwo+ICBvYmotJChDT05GSUdfU09DRlBHQV9GUEdBX0JSSURHRSkJKz0gYWx0ZXJhLWhwczJmcGdh
+Lm8gYWx0ZXJhLWZwZ2Eyc2RyYW0ubwo+ICBvYmotJChDT05GSUdfQUxURVJBX0ZSRUVaRV9CUklE
+R0UpCSs9IGFsdGVyYS1mcmVlemUtYnJpZGdlLm8KPiArb2JqLSQoQ09ORklHX1hJTElOWF9QUl9E
+RUNPVVBMRVIpCSs9IHhpbGlueC1wci1kZWNvdXBsZXIubwo+ICAKPiAgIyBIaWdoIExldmVsIElu
+dGVyZmFjZXMKPiAgb2JqLSQoQ09ORklHX0ZQR0FfUkVHSU9OKQkJKz0gZnBnYS1yZWdpb24ubwo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci5jIGIvZHJpdmVy
+cy9mcGdhL3hpbGlueC1wci1kZWNvdXBsZXIuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5k
+ZXggMDAwMDAwMC4uZGQzN2IxYwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2ZwZ2Ev
+eGlsaW54LXByLWRlY291cGxlci5jCj4gQEAgLTAsMCArMSwxNDggQEAKPiArLyoKPiArICogQ29w
+eXJpZ2h0IChjKSAyMDE3LCBOYXRpb25hbCBJbnN0cnVtZW50cyBDb3JwLgo+ICsgKiBDb3B5cmln
+aHQgKGMpIDIwMTcsIFhpbGl4IEluYwo+ICsgKgo+ICsgKiBGUEdBIEJyaWRnZSBEcml2ZXIgZm9y
+IHRoZSBYaWxpbnggTG9naUNPUkUgUGFydGlhbCBSZWNvbmZpZ3VyYXRpb24KPiArICogRGVjb3Vw
+bGVyIElQIENvcmUuCj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5
+b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5Cj4gKyAqIGl0IHVuZGVyIHRoZSB0
+ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5Cj4g
+KyAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IHZlcnNpb24gMiBvZiB0aGUgTGljZW5z
+ZS4KPiArICoKPiArICogVGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRo
+YXQgaXQgd2lsbCBiZSB1c2VmdWwsCj4gKyAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0
+aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mCj4gKyAqIE1FUkNIQU5UQUJJTElUWSBv
+ciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gU2VlIHRoZQo+ICsgKiBHTlUgR2Vu
+ZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgo+ICsgKi8KPiArCj4gKyNpbmNs
+dWRlIDxsaW51eC9jbGsuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2lvLmg+Cj4gKyNpbmNsdWRlIDxs
+aW51eC9rZXJuZWwuaD4KPiArI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPgo+ICsjaW5jbHVk
+ZSA8bGludXgvbW9kdWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9mcGdhL2ZwZ2EtYnJpZGdlLmg+
+Cj4gKwo+ICsjZGVmaW5lIENUUkxfQ01EX0RFQ09VUExFCUJJVCgwKQo+ICsjZGVmaW5lIENUUkxf
+Q01EX0NPVVBMRQkJfkJJVCgwKQoKZm9yIG90aGVycyAtIHRoaXMgd2FzIHJlcG9ydGVkIGJ5IDAt
+ZGF5IHRlc3Rpbmcgc3lzdGVtIGFzIGEgd2FybmluZy4KCk0KCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
