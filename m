@@ -1,129 +1,125 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for power-domains
-Date: Mon, 20 Mar 2017 15:02:13 +0530
-Message-ID: <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
-References: <cover.1490001099.git.viresh.kumar@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1490001099.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1490001099.git.viresh.kumar@linaro.org>
-References: <cover.1490001099.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Mon, 20 Mar 2017 13:49:27 +0100
+Message-ID: <b6cf3479-d0c7-8e28-078a-9e45b25ade34@xs4all.nl>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170318192258.GL21222@n2100.armlinux.org.uk>
+ <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+ <20170319121402.GS21222@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170319121402.GS21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Power-domains need to express their active states in DT and what's
-better than OPP table for that.
+On 03/19/2017 01:14 PM, Russell King - ARM Linux wrote:
+> On Sat, Mar 18, 2017 at 12:58:27PM -0700, Steve Longerbeam wrote:
+>> On 03/18/2017 12:22 PM, Russell King - ARM Linux wrote:
+>>> 0:00:01.955927879 20954  0x15ffe90 INFO                    v4l2 gstv4l2object.c:3811:gst_v4l2_object_get_caps:<v4l2src0> probed caps: video/x-bayer, format=(string)rggb, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)I420, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)YV12, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(string)BGR, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1; video/x-raw, format=(
+ string)RGB, framerate=(fraction)30000/1001, width=(int)816, height=(int)616, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1
+>>>
+>>>    despite the media pipeline actually being configured for 60fps.
+>>>
+>>>    Forcing it by adjusting the pipeline only results in gstreamer
+>>>    failing, because it believes that v4l2 is unable to operate at
+>>>    60fps.
+>>>
+>>>    Also note the complaints from v4l2src about the non-compliance...
+>>
+>> Thanks, I've fixed most of v4l2-compliance issues, but this is not
+>> done yet. Is that something you can help with?
+> 
+> I've looked at this, and IMHO it's yet another media control API mess.
+> 
+> - media-ctl itself allows setting the format on subdev pads via
+>   struct v4l2_subdev_format.
+> 
+> - struct v4l2_subdev_format contains a struct v4l2_mbus_framefmt.
+> 
+> - struct v4l2_mbus_framefmt contains:
+>   * @width:      frame width
+>   * @height:     frame height
+>   * @code:       data format code (from enum v4l2_mbus_pixelcode)
+>   * @field:      used interlacing type (from enum v4l2_field)
+>   * @colorspace: colorspace of the data (from enum v4l2_colorspace)
+>   * @ycbcr_enc:  YCbCr encoding of the data (from enum v4l2_ycbcr_encoding)
+>   * @quantization: quantization of the data (from enum v4l2_quantization)
+>   * @xfer_func:  transfer function of the data (from enum v4l2_xfer_func)
+> 
+> - media-ctl sets width, height, code and field, but nothing else.
+> 
+> We're already agreed that the fields that media-ctl are part of the
+> format negotiation between the ultimate source, flowing down to the
+> capture device.  However, there's no support in media-ctl to deal
+> with these other fields - so media-ctl in itself is only half-
+> implemented.
 
-This patch allows power-domains to reuse OPP tables to express their
-active states. The "opp-hz" property isn't a required property anymore
-as power-domains may not always use them.
+Correct. The colorspace et al fields are in practice unimportant for sensors.
+For HDMI/DP they are very important, though.
 
-Add a new property "domain-performance-state", which will contain
-positive integer values to represent performance levels of the
-power-domains as described in this patch.
+It's the reason why nobody worked on adding support for this to media-ctl,
+it's almost exclusively used with sensors. Not saying that it is right that
+it hasn't been added to media-ctl, just that it never had a high enough prio.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/opp/opp.txt | 73 ++++++++++++++++++++++++++-
- 1 file changed, 71 insertions(+), 2 deletions(-)
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 63725498bd20..d0b95c9e1011 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -76,10 +76,9 @@ This describes the OPPs belonging to a device. This node can have following
- This defines voltage-current-frequency combinations along with other related
- properties.
- 
--Required properties:
-+Optional properties:
- - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
- 
--Optional properties:
- - opp-microvolt: voltage in micro Volts.
- 
-   A single regulator's voltage is specified with an array of size one or three.
-@@ -154,6 +153,19 @@ properties.
- 
- - status: Marks the node enabled/disabled.
- 
-+- domain-performance-state: A positive integer value representing the minimum
-+  power-domain performance level required by the device for the OPP node. The
-+  integer value '0' represents the lowest performance level and the higher
-+  values represent higher performance levels. When present in the OPP table of a
-+  power-domain, it represents the performance level of the domain. When present
-+  in the OPP table of a normal device, it represents the performance level of
-+  the parent power-domain. The OPP table can contain the
-+  "domain-performance-state" property, only if the device node contains the
-+  "power-domains" or "#power-domain-cells" property. The OPP nodes aren't
-+  allowed to contain the "domain-performance-state" property partially, i.e.
-+  Either all OPP nodes in the OPP table have the "domain-performance-state"
-+  property or none of them have it.
-+
- Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
- 
- / {
-@@ -528,3 +540,60 @@ Example 5: opp-supported-hw
- 		};
- 	};
- };
-+
-+Example 7: domain-Performance-state:
-+(example: For 1GHz require domain state 1 and for 1.1 & 1.2 GHz require state 2)
-+
-+/ {
-+	domain_opp_table: opp_table0 {
-+		compatible = "operating-points-v2";
-+
-+		opp@1 {
-+			domain-performance-state = <1>;
-+			opp-microvolt = <975000 970000 985000>;
-+		};
-+		opp@2 {
-+			domain-performance-state = <2>;
-+			opp-microvolt = <1075000 1000000 1085000>;
-+		};
-+	};
-+
-+	foo_domain: power-controller@12340000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12340000 0x1000>;
-+		#power-domain-cells = <0>;
-+		operating-points-v2 = <&domain_opp_table>;
-+	}
-+
-+	cpu0_opp_table: opp_table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp@1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			domain-performance-state = <1>;
-+		};
-+		opp@1100000000 {
-+			opp-hz = /bits/ 64 <1100000000>;
-+			domain-performance-state = <2>;
-+		};
-+		opp@1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			domain-performance-state = <2>;
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+			clocks = <&clk_controller 0>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			power-domains = <&foo_domain>;
-+		};
-+	};
-+};
--- 
-2.12.0.432.g71c3a4f4ba37
+	Hans
+
+> 
+> From what I can tell, _we_ are doing the right thing in imx-media-capture.
+> 
+> However, I think part of the problem is the set_fmt implementation.
+> When a source pad is configured via set_fmt(), any fields that can
+> not be altered (eg, because the subdev doesn't support colorspace
+> conversion) need to be preserved from the subdev's sink pad.
+> 
+> Right now, CSI doesn't do that - it only looks at the width, height,
+> code, and field.
+> 
+> I think we've got other bugs though that haven't been picked up by any
+> review - csi_try_fmt() adjusts the format using the _current_
+> configuration of the sink pad, even when using V4L2_SUBDEV_FORMAT_TRY.
+> This seems wrong according to the docs: the purpose of the try
+> mechanism is to be able to setup the _entire_ pipeline using the TRY
+> mechanism to work out whether the configuration works, before then
+> setting for real.  If we're validating the TRY formats against the
+> live configuration, then we're not doing that.
+> 
+> There's calls for:
+> 
+> v4l2_subdev_get_try_format
+> v4l2_subdev_get_try_crop
+> v4l2_subdev_get_try_compose
+> 
+> to get the try configuration - we hardly make use of all of these.  I
+> would suggest that we change the approach to implementing the various
+> subdevs such that:
+> 
+> 1) like __csi_get_fmt(), we have accessors that gets a pointer to the
+>    correct state for the TRY/live settings.
+> 
+> 2) everywhere we're asked to get or set parameters that can be TRY/live,
+>    we use these accessors to retrieve a pointer to the correct state to
+>    not only read, but also modify.
+> 
+> 3) when we're evaluating parameters against another pad, we use these
+>    accessors to obtain the other pad's configuration, rather than poking
+>    about in the state saved in the subdev's priv-> (which is irrelevant
+>    for the TRY variant.)
+> 
+> 4) ensure that all parameters which the subdev itself does not support
+>    modification of are correctly propagated from the sink pad to all
+>    source pads, and are unable to be modified via the source pad.
+> 
