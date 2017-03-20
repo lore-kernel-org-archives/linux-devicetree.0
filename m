@@ -1,13 +1,13 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: add binding for the Allwinner DE2 CCU
-Date: Mon, 20 Mar 2017 10:55:25 +0100
-Message-ID: <20170320095525.osvx5zba4xkfqm25@lukather>
+Subject: Re: [PATCH v2 3/8] dt-bindings: add bindings for DE2 on V3s SoC
+Date: Mon, 20 Mar 2017 10:56:49 +0100
+Message-ID: <20170320095649.pnokqzv3akubkklm@lukather>
 References: <20170316204748.8596-1-icenowy@aosc.xyz>
- <20170316204748.8596-2-icenowy@aosc.xyz>
+ <20170316204748.8596-4-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0593311160=="
+Content-Type: multipart/mixed; boundary="===============1382126277=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170316204748.8596-2-icenowy@aosc.xyz>
+In-Reply-To: <20170316204748.8596-4-icenowy@aosc.xyz>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -22,61 +22,106 @@ Cc: devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-
 List-Id: devicetree@vger.kernel.org
 
 
---===============0593311160==
+--===============1382126277==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bvtb6bi2qa3loh6l"
+	protocol="application/pgp-signature"; boundary="4sksu36x4iadloy5"
 Content-Disposition: inline
 
 
---bvtb6bi2qa3loh6l
+--4sksu36x4iadloy5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 17, 2017 at 04:47:41AM +0800, Icenowy Zheng wrote:
-> Allwinner "Display Engine 2.0" contains some clock controls in it.
+On Fri, Mar 17, 2017 at 04:47:43AM +0800, Icenowy Zheng wrote:
+> Allwinner V3s SoC have a display engine which have a different pipeline
+> with older SoCs.
 >=20
-> Add them as a clock driver, and make a device tree binding.
+> Add document for it (new compatibles and the new "mixer" part).
+>=20
+> The paragraph of TCON is also refactored, for furtherly add TCONs in
+> A83T/H3/A64/H5 that have only a channel 1 (used for HDMI or TV Encoder).
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 > ---
->  .../devicetree/bindings/clock/sun8i-de2.txt        | 31 ++++++++++++++++=
-++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/sun8i-de2.txt
+>  .../bindings/display/sunxi/sun4i-drm.txt           | 37 ++++++++++++++++=
++++---
+>  1 file changed, 33 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/Documentation/devicetree/bindings/clock/sun8i-de2.txt b/Docu=
-mentation/devicetree/bindings/clock/sun8i-de2.txt
-> new file mode 100644
-> index 000000000000..c19496f037a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
-> @@ -0,0 +1,31 @@
-> +Allwinner Display Engine 2.0 Clock Control Binding
-> +--------------------------------------------------
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.tx=
+t b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> index b82c00449468..2c293247c41d 100644
+> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> @@ -31,11 +31,11 @@ Required properties:
+>     * allwinner,sun6i-a31-tcon
+>     * allwinner,sun6i-a31s-tcon
+>     * allwinner,sun8i-a33-tcon
+> +   * allwinner,sun8i-v3s-tcon
+>   - reg: base address and size of memory-mapped region
+>   - interrupts: interrupt associated to this IP
+> - - clocks: phandles to the clocks feeding the TCON. Three are needed:
+> + - clocks: phandles to the clocks feeding the TCON
+>     - 'ahb': the interface clocks
+> -   - 'tcon-ch0': The clock driving the TCON channel 0
+>   - resets: phandles to the reset controllers driving the encoder
+>     - "lcd": the reset line for the TCON channel 0
+> =20
+> @@ -52,7 +52,12 @@ Required properties:
+>    second the block connected to the TCON channel 1 (usually the TV
+>    encoder)
+> =20
+> -On SoCs other than the A33, there is one more clock required:
+> +On TCONs that have a channel 0 (currently all TCONs supported), there
+> +is one more clock required:
+> +   - 'tcon-ch0': The clock driving the TCON channel 0
 > +
-> +Required properties :
-> +- compatible: must contain one of the following compatibles:
-> +		- "allwinner,sun8i-a83t-de2-clk"
-> +		- "allwinner,sun50i-a64-de2-clk"
-> +		- "allwinner,sun50i-h5-de2-clk"
+> +On TCONs that have a channel 1 (currently all TCONs except the ones in
+> +A33 and V3s), there is one more clock required:
+>     - 'tcon-ch1': The clock driving the TCON channel 1
+> =20
+>  DRC
+> @@ -137,6 +142,26 @@ Required properties:
+>    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+>    first port should be the input endpoints, the second one the outputs
+> =20
+> +Display Engine 2.0 Mixer
+> +------------------------
 > +
-> +- reg: Must contain the registers base address and length
-> +- clocks: phandle to the clocks feeding the display engine subsystem.
-> +	  Three are needed:
-> +  - "mod": the display engine module clock
-> +  - "bus": the bus clock for the whole display engine subsystem
-> +- clock-names: Must contain the clock names described just above
-> +- resets: phandle to the reset control for the display engine subsystem.
-> +- #clock-cells : must contain 1
-> +- #reset-cells : must contain 1
+> +The DE2 mixer have many functionalities, currently only layer blending is
+> +supported.
 > +
-> +Example:
-> +de2_clocks: clock@01000000 {
-> +	compatible =3D "allwinner,sun50i-a64-de2-clk";
-> +	reg =3D <0x01000000 0x1c>;
+> +Required properties:
+> +  - compatible: value must be one of:
+> +    * allwinner,sun8i-v3s-de2-mixer
+> +  - reg: base address and size of the memory-mapped region.
+> +  - clocks: phandles to the clocks feeding the frontend and backend
+> +    * bus: the backend interface clock
+> +    * ram: the backend DRAM clock
+> +  - clock-names: the clock names mentioned above
+> +  - resets: phandles to the reset controllers driving the backend
+> +
+> +- ports: A ports node with endpoint definitions as defined in
+> +  Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> +  first port should be the input endpoints, the second one the output
+> +
+> =20
+>  Display Engine Pipeline
+>  -----------------------
+> @@ -151,9 +176,13 @@ Required properties:
+>      * allwinner,sun6i-a31-display-engine
+>      * allwinner,sun6i-a31s-display-engine
+>      * allwinner,sun8i-a33-display-engine
+> +    * allwinner,sun8i-v3s-display-engine
+> =20
+>    - allwinner,pipelines: list of phandle to the display engine
+> -    frontends available.
+> +    pipeline entry point. For SoCs with original DE (currently
+> +    all SoCs supported by display engine except V3s), this
+> +    phandle should be a display frontend or backend; for SoCs
+> +    with DE2, this phandle should be a mixer.
 
-Please use the full size of the memory area allocated to that device.
+In the old ones, this should never be the backend.
 
 Maxime
 
@@ -85,29 +130,29 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---bvtb6bi2qa3loh6l
+--4sksu36x4iadloy5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYz6cNAAoJEBx+YmzsjxAgkp0P+wVDmXMejCJewPQsa3US2c+E
-Q8GtBjDThWmpPG8Plyrv4KyvxP7Dg/Zubev9WGU856z10O5WhAHne17M4gQj4pIh
-ZAyI/pd67/0u0P9EK/e3Qcc2zuaWaWV+Rv5J62NoqoSY3aCMcl0mBF1k5XKkP1Kn
-wV3oUDoMmaJU1u5wmzzvzfdLjFKBtgYdLYJlxDZzP+fuMs++TGY0YktbT94YFh+H
-xwkyl3IdrvP6+adleacNs5jrOzndMhe0vVhzjJmc/VWX3FAYPt7Efxw12lPL4rvY
-6lQ7LV2AtRvrrF2QRiRafEYtemv8er5OYxyTKScy5a/KqKrjR9H7uO6iZxqIUikf
-fgRWc2t5nCrPQxxmn/O9NQcI34shEzJa9qAPsMzBFmLEhQ/OFACNS3ExjeU5VH/s
-Jf4UCPbf4GhF3+PZ+FpyVT+cbZ2QErnnHXCTdvxk0leshQ+aHBYII8wymp2u1YjJ
-uhqcqTherN8aA6eo4AGyCB1ECJ7aU4a31t37bX+d5t5Wc1TiyQlIm+rOoWkZS7JQ
-oXxCRpBfFESkpLXgIRYYBiWmTTfMcbAsWGmMKW2hYFENKuTgZH1ww/iQ8wI0ijkJ
-wEx1cBDBmWYYWrv8VDroqCuBcaE1DvC5vUZVrhNYiDVxX1lJL3fkcrk9jiI2g7NL
-xy4MrjPMAbxkv2aCJytP
-=um0S
+iQIcBAEBCAAGBQJYz6dhAAoJEBx+YmzsjxAgjtQP/208fM4WV3++1VkzGyr2eEkK
+ZPJ4x0HW57Gy25tfhdyTKc0VpG/p4AdfKp+CZtjuIzBsmab7zpQBTjiMoBUyz5hj
+IPNumRi/FeVp5SeQTKEV0TXhJZhy0Ft3nNxG8jTHmaO70sgL4//HUz8J3IN8BmNv
+BaDc3KGLsWIwxmOm6miVWWMUA+beNPkTms6v0zin1y2gXu7396PzK4Jyrhni07GU
+fcwheXSn3A3iG0+V13tBsmK9NkyE1cMNIpUJ2pX8CewzBmqfzM3oAfnfeLtVhv28
+4Iq2Hf4oSs/5a9548xyFa3qZbqplyoOb1xFygmXC4Ebt1+SJeVb10PxXfDy7cuhA
+3MUY8pPziz8Ac936cpmphHtyR4BmPS8v9OpC4n56v1amxOn5kwYeNPv4eanPrIt8
+GoYX3jQhUH+dbkxzj4g62JXySSbMyQfuVgBZQ06MawErusY870FPhbE7jFPXguUL
+Yt5Z1XiSwRb1EjEmxyKP8byh109lwXdK63muAr7xRltnq6LtINR1CiWoEphHwakj
+NfF9qtIaE8/VUv1Lj/1CS+kkEoQP4Xyw7CEYuZgrfLCy+w7A8rup3XQI7H0wf9Y+
+qOIZPO1a/2Dcd7P34d07wML6ngiSK9jrXcU3jjksVs0TpLEk4X7ltJmCdRwv+FK7
+sHeBf81vEOrBQ/FtMzbx
+=q1HR
 -----END PGP SIGNATURE-----
 
---bvtb6bi2qa3loh6l--
+--4sksu36x4iadloy5--
 
---===============0593311160==
+--===============1382126277==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -117,4 +162,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============0593311160==--
+--===============1382126277==--
