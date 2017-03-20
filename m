@@ -1,105 +1,82 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] soc/tegra: Move Tegra flowctrl driver
-Date: Mon, 20 Mar 2017 15:14:34 +0100
-Message-ID: <20170320141434.GC28203@ulmo.ba.sec>
-References: <1489584715-23138-1-git-send-email-jonathanh@nvidia.com>
- <1489584715-23138-4-git-send-email-jonathanh@nvidia.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Mon, 20 Mar 2017 14:17:05 +0000
+Message-ID: <20170320141705.GL21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+ <20170319152233.GW21222@n2100.armlinux.org.uk>
+ <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+ <1490010926.2917.59.camel@pengutronix.de>
+ <20170320120855.GH21222@n2100.armlinux.org.uk>
+ <1490018451.2917.86.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WplhKdTI2c8ulnbP"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1489584715-23138-4-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1490018451.2917.86.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 20, 2017 at 03:00:51PM +0100, Philipp Zabel wrote:
+> On Mon, 2017-03-20 at 12:08 +0000, Russell King - ARM Linux wrote:
+> > The same document says:
+> > 
+> >   Scaling support is optional. When supported by a subdev, the crop
+> >   rectangle on the subdev's sink pad is scaled to the size configured
+> >   using the
+> >   :ref:`VIDIOC_SUBDEV_S_SELECTION <VIDIOC_SUBDEV_G_SELECTION>` IOCTL
+> >   using ``V4L2_SEL_TGT_COMPOSE`` selection target on the same pad. If the
+> >   subdev supports scaling but not composing, the top and left values are
+> >   not used and must always be set to zero.
+> 
+> Right, this sentence does imply that when scaling is supported, there
+> must be a sink compose rectangle, even when composing is not.
+> 
+> I have previously set up scaling like this:
+> 
+> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
+> media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
+> 
+> Does this mean, it should work like this instead?
+> 
+> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
+> media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY2X8/1920x1080@1/60,compose:(0,0)/960x540]"
+> media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
+> 
+> I suppose setting the source pad format should not be allowed to modify
+> the sink compose rectangle.
 
---WplhKdTI2c8ulnbP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That is what I believe having read these documents several times, but
+we need v4l2 people to confirm.
 
-On Wed, Mar 15, 2017 at 01:31:53PM +0000, Jon Hunter wrote:
-[...]
-> +static int __init tegra_flowctrl_init(void)
-> +{
-> +	/* hardcoded fallback if device tree node is missing */
-> +	unsigned long base =3D 0x60007000;
-> +	unsigned long size =3D SZ_4K;
-> +	struct device_node *np;
-> +
-> +	if (!soc_is_tegra())
-> +		return 0;
-> +
-> +	np =3D of_find_matching_node(NULL, matches);
-> +	if (np) {
-> +		struct resource res;
-> +
-> +		if (of_address_to_resource(np, 0, &res) =3D=3D 0) {
-> +			size =3D resource_size(&res);
-> +			base =3D res.start;
-> +		}
-> +
-> +		of_node_put(np);
-> +	}
-> +
-> +	tegra_flowctrl_base =3D ioremap_nocache(base, size);
-> +
-> +	if (!tegra_flowctrl_base)
-> +		return -ENXIO;
-> +
-> +	return 0;
-> +}
-> +early_initcall(tegra_flowctrl_init);
+Note that setting the format on 'ipu1_csi0':0 should already be done by
+the previous media-ctl command, so it should be possible to simplify
+that to:
 
-Do we want to implement a hand-off to a proper driver at some point,
-similar to what we have for PMC?
+media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
+media-ctl --set-v4l2 "'ipu1_csi0':0[compose:(0,0)/960x540]"
+media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
 
-> diff --git a/include/soc/tegra/flowctrl.h b/include/soc/tegra/flowctrl.h
-[...]
-> +#ifndef __ASSEMBLY__
-> +u32 flowctrl_read_cpu_csr(unsigned int cpuid);
-> +void flowctrl_write_cpu_csr(unsigned int cpuid, u32 value);
-> +void flowctrl_write_cpu_halt(unsigned int cpuid, u32 value);
-> +
-> +void flowctrl_cpu_suspend_enter(unsigned int cpuid);
-> +void flowctrl_cpu_suspend_exit(unsigned int cpuid);
-> +#endif
+I have tripped over a bug in media-ctl when specifying both a crop and
+compose rectangle - the --help output suggests that "," should be used
+to separate them.  media-ctl rejects that, telling me the character at
+the "," should be "]".  Replacing the "," with " " allows media-ctl to
+accept it and set both rectangles, so it sounds like a parser bug - I've
+not looked into this any further yet.
 
-Perhaps we want the same type of dummy functions scheme here for
-!SOC_TEGRA_FLOWCTRL that Arnd proposed for !SOC_TEGRA_PMC?
-
-
-> +
-> +#endif
-> --=20
-> 2.7.4
->=20
-
---WplhKdTI2c8ulnbP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljP48oACgkQ3SOs138+
-s6EjMw//UjAvA/xaiULMrW77/A0HZpztJb+MUus8BHNMQq0PxO3KVywqa7FcjXlq
-Laue5JiluDWHvGZvnA94XImLaWVIZliLTijFHdzAgmru6uj/AQOibkam9In+PIEu
-awoCt89aSMHyVgUfs2Bvu9S/U4DM38kqAbELoUrAACQY2FHW9OplMa+MIXIb99Zs
-KFGhZfxkN9+dnYYtKFyHCjrTfPOjgeq9nUIl5vjY986o+6ngKKikrjSBdmTmoNnL
-pkNcDHKZUEVf6DoSf6Y5C9ZAAlw/FziI+geKJnXzcoUcrDFEv0rQozSiIixL2brC
-vFgPRFFiFrKZBy92IEDyd9hl8auKRYaVVG3O/2UsTwZV5wOC9TlJuWnccuRGp+Ta
-3/tpuqpTxuKN2s9TaJgVAPcOxr47NU+y6sAx+182b6sdlPsW96gd/46JKmMobwvx
-/MjW1Q39MGRi0ajAUkATrEO5BKesVNSHzMfFob8uyrXp14aBWnCkSaz05jLboZgT
-L7PnzIU1f6ZHt6ezkDddRBq8VgO2Mfb3QI3SVgrKTKB/Sia6SOpAIZsTDLc4hO3v
-Yj0ZajOwso/k4SupabeOvx5kpaPhf1a+0krPpzybOw7x4VhTleRTpkFMTw0TJqhL
-WW1rrkYtRzhqk3PqsIvA/US7uAw5brkIfHBOKRL5Y08aG46b7uk=
-=HmeW
------END PGP SIGNATURE-----
-
---WplhKdTI2c8ulnbP--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
