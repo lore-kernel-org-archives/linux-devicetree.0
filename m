@@ -1,36 +1,29 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
  sink set_fmt
-Date: Mon, 20 Mar 2017 17:16:30 +0000
-Message-ID: <20170320171630.GR21222@n2100.armlinux.org.uk>
+Date: Mon, 20 Mar 2017 18:23:24 +0100
+Message-ID: <1490030604.2917.103.camel@pengutronix.de>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
- <20170319152233.GW21222@n2100.armlinux.org.uk>
- <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
- <1490010926.2917.59.camel@pengutronix.de>
- <20170320120855.GH21222@n2100.armlinux.org.uk>
- <1490018451.2917.86.camel@pengutronix.de>
- <20170320141705.GL21222@n2100.armlinux.org.uk>
+         <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+         <20170319152233.GW21222@n2100.armlinux.org.uk>
+         <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+         <1490010926.2917.59.camel@pengutronix.de>
+         <20170320120855.GH21222@n2100.armlinux.org.uk>
+         <1490018451.2917.86.camel@pengutronix.de>
+         <20170320141705.GL21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20170320141705.GL21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, mchehab@kernel.org, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320141705.GL21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 02:17:05PM +0000, Russell King - ARM Linux wrote:
+Hi Steve, Russell,
+
+On Mon, 2017-03-20 at 14:17 +0000, Russell King - ARM Linux wrote:
 > On Mon, Mar 20, 2017 at 03:00:51PM +0100, Philipp Zabel wrote:
 > > On Mon, 2017-03-20 at 12:08 +0000, Russell King - ARM Linux wrote:
 > > > The same document says:
@@ -62,53 +55,389 @@ On Mon, Mar 20, 2017 at 02:17:05PM +0000, Russell King - ARM Linux wrote:
 > 
 > That is what I believe having read these documents several times, but
 > we need v4l2 people to confirm.
-> 
-> Note that setting the format on 'ipu1_csi0':0 should already be done by
-> the previous media-ctl command, so it should be possible to simplify
-> that to:
-> 
-> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080@1/60]"
-> media-ctl --set-v4l2 "'ipu1_csi0':0[compose:(0,0)/960x540]"
-> media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/960x540@1/30]"
 
-There is a slightly puzzling bit in the documentation.  If we consider
-the CSI, and the sink compose rectangle size has to always match the
-the source output pad format size (since in hardware they are one of
-the same), then:
+What do you think of this:
 
-  Inside subdevs, the order of image processing steps will always be from
-  the sink pad towards the source pad. This is also reflected in the order
-  in which the configuration must be performed by the user: the changes
-  made will be propagated to any subsequent stages. If this behaviour is
-  not desired, the user must set ``V4L2_SEL_FLAG_KEEP_CONFIG`` flag. This
-                                                                     ^^^^
-  flag causes no propagation of the changes are allowed in any
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  circumstances. This may also cause the accessed rectangle to be adjusted
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  by the driver, depending on the properties of the underlying hardware.
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------8<----------
+>From 2830aebc404bdfc9d7fc1ec94e5282d0b668e8f6 Mon Sep 17 00:00:00 2001
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Date: Mon, 20 Mar 2017 17:10:21 +0100
+Subject: [PATCH] media: imx: csi: add sink selection rectangles
 
-presumably, this means if we get a request to change the source compose
-rectangle with V4L2_SEL_FLAG_KEEP_CONFIG set, we need to force its size
-to be the current output format size.  I don't think we can do anything
-else - because the above makes it very clear that any following stages
-shall not be updated.  The last sentence appears to give permission to
-do that.
+Move the crop rectangle to the sink pad and add a sink compose rectangle
+to configure scaling. Also propagate rectangles from sink pad to crop
+rectangle, to compose rectangle, and to the source pads both in ACTIVE
+and TRY variants of set_fmt/selection, and initialize the default crop
+and compose rectangles.
 
-This also has implications when changing the sink crop - the sink crop
-(eg) must not be smaller than the sink compose, as we don't support
-scaling up in CSI.
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/staging/media/imx/imx-media-csi.c | 216 +++++++++++++++++++++---------
+ 1 file changed, 152 insertions(+), 64 deletions(-)
 
-It seems to me that V4L2_SEL_FLAG_KEEP_CONFIG in practice changes the
-way validation of the request works.  So, rather than validating the
-request against the upstream rectangle and propagating downstream, it
-needs to be validated against both the upstream and downstream
-rectangles instead.
-
-It seems there's many subtleties to this...
-
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 560da3abdd70b..b026a5d602ddf 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -79,6 +79,7 @@ struct csi_priv {
+ 	const struct imx_media_pixfmt *cc[CSI_NUM_PADS];
+ 	struct v4l2_fract frame_interval;
+ 	struct v4l2_rect crop;
++	struct v4l2_rect compose;
+ 	const struct csi_skip_desc *skip[CSI_NUM_PADS - 1];
+ 
+ 	/* active vb2 buffers to send to video dev sink */
+@@ -574,8 +575,8 @@ static int csi_setup(struct csi_priv *priv)
+ 	ipu_csi_set_window(priv->csi, &priv->crop);
+ 
+ 	ipu_csi_set_downsize(priv->csi,
+-			     priv->crop.width == 2 * outfmt->width,
+-			     priv->crop.height == 2 * outfmt->height);
++			     priv->crop.width == 2 * priv->compose.width,
++			     priv->crop.height == 2 * priv->compose.height);
+ 
+ 	ipu_csi_init_interface(priv->csi, &sensor_mbus_cfg, &if_fmt);
+ 
+@@ -1001,6 +1002,27 @@ __csi_get_fmt(struct csi_priv *priv, struct v4l2_subdev_pad_config *cfg,
+ 		return &priv->format_mbus[pad];
+ }
+ 
++static struct v4l2_rect *
++__csi_get_crop(struct csi_priv *priv, struct v4l2_subdev_pad_config *cfg,
++	       enum v4l2_subdev_format_whence which)
++{
++	if (which == V4L2_SUBDEV_FORMAT_TRY)
++		return v4l2_subdev_get_try_crop(&priv->sd, cfg, CSI_SINK_PAD);
++	else
++		return &priv->crop;
++}
++
++static struct v4l2_rect *
++__csi_get_compose(struct csi_priv *priv, struct v4l2_subdev_pad_config *cfg,
++		  enum v4l2_subdev_format_whence which)
++{
++	if (which == V4L2_SUBDEV_FORMAT_TRY)
++		return v4l2_subdev_get_try_compose(&priv->sd, cfg,
++						   CSI_SINK_PAD);
++	else
++		return &priv->compose;
++}
++
+ static void csi_try_crop(struct csi_priv *priv,
+ 			 struct v4l2_rect *crop,
+ 			 struct v4l2_subdev_pad_config *cfg,
+@@ -1159,6 +1181,7 @@ static void csi_try_fmt(struct csi_priv *priv,
+ 			struct v4l2_subdev_pad_config *cfg,
+ 			struct v4l2_subdev_format *sdformat,
+ 			struct v4l2_rect *crop,
++			struct v4l2_rect *compose,
+ 			const struct imx_media_pixfmt **cc)
+ {
+ 	const struct imx_media_pixfmt *incc;
+@@ -1173,15 +1196,8 @@ static void csi_try_fmt(struct csi_priv *priv,
+ 		incc = imx_media_find_mbus_format(infmt->code,
+ 						  CS_SEL_ANY, true);
+ 
+-		if (sdformat->format.width < priv->crop.width * 3 / 4)
+-			sdformat->format.width = priv->crop.width / 2;
+-		else
+-			sdformat->format.width = priv->crop.width;
+-
+-		if (sdformat->format.height < priv->crop.height * 3 / 4)
+-			sdformat->format.height = priv->crop.height / 2;
+-		else
+-			sdformat->format.height = priv->crop.height;
++		sdformat->format.width = compose->width;
++		sdformat->format.height = compose->height;
+ 
+ 		if (incc->bayer) {
+ 			sdformat->format.code = infmt->code;
+@@ -1217,11 +1233,17 @@ static void csi_try_fmt(struct csi_priv *priv,
+ 		v4l_bound_align_image(&sdformat->format.width, MIN_W, MAX_W,
+ 				      W_ALIGN, &sdformat->format.height,
+ 				      MIN_H, MAX_H, H_ALIGN, S_ALIGN);
++
++		/* Reset crop and compose rectangles */
+ 		crop->left = 0;
+ 		crop->top = 0;
+ 		crop->width = sdformat->format.width;
+ 		crop->height = sdformat->format.height;
+ 		csi_try_crop(priv, crop, cfg, &sdformat->format, sensor);
++		compose->left = 0;
++		compose->top = 0;
++		compose->width = crop->width;
++		compose->height = crop->height;
+ 
+ 		*cc = imx_media_find_mbus_format(sdformat->format.code,
+ 						 CS_SEL_ANY, true);
+@@ -1245,7 +1267,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 	const struct imx_media_pixfmt *cc;
+ 	struct imx_media_subdev *sensor;
+ 	struct v4l2_pix_format vdev_fmt;
+-	struct v4l2_rect crop;
++	struct v4l2_mbus_framefmt *fmt;
++	struct v4l2_rect *crop, *compose;
+ 	int ret = 0;
+ 
+ 	if (sdformat->pad >= CSI_NUM_PADS)
+@@ -1264,37 +1287,42 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 		goto out;
+ 	}
+ 
+-	csi_try_fmt(priv, sensor, cfg, sdformat, &crop, &cc);
++	crop = __csi_get_crop(priv, cfg, sdformat->which);
++	compose = __csi_get_compose(priv, cfg, sdformat->which);
+ 
+-	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
+-		cfg->try_fmt = sdformat->format;
+-		goto out;
+-	}
++	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
+ 
+-	priv->format_mbus[sdformat->pad] = sdformat->format;
+-	priv->cc[sdformat->pad] = cc;
++	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
++	*fmt = sdformat->format;
+ 
+ 	if (sdformat->pad == CSI_SINK_PAD) {
+ 		int pad;
+ 
+-		/* reset the crop window */
+-		priv->crop = crop;
+-
+ 		/* propagate format to source pads */
+ 		for (pad = CSI_SINK_PAD + 1; pad < CSI_NUM_PADS; pad++) {
+ 			const struct imx_media_pixfmt *outcc;
+ 			struct v4l2_subdev_format format;
++			struct v4l2_mbus_framefmt *outfmt;
+ 
+ 			format.pad = pad;
+-			format.which = V4L2_SUBDEV_FORMAT_ACTIVE;
++			format.which = sdformat->which;
+ 			format.format = sdformat->format;
+-			csi_try_fmt(priv, sensor, cfg, &format, &crop, &outcc);
++			csi_try_fmt(priv, sensor, cfg, &format, NULL, compose,
++				    &outcc);
+ 
+-			priv->format_mbus[pad] = format.format;
+-			priv->cc[pad] = outcc;
++			outfmt = __csi_get_fmt(priv, cfg, pad, sdformat->which);
++			*outfmt = format.format;
++
++			if (sdformat->which == V4L2_SUBDEV_FORMAT_ACTIVE)
++				priv->cc[pad] = outcc;
+ 		}
+ 	}
+ 
++	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY)
++		goto out;
++
++	priv->cc[sdformat->pad] = cc;
++
+ 	/* propagate IDMAC output pad format to capture device */
+ 	imx_media_mbus_fmt_to_pix_fmt(&vdev_fmt,
+ 				      &priv->format_mbus[CSI_SRC_PAD_IDMAC],
+@@ -1314,18 +1342,17 @@ static int csi_get_selection(struct v4l2_subdev *sd,
+ {
+ 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+ 	struct v4l2_mbus_framefmt *infmt;
++	struct v4l2_rect *crop, *compose;
+ 	int ret = 0;
+ 
+-	if (sel->pad >= CSI_NUM_PADS || sel->pad == CSI_SINK_PAD)
++	if (sel->pad != CSI_SINK_PAD)
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&priv->lock);
+ 
+ 	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sel->which);
+-	if (!infmt) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
++	crop = __csi_get_crop(priv, cfg, sel->which);
++	compose = __csi_get_compose(priv, cfg, sel->which);
+ 
+ 	switch (sel->target) {
+ 	case V4L2_SEL_TGT_CROP_BOUNDS:
+@@ -1335,36 +1362,54 @@ static int csi_get_selection(struct v4l2_subdev *sd,
+ 		sel->r.height = infmt->height;
+ 		break;
+ 	case V4L2_SEL_TGT_CROP:
+-		if (sel->which == V4L2_SUBDEV_FORMAT_TRY) {
+-			struct v4l2_rect *try_crop =
+-				v4l2_subdev_get_try_crop(&priv->sd,
+-							 cfg, sel->pad);
+-			sel->r = *try_crop;
+-		} else {
+-			sel->r = priv->crop;
+-		}
++		sel->r = *crop;
++		break;
++	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
++		sel->r.left = 0;
++		sel->r.top = 0;
++		sel->r.width = crop->width;
++		sel->r.height = crop->height;
++		break;
++	case V4L2_SEL_TGT_COMPOSE:
++		sel->r = *compose;
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+ 
+-out:
+ 	mutex_unlock(&priv->lock);
+ 	return ret;
+ }
+ 
++static int csi_set_scale(u32 *compose, u32 crop, u32 flags)
++{
++	if ((flags & (V4L2_SEL_FLAG_LE | V4L2_SEL_FLAG_GE)) ==
++		     (V4L2_SEL_FLAG_LE | V4L2_SEL_FLAG_GE) &&
++	    *compose != crop && *compose != crop / 2)
++		return -ERANGE;
++
++	if (*compose <= crop / 2 ||
++	    (*compose < crop * 3 / 4 && !(flags & V4L2_SEL_FLAG_GE)) ||
++	    (*compose < crop && (flags & V4L2_SEL_FLAG_LE)))
++		*compose = crop / 2;
++	else
++		*compose = crop;
++
++	return 0;
++}
++
+ static int csi_set_selection(struct v4l2_subdev *sd,
+ 			     struct v4l2_subdev_pad_config *cfg,
+ 			     struct v4l2_subdev_selection *sel)
+ {
+ 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+ 	struct v4l2_mbus_framefmt *infmt;
++	struct v4l2_rect *crop, *compose;
+ 	struct imx_media_subdev *sensor;
++	int pad;
+ 	int ret = 0;
+ 
+-	if (sel->pad >= CSI_NUM_PADS ||
+-	    sel->pad == CSI_SINK_PAD ||
+-	    sel->target != V4L2_SEL_TGT_CROP)
++	if (sel->pad != CSI_SINK_PAD)
+ 		return -EINVAL;
+ 
+ 	sensor = imx_media_find_sensor(priv->md, &priv->sd.entity);
+@@ -1380,31 +1425,68 @@ static int csi_set_selection(struct v4l2_subdev *sd,
+ 		goto out;
+ 	}
+ 
+-	/*
+-	 * Modifying the crop rectangle always changes the format on the source
+-	 * pad. If the KEEP_CONFIG flag is set, just return the current crop
+-	 * rectangle.
+-	 */
+-	if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
+-		sel->r = priv->crop;
+-		if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
+-			cfg->try_crop = sel->r;
++	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sel->which);
++	crop = __csi_get_crop(priv, cfg, sel->which);
++	compose = __csi_get_compose(priv, cfg, sel->which);
++
++	switch (sel->target) {
++	case V4L2_SEL_TGT_CROP:
++		/*
++		 * Modifying the crop rectangle always changes the format on
++		 * the source pads. If the KEEP_CONFIG flag is set, just return
++		 * the current crop rectangle.
++		 */
++		if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
++			sel->r = priv->crop;
++			if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
++				*crop = sel->r;
++			goto out;
++		}
++
++		csi_try_crop(priv, &sel->r, cfg, infmt, sensor);
++
++		*crop = sel->r;
++
++		/* Reset scaling to 1:1 */
++		compose->width = crop->width;
++		compose->height = crop->height;
++		break;
++	case V4L2_SEL_TGT_COMPOSE:
++		/*
++		 * Modifying the compose rectangle always changes the format on
++		 * the source pads. If the KEEP_CONFIG flag is set, just return
++		 * the current compose rectangle.
++		 */
++		if (sel->flags & V4L2_SEL_FLAG_KEEP_CONFIG) {
++			sel->r = priv->compose;
++			if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
++				*compose = sel->r;
++			goto out;
++		}
++
++		sel->r.left = 0;
++		sel->r.top = 0;
++		ret = csi_set_scale(&sel->r.width, crop->width, sel->flags);
++		if (ret)
++			goto out;
++		ret = csi_set_scale(&sel->r.height, crop->height, sel->flags);
++		if (ret)
++			goto out;
++
++		*compose = sel->r;
++		break;
++	default:
++		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+-	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sel->which);
+-	csi_try_crop(priv, &sel->r, cfg, infmt, sensor);
+-
+-	if (sel->which == V4L2_SUBDEV_FORMAT_TRY) {
+-		cfg->try_crop = sel->r;
+-	} else {
+-		struct v4l2_mbus_framefmt *outfmt =
+-			&priv->format_mbus[sel->pad];
++	/* Reset source pads to sink compose rectangle */
++	for (pad = CSI_SINK_PAD + 1; pad < CSI_NUM_PADS; pad++) {
++		struct v4l2_mbus_framefmt *outfmt;
+ 
+-		priv->crop = sel->r;
+-		/* Update the source format */
+-		outfmt->width = sel->r.width;
+-		outfmt->height = sel->r.height;
++		outfmt = __csi_get_fmt(priv, cfg, pad, sel->which);
++		outfmt->width = compose->width;
++		outfmt->height = compose->height;
+ 	}
+ 
+ out:
+@@ -1467,6 +1549,12 @@ static int csi_registered(struct v4l2_subdev *sd)
+ 			priv->skip[i - 1] = &csi_skip[0];
+ 	}
+ 
++	/* init default crop and compose rectangle sizes */
++	priv->crop.width = 640;
++	priv->crop.height = 480;
++	priv->compose.width = 640;
++	priv->compose.height = 480;
++
+ 	/* init default frame interval */
+ 	priv->frame_interval.numerator = 1;
+ 	priv->frame_interval.denominator = 30;
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.11.0
+---------->8----------
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
