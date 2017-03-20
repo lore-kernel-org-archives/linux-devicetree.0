@@ -1,39 +1,26 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 8/9] ASoC: add audio-graph-card document
-Date: Mon, 20 Mar 2017 14:31:50 -0500
-Message-ID: <20170320193150.ahw2zxpteeywgyxd@rob-hp-laptop>
-References: <8760jdivfm.wl%kuninori.morimoto.gx@renesas.com>
- <87tw6xhghs.wl%kuninori.morimoto.gx@renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: iio: accel: adxl345: Add optional
+ interrupt-names support
+Date: Mon, 20 Mar 2017 14:34:04 -0500
+Message-ID: <20170320193404.6c7s4c5qpdgvim2p@rob-hp-laptop>
+References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
+ <1489403497-27849-2-git-send-email-eraretuya@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87tw6xhghs.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489403497-27849-2-git-send-email-eraretuya@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eva Rachel Retuya <eraretuya@gmail.com>
+Cc: jic23@kernel.org, linux-iio@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, dmitry.torokhov@gmail.com, michael.hennerich@analog.com, daniel.baluta@gmail.com, amsfield22@gmail.com, florian.vaussard@heig-vd.ch, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 05:54:22AM +0000, Kuninori Morimoto wrote:
+On Mon, Mar 13, 2017 at 07:11:34PM +0800, Eva Rachel Retuya wrote:
+> Add interrupt-names property in order to specify interrupt pin in use.
 > 
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> 
-> "Audio Graph Card" = "Simple Card" + "OF-graph"
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Eva Rachel Retuya <eraretuya@gmail.com>
 > ---
-> v3 -> v4
-> 
->  - remove prefix
->  - asoc-audio-graph-card -> audio-graph-card
->  - dai-controller -> audio-codec
-> 
->  .../devicetree/bindings/sound/audio-graph-card.txt | 124 +++++++++++++++++++++
->  1 file changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/audio-graph-card.txt
+>  Documentation/devicetree/bindings/iio/accel/adxl345.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
