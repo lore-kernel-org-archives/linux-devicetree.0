@@ -1,92 +1,104 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Tue, 21 Mar 2017 11:36:29 +0000
-Message-ID: <20170321113629.GW21222@n2100.armlinux.org.uk>
-References: <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
- <20170319103801.GQ21222@n2100.armlinux.org.uk>
- <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
- <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
- <20170320132930.GJ21222@n2100.armlinux.org.uk>
- <d0e2a9c2-5e94-d810-7ef4-ae089a6b25f5@xs4all.nl>
- <20170320141158.GK21222@n2100.armlinux.org.uk>
- <40e08d05-58cd-a295-3174-123147ee2ac5@xs4all.nl>
- <20170321104212.GC3784@bigcity.dyn.berto.se>
- <7fe51907-311d-e1cd-3e4c-dd3dc4af7d78@xs4all.nl>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: Re: [PATCH v2 1/5] dt-bindings: update device tree
+ binding for Allwinner PRCM CCUs
+Date: Tue, 21 Mar 2017 19:37:32 +0800
+Message-ID: <20170321143806.c0ku8Okq@smtp3j.mail.yandex.net>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <7fe51907-311d-e1cd-3e4c-dd3dc4af7d78@xs4all.nl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kerne
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBKFBYTDAKGQEO3QPZTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 11:59:02AM +0100, Hans Verkuil wrote:
-> Ah, good to hear that -s works with MC. I was not sure about that.
-> Thanks for the feedback!
 
-Not soo good on iMX6:
+2017=E5=B9=B43=E6=9C=8821=E6=97=A5 =E4=B8=8B=E5=8D=883:41=E4=BA=8E Maxime R=
+ipard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Thu, Mar 16, 2017 at 01:28:04AM +0800, Icenowy Zheng wrote:=20
+> > Many Allwinner SoCs after A31 have a CCU in PRCM block.=20
+> >=20
+> > Give the ones on H3 and A64 compatible strings.=20
+> >=20
+> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
+> > ---=20
+> > Changes in v2:=20
+> > - Add iosc for R_CCU's on H3/A64. (A31, A23 and A33 seem to have differ=
+ent=20
+> >=C2=A0=C2=A0 clock for mux 3 of ar100 clk. Investgations are needed for =
+them.)=20
+> >=20
+> >=C2=A0 Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 18 ++++++=
++++++++++++-=20
+> >=C2=A0 1 file changed, 17 insertions(+), 1 deletion(-)=20
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt b/Do=
+cumentation/devicetree/bindings/clock/sunxi-ccu.txt=20
+> > index 68512aa398a9..4a4addff595d 100644=20
+> > --- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt=20
+> > +++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt=20
+> > @@ -7,9 +7,11 @@ Required properties :=20
+> >=C2=A0 - "allwinner,sun8i-a23-ccu"=20
+> >=C2=A0 - "allwinner,sun8i-a33-ccu"=20
+> >=C2=A0 - "allwinner,sun8i-h3-ccu"=20
+> > + - "allwinner,sun8i-h3-r-ccu"=20
+> >=C2=A0 - "allwinner,sun8i-v3s-ccu"=20
+> >=C2=A0 - "allwinner,sun9i-a80-ccu"=20
+> >=C2=A0 - "allwinner,sun50i-a64-ccu"=20
+> > + - "allwinner,sun50i-a64-r-ccu"=20
+> >=C2=A0 - "allwinner,sun50i-h5-ccu"=20
+> >=C2=A0=20
+> >=C2=A0 - reg: Must contain the registers base address and length=20
+> > @@ -20,7 +22,11 @@ Required properties :=20
+> >=C2=A0 - #clock-cells : must contain 1=20
+> >=C2=A0 - #reset-cells : must contain 1=20
+> >=C2=A0=20
+> > -Example:=20
+> > +For the PRCM CCUs on H3/A64, one more clock is needed:=20
+> > +- "iosc": another frequency oscillator used for CPUS (usually at 32000=
+Hz,=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 not the same wi=
+th losc)=20
+>
+> This is called the internal oscillator in the datasheet, it would=20
+> probably make more sense to call it that way in the documentation too.=20
+>
+> This oscillator seems to be clocked at 16MHz, so we should represent=20
+> it as such.=20
+>
+> And I'm wondering, are you *sure* that it's fed directly from the=20
+> internal oscillator, or goes through the registers in the RTC, with=20
+> the 32 divider and 16 prescaler by default that makes it at roughly=20
+> the same rate (31.25kHz).=20
 
-$ v4l2-compliance -d /dev/video10 -s --expbuf-device=/dev/video0
-...
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-                fail: v4l2-test-input-output.cpp(420): G_INPUT not supported for a capture device
-        test VIDIOC_G/S/ENUMINPUT: FAIL
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-...
-        Control ioctls:
-                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-                test VIDIOC_QUERYCTRL: OK
-                test VIDIOC_G/S_CTRL: OK
-                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-                fail: v4l2-test-controls.cpp(782): subscribe event for control 'User Controls' failed
-                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
-...
-Streaming ioctls:
-        test read/write: OK (Not Supported)
-                fail: v4l2-test-buffers.cpp(297): g_field() == V4L2_FIELD_ANY
-                fail: v4l2-test-buffers.cpp(703): buf.check(q, last_seq)
-                fail: v4l2-test-buffers.cpp(973): captureBufs(node, q, m2m_q, frame_count, false)
-        test MMAP: FAIL
-        test USERPTR: OK (Not Supported)
-                fail: v4l2-test-buffers.cpp(1188): can_stream && ret != EINVAL
-        test DMABUF: FAIL
+BSP clock driver makes it a 32000Hz fixed clock.
 
-(/dev/video0 being CODA).  CODA itself seems to have failures:
+>
+> Maxime=20
+>
+> --=20
+> Maxime Ripard, Free Electrons=20
+> Embedded Linux and Kernel engineering=20
+> http://free-electrons.com=20
+>
+> --=20
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.=20
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org=20
+> For more options, visit https://groups.google.com/d/optout.=20
 
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                warn: v4l2-test-formats.cpp(1187): S_PARM is supported for buftype 2, but not ENUM_FRAMEINTERVALS
-                warn: v4l2-test-formats.cpp(1194): S_PARM is supported but doesn't report V4L2_CAP_TIMEPERFRAME
-                test VIDIOC_G/S_PARM: OK
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                fail: v4l2-test-formats.cpp(774): fmt_out.g_colorspace() != col
-...
-Streaming ioctls:
-        test read/write: OK (Not Supported)
-                fail: v4l2-test-buffers.cpp(956): q.create_bufs(node, 1, &fmt) != EINVAL
-        test MMAP: FAIL
-        test USERPTR: OK (Not Supported)
-        test DMABUF: Cannot test, specify --expbuf-device
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
