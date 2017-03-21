@@ -1,109 +1,76 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sun8i-codec: Remove analog "HP" widget"
-	to the asoc tree
-Date: Tue, 21 Mar 2017 18:45:57 +0000
-Message-ID: <E1cqOn7-0001Bk-6c@debutante>
-References: <20170210094133.11382-2-mylene.josserand@free-electrons.com>
+From: Antonio Borneo <borneo.antonio@gmail.com>
+Subject: Re: [PATCH] arm64: dts: hi6220: enable DMA in spi0
+Date: Tue, 21 Mar 2017 20:13:29 +0100
+Message-ID: <CAAj6DX3kvc-wy+xSPBC26Xw0s6BBApTJQGrVS1BsiFgfDybBbw@mail.gmail.com>
+References: <20170321070818.3247-1-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1281130112911099090=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170210094133.11382-2-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170321070818.3247-1-guodong.xu@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guodong Xu <guodong.xu@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Zhong Kaihua <zhongkaihua@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, xuwei5@hisilicon.com, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1281130112911099090==
-Content-Type: text/plain
+On Tue, Mar 21, 2017 at 8:08 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
+> From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+>
+> Enable DMA in spi0.
 
-The patch
+Hi Guodong, Xiaoyin,
 
-   ASoC: sun8i-codec: Remove analog "HP" widget
+added linux-spi in copy.
 
-has been applied to the asoc tree at
+Actually the patch does not enable the DMA. The commit message is not correct.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> Cc: Antonio Borneo <borneo.antonio@gmail.com>
+> Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
+> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index 470461d..e40625f 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -682,7 +682,8 @@
+>                         reg = <0x0 0xf7106000 0x0 0x1000>;
+>                         interrupts = <0 50 4>;
+>                         bus-id = <0>;
+> -                       enable-dma = <0>;
+> +                       dmas =  <&dma0 0 &dma0 1>;
+> +                       dma-names = "rx", "tx";
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+The controller spi0 is a standard ARM PL022.
+This patch removes the nonexistent property "enable-dma" and specifies
+which DMA controller and which DMA channels are connected to spi0.
+The values are coherent with the documentation available for hi6220.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Apart from the commit message, I'm fine with this patch.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+On PL022 the DMA is not enabled in the DT node of the controller but
+in the DT node of each spi device, through the property
+"pl022,com-mode".
+A separate patch should eventually enable the DMA for those spi
+devices that require it.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Best Regards,
+Antonio
 
-Thanks,
-Mark
-
->From a82f16188a32a3c889916c582ea2d9188e3c2734 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
- <mylene.josserand@free-electrons.com>
-Date: Sat, 18 Mar 2017 08:55:05 +0100
-Subject: [PATCH] ASoC: sun8i-codec: Remove analog "HP" widget
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-The "HP" widget is already present and take part to
-the analog part (sun8i-codec-analog).
-
-Remove it from the digital part as it is unnecessary.
-
-Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sunxi/sun8i-codec.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index b92bdc8361af..d60f6fbd36a2 100644
---- a/sound/soc/sunxi/sun8i-codec.c
-+++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -321,8 +321,6 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
- 			    SUN8I_MOD_RST_CTL_AIF1, 0, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY("RST DAC", SUN8I_MOD_RST_CTL,
- 			    SUN8I_MOD_RST_CTL_DAC, 0, NULL, 0),
--
--	SND_SOC_DAPM_OUTPUT("HP"),
- };
- 
- static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
-@@ -344,10 +342,6 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
- 	/* DAC Mixer Routes */
- 	{ "Left DAC Mixer", "LSlot 0", "Digital Left DAC"},
- 	{ "Right DAC Mixer", "RSlot 0", "Digital Right DAC"},
--
--	/* End of route : HP out */
--	{ "HP", NULL, "Left DAC Mixer" },
--	{ "HP", NULL, "Right DAC Mixer" },
- };
- 
- static struct snd_soc_dai_ops sun8i_codec_dai_ops = {
--- 
-2.11.0
-
-
---===============1281130112911099090==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1281130112911099090==--
+>                         clocks = <&sys_ctrl HI6220_SPI_CLK>;
+>                         clock-names = "apb_pclk";
+>                         pinctrl-names = "default";
+> --
+> 2.10.2
+>
