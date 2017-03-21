@@ -1,97 +1,195 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [v3 3/5] coresight: add support for debug module
-Date: Tue, 21 Mar 2017 10:16:45 +0000
-Message-ID: <7226bc83-24f5-f609-2f87-f0afc7657488@arm.com>
-References: <20170309175915.GA964@leoy-linaro>
- <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
- <20170313165600.GB32431@linaro.org>
- <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
- <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
- <20170317101328.GA19877@leoy-linaro> <20170317155007.GA20435@linaro.org>
- <20170317162836.GD2020@leoy-linaro>
- <5995f6a7-08b1-c868-fc88-a145d1748a33@arm.com>
- <CANLsYkyiAnSGW4Ujs6L-yBKK3no3zigbyBgOCWbm06ZdV-f2Hw@mail.gmail.com>
- <20170321025924.GA7429@leoy-linaro>
+From: Olivier MOYSAN <olivier.moysan@st.com>
+Subject: Re: [RESEND PATCH v2 1/2] ASoC: stm32: add bindings
+	for SAI
+Date: Tue, 21 Mar 2017 10:31:54 +0000
+Message-ID: <2d9ee6db-e030-39ef-1988-b8305bcf042f@st.com>
+References: <f6a9354e-dbab-f485-c763-21c8e3af3d62@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170321025924.GA7429@leoy-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <f6a9354e-dbab-f485-c763-21c8e3af3d62@st.com>
+Content-Language: en-US
+Content-ID: <47D692996A275247AFE178858F154E10@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "tiwai@suse.com" <tiwai@suse.com>, "broonie@kernel.org" <broonie@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/03/17 02:59, Leo Yan wrote:
-> On Mon, Mar 20, 2017 at 10:40:00AM -0600, Mathieu Poirier wrote:
->
-> [...]
->
->>>>> If we don't check for "nohlt" some platform may freeze, others may work.
->>>>> If we
->>>>> mandate that "nohlt" be present on the kernel cmd line it works in all
->>>>> cases.
->>>>> As such mandating that "nohlt" be present is a better way to go.
->>>>
->>>>
->>>> Sure, so I will add below checking code in the probe function, please
->>>> let me know if you have alter better way to implement this:
->>>>
->>>> +       if (IS_ENABLED(CONFIG_CPU_IDLE) &&
->>>> +                       !strstr(boot_command_line, "nohlt")) {
->>>> +               dev_err(dev, "May not be accessible in CPU power
->>>> domain.\n");
->>>> +               return -EPERM;
->>>> +       }
->>>>
->>>
->>> There is an API which kind of achieves what "nohlt" does at runtime :
->>>
->>>   cpu_idle_poll_ctrl(true)
->>>
->>> So may be we could use that instead of depending on "nohlt". The other side
->>> of the issues is "when do we decide to use the API". May be we could add
->>> something
->>> like : enable_debug, which could then trigger the panic notifier
->>> registrations
->>> and the above. That would still leave us with a case where the system
->>> crashes
->>> even before the user gets a terminal. May be the following is the best
->>> option :
->>>
->>> 1) Dedicated kernel command line parameter for enabling the CPU debug at
->>> boot/probe.
->>>
->>> and
->>>
->>> 2) Runtime enable method via sysfs.
->>>
->>> What do you think ?
+Hello Rob,
+
+On 03/18/2017 09:43 PM, Rob Herring wrote:
+> On Thu, Mar 16, 2017 at 5:50 AM, Olivier MOYSAN <olivier.moysan@st.com> wrote:
+>> Hello Rob,
 >>
->> In my opinion booting with "nohlt" on the cmd line is sufficient to
->> determine if we should use the driver or not.  That way we also avoid
->> declaring yet another sysfs flag, something I really want to avoid.
+>> Thanks for your feedback.
+>>
+>> On 03/15/2017 06:46 PM, Rob Herring wrote:
+>>> On Tue, Mar 07, 2017 at 10:44:31AM +0100, olivier moysan wrote:
+>>>> This patch adds documentation of device tree bindings for the
+>>>> STM32 SAI ASoC driver.
+>>>>
+>>>> Signed-off-by: olivier moysan <olivier.moysan@st.com>
+>>>> ---
+>>>>  .../devicetree/bindings/sound/st,stm32-sai.txt     | 79 ++++++++++++++++++++++
+>>>>  1 file changed, 79 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>>>> new file mode 100644
+>>>> index 0000000..b3be26d
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>>>> @@ -0,0 +1,79 @@
+>>>> +STMicroelectronics STM32 Serial Audio Interface (SAI).
+>>>> +
+>>>> +The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
+>>>> +as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
+>>>> +The SAI contains two independent audio sub-blocks. Each sub-block has
+>>>> +its own clock generator and I/O lines controller.
+>>>> +
+>>>> +Required properties:
+>>>> +  - compatible: Should be "st,stm32f4-sai"
+>>>> +  - reg: Base address and size of SAI common register set.
+>>>> +  - clocks: Must contain phandle and clock specifier pairs for each entry
+>>>> +    in clock-names.
+>>>> +  - clock-names: Must contain "clk_x8k" and "clk_x11k"
+>>>> +    "clk_x8k": SAI parent clock for sampling rates multiple of 8kHz.
+>>>> +    "clk_x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
+>>>
+>>> clk_ is redundant.
+>>>
+>>
+>> Do you mean, removing clk_ prefix ?
 >
-> Agree.
+> Yes.
 >
-> I did spend some time to implement coresight core framework to support
-> debug module, you could see it on:http://termbin.com/k2fj; this also
-> gives me more sense which is better choice. If declaring another sysfs
-> flag to support debug module in coresight framework, this lets the
-> codes and interfaces more complex. E.g. for best fit into coresight
-> framework, finally we can get 8 sysfs nodes for 8 CPUs in system; so
-> that means we need enable every CPU one by one.
+>>
+>>>> +  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
+>>>> +
+>>>> +Note: Each SAI controller should have an alias correctly numbered
+>>>> +in "aliases" node, to provide explicit name to CPU DAI.
+>>>
+>>> No, it shouldn't. Why do you need that?
+>>>
+>>
+>> Yes, this is not mandatory. This is convenient to identify sai
+>> controller, as we may have up to 8 instances.
+>> I can make it optional, or remove it if you think it is not relevant.
+>
+> Remove it.
+>
 
-Having a node for each debug area indeed doesn't look good. We could
-as will stick a single node under /sys/kernel/debug/ which would enable/disable
-the debug component.
+One more thing regarding aliases.
+In future patches, I will add alsa controls to configure sai.
+Some stm32 socs exhibit several sai (4 instances for H7)
+It will be necessary to identify to which sai each control apply,
+through the control names:
+	SAI1A control X
+	SAI2A control X
+	...
+sub-node compatible already allows to identify A or B sub-instance.
 
-I am OK with it being tied to nohlt. In that case we will have to add
-a Kconfig dependency on GENERIC_IDLE_POLL_SETUP (though it is selected
-by default on ARM/ARM64). Parsing the boot command line for nohlt doesn't
-look like a good idea. We may have to figure out a way to do that. Also,
-please could you add support for building this as a module ? Since it
-doesn't depend on the coresight bus anyway, it should be pretty straight
-forward.
+An alternative to alias, may be to use dev_name information to identify 
+sai instance. But this does not produce user friendly control names.
 
-Suzuki
+Another way is to use compatible also. The drawback here
+is to multiply compatible names. (many soc families and many instances)
+
+What is your recommendation ?
+If there is another solution, I did not consider, please let me know.
+
+>>
+>>>
+>>>> +
+>>>> +Optional properties:
+>>>> +  - resets: Reference to a reset controller asserting the SAI
+>>>> +
+>>>> +SAI subnodes:
+>>>> +Two subnodes corresponding to SAI sub-block instances A et B can be defined.
+>>>> +Subnode can be omitted for unsused sub-block.
+>>>> +
+>>>> +SAI subnodes required properties:
+>>>> +  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
+>>>> +    for SAI sub-block A or B respectively.
+>>>> +  - reg: Base address and size of SAI sub-block register set.
+>>>> +  - clocks: Must contain one phandle and clock specifier pair
+>>>> +    for sai_ck which feeds the internal clock generator.
+>>>> +  - clock-names: Must contain "sai_ck".
+>>>> +  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
+>>>> +  - dma-names: identifier string for each DMA request line
+>>>> +    "tx": if sai sub-block is configured as playback DAI
+>>>> +    "rx": if sai sub-block is configured as capture DAI
+>>>> +  - pinctrl-names: should contain only value "default"
+>>>> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
+>>>> +
+>>>> +Example:
+>>>> +sai1: sai1@40015800 {
+>>>> +    compatible = "st,stm32f4-sai";
+>>>> +    reg = <0x40015800 0x400>;
+>>
+>>         reg = <0x40015800 0x4>;
+>>
+>>>> +    clocks = <&rcc 1 CLK_SAIQ_PDIV>, <&rcc 1 CLK_I2SQ_PDIV>;
+>>>> +    clock-names = "clk_x8k", "clk_x11k";
+>>>> +    interrupts = <87>;
+>>>> +    resets = <&rcc 310>;
+>>>> +
+>>>> +    sai1b: sai@1 {
+>>>
+>>> unit address needs a reg property.
+>>>
+>>> audio-controller@1
+>>>
+>>
+>> Right. This needs to be updated as follows:
+>>         sai1b: sai1b@40015824 {
+>
+> audio-controller@...
+>
+>>                 ...
+>>                 reg = <0x40015824 0x1C>;
+>>                 ...
+>>         };
+>>
+>>>> +            #sound-dai-cells = <0>;
+>>>> +            compatible = "st,stm32-sai-sub-b";
+>>>> +            clocks = <&rcc 1 CLK_SAI2>;
+>>>> +            clock-names = "sai_ck";
+>>>> +            dmas = <&dma2 5 0 0x400 0x1>;
+>>>> +            dma-names = "tx";
+>>>> +    };
+>>>> +};
+>>>> +
+>>>> +sound {
+>>>> +    compatible = "simple-audio-card";
+>>>
+>>> Perhaps you want to use the graph-card here. It's getting close to
+>>> merging.
+>>>
+>>
+>> mclk-fs property is required when SAI is configured as master.
+>> It seems that mclk-fs is not supported in current version
+>> of audio graph card. So I thing I should keep simple card for the time
+>> being. Anyway, I plan further updates for SAI, so I will
+>> have opportunity to change to graph card at that time.
+>
+> Well, it's not easy to switch later and maintain compatibility. Is it
+> complicated to add mclk-fs property? The intent is graph-card supports
+> everything simple-card supports.
+>
+> Rob
+>
+
+Right, it should not be too complicated to add mclk-fs support to 
+graph-card.
+
+BRs
+olivier
