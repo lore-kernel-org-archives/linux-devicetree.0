@@ -1,81 +1,68 @@
-From: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Subject: [PATCH v9 2/3] backlight arcxcnn devicetree bindings for ArcticSand
-Date: Tue, 21 Mar 2017 12:58:47 -0400
-Message-ID: <1490115528-11044-2-git-send-email-olimpiu@arcticsand.com>
-References: <1490115528-11044-1-git-send-email-olimpiu@arcticsand.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490115528-11044-1-git-send-email-olimpiu@arcticsand.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com, joe@perches.com, medasaro@arcticsand.com, daniel.thompson@linaro.org, lkp@intel.com, fengguang.wu@intel.com, Olimpiu Dejeu <olimpiu@arcticsand.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v6 03/11] dt-bindings: perf: hisi: Add Devicetree
+ bindings for Hisilicon SoC PMU
+Date: Tue, 21 Mar 2017 17:28:20 +0000
+Message-ID: <20170321172819.GE29116@leverpostej>
+References: <1489127248-112605-1-git-send-email-anurup.m@huawei.com>
+ <20170321140741.GD22188@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170321140741.GD22188@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anurup M <anurupvasu@gmail.com>
+Cc: dikshit.n@huawei.com, devicetree@vger.kernel.org, wangkefeng.wang@huawei.com, gabriele.paoloni@huawei.com, linux-arm-kernel@lists.infradead.org, john.garry@huawei.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, zhangshaokun@hisilicon.com, robh+dt@kernel.org, sanil.kumar@hisilicon.com, huangdaode@hisilicon.com, shiju.jose@huawei.com, shyju.pv@huawei.com, tanxiaojun@huawei.com, anurup.m@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-backlight: Add devicetree bindings for the Arctic Sand backlight driver
-This patch provides devicetree bindings for the Arctic Sand
-    driver submitted in the previous patch
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
----
-v8 => v9:
-- Version updated to match other patch in set. No other changes.
-v7 => v8:
-- Version updated to match other patch in set. No other changes.
-v6 => v7:
-- Version updated to match other patch in set. No other changes.
-v5 => v6:
-- Version updated to match other patch in set. No other changes.
-v4 => v5:
-- Added spaces for increased readability per Lee Jones
-v3 => v4:
-- Added spaces for increased readability per Lee Jones
-v2 => v3:
-- Version updated to match other patch in set. No other changes.
-v1 => v2:
-- Version updated to match other patch in set. No other changes.
+On Tue, Mar 21, 2017 at 02:07:42PM +0000, Mark Rutland wrote:
+> On Fri, Mar 10, 2017 at 01:27:27AM -0500, Anurup M wrote:
+> > +HiSilicon SoC chip is encapsulated by multiple CPU and IO dies. The CPU die
+> > +is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
+> > +in HiP05/06/07 chips are further grouped as CPU clusters (CCL) which includes
+> > +4 cpu-cores each.
+> > +e.g. In the case of HiP05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
+> > +The L3 cache is further grouped as 4 L3 cache banks in a SCCL.
+> > +
+> > +The Hisilicon SoC PMU DT node bindings for uncore PMU devices are as below.
+> > +For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
+> > +the parent node will be the djtag node of the corresponding CPU die (SCCL).
+> > +
+> > +L3 cache
+> > +---------
+> > +The L3 cache is dedicated for each SCCL. Each SCCL in HiP05/06/07 chips have 4
+> > +L3 cache banks. Each L3 cache bank have separate DT nodes.
+> > +
+> > +Required properties:
+> > +
+> > +	- compatible : This value should be as follows
+> > +		(a) "hisilicon,hip05-pmu-l3c-v1" for v1 hw in HiP05 chipset
+> > +		(b) "hisilicon,hip06-pmu-l3c-v1" for v1 hw in HiP06 chipset
+> > +		(c) "hisilicon,hip07-pmu-l3c-v2" for v2 hw in HiP07 chipset
+> > +
+> > +	- hisilicon,module-id : This property is a combination of two values
+> > +	    in the below order.
+> > +		a) Module ID: The module identifier for djtag.
+> > +		b) Instance or Bank ID: This will identify the L3 cache bank
+> > +		 or instance.
+> 
+> I take it this is intended two mean this property is two cells in
+> length, with one cell for each of the below.
+> 
+> This is a somewhat confusing proeprty given that the name only applies
+> to the first half of the value...
 
- .../bindings/leds/backlight/arcxcnn_bl.txt         | 33 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+Please split this itno two properties, and have a hisilicon,instance-id
+for the L3 nodes.
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-new file mode 100644
-index 0000000..ecb7731
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-@@ -0,0 +1,33 @@
-+Binding for ArcticSand arc2c0608 LED driver
-+
-+Required properties:
-+- compatible:		should be "arc,arc2c0608"
-+- reg:			slave address
-+
-+Optional properties:
-+- default-brightness:	brightness value on boot, value from: 0-4095
-+- label:		The name of the backlight device
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- led-sources:		List of enabled channels from 0 to 5.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+
-+- arc,led-config-0:	setting for register ILED_CONFIG_0
-+- arc,led-config-1:	setting for register ILED_CONFIG_1
-+- arc,dim-freq:		PWM mode frequence setting (bits [3:0] used)
-+- arc,comp-config:	setting for register CONFIG_COMP
-+- arc,filter-config:	setting for register FILTER_CONFIG
-+- arc,trim-config:	setting for register IMAXTUNE
-+
-+Note: Optional properties not specified will default to values in IC EPROM
-+
-+Example:
-+
-+arc2c0608@30 {
-+	compatible = "arc,arc2c0608";
-+	reg = <0x30>;
-+	default-brightness = <500>;
-+	label = "lcd-backlight";
-+	linux,default-trigger = "backlight";
-+	led-sources = <0 1 2 5>;
-+};
-+
--- 
-2.7.4
+Thanks,
+Mark.
