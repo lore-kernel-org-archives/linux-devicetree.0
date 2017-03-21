@@ -1,81 +1,97 @@
-From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] iio: accel: adxl345: Add support for triggered buffer
-Date: Tue, 21 Mar 2017 17:56:57 +0800
-Message-ID: <20170321095655.GA5213@Socrates-UM>
-References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
- <1489403497-27849-5-git-send-email-eraretuya@gmail.com>
- <CAHp75VefS18nAH3HkQgNdmo5oUWoaQ7ctj=eXHx9XjwrJtZzuQ@mail.gmail.com>
- <8da981ed-6ce0-0be5-6b56-c3c1ec0d5dab@kernel.org>
- <f03e9577-41f9-8f1f-1963-3e8cbac5f979@metafoo.de>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [v3 3/5] coresight: add support for debug module
+Date: Tue, 21 Mar 2017 10:16:45 +0000
+Message-ID: <7226bc83-24f5-f609-2f87-f0afc7657488@arm.com>
+References: <20170309175915.GA964@leoy-linaro>
+ <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
+ <20170313165600.GB32431@linaro.org>
+ <516f8989-4dde-2686-d549-0761feb14d1b@arm.com>
+ <CANLsYkzJsGvr4ZzNbTwcPu1Qki6=Szvu+bMjHZ_rza==DqFChw@mail.gmail.com>
+ <20170317101328.GA19877@leoy-linaro> <20170317155007.GA20435@linaro.org>
+ <20170317162836.GD2020@leoy-linaro>
+ <5995f6a7-08b1-c868-fc88-a145d1748a33@arm.com>
+ <CANLsYkyiAnSGW4Ujs6L-yBKK3no3zigbyBgOCWbm06ZdV-f2Hw@mail.gmail.com>
+ <20170321025924.GA7429@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f03e9577-41f9-8f1f-1963-3e8cbac5f979-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170321025924.GA7429@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 08:46:11PM +0100, Lars-Peter Clausen wrote:
-> On 03/15/2017 10:50 PM, Jonathan Cameron wrote:
-> > On 13/03/17 12:16, Andy Shevchenko wrote:
-> >> On Mon, Mar 13, 2017 at 1:11 PM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>> Provide an all-axes read for triggered buffering.
-> >>
-> >> Better description is needed.
-> >>
-> >>> -static int adxl345_get_triple(struct adxl345_data *data, void *buf)
-> >>> +static int adxl345_get_triple(struct adxl345_data *data)
-> >>
-> >> Ping-ponging again. This should be essentially a change in the patch
-> >> where you introduce a helper.
-> >>
-> >>> +err_buffer_cleanup:
-> >>> +       iio_triggered_buffer_cleanup(indio_dev);
-> >>>  err_trigger_unregister:
-> >>>         if (data->drdy_trig)
-> >>>                 iio_trigger_unregister(data->drdy_trig);
-> >>
-> >> devm_iio_*() ?
-> >>
-> >>> @@ -334,6 +435,7 @@ int adxl345_core_remove(struct device *dev)
-> >>>         struct adxl345_data *data = iio_priv(indio_dev);
-> >>>
-> >>>         iio_device_unregister(indio_dev);
-> >>> +       iio_triggered_buffer_cleanup(indio_dev);
-> >>>         if (data->drdy_trig)
-> >>>                 iio_trigger_unregister(data->drdy_trig);
-> >>
-> >> Ditto.
-> >>
-> >>> diff --git a/drivers/iio/accel/adxl345_i2c.c b/drivers/iio/accel/adxl345_i2c.c
-> >>> index 8c791b8..1e0f071 100644
-> >>> --- a/drivers/iio/accel/adxl345_i2c.c
-> >>> +++ b/drivers/iio/accel/adxl345_i2c.c
-> >>> @@ -30,6 +30,10 @@ static int adxl345_i2c_probe(struct i2c_client *client,
-> >>>         bool use_int2 = false;
-> >>>         int irq;
-> >>>
-> >>> +       if (!i2c_check_functionality(client->adapter,
-> >>> +                                    I2C_FUNC_SMBUS_READ_I2C_BLOCK))
-> >>> +               return -EOPNOTSUPP;
-> >>
-> >> And if driver works before, you make a regression here.
-> > Absolutely. Need a fallback if it's not supported...
-> 
-> I believe regmap has a fallback, so that check could simply be removed, I guess.
-> 
+On 21/03/17 02:59, Leo Yan wrote:
+> On Mon, Mar 20, 2017 at 10:40:00AM -0600, Mathieu Poirier wrote:
+>
+> [...]
+>
+>>>>> If we don't check for "nohlt" some platform may freeze, others may work.
+>>>>> If we
+>>>>> mandate that "nohlt" be present on the kernel cmd line it works in all
+>>>>> cases.
+>>>>> As such mandating that "nohlt" be present is a better way to go.
+>>>>
+>>>>
+>>>> Sure, so I will add below checking code in the probe function, please
+>>>> let me know if you have alter better way to implement this:
+>>>>
+>>>> +       if (IS_ENABLED(CONFIG_CPU_IDLE) &&
+>>>> +                       !strstr(boot_command_line, "nohlt")) {
+>>>> +               dev_err(dev, "May not be accessible in CPU power
+>>>> domain.\n");
+>>>> +               return -EPERM;
+>>>> +       }
+>>>>
+>>>
+>>> There is an API which kind of achieves what "nohlt" does at runtime :
+>>>
+>>>   cpu_idle_poll_ctrl(true)
+>>>
+>>> So may be we could use that instead of depending on "nohlt". The other side
+>>> of the issues is "when do we decide to use the API". May be we could add
+>>> something
+>>> like : enable_debug, which could then trigger the panic notifier
+>>> registrations
+>>> and the above. That would still leave us with a case where the system
+>>> crashes
+>>> even before the user gets a terminal. May be the following is the best
+>>> option :
+>>>
+>>> 1) Dedicated kernel command line parameter for enabling the CPU debug at
+>>> boot/probe.
+>>>
+>>> and
+>>>
+>>> 2) Runtime enable method via sysfs.
+>>>
+>>> What do you think ?
+>>
+>> In my opinion booting with "nohlt" on the cmd line is sufficient to
+>> determine if we should use the driver or not.  That way we also avoid
+>> declaring yet another sysfs flag, something I really want to avoid.
+>
+> Agree.
+>
+> I did spend some time to implement coresight core framework to support
+> debug module, you could see it on:http://termbin.com/k2fj; this also
+> gives me more sense which is better choice. If declaring another sysfs
+> flag to support debug module in coresight framework, this lets the
+> codes and interfaces more complex. E.g. for best fit into coresight
+> framework, finally we can get 8 sysfs nodes for 8 CPUs in system; so
+> that means we need enable every CPU one by one.
 
-Yes, regmap does this check. I've seen it while working on the patchset.
-I checked other drivers doing regmap and some have this check_functionality
-check so I chose to include it because I'm not sure.
+Having a node for each debug area indeed doesn't look good. We could
+as will stick a single node under /sys/kernel/debug/ which would enable/disable
+the debug component.
 
-Will remove it on the next version.
+I am OK with it being tied to nohlt. In that case we will have to add
+a Kconfig dependency on GENERIC_IDLE_POLL_SETUP (though it is selected
+by default on ARM/ARM64). Parsing the boot command line for nohlt doesn't
+look like a good idea. We may have to figure out a way to do that. Also,
+please could you add support for building this as a module ? Since it
+doesn't depend on the coresight bus anyway, it should be pretty straight
+forward.
 
-Thanks,
-Eva
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Suzuki
