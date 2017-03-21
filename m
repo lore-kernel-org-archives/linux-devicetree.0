@@ -1,66 +1,48 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: add the grf clock for dw-mipi-dsi
-Date: Tue, 21 Mar 2017 16:27:38 -0400
-Message-ID: <20170321202738.GI19389@art_vandelay>
-References: <1489722865-22122-1-git-send-email-zyw@rock-chips.com>
- <1489722865-22122-3-git-send-email-zyw@rock-chips.com>
- <20170321201700.GG19389@art_vandelay>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170321201700.GG19389@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/2] Documentation: dt-bindings: Document bindings for Aspeed AST2400/AST2500 ADC
+Date: Tue, 21 Mar 2017 13:48:27 -0700
+Message-ID: <20170321204828.31303-1-raltherr@google.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXIgMjEsIDIwMTcgYXQgMDQ6MTc6MDBQTSAtMDQwMCwgU2VhbiBQYXVsIHdyb3Rl
-Ogo+IE9uIEZyaSwgTWFyIDE3LCAyMDE3IGF0IDExOjU0OjIyQU0gKzA4MDAsIENocmlzIFpob25n
-IHdyb3RlOgo+ID4gRm9yIFJLMzM5OSwgdGhlIGdyZiBjbG9jayBzaG91bGQgYmUgY29udHJvbGxl
-ZCBieSBkdy1taXBpLWRzaSBkcml2ZXIsCj4gPiBhZGQgdGhlIGRlc2NyaXB0aW9uIGZvciB0aGlz
-IGNsb2NrLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hp
-cHMuY29tPgo+ID4gLS0tCj4gPiAKPiA+IENoYW5nZXMgaW4gdjM6IE5vbmUKPiA+IENoYW5nZXMg
-aW4gdjI6IE5vbmUKPiA+IAo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9j
-a2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0ICAgICAgIHwgMiArLQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdf
-bWlwaV9kc2lfcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0Cj4gPiBpbmRleCAxODhm
-NmY3Li43ZTE3YTYwIDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0Cj4gPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19t
-aXBpX2RzaV9yb2NrY2hpcC50eHQKPiA+IEBAIC0xMCw3ICsxMCw3IEBAIFJlcXVpcmVkIHByb3Bl
-cnRpZXM6Cj4gPiAgLSBpbnRlcnJ1cHRzOiBSZXByZXNlbnQgdGhlIGNvbnRyb2xsZXIncyBpbnRl
-cnJ1cHQgdG8gdGhlIENQVShzKS4KPiA+ICAtIGNsb2NrcywgY2xvY2stbmFtZXM6IFBoYW5kbGVz
-IHRvIHRoZSBjb250cm9sbGVyJ3MgcGxsIHJlZmVyZW5jZQo+ID4gICAgY2xvY2socmVmKSBhbmQg
-QVBCIGNsb2NrKHBjbGspLiBGb3IgUkszMzk5LCBhIHBoeSBjb25maWcgY2xvY2sKPiA+IC0gIChw
-aHlfY2ZnKSBpcyBhZGRpdGlvbmFsIHJlcXVpcmVkLiBBcyBkZXNjcmliZWQgaW4gWzFdLgo+ID4g
-KyAgKHBoeV9jZmcpIGFuZCBhIGdyZiBjbG9jayhncmYpIGFyZSBhZGRpdGlvbmFsIHJlcXVpcmVk
-LiBBcyBkZXNjcmliZWQgaW4gWzFdLgo+IAo+IFRoZXNlIGFyZSBvbmx5IHJlcXVpcmVkIGZvciBy
-azMzOTksIHlvdSBzaG91bGQgbWFrZSB0aGF0IGNsZWFyLgo+IAoKSSBjb21wbGV0ZWx5IG1pc3Nl
-ZCAiRm9yIFJLMzM5OSIgb24gbXkgZmlyc3QgcGFzcywgc2lnaC4gU29ycnkgZm9yIHRoZSByZWFk
-aW5nCmNvbXByZWhlbnNpb24gZmFpbC4KCk1pbm9yIG5pdCBpZiB5b3Ugd2FudDogcy9hZGRpdGlv
-bmFsLy8gJiYgcy8uIEFzLywgYXMvCgpFaXRoZXIgd2F5LAoKUmV2aWV3ZWQtYnk6IFNlYW4gUGF1
-bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgoKU2VhbgoKPiBTZWFuCj4gCj4gPiAgLSByb2NrY2hp
-cCxncmY6IHRoaXMgc29jIHNob3VsZCBzZXQgR1JGIHJlZ3MgdG8gbXV4IHZvcGwvdm9wYi4KPiA+
-ICAtIHBvcnRzOiBjb250YWluIGEgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMg
-YXMgZGVmaW5lZCBpbiBbMl0uCj4gPiAgICBGb3Igdm9wYixzZXQgdGhlIHJlZyA9IDwwPiBhbmQg
-c2V0IHRoZSByZWcgPSA8MT4gZm9yIHZvcGwuCj4gPiAtLSAKPiA+IDIuNi4zCj4gPiAKPiA+IF9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gPiBkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0Cj4gPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gPiBo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo+
-IAo+IC0tIAo+IFNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9taXVt
-IE9TCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0g
-T1MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Signed-off-by: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+---
+
+Changes in v2:
+- Rewritten as an IIO ADC device
+
+ .../devicetree/bindings/iio/adc/aspeed_adc.txt       | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+new file mode 100644
+index 000000000000..7748c2c2ad0c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+@@ -0,0 +1,20 @@
++Aspeed AST2400/2500 ADC
++
++This device is a 10-bit converter for 16 voltage channels.  All inputs are
++single ended.
++
++Required properties:
++- compatible: Should be "aspeed,ast2400-adc" or "aspeed,ast2500-adc"
++- reg: memory window mapping address and length
++- clocks: Input clock used to derive the sample clock. Expected to be the
++          SoC's APB clock.
++- #io-channel-cells: Must be set to <1> to indicate channels are selected
++                     by index.
++
++Example:
++	adc@1e6e9000 {
++		compatible = "aspeed,ast2400-adc";
++		reg = <0x1e6e9000 0xB0>;
++		clocks = <&clk_apb>;
++		#io-channel-cells = <1>;
++	};
+-- 
+2.12.1.500.gab5fba24ee-goog
