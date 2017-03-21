@@ -1,76 +1,37 @@
-From: Antonio Borneo <borneo.antonio@gmail.com>
-Subject: Re: [PATCH] arm64: dts: hi6220: enable DMA in spi0
-Date: Tue, 21 Mar 2017 20:13:29 +0100
-Message-ID: <CAAj6DX3kvc-wy+xSPBC26Xw0s6BBApTJQGrVS1BsiFgfDybBbw@mail.gmail.com>
-References: <20170321070818.3247-1-guodong.xu@linaro.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/3] dtc updates for 4.12
+Date: Tue, 21 Mar 2017 12:15:46 -0700
+Message-ID: <CAOesGMiWFPERPapOLCW4iqSuFWiqesBBjGN0ny6XjzFXNfKr4g@mail.gmail.com>
+References: <20170321161958.9658-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170321070818.3247-1-guodong.xu@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Zhong Kaihua <zhongkaihua@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, xuwei5@hisilicon.com, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170321161958.9658-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "arm@kernel.org" <arm@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 8:08 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
-> From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+On Tue, Mar 21, 2017 at 9:19 AM, Rob Herring <robh@kernel.org> wrote:
+> This series syncs dtc with current mainline. The primary motivation is
+> to pull in the new checks I've worked on. This gives lots of new
+> warnings which are turned off by default.
 >
-> Enable DMA in spi0.
+> Arm-soc folks, I've left the PCI checks enabled as they are pretty much
+> all real errors and there aren't that many (about 1200, but that's lots
+> of duplicates). I have a patch for some of them.
 
-Hi Guodong, Xiaoyin,
+Yay for better warnings!
 
-added linux-spi in copy.
+But as with all changes of this kind, when new warnings are introduced
+please give people some time to remove them without turning them on by
+default. We had a cycle like that already.
 
-Actually the patch does not enable the DMA. The commit message is not correct.
+Main reason is that it becomes too hard to spot new warnings when they
+come in if the logs are flooded with 1200 existing warnings.
 
-> Cc: Antonio Borneo <borneo.antonio@gmail.com>
-> Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
-> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index 470461d..e40625f 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -682,7 +682,8 @@
->                         reg = <0x0 0xf7106000 0x0 0x1000>;
->                         interrupts = <0 50 4>;
->                         bus-id = <0>;
-> -                       enable-dma = <0>;
-> +                       dmas =  <&dma0 0 &dma0 1>;
-> +                       dma-names = "rx", "tx";
+How many of them do you have patches for, per chance? If we can see
+them show up quickly the answer to the above might be a bit different.
 
-The controller spi0 is a standard ARM PL022.
-This patch removes the nonexistent property "enable-dma" and specifies
-which DMA controller and which DMA channels are connected to spi0.
-The values are coherent with the documentation available for hi6220.
 
-Apart from the commit message, I'm fine with this patch.
-
-On PL022 the DMA is not enabled in the DT node of the controller but
-in the DT node of each spi device, through the property
-"pl022,com-mode".
-A separate patch should eventually enable the DMA for those spi
-devices that require it.
-
-Best Regards,
-Antonio
-
->                         clocks = <&sys_ctrl HI6220_SPI_CLK>;
->                         clock-names = "apb_pclk";
->                         pinctrl-names = "default";
-> --
-> 2.10.2
->
+-Olof
