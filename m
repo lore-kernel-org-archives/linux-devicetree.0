@@ -1,35 +1,22 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sun8i-codec: Fix space on audio-routing
-	widget" to the asoc tree
-Date: Tue, 21 Mar 2017 18:45:51 +0000
-Message-ID: <E1cqOn1-00019C-9I@debutante>
-References: <20170309095602.13809-2-mylene.josserand@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4703304868896029741=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170309095602.13809-2-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "spi: pl022: Document property values" to the spi tree
+Date: Tue, 21 Mar 2017 18:46:14 +0000
+Message-ID: <E1cqOnO-0001JC-4D@debutante>
+References: <20170320095959.6813-1-borneo.antonio@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320095959.6813-1-borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antonio Borneo <borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
-
---===============4703304868896029741==
-Content-Type: text/plain
 
 The patch
 
-   ASoC: sun8i-codec: Fix space on audio-routing widget
+   spi: pl022: Document property values
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -50,50 +37,41 @@ to this mail.
 Thanks,
 Mark
 
->From 79e26de81448fad80f6c15ae1e3c9e7fca2740cd Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
- <mylene.josserand@free-electrons.com>
-Date: Sat, 18 Mar 2017 08:55:07 +0100
-Subject: [PATCH] ASoC: sun8i-codec: Fix space on audio-routing widget
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+>From 3c85871a8a7f079cd4a24877ac9e0bcc0b1c2e4a Mon Sep 17 00:00:00 2001
+From: Antonio Borneo <borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Mon, 20 Mar 2017 10:59:59 +0100
+Subject: [PATCH] spi: pl022: Document property values
 
-An unwanted space is present in an audio widget's name on the dapm
-routing. It causes an error on the recognition of this widget (error:
-("no dapm match for AIF1 Slot 0 Right").
+The property "pl022,com-mode" can only assume one of the values of
+the enum ssp_mode, defined in include/linux/amba/pl022.h
+List the possible numeric values and report the associated meaning.
 
-Remove the space fixes it.
-
-Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Antonio Borneo <borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/spi/spi_pl022.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index 107fa8213600..adb13fbd2006 100644
---- a/sound/soc/sunxi/sun8i-codec.c
-+++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -337,7 +337,7 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
- 	/* DAC Mixer Routes */
- 	{ "Left Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
- 	  "Digital Left DAC"},
--	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch ",
-+	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
- 	  "Digital Right DAC"},
- };
- 
+diff --git a/Documentation/devicetree/bindings/spi/spi_pl022.txt b/Documentation/devicetree/bindings/spi/spi_pl022.txt
+index 2692a5726c3f..7638b4968ddb 100644
+--- a/Documentation/devicetree/bindings/spi/spi_pl022.txt
++++ b/Documentation/devicetree/bindings/spi/spi_pl022.txt
+@@ -30,7 +30,10 @@ contain the following properties.
+ 	0: SPI
+ 	1: Texas Instruments Synchronous Serial Frame Format
+ 	2: Microwire (Half Duplex)
+-- pl022,com-mode : polling, interrupt or dma
++- pl022,com-mode : specifies the transfer mode:
++	0: interrupt mode
++	1: polling mode (default mode if property not present)
++	2: DMA mode
+ - pl022,rx-level-trig : Rx FIFO watermark level
+ - pl022,tx-level-trig : Tx FIFO watermark level
+ - pl022,ctrl-len : Microwire interface: Control length
 -- 
 2.11.0
 
-
---===============4703304868896029741==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4703304868896029741==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
