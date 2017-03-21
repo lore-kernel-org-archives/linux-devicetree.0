@@ -1,82 +1,55 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] arm: renesas: Add reset control properties
-Date: Tue, 21 Mar 2017 09:20:37 +0100
-Message-ID: <20170321082036.GE20866@verge.net.au>
-References: <1489673246-11015-1-git-send-email-geert+renesas@glider.be>
- <20170320082852.GC21538@verge.net.au>
- <CAMuHMdUdFUBh=2azMLWJ1Bm34pP3OnesqdvR1ZQ14JgMtuqecw@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v3 3/4] device property: Move FW type specific
+ functionality to FW specific files
+Date: Tue, 21 Mar 2017 10:27:06 +0200
+Message-ID: <1655370d-6867-9466-6d26-f34a09789369@linux.intel.com>
+References: <1489671289-20406-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1489671289-20406-4-git-send-email-sakari.ailus@linux.intel.com>
+ <CAL_Jsq+HGNCbiHw8dD0R+zj+GfGxaypk7di0sbxNr4bZsjqxbA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUdFUBh=2azMLWJ1Bm34pP3OnesqdvR1ZQ14JgMtuqecw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+HGNCbiHw8dD0R+zj+GfGxaypk7di0sbxNr4bZsjqxbA@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 10:31:50AM +0100, Geert Uytterhoeven wrote:
-> Hi Simon, Shimoda-san,
-> 
-> On Mon, Mar 20, 2017 at 9:28 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > On Thu, Mar 16, 2017 at 03:07:22PM +0100, Geert Uytterhoeven wrote:
-> >> This patch series describes the reset control topology for on-SoC devices
-> >> connected to the Renesas Clock Pulse Generator / Module Standby and
-> >> Software Reset module on the R-Car H3 and M3-W, RZ/G1M, and RZ/G1E SoCs.
-> >>
-> >> Resets usually match the corresponding module clocks.  Exceptions are:
-> >>   - The Display Unit has only 2 resets, one per channel pair, cfr.
-> >>     "[PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
-> >>     properties" (http://www.spinics.net/lists/dri-devel/msg134637.html),
-> >>   - The audio module has resets for the Serial Sound Interfaces only.
-> >>     Adding resets and reset-names properties depends on a DT binding
-> >>     update for renesas,rsnd (note: the DT binding documentation in
-> >>     Documentation/devicetree/bindings/sound/renesas,rsnd.txt doesn't
-> >>     even document clocks and clock-names?).
-> >> Upon request from Laurent for the DU, and upon a DT bindings update
-> >> for rcar_sound, the addition of resets (and reset-names) properties for
-> >> these complex modules is postponed.
-> >>
-> >> Note that this patch series contains hardware description only.
-> >> Actual reset policy is to be defined and implemented separately.
-> >> Also, this is an optional feature, to be enabled explicitly using
-> >> CONFIG_RESET_CONTROLLER=y.  When enabled, an on-SoC device can be reset
-> >> easily using device_reset(), or by using the reset_control_*() API when
-> >> more fine-grained control is desired.
-> >>
-> >> Possible use cases are (not exhaustive):
-> >>   - Reset a device before use, to make sure it's in a predefined state, and
-> >>     doesn't depend on earlier configuration by e.g. the boot loader,
-> >>   - Reset a device after detecting an anomaly,
-> >>   - Reset a device to verify suspend/resume is handled correctly by the
-> >>     driver in case the device would be part of a power domain on a
-> >>     different/future SoC.
-> >>
-> >> Dependencies and impact:
-> >>   - The corresponding driver changes to the CGP/MSSR driver are already
-> >>     present in v4.11-rc1.
-> >>   - These patches have no impact as long as CONFIG_RESET_CONTROLLER=n.
-> >>     However, if CONFIG_RESET_CONTROLLER=y and resets properties are
-> >>     prsesent in DTS, the EHCI and OHCI drivers already deassert reset as
-> >>     part of their initialization sequences, and put the devices back
-> >>     into reset state in case initialization failed, or on unbind.
-> >>     I'm not aware of other relevant drivers already using reset control.
-> >
-> > It appears that for arm64 defconfig CONFIG_RESET_CONTROLLER=y is true so
-> > by default there will be a behavioural change on arm64. I'd like to
-> > understand if it is a desirable (or at least not undesirable) change.
-> 
-> V1 of this patch series has been part of renesas-drivers since
-> renesas-drivers-2017-01-24-v4.10-rc5, so I'd hope any negative impact would
-> have been discovered by now.
-> 
-> Shimoda-san: Have you noticed any oddities w.r.t. USB?
+Hi Rob,
 
-Thanks for the extra information. With the above in mind I think its
-reasonable to queue-up this series for v4.12 and I have done so.
+Rob Herring wrote:
+> On Thu, Mar 16, 2017 at 8:34 AM, Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+>> The device and fwnode property API supports Devicetree, ACPI and pset
+>> properties. The implementation of this functionality for each firmware
+>> type was embedded in the fwnode property core. Move it out to firmware
+>> type specific locations, making it easier to maintain.
+>>
+>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> ---
+>>  drivers/acpi/property.c |  87 +++++++++++++++
+>>  drivers/acpi/scan.c     |   1 +
+>>  drivers/base/property.c | 280 +++++++++++++++++++-----------------------------
+>>  drivers/of/base.c       |  99 +++++++++++++++++
+>
+> This is the opposite direction everything else has been moving. For
+> example, I2C parsing is in drivers/i2c. But I guess this is a bit
+> different.
+>
+> In any case, please move this to drivers/of/property.c (and perhaps
+> move all of of_property_* there too).
 
-If any oddities arise then we can revisit this.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
+
+There appear to be quite a few functions dealing with properties in 
+drivers/of/base.c either directly reading their values or otherwise 
+accessing them. Let me see if I can find a roughly coherent set of 
+functions to move to property.c. I'll move the existing functions there 
+first, creating a new patch before this one.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
