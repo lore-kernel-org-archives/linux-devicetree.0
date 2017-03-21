@@ -1,52 +1,48 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] dtc bus and unit address checks
-Date: Tue, 21 Mar 2017 14:50:54 +1100
-Message-ID: <20170321035054.GC13932@umbus.fritz.box>
+Subject: Re: [PATCH v4 1/3] checks: Add bus checks for PCI buses
+Date: Tue, 21 Mar 2017 14:46:48 +1100
+Message-ID: <20170321034648.GB13932@umbus.fritz.box>
 References: <20170320144418.5021-1-robh@kernel.org>
+ <20170320144418.5021-2-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="FsscpQKzF/jJk6ya"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170320144418.5021-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170320144418.5021-2-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---FsscpQKzF/jJk6ya
+--tsOsTdHNUZQcU9Ye
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 20, 2017 at 09:44:15AM -0500, Rob Herring wrote:
-> This is a series of checks designed to check problems commonly found in
-> binding reviews. The first patch adds checks for PCI bridges and devices.
-> The 2nd patch is new in this version and adds checks for simple-bus. The
-> 3rd patch is a default check if bus type is not set to check for '0x' or
-> leading 0s in unit addresses.
+On Mon, Mar 20, 2017 at 09:44:16AM -0500, Rob Herring wrote:
+> Add PCI bridge and device node checks. We identify PCI bridges with
+> 'device_type =3D "pci"' as only PCI bridges should set that property. For
+> bridges, check that node name is pci or pcie, ranges and bus-range are
+> present, and #address-cells and #size-cells are correct.
 >=20
-> Rob
+> For devices, check the reg property fields are correct for the first
+> element (the config address). Check that the unit address is formatted
+> corectly based on the reg property. Device unit addresses are in the
+> form DD or DD,F where DD is the device 0-0x1f and F is the function 0-7.
+> Also, check that the bus number is within the expected range defined by
+> bridge's bus-ranges.
 >=20
-> Rob Herring (3):
->   checks: Add bus checks for PCI buses
->   checks: Add bus checks for simple-bus buses
->   checks: Warn on node name unit-addresses with '0x' or leading 0s
+> Reviewed-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Applied to master, thanks.
+Applied, with a small change..
 
->=20
->  checks.c                       | 231 +++++++++++++++++++++++++++++++++++=
-++++++
->  dtc.h                          |   5 +
->  tests/run_tests.sh             |   2 +
->  tests/unit-addr-leading-0s.dts |  12 +++
->  tests/unit-addr-leading-0x.dts |  12 +++
->  5 files changed, 262 insertions(+)
->  create mode 100644 tests/unit-addr-leading-0s.dts
->  create mode 100644 tests/unit-addr-leading-0x.dts
->=20
+[snip]
+> +WARNING(pci_device_reg, check_pci_device_reg, NULL, &reg_format);
+
+=2E.adding pci_bridge to the dependency list here.
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -54,29 +50,25 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---FsscpQKzF/jJk6ya
+--tsOsTdHNUZQcU9Ye
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJY0KMdAAoJEGw4ysog2bOSUKkP/0kyn6Mc8OtpMK94dF75pOaI
-HE0MTY1lVWYqBzfNb2ureVOYMTnL2hg0NWh2ZOnEkxQ9oCht0SIcL1qhqEE2x0gF
-Bbbfi0+7IUrb8MzOJcV6v5OoQCvV63rkKwUFc+YsQ9aCiTTrt3DvNSvqqojUVrxO
-OPIAcd+5DE/v+NvSqkGk7djUt7ecEFKxJWCTYaOHoTCp396G55aCtNOSpzGaYKw9
-qQ5mKHW5bPMUKcWCy+9F0lzICGEPd/uTS4ZVzagiG/Cc9eRSIpzC/aMdCh9MMz0V
-lcsVEjAEG1TWOLTQQ3RS/q1kqW3jIZS97OaliDLmSRexPN6f7SiPLuarkxIWtLOy
-Vv0K5T070L0Kewpd8IlzO5Sq+qSfue/s1PewUVYscOwSKhHp59BjZwsn48/JO16+
-SZH4ILPs7sWzupTEfXLlDiqgqqVDRrQ5725te8yJnPnuJ7cNA8UUHBLbNDTyod7n
-vgycEnwYA1lxLGEZHNz8wZUDqtyuRMASsGW//3P6pscUFSc7M2VORhMGd9Re7j0Z
-Z4CeO9B8cw+g1BzbEt54ZCzFpVRZ0WFOJsANYxLBJUZQDQaFJpZ3eBsi+LbUobDL
-v5HUYGtiF2mY41giTP6TQOh7Lvz8nTs6zC4UTtOfeKYx71/hinPk4eU3eh2hMPTp
-rIyq+In/L4A0osEtsymK
-=iV06
+iQIcBAEBCAAGBQJY0KImAAoJEGw4ysog2bOSPhwQAMdYwOed/D/b6yJwUb5peZPf
+SRekLQ1r3gAoNuU3p6Bwro78tnWD/qZxcouodo8/OTzjw5wlo788AWJ5K78z9isz
+NGCIttQgWLNn7K66ut+Ai8w69+G2hIBclbBjwzOpAvYyfp6/g1QvAipoxdH0Ny4g
+jVSGMTTLAlH4N7cFo7cImrmCN7Lu4CrMydMT0o5h2+sRgKdGw7Gcw+57gxE5VQj4
+3PadVoZlwbZbRdfLwV5jwcKS6xVQMvJvrFhv0hWscO4Nd1jlCjmtXgMnJ20SDcU4
+MnVbiKzYW2QHDnuipF/wctvJA4/rU9/2RVCTTadf31USaIKoi0njiWJY/Er6VV/4
+5EEpm9jEHAfHtpUmgbEk19DlQ8AbBrKjNBxzrHbfLmwHdsChsER2JhD5k9On0YDT
+IbCsGhalJSiKbMsClopZmljTDMCIPt0h7jB0HSgiwstdbHA6n/XxI8IE45lzEU4Z
+3vh8rzGFtkOPbT9+FFOrqURh5Pf9Bwuop2OcFE0Ew+g5btuU1XjuESMw8jlWmAt9
+mY2Asy/MnliSjXgoCHKQ2Ur6GCtDoK0CJUM9e5uyyWpj85WW4VTefEPnzj94G20v
+iEpTxTNpLWILOU0GNP1vGJpW/rgSG1Gj73RdMgpjsdH2naXQPkX7exCFoW1ce9Ai
+Pdr3dwurhN1VEWYEOVpk
+=jecy
 -----END PGP SIGNATURE-----
 
---FsscpQKzF/jJk6ya--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--tsOsTdHNUZQcU9Ye--
