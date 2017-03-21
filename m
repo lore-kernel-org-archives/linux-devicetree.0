@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/5] dt-bindings: mtd: document new "on-die" nand-ecc-mode
-Date: Tue, 21 Mar 2017 11:38:02 +0100
-Message-ID: <1490092686-16509-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 5/5] mtd: nand: fsmc_nand: handle on-die ECC case
+Date: Tue, 21 Mar 2017 11:38:06 +0100
+Message-ID: <1490092686-16509-6-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1490092686-16509-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1490092686-16509-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,29 +10,30 @@ To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gma
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A number of NAND chips support a feature called on-die ECC, where the
-NAND chip itself is capable of doing error detection and correction. The
-new "on-die" value for nand-ecc-mode indicates that we want this
-functionality to be used.
+This commit adjusts the fsmc_nand driver so that it accepts the
+NAND_ECC_ON_DIE case. It simply does nothing in this case, since both
+the ECC operations and OOB layout will be defined by the NAND chip code
+rather than by the NAND controller code.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mtd/nand.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/fsmc_nand.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-index b056016..133f381 100644
---- a/Documentation/devicetree/bindings/mtd/nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -21,7 +21,7 @@ Optional NAND chip properties:
+diff --git a/drivers/mtd/nand/fsmc_nand.c b/drivers/mtd/nand/fsmc_nand.c
+index bda1e46..2fc8497 100644
+--- a/drivers/mtd/nand/fsmc_nand.c
++++ b/drivers/mtd/nand/fsmc_nand.c
+@@ -1075,6 +1075,9 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
+ 				break;
+ 			}
  
- - nand-ecc-mode : String, operation mode of the NAND ecc mode.
- 		  Supported values are: "none", "soft", "hw", "hw_syndrome",
--		  "hw_oob_first".
-+		  "hw_oob_first", "on-die".
- 		  Deprecated values:
- 		  "soft_bch": use "soft" and nand-ecc-algo instead
- - nand-ecc-algo: string, algorithm of NAND ECC.
++		case NAND_ECC_ON_DIE:
++			break;
++
+ 		default:
+ 			dev_err(&pdev->dev, "Unsupported ECC mode!\n");
+ 			goto err_probe;
 -- 
 2.7.4
 
