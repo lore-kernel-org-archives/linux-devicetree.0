@@ -1,252 +1,136 @@
-From: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: add new dt entry for ath10k calibration variant
-Date: Tue, 21 Mar 2017 15:33:43 +0100
-Message-ID: <5158144.BXJK97egUR@bentobox>
-References: <20170310080615.22958-1-sven.eckelmann@openmesh.com> <1919994.musG4GLznX@bentobox> <CAL_Jsq+aEdjq9MR--Hyrw17KoKv=uZ7OBsAqX1_0+Djpw+QUCg@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 6/6] ASoC: arizona: Add support for new micbias
+	regulators
+Date: Tue, 21 Mar 2017 14:45:39 +0000
+Message-ID: <1490107539-23995-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1490107539-23995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2121705.Aa6AmNEe8Z"; micalg="pgp-sha512"; protocol="application/pgp-signature"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+aEdjq9MR--Hyrw17KoKv=uZ7OBsAqX1_0+Djpw+QUCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1490107539-23995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, lgirdwood@gmail.com, robh+dt@kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart2121705.Aa6AmNEe8Z
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Change the widgets from the old SND_SOC_DAPM_SUPPLY widgets into
+SND_SOC_DAPM_REGULATOR_SUPPLY widgets now that we have proper regulator
+support for the micbiases.
 
-On Dienstag, 21. M=E4rz 2017 08:00:34 CET Rob Herring wrote:
-[...]
-> > It would then up with something like this as compatibility string:
-> >
-> >  * qcom,ipq4019-wifi-asus-rt-ac58u
-> >  * qcom,ipq4019-wifi-fritzbox-4040
-> >  * qcom,ipq4019-wifi-netgear-whatever
-> >  * qcom,ipq4019-wifi-openmesh-i-have-no-idea
-> >  * ...
->=20
-> Are these all the same board design or variations? In the latter case,
-> you should have specific compatibles anyway. Now if the variants are
-> the same hardware, but different configurations say for different
-> regions or something, then I'd say a separate property is fine.
->=20
-> We already have a "firmware-name" property. Would that work for you?
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ sound/soc/codecs/cs47l24.c | 6 ++----
+ sound/soc/codecs/wm5102.c  | 9 +++------
+ sound/soc/codecs/wm5110.c  | 9 +++------
+ sound/soc/codecs/wm8997.c  | 9 +++------
+ sound/soc/codecs/wm8998.c  | 9 +++------
+ 5 files changed, 14 insertions(+), 28 deletions(-)
 
-Hm, maybe we should specify some names better:
-
-"qcom,ipq4019-wifi" =3D=3D compatibility string for WiFi hardware inside th=
-e SoC.=20
-It is the one which ath10k supports on the Atheros Host Bus (ahb) of the=20
-QCA4019.
-
-The ath10k driver will use the information from these nodes to initialize t=
-he=20
-device. It will basically:
-
-1. load a firmware(-5).bin from /lib/firmware/ath10k/QCA4019/hw1.0/
-2. load the pre-cal (aka first part of calibration) data from
-   /lib/firmware/ath10k/pre-cal-*
-3. do some firmware magic to identify the reference design
-4. load board data "files" (BDF) for this reference design from
-    /lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin
-5. send the BDF data to the firmware to let it compute the final calibration
-   data
-6. start the actual wifi stuff
-
-The IPQ4018/4019 SoC doesn't contain the actual RF parts. There are a coupl=
-e=20
-of reference designs (SoC+RF parts) from QCA which got official numbers. Th=
-ese=20
-numbers identify the BDFs inside the board-2.bin. And the board-2.bin is no=
-t=20
-the firmware - it is a container for multiple BDFs.
-
-
-To summarize:
-
- * pre-cal is some data stored in a special partition of the devices and wi=
-ll
-   not be overwritten on updates
- * board-2.bin are multiple BDF files containing the second part of the
-   calibration data
- * pre-cal + BDF (+ some OTP stuff) are getting combined to form the comple=
-te
-   calibration data
-
-Asus RT-AC58U, Fritzbox 4040 and ZyXEL NBG6617 are products based on the sa=
-me=20
-reference design. But of course, some (all?) fiddled around with the RF par=
-ts=20
-and therefore require special BDFs. They still use the same SoC and require=
-=20
-that the closed source ath10k firmware behaves like on the official referen=
-ce=20
-designs. Only the BDFs have to be different.
-
-So you could say that the wifi-chip hardware (part of the QCA4018/4019 SoC)=
- is=20
-the same between these different products. But the hardware around the SoC =
-is=20
-different and therefore requires a different "configuration"/calibration fo=
-r=20
-the surrounding RF hardware. It is not a perfect match for your "separate=20
-property is fine" compromise. Maybe you still meant this - I let you decide.
-
-
-This is not only a problem on QCA4019 but also for other devices supported =
-by=20
-ath10k. Waldemar Rymarkiewicz introduced the concept of BDF variants for
-this [1] and implemented the support for SMBIOS. The variant string (genera=
-ted=20
-from the SMBIOS data) is then used by ath10k when it searches for the corre=
-ct=20
-BDFs in the board-2.bin. Kalle Valo suggested to use the same mechanism for=
-=20
-QCA401X based boards (which don't use SMBIOS).
-
-The "qcom,ath10k-calibration-variant" is now the (more or less) equivalent =
-of=20
-the SMBIOS entry - but for device tree users. Let us assume that the varian=
-t=20
-string would be "RT-AC58U" for the Asus RT-AC58U and the first wifi device=
-=20
-(bmi-board-id=3D16) gets initialized [2]. Then the step 4 would get splitte=
-d in=20
-following steps:
-
-4.1. Get the the qcom,ath10k-calibration-variant content
-4.2. jump to 4.5. when there is no qcom,ath10k-calibration-variant
-4.3. calculate BDF search name with variant string
-     "bus=3Dahb,bmi-chip-id=3D0,bmi-board-id=3D16,variant=3DRT-AC58U"
-4.4. load BDF and when found, jump to 5.
-4.5. calculate BDF search name without variant string
-     "bus=3Dahb,bmi-chip-id=3D0,bmi-board-id=3D16"
-4.6. load the BDF
-
-
-There would be no changes in ath10k when adding a new BDF calibration varia=
-nt=20
-using qcom,ath10k-calibration-variant. Only the device tree node would have=
- to=20
-be updated:
-
- * device tree (simplified):
-    / {
-      model =3D "ASUS RT-AC58U";
-   =20
-      soc {
-        wifi@a000000 {
-          compatible =3D "qcom,ipq4019-wifi";
-          reg =3D <0xa000000 0x200000>;
-          status =3D "okay";
-          qcom,ath10k-calibration-variant =3D "RT-AC58U";
-        };
-   =20
-        wifi@a800000 {
-          compatible =3D "qcom,ipq4019-wifi";
-          reg =3D <0xa800000 0x200000>;
-          status =3D "okay";
-          qcom,ath10k-calibration-variant =3D "RT-AC58U";
-        };
-      };
-    };
- * ath10k + ath10k-firmware
-   <no change>
-
-
-
-
-This about how the calibration [insert swearword] works for
-"qcom,ipq4019-wifi" and why the "qcom,ath10k-calibration-variant" was used =
-in
-my first implementation. But then you've suggested to "use a more specific
-compatible string". This information was not enough for me to understand wh=
-at
-you've actually meant. I was therefore proposing some examples which show w=
-hat
-you maybe could have meant. These were following things:
-
-> >  * qcom,ipq4019-wifi-asus-rt-ac58u
-> >  * qcom,ipq4019-wifi-fritzbox-4040
-> >  * qcom,ipq4019-wifi-netgear-whatever
-> >  * qcom,ipq4019-wifi-openmesh-i-have-no-idea
-
-They are basically "qcom,ipq4019-wifi" + a product specific string. The fir=
-st=20
-part is therefore the string which identifies the wifi device(s) in the=20
-QCA4018/4019 SoC. The product specific string is simply the part (or a=20
-variation of it) which would been used before in
-"qcom,ath10k-calibration-variant" - just to make it "use a more specific=20
-compatible string".
-
-I have no idea if this is really what you meant. I just wanted to give you=
-=20
-some examples and explanations why I don't feel that this a good idea. I=20
-thought that this would help you to point me in the right direction and=20
-explain better what you've meant.
-
-Right now it looks to me like following must be done for your(?) proposal f=
-or=20
-each new board:
-
- * device tree (simplified):
-    / {
-      model =3D "ASUS RT-AC58U";
-   =20
-      soc {
-        wifi@a000000 {
-          compatible =3D "qcom,ipq4019-wifi-asus-rt-ac58u";
-          reg =3D <0xa000000 0x200000>;
-          status =3D "okay";
-        };
-   =20
-        wifi@a800000 {
-          compatible =3D "qcom,ipq4019-wifi-asus-rt-ac58u";
-          reg =3D <0xa800000 0x200000>;
-          status =3D "okay";
-        };
-      };
-    };
- * ath10k + ath10k-firmware
-   - add qcom,ipq4019-wifi-asus-rt-ac58u to
-     Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-   - add qcom,ipq4019-wifi-asus-rt-ac58u to ath10k_ahb_of_match in
-     drivers/net/wireless/ath/ath10k/ahb.c
-   - add a mapping from qcom,ipq4019-wifi-asus-rt-ac58u to the RT-AC58U
-     variant string somewhere in ath10k
-
-
-I hope this is enough to understand it a little bit better.
-
-Kind regards,
-	Sven
-
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?i=
-d=3D1657b8f84ed9fc1d2a100671f1d42d6286f20073
-[2] the second wifi device for this reference design would be 17. But there
-    are a lot more for the other reference designs from QCA
---nextPart2121705.Aa6AmNEe8Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAljROccACgkQXYcKB8Em
-e0aoChAAp6kOR7V+ZhGgvHKsvMGfMb8s5XENZsHJd0QRzHWccm9RJjwfY9rLaRJ4
-tmhBrSWovqzjqVTreE6u8D5lSlcUn8XFAvC8NFPHu4dYyTb3dZ0ERUJfFASEF3Pt
-gf1OMnHb2JIK/XTjhiR9nGbnpev6nCqSYiVtWH0SzmSoY75u6RLEZvn4vt4bpqMC
-I1KbFtgRGrxGlNhoMNe0qkpoN+AGdo24wThqDbqXO6ZnhAPT6O7nVj7IlwPsFL5B
-72OjQ77+fk2V4LjQ9iCsMHY5cqoNheerhpxijHmCJ4Kss21b2q3jFP4m2PI2zVpd
-TjQSxTf+Hh8njbH01nCmidC0ghch5BxjpU/Ggdp/a5D1Z0UsEO73PuYsSSDtLkVD
-GCPT2Ayl/TfLfUfP5AyGf8df/NXMI/nCau1tKxWLURARcu/3aG5mwJjsmrlKVChQ
-LFWV5vlxNWMIDtQ7eC8sXafave51kNM1n+Ej3/3E1hNhVeykS/q3BvOM1MjIg8wG
-JRJ59t2lrxA4JrnYsEmwe1eIj6iDFbpmvXdntb4Ngmn2evtn2VE6oDUMtb+jQskv
-WEIFdVz/xgstRm7jCGPjNZzqb++AFOqxkJFA0IcMBAZTJmYAG7WxnVsZFdhQO4YL
-CvD7/cil5S1sVBfYI6PRBtCmGBE3dtgtwRdRWhnk0slutLRHQ2g=
-=uIBn
------END PGP SIGNATURE-----
-
---nextPart2121705.Aa6AmNEe8Z--
+diff --git a/sound/soc/codecs/cs47l24.c b/sound/soc/codecs/cs47l24.c
+index 47e6fdd..c5dc322 100644
+--- a/sound/soc/codecs/cs47l24.c
++++ b/sound/soc/codecs/cs47l24.c
+@@ -386,10 +386,8 @@ SND_SOC_DAPM_PGA_E("IN2R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN2R_ENA_SHIFT,
+ 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
+ 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
+ 
+-SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
+ 
+ SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
+ 		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
+diff --git a/sound/soc/codecs/wm5102.c b/sound/soc/codecs/wm5102.c
+index 1fe358e..2a817f8 100644
+--- a/sound/soc/codecs/wm5102.c
++++ b/sound/soc/codecs/wm5102.c
+@@ -1137,12 +1137,9 @@ SND_SOC_DAPM_PGA_E("IN3R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN3R_ENA_SHIFT,
+ 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
+ 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
+ 
+-SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
+-		    ARIZONA_MICB2_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS3", ARIZONA_MIC_BIAS_CTRL_3,
+-		    ARIZONA_MICB3_ENA_SHIFT, 0, NULL, 0),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS3", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
+ 
+ SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
+ 		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
+diff --git a/sound/soc/codecs/wm5110.c b/sound/soc/codecs/wm5110.c
+index 1bc9421..57f3b41 100644
+--- a/sound/soc/codecs/wm5110.c
++++ b/sound/soc/codecs/wm5110.c
+@@ -1157,12 +1157,9 @@ SND_SOC_DAPM_PGA_E("IN4R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN4R_ENA_SHIFT,
+ 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
+ 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
+ 
+-SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS3", ARIZONA_MIC_BIAS_CTRL_3,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS3", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
+ 
+ SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
+ 		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
+diff --git a/sound/soc/codecs/wm8997.c b/sound/soc/codecs/wm8997.c
+index 49401a8..455d88a 100644
+--- a/sound/soc/codecs/wm8997.c
++++ b/sound/soc/codecs/wm8997.c
+@@ -452,12 +452,9 @@ SND_SOC_DAPM_PGA_E("IN2R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN2R_ENA_SHIFT,
+ 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
+ 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
+ 
+-SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
+-		    ARIZONA_MICB2_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS3", ARIZONA_MIC_BIAS_CTRL_3,
+-		    ARIZONA_MICB3_ENA_SHIFT, 0, NULL, 0),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS3", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
+ 
+ SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
+ 		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
+diff --git a/sound/soc/codecs/wm8998.c b/sound/soc/codecs/wm8998.c
+index 44f4471..a5e87ba 100644
+--- a/sound/soc/codecs/wm8998.c
++++ b/sound/soc/codecs/wm8998.c
+@@ -587,12 +587,9 @@ SND_SOC_DAPM_PGA_E("IN2 PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN2L_ENA_SHIFT,
+ 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
+ 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
+ 
+-SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
+-SND_SOC_DAPM_SUPPLY("MICBIAS3", ARIZONA_MIC_BIAS_CTRL_3,
+-		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS3", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
+ 
+ SND_SOC_DAPM_PGA("Tone Generator 1", ARIZONA_TONE_GENERATOR_1,
+ 		 ARIZONA_TONE1_ENA_SHIFT, 0, NULL, 0),
+-- 
+2.1.4
