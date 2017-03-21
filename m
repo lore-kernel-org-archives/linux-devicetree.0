@@ -1,34 +1,58 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add IMR-L[S]X3 clocks
-Date: Tue, 21 Mar 2017 23:14:43 +0300
-Message-ID: <a802018c-9943-22e5-0f78-28b8ab9689d9@cogentembedded.com>
-References: <20170321200443.078095898@cogentembedded.com>
- <34050114-752a-08b6-700e-697e78102af7@cogentembedded.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: add the grf clock for dw-mipi-dsi
+Date: Tue, 21 Mar 2017 16:17:00 -0400
+Message-ID: <20170321201700.GG19389@art_vandelay>
+References: <1489722865-22122-1-git-send-email-zyw@rock-chips.com>
+ <1489722865-22122-3-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <34050114-752a-08b6-700e-697e78102af7@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1489722865-22122-3-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2017 11:08 PM, Sergei Shtylyov wrote:
-
-> Still not cover letter but I think it's better now, so I won't retry...
-> The patches are against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-20170321-v4.11-rc3' tag.
-
-    The patches depend on the IMR driver patches adding the IMR-L[S]X3 support 
-for the "compatible" values.
-
-MBR, Sergei
+T24gRnJpLCBNYXIgMTcsIDIwMTcgYXQgMTE6NTQ6MjJBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
+dGU6Cj4gRm9yIFJLMzM5OSwgdGhlIGdyZiBjbG9jayBzaG91bGQgYmUgY29udHJvbGxlZCBieSBk
+dy1taXBpLWRzaSBkcml2ZXIsCj4gYWRkIHRoZSBkZXNjcmlwdGlvbiBmb3IgdGhpcyBjbG9jay4K
+PiAKPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgo+IC0t
+LQo+IAo+IENoYW5nZXMgaW4gdjM6IE5vbmUKPiBDaGFuZ2VzIGluIHYyOiBOb25lCj4gCj4gIC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2No
+aXAudHh0ICAgICAgIHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
+ZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lf
+cm9ja2NoaXAudHh0Cj4gaW5kZXggMTg4ZjZmNy4uN2UxN2E2MCAxMDA2NDQKPiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2Rz
+aV9yb2NrY2hpcC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQKPiBAQCAtMTAsNyArMTAs
+NyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAtIGludGVycnVwdHM6IFJlcHJlc2VudCB0aGUg
+Y29udHJvbGxlcidzIGludGVycnVwdCB0byB0aGUgQ1BVKHMpLgo+ICAtIGNsb2NrcywgY2xvY2st
+bmFtZXM6IFBoYW5kbGVzIHRvIHRoZSBjb250cm9sbGVyJ3MgcGxsIHJlZmVyZW5jZQo+ICAgIGNs
+b2NrKHJlZikgYW5kIEFQQiBjbG9jayhwY2xrKS4gRm9yIFJLMzM5OSwgYSBwaHkgY29uZmlnIGNs
+b2NrCj4gLSAgKHBoeV9jZmcpIGlzIGFkZGl0aW9uYWwgcmVxdWlyZWQuIEFzIGRlc2NyaWJlZCBp
+biBbMV0uCj4gKyAgKHBoeV9jZmcpIGFuZCBhIGdyZiBjbG9jayhncmYpIGFyZSBhZGRpdGlvbmFs
+IHJlcXVpcmVkLiBBcyBkZXNjcmliZWQgaW4gWzFdLgoKVGhlc2UgYXJlIG9ubHkgcmVxdWlyZWQg
+Zm9yIHJrMzM5OSwgeW91IHNob3VsZCBtYWtlIHRoYXQgY2xlYXIuCgpTZWFuCgo+ICAtIHJvY2tj
+aGlwLGdyZjogdGhpcyBzb2Mgc2hvdWxkIHNldCBHUkYgcmVncyB0byBtdXggdm9wbC92b3BiLgo+
+ICAtIHBvcnRzOiBjb250YWluIGEgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMg
+YXMgZGVmaW5lZCBpbiBbMl0uCj4gICAgRm9yIHZvcGIsc2V0IHRoZSByZWcgPSA8MD4gYW5kIHNl
+dCB0aGUgcmVnID0gPDE+IGZvciB2b3BsLgo+IC0tIAo+IDIuNi4zCj4gCj4gX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKU2VhbiBQYXVsLCBT
+b2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
