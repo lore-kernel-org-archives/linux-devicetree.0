@@ -1,100 +1,43 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v11 0/3] Add support for the S6E3HA2 panel on TM2 board
-Date: Tue, 21 Mar 2017 15:55:05 +0900
-Message-ID: <67497946-37d3-1a8d-f031-14db597886f5@samsung.com>
-References: <CGME20170308014258epcas5p35b908c56e003eb5d2ded8b503aa511be@epcas5p3.samsung.com>
- <1488937357-5623-1-git-send-email-hoegeun.kwon@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1488937357-5623-1-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm64: dts: hi6220: enable DMA in spi0
+Date: Tue, 21 Mar 2017 15:08:18 +0800
+Message-ID: <20170321070818.3247-1-guodong.xu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Antonio Borneo <borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBUaGllcnJ5LAoKSSB3b3VsZCBsaWtlIHlvdXIgcmV2aWV3IHBsZWFzZS4KCkkgdHJ5IHRv
-IG1vZGlmeSBpdCB0byB5b3VyIGFkdmljZS4KUGxlYXNlIGxldCBtZSBrbm93IGlmIHlvdSBoYXZl
-IGFueSBvdGhlciBhZHZpY2UuCgpCZXN0IHJlZ2FyZHMsCkhvZWdldW4KCgpPbiAwMy8wOC8yMDE3
-IDEwOjQyIEFNLCBIb2VnZXVuIEt3b24gd3JvdGU6Cj4gRGVhciBUaGllcnJ5LAo+Cj4gSSB1bmRl
-cnN0YW5kIHRoYXQgeW91ciBvcGluaW9uIGlzOgo+IEl0IGlzIGJldHRlciB0byBoYW5kbGUgdGhl
-IGVycm9yIGV2ZXJ5IHRpbWUgaXQgaXMgaW5wdXQgdG8gdGhlCj4gcmVnaXN0ZXIsIHJhdGhlciB0
-aGFuIGVycm9yIGhhbmRsaW5nIGF0IG9uY2UgaW4gdGhlIHN0cnVjdCB1c2luZwo+IGVycm9yLiBU
-aGlzIG5vdCBvbmx5IG1ha2VzIHRoZSBjb2RlIGVhc2llciB0byBtYWludGFpbiwgYnV0IGFsc28K
-PiByZWR1Y2VzIHVubmVjZXNzYXJ5IGNvbXB1dGF0aW9uLgo+Cj4gU28gSSBtb2RpZmllZCB0aGUg
-cGFuZWwgZHJpdmVyIHRvIGNvZGUtYnktY29kZSBlcnJvciBoYW5kbGluZy4KPiBJZiB0aGlzIGlz
-IG5vdCB5b3VyIG9waW5pb24sIGNvdWxkIHlvdSB0ZWxsIG1lIHdoYXQgeW91ciBvcGluaW9uPwo+
-Cj4gQmVzdCBSZWdhcmRzLAo+IEhvZWdldW4KPgo+IENoYW5nZXMgZm9yIFYxMToKPiAtIEFkZGVk
-IHRoZSBSZXZpZXdlZC1ieTogSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJAb3NnLnNh
-bXN1bmcuY29tPgo+ICAgICgxLzMsIDMvMyBwYXRjaGVzKQo+IC0gQ2hlY2tlZCBmb3IgcmViYXNl
-IDQuMTEgcmMxLgo+Cj4gQ2hhbmdlcyBmb3IgVjEwOgo+IC0gRml4ZWQgY29kZS1ieS1jb2RlIGVy
-cm9yIGhhbmRsaW5nLgo+Cj4gQ2hhbmdlcyBmb3IgVjk6Cj4gLSBGaXhlZCB0aGUgdGUtZ3BpbyB0
-byBvcHRpb25hbCBpbiBiaW5kaW5ncwo+Cj4gQ2hhbmdlcyBmb3IgVjg6Cj4gLSBBcHBsaWVkIGJl
-bG93IHR3byBwYXRjaGVzOiAoZHJtL2V4eW5vcykKPiAgICA6IGRybS9leHlub3M6IG1pYzogQWRk
-IG1vZGVfc2V0IGNhbGxiYWNrIGZ1bmN0aW9uCj4gICAgOiBkcm0vZXh5bm9zOiBtaWM6IEZpeCBw
-YXJzZV9kdCBmdW5jdGlvbgo+IC0gVGhlIGR0LWJpbmRpbmcgcGF0Y2ggYW5kIGRyaXZlciBwYXRj
-aCB3ZXJlIGRpdmlkZWQuCj4gLSBSZWJhc2UgdGhlc2UgcGF0Y2hlcyBvbiBzYW1zdW5nIFNvQyB0
-cmVlWzFdIGFuZCB0bTIgdG91Y2tleSBwYXRjaFsyXS4KPgo+IENoYW5nZSBmb3IgVjc6Cj4gLSBG
-aXhlZCB0aGUgbW9kZV9zZXQgY2FsbGJhY2sgZnVuY3Rpb24gb2YgbWljIGRldmljZSBkcml2ZXIu
-Cj4gICAgYmVjYXVzZSB0aGUgbWljIHJlZ2lzdGVyIGlzIGluaXRpYWxpemVkIHdoZW4gZW50ZXJp
-bmcgc3VzcGVuZAo+ICAgIG1vZGUsIHNvIHNob3VsZCBzZXQgdGhlIHJlZyB2YWx1ZSB3aGVuZXZl
-ciBwcmVfZW5hYmxlIGlzCj4gICAgY2FsbGVkLgo+Cj4gQ2hhbmdlcyBmb3IgVjY6Cj4gLSBGaXhl
-ZCB0aGUgcGFyc2VfZHQgZnVuY3Rpb24gb2YgZHNpIGRldmljZSBkcml2ZXIuCj4gLSBSZW1vdmVk
-IE9GIGdyYXBoIG9mIHBhbmVsIGluIERUIGFuZCBEVCBiaW5kaW5nIGRvY3VtZW50Lgo+IC0gRml4
-ZWQgdGhlIHM2ZTNoYTIgcGFuZWwgZGV2aWNlIGRyaXZlci4KPiAgICAtIEZpeGVkIGZyb20gbnVt
-YmVyIHNpemUgdG8gQVJSQVlfU0laRSgpLgo+ICAgIC0gRml4ZWQgZXJyb3IgaGFuZGxpbmcgaW4g
-bWlwaV9kc2lfZGNzXyogZnVuY3Rpb25zLgo+ICAgIC0gRml4ZWQgdGhlIGNsb2NrIG9mIGRpc3Bs
-YXlfbW9kZS4KPiAgICAtIFJlbW92ZWQgdW5uZWNlc3NhcnkgY2FzdGluZyBhbmQgZXJyb3IgbG9n
-Lgo+Cj4gQ2hhbmdlIGZvciBWNToKPiAtIFRoZSBWNSBoYXMgb25seSBvbmUgZml4IGluIFY0IGJl
-bG93Lgo+IC0gUmVtb3ZlZCB0aGUgZW5hYmxlIGNoZWNrIG9mIHRoZSBtaWMgZHJpdmVyIGluIG1v
-ZGVfc2V0Cj4gICAgY2FsbGJhY2ssIGJlY2F1c2UgbW9kZV9zZXQgc2hvdWxkIGJlIHBlcmZvcm1l
-ZCBldmVyeSB0aW1lLgo+Cj4gQ2hhbmdlcyBmb3IgVjQ6Cj4gLSBSZW1vdmVkIGRpc3BsYXktdGlt
-aW5ncyBpbiBkZXZpY2V0cmVlLCB0aGUgZGlzcGxheS10aW1pbmdzIGhhcwo+ICAgIGJlZW4gZml4
-ZWQgdG8gYmUgcHJvdmlkZWQgYnkgdGhlIGRldmljZSBkcml2ZXIuCj4gLSBBZGRlZCB0aGUgbW9k
-ZV9zZXQgY2FsbGJhY2sgZnVuY3Rpb24gaW50byBleHlub3NfZHJtX21pYywKPiAgICBiZWNhdXNl
-IHRoZSBleHlub3NfZHJtX21pYyBkcml2ZXIgY2FuIG5vdCBwYXJzZSBhIHZpZGVvbW9kZQo+ICAg
-IHN0cnVjdCBieSByZW1vdmluZyB0aGUgZGlzcGxheS10aW1pbmdzIGZyb20gdGhlIGRldmljZXRy
-ZWUuCj4KPiBDaGFuZ2VzIGZvciBWMzoKPiAtIEluIHRoZSBEVCBiaW5kaW5nIGRvY3VtZW50LCBt
-YWRlIGl0IGNsZWFybHkgdGhhdCB0aGUgcGFuZWwgaXMgYQo+ICAgIGNoaWxkIG5vZGUgb2YgZHNp
-Lgo+IC0gRml4IHJlc2V0LWdwaW8gYWN0aXZlIGZyb20gaGlnaCB0byBsb3cuCj4gLSBJcyB0aGUg
-T0YgZ3JhcGggc2F5aW5nIHJlbGF0ZWQgdG8gcGF0Y2gyPwo+ICAgIEFsdGhvZ2ggdGhlIHBhbmVs
-IGlzIGEgY2hpbGQgb2YgZHNpLCBJIHRoaW5rIE9GIGdyYXBoIG5lY2Vzc2FyeS4KPiAgICBiZWNh
-dXNlIGlmIGEgcmVtb3RlLWVuZHBvaW50IGlzIG5vdCBzcGVjaWZpZWQsIHRoZSBkc2kgYWxzbwo+
-ICAgIHBhbmVsIGlzIG5vdCBwcm9iZWQuCj4gLSBUaGUgZGlzcGxheS10aW1pbmdzIGhhcyBiZWVu
-IGZpeGVkIHRvIGJlIHByb3ZpZGVkIGJ5IHRoZSBkZXZpY2UKPiAgICBkcml2ZXIuIGhvd2V2ZXIs
-IEkgdGhpbmsgZGlzcGxheS10aW1pbmdzIGlzIG5lY2Vzc2FyeSBpbiBkdHMuCj4gICAgYmVjYXVz
-ZSBpZiBkdHMgZG9lcyBub3QgaGF2ZSBkaXNwbGF5LXRpbWluZ3MsIGRzaSB3aWxsIG5vdCBsb2Fk
-Lgo+Cj4gQ2hhbmdlcyBmb3IgVjI6Cj4gLSBGaXhlZCB0aGUgc2Ftc3VuZyxzNmUzaGEyLnR4dCBE
-VCBkb2N1bWVudC4KPiAgICAtIEFkZGVkIGFjdGl2ZSBoaWdoIG9yIGxvdyBhZnRlciB0aGUgZGVz
-Y3JpcHRpb24gb2YgdGhlIEdQSU9zLgo+ICAgIC0gUmVtb3ZlZCB0aGUgcmVnIGFuZCBhZGRlZCBh
-IGRlc2NyaXB0aW9uIG9mIHRoZSB2aXJ0dWFsCj4gICAgICBjaGFubmVsIG51bWJlciBvZiBhIERT
-SSBwZXJpcGhlcmFsLgo+Cj4gRGVwZW5kcyBvbjoKPiBbMV0gaHR0cHM6Ly9naXQua2VybmVsLm9y
-Zy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQva3J6ay9saW51eC5naXQvIChmb3ItbmV4dCBicmFuY2gp
-Cj4gWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTUwNDEzMS8KPiAgICAg
-IC0gKCJhcm02NDogZHRzOiBleHlub3M6IEFkZCB0bTIgdG91Y2hrZXkgbm9kZSIpCj4KPiBIb2Vn
-ZXVuIEt3b24gKDIpOgo+ICAgIGR0LWJpbmRpbmdzOiBBZGQgc3VwcG9ydCBmb3Igc2Ftc3VuZyBz
-NmUzaGEyIHBhbmVsIGJpbmRpbmcKPiAgICBkcm0vcGFuZWw6IEFkZCBzdXBwb3J0IGZvciBTNkUz
-SEEyIHBhbmVsIGRyaXZlciBvbiBUTTIgYm9hcmQKPgo+IEh5dW5nd29uIEh3YW5nICgxKToKPiAg
-ICBhcm02NDogZHRzOiBleHlub3M6IEFkZCBzdXBwb3J0IGZvciBTNkUzSEEyIHBhbmVsIGRldmlj
-ZSBvbiBUTTIgYm9hcmQKPgo+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxz
-NmUzaGEyLnR4dCAgICAgfCAgMjggKwo+ICAgYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5
-bm9zNTQzMy10bTIuZHRzICAgICAgfCAgMTIgKwo+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tj
-b25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKwo+ICAgZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICAgZHJpdmVycy9ncHUv
-ZHJtL3BhbmVsL3BhbmVsLXNhbXN1bmctczZlM2hhMi5jICAgICAgfCA3MzkgKysrKysrKysrKysr
-KysrKysrKysrCj4gICA1IGZpbGVzIGNoYW5nZWQsIDc4NiBpbnNlcnRpb25zKCspCj4gICBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvc2Ftc3VuZyxzNmUzaGEyLnR4dAo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-Z3B1L2RybS9wYW5lbC9wYW5lbC1zYW1zdW5nLXM2ZTNoYTIuYwo+CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+
+Enable DMA in spi0.
+
+Cc: Antonio Borneo <borneo.antonio-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 470461d..e40625f 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -682,7 +682,8 @@
+ 			reg = <0x0 0xf7106000 0x0 0x1000>;
+ 			interrupts = <0 50 4>;
+ 			bus-id = <0>;
+-			enable-dma = <0>;
++			dmas =  <&dma0 0 &dma0 1>;
++			dma-names = "rx", "tx";
+ 			clocks = <&sys_ctrl HI6220_SPI_CLK>;
+ 			clock-names = "apb_pclk";
+ 			pinctrl-names = "default";
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
