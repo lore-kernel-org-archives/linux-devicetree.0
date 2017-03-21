@@ -1,146 +1,171 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 10/13] dt-bindings: Add bindings for the Amlogic Meson dw-hdmi extension
-Date: Tue, 21 Mar 2017 16:25:47 +0100
-Message-ID: <1490109950-21421-11-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 09/13] ARM64: dts: meson-gx: Add support for HDMI output
+Date: Tue, 21 Mar 2017 16:25:46 +0100
+Message-ID: <1490109950-21421-10-git-send-email-narmstrong@baylibre.com>
 References: <1490109950-21421-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490109950-21421-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1490109950-21421-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: airlied@linux.ie
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This binding describes the Amlogic Meson specific extension to the
-Synopsys Designware HDMI Controller.
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- .../bindings/display/amlogic,meson-dw-hdmi.txt     | 111 +++++++++++++++++++++
- 1 file changed, 111 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-
-diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-new file mode 100644
-index 0000000..7f040ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-@@ -0,0 +1,111 @@
-+Amlogic specific extensions to the Synopsys Designware HDMI Controller
-+======================================================================
-+
-+The Amlogic Meson Synopsys Designware Integration is composed of :
-+- A Synopsys DesignWare HDMI Controller IP
-+- A TOP control block controlling the Clocks and PHY
-+- A custom HDMI PHY in order to convert video to TMDS signal
-+ ___________________________________
-+|            HDMI TOP               |<= HPD
-+|___________________________________|
-+|                  |                |
-+|  Synopsys HDMI   |   HDMI PHY     |=> TMDS
-+|    Controller    |________________|
-+|___________________________________|<=> DDC
-+
-+The HDMI TOP block only supports HPD sensing.
-+The Synopsys HDMI Controller interrupt is routed through the
-+TOP Block interrupt.
-+Communication to the TOP Block and the Synopsys HDMI Controller is done
-+via a pair of dedicated addr+read/write registers.
-+The HDMI PHY is configured by registers in the HHI register block.
-+
-+Pixel data arrives in 4:4:4 format from the VENC block and the VPU HDMI mux
-+selects either the ENCI encoder for the 576i or 480i formats or the ENCP
-+encoder for all the other formats including interlaced HD formats.
-+
-+The VENC uses a DVI encoder on top of the ENCI or ENCP encoders to generate
-+DVI timings for the HDMI controller.
-+
-+Amlogic Meson GXBB, GXL and GXM SoCs families embeds the Synopsys DesignWare
-+HDMI TX IP version 2.01a with HDCP and I2C & S/PDIF
-+audio source interfaces.
-+
-+Required properties:
-+- compatible: value should be different for each SoC family as :
-+	- GXBB (S905) : "amlogic,meson-gxbb-dw-hdmi"
-+	- GXL (S905X, S905D) : "amlogic,meson-gxl-dw-hdmi"
-+	- GXM (S912) : "amlogic,meson-gxm-dw-hdmi"
-+	followed by the common "amlogic,meson-gx-dw-hdmi"
-+- reg: Physical base address and length of the controller's registers.
-+- interrupts: The HDMI interrupt number
-+- clocks, clock-names : must have the phandles to the HDMI iahb and isfr clocks,
-+  and the Amlogic Meson venci clocks as described in
-+  Documentation/devicetree/bindings/clock/clock-bindings.txt,
-+  the clocks are soc specific, the clock-names should be "iahb", "isfr", "venci"
-+- resets, resets-names: must have the phandles to the HDMI apb, glue and phy
-+  resets as described in :
-+  Documentation/devicetree/bindings/reset/reset.txt,
-+  the reset-names should be "hdmitx_apb", "hdmitx", "hdmitx_phy"
-+
-+Required nodes:
-+
-+The connections to the HDMI ports are modeled using the OF graph
-+bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+The following table lists for each supported model the port number
-+corresponding to each HDMI output and input.
-+
-+		Port 0		Port 1
-+-----------------------------------------
-+ S905 (GXBB)	VENC Input	TMDS Output
-+ S905X (GXL)	VENC Input	TMDS Output
-+ S905D (GXL)	VENC Input	TMDS Output
-+ S912 (GXM)	VENC Input	TMDS Output
-+
-+Example:
-+
-+hdmi-connector {
-+	compatible = "hdmi-connector";
-+	type = "a";
-+
-+	port {
-+		hdmi_connector_in: endpoint {
-+			remote-endpoint = <&hdmi_tx_tmds_out>;
-+		};
-+	};
-+};
-+
-+hdmi_tx: hdmi-tx@c883a000 {
-+	compatible = "amlogic,meson-gxbb-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
-+	reg = <0x0 0xc883a000 0x0 0x1c>;
-+	interrupts = <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
-+	resets = <&reset RESET_HDMITX_CAPB3>,
-+		 <&reset RESET_HDMI_SYSTEM_RESET>,
-+		 <&reset RESET_HDMI_TX>;
-+	reset-names = "hdmitx_apb", "hdmitx", "hdmitx_phy";
-+	clocks = <&clkc CLKID_HDMI_PCLK>,
-+		 <&clkc CLKID_CLK81>,
-+		 <&clkc CLKID_GCLK_VENCI_INT0>;
-+	clock-names = "isfr", "iahb", "venci";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	/* VPU VENC Input */
-+	hdmi_tx_venc_port: port@0 {
-+		reg = <0>;
-+
-+		hdmi_tx_in: endpoint {
-+			remote-endpoint = <&hdmi_tx_out>;
-+		};
-+	};
-+
-+	/* TMDS Output */
-+	hdmi_tx_tmds_port: port@1 {
-+		reg = <1>;
-+
-+		hdmi_tx_tmds_out: endpoint {
-+			remote-endpoint = <&hdmi_connector_in>;
-+		};
-+	};
-+};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIEhETUkgb3V0cHV0IGFuZCBjb25uZWN0b3Igbm9kZXMuCgpTaWduZWQtb2ZmLWJ5OiBOZWls
+IEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+Ci0tLQogLi4uL2FybTY0L2Jvb3Qv
+ZHRzL2FtbG9naWMvbWVzb24tZ3gtcDIzeC1xMjB4LmR0c2kgfCAzOSArKysrKysrKysrKysrKysr
+KysrKysrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3guZHRzaSAgICAgICAg
+ICB8IDMyICsrKysrKysrKysrKysrKysrKwogLi4uL2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hi
+Yi1uZXhib3gtYTk1eC5kdHMgICAgfCAyMyArKysrKysrKysrKysrCiBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1wMjB4LmR0c2kgICB8IDIzICsrKysrKysrKysrKysKIGFy
+Y2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLmR0c2kgICAgICAgIHwgMTIgKysr
+KysrKwogLi4uL2R0cy9hbWxvZ2ljL21lc29uLWd4bC1zOTA1eC1uZXhib3gtYTk1eC5kdHMgICAg
+fCAyMyArKysrKysrKysrKysrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hs
+LmR0c2kgICAgICAgICB8IDEzICsrKysrKysrCiAuLi4vYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9t
+ZXNvbi1neG0tbmV4Ym94LWExLmR0cyB8IDIzICsrKysrKysrKysrKysKIGFyY2gvYXJtNjQvYm9v
+dC9kdHMvYW1sb2dpYy9tZXNvbi1neG0uZHRzaSAgICAgICAgIHwgIDMgKysKIDkgZmlsZXMgY2hh
+bmdlZCwgMTkxIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2FtbG9naWMvbWVzb24tZ3gtcDIzeC1xMjB4LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2Ft
+bG9naWMvbWVzb24tZ3gtcDIzeC1xMjB4LmR0c2kKaW5kZXggN2EwNzhiZS4uYTg0ZTI3NiAxMDA2
+NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4LXAyM3gtcTIweC5k
+dHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neC1wMjN4LXEyMHgu
+ZHRzaQpAQCAtOTgsNiArOTgsMjcgQEAKIAkJY2xvY2tzID0gPCZ3aWZpMzJrPjsKIAkJY2xvY2st
+bmFtZXMgPSAiZXh0X2Nsb2NrIjsKIAl9OworCisJY3Zicy1jb25uZWN0b3IgeworCQljb21wYXRp
+YmxlID0gImNvbXBvc2l0ZS12aWRlby1jb25uZWN0b3IiOworCisJCXBvcnQgeworCQkJY3Zic19j
+b25uZWN0b3JfaW46IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmN2YnNfdmRh
+Y19vdXQ+OworCQkJfTsKKwkJfTsKKwl9OworCisJaGRtaS1jb25uZWN0b3IgeworCQljb21wYXRp
+YmxlID0gImhkbWktY29ubmVjdG9yIjsKKwkJdHlwZSA9ICJhIjsKKworCQlwb3J0IHsKKwkJCWhk
+bWlfY29ubmVjdG9yX2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1p
+X3R4X3RtZHNfb3V0PjsKKwkJCX07CisJCX07CisJfTsKIH07CiAKIC8qIFRoaXMgVUFSVCBpcyBi
+cm91Z2h0IG91dCB0byB0aGUgREI5IGNvbm5lY3RvciAqLwpAQCAtMTg4LDMgKzIwOSwyMSBAQAog
+JmV0aG1hYyB7CiAJc3RhdHVzID0gIm9rYXkiOwogfTsKKworJmN2YnNfdmRhY19wb3J0IHsKKwlj
+dmJzX3ZkYWNfb3V0OiBlbmRwb2ludCB7CisJCXJlbW90ZS1lbmRwb2ludCA9IDwmY3Zic19jb25u
+ZWN0b3JfaW4+OworCX07Cit9OworCismaGRtaV90eCB7CisJc3RhdHVzID0gIm9rYXkiOworCXBp
+bmN0cmwtMCA9IDwmaGRtaV9ocGRfcGlucz4sIDwmaGRtaV9pMmNfcGlucz47CisJcGluY3RybC1u
+YW1lcyA9ICJkZWZhdWx0IjsKK307CisKKyZoZG1pX3R4X3RtZHNfcG9ydCB7CisJaGRtaV90eF90
+bWRzX291dDogZW5kcG9pbnQgeworCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfY29ubmVjdG9y
+X2luPjsKKwl9OworfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9t
+ZXNvbi1neC5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4LmR0c2kK
+aW5kZXggOTRjNmY5NS4uMGRkYTA1OCAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9h
+bWxvZ2ljL21lc29uLWd4LmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21l
+c29uLWd4LmR0c2kKQEAgLTQ2NSw2ICs0NjUsMzggQEAKIAkJCWN2YnNfdmRhY19wb3J0OiBwb3J0
+QDAgewogCQkJCXJlZyA9IDwwPjsKIAkJCX07CisKKwkJCS8qIEhETUktVFggb3V0cHV0IHBvcnQg
+Ki8KKwkJCWhkbWlfdHhfcG9ydDogcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisKKwkJCQloZG1p
+X3R4X291dDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfdHhfaW4+
+OworCQkJCX07CisJCQl9OworCQl9OworCisJCWhkbWlfdHg6IGhkbWktdHhAYzg4M2EwMDAgewor
+CQkJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4LWR3LWhkbWkiOworCQkJcmVnID0gPDB4
+MCAweGM4ODNhMDAwIDB4MCAweDFjPjsKKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA1NyBJUlFf
+VFlQRV9FREdFX1JJU0lORz47CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNl
+bGxzID0gPDA+OworCQkJc3RhdHVzID0gImRpc2FibGVkIjsKKworCQkJLyogVlBVIFZFTkMgSW5w
+dXQgKi8KKwkJCWhkbWlfdHhfdmVuY19wb3J0OiBwb3J0QDAgeworCQkJCXJlZyA9IDwwPjsKKwor
+CQkJCWhkbWlfdHhfaW46IGVuZHBvaW50IHsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1p
+X3R4X291dD47CisJCQkJfTsKKwkJCX07CisKKwkJCS8qIFRNRFMgT3V0cHV0ICovCisJCQloZG1p
+X3R4X3RtZHNfcG9ydDogcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisJCQl9OwogCQl9OwogCX07
+CiB9OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmIt
+bmV4Ym94LWE5NXguZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmIt
+bmV4Ym94LWE5NXguZHRzCmluZGV4IDRjYmQ2MjYuLmEyYzk5OWYgMTAwNjQ0Ci0tLSBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLW5leGJveC1hOTV4LmR0cworKysgYi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1uZXhib3gtYTk1eC5kdHMKQEAg
+LTE1Miw2ICsxNTIsMTcgQEAKIAkJCX07CiAJCX07CiAJfTsKKworCWhkbWktY29ubmVjdG9yIHsK
+KwkJY29tcGF0aWJsZSA9ICJoZG1pLWNvbm5lY3RvciI7CisJCXR5cGUgPSAiYSI7CisKKwkJcG9y
+dCB7CisJCQloZG1pX2Nvbm5lY3Rvcl9pbjogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2lu
+dCA9IDwmaGRtaV90eF90bWRzX291dD47CisJCQl9OworCQl9OworCX07CiB9OwogCiAmdWFydF9B
+TyB7CkBAIC0yNDUsMyArMjU2LDE1IEBACiAJCXJlbW90ZS1lbmRwb2ludCA9IDwmY3Zic19jb25u
+ZWN0b3JfaW4+OwogCX07CiB9OworCismaGRtaV90eCB7CisJc3RhdHVzID0gIm9rYXkiOworCXBp
+bmN0cmwtMCA9IDwmaGRtaV9ocGRfcGlucz4sIDwmaGRtaV9pMmNfcGlucz47CisJcGluY3RybC1u
+YW1lcyA9ICJkZWZhdWx0IjsKK307CisKKyZoZG1pX3R4X3RtZHNfcG9ydCB7CisJaGRtaV90eF90
+bWRzX291dDogZW5kcG9pbnQgeworCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfY29ubmVjdG9y
+X2luPjsKKwl9OworfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9t
+ZXNvbi1neGJiLXAyMHguZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1n
+eGJiLXAyMHguZHRzaQppbmRleCA0YTk2ZTBmLi4xYzk2ZmM4IDEwMDY0NAotLS0gYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1wMjB4LmR0c2kKKysrIGIvYXJjaC9hcm02
+NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmItcDIweC5kdHNpCkBAIC0xMzUsNiArMTM1LDE3
+IEBACiAJCQl9OwogCQl9OwogCX07CisKKwloZG1pLWNvbm5lY3RvciB7CisJCWNvbXBhdGlibGUg
+PSAiaGRtaS1jb25uZWN0b3IiOworCQl0eXBlID0gImEiOworCisJCXBvcnQgeworCQkJaGRtaV9j
+b25uZWN0b3JfaW46IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfdHhf
+dG1kc19vdXQ+OworCQkJfTsKKwkJfTsKKwl9OwogfTsKIAogLyogVGhpcyBVQVJUIGlzIGJyb3Vn
+aHQgb3V0IHRvIHRoZSBEQjkgY29ubmVjdG9yICovCkBAIC0yNTAsMyArMjYxLDE1IEBACiAJCXJl
+bW90ZS1lbmRwb2ludCA9IDwmY3Zic19jb25uZWN0b3JfaW4+OwogCX07CiB9OworCismaGRtaV90
+eCB7CisJc3RhdHVzID0gIm9rYXkiOworCXBpbmN0cmwtMCA9IDwmaGRtaV9ocGRfcGlucz4sIDwm
+aGRtaV9pMmNfcGlucz47CisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKK307CisKKyZoZG1p
+X3R4X3RtZHNfcG9ydCB7CisJaGRtaV90eF90bWRzX291dDogZW5kcG9pbnQgeworCQlyZW1vdGUt
+ZW5kcG9pbnQgPSA8JmhkbWlfY29ubmVjdG9yX2luPjsKKwl9OworfTsKZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLmR0c2kgYi9hcmNoL2FybTY0L2Jv
+b3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi5kdHNpCmluZGV4IDA0YjMzMjQuLjk3MTZlNjUgMTAw
+NjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLmR0c2kKKysr
+IGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmIuZHRzaQpAQCAtNTI0LDMg
+KzUyNCwxNSBAQAogJnZwdSB7CiAJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4YmItdnB1
+IiwgImFtbG9naWMsbWVzb24tZ3gtdnB1IjsKIH07CisKKyZoZG1pX3R4IHsKKwljb21wYXRpYmxl
+ID0gImFtbG9naWMsbWVzb24tZ3hiYi1kdy1oZG1pIiwgImFtbG9naWMsbWVzb24tZ3gtZHctaGRt
+aSI7CisJcmVzZXRzID0gPCZyZXNldCBSRVNFVF9IRE1JVFhfQ0FQQjM+LAorCQkgPCZyZXNldCBS
+RVNFVF9IRE1JX1NZU1RFTV9SRVNFVD4sCisJCSA8JnJlc2V0IFJFU0VUX0hETUlfVFg+OworCXJl
+c2V0LW5hbWVzID0gImhkbWl0eF9hcGIiLCAiaGRtaXR4IiwgImhkbWl0eF9waHkiOworCWNsb2Nr
+cyA9IDwmY2xrYyBDTEtJRF9IRE1JX1BDTEs+LAorCQkgPCZjbGtjIENMS0lEX0NMSzgxPiwKKwkJ
+IDwmY2xrYyBDTEtJRF9HQ0xLX1ZFTkNJX0lOVDA+OworCWNsb2NrLW5hbWVzID0gImlzZnIiLCAi
+aWFoYiIsICJ2ZW5jaSI7Cit9OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxv
+Z2ljL21lc29uLWd4bC1zOTA1eC1uZXhib3gtYTk1eC5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2FtbG9naWMvbWVzb24tZ3hsLXM5MDV4LW5leGJveC1hOTV4LmR0cwppbmRleCBjZWE0YTNlLi44
+ODczYzA1IDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hs
+LXM5MDV4LW5leGJveC1hOTV4LmR0cworKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMv
+bWVzb24tZ3hsLXM5MDV4LW5leGJveC1hOTV4LmR0cwpAQCAtMTI3LDYgKzEyNywxNyBAQAogCQkJ
+fTsKIAkJfTsKIAl9OworCisJaGRtaS1jb25uZWN0b3IgeworCQljb21wYXRpYmxlID0gImhkbWkt
+Y29ubmVjdG9yIjsKKwkJdHlwZSA9ICJhIjsKKworCQlwb3J0IHsKKwkJCWhkbWlfY29ubmVjdG9y
+X2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX3R4X3RtZHNfb3V0
+PjsKKwkJCX07CisJCX07CisJfTsKIH07CiAKICZ1YXJ0X0FPIHsKQEAgLTIxOSwzICsyMzAsMTUg
+QEAKIAkJcmVtb3RlLWVuZHBvaW50ID0gPCZjdmJzX2Nvbm5lY3Rvcl9pbj47CiAJfTsKIH07CisK
+KyZoZG1pX3R4IHsKKwlzdGF0dXMgPSAib2theSI7CisJcGluY3RybC0wID0gPCZoZG1pX2hwZF9w
+aW5zPiwgPCZoZG1pX2kyY19waW5zPjsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworfTsK
+KworJmhkbWlfdHhfdG1kc19wb3J0IHsKKwloZG1pX3R4X3RtZHNfb3V0OiBlbmRwb2ludCB7CisJ
+CXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb25uZWN0b3JfaW4+OworCX07Cit9OwpkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC5kdHNpIGIvYXJjaC9h
+cm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC5kdHNpCmluZGV4IGZlMTFiNWYuLjlkY2Fj
+MjUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRz
+aQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLmR0c2kKQEAgLTQ0
+LDYgKzQ0LDcgQEAKICNpbmNsdWRlICJtZXNvbi1neC5kdHNpIgogI2luY2x1ZGUgPGR0LWJpbmRp
+bmdzL2Nsb2NrL2d4YmItY2xrYy5oPgogI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vbWVzb24t
+Z3hsLWdwaW8uaD4KKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9yZXNldC9hbWxvZ2ljLG1lc29uLWd4
+YmItcmVzZXQuaD4KIAogLyB7CiAJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4bCI7CkBA
+IC0zODEsMyArMzgyLDE1IEBACiAmdnB1IHsKIAljb21wYXRpYmxlID0gImFtbG9naWMsbWVzb24t
+Z3hsLXZwdSIsICJhbWxvZ2ljLG1lc29uLWd4LXZwdSI7CiB9OworCismaGRtaV90eCB7CisJY29t
+cGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4bC1kdy1oZG1pIiwgImFtbG9naWMsbWVzb24tZ3gt
+ZHctaGRtaSI7CisJcmVzZXRzID0gPCZyZXNldCBSRVNFVF9IRE1JVFhfQ0FQQjM+LAorCQkgPCZy
+ZXNldCBSRVNFVF9IRE1JX1NZU1RFTV9SRVNFVD4sCisJCSA8JnJlc2V0IFJFU0VUX0hETUlfVFg+
+OworCXJlc2V0LW5hbWVzID0gImhkbWl0eF9hcGIiLCAiaGRtaXR4IiwgImhkbWl0eF9waHkiOwor
+CWNsb2NrcyA9IDwmY2xrYyBDTEtJRF9IRE1JX1BDTEs+LAorCQkgPCZjbGtjIENMS0lEX0NMSzgx
+PiwKKwkJIDwmY2xrYyBDTEtJRF9HQ0xLX1ZFTkNJX0lOVDA+OworCWNsb2NrLW5hbWVzID0gImlz
+ZnIiLCAiaWFoYiIsICJ2ZW5jaSI7Cit9OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0
+cy9hbWxvZ2ljL21lc29uLWd4bS1uZXhib3gtYTEuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9h
+bWxvZ2ljL21lc29uLWd4bS1uZXhib3gtYTEuZHRzCmluZGV4IDVhMzM3ZDMuLjBlNjhjNjJlIDEw
+MDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3htLW5leGJveC1h
+MS5kdHMKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS1uZXhib3gt
+YTEuZHRzCkBAIC0xMDAsNiArMTAwLDE3IEBACiAJCQl9OwogCQl9OwogCX07CisKKwloZG1pLWNv
+bm5lY3RvciB7CisJCWNvbXBhdGlibGUgPSAiaGRtaS1jb25uZWN0b3IiOworCQl0eXBlID0gImEi
+OworCisJCXBvcnQgeworCQkJaGRtaV9jb25uZWN0b3JfaW46IGVuZHBvaW50IHsKKwkJCQlyZW1v
+dGUtZW5kcG9pbnQgPSA8JmhkbWlfdHhfdG1kc19vdXQ+OworCQkJfTsKKwkJfTsKKwl9OwogfTsK
+IAogLyogVGhpcyBVQVJUIGlzIGJyb3VnaHQgb3V0IHRvIHRoZSBEQjkgY29ubmVjdG9yICovCkBA
+IC0xODMsMyArMTk0LDE1IEBACiAJCXJlbW90ZS1lbmRwb2ludCA9IDwmY3Zic19jb25uZWN0b3Jf
+aW4+OwogCX07CiB9OworCismaGRtaV90eCB7CisJc3RhdHVzID0gIm9rYXkiOworCXBpbmN0cmwt
+MCA9IDwmaGRtaV9ocGRfcGlucz4sIDwmaGRtaV9pMmNfcGlucz47CisJcGluY3RybC1uYW1lcyA9
+ICJkZWZhdWx0IjsKK307CisKKyZoZG1pX3R4X3RtZHNfcG9ydCB7CisJaGRtaV90eF90bWRzX291
+dDogZW5kcG9pbnQgeworCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfY29ubmVjdG9yX2luPjsK
+Kwl9OworfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1n
+eG0uZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neG0uZHRzaQppbmRl
+eCBkZGVhNzMwLi5mZTQ1MWNjIDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9n
+aWMvbWVzb24tZ3htLmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29u
+LWd4bS5kdHNpCkBAIC0xMzAsMyArMTMwLDYgQEAKIAljb21wYXRpYmxlID0gImFtbG9naWMsbWVz
+b24tZ3htLXZwdSIsICJhbWxvZ2ljLG1lc29uLWd4LXZwdSI7CiB9OwogCismaGRtaV90eCB7CisJ
+Y29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4bS1kdy1oZG1pIiwgImFtbG9naWMsbWVzb24t
+Z3gtZHctaGRtaSI7Cit9OwotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
