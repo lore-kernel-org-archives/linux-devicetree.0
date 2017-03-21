@@ -1,48 +1,63 @@
-From: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Question regarding back compatibility for DT
-Date: Tue, 21 Mar 2017 11:36:28 -0500
-Message-ID: <CABGGisy1dFstxQdkFWL0VAHgdcp+L8xAHJwZuvs0zMQnSUkPnw@mail.gmail.com>
-References: <20170321155814.GA10342@mai> <CANCZdfpwRSSEhBcr_BrvRj4MfBbMHSYpC+wJvm7fU6h=GXkqtg@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/3] dtc updates for 4.12
+Date: Tue, 21 Mar 2017 09:49:37 -0700
+Message-ID: <1e151194-0768-7f73-cd5c-21f42a6555de@gmail.com>
+References: <20170321161958.9658-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANCZdfpwRSSEhBcr_BrvRj4MfBbMHSYpC+wJvm7fU6h=GXkqtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170321161958.9658-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 11:16 AM, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org> wrote:
-> On Tue, Mar 21, 2017 at 8:58 AM, Daniel Lezcano
-> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Hi Rob, dt people,
->>
->> is it acceptable a driver is changed using a new DT binding but becomes
->> incompatible with the old DT files ?
->>
->> IOW, is it possible to change the DT and the driver without supporting the old
->> DT format, forcing an update of the DT and the kernel ?
->
-> I've seen new properties many times added, even though the new driver
-> wouldn't work quite right on old DT files. I've also seen people
-> create a new hardware compatibility name for a totally new binding.
-> Finally, I've seen the bindings just randomly change for no reason
-> with no concern for backwards compat. The last really sucks if you
-> have a driver that's not in the Linux tree (say, because it's a
-> FreeBSD driver).
+On 03/21/2017 09:19 AM, Rob Herring wrote:
+> This series syncs dtc with current mainline. The primary motivation is 
+> to pull in the new checks I've worked on. This gives lots of new 
+> warnings which are turned off by default.
+> 
+> Arm-soc folks, I've left the PCI checks enabled as they are pretty much 
+> all real errors and there aren't that many (about 1200, but that's lots 
+> of duplicates). I have a patch for some of them.
 
-Hopefully that is getting better? If not, how do we make it better? I
-try to prevent it through reviews, but I have have no visibility into
-what FreeBSD does and doesn't care about.
+Out of curiosity, should we think about making dtc a git submodule and
+have some magic in scripts/update-dtc-source.sh to sync it to a desired
+commit?
 
-The common suggestion is moving the bindings out of the kernel. The
-biggest issue I have with that is that we would lose the review of all
-the kernel subsystem maintainers. They may be biased toward Linux, but
-they know their class of h/w and no other project has the breath of
-h/w support.
+> 
+> Rob
+> 
+> Rob Herring (3):
+>   scripts/dtc: automate getting dtc version and log in update script
+>   scripts/dtc: Update to upstream version v1.4.4-8-g756ffc4f52f6
+>   dtc: update warning settings for new bus and node/property name checks
+> 
+>  scripts/Makefile.lib                 |   9 +-
+>  scripts/dtc/checks.c                 | 361 +++++++++++++++++++++++++++++++----
+>  scripts/dtc/data.c                   |  16 +-
+>  scripts/dtc/dtc-lexer.l              |   3 +-
+>  scripts/dtc/dtc-lexer.lex.c_shipped  |  77 ++++----
+>  scripts/dtc/dtc-parser.tab.c_shipped |   6 +-
+>  scripts/dtc/dtc-parser.y             |   6 +-
+>  scripts/dtc/dtc.c                    |   9 +-
+>  scripts/dtc/dtc.h                    |  11 +-
+>  scripts/dtc/flattree.c               |  58 +++---
+>  scripts/dtc/libfdt/fdt_rw.c          |   3 +-
+>  scripts/dtc/libfdt/libfdt.h          |  51 ++++-
+>  scripts/dtc/libfdt/libfdt_env.h      |  26 +--
+>  scripts/dtc/livetree.c               |  22 ++-
+>  scripts/dtc/srcpos.c                 |   2 +-
+>  scripts/dtc/srcpos.h                 |  11 +-
+>  scripts/dtc/treesource.c             |   6 +-
+>  scripts/dtc/update-dtc-source.sh     |  20 +-
+>  scripts/dtc/util.c                   |  11 +-
+>  scripts/dtc/util.h                   |  24 ++-
+>  scripts/dtc/version_gen.h            |   2 +-
+>  21 files changed, 550 insertions(+), 184 deletions(-)
+> 
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Florian
