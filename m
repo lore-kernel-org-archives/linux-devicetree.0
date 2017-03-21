@@ -1,195 +1,91 @@
-From: Olivier MOYSAN <olivier.moysan@st.com>
-Subject: Re: [RESEND PATCH v2 1/2] ASoC: stm32: add bindings
-	for SAI
-Date: Tue, 21 Mar 2017 10:31:54 +0000
-Message-ID: <2d9ee6db-e030-39ef-1988-b8305bcf042f@st.com>
-References: <f6a9354e-dbab-f485-c763-21c8e3af3d62@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <f6a9354e-dbab-f485-c763-21c8e3af3d62@st.com>
-Content-Language: en-US
-Content-ID: <47D692996A275247AFE178858F154E10@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "tiwai@suse.com" <tiwai@suse.com>, "broonie@kernel.org" <broonie@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 3/5] mtd: nand: export nand_{read,write}_page_raw()
+Date: Tue, 21 Mar 2017 11:38:04 +0100
+Message-ID: <1490092686-16509-4-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1490092686-16509-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490092686-16509-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+The nand_read_page_raw() and nand_write_page_raw() functions might be
+re-used by vendor-specific implementations of the read_page/write_page
+functions. Instead of having vendor-specific code duplicate this code,
+it is much better to export those functions and allow them to be
+re-used.
 
-On 03/18/2017 09:43 PM, Rob Herring wrote:
-> On Thu, Mar 16, 2017 at 5:50 AM, Olivier MOYSAN <olivier.moysan@st.com> wrote:
->> Hello Rob,
->>
->> Thanks for your feedback.
->>
->> On 03/15/2017 06:46 PM, Rob Herring wrote:
->>> On Tue, Mar 07, 2017 at 10:44:31AM +0100, olivier moysan wrote:
->>>> This patch adds documentation of device tree bindings for the
->>>> STM32 SAI ASoC driver.
->>>>
->>>> Signed-off-by: olivier moysan <olivier.moysan@st.com>
->>>> ---
->>>>  .../devicetree/bindings/sound/st,stm32-sai.txt     | 79 ++++++++++++++++++++++
->>>>  1 file changed, 79 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
->>>> new file mode 100644
->>>> index 0000000..b3be26d
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
->>>> @@ -0,0 +1,79 @@
->>>> +STMicroelectronics STM32 Serial Audio Interface (SAI).
->>>> +
->>>> +The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
->>>> +as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
->>>> +The SAI contains two independent audio sub-blocks. Each sub-block has
->>>> +its own clock generator and I/O lines controller.
->>>> +
->>>> +Required properties:
->>>> +  - compatible: Should be "st,stm32f4-sai"
->>>> +  - reg: Base address and size of SAI common register set.
->>>> +  - clocks: Must contain phandle and clock specifier pairs for each entry
->>>> +    in clock-names.
->>>> +  - clock-names: Must contain "clk_x8k" and "clk_x11k"
->>>> +    "clk_x8k": SAI parent clock for sampling rates multiple of 8kHz.
->>>> +    "clk_x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
->>>
->>> clk_ is redundant.
->>>
->>
->> Do you mean, removing clk_ prefix ?
->
-> Yes.
->
->>
->>>> +  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
->>>> +
->>>> +Note: Each SAI controller should have an alias correctly numbered
->>>> +in "aliases" node, to provide explicit name to CPU DAI.
->>>
->>> No, it shouldn't. Why do you need that?
->>>
->>
->> Yes, this is not mandatory. This is convenient to identify sai
->> controller, as we may have up to 8 instances.
->> I can make it optional, or remove it if you think it is not relevant.
->
-> Remove it.
->
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/mtd/nand/nand_base.c | 10 ++++++----
+ include/linux/mtd/nand.h     |  8 ++++++++
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-One more thing regarding aliases.
-In future patches, I will add alsa controls to configure sai.
-Some stm32 socs exhibit several sai (4 instances for H7)
-It will be necessary to identify to which sai each control apply,
-through the control names:
-	SAI1A control X
-	SAI2A control X
-	...
-sub-node compatible already allows to identify A or B sub-instance.
+diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
+index 3a5512a..915c3d5 100644
+--- a/drivers/mtd/nand/nand_base.c
++++ b/drivers/mtd/nand/nand_base.c
+@@ -1460,14 +1460,15 @@ EXPORT_SYMBOL(nand_check_erased_ecc_chunk);
+  *
+  * Not for syndrome calculating ECC controllers, which use a special oob layout.
+  */
+-static int nand_read_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
+-			      uint8_t *buf, int oob_required, int page)
++int nand_read_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++		       uint8_t *buf, int oob_required, int page)
+ {
+ 	chip->read_buf(mtd, buf, mtd->writesize);
+ 	if (oob_required)
+ 		chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
+ 	return 0;
+ }
++EXPORT_SYMBOL(nand_read_page_raw);
+ 
+ /**
+  * nand_read_page_raw_syndrome - [INTERN] read raw page data without ecc
+@@ -2404,8 +2405,8 @@ static int nand_read_oob(struct mtd_info *mtd, loff_t from,
+  *
+  * Not for syndrome calculating ECC controllers, which use a special oob layout.
+  */
+-static int nand_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
+-			       const uint8_t *buf, int oob_required, int page)
++int nand_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++			const uint8_t *buf, int oob_required, int page)
+ {
+ 	chip->write_buf(mtd, buf, mtd->writesize);
+ 	if (oob_required)
+@@ -2413,6 +2414,7 @@ static int nand_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(nand_write_page_raw);
+ 
+ /**
+  * nand_write_page_raw_syndrome - [INTERN] raw page write function
+diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+index d27374c..5fc705d 100644
+--- a/include/linux/mtd/nand.h
++++ b/include/linux/mtd/nand.h
+@@ -1261,6 +1261,14 @@ int nand_read_oob_std(struct mtd_info *mtd, struct nand_chip *chip, int page);
+ int nand_read_oob_syndrome(struct mtd_info *mtd, struct nand_chip *chip,
+ 			   int page);
+ 
++/* Default read_page_raw implementation */
++int nand_read_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++		       uint8_t *buf, int oob_required, int page);
++
++/* Default write_page_raw implementation */
++int nand_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++			const uint8_t *buf, int oob_required, int page);
++
+ /* Reset and initialize a NAND device */
+ int nand_reset(struct nand_chip *chip, int chipnr);
+ 
+-- 
+2.7.4
 
-An alternative to alias, may be to use dev_name information to identify 
-sai instance. But this does not produce user friendly control names.
-
-Another way is to use compatible also. The drawback here
-is to multiply compatible names. (many soc families and many instances)
-
-What is your recommendation ?
-If there is another solution, I did not consider, please let me know.
-
->>
->>>
->>>> +
->>>> +Optional properties:
->>>> +  - resets: Reference to a reset controller asserting the SAI
->>>> +
->>>> +SAI subnodes:
->>>> +Two subnodes corresponding to SAI sub-block instances A et B can be defined.
->>>> +Subnode can be omitted for unsused sub-block.
->>>> +
->>>> +SAI subnodes required properties:
->>>> +  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
->>>> +    for SAI sub-block A or B respectively.
->>>> +  - reg: Base address and size of SAI sub-block register set.
->>>> +  - clocks: Must contain one phandle and clock specifier pair
->>>> +    for sai_ck which feeds the internal clock generator.
->>>> +  - clock-names: Must contain "sai_ck".
->>>> +  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
->>>> +  - dma-names: identifier string for each DMA request line
->>>> +    "tx": if sai sub-block is configured as playback DAI
->>>> +    "rx": if sai sub-block is configured as capture DAI
->>>> +  - pinctrl-names: should contain only value "default"
->>>> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
->>>> +
->>>> +Example:
->>>> +sai1: sai1@40015800 {
->>>> +    compatible = "st,stm32f4-sai";
->>>> +    reg = <0x40015800 0x400>;
->>
->>         reg = <0x40015800 0x4>;
->>
->>>> +    clocks = <&rcc 1 CLK_SAIQ_PDIV>, <&rcc 1 CLK_I2SQ_PDIV>;
->>>> +    clock-names = "clk_x8k", "clk_x11k";
->>>> +    interrupts = <87>;
->>>> +    resets = <&rcc 310>;
->>>> +
->>>> +    sai1b: sai@1 {
->>>
->>> unit address needs a reg property.
->>>
->>> audio-controller@1
->>>
->>
->> Right. This needs to be updated as follows:
->>         sai1b: sai1b@40015824 {
->
-> audio-controller@...
->
->>                 ...
->>                 reg = <0x40015824 0x1C>;
->>                 ...
->>         };
->>
->>>> +            #sound-dai-cells = <0>;
->>>> +            compatible = "st,stm32-sai-sub-b";
->>>> +            clocks = <&rcc 1 CLK_SAI2>;
->>>> +            clock-names = "sai_ck";
->>>> +            dmas = <&dma2 5 0 0x400 0x1>;
->>>> +            dma-names = "tx";
->>>> +    };
->>>> +};
->>>> +
->>>> +sound {
->>>> +    compatible = "simple-audio-card";
->>>
->>> Perhaps you want to use the graph-card here. It's getting close to
->>> merging.
->>>
->>
->> mclk-fs property is required when SAI is configured as master.
->> It seems that mclk-fs is not supported in current version
->> of audio graph card. So I thing I should keep simple card for the time
->> being. Anyway, I plan further updates for SAI, so I will
->> have opportunity to change to graph card at that time.
->
-> Well, it's not easy to switch later and maintain compatibility. Is it
-> complicated to add mclk-fs property? The intent is graph-card supports
-> everything simple-card supports.
->
-> Rob
->
-
-Right, it should not be too complicated to add mclk-fs support to 
-graph-card.
-
-BRs
-olivier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
