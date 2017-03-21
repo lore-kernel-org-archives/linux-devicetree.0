@@ -1,104 +1,124 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: Re: [PATCH v2 1/5] dt-bindings: update device tree
- binding for Allwinner PRCM CCUs
-Date: Tue, 21 Mar 2017 19:37:32 +0800
-Message-ID: <20170321143806.c0ku8Okq@smtp3j.mail.yandex.net>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [v5,net-next,1/9] net: stmmac: multiple queues dt configuration
+Date: Tue, 21 Mar 2017 11:39:24 +0000
+Message-ID: <340aba35-de12-14a8-749c-5507edab449e@synopsys.com>
+References: <c315778b650a846db3c04816fd1d1041bb1e4043.1489169213.git.jpinto@synopsys.com>
+ <20170321113245.GA10526@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBKFBYTDAKGQEO3QPZTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170321113245.GA10526-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, niklas.cassel-VrBV9hrLPhE@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-2017=E5=B9=B43=E6=9C=8821=E6=97=A5 =E4=B8=8B=E5=8D=883:41=E4=BA=8E Maxime R=
-ipard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Thu, Mar 16, 2017 at 01:28:04AM +0800, Icenowy Zheng wrote:=20
-> > Many Allwinner SoCs after A31 have a CCU in PRCM block.=20
-> >=20
-> > Give the ones on H3 and A64 compatible strings.=20
-> >=20
-> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
-> > ---=20
-> > Changes in v2:=20
-> > - Add iosc for R_CCU's on H3/A64. (A31, A23 and A33 seem to have differ=
-ent=20
-> >=C2=A0=C2=A0 clock for mux 3 of ar100 clk. Investgations are needed for =
-them.)=20
-> >=20
-> >=C2=A0 Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 18 ++++++=
-+++++++++++-=20
-> >=C2=A0 1 file changed, 17 insertions(+), 1 deletion(-)=20
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt b/Do=
-cumentation/devicetree/bindings/clock/sunxi-ccu.txt=20
-> > index 68512aa398a9..4a4addff595d 100644=20
-> > --- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt=20
-> > +++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt=20
-> > @@ -7,9 +7,11 @@ Required properties :=20
-> >=C2=A0 - "allwinner,sun8i-a23-ccu"=20
-> >=C2=A0 - "allwinner,sun8i-a33-ccu"=20
-> >=C2=A0 - "allwinner,sun8i-h3-ccu"=20
-> > + - "allwinner,sun8i-h3-r-ccu"=20
-> >=C2=A0 - "allwinner,sun8i-v3s-ccu"=20
-> >=C2=A0 - "allwinner,sun9i-a80-ccu"=20
-> >=C2=A0 - "allwinner,sun50i-a64-ccu"=20
-> > + - "allwinner,sun50i-a64-r-ccu"=20
-> >=C2=A0 - "allwinner,sun50i-h5-ccu"=20
-> >=C2=A0=20
-> >=C2=A0 - reg: Must contain the registers base address and length=20
-> > @@ -20,7 +22,11 @@ Required properties :=20
-> >=C2=A0 - #clock-cells : must contain 1=20
-> >=C2=A0 - #reset-cells : must contain 1=20
-> >=C2=A0=20
-> > -Example:=20
-> > +For the PRCM CCUs on H3/A64, one more clock is needed:=20
-> > +- "iosc": another frequency oscillator used for CPUS (usually at 32000=
-Hz,=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 not the same wi=
-th losc)=20
->
-> This is called the internal oscillator in the datasheet, it would=20
-> probably make more sense to call it that way in the documentation too.=20
->
-> This oscillator seems to be clocked at 16MHz, so we should represent=20
-> it as such.=20
->
-> And I'm wondering, are you *sure* that it's fed directly from the=20
-> internal oscillator, or goes through the registers in the RTC, with=20
-> the 32 divider and 16 prescaler by default that makes it at roughly=20
-> the same rate (31.25kHz).=20
+Hi Thierry,
 
-BSP clock driver makes it a 32000Hz fixed clock.
+Às 11:32 AM de 3/21/2017, Thierry Reding escreveu:
+> On Fri, Mar 10, 2017 at 06:24:51PM +0000, Joao Pinto wrote:
+>> This patch adds the multiple queues configuration in the Device Tree.
+>> It was also created a set of structures to keep the RX and TX queues
+>> configurations to be used in the driver.
+>>
+>> Signed-off-by: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> ---
+>> Changes v4->v5:
+>> - patch title update (stmicro replaced by stmmac)
+>> Changes v2->v4:
+>> - Just to keep up with patch-set version
+>> Changes v1->v2:
+>> - RX and TX queues child nodes had bad handle
+>>
+>>  Documentation/devicetree/bindings/net/stmmac.txt   | 40 ++++++++++
+>>  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 91 ++++++++++++++++++++++
+>>  include/linux/stmmac.h                             | 30 +++++++
+>>  3 files changed, 161 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+>> index d3bfc2b..4107e67 100644
+>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+>> @@ -72,6 +72,27 @@ Optional properties:
+>>  	- snps,mb: mixed-burst
+>>  	- snps,rb: rebuild INCRx Burst
+>>  - mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
+>> +- Multiple RX Queues parameters: below the list of all the parameters to
+>> +				 configure the multiple RX queues:
+>> +	- snps,rx-queues-to-use: number of RX queues to be used in the driver
+>> +	- Choose one of these RX scheduling algorithms:
+>> +		- snps,rx-sched-sp: Strict priority
+>> +		- snps,rx-sched-wsp: Weighted Strict priority
+>> +	- For each RX queue
+>> +		- Choose one of these modes:
+>> +			- snps,dcb-algorithm: Queue to be enabled as DCB
+>> +			- snps,avb-algorithm: Queue to be enabled as AVB
+>> +		- snps,map-to-dma-channel: Channel to map
+>> +- Multiple TX Queues parameters: below the list of all the parameters to
+>> +				 configure the multiple TX queues:
+>> +	- snps,tx-queues-to-use: number of TX queues to be used in the driver
+>> +	- Choose one of these TX scheduling algorithms:
+>> +		- snps,tx-sched-wrr: Weighted Round Robin
+>> +		- snps,tx-sched-wfq: Weighted Fair Queuing
+>> +		- snps,tx-sched-dwrr: Deficit Weighted Round Robin
+>> +		- snps,tx-sched-sp: Strict priority
+>> +	- For each TX queue
+>> +		- snps,weight: TX queue weight (if using a weighted algorithm)
+>>  
+>>  Examples:
+>>  
+>> @@ -81,6 +102,23 @@ Examples:
+>>  		snps,blen = <256 128 64 32 0 0 0>;
+>>  	};
+>>  
+>> +	mtl_rx_setup: rx-queues-config {
+>> +		snps,rx-queues-to-use = <1>;
+>> +		snps,rx-sched-sp;
+>> +		queue0 {
+>> +			snps,dcb-algorithm;
+>> +			snps,map-to-dma-channel = <0x0>;
+>> +		};
+>> +	};
+>> +
+>> +	mtl_tx_setup: tx-queues-config {
+>> +		snps,tx-queues-to-use = <1>;
+>> +		snps,tx-sched-wrr;
+>> +		queue0 {
+>> +			snps,weight = <0x10>;
+>> +		};
+>> +	};
+>> +
+>>  	gmac0: ethernet@e0800000 {
+>>  		compatible = "st,spear600-gmac";
+>>  		reg = <0xe0800000 0x8000>;
+>> @@ -104,4 +142,6 @@ Examples:
+>>  			phy1: ethernet-phy@0 {
+>>  			};
+>>  		};
+>> +		snps,mtl-rx-config = <&mtl_rx_setup>;
+>> +		snps,mtl-tx-config = <&mtl_tx_setup>;
+>>  	};
+> 
+> That's kind of an odd placement for these nodes. Wouldn't they be better
+> located within the controller's device tree node, rather than referenced
+> by phandle? Making them children of the root node leaves them completely
+> without context.
+> 
+> Thierry
+> 
 
->
-> Maxime=20
->
-> --=20
-> Maxime Ripard, Free Electrons=20
-> Embedded Linux and Kernel engineering=20
-> http://free-electrons.com=20
->
-> --=20
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.=20
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org=20
-> For more options, visit https://groups.google.com/d/optout.=20
+I followed the same approach as "stmmac_axi_setup":
+https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/tree/Documentation/devicetree/bindings/net/stmmac.txt
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+I personally find it cleaner and easier to read.
+
+Thanks,
+Joao
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
