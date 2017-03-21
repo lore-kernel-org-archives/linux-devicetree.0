@@ -1,57 +1,130 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
-Date: Tue, 21 Mar 2017 14:48:29 +0530
-Message-ID: <20170321091829.GZ2843@localhost>
-References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
- <20170321083052.GY2843@localhost>
- <CAALAos-k_DBYAz49278wBr_GoceOKYVH_UuzTLn1h7QCiUd8pg@mail.gmail.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH net-next v2 1/5] dt-bindings: net: dsa: add Mediatek MT7530 binding
+Date: Tue, 21 Mar 2017 17:30:50 +0800
+Message-ID: <1490088654-19231-2-git-send-email-sean.wang@mediatek.com>
+References: <1490088654-19231-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAALAos-k_DBYAz49278wBr_GoceOKYVH_UuzTLn1h7QCiUd8pg@mail.gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490088654-19231-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 02:17:21PM +0530, Anup Patel wrote:
-> On Tue, Mar 21, 2017 at 2:00 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> > On Mon, Mar 06, 2017 at 03:13:24PM +0530, Anup Patel wrote:
-> >> The Broadcom SBA RAID is a stream-based device which provides
-> >> RAID5/6 offload.
-> >>
-> >> It requires a SoC specific ring manager (such as Broadcom FlexRM
-> >> ring manager) to provide ring-based programming interface. Due to
-> >> this, the Broadcom SBA RAID driver (mailbox client) implements
-> >> DMA device having one DMA channel using a set of mailbox channels
-> >> provided by Broadcom SoC specific ring manager driver (mailbox
-> >> controller).
-> >>
-> >> The Broadcom SBA RAID hardware requires PQ disk position instead
-> >> of PQ disk coefficient. To address this, we have added raid_gflog
-> >> table which will help driver to convert PQ disk coefficient to PQ
-> >> disk position.
-> >>
-> >> This patchset is based on Linux-4.11-rc1 and depends on patchset
-> >> "[PATCH v5 0/2] Broadcom FlexRM ring manager support"
-> >
-> > Okay I applied and was about to push when I noticed this :(
-> >
-> > So what is the status of this..?
-> 
-> PATCH2 is Acked but PATCH1 is under-review. Currently, its
-> v6 of that patchset.
-> 
-> The only dependency on that patchset is the changes in
-> brcm-message.h which are required by this BCM-SBA-RAID
-> driver.
-> 
-> @Jassi,
-> Can you please have a look at PATCH v6?
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-And I would need an immutable branch/tag once merged. I am going to keep
-this series pending till then.
+Add device-tree binding for Mediatek MT7530 switch.
 
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/net/dsa/mt7530.txt         | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
+
+diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
+new file mode 100644
+index 0000000..a9bc27b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
+@@ -0,0 +1,92 @@
++Mediatek MT7530 Ethernet switch
++================================
++
++Required properties:
++
++- compatible: Must be compatible = "mediatek,mt7530";
++- #address-cells: Must be 1.
++- #size-cells: Must be 0.
++- mediatek,mcm: Boolean; if defined, indicates that either MT7530 is the part
++	on multi-chip module belong to MT7623A has or the remotely standalone
++	chip as the function MT7623N reference board provided for.
++- core-supply: Phandle to the regulator node necessary for the core power.
++- io-supply: Phandle to the regulator node necessary for the I/O power.
++	See Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
++	for details for the regulator setup on these boards.
++
++If the property mediatek,mcm isn't defined, following property is required
++
++- reset-gpios: Should be a gpio specifier for a reset line.
++
++Else, following properties are required
++
++- resets : Phandle pointing to the system reset controller with
++	line index for the ethsys.
++- reset-names : Should be set to "mcm".
++
++Required properties for the child nodes within ports container:
++
++- reg: Port address described must be 6 for CPU port and from 0 to 5 for
++	user ports.
++- phy-mode: String, must be either "trgmii" or "rgmii" for port labeled
++	 "cpu".
++
++See Documentation/devicetree/bindings/dsa/dsa.txt for a list of additional
++required, optional properties and how the integrated switch subnodes must
++be specified.
++
++Example:
++
++	&mdio0 {
++		switch@0 {
++			compatible = "mediatek,mt7530";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			core-supply = <&mt6323_vpa_reg>;
++			io-supply = <&mt6323_vemc3v3_reg>;
++			reset-gpios = <&pio 33 0>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>;
++				port@0 {
++					reg = <0>;
++					label = "lan0";
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "lan1";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "lan2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "lan3";
++				};
++
++				port@4 {
++					reg = <4>;
++					label = "wan";
++				};
++
++				port@6 {
++					reg = <6>;
++					label = "cpu";
++					ethernet = <&gmac0>;
++					phy-mode = "trgmii";
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++			};
++		};
++	};
 -- 
-~Vinod
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
