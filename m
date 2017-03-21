@@ -1,64 +1,59 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 3/5] coresight: add support for debug module
-Date: Tue, 21 Mar 2017 15:39:23 +0000
-Message-ID: <671a0b39-b635-6e0e-d3fa-967651f2e29c@arm.com>
-References: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
- <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun8i: a33: remove highest OPP to fix
+ CPU crashes
+Date: Tue, 21 Mar 2017 16:56:32 +0100
+Message-ID: <20170321155632.k7vtmkorucsspnun@lukather>
+References: <20170320112551.25825-1-quentin.schulz@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mike.leach@linaro.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eurcn6bmi2eoq46j"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMM2YXDAKGQEGD6WV3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170320112551.25825-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO13Tl8gKCW/8w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--eurcn6bmi2eoq46j
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 03/03/17 06:00, Leo Yan wrote:
-> Coresight includes debug module and usually the module connects with CPU
-> debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
-> description for related info in "Part H: External Debug".
+On Mon, Mar 20, 2017 at 12:25:51PM +0100, Quentin Schulz wrote:
+> The highest supported frequency (1.2GHz) requires to "overvolt" the CPU.
+> However, some boards still do not have the cpu-supply DT property in the
+> cpu DT node which means that the CPU will always run with the same input
+> voltage but try to run at 1.2GHz frequency. This is the source of
+> (experienced) CPU crashes.
 > 
-> Chapter H7 "The Sample-based Profiling Extension" introduces several
-> sampling registers, e.g. we can check program counter value with
-> combined CPU exception level, secure state, etc. So this is helpful for
-> analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
-> loop with IRQ disabled. In this case the CPU cannot switch context and
-> handle any interrupt (including IPIs), as the result it cannot handle
-> SMP call for stack dump.
+> Remove the OPP which requires overvolting the CPU until all boards have
+> a cpu-supply property.
 > 
-> This patch is to enable coresight debug module, so firstly this driver
-> is to bind apb clock for debug module and this is to ensure the debug
-> module can be accessed from program or external debugger. And the driver
-> uses sample-based registers for debug purpose, e.g. when system detects
-> the CPU lockup and trigger panic, the driver will dump program counter
-> and combined context registers (EDCIDSR, EDVIDSR); by parsing context
-> registers so can quickly get to know CPU secure state, exception level,
-> etc.
-> 
-> Some of the debug module registers are located in CPU power domain, so
-> in the driver it has checked the power state for CPU before accessing
-> registers within CPU power domain. For most safe way to use this driver,
-> it's suggested to disable CPU low power states, this can simply set
-> "nohlt" in kernel command line.
-> 
+> Fixes: 03749eb88e635ad67818827adde8e5eea7b64571 ("ARM: dts: sun8i: add
+> opp-v2 table for A33")
 
-I disagree with this approach. One of the main usefulness of such self
-hosted debug feature is to debug issues around features like cpuidle.
-Adding constraints like "cpuidle needs to be disabled" is not good IMO.
-There are ways to make it work with cpuidle enabled. Please explore
-them. In particular refer H9.2.39 EDPRCR, External Debug Power/Reset
-Control Register.
+The commit ID must be 12 chars, as documented in
+Documentation/process/submitting-patches.rst.
 
-So, "nohlt" option is not an option. I prefer some sysfs option like
-Suzuki suggested to enable this feature on demand if power saving in
-normal usecase is the concern. Using "nohlt" just disables idle and
-doesn't ensure the debug power domain is ON. Using the flag directly in
-this driver to enable debug power domain also sounds misuse of that flag
-for me.
+You can also use the pretty format given there to be sure to have it
+right.
+
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Applied, thanks!
+Maxime
 
 -- 
-Regards,
-Sudeep
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--eurcn6bmi2eoq46j--
