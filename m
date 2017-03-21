@@ -1,63 +1,84 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCHv5 00/16] atmel-isi/ov7670/ov2640: convert to standalone
- drivers
-Date: Tue, 21 Mar 2017 13:23:05 +0200
-Message-ID: <20170321112304.GM10701@valkosipuli.retiisi.org.uk>
-References: <20170311112328.11802-1-hverkuil@xs4all.nl>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Tue, 21 Mar 2017 11:27:41 +0000
+Message-ID: <20170321112741.GV21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+ <20170319152233.GW21222@n2100.armlinux.org.uk>
+ <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+ <1490010926.2917.59.camel@pengutronix.de>
+ <20170320120855.GH21222@n2100.armlinux.org.uk>
+ <1490018451.2917.86.camel@pengutronix.de>
+ <20170320141705.GL21222@n2100.armlinux.org.uk>
+ <1490030604.2917.103.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20170311112328.11802-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1490030604.2917.103.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Mon, Mar 20, 2017 at 06:23:24PM +0100, Philipp Zabel wrote:
+> @@ -1173,15 +1196,8 @@ static void csi_try_fmt(struct csi_priv *priv,
+>  		incc = imx_media_find_mbus_format(infmt->code,
+>  						  CS_SEL_ANY, true);
+>  
+> -		if (sdformat->format.width < priv->crop.width * 3 / 4)
+> -			sdformat->format.width = priv->crop.width / 2;
+> -		else
+> -			sdformat->format.width = priv->crop.width;
+> -
+> -		if (sdformat->format.height < priv->crop.height * 3 / 4)
+> -			sdformat->format.height = priv->crop.height / 2;
+> -		else
+> -			sdformat->format.height = priv->crop.height;
+> +		sdformat->format.width = compose->width;
+> +		sdformat->format.height = compose->height;
+>  
+>  		if (incc->bayer) {
+>  			sdformat->format.code = infmt->code;
 
-On Sat, Mar 11, 2017 at 12:23:12PM +0100, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> 
-> This patch series converts the soc-camera atmel-isi to a standalone V4L2
-> driver.
-> 
-> The same is done for the ov7670 and ov2640 sensor drivers: the ov7670 was
-> used to test the atmel-isi driver. The ov2640 is needed because the em28xx
-> driver has a soc_camera include dependency. Both ov7670 and ov2640 sensors
-> have been tested with the atmel-isi driver.
-> 
-> The first 5 patches improve the ov7670 sensor driver, mostly adding modern
-> features such as DT support.
-> 
-> The next three convert the atmel-isi and move it out of soc_camera.
-> 
-> The following 6 patches convert ov2640 and drop the soc_camera dependency
-> in em28xx. I have tested that this works with my 'SpeedLink Vicious And
-> Divine Laplace webcam'.
-> 
-> The last two patches add isi support to the DT: the first for the ov7670
-> sensor, the second modifies it for the ov2640 sensor.
-> 
-> These two final patches are for demonstration purposes only, I do not plan
-> on merging them.
-> 
-> Tested with my sama5d3-Xplained board, the ov2640 sensor and two ov7670
-> sensors: one with and one without reset/pwdn pins. Also tested with my
-> em28xx-based webcam.
-> 
-> I'd like to get this in for 4.12. Fingers crossed.
+We need to do more in here, because right now setting the source pads
+overwrites the colorimetry etc information.  Maybe something like the
+below?  I'm wondering if it would be a saner approach to copy the
+sink format and update the parameters that can be changed, rather than
+trying to list all the parameters that shouldn't be changed.  What if
+the format structure gains a new member?
 
-A question on the last two patches --- what's in the commit description
-still holds, right? In that case, how about dropping them from the set?
-There have been no changes to those patches during review AFAIR.
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 1492b92e1970..756204ced53c 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -1221,6 +1221,12 @@ static void csi_try_fmt(struct csi_priv *priv,
+ 			sdformat->format.field =  (infmt->height == 480) ?
+ 				V4L2_FIELD_SEQ_TB : V4L2_FIELD_SEQ_BT;
+ 		}
++
++		/* copy settings we can't change */
++		sdformat->format.colorspace = infmt->colorspace;
++		sdformat->format.ycbcr_enc = infmt->ycbcr_enc;
++		sdformat->format.quantization = infmt->quantization;
++		sdformat->format.xfer_func = infmt->xfer_func;
+ 		break;
+ 	case CSI_SINK_PAD:
+ 		v4l_bound_align_image(&sdformat->format.width, MIN_W, MAX_W,
+
+
 
 -- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
