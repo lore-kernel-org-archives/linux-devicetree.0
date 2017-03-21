@@ -1,140 +1,92 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [v5,net-next,1/9] net: stmmac: multiple queues dt configuration
-Date: Tue, 21 Mar 2017 12:32:45 +0100
-Message-ID: <20170321113245.GA10526@ulmo.ba.sec>
-References: <c315778b650a846db3c04816fd1d1041bb1e4043.1489169213.git.jpinto@synopsys.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Tue, 21 Mar 2017 11:36:29 +0000
+Message-ID: <20170321113629.GW21222@n2100.armlinux.org.uk>
+References: <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
+ <20170319103801.GQ21222@n2100.armlinux.org.uk>
+ <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
+ <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
+ <20170320132930.GJ21222@n2100.armlinux.org.uk>
+ <d0e2a9c2-5e94-d810-7ef4-ae089a6b25f5@xs4all.nl>
+ <20170320141158.GK21222@n2100.armlinux.org.uk>
+ <40e08d05-58cd-a295-3174-123147ee2ac5@xs4all.nl>
+ <20170321104212.GC3784@bigcity.dyn.berto.se>
+ <7fe51907-311d-e1cd-3e4c-dd3dc4af7d78@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <c315778b650a846db3c04816fd1d1041bb1e4043.1489169213.git.jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, niklas.cassel-VrBV9hrLPhE@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <7fe51907-311d-e1cd-3e4c-dd3dc4af7d78@xs4all.nl>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kerne
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 21, 2017 at 11:59:02AM +0100, Hans Verkuil wrote:
+> Ah, good to hear that -s works with MC. I was not sure about that.
+> Thanks for the feedback!
 
---cWoXeonUoKmBZSoM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Not soo good on iMX6:
 
-On Fri, Mar 10, 2017 at 06:24:51PM +0000, Joao Pinto wrote:
-> This patch adds the multiple queues configuration in the Device Tree.
-> It was also created a set of structures to keep the RX and TX queues
-> configurations to be used in the driver.
->=20
-> Signed-off-by: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
-> Changes v4->v5:
-> - patch title update (stmicro replaced by stmmac)
-> Changes v2->v4:
-> - Just to keep up with patch-set version
-> Changes v1->v2:
-> - RX and TX queues child nodes had bad handle
->=20
->  Documentation/devicetree/bindings/net/stmmac.txt   | 40 ++++++++++
->  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 91 ++++++++++++++++=
-++++++
->  include/linux/stmmac.h                             | 30 +++++++
->  3 files changed, 161 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documenta=
-tion/devicetree/bindings/net/stmmac.txt
-> index d3bfc2b..4107e67 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -72,6 +72,27 @@ Optional properties:
->  	- snps,mb: mixed-burst
->  	- snps,rb: rebuild INCRx Burst
->  - mdio: with compatible =3D "snps,dwmac-mdio", create and register mdio =
-bus.
-> +- Multiple RX Queues parameters: below the list of all the parameters to
-> +				 configure the multiple RX queues:
-> +	- snps,rx-queues-to-use: number of RX queues to be used in the driver
-> +	- Choose one of these RX scheduling algorithms:
-> +		- snps,rx-sched-sp: Strict priority
-> +		- snps,rx-sched-wsp: Weighted Strict priority
-> +	- For each RX queue
-> +		- Choose one of these modes:
-> +			- snps,dcb-algorithm: Queue to be enabled as DCB
-> +			- snps,avb-algorithm: Queue to be enabled as AVB
-> +		- snps,map-to-dma-channel: Channel to map
-> +- Multiple TX Queues parameters: below the list of all the parameters to
-> +				 configure the multiple TX queues:
-> +	- snps,tx-queues-to-use: number of TX queues to be used in the driver
-> +	- Choose one of these TX scheduling algorithms:
-> +		- snps,tx-sched-wrr: Weighted Round Robin
-> +		- snps,tx-sched-wfq: Weighted Fair Queuing
-> +		- snps,tx-sched-dwrr: Deficit Weighted Round Robin
-> +		- snps,tx-sched-sp: Strict priority
-> +	- For each TX queue
-> +		- snps,weight: TX queue weight (if using a weighted algorithm)
-> =20
->  Examples:
-> =20
-> @@ -81,6 +102,23 @@ Examples:
->  		snps,blen =3D <256 128 64 32 0 0 0>;
->  	};
-> =20
-> +	mtl_rx_setup: rx-queues-config {
-> +		snps,rx-queues-to-use =3D <1>;
-> +		snps,rx-sched-sp;
-> +		queue0 {
-> +			snps,dcb-algorithm;
-> +			snps,map-to-dma-channel =3D <0x0>;
-> +		};
-> +	};
-> +
-> +	mtl_tx_setup: tx-queues-config {
-> +		snps,tx-queues-to-use =3D <1>;
-> +		snps,tx-sched-wrr;
-> +		queue0 {
-> +			snps,weight =3D <0x10>;
-> +		};
-> +	};
-> +
->  	gmac0: ethernet@e0800000 {
->  		compatible =3D "st,spear600-gmac";
->  		reg =3D <0xe0800000 0x8000>;
-> @@ -104,4 +142,6 @@ Examples:
->  			phy1: ethernet-phy@0 {
->  			};
->  		};
-> +		snps,mtl-rx-config =3D <&mtl_rx_setup>;
-> +		snps,mtl-tx-config =3D <&mtl_tx_setup>;
->  	};
+$ v4l2-compliance -d /dev/video10 -s --expbuf-device=/dev/video0
+...
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+                fail: v4l2-test-input-output.cpp(420): G_INPUT not supported for a capture device
+        test VIDIOC_G/S/ENUMINPUT: FAIL
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
+...
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+                test VIDIOC_QUERYCTRL: OK
+                test VIDIOC_G/S_CTRL: OK
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+                fail: v4l2-test-controls.cpp(782): subscribe event for control 'User Controls' failed
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+...
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+                fail: v4l2-test-buffers.cpp(297): g_field() == V4L2_FIELD_ANY
+                fail: v4l2-test-buffers.cpp(703): buf.check(q, last_seq)
+                fail: v4l2-test-buffers.cpp(973): captureBufs(node, q, m2m_q, frame_count, false)
+        test MMAP: FAIL
+        test USERPTR: OK (Not Supported)
+                fail: v4l2-test-buffers.cpp(1188): can_stream && ret != EINVAL
+        test DMABUF: FAIL
 
-That's kind of an odd placement for these nodes. Wouldn't they be better
-located within the controller's device tree node, rather than referenced
-by phandle? Making them children of the root node leaves them completely
-without context.
+(/dev/video0 being CODA).  CODA itself seems to have failures:
 
-Thierry
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                warn: v4l2-test-formats.cpp(1187): S_PARM is supported for buftype 2, but not ENUM_FRAMEINTERVALS
+                warn: v4l2-test-formats.cpp(1194): S_PARM is supported but doesn't report V4L2_CAP_TIMEPERFRAME
+                test VIDIOC_G/S_PARM: OK
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                fail: v4l2-test-formats.cpp(774): fmt_out.g_colorspace() != col
+...
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+                fail: v4l2-test-buffers.cpp(956): q.create_bufs(node, 1, &fmt) != EINVAL
+        test MMAP: FAIL
+        test USERPTR: OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
 
---cWoXeonUoKmBZSoM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljRD1sACgkQ3SOs138+
-s6E2ihAAvzjSHlEXKv19FLXgDyTCKUzexrTl99xI6q35CB0hOwiZLvG2Boc8nCNZ
-gdhhsT1MDV/2VlunRHt9KfWp1QmT0FIuQHRA6ZPpTAwWlszKFIRSka4c5w31kSmJ
-U6Df8bu0azwp6iJ90c+Fq84IWtC1CeJfSXNB4QAWMDbcxqU2Cwj5lTcMdomILqya
-ec9qOamNC1wF4nqvtQ0bQDz1CTsdb8ZNZCFpZR+0g33bRMpX7hRT0XRQ8FsjvcXv
-APwqFyBxiYd6bX1hTKstxgW0JR8Lkep4c5MnuuhQTvWcBxN9Sg5vsBXqXDG/dWyf
-UfNiHR5/Vn7R3rldp71q+/EjV+XPmCFTwAMam0LJbhGVauSv7yV/zr5oPXAaEBLV
-fyPpBjxBTLxSYfmtqVpI5mj089HgPof7Qg+Mvoor4NKhU8BVjaor24dP1mkiFRSW
-JLbBa3aF60We0xOKIX5A0kLca/aCLc2KsjAU/HuogceOmyBYIc1/LTIIIH5cFLNO
-ex9JjmOq3GSm+MJ7y5v+/GQejqRRHQhv8+goyZEMdZbtWWipCbRtflddyeQ9wbq2
-Wuvzbs3KoKIJt8z5N1GYGGnrGdsgQQywj39hSTMrpkbhfbfl1ViuqIo6j2/L0x1w
-aj4O4aU/T2EeJ4JbreC1rp+1Az0Yg2NBKgP4hkdrEl0Vbv/c4ks=
-=miiN
------END PGP SIGNATURE-----
-
---cWoXeonUoKmBZSoM--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
