@@ -1,365 +1,59 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v3 3/4] arm64: dts: rockchip: describe Gru/Kevin OPPs + CPU regulators
-Date: Mon, 20 Mar 2017 16:53:43 -0700
-Message-ID: <20170320235344.126298-4-briannorris@chromium.org>
-References: <20170320235344.126298-1-briannorris@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170320235344.126298-1-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Barber <smbarber@chromium.org>, linux-arm-kernel@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Brian Norris <briannorris@chromium.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 04/20] ARM: sun8i: dt: Add DT bindings documentation
+ for Allwinner syscon
+Date: Mon, 20 Mar 2017 20:08:07 -0500
+Message-ID: <20170321010807.rhx6xvysunujkcjk@rob-hp-laptop>
+References: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+ <20170314141856.24560-5-clabbe.montjoie@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170314141856.24560-5-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Used for Gru/Kevin only, as they're the only ones which have a described
-CPU regulator. Also, I'm not sure we've validated this table non-Gru
-boards.
+On Tue, Mar 14, 2017 at 03:18:40PM +0100, Corentin Labbe wrote:
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/misc/allwinner,syscon.txt     | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/allwinner,syscon.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/allwinner,syscon.txt b/Documentation/devicetree/bindings/misc/allwinner,syscon.txt
+> new file mode 100644
+> index 0000000..9f5f1f5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/allwinner,syscon.txt
+> @@ -0,0 +1,19 @@
+> +* Allwinner sun8i system controller
+> +
+> +This file describes the bindings for the system controller present in
+> +Allwinner SoC H3, A83T and A64.
+> +The principal function of this syscon is to control EMAC PHY choice and
+> +config.
+> +
+> +Required properties for the system controller:
+> +- reg: address and length of the register for the device.
+> +- compatible: should be "syscon" and one of the following string:
+> +		"allwinner,sun8i-h3-system-controller"
+> +		"allwinner,sun8i-a64-system-controller"
+> +		"allwinner,sun8i-a83t-system-controller"
+> +
+> +Example:
+> +syscon: syscon@01c00000 {
+> +	compatible = "syscon", "allwinner,sun8i-h3-system-controller";
 
-At the same time, partially describe PWM regulators for Gru, so cpufreq
-doesn't think it can crank up the clock speed without changing the
-voltage. However, we don't yet have the DT bindings to fully describe
-the Over Voltage Protection (OVP) circuits on these boards. Without that
-description, we might end up changing the voltage too much, too fast.
+Wrong order of compatibles.
 
-Add the pwm-regulator descriptions and associate the CPU OPPs, but leave
-them disabled.
-
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
-v2 --> v3: no change
-
-v1 --> v2:
- * combine the OPP table into the regulator patch, to keep from
-   regressing
- * don't include the OPP table in top-level rk3399.dtsi, to avoid
-   breaking other boards
----
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 147 +++++++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi | 145 ++++++++++++++++++++++++++
- 2 files changed, 292 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 9c581173cb64..b512b27c78c5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -44,6 +44,7 @@
- 
- #include <dt-bindings/input/input.h>
- #include "rk3399.dtsi"
-+#include "rk3399-opp.dtsi"
- 
- / {
- 	chosen {
-@@ -170,6 +171,98 @@
- 		vin-supply = <&ppvar_sys>;
- 	};
- 
-+	ppvar_bigcpu: ppvar-bigcpu {
-+		compatible = "pwm-regulator";
-+		regulator-name = "ppvar_bigcpu";
-+		/*
-+		 * OVP circuit requires special handling which is not yet
-+		 * represented. Keep disabled for now.
-+		 */
-+		status = "disabled";
-+
-+		pwms = <&pwm1 0 3337 0>;
-+
-+		/* EC turns on w/ ap_core_en; always on for AP */
-+		regulator-always-on;
-+		regulator-boot-on;
-+
-+		regulator-min-microvolt = <798674>;
-+		regulator-max-microvolt = <1302172>;
-+
-+		pwm-supply = <&ppvar_sys>;
-+		pwm-dutycycle-range = <100 0>;
-+		pwm-dutycycle-unit = <100>;
-+	};
-+
-+	ppvar_litcpu: ppvar-litcpu {
-+		compatible = "pwm-regulator";
-+		regulator-name = "ppvar_litcpu";
-+		/*
-+		 * OVP circuit requires special handling which is not yet
-+		 * represented. Keep disabled for now.
-+		 */
-+		status = "disabled";
-+
-+		pwms = <&pwm2 0 3337 0>;
-+
-+		/* EC turns on w/ ap_core_en; always on for AP */
-+		regulator-always-on;
-+		regulator-boot-on;
-+
-+		regulator-min-microvolt = <799065>;
-+		regulator-max-microvolt = <1303738>;
-+
-+		pwm-supply = <&ppvar_sys>;
-+		pwm-dutycycle-range = <100 0>;
-+		pwm-dutycycle-unit = <100>;
-+	};
-+
-+	ppvar_gpu: ppvar-gpu {
-+		compatible = "pwm-regulator";
-+		regulator-name = "ppvar_gpu";
-+		/*
-+		 * OVP circuit requires special handling which is not yet
-+		 * represented. Keep disabled for now.
-+		 */
-+		status = "disabled";
-+
-+		pwms = <&pwm0 0 3337 0>;
-+
-+		/* EC turns on w/ ap_core_en; always on for AP */
-+		regulator-always-on;
-+		regulator-boot-on;
-+
-+		regulator-min-microvolt = <785782>;
-+		regulator-max-microvolt = <1217729>;
-+
-+		pwm-supply = <&ppvar_sys>;
-+		pwm-dutycycle-range = <100 0>;
-+		pwm-dutycycle-unit = <100>;
-+	};
-+
-+	ppvar_centerlogic: ppvar-centerlogic {
-+		compatible = "pwm-regulator";
-+		regulator-name = "ppvar_centerlogic";
-+		/*
-+		 * OVP circuit requires special handling which is not yet
-+		 * represented. Keep disabled for now.
-+		 */
-+		status = "disabled";
-+
-+		pwms = <&pwm3 0 3337 0>;
-+
-+		/* EC turns on w/ ppvar_centerlogic_en; always on for AP */
-+		regulator-always-on;
-+		regulator-boot-on;
-+
-+		regulator-min-microvolt = <800069>;
-+		regulator-max-microvolt = <1049692>;
-+
-+		pwm-supply = <&ppvar_sys>;
-+		pwm-dutycycle-range = <100 0>;
-+		pwm-dutycycle-unit = <100>;
-+	};
-+
- 	/* Schematics call this PPVAR even though it's fixed */
- 	ppvar_logic: ppvar-logic {
- 		compatible = "regulator-fixed";
-@@ -405,6 +498,60 @@
- 	};
- };
- 
-+/*
-+ * Set some suspend operating points to avoid OVP in suspend
-+ *
-+ * When we go into S3 ARM Trusted Firmware will transition our PWM regulators
-+ * from wherever they're at back to the "default" operating point (whatever
-+ * voltage we get when we set the PWM pins to "input").
-+ *
-+ * This quick transition under light load has the possibility to trigger the
-+ * regulator "over voltage protection" (OVP).
-+ *
-+ * To make extra certain that we don't hit this OVP at suspend time, we'll
-+ * transition to a voltage that's much closer to the default (~1.0 V) so that
-+ * there will not be a big jump.  Technically we only need to get within 200 mV
-+ * of the default voltage, but the speed here should be fast enough and we need
-+ * suspend/resume to be rock solid.
-+ */
-+
-+&cluster0_opp {
-+	opp05 {
-+		opp-suspend;
-+	};
-+};
-+
-+&cluster1_opp {
-+	opp06 {
-+		opp-suspend;
-+	};
-+};
-+
-+&cpu_l0 {
-+	cpu-supply = <&ppvar_litcpu>;
-+};
-+
-+&cpu_l1 {
-+	cpu-supply = <&ppvar_litcpu>;
-+};
-+
-+&cpu_l2 {
-+	cpu-supply = <&ppvar_litcpu>;
-+};
-+
-+&cpu_l3 {
-+	cpu-supply = <&ppvar_litcpu>;
-+};
-+
-+&cpu_b0 {
-+	cpu-supply = <&ppvar_bigcpu>;
-+};
-+
-+&cpu_b1 {
-+	cpu-supply = <&ppvar_bigcpu>;
-+};
-+
-+
- &cru {
- 	assigned-clocks =
- 		<&cru PLL_GPLL>, <&cru PLL_CPLL>,
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
-new file mode 100644
-index 000000000000..dd82e16236a8
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
-@@ -0,0 +1,145 @@
-+/*
-+ * Copyright (c) 2016-2017 Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/ {
-+	cluster0_opp: opp-table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp00 {
-+			opp-hz = /bits/ 64 <408000000>;
-+			opp-microvolt = <800000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <816000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <1008000000>;
-+			opp-microvolt = <875000>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <925000>;
-+		};
-+		opp05 {
-+			opp-hz = /bits/ 64 <1416000000>;
-+			opp-microvolt = <1050000>;
-+		};
-+		opp06 {
-+			opp-hz = /bits/ 64 <1512000000>;
-+			opp-microvolt = <1125000>;
-+		};
-+	};
-+
-+	cluster1_opp: opp-table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp00 {
-+			opp-hz = /bits/ 64 <408000000>;
-+			opp-microvolt = <800000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <816000000>;
-+			opp-microvolt = <825000>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <1008000000>;
-+			opp-microvolt = <875000>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp05 {
-+			opp-hz = /bits/ 64 <1416000000>;
-+			opp-microvolt = <1025000>;
-+		};
-+		opp06 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <1075000>;
-+		};
-+		opp07 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <1150000>;
-+		};
-+		opp08 {
-+			opp-hz = /bits/ 64 <2016000000>;
-+			opp-microvolt = <1250000>;
-+		};
-+	};
-+};
-+
-+&cpu_l0 {
-+	operating-points-v2 = <&cluster0_opp>;
-+};
-+
-+&cpu_l1 {
-+	operating-points-v2 = <&cluster0_opp>;
-+};
-+
-+&cpu_l2 {
-+	operating-points-v2 = <&cluster0_opp>;
-+};
-+
-+&cpu_l3 {
-+	operating-points-v2 = <&cluster0_opp>;
-+};
-+
-+&cpu_b0 {
-+	operating-points-v2 = <&cluster1_opp>;
-+};
-+
-+&cpu_b1 {
-+	operating-points-v2 = <&cluster1_opp>;
-+};
--- 
-2.12.0.367.g23dc2f6d3c-goog
+> +	reg = <0x01c00000 0x1000>;
+> +};
+> -- 
+> 2.10.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
