@@ -1,56 +1,46 @@
-From: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Question regarding back compatibility for DT
-Date: Tue, 21 Mar 2017 09:16:41 -0700
-Message-ID: <CANCZdfpwRSSEhBcr_BrvRj4MfBbMHSYpC+wJvm7fU6h=GXkqtg@mail.gmail.com>
-References: <20170321155814.GA10342@mai>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170321155814.GA10342@mai>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 3/3] dtc: update warning settings for new bus and node/property name checks
+Date: Tue, 21 Mar 2017 11:19:58 -0500
+Message-ID: <20170321161958.9658-4-robh@kernel.org>
+References: <20170321161958.9658-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170321161958.9658-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 8:58 AM, Daniel Lezcano
-<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi Rob, dt people,
->
-> is it acceptable a driver is changed using a new DT binding but becomes
-> incompatible with the old DT files ?
->
-> IOW, is it possible to change the DT and the driver without supporting th=
-e old
-> DT format, forcing an update of the DT and the kernel ?
+dtc gained new warnings checking PCI and simple buses, unit address
+formatting, and stricter node and property name checking. Disable the
+new dtc warnings by default as there are 1000s. As before warnings are
+enabled with W=1 or W=2. The strict node and property name checks are a
+bit subjective, so they are only enabled for W=2.
 
-I've seen new properties many times added, even though the new driver
-wouldn't work quite right on old DT files. I've also seen people
-create a new hardware compatibility name for a totally new binding.
-Finally, I've seen the bindings just randomly change for no reason
-with no concern for backwards compat. The last really sucks if you
-have a driver that's not in the Linux tree (say, because it's a
-FreeBSD driver).
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ scripts/Makefile.lib             | 9 ++++++++-
+ scripts/dtc/update-dtc-source.sh | 1 +
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-Warner
-
-> Thanks.
->
->   -- Daniel
->
-> --
->
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 0a07f9014944..9ded5cd4c68b 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -280,7 +280,14 @@ DTC ?= $(objtree)/scripts/dtc/dtc
+ 
+ # Disable noisy checks by default
+ ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
+-DTC_FLAGS += -Wno-unit_address_vs_reg
++DTC_FLAGS += -Wno-unit_address_vs_reg \
++	-Wno-simple_bus_reg \
++	-Wno-unit_address_format
++endif
++
++ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),2)
++DTC_FLAGS += -Wnode_name_chars_strict \
++	-Wproperty_name_chars_strict
+ endif
+ 
+ # Generate an assembly file to wrap the output of the device tree compiler
+-- 
+2.10.1
