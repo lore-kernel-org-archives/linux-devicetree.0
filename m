@@ -1,12 +1,13 @@
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH] ARM: dts: rockchip: setup DMA-channels for mmc0 and emmc for
- rk3188
-Date: Tue, 21 Mar 2017 18:13:47 +0300
-Message-ID: <1490109227-4006-1-git-send-email-al.kochet@gmail.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH v2 1/5] dt-bindings: Document STM32 CRC bindings
+Date: Tue, 21 Mar 2017 16:13:27 +0100
+Message-ID: <1490109211-4869-2-git-send-email-fabien.dessenne@st.com>
+References: <1490109211-4869-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490109211-4869-1-git-send-email-fabien.dessenne@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,40 +17,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alexander Kochetkov <al.kochet@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit enable DMA-based transfers for SD/eMMC card adapters
-and reduce number of interrupts produced by SD-card/eMMC-card
-adapters.
+Document device tree bindings for the STM32 CRC (crypto CRC32)
 
-Sometimes interrupts from SD-card/eMMC-card adapters running in
-PIO mode blocks execution of hrtimers and I2S DMA callbacks for
-a long periods (100 ms or more).
-
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/rk3188.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../devicetree/bindings/crypto/st,stm32-crc.txt          | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
 
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index 44da3d42..de786f8 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -638,3 +638,13 @@
- &wdt {
- 	compatible = "rockchip,rk3188-wdt", "snps,dw-wdt";
- };
+diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt b/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
+new file mode 100644
+index 0000000..3ba92a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
+@@ -0,0 +1,16 @@
++* STMicroelectronics STM32 CRC
 +
-+&mmc0 {
-+	dmas = <&dmac2 1>;
-+	dma-names = "rx-tx";
-+};
++Required properties:
++- compatible: Should be "st,stm32f7-crc".
++- reg: The address and length of the peripheral registers space
++- clocks: The input clock of the CRC instance
 +
-+&emmc {
-+	dmas = <&dmac2 4>;
-+	dma-names = "rx-tx";
++Optional properties: none
++
++Example:
++
++crc: crc@40023000 {
++	compatible = "st,stm32f7-crc";
++	reg = <0x40023000 0x400>;
++	clocks = <&rcc 0 12>;
 +};
 -- 
-1.7.9.5
+2.7.4
