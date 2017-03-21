@@ -1,123 +1,130 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] arm64: dts: NS2: Add dma-coherent to relevant DT entries
-Date: Tue, 21 Mar 2017 16:51:19 -0400
-Message-ID: <1490129479-19459-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v4 1/8] dt-bindings: display: add STM32 LTDC driver
+Date: Tue, 21 Mar 2017 13:54:18 -0700
+Message-ID: <87k27inyf9.fsf@eliezer.anholt.net>
+References: <1489597334-16896-1-git-send-email-yannick.fertre@st.com>
+ <1489597334-16896-2-git-send-email-yannick.fertre@st.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2131825603=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1489597334-16896-2-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick Fertre <yannick.fertre@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@st.com>Yannick Fertre <yannick.fertre@st.com>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, dri-devel@lists.freedesktop.org, Fabien Dessenne <fabien.dessenne@st.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Cache related issues with DMA rings and performance issues related to
-caching are being caused by not properly setting the "dma-coherent" flag
-in the device tree entries.  Adding it here to correct the issue.
+--===============2131825603==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Fixes: fd5e5dd56 ("arm64: dts: Add PCIe0 and PCIe4 DT nodes for NS2")
-Fixes: dddc3c9d7 ("arm64: dts: NS2: add AMAC ethernet support")
-Fixes: e79249143 ("arm64: dts: Add Broadcom Northstar2 device tree entries for PDC driver")
-Fixes: ac9aae00f ("arm64: dts: Add SATA3 AHCI and SATA3 PHY DT nodes for NS2")
-Fixes: efc877676 ("arm64: dts: Add SDHCI DT node for NS2")
----
- arch/arm64/boot/dts/broadcom/ns2.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index b8503fc..35a309a 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -114,6 +114,7 @@
- 	pcie0: pcie@20020000 {
- 		compatible = "brcm,iproc-pcie";
- 		reg = <0 0x20020000 0 0x1000>;
-+		dma-coherent;
- 
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 0>;
-@@ -144,6 +145,7 @@
- 	pcie4: pcie@50020000 {
- 		compatible = "brcm,iproc-pcie";
- 		reg = <0 0x50020000 0 0x1000>;
-+		dma-coherent;
- 
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 0>;
-@@ -174,6 +176,7 @@
- 	pcie8: pcie@60c00000 {
- 		compatible = "brcm,iproc-pcie-paxc";
- 		reg = <0 0x60c00000 0 0x1000>;
-+		dma-coherent;
- 		linux,pci-domain = <8>;
- 
- 		bus-range = <0x0 0x1>;
-@@ -203,6 +206,7 @@
- 			      <0x61030000 0x100>;
- 			reg-names = "amac_base", "idm_base", "nicpm_base";
- 			interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-coherent;
- 			phy-handle = <&gphy0>;
- 			phy-mode = "rgmii";
- 			status = "disabled";
-@@ -213,6 +217,7 @@
- 			reg = <0x612c0000 0x445>;  /* PDC FS0 regs */
- 			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <1>;
-+			dma-coherent;
- 			brcm,rx-status-len = <32>;
- 			brcm,use-bcm-hdr;
- 		};
-@@ -228,6 +233,7 @@
- 			reg = <0x612e0000 0x445>;  /* PDC FS1 regs */
- 			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <1>;
-+			dma-coherent;
- 			brcm,rx-status-len = <32>;
- 			brcm,use-bcm-hdr;
- 		};
-@@ -243,6 +249,7 @@
- 			reg = <0x61300000 0x445>;  /* PDC FS2 regs */
- 			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <1>;
-+			dma-coherent;
- 			brcm,rx-status-len = <32>;
- 			brcm,use-bcm-hdr;
- 		};
-@@ -258,6 +265,7 @@
- 			reg = <0x61320000 0x445>;  /* PDC FS3 regs */
- 			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <1>;
-+			dma-coherent;
- 			brcm,rx-status-len = <32>;
- 			brcm,use-bcm-hdr;
- 		};
-@@ -668,6 +676,7 @@
- 		sata: ahci@663f2000 {
- 			compatible = "brcm,iproc-ahci", "generic-ahci";
- 			reg = <0x663f2000 0x1000>;
-+			dma-coherent;
- 			reg-names = "ahci";
- 			interrupts = <GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -691,6 +700,7 @@
- 			compatible = "brcm,sdhci-iproc-cygnus";
- 			reg = <0x66420000 0x100>;
- 			interrupts = <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-coherent;
- 			bus-width = <8>;
- 			clocks = <&genpll_sw BCM_NS2_GENPLL_SW_SDIO_CLK>;
- 			status = "disabled";
-@@ -700,6 +710,7 @@
- 			compatible = "brcm,sdhci-iproc-cygnus";
- 			reg = <0x66430000 0x100>;
- 			interrupts = <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-coherent;
- 			bus-width = <8>;
- 			clocks = <&genpll_sw BCM_NS2_GENPLL_SW_SDIO_CLK>;
- 			status = "disabled";
--- 
-2.7.4
+Yannick Fertre <yannick.fertre@st.com> writes:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+> ---
+>  .../devicetree/bindings/display/st,stm32-ltdc.txt  | 36 ++++++++++++++++=
+++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-lt=
+dc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt =
+b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+> new file mode 100644
+> index 0000000..e8d39c5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+> @@ -0,0 +1,36 @@
+> +* STMicroelectronics STM32 lcd-tft display controller
+> +
+> +- ltdc: lcd-tft display controller host
+> +  must be a sub-node of st-display-subsystem
+> +  Required properties:
+> +  - compatible: "st,stm32-ltdc"
+> +  - reg: Physical base address of the IP registers and length of memory =
+mapped region.
+> +  - clocks: A list of phandle + clock-specifier pairs, one for each
+> +    entry in 'clock-names'.
+> +  - clock-names: A list of clock names. For ltdc it should contain:
+> +      - "clk-lcd" for the clock feeding the output pixel clock & IP cloc=
+k.
+
+I think you meant "lcd" here.
+
+> +  - resets: reset to be used by the device (defined by use of RCC macro).
+> +  Required nodes:
+> +    - Video port for RGB output.
+> +
+> +Example:
+> +
+> +/ {
+> +	...
+> +	soc {
+> +	...
+> +		ltdc: display-controller@40016800 {
+> +			compatible =3D "st,stm32-ltdc";
+> +			reg =3D <0x40016800 0x200>;
+> +			interrupts =3D <88>, <89>;
+> +			resets =3D <&rcc STM32F4_APB2_RESET(LTDC)>;
+> +			clocks =3D <&rcc 1 CLK_LCD>;
+> +			clock-names =3D "lcd";
+> +
+> +			port {
+> +				ltdc_out_rgb: endpoint {
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> --=20
+> 1.9.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAljRkvoACgkQtdYpNtH8
+nuh6WA//ddvWCf3u/nwA0gL0AhE8+hcTc7gwv8zvvjCS2Dp7SWvIwlFzWDMoMqQF
+gP93CVxmy7f54gBdKZetmE7Yk6XpXUFXUGpWSCqTCak6+2qD1J248MuugAgt0stL
+CdDAcDyB6PX9JHmX9VKE2DaMqqxSeWYhatz182lO7aFFfyHjxtT6QR9HVC83K76C
+baVRnWQANKrzwQseO+1Clw+o3Mcv4BMo14FDP5Ne9l0MqNnvOQQPVQCd0ZF3Q8Ic
+R4M8yDsMqgC5jaQ6Nd1KtuunqIoxgSVQhhhWookkzqA16Zr8XCiHkOYHSf0nhCFi
+/5CnPMYphSgYxDkZ4UQmIZwn7B/toR0Rg8H3hXLyWdWS3xR11urJIInyQN3CLH74
+K4klz24NgSueuUdfa4aDzImDauQrg80k4/JGTytTddLttF/UUMecdYidYZ6LC0nK
+lumwraCfovOa25tijH+xdy3YNXaicp1p1MUWqw+iVqEr1CvFlPYGMpWk2XTb5a7D
+0cRvZ2pT6VxMJbUwsXnxfAum6Ef4BHdmtEYvHl3EkmEt1u+Dh1Sy2KzmWwT17NQ1
+nLJjPKj1GjsN9fqbXpay2ATKaYKElRkNnabDEmCNQPNr7CXPhUcRKE23DS0WGnkw
+5XHORxxNUvOmA9SOC4ND46ivtE1ZTqmvrvMJVDQGh1mCAEX1htU=
+=D371
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============2131825603==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============2131825603==--
