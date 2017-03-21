@@ -1,127 +1,92 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v6 0/5] Implement clocksource for rockchip SoC using
- rockchip timer
-Date: Tue, 21 Mar 2017 09:02:00 +0100
-Message-ID: <6b897768-d11f-bfd2-7eeb-bd7a41ea7669@linaro.org>
-References: <1485866596-32254-1-git-send-email-al.kochet@gmail.com>
- <F14EA552-9783-4083-A00F-9151AB7E5C99@gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] dt-bindings: auxdisplay: Add bindings for Hitachi HD44780
+Date: Tue, 21 Mar 2017 09:07:00 +0100
+Message-ID: <CAMuHMdWHWL6sPCLUHHpo3mMyQhbASGVQFBcBvqMKmHg-8zy=dQ@mail.gmail.com>
+References: <1489155321-25666-1-git-send-email-geert@linux-m68k.org>
+ <1489155321-25666-5-git-send-email-geert@linux-m68k.org> <20170320151516.dscqfjihoeezzhgi@rob-hp-laptop>
+ <CAMuHMdX_9-yze0ErxKxTM0rgLAhWhtfvkW8wvXxR6vMdVXXGbg@mail.gmail.com> <CAL_Jsq+80ut=9eGK8v2e6pW_q0yPCV-Hk25C=KeE3xZVc5ooeg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <F14EA552-9783-4083-A00F-9151AB7E5C99@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Kochetkov <al.kochet@gmail.com>, Heiko Stuebner <heiko@sntech.de>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+80ut=9eGK8v2e6pW_q0yPCV-Hk25C=KeE3xZVc5ooeg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Willy Tarreau <willy-W4YR9g1X7EZBDgjK7y7TUQ@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akira Tsukamoto <akira.tsukamoto-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/03/2017 14:18, Alexander Kochetkov wrote:
-> Hello, Daniel.
-> 
-> Sorry for bothering you, but could you please take a look at v6[1] series and tell what do you think about it?
-> I see your commit[2] in the git, but I don’t understand well how to use it in rockchip driver.
-> 
-> [1] https://lkml.org/lkml/2017/1/31/401
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/clocksource?id=376bc27150f180d9f5eddec6a14117780177589d
+Hi Rob,
 
-Hi Alexander,
+On Mon, Mar 20, 2017 at 6:00 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Mar 20, 2017 at 10:27 AM, Geert Uytterhoeven
+> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> On Mon, Mar 20, 2017 at 4:15 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Fri, Mar 10, 2017 at 03:15:20PM +0100, Geert Uytterhoeven wrote:
+>>>> Add DT bindings for an Hitachi HD44780 Character LCD Controller where
+>>>> its M6800 bus interface is connected to GPIOs.
+>>>>
+>>>> Memory-mapped configurations are not yet supported.
+>>>>
+>>>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>>
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+>>
+>>>> +Required properties:
+>>>> +  - compatible: Must contain "hit,hd44780",
+>>>> +  - data-gpios: Must contain an array of either 4 or 8 GPIO specifiers,
+>>>> +    referring to the GPIO pins connected to the data signal lines DB0-DB7
+>>>> +    (8-bit mode) or DB4-DB7 (4-bit mode) of the LCD Controller's bus interface,
+>>>> +  - enable-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+>>>> +    connected to the "E" (Enable) signal line of the LCD Controller's bus
+>>>> +    interface,
+>>>> +  - rs-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+>>>> +    connected to the "RS" (Register Select) signal line of the LCD Controller's
+>>>> +    bus interface,
+>>>> +  - display-height: Height of the display, in character cells,
+>>>> +  - display-width: Width of the display, in character cells.
+>>>
+>>> display-{width,height}-chars
+>>
+>> Makes sense.
+>>
+>> Greg: As this is already in char-misc-next, shall I send an update for
+>> the bindings
+>> and the driver?
+>>
+>>>> +Optional properties:
+>>>> +  - rw-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+>>>> +    connected to the "RW" (Read/Write) signal line of the LCD Controller's bus
+>>>> +    interface,
+>>>> +  - backlight-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+>>>> +    used for enabling the LCD's backlight,
+>>>
+>>> Active state?
+>>
+>> That's typically handled via the last cell of the GPIO specifier, cfr.
+>> GPIO_ACTIVE_HIGH / GPIO_ACTIVE_LOW in <dt-bindings/gpio/gpio.h>.
+>
+> Yes, I know. I want to be able to read the binding and validate the
+> dts file, so I need to know what is the correct flag.
 
-I have been through the patchset and it is ok except for the patch 3/5.
-I wanted to investigate a bit on this one because of the patch [2] you
-are mentioning.
+For the LCD Controller's bus, the GPIOs are wired straight, so they should
+be ACTIVE_HIGH (unless there's an inverting buffer in between :-).
 
-I think there is small missing piece of devicetree binding to specify
-'clocksource' or 'clockevent'. Rob Herring is ok with an attribute of
-this kind.
+The backlight is separate from the LCD Controller, hence the polarity
+depends on the actual hardware configuration.
 
-That would help to clearly separate these drivers without ambiguity.
+Is it worth documenting that?
 
-However, it results on some duplicated code I'm not very happy with, so
-that is my major issue with this approach I would like to solve. That is
-the status today.
+Gr{oetje,eeting}s,
 
-I wanted to take the opportunity of your changes to investigate this area.
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
->> 31 янв. 2017 г., в 15:43, Alexander Kochetkov <al.kochet@gmail.com> написал(а):
->>
->> From: Alexander Kochetkov <akochetkov@lintech.ru>
->>
->> Hello, Daniel, Heiko.
->>
->> Here is try 6 :) Thanks a lot for helping me to bring the code
->> into kernel!
->>
->> This patch series contain:
->> - devicetree bindings clarification for rockchip timers
->> - dts files fixes for rk3228-evb, rk3229-evb and rk3188
->> - implementation of clocksource and sched clock for rockchip SoC
->>
->> The clock supplying the arm-global-timer on the rk3188 is coming from the
->> the cpu clock itself and thus changes its rate everytime cpufreq adjusts
->> the cpu frequency making this timer unsuitable as a stable clocksource.
->>
->> The rk3188, rk3288 and following socs share a separate timer block already
->> handled by the rockchip-timer driver. Therefore adapt this driver to also
->> be able to act as clocksource on rk3188.
->>
->> In order to test clocksource you can run following commands and check
->> how much time it take in real. On rk3188 it take about ~45 seconds.
->>
->>       cpufreq-set -f 1.6GHZ
->>       date; sleep 60; date
->>
->> rk3288 (and probably anything newer) is irrelevant to this patch,
->> as it has the arch timer interface. This patch may be usefull
->> for Cortex-A9/A5 based parts.
->>
->> Regards,
->> Alexander.
->>
->> Changes in v6:
->> - Removed Reviewed-by: Heiko Stübner <heiko@sntech.de> tag
->> - Merge 5/8, 6/8, 7/8, 8/9 into single file
->> - split init paths into rk_clkevt_init() and rk_clksrc_init()
->>  so the driver code could be adopted to CLOCKEVENT_OF_DECLARE()
->> - clockevents implemented using clocksource_mmio_init()
->> - fixed commit message for 4/8 (thanks a lot Daniel)
->>
->> Changes in v5:
->> - Add Acked-by: Rob Herring <robh at kernel.org> to 1/8
->>  http://lists.infradead.org/pipermail/linux-rockchip/2016-December/013308.html
->> - Add Reviwed-by: Heiko Stübner <heiko@sntech.de> to series
->> - change timer compatible property in the rk322x.dtsi 2/8
->>  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013784.html
->> - updated comment message for 4/8
->>  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013786.html
->> - updated comment message for 5/8
->>  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013787.html
->> - fixed build error for 8/8
->>  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013789.html
->>
->> Alexander Kochetkov (5):
->>  dt-bindings: clarify compatible property for rockchip timers
->>  ARM: dts: rockchip: update compatible property for rk322x timer
->>  clocksource/drivers/rockchip_timer: implement clocksource timer
->>  ARM: dts: rockchip: add timer entries to rk3188 SoC
->>  ARM: dts: rockchip: disable arm-global-timer for rk3188
->>
->> .../bindings/timer/rockchip,rk-timer.txt           |   12 +-
->> arch/arm/boot/dts/rk3188.dtsi                      |   17 ++
->> arch/arm/boot/dts/rk322x.dtsi                      |    2 +-
->> drivers/clocksource/Kconfig                        |    1 +
->> drivers/clocksource/rockchip_timer.c               |  218 ++++++++++++++------
->> 5 files changed, 185 insertions(+), 65 deletions(-)
->>
->> -- 
->> 1.7.9.5
->>
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
