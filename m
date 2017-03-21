@@ -1,115 +1,127 @@
-From: =?UTF-8?B?6ZmI5Lqu?= <cl@rock-chips.com>
-Subject: Re: [PATCH v1 6/7] arm64: dts: rockchip: add dts file for RK3328
- evaluation board
-Date: Tue, 21 Mar 2017 15:59:50 +0800
-Message-ID: <58D0DD76.8090909@rock-chips.com>
-References: <1489572237-6649-1-git-send-email-cl@rock-chips.com>
- <63969127-3fcd-658c-2986-8ded6d93c433@arm.com>
- <58CB4945.9020408@rock-chips.com> <4559383.EsY2O1vJ7P@phil>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v6 0/5] Implement clocksource for rockchip SoC using
+ rockchip timer
+Date: Tue, 21 Mar 2017 09:02:00 +0100
+Message-ID: <6b897768-d11f-bfd2-7eeb-bd7a41ea7669@linaro.org>
+References: <1485866596-32254-1-git-send-email-al.kochet@gmail.com>
+ <F14EA552-9783-4083-A00F-9151AB7E5C99@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4559383.EsY2O1vJ7P@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: mark.rutland@arm.com, wsa@the-dreams.de, linux-iio@vger.kernel.org, catalin.marinas@arm.com, shawn.lin@rock-chips.com, will.deacon@arm.com, kever.yang@rock-chips.com, linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com, tony.xie@rock-chips.com, linux-i2c@vger.kernel.org, pmeerw@pmeerw.net, david.wu@rock-chips.com, lars@metafoo.de, zhengxing@rock-chips.com, khilman@baylibre.com, linux-rockchip@lists.infradead.org, yhx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, paweljarosz3691@gmail.com, arnd@arndb.de, Andre Przywara <andre.przywara@arm.com>, zhangqing@rock-chips.com, robh+dt@kernel.org, matthias.bgg@gmail.com, akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org, dianders@chromium.org, knaack.h@gmx.de, fabio.estevam@nxp.com, andy.yan@rock-chips.com, rocky.hao@rock-chips.com, shawnguo@k
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <F14EA552-9783-4083-A00F-9151AB7E5C99@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Kochetkov <al.kochet@gmail.com>, Heiko Stuebner <heiko@sntech.de>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa2/vvJoKCiAgICAgICAgIElzIHRoZXJlIGFueSBhZHZpY2UgYWJvdXQgdGhlIGJpZyBk
-dHNpPwogICAgICAgICBJIHdvdWxkIGxpa2UgdG8gc2VuZCBuZXh0IHZlcnNpb24gLCB0aGFua3Mu
-CgrlnKggMjAxN+W5tDAz5pyIMTfml6UgMTY6NDUsIEhlaWtvIFN0dWVibmVyIOWGmemBkzoKPiBB
-bSBGcmVpdGFnLCAxNy4gTcOkcnogMjAxNywgMTA6MjY6MTMgQ0VUIHNjaHJpZWIg6ZmI5LquOgo+
-PiDlnKggMjAxN+W5tDAz5pyIMTfml6UgMDA6MTgsIEFuZHJlIFByenl3YXJhIOWGmemBkzoKPj4+
-IEhpIENoZW4sCj4+Pgo+Pj4gT24gMTYvMDMvMTcgMDE6NDUsIGNsQHJvY2stY2hpcHMuY29tIHdy
-b3RlOgo+Pj4+IEZyb206IENoZW4gTGlhbmcgPGNsQHJvY2stY2hpcHMuY29tPgo+Pj4+Cj4+Pj4g
-VGhpcyBwYXRjaCBhZGQgcmszMzI4LWV2Yi5kdHMgZm9yIFJLMzMyOCBldmFsdWF0aW9uIGJvYXJk
-Lgo+Pj4+IFRlc3RlZCBvbiBSSzMzMjggZXZiLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogQ2hl
-biBMaWFuZyA8Y2xAcm9jay1jaGlwcy5jb20+Cj4+Pj4gLS0tCj4+Pj4KPj4+PiAgICBhcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3JvY2tjaGlwL01ha2VmaWxlICAgICAgIHwgIDEgKwo+Pj4+ICAgIGFyY2gv
-YXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzI4LWV2Yi5kdHMgfCA1Nwo+Pj4+ICAgICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrIDIgZmlsZXMgY2hhbmdlZCwgNTggaW5zZXJ0aW9ucygr
-KQo+Pj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlw
-L3JrMzMyOC1ldmIuZHRzCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0
-cy9yb2NrY2hpcC9NYWtlZmlsZQo+Pj4+IGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9N
-YWtlZmlsZSBpbmRleCAzYTg2Mjg5Li44NTNmYzdkIDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvcm9ja2NoaXAvTWFrZWZpbGUKPj4+PiArKysgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3JvY2tjaGlwL01ha2VmaWxlCj4+Pj4gQEAgLTQsNiArNCw3IEBAIGR0Yi0kKENPTkZJR19B
-UkNIX1JPQ0tDSElQKSArPSByazMzNjgtb3Jpb24tcjY4LW1ldGEuZHRiCj4+Pj4KPj4+PiAgICBk
-dGItJChDT05GSUdfQVJDSF9ST0NLQ0hJUCkgKz0gcmszMzY4LXB4NS1ldmIuZHRiCj4+Pj4gICAg
-ZHRiLSQoQ09ORklHX0FSQ0hfUk9DS0NISVApICs9IHJrMzM2OC1yODguZHRiCj4+Pj4gICAgZHRi
-LSQoQ09ORklHX0FSQ0hfUk9DS0NISVApICs9IHJrMzM5OS1ldmIuZHRiCj4+Pj4KPj4+PiArZHRi
-LSQoQ09ORklHX0FSQ0hfUk9DS0NISVApICs9IHJrMzMyOC1ldmIuZHRiCj4+Pj4KPj4+PiAgICBh
-bHdheXMJCTo9ICQoZHRiLXkpCj4+Pj4gICAgc3ViZGlyLXkJOj0gJChkdHMtZGlycykKPj4+Pgo+
-Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzMyOC1ldmIu
-ZHRzCj4+Pj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzMyOC1ldmIuZHRzIG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4+Pj4gaW5kZXggMDAwMDAwMC4uY2YyNzIzOQo+Pj4+IC0tLSAv
-ZGV2L251bGwKPj4+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzMyOC1l
-dmIuZHRzCj4+Pj4gQEAgLTAsMCArMSw1NyBAQAo+Pj4+ICsvKgo+Pj4+ICsgKiBDb3B5cmlnaHQg
-KGMpIDIwMTcgRnV6aG91IFJvY2tjaGlwIEVsZWN0cm9uaWNzIENvLiwgTHRkCj4+Pj4gKyAqCj4+
-Pj4gKyAqIFRoaXMgZmlsZSBpcyBkdWFsLWxpY2Vuc2VkOiB5b3UgY2FuIHVzZSBpdCBlaXRoZXIg
-dW5kZXIgdGhlIHRlcm1zCj4+Pj4gKyAqIG9mIHRoZSBHUEwgb3IgdGhlIFgxMSBsaWNlbnNlLCBh
-dCB5b3VyIG9wdGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbAo+Pj4+ICsgKiBsaWNlbnNpbmcgb25s
-eSBhcHBsaWVzIHRvIHRoaXMgZmlsZSwgYW5kIG5vdCB0aGlzIHByb2plY3QgYXMgYQo+Pj4+ICsg
-KiB3aG9sZS4KPj4+PiArICoKPj4+PiArICogIGEpIFRoaXMgbGlicmFyeSBpcyBmcmVlIHNvZnR3
-YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IKPj4+PiArICogICAgIG1vZGlmeSBp
-dCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzCj4+
-Pj4gKyAqICAgICBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0
-aGVyIHZlcnNpb24gMiBvZgo+Pj4+IHRoZQo+Pj4+ICsgKiAgICAgTGljZW5zZSwgb3IgKGF0IHlv
-dXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4KPj4+PiArICoKPj4+PiArICogICAgIFRoaXMg
-bGlicmFyeSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVs
-LAo+Pj4+ICsgKiAgICAgYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhl
-IGltcGxpZWQgd2FycmFudHkgb2YKPj4+PiArICogICAgIE1FUkNIQU5UQUJJTElUWSBvciBGSVRO
-RVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKPj4+PiArICogICAgIEdOVSBH
-ZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCj4+Pj4gKyAqCj4+Pj4gKyAq
-IE9yLCBhbHRlcm5hdGl2ZWx5LAo+Pj4+ICsgKgo+Pj4+ICsgKiAgYikgUGVybWlzc2lvbiBpcyBo
-ZXJlYnkgZ3JhbnRlZCwgZnJlZSBvZiBjaGFyZ2UsIHRvIGFueSBwZXJzb24KPj4+PiArICogICAg
-IG9idGFpbmluZyBhIGNvcHkgb2YgdGhpcyBzb2Z0d2FyZSBhbmQgYXNzb2NpYXRlZCBkb2N1bWVu
-dGF0aW9uCj4+Pj4gKyAqICAgICBmaWxlcyAodGhlICJTb2Z0d2FyZSIpLCB0byBkZWFsIGluIHRo
-ZSBTb2Z0d2FyZSB3aXRob3V0Cj4+Pj4gKyAqICAgICByZXN0cmljdGlvbiwgaW5jbHVkaW5nIHdp
-dGhvdXQgbGltaXRhdGlvbiB0aGUgcmlnaHRzIHRvIHVzZSwKPj4+PiArICogICAgIGNvcHksIG1v
-ZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1YmxpY2Vuc2UsIGFuZC9vcgo+Pj4+
-ICsgKiAgICAgc2VsbCBjb3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNv
-bnMgdG8gd2hvbSB0aGUKPj4+PiArICogICAgIFNvZnR3YXJlIGlzIGZ1cm5pc2hlZCB0byBkbyBz
-bywgc3ViamVjdCB0byB0aGUgZm9sbG93aW5nCj4+Pj4gKyAqICAgICBjb25kaXRpb25zOgo+Pj4+
-ICsgKgo+Pj4+ICsgKiAgICAgVGhlIGFib3ZlIGNvcHlyaWdodCBub3RpY2UgYW5kIHRoaXMgcGVy
-bWlzc2lvbiBub3RpY2Ugc2hhbGwgYmUKPj4+PiArICogICAgIGluY2x1ZGVkIGluIGFsbCBjb3Bp
-ZXMgb3Igc3Vic3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgo+Pj4+ICsgKgo+Pj4+
-ICsgKiAgICAgVEhFIFNPRlRXQVJFIElTIFBST1ZJREVEICJBUyBJUyIsIFdJVEhPVVQgV0FSUkFO
-VFkgT0YgQU5ZIEtJTkQsCj4+Pj4gKyAqICAgICBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xVRElO
-RyBCVVQgTk9UIExJTUlURUQgVE8gVEhFIFdBUlJBTlRJRVMKPj4+PiArICogICAgIE9GIE1FUkNI
-QU5UQUJJTElUWSwgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UgQU5ECj4+Pj4gKyAq
-ICAgICBOT05JTkZSSU5HRU1FTlQuIElOIE5PIEVWRU5UIFNIQUxMIFRIRSBBVVRIT1JTIE9SIENP
-UFlSSUdIVAo+Pj4+ICsgKiAgICAgSE9MREVSUyBCRSBMSUFCTEUgRk9SIEFOWSBDTEFJTSwgREFN
-QUdFUyBPUiBPVEhFUiBMSUFCSUxJVFksCj4+Pj4gKyAqICAgICBXSEVUSEVSIElOIEFOIEFDVElP
-TiBPRiBDT05UUkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJTkcKPj4+PiArICogICAgIEZS
-T00sIE9VVCBPRiBPUiBJTiBDT05ORUNUSU9OIFdJVEggVEhFIFNPRlRXQVJFIE9SIFRIRSBVU0Ug
-T1IKPj4+PiArICogICAgIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KPj4+PiArICov
-Cj4+Pj4gKwo+Pj4+ICsvZHRzLXYxLzsKPj4+PiArI2luY2x1ZGUgInJrMzMyOC5kdHNpIgo+Pj4+
-ICsKPj4+PiArLyB7Cj4+Pj4gKwltb2RlbCA9ICJSb2NrY2hpcCBSSzMzMjggRVZCIjsKPj4+PiAr
-CWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMzI4LWV2YiIsICJyb2NrY2hpcCxyazMzMjgiOwo+
-Pj4+ICsKPj4+PiArCWNob3NlbiB7Cj4+Pj4gKwkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMjoxNTAw
-MDAwbjgiOwo+Pj4gSXMgdGhhdCByZWFsbHkgMS41TUJpdC9zPwo+PiBZZXMsIHRoZSBSSzMzMjgg
-RVZCIGJvYXJkIHVzZSAxLjVNQml0L3MgYmF1ZCByYXRlLgo+Pgo+Pj4+ICsJfTsKPj4+PiArfTsK
-Pj4+PiArCj4+Pj4gKyZ1YXJ0MiB7Cj4+Pj4gKwlzdGF0dXMgPSAib2theSI7Cj4+Pj4gK307Cj4+
-PiBJIGRvbid0IGhhdmUgdGhlIGJvYXJkLCBidXQgd291bGQgZXhwZWN0IHRvIHNlZSBtb3JlIHBl
-cmlwaGVyYWxzCj4+PiBtZW50aW9uZWQgaW4gdGhlIC5kdHNpIGVuYWJsZWQgaGVyZS4KPj4+IEZv
-ciBzdXJlIHRoZSBib2FyZCBoYXMgYW4gKG1pY3JvKVNEIGNhcmQgc2xvdCwgcG9zc2libHkgZXZl
-biBFdGhlcm5ldD8KPj4gVGhlIGNvZGVzIGZvciBvdGhlciBwZXJpcGhlcmFscyBhcmUgbm90IHJl
-YWR5IG5vdyBmb3IgbmV3IGtlcm5lbCwgc28gaQo+PiBwdXNoIGEgYmFzZSBkdHNpLCBhbmQgb3Ro
-ZXIgY29uZmlncmF0aW9uIHdpbGwgYmUgcHVzaGVkIGxhdGVyIGlmIGl0IGlzIG9rLgo+IGZvciBt
-ZSB0aGF0IGFwcHJvYWNoIGlzIGZpbmUgaW4gZ2VuZXJhbCwgYnV0IGhlcmUsIHlvdSBjb3VsZCBl
-bmFibGUgYXQgbGVhc3QKPiB0aGUgd2F0Y2hkb2cgYXMgd2VsbD8KPgo+IEJ1dCBubyBuZWVkIHRv
-IHJlc2VuZCBqdXN0IG5vdywgSSBzdGlsbCBuZWVkIHRvIGxvb2sgYXQgdGhlIGJpZyBkdHNpLgo+
-Cj4KPiBIZWlrbwo+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 20/03/2017 14:18, Alexander Kochetkov wrote:
+> Hello, Daniel.
+> 
+> Sorry for bothering you, but could you please take a look at v6[1] series and tell what do you think about it?
+> I see your commit[2] in the git, but I don’t understand well how to use it in rockchip driver.
+> 
+> [1] https://lkml.org/lkml/2017/1/31/401
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/clocksource?id=376bc27150f180d9f5eddec6a14117780177589d
+
+Hi Alexander,
+
+I have been through the patchset and it is ok except for the patch 3/5.
+I wanted to investigate a bit on this one because of the patch [2] you
+are mentioning.
+
+I think there is small missing piece of devicetree binding to specify
+'clocksource' or 'clockevent'. Rob Herring is ok with an attribute of
+this kind.
+
+That would help to clearly separate these drivers without ambiguity.
+
+However, it results on some duplicated code I'm not very happy with, so
+that is my major issue with this approach I would like to solve. That is
+the status today.
+
+I wanted to take the opportunity of your changes to investigate this area.
+
+
+>> 31 янв. 2017 г., в 15:43, Alexander Kochetkov <al.kochet@gmail.com> написал(а):
+>>
+>> From: Alexander Kochetkov <akochetkov@lintech.ru>
+>>
+>> Hello, Daniel, Heiko.
+>>
+>> Here is try 6 :) Thanks a lot for helping me to bring the code
+>> into kernel!
+>>
+>> This patch series contain:
+>> - devicetree bindings clarification for rockchip timers
+>> - dts files fixes for rk3228-evb, rk3229-evb and rk3188
+>> - implementation of clocksource and sched clock for rockchip SoC
+>>
+>> The clock supplying the arm-global-timer on the rk3188 is coming from the
+>> the cpu clock itself and thus changes its rate everytime cpufreq adjusts
+>> the cpu frequency making this timer unsuitable as a stable clocksource.
+>>
+>> The rk3188, rk3288 and following socs share a separate timer block already
+>> handled by the rockchip-timer driver. Therefore adapt this driver to also
+>> be able to act as clocksource on rk3188.
+>>
+>> In order to test clocksource you can run following commands and check
+>> how much time it take in real. On rk3188 it take about ~45 seconds.
+>>
+>>       cpufreq-set -f 1.6GHZ
+>>       date; sleep 60; date
+>>
+>> rk3288 (and probably anything newer) is irrelevant to this patch,
+>> as it has the arch timer interface. This patch may be usefull
+>> for Cortex-A9/A5 based parts.
+>>
+>> Regards,
+>> Alexander.
+>>
+>> Changes in v6:
+>> - Removed Reviewed-by: Heiko Stübner <heiko@sntech.de> tag
+>> - Merge 5/8, 6/8, 7/8, 8/9 into single file
+>> - split init paths into rk_clkevt_init() and rk_clksrc_init()
+>>  so the driver code could be adopted to CLOCKEVENT_OF_DECLARE()
+>> - clockevents implemented using clocksource_mmio_init()
+>> - fixed commit message for 4/8 (thanks a lot Daniel)
+>>
+>> Changes in v5:
+>> - Add Acked-by: Rob Herring <robh at kernel.org> to 1/8
+>>  http://lists.infradead.org/pipermail/linux-rockchip/2016-December/013308.html
+>> - Add Reviwed-by: Heiko Stübner <heiko@sntech.de> to series
+>> - change timer compatible property in the rk322x.dtsi 2/8
+>>  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013784.html
+>> - updated comment message for 4/8
+>>  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013786.html
+>> - updated comment message for 5/8
+>>  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013787.html
+>> - fixed build error for 8/8
+>>  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013789.html
+>>
+>> Alexander Kochetkov (5):
+>>  dt-bindings: clarify compatible property for rockchip timers
+>>  ARM: dts: rockchip: update compatible property for rk322x timer
+>>  clocksource/drivers/rockchip_timer: implement clocksource timer
+>>  ARM: dts: rockchip: add timer entries to rk3188 SoC
+>>  ARM: dts: rockchip: disable arm-global-timer for rk3188
+>>
+>> .../bindings/timer/rockchip,rk-timer.txt           |   12 +-
+>> arch/arm/boot/dts/rk3188.dtsi                      |   17 ++
+>> arch/arm/boot/dts/rk322x.dtsi                      |    2 +-
+>> drivers/clocksource/Kconfig                        |    1 +
+>> drivers/clocksource/rockchip_timer.c               |  218 ++++++++++++++------
+>> 5 files changed, 185 insertions(+), 65 deletions(-)
+>>
+>> -- 
+>> 1.7.9.5
+>>
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
