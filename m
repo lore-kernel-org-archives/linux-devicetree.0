@@ -1,80 +1,48 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: r8a7792: add IMR-L[S]X3 clocks
-Date: Tue, 21 Mar 2017 23:04:44 +0300
-Message-ID: <20170321200443.078095898@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] dtc updates for 4.12
+Date: Tue, 21 Mar 2017 14:55:22 -0500
+Message-ID: <CAL_JsqL3z1dqYZ68jtt2coNhM8sbZZWimuCku2mTHWDuS+kj6g@mail.gmail.com>
+References: <20170321161958.9658-1-robh@kernel.org> <CAOesGMiWFPERPapOLCW4iqSuFWiqesBBjGN0ny6XjzFXNfKr4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=ARM-dts-r8a7792-add-IMR-L-S-X3-clocks.patch
+In-Reply-To: <CAOesGMiWFPERPapOLCW4iqSuFWiqesBBjGN0ny6XjzFXNfKr4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the IMR-L[S]X3 clocks to the R8A7792 device tree.
+On Tue, Mar 21, 2017 at 2:15 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Tue, Mar 21, 2017 at 9:19 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> This series syncs dtc with current mainline. The primary motivation is
+>> to pull in the new checks I've worked on. This gives lots of new
+>> warnings which are turned off by default.
+>>
+>> Arm-soc folks, I've left the PCI checks enabled as they are pretty much
+>> all real errors and there aren't that many (about 1200, but that's lots
+>> of duplicates). I have a patch for some of them.
+>
+> Yay for better warnings!
+>
+> But as with all changes of this kind, when new warnings are introduced
+> please give people some time to remove them without turning them on by
+> default. We had a cycle like that already.
 
-Based on the original patch by Roman Meshkevich
-<roman.meshkevich-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+Which I quickly fixed and learned my lesson. That's why I tried
+getting this out earlier as well.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Main reason is that it becomes too hard to spot new warnings when they
+> come in if the logs are flooded with 1200 existing warnings.
 
----
- arch/arm/boot/dts/r8a7792.dtsi            |   15 ++++++++++++---
- include/dt-bindings/clock/r8a7792-clock.h |    7 +++++++
- 2 files changed, 19 insertions(+), 3 deletions(-)
+Yeah. Since almost everything is an include, the warnings really multiply.
 
-Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-@@ -927,16 +927,25 @@
- 				     "renesas,cpg-mstp-clocks";
- 			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
- 			clocks = <&zg_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
--			         <&zg_clk>, <&zg_clk>, <&hp_clk>;
-+				 <&zg_clk>, <&zg_clk>, <&hp_clk>, <&zg_clk>,
-+				 <&zg_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
-+				 <&zg_clk>, <&zg_clk>;
- 			#clock-cells = <1>;
- 			clock-indices = <
- 				R8A7792_CLK_VIN5 R8A7792_CLK_VIN4
- 				R8A7792_CLK_VIN3 R8A7792_CLK_VIN2
- 				R8A7792_CLK_VIN1 R8A7792_CLK_VIN0
--				R8A7792_CLK_ETHERAVB
-+				R8A7792_CLK_ETHERAVB R8A7792_CLK_IMR_LX3
-+				R8A7792_CLK_IMR_LSX3_1 R8A7792_CLK_IMR_LSX3_0
-+				R8A7792_CLK_IMR_LSX3_5 R8A7792_CLK_IMR_LSX3_4
-+				R8A7792_CLK_IMR_LSX3_3 R8A7792_CLK_IMR_LSX3_2
- 			>;
- 			clock-output-names = "vin5", "vin4", "vin3", "vin2",
--					     "vin1", "vin0", "etheravb";
-+					     "vin1", "vin0",
-+					     "etheravb", "imr-lx3",
-+					     "imr-lsx3-1", "imr-lsx3-0",
-+					     "imr-lsx3-5", "imr-lsx3-4",
-+					     "imr-lsx3-3", "imr-lsx3-2";
- 		};
- 		mstp9_clks: mstp9_clks@e6150994 {
- 			compatible = "renesas,r8a7792-mstp-clocks",
-Index: renesas/include/dt-bindings/clock/r8a7792-clock.h
-===================================================================
---- renesas.orig/include/dt-bindings/clock/r8a7792-clock.h
-+++ renesas/include/dt-bindings/clock/r8a7792-clock.h
-@@ -70,6 +70,13 @@
- #define R8A7792_CLK_VIN1		10
- #define R8A7792_CLK_VIN0		11
- #define R8A7792_CLK_ETHERAVB		12
-+#define R8A7792_CLK_IMR_LX3		21
-+#define R8A7792_CLK_IMR_LSX3_1		22
-+#define R8A7792_CLK_IMR_LSX3_0		23
-+#define R8A7792_CLK_IMR_LSX3_5		25
-+#define R8A7792_CLK_IMR_LSX3_4		26
-+#define R8A7792_CLK_IMR_LSX3_3		27
-+#define R8A7792_CLK_IMR_LSX3_2		28
- 
- /* MSTP9 */
- #define R8A7792_CLK_GPIO7		4
+> How many of them do you have patches for, per chance? If we can see
+> them show up quickly the answer to the above might be a bit different.
 
+Okay, I lied or lost them... It looks like it is 79 unique warnings
+for arm. I'll take a stab at fixing them.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
