@@ -1,36 +1,102 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: uniphier: add pinctrl property to eMMC node
- for LD11/LD20
-Date: Wed, 22 Mar 2017 08:42:36 +0900
-Message-ID: <CAK7LNAQ-93O75n=Onboq5PbCPM8HfKHkioxEMYCPL9Y0M5Zx5g@mail.gmail.com>
-References: <1489246685-8264-1-git-send-email-yamada.masahiro@socionext.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
+ sink set_fmt
+Date: Tue, 21 Mar 2017 16:56:52 -0700
+Message-ID: <1d382b89-fac3-a413-55a3-06cd2b751322@gmail.com>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
+ <20170319152233.GW21222@n2100.armlinux.org.uk>
+ <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
+ <1490010926.2917.59.camel@pengutronix.de>
+ <20170320120855.GH21222@n2100.armlinux.org.uk>
+ <1490018451.2917.86.camel@pengutronix.de>
+ <20170320141705.GL21222@n2100.armlinux.org.uk>
+ <1490030604.2917.103.camel@pengutronix.de>
+ <20170321112741.GV21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489246685-8264-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170321112741.GV21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-2017-03-12 0:38 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> Now everything is ready to enable this pinctrl.
+
+
+On 03/21/2017 04:27 AM, Russell King - ARM Linux wrote:
+> On Mon, Mar 20, 2017 at 06:23:24PM +0100, Philipp Zabel wrote:
+>> @@ -1173,15 +1196,8 @@ static void csi_try_fmt(struct csi_priv *priv,
+>>  		incc = imx_media_find_mbus_format(infmt->code,
+>>  						  CS_SEL_ANY, true);
+>>
+>> -		if (sdformat->format.width < priv->crop.width * 3 / 4)
+>> -			sdformat->format.width = priv->crop.width / 2;
+>> -		else
+>> -			sdformat->format.width = priv->crop.width;
+>> -
+>> -		if (sdformat->format.height < priv->crop.height * 3 / 4)
+>> -			sdformat->format.height = priv->crop.height / 2;
+>> -		else
+>> -			sdformat->format.height = priv->crop.height;
+>> +		sdformat->format.width = compose->width;
+>> +		sdformat->format.height = compose->height;
+>>
+>>  		if (incc->bayer) {
+>>  			sdformat->format.code = infmt->code;
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> ---
+> We need to do more in here, because right now setting the source pads
+> overwrites the colorimetry etc information.  Maybe something like the
+> below?
+
+I'm thinking, to support propagating the colorimetry params, there
+should be a util function
+
+void imx_media_copy_colorimetry(struct v4l2_mbus_framefmt *out,
+				struct v4l2_mbus_framefmt *in);
+
+that can be used throughout the pipeline, that does exactly what
+you add below.
+
+>  I'm wondering if it would be a saner approach to copy the
+> sink format and update the parameters that can be changed, rather than
+> trying to list all the parameters that shouldn't be changed.
+
+For CSI that is a bit difficult, because the source formats are
+hardly related to the sink formats, so so much would have to be
+modified after copying the sink format that it would be rather
+pointless, except to forward the colorimetry params.
+
+Steve
+
+>  What if the format structure gains a new member?
 >
->  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 2 ++
->  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 ++
->  2 files changed, 4 insertions(+)
-
-
-Applied to linux-uniphier.
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+> index 1492b92e1970..756204ced53c 100644
+> --- a/drivers/staging/media/imx/imx-media-csi.c
+> +++ b/drivers/staging/media/imx/imx-media-csi.c
+> @@ -1221,6 +1221,12 @@ static void csi_try_fmt(struct csi_priv *priv,
+>  			sdformat->format.field =  (infmt->height == 480) ?
+>  				V4L2_FIELD_SEQ_TB : V4L2_FIELD_SEQ_BT;
+>  		}
+> +
+> +		/* copy settings we can't change */
+> +		sdformat->format.colorspace = infmt->colorspace;
+> +		sdformat->format.ycbcr_enc = infmt->ycbcr_enc;
+> +		sdformat->format.quantization = infmt->quantization;
+> +		sdformat->format.xfer_func = infmt->xfer_func;
+>  		break;
+>  	case CSI_SINK_PAD:
+>  		v4l_bound_align_image(&sdformat->format.width, MIN_W, MAX_W,
+>
+>
+>
