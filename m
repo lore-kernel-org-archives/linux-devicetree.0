@@ -1,203 +1,287 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
-Date: Tue, 21 Mar 2017 07:36:18 +0100
-Message-ID: <20170321073618.2e4d41cc@gmail.com>
-References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
- <20170316064218.9169-2-ralph.sennhauser@gmail.com>
- <20170320134252.GM22463@ulmo.ba.sec>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v11 0/3] Add support for the S6E3HA2 panel on TM2 board
+Date: Tue, 21 Mar 2017 15:42:18 +0900
+Message-ID: <5512d06b-770e-d748-b835-0788b01eb684@samsung.com>
+References: <CGME20170308014258epcas5p35b908c56e003eb5d2ded8b503aa511be@epcas5p3.samsung.com>
+ <1488937357-5623-1-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20170320134252.GM22463@ulmo.ba.sec>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============2090162361=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1488937357-5623-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Mar 2017 14:42:52 +0100
-Thierry Reding <thierry.reding@gmail.com> wrote:
+This is a multi-part message in MIME format.
+--===============2090162361==
+Content-type: multipart/alternative;
+ boundary=------------EA7F2FF7AA0933A8FCEC512B
 
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> > b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt index
-> > a6f3bec..86932e3 100644 ---
-> > a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt +++
-> > b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt @@ -38,6
-> > +38,23 @@ Required properties:
-> >  - #gpio-cells: Should be two. The first cell is the pin number. The
-> >    second cell is reserved for flags, unused at the moment.
-> >  
-> > +Optional properties:
-> > +
-> > +In order to use the gpio lines in PWM mode, some additional
-> > optional +properties are required. Only Armada 370 and XP support
-> > these properties. +
-> > +- reg: an additional register set is needed, for the GPIO Blink
-> > +  Counter on/off registers.
-> > +
-> > +- reg-names: Must contain an entry "pwm" corresponding to the
-> > +  additional register range needed for pwm operation.
-> > +
-> > +- #pwm-cells: Should be two. The first cell is the pin number. The
-> > +  second cell is reserved for flags and should be set to 0, so it
-> > has a
-> > +  known value. It then becomes possible to use it in the future.  
-> 
-> That's usually not how we do this. Either your hardware can support
-> the flags (which at this point effectively means polarity) or it
-> can't. Any potential future feature can be enabled when it emerges.
-> No need to concern ourselves with something that doesn't exist yet.
+This is a multi-part message in MIME format.
+--------------EA7F2FF7AA0933A8FCEC512B
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: 7bit
 
-So for short:
-  #pwm-cells: Should be one. The first cell is the pin number.
+Dear Thierry,
 
-or just a blatant copy of #gpio-cells as in the above hunk.
+I would like your review please.
 
-> > @@ -109,6 +139,11 @@ static void __iomem
-> > *mvebu_gpioreg_blink(struct mvebu_gpio_chip *mvchip) return
-> > mvchip->membase + GPIO_BLINK_EN_OFF; }
-> >  
-> > +static void __iomem *mvebu_gpioreg_blink_select(struct
-> > mvebu_gpio_chip *mvchip) +{
-> > +	return mvchip->membase + GPIO_BLINK_CNT_SELECT_OFF;
-> > +}  
-> 
-> That's a really weird thing to do. Why not just use this expression in
-> your calls to readl() and writel() directly? Seems a lot of additional
-> code for no gain.
-> 
+I try to modify it to your advice.
+Please let me know if you have any other advice.
 
-How to hide a tree in the forest. Just following suite with the rest of
-the file. So I'd leave it as is but certainly don't mind changing
-it.
+Best regards,
+Hoegeun
 
-> > +
-> > +static int mvebu_pwm_request(struct pwm_chip *chip, struct
-> > pwm_device *pwmd) +{
-> > +	struct mvebu_pwm *pwm = to_mvebu_pwm(chip);
-> > +	struct mvebu_gpio_chip *mvchip = pwm->mvchip;
-> > +	struct gpio_desc *desc = gpio_to_desc(pwmd->pwm);
-> > +	unsigned long flags;
-> > +	int ret = 0;
-> > +
-> > +	spin_lock_irqsave(&pwm->lock, flags);
-> > +	if (pwm->used) {
-> > +		ret = -EBUSY;
-> > +	} else {
-> > +		if (!desc) {
-> > +			ret = -ENODEV;
-> > +			goto out;
-> > +		}
-> > +		ret = gpiod_request(desc, "mvebu-pwm");
-> > +		if (ret)
-> > +			goto out;
-> > +
-> > +		ret = gpiod_direction_output(desc, 0);
-> > +		if (ret) {
-> > +			gpiod_free(desc);
-> > +			goto out;
-> > +		}
-> > +
-> > +		pwm->pin = pwmd->pwm - mvchip->chip.base;  
-> 
-> pwm->pin = pwmd->hwpwm? But then, why store something that you can
-> always access directly?
+On 03/08/2017 10:42 AM, Hoegeun Kwon wrote:
+> Dear Thierry,
+>
+> I understand that your opinion is:
+> It is better to handle the error every time it is input to the
+> register, rather than error handling at once in the struct using
+> error. This not only makes the code easier to maintain, but also
+> reduces unnecessary computation.
+>
+> So I modified the panel driver to code-by-code error handling.
+> If this is not your opinion, could you tell me what your opinion?
+>
+> Best Regards,
+> Hoegeun
+>
+> Changes for V11:
+> - Added the Reviewed-by: Javier Martinez Canillas<javier@osg.samsung.com>
+>    (1/3, 3/3 patches)
+> - Checked for rebase 4.11 rc1.
+>
+> Changes for V10:
+> - Fixed code-by-code error handling.
+>
+> Changes for V9:
+> - Fixed the te-gpio to optional in bindings
+>
+> Changes for V8:
+> - Applied below two patches: (drm/exynos)
+>    : drm/exynos: mic: Add mode_set callback function
+>    : drm/exynos: mic: Fix parse_dt function
+> - The dt-binding patch and driver patch were divided.
+> - Rebase these patches on samsung SoC tree[1] and tm2 touckey patch[2].
+>
+> Change for V7:
+> - Fixed the mode_set callback function of mic device driver.
+>    because the mic register is initialized when entering suspend
+>    mode, so should set the reg value whenever pre_enable is
+>    called.
+>
+> Changes for V6:
+> - Fixed the parse_dt function of dsi device driver.
+> - Removed OF graph of panel in DT and DT binding document.
+> - Fixed the s6e3ha2 panel device driver.
+>    - Fixed from number size to ARRAY_SIZE().
+>    - Fixed error handling in mipi_dsi_dcs_* functions.
+>    - Fixed the clock of display_mode.
+>    - Removed unnecessary casting and error log.
+>
+> Change for V5:
+> - The V5 has only one fix in V4 below.
+> - Removed the enable check of the mic driver in mode_set
+>    callback, because mode_set should be performed every time.
+>
+> Changes for V4:
+> - Removed display-timings in devicetree, the display-timings has
+>    been fixed to be provided by the device driver.
+> - Added the mode_set callback function into exynos_drm_mic,
+>    because the exynos_drm_mic driver can not parse a videomode
+>    struct by removing the display-timings from the devicetree.
+>
+> Changes for V3:
+> - In the DT binding document, made it clearly that the panel is a
+>    child node of dsi.
+> - Fix reset-gpio active from high to low.
+> - Is the OF graph saying related to patch2?
+>    Althogh the panel is a child of dsi, I think OF graph necessary.
+>    because if a remote-endpoint is not specified, the dsi also
+>    panel is not probed.
+> - The display-timings has been fixed to be provided by the device
+>    driver. however, I think display-timings is necessary in dts.
+>    because if dts does not have display-timings, dsi will not load.
+>
+> Changes for V2:
+> - Fixed the samsung,s6e3ha2.txt DT document.
+>    - Added active high or low after the description of the GPIOs.
+>    - Removed the reg and added a description of the virtual
+>      channel number of a DSI peripheral.
+>
+> Depends on:
+> [1]https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/  (for-next branch)
+> [2]https://patchwork.kernel.org/patch/9504131/
+>      - ("arm64: dts: exynos: Add tm2 touchkey node")
+>
+> Hoegeun Kwon (2):
+>    dt-bindings: Add support for samsung s6e3ha2 panel binding
+>    drm/panel: Add support for S6E3HA2 panel driver on TM2 board
+>
+> Hyungwon Hwang (1):
+>    arm64: dts: exynos: Add support for S6E3HA2 panel device on TM2 board
+>
+>   .../bindings/display/panel/samsung,s6e3ha2.txt     |  28 +
+>   arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      |  12 +
+>   drivers/gpu/drm/panel/Kconfig                      |   6 +
+>   drivers/gpu/drm/panel/Makefile                     |   1 +
+>   drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 739 +++++++++++++++++++++
+>   5 files changed, 786 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
+>   create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c
+>
 
-Agreed.
 
-> > +
-> > +static const struct pwm_ops mvebu_pwm_ops = {
-> > +	.request = mvebu_pwm_request,
-> > +	.free = mvebu_pwm_free,
-> > +	.config = mvebu_pwm_config,
-> > +	.enable = mvebu_pwm_enable,
-> > +	.disable = mvebu_pwm_disable,
-> > +	.owner = THIS_MODULE,
-> > +};  
-> 
-> Can you please implement the atomic PWM API? Specifically the
-> ->apply() and ->get_state() implementations replace ->config(),
-> ->enable() and ->disable().  
-> 
+--------------EA7F2FF7AA0933A8FCEC512B
+Content-Type: text/html; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 
-Will do for v3.
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252"
+      http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    Dear Thierry,<br>
+    <br>
+    I would like your review please.<br>
+    <br>
+    I try to modify it to your advice.<br>
+    Please let me know if you have any other advice.<br>
+    <br>
+    Best regards,<br>
+    Hoegeun<br>
+    <br>
+    <div class="moz-cite-prefix">On 03/08/2017 10:42 AM, Hoegeun Kwon
+      wrote:<br>
+    </div>
+    <blockquote
+      cite="mid:1488937357-5623-1-git-send-email-hoegeun.kwon@samsung.com"
+      type="cite">
+      <pre wrap="">Dear Thierry,
 
-> > +/*
-> > + * Armada 370/XP has simple PWM support for gpio lines. Other SoCs
-> > + * don't have this hardware. So if we don't have the necessary
-> > + * resource, it is not an error.
-> > + */  
-> 
-> There's a bit of inconsistency in this file regarding "pwm" -> "PWM"
-> and "gpio" -> "GPIO". In prose, please always use the uppercase
-> version for these abbreviations.
+I understand that your opinion is:
+It is better to handle the error every time it is input to the
+register, rather than error handling at once in the struct using
+error. This not only makes the code easier to maintain, but also
+reduces unnecessary computation.
 
-Will do as told for this series and maybe send another cleanup patch
-as well.
+So I modified the panel driver to code-by-code error handling.
+If this is not your opinion, could you tell me what your opinion?
 
-> > +static int mvebu_pwm_probe(struct platform_device *pdev,
-> > +		    struct mvebu_gpio_chip *mvchip,
-> > +		    int id)  
-> 
-> Is there any reason why id would want to be negative?
-> 
+Best Regards,
+Hoegeun
 
-v2 dropped id from the function signature as I moved id to the
-struct mvebu_gpio_chip. Then it's also apparent why not unsigned was
-used. Cast it?
+Changes for V11:
+- Added the Reviewed-by: Javier Martinez Canillas <a class="moz-txt-link-rfc2396E" href="mailto:javier@osg.samsung.com">&lt;javier@osg.samsung.com&gt;</a>
+  (1/3, 3/3 patches)
+- Checked for rebase 4.11 rc1.
 
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct mvebu_pwm *pwm;
-> > +	struct resource *res;
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > "pwm");
-> > +	if (!res)
-> > +		return 0;
-> > +
-> > +	pwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm),
-> > GFP_KERNEL);
-> > +	if (!pwm)
-> > +		return -ENOMEM;
-> > +	mvchip->pwm = pwm;
-> > +	pwm->mvchip = mvchip;
-> > +
-> > +	pwm->membase = devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(pwm->membase))
-> > +		return PTR_ERR(pwm->membase);
-> > +
-> > +	if (id < 0 || id > 1)
-> > +		return -EINVAL;  
-> 
-> You check for negative values here, so might as well turn id into an
-> unsigned to prohibit them altogether.
+Changes for V10:
+- Fixed code-by-code error handling.
 
-See above. Though the test for id < 0 is redundant as we checked this
-earlier already.
+Changes for V9:
+- Fixed the te-gpio to optional in bindings
 
-> 
-> > +	pwm->id = id;
-> > +
-> > +	if (IS_ERR(mvchip->clk))
-> > +		return PTR_ERR(mvchip->clk);
-> > +
-> > +	pwm->clk_rate = clk_get_rate(mvchip->clk);
-> > +	if (!pwm->clk_rate) {
-> > +		dev_err(dev, "failed to get clock rate\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	pwm->chip.dev = dev;
-> > +	pwm->chip.ops = &mvebu_pwm_ops;
-> > +	pwm->chip.base = mvchip->chip.base;
-> > +	pwm->chip.npwm = mvchip->chip.ngpio;  
-> 
-> Isn't that a lie? The code above suggests you can only ever have a
-> single GPIO turn into a PWM, so I'd expect ".npwm = 1" here.
-> 
+Changes for V8:
+- Applied below two patches: (drm/exynos)
+  : drm/exynos: mic: Add mode_set callback function
+  : drm/exynos: mic: Fix parse_dt function
+- The dt-binding patch and driver patch were divided.
+- Rebase these patches on samsung SoC tree[1] and tm2 touckey patch[2].
 
-Agreed.
+Change for V7:
+- Fixed the mode_set callback function of mic device driver.
+  because the mic register is initialized when entering suspend
+  mode, so should set the reg value whenever pre_enable is
+  called.
 
-Thanks
-Ralph
+Changes for V6:
+- Fixed the parse_dt function of dsi device driver.
+- Removed OF graph of panel in DT and DT binding document.
+- Fixed the s6e3ha2 panel device driver.
+  - Fixed from number size to ARRAY_SIZE().
+  - Fixed error handling in mipi_dsi_dcs_* functions.
+  - Fixed the clock of display_mode.
+  - Removed unnecessary casting and error log.
+
+Change for V5:
+- The V5 has only one fix in V4 below.
+- Removed the enable check of the mic driver in mode_set
+  callback, because mode_set should be performed every time.
+
+Changes for V4:
+- Removed display-timings in devicetree, the display-timings has
+  been fixed to be provided by the device driver.
+- Added the mode_set callback function into exynos_drm_mic,
+  because the exynos_drm_mic driver can not parse a videomode
+  struct by removing the display-timings from the devicetree.
+
+Changes for V3:
+- In the DT binding document, made it clearly that the panel is a
+  child node of dsi.
+- Fix reset-gpio active from high to low.
+- Is the OF graph saying related to patch2?
+  Althogh the panel is a child of dsi, I think OF graph necessary.
+  because if a remote-endpoint is not specified, the dsi also
+  panel is not probed.
+- The display-timings has been fixed to be provided by the device
+  driver. however, I think display-timings is necessary in dts.
+  because if dts does not have display-timings, dsi will not load.
+
+Changes for V2:
+- Fixed the samsung,s6e3ha2.txt DT document.
+  - Added active high or low after the description of the GPIOs.
+  - Removed the reg and added a description of the virtual
+    channel number of a DSI peripheral.
+
+Depends on:
+[1] <a class="moz-txt-link-freetext" href="https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/">https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/</a> (for-next branch)
+[2] <a class="moz-txt-link-freetext" href="https://patchwork.kernel.org/patch/9504131/">https://patchwork.kernel.org/patch/9504131/</a>
+    - ("arm64: dts: exynos: Add tm2 touchkey node")
+
+Hoegeun Kwon (2):
+  dt-bindings: Add support for samsung s6e3ha2 panel binding
+  drm/panel: Add support for S6E3HA2 panel driver on TM2 board
+
+Hyungwon Hwang (1):
+  arm64: dts: exynos: Add support for S6E3HA2 panel device on TM2 board
+
+ .../bindings/display/panel/samsung,s6e3ha2.txt     |  28 +
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      |  12 +
+ drivers/gpu/drm/panel/Kconfig                      |   6 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 739 +++++++++++++++++++++
+ 5 files changed, 786 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c
+
+</pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------EA7F2FF7AA0933A8FCEC512B--
+
+--===============2090162361==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============2090162361==--
