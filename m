@@ -1,60 +1,41 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v3 3/4] device property: Move FW type specific
- functionality to FW specific files
-Date: Tue, 21 Mar 2017 10:28:33 +0200
-Message-ID: <74b1619e-72a9-f991-8138-845e5e8603b8@linux.intel.com>
-References: <1489671289-20406-1-git-send-email-sakari.ailus@linux.intel.com>
- <1489671289-20406-4-git-send-email-sakari.ailus@linux.intel.com>
- <CAL_Jsq+HGNCbiHw8dD0R+zj+GfGxaypk7di0sbxNr4bZsjqxbA@mail.gmail.com>
- <1655370d-6867-9466-6d26-f34a09789369@linux.intel.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
+Date: Tue, 21 Mar 2017 14:00:52 +0530
+Message-ID: <20170321083052.GY2843@localhost>
+References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1655370d-6867-9466-6d26-f34a09789369@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-raid@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc Frank.
+On Mon, Mar 06, 2017 at 03:13:24PM +0530, Anup Patel wrote:
+> The Broadcom SBA RAID is a stream-based device which provides
+> RAID5/6 offload.
+> 
+> It requires a SoC specific ring manager (such as Broadcom FlexRM
+> ring manager) to provide ring-based programming interface. Due to
+> this, the Broadcom SBA RAID driver (mailbox client) implements
+> DMA device having one DMA channel using a set of mailbox channels
+> provided by Broadcom SoC specific ring manager driver (mailbox
+> controller).
+> 
+> The Broadcom SBA RAID hardware requires PQ disk position instead
+> of PQ disk coefficient. To address this, we have added raid_gflog
+> table which will help driver to convert PQ disk coefficient to PQ
+> disk position.
+> 
+> This patchset is based on Linux-4.11-rc1 and depends on patchset
+> "[PATCH v5 0/2] Broadcom FlexRM ring manager support"
 
-Sakari Ailus wrote:
-> Hi Rob,
->
-> Rob Herring wrote:
->> On Thu, Mar 16, 2017 at 8:34 AM, Sakari Ailus
->> <sakari.ailus@linux.intel.com> wrote:
->>> The device and fwnode property API supports Devicetree, ACPI and pset
->>> properties. The implementation of this functionality for each firmware
->>> type was embedded in the fwnode property core. Move it out to firmware
->>> type specific locations, making it easier to maintain.
->>>
->>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>> ---
->>>  drivers/acpi/property.c |  87 +++++++++++++++
->>>  drivers/acpi/scan.c     |   1 +
->>>  drivers/base/property.c | 280
->>> +++++++++++++++++++-----------------------------
->>>  drivers/of/base.c       |  99 +++++++++++++++++
->>
->> This is the opposite direction everything else has been moving. For
->> example, I2C parsing is in drivers/i2c. But I guess this is a bit
->> different.
->>
->> In any case, please move this to drivers/of/property.c (and perhaps
->> move all of of_property_* there too).
->
-> Ok.
->
-> There appear to be quite a few functions dealing with properties in
-> drivers/of/base.c either directly reading their values or otherwise
-> accessing them. Let me see if I can find a roughly coherent set of
-> functions to move to property.c. I'll move the existing functions there
-> first, creating a new patch before this one.
->
+Okay I applied and was about to push when I noticed this :(
+
+So what is the status of this..?
 
 
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+~Vinod
