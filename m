@@ -1,52 +1,49 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Question regarding back compatibility for DT
-Date: Tue, 21 Mar 2017 22:56:46 +0100
-Message-ID: <20170321215646.GC10342@mai>
-References: <20170321155814.GA10342@mai>
- <CABGGisyuq6=3RTKZ7ceUjt_iFZVag0EMViqmXSKSg5bM2-o-Cw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CABGGisyuq6=3RTKZ7ceUjt_iFZVag0EMViqmXSKSg5bM2-o-Cw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Liam Breck <liam@networkimprov.net>
+Subject: [PATCH v1 1/7] devicetree: power: battery: Add properties for pre-charge and end-charge current
+Date: Tue, 21 Mar 2017 15:09:15 -0700
+Message-ID: <20170321220921.5834-2-liam@networkimprov.net>
+References: <20170321220921.5834-1-liam@networkimprov.net>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170321220921.5834-1-liam@networkimprov.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, linux-pm@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 11:27:37AM -0500, Rob Herring wrote:
-> On Tue, Mar 21, 2017 at 10:58 AM, Daniel Lezcano
-> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > Hi Rob, dt people,
-> >
-> > is it acceptable a driver is changed using a new DT binding but becomes
-> > incompatible with the old DT files ?
-> >
-> > IOW, is it possible to change the DT and the driver without supporting the old
-> > DT format, forcing an update of the DT and the kernel ?
-> 
-> If you want a global rule, then no it is not okay. However, it depends
-> on the platform and it's users. I just ask that breaking compatibility
-> and why is highlighted in the commit message and the platform
-> maintainer is okay with it.
+From: Liam Breck <kernel@networkimprov.net>
 
-Thanks for the clarification. I will ask the maintainer if breaking the
-compatibility is ok.
+precharge-current-microamp and endcharge-current-microamp are used
+by battery chargers at the beginning and end of a charging cycle.
 
-That shows how important is to wisely choose the right binding.
+Depends-on: https://patchwork.kernel.org/patch/9633605/
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Liam Breck <kernel@networkimprov.net>
+---
+ Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-  -- Daniel
-
-
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+index 53a68c0..494374a 100644
+--- a/Documentation/devicetree/bindings/power/supply/battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -12,6 +12,8 @@ Optional Properties:
+  - voltage-min-design-microvolt: drained battery voltage
+  - energy-full-design-microwatt-hours: battery design energy
+  - charge-full-design-microamp-hours: battery design capacity
++ - precharge-current-microamp: current for pre-charge phase
++ - endcharge-current-microamp: current for charge termination phase
+ 
+ Battery properties are named, where possible, for the corresponding 
+ elements in enum power_supply_property, defined in
+@@ -28,6 +30,8 @@ Example:
+ 		voltage-min-design-microvolt = <3200000>;
+ 		energy-full-design-microwatt-hours = <5290000>;
+ 		charge-full-design-microamp-hours = <1430000>;
++		precharge-current-microamp = <256000>;
++		endcharge-current-microamp = <128000>;
+ 	};
+ 
+ 	charger: charger@11 {
 -- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
