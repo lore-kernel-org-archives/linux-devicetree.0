@@ -1,126 +1,223 @@
 From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv2 05/11] serdev: add serdev_device_wait_until_sent
-Date: Tue, 21 Mar 2017 23:32:10 +0100
-Message-ID: <20170321223216.11733-6-sre@kernel.org>
-References: <20170321223216.11733-1-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170321223216.11733-1-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv3 2/2] input: cpcap-pwrbutton: new driver
+Date: Tue, 21 Mar 2017 23:50:42 +0100
+Message-ID: <20170321225042.28057-2-sre@kernel.org>
+References: <20170321225042.28057-1-sre@kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170321225042.28057-1-sre@kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add method, which waits until the transmission buffer has been sent.
-Note, that the change in ttyport_write_wakeup is related, since
-tty_wait_until_sent will hang without that change.
+Motorola CPCAP is a PMIC found in multiple smartphones.
+This driver adds support for the power/on button and has
+been tested in Droid 4.
 
 Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- drivers/tty/serdev/core.c           | 11 +++++++++++
- drivers/tty/serdev/serdev-ttyport.c | 15 ++++++++++++++-
- include/linux/serdev.h              |  3 +++
- 3 files changed, 28 insertions(+), 1 deletion(-)
+Changes since PATCHv2:
+ - Collect Acked-by/Tested-by
 
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index f4c6c90add78..a63b74031e22 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -173,6 +173,17 @@ void serdev_device_set_flow_control(struct serdev_device *serdev, bool enable)
- }
- EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
+As merge strategy I suggest, that Lee takes the first patch
+and provides a immutable branch with for the input subsystem,
+which can pull in the immutable branch + the second patch.
+Alternatively both can go through mfd of course and Dmitry
+gave his Ack for that strategy in PATCHv2.
+---
+ .../devicetree/bindings/input/cpcap-pwrbutton.txt  |  20 ++++
+ drivers/input/misc/Kconfig                         |  10 ++
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/cpcap-pwrbutton.c               | 117 +++++++++++++++++++++
+ 4 files changed, 148 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+ create mode 100644 drivers/input/misc/cpcap-pwrbutton.c
+
+diff --git a/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt b/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+new file mode 100644
+index 000000000000..0dd0076daf71
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+@@ -0,0 +1,20 @@
++Motorola CPCAP on key
++
++This module is part of the CPCAP. For more details about the whole
++chip see Documentation/devicetree/bindings/mfd/motorola-cpcap.txt.
++
++This module provides a simple power button event via an Interrupt.
++
++Required properties:
++- compatible: should be one of the following
++   - "motorola,cpcap-pwrbutton"
++- interrupts: irq specifier for CPCAP's ON IRQ
++
++Example:
++
++&cpcap {
++	cpcap_pwrbutton: pwrbutton {
++		compatible = "motorola,cpcap-pwrbutton";
++		interrupts = <23 IRQ_TYPE_NONE>;
++	};
++};
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 5b6c52210d20..9f7b72249eac 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -316,6 +316,16 @@ config INPUT_COBALT_BTNS
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cobalt_btns.
  
-+void serdev_device_wait_until_sent(struct serdev_device *serdev, long timeout)
++config INPUT_CPCAP_PWRBUTTON
++	tristate "CPCAP OnKey"
++	depends on MFD_CPCAP
++	help
++	  Say Y here if you want to enable power key reporting via the
++	  Motorola CPCAP chip.
++
++	  To compile this driver as a module, choose M here. The module will
++	  be called cpcap-pwrbutton.
++
+ config INPUT_WISTRON_BTNS
+ 	tristate "x86 Wistron laptop button interface"
+ 	depends on X86_32
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index b10523f2878e..b923a9828c88 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -24,6 +24,7 @@ obj-$(CONFIG_INPUT_CM109)		+= cm109.o
+ obj-$(CONFIG_INPUT_CMA3000)		+= cma3000_d0x.o
+ obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
+ obj-$(CONFIG_INPUT_COBALT_BTNS)		+= cobalt_btns.o
++obj-$(CONFIG_INPUT_CPCAP_PWRBUTTON)	+= cpcap-pwrbutton.o
+ obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
+ obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
+ obj-$(CONFIG_INPUT_DA9063_ONKEY)	+= da9063_onkey.o
+diff --git a/drivers/input/misc/cpcap-pwrbutton.c b/drivers/input/misc/cpcap-pwrbutton.c
+new file mode 100644
+index 000000000000..0abef63217e2
+--- /dev/null
++++ b/drivers/input/misc/cpcap-pwrbutton.c
+@@ -0,0 +1,117 @@
++/**
++ * CPCAP Power Button Input Driver
++ *
++ * Copyright (C) 2017 Sebastian Reichel <sre@kernel.org>
++ *
++ * This file is subject to the terms and conditions of the GNU General
++ * Public License. See the file "COPYING" in the main directory of this
++ * archive for more details.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/regmap.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/motorola-cpcap.h>
++
++#define CPCAP_IRQ_ON 23
++#define CPCAP_IRQ_ON_BITMASK (1 << (CPCAP_IRQ_ON % 16))
++
++struct cpcap_power_button {
++	struct regmap *regmap;
++	struct input_dev *idev;
++	struct device *dev;
++};
++
++static irqreturn_t powerbutton_irq(int irq, void *_button)
 +{
-+	struct serdev_controller *ctrl = serdev->ctrl;
++	struct cpcap_power_button *button = _button;
++	int val;
 +
-+	if (!ctrl || !ctrl->ops->wait_until_sent)
-+		return;
++	val = cpcap_sense_virq(button->regmap, irq);
++	if (val < 0) {
++		dev_err(button->dev, "irq read failed: %d", val);
++		return IRQ_HANDLED;
++	}
 +
-+	ctrl->ops->wait_until_sent(ctrl, timeout);
++	pm_wakeup_event(button->dev, 0);
++	input_report_key(button->idev, KEY_POWER, val);
++	input_sync(button->idev);
++
++	return IRQ_HANDLED;
 +}
-+EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
 +
- static int serdev_drv_probe(struct device *dev)
- {
- 	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
-diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
-index d05393594f15..db2bc601e554 100644
---- a/drivers/tty/serdev/serdev-ttyport.c
-+++ b/drivers/tty/serdev/serdev-ttyport.c
-@@ -14,6 +14,7 @@
- #include <linux/serdev.h>
- #include <linux/tty.h>
- #include <linux/tty_driver.h>
-+#include <linux/poll.h>
- 
- #define SERPORT_ACTIVE		1
- 
-@@ -47,10 +48,13 @@ static void ttyport_write_wakeup(struct tty_port *port)
- 	struct serport *serport = serdev_controller_get_drvdata(ctrl);
- 
- 	if (!test_and_clear_bit(TTY_DO_WRITE_WAKEUP, &port->tty->flags))
--		return;
-+		goto out;
- 
- 	if (test_bit(SERPORT_ACTIVE, &serport->flags))
- 		serdev_controller_write_wakeup(ctrl);
-+
-+out:
-+	wake_up_interruptible_poll(&port->tty->write_wait, POLLOUT);
- }
- 
- static const struct tty_port_client_operations client_ops = {
-@@ -167,6 +171,14 @@ static void ttyport_set_flow_control(struct serdev_controller *ctrl, bool enable
- 	tty_set_termios(tty, &ktermios);
- }
- 
-+static void ttyport_wait_until_sent(struct serdev_controller *ctrl, long timeout)
++static int cpcap_power_button_probe(struct platform_device *pdev)
 +{
-+	struct serport *serport = serdev_controller_get_drvdata(ctrl);
-+	struct tty_struct *tty = serport->tty;
++	struct cpcap_power_button *button;
++	int irq = platform_get_irq(pdev, 0);
++	int err;
 +
-+	tty_wait_until_sent(tty, timeout);
++	button = devm_kmalloc(&pdev->dev, sizeof(*button), GFP_KERNEL);
++	if (!button)
++		return -ENOMEM;
++
++	button->idev = devm_input_allocate_device(&pdev->dev);
++	if (!button->idev)
++		return -ENOMEM;
++
++	button->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!button->regmap)
++		return -ENODEV;
++
++	button->dev = &pdev->dev;
++
++	button->idev->name = "cpcap-pwrbutton";
++	button->idev->phys = "cpcap-pwrbutton/input0";
++	button->idev->dev.parent = button->dev;
++	input_set_capability(button->idev, EV_KEY, KEY_POWER);
++
++	err = devm_request_threaded_irq(&pdev->dev, irq, NULL,
++		powerbutton_irq, IRQF_ONESHOT, "cpcap_pwrbutton", button);
++	if (err < 0) {
++		dev_err(&pdev->dev, "IRQ request failed: %d\n", err);
++		return err;
++	}
++
++	err = input_register_device(button->idev);
++	if (err) {
++		dev_err(&pdev->dev, "Input register failed: %d\n", err);
++		return err;
++	}
++
++	device_init_wakeup(&pdev->dev, true);
++
++	return 0;
 +}
 +
- static const struct serdev_controller_ops ctrl_ops = {
- 	.write_buf = ttyport_write_buf,
- 	.write_flush = ttyport_write_flush,
-@@ -175,6 +187,7 @@ static const struct serdev_controller_ops ctrl_ops = {
- 	.close = ttyport_close,
- 	.set_flow_control = ttyport_set_flow_control,
- 	.set_baudrate = ttyport_set_baudrate,
-+	.wait_until_sent = ttyport_wait_until_sent,
- };
- 
- struct device *serdev_tty_port_register(struct tty_port *port,
-diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-index 9519da6253a8..a308b206d204 100644
---- a/include/linux/serdev.h
-+++ b/include/linux/serdev.h
-@@ -81,6 +81,7 @@ struct serdev_controller_ops {
- 	void (*close)(struct serdev_controller *);
- 	void (*set_flow_control)(struct serdev_controller *, bool);
- 	unsigned int (*set_baudrate)(struct serdev_controller *, unsigned int);
-+	void (*wait_until_sent)(struct serdev_controller *, long);
- };
- 
- /**
-@@ -186,6 +187,7 @@ int serdev_device_open(struct serdev_device *);
- void serdev_device_close(struct serdev_device *);
- unsigned int serdev_device_set_baudrate(struct serdev_device *, unsigned int);
- void serdev_device_set_flow_control(struct serdev_device *, bool);
-+void serdev_device_wait_until_sent(struct serdev_device *, long);
- int serdev_device_write_buf(struct serdev_device *, const unsigned char *, size_t);
- void serdev_device_write_flush(struct serdev_device *);
- int serdev_device_write_room(struct serdev_device *);
-@@ -223,6 +225,7 @@ static inline unsigned int serdev_device_set_baudrate(struct serdev_device *sdev
- 	return 0;
- }
- static inline void serdev_device_set_flow_control(struct serdev_device *sdev, bool enable) {}
-+static inline void serdev_device_wait_until_sent(struct serdev_device *sdev, long timeout) {}
- static inline int serdev_device_write_buf(struct serdev_device *sdev, const unsigned char *buf, size_t count)
- {
- 	return -ENODEV;
++#ifdef CONFIG_OF
++static const struct of_device_id cpcap_pwrbutton_dt_match_table[] = {
++	{ .compatible = "motorola,cpcap-pwrbutton" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, cpcap_pwrbutton_dt_match_table);
++#endif
++
++static struct platform_driver cpcap_power_button_driver = {
++	.probe		= cpcap_power_button_probe,
++	.driver		= {
++		.name	= "cpcap-pwrbutton",
++		.of_match_table = of_match_ptr(cpcap_pwrbutton_dt_match_table),
++	},
++};
++module_platform_driver(cpcap_power_button_driver);
++
++MODULE_ALIAS("platform:cpcap-pwrbutton");
++MODULE_DESCRIPTION("CPCAP Power Button");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Sebastian Reichel <sre@kernel.org>");
 -- 
 2.11.0
+
