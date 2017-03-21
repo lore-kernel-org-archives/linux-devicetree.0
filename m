@@ -1,50 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 0/3] dtc updates for 4.12
-Date: Tue, 21 Mar 2017 11:19:55 -0500
-Message-ID: <20170321161958.9658-1-robh@kernel.org>
+Subject: [PATCH 1/3] scripts/dtc: automate getting dtc version and log in update script
+Date: Tue, 21 Mar 2017 11:19:56 -0500
+Message-ID: <20170321161958.9658-2-robh@kernel.org>
+References: <20170321161958.9658-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170321161958.9658-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, arm@kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This series syncs dtc with current mainline. The primary motivation is 
-to pull in the new checks I've worked on. This gives lots of new 
-warnings which are turned off by default.
+Further automate the dtc update script to fill in the dtc version and
+commit log.
 
-Arm-soc folks, I've left the PCI checks enabled as they are pretty much 
-all real errors and there aren't that many (about 1200, but that's lots 
-of duplicates). I have a patch for some of them.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ scripts/dtc/update-dtc-source.sh | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-Rob
-
-Rob Herring (3):
-  scripts/dtc: automate getting dtc version and log in update script
-  scripts/dtc: Update to upstream version v1.4.4-8-g756ffc4f52f6
-  dtc: update warning settings for new bus and node/property name checks
-
- scripts/Makefile.lib                 |   9 +-
- scripts/dtc/checks.c                 | 361 +++++++++++++++++++++++++++++++----
- scripts/dtc/data.c                   |  16 +-
- scripts/dtc/dtc-lexer.l              |   3 +-
- scripts/dtc/dtc-lexer.lex.c_shipped  |  77 ++++----
- scripts/dtc/dtc-parser.tab.c_shipped |   6 +-
- scripts/dtc/dtc-parser.y             |   6 +-
- scripts/dtc/dtc.c                    |   9 +-
- scripts/dtc/dtc.h                    |  11 +-
- scripts/dtc/flattree.c               |  58 +++---
- scripts/dtc/libfdt/fdt_rw.c          |   3 +-
- scripts/dtc/libfdt/libfdt.h          |  51 ++++-
- scripts/dtc/libfdt/libfdt_env.h      |  26 +--
- scripts/dtc/livetree.c               |  22 ++-
- scripts/dtc/srcpos.c                 |   2 +-
- scripts/dtc/srcpos.h                 |  11 +-
- scripts/dtc/treesource.c             |   6 +-
- scripts/dtc/update-dtc-source.sh     |  20 +-
- scripts/dtc/util.c                   |  11 +-
- scripts/dtc/util.h                   |  24 ++-
- scripts/dtc/version_gen.h            |   2 +-
- 21 files changed, 550 insertions(+), 184 deletions(-)
-
+diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
+index f5cde799db03..c92e6bd9458d 100755
+--- a/scripts/dtc/update-dtc-source.sh
++++ b/scripts/dtc/update-dtc-source.sh
+@@ -36,10 +36,19 @@ DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c
+ DTC_GENERATED="dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h"
+ LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_empty_tree.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
+ 
++get_last_dtc_version() {
++	git log --oneline scripts/dtc/ | grep 'upstream' | head -1 | sed -e 's/^.* \(.*\)/\1/'
++}
++
++last_dtc_ver=$(get_last_dtc_version)
++
+ # Build DTC
+ cd $DTC_UPSTREAM_PATH
+ make clean
+ make check
++dtc_version=$(git describe HEAD)
++dtc_log=$(git log --oneline ${last_dtc_ver}..)
++
+ 
+ # Copy the files into the Linux tree
+ cd $DTC_LINUX_PATH
+@@ -60,4 +69,12 @@ sed -i -- 's/#include <libfdt_env.h>/#include "libfdt_env.h"/g' ./libfdt/libfdt.
+ sed -i -- 's/#include <fdt.h>/#include "fdt.h"/g' ./libfdt/libfdt.h
+ git add ./libfdt/libfdt.h
+ 
+-git commit -e -v -m "scripts/dtc: Update to upstream version [CHANGEME]"
++commit_msg=$(cat << EOF
++scripts/dtc: Update to upstream version ${dtc_version}
++
++This adds the following commits from upstream:
++
++${dtc_log}
++EOF
++)
++git commit -e -v -s -m "${commit_msg}"
 -- 
 2.10.1
