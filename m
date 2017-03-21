@@ -1,8 +1,10 @@
 From: matthew.gerlach@linux.intel.com
-Subject: [PATCH v6 0/4] Altera Partial Reconfiguration IP
-Date: Tue, 21 Mar 2017 14:02:35 -0700
-Message-ID: <1490130159-2597-1-git-send-email-matthew.gerlach@linux.intel.com>
+Subject: [PATCH v6 3/4] fpga dt: bindings for Altera Partial Reconfiguration IP.
+Date: Tue, 21 Mar 2017 14:02:38 -0700
+Message-ID: <1490130159-2597-4-git-send-email-matthew.gerlach@linux.intel.com>
+References: <1490130159-2597-1-git-send-email-matthew.gerlach@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490130159-2597-1-git-send-email-matthew.gerlach@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: atull@kernel.org, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, agust@denx.de
 Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
@@ -10,34 +12,39 @@ List-Id: devicetree@vger.kernel.org
 
 From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-This set of patches implements a fpga-mgr driver for the Altera Partial
-Reconfiguration IP.  The driver depends on a patch from Alan Tull that
-adds a config complete timeout.  The driver code itself is divided into
-core functions and functions to implement a platform driver. It is
-expected that drivers for other buses like PCIe would also use the core
-functions.
+Device Tree bindings for Altera Partial Reconfiguration IP.
 
-Alan Tull (1):
-  fpga: add config complete timeout
-
-Matthew Gerlach (3):
-  fpga pr ip: Core driver support for Altera Partial Reconfiguration IP.
-  fpga dt: bindings for Altera Partial Reconfiguration IP.
-  fpga pr ip: Platform driver for Altera Partial Reconfiguration IP.
-
- .../devicetree/bindings/fpga/altera-pr-ip.txt      |  12 ++
- drivers/fpga/Kconfig                               |  12 ++
- drivers/fpga/Makefile                              |   2 +
- drivers/fpga/altera-pr-ip-core-plat.c              |  68 +++++++
- drivers/fpga/altera-pr-ip-core.c                   | 220 +++++++++++++++++++++
- drivers/fpga/fpga-region.c                         |   3 +
- include/linux/fpga/altera-pr-ip-core.h             |  29 +++
- include/linux/fpga/fpga-mgr.h                      |   3 +
- 8 files changed, 349 insertions(+)
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v5:
+    fix comment as suggested by Rob Herring <robh@kernel.org>
+    added Acked-by: Rob Herring <robh@kernel.org>
+v4: v3 patch set mistakenly sent out labeled as v4
+v3: s/altr,pr-ip/altr,a10-pr-ip/
+v2: s/Reconfiguraion/Reconfiguration/
+---
+ Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
- create mode 100644 drivers/fpga/altera-pr-ip-core-plat.c
- create mode 100644 drivers/fpga/altera-pr-ip-core.c
- create mode 100644 include/linux/fpga/altera-pr-ip-core.h
 
+diff --git a/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+new file mode 100644
+index 0000000..52a294c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+@@ -0,0 +1,12 @@
++Altera Arria10 Partial Reconfiguration IP
++
++Required properties:
++- compatible : should contain "altr,a10-pr-ip"
++- reg        : base address and size for memory mapped io.
++
++Example:
++
++	fpga_mgr: fpga-mgr@ff20c000 {
++		compatible = "altr,a10-pr-ip";
++		reg = <0xff20c000 0x10>;
++	};
 -- 
 2.7.4
