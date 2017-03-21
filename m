@@ -1,84 +1,108 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 38/39] media: imx: csi: fix crop rectangle reset in
- sink set_fmt
-Date: Tue, 21 Mar 2017 11:27:41 +0000
-Message-ID: <20170321112741.GV21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-39-git-send-email-steve_longerbeam@mentor.com>
- <20170319152233.GW21222@n2100.armlinux.org.uk>
- <327d67d9-68c1-7f74-0c0f-f6aee1c4b546@gmail.com>
- <1490010926.2917.59.camel@pengutronix.de>
- <20170320120855.GH21222@n2100.armlinux.org.uk>
- <1490018451.2917.86.camel@pengutronix.de>
- <20170320141705.GL21222@n2100.armlinux.org.uk>
- <1490030604.2917.103.camel@pengutronix.de>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v3 4/4] device property: Move fwnode graph ops to firmware
+ specific locations
+Date: Tue, 21 Mar 2017 13:17:21 +0200
+Message-ID: <9032e072-17d9-fea1-fe60-888686879f8d@linux.intel.com>
+References: <1489671289-20406-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1489671289-20406-5-git-send-email-sakari.ailus@linux.intel.com>
+ <CAL_JsqK0LeJ7UckS0XRQEikTPcUa-4i9yeyNiMu60SNL+i=d=Q@mail.gmail.com>
+ <1484fb17-a0cd-961f-6c85-75de6e662409@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1490030604.2917.103.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1484fb17-a0cd-961f-6c85-75de6e662409@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 06:23:24PM +0100, Philipp Zabel wrote:
-> @@ -1173,15 +1196,8 @@ static void csi_try_fmt(struct csi_priv *priv,
->  		incc = imx_media_find_mbus_format(infmt->code,
->  						  CS_SEL_ANY, true);
->  
-> -		if (sdformat->format.width < priv->crop.width * 3 / 4)
-> -			sdformat->format.width = priv->crop.width / 2;
-> -		else
-> -			sdformat->format.width = priv->crop.width;
-> -
-> -		if (sdformat->format.height < priv->crop.height * 3 / 4)
-> -			sdformat->format.height = priv->crop.height / 2;
-> -		else
-> -			sdformat->format.height = priv->crop.height;
-> +		sdformat->format.width = compose->width;
-> +		sdformat->format.height = compose->height;
->  
->  		if (incc->bayer) {
->  			sdformat->format.code = infmt->code;
+Cc Frank. (Oops.)
 
-We need to do more in here, because right now setting the source pads
-overwrites the colorimetry etc information.  Maybe something like the
-below?  I'm wondering if it would be a saner approach to copy the
-sink format and update the parameters that can be changed, rather than
-trying to list all the parameters that shouldn't be changed.  What if
-the format structure gains a new member?
-
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 1492b92e1970..756204ced53c 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -1221,6 +1221,12 @@ static void csi_try_fmt(struct csi_priv *priv,
- 			sdformat->format.field =  (infmt->height == 480) ?
- 				V4L2_FIELD_SEQ_TB : V4L2_FIELD_SEQ_BT;
- 		}
-+
-+		/* copy settings we can't change */
-+		sdformat->format.colorspace = infmt->colorspace;
-+		sdformat->format.ycbcr_enc = infmt->ycbcr_enc;
-+		sdformat->format.quantization = infmt->quantization;
-+		sdformat->format.xfer_func = infmt->xfer_func;
- 		break;
- 	case CSI_SINK_PAD:
- 		v4l_bound_align_image(&sdformat->format.width, MIN_W, MAX_W,
-
+Sakari Ailus wrote:
+> Hi Rob,
+>
+> Rob Herring wrote:
+>> On Thu, Mar 16, 2017 at 8:34 AM, Sakari Ailus
+>> <sakari.ailus@linux.intel.com> wrote:
+>>> Move firmware specific implementations of the fwnode graph operations to
+>>> firmware specific locations.
+>>>
+>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>> ---
+>>>  drivers/acpi/property.c | 61 ++++++++++++++++++++++++++++++++
+>>>  drivers/base/property.c | 92
+>>> +++----------------------------------------------
+>>>  drivers/of/base.c       | 70 +++++++++++++++++++++++++++++++++++++
+>>>  include/linux/fwnode.h  | 16 +++++++++
+>>>  4 files changed, 152 insertions(+), 87 deletions(-)
+>>
+>> As I've mentioned before, this is just propagating APIs I would like
+>> to get rid of. See my series cleaning up DRM users[1].
+>
+> Why would you want to get rid of the existing APIs? They do fit well for
+> the purpose they're currently used for on V4L2, at least. That could be
+> because the current API was implemented *for* V4L2. If you'd like to add
+> a new one, then at least I'd very much like to keep what exists at the
+> moment.
+>
+> Please see e.g. isp_fwnodes_parse() in
+> drivers/media/platform/omap3isp/isp.c . That function is generic enough
+> to be moved to the V4L2 framework, with a driver callback to handle
+> driver specific matters.
+>
+>>
+>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>> index e483dd1..a8686a8 100644
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>> @@ -2624,6 +2624,71 @@ static struct fwnode_handle
+>>> *of_fwnode_get_named_child_node(
+>>>         return NULL;
+>>>  }
+>>>
+>>> +static struct fwnode_handle *of_fwnode_graph_get_next_endpoint(
+>>> +       struct fwnode_handle *fwnode, struct fwnode_handle *prev)
+>>> +{
+>>> +       struct device_node *node;
+>>> +
+>>> +       node = of_graph_get_next_endpoint(to_of_node(fwnode),
+>>> +                                         to_of_node(prev));
+>>> +       if (node)
+>>> +               return of_fwnode_handle(node);
+>>> +
+>>> +       return NULL;
+>>> +}
+>>
+>> For example, most callers of of_graph_get_next_endpoint really just
+>> want port=0, endpoint=0 and then they want the remote node. As the
+>> assignment of port and endpoint numbers are fixed for a device,
+>> drivers should be explicit about which port/endpoint they want. The
+>> actual handle to either the port or endpoint nodes are mostly
+>> irrelevant. We only really need the endpoint node handles when we have
+>> properties in the endpoints.
+>
+> I certainly don't mind adding a new API if there are use cases the
+> existing one does not serve well. But please don't remove the
+> enumeration API. It's simply way more practical.
+>
+> If you have one or two ports and an endpoint in each, perhaps it's ok
+> just to try check if one more more of them are around. Some devices may
+> have e.g. six ports today and I don't think that number will go down in
+> the future, it's rather going to increase.
+>
+> The caller can also find the endpoints without knowing the endpoint
+> numbers in advance. In a number of devices' DT binding documentation it
+> is not explicitly stated that endpoint IDs have a special meaning. I'm
+> not fully certain everything would keep on working fine if the drivers
+> that previously did not care about endpoint numbers would start e.g.
+> requiring zero from now on.
+>
+> An analogous interface is the _ENUM IOCTLs in V4L2, with the difference
+> that it's towards the user space.
+>
 
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Sakari Ailus
+sakari.ailus@linux.intel.com
