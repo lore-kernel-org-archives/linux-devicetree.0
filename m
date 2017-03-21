@@ -1,280 +1,136 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 3/6] regulator: arizona-micbias: Add regulator driver for Arizona micbiases
-Date: Tue, 21 Mar 2017 14:45:36 +0000
-Message-ID: <1490107539-23995-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1490107539-23995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490107539-23995-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v7 1/2] dt-bindings: Add GPCv2 power gating driver
+Date: Tue, 21 Mar 2017 07:50:03 -0700
+Message-ID: <20170321145004.21265-2-andrew.smirnov@gmail.com>
+References: <20170321145004.21265-1-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170321145004.21265-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Dong Aisheng <dongas86@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for controlling the micbias regulators on the Arizona class
-audio CODECs. This will replace earlier fixed support that initialised
-the micbias's with fixed settings from platform data, although that
-platform data can still be used to configure the constraints on this new
-regulator.
+Add DT bindings for power domain driver for GPCv2 IP block found in
+i.MX7 SoCs.
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: yurovsky@gmail.com
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Dong Aisheng <dongas86@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
- drivers/regulator/Makefile          |   2 +-
- drivers/regulator/arizona-micbias.c | 227 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 228 insertions(+), 1 deletion(-)
- create mode 100644 drivers/regulator/arizona-micbias.c
+ .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
+ include/dt-bindings/power/imx7-power.h             | 18 ++++++
+ 2 files changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+ create mode 100644 include/dt-bindings/power/imx7-power.h
 
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index ef7725e..b670e87 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -19,7 +19,7 @@ obj-$(CONFIG_REGULATOR_ACT8865) += act8865-regulator.o
- obj-$(CONFIG_REGULATOR_ACT8945A) += act8945a-regulator.o
- obj-$(CONFIG_REGULATOR_AD5398) += ad5398.o
- obj-$(CONFIG_REGULATOR_ANATOP) += anatop-regulator.o
--obj-$(CONFIG_REGULATOR_ARIZONA) += arizona-micsupp.o arizona-ldo1.o
-+obj-$(CONFIG_REGULATOR_ARIZONA) += arizona-micsupp.o arizona-ldo1.o arizona-micbias.o
- obj-$(CONFIG_REGULATOR_AS3711) += as3711-regulator.o
- obj-$(CONFIG_REGULATOR_AS3722) += as3722-regulator.o
- obj-$(CONFIG_REGULATOR_AXP20X) += axp20x-regulator.o
-diff --git a/drivers/regulator/arizona-micbias.c b/drivers/regulator/arizona-micbias.c
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
 new file mode 100644
-index 0000000..4a361186
+index 0000000..02f45c6
 --- /dev/null
-+++ b/drivers/regulator/arizona-micbias.c
-@@ -0,0 +1,227 @@
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+@@ -0,0 +1,71 @@
++Freescale i.MX General Power Controller v2
++==========================================
++
++The i.MX7S/D General Power Control (GPC) block contains Power Gating
++Control (PGC) for various power domains.
++
++Required properties:
++
++- compatible: Should be "fsl,imx7d-gpc"
++
++- reg: should be register base and length as documented in the
++  datasheet
++
++- interrupts: Should contain GPC interrupt request 1
++
++Power domains contained within GPC node are generic power domain
++providers, documented in
++Documentation/devicetree/bindings/power/power_domain.txt, which are
++described as subnodes of the power gating controller 'pgc' node,
++which, in turn, is expected to contain the following:
++
++Required properties:
++
++- reg: Power domain index. Valid values are defined in
++  include/dt-bindings/power/imx7-power.h
++
++- #power-domain-cells: Should be 0
++
++Optional properties:
++
++- power-supply: Power supply used to power the domain
++
++Example:
++
++	gpc: gpc@303a0000 {
++		compatible = "fsl,imx7d-gpc";
++		reg = <0x303a0000 0x1000>;
++		interrupt-controller;
++		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&intc>;
++
++		pgc {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			pgc_pcie_phy: power-domain@3 {
++				#power-domain-cells = <0>;
++
++				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
++				power-supply = <&reg_1p0d>;
++			};
++		};
++	};
++
++
++Specifying power domain for IP modules
++======================================
++
++IP cores belonging to a power domain should contain a 'power-domains'
++property that is a phandle for PGC node representing the domain.
++
++Example of a device that is part of the PCIE_PHY power domain:
++
++	pcie: pcie@33800000 {
++	      reg = <0x33800000 0x4000>,
++	            <0x4ff00000 0x80000>;
++		/* ... */
++		power-domains = <&pgc_pcie_phy>;
++		/* ... */
++	};
+diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
+new file mode 100644
+index 0000000..eb70023
+--- /dev/null
++++ b/include/dt-bindings/power/imx7-power.h
+@@ -0,0 +1,18 @@
 +/*
-+ * arizona-micbias.c  --  Microphone bias supplies for Arizona devices
++ *  Copyright (C) 2017 Impinj
 + *
-+ * Copyright 2017 Cirrus Logic Inc.
-+ *
-+ * Author: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-+ *
-+ *  This program is free software; you can redistribute  it and/or modify it
-+ *  under  the terms of  the GNU General  Public License as published by the
-+ *  Free Software Foundation;  either version 2 of the  License, or (at your
-+ *  option) any later version.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#include <linux/module.h>
-+#include <linux/moduleparam.h>
-+#include <linux/init.h>
-+#include <linux/bitops.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/slab.h>
-+#include <sound/soc.h>
++#ifndef __DT_BINDINGS_IMX7_POWER_H__
++#define __DT_BINDINGS_IMX7_POWER_H__
 +
-+#include <linux/mfd/arizona/core.h>
-+#include <linux/mfd/arizona/pdata.h>
-+#include <linux/mfd/arizona/registers.h>
++#define IMX7_POWER_DOMAIN_USB_HSIC_PHY	0
++#define IMX7_POWER_DOMAIN_USB_OTG2_PHY	1
++#define IMX7_POWER_DOMAIN_USB_OTG1_PHY	2
++#define IMX7_POWER_DOMAIN_PCIE_PHY	3
++#define IMX7_POWER_DOMAIN_MIPI_PHY	4
 +
-+#define ARIZONA_MICBIAS_MAX_NAME 10
-+#define ARIZONA_MICBIAS_MAX_SELECTOR 0xD
-+
-+struct arizona_micbias_priv {
-+	int id;
-+	char name[ARIZONA_MICBIAS_MAX_NAME];
-+
-+	struct regulator_dev *regulator;
-+	struct arizona *arizona;
-+
-+	struct regulator_consumer_supply supply;
-+	struct regulator_init_data *init_data;
-+	struct regulator_desc desc;
-+};
-+
-+static const struct regulator_ops arizona_micbias_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_linear,
-+	.map_voltage = regulator_map_voltage_linear,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_bypass = regulator_get_bypass_regmap,
-+	.set_bypass = regulator_set_bypass_regmap,
-+	.set_soft_start = regulator_set_soft_start_regmap,
-+	.set_pull_down = regulator_set_pull_down_regmap,
-+};
-+
-+static const struct regulator_desc arizona_micbias_desc_tmpl = {
-+	.supply_name = "MICVDD",
-+	.type = REGULATOR_VOLTAGE,
-+	.ops = &arizona_micbias_ops,
-+
-+	.min_uV = 1500000,
-+	.uV_step = 100000,
-+	.n_voltages = ARIZONA_MICBIAS_MAX_SELECTOR + 1,
-+
-+	.vsel_reg = ARIZONA_MIC_BIAS_CTRL_1,
-+	.vsel_mask = ARIZONA_MICB1_LVL_MASK,
-+	.enable_reg = ARIZONA_MIC_BIAS_CTRL_1,
-+	.enable_mask = ARIZONA_MICB1_ENA,
-+	.bypass_reg = ARIZONA_MIC_BIAS_CTRL_1,
-+	.bypass_mask = ARIZONA_MICB1_BYPASS,
-+	.soft_start_reg = ARIZONA_MIC_BIAS_CTRL_1,
-+	.soft_start_mask = ARIZONA_MICB1_RATE,
-+	.pull_down_reg = ARIZONA_MIC_BIAS_CTRL_1,
-+	.pull_down_mask = ARIZONA_MICB1_DISCH,
-+
-+	.owner = THIS_MODULE,
-+};
-+
-+static const struct regulator_init_data arizona_micbias_tmpl = {
-+	.constraints = {
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS |
-+				  REGULATOR_CHANGE_VOLTAGE |
-+				  REGULATOR_CHANGE_BYPASS,
-+		.min_uV = 1500000,
-+		.max_uV = 2800000,
-+	},
-+};
-+
-+static int arizona_micbias_of_get_pdata(struct regulator_config *config)
-+{
-+	struct arizona_micbias_priv *micbias = config->driver_data;
-+	struct arizona *arizona = micbias->arizona;
-+	struct arizona_micbias *pdata = &arizona->pdata.micbias[micbias->id];
-+	struct device_node *np;
-+
-+	np = of_get_child_by_name(arizona->dev->of_node, micbias->name);
-+	if (np) {
-+		config->of_node = np;
-+
-+		micbias->init_data = of_get_regulator_init_data(arizona->dev,
-+								np,
-+								&micbias->desc);
-+
-+		pdata->ext_cap = of_property_read_bool(np, "wlf,ext-cap");
-+	}
-+
-+	return 0;
-+}
-+
-+static int arizona_micbias_probe(struct platform_device *pdev)
-+{
-+	struct arizona *arizona = dev_get_drvdata(pdev->dev.parent);
-+	int id = pdev->id;
-+	struct arizona_micbias *pdata = &arizona->pdata.micbias[id];
-+	struct arizona_micbias_priv *micbias;
-+	struct regulator_config config = { };
-+	struct regulation_constraints *constraints;
-+	unsigned int val;
-+	int ret;
-+
-+	micbias = devm_kzalloc(&pdev->dev, sizeof(*micbias), GFP_KERNEL);
-+	if (micbias == NULL)
-+		return -ENOMEM;
-+
-+	micbias->arizona = arizona;
-+	micbias->id = id;
-+	snprintf(micbias->name, sizeof(micbias->name), "MICBIAS%d", id + 1);
-+
-+	micbias->desc = arizona_micbias_desc_tmpl;
-+	micbias->desc.name = micbias->name;
-+	micbias->desc.vsel_reg += id;
-+	micbias->desc.enable_reg += id;
-+	micbias->desc.bypass_reg += id;
-+	micbias->desc.soft_start_reg += id;
-+	micbias->desc.pull_down_reg += id;
-+
-+	micbias->supply.supply = micbias->name;
-+	micbias->supply.dev_name = dev_name(arizona->dev);
-+
-+	config.dev = arizona->dev;
-+	config.regmap = arizona->regmap;
-+	config.driver_data = micbias;
-+
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		if (!dev_get_platdata(arizona->dev)) {
-+			ret = arizona_micbias_of_get_pdata(&config);
-+			if (ret < 0)
-+				return ret;
-+		}
-+	}
-+
-+	if (!micbias->init_data) {
-+		micbias->init_data = devm_kmemdup(&pdev->dev,
-+						  &arizona_micbias_tmpl,
-+						  sizeof(arizona_micbias_tmpl),
-+						  GFP_KERNEL);
-+		if (!micbias->init_data)
-+			return -ENOMEM;
-+	}
-+
-+	micbias->init_data->consumer_supplies = &micbias->supply;
-+	micbias->init_data->num_consumer_supplies = 1;
-+
-+	config.init_data = micbias->init_data;
-+	constraints = &micbias->init_data->constraints;
-+
-+	if (pdata->mV) {
-+		constraints->min_uV = pdata->mV * 1000;
-+		constraints->max_uV = pdata->mV * 1000;
-+	}
-+
-+	if (pdata->soft_start)
-+		constraints->soft_start = true;
-+
-+	if (pdata->bypass)
-+		constraints->valid_ops_mask |= REGULATOR_CHANGE_BYPASS;
-+
-+	if (pdata->discharge)
-+		constraints->pull_down = true;
-+
-+	if (pdata->ext_cap)
-+		val = ARIZONA_MICB1_EXT_CAP;
-+	else
-+		val = 0;
-+
-+	/*
-+	 * The core expects the regulator to have pull_down (discharge) and
-+	 * bypass disabled by default so clear those here, whilst we set the
-+	 * external cap.
-+	 */
-+	regmap_update_bits(arizona->regmap, ARIZONA_MIC_BIAS_CTRL_1 + id,
-+			   ARIZONA_MICB1_EXT_CAP | ARIZONA_MICB1_DISCH |
-+			   ARIZONA_MICB1_BYPASS, val);
-+
-+	micbias->regulator = devm_regulator_register(&pdev->dev,
-+						     &micbias->desc,
-+						     &config);
-+
-+	of_node_put(config.of_node);
-+
-+	if (IS_ERR(micbias->regulator)) {
-+		ret = PTR_ERR(micbias->regulator);
-+		dev_err(arizona->dev, "Failed to register %s supply: %d\n",
-+			micbias->name, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver arizona_micbias_driver = {
-+	.probe = arizona_micbias_probe,
-+	.driver		= {
-+		.name	= "arizona-micbias",
-+	},
-+};
-+
-+module_platform_driver(arizona_micbias_driver);
-+
-+/* Module information */
-+MODULE_AUTHOR("Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>");
-+MODULE_DESCRIPTION("Arizona microphone bias supply driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:arizona-micbias");
++#endif
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
