@@ -1,130 +1,113 @@
-From: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
-Subject: [PATCH v5] hwmon: ads7828 optional parameters from the device tree
-Date: Mon, 20 Mar 2017 21:24:34 -0600
-Message-ID: <20170321032434.9268-1-kernel.development@povil.us>
+From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
+Subject: Minecraft_pi now works in Raspbian with arm64 kernel from
+ staging-testing
+Date: Mon, 20 Mar 2017 20:38:41 -0700
+Message-ID: <1490067521.11105.19.camel@crowfest.net>
+References: <1489937108.13607.1.camel@crowfest.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489937108.13607.1.camel-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding the ability for the ads7828 and ads7830 to use the device tree to
-get their optional parameters, instead of using platform devices. This
-allows people using custom boards to also use the ads7828 in a non-default
-manner.
+Just thought people might find this useful.
 
-v2: conforming to coding style
-v3: changing from "_" to "-" for device tree entries
-v4: using regulator subsystem for voltage source, renaming differential
-    input property
-v5: checking for invalid vref values sooner and returning error if they are
-    bad, not warning user.
+I think at this point it might be working from linux-next as well.
 
-Signed-off-by: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
----
- .../devicetree/bindings/hwmon/ads7828.txt          | 26 ++++++++++++++++++++++
- .../devicetree/bindings/i2c/trivial-devices.txt    |  2 --
- drivers/hwmon/ads7828.c                            | 21 +++++++++++++++++
- 3 files changed, 47 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
+Where do I e-mail updated DT bindings to?
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-new file mode 100644
-index 000000000000..5a0c4a7c6144
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-@@ -0,0 +1,26 @@
-+ads7828 properties
-+
-+Required properties:
-+- compatible: Should be one of
-+	       ti,ads7828
-+	       ti,ads7830
-+- reg: I2C address
-+
-+Optional properties:
-+
-+- ti,differential-input
-+  Set to use the device in differential mode.
-+- vref
-+  The external reference on the device is set to this regulators output. If it
-+  does not exists the internal reference will be used and output by the ads78xx
-+  on the "external vref" pin.
-+
-+  Example ADS7828 node:
-+
-+  ads7828: ads@48 {
-+  	   comatible = "ti,ads7828";
-+	   reg = <0x48>;
-+	   vref = <&vref>;
-+	   ti,differential-input;
-+  };
-+
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index cdd7b48826c3..87648909f6ce 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -163,8 +163,6 @@ st,m41t00		Serial real-time clock (RTC)
- st,m41t62		Serial real-time clock (RTC) with alarm
- st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
- taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
--ti,ads7828		8-Channels, 12-bit ADC
--ti,ads7830		8-Channels, 8-bit ADC
- ti,tsc2003		I2C Touch-Screen Controller
- ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
- ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
-diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
-index ee396ff167d9..0be4804a9e59 100644
---- a/drivers/hwmon/ads7828.c
-+++ b/drivers/hwmon/ads7828.c
-@@ -34,6 +34,9 @@
- #include <linux/platform_data/ads7828.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-+#include <linux/regulator/consumer.h>
-+
-+#define MV_TO_UV 1000
- 
- /* The ADS7828 registers */
- #define ADS7828_CMD_SD_SE	0x80	/* Single ended inputs */
-@@ -118,9 +121,12 @@ static int ads7828_probe(struct i2c_client *client,
- 	struct ads7828_data *data;
- 	struct device *hwmon_dev;
- 	unsigned int vref_mv = ADS7828_INT_VREF_MV;
-+	unsigned int vref_uv;
- 	bool diff_input = false;
- 	bool ext_vref = false;
- 	unsigned int regval;
-+	struct regulator *reg;
-+
- 
- 	data = devm_kzalloc(dev, sizeof(struct ads7828_data), GFP_KERNEL);
- 	if (!data)
-@@ -131,6 +137,21 @@ static int ads7828_probe(struct i2c_client *client,
- 		ext_vref = pdata->ext_vref;
- 		if (ext_vref && pdata->vref_mv)
- 			vref_mv = pdata->vref_mv;
-+	} else if (dev->of_node) {
-+		if (of_get_property(dev->of_node, "ti,differential-input",
-+				    NULL))
-+			diff_input = true;
-+		reg = devm_regulator_get_optional(dev, "vref");
-+		if (!IS_ERR(reg)) {
-+			vref_uv = regulator_get_voltage(reg);
-+			if ((vref_uv >= ADS7828_EXT_VREF_MV_MIN * MV_TO_UV) &&
-+			    (vref_uv <= ADS7828_EXT_VREF_MV_MAX * MV_TO_UV)) {
-+				vref_mv = DIV_ROUND_CLOSEST(vref_uv, MV_TO_UV);
-+				ext_vref = true;
-+			} else {
-+				return  -EINVAL;
-+			}
-+		}
- 	}
- 
- 	/* Bound Vref with min/max values */
--- 
-2.11.0
-
+On Sun, 2017-03-19 at 08:25 -0700, Michael Zoran wrote:
+> So this morning after testing a new firmware release for the RPI, I
+> was
+> able to get minecraft_pi on ARM 64 to work on Raspbian when built
+> from
+> the upstream staging-testing tree.
+> 
+> I'm including the DT I used for testing.  The firmware creates the
+> simplefb node that it's been doing for testing on the RPI 3 for a
+> very
+> long time now.
+> 
+> The only issue is that it appears for now you will need to hard code
+> your display settings in config.txt and you will need to set
+> gpu_mem=128 or something reasonable just like most people would do in
+> Raspbian.
+> 
+> The lastest firmware for the RPI is available at:(Where updates are
+> always available)
+> https://github.com/raspberrypi/firmware
+> 
+> This is the replacement for arch/arm64/boot/dts/broadcom/bcm2837-rpi-
+> 3-
+> b.dts
+> 
+> /dts-v1/;
+> #include "bcm2837.dtsi"
+> #include "bcm2835-rpi.dtsi"
+> #include "bcm283x-rpi-smsc9514.dtsi"
+> #include "bcm283x-rpi-usb-host.dtsi"
+> 
+> / {
+> 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+> 	model = "Raspberry Pi 3 Model B";
+> 
+> 	memory {
+> 		reg = <0 0x40000000>;
+> 	};
+> 
+> 	leds {
+> 		act {
+> 			gpios = <&gpio 47 0>;
+> 		};
+> 	};
+> 
+> 
+> 	soc {
+> 
+> 		hvs@7e400000 {
+> 			status = "disabled";
+> 		};
+> 
+> 		v3d: v3d@7ec00000 {
+> 			status = "disabled";
+> 		};
+> 
+> 		vc4: gpu {
+> 			status = "disabled";
+> 		};
+> 
+>                 fb: fb {
+>                         status = "disabled";
+>                 };
+> 
+> 		vchiq: vchiq {
+> 			compatible = "brcm,bcm2835-vchiq";
+> 			reg = <0x7e00b840 0xf>;
+> 			interrupts = <0 2>;
+> 			cache-line-size = <32>;
+> 			firmware = <&firmware>;
+> 		};
+> 
+> 		audio: audio {
+> 			compatible = "brcm,bcm2835-audio";
+> 			brcm,pwm-channels = <8>;
+> 		};
+> 
+> 	};
+> 
+> 	__overrides__ {
+> 		cache_line_size = <&vchiq>, "cache-line-size:0";
+> 	};
+> 
+> };
+> 
+> &uart1 {
+> 	status = "okay";
+> };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
