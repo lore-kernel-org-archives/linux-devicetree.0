@@ -1,136 +1,53 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v7 1/2] dt-bindings: Add GPCv2 power gating driver
-Date: Tue, 21 Mar 2017 07:50:03 -0700
-Message-ID: <20170321145004.21265-2-andrew.smirnov@gmail.com>
-References: <20170321145004.21265-1-andrew.smirnov@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
+Date: Tue, 21 Mar 2017 15:50:56 +0100
+Message-ID: <20170321145056.GA30655@lunn.ch>
+References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
+ <20170316064218.9169-2-ralph.sennhauser@gmail.com>
+ <20170320134252.GM22463@ulmo.ba.sec>
+ <20170321073618.2e4d41cc@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170321145004.21265-1-andrew.smirnov@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20170321073618.2e4d41cc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Dong Aisheng <dongas86@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-gpio@vger.kernel.org, Imre Kaloz <kaloz@openwrt.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for power domain driver for GPCv2 IP block found in
-i.MX7 SoCs.
+> > > *mvebu_gpioreg_blink(struct mvebu_gpio_chip *mvchip) return
+> > > mvchip->membase + GPIO_BLINK_EN_OFF; }
+> > >  
+> > > +static void __iomem *mvebu_gpioreg_blink_select(struct
+> > > mvebu_gpio_chip *mvchip) +{
+> > > +	return mvchip->membase + GPIO_BLINK_CNT_SELECT_OFF;
+> > > +}  
+> > 
+> > That's a really weird thing to do. Why not just use this expression in
+> > your calls to readl() and writel() directly? Seems a lot of additional
+> > code for no gain.
 
-Cc: yurovsky@gmail.com
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Dong Aisheng <dongas86@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
- include/dt-bindings/power/imx7-power.h             | 18 ++++++
- 2 files changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
- create mode 100644 include/dt-bindings/power/imx7-power.h
+This driver is made more complex by the Armada XP SMP handling. Some
+GPIO registers are per-cpu, others are global. Registers for
+interrupts in particular are per CPU. So there is a general trend in
+this driver to have a function which returns the address of a
+register, for a given SOC variant. In this case, it is fixed, so could
+be collapsed into the actual read/write. But then it would be
+different to all others in this driver...
 
-diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-new file mode 100644
-index 0000000..02f45c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-@@ -0,0 +1,71 @@
-+Freescale i.MX General Power Controller v2
-+==========================================
-+
-+The i.MX7S/D General Power Control (GPC) block contains Power Gating
-+Control (PGC) for various power domains.
-+
-+Required properties:
-+
-+- compatible: Should be "fsl,imx7d-gpc"
-+
-+- reg: should be register base and length as documented in the
-+  datasheet
-+
-+- interrupts: Should contain GPC interrupt request 1
-+
-+Power domains contained within GPC node are generic power domain
-+providers, documented in
-+Documentation/devicetree/bindings/power/power_domain.txt, which are
-+described as subnodes of the power gating controller 'pgc' node,
-+which, in turn, is expected to contain the following:
-+
-+Required properties:
-+
-+- reg: Power domain index. Valid values are defined in
-+  include/dt-bindings/power/imx7-power.h
-+
-+- #power-domain-cells: Should be 0
-+
-+Optional properties:
-+
-+- power-supply: Power supply used to power the domain
-+
-+Example:
-+
-+	gpc: gpc@303a0000 {
-+		compatible = "fsl,imx7d-gpc";
-+		reg = <0x303a0000 0x1000>;
-+		interrupt-controller;
-+		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&intc>;
-+
-+		pgc {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pgc_pcie_phy: power-domain@3 {
-+				#power-domain-cells = <0>;
-+
-+				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
-+				power-supply = <&reg_1p0d>;
-+			};
-+		};
-+	};
-+
-+
-+Specifying power domain for IP modules
-+======================================
-+
-+IP cores belonging to a power domain should contain a 'power-domains'
-+property that is a phandle for PGC node representing the domain.
-+
-+Example of a device that is part of the PCIE_PHY power domain:
-+
-+	pcie: pcie@33800000 {
-+	      reg = <0x33800000 0x4000>,
-+	            <0x4ff00000 0x80000>;
-+		/* ... */
-+		power-domains = <&pgc_pcie_phy>;
-+		/* ... */
-+	};
-diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
-new file mode 100644
-index 0000000..eb70023
---- /dev/null
-+++ b/include/dt-bindings/power/imx7-power.h
-@@ -0,0 +1,18 @@
-+/*
-+ *  Copyright (C) 2017 Impinj
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __DT_BINDINGS_IMX7_POWER_H__
-+#define __DT_BINDINGS_IMX7_POWER_H__
-+
-+#define IMX7_POWER_DOMAIN_USB_HSIC_PHY	0
-+#define IMX7_POWER_DOMAIN_USB_OTG2_PHY	1
-+#define IMX7_POWER_DOMAIN_USB_OTG1_PHY	2
-+#define IMX7_POWER_DOMAIN_PCIE_PHY	3
-+#define IMX7_POWER_DOMAIN_MIPI_PHY	4
-+
-+#endif
--- 
-2.9.3
+> > > +	pwm->chip.dev = dev;
+> > > +	pwm->chip.ops = &mvebu_pwm_ops;
+> > > +	pwm->chip.base = mvchip->chip.base;
+> > > +	pwm->chip.npwm = mvchip->chip.ngpio;  
+> > 
+> > Isn't that a lie? The code above suggests you can only ever have a
+> > single GPIO turn into a PWM, so I'd expect ".npwm = 1" here.
+
+Well, any of the 32 GPIOs can be a PWM. But only one can be enabled at
+a time. What exactly does pwm->chip.npwm mean? If we say 1 here, how
+at run time do we say which of the 32 GPIOs is used as a PWM output?
+By saying 32, it is simpler, which ever is enabled first is the one to
+use.
+
+	Andrew
