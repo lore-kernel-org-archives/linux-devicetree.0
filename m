@@ -1,82 +1,77 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: add new dt entry for ath10k calibration variant
-Date: Tue, 21 Mar 2017 08:00:34 -0500
-Message-ID: <CAL_Jsq+aEdjq9MR--Hyrw17KoKv=uZ7OBsAqX1_0+Djpw+QUCg@mail.gmail.com>
-References: <20170310080615.22958-1-sven.eckelmann@openmesh.com>
- <20170320150733.25bufnzrhh7xabml@rob-hp-laptop> <1919994.musG4GLznX@bentobox>
+From: Michael Zoran <mzoran@crowfest.net>
+Subject: Re: [PATCH 1/4] dt-bindings: Document the dmas and
+ dma-names properties for bcm2835-analog-audio
+Date: Tue, 21 Mar 2017 06:30:37 -0700
+Message-ID: <1490103037.11105.30.camel@crowfest.net>
+References: <20170312063820.19313-1-mzoran@crowfest.net>
+ <20170320165009.ylrohjwettdy2lgf@rob-hp-laptop>
+ <1490029654.11105.7.camel@crowfest.net>
+ <CAL_JsqJrLjqobGEWuvrOrU_wXmADUTAXbDRTaE-ukpE6sHRYLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1919994.musG4GLznX@bentobox>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAL_JsqJrLjqobGEWuvrOrU_wXmADUTAXbDRTaE-ukpE6sHRYLQ@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Linux-ALSA <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 11:28 AM, Sven Eckelmann
-<sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org> wrote:
-> On Montag, 20. März 2017 10:07:33 CET Rob Herring wrote:
->> On Fri, Mar 10, 2017 at 09:06:14AM +0100, Sven Eckelmann wrote:
->> > The bus + bmi-chip-id + bmi-board-id is not enough to identify the correct
->> > board data file on QCA4019 based devices. Multiple different boards share
->> > the same values. Only the original reference designs can currently be
->> > identified and loaded from the board-2.bin. But these will not result in
->> > the correct calibration data when combined with the pre-calibration data
->> > from the device.
->> >
->> > An additional "variant" information has to be provided (via SMBIOS or DT)
->> > to select the correct board data for a design which was modified by an ODM.
->> >
->> > Signed-off-by: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
->> > ---
->> > Since RFC:
->> >
->> >  - Split patch in DT doc and ath10k part (thanks Christian Lamparter)
->> >  - Remove the words "bmi-chip-id" and "bmi-board-id" and replace them with
->> >    more generic "device specific ids"
->> > ---
->> >  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 +++
->> >  1 file changed, 3 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> > index 74d7f0af209c..3d2a031217da 100644
->> > --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> > @@ -41,6 +41,9 @@ Optional properties:
->> >  - qcom,msi_addr: MSI interrupt address.
->> >  - qcom,msi_base: Base value to add before writing MSI data into
->> >             MSI address register.
->> > +- qcom,ath10k-calibration-variant: string to search for in the board-2.bin
->> > +                              variant list with the same bus and device
->> > +                              specific ids
->>
->> Sounds like you should use a more specific compatible string.
->
-> Hm, this would require that each calibration data has an own compatibility
-> string - which then has to be supported by ath10k, right? Doesn't sound like
-> it would work well when each vendor (with an own calibration variant) would
-> have to modify ath10k to get it working. This sounds especially odd because
-> nothing else in ath10k has to be changed. Only the board data files which will
-> be selected by ath10k are different on these devices.
->
-> It would then up with something like this as compatibility string:
->
->  * qcom,ipq4019-wifi-asus-rt-ac58u
->  * qcom,ipq4019-wifi-fritzbox-4040
->  * qcom,ipq4019-wifi-netgear-whatever
->  * qcom,ipq4019-wifi-openmesh-i-have-no-idea
->  * ...
-
-Are these all the same board design or variations? In the latter case,
-you should have specific compatibles anyway. Now if the variants are
-the same hardware, but different configurations say for different
-regions or something, then I'd say a separate property is fine.
-
-We already have a "firmware-name" property. Would that work for you?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCAyMDE3LTAzLTIxIGF0IDA3OjUzIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBP
+biBNb24sIE1hciAyMCwgMjAxNyBhdCAxMjowNyBQTSwgTWljaGFlbCBab3JhbiA8bXpvcmFuQGNy
+b3dmZXN0Lm5ldD4KPiB3cm90ZToKPiA+IE9uIE1vbiwgMjAxNy0wMy0yMCBhdCAxMTo1MCAtMDUw
+MCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiA+IE9uIFNhdCwgTWFyIDExLCAyMDE3IGF0IDEwOjM4
+OjE3UE0gLTA4MDAsIE1pY2hhZWwgWm9yYW4gd3JvdGU6Cj4gPiA+ID4gQWRkIGRvY3VtZW50YXRp
+b24gZm9yIHRoZSBETUEgcHJvcGVydGllcyByZXF1aXJlZCB3aGVuIHVzaW5nCj4gPiA+ID4gdGhl
+Cj4gPiA+ID4gUFdNIGNvbnRyb2xsZXIgb2YgdGhlIGJjbTI4MzUgZm9yIGFuYWxvZyBhdWRpbyBv
+dXRwdXQuCj4gPiA+ID4gCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTWljaGFlbCBab3JhbiA8bXpv
+cmFuQGNyb3dmZXN0Lm5ldD4KPiA+ID4gPiAtLS0KPiA+ID4gPiDCoERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLWJjbTI4MzUudHh0IHwgOQo+ID4gPiA+ICsrKysrKysr
+LQo+ID4gPiA+IMKgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQo+ID4gPiA+IAo+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcHdtL3B3bS0KPiA+ID4gPiBiY20yODM1LnR4dAo+ID4gPiA+IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20tYmNtMjgzNS50eHQKPiA+ID4gPiBpbmRl
+eCBjZjU3M2U4NWIxMWQuLjA4ZmMwNmZjMDgzYSAxMDA2NDQKPiA+ID4gPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS1iY20yODM1LnR4dAo+ID4gPiA+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLWJjbTI4MzUudHh0
+Cj4gPiA+ID4gQEAgLTEsMTQgKzEsMjEgQEAKPiA+ID4gPiDCoEJDTTI4MzUgUFdNIGNvbnRyb2xs
+ZXIgKFJhc3BiZXJyeSBQaSBjb250cm9sbGVyKQo+ID4gPiA+IAo+ID4gPiA+IMKgUmVxdWlyZWQg
+cHJvcGVydGllczoKPiA+ID4gPiAtLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImJyY20sYmNtMjgz
+NS1wd20iCj4gPiA+ID4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJicmNtLGJjbTI4MzUtcHdt
+IiBvciAiYnJjbSxiY20yODM1LQo+ID4gPiA+IGFuYWxvZy1hdWRpbyIKPiA+ID4gCj4gPiA+IENv
+bXBhdGlibGVzIGFyZSBub3QgZm9yIHNlbGVjdGluZyB1c2FnZSBtb2Rlcy4gWW91IHNob3VsZAo+
+ID4gPiBkZXNjcmliZQo+ID4gPiB0aGUKPiA+ID4gY29ubmVjdGlvbiB0byB0aGUgcHdtIHRoYXQg
+bWFrZXMgaXQgYW4gYXVkaW8gb3V0cHV0IHJhdGhlciB0aGFuCj4gPiA+IGNoYW5nZQo+ID4gPiB0
+aGUgY29tcGF0aWJsZS4KPiA+ID4gCj4gPiAKPiA+IENvb2wsIHRoYXQncyBnb29kIHRvIGtub3cg
+dGhhdCBzb21lb25lIGxldCBtZSBrbm93IGFmdGVyIGFsbCB0aGlzCj4gPiB0aW1lLgo+IAo+IFdl
+bGwsIHRoZXJlIGFyZSBtb3JlIHN1Ym1pdHRlcnMgdGhhbiByZXZpZXdlcnMgYW5kIG1haW50YWlu
+ZXJzIGFuZCB3ZQo+IGhhdmUgdHJhdmVsIGFuZCB2YWNhdGlvbiAoYWthIGxpdmVzKS4KPiAKPiA+
+IMKgQW5kIHBsZWFzZSB0ZWxsIGhvdyBpZiBEVCBub2RlcyBhcmUgYW4gZXhhY3QgZG9jdW1lbnRh
+dGlvbiBvZiB0aGUKPiA+IGhhcmR3YXJlIGhvdyBhcmUgdmlydHVhbGl6ZWQgRFQgbm9kZXMgbGlr
+ZSBmaXJtd2FyZSBnZXR0aW5nIGludG8KPiA+IHRoZQo+ID4gRFRzPwo+IAo+IERUIGlzIHNvZnR3
+YXJlJ3MgdmlldyBvZiB0aGUgaGFyZHdhcmUuIEZpcm13YXJlIHByb3ZpZGVzIGludGVyZmFjZXMK
+PiB0bwo+IHRoZSBPUyBqdXN0IGxpa2UgYSBoL3cgZGV2aWNlIGRvZXMuIEFuZCBqdXN0IGxpa2Ug
+aC93IGRldmljZXMsIHRoZQo+IGZpcm13YXJlIGlzIG5vdCBkaXNjb3ZlcmFibGUgYW5kIG5lZWRz
+IHRvIGJlIGRlc2NyaWJlZC4gT3JpZ2luYWxseSwKPiBEVAo+IHdhcyB0aGUgZmlybXdhcmUncyBp
+bnRlcmZhY2UgdG8gdGhlIE9TIHdpdGggT3BlbkZpcm13YXJlLgo+IAo+IFJvYgoKT0ssIEkgdW5k
+ZXJzdGFuZCBiZXR0ZXIga25vdy4gIFNvIGl0IHNvdW5kcyBsaWtlIHdoYXQgSSByZWFsbHkgd2Fu
+dCB0bwpkbyBpcyBiZSBhYmxlIHRvIGtlZXAgdGhlIGV4aXN0aW5nIERUIGFzIG11Y2ggYXMgcG9z
+c2libGUgYnV0IGxvYWQgYW4KYWx0ZXJuYXRpdmUgZHJpdmVyLiAgIFByZXN1bWFibHkgYXQgdGhl
+IHJlcXVlc3Qgb2YgdGhlIGVuZCB1c2VyIHNvbWUKaG93LgoKSSdtIG5vdCBzdXJlIHNvbWV0aGlu
+ZyBsaWtlIHRoYXQgaXMgc3VwcG9ydGVkIGluIHRoZSBsaW51eCBrZXJuZWwuICBGb3IKdGhpcyBz
+cGVjaWZpYyBleGFtcGxlLCBJIGRvbid0IGtub3cgb2YgYW55IHJlYXNvbiBJIGNvdWxkbid0IHdy
+aXRlIGEKcmVwbGFjZW1lbnQgZHJpdmVyIGZvciB0aGUgZXhpc3RpbmcgUFdNIGNvbnRyb2wgdGhh
+dCBkb2VzIGJvdGggYXVkaW8KYW5kIHN0YW5kYXJkIFBXTSwgYnV0IEkndmUgaGVhcmQgcmVwbGFj
+aW5nIGV4aXN0aW5nIGRyaXZlcnMgaXMgcmVhbGx5CmFjY2VwdGVkIGFuZCBoYXZpbmcgYWx0ZXJu
+YXRpdmUgZHJpdmVycyBpc24ndCBzb21ldGhpbmcgdGhhdCdzCnN1cHBvcnRlZC4KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGlu
+ZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXBy
+b2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
