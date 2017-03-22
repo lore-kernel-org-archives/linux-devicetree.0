@@ -1,60 +1,63 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v8 3/3] ARM: dts: imx6q-icore: Add touchscreen node
-Date: Thu, 23 Mar 2017 00:35:18 +0530
-Message-ID: <1490209518-20790-3-git-send-email-jagan@openedev.com>
-References: <1490209518-20790-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1490209518-20790-1-git-send-email-jagan@openedev.com>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Domenico Acri <domenico.acri@engicam.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: sun8i: v3s: add LRADC device node
+Date: Wed, 22 Mar 2017 20:22:21 +0100
+Message-ID: <20170322192221.yhtk6qmzqka4vssd@lukather>
+References: <20170317154343.39921-1-icenowy@aosc.xyz>
+ <20170317154343.39921-2-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qrs2aqduen5qwjgq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6E5ZPDAKGQEVBH4F4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170317154343.39921-2-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
 
-max11801 touchscreen on Engicam iCoreM6 Quad module is
-connected via i2c1, so add max11801: touchscreen@48 on i2c1.
+--qrs2aqduen5qwjgq
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Domenico Acri <domenico.acri@engicam.com>
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v8:
-- Use IRQ_TYPE_EDGE_FALLING for interrupt trigger type. 
-Changes for v7:
-- add vendor prefix as maxim
-Changes for v6:
-- Replace the lable and name of the node
-   ts: max11801 => max11801: touchscreen@48
-Changes for v5:
-- Newly added patch
+On Fri, Mar 17, 2017 at 11:43:41PM +0800, Icenowy Zheng wrote:
+> Allwinner V3s features a LRADC like the ones in older SoCs.
+> 
+> Add a device tree node for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-v3s.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
+> index 71075969e5e6..77bbf5ff9548 100644
+> --- a/arch/arm/boot/dts/sun8i-v3s.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+> @@ -238,6 +238,13 @@
+>  			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+>  
+> +		lradc: lradc@01c22800 {
 
- arch/arm/boot/dts/imx6q-icore.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+The node name should reflect the class of the device, so something like adc@..
 
-diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
-index 73f34d1..5613dd9 100644
---- a/arch/arm/boot/dts/imx6q-icore.dts
-+++ b/arch/arm/boot/dts/imx6q-icore.dts
-@@ -58,6 +58,15 @@
- 	status = "okay";
- };
- 
-+&i2c1 {
-+	max11801: touchscreen@48 {
-+		compatible = "maxim,max11801";
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
+> +			compatible = "allwinner,sun4i-a10-lradc-keys";
+
+Please put a SoC-specific compatible there.
+
+Thanks!
+Maxime
+
 -- 
-1.9.1
-
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--qrs2aqduen5qwjgq--
