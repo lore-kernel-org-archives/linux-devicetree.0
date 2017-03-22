@@ -1,51 +1,106 @@
-From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v2 0/5] STM32 Independant watchdog
-Date: Wed, 22 Mar 2017 15:12:49 +0100
-Message-ID: <1490191974-29722-1-git-send-email-yannick.fertre@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 00/53] mtd: nand: denali: 2nd round of Denali NAND IP patch bomb
+Date: Wed, 22 Mar 2017 23:07:07 +0900
+Message-ID: <1490191680-14481-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: laurent.monat@idquantique.com, thorsten.christiansson@idquantique.com, Enrico Jorns <ejo@pengutronix.de>, Jason Roberts <jason.e.roberts@intel.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@at>
 List-Id: devicetree@vger.kernel.org
 
-Version 2:
-- Add commit messages
 
-Version 1:
-- Initial commit
+It took a couple months to update this series, but finally here is v2.
+(v1: https://lkml.org/lkml/2016/11/26/144 )
 
-The purpose of this set of patches is to add a new watchdog driver for
-stm32f429.
-This driver was developed and tested on evaluation board stm32429i.
+This driver includes many problems.
 
-Yannick Fertre (5):
-  dt-bindings: Document STM32 IWDG bindings
-  drivers: watchdog: Add STM32 IWDG driver
-  ARM: dts: stm32: Add watchdog support for STM32F429 SoC
-  ARM: dts: stm32: Add watchdog support for STM32F429 eval board
-  ARM: configs: Add watchdog support in STM32 defconfig
+One of the biggest one is a bunch of hard-coded parameters.  This IP
+has many parameters that can be customized when a delivery RTL is
+generated.  However, this driver was upstreamed by Intel, with
+Intel parameters hard-coded.  Later, Altera added denali_dt.c to use
+this driver for embedded boards, but they did not fix the code in
+denali.c  So, this driver has never worked.  Even some DT bindings
+actually turned out wrong.
 
- .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  15 ++
- arch/arm/boot/dts/stm32429i-eval.dts               |   4 +
- arch/arm/boot/dts/stm32f429.dtsi                   |   9 +-
- arch/arm/configs/stm32_defconfig                   |   1 +
- drivers/watchdog/Kconfig                           |  11 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/stm32_iwdg.c                      | 289 +++++++++++++++++++++
- 7 files changed, 329 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
- create mode 100644 drivers/watchdog/stm32_iwdg.c
+There are more problems: [1] The driver just retrieves the OOB area as-is
+whereas the controller uses syndrome page layout. [2] Many NAND chip
+specific parameters are hard-coded in the driver. [3] ONFi devices are
+not working  [4] It can not read Bad Block Marker
+
+This patch series intends to solve those problems.
+
+Since v1, here are more fixes/improvements:
+ - Fix raw/oob callbacks for syndrome page layout
+ - Implement setup_data_interface() callback
+ - Fix/implement more commands for ONFi devices
+ - Allow to skip the driver internal bounce buffer
+ - Support PIO in case DMA is not supported
+ - Switch from ->cmdfunc over to ->cmd_ctrl
+
+
+Masahiro Yamada (53):
+  mtd: nand: allow to set only one of ECC size and ECC strength from DT
+  mtd: nand: use read_oob() instead of cmdfunc() for bad block check
+  mtd: nand: denali: remove unused CONFIG option and macros
+  mtd: nand: denali: remove redundant define of BANK(x)
+  mtd: nand: denali: remove more unused struct members
+  mtd: nand: denali: fix comment of denali_nand_info::flash_mem
+  mtd: nand: denali: consolidate INTR_STATUS__* and INTR_EN__* macros
+  mtd: nand: denali: introduce capability flag
+  mtd: nand: denali: use int where no reason to use fixed width variable
+  mtd: nand: denali: fix erased page checking
+  mtd: nand: denali: fix bitflips calculation in handle_ecc()
+  mtd: nand: denali: support HW_ECC_FIXUP capability
+  mtd: nand: denali_dt: enable HW_ECC_FIXUP for Altera SOCFPGA variant
+  mtd: nand: denali: support 64bit capable DMA engine
+  mtd: nand: denali_dt: remove dma-mask DT property
+  mtd: nand: denali_dt: use pdev instead of ofdev for platform_device
+  mtd: nand: denali: allow to override revision number
+  mtd: nand: denali: use nand_chip to hold frequently accessed data
+  mtd: nand: denali: call nand_set_flash_node() to set DT node
+  mtd: nand: denali: do not set mtd->name
+  mtd: nand: denali: move multi device fixup code to a helper function
+  mtd: nand: denali: simplify multi device fixup code
+  mtd: nand: denali: set DEVICES_CONNECTED 1 if not set
+  mtd: nand: denali: remove meaningless writes to read-only registers
+  mtd: nand: denali: remove unnecessary writes to ECC_CORRECTION
+  mtd: nand: denali: support 1024 byte ECC step size
+  mtd: nand: denali: avoid hard-coding ecc.strength and ecc.bytes
+  mtd: nand: denali: support "nand-ecc-strength" DT property
+  mtd: nand: denali: remove Toshiba and Hynix specific fixup code
+  mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
+  mtd: nand: denali: set NAND_ECC_CUSTOM_PAGE_ACCESS
+  mtd: nand: denali: do not propagate NAND_STATUS_FAIL to waitfunc()
+  mtd: nand: denali: use BIT() and GENMASK() for register macros
+  mtd: nand: denali: remove unneeded find_valid_banks()
+  mtd: nand: denali: handle timing parameters by setup_data_interface()
+  mtd: nand: denali: remove meaningless pipeline read-ahead operation
+  mtd: nand: denali: rework interrupt handling
+  mtd: nand: denali: fix NAND_CMD_STATUS handling
+  mtd: nand: denali: fix NAND_CMD_PARAM handling
+  mtd: nand: do not check R/B# for CMD_READID in nand_command(_lp)
+  mtd: nand: do not check R/B# for CMD_SET_FEATURES in nand_command(_lp)
+  mtd: nand: denali: switch over to cmd_ctrl instead of cmdfunc
+  mtd: nand: denali: fix bank reset function
+  mtd: nand: denali: use interrupt instead of polling for bank reset
+  mtd: nand: denali: propagate page to helpers via function argument
+  mtd: nand: denali: merge struct nand_buf into struct denali_nand_info
+  mtd: nand: denali: use flag instead of register macro for direction
+  mtd: nand: denali: fix raw and oob accessors for syndrome page layout
+  mtd: nand: denali: support hardware-assisted erased page detection
+  mtd: nand: allocate aligned buffers if NAND_OWN_BUFFERS is unset
+  mtd: nand: denali: skip driver internal bounce buffer when possible
+  mtd: nand: denali: use non-managed kmalloc() for DMA buffer
+  mtd: nand: denali: enable bad block table scan
+
+ .../devicetree/bindings/mtd/denali-nand.txt        |   24 +-
+ drivers/mtd/nand/Kconfig                           |   11 -
+ drivers/mtd/nand/denali.c                          | 2073 +++++++++-----------
+ drivers/mtd/nand/denali.h                          |  453 ++---
+ drivers/mtd/nand/denali_dt.c                       |  104 +-
+ drivers/mtd/nand/denali_pci.c                      |   10 +-
+ drivers/mtd/nand/nand_base.c                       |   78 +-
+ 7 files changed, 1278 insertions(+), 1475 deletions(-)
 
 -- 
-1.9.1
+2.7.4
