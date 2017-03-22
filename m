@@ -1,18 +1,27 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 Subject: Re:[PATCH 01/16] arm: dts: add clock controller device nodes
-Date: Wed, 22 Mar 2017 16:04:25 +0800
-Message-ID: <1490169865-12993-1-git-send-email-sean.wang@mediatek.com>
+Date: Wed, 22 Mar 2017 16:16:01 +0800
+Message-ID: <1490170561-13358-1-git-send-email-sean.wang@mediatek.com>
 References: <1485170975-51813-2-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485170975-51813-2-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org
-Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485170975-51813-2-git-send-email-john@phrozen.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: john@phrozen.org
+Cc: devicetree@vger.kernel.org, sean.wang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
 Hi John,
 
@@ -22,7 +31,7 @@ Some nitpicking below.
 >also cleans up two oscillators that provide clocks for MT7623. Switch the uart clocks to the real ones 
 >while at it.
 >
->Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+>Signed-off-by: John Crispin <john@phrozen.org>
 >---
 > arch/arm/boot/dts/mt7623.dtsi |   60 ++++++++++++++++++++++++++++++++++-------
 > 1 file changed, 51 insertions(+), 9 deletions(-)
@@ -175,9 +184,5 @@ duplicated items which seems wrong to type
 
 _______________________________________________
 Linux-mediatek mailing list
-Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Linux-mediatek@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-mediatek
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
