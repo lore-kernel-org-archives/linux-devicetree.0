@@ -1,48 +1,107 @@
-From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v1 0/5] STM32 Independant watchdog
-Date: Wed, 22 Mar 2017 14:36:21 +0100
-Message-ID: <1490189786-19232-1-git-send-email-yannick.fertre@st.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
+Date: Wed, 22 Mar 2017 14:45:07 +0100
+Message-ID: <20170322144507.4d80d2cc@bbrezillon>
+References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
+        <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8a171dacd20c45bd8285ecc5dbe8854a-aBoyCxvc2dBaXkNJqdKpEhSpLNRU/VIH@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Version 1:
-- Initial commit
+Hi Bean,
 
-The purpose of this set of patches is to add a new watchdog driver for
-stm32f429.
-This driver was developed and tested on evaluation board stm32429i.
+On Wed, 22 Mar 2017 13:20:04 +0000
+"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
 
-Yannick Fertre (5):
-  dt-bindings: Document STM32 IWDG bindings
-  drivers: watchdog: Add STM32 IWDG driver
-  ARM: dts: stm32ap: Add watchdog support for STM32F429 SoC
-  ARM: dts: stm32ap: Add watchdog support for STM32F429 eval board
-  ARM: configs: Add watchdog support in STM32 defconfig
+> >+micron_nand_read_page_on_die_ecc(struct mtd_info *mtd, struct nand_chip
+> >*chip,
+> >+                                                         uint8_t *buf, int oob_required,
+> >+                                                         int page)
+> >+{
+> >+             int status;
+> >+             int max_bitflips = 0;
+> >+
+> >+             micron_nand_on_die_ecc_setup(chip, true);
+> >+
+> >+             chip->cmdfunc(mtd, NAND_CMD_READ0, 0x00, page);
+> >+             chip->cmdfunc(mtd, NAND_CMD_STATUS, -1, -1);
+> >+             status = chip->read_byte(mtd);
+> >+             if (status & NAND_STATUS_FAIL)
+> >+                           mtd->ecc_stats.failed++;
+> >+             /*
+> >+             * The internal ECC doesn't tell us the number of bitflips
+> >+             * that have been corrected, but tells us if it recommends to
+> >+             * rewrite the block. If it's the case, then we pretend we had
+> >+             * a number of bitflips equal to the ECC strength, which will
+> >+             * hint the NAND core to rewrite the block.
+> >+             */
+> >+             else if (status & NAND_STATUS_WRITE_RECOMMENDED)
+> >+                           max_bitflips = chip->ecc.strength;
+> >+
+> >+             chip->cmdfunc(mtd, NAND_CMD_READ0, -1, -1);
+> >+
+> >+             nand_read_page_raw(mtd, chip, buf, oob_required, page);
+> >+
+> >+             micron_nand_on_die_ecc_setup(chip, false);
+> >+
+> >+             return max_bitflips;
+> >+}  
+> 
+> 
+> Hi, 
+> Let me give you some information, hopefully you can do some modification based on above codes.
+> 
+> I noticed that this patches are based on MT29F1G08ABADAWP SLC NAND, it is our 60s 34nm SLC NAND.
+> So far, we have 2 series SLC NAND with implementations of on die ECC.
+> 1. M79A for all 25nm (70series) SLC NAND with on-die ECC (M78A, M79A, and future design M70A)
+> 2. M60A for all 34nm (60series) SLC NAND with on-die ECC
 
- .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  15 ++
- arch/arm/boot/dts/stm32429i-eval.dts               |   4 +
- arch/arm/boot/dts/stm32f429.dtsi                   |   9 +-
- arch/arm/configs/stm32_defconfig                   |   1 +
- drivers/watchdog/Kconfig                           |  11 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/stm32_iwdg.c                      | 289 +++++++++++++++++++++
- 7 files changed, 329 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
- create mode 100644 drivers/watchdog/stm32_iwdg.c
+Do you have an easy way to differentiate those 2 generations of chip,
+or should we base our detection on the model name provided in the ONFI
+parameter page?
 
--- 
-1.9.1
+> 
+> NAND_STATUS_FAIL:
+> For the both of series SLC NAND with on-die ECC, SR bit 0 (NAND_STATUS_FAIL) indicates an uncorrectable read fail,
+> data is lost, no recovery possible, unless we have software additional protection, the block is not necessarily
+> bad but the data is lost.
+> 
+> NAND_STATUS_WRITE_RECOMMENDED:
+> 
+> For the NAND_STATUS_WRITE_RECOMMENDED, it only works on 60s NAND, it is 4 bit ECC, the status register only
+> indicates if there is 0 or 1-4 correctable error bits. We don't want to trigger refresh if only 1 or 2 bits fail.
+> the base refresh is that if there 3 or 4 bitflips. But unfortunately we can't get failed bit count trough read status register. 
+> SW workaround proposal:
+> 1. If SR bit 3 is set to 1 it means 1~4 bitflips and correctable.
+> 2. Read out the page with ECC ON
+> 3. Read out the page with ECC OFF
+> 4. Compare the data
+> 5. Count the number of bitflips for the sectors (there are 4 ECC sectors)
+> 6. if 3 or more fail bits, trigger fresh. 
+> I know this is not good solution, but if as long as NAND_STATUS_WRITE_RECOMMENDED is set, and trigger refresh,
+> this will definitely increase NAND PE cycle.
+
+We discussed that with Thomas when developing the solution. I suggested
+to first go for a simple solution even if it implies unneeded PE
+cycles when bitflips are detected, but maybe I was wrong. In any case,
+it shouldn't be to hard to do what you suggest.
+
+> 
+> For the 70s, it is 8 bits on-die ECC, the status register can report 7-8 bitflips (refresh recommended), 4-6 bitflips and 1-3 bitflips.
+> So we can trigger refresh according to its bitflips status.
+
+That's good news!
+
+Thanks for your feedback.
+
+Boris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
