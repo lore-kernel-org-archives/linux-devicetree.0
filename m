@@ -1,79 +1,34 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 02/12] ARM: dts: imx6ul-isiot: Add backlight support for lcdif
-Date: Wed, 22 Mar 2017 23:18:07 +0530
-Message-ID: <1490204897-14525-3-git-send-email-jagan@openedev.com>
-References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490204897-14525-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: Document rk3399 Gru/Kevin
+Date: Wed, 22 Mar 2017 10:56:37 -0700
+Message-ID: <20170322175636.GA98450@google.com>
+References: <20170320235344.126298-1-briannorris@chromium.org>
+ <20170320235344.126298-2-briannorris@chromium.org>
+ <3700058.o6cBinDvsr@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3700058.o6cBinDvsr@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Barber <smbarber@chromium.org>, linux-arm-kernel@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+On Wed, Mar 22, 2017 at 10:01:00AM +0100, Heiko Stuebner wrote:
+> Am Montag, 20. März 2017, 16:53:41 CET schrieb Brian Norris:
+> > Gru is a base dev board for a family of devices, including Kevin. Both
+> > utilize Rockchip RK3399, and they share much of their design.
+> > 
+> > Signed-off-by: Brian Norris <briannorris@chromium.org>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> 
+> applied for 4.12, after adding a "(Samsung Chromebook Plus)" hint, as that may 
+> help people identifying the correct dts and also is public knowledge (some 
+> blogs but also /proc/device-tree/compatible on the device itself).
 
-This patch add support for lcdif backlight on Is.IoT MX6UL
-variant boards.
+Oh, thanks. There wasn't a public name when I first started sending this
+series :)
 
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- arch/arm/boot/dts/imx6ul-isiot.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 0b43699..5ccc3df 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -52,6 +52,29 @@
- 	chosen {
- 		stdout-path = &uart1;
- 	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm8 0 100000>;
-+		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
-+				     10 11 12 13 14 15 16 17 18 19
-+				     20 21 22 23 24 25 26 27 28 29
-+				     30 31 32 33 34 35 36 37 38 39
-+				     40 41 42 43 44 45 46 47 48 49
-+				     50 51 52 53 54 55 56 57 58 59
-+				     60 61 62 63 64 65 66 67 68 69
-+				     70 71 72 73 74 75 76 77 78 79
-+				     80 81 82 83 84 85 86 87 88 89
-+				     90 91 92 93 94 95 96 97 98 99
-+				    100>;
-+		default-brightness-level = <100>;
-+	};
-+};
-+
-+&pwm8 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm8>;
-+	status = "okay";
- };
- 
- &uart1 {
-@@ -72,6 +95,12 @@
- };
- 
- &iomuxc {
-+	pinctrl_pwm8: pwm8grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET1_RX_ER__PWM8_OUT   0x110b0
-+		>;
-+	};
-+
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
- 			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Brian
