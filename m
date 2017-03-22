@@ -1,432 +1,545 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] pinctrl: Renesas RZ/A1 pin and gpio controller
-Date: Wed, 22 Mar 2017 11:26:58 +0100
-Message-ID: <CAMuHMdW=MKvjXOXOAL7LE7=R1v4jWGko6mMq_r_u9PRqYC2w2Q@mail.gmail.com>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org> <1490026491-21742-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: Re: [PATCH v2 4/6] arm64: dts: rockchip: add core dtsi file for RK3328
+ SoCs
+Date: Wed, 22 Mar 2017 18:23:56 +0800
+Message-ID: <58D250BC.4040609@rock-chips.com>
+References: <1489670244-13328-1-git-send-email-cl@rock-chips.com>
+ <1489670244-13328-5-git-send-email-cl@rock-chips.com>
+ <14610453.rKm3MBREMz@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490026491-21742-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <14610453.rKm3MBREMz@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?windows-1252?Q?Heiko_St=FCbner?= <heiko@sntech.de>, cl@rock-chips.com
+Cc: mark.rutland@arm.com, wsa@the-dreams.de, linux-iio@vger.kernel.org, catalin.marinas@arm.com, shawn.lin@rock-chips.com, will.deacon@arm.com, kever.yang@rock-chips.com, dianders@chromium.org, yamada.masahiro@socionext.com, tony.xie@rock-chips.com, linux-i2c@vger.kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, zhengxing@rock-chips.com, khilman@baylibre.com, linux-rockchip@lists.infradead.org, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, paweljarosz3691@gmail.com, arnd@arndb.de, yhx@rock-chips.com, knaack.h@gmx.de, robh+dt@kernel.org, matthias.bgg@gmail.com, rocky.hao@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, david.wu@rock-chips.com, fabio.estevam@nxp.com, andy.yan@rock-chips.com, akpm@linux-foundation.org, shawnguo@kernel.org, afaerber@suse.de, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
 
-On Mon, Mar 20, 2017 at 5:14 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> Add combined gpio and pin controller driver for Renesas RZ/A1
-> r7s72100 SoC.
+
+On 03/21/2017 04:55 PM, Heiko St=FCbner wrote:
+> Hi,
 >
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-rza1.c
-
-> +/*
-> + * This pincontroller/gpio combined driver support Renesas devices of RZ/A1
-> + * family.
-> + * This includes SoCs which are sub- or super- sets of this particular line,
-> + * as RZ/A1H (r7s721000), RZ/A1M (r7s721001) and RZ/A1L (r7s721002) are.
-
-RZ/A1M = r7s721010, RZ/A1L = r7s721020
-
-> +#define RZA1_ADDR(mem, reg, port)      ((mem) + (reg) + ((port) * 4))
-
-
-> +
-> +#define RZA1_NPORTS                    12
-> +#define RZA1_PINS_PER_PORT             16
-> +#define RZA1_NPINS                     (RZA1_PINS_PER_PORT * RZA1_NPORTS)
-> +#define RZA1_PIN_TO_PORT(pin)          ((pin) / RZA1_PINS_PER_PORT)
-> +#define RZA1_PIN_TO_OFFSET(pin)                ((pin) % RZA1_PINS_PER_PORT)
-> +
-> +/*
-> + * Be careful here: the pin configuration subnodes in device tree enumerates
-
-enumerate
-
-> + * alternate functions from 1 to 8; subtract 1 before using macros so to match
-> + * registers configuration which expects numbers from 0 to 7 instead.
-
-register configuration
-
-> + */
-> +#define MUX_FUNC_OFFS                  3
-> +#define MUX_FUNC_MASK                  (BIT(MUX_FUNC_OFFS) - 1)
-> +#define MUX_FUNC_PFC_MASK              BIT(0)
-> +#define MUX_FUNC_PFCE_MASK             BIT(1)
-> +#define MUX_FUNC_PFCEA_MASK            BIT(2)
-> +#define MUX_CONF_BIDIR                 BIT(0)
-> +#define MUX_CONF_SWIO_INPUT            BIT(1)
-> +#define MUX_CONF_SWIO_OUTPUT           BIT(2)
-> +
-> +/**
-> + * rza1_pin_conf - describes a pin position, id, mux config and output value
-> + *
-> + * Use uint32_t to match types used in of_device nodes argument lists.
-> + *
-> + * @id: the pin identifier from 0 to RZA1_NPINS
-> + * @port: the port where pin sits on
-> + * @offset: pin offset in the port
-> + * @mux: alternate function configuration settings
-> + * @value: output value to set the pin to
-> + */
-> +struct rza1_pin_conf {
-> +       uint32_t id;
-> +       uint32_t port;
-> +       uint32_t offset;
-> +       uint32_t mux_conf;
-> +       uint32_t value;
-
-In the kernel, we tend to use u32 instead of uint32_t.
-But many of these fields can be smaller than 32 bits, right, saving some
-memory (important when running with built-in RAM only).
-
-> +/**
-> + * rza1_pinctrl - RZ pincontroller device
-> + *
-> + * @dev: parent device structure
-> + * @mutex: protect [pinctrl|pinmux]_generic functions
-> + * @base: logical address base
-> + * @nports: number of pin controller ports
-> + * @ports: pin controller banks
-> + * @ngpiochips: number of gpio chips
-> + * @gpio_ranges: gpio ranges for pinctrl core
-> + * @pins: pin array for pinctrl core
-> + * @desc: pincontroller desc for pinctrl core
-> + * @pctl: pinctrl device
-> + */
-> +struct rza1_pinctrl {
-> +       struct device *dev;
-> +
-> +       struct mutex mutex;
-> +
-> +       void __iomem *base;
-> +
-> +       unsigned int nport;
-> +       struct rza1_port *ports;
-> +
-> +       unsigned int ngpiochips;
-> +
-> +       struct pinctrl_gpio_range *gpio_ranges;
-> +       struct pinctrl_pin_desc *pins;
-> +       struct pinctrl_desc desc;
-> +       struct pinctrl_dev *pctl;
-
-It's a good idea not to mix pointers and integers, as the pointers will
-be 64-bit on 64-bit platforms, leading to gaps due to alignment rules.
-Not super-important here, as (for now) this driver is meant for 32-bit SoCs.
-
-> +/**
-> + * rza1_set_bit() - un-locked set/clear a single bit in pin configuration
-> + *                 registers
-> + */
-> +static inline void rza1_set_bit(const struct rza1_port *port,
-> +                               unsigned int reg, unsigned int offset,
-> +                               bool set)
-
-I think "reg" and "set" still fit on the previous lines (many more cases
-in other functions).
-
-I'd call "offset" "bit" (and "reg" "offset"?)
-
-> +{
-> +       void __iomem *mem = RZA1_ADDR(port->base, reg, port->id);
-
-I think this would be easier to read without using the RZA1_ADDR() macro.
-
-> +       u16 val = ioread16(mem);
-> +
-> +       if (set)
-> +               val |= BIT(offset);
-> +       else
-> +               val &= ~BIT(offset);
-> +
-> +       iowrite16(val, mem);
-> +}
-> +
-> +static inline int rza1_get_bit(struct rza1_port *port,
-> +                              unsigned int reg, unsigned int offset)
-> +{
-> +       void __iomem *mem = RZA1_ADDR(port->base, reg, port->id);
-> +
-> +       return ioread16(mem) & BIT(offset);
-
-Same comments as for rza1_set_bit().
-
-> +}
-> +
-> +/**
-> + * rza1_pin_reset() - reset a pin to default initial state
-> + *
-> + * Reset pin state disabling input buffer and bi-directional control,
-> + * and configure it as input port.
-> + * Note that pin is now configured with direction as input but with input
-> + * buffer disabled. This implies the pin value cannot be read in this state.
-> + *
-> + * @port: port where pin sits on
-> + * @offset: pin offset
-> + */
-> +static void rza1_pin_reset(struct rza1_port *port,
-> +                          unsigned int offset)
-
-The above fits on a single line.
-
-"pin" instead of "offset"?
-
-> +{
-> +       spin_lock(&port->lock);
-
-spin_lock_irqsave()? (everywhere)
-
-> +       rza1_set_bit(port, PIBC_REG, offset, 0);
-> +       rza1_set_bit(port, PBDC_REG, offset, 0);
-> +
-> +       rza1_set_bit(port, PM_REG, offset, 1);
-> +       rza1_set_bit(port, PMC_REG, offset, 0);
-> +       rza1_set_bit(port, PIPC_REG, offset, 0);
-> +       spin_unlock(&port->lock);
-
-spin_unlock_irqrestore()? (everywhere)
-
-> +}
-> +
-> +static inline int rza1_pin_get_direction(struct rza1_port *port,
-> +                                        int offset)
-
-The above fits on a single line.
-
-"pin" instead of "offset" (many more below)?
-
-> +/**
-> + * rza1_pin_conf_validate() - make sure a single bit it set in mux_conf mask
-
-is set
-
-> + */
-> +static inline int rza1_pin_conf_validate(u8 mux_conf)
-> +{
-> +       do {
-> +               if (mux_conf & BIT(0))
-> +                       break;
-> +       } while ((mux_conf >>= 1));
-> +
-> +       return (mux_conf >> 1);
-
-Please study <linux/bitops.h> to find a better way to do this ;-)
-
-> +/**
-> + * rza1_gpio_get() - read a gpio pin value
-> + *
-> + * Read gpio pin value through PPR register.
-> + * Requires bi-directional mode to work when reading value of a pin
-
-the value
-
-> + * in output mode
-
-
-> +/**
-> + * rza1_pinmux_set() - retrieve pins from a group and apply them mux settings
-
-their
-
-> + *
-> + * @pctldev: pin controller device
-> + * @selector: function selector
-> + * @group: group selector
-> + */
-> +static int rza1_pinmux_set(struct pinctrl_dev *pctldev, unsigned int selector,
-> +                          unsigned int group)
-> +{
-> +       int i;
-> +       struct group_desc *grp;
-> +       struct function_desc *func;
-> +       struct rza1_pin_conf *pin_confs;
-> +       struct rza1_pinctrl *rza1_pctl = pinctrl_dev_get_drvdata(pctldev);
-
-Reverse Christmas tree ordering (longest line first)?
-
-
-
-> +/**
-> + * rza1_parse_pmx_function() - parse and register a pin mux function
-> + *
-> + * Pins for RZ SoC pin controller described by "renesas-pins" property.
-> + *
-> + * First argument in the list identifies the pin, while the second one
-> + * describes the requested alternate function number and additional
-> + * configuration parameter to be applied to the selected function.
-> + *
-> + * @rza1_pctl: RZ/A1 pin controller device
-> + * @np: of pmx sub-node
-> + */
-> +static int rza1_parse_pmx_function(struct rza1_pinctrl *rza1_pctl,
-> +                                  struct device_node *np)
-> +{
-> +       int ret;
-> +       int of_pins;
-
-npins?
-
-> +       unsigned int i;
-> +       unsigned int *grpins;
-> +       const char *grpname;
-> +       const char **fngrps;
-> +       struct rza1_pin_conf *pin_confs;
-> +       struct pinctrl_dev *pctldev = rza1_pctl->pctl;
-> +       char const *prop_name = "renesas,pins";
-
-const char *prop_name
-
-Reverse Christmas tree ordering (longest line first)? (more below)
-
-> +
-> +       of_pins = pinctrl_count_index_with_args(np, prop_name);
-> +       if (of_pins <= 0) {
-> +               dev_err(rza1_pctl->dev, "Missing %s property\n", prop_name);
-> +               return -ENOENT;
-> +       }
-> +
-> +       /*
-> +        * Functions are made of 1 group only;
-> +        * in facts, functions and groups are identical for this pin controller
-
-in fact
-
-> +        * except that functions carry an array of per-pin configurations
-
-configuration
-
-> +        * settings.
-> +        */
-> +       pin_confs = devm_kcalloc(rza1_pctl->dev, of_pins, sizeof(*pin_confs),
-> +                                GFP_KERNEL);
-> +       grpins = devm_kcalloc(rza1_pctl->dev, of_pins, sizeof(*grpins),
-> +                             GFP_KERNEL);
-> +       fngrps = devm_kzalloc(rza1_pctl->dev, sizeof(*fngrps), GFP_KERNEL);
-> +
-> +       if (!pin_confs || !grpins || !fngrps)
-> +               return -ENOMEM;
-> +
-> +       /* Collect pin positions and mux settings to store them in function */
-> +       for (i = 0; i < of_pins; ++i) {
-> +               struct rza1_pin_conf *pin_conf = &pin_confs[i];
-> +               struct of_phandle_args of_pins_args;
-> +
-> +               ret = pinctrl_parse_index_with_args(np, prop_name, i,
-> +                                                   &of_pins_args);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               if (of_pins_args.args_count < RZA1_PINMUX_OF_ARGS) {
-> +                       dev_err(rza1_pctl->dev,
-> +                               "Wrong arguments number for %s property\n",
-
-number of arguments
-
-
-> +/**
-> + * rza1_parse_gpiochip() - parse and register a gpio chip and pin range
-> + *
-> + * The gpio controller subnode shall provide a "gpio-ranges" list property as
-> + * defined by gpio device tree binding documentation.
-> + * Gpio chips and pin ranges are here collected, but ranges are registered
-> + * later, after pin controller has been registered too. Only gpiochips are
-
-after the pin controller
-
-> + * registered here.
-> + *
-> + * @rza1_pctl: RZ/A1 pin controller device
-> + * @np: of gpio-controller node
-> + * @chip: gpio chip to register to gpiolib
-> + * @range: pin range to register to pinctrl core
-> + */
-> +static int rza1_parse_gpiochip(struct rza1_pinctrl *rza1_pctl,
-> +                              struct device_node *np,
-> +                              struct gpio_chip *chip,
-> +                              struct pinctrl_gpio_range *range)
-> +{
-> +       int ret;
-> +       u32 pinctrl_base;
-> +       unsigned int gpioport;
-> +       struct of_phandle_args of_args;
-> +       const char *list_name = "gpio-ranges";
-> +
-> +       of_parse_phandle_with_fixed_args(np, list_name, 3, 0, &of_args);
-
-This function can fail.
-
-> +
-> +       /*
-> +        * Find out on which port this gpio-chip maps to inspecting the second
-
-by inspecting
-
-> +        * argument of "gpio-ranges" property.
-
-the "gpio-ranges" property.
-
-> +        */
-> +       pinctrl_base = of_args.args[1];
-> +       gpioport = RZA1_PIN_TO_PORT(pinctrl_base);
-> +       if (gpioport > RZA1_NPORTS) {
-> +               dev_err(rza1_pctl->dev,
-> +                       "Invalid values in property %s\n", list_name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       *chip           = rza1_gpiochip_template;
-> +       chip->base      = -1;
-> +       chip->label     = kasprintf(GFP_KERNEL, "%s-%d", np->name, gpioport);
-
-devm_kasprintf()?
-
-"%s-%u"
-
-> +       chip->ngpio     = of_args.args[2];
-> +       chip->of_node   = np;
-> +       chip->parent    = rza1_pctl->dev;
-> +
-> +       range->id       = gpioport;
-> +       range->name     = kasprintf(GFP_KERNEL, "%s-%d", np->name, gpioport);
-
-Reuse chip->label?
-
-
-> +/**
-> + * rza1_pinctrl_register() - Enumerate pins, ports, gpiochips and functions and
-> + *                          register to pinctrl and gpio cores
-> + *
-> + * @rza1_pctl: RZ/A1 pin controller device
-> + */
-> +static int rza1_pinctrl_register(struct rza1_pinctrl *rza1_pctl)
-> +{
-
-> +       for (i = 0; i < RZA1_NPINS; ++i) {
-> +               unsigned int port = RZA1_PIN_TO_PORT(i);
-> +               unsigned int offset = RZA1_PIN_TO_OFFSET(i);
-> +
-> +               pins[i].number = i;
-> +               pins[i].name = kasprintf(GFP_KERNEL, "P%u-%u", port, offset);
-
-devm_kasprintf()
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Am Donnerstag, 16. M=E4rz 2017, 21:17:22 CET schrieb cl@rock-chips.com:
+>> From: Liang Chen <cl@rock-chips.com>
+>>
+>> This patch adds core dtsi file for Rockchip RK3328 SoCs.
+>>
+>> Signed-off-by: Liang Chen <cl@rock-chips.com>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3328.dtsi | 1362
+>> ++++++++++++++++++++++++++++++ 1 file changed, 1362 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> b/arch/arm64/boot/dts/rockchip/rk3328.dtsi new file mode 100644
+>> index 0000000..a92955c
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> @@ -0,0 +1,1362 @@
+>> +/*
+>> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This library is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of t=
+he
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This library is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +#include <dt-bindings/clock/rk3328-cru.h>
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/pinctrl/rockchip.h>
+>> +#include <dt-bindings/soc/rockchip,boot-mode.h>
+>> +#include <dt-bindings/power/rk3328-power.h>
+>> +
+>> +/ {
+>> +	compatible =3D "rockchip,rk3328";
+>> +
+>> +	interrupt-parent =3D <&gic>;
+>> +	#address-cells =3D <2>;
+>> +	#size-cells =3D <2>;
+>> +
+>> +	aliases {
+>> +		serial0 =3D &uart0;
+>> +		serial1 =3D &uart1;
+>> +		serial2 =3D &uart2;
+>> +		i2c0 =3D &i2c0;
+>> +		i2c1 =3D &i2c1;
+>> +		i2c2 =3D &i2c2;
+>> +		i2c3 =3D &i2c3;
+>> +	};
+>> +
+>> +	cpus {
+>> +		#address-cells =3D <2>;
+>
+> #address-cells =3D <1>? You most likely don't need the 2 field cpu regs?
+>
+>> +		#size-cells =3D <0>;
+>> +
+>> +		cpu0: cpu@0 {
+>> +			device_type =3D "cpu";
+>> +			compatible =3D "arm,cortex-a53", "arm,armv8";
+>> +			reg =3D <0x0 0x0>;
+>> +			enable-method =3D "psci";
+>> +			clocks =3D <&cru ARMCLK>;
+>> +		};
+>> +		cpu1: cpu@1 {
+>> +			device_type =3D "cpu";
+>> +			compatible =3D "arm,cortex-a53", "arm,armv8";
+>> +			reg =3D <0x0 0x1>;
+>> +			enable-method =3D "psci";
+>> +		};
+>> +		cpu2: cpu@2 {
+>> +			device_type =3D "cpu";
+>> +			compatible =3D "arm,cortex-a53", "arm,armv8";
+>> +			reg =3D <0x0 0x2>;
+>> +			enable-method =3D "psci";
+>> +		};
+>> +		cpu3: cpu@3 {
+>> +			device_type =3D "cpu";
+>> +			compatible =3D "arm,cortex-a53", "arm,armv8";
+>> +			reg =3D <0x0 0x3>;
+>> +			enable-method =3D "psci";
+>> +		};
+>> +	};
+>
+> amba block here please
+>
+>> +
+>> +	arm-pmu {
+>> +		compatible =3D "arm,cortex-a53-pmu";
+>> +		interrupts =3D <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-affinity =3D <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
+>> +	};
+>> +
+>> +	psci {
+>> +		compatible =3D "arm,psci-1.0";
+>> +		method =3D "smc";
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible =3D "arm,armv8-timer";
+>> +		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+> IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>> +	};
+>> +
+>> +	xin24m: xin24m {
+>> +		compatible =3D "fixed-clock";
+>> +		#clock-cells =3D <0>;
+>> +		clock-frequency =3D <24000000>;
+>> +		clock-output-names =3D "xin24m";
+>> +	};
+>> +
+>
+> [...]
+>
+>> +	wdt: watchdog@ff1a0000 {
+>> +		compatible =3D "snps,dw-wdt";
+>> +		reg =3D <0x0 0xff1a0000 0x0 0x100>;
+>> +		interrupts =3D <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	amba {
+>
+> amba block above arm-pmu please
+>
+>> +		compatible =3D "simple-bus";
+>> +		#address-cells =3D <2>;
+>> +		#size-cells =3D <2>;
+>> +		ranges;
+>> +
+>> +		dmac: dmac@ff1f0000 {
+>> +			compatible =3D "arm,pl330", "arm,primecell";
+>> +			reg =3D <0x0 0xff1f0000 0x0 0x4000>;
+>> +			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&cru ACLK_DMAC>;
+>> +			clock-names =3D "apb_pclk";
+>> +			#dma-cells =3D <1>;
+>> +		};
+>> +	};
+>> +
+>> +	saradc: saradc@ff280000 {
+>> +		compatible =3D "rockchip,rk3328-saradc", "rockchip,rk3399-saradc";
+>> +		reg =3D <0x0 0xff280000 0x0 0x100>;
+>> +		interrupts =3D <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+>> +		#io-channel-cells =3D <1>;
+>> +		clocks =3D <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+>> +		clock-names =3D "saradc", "apb_pclk";
+>> +		resets =3D <&cru SRST_SARADC_P>;
+>> +		reset-names =3D "saradc-apb";
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	cru: clock-controller@ff440000 {
+>> +		compatible =3D "rockchip,rk3328-cru", "rockchip,cru", "syscon";
+>> +		reg =3D <0x0 0xff440000 0x0 0x1000>;
+>> +		rockchip,grf =3D <&grf>;
+>> +		#clock-cells =3D <1>;
+>> +		#reset-cells =3D <1>;
+>> +		assigned-clocks =3D
+>> +			<&cru DCLK_LCDC>, <&cru SCLK_PDM>,
+>> +			<&cru SCLK_RTC32K>, <&cru SCLK_UART0>,
+>> +			<&cru SCLK_UART1>, <&cru SCLK_UART2>,
+>> +			<&cru ACLK_BUS_PRE>, <&cru ACLK_PERI_PRE>,
+>> +			<&cru ACLK_VIO_PRE>, <&cru ACLK_RGA_PRE>,
+>> +			<&cru ACLK_VOP_PRE>, <&cru ACLK_RKVDEC_PRE>,
+>> +			<&cru ACLK_RKVENC>, <&cru ACLK_VPU_PRE>,
+>> +			<&cru SCLK_VDEC_CABAC>, <&cru SCLK_VDEC_CORE>,
+>> +			<&cru SCLK_VENC_CORE>, <&cru SCLK_VENC_DSP>,
+>> +			<&cru SCLK_SDIO>, <&cru SCLK_TSP>,
+>> +			<&cru SCLK_WIFI>, <&cru ARMCLK>,
+>> +			<&cru PLL_GPLL>, <&cru PLL_CPLL>,
+>> +			<&cru ACLK_BUS_PRE>, <&cru HCLK_BUS_PRE>,
+>> +			<&cru PCLK_BUS_PRE>, <&cru ACLK_PERI_PRE>,
+>> +			<&cru HCLK_PERI>, <&cru PCLK_PERI>,
+>> +			<&cru ACLK_VIO_PRE>, <&cru HCLK_VIO_PRE>,
+>> +			<&cru ACLK_RGA_PRE>, <&cru SCLK_RGA>,
+>> +			<&cru ACLK_VOP_PRE>, <&cru ACLK_RKVDEC_PRE>,
+>> +			<&cru ACLK_RKVENC>, <&cru ACLK_VPU_PRE>,
+>> +			<&cru SCLK_VDEC_CABAC>, <&cru SCLK_VDEC_CORE>,
+>> +			<&cru SCLK_VENC_CORE>, <&cru SCLK_VENC_DSP>,
+>> +			<&cru SCLK_EFUSE>, <&cru PCLK_DDR>,
+>> +			<&cru ACLK_GMAC>, <&cru PCLK_GMAC>,
+>> +			<&cru SCLK_RTC32K>, <&cru SCLK_USB3OTG_SUSPEND>;
+>
+> that list is way to long.
+> Device-specific clocks should be inited in their respective device nodes.
+
+Cpll init freq is 1200M, is too high. we need set cpll child clk div =
+
+first,and then set cpll freq.
+After pll init, others clk init freq can inited in their device node.
+
+>
+> Aka sdio clocks in the sdio controller node, video encoder/decoder in the
+> encoder/decoder nodes, efuse, gmac etc etc.
+>
+> Controllers for which you don't have bindings yet, also most likely won't=
+ need
+> their clocks to get adjusted just now.
+>
+> The cru assigned clocks are really only for system-wide shared clocks.
+>
+>> +		assigned-clock-parents =3D
+>> +			<&cru HDMIPHY>, <&cru PLL_APLL>,
+>> +			<&cru PLL_GPLL>, <&xin24m>,
+>> +			<&xin24m>, <&xin24m>;
+>> +		assigned-clock-rates =3D
+>> +			<0>, <61440000>,
+>> +			<0>, <24000000>,
+>> +			<24000000>, <24000000>,
+>> +			<15000000>, <15000000>,
+>> +			<100000000>, <100000000>,
+>> +			<100000000>, <100000000>,
+>> +			<50000000>, <100000000>,
+>> +			<100000000>, <100000000>,
+>> +			<50000000>, <50000000>,
+>> +			<50000000>, <50000000>,
+>> +			<24000000>, <600000000>,
+>> +			<491520000>, <1200000000>,
+>> +			<150000000>, <75000000>,
+>> +			<75000000>, <150000000>,
+>> +			<75000000>, <75000000>,
+>> +			<300000000>, <100000000>,
+>> +			<300000000>, <200000000>,
+>> +			<400000000>, <500000000>,
+>> +			<200000000>, <300000000>,
+>> +			<300000000>, <250000000>,
+>> +			<200000000>, <100000000>,
+>> +			<24000000>, <100000000>,
+>> +			<150000000>, <50000000>,
+>> +			<32768>, <32768>;
+>> +	};
+>> +
+>> +	gmac2io: eth@ff540000 {
+>
+> phandle should be gmac instead?
+> Node name, ethernet@ff540000
+>
+>> +		compatible =3D "rockchip,rk3328-gmac";
+>> +		reg =3D <0x0 0xff540000 0x0 0x10000>;
+>> +		rockchip,grf =3D <&grf>;
+>> +		interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-names =3D "macirq";
+>> +		clocks =3D <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_RX>,
+>> +			 <&cru SCLK_MAC2IO_TX>, <&cru SCLK_MAC2IO_REF>,
+>> +			 <&cru SCLK_MAC2IO_REFOUT>, <&cru ACLK_MAC2IO>,
+>> +			 <&cru PCLK_MAC2IO>;
+>> +		clock-names =3D "stmmaceth", "mac_clk_rx",
+>> +			      "mac_clk_tx", "clk_mac_ref",
+>> +			      "clk_mac_refout", "aclk_mac",
+>> +			      "pclk_mac";
+>> +		resets =3D <&cru SRST_GMAC2IO_A>;
+>> +		reset-names =3D "stmmaceth";
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	gic: interrupt-controller@ff811000 {
+>> +		compatible =3D "arm,gic-400";
+>> +		#interrupt-cells =3D <3>;
+>> +		#address-cells =3D <0>;
+>> +		interrupt-controller;
+>> +		reg =3D <0x0 0xff811000 0 0x1000>,
+>> +		      <0x0 0xff812000 0 0x2000>,
+>> +		      <0x0 0xff814000 0 0x2000>,
+>> +		      <0x0 0xff816000 0 0x2000>;
+>> +		interrupts =3D <GIC_PPI 9
+>> +		      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>> +	};
+>> +
+>> +	pinctrl: pinctrl {
+>> +		compatible =3D "rockchip,rk3328-pinctrl";
+>> +		rockchip,grf =3D <&grf>;
+>> +		#address-cells =3D <2>;
+>> +		#size-cells =3D <2>;
+>> +		ranges;
+>> +
+>> +		gpio0: gpio0@ff210000 {
+>> +			compatible =3D "rockchip,gpio-bank";
+>> +			reg =3D <0x0 0xff210000 0x0 0x100>;
+>> +			interrupts =3D <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&cru PCLK_GPIO0>;
+>> +
+>> +			gpio-controller;
+>> +			#gpio-cells =3D <2>;
+>> +
+>> +			interrupt-controller;
+>> +			#interrupt-cells =3D <2>;
+>> +		};
+>> +
+>> +		gpio1: gpio1@ff220000 {
+>> +			compatible =3D "rockchip,gpio-bank";
+>> +			reg =3D <0x0 0xff220000 0x0 0x100>;
+>> +			interrupts =3D <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&cru PCLK_GPIO1>;
+>> +
+>> +			gpio-controller;
+>> +			#gpio-cells =3D <2>;
+>> +
+>> +			interrupt-controller;
+>> +			#interrupt-cells =3D <2>;
+>> +		};
+>> +
+>> +		gpio2: gpio2@ff230000 {
+>> +			compatible =3D "rockchip,gpio-bank";
+>> +			reg =3D <0x0 0xff230000 0x0 0x100>;
+>> +			interrupts =3D <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&cru PCLK_GPIO2>;
+>> +
+>> +			gpio-controller;
+>> +			#gpio-cells =3D <2>;
+>> +
+>> +			interrupt-controller;
+>> +			#interrupt-cells =3D <2>;
+>> +		};
+>> +
+>> +		gpio3: gpio3@ff240000 {
+>> +			compatible =3D "rockchip,gpio-bank";
+>> +			reg =3D <0x0 0xff240000 0x0 0x100>;
+>> +			interrupts =3D <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&cru PCLK_GPIO3>;
+>> +
+>> +			gpio-controller;
+>> +			#gpio-cells =3D <2>;
+>> +
+>> +			interrupt-controller;
+>> +			#interrupt-cells =3D <2>;
+>> +		};
+>> +
+>> +		pcfg_pull_up: pcfg-pull-up {
+>> +			bias-pull-up;
+>> +		};
+>> +
+>> +		pcfg_pull_down: pcfg-pull-down {
+>> +			bias-pull-down;
+>> +		};
+>> +
+>> +		pcfg_pull_none: pcfg-pull-none {
+>> +			bias-disable;
+>> +		};
+>> +
+>> +		pcfg_pull_none_2ma: pcfg-pull-none-2ma {
+>> +			bias-disable;
+>> +			drive-strength =3D <2>;
+>> +		};
+>> +
+>> +		pcfg_pull_up_2ma: pcfg-pull-up-2ma {
+>> +			bias-pull-up;
+>> +			drive-strength =3D <2>;
+>> +		};
+>> +
+>> +		pcfg_pull_up_4ma: pcfg-pull-up-4ma {
+>> +			bias-pull-up;
+>> +			drive-strength =3D <4>;
+>> +		};
+>> +
+>> +		pcfg_pull_none_4ma: pcfg-pull-none-4ma {
+>> +			bias-disable;
+>> +			drive-strength =3D <4>;
+>> +		};
+>> +
+>> +		pcfg_pull_down_4ma: pcfg-pull-down-4ma {
+>> +			bias-pull-down;
+>> +			drive-strength =3D <4>;
+>> +		};
+>> +
+>> +		pcfg_pull_none_8ma: pcfg-pull-none-8ma {
+>> +			bias-disable;
+>> +			drive-strength =3D <8>;
+>> +		};
+>> +
+>> +		pcfg_pull_up_8ma: pcfg-pull-up-8ma {
+>> +			bias-pull-up;
+>> +			drive-strength =3D <8>;
+>> +		};
+>> +
+>> +		pcfg_pull_none_12ma: pcfg-pull-none-12ma {
+>> +			bias-disable;
+>> +			drive-strength =3D <12>;
+>> +		};
+>> +
+>> +		pcfg_pull_up_12ma: pcfg-pull-up-12ma {
+>> +			bias-pull-up;
+>> +			drive-strength =3D <12>;
+>> +		};
+>> +
+>> +		pcfg_output_high: pcfg-output-high {
+>> +			output-high;
+>> +		};
+>> +
+>> +		pcfg_output_low: pcfg-output-low {
+>> +			output-low;
+>> +		};
+>> +
+>> +		pcfg_input_high: pcfg-input-high {
+>> +			bias-pull-up;
+>> +			input-enable;
+>> +		};
+>> +
+>> +		pcfg_input: pcfg-input {
+>> +			input-enable;
+>> +		};
+>> +
+>> +		i2c0 {
+>> +			i2c0_xfer: i2c0-xfer {
+>> +				rockchip,pins =3D
+>> +					<2 RK_PD0 1 &pcfg_pull_none>,
+>> +					<2 RK_PD1 1 &pcfg_pull_none>;
+>> +			};
+>> +		};
+>> +
+>> +		i2c1 {
+>> +			i2c1_xfer: i2c1-xfer {
+>> +				rockchip,pins =3D
+>> +					<2 RK_PA4 2 &pcfg_pull_none>,
+>> +					<2 RK_PA5 2 &pcfg_pull_none>;
+>> +			};
+>> +		};
+>> +
+>> +		i2c2 {
+>> +			i2c2_xfer: i2c2-xfer {
+>> +				rockchip,pins =3D
+>> +					<2 RK_PB5 1 &pcfg_pull_none>,
+>> +					<2 RK_PB6 1 &pcfg_pull_none>;
+>> +			};
+>> +		};
+>> +
+>> +		i2c3 {
+>> +			i2c3_xfer: i2c3-xfer {
+>> +				rockchip,pins =3D
+>> +					<0 RK_PA5 2 &pcfg_pull_none>,
+>> +					<0 RK_PA6 2 &pcfg_pull_none>;
+>> +			};
+>> +			i2c3_gpio: i2c3-gpio {
+>> +				rockchip,pins =3D
+>> +					<0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>,
+>> +					<0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +			};
+>> +		};
+>> +
+>> +		hdmi_i2c {
+>> +			hdmii2c_xfer: hdmii2c-xfer {
+>> +				rockchip,pins =3D
+>> +					<0 RK_PA5 1 &pcfg_pull_none>,
+>> +					<0 RK_PA6 1 &pcfg_pull_none>;
+>> +			};
+>> +		};
+>> +
+>> +		tsadc {
+>> +			otp_gpio: otp-gpio {
+>> +				rockchip,pins =3D
+>> +					<2 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
+>
+> no need to line -break all these single-pin definitions, there are still =
+enough
+> characters below 80 left :-)
+>
+> Same for all below
+>
+>> +			};
+>> +
+>> +			otp_out: otp-out {
+>> +				rockchip,pins =3D
+>> +					<2 RK_PB5 1 &pcfg_pull_none>;
+>> +			};
+>> +		};
+>> +
+>
+>
+> Heiko
+>
+>
+>
