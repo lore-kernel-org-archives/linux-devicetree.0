@@ -1,92 +1,108 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v2 13/53] mtd: nand: denali_dt: enable HW_ECC_FIXUP for Altera SOCFPGA variant
-Date: Wed, 22 Mar 2017 23:07:20 +0900
-Message-ID: <1490191680-14481-14-git-send-email-yamada.masahiro@socionext.com>
-References: <1490191680-14481-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490191680-14481-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: laurent.monat-1zQW0WpQGTYgLlGVC3PcNw@public.gmane.org, thorsten.christiansson-1zQW0WpQGTYgLlGVC3PcNw@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jason Roberts <jason.e.roberts-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen@at>
+From: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Subject: Re: [15/17] qcom: ipq4019: add cpu operating points for cpufreq
+ support
+Date: Wed, 22 Mar 2017 15:10:49 +0100
+Message-ID: <40277521.UIyJVnYny8@bentobox>
+References: <1458770712-10880-16-git-send-email-mmcclint@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7600287083465387108=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1458770712-10880-16-git-send-email-mmcclint@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthew McClintock <mmcclint@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, john@phrozen.org, qca-upstream.external@qca.qualcomm.com, David Brown <david.brown@linaro.org>, Gopinath Sekar <gsekar@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, andy.gross@linaro.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-There are various customizable parameters, so several variants for
-this IP.  A generic compatible like "denali,denali-nand-dt" is
-useless.  Moreover, there are multiple things wrong with this string.
-(Refer to Rob's comment [1])
+--===============7600287083465387108==
+Content-Type: multipart/signed; boundary="nextPart2867819.Bl46GRiBX1"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-The denali_dt.c was split out and this compatible was added by Altera
-for the SOCFPGA port.  So, replace it with a more specific string.
+--nextPart2867819.Bl46GRiBX1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-The Denali IP on SOCFPGA incorporates the hardware ECC fixup feature.
-So, this capability should be associated with the compatible string.
+On Mittwoch, 23. M=E4rz 2016 17:05:10 CET Matthew McClintock wrote:
+> This adds some operating points for cpu frequeny scaling
+>=20
+> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
+[...]
 
-[1] https://lkml.org/lkml/2016/12/1/450
+I saw that you've created a new version of the patch and it was added to
+different staging/testing [1] trees.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
+But I find it rather odd that Codeaurora uses different settings [3]. Here =
+for=20
+easier comparison:
 
-Changes in v2:
-  - Add caps flag to of_device_id data, not hard-code in driver code
-  - Add Altera-specific compatible.
+setting     | QSDK 1.1.3     | proposed patch
+=2D--------------------------------------------
+clk-latency |         100000 |    256000
+opp0        |     48000(000) |  48000000
+opp1        |    200000(000) | 200000000
+opp2        |    500000(000) | 500000000
+opp3        |    710000(000) | 666000000
 
- Documentation/devicetree/bindings/mtd/denali-nand.txt |  5 +++--
- drivers/mtd/nand/denali_dt.c                          | 14 ++++++++++----
- 2 files changed, 13 insertions(+), 6 deletions(-)
+It looks to me like clk-latency and the opp3 (maximum frequency) are=20
+different. Is the reason for this difference known?
 
-diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index b04d03a..6f4ab4c 100644
---- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -1,7 +1,8 @@
- * Denali NAND controller
- 
- Required properties:
--  - compatible : should be "denali,denali-nand-dt"
-+  - compatible : should be one of the following:
-+      "altr,socfpga-denali-nand"            - for Altera SOCFPGA
-   - reg : should contain registers location and length for data and reg.
-   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
-   - interrupts : The interrupt number.
-@@ -15,7 +16,7 @@ Examples:
- nand: nand@ff900000 {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
--	compatible = "denali,denali-nand-dt";
-+	compatible = "altr,socfpga-denali-nand";
- 	reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
- 	reg-names = "nand_data", "denali_reg";
- 	interrupts = <0 144 4>;
-diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
-index 293ddb8..9577bfd 100644
---- a/drivers/mtd/nand/denali_dt.c
-+++ b/drivers/mtd/nand/denali_dt.c
-@@ -33,11 +33,17 @@ struct denali_dt_data {
- 	unsigned int caps;
- };
- 
--static const struct of_device_id denali_nand_dt_ids[] = {
--		{ .compatible = "denali,denali-nand-dt" },
--		{ /* sentinel */ }
--	};
-+static const struct denali_dt_data denali_socfpga_data = {
-+	.caps = DENALI_CAP_HW_ECC_FIXUP,
-+};
- 
-+static const struct of_device_id denali_nand_dt_ids[] = {
-+	{
-+		.compatible = "altr,socfpga-denali-nand",
-+		.data = &denali_socfpga_data,
-+	},
-+	{ /* sentinel */ }
-+};
- MODULE_DEVICE_TABLE(of, denali_nand_dt_ids);
- 
- static u64 denali_dma_mask;
--- 
-2.7.4
+I've just noticed it because I got an DTB from an ODM which had even
+716000(000) set for opp3.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards,
+	Sven
+
+[1] https://git.lede-project.org/?p=3Dlede/blogic/staging.git;a=3Dblob;f=3D=
+target/linux/ipq806x/patches-4.9/0017-qcom-ipq4019-add-cpu-operating-points=
+=2Dfor-cpufreq-su.patch;h=3D7cbd6a4551bfd968d013164f76897c603f4ae2ff;hb=3D6=
+27e9c2c36839634d987535658a287843a8a9fd6
+[2] https://github.com/chunkeey/LEDE-IPQ40XX/blob/a04cf208fe317074502f7ea81=
+dafa828c89b74bb/target/linux/ipq40xx/patches-4.9/120-qcom-ipq4019-add-cpu-o=
+perating-points-for-cpufreq-su.patch
+[3] https://source.codeaurora.org/quic/qsdk/oss/kernel/linux-msm/tree/arch/=
+arm/boot/dts/qcom-ipq40xx.dtsi?h=3Drelease/date_r1&id=3D461894f071b168c9637=
+95ebfa15d3458b102730a#n768
+--nextPart2867819.Bl46GRiBX1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAljShekACgkQXYcKB8Em
+e0aZ7A/9GL3UYdfRNhpXlzXdovFxWj6301f6Gu+31b9CaSWJHt+LDXPhF1mV/O4y
+79/lcn530xgKPhgc5u8TU5w/dX+e84n0yCXCEpKKMXIoH8+MCSMIsFF2gJVmIwp+
+MrH+iuesdcfX4SboBwgPQv01Rg5P2jVNF6iasKKN9Aev5INrb0dNqsc16Md5h0ks
+UKlTkq/OK2m2xc2MgmM2NkXqhJvzeS3lbH73WitvzDQ7bCB9YltfL2KsVUXiRFL6
+WG9zpYckR0+PvnbgdIQwaKnqyyGYb6yZq6UWmfCL9AqCjGtETV/JWivOOV1r410S
+0PfyAWt/6jWwegQvddOMW58iM1E2TWquxIAfzMFSsfo8ain9GBb/IFEuohJbnSi7
+OzZ+jBz37RuTfzoqb2k7VcadtRGRxcStfo1zZCvBoPvS1oWzOPV5u/vazZ6UUl1Z
+DPU5xdww1BoES59mfIzX+1BrAQRXvoP9Lfk0WfChmRvJRFyXsr500KA9LLAKDsiQ
+/f09fcuPa7QSQE+RTvg/k+cAaz1xrQ3Rjo3B8x2v/OSQ+PdjdaKuMkuIGWIj8igE
+uN5+JL5inob0mpuE2FuTsbs9r9gT5fH0XUlES3x/VnYlbbtyqg134aOyzArzHHhz
+PFTa+5oUdp4vkiD/sp6oLSD/dCdy6NDOfrXjdeVuhMg/4H+IPzs=
+=eudq
+-----END PGP SIGNATURE-----
+
+--nextPart2867819.Bl46GRiBX1--
+
+
+
+--===============7600287083465387108==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7600287083465387108==--
