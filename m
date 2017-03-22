@@ -1,166 +1,253 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: update device tree
- binding for Allwinner PRCM CCUs
-Date: Wed, 22 Mar 2017 21:09:23 +0100
-Message-ID: <20170322200923.tcr7yqnfqj2zk2v7@lukather>
-References: <20170315172808.64011-1-icenowy@aosc.xyz>
- <20170315172808.64011-2-icenowy@aosc.xyz>
- <20170321074117.vdfjynauuuv6fivp@lukather>
- <115431490120542@web34g.yandex.ru>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xisbm6zwhvbrtxfv"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7VTZPDAKGQES5SPVMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <115431490120542-7xDsBygrUg5xpj1cXAZ9Bg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [RESEND PATCH v2 26/53] mtd: nand: denali: support 1024 byte ECC step size
+Date: Thu, 23 Mar 2017 05:07:25 +0900
+Message-ID: <1490213273-8571-27-git-send-email-yamada.masahiro@socionext.com>
+References: <1490213273-8571-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490213273-8571-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: laurent.monat-1zQW0WpQGTYgLlGVC3PcNw@public.gmane.org, thorsten.christiansson-1zQW0WpQGTYgLlGVC3PcNw@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This driver was originally written for the Intel MRST platform with
+several platform specific parameters hard-coded.  Another thing we
+need to fix is the hard-coded ECC step size.  Currently, it is
+defined as follows:
 
---xisbm6zwhvbrtxfv
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  #define ECC_SECTOR_SIZE 512
 
-On Wed, Mar 22, 2017 at 02:22:22AM +0800, Icenowy Zheng wrote:
->=20
->=20
-> 21.03.2017, 15:41, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > On Thu, Mar 16, 2017 at 01:28:04AM +0800, Icenowy Zheng wrote:
-> >> =C2=A0Many Allwinner SoCs after A31 have a CCU in PRCM block.
-> >>
-> >> =C2=A0Give the ones on H3 and A64 compatible strings.
-> >>
-> >> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >> =C2=A0---
-> >> =C2=A0Changes in v2:
-> >> =C2=A0- Add iosc for R_CCU's on H3/A64. (A31, A23 and A33 seem to have=
- different
-> >> =C2=A0=C2=A0=C2=A0clock for mux 3 of ar100 clk. Investgations are need=
-ed for them.)
-> >>
-> >> =C2=A0=C2=A0Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 18=
- +++++++++++++++++-
-> >> =C2=A0=C2=A01 file changed, 17 insertions(+), 1 deletion(-)
-> >>
-> >> =C2=A0diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.t=
-xt b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-> >> =C2=A0index 68512aa398a9..4a4addff595d 100644
-> >> =C2=A0--- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-> >> =C2=A0+++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-> >> =C2=A0@@ -7,9 +7,11 @@ Required properties :
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun8i-a23-ccu"
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun8i-a33-ccu"
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun8i-h3-ccu"
-> >> =C2=A0+ - "allwinner,sun8i-h3-r-ccu"
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun8i-v3s-ccu"
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun9i-a80-ccu"
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun50i-a64-ccu"
-> >> =C2=A0+ - "allwinner,sun50i-a64-r-ccu"
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun50i-h5-ccu"
-> >>
-> >> =C2=A0=C2=A0- reg: Must contain the registers base address and length
-> >> =C2=A0@@ -20,7 +22,11 @@ Required properties :
-> >> =C2=A0=C2=A0- #clock-cells : must contain 1
-> >> =C2=A0=C2=A0- #reset-cells : must contain 1
-> >>
-> >> =C2=A0-Example:
-> >> =C2=A0+For the PRCM CCUs on H3/A64, one more clock is needed:
-> >> =C2=A0+- "iosc": another frequency oscillator used for CPUS (usually a=
-t 32000Hz,
-> >> =C2=A0+ not the same with losc)
-> >
-> > This is called the internal oscillator in the datasheet, it would
-> > probably make more sense to call it that way in the documentation too.
-> >
-> > This oscillator seems to be clocked at 16MHz, so we should represent
-> > it as such.
-> >
-> > And I'm wondering, are you *sure* that it's fed directly from the
-> > internal oscillator, or goes through the registers in the RTC, with
-> > the 32 divider and 16 prescaler by default that makes it at roughly
-> > the same rate (31.25kHz).
->=20
-> In fact I know nothing about it -- I only represented the code in BSP
-> clock driver.
->=20
-> The mux value 3 varies from SoC to SoC. For A64/H5 it's 32000,
-> for A33 it's 667000 (seems to be directly the internal OSC, as the
-> user manual says the internal OSC is 600~700kHz; but it's named
-> cpuosc rather than iosc in A33 BSP clock driver); for A80 it's even
-> PLL_AUDIO.
+(somehow, it is defined in both denali.c and denali.h)
 
-Where are you getting those info from?
+This must be avoided because the Denali IP supports 1024B ECC size
+as well.  The Denali User's Guide also says supporting both 512B and
+1024B ECC sectors is possible, though it would require instantiation
+of two different ECC circuits.  So, possible cases are:
 
-As far as I know, the A33 PRCM takes the hosc, losc, pll6 and CPU
-(internal) oscillator:
-https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/clk/sun=
-xi/clk-sun8iw5.c#L508
+ [1] only 512B ECC size is supported
+ [2] only 1024B ECC size is supported
+ [3] both 512B and 1024B ECC sizes are supported
 
-The H3 takes the hosc and losc:
-https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/clk/sun=
-xi/clk-sun8iw7.c#L379
+For [3], the actually used ECC size is specified by some registers.
 
-The A80 takes the hosc and losc:
-https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/clk/sun=
-xi/clk-sun9iw1.c#L281
+Newer versions of this IP have the following registers:
+  CFG_DATA_BLOCK_SIZE       (0x6b0)
+  CFG_LAST_DATA_BLOCK_SIZE  (0x6c0)
+  CFG_NUM_DATA_BLOCKS       (0x6d0)
 
-The A64 takes the hosc, losc, pll-periph0 and the iosc, which indeed
-seems to be fed from the internal oscillator with the divider in the
-RTC:
-https://github.com/longsleep/linux-pine64/blob/lichee-dev-v3.10.65-bsp2.0/a=
-rch/arm64/boot/dts/sun50iw1p1-clk.dtsi#L19
-https://github.com/longsleep/linux-pine64/blob/lichee-dev-v3.10.65-bsp2.0/d=
-rivers/clk/sunxi/clk-sun50iw1.c#L603
+For those versions, the software should set ecc.size and ecc.steps
+to these registers.  Old versions do not have such registers, but
+they are "reserved", so write accesses are safely ignored.
 
-Maxime
+This commit adds new flags DENALI_CAP_ECC_SIZE_{512,1024}.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+The DT property "nand-ecc-step-size" is still optional; a reasonable
+default will be chosen for [1] and [2].  For case [3], if exists, it
+is recommended to specify the desired ECC size explicitly.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
 
---xisbm6zwhvbrtxfv
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v2:
+  - Change the capability prefix DENALI_CAPS_ -> DENALI_CAP_
+  - Make ECC 512 cap and ECC 1024 cap independent
+  - Set up three CFG_... registers
 
------BEGIN PGP SIGNATURE-----
+ .../devicetree/bindings/mtd/denali-nand.txt        |  5 +++
+ drivers/mtd/nand/denali.c                          | 44 +++++++++++++++-------
+ drivers/mtd/nand/denali.h                          | 12 +++++-
+ drivers/mtd/nand/denali_dt.c                       |  3 +-
+ drivers/mtd/nand/denali_pci.c                      |  2 +
+ 5 files changed, 50 insertions(+), 16 deletions(-)
 
-iQIcBAEBCAAGBQJY0tnvAAoJEBx+YmzsjxAgiGMQAKxEgy65BS6wypY1DPwmtGhf
-HZioe7x0JgtFOyjYlsgfqzraFOzDsAklecT5V+Av1qcM5d103HpA4HeSRvcDMQYY
-Im8K4qlJv4EeQVOPf4QNSjKFNJC/g2Ck2FYQSe5/L8GXZuEk2yXE/aejbTz4fIlL
-KvwHBs3gIMQVjnBpomta4w56nNWOZdEe+9O5JLVP2S654ueMZOoHTcjBdlU5hiRv
-/0jaY8GMvv5zxUFEWyh5tEsXQxs8wzqJ51J5SfeGU4z/8lmuB7cxTR66LoYaz7cM
-B2QrHTtnGS0xNchsP1y0kvwkmpRVnS1QNSTlmwBvIDiEmHk++VtHiVBD0OaCl4gm
-aq/ScqvF3vvQL5QfLS1J+kQy9ZlhD65aRyxZoQDaVTH92NChlzJounNUhFXfoIl0
-DXjNZleUi0yEoy8QvjqVKCfaDyj8fZkv+4Bw1VJt4UAd2z4St4dCakdDJjUqQdPT
-pYRGj0all+8uS0Kq3BVx6CkCajlRYibQKponxNpu4D8xVMyqKThZTP+hC3FKIomr
-GWiKMxhifbs9Y1ZEJ6OlUIjkOeJFlRf+ID8UGIdRW1ZFW/YKMO8ealUlfthsM3bd
-TEMisttYcA5YNj5sBV9ltYsMvBo2k0t6/Fu6RYKfc1kEJ3Ld5ve30BCrgPRjf+M5
-GRfy9LCWxXhXnX+xSMR+
-=fkI5
------END PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+index e593bbe..25313c7 100644
+--- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+@@ -7,6 +7,11 @@ Required properties:
+   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
+   - interrupts : The interrupt number.
+ 
++Optional properties:
++  - nand-ecc-step-size: must be 512 or 1024.  If not specified, default to:
++      512   for "altr,socfpga-denali-nand"
++    see nand.txt for details.
++
+ The device tree may optionally contain sub-nodes describing partitions of the
+ address space. See partition.txt for more detail.
+ 
+diff --git a/drivers/mtd/nand/denali.c b/drivers/mtd/nand/denali.c
+index a190cb2..cf8daba 100644
+--- a/drivers/mtd/nand/denali.c
++++ b/drivers/mtd/nand/denali.c
+@@ -875,8 +875,6 @@ static int denali_hw_ecc_fixup(struct mtd_info *mtd,
+ 	return max_bitflips;
+ }
+ 
+-#define ECC_SECTOR_SIZE 512
+-
+ #define ECC_SECTOR(x)	(((x) & ECC_ERROR_ADDRESS__SECTOR_NR) >> 12)
+ #define ECC_BYTE(x)	(((x) & ECC_ERROR_ADDRESS__OFFSET))
+ #define ECC_CORRECTION_VALUE(x) ((x) & ERR_CORRECTION_INFO__BYTEMASK)
+@@ -887,6 +885,7 @@ static int denali_hw_ecc_fixup(struct mtd_info *mtd,
+ static int denali_sw_ecc_fixup(struct mtd_info *mtd,
+ 			       struct denali_nand_info *denali, uint8_t *buf)
+ {
++	unsigned int ecc_size = denali->nand.ecc.size;
+ 	unsigned int bitflips = 0;
+ 	unsigned int max_bitflips = 0;
+ 	unsigned int total_bitflips = 0;
+@@ -914,9 +913,9 @@ static int denali_sw_ecc_fixup(struct mtd_info *mtd,
+ 
+ 		if (ECC_ERROR_UNCORRECTABLE(err_cor_info)) {
+ 			ret = -EBADMSG;
+-		} else if (err_byte < ECC_SECTOR_SIZE) {
++		} else if (err_byte < ecc_size) {
+ 			/*
+-			 * If err_byte is larger than ECC_SECTOR_SIZE, means error
++			 * If err_byte is larger than ecc_size, means error
+ 			 * happened in OOB, so we ignore it. It's no need for
+ 			 * us to correct it err_device is represented the NAND
+ 			 * error bits are happened in if there are more than
+@@ -925,7 +924,7 @@ static int denali_sw_ecc_fixup(struct mtd_info *mtd,
+ 			int offset;
+ 			unsigned int flips_in_byte;
+ 
+-			offset = (err_sector * ECC_SECTOR_SIZE + err_byte) *
++			offset = (err_sector * ecc_size + err_byte) *
+ 						denali->devnum + err_device;
+ 
+ 			/* correct the ECC error */
+@@ -1579,22 +1578,37 @@ int denali_init(struct denali_nand_info *denali)
+ 	/* no subpage writes on denali */
+ 	chip->options |= NAND_NO_SUBPAGE_WRITE;
+ 
++	if (!chip->ecc.size) {
++		if (denali->caps & DENALI_CAP_ECC_SIZE_512)
++			chip->ecc.size = 512;
++		if (denali->caps & DENALI_CAP_ECC_SIZE_1024)
++			chip->ecc.size = 1024;
++		if (WARN(!chip->ecc.size, "must support at least 512 or 1024 ECC size"))
++			goto failed_req_irq;
++	}
++
++	if ((chip->ecc.size != 512 && chip->ecc.size != 1024) ||
++	    (chip->ecc.size == 512 && !(denali->caps & DENALI_CAP_ECC_SIZE_512)) ||
++	    (chip->ecc.size == 1024 && !(denali->caps & DENALI_CAP_ECC_SIZE_1024))) {
++		dev_err(denali->dev, "specified ECC size %d in not supported",
++			chip->ecc.size);
++		goto failed_req_irq;
++	}
++
+ 	/*
+ 	 * Denali Controller only support 15bit and 8bit ECC in MRST,
+ 	 * so just let controller do 15bit ECC for MLC and 8bit ECC for
+ 	 * SLC if possible.
+ 	 * */
+ 	if (!nand_is_slc(chip) &&
+-			(mtd->oobsize > (denali->bbtskipbytes +
+-			ECC_15BITS * (mtd->writesize /
+-			ECC_SECTOR_SIZE)))) {
++			mtd->oobsize > denali->bbtskipbytes +
++			ECC_15BITS * (mtd->writesize / chip->ecc.size)) {
+ 		/* if MLC OOB size is large enough, use 15bit ECC*/
+ 		chip->ecc.strength = 15;
+ 		chip->ecc.bytes = ECC_15BITS;
+ 		iowrite32(15, denali->flash_reg + ECC_CORRECTION);
+-	} else if (mtd->oobsize < (denali->bbtskipbytes +
+-			ECC_8BITS * (mtd->writesize /
+-			ECC_SECTOR_SIZE))) {
++	} else if (mtd->oobsize <
++		   denali->bbtskipbytes + ECC_8BITS * (mtd->writesize / chip->ecc.size)) {
+ 		pr_err("Your NAND chip OOB is not large enough to contain 8bit ECC correction codes");
+ 		goto failed_req_irq;
+ 	} else {
+@@ -1603,10 +1617,14 @@ int denali_init(struct denali_nand_info *denali)
+ 		iowrite32(8, denali->flash_reg + ECC_CORRECTION);
+ 	}
+ 
++	iowrite32(chip->ecc.size, denali->flash_reg + CFG_DATA_BLOCK_SIZE);
++	iowrite32(chip->ecc.size, denali->flash_reg + CFG_LAST_DATA_BLOCK_SIZE);
++	/* chip->ecc.steps is set by nand_scan_tail(); not available here */
++	iowrite32(mtd->writesize / chip->ecc.size,
++		  denali->flash_reg + CFG_NUM_DATA_BLOCKS);
++
+ 	mtd_set_ooblayout(mtd, &denali_ooblayout_ops);
+ 
+-	/* override the default read operations */
+-	chip->ecc.size = ECC_SECTOR_SIZE;
+ 	chip->ecc.read_page = denali_read_page;
+ 	chip->ecc.read_page_raw = denali_read_page_raw;
+ 	chip->ecc.write_page = denali_write_page;
+diff --git a/drivers/mtd/nand/denali.h b/drivers/mtd/nand/denali.h
+index d9232e4..aa6548a 100644
+--- a/drivers/mtd/nand/denali.h
++++ b/drivers/mtd/nand/denali.h
+@@ -270,6 +270,14 @@
+ #define     ECC_COR_INFO__MAX_ERRORS			0x007f
+ #define     ECC_COR_INFO__UNCOR_ERR			0x0080
+ 
++#define CFG_DATA_BLOCK_SIZE			0x6b0
++
++#define CFG_LAST_DATA_BLOCK_SIZE		0x6c0
++
++#define CFG_NUM_DATA_BLOCKS			0x6d0
++
++#define CFG_META_DATA_SIZE			0x6e0
++
+ #define DMA_ENABLE				0x700
+ #define     DMA_ENABLE__FLAG				0x0001
+ 
+@@ -312,8 +320,6 @@
+ #define MODE_10    0x08000000
+ #define MODE_11    0x0C000000
+ 
+-#define ECC_SECTOR_SIZE     512
+-
+ struct nand_buf {
+ 	int head;
+ 	int tail;
+@@ -350,6 +356,8 @@ struct denali_nand_info {
+ 	unsigned int caps;
+ #define DENALI_CAP_HW_ECC_FIXUP			BIT(0)
+ #define DENALI_CAP_DMA_64BIT			BIT(1)
++#define DENALI_CAP_ECC_SIZE_512			BIT(2)
++#define DENALI_CAP_ECC_SIZE_1024		BIT(3)
+ };
+ 
+ extern int denali_init(struct denali_nand_info *denali);
+diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
+index df9ef36..1681a30 100644
+--- a/drivers/mtd/nand/denali_dt.c
++++ b/drivers/mtd/nand/denali_dt.c
+@@ -35,7 +35,8 @@ struct denali_dt_data {
+ };
+ 
+ static const struct denali_dt_data denali_socfpga_data = {
+-	.caps = DENALI_CAP_HW_ECC_FIXUP,
++	.caps = DENALI_CAP_HW_ECC_FIXUP |
++		DENALI_CAP_ECC_SIZE_512,
+ };
+ 
+ static const struct of_device_id denali_nand_dt_ids[] = {
+diff --git a/drivers/mtd/nand/denali_pci.c b/drivers/mtd/nand/denali_pci.c
+index ac84323..5202a11 100644
+--- a/drivers/mtd/nand/denali_pci.c
++++ b/drivers/mtd/nand/denali_pci.c
+@@ -85,6 +85,8 @@ static int denali_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 		goto failed_remap_reg;
+ 	}
+ 
++	denali->caps |= DENALI_CAP_ECC_SIZE_512;
++
+ 	ret = denali_init(denali);
+ 	if (ret)
+ 		goto failed_remap_mem;
+-- 
+2.7.4
 
---xisbm6zwhvbrtxfv--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
