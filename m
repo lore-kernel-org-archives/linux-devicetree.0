@@ -1,80 +1,60 @@
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH v7 4/7] ARM: dts: rockchip: add clockevent attribute to rockchip timers
-Date: Wed, 22 Mar 2017 18:48:31 +0300
-Message-ID: <1490197714-25415-5-git-send-email-al.kochet@gmail.com>
-References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 1/2] mfd: cpcap: Add missing include dependencies
+Date: Wed, 22 Mar 2017 08:57:16 -0700
+Message-ID: <20170322155716.GC10760@atomide.com>
+References: <20170322000912.24210-1-sre@kernel.org>
+ <20170322092708.GA26771@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170322092708.GA26771@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-All rockchip timers present in the DT act as clockevent.
-It is possible to specify timer role using DT attribute.
-Mark them accordingly.
+* Pavel Machek <pavel@ucw.cz> [170322 02:29]:
+> On Wed 2017-03-22 01:09:11, Sebastian Reichel wrote:
+> > This fixes compilation for files, that try to include the
+> > cpcap header in alphabetically sorted #include lists.
+> > 
+> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Also this patch specify that for timer should be called init
-function specified with CLOCKEVENT_OF_DECLARE().
+Hmm I wonder why I never ran into this so far. No objections
+to the patch though if it fixes the issue with all the necessary
+headers included.
 
-Without the commit boot warnings will appear because clock
-framework will try initialize them as clocksource.
+Regards,
 
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
----
- arch/arm/boot/dts/rk3036.dtsi            |    1 +
- arch/arm/boot/dts/rk322x.dtsi            |    1 +
- arch/arm/boot/dts/rk3288.dtsi            |    1 +
- arch/arm64/boot/dts/rockchip/rk3368.dtsi |    1 +
- 4 files changed, 4 insertions(+)
+Tony
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 843d2be..a04bb5a 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -353,6 +353,7 @@
- 		interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&xin24m>, <&cru PCLK_TIMER>;
- 		clock-names = "timer", "pclk";
-+		clockevent;
- 	};
- 
- 	pwm0: pwm@20050000 {
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 2a4eee2..2250640 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -328,6 +328,7 @@
- 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&xin24m>, <&cru PCLK_TIMER>;
- 		clock-names = "timer", "pclk";
-+		clockevent;
- 	};
- 
- 	cru: clock-controller@110e0000 {
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 91c4b3c..f45b7ad 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -217,6 +217,7 @@
- 		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&xin24m>, <&cru PCLK_TIMER>;
- 		clock-names = "timer", "pclk";
-+		clockevent;
- 	};
- 
- 	display-subsystem {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 4f44d11..054dadd 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -673,6 +673,7 @@
- 		compatible = "rockchip,rk3368-timer", "rockchip,rk3288-timer";
- 		reg = <0x0 0xff810000 0x0 0x20>;
- 		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+		clockevent;
- 	};
- 
- 	gic: interrupt-controller@ffb71000 {
--- 
-1.7.9.5
+
+> > ---
+> > This patch is new, since PATCHv1 did not order the includes
+> > in the led driver alphabetically.
+> > ---
+> >  include/linux/mfd/motorola-cpcap.h | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motorola-cpcap.h
+> > index 7629e0d24d26..b8916953a537 100644
+> > --- a/include/linux/mfd/motorola-cpcap.h
+> > +++ b/include/linux/mfd/motorola-cpcap.h
+> > @@ -14,6 +14,9 @@
+> >   * published by the Free Software Foundation.
+> >   */
+> >  
+> > +#include <linux/device.h>
+> > +#include <linux/regmap.h>
+> > +
+> >  #define CPCAP_VENDOR_ST		0
+> >  #define CPCAP_VENDOR_TI		1
+> >  
+> 
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
