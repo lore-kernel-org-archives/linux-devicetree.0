@@ -1,141 +1,58 @@
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH v7 1/7] clocksource/drivers/clksrc-evt-probe: Describe with the DT both the clocksource and the clockevent
-Date: Wed, 22 Mar 2017 18:48:28 +0300
-Message-ID: <1490197714-25415-2-git-send-email-al.kochet@gmail.com>
-References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: setup DMA-channels for mmc0 and emmc
+ for rk3188
+Date: Wed, 22 Mar 2017 16:54:33 +0100
+Message-ID: <11123239.Wc863F7R2R@phil>
+References: <1490109227-4006-1-git-send-email-al.kochet@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490109227-4006-1-git-send-email-al.kochet@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Hi Alexander,
 
-The CLOCKSOURCE_OF_DECLARE() was introduced before the
-CLOCKEVENT_OF_DECLARE() and that resulted in some abuse where the
-clockevent and the clocksource are both initialized in the same init
-routine.
+Am Dienstag, 21. M=E4rz 2017, 18:13:47 CET schrieb Alexander Kochetkov:
+> This commit enable DMA-based transfers for SD/eMMC card adapters
+> and reduce number of interrupts produced by SD-card/eMMC-card
+> adapters.
+> =
 
-With the introduction of the CLOCKEVENT_OF_DECLARE(), the driver can
-now split the clocksource and the clockevent init code. However, the
-device tree may specify a single node, so the same node will be passed
-to the clockevent/clocksource's init function, with the same base
-address.
+> Sometimes interrupts from SD-card/eMMC-card adapters running in
+> PIO mode blocks execution of hrtimers and I2S DMA callbacks for
+> a long periods (100 ms or more).
+> =
 
-with this patch it is possible to specify an attribute to the timer's node to
-specify if it is a clocksource or a clockevent and define two timers node.
+> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
 
-For example:
+I've applied a slightly different variant in [0] with your commit message a=
+nd
+moved the dma properties to the mmc/emmc nodes in rk3xxx.dtsi - as the dma
+channels are the same on both rk3188 and rk3066.
 
-        timer: timer@98400000 {
-                compatible = "moxa,moxart-timer";
-                reg = <0x98400000 0x42>;
-                interrupts = <19 1>;
-                clocks = <&coreclk>;
-                clockevent;
-        };
+While at it, I've also added the sdio dma as there is no need to leave it o=
+ut.
 
-        timer: timer@98400010 {
-                compatible = "moxa,moxart-timer";
-                reg = <0x98400010 0x42>;
-                clocks = <&coreclk>;
-                clocksource;
-        };
 
-With this approach, we allow a mechanism to clearly define a clocksource or a
-clockevent without aerobatics we can find around in some drivers:
-	timer-sp804.c, arc-timer.c, dw_apb_timer_of.c, mps2-timer.c,
-	renesas-ostm.c, time-efm32.c, time-lpc32xx.c.
+Also when changing the devicetree, please do not append stuff at the bottom
+but instead sort new nodes (the &mmc &emmc in this case) and properties
+alphabetically.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
----
- Documentation/devicetree/bindings/timer/timer.txt |   38 +++++++++++++++++++++
- drivers/clocksource/clkevt-probe.c                |    7 ++++
- drivers/clocksource/clksrc-probe.c                |    7 ++++
- 3 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/timer.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/timer.txt b/Documentation/devicetree/bindings/timer/timer.txt
-new file mode 100644
-index 0000000..f1ee0cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/timer.txt
-@@ -0,0 +1,38 @@
-+
-+Specifying timer information for devices
-+========================================
-+
-+The timer can be declared via the macro:
-+
-+CLOCKSOURCE_OF_DECLARE(name, init) if it is a clocksource
-+CLOCKEVENT_OF_DECLARE(name, init) if it is a clockevent
-+
-+The CLOCKSOURCE_OF_DECLARE() was introduced before the
-+CLOCKEVENT_OF_DECLARE() and that resulted in some abuse where the
-+clockevent and the clocksource are both initialized in the same init
-+routine.
-+
-+With the introduction of the CLOCKEVENT_OF_DECLARE(), the driver can
-+now split the clocksource and the clockevent init code. However, the
-+device tree may specify a single node, so the same node will be passed
-+to the clockevent/clocksource's init function, with the same base
-+address. It is possible to specify an attribute to the timer's node to
-+specify if it is a clocksource or a clockevent and define two timers
-+node.
-+
-+Example:
-+
-+	timer: timer@98400000 {
-+		compatible = "moxa,moxart-timer";
-+		reg = <0x98400000 0x42>;
-+		interrupts = <19 1>;
-+		clocks = <&coreclk>;
-+		clockevent;
-+	};
-+
-+	timer: timer@98400010 {
-+		compatible = "moxa,moxart-timer";
-+		reg = <0x98400010 0x42>;
-+		clocks = <&coreclk>;
-+		clocksource;
-+	};
-diff --git a/drivers/clocksource/clkevt-probe.c b/drivers/clocksource/clkevt-probe.c
-index eb89b50..fa02ac1 100644
---- a/drivers/clocksource/clkevt-probe.c
-+++ b/drivers/clocksource/clkevt-probe.c
-@@ -37,6 +37,13 @@ int __init clockevent_probe(void)
- 
- 		init_func = match->data;
- 
-+		/*
-+		 * The device node describes a clocksource, ignore it
-+		 * as we are in the clockevent init routine.
-+		 */
-+		if (of_property_read_bool(np, "clocksource"))
-+			continue;
-+
- 		ret = init_func(np);
- 		if (ret) {
- 			pr_warn("Failed to initialize '%s' (%d)\n",
-diff --git a/drivers/clocksource/clksrc-probe.c b/drivers/clocksource/clksrc-probe.c
-index bc62be9..ce50f33 100644
---- a/drivers/clocksource/clksrc-probe.c
-+++ b/drivers/clocksource/clksrc-probe.c
-@@ -38,6 +38,13 @@ void __init clocksource_probe(void)
- 
- 		init_func_ret = match->data;
- 
-+		/*
-+		 * The device node describes a clockevent, ignore it
-+		 * as we are in the clocksource init routine.
-+		 */
-+		if (of_property_read_bool(np, "clockevent"))
-+			continue;
-+
- 		ret = init_func_ret(np);
- 		if (ret) {
- 			pr_err("Failed to initialize '%s': %d",
--- 
-1.7.9.5
+Thanks
+Heiko
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.gi=
+t/commit/?id=3D94bbdd77247d8c16eed5f55dddcf1cbc38d06cc4
