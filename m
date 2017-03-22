@@ -1,124 +1,82 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 06/15] ARM: dts: r8a779x: fix PCI bus dtc warnings
-Date: Wed, 22 Mar 2017 09:58:24 +0100
-Message-ID: <CAMuHMdVMyjVv471KB6+SCbNBs6EAaFUm1-2xwj2y-qgriFht0Q@mail.gmail.com>
-References: <20170322020313.24338-1-robh@kernel.org>
- <20170322020313.24338-6-robh@kernel.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: Document rk3399 Gru/Kevin
+Date: Wed, 22 Mar 2017 10:01:00 +0100
+Message-ID: <3700058.o6cBinDvsr@phil>
+References: <20170320235344.126298-1-briannorris@chromium.org> <20170320235344.126298-2-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170322020313.24338-6-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170320235344.126298-2-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Am Montag, 20. März 2017, 16:53:41 CET schrieb Brian Norris:
+> Gru is a base dev board for a family of devices, including Kevin. Both
+> utilize Rockchip RK3399, and they share much of their design.
+> 
+> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-On Wed, Mar 22, 2017 at 3:03 AM, Rob Herring <robh@kernel.org> wrote:
-> dtc recently added PCI bus checks. Fix these warnings.
+applied for 4.12, after adding a "(Samsung Chromebook Plus)" hint, as that may 
+help people identifying the correct dts and also is public knowledge (some 
+blogs but also /proc/device-tree/compatible on the device itself).
 
-It's always a good idea to put the warnings in the commit message:
 
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,1 node name is not "pci" or "pcie"
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,1 missing ranges for PCI bridge (or not a bridge)
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,1 incorrect #address-cells for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,1 incorrect #size-cells for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,1 missing bus-range for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,2 node name is not "pci" or "pcie"
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,2 missing ranges for PCI bridge (or not a bridge)
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,2 incorrect #address-cells for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,2 incorrect #size-cells for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee090000/usb@0,2 missing bus-range for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,1 node name is not "pci" or "pcie"
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,1 missing ranges for PCI bridge (or not a bridge)
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,1 incorrect #address-cells for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,1 incorrect #size-cells for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,1 missing bus-range for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,2 node name is not "pci" or "pcie"
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,2 missing ranges for PCI bridge (or not a bridge)
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,2 incorrect #address-cells for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,2 incorrect #size-cells for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
-/pci@ee0d0000/usb@0,2 missing bus-range for PCI bridge
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (unit_address_format):
-Failed prerequisite 'pci_bridge'
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg): Failed
-prerequisite 'pci_bridge'
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_bus_num):
-Failed prerequisite 'pci_bridge'
+Heiko
 
-The above indeed go away with your patch, but I don't know why ;-)
-
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: linux-renesas-soc@vger.kernel.org
 > ---
-> Sub-arch maintainers, please apply to your trees unless arm-soc wants
-> to take the whole lot.
->
->  arch/arm/boot/dts/r8a7790.dtsi | 16 ++++++----------
->  arch/arm/boot/dts/r8a7791.dtsi | 16 ++++++----------
->  arch/arm/boot/dts/r8a7794.dtsi | 16 ++++++----------
->  3 files changed, 18 insertions(+), 30 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-> index 6d10450de6d7..c16a37e9fb5d 100644
-> --- a/arch/arm/boot/dts/r8a7790.dtsi
-> +++ b/arch/arm/boot/dts/r8a7790.dtsi
-> @@ -1598,16 +1598,14 @@
->                                  0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
->                                  0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
->
-> -               usb@0,1 {
-> +               usb@1,0 {
->                         reg = <0x800 0 0 0 0>;
-> -                       device_type = "pci";
->                         phys = <&usb0 0>;
->                         phy-names = "usb";
->                 };
+> v3:
+>  * added Rob's ack
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.txt | 20
+> ++++++++++++++++++++ 1 file changed, 20 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
+> b/Documentation/devicetree/bindings/arm/rockchip.txt index
+> 226ee9131078..a18308c5bdf1 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -59,6 +59,17 @@ Rockchip platforms device tree bindings
+>        - compatible = "google,veyron-brain-rev0", "google,veyron-brain",
+>  		     "google,veyron", "rockchip,rk3288";
+> 
+> +- Google Gru (dev-board):
+> +    Required root node properties:
+> +      - compatible = "google,gru-rev15", "google,gru-rev14",
+> +		     "google,gru-rev13", "google,gru-rev12",
+> +		     "google,gru-rev11", "google,gru-rev10",
+> +		     "google,gru-rev9", "google,gru-rev8",
+> +		     "google,gru-rev7", "google,gru-rev6",
+> +		     "google,gru-rev5", "google,gru-rev4",
+> +		     "google,gru-rev3", "google,gru-rev2",
+> +		     "google,gru", "rockchip,rk3399";
+> +
+>  - Google Jaq (Haier Chromebook 11 and more):
+>      Required root node properties:
+>        - compatible = "google,veyron-jaq-rev5", "google,veyron-jaq-rev4",
+> @@ -73,6 +84,15 @@ Rockchip platforms device tree bindings
+>  		     "google,veyron-jerry-rev3", "google,veyron-jerry",
+>  		     "google,veyron", "rockchip,rk3288";
+> 
+> +- Google Kevin:
+> +    Required root node properties:
+> +      - compatible = "google,kevin-rev15", "google,kevin-rev14",
+> +		     "google,kevin-rev13", "google,kevin-rev12",
+> +		     "google,kevin-rev11", "google,kevin-rev10",
+> +		     "google,kevin-rev9", "google,kevin-rev8",
+> +		     "google,kevin-rev7", "google,kevin-rev6",
+> +		     "google,kevin", "google,gru", "rockchip,rk3399";
+> +
+>  - Google Mickey (Asus Chromebit CS10):
+>      Required root node properties:
+>        - compatible = "google,veyron-mickey-rev8",
+> "google,veyron-mickey-rev7",
 
-Both Documentation/devicetree/bindings/pci/pci.txt and ePAPR refer to
-http://www.firmware.org/1275/bindings/pci/pci2_1.pdf
-http://www.firmware.org/1275/practice/imap/imap0_9d.pdf
-which no longer exist.
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
