@@ -1,38 +1,53 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] ARM: dts: BCM5301X: Specify serial console params
- in dtsi files
-Date: Wed, 22 Mar 2017 09:49:24 -0700
-Message-ID: <c900cc9c-3650-f6f0-3650-01f05f680fcd@gmail.com>
-References: <20170314075830.2247-1-zajec5@gmail.com>
- <20170315170328.13879-1-zajec5@gmail.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: [RFC 1/8] ARM: imx: gpc: Do not print error message for EPROBE_DEFER
+Date: Wed, 22 Mar 2017 18:53:03 +0200
+Message-ID: <3f579c378e1bbc2d78674e0846b937b8e69706ce.1490199005.git.leonard.crestez@nxp.com>
+References: <cover.1490199005.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170315170328.13879-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1490199005.git.leonard.crestez@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Irina Tirdea <irina.tirdea@nxp.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Octavian Purdila <octavian.purdila@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2017 10:03 AM, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> 
-> So far every Northstar device we have seen was using the same serial
-> console params (115200n8). It probably make the most sense to put it in
-> some proper dtsi files instead of repeating over and over for every
-> single device. As different boards may use different bootloaders it
-> seems the safest idea is to use board specific dtsi files.
-> 
-> Just in case some vendor decides to use different UART (parameters) this
-> can be always easily overwritten.
-> 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+The pu regulator request will return -EPROBE_DEFER if it has a supply
+from PMIC and this supply is not yet registered. This does not represent
+an error since the driver will call probe again later, so only print a
+warning message in this case.
 
-Applied, thanks!
+Signed-off-by: Irina Tirdea <irina.tirdea@nxp.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+---
+ arch/arm/mach-imx/gpc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+index 1dc2a34..ce64d11 100644
+--- a/arch/arm/mach-imx/gpc.c
++++ b/arch/arm/mach-imx/gpc.c
+@@ -466,7 +466,11 @@ static int imx_gpc_probe(struct platform_device *pdev)
+ 		pu_reg = NULL;
+ 	if (IS_ERR(pu_reg)) {
+ 		ret = PTR_ERR(pu_reg);
+-		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
++		if (ret == -EPROBE_DEFER)
++			dev_dbg(&pdev->dev, "pu regulator not ready, retry\n");
++		else
++			dev_err(&pdev->dev, "failed to get pu regulator: %d\n",
++					ret);
+ 		return ret;
+ 	}
+ 
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
