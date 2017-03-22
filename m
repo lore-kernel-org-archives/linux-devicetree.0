@@ -1,85 +1,153 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH] ipmi: bt-bmc: Add ast2500
-	compatible string
-Date: Wed, 22 Mar 2017 15:09:33 +0100
-Message-ID: <a5f74faa-e5a2-e13d-01f0-6ae732f07c80@kaod.org>
-References: <20170322140112.2479-1-joel@jms.id.au>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 1/7] rtc: rtc-sh: add support for rza series
+Date: Wed, 22 Mar 2017 10:27:48 -0400
+Message-ID: <20170322142754.30888-2-chris.brandt@renesas.com>
+References: <20170322142754.30888-1-chris.brandt@renesas.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
-In-Reply-To: <20170322140112.2479-1-joel@jms.id.au>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
-List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
-List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
-Errors-To: openipmi-developer-bounces@lists.sourceforge.net
-To: Joel Stanley <joel@jms.id.au>, Corey Minyard <minyard@acm.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, openipmi-developer@lists.sourceforge.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDXOFUXT2UGBBJEUZLDAKGQELACNIMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170322142754.30888-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/22/2017 03:01 PM, Joel Stanley wrote:
-> The ast2500 SoCs contain the same IPMI BT device.
-> =
+This same RTC is used in RZ/A series MPUs, therefore with some slight
+changes, this driver can be reused. Additionally, since ARM architectures
+require Device Tree configurations, device tree support has been added.
 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-
-Reviewed-by: C=E9dric Le Goater <clg@kaod.org>
-
-Thanks,
-
-C. =
-
-
-
-> ---
->  Documentation/devicetree/bindings/ipmi/aspeed,ast2400-ibt-bmc.txt | 4 ++=
-+-
->  drivers/char/ipmi/bt-bmc.c                                        | 1 +
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-ibt-bm=
-c.txt b/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-ibt-bmc.txt
-> index 6f28969af9dc..028268fd99ee 100644
-> --- a/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-ibt-bmc.txt
-> +++ b/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-ibt-bmc.txt
-> @@ -6,7 +6,9 @@ perform in-band IPMI communication with their host.
->  =
-
->  Required properties:
->  =
-
-> -- compatible : should be "aspeed,ast2400-ibt-bmc"
-> +- compatible : should be one of
-> +	"aspeed,ast2400-ibt-bmc"
-> +	"aspeed,ast2500-ibt-bmc"
->  - reg: physical address and size of the registers
->  =
-
->  Optional properties:
-> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
-> index fc9e8891eae3..002907e6c7d9 100644
-> --- a/drivers/char/ipmi/bt-bmc.c
-> +++ b/drivers/char/ipmi/bt-bmc.c
-> @@ -485,6 +485,7 @@ static int bt_bmc_remove(struct platform_device *pdev)
->  =
-
->  static const struct of_device_id bt_bmc_match[] =3D {
->  	{ .compatible =3D "aspeed,ast2400-ibt-bmc" },
-> +	{ .compatible =3D "aspeed,ast2500-ibt-bmc" },
->  	{ },
->  };
->  =
-
-> =
-
-
-
----------------------------------------------------------------------------=
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
-Check out the vibrant tech community on one of the world's most
-engaging tech sites, Slashdot.org! http://sdm.link/slashdot
+v2:
+* removed HAVE_CLK from Kconfig
+* when using DT, look for "fck" instead of "rtc0"
+* changed (res == NULL) to (!res)
+* added Reviewed-by
+---
+ drivers/rtc/Kconfig  |  4 ++--
+ drivers/rtc/rtc-sh.c | 33 ++++++++++++++++++++++++++++-----
+ 2 files changed, 30 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index ee1b0e9..c2d1f0e 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1303,10 +1303,10 @@ config RTC_DRV_SA1100
+ 
+ config RTC_DRV_SH
+ 	tristate "SuperH On-Chip RTC"
+-	depends on SUPERH && HAVE_CLK
++	depends on SUPERH || ARCH_RENESAS
+ 	help
+ 	  Say Y here to enable support for the on-chip RTC found in
+-	  most SuperH processors.
++	  most SuperH processors. This RTC is also found in RZ/A SoCs.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called rtc-sh.
+diff --git a/drivers/rtc/rtc-sh.c b/drivers/rtc/rtc-sh.c
+index c626e43..00b396e 100644
+--- a/drivers/rtc/rtc-sh.c
++++ b/drivers/rtc/rtc-sh.c
+@@ -27,7 +27,15 @@
+ #include <linux/log2.h>
+ #include <linux/clk.h>
+ #include <linux/slab.h>
++#ifdef CONFIG_SUPERH
+ #include <asm/rtc.h>
++#else
++/* Default values for RZ/A RTC */
++#define rtc_reg_size		sizeof(u16)
++#define RTC_BIT_INVERTED        0	/* no chip bugs */
++#define RTC_CAP_4_DIGIT_YEAR    (1 << 0)
++#define RTC_DEF_CAPABILITIES    RTC_CAP_4_DIGIT_YEAR
++#endif
+ 
+ #define DRV_NAME	"sh-rtc"
+ 
+@@ -570,6 +578,8 @@ static int __init sh_rtc_probe(struct platform_device *pdev)
+ 	rtc->alarm_irq = platform_get_irq(pdev, 2);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
++	if (!res)
++		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (unlikely(res == NULL)) {
+ 		dev_err(&pdev->dev, "No IO resource\n");
+ 		return -ENOENT;
+@@ -587,12 +597,15 @@ static int __init sh_rtc_probe(struct platform_device *pdev)
+ 	if (unlikely(!rtc->regbase))
+ 		return -EINVAL;
+ 
+-	clk_id = pdev->id;
+-	/* With a single device, the clock id is still "rtc0" */
+-	if (clk_id < 0)
+-		clk_id = 0;
++	if (!pdev->dev.of_node) {
++		clk_id = pdev->id;
++		/* With a single device, the clock id is still "rtc0" */
++		if (clk_id < 0)
++			clk_id = 0;
+ 
+-	snprintf(clk_name, sizeof(clk_name), "rtc%d", clk_id);
++		snprintf(clk_name, sizeof(clk_name), "rtc%d", clk_id);
++	} else
++		snprintf(clk_name, sizeof(clk_name), "fck");
+ 
+ 	rtc->clk = devm_clk_get(&pdev->dev, clk_name);
+ 	if (IS_ERR(rtc->clk)) {
+@@ -608,6 +621,8 @@ static int __init sh_rtc_probe(struct platform_device *pdev)
+ 	clk_enable(rtc->clk);
+ 
+ 	rtc->capabilities = RTC_DEF_CAPABILITIES;
++
++#ifdef CONFIG_SUPERH
+ 	if (dev_get_platdata(&pdev->dev)) {
+ 		struct sh_rtc_platform_info *pinfo =
+ 			dev_get_platdata(&pdev->dev);
+@@ -618,6 +633,7 @@ static int __init sh_rtc_probe(struct platform_device *pdev)
+ 		 */
+ 		rtc->capabilities |= pinfo->capabilities;
+ 	}
++#endif
+ 
+ 	if (rtc->carry_irq <= 0) {
+ 		/* register shared periodic/carry/alarm irq */
+@@ -738,10 +754,17 @@ static int sh_rtc_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(sh_rtc_pm_ops, sh_rtc_suspend, sh_rtc_resume);
+ 
++static const struct of_device_id sh_rtc_of_match[] = {
++	{ .compatible = "renesas,sh-rtc", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, sh_rtc_of_match);
++
+ static struct platform_driver sh_rtc_platform_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
+ 		.pm	= &sh_rtc_pm_ops,
++		.of_match_table = sh_rtc_of_match,
+ 	},
+ 	.remove		= __exit_p(sh_rtc_remove),
+ };
+-- 
+2.10.1
+
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
