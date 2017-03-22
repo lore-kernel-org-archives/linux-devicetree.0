@@ -1,78 +1,51 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3] mmc: sh_mmcif: Document r7s72100 DT bindings
-Date: Wed, 22 Mar 2017 13:17:06 +0000
-Message-ID: <PS1PR06MB1162CACF3A130AB157C200AA8A3C0@PS1PR06MB1162.apcprd06.prod.outlook.com>
-References: <20170112041452.14136-1-chris.brandt@renesas.com>
- <20170118213024.qreoa5k7stjmwmr7@rob-hp-laptop>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
+Date: Wed, 22 Mar 2017 14:20:08 +0100
+Message-ID: <CAMuHMdUvq6afz4h8XGUP=Ui6re9J1uZDrcSZ9OV+agY-jhJebQ@mail.gmail.com>
+References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org> <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170118213024.qreoa5k7stjmwmr7@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This one seems to have been forgotten.
+On Wed, Mar 22, 2017 at 11:33 AM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Mon, Mar 20, 2017 at 5:14 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+>> Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
 
-Should I resend with all the acks and reviews?
-
-Chris
-
-
-
-On Wednesday, January 18, 2017, Rob Herring wrote:
-> On Wed, Jan 11, 2017 at 11:14:52PM -0500, Chris Brandt wrote:
-> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> >
-> > ---
-> > v3:
-> > * added list of how many interrupts each SOC has
-> > v2:
-> > * added interrupt description
-> > ---
-> >  Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
-
-
-
-On Thursday, January 12, 2017, Simon Horman wrote:
-> On Thu, Jan 12, 2017 at 08:36:10AM +0100, Geert Uytterhoeven wrote:
-> > Hi Chris,
-> >
-> > On Thu, Jan 12, 2017 at 5:14 AM, Chris Brandt <chris.brandt@renesas.com=
+ulating the pin index from its position
+>> +      (port where it sits on and pin offset), and alternate function
+>> +      configuration options are provided in pin controller header file at:
 >
-> wrote:
-> > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> > >
-> > > ---
-> > > v3:
-> > > * added list of how many interrupts each SOC has
-> > > v2:
-> > > * added interrupt description
-> >
-> > Thanks or the update!
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->=20
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> the pin ... file
+>
+>> +      include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+>
+> Hence I'd include that file in this patch, as it's part of the bindings.
 
+Ah, that would create a hard dependency between the DTS files and the
+DT bindings, which typically go in through different trees.
+As the driver replicates the definitions from the header, the include file
+can go in with the DTS updates.
 
-On Thursday, January 12, 2017, Geert Uytterhoeven wrote:
-> On Thu, Jan 12, 2017 at 5:14 AM, Chris Brandt <chris.brandt@renesas.com>
-> wrote:
-> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> >
-> > ---
-> > v3:
-> > * added list of how many interrupts each SOC has
-> > v2:
-> > * added interrupt description
->=20
-> Thanks or the update!
->=20
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
