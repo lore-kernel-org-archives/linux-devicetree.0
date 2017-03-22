@@ -1,118 +1,103 @@
-From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-Subject: [PATCH] arm64: dts: ls1012a: add crypto node
-Date: Wed, 22 Mar 2017 14:29:39 +0200
-Message-ID: <20170322122939.22117-1-horia.geanta@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Harninder Rai <harninder.rai@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>, Will Deacon <will.deacon@arm.com>, Dan Douglass <dan.douglass@nxp.com>, linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: [PATCH v11 0/2] Add support for Omnivision OV5647
+Date: Wed, 22 Mar 2017 12:30:25 +0000
+Message-ID: <cover.1490185140.git.roliveir@synopsys.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: vladimir_zapolskiy@mentor.com, CARLOS.PALMINHA@synopsys.com, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-TFMxMDEyQSBoYXMgYSBTRUMgdjUuNCBzZWN1cml0eSBlbmdpbmUuCgpTaWduZWQtb2ZmLWJ5OiBI
-b3JpYSBHZWFudMSDIDxob3JpYS5nZWFudGFAbnhwLmNvbT4KLS0tCiBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1mcmRtLmR0cyB8ICA5ICsrKwogYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEtcWRzLmR0cyAgfCAgOSArKysKIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMTJhLXJkYi5kdHMgIHwgIDkgKysrCiBhcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS5kdHNpICAgICB8IDkxICsrKysr
-KysrKysrKysrKysrKysrKy0KIDQgZmlsZXMgY2hhbmdlZCwgMTE3IGluc2VydGlvbnMoKyksIDEg
-ZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
-c2wtbHMxMDEyYS1mcmRtLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
-czEwMTJhLWZyZG0uZHRzCmluZGV4IGE2MTlmNjQ5NmE0Yy4uYmFiOWU2ODk0N2U0IDEwMDY0NAot
-LS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1mcmRtLmR0cwor
-KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1mcmRtLmR0cwpA
-QCAtNDksNiArNDksMTUgQEAKIAltb2RlbCA9ICJMUzEwMTJBIEZyZWVkb20gQm9hcmQiOwogCWNv
-bXBhdGlibGUgPSAiZnNsLGxzMTAxMmEtZnJkbSIsICJmc2wsbHMxMDEyYSI7CiAKKwlhbGlhc2Vz
-IHsKKwkJY3J5cHRvID0gJmNyeXB0bzsKKwkJcnRpY19hID0gJnJ0aWNfYTsKKwkJcnRpY19iID0g
-JnJ0aWNfYjsKKwkJcnRpY19jID0gJnJ0aWNfYzsKKwkJcnRpY19kID0gJnJ0aWNfZDsKKwkJc2Vj
-X21vbiA9ICZzZWNfbW9uOworCX07CisKIAlzeXNfbWNsazogY2xvY2stbWNsayB7CiAJCWNvbXBh
-dGlibGUgPSAiZml4ZWQtY2xvY2siOwogCQkjY2xvY2stY2VsbHMgPSA8MD47CmRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1xZHMuZHRzIGIvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEtcWRzLmR0cwppbmRleCAxNGE2
-N2YxNzA5ZTcuLjVjNGU4NGM3ZjIwZCAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWxzMTAxMmEtcWRzLmR0cworKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9mc2wtbHMxMDEyYS1xZHMuZHRzCkBAIC00OSw2ICs0OSwxNSBAQAogCW1vZGVsID0g
-IkxTMTAxMkEgUURTIEJvYXJkIjsKIAljb21wYXRpYmxlID0gImZzbCxsczEwMTJhLXFkcyIsICJm
-c2wsbHMxMDEyYSI7CiAKKwlhbGlhc2VzIHsKKwkJY3J5cHRvID0gJmNyeXB0bzsKKwkJcnRpY19h
-ID0gJnJ0aWNfYTsKKwkJcnRpY19iID0gJnJ0aWNfYjsKKwkJcnRpY19jID0gJnJ0aWNfYzsKKwkJ
-cnRpY19kID0gJnJ0aWNfZDsKKwkJc2VjX21vbiA9ICZzZWNfbW9uOworCX07CisKIAlzeXNfbWNs
-azogY2xvY2stbWNsayB7CiAJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOwogCQkjY2xvY2st
-Y2VsbHMgPSA8MD47CmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
-c2wtbHMxMDEyYS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
-MTAxMmEtcmRiLmR0cwppbmRleCA2MmM1YzcxMjNhMTUuLmZmOWRkMTZhYTY1YSAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEtcmRiLmR0cworKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1yZGIuZHRzCkBAIC00
-OCw2ICs0OCwxNSBAQAogLyB7CiAJbW9kZWwgPSAiTFMxMDEyQSBSREIgQm9hcmQiOwogCWNvbXBh
-dGlibGUgPSAiZnNsLGxzMTAxMmEtcmRiIiwgImZzbCxsczEwMTJhIjsKKworCWFsaWFzZXMgewor
-CQljcnlwdG8gPSAmY3J5cHRvOworCQlydGljX2EgPSAmcnRpY19hOworCQlydGljX2IgPSAmcnRp
-Y19iOworCQlydGljX2MgPSAmcnRpY19jOworCQlydGljX2QgPSAmcnRpY19kOworCQlzZWNfbW9u
-ID0gJnNlY19tb247CisJfTsKIH07CiAKICZkdWFydDAgewpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2ZzbC1sczEwMTJhLmR0c2kKaW5kZXggY2ZmZWJiNGIzZGYxLi42OGYzMDEy
-YWUwN2UgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
-MTJhLmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEu
-ZHRzaQpAQCAtNDIsNyArNDIsNyBAQAogICogICAgIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZU
-V0FSRS4KICAqLwogCi0jaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIv
-aXJxLmg+CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdp
-Yy5oPgogCiAvIHsKIAljb21wYXRpYmxlID0gImZzbCxsczEwMTJhIjsKQEAgLTExMyw2ICsxMTMs
-OTUgQEAKIAkJCWJpZy1lbmRpYW47CiAJCX07CiAKKwkJY3J5cHRvOiBjcnlwdG9AMTcwMDAwMCB7
-CisJCQljb21wYXRpYmxlID0gImZzbCxzZWMtdjUuNCIsICJmc2wsc2VjLXY1LjAiLAorCQkJCSAg
-ICAgImZzbCxzZWMtdjQuMCI7CisJCQlmc2wsc2VjLWVyYSA9IDw4PjsKKwkJCSNhZGRyZXNzLWNl
-bGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MT47CisJCQlyYW5nZXMgPSA8MHgwIDB4MDAg
-MHgxNzAwMDAwIDB4MTAwMDAwPjsKKwkJCXJlZyA9IDwweDAwIDB4MTcwMDAwMCAweDAgMHgxMDAw
-MDA+OworCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDc1IElSUV9UWVBFX0xFVkVMX0hJR0g+Owor
-CisJCQlzZWNfanIwOiBqckAxMDAwMCB7CisJCQkJY29tcGF0aWJsZSA9ICJmc2wsc2VjLXY1LjQt
-am9iLXJpbmciLAorCQkJCQkgICAgICJmc2wsc2VjLXY1LjAtam9iLXJpbmciLAorCQkJCQkgICAg
-ICJmc2wsc2VjLXY0LjAtam9iLXJpbmciOworCQkJCXJlZwkgICA9IDwweDEwMDAwIDB4MTAwMDA+
-OworCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3MSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJ
-CX07CisKKwkJCXNlY19qcjE6IGpyQDIwMDAwIHsKKwkJCQljb21wYXRpYmxlID0gImZzbCxzZWMt
-djUuNC1qb2ItcmluZyIsCisJCQkJCSAgICAgImZzbCxzZWMtdjUuMC1qb2ItcmluZyIsCisJCQkJ
-CSAgICAgImZzbCxzZWMtdjQuMC1qb2ItcmluZyI7CisJCQkJcmVnCSAgID0gPDB4MjAwMDAgMHgx
-MDAwMD47CisJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDcyIElSUV9UWVBFX0xFVkVMX0hJR0g+
-OworCQkJfTsKKworCQkJc2VjX2pyMjoganJAMzAwMDAgeworCQkJCWNvbXBhdGlibGUgPSAiZnNs
-LHNlYy12NS40LWpvYi1yaW5nIiwKKwkJCQkJICAgICAiZnNsLHNlYy12NS4wLWpvYi1yaW5nIiwK
-KwkJCQkJICAgICAiZnNsLHNlYy12NC4wLWpvYi1yaW5nIjsKKwkJCQlyZWcJICAgPSA8MHgzMDAw
-MCAweDEwMDAwPjsKKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzMgSVJRX1RZUEVfTEVWRUxf
-SElHSD47CisJCQl9OworCisJCQlzZWNfanIzOiBqckA0MDAwMCB7CisJCQkJY29tcGF0aWJsZSA9
-ICJmc2wsc2VjLXY1LjQtam9iLXJpbmciLAorCQkJCQkgICAgICJmc2wsc2VjLXY1LjAtam9iLXJp
-bmciLAorCQkJCQkgICAgICJmc2wsc2VjLXY0LjAtam9iLXJpbmciOworCQkJCXJlZwkgICA9IDww
-eDQwMDAwIDB4MTAwMDA+OworCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3NCBJUlFfVFlQRV9M
-RVZFTF9ISUdIPjsKKwkJCX07CisKKwkJCXJ0aWNANjAwMDAgeworCQkJCWNvbXBhdGlibGUgPSAi
-ZnNsLHNlYy12NS40LXJ0aWMiLAorCQkJCQkgICAgICJmc2wsc2VjLXY1LjAtcnRpYyIsCisJCQkJ
-CSAgICAgImZzbCxzZWMtdjQuMC1ydGljIjsKKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJ
-CQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJCQlyZWcgPSA8MHg2MDAwMCAweDEwMCAweDYwZTAwIDB4
-MTg+OworCQkJCXJhbmdlcyA9IDwweDAgMHg2MDEwMCAweDUwMD47CisKKwkJCQlydGljX2E6IHJ0
-aWMtYUAwIHsKKwkJCQkJY29tcGF0aWJsZSA9ICJmc2wsc2VjLXY1LjQtcnRpYy1tZW1vcnkiLAor
-CQkJCQkJICAgICAiZnNsLHNlYy12NS4wLXJ0aWMtbWVtb3J5IiwKKwkJCQkJCSAgICAgImZzbCxz
-ZWMtdjQuMC1ydGljLW1lbW9yeSI7CisJCQkJCXJlZyA9IDwweDAwIDB4MjAgMHgxMDAgMHgxMDA+
-OworCQkJCX07CisKKwkJCQlydGljX2I6IHJ0aWMtYkAyMCB7CisJCQkJCWNvbXBhdGlibGUgPSAi
-ZnNsLHNlYy12NS40LXJ0aWMtbWVtb3J5IiwKKwkJCQkJCSAgICAgImZzbCxzZWMtdjUuMC1ydGlj
-LW1lbW9yeSIsCisJCQkJCQkgICAgICJmc2wsc2VjLXY0LjAtcnRpYy1tZW1vcnkiOworCQkJCQly
-ZWcgPSA8MHgyMCAweDIwIDB4MjAwIDB4MTAwPjsKKwkJCQl9OworCisJCQkJcnRpY19jOiBydGlj
-LWNANDAgeworCQkJCQljb21wYXRpYmxlID0gImZzbCxzZWMtdjUuNC1ydGljLW1lbW9yeSIsCisJ
-CQkJCQkgICAgICJmc2wsc2VjLXY1LjAtcnRpYy1tZW1vcnkiLAorCQkJCQkJICAgICAiZnNsLHNl
-Yy12NC4wLXJ0aWMtbWVtb3J5IjsKKwkJCQkJcmVnID0gPDB4NDAgMHgyMCAweDMwMCAweDEwMD47
-CisJCQkJfTsKKworCQkJCXJ0aWNfZDogcnRpYy1kQDYwIHsKKwkJCQkJY29tcGF0aWJsZSA9ICJm
-c2wsc2VjLXY1LjQtcnRpYy1tZW1vcnkiLAorCQkJCQkJICAgICAiZnNsLHNlYy12NS4wLXJ0aWMt
-bWVtb3J5IiwKKwkJCQkJCSAgICAgImZzbCxzZWMtdjQuMC1ydGljLW1lbW9yeSI7CisJCQkJCXJl
-ZyA9IDwweDYwIDB4MjAgMHg0MDAgMHgxMDA+OworCQkJCX07CisJCQl9OworCQl9OworCisJCXNl
-Y19tb246IHNlY19tb25AMWU5MDAwMCB7CisJCQljb21wYXRpYmxlID0gImZzbCxzZWMtdjUuNC1t
-b24iLCAiZnNsLHNlYy12NS4wLW1vbiIsCisJCQkJICAgICAiZnNsLHNlYy12NC4wLW1vbiI7CisJ
-CQlyZWcgPSA8MHgwIDB4MWU5MDAwMCAweDAgMHgxMDAwMD47CisJCQlpbnRlcnJ1cHRzID0gPEdJ
-Q19TUEkgNzggSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQkJICAgICA8R0lDX1NQSSA3OSBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsKKwkJfTsKKwogCQlkY2ZnOiBkY2ZnQDFlZTAwMDAgewogCQkJY29t
-cGF0aWJsZSA9ICJmc2wsbHMxMDEyYS1kY2ZnIiwKIAkJCQkgICAgICJzeXNjb24iOwotLSAKMi4x
-Mi4wLjI2NC5nZDZkYjNmMjE2NTQ0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hello,
+
+This patchset adds support for the Omnivision OV5647 sensor.
+
+At the moment it only supports 640x480 in RAW 8.
+
+This is the eleventh version of the OV5647 camera driver patchset.
+
+v11:
+ - Remove leftover debug code
+Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+v10:
+ - Add more error info to model check
+ - Remove empty callback
+Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+ - Change error message in read function
+ - Change clock handling
+ - Add error checking where it was missing
+ - Remove debug messages
+ - Remove the need for clock name
+Suggested-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+ - Code refactoring
+
+v9:
+ - Remove unused struct
+ - Remove comments
+ - Refactor error handling in i2c r/w functions
+ - Change declarations to single line.
+ - Remove value assignment in variable declarion
+ - Refactor configurion write loop 
+ - Change the variable type that received ov5647_read() read value
+ - Remove print from probe function
+ - Remove unused device struct
+ - Remove OF dependency from Kconfig
+Suggested-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+
+v8:
+ - Remove a part of the initialization procedure which wasn't doing 
+ anything
+ - Check for i2c read/writes return values
+ - Add stream_on/off functions
+Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+v7:
+ - Remove "0x" and leading 0 from DT documentation examples
+
+v6:
+ - Add example to DT documentation
+ - Remove data-lanes and clock-lane property from DT
+ - Add external clock property to DT
+ - Order includes
+ - Remove unused variables and functions
+ - Add external clock handling
+ - Add power on counter
+ - Change from g/s_parm to g/s_frame_interval
+
+v5:
+ - Refactor code 
+ - Change comments
+ - Add missing error handling in some functions
+
+v4: 
+ - Add correct license
+ - Revert debugging info to generic infrastructure
+ - Turn defines into enums
+ - Correct code style issues
+ - Remove unused defines
+ - Make sure all errors where being handled
+ - Rename some functions to make code more readable
+ - Add some debugging info
+
+v3: 
+ - No changes. Re-submitted due to lack of responses
+
+v2: 
+ - Corrections in DT documentation
+
+Ramiro Oliveira (2):
+  Documentation: DT: Add OV5647 bindings
+  media: i2c: Add support for OV5647 sensor.
+
+ .../devicetree/bindings/media/i2c/ov5647.txt       |  35 ++
+ MAINTAINERS                                        |   7 +
+ drivers/media/i2c/Kconfig                          |  11 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/ov5647.c                         | 634 +++++++++++++++++++++
+ 5 files changed, 688 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+ create mode 100644 drivers/media/i2c/ov5647.c
+
+-- 
+2.11.0
