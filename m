@@ -1,188 +1,52 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re:[PATCH 01/16] arm: dts: add clock controller device nodes
-Date: Wed, 22 Mar 2017 16:16:01 +0800
-Message-ID: <1490170561-13358-1-git-send-email-sean.wang@mediatek.com>
-References: <1485170975-51813-2-git-send-email-john@phrozen.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485170975-51813-2-git-send-email-john@phrozen.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: john@phrozen.org
-Cc: devicetree@vger.kernel.org, sean.wang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/3] clk: qcom: Update DT bindings for the MSM8660/APQ8060 RPMCC
+Date: Wed, 22 Mar 2017 09:18:23 +0100
+Message-ID: <20170322081823.20446-1-linus.walleij@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+These compatible strings need to be added to extend support
+for the RPM CC to cover MSM8660/APQ8060. We also need to add
+enumberators to the include file for a few clocks that were
+missing.
 
-Hi John,
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 2 ++
+ include/dt-bindings/clock/qcom,rpmcc.h                 | 4 ++++
+ 2 files changed, 6 insertions(+)
 
-Some nitpicking below.
-
->Add clock controller nodes for MT7623, including topckgen, infracfg, pericfg and apmixedsys. This patch 
->also cleans up two oscillators that provide clocks for MT7623. Switch the uart clocks to the real ones 
->while at it.
->
->Signed-off-by: John Crispin <john@phrozen.org>
->---
-> arch/arm/boot/dts/mt7623.dtsi |   60 ++++++++++++++++++++++++++++++++++-------
-> 1 file changed, 51 insertions(+), 9 deletions(-)
->
->diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi index fd2b614..592fc0a 
->100644
->--- a/arch/arm/boot/dts/mt7623.dtsi
->+++ b/arch/arm/boot/dts/mt7623.dtsi
->@@ -14,6 +14,8 @@
-> 
-> #include <dt-bindings/interrupt-controller/irq.h>
-> #include <dt-bindings/interrupt-controller/arm-gic.h>
->+#include <dt-bindings/clock/mt2701-clk.h> #include 
->+<dt-bindings/reset/mt2701-resets.h>
-> #include "skeleton64.dtsi"
-> 
-> / {
->@@ -53,16 +55,18 @@
-> 		#clock-cells = <0>;
-> 	};
-> 
->-	rtc_clk: dummy32k {
->+	rtc32k: oscillator@1 {
-> 		compatible = "fixed-clock";
->-		clock-frequency = <32000>;
-> 		#clock-cells = <0>;
->+		clock-frequency = <32000>;
->+		clock-output-names = "rtc32k";
-> 	};
-> 
->-	uart_clk: dummy26m {
->+	clk26m: oscillator@0 {
-> 		compatible = "fixed-clock";
->-		clock-frequency = <26000000>;
-> 		#clock-cells = <0>;
->+		clock-frequency = <26000000>;
->+		clock-output-names = "clk26m";
-> 	};
-> 
-> 	timer {
->@@ -74,6 +78,32 @@
-> 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> 	};
-> 
->+	topckgen: syscon@10000000 {
->+		compatible = "mediatek,mt7623-topckgen",
->+			     "mediatek,mt2701-topckgen",
->+			     "syscon";
->+		reg = <0 0x10000000 0 0x1000>;
->+		#clock-cells = <1>;
->+	};
->+
->+	infracfg: syscon@10001000 {
->+		compatible = "mediatek,mt2701-infracfg",
->+			     "mediatek,mt7623-infracfg",
-
-the order should be 
-		compatible =  "mediatek,mt7623-pericfg",
-			      "mediatek,mt2701-pericfg"
-?
-
->+			     "syscon";
->+		reg = <0 0x10001000 0 0x1000>;
->+		#clock-cells = <1>;
->+		#reset-cells = <1>;
->+	};
->+
->+	pericfg: syscon@10003000 {
->+		compatible =  "mediatek,mt7623-pericfg",
->+			      "mediatek,mt2701-pericfg",
->+			      "syscon";
->+		reg = <0 0x10003000 0 0x1000>;
->+		#clock-cells = <1>;
->+		#reset-cells = <1>;
->+	};
->+
-> 	watchdog: watchdog@10007000 {
-> 		compatible = "mediatek,mt7623-wdt",
-> 			     "mediatek,mt6589-wdt";
->@@ -85,7 +115,7 @@
-> 			     "mediatek,mt6577-timer";
-> 		reg = <0 0x10008000 0 0x80>;
-> 		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
->-		clocks = <&system_clk>, <&rtc_clk>;
->+		clocks = <&system_clk>, <&rtc32k>;
-> 		clock-names = "system-clk", "rtc-clk";
-> 	};
-> 
->@@ -98,6 +128,14 @@
-> 		reg = <0 0x10200100 0 0x1c>;
-> 	};
-> 
->+	apmixedsys: syscon@10209000 {
->+		compatible = "mediatek,mt2701-apmixedsys",
->+			     "mediatek,mt2701-apmixedsys",
-
-duplicated items which seems wrong to type
-
->+			     "syscon";
->+		reg = <0 0x10209000 0 0x1000>;
->+		#clock-cells = <1>;
->+	};
->+
-> 	gic: interrupt-controller@10211000 {
-> 		compatible = "arm,cortex-a7-gic";
-> 		interrupt-controller;
->@@ -114,7 +152,8 @@
-> 			     "mediatek,mt6577-uart";
-> 		reg = <0 0x11002000 0 0x400>;
-> 		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
->-		clocks = <&uart_clk>;
->+		clocks = <&pericfg CLK_PERI_UART0_SEL>, <&pericfg CLK_PERI_UART0>;
->+		clock-names = "baud", "bus";
-> 		status = "disabled";
-> 	};
-> 
->@@ -123,7 +162,8 @@
-> 			     "mediatek,mt6577-uart";
-> 		reg = <0 0x11003000 0 0x400>;
-> 		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
->-		clocks = <&uart_clk>;
->+		clocks = <&pericfg CLK_PERI_UART1_SEL>, <&pericfg CLK_PERI_UART1>;
->+		clock-names = "baud", "bus";
-> 		status = "disabled";
-> 	};
-> 
->@@ -132,7 +172,8 @@
-> 			     "mediatek,mt6577-uart";
-> 		reg = <0 0x11004000 0 0x400>;
-> 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
->-		clocks = <&uart_clk>;
->+		clocks = <&pericfg CLK_PERI_UART2_SEL>, <&pericfg CLK_PERI_UART2>;
->+		clock-names = "baud", "bus";
-> 		status = "disabled";
-> 	};
-> 
->@@ -141,7 +182,8 @@
-> 			     "mediatek,mt6577-uart";
-> 		reg = <0 0x11005000 0 0x400>;
-> 		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
->-		clocks = <&uart_clk>;
->+		clocks = <&pericfg CLK_PERI_UART3_SEL>, <&pericfg CLK_PERI_UART3>;
->+		clock-names = "baud", "bus";
-> 		status = "disabled";
-> 	};
->};
---
-1.7.10.4
-
-
-_______________________________________________
-Linux-mediatek mailing list
-Linux-mediatek@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-mediatek
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index a7235e9e1c97..d470a0187035 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -10,6 +10,8 @@ Required properties :
+ - compatible : shall contain only one of the following. The generic
+                compatible "qcom,rpmcc" should be also included.
+ 
++			"qcom,rpmcc-msm8660", "qcom,rpmcc"
++			"qcom,rpmcc-apq8060", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index 96b63c00249e..44358562a031 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -37,6 +37,10 @@
+ #define RPM_SYS_FABRIC_A_CLK			19
+ #define RPM_SFPB_CLK				20
+ #define RPM_SFPB_A_CLK				21
++#define RPM_PLL4_CLK				22
++#define RPM_PLL4_A_CLK				23
++#define RPM_SMI_CLK				24
++#define RPM_SMI_A_CLK				25
+ 
+ /* SMD RPM clocks */
+ #define RPM_SMD_XO_CLK_SRC				0
+-- 
+2.9.3
