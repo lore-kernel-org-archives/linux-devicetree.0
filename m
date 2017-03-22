@@ -1,50 +1,55 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v4 2/4] dt-bindings: add the grf clock for dw-mipi-dsi
-Date: Wed, 22 Mar 2017 09:54:49 +0800
-Message-ID: <1490147691-4489-3-git-send-email-zyw@rock-chips.com>
-References: <1490147691-4489-1-git-send-email-zyw@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 03/15] ARM: dts: ti: fix PCI bus dtc warnings
+Date: Tue, 21 Mar 2017 21:03:01 -0500
+Message-ID: <20170322020313.24338-3-robh@kernel.org>
+References: <20170322020313.24338-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1490147691-4489-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170322020313.24338-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rm9yIFJLMzM5OSwgdGhlIGdyZiBjbG9jayBzaG91bGQgYmUgY29udHJvbGxlZCBieSBkdy1taXBp
-LWRzaSBkcml2ZXIsCmFkZCB0aGUgZGVzY3JpcHRpb24gZm9yIHRoaXMgY2xvY2suCgpTaWduZWQt
-b2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgpSZXZpZXdlZC1ieTogU2Vh
-biBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+Ci0tLQoKQ2hhbmdlcyBpbiB2NDoKLSByZW1v
-dmUgImFkZGl0aW9uYWwiCgpDaGFuZ2VzIGluIHYzOiBOb25lCkNoYW5nZXMgaW4gdjI6IE5vbmUK
-CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3Jv
-Y2tjaGlwLnR4dCAgICAgICB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
-MSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3Jv
-Y2tjaGlwLnR4dAppbmRleCAxODhmNmY3Li4xZDcyMmY1IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2Nr
-Y2hpcC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0CkBAIC0xMCw3ICsxMCw3IEBAIFJlcXVp
-cmVkIHByb3BlcnRpZXM6CiAtIGludGVycnVwdHM6IFJlcHJlc2VudCB0aGUgY29udHJvbGxlcidz
-IGludGVycnVwdCB0byB0aGUgQ1BVKHMpLgogLSBjbG9ja3MsIGNsb2NrLW5hbWVzOiBQaGFuZGxl
-cyB0byB0aGUgY29udHJvbGxlcidzIHBsbCByZWZlcmVuY2UKICAgY2xvY2socmVmKSBhbmQgQVBC
-IGNsb2NrKHBjbGspLiBGb3IgUkszMzk5LCBhIHBoeSBjb25maWcgY2xvY2sKLSAgKHBoeV9jZmcp
-IGlzIGFkZGl0aW9uYWwgcmVxdWlyZWQuIEFzIGRlc2NyaWJlZCBpbiBbMV0uCisgIChwaHlfY2Zn
-KSBhbmQgYSBncmYgY2xvY2soZ3JmKSBhcmUgcmVxdWlyZWQuIEFzIGRlc2NyaWJlZCBpbiBbMV0u
-CiAtIHJvY2tjaGlwLGdyZjogdGhpcyBzb2Mgc2hvdWxkIHNldCBHUkYgcmVncyB0byBtdXggdm9w
-bC92b3BiLgogLSBwb3J0czogY29udGFpbiBhIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmlu
-aXRpb25zIGFzIGRlZmluZWQgaW4gWzJdLgogICBGb3Igdm9wYixzZXQgdGhlIHJlZyA9IDwwPiBh
-bmQgc2V0IHRoZSByZWcgPSA8MT4gZm9yIHZvcGwuCi0tIAoyLjYuMwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+dtc recently added PCI bus checks. Fix these warnings.
+
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Benoît Cousson" <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+Sub-arch maintainers, please apply to your trees unless arm-soc wants 
+to take the whole lot.
+
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 2c9e56f4aac5..bbfb9d5a70a9 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -283,6 +283,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+ 				linux,pci-domain = <0>;
+@@ -319,6 +320,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+ 				linux,pci-domain = <1>;
+-- 
+2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
