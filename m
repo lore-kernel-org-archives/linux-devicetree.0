@@ -1,164 +1,70 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 0/7] Add support for pinctrl/gpio on Armada 37xx Was Re: [PATCH v2 0/7] Hi,
-Date: Wed, 22 Mar 2017 12:40:49 +0100
-Message-ID: <87efxpfsji.fsf@free-electrons.com>
-References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
-        <87pohafj6q.fsf@free-electrons.com>
+From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 13/15] arm64: dts: juno: fix PCI bus dtc warnings
+Date: Wed, 22 Mar 2017 11:56:18 +0000
+Message-ID: <20170322115618.GD6816@e110455-lin.cambridge.arm.com>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-13-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <87pohafj6q.fsf@free-electrons.com> (Gregory CLEMENT's message of
-        "Tue, 21 Mar 2017 21:50:37 +0100")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Victor Gu <xigu@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170322020313.24338-13-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
- 
- On mar., mars 21 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+Hi Rob,
 
-> Hi,
->
-> Obviously this cover letter is wrong. Actually I forgot to commit it in
-> git series. Here it is the correct one:
->
-> After several months here it is the second version of the series adding
-> support for the pin and gpio controllers present on the Armada 37xx
-> SoCs.
+On Tue, Mar 21, 2017 at 09:03:11PM -0500, Rob Herring wrote:
+> dtc recently added PCI bus checks. Fix these warnings.
 
-As the first version was sent in December here it is a link to it:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/475216.html
+Was not aware of the warnings and the commit message doesn't quote
+them, but the change looks trivial. So:
 
-Also I am going to answer to your review to point what I have done in
-this new series.
+Acked-by: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
 
-Gregory
+Thanks for fixing this!
+Liviu
 
->
-> Each Armada 37xx SoC comes with 2 pin controllers: one on the south
-> bridge (managing 28 pins) and one on the north bridge (managing 36 pins).
->
-> At the hardware level the controller configure the pins by group and not
-> pin by pin.
->
-> The gpio controller is also capable to handle interrupt from gpio.
->
-> In the second version several changes has been done:
->
-> - Update binding documentation making clear that mfd and syscon must
->   be used (patch 1).
->
-> - Split the fist patch adding pin controller support for Armada 37xx
->   in arm64 part (for kconfig) and pinctrl part (patch 2 and 3)
->
-> - Add MFD_SYSCON dependency (patch 3)
->
-> - Add kerneldoc for the armada_37xx_pin_group struct (patch 3)
->
-> - Rename _add_function() to armada_37xx_add_function() (patch 3)
->
-> - Use an inline function to update the reg offset (patch 4)
->
-> - Rename gpiolib_register to gpiochip_register (patch 4)
->
-> - Add a comment about the two registers limit (patch 4)
->
-> - Add explicit gpio node in the device tree (patch 4)
->
-> - Convert the driver to use GPIOLIB_IRQCHIP (patch 5)
->
-> - Add a critical section when accessing the hardware registers (patch 5)
->
-> - Use the gpio sub-node (patch 5)
->
-> With these change most of the comment of the first revision have been addressed.
->
-> Thanks,
->
-> Gregory
->
-> Gregory CLEMENT (7):
->   pinctrl: dt-bindings: Add documentation for Armada 37xx pin controllers
->   arm64: marvell: enable the Armada 37xx pinctrl driver
->   pinctrl: armada-37xx: Add pin controller support for Armada 37xx
->   pinctrl: armada-37xx: Add gpio support
->   pinctrl: aramda-37xx: Add irqchip support
->   ARM64: dts: marvell: Add pinctrl nodes for Armada 3700
->   ARM64: dts: marvell: armada37xx: add pinctrl definition
->
->  Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt         |   7 +-
->  Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt | 143 +++++++++++-
->  arch/arm64/Kconfig.platforms                                              |   2 +-
->  arch/arm64/boot/dts/marvell/armada-3720-db.dts                            |   8 +-
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi                              |  71 +++++-
->  drivers/pinctrl/Makefile                                                  |   2 +-
->  drivers/pinctrl/mvebu/Kconfig                                             |   7 +-
->  drivers/pinctrl/mvebu/Makefile                                            |   3 +-
->  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c                               | 918 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  9 files changed, 1153 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
->  create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
->
-> Sorry for the noise,
->
-> Gregory
->
->
->  On mar., mars 21 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
->
->> this series add support for the pin and gpio controllers present on
->> the Armada 37xx SoCs.
->>
->> Each Armada 37xx SoC comes with 2 pin controllers: one on the south
->> bridge (managing 28 pins) and one on the north bridge (managing 36 pins).
->>
->> At the hardware level the controller configure the pins by group and not
->> pin by pin.
->>
->> The gpio controller is also capable to handle interrupt from gpio.
->>
->> Gregory
->>
->> Gregory CLEMENT (7):
->>   pinctrl: dt-bindings: Add documentation for Armada 37xx pin controllers
->>   arm64: marvell: enable the Armada 37xx pinctrl driver
->>   pinctrl: armada-37xx: Add pin controller support for Armada 37xx
->>   pinctrl: armada-37xx: Add gpio support
->>   pinctrl: aramda-37xx: Add irqchip support
->>   ARM64: dts: marvell: Add pinctrl nodes for Armada 3700
->>   ARM64: dts: marvell: armada37xx: add pinctrl definition
->>
->>  Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt         |   7 +-
->>  Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt | 143 +++++++++++-
->>  arch/arm64/Kconfig.platforms                                              |   2 +-
->>  arch/arm64/boot/dts/marvell/armada-3720-db.dts                            |   8 +-
->>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi                              |  71 +++++-
->>  drivers/pinctrl/Makefile                                                  |   2 +-
->>  drivers/pinctrl/mvebu/Kconfig                                             |   7 +-
->>  drivers/pinctrl/mvebu/Makefile                                            |   3 +-
->>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c                               | 918 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->>  9 files changed, 1153 insertions(+), 8 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
->>  create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
->>
->> base-commit: c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201
->> -- 
->> git-series 0.9.1
->
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> ---
+> 
+>  arch/arm64/boot/dts/arm/juno-base.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> index df539e865b90..8ffaff2043d0 100644
+> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> @@ -428,7 +428,7 @@
+>  		};
+>  	};
+>  
+> -	pcie_ctlr: pcie-controller@40000000 {
+> +	pcie_ctlr: pcie@40000000 {
+>  		compatible = "arm,juno-r1-pcie", "plda,xpressrich3-axi", "pci-host-ecam-generic";
+>  		device_type = "pci";
+>  		reg = <0 0x40000000 0 0x10000000>;	/* ECAM config space */
 > -- 
-> Gregory Clement, Free Electrons
-> Kernel, drivers, real-time and embedded Linux
-> development, consulting, training and support.
-> http://free-electrons.com
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 2.10.1
+> 
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
