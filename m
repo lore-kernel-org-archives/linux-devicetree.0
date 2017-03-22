@@ -1,107 +1,132 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
-Date: Wed, 22 Mar 2017 14:45:07 +0100
-Message-ID: <20170322144507.4d80d2cc@bbrezillon>
-References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
-        <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 06/15] ARM: dts: r8a779x: fix PCI bus dtc warnings
+Date: Wed, 22 Mar 2017 08:47:27 -0500
+Message-ID: <CAL_JsqLd3o0MEgU93axvEg3kddMp4fvP2ZpnBWRdNBR8AHFV+Q@mail.gmail.com>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-6-robh@kernel.org>
+ <CAMuHMdVMyjVv471KB6+SCbNBs6EAaFUm1-2xwj2y-qgriFht0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8a171dacd20c45bd8285ecc5dbe8854a-aBoyCxvc2dBaXkNJqdKpEhSpLNRU/VIH@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdVMyjVv471KB6+SCbNBs6EAaFUm1-2xwj2y-qgriFht0Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bean,
+On Wed, Mar 22, 2017 at 3:58 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Hi Rob,
+>
+> On Wed, Mar 22, 2017 at 3:03 AM, Rob Herring <robh@kernel.org> wrote:
+>> dtc recently added PCI bus checks. Fix these warnings.
+>
+> It's always a good idea to put the warnings in the commit message:
 
-On Wed, 22 Mar 2017 13:20:04 +0000
-"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
+Well, the warnings are a bit noisy in that they get repeated, can be
+misleading, change as I fix problems (device nodes are not checked if
+the bridge node fails), and most importantly I'm lazy having fixed
+these treewide. Sub-arch maintainers are welcome to make better
+patches. :)
 
-> >+micron_nand_read_page_on_die_ecc(struct mtd_info *mtd, struct nand_chip
-> >*chip,
-> >+                                                         uint8_t *buf, int oob_required,
-> >+                                                         int page)
-> >+{
-> >+             int status;
-> >+             int max_bitflips = 0;
-> >+
-> >+             micron_nand_on_die_ecc_setup(chip, true);
-> >+
-> >+             chip->cmdfunc(mtd, NAND_CMD_READ0, 0x00, page);
-> >+             chip->cmdfunc(mtd, NAND_CMD_STATUS, -1, -1);
-> >+             status = chip->read_byte(mtd);
-> >+             if (status & NAND_STATUS_FAIL)
-> >+                           mtd->ecc_stats.failed++;
-> >+             /*
-> >+             * The internal ECC doesn't tell us the number of bitflips
-> >+             * that have been corrected, but tells us if it recommends to
-> >+             * rewrite the block. If it's the case, then we pretend we had
-> >+             * a number of bitflips equal to the ECC strength, which will
-> >+             * hint the NAND core to rewrite the block.
-> >+             */
-> >+             else if (status & NAND_STATUS_WRITE_RECOMMENDED)
-> >+                           max_bitflips = chip->ecc.strength;
-> >+
-> >+             chip->cmdfunc(mtd, NAND_CMD_READ0, -1, -1);
-> >+
-> >+             nand_read_page_raw(mtd, chip, buf, oob_required, page);
-> >+
-> >+             micron_nand_on_die_ecc_setup(chip, false);
-> >+
-> >+             return max_bitflips;
-> >+}  
-> 
-> 
-> Hi, 
-> Let me give you some information, hopefully you can do some modification based on above codes.
-> 
-> I noticed that this patches are based on MT29F1G08ABADAWP SLC NAND, it is our 60s 34nm SLC NAND.
-> So far, we have 2 series SLC NAND with implementations of on die ECC.
-> 1. M79A for all 25nm (70series) SLC NAND with on-die ECC (M78A, M79A, and future design M70A)
-> 2. M60A for all 34nm (60series) SLC NAND with on-die ECC
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,1 node name is not "pci" or "pcie"
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,1 missing ranges for PCI bridge (or not a bridge)
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,1 incorrect #address-cells for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,1 incorrect #size-cells for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,1 missing bus-range for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,2 node name is not "pci" or "pcie"
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,2 missing ranges for PCI bridge (or not a bridge)
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,2 incorrect #address-cells for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,2 incorrect #size-cells for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee090000/usb@0,2 missing bus-range for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,1 node name is not "pci" or "pcie"
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,1 missing ranges for PCI bridge (or not a bridge)
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,1 incorrect #address-cells for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,1 incorrect #size-cells for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,1 missing bus-range for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,2 node name is not "pci" or "pcie"
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,2 missing ranges for PCI bridge (or not a bridge)
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,2 incorrect #address-cells for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,2 incorrect #size-cells for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
+> /pci@ee0d0000/usb@0,2 missing bus-range for PCI bridge
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (unit_address_format):
+> Failed prerequisite 'pci_bridge'
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg): Failed
+> prerequisite 'pci_bridge'
+> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_bus_num):
+> Failed prerequisite 'pci_bridge'
+>
+> The above indeed go away with your patch, but I don't know why ;-)
 
-Do you have an easy way to differentiate those 2 generations of chip,
-or should we base our detection on the model name provided in the ONFI
-parameter page?
+Most of these are because 'device_type = "pci";' should only be on PCI
+bridges, not PCI devices.
 
-> 
-> NAND_STATUS_FAIL:
-> For the both of series SLC NAND with on-die ECC, SR bit 0 (NAND_STATUS_FAIL) indicates an uncorrectable read fail,
-> data is lost, no recovery possible, unless we have software additional protection, the block is not necessarily
-> bad but the data is lost.
-> 
-> NAND_STATUS_WRITE_RECOMMENDED:
-> 
-> For the NAND_STATUS_WRITE_RECOMMENDED, it only works on 60s NAND, it is 4 bit ECC, the status register only
-> indicates if there is 0 or 1-4 correctable error bits. We don't want to trigger refresh if only 1 or 2 bits fail.
-> the base refresh is that if there 3 or 4 bitflips. But unfortunately we can't get failed bit count trough read status register. 
-> SW workaround proposal:
-> 1. If SR bit 3 is set to 1 it means 1~4 bitflips and correctable.
-> 2. Read out the page with ECC ON
-> 3. Read out the page with ECC OFF
-> 4. Compare the data
-> 5. Count the number of bitflips for the sectors (there are 4 ECC sectors)
-> 6. if 3 or more fail bits, trigger fresh. 
-> I know this is not good solution, but if as long as NAND_STATUS_WRITE_RECOMMENDED is set, and trigger refresh,
-> this will definitely increase NAND PE cycle.
+>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> Cc: Simon Horman <horms@verge.net.au>
+>> Cc: Magnus Damm <magnus.damm@gmail.com>
+>> Cc: linux-renesas-soc@vger.kernel.org
+>> ---
+>> Sub-arch maintainers, please apply to your trees unless arm-soc wants
+>> to take the whole lot.
+>>
+>>  arch/arm/boot/dts/r8a7790.dtsi | 16 ++++++----------
+>>  arch/arm/boot/dts/r8a7791.dtsi | 16 ++++++----------
+>>  arch/arm/boot/dts/r8a7794.dtsi | 16 ++++++----------
+>>  3 files changed, 18 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+>> index 6d10450de6d7..c16a37e9fb5d 100644
+>> --- a/arch/arm/boot/dts/r8a7790.dtsi
+>> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+>> @@ -1598,16 +1598,14 @@
+>>                                  0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
+>>                                  0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+>>
+>> -               usb@0,1 {
+>> +               usb@1,0 {
+>>                         reg = <0x800 0 0 0 0>;
+>> -                       device_type = "pci";
+>>                         phys = <&usb0 0>;
+>>                         phy-names = "usb";
+>>                 };
+>
+> Both Documentation/devicetree/bindings/pci/pci.txt and ePAPR refer to
+> http://www.firmware.org/1275/bindings/pci/pci2_1.pdf
+> http://www.firmware.org/1275/practice/imap/imap0_9d.pdf
+> which no longer exist.
 
-We discussed that with Thomas when developing the solution. I suggested
-to first go for a simple solution even if it implies unneeded PE
-cycles when bitflips are detected, but maybe I was wrong. In any case,
-it shouldn't be to hard to do what you suggest.
+Yeah, they are still out there. Just need to google "PCI supplement 1275". :)
 
-> 
-> For the 70s, it is 8 bits on-die ECC, the status register can report 7-8 bitflips (refresh recommended), 4-6 bitflips and 1-3 bitflips.
-> So we can trigger refresh according to its bitflips status.
+I have the full archive saved off. I need to get them added to devicetree.org.
 
-That's good news!
-
-Thanks for your feedback.
-
-Boris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
