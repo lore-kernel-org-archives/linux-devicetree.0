@@ -1,63 +1,41 @@
-From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] fpga dt: bindings for Altera Partial
+From: Alan Tull <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v6 2/4] fpga pr ip: Core driver support for Altera Partial
  Reconfiguration IP.
-Date: Wed, 22 Mar 2017 10:27:33 -0500
-Message-ID: <CANk1AXRqZZJ77r93d3A-pNM_73UwPPUbtL_dFQ9GZXWqTXumZg@mail.gmail.com>
-References: <1490130159-2597-1-git-send-email-matthew.gerlach@linux.intel.com> <1490130159-2597-4-git-send-email-matthew.gerlach@linux.intel.com>
+Date: Wed, 22 Mar 2017 10:28:34 -0500
+Message-ID: <CANk1AXTb=b8urUJ-Nc7hVOT03HTt=Thtb5HiufdjQHuWd1NsYw@mail.gmail.com>
+References: <1490130159-2597-1-git-send-email-matthew.gerlach@linux.intel.com> <1490130159-2597-3-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490130159-2597-4-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490130159-2597-3-git-send-email-matthew.gerlach@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthew.gerlach@linux.intel.com
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, linux-fpga@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Anatolij Gustschin <agust@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 4:02 PM, <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+On Tue, Mar 21, 2017 at 4:02 PM,  <matthew.gerlach@linux.intel.com> wrote:
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 >
-> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Adding the core functions necessary for a fpga-mgr driver
+> for the Altera Partial IP component.  It is intended for
+> these functions to be used by the various bus implementations
+> like the platform bus or the PCIe bus.
 >
-> Device Tree bindings for Altera Partial Reconfiguration IP.
->
-> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-Acked-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Alan Tull <atull@kernel.org>
 
 > ---
+> v6:
+>     Suggestions from Anatolij Gustschin <agust@denx.de>
+>     s/pr_err/dev_err/g
+>     Change for loop to do/while to handle config_complete_timeout_us == 0
+>     move altera-pr-ip-core.h to include/linux/fpga
 > v5:
->     fix comment as suggested by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->     added Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> v4: v3 patch set mistakenly sent out labeled as v4
-> v3: s/altr,pr-ip/altr,a10-pr-ip/
-> v2: s/Reconfiguraion/Reconfiguration/
-> ---
->  Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+>     Fix comment as suggested by Rob Herring <robh@kernel.org>
+> v4:
+>     v3 patch set mistakenly sent out labeled as v4
+> v3:
+>     s/alt_pr_probe/alt_pr_register/
+>     s/alt_pr_remove/alt_pr_unregister/
 >
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
-> new file mode 100644
-> index 0000000..52a294c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
-> @@ -0,0 +1,12 @@
-> +Altera Arria10 Partial Reconfiguration IP
-> +
-> +Required properties:
-> +- compatible : should contain "altr,a10-pr-ip"
-> +- reg        : base address and size for memory mapped io.
-> +
-> +Example:
-> +
-> +       fpga_mgr: fpga-mgr@ff20c000 {
-> +               compatible = "altr,a10-pr-ip";
-> +               reg = <0xff20c000 0x10>;
-> +       };
-> --
-> 2.7.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
