@@ -1,136 +1,54 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sun8i: add device tree for
- Lichee Pi Zero with Dock
-Date: Wed, 22 Mar 2017 20:24:14 +0100
-Message-ID: <20170322192414.rjdu22x3zelvi36a@lukather>
-References: <20170317154343.39921-1-icenowy@aosc.xyz>
- <20170317154343.39921-4-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V11 0/6] thermal: bcm2835: add thermal driver for
+ bcm2835 SoC
+Date: Wed, 22 Mar 2017 20:30:21 +0100 (CET)
+Message-ID: <406851412.102944.1490211021451@email.1und1.de>
+References: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="y4m255lktvg5emdv"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2M6ZPDAKGQEVCFXYLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170317154343.39921-4-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, kernel@martin.sperl.org, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-
---y4m255lktvg5emdv
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Fri, Mar 17, 2017 at 11:43:43PM +0800, Icenowy Zheng wrote:
-> Lichee Pi Zero features a dock, which adds some functions, and should be
-> soldered with the core board of Lichee Pi Zero.
+> Stefan Wahren <stefan.wahren@i2se.com> hat am 12. März 2017 um 23:10 geschrieben:
 > 
-> Add support for the dock as a new dts, as soldering is needed to make
-> the dock usable and there's functions enabled on the dock that is
-> unavailable at the 2.54mm pins of the core board.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile                         |  3 +-
->  arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts | 98 ++++++++++++++++++++++
->  2 files changed, 100 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
+> This is an attempt to finish Martin's great work on the bcm2835
+> thermal driver. It includes now all Eduardo's suggestions and the
+> explanations from the Raspberry Pi forum [1].
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 43c27b624f94..de52d403f818 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -878,7 +878,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->  	sun8i-h3-orangepi-plus.dtb \
->  	sun8i-h3-orangepi-plus2e.dtb \
->  	sun8i-r16-parrot.dtb \
-> -	sun8i-v3s-licheepi-zero.dtb
-> +	sun8i-v3s-licheepi-zero.dtb \
-> +	sun8i-v3s-licheepi-zero-dock.dtb
->  dtb-$(CONFIG_MACH_SUN9I) += \
->  	sun9i-a80-optimus.dtb \
->  	sun9i-a80-cubieboard4.dtb
-> diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-> new file mode 100644
-> index 000000000000..956fa47fde53
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-> @@ -0,0 +1,98 @@
-> +/*
-> + * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include "sun8i-v3s-licheepi-zero.dts"
-> +
-> +#include <dt-bindings/input/input.h>
-> +
-> +/ {
-> +	model = "Lichee Pi Zero with Dock";
-> +	compatible = "licheepi,licheepi-zero-dock", "licheepi,licheepi-zero",
-> +		     "allwinner,sun8i-v3s";
-> +};
-> +
-> +&leds {
-> +	/* The LEDs conflict with MMC1 slot */
+> ChangeLog:
+> V1 -> V2: added specific settings depending on compatiblity
+> added trip point based on register
+> setting up ctrl-register if HW is not enabled by firmware
+> as per recommendation of Eric (untested)
+> check that clock frequency is in range
+> (1.9 - 5MHz - as per comment in clk-bcm2835.c)
+> V2 -> V4: moved back to thermal (not using bcm sub-directory)
+> set polling interval to 1second (was 0ms, so interrupt driven)
+> V5 -> V6: added correct depends in KConfig
+> removed defined default for RESET_DELAY
+> removed obvious comments
+> clarify HW setup comments if not set up by FW already
+> move clk_prepare_enable to an earlier stage and add error handling
+> clarify warning when TS-clock runs out of recommended range
+> clk_disable_unprepare added in bcm2835_thermal_remove
+> added comment on recommended temperature ranges for SOC
+> V6 -> V7: removed depends on ARCH_BCM2836 || ARCH_BCM2837 in Kconfig
+> V7 -> V8: rebased
+> V8 -> V9: moved to use the thermal framework offset and slope in
+> thermal_zone_parameters as per request
+> V9 -> V10: implement support for thermal zone descriptor, define offset and
+> slope within DT, apply forum explanations, replace symbolic with octal
+> permissions
+> V10 -> V11: fix parse issue in bcm2837.dtsi, fix probing and remove unused tzp
+> (sorry about this crap)
+> 
+> [1] - https://www.raspberrypi.org/forums/viewtopic.php?f=72&t=160289&p=1040448
+> 
 
-How does it conflicts?
-
-> +&mmc1 {
-> +	pinctrl-0 = <&mmc1_pins>;
-> +	pinctrl-names = "default";
-> +	broken-cd;
-
-There's no card-detect on a GPIO?
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---y4m255lktvg5emdv--
+gentle ping ...
