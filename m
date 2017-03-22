@@ -1,48 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] ASoC: wm8903: add regulator handling
-Date: Wed, 22 Mar 2017 08:24:32 +0100
-Message-ID: <CACRpkdbcudActZhifqUrb-4PFY0tTpNwt0TvpS4nUu6ptWPOJw@mail.gmail.com>
-References: <20170320091352.4115-1-linus.walleij@linaro.org>
- <20170320115155.GQ6986@localhost.localdomain>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [v5 2/4] dt-bindings: mmc: add description of PHY delays for sdhci-cadence
+Date: Wed, 22 Mar 2017 16:30:56 +0900
+Message-ID: <CAK7LNAS+=KjuD-31he5fRw=S_t10Uygae7bOWf+uRYVCPeW=5w@mail.gmail.com>
+References: <1490106736-2242-1-git-send-email-piotrs@cadence.com> <1490106781-3129-1-git-send-email-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170320115155.GQ6986@localhost.localdomain>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Stephen Warren <swarren@nvidia.com>, Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1490106781-3129-1-git-send-email-piotrs@cadence.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Piotr Sroka <piotrs@cadence.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 12:51 PM, Charles Keepax
-<ckeepax@opensource.wolfsonmicro.com> wrote:
-> On Mon, Mar 20, 2017 at 10:13:52AM +0100, Linus Walleij wrote:
-
->> Mark: I was thinking about adding runtime PM for disabling
->> these regulators when unused, but I'm uncertain about the
->> interaction with DAPM in that regard. This atleast gives us
->> control over the supplies.
+2017-03-21 23:33 GMT+09:00 Piotr Sroka <piotrs@cadence.com>:
+> DTS properties are used instead of fixed data
+> because PHY settings can be different for different chips/boards.
+> Add description of new DLL PHY delays.
 >
-> DAPM will hold a pm_runtime reference whilst the chip is active
-> so usually there isn't really much interaction to worry about.
+> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+> ---
+> Changes for v2:
+> - file was created in v2. It was a part of driver source file patch.
+> - most delays were moved from dts file
+>   to data associated with an SoC specific compatible
+> - description of delays was updated to be more clearly
+> ---
+> Changes for v3:
+> - move all delays back to dts because they are also boards dependent
+> - prefix all of the Cadence-specific properties with cdns prefix
+> ---
+> Changes for v4:
+> - change the beginning of the commit subject
+> ---
+> Changes for v5:
+> - change name of property to be consistent with timing modes
+>   available in Linux
 
-OK, so since the codec is registered on i2c's client->dev I take
-it I could use the runtime PM / suspend/resume callbacks on
-that device, and it should just work.
 
-> I think the patch looks fine for a first pass adding the supplies
-> to me, someone can always add the suspend/resume and controlling
-> the supplies across that when they need it.
+As I gave Reviewed-by in v4 already, this looks good to me.
 
-I will make a try at this as a follow-on patch.
 
-Yours,
-Linus Walleij
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+As I said before,
+once you get Reviewed/Acked tags,
+please include them in your later version.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
