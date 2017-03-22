@@ -1,87 +1,69 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] of/pci: Fix memory leak in of_pci_get_host_bridge_resources
-Date: Wed, 22 Mar 2017 09:55:12 -0500
-Message-ID: <CAL_JsqLiZB2cQ1h+hFdRm4HXvi9WRL6HsUDvW8SxqjwVndbTxg@mail.gmail.com>
-References: <1490149546-4062-1-git-send-email-jeffy.chen@rock-chips.com>
- <1490149546-4062-2-git-send-email-jeffy.chen@rock-chips.com> <CAL_JsqL7eqJCKhsGuCtqoCXW=KpXrjka+4ZX4VCYDyFFY5RYFg@mail.gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v6 06/14] mmc: sdhci: Export sdhci_enable_sdio_irq() from
+ sdhci.c
+Date: Wed, 22 Mar 2017 16:49:38 +0200
+Message-ID: <ff0c74a4-00c3-6eea-9427-bdd5412a2c07@intel.com>
+References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
+ <43d7894cb56bd69d7980cea12b12d56f509f4797.1487091464.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL7eqJCKhsGuCtqoCXW=KpXrjka+4ZX4VCYDyFFY5RYFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, toshi.kani-ZPxbGqLxI0U@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <43d7894cb56bd69d7980cea12b12d56f509f4797.1487091464.git-series.gregory.clement@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Ziji Hu <huziji@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.c>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 22, 2017 at 9:39 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Mar 21, 2017 at 9:25 PM, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->> Currently we only free the allocated resource struct when error.
->> This would cause memory leak after pci_free_resource_list.
->>
->> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->>  drivers/of/of_pci.c | 48 +++++++++++++++---------------------------------
->>  1 file changed, 15 insertions(+), 33 deletions(-)
->>
->> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
->> index 0ee42c3..269393bc 100644
->> --- a/drivers/of/of_pci.c
->> +++ b/drivers/of/of_pci.c
->> @@ -189,9 +189,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->>                         unsigned char busno, unsigned char bus_max,
->>                         struct list_head *resources, resource_size_t *io_base)
->>  {
->> -       struct resource_entry *window;
->> -       struct resource *res;
->> -       struct resource *bus_range;
->> +       struct resource res;
->>         struct of_pci_range range;
->>         struct of_pci_range_parser parser;
->>         char range_type[4];
->> @@ -200,24 +198,19 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->>         if (io_base)
->>                 *io_base = (resource_size_t)OF_BAD_ADDR;
->>
->> -       bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
->> -       if (!bus_range)
->> -               return -ENOMEM;
->> -
->>         pr_info("host bridge %s ranges:\n", dev->full_name);
->>
->> -       err = of_pci_parse_bus_range(dev, bus_range);
->> +       err = of_pci_parse_bus_range(dev, &res);
->>         if (err) {
->> -               bus_range->start = busno;
->> -               bus_range->end = bus_max;
->> -               bus_range->flags = IORESOURCE_BUS;
->> -               pr_info("  No bus range found for %s, using %pR\n",
->> -                       dev->full_name, bus_range);
->> +               res.start = busno;
->> +               res.end = bus_max;
->> +               res.flags = IORESOURCE_BUS;
->> +               pr_info("  No bus range found for %s\n", dev->full_name);
->>         } else {
->> -               if (bus_range->end > bus_range->start + bus_max)
->> -                       bus_range->end = bus_range->start + bus_max;
->> +               if (res.end > res.start + bus_max)
->> +                       res.end = res.start + bus_max;
->>         }
->> -       pci_add_resource(resources, bus_range);
->> +       pci_add_resource(resources, &res);
->
-> You are passing a stack variable to pci_add_resource and it doesn't
-> make a copy of it. I assume the resource needs to live after you exit
-> this function.
+On 14/02/17 19:01, Gregory CLEMENT wrote:
+> From: Hu Ziji <huziji@marvell.com>
+> 
+> Export sdhci_enable_sdio_irq() from sdhci.c.
+> Thus vendor SDHC driver can implement its specific SDIO irq
+> control.
+> 
+> Signed-off-by: Hu Ziji <huziji@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-Ah, found your 1st patch changing the behavior. I'm surprised that
-change works without affecting anyone else.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> If we have a leak, can't you just add a free in the correct spot? That
-> would be a lot easier to review.
->
-> Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/mmc/host/sdhci.c | 3 ++-
+>  drivers/mmc/host/sdhci.h | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index d2338dc362f4..9a4fda81ff81 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1824,7 +1824,7 @@ static void sdhci_enable_sdio_irq_nolock(struct sdhci_host *host, int enable)
+>  	}
+>  }
+>  
+> -static void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable)
+> +void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable)
+>  {
+>  	struct sdhci_host *host = mmc_priv(mmc);
+>  	unsigned long flags;
+> @@ -1838,6 +1838,7 @@ static void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable)
+>  	sdhci_enable_sdio_irq_nolock(host, enable);
+>  	spin_unlock_irqrestore(&host->lock, flags);
+>  }
+> +EXPORT_SYMBOL_GPL(sdhci_enable_sdio_irq);
+>  
+>  int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
+>  				      struct mmc_ios *ios)
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index e4a07543a12b..609783364941 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -694,6 +694,7 @@ int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode);
+>  void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios);
+>  int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
+>  				      struct mmc_ios *ios);
+> +void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable);
+>  
+>  #ifdef CONFIG_PM
+>  extern int sdhci_suspend_host(struct sdhci_host *host);
+> 
+
