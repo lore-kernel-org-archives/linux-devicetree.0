@@ -1,43 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 14/15] arm64: dts: broadcom: fix PCI bus dtc warnings
-Date: Tue, 21 Mar 2017 21:03:12 -0500
-Message-ID: <20170322020313.24338-14-robh@kernel.org>
-References: <20170322020313.24338-1-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170322020313.24338-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Jayachandran C." <c.jayachandran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] power: supply: cpcap-charger: Add minimal CPCAP PMIC
+ battery charger
+Date: Wed, 22 Mar 2017 03:15:14 +0100
+Message-ID: <20170322021514.ewipilqbfm2cwua6@earth>
+References: <20170317022152.21427-1-tony@atomide.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="baxxlrf32bzdp76x"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170317022152.21427-1-tony@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-dtc recently added PCI bus checks. Fix these warnings.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Jayachandran C." <c.jayachandran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
----
-Sub-arch maintainers, please apply to your trees unless arm-soc wants 
-to take the whole lot.
+--baxxlrf32bzdp76x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- arch/arm64/boot/dts/broadcom/vulcan.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/broadcom/vulcan.dtsi b/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-index 34e11a9db2a0..71fea7fdc68d 100644
---- a/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-@@ -117,6 +117,7 @@
- 		ranges =
- 		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
- 		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
-+		bus-range = <0x00 0xff>;
- 		interrupt-map-mask = <0 0 0 7>;
- 		interrupt-map =
- 		      /* addr  pin  ic   icaddr  icintr */
--- 
-2.10.1
+On Thu, Mar 16, 2017 at 07:21:52PM -0700, Tony Lindgren wrote:
+> The custom CPCAP PMIC used on Motorola phones such as Droid 4 has a
+> USB battery charger. It can optionally also have a companion chip that
+> is used for wireless charging.
+>=20
+> The charger on CPCAP also can feed VBUS for the USB host mode. This
+> can be handled by the existing kernel phy_companion interface.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Cc: Marcel Partap <mpartap@gmx.net>
+> Cc: Michael Scott <michael.scott@linaro.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Driver looks ok and works for me, but values are not scaled
+correctly. The power-supply subsystem exposes values in microamps
+and microvolt. IIO provides values in millivolt/milliamps instead,
+so it should be scaled with 1000.
+
+-- Sebastian
+
+--baxxlrf32bzdp76x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljR3i8ACgkQ2O7X88g7
++prR2Q/8CZFujxOHcUhDM0TjDwBl1NPV20gEWc7/iCk1MAd75jLfeV67YtFRT4bR
+0d1ipCrM7R+rf2kDcrZ7mR4+AJpKSTXdFxLGxEqGkojmUKkVRJpXSyR3grEmlLk3
+XBpIeOV1xCN9w/F+w/JK3YMjzdX0e7NTtz/S7mhhKzuDs23Hnq0QTeh/vFJ9rHk6
+3jruFaGoG7r1f5AEgtvBpUyF8gye2iV4B3LznGVCmD3fxzk9XOJ9a5WKuPiwRMB1
+2b0oj7X04wwgOO5K1VF1u/s6jochXSHO6Tn3huzjZAOpNgwFnEaurPhCZ2EtQqc/
+tJ9dbgoaD47GEjE5s+6QSddRlO6mgOguC/yYUyZS8Rfj7E8U41R+dWeGze1iqarg
+X2W4aIL0KGPdVJb1LMMbUKsVjI+jEuypptAZ8DOYLDo246bd9FH220YwkijzUGvw
+6WQgkXe2X3h4b6cxscJr2rd5ORspv2dSdGKUc9KvdHtGkZWEjjlwHnVxjDhbBfiC
+BbSHxQmamNEbAIyxuBFdBQKnVibPFKv392h9i1207KaLrT98SFDHvL9pSM2SOBcu
+nm3XZrj5p01C4r8t+OJ5XzL6g9Fq56GHL/4LYV0w7DMu25oJ4735e/qWsV/qwh/d
+qgABvU5GmYfV1KQAirS8yzd0i3CENUgB8mZTl8I45bDmREi0YMg=
+=enRp
+-----END PGP SIGNATURE-----
+
+--baxxlrf32bzdp76x--
