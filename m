@@ -1,37 +1,52 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 6/7] ARM: dts: rskrza1: set rtc_x1 clock value
-Date: Wed, 22 Mar 2017 10:27:53 -0400
-Message-ID: <20170322142754.30888-7-chris.brandt@renesas.com>
-References: <20170322142754.30888-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170322142754.30888-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 15/23] dt-bindings: PCI: dra7xx: Add dt bindings to
+ enable unaligned access
+Date: Wed, 22 Mar 2017 20:07:18 +0530
+Message-ID: <a3b44129-38b5-fb19-c931-108079b0c382@ti.com>
+References: <20170313142259.25397-1-kishon@ti.com>
+ <20170313142259.25397-16-kishon@ti.com>
+ <20170320214316.yah5cvfdabiceywf@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170320214316.yah5cvfdabiceywf@rob-hp-laptop>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hch@infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Enable the 32.768 kHz RTC_X1 clock by setting the frequency value to
-non-zero.
+Hi Rob,
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+On Tuesday 21 March 2017 03:13 AM, Rob Herring wrote:
+> On Mon, Mar 13, 2017 at 07:52:51PM +0530, Kishon Vijay Abraham I wrote:
+>> Update device tree binding documentation of TI's dra7xx PCI
+>> controller to include property for enabling unaligned mem access.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/pci/ti-pci.txt | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> index 190828a5f32a..b69dd7dbd29e 100644
+>> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> @@ -39,6 +39,11 @@ DEVICE MODE
+>>   - interrupts : one interrupt entries must be specified for main interrupt.
+>>   - num-ib-windows : number of inbound address translation windows
+>>   - num-ob-windows : number of outbound address translation windows
+>> + - ti,syscon-unaligned-access: phandle to the syscon dt node. The 1st argument
+>> +			       should contain the register offset within syscon
+>> +			       and the 2nd argument should contain the bit field
+>> +			       for setting the bit to enable unaligned
+>> +			       access.
+> 
+> This should be setup by the firmware/bootloader or some platform code. 
+> Why does the PCI host need to configure this?
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index 02b59c5..cab5857 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -43,6 +43,10 @@
- 	clock-frequency = <48000000>;
- };
- 
-+&rtc_x1_clk {
-+	clock-frequency = <32768>;
-+};
-+
- &mtu2 {
- 	status = "okay";
- };
--- 
-2.10.1
+That would create a dependency between the bootloader and kernel which is
+usually avoided in platforms like dra7xx.
+
+Thanks
+Kishon
