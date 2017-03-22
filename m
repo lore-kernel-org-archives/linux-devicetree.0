@@ -1,75 +1,86 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 05/14] mmc: sdhci: Export
- sdhci_start_signal_voltage_switch() in sdhci.c
-Date: Wed, 22 Mar 2017 16:49:10 +0200
-Message-ID: <0648f4c1-6acf-00c3-bc5c-c7f029d1eec5@intel.com>
-References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
- <ebab2ad6a83a91683c9589b976a6975141167296.1487091464.git-series.gregory.clement@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/pci: Fix memory leak in of_pci_get_host_bridge_resources
+Date: Wed, 22 Mar 2017 09:55:12 -0500
+Message-ID: <CAL_JsqLiZB2cQ1h+hFdRm4HXvi9WRL6HsUDvW8SxqjwVndbTxg@mail.gmail.com>
+References: <1490149546-4062-1-git-send-email-jeffy.chen@rock-chips.com>
+ <1490149546-4062-2-git-send-email-jeffy.chen@rock-chips.com> <CAL_JsqL7eqJCKhsGuCtqoCXW=KpXrjka+4ZX4VCYDyFFY5RYFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ebab2ad6a83a91683c9589b976a6975141167296.1487091464.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CAL_JsqL7eqJCKhsGuCtqoCXW=KpXrjka+4ZX4VCYDyFFY5RYFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan Gao <ygao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw@semihalf.c>
+To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, toshi.kani-ZPxbGqLxI0U@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/02/17 19:01, Gregory CLEMENT wrote:
-> From: Hu Ziji <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> 
-> Export sdhci_start_signal_voltage_switch() from sdhci.c.
-> Thus vendor sdhci driver can implement its own signal voltage
-> switch routine.
-> 
-> Signed-off-by: Hu Ziji <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Wed, Mar 22, 2017 at 9:39 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Mar 21, 2017 at 9:25 PM, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> Currently we only free the allocated resource struct when error.
+>> This would cause memory leak after pci_free_resource_list.
+>>
+>> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>
+>>  drivers/of/of_pci.c | 48 +++++++++++++++---------------------------------
+>>  1 file changed, 15 insertions(+), 33 deletions(-)
+>>
+>> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+>> index 0ee42c3..269393bc 100644
+>> --- a/drivers/of/of_pci.c
+>> +++ b/drivers/of/of_pci.c
+>> @@ -189,9 +189,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>                         unsigned char busno, unsigned char bus_max,
+>>                         struct list_head *resources, resource_size_t *io_base)
+>>  {
+>> -       struct resource_entry *window;
+>> -       struct resource *res;
+>> -       struct resource *bus_range;
+>> +       struct resource res;
+>>         struct of_pci_range range;
+>>         struct of_pci_range_parser parser;
+>>         char range_type[4];
+>> @@ -200,24 +198,19 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>         if (io_base)
+>>                 *io_base = (resource_size_t)OF_BAD_ADDR;
+>>
+>> -       bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
+>> -       if (!bus_range)
+>> -               return -ENOMEM;
+>> -
+>>         pr_info("host bridge %s ranges:\n", dev->full_name);
+>>
+>> -       err = of_pci_parse_bus_range(dev, bus_range);
+>> +       err = of_pci_parse_bus_range(dev, &res);
+>>         if (err) {
+>> -               bus_range->start = busno;
+>> -               bus_range->end = bus_max;
+>> -               bus_range->flags = IORESOURCE_BUS;
+>> -               pr_info("  No bus range found for %s, using %pR\n",
+>> -                       dev->full_name, bus_range);
+>> +               res.start = busno;
+>> +               res.end = bus_max;
+>> +               res.flags = IORESOURCE_BUS;
+>> +               pr_info("  No bus range found for %s\n", dev->full_name);
+>>         } else {
+>> -               if (bus_range->end > bus_range->start + bus_max)
+>> -                       bus_range->end = bus_range->start + bus_max;
+>> +               if (res.end > res.start + bus_max)
+>> +                       res.end = res.start + bus_max;
+>>         }
+>> -       pci_add_resource(resources, bus_range);
+>> +       pci_add_resource(resources, &res);
+>
+> You are passing a stack variable to pci_add_resource and it doesn't
+> make a copy of it. I assume the resource needs to live after you exit
+> this function.
 
-Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Ah, found your 1st patch changing the behavior. I'm surprised that
+change works without affecting anyone else.
 
-> ---
->  drivers/mmc/host/sdhci.c | 5 +++--
->  drivers/mmc/host/sdhci.h | 2 ++
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 0e9ed0fadff9..d2338dc362f4 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1839,8 +1839,8 @@ static void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable)
->  	spin_unlock_irqrestore(&host->lock, flags);
->  }
->  
-> -static int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
-> -					     struct mmc_ios *ios)
-> +int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
-> +				      struct mmc_ios *ios)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
->  	u16 ctrl;
-> @@ -1932,6 +1932,7 @@ static int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
->  		return 0;
->  	}
->  }
-> +EXPORT_SYMBOL_GPL(sdhci_start_signal_voltage_switch);
->  
->  static int sdhci_card_busy(struct mmc_host *mmc)
->  {
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 3563c0c384ca..e4a07543a12b 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -692,6 +692,8 @@ void sdhci_reset(struct sdhci_host *host, u8 mask);
->  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
->  int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode);
->  void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios);
-> +int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
-> +				      struct mmc_ios *ios);
->  
->  #ifdef CONFIG_PM
->  extern int sdhci_suspend_host(struct sdhci_host *host);
-> 
-
+> If we have a leak, can't you just add a free in the correct spot? That
+> would be a lot easier to review.
+>
+> Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
