@@ -1,53 +1,66 @@
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH v7 7/7] ARM: dts: rockchip: disable arm-global-timer for rk3188
-Date: Wed, 22 Mar 2017 18:48:34 +0300
-Message-ID: <1490197714-25415-8-git-send-email-al.kochet@gmail.com>
-References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
+Date: Wed, 22 Mar 2017 16:49:49 +0100
+Message-ID: <CAMuHMdVwQtdezy2vSp=v_DVHSoVtaOBVgam79k67zNSPiMB1jg@mail.gmail.com>
+References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com>
+ <CAMuHMdUvq6afz4h8XGUP=Ui6re9J1uZDrcSZ9OV+agY-jhJebQ@mail.gmail.com> <20170322153628.GH30223@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Huang Tao <huangtao@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170322153628.GH30223@w540>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The clocksource and the sched_clock provided by the arm_global_timer
-are quite unstable because their rates depend on the cpu frequency.
+Hi Jacopo,
 
-On the other side, the arm_global_timer has a higher rating than the
-rockchip_timer, it will be selected by default by the time framework
-while we want to use the stable rockchip clocksource.
+On Wed, Mar 22, 2017 at 4:36 PM, jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Mar 22, 2017 at 02:20:08PM +0100, Geert Uytterhoeven wrote:
+>> On Wed, Mar 22, 2017 at 11:33 AM, Geert Uytterhoeven
+>> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> > On Mon, Mar 20, 2017 at 5:14 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+>> >> Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+>>
+>> ulating the pin index from its position
+>> >> +      (port where it sits on and pin offset), and alternate function
+>> >> +      configuration options are provided in pin controller header file at:
+>> >
+>> > the pin ... file
+>> >
+>> >> +      include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+>> >
+>> > Hence I'd include that file in this patch, as it's part of the bindings.
+>>
+>> Ah, that would create a hard dependency between the DTS files and the
+>> DT bindings, which typically go in through different trees.
+>> As the driver replicates the definitions from the header, the include file
+>> can go in with the DTS updates.
+>>
+>
+> Sorry, got confused by multiple reviews here..
+> Are you suggesting to squash [03/07] in [04/07] here?
 
-Let's disable the arm_global_timer in order to have the rockchip
-clocksource selected by default.
+No, I suggested to squash [03/07] into [02/07].
 
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
----
- arch/arm/boot/dts/rk3188.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+But upon second thought, that's not such a good idea, as it creates an
+additional dependency.
 
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index a20d501..c316468 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -548,6 +548,7 @@
- 
- &global_timer {
- 	interrupts = <GIC_PPI 11 0xf04>;
-+	status = "disabled";
- };
- 
- &local_timer {
--- 
-1.7.9.5
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
