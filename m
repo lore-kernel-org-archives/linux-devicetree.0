@@ -1,74 +1,62 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [RFC RESEND] serdev binding for QCA7000 UART driver
-Date: Wed, 22 Mar 2017 16:26:59 +0100
-Message-ID: <a071486b-d789-341b-97a4-d74e07603cb0@i2se.com>
-References: <b2273c4a-069b-0b9a-83d3-aed782920c34@i2se.com>
+From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 3/4] fpga dt: bindings for Altera Partial
+ Reconfiguration IP.
+Date: Wed, 22 Mar 2017 10:27:33 -0500
+Message-ID: <CANk1AXRqZZJ77r93d3A-pNM_73UwPPUbtL_dFQ9GZXWqTXumZg@mail.gmail.com>
+References: <1490130159-2597-1-git-send-email-matthew.gerlach@linux.intel.com> <1490130159-2597-4-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b2273c4a-069b-0b9a-83d3-aed782920c34-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <1490130159-2597-4-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 13.03.2017 um 17:16 schrieb Stefan Wahren:
-> Hi Rob,
+On Tue, Mar 21, 2017 at 4:02 PM, <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
 >
-> since serdev has been merged, i'm currently working on a
-> suitable ethernet driver for the QCA7000 [1]. In order to provide a plug
-> and play solution for the network interface i suggest the following
-> binding, which uses common properties for UART configuration:
+> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 >
-> * Qualcomm QCA7000 (Ethernet over UART protocol)
+> Device Tree bindings for Altera Partial Reconfiguration IP.
 >
-> Note: The QCA7000 is also useable as a UART slave device.
->
-> Required properties:
-> - compatible        : Should be "qca,qca7000-uart"
->
-> Optional properties:
-> - local-mac-address : 6 bytes, Specifies MAC address
-> - current-speed     : Specifies current serial device speed in
->                       bits per second (default = 115200)
-> - data-bits         : Specifies number of data bits (default = 8)
-> - use-parity        : If present, this enables the parity
->                       error detection (default = off)
-> - odd-parity        : If present, this specifies that the parity
->                       of each character must be odd (default = even)
->
-> Example:
->
-> /* Freescale i.MX28 UART */
-> auart0: serial@8006a000 {
->     compatible = "fsl,imx28-auart", "fsl,imx23-auart";
->     reg = <0x8006a000 0x2000>;
->     pinctrl-names = "default";
->     pinctrl-0 = <&auart0_2pins_a>;
->     status = "okay";
->
->     qca7000: ethernet {
->         compatible = "qca,qca7000-uart";
->         local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
->         current-speed = <38400>;
->         data-bits = <8>;
->         use-parity;
->         odd-parity;
->     };
-> };
->
-> Is it okay for you or do you want a different kind of configuration?
-> Are there any plans for parity handling?
->
-> Thanks
-> Stefan
->
-> P.S.: Sorry for the broken version
->
-> [1] - https://lwn.net/Articles/701225/
+> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-gentle ping ...
+Acked-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> ---
+> v5:
+>     fix comment as suggested by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>     added Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> v4: v3 patch set mistakenly sent out labeled as v4
+> v3: s/altr,pr-ip/altr,a10-pr-ip/
+> v2: s/Reconfiguraion/Reconfiguration/
+> ---
+>  Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+>
+> diff --git a/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+> new file mode 100644
+> index 0000000..52a294c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+> @@ -0,0 +1,12 @@
+> +Altera Arria10 Partial Reconfiguration IP
+> +
+> +Required properties:
+> +- compatible : should contain "altr,a10-pr-ip"
+> +- reg        : base address and size for memory mapped io.
+> +
+> +Example:
+> +
+> +       fpga_mgr: fpga-mgr@ff20c000 {
+> +               compatible = "altr,a10-pr-ip";
+> +               reg = <0xff20c000 0x10>;
+> +       };
+> --
+> 2.7.4
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
