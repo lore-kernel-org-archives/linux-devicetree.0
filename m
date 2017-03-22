@@ -1,104 +1,74 @@
-From: David Rivshin <drivshin-WHIoityCHfoAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] input: matrix_keypad: add option to drive inactive columns
-Date: Wed, 22 Mar 2017 16:16:50 -0400
-Message-ID: <20170322201650.9072-1-drivshin@awxrd.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [RESEND PATCH v2 15/53] mtd: nand: denali_dt: remove dma-mask DT property
+Date: Thu, 23 Mar 2017 05:07:14 +0900
+Message-ID: <1490213273-8571-16-git-send-email-yamada.masahiro@socionext.com>
+References: <1490213273-8571-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490213273-8571-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: laurent.monat@idquantique.com, thorsten.christiansson@idquantique.com, Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Rivshin <DRivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
+The driver sets appropriate DMA mask.  Delete the "dma-mask" DT
+property.  See [1] for negative comments for this binding.
 
-The gpio-matrix-keypad driver normally sets inactive columns as inputs
-while scanning. This does not work for all hardware, which may require
-the inactive columns to be actively driven in order to overcome any
-pull-ups/downs on the columns.
+[1] https://lkml.org/lkml/2016/2/8/57
 
-Signed-off-by: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/input/gpio-matrix-keypad.txt        |  2 ++
- drivers/input/keyboard/matrix_keypad.c                      | 13 +++++++++----
- include/linux/input/matrix_keypad.h                         |  3 +++
- 3 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-index d0ea09b..570dc10 100644
---- a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-+++ b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-@@ -24,6 +24,8 @@ Optional Properties:
- - debounce-delay-ms:	debounce interval in milliseconds
- - col-scan-delay-us:	delay, measured in microseconds, that is needed
- 			before we can scan keypad after activating column gpio
-+- drive-inactive-cols:	drive inactive columns during scan,
-+			default is to turn inactive columns into inputs.
+Changes in v2: None
+
+ Documentation/devicetree/bindings/mtd/denali-nand.txt | 2 --
+ drivers/mtd/nand/denali_dt.c                          | 9 ---------
+ 2 files changed, 11 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+index 6f4ab4c..e593bbe 100644
+--- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+@@ -6,7 +6,6 @@ Required properties:
+   - reg : should contain registers location and length for data and reg.
+   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
+   - interrupts : The interrupt number.
+-  - dm-mask : DMA bit mask
  
- Example:
- 	matrix-keypad {
-diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
-index 18839cd..1f316d6 100644
---- a/drivers/input/keyboard/matrix_keypad.c
-+++ b/drivers/input/keyboard/matrix_keypad.c
-@@ -42,9 +42,10 @@ struct matrix_keypad {
+ The device tree may optionally contain sub-nodes describing partitions of the
+ address space. See partition.txt for more detail.
+@@ -20,5 +19,4 @@ nand: nand@ff900000 {
+ 	reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
+ 	reg-names = "nand_data", "denali_reg";
+ 	interrupts = <0 144 4>;
+-	dma-mask = <0xffffffff>;
  };
- 
- /*
-- * NOTE: normally the GPIO has to be put into HiZ when de-activated to cause
-- * minmal side effect when scanning other columns, here it is configured to
-- * be input, and it should work on most platforms.
-+ * NOTE: If drive_inactive_cols is false, then the GPIO has to be put into
-+ * HiZ when de-activated to cause minmal side effect when scanning other
-+ * columns. In that case it is configured here to be input, otherwise it is
-+ * driven with the inactive value.
-  */
- static void __activate_col(const struct matrix_keypad_platform_data *pdata,
- 			   int col, bool on)
-@@ -55,7 +56,8 @@ static void __activate_col(const struct matrix_keypad_platform_data *pdata,
- 		gpio_direction_output(pdata->col_gpios[col], level_on);
- 	} else {
- 		gpio_set_value_cansleep(pdata->col_gpios[col], !level_on);
--		gpio_direction_input(pdata->col_gpios[col]);
-+		if (!pdata->drive_inactive_cols)
-+			gpio_direction_input(pdata->col_gpios[col]);
- 	}
- }
- 
-@@ -432,6 +434,9 @@ matrix_keypad_parse_dt(struct device *dev)
- 	if (of_get_property(np, "gpio-activelow", NULL))
- 		pdata->active_low = true;
- 
-+	pdata->drive_inactive_cols =
-+		of_property_read_bool(np, "drive-inactive-cols");
-+
- 	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
- 	of_property_read_u32(np, "col-scan-delay-us",
- 						&pdata->col_scan_delay_us);
-diff --git a/include/linux/input/matrix_keypad.h b/include/linux/input/matrix_keypad.h
-index 37b04a0..6174733 100644
---- a/include/linux/input/matrix_keypad.h
-+++ b/include/linux/input/matrix_keypad.h
-@@ -49,6 +49,8 @@ struct matrix_keymap_data {
-  * @wakeup: controls whether the device should be set up as wakeup
-  *	source
-  * @no_autorepeat: disable key autorepeat
-+ * @drive_inactive_cols: drive inactive columns during scan, rather than
-+ *	making them inputs.
-  *
-  * This structure represents platform-specific data that use used by
-  * matrix_keypad driver to perform proper initialization.
-@@ -73,6 +75,7 @@ struct matrix_keypad_platform_data {
- 	bool		active_low;
- 	bool		wakeup;
- 	bool		no_autorepeat;
-+	bool		drive_inactive_cols;
+diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
+index 9577bfd..b8a8284 100644
+--- a/drivers/mtd/nand/denali_dt.c
++++ b/drivers/mtd/nand/denali_dt.c
+@@ -46,8 +46,6 @@ static const struct of_device_id denali_nand_dt_ids[] = {
  };
+ MODULE_DEVICE_TABLE(of, denali_nand_dt_ids);
  
- int matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
+-static u64 denali_dma_mask;
+-
+ static int denali_dt_probe(struct platform_device *ofdev)
+ {
+ 	struct resource *denali_reg, *nand_data;
+@@ -83,13 +81,6 @@ static int denali_dt_probe(struct platform_device *ofdev)
+ 	if (IS_ERR(denali->flash_mem))
+ 		return PTR_ERR(denali->flash_mem);
+ 
+-	if (!of_property_read_u32(ofdev->dev.of_node,
+-		"dma-mask", (u32 *)&denali_dma_mask)) {
+-		denali->dev->dma_mask = &denali_dma_mask;
+-	} else {
+-		denali->dev->dma_mask = NULL;
+-	}
+-
+ 	dt->clk = devm_clk_get(&ofdev->dev, NULL);
+ 	if (IS_ERR(dt->clk)) {
+ 		dev_err(&ofdev->dev, "no clk available\n");
 -- 
-2.9.3
-
-base-commit: c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
