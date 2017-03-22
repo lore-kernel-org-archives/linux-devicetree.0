@@ -1,155 +1,82 @@
-From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] fpga pr ip: Platform driver for Altera Partial
- Reconfiguration IP.
-Date: Wed, 22 Mar 2017 10:18:20 -0500
-Message-ID: <CANk1AXSsSOCm8OWWsYL7yKp0VqKE0djQSDVr8TZnPs9Rv6MrDA@mail.gmail.com>
-References: <1490130159-2597-1-git-send-email-matthew.gerlach@linux.intel.com> <1490130159-2597-5-git-send-email-matthew.gerlach@linux.intel.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Fix DMA mask assignment
+Date: Wed, 22 Mar 2017 10:19:58 -0500
+Message-ID: <CAL_JsqKAuyePWUC-K21uZEjBU29EZA3WUQOYQdwAZUMOz+mEFg@mail.gmail.com>
+References: <94ede94e98502a7948085fba5a16994d3805010c.1488910224.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490130159-2597-5-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <94ede94e98502a7948085fba5a16994d3805010c.1488910224.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 4:02 PM,  <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->
-> This adds a platform bus driver for a fpga-mgr driver
-> that uses the Altera Partial Reconfiguration IP component.
->
-> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On Tue, Mar 7, 2017 at 12:12 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> As we start moving towards mandating that device DMA addressing
+> capabilities are correctly described in DT for platforms like arm64,
 
-Acked-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Why? There's no point to dma-ranges if the bus is not restricting the
+device. dma-ranges is supposed to apply to a bus, not a device. For
+example, using dma-ranges for a 32-bit device on a 64-bit platform is
+wrong. To put it another way, devices know their addressing
+capability, so we don't need to describe that in DT, only external
+restrictions outside of the device.
 
+> it
+> turns out that actually assigning DMA masks wider than 32 bits from
+> "dma-ranges" is made largely impossible by the current code. New PCI
+> devices are passed in with 32-bit masks, while new platform devices are
+> passed in with their masks unset, so we install default 32-bit masks for
+> them. As a result, subsequently taking the minimum between any existing
+> mask and the size given by "dma-ranges" means that we can never exceed
+> 32 bits for the vast majority of devices.
+>
+> Since the DT can be assumed to describe the hardware appropriately, and
+> the device's driver is expected by the DMA API to explicitly set a mask
+> later when it probes, we can safely let "dma-ranges" unconditionally
+> override any initial mask from device creation (and as a small bonus
+> deduplicate the calculation in the process).
+>
+> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> CC: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> Fixes: 9a6d7298b083 ("of: Calculate device DMA masks based on DT dma-range size")
+
+Changing behavior since 4.1 doesn't really seem like a fix. A fix
+should generally be tagged for stable and I'd be nervous on this one.
+
+Are we sure all the things a driver may do still work the same? A
+driver changing the default 32-bit mask to a 64-bit mask for example.
+
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 > ---
-> v6:
->     add MODULE_LICENSE/DESCRIPTION/AUTHOR as suggested by Anatolij Gustschin
->     <agust-ynQEQJNshbs@public.gmane.org>
+>  drivers/of/device.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
 >
-> v5: fix comment as suggested by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> v4: v3 patch set mistakenly sent out labeled as v4
-> v3:
->     s/altr,pr-ip/altr,a10-pr-ip/
->     s/alt_pr_probe/alt_pr_register/
->     s/alt_pr_remove/alt_pr_unregister/
->     fix error found by kbuild robot with more precise Kconfig depends
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index b1e6bebda3f3..9bb8518b28f2 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -129,15 +129,8 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>         }
 >
-> v2: s/altr,pr-ip-core/altr,pr-ip/
-> ---
->  drivers/fpga/Kconfig                  |  7 ++++
->  drivers/fpga/Makefile                 |  1 +
->  drivers/fpga/altera-pr-ip-core-plat.c | 68 +++++++++++++++++++++++++++++++++++
->  3 files changed, 76 insertions(+)
->  create mode 100644 drivers/fpga/altera-pr-ip-core-plat.c
+>         dev->dma_pfn_offset = offset;
+> -
+> -       /*
+> -        * Limit coherent and dma mask based on size and default mask
+> -        * set by the driver.
+> -        */
+> -       dev->coherent_dma_mask = min(dev->coherent_dma_mask,
+> -                                    DMA_BIT_MASK(ilog2(dma_addr + size)));
+> -       *dev->dma_mask = min((*dev->dma_mask),
+> -                            DMA_BIT_MASK(ilog2(dma_addr + size)));
+> +       dev->coherent_dma_mask = DMA_BIT_MASK(ilog2(dma_addr + size));
+> +       *dev->dma_mask = dev->coherent_dma_mask;
 >
-> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> index 9dd8da1..43e004a 100644
-> --- a/drivers/fpga/Kconfig
-> +++ b/drivers/fpga/Kconfig
-> @@ -81,6 +81,13 @@ config ALTERA_PR_IP_CORE
->          help
->            Core driver support for Altera Partial Reconfiguration IP component
->
-> +config ALTERA_PR_IP_CORE_PLAT
-> +       tristate "Platform support of Altera Partial Reconfiguration IP Core"
-> +       depends on ALTERA_PR_IP_CORE && OF && HAS_IOMEM
-> +       help
-> +         Platform driver support for Altera Partial Reconfiguration IP
-> +         component
-> +
->  endif # FPGA
->
->  endmenu
-> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> index 916d67e..17881a5 100644
-> --- a/drivers/fpga/Makefile
-> +++ b/drivers/fpga/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)    += socfpga-a10.o
->  obj-$(CONFIG_FPGA_MGR_TS73XX)          += ts73xx-fpga.o
->  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)       += zynq-fpga.o
->  obj-$(CONFIG_ALTERA_PR_IP_CORE)         += altera-pr-ip-core.o
-> +obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    += altera-pr-ip-core-plat.o
->
->  # FPGA Bridge Drivers
->  obj-$(CONFIG_FPGA_BRIDGE)              += fpga-bridge.o
-> diff --git a/drivers/fpga/altera-pr-ip-core-plat.c b/drivers/fpga/altera-pr-ip-core-plat.c
-> new file mode 100644
-> index 0000000..8fb36b8
-> --- /dev/null
-> +++ b/drivers/fpga/altera-pr-ip-core-plat.c
-> @@ -0,0 +1,68 @@
-> +/*
-> + * Driver for Altera Partial Reconfiguration IP Core
-> + *
-> + * Copyright (C) 2016-2017 Intel Corporation
-> + *
-> + * Based on socfpga-a10.c Copyright (C) 2015-2016 Altera Corporation
-> + *  by Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#include <linux/fpga/altera-pr-ip-core.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +
-> +static int alt_pr_platform_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       void __iomem *reg_base;
-> +       struct resource *res;
-> +
-> +       /* First mmio base is for register access */
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +       reg_base = devm_ioremap_resource(dev, res);
-> +
-> +       if (IS_ERR(reg_base))
-> +               return PTR_ERR(reg_base);
-> +
-> +       return alt_pr_register(dev, reg_base);
-> +}
-> +
-> +static int alt_pr_platform_remove(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +
-> +       return alt_pr_unregister(dev);
-> +}
-> +
-> +static const struct of_device_id alt_pr_of_match[] = {
-> +       { .compatible = "altr,a10-pr-ip", },
-> +       {},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, alt_pr_of_match);
-> +
-> +static struct platform_driver alt_pr_platform_driver = {
-> +       .probe = alt_pr_platform_probe,
-> +       .remove = alt_pr_platform_remove,
-> +       .driver = {
-> +               .name   = "alt_a10_pr_ip",
-> +               .of_match_table = alt_pr_of_match,
-> +       },
-> +};
-> +
-> +module_platform_driver(alt_pr_platform_driver);
-> +MODULE_AUTHOR("Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
-> +MODULE_DESCRIPTION("Altera Partial Reconfiguration IP Platform Driver");
-> +MODULE_LICENSE("GPL v2");
+>         coherent = of_dma_is_coherent(np);
+>         dev_dbg(dev, "device is%sdma coherent\n",
 > --
-> 2.7.4
+> 2.11.0.dirty
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
