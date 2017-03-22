@@ -1,59 +1,49 @@
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Wed, 22 Mar 2017 14:10:29 -0400
-Message-ID: <1490206229.21130.10.camel@ndufresne.ca>
-References: <aef6c412-5464-726b-42f6-a24b7323aa9c@mentor.com>
-         <20170319103801.GQ21222@n2100.armlinux.org.uk>
-         <9b3311a8-34a7-2b5b-9bc7-836371e1e0a4@gmail.com>
-         <179aca0a-deb5-7937-f955-26cc6d93afba@xs4all.nl>
-         <20170320132930.GJ21222@n2100.armlinux.org.uk>
-         <d0e2a9c2-5e94-d810-7ef4-ae089a6b25f5@xs4all.nl>
-         <20170320141158.GK21222@n2100.armlinux.org.uk>
-         <40e08d05-58cd-a295-3174-123147ee2ac5@xs4all.nl>
-         <20170321104212.GC3784@bigcity.dyn.berto.se>
-         <7fe51907-311d-e1cd-3e4c-dd3dc4af7d78@xs4all.nl>
-         <20170321113629.GW21222@n2100.armlinux.org.uk>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 4/5] dt-bindings: tegra: Update compatible strings for
+ Tegra flowctrl
+Date: Wed, 22 Mar 2017 18:13:27 +0000
+Message-ID: <58983614-8f75-b498-e544-5121a16d5d19@nvidia.com>
+References: <1490202056-13040-1-git-send-email-jonathanh@nvidia.com>
+ <1490202056-13040-5-git-send-email-jonathanh@nvidia.com>
+ <b85e7f4e-ba63-8374-b10d-3f9f04252a69@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-KdCPDvEHKmVtgP+E71wA"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170321113629.GW21222@n2100.armlinux.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Steve Longerbeam <slongerbeam@gmail.com>, Steve Longerbeam <steve_longerbeam@mentor.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b85e7f4e-ba63-8374-b10d-3f9f04252a69-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---=-KdCPDvEHKmVtgP+E71wA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 22/03/17 17:26, Stephen Warren wrote:
+> On 03/22/2017 11:00 AM, Jon Hunter wrote:
+>> Update the compatible strings for Tegra Flow Control driver to match
+>> the device-tree source files for Tegra.
+> 
+>> +++
+>> b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt
+> 
+>> +  - "nvidia,tegra124-flowctrl": for Tegra124 and Tegra132
+> 
+> I think that should be:
+> 
+> +  - "nvidia,tegra124-flowctrl": for Tegra124
+> +  - "nvidia,tegra132-flowctrl", "nvidia,tegra124-flowctrl": for \
+> Tegra132
 
-Le mardi 21 mars 2017 =C3=A0 11:36 +0000, Russell King - ARM Linux a =C3=A9=
-crit=C2=A0:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 warn: v4l2-test-formats.cpp(1187): S_PARM is
-> supported for buftype 2, but not ENUM_FRAMEINTERVALS
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 warn: v4l2-test-formats.cpp(1194): S_PARM is
-> supported but doesn't report V4L2_CAP_TIMEPERFRAME
+This is based upon the current tegra132.dtsi file which just has ...
 
-For encoders, the framerate value is used as numerical value to
-implement bitrate control. So in most cases any interval is accepted.
-Though, it would be cleaner to just implement the enumeration. It's
-quite simple when you support everything.
+	flow-controller@60007000 {
+		compatible = "nvidia,tegra124-flowctrl";
+		...
 
-Nicolas
---=-KdCPDvEHKmVtgP+E71wA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+So I can fix-it up if that is what we want/should have. I have a feeling
+there are a few other cases like this.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Cheers
+Jon
 
-iEYEABECAAYFAljSvhUACgkQcVMCLawGqBzgaACfTk1lVWBoO/6edBKgnB58rTdw
-Le8AoMZYILZhMmGN7rgvAiNqf+SFjvBx
-=vNgW
------END PGP SIGNATURE-----
-
---=-KdCPDvEHKmVtgP+E71wA--
+-- 
+nvpublic
