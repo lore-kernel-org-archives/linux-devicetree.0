@@ -1,71 +1,70 @@
-From: Huibin Hong <huibin.hong@rock-chips.com>
-Subject: [PATCH] arm64: dts: rockchip: add dmac nodes for rk3368 SoCs
-Date: Wed, 22 Mar 2017 20:03:14 +0800
-Message-ID: <1490184194-32051-1-git-send-email-huibin.hong@rock-chips.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v1 1/7] devicetree: power: battery: Add properties for
+ pre-charge and end-charge current
+Date: Wed, 22 Mar 2017 13:04:26 +0100
+Message-ID: <d73af3ca-cfa4-f48b-ba5e-cd07900de058@redhat.com>
+References: <20170321220921.5834-1-liam@networkimprov.net>
+ <20170321220921.5834-2-liam@networkimprov.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, heiko@sntech.de
-Cc: devicetree@vger.kernel.org, felipe.balbi@linux.intel.com, Huibin Hong <huibin.hong@rock-chips.com>, johnyoun@synopsys.com, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, andy.yan@rock-chips.com, jic23@kernel.org, wxt@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170321220921.5834-2-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add dmac bus and dmac peri dts nodes for peripherals,
-such as I2S, SPI, UART and so on.
+Hi,
 
-Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
----
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+On 21-03-17 23:09, Liam Breck wrote:
+> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>
+> precharge-current-microamp and endcharge-current-microamp are used
+> by battery chargers at the beginning and end of a charging cycle.
+>
+> Depends-on: https://patchwork.kernel.org/patch/9633605/
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index a635adc..2a0422f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -189,6 +189,35 @@
- 		};
- 	};
- 
-+        amba {
-+                compatible = "simple-bus";
-+                #address-cells = <2>;
-+                #size-cells = <2>;
-+                ranges;
-+
-+                dmac_peri: dma-controller@ff250000 {
-+                        compatible = "arm,pl330", "arm,primecell";
-+                        reg = <0x0 0xff250000 0x0 0x4000>;
-+                        interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+                                     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+                        #dma-cells = <1>;
-+                        clocks = <&cru ACLK_DMAC_PERI>;
-+                        clock-names = "apb_pclk";
-+                        arm,pl330-broken-no-flushp;
-+                };
-+
-+                dmac_bus: dma-controller@ff600000 {
-+                        compatible = "arm,pl330", "arm,primecell";
-+                        reg = <0x0 0xff600000 0x0 0x4000>;
-+                        interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+                                     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-+                        #dma-cells = <1>;
-+                        clocks = <&cru ACLK_DMAC_BUS>;
-+                        clock-names = "apb_pclk";
-+                        arm,pl330-broken-no-flushp;
-+                };
-+        };
-+
- 	arm-pmu {
- 		compatible = "arm,armv8-pmuv3";
- 		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
--- 
-2.0.0
+Looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+Regards,
+
+Hans
+
+
+> ---
+>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 53a68c0..494374a 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -12,6 +12,8 @@ Optional Properties:
+>   - voltage-min-design-microvolt: drained battery voltage
+>   - energy-full-design-microwatt-hours: battery design energy
+>   - charge-full-design-microamp-hours: battery design capacity
+> + - precharge-current-microamp: current for pre-charge phase
+> + - endcharge-current-microamp: current for charge termination phase
+>
+>  Battery properties are named, where possible, for the corresponding
+>  elements in enum power_supply_property, defined in
+> @@ -28,6 +30,8 @@ Example:
+>  		voltage-min-design-microvolt = <3200000>;
+>  		energy-full-design-microwatt-hours = <5290000>;
+>  		charge-full-design-microamp-hours = <1430000>;
+> +		precharge-current-microamp = <256000>;
+> +		endcharge-current-microamp = <128000>;
+>  	};
+>
+>  	charger: charger@11 {
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
