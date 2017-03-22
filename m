@@ -1,49 +1,60 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [RESEND PATCH v4 2/9] iio: adc: add support for
- X-Powers AXP20X and AXP22X PMICs ADCs
-Date: Wed, 22 Mar 2017 12:34:45 +0800
-Message-ID: <CAGb2v66JC65=9WiMy-Nu+9tTFRLsJL2Eyb0wfJV_K=65ABc6Zg@mail.gmail.com>
-References: <20170320081653.8884-1-quentin.schulz@free-electrons.com> <20170320081653.8884-3-quentin.schulz@free-electrons.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: "Jayachandran C." <c.jayachandran@gmail.com>
+Subject: Re: [PATCH 14/15] arm64: dts: broadcom: fix PCI bus dtc warnings
+Date: Wed, 22 Mar 2017 11:06:36 +0530
+Message-ID: <CA+7sy7DKf8DXVVHS22_E1wStoxMPHpufaHi83OaKg4LKS+JbUg@mail.gmail.com>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-14-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB7P5Y7DAKGQEQJ4UZVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170320081653.8884-3-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170322020313.24338-14-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, arm@kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On Mon, Mar 20, 2017 at 4:16 PM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The X-Powers AXP20X and AXP22X PMICs have multiple ADCs. They expose the
-> battery voltage, battery charge and discharge currents, AC-in and VBUS
-> voltages and currents, 2 GPIOs muxable in ADC mode and PMIC temperature.
+On Wed, Mar 22, 2017 at 7:33 AM, Rob Herring <robh@kernel.org> wrote:
+> dtc recently added PCI bus checks. Fix these warnings.
 >
-> This adds support for most of AXP20X and AXP22X ADCs.
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: "Jayachandran C." <c.jayachandran@gmail.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> ---
+> Sub-arch maintainers, please apply to your trees unless arm-soc wants
+> to take the whole lot.
 >
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Reviewed-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>  arch/arm64/boot/dts/broadcom/vulcan.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/broadcom/vulcan.dtsi b/arch/arm64/boot/dts/broadcom/vulcan.dtsi
+> index 34e11a9db2a0..71fea7fdc68d 100644
+> --- a/arch/arm64/boot/dts/broadcom/vulcan.dtsi
+> +++ b/arch/arm64/boot/dts/broadcom/vulcan.dtsi
+> @@ -117,6 +117,7 @@
+>                 ranges =
+>                   <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
+>                    0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
+> +               bus-range = <0x00 0xff>;
+>                 interrupt-map-mask = <0 0 0 7>;
+>                 interrupt-map =
+>                       /* addr  pin  ic   icaddr  icintr */
 
-This patch seems to depend on commit 4707274714ef ("mfd: axp20x: Correct name
-of temperature data ADC registers") currently in the mfd tree.
 
-Jonathan, would it be ok for Lee to take this patch through the mfd tree
-as well?
+There is a patch posted to move this from broadcom/vulcan.dtsi to
+cavium/thunder2-99xx.dtsi
+https://www.spinics.net/lists/arm-kernel/msg568464.html
 
+That might go in thru the arm-soc tree, and there might be a conflict here.
 
-Thanks
-ChenYu
-
-P.S. I'm thinking about having MFD_AXP20X imply its various sub-drivers.
-Not sure if that was the intended usage of the new imply syntax though.
+JC.
