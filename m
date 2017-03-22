@@ -1,48 +1,35 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCHv2.1] serdev: implement get/set tiocm
-Date: Wed, 22 Mar 2017 10:40:35 +0100
-Message-ID: <20170322094035.GE26771@amd>
-References: <20170321223216.11733-7-sre@kernel.org>
- <20170322005837.6047-1-sre@kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="//IivP0gvsAy3Can"
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170322005837.6047-1-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 0/2] clk: qcom: Add RPM clocks for msm8996
+Date: Wed, 22 Mar 2017 15:09:24 +0530
+Message-ID: <1490175566-4084-1-git-send-email-rnayak@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: sboyd@codeaurora.org, mturquette@baylibre.com
+Cc: linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, srinivas.kandagatla@linaro.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds all the RPM clocks on msm8996 platforms,
+while at it, we also remove some of the RCGs from the GCC
+driver as they are controlled by RPM and hence should not
+be part of GCC.
 
---//IivP0gvsAy3Can
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Series depends on Bjorns patches which add support for glink
+on msm8996
+https://www.spinics.net/lists/linux-wireless/msg160393.html
+http://www.spinics.net/lists/devicetree/msg168445.html
 
-On Wed 2017-03-22 01:58:37, Sebastian Reichel wrote:
-> Add method for getting and setting tiocm.
->=20
-> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Rajendra Nayak (2):
+  clk: qcom: clk-smd-rpm: add msm8996 rpmclks
+  clk: qcom: gcc-msm8996: Remove RPM controlled clocks
 
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+ .../devicetree/bindings/clock/qcom,rpmcc.txt       |   1 +
+ drivers/clk/qcom/clk-smd-rpm.c                     |  82 +++++++++++
+ drivers/clk/qcom/gcc-msm8996.c                     | 156 +++++----------------
+ include/dt-bindings/clock/qcom,gcc-msm8996.h       |   4 -
+ include/dt-bindings/clock/qcom,rpmcc.h             |  14 ++
+ include/linux/soc/qcom/smd-rpm.h                   |   4 +
+ 6 files changed, 134 insertions(+), 127 deletions(-)
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---//IivP0gvsAy3Can
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljSRpMACgkQMOfwapXb+vKsqgCfSRdLTO+WZr4U0ESLgNQ0V+Fq
-DvgAoJo8WUoLfTavYlUtZtFZJTSQi2ne
-=Yg9l
------END PGP SIGNATURE-----
-
---//IivP0gvsAy3Can--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
