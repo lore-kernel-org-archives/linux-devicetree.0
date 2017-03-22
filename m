@@ -1,68 +1,107 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH v5 2/4] fpga pr ip: Core driver support for Altera
- Partial Reconfiguration IP.
-Date: Wed, 22 Mar 2017 17:39:16 +0100
-Message-ID: <20170322173916.6c55b259@crub>
-References: <1489174827-6033-1-git-send-email-matthew.gerlach@linux.intel.com>
-        <1489174827-6033-3-git-send-email-matthew.gerlach@linux.intel.com>
-        <20170321220437.1fa7efaa@crub>
-        <alpine.DEB.2.20.1703220852030.2728@mgerlach-VirtualBox>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH] of: Fix DMA mask assignment
+Date: Wed, 22 Mar 2017 16:46:19 +0000
+Message-ID: <20170322164619.GG21222@n2100.armlinux.org.uk>
+References: <94ede94e98502a7948085fba5a16994d3805010c.1488910224.git.robin.murphy@arm.com>
+ <CAL_JsqKAuyePWUC-K21uZEjBU29EZA3WUQOYQdwAZUMOz+mEFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.20.1703220852030.2728@mgerlach-VirtualBox>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthew.gerlach@linux.intel.com
-Cc: atull@kernel.org, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKAuyePWUC-K21uZEjBU29EZA3WUQOYQdwAZUMOz+mEFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthew,
+On Wed, Mar 22, 2017 at 10:19:58AM -0500, Rob Herring wrote:
+> On Tue, Mar 7, 2017 at 12:12 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> > As we start moving towards mandating that device DMA addressing
+> > capabilities are correctly described in DT for platforms like arm64,
+> 
+> Why? There's no point to dma-ranges if the bus is not restricting the
+> device. dma-ranges is supposed to apply to a bus, not a device. For
+> example, using dma-ranges for a 32-bit device on a 64-bit platform is
+> wrong. To put it another way, devices know their addressing
+> capability, so we don't need to describe that in DT, only external
+> restrictions outside of the device.
+> 
+> > it
+> > turns out that actually assigning DMA masks wider than 32 bits from
+> > "dma-ranges" is made largely impossible by the current code. New PCI
+> > devices are passed in with 32-bit masks, while new platform devices are
+> > passed in with their masks unset, so we install default 32-bit masks for
+> > them. As a result, subsequently taking the minimum between any existing
+> > mask and the size given by "dma-ranges" means that we can never exceed
+> > 32 bits for the vast majority of devices.
+> >
+> > Since the DT can be assumed to describe the hardware appropriately, and
+> > the device's driver is expected by the DMA API to explicitly set a mask
+> > later when it probes, we can safely let "dma-ranges" unconditionally
+> > override any initial mask from device creation (and as a small bonus
+> > deduplicate the calculation in the process).
+> >
+> > CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > CC: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> > Fixes: 9a6d7298b083 ("of: Calculate device DMA masks based on DT dma-range size")
+> 
+> Changing behavior since 4.1 doesn't really seem like a fix. A fix
+> should generally be tagged for stable and I'd be nervous on this one.
+> 
+> Are we sure all the things a driver may do still work the same? A
+> driver changing the default 32-bit mask to a 64-bit mask for example.
 
-On Wed, 22 Mar 2017 09:08:18 -0700 (PDT)
-matthew.gerlach@linux.intel.com matthew.gerlach@linux.intel.com wrote:
-...
->> Can we also add a function for registering a PCIe device with
->> PR IP here? Something like:  
->
->If we have an alt_pr_pcie_register function, we will need the 
->corresponding alt_pr_pcie_unregister function.  Both of these functions 
->should go into their own file like alt_pr_platform_probe() and 
->alt_pr_platform_remove().
+I'll re-iterate about the DMA API requirements.  All drivers that perform
+DMA are expected to perform DMA mask negotiation with the architecture
+code.  That means all drivers should use:
 
-Okay, thanks.
+	dma_set_mask()
 
->> /**
->> * alt_pr_pcie_register - register PCIe device with PR-IP core
->> * @pci_dev:    PCI device with PR-IP
->> * @bar:        PR-IP BAR number
->> * @pr_offset:  offset of the PR-IP core registers
->> *
->> * Return: 0 on success, negative error code otherwise.
->> *
->> * To unregister the PCIe device, use alt_pr_unregister(&pdev->dev).
->> */
->> int alt_pr_pcie_register(struct pci_dev *pdev, int bar, int pr_offset)
->> {
->>        void __iomem *base;
->>        int ret;
->>
->>        if (!pci_is_enabled(pdev)) {
->>                ret = pci_enable_device(pdev);
->>                if (ret < 0) {
->>                        dev_err(&pdev->dev, "can't enable device: %d\n", ret);
->>                        return ret;
->>                }
->>        }
->>
->>        base = devm_ioremap_resource(&pdev->dev, &pdev->resource[bar]);  
->
->Does this remap the whole bar?  If it does, what happens if other 
->components are also connected to the bar?  How do those corresponding 
->drivers get access to the mapped memory?
+if they intend to use the streaming DMA APIs,
 
-yes, it remaps the whole bar. I do not know the details of the PR IP,
-my assumption was that PR IP it is only one component in the bar.
-Then I could use devm_ioremap() instead. Thanks for the hint!
+	dma_set_coherent_mask()
 
-Anatolij
+if they intend to use the coherent DMA API, or
+
+	dma_set_mask_and_coherent()
+
+if they intend to use both APIs.  Drivers that omit these calls are
+buggy.
+
+It is also required that drivers check the return value from these
+calls, since failure means that (eg) they are not allowed to perform
+64-bit DMA.
+
+The mask that the driver passes in to these functions is determined
+by two things:
+
+(a) how many address lines the device supports
+(b) the addressing mode that the driver wishes to enable for the device
+
+For example, on PCI, to use 64-bit DMA, DAC addressing is necessary.
+A PCI driver must have successfully negotiated a >32-bit DMA mask in
+order to use DAC addressing, as this indicates whether the upstream
+supports DAC addressing cycles.
+
+There may be other restrictions that the device driver is unaware of.
+
+So, these three functions are part of a negotiation that drivers are
+expected to perform, and moving this information into DT does not
+negate the need for drivers to perform this negotiation.
+
+Drivers that use the DMA mask coerce() functions are fundamentally
+buggy drivers that either (a) didn't set a DMA mask before there was
+code in DT/elsewhere to provide the default mask, or (b) are overriding
+the negotiation mechanism.  No new drivers should ever use the DMA mask
+coerce functions.
+
+Hope this helps.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
