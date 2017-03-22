@@ -1,55 +1,53 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v7 1/3] Input: max11801_ts: Add missing of_match_table
-Date: Thu, 23 Mar 2017 00:19:02 +0530
-Message-ID: <CAMty3ZCtv1a=YNcZ+WXP=-P1DN5NQe975G4DbR-82Pi_O1asCg@mail.gmail.com>
-References: <1490180808-2856-1-git-send-email-jagan@openedev.com>
- <20170322183039.GA2899@dtor-ws> <CAMty3ZApz+GVkeoT4-75tiJcn6-CxkzdOrMcH7hjK1k2Ht=ZUQ@mail.gmail.com>
- <20170322184421.GB2899@dtor-ws>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 4/5] dt-bindings: tegra: Update compatible strings for
+ Tegra flowctrl
+Date: Wed, 22 Mar 2017 13:00:08 -0600
+Message-ID: <f02f7dac-9b43-64ad-bf04-0cb1cbeac782@wwwdotorg.org>
+References: <1490202056-13040-1-git-send-email-jonathanh@nvidia.com>
+ <1490202056-13040-5-git-send-email-jonathanh@nvidia.com>
+ <b85e7f4e-ba63-8374-b10d-3f9f04252a69@wwwdotorg.org>
+ <58983614-8f75-b498-e544-5121a16d5d19@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170322184421.GB2899@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58983614-8f75-b498-e544-5121a16d5d19-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 12:14 AM, Dmitry Torokhov
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Mar 23, 2017 at 12:05:17AM +0530, Jagan Teki wrote:
->> On Thu, Mar 23, 2017 at 12:00 AM, Dmitry Torokhov
->> <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > On Wed, Mar 22, 2017 at 04:36:46PM +0530, Jagan Teki wrote:
->> >> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> >>
->> >> Added missing of_match_table for max11801_ts driver with
->> >> compatible as "maxim,max11801_ts"
->> >>
->> >
->> > Why not "maxim,max11801"? Also, I think we'd need a binding document.
+On 03/22/2017 12:13 PM, Jon Hunter wrote:
+>
+> On 22/03/17 17:26, Stephen Warren wrote:
+>> On 03/22/2017 11:00 AM, Jon Hunter wrote:
+>>> Update the compatible strings for Tegra Flow Control driver to match
+>>> the device-tree source files for Tegra.
 >>
->> Compatibility purpose to make this is for touchscreen and few of other
+>>> +++
+>>> b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt
+>>
+>>> +  - "nvidia,tegra124-flowctrl": for Tegra124 and Tegra132
+>>
+>> I think that should be:
+>>
+>> +  - "nvidia,tegra124-flowctrl": for Tegra124
+>> +  - "nvidia,tegra132-flowctrl", "nvidia,tegra124-flowctrl": for \
+>> Tegra132
 >
-> Compatibility with what? The i2c id is "max11801" (without the "-ts").
-
-Do we need to sync with i2c id as well? egalax_ts.c follow "_ts"
-of-course the i2c there as follow the same.
-
+> This is based upon the current tegra132.dtsi file which just has ...
 >
->> *_ts.c files follow the same, and added binding documentation in 2/3
->> patch.
+> 	flow-controller@60007000 {
+> 		compatible = "nvidia,tegra124-flowctrl";
+> 		...
 >
-> Sorry, it seems I am only copied on 1/3 patch.
+> So I can fix-it up if that is what we want/should have. I have a feeling
+> there are a few other cases like this.
 
-Sorry, will add in next version patches.
-
-thanks!
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, I'm sure we have some escapes right now. In practice we currently 
+treat T124 and T132 as almost/entirely identical so it won't make any 
+difference. In theory it might in the future if we find a T132-specific 
+bug (unlikely, but). If you're editing up the compatible value docs, we 
+may as well fix this issue while we're at it:-) Scope creep:-) This 
+could happen in a separate change if you want, e.g. to make the same 
+edit to all T132 or all Tegra DTs.
