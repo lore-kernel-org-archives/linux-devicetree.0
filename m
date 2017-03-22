@@ -1,32 +1,50 @@
-From: Sam Povilus <kernel.development@povil.us>
-Subject: Re: [PATCH v5] hwmon: ads7828 optional parameters from the device
- tree
-Date: Wed, 22 Mar 2017 07:05:55 -0600
-Message-ID: <20170322130555.wgwrkeju43dvj232@irascible.povil.us>
-References: <20170321032434.9268-1-kernel.development@povil.us>
- <20170322084240.xspj432z2mpyzykq@ninjato>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 4/7] arm: dts: r7s72100: Add pin controller node
+Date: Wed, 22 Mar 2017 14:12:04 +0100
+Message-ID: <CAMuHMdXZ4qoFrqQjxhD328XW_TPcEpo82mQSKyj6HKvaouot2w@mail.gmail.com>
+References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org> <1490026491-21742-5-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170322084240.xspj432z2mpyzykq@ninjato>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490026491-21742-5-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 22, 2017 at 09:42:40AM +0100, Wolfram Sang wrote:
-> 
-> >  .../devicetree/bindings/i2c/trivial-devices.txt    |  2 --
-> 
-> This file is about to get moved one directory up:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=b7e252fcddfa573bb1ee275b53bba6cef85671d4
-> 
-> Just so you know already...
-> 
+Hi Jacopo,
 
-Thanks! I'm a bit new to this, what's the best way for me to handle
-this? Submit against Linus' tree (presumably making a merge nightmare
-for someone) or rebase my branch off robh's (and presumably risking some
-other branch's patch conflicting)?
+On Mon, Mar 20, 2017 at 5:14 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add pin controller node with 12 gpio controller sub-nodes to
+> r7s72100 dtsi.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/arch/arm/boot/dts/r7s72100.dtsi
+> +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> @@ -183,6 +183,86 @@
+>                 };
+>         };
+>
+> +       pinctrl: pinctrl@fcfe3000 {
+> +               compatible = "renesas,r7s72100-ports";
+> +
+> +               #pinctrl-cells = <1>;
+> +
+> +               reg = <0xfcfe3000 0x4248>;
+
+How did you get to 0x4248? I had expected 0x4230.
+Not that it matters much, Linux rounds it up to a multiple of PAGE_SIZE anyway.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
