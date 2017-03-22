@@ -1,26 +1,180 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 4/6] clk: rockchip: rename RK1108 to RV1108
-Date: Wed, 22 Mar 2017 18:06:17 +0100
-Message-ID: <3220937.UdfUUayLc5@phil>
-References: <20170317171840.4683-1-heiko@sntech.de> <20170317171840.4683-5-heiko@sntech.de>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v6 03/14] mmc: core: Add mmc-card dt sub-node parse in
+ core layer
+Date: Wed, 22 Mar 2017 18:11:14 +0100
+Message-ID: <87r31pdyod.fsf@free-electrons.com>
+References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
+ <34e51d32c82b57571e061e80df3bbaed731db554.1487091464.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFoqxMCSe-2bt2dz1AM_2X7dtVe4w6e7+oAQ==HO_=XKQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170317171840.4683-5-heiko@sntech.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, andy.yan@rock-chips.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFoqxMCSe-2bt2dz1AM_2X7dtVe4w6e7+oAQ==HO_=XKQw@mail.gmail.com>
+ (Ulf Hansson's message of "Wed, 15 Mar 2017 13:43:44 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Ma rcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@li>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 17. März 2017, 18:18:38 CET schrieb Heiko Stuebner:
-> From: Andy Yan <andy.yan@rock-chips.com>
-> 
-> Rockchip finally named the SOC as RV1108, so change it.
-> 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> 
-> [include rename in rk1108.dtsi to prevent compile errors]
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Hi Ulf,
+ 
+ On mer., mars 15 2017, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-applied to my clk-branch for 4.12
+> On 14 February 2017 at 18:01, Gregory CLEMENT
+> <gregory.clement@free-electrons.com> wrote:
+>> From: Hu Ziji <huziji@marvell.com>
+>>
+>> Some vendor host, like Xenon, can support multiple types.
+>> In dts, use mmc-card dt sub-node to indicate eMMC is in use.
+>>
+>> Add a generic mmc-card parse function in mmc core layer.
+>> If mmc-card sub-node is detected, set eMMC common caps, such as
+>> MMC_CAP_NONREMOVABLE, MMC_CAP2_NO_SD and MMC_CAP2_NO_SDIO.
+>>
+>> Since it is likely that struct mmc_card is not allocated yet when
+>> this mmc-card parse function is called, it will return true if
+>> mmc-card sub-node is detected. Otherwise, return false.
+>> It can help vendor host determine if the card type is eMMC.
+>>
+>> Signed-off-by: Hu Ziji <huziji@marvell.com>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> ---
+>>  drivers/mmc/core/mmc.c   | 24 ++++++++++++++++++++++++
+>>  include/linux/mmc/core.h |  2 ++
+>>  2 files changed, 26 insertions(+)
+>>
+>> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+>> index b61b52f9da3d..dc480006a303 100644
+>> --- a/drivers/mmc/core/mmc.c
+>> +++ b/drivers/mmc/core/mmc.c
+>> @@ -2111,6 +2111,30 @@ static const struct mmc_bus_ops mmc_ops = {
+>>  };
+>>
+>>  /*
+>> + * Parse mmc-card dt sub-node and set eMMC common caps
+>> + * if mmc-card exists.
+>> + * If mmc-card is detected, return true.
+>> + * Otherwise, return false.
+>> + */
+>> +bool mmc_of_parse_mmc_card(struct mmc_host *host)
+>> +{
+>> +       struct device_node *np;
+>> +       bool ret = false;
+>> +
+>> +       np = mmc_of_find_child_device(host, 0);
+>
+> There are already some places in the mmc core where child nodes are
+> being parsed. You may have a look for mmc_of_find_child_device() and
+> find the callers of it.
+
+mmc_of_find_child_device is called in 3 places:
+
+ - in mmc_add_card() from drivers/mmc/core/bus.c to populate the of_node
+   field of card->dev. Here we don't care of the mmc-card property
+
+ - in mmc_decode_ext_csd() from drivers/mmc/core/mmc.c, here the purpose
+   is exactly to check if the mmc-card property is present so we could
+   replace it by mmc_of_parse_mmc_card().
+
+ - in sdio_set_of_node from drivers/mmc/core/sdio_bus.c to populate the
+   of_node field of func->dev. Here again, we don't care of the mmc-card
+   property
+
+So in one case we could use the same function but for the 2 other cases
+continue to use mmc_of_find_child_device() alone make sens.
+
+>
+> Additionally, we need a generic method of how to describe in DT, when
+> an mmc host controller has more than one mmc slot. This will also be
+> done using child nodes.
+>
+> So, before starting hacking on this, it seems like we need some
+> consolidation of the code. In principle, I would like to move the APIs
+> for parsing of the child nodes into host.c, along with existing
+> mmc_of_parse() function.
+
+I understand that you want consolidate this subsystem but it seems
+beyond the this series. I would not want that the merge of this driver
+will be delayed more because of it. We submitted the first version 5
+month ago now, made several changes and we will reach the 7th
+version. Along these version we also already contribute to improve the
+mmc subsystem. I agree to work on the change you want, but I would like
+not depending of it to merge this series.
+
+We will address all the other comment on v6 from you and Andrian for a
+v7. And for this patch we can:
+
+ - keep it as is and only modify the mmc_decode_ext_csd() to use
+   mmc_of_find_child_device().
+
+ - Moving it back inside our driver waiting for a better API in the mmc
+   subsystem.
+
+What would be your preference?
+
+>
+>> +       if (np && of_device_is_compatible(np, "mmc-card")) {
+>> +               /* mmc-card sub-node indicates eMMC card is in use. */
+>> +               host->caps |= MMC_CAP_NONREMOVABLE;
+>> +               host->caps2 |= MMC_CAP2_NO_SDIO | MMC_CAP2_NO_SD;
+>> +               ret = true;
+>> +       }
+>> +
+>
+> So instead of providing a new mmc OF parse API, let's make
+> mmc_of_parse() call another internal function which deals with child
+> node parsing.
+
+As the driver need to know if the card is an emmc then we need to alos
+expose this information in one of the mmc structure, waht about "struct
+mmc_host"?
+
+Thanks,
+
+Gregory
+
+
+>
+>> +       of_node_put(np);
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(mmc_of_parse_mmc_card);
+>> +
+>> +/*
+>>   * Starting point for MMC card init.
+>>   */
+>>  int mmc_attach_mmc(struct mmc_host *host)
+>> diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
+>> index e33cc748dcfe..1b27323f3b6e 100644
+>> --- a/include/linux/mmc/core.h
+>> +++ b/include/linux/mmc/core.h
+>> @@ -234,4 +234,6 @@ struct device_node;
+>>  extern u32 mmc_vddrange_to_ocrmask(int vdd_min, int vdd_max);
+>>  extern int mmc_of_parse_voltage(struct device_node *np, u32 *mask);
+>>
+>> +extern bool mmc_of_parse_mmc_card(struct mmc_host *host);
+>> +
+>>  #endif /* LINUX_MMC_CORE_H */
+>> --
+>> git-series 0.9.1
+>
+> If you didn't quite understand my comments, then please tell me. Then
+> I can help out cooking some patches for you.
+>
+> Kind regards
+> Uffe
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
