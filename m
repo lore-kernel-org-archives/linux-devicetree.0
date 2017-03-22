@@ -1,77 +1,59 @@
-From: Alistair Popple <alistair@popple.id.au>
-Subject: [PATCH 1/3] drivers/of/base.c: Add of_property_read_u64_index
-Date: Wed, 22 Mar 2017 14:49:31 +1100
-Message-ID: <1490154573-22475-1-git-send-email-alistair@popple.id.au>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: lamobo-r1: Fix CPU port RGMII settings
+Date: Wed, 22 Mar 2017 12:06:49 +0800
+Message-ID: <CAGb2v65KvoC9MUoErkGeHvmbm8Ocq-vhFBhxXvZu--=xT4zAeg@mail.gmail.com>
+References: <20170319045039.6163-1-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170319045039.6163-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mpe@ellerman.id.au
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, mhairgrove@nvidia.com, shailendras@nvidia.com, Alistair Popple <alistair@popple.id.au>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-arm-kernel@vger.kernel.org, mo.ucina@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-There is of_property_read_u32_index but no u64 variant. This patch
-adds one similar to the u32 version for u64.
+Hi Florian,
 
-Signed-off-by: Alistair Popple <alistair@popple.id.au>
----
- drivers/of/base.c  | 31 +++++++++++++++++++++++++++++++
- include/linux/of.h |  3 +++
- 2 files changed, 34 insertions(+)
+On Sun, Mar 19, 2017 at 12:50 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> The CPU port of the BCM53125 is configured with RGMII (no delays) but
+> this should actually be RGMII with transmit delay (rgmii-txid) because
+> STMMAC takes care of inserting the transmitter delay. This fixes
+> occasional packet loss encountered.
+>
+> Fixes: d7b9eaff5f0c ("ARM: dts: sun7i: Add BCM53125 switch nodes to the lamobo-r1 board")
+> Reported-by: Hartmut Knaack <knaack.h@gmx.de>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+> index 72ec0d5ae052..bbf1c8cbaac6 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+> @@ -167,7 +167,7 @@
+>                                         reg = <8>;
+>                                         label = "cpu";
+>                                         ethernet = <&gmac>;
+> -                                       phy-mode = "rgmii";
+> +                                       phy-mode = "rgmii-txid";
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d7c4629..0ea16bd 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1213,6 +1213,37 @@ int of_property_read_u32_index(const struct device_node *np,
- EXPORT_SYMBOL_GPL(of_property_read_u32_index);
- 
- /**
-+ * of_property_read_u64_index - Find and read a u64 from a multi-value property.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @index:	index of the u64 in the list of values
-+ * @out_value:	pointer to return value, modified only if no error.
-+ *
-+ * Search for a property in a device node and read nth 64-bit value from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_value is modified only if a valid u64 value can be decoded.
-+ */
-+int of_property_read_u64_index(const struct device_node *np,
-+				       const char *propname,
-+				       u32 index, u64 *out_value)
-+{
-+	const u64 *val = of_find_property_value_of_size(np, propname,
-+					((index + 1) * sizeof(*out_value)),
-+					0, NULL);
-+
-+	if (IS_ERR(val))
-+		return PTR_ERR(val);
-+
-+	*out_value = be64_to_cpup(((__be64 *)val) + index);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u64_index);
-+
-+/**
-  * of_property_read_variable_u8_array - Find and read an array of u8 from a
-  * property, with bounds on the minimum and maximum array size.
-  *
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 21e6323..d08788d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -292,6 +292,9 @@ extern int of_property_count_elems_of_size(const struct device_node *np,
- extern int of_property_read_u32_index(const struct device_node *np,
- 				       const char *propname,
- 				       u32 index, u32 *out_value);
-+extern int of_property_read_u64_index(const struct device_node *np,
-+				       const char *propname,
-+				       u32 index, u64 *out_value);
- extern int of_property_read_variable_u8_array(const struct device_node *np,
- 					const char *propname, u8 *out_values,
- 					size_t sz_min, size_t sz_max);
--- 
-2.1.4
+Just to clarify, the DT binding says:
+
+  * "rgmii-txid" (RGMII with internal TX delay provided by the PHY, the MAC
+     should not add an TX delay in this case)
+
+I'm assuming this applies from the device node's point of view?
+In this case the "PHY" is STMMAC, and the "MAC" is the switch chip?
+Is that right?
+
+
+Thanks
+ChenYu
+
+>                                         fixed-link {
+>                                                 speed = <1000>;
+>                                                 full-duplex;
+> --
+> 2.9.3
+>
