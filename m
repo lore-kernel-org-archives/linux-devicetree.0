@@ -1,50 +1,66 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
- Mediatek MT7530 switch
-Date: Wed, 22 Mar 2017 19:30:02 +0100
-Message-ID: <20170322183002.GP30655@lunn.ch>
-References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
- <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] Input: max11801_ts: Add missing of_match_table
+Date: Wed, 22 Mar 2017 11:30:39 -0700
+Message-ID: <20170322183039.GA2899@dtor-ws>
+References: <1490180808-2856-1-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1490088910-19405-6-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1490180808-2856-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> +static int
-> +core_read_mmd_indirect(struct mt7530_priv *priv, int prtad, int devad)
-> +{
-> +	struct mii_bus *bus = priv->bus;
-> +	int value, ret;
-> +
-> +	/* Write the desired MMD Devad */
-> +	ret = bus->write(bus, 0, MII_MMD_CTRL, devad);
-> +	if (ret < 0)
-> +		goto err;
-> +
-> +	/* Write the desired MMD register address */
-> +	ret = bus->write(bus, 0, MII_MMD_DATA, prtad);
-> +	if (ret < 0)
-> +		goto err;
-> +
-> +	/* Select the Function : DATA with no post increment */
-> +	ret = bus->write(bus, 0, MII_MMD_CTRL, (devad | MII_MMD_CTRL_NOINCR));
-> +	if (ret < 0)
-> +		goto err;
+On Wed, Mar 22, 2017 at 04:36:46PM +0530, Jagan Teki wrote:
+> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> 
+> Added missing of_match_table for max11801_ts driver with
+> compatible as "maxim,max11801_ts"
+> 
 
-Hi Sean
+Why not "maxim,max11801"? Also, I think we'd need a binding document.
 
-This appear to be a copy of mmd_phy_indirect(). There are patches from
-Russell King which made this a public function. Once Russell patches
-make net-next, it would be nice to use mmd_phy_indirect(). But that
-might be as a follow up patch, rather than now, depending on the order
-of acceptance of the patches.
+> Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+> Changes for v7:
+> - newly added patch
+> 
+>  drivers/input/touchscreen/max11801_ts.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/max11801_ts.c b/drivers/input/touchscreen/max11801_ts.c
+> index a595ae5..5085d4f 100644
+> --- a/drivers/input/touchscreen/max11801_ts.c
+> +++ b/drivers/input/touchscreen/max11801_ts.c
+> @@ -224,9 +224,16 @@ static int max11801_ts_probe(struct i2c_client *client,
+>  };
+>  MODULE_DEVICE_TABLE(i2c, max11801_ts_id);
+>  
+> +static const struct of_device_id max11801_ts_dt_ids[] = {
+> +	{ .compatible = "maxim,max11801_ts" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, max11801_ts_dt_ids);
+> +
+>  static struct i2c_driver max11801_ts_driver = {
+>  	.driver = {
+>  		.name	= "max11801_ts",
+> +		.of_match_table	= max11801_ts_dt_ids,
+>  	},
+>  	.id_table	= max11801_ts_id,
+>  	.probe		= max11801_ts_probe,
+> -- 
+> 1.9.1
+> 
 
-   Andrew
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
