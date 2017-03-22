@@ -1,41 +1,46 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5] media: platform: Renesas IMR driver
-Date: Wed, 22 Mar 2017 10:34:16 +0100
-Message-ID: <CAMuHMdV5-aMx4KuqShm47XtORJK8rMKzw6FUs2Hjsxia+jPfxg@mail.gmail.com>
-References: <20170309200818.786255823@cogentembedded.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7792: add IMR-L[S]X3 support
+Date: Wed, 22 Mar 2017 10:38:23 +0100
+Message-ID: <CAMuHMdWS8x46yG_7kEcfu+Omy3iVt5FtEwU_HD=EXcA-cje2LA@mail.gmail.com>
+References: <20170321194830.621344167@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170309200818.786255823@cogentembedded.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170321194830.621344167@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 9, 2017 at 9:08 PM, Sergei Shtylyov
+On Thu, Jan 1, 1970 at 12:00 AM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> --- /dev/null
-> +++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
-> @@ -0,0 +1,27 @@
-> +Renesas R-Car Image Renderer (Distortion Correction Engine)
-> +-----------------------------------------------------------
-> +
-> +The image renderer, or the distortion correction engine, is a drawing processor
-> +with a simple instruction system capable of referencing video capture data or
-> +data in an external memory as 2D texture data and performing texture mapping
-> +and drawing with respect to any shape that is split into triangular objects.
-> +
-> +Required properties:
-> +
-> +- compatible: "renesas,<soctype>-imr-lx4", "renesas,imr-lx4" as a fallback for
-> +  the image renderer light extended 4 (IMR-LX4) found in the R-Car gen3 SoCs,
-> +  where the examples with <soctype> are:
-> +  - "renesas,r8a7795-imr-lx4" for R-Car H3,
-> +  - "renesas,r8a7796-imr-lx4" for R-Car M3-W.
+> Describe the IMR-LX3 and 6 IMR-LSX3 devices in the R8A7792 device tree.
+>
+> Based on the original patch by Roman Meshkevich
+> <roman.meshkevich@cogentembedded.com>
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Laurent: what do you think about the need for SoC-specific compatible
-values for the various IM* blocks?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Pending acceptance of the DT bindings.
 
 Gr{oetje,eeting}s,
 
                         Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
