@@ -1,49 +1,64 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 4/5] dt-bindings: tegra: Update compatible strings for
- Tegra flowctrl
-Date: Wed, 22 Mar 2017 18:13:27 +0000
-Message-ID: <58983614-8f75-b498-e544-5121a16d5d19@nvidia.com>
-References: <1490202056-13040-1-git-send-email-jonathanh@nvidia.com>
- <1490202056-13040-5-git-send-email-jonathanh@nvidia.com>
- <b85e7f4e-ba63-8374-b10d-3f9f04252a69@wwwdotorg.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: add regulator info for
+ Kevin digitizer
+Date: Wed, 22 Mar 2017 11:14:42 -0700
+Message-ID: <20170322181441.GC98450@google.com>
+References: <20170320235344.126298-1-briannorris@chromium.org>
+ <20170320235344.126298-5-briannorris@chromium.org>
+ <20415662.PctC9IM4SC@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b85e7f4e-ba63-8374-b10d-3f9f04252a69-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20415662.PctC9IM4SC@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 22/03/17 17:26, Stephen Warren wrote:
-> On 03/22/2017 11:00 AM, Jon Hunter wrote:
->> Update the compatible strings for Tegra Flow Control driver to match
->> the device-tree source files for Tegra.
+On Wed, Mar 22, 2017 at 09:26:41AM +0100, Heiko Stuebner wrote:
+> Am Montag, 20. März 2017, 16:53:44 CET schrieb Brian Norris:
+> > We need to enable this regulator before the digitizer can be used. Wacom
+> > recommended waiting for 100 ms before talking to the HID.
+> > 
+> > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > ---
+> > v3:
+> >  * reintroduced into patch set; bindings are in linux-next
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> > b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts index
+> > 2f720cf2fd07..f4714c4606f3 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> > @@ -232,6 +232,9 @@ ap_i2c_dig: &i2c2 {
 > 
->> +++
->> b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt
+> according to the hid-over-i2c binding, this should use a special compatible 
+> like
 > 
->> +  - "nvidia,tegra124-flowctrl": for Tegra124 and Tegra132
+> 	compatible = "wacom,w9013", "hid-over-i2c"
 > 
-> I think that should be:
-> 
-> +  - "nvidia,tegra124-flowctrl": for Tegra124
-> +  - "nvidia,tegra132-flowctrl", "nvidia,tegra124-flowctrl": for \
-> Tegra132
+> As the binding patch is from Caesar, I assume that is the Kevin component and
+> I can add that myself, just need confirmation that this is actually the correct 
+> component :-) .
 
-This is based upon the current tegra132.dtsi file which just has ...
+*Sigh.* The I2C (and SPI) framework is still broken w.r.t. multiple
+compatible strings and drivers built as modules [1]. So I'd really
+rather not do this...
 
-	flow-controller@60007000 {
-		compatible = "nvidia,tegra124-flowctrl";
-		...
+...but yes, that's a fair component description.
 
-So I can fix-it up if that is what we want/should have. I have a feeling
-there are a few other cases like this.
+Brian
 
-Cheers
-Jon
-
--- 
-nvpublic
+[1] Some discussion about SPI:
+    https://patchwork.kernel.org/patch/7630571/
+    And the discussion about I2C (25% through that thread):
+    https://patchwork.kernel.org/patch/9455245/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
