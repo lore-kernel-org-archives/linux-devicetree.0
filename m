@@ -1,88 +1,158 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 09/11] Bluetooth: add nokia driver
-Date: Wed, 22 Mar 2017 23:48:30 +0100
-Message-ID: <20170322224830.bzlsrrl65nx6olou@earth>
-References: <20170321223216.11733-1-sre@kernel.org>
- <20170321223216.11733-10-sre@kernel.org>
- <CAL_Jsq+UXxocmpSJwJ8dVY0ZSLn1Rk+GfTRKP7Wqvo-_cE4qPg@mail.gmail.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: update device tree
+ binding for Allwinner PRCM CCUs
+Date: Thu, 23 Mar 2017 07:17:03 +0800
+Message-ID: <997781490224623@web30o.yandex.ru>
+References: <20170315172808.64011-1-icenowy@aosc.xyz>
+	 <20170315172808.64011-2-icenowy@aosc.xyz>
+	 <20170321074117.vdfjynauuuv6fivp@lukather>
+	 <115431490120542@web34g.yandex.ru> <20170322200923.tcr7yqnfqj2zk2v7@lukather>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rccjul55cibclxh4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+UXxocmpSJwJ8dVY0ZSLn1Rk+GfTRKP7Wqvo-_cE4qPg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB4MLZTDAKGQEHRIUSIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170322200923.tcr7yqnfqj2zk2v7@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---rccjul55cibclxh4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+23.03.2017, 04:09, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> On Wed, Mar 22, 2017 at 02:22:22AM +0800, Icenowy Zheng wrote:
+>> =C2=A021.03.2017, 15:41, "Maxime Ripard" <maxime.ripard@free-electrons.c=
+om>:
+>> =C2=A0> On Thu, Mar 16, 2017 at 01:28:04AM +0800, Icenowy Zheng wrote:
+>> =C2=A0>> =C2=A0Many Allwinner SoCs after A31 have a CCU in PRCM block.
+>> =C2=A0>>
+>> =C2=A0>> =C2=A0Give the ones on H3 and A64 compatible strings.
+>> =C2=A0>>
+>> =C2=A0>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> =C2=A0>> =C2=A0---
+>> =C2=A0>> =C2=A0Changes in v2:
+>> =C2=A0>> =C2=A0- Add iosc for R_CCU's on H3/A64. (A31, A23 and A33 seem =
+to have different
+>> =C2=A0>> =C2=A0=C2=A0=C2=A0clock for mux 3 of ar100 clk. Investgations a=
+re needed for them.)
+>> =C2=A0>>
+>> =C2=A0>> =C2=A0=C2=A0Documentation/devicetree/bindings/clock/sunxi-ccu.t=
+xt | 18 +++++++++++++++++-
+>> =C2=A0>> =C2=A0=C2=A01 file changed, 17 insertions(+), 1 deletion(-)
+>> =C2=A0>>
+>> =C2=A0>> =C2=A0diff --git a/Documentation/devicetree/bindings/clock/sunx=
+i-ccu.txt b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+>> =C2=A0>> =C2=A0index 68512aa398a9..4a4addff595d 100644
+>> =C2=A0>> =C2=A0--- a/Documentation/devicetree/bindings/clock/sunxi-ccu.t=
+xt
+>> =C2=A0>> =C2=A0+++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.t=
+xt
+>> =C2=A0>> =C2=A0@@ -7,9 +7,11 @@ Required properties :
+>> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun8i-a23-ccu"
+>> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun8i-a33-ccu"
+>> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun8i-h3-ccu"
+>> =C2=A0>> =C2=A0+ - "allwinner,sun8i-h3-r-ccu"
+>> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun8i-v3s-ccu"
+>> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun9i-a80-ccu"
+>> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun50i-a64-ccu"
+>> =C2=A0>> =C2=A0+ - "allwinner,sun50i-a64-r-ccu"
+>> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- "allwinner,sun50i-h5-ccu"
+>> =C2=A0>>
+>> =C2=A0>> =C2=A0=C2=A0- reg: Must contain the registers base address and =
+length
+>> =C2=A0>> =C2=A0@@ -20,7 +22,11 @@ Required properties :
+>> =C2=A0>> =C2=A0=C2=A0- #clock-cells : must contain 1
+>> =C2=A0>> =C2=A0=C2=A0- #reset-cells : must contain 1
+>> =C2=A0>>
+>> =C2=A0>> =C2=A0-Example:
+>> =C2=A0>> =C2=A0+For the PRCM CCUs on H3/A64, one more clock is needed:
+>> =C2=A0>> =C2=A0+- "iosc": another frequency oscillator used for CPUS (us=
+ually at 32000Hz,
+>> =C2=A0>> =C2=A0+ not the same with losc)
+>> =C2=A0>
+>> =C2=A0> This is called the internal oscillator in the datasheet, it woul=
+d
+>> =C2=A0> probably make more sense to call it that way in the documentatio=
+n too.
+>> =C2=A0>
+>> =C2=A0> This oscillator seems to be clocked at 16MHz, so we should repre=
+sent
+>> =C2=A0> it as such.
+>> =C2=A0>
+>> =C2=A0> And I'm wondering, are you *sure* that it's fed directly from th=
+e
+>> =C2=A0> internal oscillator, or goes through the registers in the RTC, w=
+ith
+>> =C2=A0> the 32 divider and 16 prescaler by default that makes it at roug=
+hly
+>> =C2=A0> the same rate (31.25kHz).
+>>
+>> =C2=A0In fact I know nothing about it -- I only represented the code in =
+BSP
+>> =C2=A0clock driver.
+>>
+>> =C2=A0The mux value 3 varies from SoC to SoC. For A64/H5 it's 32000,
+>> =C2=A0for A33 it's 667000 (seems to be directly the internal OSC, as the
+>> =C2=A0user manual says the internal OSC is 600~700kHz; but it's named
+>> =C2=A0cpuosc rather than iosc in A33 BSP clock driver); for A80 it's eve=
+n
+>> =C2=A0PLL_AUDIO.
+>
+> Where are you getting those info from?
+>
+> As far as I know, the A33 PRCM takes the hosc, losc, pll6 and CPU
+> (internal) oscillator:
+> https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/clk/s=
+unxi/clk-sun8iw5.c#L508
+>
+> The H3 takes the hosc and losc:
+> https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/clk/s=
+unxi/clk-sun8iw7.c#L379
+>
+> The A80 takes the hosc and losc:
+> https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/clk/s=
+unxi/clk-sun9iw1.c#L281
+>
+> The A64 takes the hosc, losc, pll-periph0 and the iosc, which indeed
+> seems to be fed from the internal oscillator with the divider in the
+> RTC:
+> https://github.com/longsleep/linux-pine64/blob/lichee-dev-v3.10.65-bsp2.0=
+/arch/arm64/boot/dts/sun50iw1p1-clk.dtsi#L19
+> https://github.com/longsleep/linux-pine64/blob/lichee-dev-v3.10.65-bsp2.0=
+/drivers/clk/sunxi/clk-sun50iw1.c#L603
 
-On Wed, Mar 22, 2017 at 04:26:28PM -0500, Rob Herring wrote:
-> On Tue, Mar 21, 2017 at 5:32 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > This adds a driver for the Nokia H4+ protocol, which is used
-> > at least on the Nokia N9, N900 & N950.
-> >
-> > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
->=20
-> > +       btdev->wakeup_host =3D devm_gpiod_get(dev, "host-wakeup", GPIOD=
-_IN);
-> > +       if (IS_ERR(btdev->wakeup_host)) {
-> > +               err =3D PTR_ERR(btdev->wakeup_host);
-> > +               dev_err(dev, "could not get host wakeup gpio: %d", err);
-> > +               return err;
-> > +       }
-> > +
-> > +       btdev->wake_irq =3D gpiod_to_irq(btdev->wakeup_host);
->=20
-> Missed this in the binding review, but generally, we make these
-> interrupts rather than gpios in the binding.
+But then in sunxi_init_clocks function, the iosc clock is initialized
+as a fixed clock with 32000Hz.
 
-I also read the state of the GPIO. AFAIK it's not possible to read
-the state of an IRQ, so I can't switch to IRQ.
+The clock node in BSP device tree have a compatible of
+allwinner,fixed-clock, but not fixed-clock, which makes it not able
+to be really probed.
 
-> > +
-> > +       err =3D devm_request_threaded_irq(dev, btdev->wake_irq, NULL,
-> > +               wakeup_handler,
-> > +               IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESH=
-OT,
-> > +               "wakeup", btdev);
-> > +       if (err) {
-> > +               dev_err(dev, "could request wakeup irq: %d", err);
-> > +               return err;
-> > +       }
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
--- Sebastian
-
---rccjul55cibclxh4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljS/zsACgkQ2O7X88g7
-+pq/Ww//UADQNmd/5kZQubaCvi54xIxmQy26acsz4jjiuAANnzDRIePzRZiW6Nei
-d6AiW54GVz42LAkJ5LGKsExmxtjdhUA+ILMnTXJwuCKtN+PGWUFsGLWurXAlkEbw
-JZydDy21+hcepGJyFuKiMa7sIDw7xg5wTIhMZ4PyVNLazWQvq+CS9wfW00820upn
-M5cHlfDhCgdPu6ghMsKP+JQtmNxhytkPpAzRdpxsTT7JBY2k6SsU6ts5HgCsu4mm
-/NbVCFTWc2hmJ4rgM5AohTOo7xbyDL6uC8DT+wrlzcDY+VtGdK7dRkpOUqk5xSY1
-eGmATnv8UB5yFX4RqFLoCVQAsQTN3JTXnFAG7u3bEoGJRIRRCmatfRsFmSA/Qt5a
-Hf7LUXbkc2CKkl8QB9DUzq5k/NahbPTMmA7n/HQPuYYB0kvWLbi2l0VnI1P0nwrg
-07sk2GmFHq/gUWBmpaii5JpApZ1UIMMEb5X5PyyBYDi/Ayu1o8+ajaXKuqEZwAKW
-FlZZhwDF1WvTybaWS/MRSqlEoTF68rYVO33qzvXtj1nEbbrdNdpV50ajWIIQmia5
-61N0QAtLMwNv/i6QpYc1368yOMJY2JZQsQ/S7oAsmHtxlSNKbbgEyYZX9HyWADtX
-s+6Z4sN7PS4xQQikH/NwgU4L/15Tnlz3K5FK7WZDpAWWbDL9Zyc=
-=2jsv
------END PGP SIGNATURE-----
-
---rccjul55cibclxh4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
