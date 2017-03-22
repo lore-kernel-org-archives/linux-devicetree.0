@@ -1,89 +1,85 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC RESEND] serdev binding for QCA7000 UART driver
-Date: Wed, 22 Mar 2017 15:32:13 -0500
-Message-ID: <CAL_JsqJS05gw80B4oUWZHEHOg5iPpwKie8XdBr82UD=7WB1cdg@mail.gmail.com>
-References: <b2273c4a-069b-0b9a-83d3-aed782920c34@i2se.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] iio: Documentation: Add max961x sysfs documentation
+Date: Wed, 22 Mar 2017 20:43:34 +0000
+Message-ID: <108fc4a4-8312-fc92-7a61-53616cd743de@kernel.org>
+References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1487948756-25172-3-git-send-email-jacopo+renesas@jmondi.org>
+ <56b35a65-a23d-68ac-17d6-cf46f9352ab7@kernel.org>
+ <20170321160911.GE30223@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b2273c4a-069b-0b9a-83d3-aed782920c34-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <20170321160911.GE30223@w540>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, meerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 11:16 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
-> Hi Rob,
->
-> since serdev has been merged, i'm currently working on a
-> suitable ethernet driver for the QCA7000 [1]. In order to provide a plug
-> and play solution for the network interface i suggest the following
-> binding, which uses common properties for UART configuration:
->
-> * Qualcomm QCA7000 (Ethernet over UART protocol)
->
-> Note: The QCA7000 is also useable as a UART slave device.
+On 21/03/17 16:09, jacopo wrote:
+> Hi Jonathan,
+> 
+> On Sat, Feb 25, 2017 at 03:54:45PM +0000, Jonathan Cameron wrote:
+>> On 24/02/17 15:05, Jacopo Mondi wrote:
+>>> Add documentation for max961x driver.
+>>> The only attribute to document is the current sense shunt resistor
+>>> value.
+>>>
+>>> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+>> Interestingly generic as it only applies to some of the channels.
+>> We might need to have the channel where it is effecting the output specified in the
+>> name, even if we end up with several repeats of the same thing for different
+>> computed channels.
+>>
+> 
+> Sorry, I'm getting on this a bit late...
+> 
+> Do you still think we should have an attribute for each of the
+> channels this values affects?
+> We will end up having 2 distinct processed channels (power and
+> current) that depends on this value.
+> I can expose them as 2 distinct attributes if you think this is the
+> case...
+Better to have two attributes exposing the same thing than imply it
+is relevant to more of channels than it is...
+> 
+> A note on the series in general: given the lack of comments, I will
+> send v2 exposing two processed channels, with no buffered reads, and
+> gain selection performed in kernel space.
+> If we will have to add buffered reads to accomodate higher sampling
+> frequency we'll do that later on eventually.
+Great.
 
-Should this be s/UART/SPI/ ?
+Jonathan
+> 
+> Thanks
+>   j
+> 
+>> Jonathan
+>>> ---
+>>>  Documentation/ABI/testing/sysfs-bus-iio-adc-max961x | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x b/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
+>>> new file mode 100644
+>>> index 0000000..dbd5e75
+>>> --- /dev/null
+>>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
+>>> @@ -0,0 +1,5 @@
+>>> +What:		/sys/bus/iio/devices/iio:deviceX/in_shunt_resistor
+>>> +Date:		February 2017
+>>> +KernelVersion:	4.10
+>>> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> +Description: 	The value of the shunt resistor in micro Ohms.
+>>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
->
-> Required properties:
-> - compatible        : Should be "qca,qca7000-uart"
->
-> Optional properties:
-> - local-mac-address : 6 bytes, Specifies MAC address
-> - current-speed     : Specifies current serial device speed in
->                       bits per second (default = 115200)
-> - data-bits         : Specifies number of data bits (default = 8)
-> - use-parity        : If present, this enables the parity
->                       error detection (default = off)
-> - odd-parity        : If present, this specifies that the parity
->                       of each character must be odd (default = even)
->
-> Example:
->
-> /* Freescale i.MX28 UART */
-> auart0: serial@8006a000 {
->     compatible = "fsl,imx28-auart", "fsl,imx23-auart";
->     reg = <0x8006a000 0x2000>;
->     pinctrl-names = "default";
->     pinctrl-0 = <&auart0_2pins_a>;
->     status = "okay";
->
->     qca7000: ethernet {
->         compatible = "qca,qca7000-uart";
->         local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
->         current-speed = <38400>;
-
-Unless this device supports auto-baud (generally only AT command set
-devices do), this is setup by a bootloader (and you have no way to
-reset the device), or the speed changes with different firmware, I
-don't think you should need this. Devices typically have a fixed,
-initial baudrate that is known, so the driver should know it. Many
-devices switch to a higher speed with some command which the driver
-should also know. Unless there is some board limitation of the max
-speed, then you shouldn't really need a baudrate property. And for max
-baudrate, I added "max-speed".
-
->         data-bits = <8>;
-
-Nearly everything uses 8 bits, so this should be the default.
-
->         use-parity;
->         odd-parity;
-
-I don't think we need 2 properties here. "even-parity" and
-"odd-parity" booleans should be enough to enable and set parity type.
-
->     };
-> };
->
-> Is it okay for you or do you want a different kind of configuration?
-> Are there any plans for parity handling?
-
-I don't have any. Patches welcome. :)
-
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
