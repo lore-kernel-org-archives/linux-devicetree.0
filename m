@@ -1,107 +1,182 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH 06/12] ARM: dts: imx6ul-[geam|isiot]: Add sai2 node
-Date: Wed, 22 Mar 2017 23:18:11 +0530
-Message-ID: <1490204897-14525-7-git-send-email-jagan@openedev.com>
+Subject: [PATCH 09/12] ARM: dts: imx6qdl-icore: Add Sound card with codec node
+Date: Wed, 22 Mar 2017 23:18:14 +0530
+Message-ID: <1490204897-14525-10-git-send-email-jagan@openedev.com>
 References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-Add Synchronous Audio Interface(SAI) node for Engicam GEAM6UL
-and Is.IoT MX6UL variant module boards.
+Add support for Sound card and related codec(via i2c1) nodes
+on below Engicam module boards.
+- i.CoreM6 DualLite/Solo Starter kit
+- i.CoreM6 Quad/Dual Starter kit
+- i.CoreM6 Quad/Dual OpenFrame Cap touch 10.1
+- i.CoreM6 Quad/Dual OpenFrame Cap touch 12.3
 
 Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Matteo Lisi <matteo.lisi@engicam.com>
 Cc: Michael Trimarchi <michael@amarulasolutions.com>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/imx6ul-geam.dtsi  | 16 ++++++++++++++++
- arch/arm/boot/dts/imx6ul-isiot.dtsi | 16 ++++++++++++++++
- 2 files changed, 32 insertions(+)
+ arch/arm/boot/dts/imx6dl-icore.dts        | 11 +++++++++
+ arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 11 +++++++++
+ arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 11 +++++++++
+ arch/arm/boot/dts/imx6q-icore.dts         | 11 +++++++++
+ arch/arm/boot/dts/imx6qdl-icore.dtsi      | 37 +++++++++++++++++++++++++++++++
+ 5 files changed, 81 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dtsi b/arch/arm/boot/dts/imx6ul-geam.dtsi
-index ee5220c..eb94d95 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-geam.dtsi
-@@ -172,6 +172,12 @@
- 	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
+index 6de83c7..c132ccd 100644
+--- a/arch/arm/boot/dts/imx6dl-icore.dts
++++ b/arch/arm/boot/dts/imx6dl-icore.dts
+@@ -57,3 +57,14 @@
+ &can2 {
+ 	status = "okay";
+ };
++
++&i2c3 {
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_2p5v>;
++		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+index 49b60ca..5cc2518 100644
+--- a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
++++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+@@ -50,6 +50,17 @@
+ 	compatible = "engicam,imx6-icore", "fsl,imx6q";
  };
  
-+&sai2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai2>;
-+	status = "okay";
++&i2c3 {
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_2p5v>;
++		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
++	};
 +};
 +
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-@@ -328,6 +334,16 @@
- 		>;
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+index 9e230f5..554a25c 100644
+--- a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
++++ b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+@@ -50,6 +50,17 @@
+ 	compatible = "engicam,imx6-icore", "fsl,imx6q";
+ };
+ 
++&i2c3 {
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_2p5v>;
++		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
++	};
++};
++
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
+index 70cc8b2..07021fd 100644
+--- a/arch/arm/boot/dts/imx6q-icore.dts
++++ b/arch/arm/boot/dts/imx6q-icore.dts
+@@ -67,6 +67,17 @@
+ 	};
+ };
+ 
++&i2c3 {
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_2p5v>;
++		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
++	};
++};
++
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+index 56d0c5d..dd123af 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -55,6 +55,25 @@
+ 		default-brightness-level = <7>;
  	};
  
-+	pinctrl_sai2: sai2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x130b0
-+			MX6UL_PAD_JTAG_TMS__CCM_CLKO1		0x4001b031
-+			MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
-+			MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
-+			MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x120b0
-+		>;
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
 +	};
 +
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
- 			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 4697a04..ea30380 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -91,6 +91,12 @@
++
++	reg_2p5v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "2P5V";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
+ 	reg_3p3v: regulator-3p3v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "3P3V";
+@@ -87,6 +106,20 @@
+ 		#clock-cells = <0>;
+ 		clock-frequency = <25000000>;  /* 25MHz for example */
+ 	};
++
++	sound {
++		compatible = "fsl,imx6-icore-sgtl5000",
++			     "fsl,imx-audio-sgtl5000";
++		model = "imx6q-icore-sgtl5000";
++		ssi-controller = <&ssi1>;
++		audio-codec = <&codec>;
++		audio-routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"Headphone Jack", "HP_OUT";
++		mux-int-port = <1>;
++		mux-ext-port = <4>;
++	};
+ };
+ 
+ &can1 {
+@@ -149,6 +182,10 @@
  	status = "okay";
  };
  
-+&sai2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai2>;
++&ssi1 {
 +	status = "okay";
 +};
 +
- &uart1 {
+ &uart4 {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-@@ -129,6 +135,16 @@
- 		>;
- 	};
- 
-+	pinctrl_sai2: sai2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x130b0
-+			MX6UL_PAD_JTAG_TMS__CCM_CLKO1		0x4001b031
-+			MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
-+			MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
-+			MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x120b0
-+		>;
-+	};
-+
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
- 			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
+ 	pinctrl-0 = <&pinctrl_uart4>;
 -- 
 1.9.1
