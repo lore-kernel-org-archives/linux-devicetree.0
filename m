@@ -1,89 +1,34 @@
-From: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
-Date: Wed, 22 Mar 2017 13:20:04 +0000
-Message-ID: <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
-References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] arm: dts: genmai: Add user led device nodes
+Date: Wed, 22 Mar 2017 14:23:37 +0100
+Message-ID: <CAMuHMdUuX6umyBxHM-aE+PzZYEpWT8wHaHCpnCLUjYjJT-RjPg@mail.gmail.com>
+References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org> <1490026491-21742-8-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <538805ebf8e64015a8b833de755652b3-aBoyCxvc2dBaXkNJqdKpEhSpLNRU/VIH@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1490026491-21742-8-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->+micron_nand_read_page_on_die_ecc(struct mtd_info *mtd, struct nand_chip
->*chip,
->+                                                         uint8_t *buf, int oob_required,
->+                                                         int page)
->+{
->+             int status;
->+             int max_bitflips = 0;
->+
->+             micron_nand_on_die_ecc_setup(chip, true);
->+
->+             chip->cmdfunc(mtd, NAND_CMD_READ0, 0x00, page);
->+             chip->cmdfunc(mtd, NAND_CMD_STATUS, -1, -1);
->+             status = chip->read_byte(mtd);
->+             if (status & NAND_STATUS_FAIL)
->+                           mtd->ecc_stats.failed++;
->+             /*
->+             * The internal ECC doesn't tell us the number of bitflips
->+             * that have been corrected, but tells us if it recommends to
->+             * rewrite the block. If it's the case, then we pretend we had
->+             * a number of bitflips equal to the ECC strength, which will
->+             * hint the NAND core to rewrite the block.
->+             */
->+             else if (status & NAND_STATUS_WRITE_RECOMMENDED)
->+                           max_bitflips = chip->ecc.strength;
->+
->+             chip->cmdfunc(mtd, NAND_CMD_READ0, -1, -1);
->+
->+             nand_read_page_raw(mtd, chip, buf, oob_required, page);
->+
->+             micron_nand_on_die_ecc_setup(chip, false);
->+
->+             return max_bitflips;
->+}
+On Mon, Mar 20, 2017 at 5:14 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> Add device nodes for user leds on Genmai board.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Hi, 
-Let me give you some information, hopefully you can do some modification based on above codes.
+Gr{oetje,eeting}s,
 
-I noticed that this patches are based on MT29F1G08ABADAWP SLC NAND, it is our 60s 34nm SLC NAND.
-So far, we have 2 series SLC NAND with implementations of on die ECC.
-1. M79A for all 25nm (70series) SLC NAND with on-die ECC (M78A, M79A, and future design M70A)
-2. M60A for all 34nm (60series) SLC NAND with on-die ECC
+                        Geert
 
-NAND_STATUS_FAIL:
-For the both of series SLC NAND with on-die ECC, SR bit 0 (NAND_STATUS_FAIL) indicates an uncorrectable read fail,
-data is lost, no recovery possible, unless we have software additional protection, the block is not necessarily
-bad but the data is lost.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-NAND_STATUS_WRITE_RECOMMENDED:
-
-For the NAND_STATUS_WRITE_RECOMMENDED, it only works on 60s NAND, it is 4 bit ECC, the status register only
-indicates if there is 0 or 1-4 correctable error bits. We don't want to trigger refresh if only 1 or 2 bits fail.
-the base refresh is that if there 3 or 4 bitflips. But unfortunately we can't get failed bit count trough read status register. 
-SW workaround proposal:
-1. If SR bit 3 is set to 1 it means 1~4 bitflips and correctable.
-2. Read out the page with ECC ON
-3. Read out the page with ECC OFF
-4. Compare the data
-5. Count the number of bitflips for the sectors (there are 4 ECC sectors)
-6. if 3 or more fail bits, trigger fresh. 
-I know this is not good solution, but if as long as NAND_STATUS_WRITE_RECOMMENDED is set, and trigger refresh,
-this will definitely increase NAND PE cycle.
-
-For the 70s, it is 8 bits on-die ECC, the status register can report 7-8 bitflips (refresh recommended), 4-6 bitflips and 1-3 bitflips.
-So we can trigger refresh according to its bitflips status.
-
-Thanks.
-//beanhuo
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
