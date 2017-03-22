@@ -1,73 +1,83 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH 04/12] ARM: dts: imx6ul-isiot: Add i2c nodes
-Date: Wed, 22 Mar 2017 23:18:09 +0530
-Message-ID: <1490204897-14525-5-git-send-email-jagan@openedev.com>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 05/12] ARM: dts: imx6ul-isiot-common: Add touchscreen node
+Date: Wed, 22 Mar 2017 23:18:10 +0530
+Message-ID: <1490204897-14525-6-git-send-email-jagan@openedev.com>
 References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490204897-14525-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Add support for i2c nodes i2c1 and i2c2 on Is.IoT MX6UL
-eMMC variant boards.
+Add touchscreen node as i2c1 slave device on Engicam Is.IoT MX6UL
+modules, the touchscreen controlled 'st,stmpe-ts' connected via
+i2c with st,stmpe811 mfb interface.
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6ul-isiot.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 34 ++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 5ccc3df..4697a04 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -71,6 +71,20 @@
- 	};
- };
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+index 9660e20..b149b5e 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+@@ -40,6 +40,34 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
  
 +&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
++	touch: stmpe811@44 {
++		compatible = "st,stmpe811";
++		reg = <0x44>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_stmpe_ts>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		stmpe_touchscreen {
++			compatible = "st,stmpe-ts";
++			st,sample-time = <4>;
++			st,mod-12b = <1>;
++			st,ref-sel = <0>;
++			st,adc-freq = <1>;
++			st,ave-ctrl = <1>;
++			st,touch-det-delay = <2>;
++			st,settling = <2>;
++			st,fraction-z = <7>;
++			st,i-drive = <1>;
++		};
++	};
 +};
 +
-+&i2c2 {
-+	clock_frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
- &pwm8 {
+ &lcdif {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm8>;
-@@ -95,6 +109,20 @@
+ 	pinctrl-0 = <&pinctrl_lcdif_dat
+@@ -104,4 +132,10 @@
+ 			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x79
+ 		>;
+ 	};
++
++	pinctrl_stmpe_ts:  stmpe-tsgrp  {
++		fsl,pins = <
++			MX6UL_PAD_UART1_CTS_B__GPIO1_IO18 0x1b0b0
++		>;
++	};
  };
- 
- &iomuxc {
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
-+			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO00__I2C2_SCL 0x4001b8b0
-+			MX6UL_PAD_GPIO1_IO01__I2C2_SDA 0x4001b8b0
-+		>;
-+	};
-+
- 	pinctrl_pwm8: pwm8grp {
- 		fsl,pins = <
- 			MX6UL_PAD_ENET1_RX_ER__PWM8_OUT   0x110b0
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
