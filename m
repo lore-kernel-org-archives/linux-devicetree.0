@@ -1,71 +1,46 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv2 1/2] mfd: cpcap: Add missing include dependencies
-Date: Wed, 22 Mar 2017 10:27:08 +0100
-Message-ID: <20170322092708.GA26771@amd>
-References: <20170322000912.24210-1-sre@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add IMR-L[S]X3 clocks
+Date: Wed, 22 Mar 2017 10:31:38 +0100
+Message-ID: <CAMuHMdUMqZz4C=a3Je-kNoodUeMu7O8riGjaBM755vH71W0ctA@mail.gmail.com>
+References: <20170321194820.477663240@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170322000912.24210-1-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170321194820.477663240@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 1, 1970 at 12:00 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add the IMR-L[S]X3 clocks to the R8A7792 device tree.
+>
+> Based on the original patch by Roman Meshkevich
+> <roman.meshkevich@cogentembedded.com>.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Wed 2017-03-22 01:09:11, Sebastian Reichel wrote:
-> This fixes compilation for files, that try to include the
-> cpcap header in alphabetically sorted #include lists.
->=20
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+I can't verify the parent clocks, though.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Gr{oetje,eeting}s,
 
-> ---
-> This patch is new, since PATCHv1 did not order the includes
-> in the led driver alphabetically.
-> ---
->  include/linux/mfd/motorola-cpcap.h | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motor=
-ola-cpcap.h
-> index 7629e0d24d26..b8916953a537 100644
-> --- a/include/linux/mfd/motorola-cpcap.h
-> +++ b/include/linux/mfd/motorola-cpcap.h
-> @@ -14,6 +14,9 @@
->   * published by the Free Software Foundation.
->   */
-> =20
-> +#include <linux/device.h>
-> +#include <linux/regmap.h>
-> +
->  #define CPCAP_VENDOR_ST		0
->  #define CPCAP_VENDOR_TI		1
-> =20
+                        Geert
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljSQ2wACgkQMOfwapXb+vJCkgCgprxs8cpdjg81H049gmjOKPiA
-VV0An0cAIAAvZpE3fet3GpzNpXraWUfV
-=L9BX
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
