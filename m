@@ -1,45 +1,182 @@
-From: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
-Date: Wed, 22 Mar 2017 17:11:31 +0000
-Message-ID: <c4dd0c48d345412687a55e7904b63815@SIWEX5A.sing.micron.com>
-References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
-        <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
-        <20170322144507.4d80d2cc@bbrezillon>
-        <0dccc0abcf234e98be6d340027cf1a30@SIWEX5A.sing.micron.com>
- <20170322155216.319efc3e@bbrezillon>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [RFC 8/8] ARM: dts: imx6qdl-sabresd: Enable fsl,ldo-bypass
+Date: Wed, 22 Mar 2017 18:13:50 +0100
+Message-ID: <1490202830.29056.8.camel@pengutronix.de>
+References: <cover.1490199005.git.leonard.crestez@nxp.com>
+         <8f4dca5609781f0362009dfa7f6d5c0990b5ea6d.1490199005.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170322155216.319efc3e@bbrezillon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <8f4dca5609781f0362009dfa7f6d5c0990b5ea6d.1490199005.git.leonard.crestez@nxp.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>, Irina Tirdea <irina.tirdea@nxp.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Octavian Purdila <octavian.purdila@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris
+Am Mittwoch, den 22.03.2017, 18:53 +0200 schrieb Leonard Crestez:
+> This enables LDO bypass by default on the imx6qdl-sabresd boards. New
+> dts files with -ldo suffix are added for users who want to run with LDOs
+> enabled on these boards anyway.
 
->>
->> For the Micron SLC NAND with on Die ECC, please note only for the "SLC
->> NAND with on Die ECC", You can always differentiate these two
->> generation NAND by ONFI table byte 112 "Number of bits ECC
->> correctability ", if its value is 4, it is 60s; if it's 8, it is 70s. this is a permanent
->method for both 60s and 70s "SLC NAND with on Die ECC".
->
->The question is, how can we know if the NAND supports on-die ECC?
->
->We were basing our detection on the "Internal ECC" bit in READ_ID, but it seems
->this bit is actually reflecting the current ECC engine status (enabled/disabled),
->which is disturbing, since information returned by the READ_ID are supposed to
->be static :-(.
->
+Given that using LDO bypass affects the device lifetime negatively (see
+AN4724), I think the default should still be to use LDO enabled mode and
+have new DTs for people that desire to shorten the lifetime of the SoC
+for a minimal drop in power consumption.
 
-This is very difficult question, as a Micron worker, this is also a headache to me.
-Device ID byte 4 can't be fully trusted, it always changes. Anyway, I will give you
-A better answer in 2 days. Hopefully.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Lucas
+> 
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6dl-sabresd-ldo.dts | 13 +++++++++++++
+>  arch/arm/boot/dts/imx6q-sabresd-ldo.dts  | 13 +++++++++++++
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi   | 19 +++++++++++++++++++
+>  arch/arm/boot/dts/imx6qdl.dtsi           |  6 +++---
+>  arch/arm/boot/dts/imx6qp-sabresd-ldo.dts | 13 +++++++++++++
+>  arch/arm/boot/dts/imx6qp-sabresd.dts     |  4 ++--
+>  6 files changed, 63 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-sabresd-ldo.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-sabresd-ldo.dts
+>  create mode 100644 arch/arm/boot/dts/imx6qp-sabresd-ldo.dts
+> 
+> diff --git a/arch/arm/boot/dts/imx6dl-sabresd-ldo.dts b/arch/arm/boot/dts/imx6dl-sabresd-ldo.dts
+> new file mode 100644
+> index 0000000..1b224d6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6dl-sabresd-ldo.dts
+> @@ -0,0 +1,13 @@
+> +/*
+> + * Copyright 2017 NXP
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "imx6dl-sabresd.dts"
+> +
+> +&gpc {
+> +	fsl,ldo-bypass = <0>;
+> +};
+> diff --git a/arch/arm/boot/dts/imx6q-sabresd-ldo.dts b/arch/arm/boot/dts/imx6q-sabresd-ldo.dts
+> new file mode 100644
+> index 0000000..4d2e8cc
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-sabresd-ldo.dts
+> @@ -0,0 +1,13 @@
+> +/*
+> + * Copyright 2017 NXP
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "imx6q-sabresd.dts"
+> +
+> +&gpc {
+> +	fsl,ldo-bypass = <0>;
+> +};
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> index 63bf95e..5a73d9d 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> @@ -182,6 +182,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&gpc {
+> +	fsl,ldo-bypass = <1>;
+> +};
+> +
+>  &hdmi {
+>  	ddc-i2c-bus = <&i2c2>;
+>  	status = "okay";
+> @@ -548,6 +552,21 @@
+>  	status = "okay";
+>  };
+>  
+> +&reg_arm {
+> +       vin-supply = <&sw1a_reg>;
+> +       regulator-allow-bypass;
+> +};
+> +
+> +&reg_pu {
+> +       vin-supply = <&sw1c_reg>;
+> +       regulator-allow-bypass;
+> +};
+> +
+> +&reg_soc {
+> +       vin-supply = <&sw1c_reg>;
+> +       regulator-allow-bypass;
+> +};
+> +
+>  &snvs_poweroff {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 6d7bf64..54fe769 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -677,7 +677,7 @@
+>  					compatible = "fsl,anatop-regulator";
+>  					regulator-name = "vddarm";
+>  					regulator-min-microvolt = <725000>;
+> -					regulator-max-microvolt = <1450000>;
+> +					regulator-max-microvolt = <1300000>;
+>  					regulator-always-on;
+>  					anatop-reg-offset = <0x140>;
+>  					anatop-vol-bit-shift = <0>;
+> @@ -694,7 +694,7 @@
+>  					compatible = "fsl,anatop-regulator";
+>  					regulator-name = "vddpu";
+>  					regulator-min-microvolt = <725000>;
+> -					regulator-max-microvolt = <1450000>;
+> +					regulator-max-microvolt = <1300000>;
+>  					regulator-enable-ramp-delay = <150>;
+>  					anatop-reg-offset = <0x140>;
+>  					anatop-vol-bit-shift = <9>;
+> @@ -711,7 +711,7 @@
+>  					compatible = "fsl,anatop-regulator";
+>  					regulator-name = "vddsoc";
+>  					regulator-min-microvolt = <725000>;
+> -					regulator-max-microvolt = <1450000>;
+> +					regulator-max-microvolt = <1300000>;
+>  					regulator-always-on;
+>  					anatop-reg-offset = <0x140>;
+>  					anatop-vol-bit-shift = <18>;
+> diff --git a/arch/arm/boot/dts/imx6qp-sabresd-ldo.dts b/arch/arm/boot/dts/imx6qp-sabresd-ldo.dts
+> new file mode 100644
+> index 0000000..c659533
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6qp-sabresd-ldo.dts
+> @@ -0,0 +1,13 @@
+> +/*
+> + * Copyright 2017 NXP
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "imx6qp-sabresd.dts"
+> +
+> +&gpc {
+> +	fsl,ldo-bypass = <0>;
+> +};
+> diff --git a/arch/arm/boot/dts/imx6qp-sabresd.dts b/arch/arm/boot/dts/imx6qp-sabresd.dts
+> index b234580..a8a5004 100644
+> --- a/arch/arm/boot/dts/imx6qp-sabresd.dts
+> +++ b/arch/arm/boot/dts/imx6qp-sabresd.dts
+> @@ -50,8 +50,8 @@
+>  	compatible = "fsl,imx6qp-sabresd", "fsl,imx6qp";
+>  };
+>  
+> -&cpu0 {
+> -	arm-supply = <&sw2_reg>;
+> +&reg_arm {
+> +	vin-supply = <&sw2_reg>;
+>  };
+>  
+>  &iomuxc {
