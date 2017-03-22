@@ -1,59 +1,40 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 1/6] regulator: helpers: Add regmap set_soft_start helper
-Date: Wed, 22 Mar 2017 12:57:09 +0000
-Message-ID: <20170322125709.GI6986@localhost.localdomain>
-References: <1490107539-23995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] clk: tegra: Add UARTB reset
+Date: Wed, 22 Mar 2017 14:58:12 +0200
+Message-ID: <1490187493-6162-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1490107539-23995-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 02:45:34PM +0000, Charles Keepax wrote:
-> Add a helper function regulator_set_soft_start_regmap to allow regmap
-> based regulators to easily enable soft start.
-> 
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->  drivers/regulator/helpers.c      | 18 ++++++++++++++++++
->  include/linux/regulator/driver.h |  4 ++++
->  2 files changed, 22 insertions(+)
-> 
-> diff --git a/drivers/regulator/helpers.c b/drivers/regulator/helpers.c
-> index 379cdac..a75e7da 100644
-> --- a/drivers/regulator/helpers.c
-> +++ b/drivers/regulator/helpers.c
-> @@ -446,6 +446,24 @@ int regulator_set_bypass_regmap(struct regulator_dev *rdev, bool enable)
->  EXPORT_SYMBOL_GPL(regulator_set_bypass_regmap);
->  
->  /**
-> + * regulator_set_soft_start_regmap - Default set_soft_start() using regmap
-> + *
-> + * @rdev: device to operate on.
-> + */
-> +int regulator_set_soft_start_regmap(struct regulator_dev *rdev)
-> +{
-> +	unsigned int val;
-> +
-> +	val = rdev->desc->soft_start_val_on;
-> +	if (!val)
-> +		val = rdev->desc->soft_start_mask;
-> +
-> +	return regmap_update_bits(rdev->regmap, rdev->desc->soft_start_reg,
-> +				  rdev->desc->soft_start_mask, val);
-> +}
-> +EXPORT_SYMBOL_GPL(regulator_set_soft_start_regmap);
-> +
+Bit 7 of CLK_RST_CONTROLLER_RST_DEVICES_L_0 controls the UARTB reset.
+Despite the fact that Tegra210 doesn't have VFIR, 224 was assigned as the
+clock ID for UARTB. We can't use 224 as the reset ID because that's already
+used for TEGRA210_RST_DFLL_DVCO.
 
-Apologies there are some small bugs here let me respin the
-series.
+Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ include/dt-bindings/reset/tegra210-car.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
-Charles
+diff --git a/include/dt-bindings/reset/tegra210-car.h b/include/dt-bindings/reset/tegra210-car.h
+index 296ec6e..de2fce4 100644
+--- a/include/dt-bindings/reset/tegra210-car.h
++++ b/include/dt-bindings/reset/tegra210-car.h
+@@ -6,6 +6,8 @@
+ #ifndef _DT_BINDINGS_RESET_TEGRA210_CAR_H
+ #define _DT_BINDINGS_RESET_TEGRA210_CAR_H
+ 
++#define TEGRA210_RST_UARTB		7
++
+ #define TEGRA210_RESET(x)		(7 * 32 + (x))
+ #define TEGRA210_RST_DFLL_DVCO		TEGRA210_RESET(0)
+ #define TEGRA210_RST_ADSP		TEGRA210_RESET(1)
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
