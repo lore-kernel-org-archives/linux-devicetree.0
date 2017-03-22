@@ -1,136 +1,97 @@
-From: Amit Kama IL <Amit.Kama@satixfy.com>
-Subject: [PATCH] Add initial SX3000b platform related documentation to
- document tree
-Date: Wed, 22 Mar 2017 05:59:49 +0000
-Message-ID: <AM4PR0201MB21799759E18C64A7032A2C3EE43C0@AM4PR0201MB2179.eurprd02.prod.outlook.com>
+From: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 10/15] ARM: dts: bcm: fix msi-controller name and unit
+ address
+Date: Tue, 21 Mar 2017 23:07:34 -0700
+Message-ID: <85acf150-aaa4-efee-c477-6d8e5ccfdf1d@broadcom.com>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-10-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Language: en-US
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: "corbet@lwn.net" <corbet@lwn.net>
-Cc: "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170322020313.24338-10-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial SX3000b platform related documentation to document tree:
- - Vendor prefix
- - Platform binding documentation
- - Interrupt Controller Unit binding documentation.
+Hi Rob,
 
-Signed-off-by: Amit Kama <amit.kama@staixfy.com>
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/satixfy-icu.txt b/Documentation/devicetree/bindings/interrupt-controller/satixfy-icu.txt
-index 0000000..1893393
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/satixfy-icu.txt
-@@ -0,0 +1,47 @@
-+Satixfy SX3000B Interrupt Controller Unit (ICU)
-+
-+The ICU routes HW interrupts from the inter-module fabric to the
-+processor. For the MIPS interaptive, all interrupts are then routed
-+to the GIC.
-+
-+Required properties:
-+- compatible : Should be "satixfy,icu".
-+- reg - must be present and equal <0x1D4D0000 0x1C0>
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt specifier.  Should be 1 - the GIC interrupt number
-+- interrupt-parent - Currently only the MIPS GIC is supported, so
-+<&gic> must be specified as parent
-+- interrupts : in interrupt parent form. For GIC it's
-+<GIC_SHARED x IRQ_TYPE_EDGE_RISING> where x is the interrupt number
-+allocated for ICU in GIC.
-+
-+
-+
-+
-+
-+Example:
-+
-+	icu: interrupt-controller@1d4d0000 {
-+		compatible = "sx,icu";
-+		reg = <0x1D4D0000 0x1C0>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SHARED 25 IRQ_TYPE_EDGE_RISING>;
-+	};
-+
-+	uart0: uart@1D4D09C0 {
-+		compatible = "ns16550a";
-+		reg = <0x1D4D09C0 0x100>;
-+
-+		interrupt-parent = <&icu>;
-+		interrupts = <3>;
-+
-+		clock-frequency = <270000000>;
-+
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-diff --git a/Documentation/devicetree/bindings/mips/satixfy/sx3000b.txt b/Documentation/devicetree/bindings/mips/satixfy/sx3000b.txt
-index 0000000..7cae67b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/satixfy/sx3000b.txt
-@@ -0,0 +1,37 @@
-+Satixfy SX3000b SoC
-+=========================
-+
-+Required properties:
-+--------------------
-+ - compatible: Must include "satixfy,sx3000".
-+
-+CPU nodes:
-+----------
-+A "cpus" node is required.  Required properties:
-+ - #address-cells: Must be 1.
-+ - #size-cells: Must be 0.
-+A CPU sub-node is also required for at least CPU 0.  Since the topology may
-+be probed via CPS, it is not necessary to specify secondary CPUs.  Required
-+properties:
-+ - device_type: Must be "cpu".
-+ - compatible: Must be "mti,interaptiv".
-+ - reg: CPU number.
-+ - clocks: Must include the CPU clock.  See ../../clock/clock-bindings.txt for
-+   details on clock bindings.
-+Example:
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mti,interaptiv";
-+			clocks	= <&ext>;
-+			reg = <0>;
-+		};
-+	};
-+
-+Interrupt controllers:
-+----------------------
-+Two nodes are required:
-+ - mips,gic - MIPS Global Interrupt Controller - see Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-+ - satixfy,icu - SX3000b SoC Interrupt Controller Unit - see Documentation/devicetree/bindings/interrupt-controller/satixfy-icu.txt
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ec0bfb9..76819dd
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -261,6 +261,7 @@ rockchip	Fuzhou Rockchip Electronics Co., Ltd
- samsung	Samsung Semiconductor
- samtec	Samtec/Softing company
- sandisk	Sandisk Corporation
-+satixfy Satixfy Technologies Ltd
- sbs	Smart Battery System
- schindler	Schindler
- seagate	Seagate Technology PLC
+On 3/21/2017 7:03 PM, Rob Herring wrote:
+> The unit address for the msi controller is not valid as there is no reg
+> property, so remove it. Also, msi-controller is the preferred node name.
+>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Cc: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+> ---
+> Sub-arch maintainers, please apply to your trees unless arm-soc wants
+> to take the whole lot.
+>
+>   arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
+>   arch/arm/boot/dts/bcm-nsp.dtsi    | 6 +++---
+>   2 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index 8833a4c3cd96..9644fddb5e3c 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -205,7 +205,7 @@
+>   			status = "disabled";
+>   
+>   			msi-parent = <&msi0>;
+> -			msi0: msi@18012000 {
+> +			msi0: msi-controller {
+>   				compatible = "brcm,iproc-msi";
+>   				msi-controller;
+>   				interrupt-parent = <&gic>;
+> @@ -240,7 +240,7 @@
+>   			status = "disabled";
+>   
+>   			msi-parent = <&msi1>;
+> -			msi1: msi@18013000 {
+> +			msi1: msi-controller {
+>   				compatible = "brcm,iproc-msi";
+>   				msi-controller;
+>   				interrupt-parent = <&gic>;
+> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> index 832795b0fd0f..42c017df490f 100644
+> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> @@ -450,7 +450,7 @@
+>   		status = "disabled";
+>   
+>   		msi-parent = <&msi0>;
+> -		msi0: msi@18012000 {
+> +		msi0: msi-controller {
+>   			compatible = "brcm,iproc-msi";
+>   			msi-controller;
+>   			interrupt-parent = <&gic>;
+> @@ -486,7 +486,7 @@
+>   		status = "disabled";
+>   
+>   		msi-parent = <&msi1>;
+> -		msi1: msi@18013000 {
+> +		msi1: msi-controller {
+>   			compatible = "brcm,iproc-msi";
+>   			msi-controller;
+>   			interrupt-parent = <&gic>;
+> @@ -522,7 +522,7 @@
+>   		status = "disabled";
+>   
+>   		msi-parent = <&msi2>;
+> -		msi2: msi@18014000 {
+> +		msi2: msi-controller {
+>   			compatible = "brcm,iproc-msi";
+>   			msi-controller;
+>   			interrupt-parent = <&gic>;
+Looks good and thanks!
+
+Acked-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
