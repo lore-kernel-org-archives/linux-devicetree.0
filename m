@@ -1,59 +1,43 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: lamobo-r1: Fix CPU port RGMII settings
-Date: Wed, 22 Mar 2017 12:06:49 +0800
-Message-ID: <CAGb2v65KvoC9MUoErkGeHvmbm8Ocq-vhFBhxXvZu--=xT4zAeg@mail.gmail.com>
-References: <20170319045039.6163-1-f.fainelli@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 07/15] ARM: dts: spear13xx: fix PCI bus dtc warnings
+Date: Wed, 22 Mar 2017 09:41:36 +0530
+Message-ID: <20170322041136.GU25659@vireshk-i7>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170319045039.6163-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-arm-kernel@vger.kernel.org, mo.ucina@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170322020313.24338-7-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, arm@kernel.org, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, linux-arm-kernel@lists.infradead.org, Viresh Kumar <vireshk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
-
-On Sun, Mar 19, 2017 at 12:50 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> The CPU port of the BCM53125 is configured with RGMII (no delays) but
-> this should actually be RGMII with transmit delay (rgmii-txid) because
-> STMMAC takes care of inserting the transmitter delay. This fixes
-> occasional packet loss encountered.
->
-> Fixes: d7b9eaff5f0c ("ARM: dts: sun7i: Add BCM53125 switch nodes to the lamobo-r1 board")
-> Reported-by: Hartmut Knaack <knaack.h@gmx.de>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On 21-03-17, 21:03, Rob Herring wrote:
+> dtc recently added PCI bus checks. Fix these warnings.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Viresh Kumar <vireshk@kernel.org>
+> Cc: Shiraz Hashim <shiraz.linux.kernel@gmail.com>
 > ---
->  arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-> index 72ec0d5ae052..bbf1c8cbaac6 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-> @@ -167,7 +167,7 @@
->                                         reg = <8>;
->                                         label = "cpu";
->                                         ethernet = <&gmac>;
-> -                                       phy-mode = "rgmii";
-> +                                       phy-mode = "rgmii-txid";
+> Sub-arch maintainers, please apply to your trees unless arm-soc wants 
+> to take the whole lot.
+> 
+>  arch/arm/boot/dts/spear1310.dtsi | 3 +++
+>  arch/arm/boot/dts/spear1340.dtsi | 1 +
+>  2 files changed, 4 insertions(+)
 
-Just to clarify, the DT binding says:
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-  * "rgmii-txid" (RGMII with internal TX delay provided by the PHY, the MAC
-     should not add an TX delay in this case)
-
-I'm assuming this applies from the device node's point of view?
-In this case the "PHY" is STMMAC, and the "MAC" is the switch chip?
-Is that right?
-
-
-Thanks
-ChenYu
-
->                                         fixed-link {
->                                                 speed = <1000>;
->                                                 full-duplex;
-> --
-> 2.9.3
->
+-- 
+viresh
