@@ -1,60 +1,42 @@
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH v7 0/7] Implement clocksource for rockchip SoC using rockchip
- timer
-Date: Wed, 22 Mar 2017 18:48:27 +0300
-Message-ID: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
+From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7 3/7] ARM: dts: rockchip: update compatible property for
+ rk322x timer
+Date: Wed, 22 Mar 2017 18:48:30 +0300
+Message-ID: <1490197714-25415-4-git-send-email-al.kochet@gmail.com>
+References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Huang Tao <huangtao@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Caesar Wang <wxt@rock-chips.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1490197714-25415-1-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sIERhbmllbCwgSGVpa28uCgpIZXJlIGlzIHRyeSA3IDopIENvdWxkIHlvdSBwbGVhc2Ug
-dGFrZSBhIGxvb2sgaW50byBpdD8KCnJvY2tjaGlwX3RpbWVyIGluaXQgY29kZSBpbXBsZW1lbnRl
-ZCB1c2luZyBDTE9DS0VWRU5UX09GX0RFQ0xBUkUoKQppbnRyb2R1Y2VkIGluIGNvbW1pdCAwYzg4
-OTNjOTA5NWQgKCJjbG9ja2V2ZW50czogQWRkIGEgY2xrZXZ0LW9mCm1lY2hhbmlzbSBsaWtlIGNs
-a3NyYy1vZiIpCgpUaGVyZSBpcyBjaGFuZ2UgaW4gdGhlIGFyY2gvYXJtL21hY2gtcm9ja2NoaXAv
-cm9ja2NoaXAuYy4KClRoaXMgc2VyaWVzIHNob3VsZCBiZSBhcHBsaWVkIGFmdGVyIHRoZSBjb21t
-aXQ6Cmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE3LzMvMjIvNDI2CgpBcyB3aXRob3V0IHRoZSBj
-b21taXQsIHlvdSB3aWxsIGdldCBsaW5rZXIgZXJyb3IgKCJjbGtldnQtcHJvYmUuYzo2MzoKdW5k
-ZWZpbmVkIHJlZmVyZW5jZSB0byBgX19jbGtldnRfb2ZfdGFibGXigJkiKQoKUmVnYXJkcywKQWxl
-eGFuZGVyLgoKCkFsZXhhbmRlciBLb2NoZXRrb3YgKDYpOgogIGR0LWJpbmRpbmdzOiBjbGFyaWZ5
-IGNvbXBhdGlibGUgcHJvcGVydHkgZm9yIHJvY2tjaGlwIHRpbWVycwogIEFSTTogZHRzOiByb2Nr
-Y2hpcDogdXBkYXRlIGNvbXBhdGlibGUgcHJvcGVydHkgZm9yIHJrMzIyeCB0aW1lcgogIEFSTTog
-ZHRzOiByb2NrY2hpcDogYWRkIGNsb2NrZXZlbnQgYXR0cmlidXRlIHRvIHJvY2tjaGlwIHRpbWVy
-cwogIGNsb2Nrc291cmNlL2RyaXZlcnMvcm9ja2NoaXBfdGltZXI6IGltcGxlbWVudCBjbG9ja3Nv
-dXJjZSB0aW1lcgogIEFSTTogZHRzOiByb2NrY2hpcDogYWRkIHRpbWVyIGVudHJpZXMgdG8gcmsz
-MTg4IFNvQwogIEFSTTogZHRzOiByb2NrY2hpcDogZGlzYWJsZSBhcm0tZ2xvYmFsLXRpbWVyIGZv
-ciByazMxODgKCkRhbmllbCBMZXpjYW5vICgxKToKICBjbG9ja3NvdXJjZS9kcml2ZXJzL2Nsa3Ny
-Yy1ldnQtcHJvYmU6IERlc2NyaWJlIHdpdGggdGhlIERUIGJvdGggdGhlCiAgICBjbG9ja3NvdXJj
-ZSBhbmQgdGhlIGNsb2NrZXZlbnQKCiAuLi4vYmluZGluZ3MvdGltZXIvcm9ja2NoaXAscmstdGlt
-ZXIudHh0ICAgICAgICAgICB8ICAgMTIgKy0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy90aW1lci90aW1lci50eHQgIHwgICAzOCArKysrCiBhcmNoL2FybS9ib290L2R0cy9yazMw
-MzYuZHRzaSAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwogYXJjaC9hcm0vYm9vdC9kdHMv
-cmszMTg4LmR0c2kgICAgICAgICAgICAgICAgICAgICAgfCAgIDE5ICsrCiBhcmNoL2FybS9ib290
-L2R0cy9yazMyMnguZHRzaSAgICAgICAgICAgICAgICAgICAgICB8ICAgIDMgKy0KIGFyY2gvYXJt
-L2Jvb3QvZHRzL3JrMzI4OC5kdHNpICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSArCiBhcmNo
-L2FybS9tYWNoLXJvY2tjaGlwL3JvY2tjaGlwLmMgICAgICAgICAgICAgICAgICB8ICAgIDIgKwog
-YXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzNjguZHRzaSAgICAgICAgICAgfCAgICAx
-ICsKIGRyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgIHwg
-ICAgMiArCiBkcml2ZXJzL2Nsb2Nrc291cmNlL2Nsa2V2dC1wcm9iZS5jICAgICAgICAgICAgICAg
-ICB8ICAgIDcgKwogZHJpdmVycy9jbG9ja3NvdXJjZS9jbGtzcmMtcHJvYmUuYyAgICAgICAgICAg
-ICAgICAgfCAgICA3ICsKIGRyaXZlcnMvY2xvY2tzb3VyY2Uvcm9ja2NoaXBfdGltZXIuYyAgICAg
-ICAgICAgICAgIHwgIDIxNSArKysrKysrKysrKysrKy0tLS0tLQogMTIgZmlsZXMgY2hhbmdlZCwg
-MjQxIGluc2VydGlvbnMoKyksIDY3IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci90aW1lci50eHQKCi0tIAoxLjcu
-OS41CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+UHJvcGVydHkgc2V0IHRvICcicm9ja2NoaXAscmszMjI4LXRpbWVyIiwgInJvY2tjaGlwLHJrMzI4
+OC10aW1lciInCnRvIG1hdGNoIGRldmljZXRyZWUgYmluZGluZ3MuCgpTaWduZWQtb2ZmLWJ5OiBB
+bGV4YW5kZXIgS29jaGV0a292IDxhbC5rb2NoZXRAZ21haWwuY29tPgpTdWdnZXN0ZWQtYnk6IEhl
+aWtvIFN0w7xibmVyIDxoZWlrb0BzbnRlY2guZGU+ClJldmlld2VkLWJ5OiBIZWlrbyBTdHVlYm5l
+ciA8aGVpa29Ac250ZWNoLmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzIyeC5kdHNpIHwg
+ICAgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpk
+aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjJ4LmR0c2kgYi9hcmNoL2FybS9ib290
+L2R0cy9yazMyMnguZHRzaQppbmRleCA5ZTZiZjBlLi4yYTRlZWUyIDEwMDY0NAotLS0gYS9hcmNo
+L2FybS9ib290L2R0cy9yazMyMnguZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9yazMyMngu
+ZHRzaQpAQCAtMzIzLDcgKzMyMyw3IEBACiAJfTsKIAogCXRpbWVyOiB0aW1lckAxMTBjMDAwMCB7
+Ci0JCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMjg4LXRpbWVyIjsKKwkJY29tcGF0aWJsZSA9
+ICJyb2NrY2hpcCxyazMyMjgtdGltZXIiLCAicm9ja2NoaXAscmszMjg4LXRpbWVyIjsKIAkJcmVn
+ID0gPDB4MTEwYzAwMDAgMHgyMD47CiAJCWludGVycnVwdHMgPSA8R0lDX1NQSSA0MyBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPjsKIAkJY2xvY2tzID0gPCZ4aW4yNG0+LCA8JmNydSBQQ0xLX1RJTUVSPjsK
+LS0gCjEuNy45LjUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LXJvY2tjaGlwCg==
