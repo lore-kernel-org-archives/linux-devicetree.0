@@ -1,62 +1,147 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: add arm/arm64 include symlinks
-Date: Tue, 21 Mar 2017 17:20:27 -0700
-Message-ID: <20170322002027.GA2984@localhost>
-References: <20170226060058.5841-1-heiko@sntech.de>
- <20170226060058.5841-2-heiko@sntech.de>
- <20170320230337.GB78325@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170320230337.GB78325-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: [PATCHv2.1] serdev: implement get/set tiocm
+Date: Wed, 22 Mar 2017 01:58:37 +0100
+Message-ID: <20170322005837.6047-1-sre@kernel.org>
+References: <20170321223216.11733-7-sre@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170321223216.11733-7-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 04:03:37PM -0700, Brian Norris wrote:
-> Hi,
-> 
-> On Sun, Feb 26, 2017 at 07:00:58AM +0100, Heiko Stuebner wrote:
-> > Allow including of dtsi files in an architecture-independent manner.
-> > Some dtsi files may be shared between architectures and one suggestion
-> > was to have symlinks and let these includes get accessed via a
-> >     #include <arm64/foo.dtsi>
-> > So add the necessary symlinks for arm32.
-> > 
-> > Suggested-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
-> > Suggested by Olof in response to the patch adding direct symlinks
-> > for cros-ec includes.
-> > 
-> > Tested with adapted rk3399-Gru dtsi files and while we only need this arm64
-> > version right now, it might make sense to already have both the arm32 and
-> > arm64 versions ready.
-> 
-> FWIW, tested fine here too (for the same platform).
-> 
-> I guess this works fine, if it makes people happy. It also allows some
-> weird #include paths. e.g.:
-> 
-> #include <arm64/include/arm/include/arm64/rockchip/rk3399.dtsi>
-> 
-> I guess we can call that an entertaining feature, and not a bug?
-> 
-> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Tested-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
-> Where should this go? I'd like not to wait another few months before
-> sending my Gru/Kevin DTS again.
+Add method for getting and setting tiocm.
 
-Checked into shared/dt-symlinks on the arm-soc repo now (and merged into
-next/dt and next/dt64). Please use that branch as a base for DT material that
-will use this.
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+Changes since PATCHv2:
+ * fix serdev_device_set_tiocm inline definition for disabled SERDEV
+ * use <linux/termios.h> instead of <asm-generic/termios.h>
+---
+ drivers/tty/serdev/core.c           | 22 ++++++++++++++++++++++
+ drivers/tty/serdev/serdev-ttyport.c | 24 ++++++++++++++++++++++++
+ include/linux/serdev.h              | 13 +++++++++++++
+ 3 files changed, 59 insertions(+)
 
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+index a63b74031e22..1e1cbae3a0ea 100644
+--- a/drivers/tty/serdev/core.c
++++ b/drivers/tty/serdev/core.c
+@@ -184,6 +184,28 @@ void serdev_device_wait_until_sent(struct serdev_device *serdev, long timeout)
+ }
+ EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
+ 
++int serdev_device_get_tiocm(struct serdev_device *serdev)
++{
++	struct serdev_controller *ctrl = serdev->ctrl;
++
++	if (!ctrl || !ctrl->ops->get_tiocm)
++		return -ENOTSUPP;
++
++	return ctrl->ops->get_tiocm(ctrl);
++}
++EXPORT_SYMBOL_GPL(serdev_device_get_tiocm);
++
++int serdev_device_set_tiocm(struct serdev_device *serdev, int set, int clear)
++{
++	struct serdev_controller *ctrl = serdev->ctrl;
++
++	if (!ctrl || !ctrl->ops->set_tiocm)
++		return -ENOTSUPP;
++
++	return ctrl->ops->set_tiocm(ctrl, set, clear);
++}
++EXPORT_SYMBOL_GPL(serdev_device_set_tiocm);
++
+ static int serdev_drv_probe(struct device *dev)
+ {
+ 	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
+diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
+index db2bc601e554..c5bdb901ff11 100644
+--- a/drivers/tty/serdev/serdev-ttyport.c
++++ b/drivers/tty/serdev/serdev-ttyport.c
+@@ -179,6 +179,28 @@ static void ttyport_wait_until_sent(struct serdev_controller *ctrl, long timeout
+ 	tty_wait_until_sent(tty, timeout);
+ }
+ 
++static int ttyport_get_tiocm(struct serdev_controller *ctrl)
++{
++	struct serport *serport = serdev_controller_get_drvdata(ctrl);
++	struct tty_struct *tty = serport->tty;
++
++	if (!tty->ops->tiocmget)
++		return -ENOTSUPP;
++
++	return tty->driver->ops->tiocmget(tty);
++}
++
++static int ttyport_set_tiocm(struct serdev_controller *ctrl, unsigned int set, unsigned int clear)
++{
++	struct serport *serport = serdev_controller_get_drvdata(ctrl);
++	struct tty_struct *tty = serport->tty;
++
++	if (!tty->ops->tiocmset)
++		return -ENOTSUPP;
++
++	return tty->driver->ops->tiocmset(tty, set, clear);
++}
++
+ static const struct serdev_controller_ops ctrl_ops = {
+ 	.write_buf = ttyport_write_buf,
+ 	.write_flush = ttyport_write_flush,
+@@ -188,6 +210,8 @@ static const struct serdev_controller_ops ctrl_ops = {
+ 	.set_flow_control = ttyport_set_flow_control,
+ 	.set_baudrate = ttyport_set_baudrate,
+ 	.wait_until_sent = ttyport_wait_until_sent,
++	.get_tiocm = ttyport_get_tiocm,
++	.set_tiocm = ttyport_set_tiocm,
+ };
+ 
+ struct device *serdev_tty_port_register(struct tty_port *port,
+diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+index a308b206d204..e29a270f603c 100644
+--- a/include/linux/serdev.h
++++ b/include/linux/serdev.h
+@@ -15,6 +15,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/device.h>
++#include <linux/termios.h>
+ 
+ struct serdev_controller;
+ struct serdev_device;
+@@ -82,6 +83,8 @@ struct serdev_controller_ops {
+ 	void (*set_flow_control)(struct serdev_controller *, bool);
+ 	unsigned int (*set_baudrate)(struct serdev_controller *, unsigned int);
+ 	void (*wait_until_sent)(struct serdev_controller *, long);
++	int (*get_tiocm)(struct serdev_controller *);
++	int (*set_tiocm)(struct serdev_controller *, unsigned int, unsigned int);
+ };
+ 
+ /**
+@@ -188,6 +191,8 @@ void serdev_device_close(struct serdev_device *);
+ unsigned int serdev_device_set_baudrate(struct serdev_device *, unsigned int);
+ void serdev_device_set_flow_control(struct serdev_device *, bool);
+ void serdev_device_wait_until_sent(struct serdev_device *, long);
++int serdev_device_get_tiocm(struct serdev_device *);
++int serdev_device_set_tiocm(struct serdev_device *, int, int);
+ int serdev_device_write_buf(struct serdev_device *, const unsigned char *, size_t);
+ void serdev_device_write_flush(struct serdev_device *);
+ int serdev_device_write_room(struct serdev_device *);
+@@ -226,6 +231,14 @@ static inline unsigned int serdev_device_set_baudrate(struct serdev_device *sdev
+ }
+ static inline void serdev_device_set_flow_control(struct serdev_device *sdev, bool enable) {}
+ static inline void serdev_device_wait_until_sent(struct serdev_device *sdev, long timeout) {}
++static inline int serdev_device_get_tiocm(struct serdev_device *serdev)
++{
++	return -ENOTSUPP;
++}
++static inline int serdev_device_set_tiocm(struct serdev_device *serdev, int set, int clear)
++{
++	return -ENOTSUPP;
++}
+ static inline int serdev_device_write_buf(struct serdev_device *sdev, const unsigned char *buf, size_t count)
+ {
+ 	return -ENODEV;
+-- 
+2.11.0
