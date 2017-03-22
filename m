@@ -1,40 +1,34 @@
-From: Artur Lorincz <larturus2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/1] of: default implementation for of_find_all_nodes(...).
-Date: Wed, 22 Mar 2017 17:27:11 +0100
-Message-ID: <1490200031-7893-1-git-send-email-larturus2@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: setup DMA-channels for mmc0 and emmc for rk3188
+Date: Wed, 22 Mar 2017 17:35:08 +0100
+Message-ID: <1719178.VTn5J36Jb3@phil>
+References: <1490109227-4006-1-git-send-email-al.kochet@gmail.com> <11123239.Wc863F7R2R@phil> <C2BC0A84-EF69-42E3-84FA-A873B8A7187A@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <C2BC0A84-EF69-42E3-84FA-A873B8A7187A-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, larturus-/E1597aS9LQAvxtiuMwx3w@public.gmane.org, Artur Lorincz <larturus2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Added default implementation for of_find_all_nodes(). This function is
-used by board.c from the board module (drivers/staging/board).
+Hi,
 
-Signed-off-by: Artur Lorincz <larturus-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
----
- include/linux/of.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Am Mittwoch, 22. März 2017, 19:20:56 CET schrieb Alexander Kochetkov:
+> Hello, Heiko!
+> 
+> > 22 марта 2017 г., в 18:54, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> написал(а):
+> I have working settings for eMMC for radxa rock. What do you think, is it
+> good idea to add them to the kernel DT? As Radxa Rock doesn’t come with
+> eMMC, but eMMC can be soldered manually.
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 21e6323..f1cff92 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -840,6 +840,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
+No, the Rock comes with a nand flash, which we hopefully will support at some 
+point in the future. And in the mainline kernel we want to support the stock 
+boards as people can buy them, not something people have soldered around on.
 
- #define of_match_ptr(_ptr)	NULL
- #define of_match_node(_matches, _node)	NULL
-+
-+static inline struct device_node *of_find_all_nodes(struct device_node *prev)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_OF */
 
- /* Default string compare functions, Allow arch asm/prom.h to override */
---
-1.9.1
-
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
