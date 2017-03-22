@@ -1,7 +1,8 @@
 From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v1 5/5] ARM: configs: Add watchdog support in STM32 defconfig
-Date: Wed, 22 Mar 2017 14:36:26 +0100
-Message-ID: <1490189786-19232-6-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v1 4/5] ARM: dts: stm32ap: Add watchdog support for STM32F429
+ eval board
+Date: Wed, 22 Mar 2017 14:36:25 +0100
+Message-ID: <1490189786-19232-5-git-send-email-yannick.fertre@st.com>
 References: <1490189786-19232-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,20 +24,20 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
 ---
- arch/arm/configs/stm32_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/stm32429i-eval.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-index a9d8e3c..83afa73 100644
---- a/arch/arm/configs/stm32_defconfig
-+++ b/arch/arm/configs/stm32_defconfig
-@@ -48,6 +48,7 @@ CONFIG_SERIAL_STM32=y
- CONFIG_SERIAL_STM32_CONSOLE=y
- # CONFIG_HW_RANDOM is not set
- # CONFIG_HWMON is not set
-+CONFIG_WATCHDOG=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- # CONFIG_USB_SUPPORT is not set
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 3c99466..aab81ed 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -181,3 +181,7 @@
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
++
++&iwdg {
++	status = "okay";
++};
 -- 
 1.9.1
