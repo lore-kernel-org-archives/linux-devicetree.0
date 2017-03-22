@@ -1,16 +1,16 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 06/15] ARM: dts: r8a779x: fix PCI bus dtc warnings
-Date: Wed, 22 Mar 2017 15:06:07 +0100
-Message-ID: <CAMuHMdWhcix=rSQMB5Vf6jN_3_RfrHBMwmVLW4tjP_9bLpVMMA@mail.gmail.com>
-References: <20170322020313.24338-1-robh@kernel.org>
- <20170322020313.24338-6-robh@kernel.org>
- <CAMuHMdVMyjVv471KB6+SCbNBs6EAaFUm1-2xwj2y-qgriFht0Q@mail.gmail.com>
- <CAL_JsqLd3o0MEgU93axvEg3kddMp4fvP2ZpnBWRdNBR8AHFV+Q@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 3/5] coresight: add support for debug module
+Date: Wed, 22 Mar 2017 14:07:47 +0000
+Message-ID: <e7a97c52-f61a-e503-f626-09563fa100b8@arm.com>
+References: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
+ <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
+ <671a0b39-b635-6e0e-d3fa-967651f2e29c@arm.com>
+ <CAJ9a7VgCjXNGC4C49PxL-nBxzhMCmA8Mb-0C_epahizA5EL2HA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLd3o0MEgU93axvEg3kddMp4fvP2ZpnBWRdNBR8AHFV+Q@mail.gmail.com>
+In-Reply-To: <CAJ9a7VgCjXNGC4C49PxL-nBxzhMCmA8Mb-0C_epahizA5EL2HA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,79 +20,100 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Mike Leach <mike.leach@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, Mar 22, 2017 at 2:47 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Mar 22, 2017 at 3:58 AM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Wed, Mar 22, 2017 at 3:03 AM, Rob Herring <robh@kernel.org> wrote:
->>> dtc recently added PCI bus checks. Fix these warnings.
->>
->> It's always a good idea to put the warnings in the commit message:
->
-> Well, the warnings are a bit noisy in that they get repeated, can be
-> misleading, change as I fix problems (device nodes are not checked if
-> the bridge node fails), and most importantly I'm lazy having fixed
-> these treewide. Sub-arch maintainers are welcome to make better
-> patches. :)
->
->> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_bridge): Node
->> /pci@ee090000/usb@0,1 node name is not "pci" or "pcie"
-
-[...]
-
->> The above indeed go away with your patch, but I don't know why ;-)
->
-> Most of these are because 'device_type = "pci";' should only be on PCI
-> bridges, not PCI devices.
-
-Thanks, retrying...
-
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg): Node
-/pci@ee090000/usb@0,1 PCI unit address format error, expected "1,0"
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg): Node
-/pci@ee090000/usb@0,2 PCI unit address format error, expected "2,0"
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg): Node
-/pci@ee0d0000/usb@0,1 PCI unit address format error, expected "1,0"
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg): Node
-/pci@ee0d0000/usb@0,2 PCI unit address format error, expected "2,0"
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_bus_num):
-Node /pci@ee0d0000/usb@0,1 PCI bus number 0 out of range, expected (2
-- 2)
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_bus_num):
-Node /pci@ee0d0000/usb@0,2 PCI bus number 0 out of range, expected (2
-- 2)
-
-OK, without 'device_type = "pci"' it makes much more sense...
-
->> Both Documentation/devicetree/bindings/pci/pci.txt and ePAPR refer to
->> http://www.firmware.org/1275/bindings/pci/pci2_1.pdf
->> http://www.firmware.org/1275/practice/imap/imap0_9d.pdf
->> which no longer exist.
->
-> Yeah, they are still out there. Just need to google "PCI supplement 1275". :)
->
-> I have the full archive saved off. I need to get them added to devicetree.org.
-
-Having working links in the DT bindings would be great.
-
-BTW, seems like I still have an offline copy of v2.0 of the PCI spec in
-PostScript format, from my CHRP days[*], when hard disks where smaller
-than CD-Rs ;-)
-
-[*] I never managed to memorize the PCI DT bindings, though.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+CgpPbiAyMi8wMy8xNyAxMjo1NCwgTWlrZSBMZWFjaCB3cm90ZToKPiAKPiAKPiBPbiAyMSBNYXJj
+aCAyMDE3IGF0IDE1OjM5LCBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xsYUBhcm0uY29tIAo+IDxt
+YWlsdG86c3VkZWVwLmhvbGxhQGFybS5jb20+PiB3cm90ZToKPiAKWy4uLl0KCj4gSSBkaXNhZ3Jl
+ZSB3aXRoIHRoaXMgYXBwcm9hY2guIE9uZSBvZiB0aGUgbWFpbiB1c2VmdWxuZXNzIG9mIHN1Y2gK
+PiBzZWxmIGhvc3RlZCBkZWJ1ZyBmZWF0dXJlIGlzIHRvIGRlYnVnIGlzc3VlcyBhcm91bmQgZmVh
+dHVyZXMgbGlrZQo+IGNwdWlkbGUuIEFkZGluZyBjb25zdHJhaW50cyBsaWtlICJjcHVpZGxlIG5l
+ZWRzIHRvIGJlIGRpc2FibGVkIiBpcwo+IG5vdCBnb29kIElNTy4gVGhlcmUgYXJlIHdheXMgdG8g
+bWFrZSBpdCB3b3JrIHdpdGggY3B1aWRsZSBlbmFibGVkLgo+IFBsZWFzZSBleHBsb3JlIHRoZW0u
+IEluIHBhcnRpY3VsYXIgcmVmZXIgSDkuMi4zOSBFRFBSQ1IsIEV4dGVybmFsCj4gRGVidWcgUG93
+ZXIvUmVzZXQgQ29udHJvbCBSZWdpc3Rlci4KPiAKPiBTbywgIm5vaGx0IiBvcHRpb24gaXMgbm90
+IGFuIG9wdGlvbi4gSSBwcmVmZXIgc29tZSBzeXNmcyBvcHRpb24gbGlrZSAKPiBTdXp1a2kgc3Vn
+Z2VzdGVkIHRvIGVuYWJsZSB0aGlzIGZlYXR1cmUgb24gZGVtYW5kIGlmIHBvd2VyIHNhdmluZyBp
+biAKPiBub3JtYWwgdXNlY2FzZSBpcyB0aGUgY29uY2Vybi4gVXNpbmcgIm5vaGx0IiBqdXN0IGRp
+c2FibGVzIGlkbGUgYW5kIAo+IGRvZXNuJ3QgZW5zdXJlIHRoZSBkZWJ1ZyBwb3dlciBkb21haW4g
+aXMgT04uIFVzaW5nIHRoZSBmbGFnIGRpcmVjdGx5Cj4gaW4gdGhpcyBkcml2ZXIgdG8gZW5hYmxl
+IGRlYnVnIHBvd2VyIGRvbWFpbiBhbHNvIHNvdW5kcyBtaXN1c2Ugb2YKPiB0aGF0IGZsYWcgZm9y
+IG1lLgo+IAo+IEkgdGhpbmsgdGhlIGtleSBpc3N1ZSB0byByZW1lbWJlciBoZXJlIGlzIHRoYXQg
+ZXhwZXJpZW5jZSB3aXRoCj4gZXh0ZXJuYWwgZGVidWcgc2hvd3MgdGhhdCBDUFUgSWRsZSBtZWFu
+cyBkaWZmZXJlbnQgdGhpbmdzIHRvCj4gZGlmZmVyZW50IFNvQyBkZXNpZ25zIC8gcG93ZXIgbWFu
+YWdlbWVudCBzY2hlbWVzLiAoYW5kIHdlIGFyZSB1c2luZwo+IGV4dGVybmFsIGRlYnVnIGluIGEg
+c2VsZiBob3N0ZWQgd2F5IGhlcmUpLgo+IAoKWWVzIGFncmVlZCBvbiB0aGUgcG9pbnQgdGhhdCBt
+ZWFuaW5nIG9mICJjcHVpZGxlIiBkaWZmZXJzIG9uIGVhY2ggU29DLgoKPiBTb21lIGRlc2lnbnMg
+d2lsbCBwb3dlciBkb3duIGFuIGVudGlyZSBjbHVzdGVyIGlmIGFsbCBDUFVzIG9uIHRoZSAKPiBj
+bHVzdGVyIGFyZSBwb3dlcmVkIGRvd24gLSBpbmNsdWRpbmcgdGhlIHBhcnRzIG9mIHRoZSBkZWJ1
+Zwo+IHJlZ2lzdGVycyB0aGF0IHNob3VsZCByZW1haW4gcG93ZXJlZCBpbiB0aGUgZGVidWcgcG93
+ZXIgZG9tYWluLgoKSW50ZXJlc3RpbmcsIGF0LWxlYXN0IEVUTXY0IG9yIHNvbWUgb3RoZXIgY29y
+ZXNpZ2h0IHNwZWNpZmljYXRpb24KY2xlYXJseSBjbGFzc2lmeSB0aGUgcG93ZXIgZG9tYWlucyBh
+bmQgdGhlIHJlZ2lzdGVyIGFjY2Vzcy4gVGhlIGFjdHVhbApwb3dlciBkb21haW4gaXRzZWxmIG1h
+eSB2YXJ5IGRlcGVuZGluZyBvbiBpbXBsZW1lbnRhdGlvbi4KCj4gVGhlIGJpdHMgaW4gRURQUkNS
+IGFyZSBub3QgcmVzcGVjdGVkIGluIHRoZXNlIGNhc2VzIC0gdGhlc2UgZGVzaWducwo+IGRvIG5v
+dCByZWFsbHkgc3VwcG9ydCBkZWJ1ZyBvdmVyIHBvd2VyIGRvd24gaW4gdGhlIHdheSB0aGF0IHRo
+ZQo+IENvcmVTaWdodCAvIERlYnVnIGRlc2lnbmVycyBhbnRpY2lwYXRlZC4gVGhpcyBtZWFucyB0
+aGF0IGV2ZW4KPiBjaGVja2luZyBFRFBSU1IgaGFzIHRoZSBwb3RlbnRpYWwgdG8gY2F1c2UgYSBi
+dXMgaGFuZyBpZiB0aGUgdGFyZ2V0Cj4gcmVnaXN0ZXIgaXMgdW5wb3dlcmVkLiAoYW5kIGlmIHRo
+ZSBkZWJ1ZyBwb3dlciBkb21haW4gaXMgdW5wb3dlcmVkCj4gdGhlbiB0aGUgUEMgZGF0YSBpcyBh
+bHNvIGxvc3QpLgo+IAoKQWdyZWVkLCBidXQgY2FuIHdlIHN0YXJ0IHN1cHBvcnRpbmcgdGhlIHNh
+bmUgZGVzaWducyBpbiBzYW5lIHdheSBmaXJzdC4KV2UgY2FuIGFsd2F5cyBhZGQgY29tcGF0aWJs
+ZSBhbmQgaGFuZGxlIGRldmlhdGlvbnMuIEkgYWdyZWUgd2UgbWF5IG5lZWQKdG8gc3VwcG9ydCBz
+dWNoIGRldmlhdGlvbnMgYnV0IHN0YXJ0aW5nIHdpdGggdGhhdCBzZWVtcyBzZXR0aW5nIGEgYmFk
+CmV4YW1wbGUuCgo+IEluIHRoZXNlIGNhc2VzLCBhY2Nlc3NpbmcgdG8gdGhlIGRlYnVnIHJlZ2lz
+dGVycyB3aGlsZSB0aGV5IGFyZSBub3QgCj4gcG93ZXJlZCBpcyBhIHJlY2lwZSBmb3IgZGlzYXN0
+ZXIgLSBzbyBwcmV2ZW50aW5nIENQVUlkbGUg4oCLYW5kIHRoZQo+IHN1YnNlcXVlbnQgY2x1c3Rl
+ciBwb3dlciBkb3duIOKAiyBhbGxvd3MgaW52ZXN0aWdhdGlvbiBvbiB0aGlzIGNsYXNzIG9mCj4g
+c3lzdGVtIC0g4oCLYW5kIGFsbG93aW5nIHRoZSBDUFVzIG9mIGludGVyZXN0IGJlIGludGVycm9n
+YXRlZCB3aXRob3V0Cj4gaGFuZ2luZyB0aGUgY3Jhc2ggbG9nIHByb2Nlc3Mu4oCLCj4gCgpBZ3Jl
+ZWQuIEJ1dCBteSBwb2ludCBpcyB0aGF0IG1hbnkgaXNzdWVzIGFyZSBhcm91bmQgY3B1aWRsZSBh
+bmQgc29tZQp1c2VjYXNlIGFuZCBqdXN0IGVsaW1pbmF0aW5nIHRoYXQgdXNlLWNhc2Ugc291bmRz
+IGJhZC4gRm9yIG1lLApjb3JlLXNpZ2h0IHdhcyBtb3N0IHVzZWZ1bCB0byBkZWJ1ZyBpc3N1ZXMg
+YXJvdW5kIGNwdSBwb3dlciBtYW5hZ2VtZW50CmFuZCBsb2NrdXBzIHdoZXJlIHdlIGNhbid0IHN0
+b3AgY29yZXMgYnV0IGV4YW1pbmUgdGhlc2UgcmVnaXN0ZXJzLgpUaGVyZSBhcmUgb3RoZXIgYWx0
+ZXJuYXRpdmVzIGZvciBvdGhlciB1c2UtY2FzZXMgSU1PLgoKPiAKPiDigItPbiBzeXN0ZW1zIHRo
+YXQgZG8gYmVoYXZlIGNvcnJlY3RseSB3aXRoIHJlc3BlY3QgdG8gZGVidWcgcG93ZXIgCj4gZG9t
+YWlucywgdGhlbiBkaXNhYmxpbmcgQ1BVSWRsZSBpcyB1bm5lY2Vzc2FyeSAtIHRoZXNlIGNhbiBi
+ZQo+IGNvbnRyb2xsZWQgYnkg4oCLRURQUkNSIC0gcGVyaGFwczsgcGVyIHRoZSBzcGVjaWZpY2F0
+aW9uIGl0IGlzCj4gImltcGxlbWVudGF0aW9uIGRlZmluZWQiIGlmIHdyaXRpbmcgYml0cyB0byB0
+aGlzIHJlZ2lzdGVyIGhhdmUgYW4KPiBlZmZlY3Qgb24gdGhlIHN5c3RlbSBhbnl3YXkgZXZlbiBp
+ZiB0aGUgZGVidWcgZG9tYWluIGlzIGNvcnJlY3RseQo+IHBvd2VyZWQuCj4gCgpXZSBjYW4gYWx3
+YXlzIGRvIHRoYXQgdW5jb25kaXRpb25hbGx5LiBJZiBpbXBsZW1lbnRhdGlvbnMgZG9uJ3QgaG9u
+b3IKdGhvc2UgYml0cywgaXQncyBkaWZmZXJlbnQuIElmIHRoZXkgaGFuZyBvbiBhY2Nlc3Npbmcg
+c29tZXRoaW5nIHdoaWNoIGlzCm9uIGRlYnVnIHBvd2VyIGRvbWFpbiBhbmQgbm90IG9uIGNvcmUg
+cG93ZXIgZG9tYWluLCB0aGVuIHlvdSBoYXZlIG11Y2gKYmlnZ2VyIGlzc3VlIHRvIHNvbHZlLiBI
+b3cgY2FuIHlvdSBldmVuIHRydXN0IGFuZCBtYWtlIGFueSBvdGhlcgpyZWdpc3RlciBhY2Nlc3Nl
+cyB0aGF0IGFyZSBpbiBkZWJ1ZyBwb3dlciBkb21haW4gdGhlbiA/Cgo+IOKAi1doaWxlIGl0IGlz
+IHRydWUgdG8gc2F5IHRoYXQgZGlzYWJsaW5nIENQVUlkbGUgZG9lcyBub3QgZ3VhcmFudGVlCj4g
+dGhhdCB0aGUgZGVidWcgcG93ZXIgZG9tYWluIGlzIG9uLCBpdCBkb2VzIGluIGEgY2VydGFpbiBj
+bGFzcyBvZgo+IGRlc2lnbnMgcHJldmVudCBpdCBiZWluZyBwb3dlcmVkIG9mZiAoSnVubyBoaXN0
+b3JpY2FsbHkgLSBub3Qgc3VyZSBpZgo+IHRoYXQgaXMgc3RpbGwgdGhlIGNhc2UuKS4KPiAKCkFn
+YWluIGl0J3MgY29tcGxldGVseSBwbGF0Zm9ybSBzcGVjaWZpYy4gQWxsIHlvdSBuZWVkIHRvIGNh
+cmUgaXMgdGhhdAp0aGUgZGVidWcgcG93ZXIgZG9tYWluIGlzIG9uIG9yIG5vdC4gRGlzYWJsaW5n
+IENQVUlkbGUgdG8gYWNoaWV2ZSB0aGF0CmlzIHNpbXBseSB3cm9uZyBhbmQgbWF5IHdvcmsgb25s
+eSBvbiBmZXcgcGxhdGZvcm1zLgoKPiBIb3dldmVyLCBJIGRvIGFncmVlIHRoYXQgdGhlIHVzZSBv
+ZiB0aGUgZHJpdmVyIHNob3VsZCBub3QgYmUKPiB0cmlnZ2VyZWQgX29ubHlfIG9uIHRoZSBleGlz
+dGVuY2Ugb2YgL25vaGx0IG9uIHRoZSBjb21tYW5kIGxpbmUgLSDigIsKPiB0aGVyZSBpcyBhIGNs
+YXNzIG9mIGRlc2lnbnMgd2hlcmUgdGhpcyB3aWxsIG5vdCBiZSByZXF1aXJlZC4KPiAKClRoYW5r
+cwoKPiBXaGVuIGVuYWJpbmcgdGhlIGRyaXZlciBhcyBhIGtlcm5lbCBjb25maWcgdGhlIHVzZXIg
+bmVlZHMgdG8KPiBkZWNpZGU6LSAxKSBkbyBJIG5lZWQgdGhpcyB0byBkZWJ1ZyB0aGUgaXNzdWUg
+SSBhbSBzZWVpbmcgMikgZG9lcyB0aGUKPiBwb3dlciBtYW5hZ2VtZW50IG9uIG15IHN5c3RlbSBy
+ZXF1aXJlIEkgdXNlIC9ub2hsdCBhcyB3ZWxsLgoKUGxlYXNlIGRvbid0ICptaXN1c2UqIG5vaGx0
+IHRvIGRpc2FibGUgaWRsZS4gVGhlcmUgYXJlIG90aGVyIHdheXMgdG8KZG8gdGhlIHNhbWUgZWl0
+aGVyIGZyb20gdGhlIHVzZXItc3BhY2Ugb3IgZnJvbSB0aGUgZHJpdmVyLgoKPiAKPiBJIHRoaW5r
+IHRoYXQgdGhlIHVzZSBvZiAvbm9obHQgYXMgYW4gb3B0aW9uLCBhbmQgdGhlIHJlYXNvbnMgd2h5
+IGl0IAo+IG1pZ2h0IGJlIG5lZWRlZCBzaG91bGQgYmUgcGFydCBvZiB0aGUgY29uZmlndXJhdGlv
+biBoZWxwIGluIHRoaXMKPiBjYXNlLgo+IAo+IFRoZXJlIGlzIGFsc28gYSBjYXNlIGZvciBjb25z
+aWRlcmluZyBpZiB0aGVyZSBzaG91bGQgYmUgYW4gb3B0aW9uIHRvIAo+IGNvbmZpZ3VyZSBpdCB0
+byBiZSBlbmFibGVkIG9yIGRpc2FibGVkIGF0IGJvb3QgdGltZS4gSXQgaXMgZWFzeSB0byAKPiBp
+bWFnaW5lIGNhc2VzIEkgd2FudCB0byBoYXZlIHRoaXMgcnVubmluZyBmcm9tIHRoZSBzdGFydCBh
+cyBhIGNyYXNoIAo+IGhhcHBlbnMgZWFybHkgLSBhbmQgY2FzZXMgSSBjYW4gZW5hYmxlIGl0IG9u
+IGRlbWFuZCBsYXRlci4KPiAKCkFsc28gY29uc2lkZXIgd2l0aCBjcHVpZGxlIGVuYWJsZWQgOyku
+IEkgY2FuIGhlbHAgdGVzdGluZyBpZiBuZWVkZWQuCgotLSAKUmVnYXJkcywKU3VkZWVwCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
