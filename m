@@ -1,32 +1,36 @@
-From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: increase SD clock frequency on Radxa Rock
-Date: Wed, 22 Mar 2017 20:14:36 +0300
-Message-ID: <BDFC28D2-5C1F-4406-9F0E-BF089048F7DB@gmail.com>
-References: <1490110822-3310-1-git-send-email-al.kochet@gmail.com> <1978752.xjtBqdMt97@phil> <FCE5C7E0-7BED-4600-952A-E1EBC900F814@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 10/15] ARM: dts: bcm: fix msi-controller name and unit
+ address
+Date: Wed, 22 Mar 2017 10:16:03 -0700
+Message-ID: <b0ac6b2e-b55f-7112-7d2a-2610d58a4232@gmail.com>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-10-robh@kernel.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <FCE5C7E0-7BED-4600-952A-E1EBC900F814-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170322020313.24338-10-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 03/21/2017 07:03 PM, Rob Herring wrote:
+> The unit address for the msi controller is not valid as there is no reg
+> property, so remove it. Also, msi-controller is the preferred node name.
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Cc: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+> ---
+> Sub-arch maintainers, please apply to your trees unless arm-soc wants 
+> to take the whole lot.
 
-> 22 =D0=BC=D0=B0=D1=80=D1=82=D0=B0 2017 =D0=B3., =D0=B2 20:04, =
-Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=
-=B0=D0=BB(=D0=B0):
->=20
-> Ok. Let leave as is for now.
->=20
-> My radxa worked stable for a year with this settings.
-
-Ok, I not sure what my radxa worked stable with this settings.
-Hieko, thanks for catching that.
-
-Sorry for your time.
-
+Applied, thanks Rob.
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
