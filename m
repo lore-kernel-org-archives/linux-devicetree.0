@@ -1,52 +1,41 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/3] clk: qcom: Update DT bindings for the MSM8660/APQ8060 RPMCC
-Date: Wed, 22 Mar 2017 09:18:23 +0100
-Message-ID: <20170322081823.20446-1-linus.walleij@linaro.org>
+Subject: [PATCH 2/3] clk: qcom: Elaborate on "active" clocks in the RPM clock bindings
+Date: Wed, 22 Mar 2017 09:18:42 +0100
+Message-ID: <20170322081842.20495-1-linus.walleij@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These compatible strings need to be added to extend support
-for the RPM CC to cover MSM8660/APQ8060. We also need to add
-enumberators to the include file for a few clocks that were
-missing.
+The concept of "active" clocks is just explained in a bried comment in the
+device driver, let's explain it a bit more in the device tree bindings
+so everyone understands this.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 2 ++
- include/dt-bindings/clock/qcom,rpmcc.h                 | 4 ++++
- 2 files changed, 6 insertions(+)
+ Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-index a7235e9e1c97..d470a0187035 100644
+index d470a0187035..cf80a00b7ff2 100644
 --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
 +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-@@ -10,6 +10,8 @@ Required properties :
- - compatible : shall contain only one of the following. The generic
-                compatible "qcom,rpmcc" should be also included.
+@@ -18,6 +18,14 @@ Required properties :
  
-+			"qcom,rpmcc-msm8660", "qcom,rpmcc"
-+			"qcom,rpmcc-apq8060", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
- 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index 96b63c00249e..44358562a031 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -37,6 +37,10 @@
- #define RPM_SYS_FABRIC_A_CLK			19
- #define RPM_SFPB_CLK				20
- #define RPM_SFPB_A_CLK				21
-+#define RPM_PLL4_CLK				22
-+#define RPM_PLL4_A_CLK				23
-+#define RPM_SMI_CLK				24
-+#define RPM_SMI_A_CLK				25
+ - #clock-cells : shall contain 1
  
- /* SMD RPM clocks */
- #define RPM_SMD_XO_CLK_SRC				0
++The clock enumerators are defined in <dt-bindings/clock/qcom,rpmcc.h>
++and come in pairs: FOO_CLK followed by FOO_A_CLK. The latter clock
++is an "active" clock, which means that the consumer only care that the
++clock is available when the system is active, i.e. not suspended. If
++it is important that the clock keeps running during system suspend,
++you need to specify the non-active clock, the one not containing
++*_A_* in the enumerator name.
++
+ Example:
+ 	smd {
+ 		compatible = "qcom,smd";
 -- 
 2.9.3
