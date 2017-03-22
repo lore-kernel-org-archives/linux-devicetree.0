@@ -1,72 +1,57 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: add regulator info for Kevin
- digitizer
-Date: Wed, 22 Mar 2017 09:26:41 +0100
-Message-ID: <20415662.PctC9IM4SC@phil>
-References: <20170320235344.126298-1-briannorris@chromium.org>
- <20170320235344.126298-5-briannorris@chromium.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v5] hwmon: ads7828 optional parameters from the device
+ tree
+Date: Wed, 22 Mar 2017 09:42:40 +0100
+Message-ID: <20170322084240.xspj432z2mpyzykq@ninjato>
+References: <20170321032434.9268-1-kernel.development@povil.us>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20170320235344.126298-5-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dy6ultjmxblubufl"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170321032434.9268-1-kernel.development-iezDrKAjiWs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
+Cc: jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 20. M=E4rz 2017, 16:53:44 CET schrieb Brian Norris:
-> We need to enable this regulator before the digitizer can be used. Wacom
-> recommended waiting for 100 ms before talking to the HID.
-> =
 
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> v3:
->  * reintroduced into patch set; bindings are in linux-next
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 3 +++
->  1 file changed, 3 insertions(+)
-> =
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts index
-> 2f720cf2fd07..f4714c4606f3 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> @@ -232,6 +232,9 @@ ap_i2c_dig: &i2c2 {
-
-according to the hid-over-i2c binding, this should use a special compatible =
-
-like
-
-	compatible =3D "wacom,w9013", "hid-over-i2c"
-
-As the binding patch is from Caesar, I assume that is the Kevin component a=
-nd
-I can add that myself, just need confirmation that this is actually the cor=
-rect =
-
-component :-) .
+--dy6ultjmxblubufl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
-Thanks
-Heiko
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |  2 --
 
->  		pinctrl-names =3D "default";
->  		pinctrl-0 =3D <&cpu1_dig_irq_l &cpu1_dig_pdct_l>;
-> =
+This file is about to get moved one directory up:
 
-> +		vdd-supply =3D <&p3_3v_dig>;
-> +		post-power-on-delay-ms =3D <100>;
-> +
->  		interrupt-parent =3D <&gpio2>;
->  		interrupts =3D <4 IRQ_TYPE_LEVEL_LOW>;
+https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=b7e252fcddfa573bb1ee275b53bba6cef85671d4
+
+Just so you know already...
+
+
+--dy6ultjmxblubufl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAljSOP0ACgkQFA3kzBSg
+KbbxSxAAhg5+fPmq39YmTgmX5EgVtqeRwmodtXLomrCAQ+ss/8Cbfip8WMjMZfCW
+EHqcbrg/QM/oHn8hfSUXRgI9yXSzQRYqz6hnQjLJ+VYbFTM7zBHK67vWdvovlqZp
+bKO/ADgQYa3w35Rw2pBCSul96YfWNEjFBSPGjTHv8KZT0v5pOdj26JEGFoZ81/Wc
+i1494tlcKqcuWTt+KoqlCqhkBtKoPe7aZcwvN6flrY4RIBKrJxE2W/Pl522gxGvM
+THBflYa/EoxpPuIK04ndAELv8MA0ms6UzxG0My5E9y7Pu9qsEKZOgwM7AyujeprQ
++W01C0c4kGcksyl7bUXxqNd+ugKE8irj9I3hzztDQRriBKa7Y2HRYSIJHUilxOGE
+b+2vfBE0t1V8Zjeod1vnIccDOwMrG8Lz1Cw86BnZyS/qPB1DqaLi3L87dyyJ5YZb
+KjG43KcRqG+iddC2RGndEN+3WwuZ1/P6mnOCZRRxy5qhELosKl5E34VgSTw3TLVc
+WJgF3WKXL9Pkfi/0yaLsXItfU2aWWVRnPiJLjaKJhKJ5TYonqjb8r/3woPsadNfV
+NHzxSV64g+A/1+fP+eU4HJItr7LjjP8O4UjrNmbx/dVmxkU0gu9kn1wJIgMMyw0+
+d2GRR3N7PqcqbWlSfCqLv8K9rl0+LJJokqrbx2sFJEb2oINv+cs=
+=npNj
+-----END PGP SIGNATURE-----
+
+--dy6ultjmxblubufl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
