@@ -1,147 +1,70 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv2.1] serdev: implement get/set tiocm
-Date: Wed, 22 Mar 2017 01:58:37 +0100
-Message-ID: <20170322005837.6047-1-sre@kernel.org>
-References: <20170321223216.11733-7-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170321223216.11733-7-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
+Date: Wed, 22 Mar 2017 10:36:44 +0900
+Message-ID: <93e79e92-a102-e931-8d63-843031848888@samsung.com>
+References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
+ <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, LW@KARO-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-Add method for getting and setting tiocm.
-
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
-Changes since PATCHv2:
- * fix serdev_device_set_tiocm inline definition for disabled SERDEV
- * use <linux/termios.h> instead of <asm-generic/termios.h>
----
- drivers/tty/serdev/core.c           | 22 ++++++++++++++++++++++
- drivers/tty/serdev/serdev-ttyport.c | 24 ++++++++++++++++++++++++
- include/linux/serdev.h              | 13 +++++++++++++
- 3 files changed, 59 insertions(+)
-
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index a63b74031e22..1e1cbae3a0ea 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -184,6 +184,28 @@ void serdev_device_wait_until_sent(struct serdev_device *serdev, long timeout)
- }
- EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
- 
-+int serdev_device_get_tiocm(struct serdev_device *serdev)
-+{
-+	struct serdev_controller *ctrl = serdev->ctrl;
-+
-+	if (!ctrl || !ctrl->ops->get_tiocm)
-+		return -ENOTSUPP;
-+
-+	return ctrl->ops->get_tiocm(ctrl);
-+}
-+EXPORT_SYMBOL_GPL(serdev_device_get_tiocm);
-+
-+int serdev_device_set_tiocm(struct serdev_device *serdev, int set, int clear)
-+{
-+	struct serdev_controller *ctrl = serdev->ctrl;
-+
-+	if (!ctrl || !ctrl->ops->set_tiocm)
-+		return -ENOTSUPP;
-+
-+	return ctrl->ops->set_tiocm(ctrl, set, clear);
-+}
-+EXPORT_SYMBOL_GPL(serdev_device_set_tiocm);
-+
- static int serdev_drv_probe(struct device *dev)
- {
- 	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
-diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
-index db2bc601e554..c5bdb901ff11 100644
---- a/drivers/tty/serdev/serdev-ttyport.c
-+++ b/drivers/tty/serdev/serdev-ttyport.c
-@@ -179,6 +179,28 @@ static void ttyport_wait_until_sent(struct serdev_controller *ctrl, long timeout
- 	tty_wait_until_sent(tty, timeout);
- }
- 
-+static int ttyport_get_tiocm(struct serdev_controller *ctrl)
-+{
-+	struct serport *serport = serdev_controller_get_drvdata(ctrl);
-+	struct tty_struct *tty = serport->tty;
-+
-+	if (!tty->ops->tiocmget)
-+		return -ENOTSUPP;
-+
-+	return tty->driver->ops->tiocmget(tty);
-+}
-+
-+static int ttyport_set_tiocm(struct serdev_controller *ctrl, unsigned int set, unsigned int clear)
-+{
-+	struct serport *serport = serdev_controller_get_drvdata(ctrl);
-+	struct tty_struct *tty = serport->tty;
-+
-+	if (!tty->ops->tiocmset)
-+		return -ENOTSUPP;
-+
-+	return tty->driver->ops->tiocmset(tty, set, clear);
-+}
-+
- static const struct serdev_controller_ops ctrl_ops = {
- 	.write_buf = ttyport_write_buf,
- 	.write_flush = ttyport_write_flush,
-@@ -188,6 +210,8 @@ static const struct serdev_controller_ops ctrl_ops = {
- 	.set_flow_control = ttyport_set_flow_control,
- 	.set_baudrate = ttyport_set_baudrate,
- 	.wait_until_sent = ttyport_wait_until_sent,
-+	.get_tiocm = ttyport_get_tiocm,
-+	.set_tiocm = ttyport_set_tiocm,
- };
- 
- struct device *serdev_tty_port_register(struct tty_port *port,
-diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-index a308b206d204..e29a270f603c 100644
---- a/include/linux/serdev.h
-+++ b/include/linux/serdev.h
-@@ -15,6 +15,7 @@
- 
- #include <linux/types.h>
- #include <linux/device.h>
-+#include <linux/termios.h>
- 
- struct serdev_controller;
- struct serdev_device;
-@@ -82,6 +83,8 @@ struct serdev_controller_ops {
- 	void (*set_flow_control)(struct serdev_controller *, bool);
- 	unsigned int (*set_baudrate)(struct serdev_controller *, unsigned int);
- 	void (*wait_until_sent)(struct serdev_controller *, long);
-+	int (*get_tiocm)(struct serdev_controller *);
-+	int (*set_tiocm)(struct serdev_controller *, unsigned int, unsigned int);
- };
- 
- /**
-@@ -188,6 +191,8 @@ void serdev_device_close(struct serdev_device *);
- unsigned int serdev_device_set_baudrate(struct serdev_device *, unsigned int);
- void serdev_device_set_flow_control(struct serdev_device *, bool);
- void serdev_device_wait_until_sent(struct serdev_device *, long);
-+int serdev_device_get_tiocm(struct serdev_device *);
-+int serdev_device_set_tiocm(struct serdev_device *, int, int);
- int serdev_device_write_buf(struct serdev_device *, const unsigned char *, size_t);
- void serdev_device_write_flush(struct serdev_device *);
- int serdev_device_write_room(struct serdev_device *);
-@@ -226,6 +231,14 @@ static inline unsigned int serdev_device_set_baudrate(struct serdev_device *sdev
- }
- static inline void serdev_device_set_flow_control(struct serdev_device *sdev, bool enable) {}
- static inline void serdev_device_wait_until_sent(struct serdev_device *sdev, long timeout) {}
-+static inline int serdev_device_get_tiocm(struct serdev_device *serdev)
-+{
-+	return -ENOTSUPP;
-+}
-+static inline int serdev_device_set_tiocm(struct serdev_device *serdev, int set, int clear)
-+{
-+	return -ENOTSUPP;
-+}
- static inline int serdev_device_write_buf(struct serdev_device *sdev, const unsigned char *buf, size_t count)
- {
- 	return -ENODEV;
--- 
-2.11.0
+SGkgaW5raSwKCkNvdWxkIHlvdSBjaGVjayB0aGUgdGhpcyBwYXRjaD8KRm9yIHJlZmVyZW5jZSwg
+cGF0Y2ggMS81IGFuZCAyLzUgaGF2ZSBhbHJlYWR5IGJlZW4gYXBwbGllZCB0byBLcnp5c3p0b2Yg
+CnRyZWUuCgpCZXN0IHJlZ2FyZHMsCkhvZWdldW4KCgpPbiAwMy8wOC8yMDE3IDAxOjU0IFBNLCBI
+b2VnZXVuIEt3b24gd3JvdGU6Cj4gVGhlIGRzaSArIHBhbmVsIGlzIGEgcGFyZW50YWwgcmVsYXRp
+b25zaGlwLCBzbyBPRiBncnBhaCBpcyBub3QgbmVlZGVkLgo+IFRoZXJlZm9yZSwgdGhlIGN1cnJl
+bnQgZHNpX3BhcnNlX2R0IGZ1bmN0aW9uIHdpbGwgdGhyb3cgYW4gZXJyb3IsCj4gYmVjYXVzZSB0
+aGVyZSBpcyBubyBsaW5rZWQgT0YgZ3JhcGggZm9yIHRoZSBjYXNlIGZpbWQgKyBkc2kgKyBwYW5l
+bC4KPgo+IFBhcnNlIHRoZSBQbGwgYnVyc3QgYW5kIGVzYyBjbG9jayBmcmVxdWVuY3kgcHJvcGVy
+dGllcyBpbiBkc2lfcGFyc2VfZHQoKQo+IGFuZCBjcmVhdGUgYSBicmlkZ2Vfbm9kZSBvbmx5IGlm
+IHRoZXJlIGlzIGFuIE9GIGdyYXBoIGFzc29jaWF0ZWQgd2l0aCBkc2kuCj4KPiBTaWduZWQtb2Zm
+LWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4KPiBSZXZpZXdlZC1i
+eTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPiBSZXZpZXdlZC1ieTogQW5k
+aSBTaHl0aSA8YW5kaS5zaHl0aUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgIGRyaXZlcnMvZ3B1L2Ry
+bS9leHlub3MvZXh5bm9zX2RybV9kc2kuYyB8IDMyICsrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tCj4gICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAyNCBkZWxldGlvbnMo
+LSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNp
+LmMgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPiBpbmRleCBmNWMw
+NGQwLi4yZDRlMTE4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9z
+X2RybV9kc2kuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2ku
+Ywo+IEBAIC0xNjUyLDM5ICsxNjUyLDIzIEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9wYXJzZV9k
+dChzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQo+ICAgCWlmIChyZXQgPCAwKQo+ICAgCQlyZXR1cm4g
+cmV0Owo+ICAgCj4gLQllcCA9IG9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKG5vZGUsIERT
+SV9QT1JUX09VVCwgMCk7Cj4gLQlpZiAoIWVwKSB7Cj4gLQkJZGV2X2VycihkZXYsICJubyBvdXRw
+dXQgcG9ydCB3aXRoIGVuZHBvaW50IHNwZWNpZmllZFxuIik7Cj4gLQkJcmV0dXJuIC1FSU5WQUw7
+Cj4gLQl9Cj4gLQo+IC0JcmV0ID0gZXh5bm9zX2RzaV9vZl9yZWFkX3UzMihlcCwgInNhbXN1bmcs
+YnVyc3QtY2xvY2stZnJlcXVlbmN5IiwKPiArCXJldCA9IGV4eW5vc19kc2lfb2ZfcmVhZF91MzIo
+bm9kZSwgInNhbXN1bmcsYnVyc3QtY2xvY2stZnJlcXVlbmN5IiwKPiAgIAkJCQkgICAgICZkc2kt
+PmJ1cnN0X2Nsa19yYXRlKTsKPiAgIAlpZiAocmV0IDwgMCkKPiAtCQlnb3RvIGVuZDsKPiArCQly
+ZXR1cm4gcmV0Owo+ICAgCj4gLQlyZXQgPSBleHlub3NfZHNpX29mX3JlYWRfdTMyKGVwLCAic2Ft
+c3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5IiwKPiArCXJldCA9IGV4eW5vc19kc2lfb2ZfcmVhZF91
+MzIobm9kZSwgInNhbXN1bmcsZXNjLWNsb2NrLWZyZXF1ZW5jeSIsCj4gICAJCQkJICAgICAmZHNp
+LT5lc2NfY2xrX3JhdGUpOwo+ICAgCWlmIChyZXQgPCAwKQo+IC0JCWdvdG8gZW5kOwo+IC0KPiAt
+CW9mX25vZGVfcHV0KGVwKTsKPiArCQlyZXR1cm4gcmV0Owo+ICAgCj4gICAJZXAgPSBvZl9ncmFw
+aF9nZXRfbmV4dF9lbmRwb2ludChub2RlLCBOVUxMKTsKPiAtCWlmICghZXApIHsKPiAtCQlyZXQg
+PSAtRUlOVkFMOwo+IC0JCWdvdG8gZW5kOwo+IC0JfQo+IC0KPiAtCWRzaS0+YnJpZGdlX25vZGUg
+PSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGVwKTsKPiAtCWlmICghZHNpLT5icmlk
+Z2Vfbm9kZSkgewo+IC0JCXJldCA9IC1FSU5WQUw7Cj4gLQkJZ290byBlbmQ7Cj4gKwlpZiAoZXAp
+IHsKPiArCQlkc2ktPmJyaWRnZV9ub2RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVu
+dChlcCk7Cj4gKwkJb2Zfbm9kZV9wdXQoZXApOwo+ICAgCX0KPiAtZW5kOgo+IC0Jb2Zfbm9kZV9w
+dXQoZXApOwo+ICAgCj4gLQlyZXR1cm4gcmV0Owo+ICsJcmV0dXJuIDA7Cj4gICB9Cj4gICAKPiAg
+IHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRl
+dmljZSAqbWFzdGVyLAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
