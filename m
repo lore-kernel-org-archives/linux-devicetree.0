@@ -1,64 +1,37 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: sun7i: lamobo-r1: Fix CPU port RGMII settings
-Date: Wed, 22 Mar 2017 14:12:49 -0700
-Message-ID: <3d32f497-e875-2a55-5908-78de880640bc@gmail.com>
-References: <20170319045039.6163-1-f.fainelli@gmail.com>
- <CAGb2v65KvoC9MUoErkGeHvmbm8Ocq-vhFBhxXvZu--=xT4zAeg@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2.1] serdev: implement get/set tiocm
+Date: Wed, 22 Mar 2017 16:18:25 -0500
+Message-ID: <CAL_Jsq+7-TUiGoOEZZveyT-vzHT-TKYw3sQb8f0NqKp5UEdtWw@mail.gmail.com>
+References: <20170321223216.11733-7-sre@kernel.org> <20170322005837.6047-1-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v65KvoC9MUoErkGeHvmbm8Ocq-vhFBhxXvZu--=xT4zAeg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: linux-arm-kernel@vger.kernel.org, mo.ucina@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170322005837.6047-1-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Chen-Yu,
+On Tue, Mar 21, 2017 at 7:58 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Add method for getting and setting tiocm.
+>
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> Changes since PATCHv2:
+>  * fix serdev_device_set_tiocm inline definition for disabled SERDEV
+>  * use <linux/termios.h> instead of <asm-generic/termios.h>
+> ---
+>  drivers/tty/serdev/core.c           | 22 ++++++++++++++++++++++
+>  drivers/tty/serdev/serdev-ttyport.c | 24 ++++++++++++++++++++++++
+>  include/linux/serdev.h              | 13 +++++++++++++
+>  3 files changed, 59 insertions(+)
 
-On 03/21/2017 09:06 PM, Chen-Yu Tsai wrote:
-> Hi Florian,
-> 
-> On Sun, Mar 19, 2017 at 12:50 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->> The CPU port of the BCM53125 is configured with RGMII (no delays) but
->> this should actually be RGMII with transmit delay (rgmii-txid) because
->> STMMAC takes care of inserting the transmitter delay. This fixes
->> occasional packet loss encountered.
->>
->> Fixes: d7b9eaff5f0c ("ARM: dts: sun7i: Add BCM53125 switch nodes to the lamobo-r1 board")
->> Reported-by: Hartmut Knaack <knaack.h@gmx.de>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
->> index 72ec0d5ae052..bbf1c8cbaac6 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
->> @@ -167,7 +167,7 @@
->>                                         reg = <8>;
->>                                         label = "cpu";
->>                                         ethernet = <&gmac>;
->> -                                       phy-mode = "rgmii";
->> +                                       phy-mode = "rgmii-txid";
-> 
-> Just to clarify, the DT binding says:
-> 
->   * "rgmii-txid" (RGMII with internal TX delay provided by the PHY, the MAC
->      should not add an TX delay in this case)
-> 
-> I'm assuming this applies from the device node's point of view?
-> In this case the "PHY" is STMMAC, and the "MAC" is the switch chip?
-> Is that right?
+I'm not that big of a fan of {set,get}_tiocm, but I guess it is fine.
 
-It's actually a MAC to MAC type of set up here, so the definition of the
-property kind of still applies, with the caveat that we need to make
-sure that if one side uses "rgmii", the other one uses "rgmii-txid"
-which is what is being done here. I think I typoed in the commit message
-in that it should read "STMMAC does not take care of inserting the
-transmitter delay here" which is why the switch must do it.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Thanks!
--- 
-Florian
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
