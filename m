@@ -1,58 +1,80 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: setup DMA-channels for mmc0 and emmc
- for rk3188
-Date: Wed, 22 Mar 2017 16:54:33 +0100
-Message-ID: <11123239.Wc863F7R2R@phil>
-References: <1490109227-4006-1-git-send-email-al.kochet@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490109227-4006-1-git-send-email-al.kochet@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Kochetkov <al.kochet@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Alexander Kochetkov <al.kochet@gmail.com>
+Subject: [PATCH v7 4/7] ARM: dts: rockchip: add clockevent attribute to rockchip timers
+Date: Wed, 22 Mar 2017 18:48:31 +0300
+Message-ID: <1490197714-25415-5-git-send-email-al.kochet@gmail.com>
+References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+All rockchip timers present in the DT act as clockevent.
+It is possible to specify timer role using DT attribute.
+Mark them accordingly.
 
-Am Dienstag, 21. M=E4rz 2017, 18:13:47 CET schrieb Alexander Kochetkov:
-> This commit enable DMA-based transfers for SD/eMMC card adapters
-> and reduce number of interrupts produced by SD-card/eMMC-card
-> adapters.
-> =
+Also this patch specify that for timer should be called init
+function specified with CLOCKEVENT_OF_DECLARE().
 
-> Sometimes interrupts from SD-card/eMMC-card adapters running in
-> PIO mode blocks execution of hrtimers and I2S DMA callbacks for
-> a long periods (100 ms or more).
-> =
+Without the commit boot warnings will appear because clock
+framework will try initialize them as clocksource.
 
-> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+---
+ arch/arm/boot/dts/rk3036.dtsi            |    1 +
+ arch/arm/boot/dts/rk322x.dtsi            |    1 +
+ arch/arm/boot/dts/rk3288.dtsi            |    1 +
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi |    1 +
+ 4 files changed, 4 insertions(+)
 
-I've applied a slightly different variant in [0] with your commit message a=
-nd
-moved the dma properties to the mmc/emmc nodes in rk3xxx.dtsi - as the dma
-channels are the same on both rk3188 and rk3066.
-
-While at it, I've also added the sdio dma as there is no need to leave it o=
-ut.
-
-
-Also when changing the devicetree, please do not append stuff at the bottom
-but instead sort new nodes (the &mmc &emmc in this case) and properties
-alphabetically.
-
-
-Thanks
-Heiko
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.gi=
-t/commit/?id=3D94bbdd77247d8c16eed5f55dddcf1cbc38d06cc4
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 843d2be..a04bb5a 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -353,6 +353,7 @@
+ 		interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&xin24m>, <&cru PCLK_TIMER>;
+ 		clock-names = "timer", "pclk";
++		clockevent;
+ 	};
+ 
+ 	pwm0: pwm@20050000 {
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 2a4eee2..2250640 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -328,6 +328,7 @@
+ 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&xin24m>, <&cru PCLK_TIMER>;
+ 		clock-names = "timer", "pclk";
++		clockevent;
+ 	};
+ 
+ 	cru: clock-controller@110e0000 {
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 91c4b3c..f45b7ad 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -217,6 +217,7 @@
+ 		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&xin24m>, <&cru PCLK_TIMER>;
+ 		clock-names = "timer", "pclk";
++		clockevent;
+ 	};
+ 
+ 	display-subsystem {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index 4f44d11..054dadd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -673,6 +673,7 @@
+ 		compatible = "rockchip,rk3368-timer", "rockchip,rk3288-timer";
+ 		reg = <0x0 0xff810000 0x0 0x20>;
+ 		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
++		clockevent;
+ 	};
+ 
+ 	gic: interrupt-controller@ffb71000 {
+-- 
+1.7.9.5
