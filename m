@@ -1,69 +1,164 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v7 3/3] ARM: dts: imx6q-icore: Add touchscreen node
-Date: Wed, 22 Mar 2017 16:36:48 +0530
-Message-ID: <1490180808-2856-3-git-send-email-jagan@openedev.com>
-References: <1490180808-2856-1-git-send-email-jagan@openedev.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 0/7] Add support for pinctrl/gpio on Armada 37xx Was Re: [PATCH v2 0/7] Hi,
+Date: Wed, 22 Mar 2017 12:40:49 +0100
+Message-ID: <87efxpfsji.fsf@free-electrons.com>
+References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
+        <87pohafj6q.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490180808-2856-1-git-send-email-jagan@openedev.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-input@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Domenico Acri <domenico.acri@engicam.com>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <87pohafj6q.fsf@free-electrons.com> (Gregory CLEMENT's message of
+        "Tue, 21 Mar 2017 21:50:37 +0100")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Victor Gu <xigu@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
-
-max11801 touchscreen on Engicam iCoreM6 Quad module is
-connected via i2c1, so add max11801: touchscreen@48 on i2c1.
-
-Cc: Domenico Acri <domenico.acri@engicam.com>
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v7:
-- add vendor prefix as maxim on compatible
-Changes for v6:
-- Replace the lable and name of the node
-   ts: max11801 => max11801: touchscreen@48
-Changes for v5:
-- %s/arm/ARM/g with subject prefix
-Changes for v4:
-- Newly added patch
-
- arch/arm/boot/dts/imx6q-icore.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
-index 73f34d1..70cc8b2 100644
---- a/arch/arm/boot/dts/imx6q-icore.dts
-+++ b/arch/arm/boot/dts/imx6q-icore.dts
-@@ -58,6 +58,15 @@
- 	status = "okay";
- };
+Hi Linus,
  
-+&i2c1 {
-+	max11801: touchscreen@48 {
-+		compatible = "maxim,max11801";
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <31 2>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
+ On mar., mars 21 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+
+> Hi,
+>
+> Obviously this cover letter is wrong. Actually I forgot to commit it in
+> git series. Here it is the correct one:
+>
+> After several months here it is the second version of the series adding
+> support for the pin and gpio controllers present on the Armada 37xx
+> SoCs.
+
+As the first version was sent in December here it is a link to it:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/475216.html
+
+Also I am going to answer to your review to point what I have done in
+this new series.
+
+Gregory
+
+>
+> Each Armada 37xx SoC comes with 2 pin controllers: one on the south
+> bridge (managing 28 pins) and one on the north bridge (managing 36 pins).
+>
+> At the hardware level the controller configure the pins by group and not
+> pin by pin.
+>
+> The gpio controller is also capable to handle interrupt from gpio.
+>
+> In the second version several changes has been done:
+>
+> - Update binding documentation making clear that mfd and syscon must
+>   be used (patch 1).
+>
+> - Split the fist patch adding pin controller support for Armada 37xx
+>   in arm64 part (for kconfig) and pinctrl part (patch 2 and 3)
+>
+> - Add MFD_SYSCON dependency (patch 3)
+>
+> - Add kerneldoc for the armada_37xx_pin_group struct (patch 3)
+>
+> - Rename _add_function() to armada_37xx_add_function() (patch 3)
+>
+> - Use an inline function to update the reg offset (patch 4)
+>
+> - Rename gpiolib_register to gpiochip_register (patch 4)
+>
+> - Add a comment about the two registers limit (patch 4)
+>
+> - Add explicit gpio node in the device tree (patch 4)
+>
+> - Convert the driver to use GPIOLIB_IRQCHIP (patch 5)
+>
+> - Add a critical section when accessing the hardware registers (patch 5)
+>
+> - Use the gpio sub-node (patch 5)
+>
+> With these change most of the comment of the first revision have been addressed.
+>
+> Thanks,
+>
+> Gregory
+>
+> Gregory CLEMENT (7):
+>   pinctrl: dt-bindings: Add documentation for Armada 37xx pin controllers
+>   arm64: marvell: enable the Armada 37xx pinctrl driver
+>   pinctrl: armada-37xx: Add pin controller support for Armada 37xx
+>   pinctrl: armada-37xx: Add gpio support
+>   pinctrl: aramda-37xx: Add irqchip support
+>   ARM64: dts: marvell: Add pinctrl nodes for Armada 3700
+>   ARM64: dts: marvell: armada37xx: add pinctrl definition
+>
+>  Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt         |   7 +-
+>  Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt | 143 +++++++++++-
+>  arch/arm64/Kconfig.platforms                                              |   2 +-
+>  arch/arm64/boot/dts/marvell/armada-3720-db.dts                            |   8 +-
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi                              |  71 +++++-
+>  drivers/pinctrl/Makefile                                                  |   2 +-
+>  drivers/pinctrl/mvebu/Kconfig                                             |   7 +-
+>  drivers/pinctrl/mvebu/Makefile                                            |   3 +-
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c                               | 918 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  9 files changed, 1153 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
+>  create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+>
+> Sorry for the noise,
+>
+> Gregory
+>
+>
+>  On mar., mars 21 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+>
+>> this series add support for the pin and gpio controllers present on
+>> the Armada 37xx SoCs.
+>>
+>> Each Armada 37xx SoC comes with 2 pin controllers: one on the south
+>> bridge (managing 28 pins) and one on the north bridge (managing 36 pins).
+>>
+>> At the hardware level the controller configure the pins by group and not
+>> pin by pin.
+>>
+>> The gpio controller is also capable to handle interrupt from gpio.
+>>
+>> Gregory
+>>
+>> Gregory CLEMENT (7):
+>>   pinctrl: dt-bindings: Add documentation for Armada 37xx pin controllers
+>>   arm64: marvell: enable the Armada 37xx pinctrl driver
+>>   pinctrl: armada-37xx: Add pin controller support for Armada 37xx
+>>   pinctrl: armada-37xx: Add gpio support
+>>   pinctrl: aramda-37xx: Add irqchip support
+>>   ARM64: dts: marvell: Add pinctrl nodes for Armada 3700
+>>   ARM64: dts: marvell: armada37xx: add pinctrl definition
+>>
+>>  Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt         |   7 +-
+>>  Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt | 143 +++++++++++-
+>>  arch/arm64/Kconfig.platforms                                              |   2 +-
+>>  arch/arm64/boot/dts/marvell/armada-3720-db.dts                            |   8 +-
+>>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi                              |  71 +++++-
+>>  drivers/pinctrl/Makefile                                                  |   2 +-
+>>  drivers/pinctrl/mvebu/Kconfig                                             |   7 +-
+>>  drivers/pinctrl/mvebu/Makefile                                            |   3 +-
+>>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c                               | 918 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>>  9 files changed, 1153 insertions(+), 8 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
+>>  create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+>>
+>> base-commit: c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201
+>> -- 
+>> git-series 0.9.1
+>
+> -- 
+> Gregory Clement, Free Electrons
+> Kernel, drivers, real-time and embedded Linux
+> development, consulting, training and support.
+> http://free-electrons.com
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 -- 
-1.9.1
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
