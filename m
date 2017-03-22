@@ -1,74 +1,58 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v5] hwmon: ads7828 optional parameters from the device
- tree
-Date: Wed, 22 Mar 2017 22:36:33 +0100
-Message-ID: <20170322213632.GA1518@katana>
-References: <20170321032434.9268-1-kernel.development@povil.us>
- <20170322084240.xspj432z2mpyzykq@ninjato>
- <20170322130555.wgwrkeju43dvj232@irascible.povil.us>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] phy: cpcap-usb: Add CPCAP PMIC USB support
+Date: Wed, 22 Mar 2017 14:59:36 -0700
+Message-ID: <20170322215935.GG10760@atomide.com>
+References: <20170317035152.18307-1-tony@atomide.com>
+ <20170322021828.wkbx3es6dpuur42y@earth>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170322130555.wgwrkeju43dvj232-vsA/HdQuLiGu4arkomUJ35yrNiDsoR7y@public.gmane.org>
+In-Reply-To: <20170322021828.wkbx3es6dpuur42y@earth>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sam Povilus <kernel.development-iezDrKAjiWs@public.gmane.org>
-Cc: jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170321 19:20]:
+> Hi,
+> 
+> On Thu, Mar 16, 2017 at 08:51:52PM -0700, Tony Lindgren wrote:
+> > Some Motorola phones like droid 4 use a custom CPCAP PMIC that has a
+> > multiplexing USB PHY.
+> > 
+> > This USB PHY can operate at least in four modes using pin multiplexing
+> > and two control GPIOS:
+> > 
+> > - Pass through companion PHY for the SoC USB PHY
+> > - ULPI PHY for the SoC
+> > - Pass through USB for the modem
+> > - UART debug console for the SoC
+> > 
+> > This patch adds support for droid 4 USB PHY and debug UART modes,
+> > support for other modes can be added later on as needed.
+> > 
+> > Both peripheral and host mode are working for the USB. The
+> > host mode depends on the cpcap-charger driver for VBUS.
+> > 
+> > VBUS and ID pin detection are done using cpcap-adc IIO ADC
+> > driver.
+> 
+> I tested UART, USB slave (cdc-ether) & USB host (keyboard & touchpad
+> from Atrix lapdock) mode with Droid 4:
+> 
+> Tested-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
---W/nzBZO5zC0uMSeA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Mar 22, 2017 at 07:05:55AM -0600, Sam Povilus wrote:
-> On Wed, Mar 22, 2017 at 09:42:40AM +0100, Wolfram Sang wrote:
-> >=20
-> > >  .../devicetree/bindings/i2c/trivial-devices.txt    |  2 --
-> >=20
-> > This file is about to get moved one directory up:
-> >=20
-> > https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?=
-h=3Ddt/next&id=3Db7e252fcddfa573bb1ee275b53bba6cef85671d4
-> >=20
-> > Just so you know already...
-> >=20
->=20
-> Thanks! I'm a bit new to this, what's the best way for me to handle
-> this?
-
-I mentioned this also for the HWMON maintainers. They will let you know
-their preference and if you need to do something.
+Thanks for testing. I'll repost v2 shortly with a minor change to
+use iio_read_channel_processed() instead of iio_read_channel_scale()
+as the ADC values are processed in the driver and not scaled by
+the IIO framework.
 
 Regards,
 
-   Wolfram
+Tony
 
 
---W/nzBZO5zC0uMSeA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJY0u5gAAoJEBQN5MwUoCm2yDkP/3Af/evqYVdryTRDjaJOr1RZ
-oXTPvZrvE+1UB0lAVH8RYDdtAx+ROUIG+ioay7QYR0kQdQ5xCNk4m3/qZb3JWMqr
-xRltOPz7E32J4ULVjEOvkcYudKbTb8DoMjFiPxTUOEpc5bAtIKyjDwIDYKaLQSIl
-jDZgFnk7i+m80RWXKGEpWHVKFxkKEdxYj2npKv6UrDTg8bc0Fps9iP4hPfM8poS8
-8s1X6zN0vzAwRfbwD/WNWgoo+qFmVMj9hF15TUNrsoUGkJRPyZpJ24euU3BKQKt0
-FL6ttGqOFQ6QhP6aKP7/Gz48uhnpH7xsp4j1/RJh0FSx4Z1Ji9OtciqEEPXq2q58
-L/45OP5VN/UtmWCAOD8dKsAwixOZjn7Jne3qweofp3EEnXrPwwmYzu1pmgb9WYBa
-rCanp5GAj8FeAttUanQFzrLeycF5d1kT6az1c022IJe/nnM/IuvsHLIDQmZ7LaoO
-t7opxv/TB69dAXf1gOm2YP9o5rCzABv593XW0+GcYn4os/qnTPpTXx9b3E2bmZ7h
-Hyhg0tNvtefrHYEzFCufLRiO0/IuGYzMU2c4H2ukz/eYcqO/ASCyLOdU+RD15i10
-yc+birwHnc7byjZZanwh5dsL74XXMaD4NzN133gNwzXIv0w7Y0n0ovfLrvefQBgX
-3ZxctCHiVYLmEHOKQJQL
-=m4I2
------END PGP SIGNATURE-----
-
---W/nzBZO5zC0uMSeA--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
