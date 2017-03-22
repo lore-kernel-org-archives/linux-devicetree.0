@@ -1,83 +1,51 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Fix DMA mask assignment
-Date: Wed, 22 Mar 2017 10:19:58 -0500
-Message-ID: <CAL_JsqKAuyePWUC-K21uZEjBU29EZA3WUQOYQdwAZUMOz+mEFg@mail.gmail.com>
-References: <94ede94e98502a7948085fba5a16994d3805010c.1488910224.git.robin.murphy@arm.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
+Date: Wed, 22 Mar 2017 08:24:08 -0700
+Message-ID: <m2lgrxnxlz.fsf@baylibre.com>
+References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
+        <20170316100743.GA12137@gondor.apana.org.au>
+        <m2mvcl6pwg.fsf@baylibre.com>
+        <20170317083032.GA18512@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <94ede94e98502a7948085fba5a16994d3805010c.1488910224.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170317083032.GA18512-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> (Herbert Xu's
+        message of "Fri, 17 Mar 2017 16:30:32 +0800")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 7, 2017 at 12:12 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
-> As we start moving towards mandating that device DMA addressing
-> capabilities are correctly described in DT for platforms like arm64,
+Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> writes:
 
-Why? There's no point to dma-ranges if the bus is not restricting the
-device. dma-ranges is supposed to apply to a bus, not a device. For
-example, using dma-ranges for a 32-bit device on a 64-bit platform is
-wrong. To put it another way, devices know their addressing
-capability, so we don't need to describe that in DT, only external
-restrictions outside of the device.
+> On Thu, Mar 16, 2017 at 11:24:31AM -0700, Kevin Hilman wrote:
+>> Hi Herbert,
+>> 
+>> Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> writes:
+>> 
+>> > On Wed, Feb 22, 2017 at 07:55:24AM +0100, Heiner Kallweit wrote:
+>> >> Expose clock CLKID_RNG0 which is needed for the HW random number generator.
+>> >> 
+>> >> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >
+>> > All patches applied.  Thanks.
+>> 
+>> Actually, can you just apply [PATCH 4/4] to your tree?
+>> 
+>> The clock and DT patches need to go through their respective trees or
+>> will otherwise have conflicts with other things going in via those
+>> trees.
+>
+> It's too late now.  Please speak up sooner next time.  These
+> patches were posted a month ago.
 
-> it
-> turns out that actually assigning DMA masks wider than 32 bits from
-> "dma-ranges" is made largely impossible by the current code. New PCI
-> devices are passed in with 32-bit masks, while new platform devices are
-> passed in with their masks unset, so we install default 32-bit masks for
-> them. As a result, subsequently taking the minimum between any existing
-> mask and the size given by "dma-ranges" means that we can never exceed
-> 32 bits for the vast majority of devices.
->
-> Since the DT can be assumed to describe the hardware appropriately, and
-> the device's driver is expected by the DMA API to explicitly set a mask
-> later when it probes, we can safely let "dma-ranges" unconditionally
-> override any initial mask from device creation (and as a small bonus
-> deduplicate the calculation in the process).
->
-> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> CC: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-> Fixes: 9a6d7298b083 ("of: Calculate device DMA masks based on DT dma-range size")
+Because this will be causing conflicts with both the platform (amlogic)
+tree and the clk tree, could provide an immutable branch where these are
+applied to help us handle these conflicts?
 
-Changing behavior since 4.1 doesn't really seem like a fix. A fix
-should generally be tagged for stable and I'd be nervous on this one.
+Thanks,
 
-Are we sure all the things a driver may do still work the same? A
-driver changing the default 32-bit mask to a 64-bit mask for example.
-
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/of/device.c | 11 ++---------
->  1 file changed, 2 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index b1e6bebda3f3..9bb8518b28f2 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -129,15 +129,8 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->         }
->
->         dev->dma_pfn_offset = offset;
-> -
-> -       /*
-> -        * Limit coherent and dma mask based on size and default mask
-> -        * set by the driver.
-> -        */
-> -       dev->coherent_dma_mask = min(dev->coherent_dma_mask,
-> -                                    DMA_BIT_MASK(ilog2(dma_addr + size)));
-> -       *dev->dma_mask = min((*dev->dma_mask),
-> -                            DMA_BIT_MASK(ilog2(dma_addr + size)));
-> +       dev->coherent_dma_mask = DMA_BIT_MASK(ilog2(dma_addr + size));
-> +       *dev->dma_mask = dev->coherent_dma_mask;
->
->         coherent = of_dma_is_coherent(np);
->         dev_dbg(dev, "device is%sdma coherent\n",
-> --
-> 2.11.0.dirty
->
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
