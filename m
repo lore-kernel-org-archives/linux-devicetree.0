@@ -1,67 +1,163 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCHv2 05/11] serdev: add serdev_device_wait_until_sent
-Date: Wed, 22 Mar 2017 10:39:39 +0100
-Message-ID: <20170322093939.GD26771@amd>
-References: <20170321223216.11733-1-sre@kernel.org>
- <20170321223216.11733-6-sre@kernel.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v4 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and GXL
+Date: Wed, 22 Mar 2017 11:18:55 +0100
+Message-ID: <1490177935-9646-4-git-send-email-narmstrong@baylibre.com>
+References: <1490177935-9646-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Q0rSlbzrZN6k9QnT"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170321223216.11733-6-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490177935-9646-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sboyd@codeaurora.org, khilman@baylibre.com, carlo@caione.org
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The same MALI-450 MP3 GPU is present in the GXBB and GXL SoCs.
 
---Q0rSlbzrZN6k9QnT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The node is simply added in the meson-gxbb.dtsi file.
 
-Hi!
+For GXL, since a lot is shared with the GXM that has a MALI-T820 IP, this
+patch adds a new meson-gxl-mali.dtsi and is included in the SoC specific
+dtsi files.
 
-> @@ -47,10 +48,13 @@ static void ttyport_write_wakeup(struct tty_port *por=
-t)
->  	struct serport *serport =3D serdev_controller_get_drvdata(ctrl);
-> =20
->  	if (!test_and_clear_bit(TTY_DO_WRITE_WAKEUP, &port->tty->flags))
-> -		return;
-> +		goto out;
-> =20
->  	if (test_bit(SERPORT_ACTIVE, &serport->flags))
->  		serdev_controller_write_wakeup(ctrl);
-> +
-> +out:
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi      | 37 ++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi  | 43 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi |  1 +
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi |  1 +
+ 4 files changed, 82 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
 
-I'd do "if (test_and_clear_bit() && test_bit()) serdev_()"
-here. Otherwise it looks fine.
-
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-
-									Pavel
-								=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Q0rSlbzrZN6k9QnT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljSRlsACgkQMOfwapXb+vLJBQCfRozd4ckjK/dqrfKBryXwMeAx
-aAcAnijtnM9S8FxpfTfaiHL6LWex2sZP
-=n4jE
------END PGP SIGNATURE-----
-
---Q0rSlbzrZN6k9QnT--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 04b3324..0617a3d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -478,6 +478,43 @@
+ 	};
+ };
+ 
++&apb {
++	mali: gpu@c0000 {
++		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
++		reg = <0x0 0xc0000 0x0 0x40000>;
++		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "gp", "gpmmu", "pp", "pmu",
++			"pp0", "ppmmu0", "pp1", "ppmmu1",
++			"pp2", "ppmmu2";
++		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
++		clock-names = "bus", "core";
++
++		/*
++		 * Mali clocking is provided by two identical clock paths
++		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
++		 * free mux to safely change frequency while running.
++		 */
++		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
++				  <&clkc CLKID_MALI_0>,
++				  <&clkc CLKID_MALI>; /* Glitch free mux */
++		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
++					 <0>, /* Do Nothing */
++					 <&clkc CLKID_MALI_0>;
++		assigned-clock-rates = <0>, /* Do Nothing */
++				       <666666666>,
++				       <0>; /* Do Nothing */
++	};
++};
++
+ &i2c_A {
+ 	clocks = <&clkc CLKID_I2C>;
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+new file mode 100644
+index 0000000..f06cc234
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+@@ -0,0 +1,43 @@
++/*
++ * Copyright (c) 2017 BayLibre SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++&apb {
++	mali: gpu@c0000 {
++		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
++		reg = <0x0 0xc0000 0x0 0x40000>;
++		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "gp", "gpmmu", "pp", "pmu",
++			"pp0", "ppmmu0", "pp1", "ppmmu1",
++			"pp2", "ppmmu2";
++		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
++		clock-names = "bus", "core";
++
++		/*
++		 * Mali clocking is provided by two identical clock paths
++		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
++		 * free mux to safely change frequency while running.
++		 */
++		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
++				  <&clkc CLKID_MALI_0>,
++				  <&clkc CLKID_MALI>; /* Glitch free mux */
++		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
++					 <0>, /* Do Nothing */
++					 <&clkc CLKID_MALI_0>;
++		assigned-clock-rates = <0>, /* Do Nothing */
++				       <666666666>,
++				       <0>; /* Do Nothing */
++	};
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+index 615308e..5a90e30 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+@@ -42,6 +42,7 @@
+  */
+ 
+ #include "meson-gxl.dtsi"
++#include "meson-gxl-mali.dtsi"
+ 
+ / {
+ 	compatible = "amlogic,s905d", "amlogic,meson-gxl";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+index 08237ee..0f78d83 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+@@ -42,6 +42,7 @@
+  */
+ 
+ #include "meson-gxl.dtsi"
++#include "meson-gxl-mali.dtsi"
+ 
+ / {
+ 	compatible = "amlogic,s905x", "amlogic,meson-gxl";
+-- 
+1.9.1
