@@ -1,13 +1,12 @@
 From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 4/7] ARM: dts: r7s72100: add RTC_X clock inputs
- to device tree
-Date: Wed, 22 Mar 2017 10:27:51 -0400
-Message-ID: <20170322142754.30888-5-chris.brandt@renesas.com>
+Subject: [PATCH v2 5/7] ARM: dts: r7s72100: add rtc to device tree
+Date: Wed, 22 Mar 2017 10:27:52 -0400
+Message-ID: <20170322142754.30888-6-chris.brandt@renesas.com>
 References: <20170322142754.30888-1-chris.brandt@renesas.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXOFUXT2UGBBI4UZLDAKGQEIITABNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBDXOFUXT2UGBBJUUZLDAKGQEZX2WB3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170322142754.30888-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,39 +19,42 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the RTC clocks to device tree. The frequencies must be fixed values
-according to the hardware manual.
+Add the realtime clock device node.
 
 Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+v2:
+* added interrupt-names
+* added clock counting sources
+* added clock-names "fck", "rtc_x1", "rtc_x3", "extal"
 ---
  arch/arm/boot/dts/r7s72100.dtsi | 14 ++++++++++++++
  1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index 6a1448b..632a6a4 100644
+index 632a6a4..f74a8ec 100644
 --- a/arch/arm/boot/dts/r7s72100.dtsi
 +++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -51,6 +51,20 @@
- 			clock-frequency = <0>;
- 		};
- 
-+		rtc_x1_clk: rtc_x1 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			/* If clk present, value must be set by board to 32678 */
-+			clock-frequency = <0>;
-+		};
+@@ -652,4 +652,18 @@
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
 +
-+		rtc_x3_clk: rtc_x3 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			/* If clk present, value must be set by board to 4000000 */
-+			clock-frequency = <0>;
-+		};
-+
- 		/* Fixed factor clocks */
- 		b_clk: b {
- 			#clock-cells = <0>;
++	rtc: rtc@fcff1000 {
++		compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
++		reg = <0xfcff1000 0x2e>;
++		interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
++			      GIC_SPI 277 IRQ_TYPE_EDGE_RISING
++			      GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
++		interrupt-names = "alarm", "period", "carry";
++		clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
++			 <&rtc_x3_clk>, <&extal_clk>;
++		clock-names = "fck", "rtc_x1", "rtc_x3", "extal";
++		power-domains = <&cpg_clocks>;
++		status = "disabled";
++	};
+ };
 -- 
 2.10.1
 
