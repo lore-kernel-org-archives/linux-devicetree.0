@@ -1,50 +1,71 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] arm64: dts: rockchip: describe Gru/Kevin OPPs +
- CPU regulators
-Date: Wed, 22 Mar 2017 13:00:03 +0100
-Message-ID: <2038128.kuAi12yfFv@phil>
-References: <20170320235344.126298-1-briannorris@chromium.org>
- <20170320235344.126298-4-briannorris@chromium.org>
+From: Huibin Hong <huibin.hong@rock-chips.com>
+Subject: [PATCH] arm64: dts: rockchip: add dmac nodes for rk3368 SoCs
+Date: Wed, 22 Mar 2017 20:03:14 +0800
+Message-ID: <1490184194-32051-1-git-send-email-huibin.hong@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20170320235344.126298-4-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, heiko@sntech.de
+Cc: devicetree@vger.kernel.org, felipe.balbi@linux.intel.com, Huibin Hong <huibin.hong@rock-chips.com>, johnyoun@synopsys.com, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, andy.yan@rock-chips.com, jic23@kernel.org, wxt@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 20. M=E4rz 2017, 16:53:43 CET schrieb Brian Norris:
-> Used for Gru/Kevin only, as they're the only ones which have a described
-> CPU regulator. Also, I'm not sure we've validated this table non-Gru
-> boards.
-> =
+Add dmac bus and dmac peri dts nodes for peripherals,
+such as I2S, SPI, UART and so on.
 
-> At the same time, partially describe PWM regulators for Gru, so cpufreq
-> doesn't think it can crank up the clock speed without changing the
-> voltage. However, we don't yet have the DT bindings to fully describe
-> the Over Voltage Protection (OVP) circuits on these boards. Without that
-> description, we might end up changing the voltage too much, too fast.
-> =
+Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-> Add the pwm-regulator descriptions and associate the CPU OPPs, but leave
-> them disabled.
-> =
-
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-applied for 4.12 with Enric's Tested-tag after some small reordering of nod=
-es/
-properties.
-
-
-Heiko
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index a635adc..2a0422f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -189,6 +189,35 @@
+ 		};
+ 	};
+ 
++        amba {
++                compatible = "simple-bus";
++                #address-cells = <2>;
++                #size-cells = <2>;
++                ranges;
++
++                dmac_peri: dma-controller@ff250000 {
++                        compatible = "arm,pl330", "arm,primecell";
++                        reg = <0x0 0xff250000 0x0 0x4000>;
++                        interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++                                     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++                        #dma-cells = <1>;
++                        clocks = <&cru ACLK_DMAC_PERI>;
++                        clock-names = "apb_pclk";
++                        arm,pl330-broken-no-flushp;
++                };
++
++                dmac_bus: dma-controller@ff600000 {
++                        compatible = "arm,pl330", "arm,primecell";
++                        reg = <0x0 0xff600000 0x0 0x4000>;
++                        interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++                                     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
++                        #dma-cells = <1>;
++                        clocks = <&cru ACLK_DMAC_BUS>;
++                        clock-names = "apb_pclk";
++                        arm,pl330-broken-no-flushp;
++                };
++        };
++
+ 	arm-pmu {
+ 		compatible = "arm,armv8-pmuv3";
+ 		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
+-- 
+2.0.0
