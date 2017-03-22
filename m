@@ -1,101 +1,118 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v1 2/7] devicetree: power: Add docs for TI BQ24190 battery
- charger
-Date: Wed, 22 Mar 2017 13:04:41 +0100
-Message-ID: <3f423ccd-9f9a-f9f3-0138-d444994465f0@redhat.com>
-References: <20170321220921.5834-1-liam@networkimprov.net>
- <20170321220921.5834-3-liam@networkimprov.net>
+From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+Subject: [PATCH] arm64: dts: ls1012a: add crypto node
+Date: Wed, 22 Mar 2017 14:29:39 +0200
+Message-ID: <20170322122939.22117-1-horia.geanta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170321220921.5834-3-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Harninder Rai <harninder.rai@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>, Will Deacon <will.deacon@arm.com>, Dan Douglass <dan.douglass@nxp.com>, linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 21-03-17 23:09, Liam Breck wrote:
-> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->
-> Document monitored-battery and ti,system-minimum-microvolt properties.
->
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-
-Looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Regards,
-
-Hans
-
-
-
-> ---
->  .../devicetree/bindings/power/supply/bq24190.txt   | 47 ++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq24190.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> new file mode 100644
-> index 0000000..d252d10
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> @@ -0,0 +1,47 @@
-> +Binding for TI BQ24190 Li-Ion Battery Charger
-> +
-> +Required properties:
-> +- compatible: Should contain one of the following:
-> +    * "ti,bq24190"
-> +- reg: integer, I2C address of the device.
-> +
-> +Optional properties:
-> +- monitored-battery: phandle of battery information devicetree node
-> +    These battery properties are relevant:
-> +    + precharge-current-microamp: maximum charge current during precharge
-> +      phase (typically 20% of battery capacity).
-> +    + endcharge-current-microamp: a charge cycle terminates when the
-> +      battery voltage is above recharge threshold, and the current is below
-> +      this setting (typically 10% of battery capacity).
-> +    See Documentation/devicetree/bindings/power/supply/battery.txt
-> +- ti,system-minimum-microvolt: when power is connected and the battery
-> +    is below minimum system voltage, the system will be regulated above this
-> +    setting.
-> +
-> +Other features:
-> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current on USB SDP port.
-> +
-> +Example:
-> +
-> +bat: battery {
-> +	compatible = "simple-battery";
-> +	precharge-current-microamp = <256000>;
-> +	endcharge-current-microamp = <128000>;
-> +};
-> +
-> +bq24190 charger@6a {
-> +	compatible = "ti,bq24190";
-> +	reg = <0x6a>;
-> +	// interrupt configuration here
-> +	monitored-battery = <&bat>;
-> +	ti,system-minimum-microvolt = <3200000>;
-> +};
-> +
-> +&twl_gpio {
-> +	otg {
-> +		gpio-hog;
-> +		gpios = <6 0>;
-> +		output-high;
-> +		line-name = "otg-gpio";
-> +	};
-> +};
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+TFMxMDEyQSBoYXMgYSBTRUMgdjUuNCBzZWN1cml0eSBlbmdpbmUuCgpTaWduZWQtb2ZmLWJ5OiBI
+b3JpYSBHZWFudMSDIDxob3JpYS5nZWFudGFAbnhwLmNvbT4KLS0tCiBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1mcmRtLmR0cyB8ICA5ICsrKwogYXJjaC9hcm02NC9i
+b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEtcWRzLmR0cyAgfCAgOSArKysKIGFyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMTJhLXJkYi5kdHMgIHwgIDkgKysrCiBhcmNo
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS5kdHNpICAgICB8IDkxICsrKysr
+KysrKysrKysrKysrKysrKy0KIDQgZmlsZXMgY2hhbmdlZCwgMTE3IGluc2VydGlvbnMoKyksIDEg
+ZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
+c2wtbHMxMDEyYS1mcmRtLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
+czEwMTJhLWZyZG0uZHRzCmluZGV4IGE2MTlmNjQ5NmE0Yy4uYmFiOWU2ODk0N2U0IDEwMDY0NAot
+LS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1mcmRtLmR0cwor
+KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1mcmRtLmR0cwpA
+QCAtNDksNiArNDksMTUgQEAKIAltb2RlbCA9ICJMUzEwMTJBIEZyZWVkb20gQm9hcmQiOwogCWNv
+bXBhdGlibGUgPSAiZnNsLGxzMTAxMmEtZnJkbSIsICJmc2wsbHMxMDEyYSI7CiAKKwlhbGlhc2Vz
+IHsKKwkJY3J5cHRvID0gJmNyeXB0bzsKKwkJcnRpY19hID0gJnJ0aWNfYTsKKwkJcnRpY19iID0g
+JnJ0aWNfYjsKKwkJcnRpY19jID0gJnJ0aWNfYzsKKwkJcnRpY19kID0gJnJ0aWNfZDsKKwkJc2Vj
+X21vbiA9ICZzZWNfbW9uOworCX07CisKIAlzeXNfbWNsazogY2xvY2stbWNsayB7CiAJCWNvbXBh
+dGlibGUgPSAiZml4ZWQtY2xvY2siOwogCQkjY2xvY2stY2VsbHMgPSA8MD47CmRpZmYgLS1naXQg
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1xZHMuZHRzIGIvYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEtcWRzLmR0cwppbmRleCAxNGE2
+N2YxNzA5ZTcuLjVjNGU4NGM3ZjIwZCAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTAxMmEtcWRzLmR0cworKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMxMDEyYS1xZHMuZHRzCkBAIC00OSw2ICs0OSwxNSBAQAogCW1vZGVsID0g
+IkxTMTAxMkEgUURTIEJvYXJkIjsKIAljb21wYXRpYmxlID0gImZzbCxsczEwMTJhLXFkcyIsICJm
+c2wsbHMxMDEyYSI7CiAKKwlhbGlhc2VzIHsKKwkJY3J5cHRvID0gJmNyeXB0bzsKKwkJcnRpY19h
+ID0gJnJ0aWNfYTsKKwkJcnRpY19iID0gJnJ0aWNfYjsKKwkJcnRpY19jID0gJnJ0aWNfYzsKKwkJ
+cnRpY19kID0gJnJ0aWNfZDsKKwkJc2VjX21vbiA9ICZzZWNfbW9uOworCX07CisKIAlzeXNfbWNs
+azogY2xvY2stbWNsayB7CiAJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOwogCQkjY2xvY2st
+Y2VsbHMgPSA8MD47CmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
+c2wtbHMxMDEyYS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
+MTAxMmEtcmRiLmR0cwppbmRleCA2MmM1YzcxMjNhMTUuLmZmOWRkMTZhYTY1YSAxMDA2NDQKLS0t
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEtcmRiLmR0cworKysg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS1yZGIuZHRzCkBAIC00
+OCw2ICs0OCwxNSBAQAogLyB7CiAJbW9kZWwgPSAiTFMxMDEyQSBSREIgQm9hcmQiOwogCWNvbXBh
+dGlibGUgPSAiZnNsLGxzMTAxMmEtcmRiIiwgImZzbCxsczEwMTJhIjsKKworCWFsaWFzZXMgewor
+CQljcnlwdG8gPSAmY3J5cHRvOworCQlydGljX2EgPSAmcnRpY19hOworCQlydGljX2IgPSAmcnRp
+Y19iOworCQlydGljX2MgPSAmcnRpY19jOworCQlydGljX2QgPSAmcnRpY19kOworCQlzZWNfbW9u
+ID0gJnNlY19tb247CisJfTsKIH07CiAKICZkdWFydDAgewpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvZnJlZXNjYWxlL2ZzbC1sczEwMTJhLmR0c2kKaW5kZXggY2ZmZWJiNGIzZGYxLi42OGYzMDEy
+YWUwN2UgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
+MTJhLmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEu
+ZHRzaQpAQCAtNDIsNyArNDIsNyBAQAogICogICAgIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZU
+V0FSRS4KICAqLwogCi0jaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIv
+aXJxLmg+CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdp
+Yy5oPgogCiAvIHsKIAljb21wYXRpYmxlID0gImZzbCxsczEwMTJhIjsKQEAgLTExMyw2ICsxMTMs
+OTUgQEAKIAkJCWJpZy1lbmRpYW47CiAJCX07CiAKKwkJY3J5cHRvOiBjcnlwdG9AMTcwMDAwMCB7
+CisJCQljb21wYXRpYmxlID0gImZzbCxzZWMtdjUuNCIsICJmc2wsc2VjLXY1LjAiLAorCQkJCSAg
+ICAgImZzbCxzZWMtdjQuMCI7CisJCQlmc2wsc2VjLWVyYSA9IDw4PjsKKwkJCSNhZGRyZXNzLWNl
+bGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MT47CisJCQlyYW5nZXMgPSA8MHgwIDB4MDAg
+MHgxNzAwMDAwIDB4MTAwMDAwPjsKKwkJCXJlZyA9IDwweDAwIDB4MTcwMDAwMCAweDAgMHgxMDAw
+MDA+OworCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDc1IElSUV9UWVBFX0xFVkVMX0hJR0g+Owor
+CisJCQlzZWNfanIwOiBqckAxMDAwMCB7CisJCQkJY29tcGF0aWJsZSA9ICJmc2wsc2VjLXY1LjQt
+am9iLXJpbmciLAorCQkJCQkgICAgICJmc2wsc2VjLXY1LjAtam9iLXJpbmciLAorCQkJCQkgICAg
+ICJmc2wsc2VjLXY0LjAtam9iLXJpbmciOworCQkJCXJlZwkgICA9IDwweDEwMDAwIDB4MTAwMDA+
+OworCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3MSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJ
+CX07CisKKwkJCXNlY19qcjE6IGpyQDIwMDAwIHsKKwkJCQljb21wYXRpYmxlID0gImZzbCxzZWMt
+djUuNC1qb2ItcmluZyIsCisJCQkJCSAgICAgImZzbCxzZWMtdjUuMC1qb2ItcmluZyIsCisJCQkJ
+CSAgICAgImZzbCxzZWMtdjQuMC1qb2ItcmluZyI7CisJCQkJcmVnCSAgID0gPDB4MjAwMDAgMHgx
+MDAwMD47CisJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDcyIElSUV9UWVBFX0xFVkVMX0hJR0g+
+OworCQkJfTsKKworCQkJc2VjX2pyMjoganJAMzAwMDAgeworCQkJCWNvbXBhdGlibGUgPSAiZnNs
+LHNlYy12NS40LWpvYi1yaW5nIiwKKwkJCQkJICAgICAiZnNsLHNlYy12NS4wLWpvYi1yaW5nIiwK
+KwkJCQkJICAgICAiZnNsLHNlYy12NC4wLWpvYi1yaW5nIjsKKwkJCQlyZWcJICAgPSA8MHgzMDAw
+MCAweDEwMDAwPjsKKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzMgSVJRX1RZUEVfTEVWRUxf
+SElHSD47CisJCQl9OworCisJCQlzZWNfanIzOiBqckA0MDAwMCB7CisJCQkJY29tcGF0aWJsZSA9
+ICJmc2wsc2VjLXY1LjQtam9iLXJpbmciLAorCQkJCQkgICAgICJmc2wsc2VjLXY1LjAtam9iLXJp
+bmciLAorCQkJCQkgICAgICJmc2wsc2VjLXY0LjAtam9iLXJpbmciOworCQkJCXJlZwkgICA9IDww
+eDQwMDAwIDB4MTAwMDA+OworCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3NCBJUlFfVFlQRV9M
+RVZFTF9ISUdIPjsKKwkJCX07CisKKwkJCXJ0aWNANjAwMDAgeworCQkJCWNvbXBhdGlibGUgPSAi
+ZnNsLHNlYy12NS40LXJ0aWMiLAorCQkJCQkgICAgICJmc2wsc2VjLXY1LjAtcnRpYyIsCisJCQkJ
+CSAgICAgImZzbCxzZWMtdjQuMC1ydGljIjsKKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJ
+CQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJCQlyZWcgPSA8MHg2MDAwMCAweDEwMCAweDYwZTAwIDB4
+MTg+OworCQkJCXJhbmdlcyA9IDwweDAgMHg2MDEwMCAweDUwMD47CisKKwkJCQlydGljX2E6IHJ0
+aWMtYUAwIHsKKwkJCQkJY29tcGF0aWJsZSA9ICJmc2wsc2VjLXY1LjQtcnRpYy1tZW1vcnkiLAor
+CQkJCQkJICAgICAiZnNsLHNlYy12NS4wLXJ0aWMtbWVtb3J5IiwKKwkJCQkJCSAgICAgImZzbCxz
+ZWMtdjQuMC1ydGljLW1lbW9yeSI7CisJCQkJCXJlZyA9IDwweDAwIDB4MjAgMHgxMDAgMHgxMDA+
+OworCQkJCX07CisKKwkJCQlydGljX2I6IHJ0aWMtYkAyMCB7CisJCQkJCWNvbXBhdGlibGUgPSAi
+ZnNsLHNlYy12NS40LXJ0aWMtbWVtb3J5IiwKKwkJCQkJCSAgICAgImZzbCxzZWMtdjUuMC1ydGlj
+LW1lbW9yeSIsCisJCQkJCQkgICAgICJmc2wsc2VjLXY0LjAtcnRpYy1tZW1vcnkiOworCQkJCQly
+ZWcgPSA8MHgyMCAweDIwIDB4MjAwIDB4MTAwPjsKKwkJCQl9OworCisJCQkJcnRpY19jOiBydGlj
+LWNANDAgeworCQkJCQljb21wYXRpYmxlID0gImZzbCxzZWMtdjUuNC1ydGljLW1lbW9yeSIsCisJ
+CQkJCQkgICAgICJmc2wsc2VjLXY1LjAtcnRpYy1tZW1vcnkiLAorCQkJCQkJICAgICAiZnNsLHNl
+Yy12NC4wLXJ0aWMtbWVtb3J5IjsKKwkJCQkJcmVnID0gPDB4NDAgMHgyMCAweDMwMCAweDEwMD47
+CisJCQkJfTsKKworCQkJCXJ0aWNfZDogcnRpYy1kQDYwIHsKKwkJCQkJY29tcGF0aWJsZSA9ICJm
+c2wsc2VjLXY1LjQtcnRpYy1tZW1vcnkiLAorCQkJCQkJICAgICAiZnNsLHNlYy12NS4wLXJ0aWMt
+bWVtb3J5IiwKKwkJCQkJCSAgICAgImZzbCxzZWMtdjQuMC1ydGljLW1lbW9yeSI7CisJCQkJCXJl
+ZyA9IDwweDYwIDB4MjAgMHg0MDAgMHgxMDA+OworCQkJCX07CisJCQl9OworCQl9OworCisJCXNl
+Y19tb246IHNlY19tb25AMWU5MDAwMCB7CisJCQljb21wYXRpYmxlID0gImZzbCxzZWMtdjUuNC1t
+b24iLCAiZnNsLHNlYy12NS4wLW1vbiIsCisJCQkJICAgICAiZnNsLHNlYy12NC4wLW1vbiI7CisJ
+CQlyZWcgPSA8MHgwIDB4MWU5MDAwMCAweDAgMHgxMDAwMD47CisJCQlpbnRlcnJ1cHRzID0gPEdJ
+Q19TUEkgNzggSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQkJICAgICA8R0lDX1NQSSA3OSBJUlFf
+VFlQRV9MRVZFTF9ISUdIPjsKKwkJfTsKKwogCQlkY2ZnOiBkY2ZnQDFlZTAwMDAgewogCQkJY29t
+cGF0aWJsZSA9ICJmc2wsbHMxMDEyYS1kY2ZnIiwKIAkJCQkgICAgICJzeXNjb24iOwotLSAKMi4x
+Mi4wLjI2NC5nZDZkYjNmMjE2NTQ0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
