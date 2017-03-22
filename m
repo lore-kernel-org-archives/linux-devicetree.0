@@ -1,85 +1,32 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] iio: Documentation: Add max961x sysfs documentation
-Date: Wed, 22 Mar 2017 20:43:34 +0000
-Message-ID: <108fc4a4-8312-fc92-7a61-53616cd743de@kernel.org>
-References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487948756-25172-3-git-send-email-jacopo+renesas@jmondi.org>
- <56b35a65-a23d-68ac-17d6-cf46f9352ab7@kernel.org>
- <20170321160911.GE30223@w540>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 08/11] dt-bindings: net: bluetooth: Add nokia-bluetooth
+Date: Wed, 22 Mar 2017 16:04:57 -0500
+Message-ID: <CAL_Jsq+CqrfK=ANLR5mt4F5sb8-0Q3=GNfZA80EJq_2oYCBXmA@mail.gmail.com>
+References: <20170321223216.11733-1-sre@kernel.org> <20170321223216.11733-9-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170321160911.GE30223@w540>
+In-Reply-To: <20170321223216.11733-9-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, meerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/03/17 16:09, jacopo wrote:
-> Hi Jonathan,
-> 
-> On Sat, Feb 25, 2017 at 03:54:45PM +0000, Jonathan Cameron wrote:
->> On 24/02/17 15:05, Jacopo Mondi wrote:
->>> Add documentation for max961x driver.
->>> The only attribute to document is the current sense shunt resistor
->>> value.
->>>
->>> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
->> Interestingly generic as it only applies to some of the channels.
->> We might need to have the channel where it is effecting the output specified in the
->> name, even if we end up with several repeats of the same thing for different
->> computed channels.
->>
-> 
-> Sorry, I'm getting on this a bit late...
-> 
-> Do you still think we should have an attribute for each of the
-> channels this values affects?
-> We will end up having 2 distinct processed channels (power and
-> current) that depends on this value.
-> I can expose them as 2 distinct attributes if you think this is the
-> case...
-Better to have two attributes exposing the same thing than imply it
-is relevant to more of channels than it is...
-> 
-> A note on the series in general: given the lack of comments, I will
-> send v2 exposing two processed channels, with no buffered reads, and
-> gain selection performed in kernel space.
-> If we will have to add buffered reads to accomodate higher sampling
-> frequency we'll do that later on eventually.
-Great.
+On Tue, Mar 21, 2017 at 5:32 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Add binding document for serial bluetooth chips using
+> Nokia H4+ protocol.
+>
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> Changes since PATCHv1:
+>  * change compatible strings
+>  * mention active high/low state for GPIOs
+> ---
+>  .../devicetree/bindings/net/nokia-bluetooth.txt    | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nokia-bluetooth.txt
 
-Jonathan
-> 
-> Thanks
->   j
-> 
->> Jonathan
->>> ---
->>>  Documentation/ABI/testing/sysfs-bus-iio-adc-max961x | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x b/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
->>> new file mode 100644
->>> index 0000000..dbd5e75
->>> --- /dev/null
->>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
->>> @@ -0,0 +1,5 @@
->>> +What:		/sys/bus/iio/devices/iio:deviceX/in_shunt_resistor
->>> +Date:		February 2017
->>> +KernelVersion:	4.10
->>> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> +Description: 	The value of the shunt resistor in micro Ohms.
->>>
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
