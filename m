@@ -1,114 +1,183 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH 01/15] ARM: dts: alpine: fix PCIe node name
-Date: Wed, 22 Mar 2017 09:01:37 +0100
-Message-ID: <20170322080137.st3osq5ckfis6uwz@kwain>
-References: <20170322020313.24338-1-robh@kernel.org>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re:[PATCH 01/16] arm: dts: add clock controller device nodes
+Date: Wed, 22 Mar 2017 16:04:25 +0800
+Message-ID: <1490169865-12993-1-git-send-email-sean.wang@mediatek.com>
+References: <1485170975-51813-2-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7556657999836502612=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170322020313.24338-1-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, arm@kernel.org, linux-arm-kernel@lists.infradead.org, Tsahee Zidenberg <tsahee@annapurnalabs.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485170975-51813-2-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org
+Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
---===============7556657999836502612==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3qbjs2aomj5oqbcj"
-Content-Disposition: inline
+Hi John,
 
+Some nitpicking below.
 
---3qbjs2aomj5oqbcj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>Add clock controller nodes for MT7623, including topckgen, infracfg, pericfg and apmixedsys. This patch 
+>also cleans up two oscillators that provide clocks for MT7623. Switch the uart clocks to the real ones 
+>while at it.
+>
+>Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+>---
+> arch/arm/boot/dts/mt7623.dtsi |   60 ++++++++++++++++++++++++++++++++++-------
+> 1 file changed, 51 insertions(+), 9 deletions(-)
+>
+>diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi index fd2b614..592fc0a 
+>100644
+>--- a/arch/arm/boot/dts/mt7623.dtsi
+>+++ b/arch/arm/boot/dts/mt7623.dtsi
+>@@ -14,6 +14,8 @@
+> 
+> #include <dt-bindings/interrupt-controller/irq.h>
+> #include <dt-bindings/interrupt-controller/arm-gic.h>
+>+#include <dt-bindings/clock/mt2701-clk.h> #include 
+>+<dt-bindings/reset/mt2701-resets.h>
+> #include "skeleton64.dtsi"
+> 
+> / {
+>@@ -53,16 +55,18 @@
+> 		#clock-cells = <0>;
+> 	};
+> 
+>-	rtc_clk: dummy32k {
+>+	rtc32k: oscillator@1 {
+> 		compatible = "fixed-clock";
+>-		clock-frequency = <32000>;
+> 		#clock-cells = <0>;
+>+		clock-frequency = <32000>;
+>+		clock-output-names = "rtc32k";
+> 	};
+> 
+>-	uart_clk: dummy26m {
+>+	clk26m: oscillator@0 {
+> 		compatible = "fixed-clock";
+>-		clock-frequency = <26000000>;
+> 		#clock-cells = <0>;
+>+		clock-frequency = <26000000>;
+>+		clock-output-names = "clk26m";
+> 	};
+> 
+> 	timer {
+>@@ -74,6 +78,32 @@
+> 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> 	};
+> 
+>+	topckgen: syscon@10000000 {
+>+		compatible = "mediatek,mt7623-topckgen",
+>+			     "mediatek,mt2701-topckgen",
+>+			     "syscon";
+>+		reg = <0 0x10000000 0 0x1000>;
+>+		#clock-cells = <1>;
+>+	};
+>+
+>+	infracfg: syscon@10001000 {
+>+		compatible = "mediatek,mt2701-infracfg",
+>+			     "mediatek,mt7623-infracfg",
 
-Hi Rob,
+the order should be 
+		compatible =  "mediatek,mt7623-pericfg",
+			      "mediatek,mt2701-pericfg"
+?
 
-On Tue, Mar 21, 2017 at 09:02:59PM -0500, Rob Herring wrote:
-> PCIe bridges should have a node name of 'pcie'.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
+>+			     "syscon";
+>+		reg = <0 0x10001000 0 0x1000>;
+>+		#clock-cells = <1>;
+>+		#reset-cells = <1>;
+>+	};
+>+
+>+	pericfg: syscon@10003000 {
+>+		compatible =  "mediatek,mt7623-pericfg",
+>+			      "mediatek,mt2701-pericfg",
+>+			      "syscon";
+>+		reg = <0 0x10003000 0 0x1000>;
+>+		#clock-cells = <1>;
+>+		#reset-cells = <1>;
+>+	};
+>+
+> 	watchdog: watchdog@10007000 {
+> 		compatible = "mediatek,mt7623-wdt",
+> 			     "mediatek,mt6589-wdt";
+>@@ -85,7 +115,7 @@
+> 			     "mediatek,mt6577-timer";
+> 		reg = <0 0x10008000 0 0x80>;
+> 		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
+>-		clocks = <&system_clk>, <&rtc_clk>;
+>+		clocks = <&system_clk>, <&rtc32k>;
+> 		clock-names = "system-clk", "rtc-clk";
+> 	};
+> 
+>@@ -98,6 +128,14 @@
+> 		reg = <0 0x10200100 0 0x1c>;
+> 	};
+> 
+>+	apmixedsys: syscon@10209000 {
+>+		compatible = "mediatek,mt2701-apmixedsys",
+>+			     "mediatek,mt2701-apmixedsys",
 
-Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+duplicated items which seems wrong to type
 
-This can go through arm-soc directly. If not I'll take it.
-Thanks!
+>+			     "syscon";
+>+		reg = <0 0x10209000 0 0x1000>;
+>+		#clock-cells = <1>;
+>+	};
+>+
+> 	gic: interrupt-controller@10211000 {
+> 		compatible = "arm,cortex-a7-gic";
+> 		interrupt-controller;
+>@@ -114,7 +152,8 @@
+> 			     "mediatek,mt6577-uart";
+> 		reg = <0 0x11002000 0 0x400>;
+> 		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
+>-		clocks = <&uart_clk>;
+>+		clocks = <&pericfg CLK_PERI_UART0_SEL>, <&pericfg CLK_PERI_UART0>;
+>+		clock-names = "baud", "bus";
+> 		status = "disabled";
+> 	};
+> 
+>@@ -123,7 +162,8 @@
+> 			     "mediatek,mt6577-uart";
+> 		reg = <0 0x11003000 0 0x400>;
+> 		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
+>-		clocks = <&uart_clk>;
+>+		clocks = <&pericfg CLK_PERI_UART1_SEL>, <&pericfg CLK_PERI_UART1>;
+>+		clock-names = "baud", "bus";
+> 		status = "disabled";
+> 	};
+> 
+>@@ -132,7 +172,8 @@
+> 			     "mediatek,mt6577-uart";
+> 		reg = <0 0x11004000 0 0x400>;
+> 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
+>-		clocks = <&uart_clk>;
+>+		clocks = <&pericfg CLK_PERI_UART2_SEL>, <&pericfg CLK_PERI_UART2>;
+>+		clock-names = "baud", "bus";
+> 		status = "disabled";
+> 	};
+> 
+>@@ -141,7 +182,8 @@
+> 			     "mediatek,mt6577-uart";
+> 		reg = <0 0x11005000 0 0x400>;
+> 		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
+>-		clocks = <&uart_clk>;
+>+		clocks = <&pericfg CLK_PERI_UART3_SEL>, <&pericfg CLK_PERI_UART3>;
+>+		clock-names = "baud", "bus";
+> 		status = "disabled";
+> 	};
+>};
+--
+1.7.10.4
 
-Antoine
-
-> Cc: Tsahee Zidenberg <tsahee@annapurnalabs.com>
-> Cc: Antoine Tenart <antoine.tenart@free-electrons.com>
-> ---
-> Sub-arch maintainers, please apply to your trees unless arm-soc wants=20
-> to take the whole lot.
->=20
->  arch/arm/boot/dts/alpine.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/alpine.dtsi b/arch/arm/boot/dts/alpine.dtsi
-> index d0eefc3b886c..f09f9c8e178a 100644
-> --- a/arch/arm/boot/dts/alpine.dtsi
-> +++ b/arch/arm/boot/dts/alpine.dtsi
-> @@ -139,7 +139,7 @@
->  		};
-> =20
->  		/* Internal PCIe Controller */
-> -		pcie-internal@0xfbc00000 {
-> +		pcie@fbc00000 {
->  			compatible =3D "pci-host-ecam-generic";
->  			device_type =3D "pci";
->  			#size-cells =3D <2>;
-> --=20
-> 2.10.1
->=20
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---3qbjs2aomj5oqbcj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCgAGBQJY0i9gAAoJEFxNi8it27zYZ0AP/2i/pW7RWLom9g8QPCN5g2f3
-yVGjlvOaZmKgFP2fsaAMIbNpzFydJpRKVivEVKbP7J1BrZXQNmXioph96kktWfAl
-zoq7htEbHe61M6pugee1cMvc+aosSbzDbf9qIppHM5fFJ6HsNUCqCWz4MRYUnm3U
-EcivhhVBQ7sWblYqi3lFLYN6IdiBxetnOFIkCsbEnRbQ1T3jw3a27R2oY47LfssM
-F/ZTalpZWXofA41UBqhhEMuRCQn9io+PUSia/QJPm8oYQj3DXpXoh6y9qadNDGti
-ZlkFBBTmcpdAd7qFC0hSuMhxMJam2JaLPLUllI+511DShS2K1l2zOHLWrL+Lj+f3
-8Fk9FH3Mqj7VbLXRvFShdtIFoMI7GMMRrbu3qS24tjo7WHSxdFWyqXp/fHcDBNlS
-3BxVTiadV61yX3sifdGH5/MIJXSbEtpPQSYqwJy7FtOrDZPppvWfHqsyI6qC7ona
-qiTUEqAytEuV/ujppPKFb2+e6S26JUOPIZuAN359IG+AZfgpHCrNkE58SQ3DTguV
-PRbYwQfhHA6k77z39m1B75IJRtHzPDbMnzR1XXN6KvFtDLRfqYeqAohtJG3CyVQo
-6XrHDUgbhHrji5IZIrfHsbLyIMClOm2fj4WgyVPC14UugwZbgoB5O8QPyJxbIYjw
-wbTg1BH6ws02lTUiwyIP
-=mTeX
------END PGP SIGNATURE-----
-
---3qbjs2aomj5oqbcj--
-
-
---===============7556657999836502612==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7556657999836502612==--
+Linux-mediatek mailing list
+Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-mediatek
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
