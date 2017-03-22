@@ -1,83 +1,75 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 05/12] ARM: dts: imx6ul-isiot-common: Add touchscreen node
-Date: Wed, 22 Mar 2017 23:18:10 +0530
-Message-ID: <1490204897-14525-6-git-send-email-jagan@openedev.com>
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH 08/12] ARM: dts: imx6ul-geam: Add Sound card with codec node
+Date: Wed, 22 Mar 2017 23:18:13 +0530
+Message-ID: <1490204897-14525-9-git-send-email-jagan@openedev.com>
 References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490204897-14525-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490204897-14525-1-git-send-email-jagan@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-Add touchscreen node as i2c1 slave device on Engicam Is.IoT MX6UL
-modules, the touchscreen controlled 'st,stmpe-ts' connected via
-i2c with st,stmpe811 mfb interface.
+Add support for Sound card and related codec(via i2c1) nodes
+on Engicam GEAM6UL variant module boards.
 
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 34 ++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm/boot/dts/imx6ul-geam-kit.dts | 13 +++++++++++++
+ arch/arm/boot/dts/imx6ul-geam.dtsi    | 12 ++++++++++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-index 9660e20..b149b5e 100644
---- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-@@ -40,6 +40,34 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
+diff --git a/arch/arm/boot/dts/imx6ul-geam-kit.dts b/arch/arm/boot/dts/imx6ul-geam-kit.dts
+index 142e60c..93c9586 100644
+--- a/arch/arm/boot/dts/imx6ul-geam-kit.dts
++++ b/arch/arm/boot/dts/imx6ul-geam-kit.dts
+@@ -58,6 +58,19 @@
+ 	status = "okay";
+ };
  
 +&i2c1 {
-+	touch: stmpe811@44 {
-+		compatible = "st,stmpe811";
-+		reg = <0x44>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_stmpe_ts>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		stmpe_touchscreen {
-+			compatible = "st,stmpe-ts";
-+			st,sample-time = <4>;
-+			st,mod-12b = <1>;
-+			st,ref-sel = <0>;
-+			st,adc-freq = <1>;
-+			st,ave-ctrl = <1>;
-+			st,touch-det-delay = <2>;
-+			st,settling = <2>;
-+			st,fraction-z = <7>;
-+			st,i-drive = <1>;
-+		};
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6UL_CLK_OSC>;
++		clock-names = "mclk";
++		wlf,shared-lrclk;
++		VDDA-supply = <&reg_3p3v>;
++		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
 +	};
 +};
 +
  &lcdif {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_lcdif_dat
-@@ -104,4 +132,10 @@
- 			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x79
- 		>;
+ 	display = <&display0>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-geam.dtsi b/arch/arm/boot/dts/imx6ul-geam.dtsi
+index eb94d95..c405e55 100644
+--- a/arch/arm/boot/dts/imx6ul-geam.dtsi
++++ b/arch/arm/boot/dts/imx6ul-geam.dtsi
+@@ -87,6 +87,18 @@
+ 		regulator-always-on;
+ 		regulator-boot-on;
  	};
 +
-+	pinctrl_stmpe_ts:  stmpe-tsgrp  {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_CTS_B__GPIO1_IO18 0x1b0b0
-+		>;
++	sound {
++		compatible = "fsl,imx-audio-sgtl5000";
++		model = "imx6q-geam-sgtl5000";
++		cpu-dai = <&sai2>;
++		audio-codec = <&codec>;
++		gpr = <&gpr>;
++		audio-routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"Headphone Jack", "HP_OUT";
 +	};
  };
+ 
+ &can1 {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
