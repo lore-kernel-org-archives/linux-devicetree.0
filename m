@@ -1,31 +1,45 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3] mmc: sh_mmcif: Document r7s72100 DT bindings
-Date: Wed, 22 Mar 2017 14:11:55 +0000
-Message-ID: <PS1PR06MB1162BBC852DBFE3EC796760D8A3C0@PS1PR06MB1162.apcprd06.prod.outlook.com>
-References: <20170112041452.14136-1-chris.brandt@renesas.com>
- <20170118213024.qreoa5k7stjmwmr7@rob-hp-laptop>
- <PS1PR06MB1162CACF3A130AB157C200AA8A3C0@PS1PR06MB1162.apcprd06.prod.outlook.com>
- <CAPDyKFqA6zwe9r8tikneL59CURETA7d50Oa1HT9zsrjyQFs9yQ@mail.gmail.com>
+From: Yannick Fertre <yannick.fertre@st.com>
+Subject: [PATCH v2 4/5] ARM: dts: stm32: Add watchdog support for STM32F429
+ eval board
+Date: Wed, 22 Mar 2017 15:12:53 +0100
+Message-ID: <1490191974-29722-5-git-send-email-yannick.fertre@st.com>
+References: <1490191974-29722-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFqA6zwe9r8tikneL59CURETA7d50Oa1HT9zsrjyQFs9yQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490191974-29722-1-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkbmVzZGF5LCBNYXJjaCAyMiwgMjAxNywgVWxmIEhhbnNzb24gd3JvdGU6DQo+IE9uIDIy
-IE1hcmNoIDIwMTcgYXQgMTQ6MTcsIENocmlzIEJyYW5kdCA8Q2hyaXMuQnJhbmR0QHJlbmVzYXMu
-Y29tPiB3cm90ZToNCj4gPiBUaGlzIG9uZSBzZWVtcyB0byBoYXZlIGJlZW4gZm9yZ290dGVuLg0K
-PiA+DQo+ID4gU2hvdWxkIEkgcmVzZW5kIHdpdGggYWxsIHRoZSBhY2tzIGFuZCByZXZpZXdzPw0K
-PiANCj4gU2VlbXMgbGlrZSB5b3UgZGlkbid0IHNlbmQgaXQgdG8gbGludXgtbW1jLCBzbyBpdCB3
-YXNuJ3QgcGlja2VkIHVwIGJ5IHRoZQ0KPiBwYXRjaHRyYWNrZXIuIFBsZWFzZSByZS1zZW5kIHNv
-IEkgY2FuIHBpY2sgaXQgdXAuDQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KDQpPSy4gVGhh
-bmsgeW91Lg0KDQpDaHJpcw0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch adds watchdog support for STM32x9I-Eval board.
+
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+---
+ arch/arm/boot/dts/stm32429i-eval.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 3c99466..aab81ed 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -181,3 +181,7 @@
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
++
++&iwdg {
++	status = "okay";
++};
+-- 
+1.9.1
