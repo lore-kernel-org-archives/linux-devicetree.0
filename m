@@ -1,42 +1,75 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2 10/11] ARM: dts: N900: Add bluetooth
-Date: Wed, 22 Mar 2017 16:55:10 -0700
-Message-ID: <20170322235509.GH10760@atomide.com>
-References: <20170321223216.11733-1-sre@kernel.org>
- <20170321223216.11733-11-sre@kernel.org>
- <CAL_JsqLBNSWdbiO2A11c=BDWAKvWVGjOWafaNT+1OxoZgvH+fg@mail.gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: add regulator info for Kevin digitizer
+Date: Thu, 23 Mar 2017 00:57:26 +0100
+Message-ID: <2959157.AbEJJVO0Z2@phil>
+References: <20170320235344.126298-1-briannorris@chromium.org> <20415662.PctC9IM4SC@phil> <20170322181441.GC98450@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLBNSWdbiO2A11c=BDWAKvWVGjOWafaNT+1OxoZgvH+fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170322181441.GC98450-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170322 14:09]:
-> On Tue, Mar 21, 2017 at 5:32 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > Add bcm2048 node and its system clock to the N900 device tree file.
-> > Apart from that a reference to the new clock has been added to
-> > wl1251 (which uses it, too).
-> >
-> > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> > Changes since PATCHv1:
-> >  - update compatible string
-> > ---
-> >  arch/arm/boot/dts/omap3-n900.dts | 23 +++++++++++++++++++++--
-> >  1 file changed, 21 insertions(+), 2 deletions(-)
+Am Mittwoch, 22. März 2017, 11:14:42 CET schrieb Brian Norris:
+> On Wed, Mar 22, 2017 at 09:26:41AM +0100, Heiko Stuebner wrote:
+> > Am Montag, 20. März 2017, 16:53:44 CET schrieb Brian Norris:
+> > > We need to enable this regulator before the digitizer can be used. Wacom
+> > > recommended waiting for 100 ms before talking to the HID.
+> > > 
+> > > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > ---
+> > > v3:
+> > >  * reintroduced into patch set; bindings are in linux-next
+> > > ---
+> > >  arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> > > b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts index
+> > > 2f720cf2fd07..f4714c4606f3 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> > > @@ -232,6 +232,9 @@ ap_i2c_dig: &i2c2 {
+> > 
+> > according to the hid-over-i2c binding, this should use a special compatible 
+> > like
+> > 
+> > 	compatible = "wacom,w9013", "hid-over-i2c"
+> > 
+> > As the binding patch is from Caesar, I assume that is the Kevin component and
+> > I can add that myself, just need confirmation that this is actually the correct 
+> > component :-) .
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> *Sigh.* The I2C (and SPI) framework is still broken w.r.t. multiple
+> compatible strings and drivers built as modules [1]. So I'd really
+> rather not do this...
 
-Picking patches 10 and 11 into omap-for-v4.12/dt-v2.
+It seems I had repressed that knowledge :-), but now that you mention it,
+I remember seeing (or reading about) this issue before.
+So yes I agree as well :-)
 
-Regards,
 
-Tony
+> ...but yes, that's a fair component description.
+
+I've applied the patch and simply added the wacom,w9013 as comment,
+so it doesn't get lost.
+
+Now this can simmer a bit in linux-next till the weekend.
+
+
+Heiko
+
+> [1] Some discussion about SPI:
+>     https://patchwork.kernel.org/patch/7630571/
+>     And the discussion about I2C (25% through that thread):
+>     https://patchwork.kernel.org/patch/9455245/
+> 
+> 
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
