@@ -1,182 +1,175 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH 09/12] ARM: dts: imx6qdl-icore: Add Sound card with codec node
-Date: Wed, 22 Mar 2017 23:18:14 +0530
-Message-ID: <1490204897-14525-10-git-send-email-jagan@openedev.com>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 03/12] ARM: dts: imx6ul-isiot: Add imx6ul-isiot-common.dtsi
+Date: Wed, 22 Mar 2017 23:18:08 +0530
+Message-ID: <1490204897-14525-4-git-send-email-jagan@openedev.com>
 References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490204897-14525-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Add support for Sound card and related codec(via i2c1) nodes
-on below Engicam module boards.
-- i.CoreM6 DualLite/Solo Starter kit
-- i.CoreM6 Quad/Dual Starter kit
-- i.CoreM6 Quad/Dual OpenFrame Cap touch 10.1
-- i.CoreM6 Quad/Dual OpenFrame Cap touch 12.3
+lcdif nodes are differ wrt specific LCD connected on Is.IoT MX6UL
+module, so create separate file 'imx6ul-isiot-common.dtsi' for common
+lcdif node structure and include the same on respective dts.
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+More common nodes will add in future patches.
+
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6dl-icore.dts        | 11 +++++++++
- arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 11 +++++++++
- arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 11 +++++++++
- arch/arm/boot/dts/imx6q-icore.dts         | 11 +++++++++
- arch/arm/boot/dts/imx6qdl-icore.dtsi      | 37 +++++++++++++++++++++++++++++++
- 5 files changed, 81 insertions(+)
+ arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 107 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6ul-isiot-emmc.dts    |   1 +
+ arch/arm/boot/dts/imx6ul-isiot-nand.dts    |   1 +
+ 3 files changed, 109 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-isiot-common.dtsi
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
-index 6de83c7..c132ccd 100644
---- a/arch/arm/boot/dts/imx6dl-icore.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore.dts
-@@ -57,3 +57,14 @@
- &can2 {
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+new file mode 100644
+index 0000000..9660e20
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+@@ -0,0 +1,107 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-+&i2c3 {
-+	codec: sgtl5000@0a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-index 49b60ca..5cc2518 100644
---- a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-@@ -50,6 +50,17 @@
- 	compatible = "engicam,imx6-icore", "fsl,imx6q";
- };
- 
-+&i2c3 {
-+	codec: sgtl5000@0a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-index 9e230f5..554a25c 100644
---- a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-@@ -50,6 +50,17 @@
- 	compatible = "engicam,imx6-icore", "fsl,imx6q";
- };
- 
-+&i2c3 {
-+	codec: sgtl5000@0a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
-index 70cc8b2..07021fd 100644
---- a/arch/arm/boot/dts/imx6q-icore.dts
-+++ b/arch/arm/boot/dts/imx6q-icore.dts
-@@ -67,6 +67,17 @@
- 	};
- };
- 
-+&i2c3 {
-+	codec: sgtl5000@0a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 56d0c5d..dd123af 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -55,6 +55,25 @@
- 		default-brightness-level = <7>;
- 	};
- 
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+
-+	reg_2p5v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2P5V";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3P3V";
-@@ -87,6 +106,20 @@
- 		#clock-cells = <0>;
- 		clock-frequency = <25000000>;  /* 25MHz for example */
- 	};
-+
-+	sound {
-+		compatible = "fsl,imx6-icore-sgtl5000",
-+			     "fsl,imx-audio-sgtl5000";
-+		model = "imx6q-icore-sgtl5000";
-+		ssi-controller = <&ssi1>;
-+		audio-codec = <&codec>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <1>;
-+		mux-ext-port = <4>;
-+	};
- };
- 
- &can1 {
-@@ -149,6 +182,10 @@
- 	status = "okay";
- };
- 
-+&ssi1 {
++&lcdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lcdif_dat
++		     &pinctrl_lcdif_ctrl>;
++	display = <&display0>;
 +	status = "okay";
++
++	display0: display {
++		bits-per-pixel = <16>;
++		bus-width = <18>;
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: timing0 {
++				clock-frequency = <28000000>;
++				hactive = <800>;
++				vactive = <480>;
++				hfront-porch = <30>;
++				hback-porch = <30>;
++				hsync-len = <64>;
++				vback-porch = <5>;
++				vfront-porch = <5>;
++				vsync-len = <20>;
++				hsync-active = <0>;
++				vsync-active = <0>;
++				de-active = <1>;
++				pixelclk-active = <0>;
++			};
++		};
++	};
 +};
 +
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart4>;
++&iomuxc {
++	pinctrl_lcdif_ctrl: lcdifctrlgrp {
++		fsl,pins = <
++			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x79
++			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x79
++			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x79
++			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x79
++		>;
++	};
++
++	pinctrl_lcdif_dat: lcdifdatgrp {
++		fsl,pins = <
++			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00  0x79
++			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01  0x79
++			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02  0x79
++			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03  0x79
++			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04  0x79
++			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05  0x79
++			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06  0x79
++			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07  0x79
++			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08  0x79
++			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09  0x79
++			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10  0x79
++			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11  0x79
++			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12  0x79
++			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13  0x79
++			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14  0x79
++			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15  0x79
++			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16  0x79
++			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x79
++		>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-emmc.dts b/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
+index f5b4228..73a1d0f 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
++++ b/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
+@@ -43,6 +43,7 @@
+ /dts-v1/;
+ 
+ #include "imx6ul-isiot.dtsi"
++#include "imx6ul-isiot-common.dtsi"
+ 
+ / {
+ 	model = "Engicam Is.IoT MX6UL eMMC Starter kit";
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-nand.dts b/arch/arm/boot/dts/imx6ul-isiot-nand.dts
+index de15e1c..da29a86 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot-nand.dts
++++ b/arch/arm/boot/dts/imx6ul-isiot-nand.dts
+@@ -43,6 +43,7 @@
+ /dts-v1/;
+ 
+ #include "imx6ul-isiot.dtsi"
++#include "imx6ul-isiot-common.dtsi"
+ 
+ / {
+ 	model = "Engicam Is.IoT MX6UL NAND Starter kit";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
