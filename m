@@ -1,8 +1,8 @@
 From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 3/7] ARM: dts: r7s72100: add rtc clock to
- device tree
-Date: Wed, 22 Mar 2017 10:27:50 -0400
-Message-ID: <20170322142754.30888-4-chris.brandt@renesas.com>
+Subject: [PATCH v2 4/7] ARM: dts: r7s72100: add RTC_X clock inputs
+ to device tree
+Date: Wed, 22 Mar 2017 10:27:51 -0400
+Message-ID: <20170322142754.30888-5-chris.brandt@renesas.com>
 References: <20170322142754.30888-1-chris.brandt@renesas.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -20,53 +20,39 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the realtime clock functional clock source.
+Add the RTC clocks to device tree. The frequencies must be fixed values
+according to the hardware manual.
 
 Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
-v2:
-* changed "rtc0" to "rtc"
-* added Reviewed-by
----
- arch/arm/boot/dts/r7s72100.dtsi            | 9 +++++++++
- include/dt-bindings/clock/r7s72100-clock.h | 3 +++
- 2 files changed, 12 insertions(+)
+ arch/arm/boot/dts/r7s72100.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index 34994af..6a1448b 100644
+index 6a1448b..632a6a4 100644
 --- a/arch/arm/boot/dts/r7s72100.dtsi
 +++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -117,6 +117,15 @@
- 			clock-output-names = "ostm0", "ostm1";
+@@ -51,6 +51,20 @@
+ 			clock-frequency = <0>;
  		};
  
-+		mstp6_clks: mstp6_clks@fcfe042c {
-+			#clock-cells = <1>;
-+			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
-+			reg = <0xfcfe042c 4>;
-+			clocks = <&p0_clk>;
-+			clock-indices = <R7S72100_CLK_RTC>;
-+			clock-output-names = "rtc";
++		rtc_x1_clk: rtc_x1 {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			/* If clk present, value must be set by board to 32678 */
++			clock-frequency = <0>;
 +		};
 +
- 		mstp7_clks: mstp7_clks@fcfe0430 {
- 			#clock-cells = <1>;
- 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
-diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-index cd2ed51..bc256d3 100644
---- a/include/dt-bindings/clock/r7s72100-clock.h
-+++ b/include/dt-bindings/clock/r7s72100-clock.h
-@@ -29,6 +29,9 @@
- #define R7S72100_CLK_OSTM0	1
- #define R7S72100_CLK_OSTM1	0
- 
-+/* MSTP6 */
-+#define R7S72100_CLK_RTC	0
++		rtc_x3_clk: rtc_x3 {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			/* If clk present, value must be set by board to 4000000 */
++			clock-frequency = <0>;
++		};
 +
- /* MSTP7 */
- #define R7S72100_CLK_ETHER	4
- 
+ 		/* Fixed factor clocks */
+ 		b_clk: b {
+ 			#clock-cells = <0>;
 -- 
 2.10.1
 
