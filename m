@@ -1,71 +1,72 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 04/14] mmc: sdhci: Export sdhci_set_ios() from sdhci.c
-Date: Wed, 22 Mar 2017 16:48:43 +0200
-Message-ID: <05648b8f-26e8-8af7-5544-6e8ef1df7c43@intel.com>
-References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
- <b95bc01da68874afbf85968d6181c60508fc56ff.1487091464.git-series.gregory.clement@free-electrons.com>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [PATCH v7 3/6] i2c: designware: MASTER mode as separated driver
+Date: Wed, 22 Mar 2017 14:56:28 +0000
+Message-ID: <fe009c91-4ce6-c444-7282-4a8112c0cad8@synopsys.com>
+References: <cover.1490007620.git.lolivei@synopsys.com>
+ <c224fa537fc1daf9f3256ce7c8da12f73f7035a7.1490007620.git.lolivei@synopsys.com>
+ <390a6b71-92d4-bafe-224a-f2b2a864cabc@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b95bc01da68874afbf85968d6181c60508fc56ff.1487091464.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan Gao <ygao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw@semihalf.c>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <390a6b71-92d4-bafe-224a-f2b2a864cabc@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/02/17 19:01, Gregory CLEMENT wrote:
-> From: Hu Ziji <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On 22-Mar-17 14:47, Jarkko Nikula wrote:
+> On 03/20/17 13:10, Luis Oliveira wrote:
+>> - The functions related to I2C master mode of operation were transformed
+>>   in a single driver.
+>> - Common definitions were moved to i2c-designware-core.h
+>> - The i2c-designware-core is now only a library file, the functions
+>>   associated are in a source file called i2c-designware-common and
+>>   are used by both i2c-designware-master and i2c-designware-slave.
+>> - To decrease noise in namespace common i2c_dw_*() functions are
+>>   now using ops to keep them private.
+>> - Designware PCI driver had to be changed to match the previous ops
+>>   functions implementation.
+>>
+>> Almost all of the "core" source is now part of the "master" source. The
+>> difference is the functions used by both modes and they are in the
+>> "common" source file.
+>>
+>> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+>> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> ---
+>> v6-v7
+>> - Moved kernel doc comments from patch 4/6 to this patch. @Jarkko
+>> - Fix Designware I2C PCI driver error when looking for previous extern
+>>   functions.
+>>
+> ...
+>>   * struct dw_i2c_dev - private i2c-designware data
+>> @@ -78,7 +196,11 @@
+>>   * @acquire_lock: function to acquire a hardware lock on the bus
+>>   * @release_lock: function to release a hardware lock on the bus
+>>   * @pm_runtime_disabled: true if pm runtime is disabled
+>> - *
+>> + * @dynamic_tar_update_enabled: true if dynamic TAR update is enabled
+>> + * @disable: function to disable the controller
+>> + * @disable_int: function to disable all interrupts
+>> + * @init: function to initialize the I2C hardware
+>> + *
+>>   * HCNT and LCNT parameters can be used if the platform knows more accurate
+>>   * values than the one computed based only on the input clock frequency.
+>>   * Leave them to be %0 if not used.
+>> @@ -126,15 +248,31 @@ struct dw_i2c_dev {
+>>      int            (*acquire_lock)(struct dw_i2c_dev *dev);
+>>      void            (*release_lock)(struct dw_i2c_dev *dev);
+>>      bool            pm_runtime_disabled;
+>> +    void            (*disable)(struct dw_i2c_dev *dev);
+>> +    void            (*disable_int)(struct dw_i2c_dev *dev);
+>> +    int            (*init)(struct dw_i2c_dev *dev);
+>>  };
+>>
+> I take my ack back. You are adding comment for dynamic_tar_update_enabled which
+> was removed by the 12688dc21f71 ("Revert "i2c: designware: detect when dynamic
+> tar update is possible"")
 > 
-> Export sdhci_set_ios() in sdhci.c.
-> Thus vendor sdhci driver can implement its own set_ios() routine.
-> 
-> Signed-off-by: Hu Ziji <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-
-> ---
->  drivers/mmc/host/sdhci.c | 3 ++-
->  drivers/mmc/host/sdhci.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 23909804ffb8..0e9ed0fadff9 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1570,7 +1570,7 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
->  }
->  EXPORT_SYMBOL_GPL(sdhci_set_uhs_signaling);
->  
-> -static void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
-> +void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
->  	unsigned long flags;
-> @@ -1730,6 +1730,7 @@ static void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->  	mmiowb();
->  	spin_unlock_irqrestore(&host->lock, flags);
->  }
-> +EXPORT_SYMBOL_GPL(sdhci_set_ios);
->  
->  static int sdhci_get_cd(struct mmc_host *mmc)
->  {
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 0b66f210ae82..3563c0c384ca 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -691,6 +691,7 @@ void sdhci_set_bus_width(struct sdhci_host *host, int width);
->  void sdhci_reset(struct sdhci_host *host, u8 mask);
->  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
->  int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode);
-> +void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios);
->  
->  #ifdef CONFIG_PM
->  extern int sdhci_suspend_host(struct sdhci_host *host);
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Oh yes. Don't know how I miss to remove this. The revert didn't removed it
+because it was not there. I add it before because it was missing. Sorry.
