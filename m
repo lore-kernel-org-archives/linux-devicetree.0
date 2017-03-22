@@ -1,51 +1,74 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
-Date: Wed, 22 Mar 2017 08:24:08 -0700
-Message-ID: <m2lgrxnxlz.fsf@baylibre.com>
-References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
-        <20170316100743.GA12137@gondor.apana.org.au>
-        <m2mvcl6pwg.fsf@baylibre.com>
-        <20170317083032.GA18512@gondor.apana.org.au>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [RFC RESEND] serdev binding for QCA7000 UART driver
+Date: Wed, 22 Mar 2017 16:26:59 +0100
+Message-ID: <a071486b-d789-341b-97a4-d74e07603cb0@i2se.com>
+References: <b2273c4a-069b-0b9a-83d3-aed782920c34@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170317083032.GA18512-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> (Herbert Xu's
-        message of "Fri, 17 Mar 2017 16:30:32 +0800")
+In-Reply-To: <b2273c4a-069b-0b9a-83d3-aed782920c34-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> writes:
-
-> On Thu, Mar 16, 2017 at 11:24:31AM -0700, Kevin Hilman wrote:
->> Hi Herbert,
->> 
->> Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org> writes:
->> 
->> > On Wed, Feb 22, 2017 at 07:55:24AM +0100, Heiner Kallweit wrote:
->> >> Expose clock CLKID_RNG0 which is needed for the HW random number generator.
->> >> 
->> >> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >
->> > All patches applied.  Thanks.
->> 
->> Actually, can you just apply [PATCH 4/4] to your tree?
->> 
->> The clock and DT patches need to go through their respective trees or
->> will otherwise have conflicts with other things going in via those
->> trees.
+Am 13.03.2017 um 17:16 schrieb Stefan Wahren:
+> Hi Rob,
 >
-> It's too late now.  Please speak up sooner next time.  These
-> patches were posted a month ago.
+> since serdev has been merged, i'm currently working on a
+> suitable ethernet driver for the QCA7000 [1]. In order to provide a plug
+> and play solution for the network interface i suggest the following
+> binding, which uses common properties for UART configuration:
+>
+> * Qualcomm QCA7000 (Ethernet over UART protocol)
+>
+> Note: The QCA7000 is also useable as a UART slave device.
+>
+> Required properties:
+> - compatible        : Should be "qca,qca7000-uart"
+>
+> Optional properties:
+> - local-mac-address : 6 bytes, Specifies MAC address
+> - current-speed     : Specifies current serial device speed in
+>                       bits per second (default = 115200)
+> - data-bits         : Specifies number of data bits (default = 8)
+> - use-parity        : If present, this enables the parity
+>                       error detection (default = off)
+> - odd-parity        : If present, this specifies that the parity
+>                       of each character must be odd (default = even)
+>
+> Example:
+>
+> /* Freescale i.MX28 UART */
+> auart0: serial@8006a000 {
+>     compatible = "fsl,imx28-auart", "fsl,imx23-auart";
+>     reg = <0x8006a000 0x2000>;
+>     pinctrl-names = "default";
+>     pinctrl-0 = <&auart0_2pins_a>;
+>     status = "okay";
+>
+>     qca7000: ethernet {
+>         compatible = "qca,qca7000-uart";
+>         local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+>         current-speed = <38400>;
+>         data-bits = <8>;
+>         use-parity;
+>         odd-parity;
+>     };
+> };
+>
+> Is it okay for you or do you want a different kind of configuration?
+> Are there any plans for parity handling?
+>
+> Thanks
+> Stefan
+>
+> P.S.: Sorry for the broken version
+>
+> [1] - https://lwn.net/Articles/701225/
 
-Because this will be causing conflicts with both the platform (amlogic)
-tree and the clk tree, could provide an immutable branch where these are
-applied to help us handle these conflicts?
-
-Thanks,
-
-Kevin
+gentle ping ...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
