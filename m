@@ -1,95 +1,48 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 12/15] arm64: dts: apm: fix PCI bus dtc warnings
-Date: Tue, 21 Mar 2017 21:03:10 -0500
-Message-ID: <20170322020313.24338-12-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 04/15] ARM: dts: exynos: fix PCI bus dtc warnings
+Date: Tue, 21 Mar 2017 21:03:02 -0500
+Message-ID: <20170322020313.24338-4-robh@kernel.org>
 References: <20170322020313.24338-1-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170322020313.24338-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20170322020313.24338-1-robh@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: arm@kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 dtc recently added PCI bus checks. Fix these warnings.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org
 ---
 Sub-arch maintainers, please apply to your trees unless arm-soc wants 
 to take the whole lot.
 
- arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 2 ++
- arch/arm64/boot/dts/apm/apm-storm.dtsi     | 5 +++++
- 2 files changed, 7 insertions(+)
+ arch/arm/boot/dts/exynos5440.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-index 72720e9132a1..c9ffffb96e43 100644
---- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-@@ -626,6 +626,7 @@
- 				  0x43000000 0xe0 0x00000000 0xe0 0x00000000 0x20 0x00000000>; /* mem */
- 			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
- 				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			bus-range = <0x00 0xff>;
- 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
- 			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0x0 0x0 0x10 0x4
- 					 0x0 0x0 0x0 0x2 &gic 0x0 0x0 0x0 0x11 0x4
-@@ -651,6 +652,7 @@
- 				  0x43000000 0xb0 0x00000000 0xb0 0x00000000 0x10 0x00000000>; /* mem */
- 			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
- 				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			bus-range = <0x00 0xff>;
- 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
- 			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0x0 0x0 0x16 0x4
- 					 0x0 0x0 0x0 0x2 &gic 0x0 0x0 0x0 0x17 0x4
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index 63be8e51eaa8..c09a36fed917 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -626,6 +626,7 @@
- 				  0x43000000 0xf0 0x00000000 0xf0 0x00000000 0x10 0x00000000>; /* mem */
- 			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
- 				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			bus-range = <0x00 0xff>;
- 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
- 			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x4
- 					 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x4
-@@ -651,6 +652,7 @@
- 				  0x43000000 0xd8 0x00000000 0xd8 0x00000000 0x08 0x00000000>; /* mem */
- 			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
- 				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			bus-range = <0x00 0xff>;
- 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
- 			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc8 0x4
- 					 0x0 0x0 0x0 0x2 &gic 0x0 0xc9 0x4
-@@ -676,6 +678,7 @@
- 				  0x43000000 0x94 0x00000000 0x94 0x00000000 0x04 0x00000000>; /* mem */
- 			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
- 				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			bus-range = <0x00 0xff>;
- 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
- 			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xce 0x4
- 					 0x0 0x0 0x0 0x2 &gic 0x0 0xcf 0x4
-@@ -701,6 +704,7 @@
- 				  0x43000000 0xb0 0x00000000 0xb0 0x00000000 0x10 0x00000000>; /* mem */
- 			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
- 				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			bus-range = <0x00 0xff>;
- 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
- 			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xd4 0x4
- 					 0x0 0x0 0x0 0x2 &gic 0x0 0xd5 0x4
-@@ -726,6 +730,7 @@
- 				  0x43000000 0xc8 0x00000000 0xc8 0x00000000 0x08 0x00000000>; /* mem */
- 			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
- 				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			bus-range = <0x00 0xff>;
- 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
- 			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xda 0x4
- 					 0x0 0x0 0x0 0x2 &gic 0x0 0xdb 0x4
+diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+index 77d35bb92950..d86da2c768fa 100644
+--- a/arch/arm/boot/dts/exynos5440.dtsi
++++ b/arch/arm/boot/dts/exynos5440.dtsi
+@@ -306,6 +306,7 @@
+ 		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /* configuration space */
+ 			  0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
+ 			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
++		bus-range = <0x00 0xff>;
+ 		#interrupt-cells = <1>;
+ 		interrupt-map-mask = <0 0 0 0>;
+ 		interrupt-map = <0x0 0 &gic 53>;
+@@ -329,6 +330,7 @@
+ 		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /* configuration space */
+ 			  0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
+ 			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
++		bus-range = <0x00 0xff>;
+ 		#interrupt-cells = <1>;
+ 		interrupt-map-mask = <0 0 0 0>;
+ 		interrupt-map = <0x0 0 &gic 56>;
 -- 
 2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
