@@ -1,35 +1,68 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: setup DMA-channels for mmc0 and emmc for rk3188
-Date: Wed, 22 Mar 2017 17:35:08 +0100
-Message-ID: <1719178.VTn5J36Jb3@phil>
-References: <1490109227-4006-1-git-send-email-al.kochet@gmail.com> <11123239.Wc863F7R2R@phil> <C2BC0A84-EF69-42E3-84FA-A873B8A7187A@gmail.com>
+From: Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH v5 2/4] fpga pr ip: Core driver support for Altera
+ Partial Reconfiguration IP.
+Date: Wed, 22 Mar 2017 17:39:16 +0100
+Message-ID: <20170322173916.6c55b259@crub>
+References: <1489174827-6033-1-git-send-email-matthew.gerlach@linux.intel.com>
+        <1489174827-6033-3-git-send-email-matthew.gerlach@linux.intel.com>
+        <20170321220437.1fa7efaa@crub>
+        <alpine.DEB.2.20.1703220852030.2728@mgerlach-VirtualBox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C2BC0A84-EF69-42E3-84FA-A873B8A7187A-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.20.1703220852030.2728@mgerlach-VirtualBox>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthew.gerlach@linux.intel.com
+Cc: atull@kernel.org, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Matthew,
 
-Am Mittwoch, 22. März 2017, 19:20:56 CET schrieb Alexander Kochetkov:
-> Hello, Heiko!
-> 
-> > 22 марта 2017 г., в 18:54, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> написал(а):
-> I have working settings for eMMC for radxa rock. What do you think, is it
-> good idea to add them to the kernel DT? As Radxa Rock doesn’t come with
-> eMMC, but eMMC can be soldered manually.
+On Wed, 22 Mar 2017 09:08:18 -0700 (PDT)
+matthew.gerlach@linux.intel.com matthew.gerlach@linux.intel.com wrote:
+...
+>> Can we also add a function for registering a PCIe device with
+>> PR IP here? Something like:  
+>
+>If we have an alt_pr_pcie_register function, we will need the 
+>corresponding alt_pr_pcie_unregister function.  Both of these functions 
+>should go into their own file like alt_pr_platform_probe() and 
+>alt_pr_platform_remove().
 
-No, the Rock comes with a nand flash, which we hopefully will support at some 
-point in the future. And in the mainline kernel we want to support the stock 
-boards as people can buy them, not something people have soldered around on.
+Okay, thanks.
 
+>> /**
+>> * alt_pr_pcie_register - register PCIe device with PR-IP core
+>> * @pci_dev:    PCI device with PR-IP
+>> * @bar:        PR-IP BAR number
+>> * @pr_offset:  offset of the PR-IP core registers
+>> *
+>> * Return: 0 on success, negative error code otherwise.
+>> *
+>> * To unregister the PCIe device, use alt_pr_unregister(&pdev->dev).
+>> */
+>> int alt_pr_pcie_register(struct pci_dev *pdev, int bar, int pr_offset)
+>> {
+>>        void __iomem *base;
+>>        int ret;
+>>
+>>        if (!pci_is_enabled(pdev)) {
+>>                ret = pci_enable_device(pdev);
+>>                if (ret < 0) {
+>>                        dev_err(&pdev->dev, "can't enable device: %d\n", ret);
+>>                        return ret;
+>>                }
+>>        }
+>>
+>>        base = devm_ioremap_resource(&pdev->dev, &pdev->resource[bar]);  
+>
+>Does this remap the whole bar?  If it does, what happens if other 
+>components are also connected to the bar?  How do those corresponding 
+>drivers get access to the mapped memory?
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+yes, it remaps the whole bar. I do not know the details of the PR IP,
+my assumption was that PR IP it is only one component in the bar.
+Then I could use devm_ioremap() instead. Thanks for the hint!
+
+Anatolij
