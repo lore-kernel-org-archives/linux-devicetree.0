@@ -1,70 +1,60 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
-Date: Wed, 22 Mar 2017 10:36:44 +0900
-Message-ID: <93e79e92-a102-e931-8d63-843031848888@samsung.com>
-References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
- <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, LW@KARO-electronics.de
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 1/2] dt-bindings: Add INNOLUX P079ZCA panel bindings
+Date: Wed, 22 Mar 2017 09:53:06 +0800
+Message-ID: <1490147587-4382-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgaW5raSwKCkNvdWxkIHlvdSBjaGVjayB0aGUgdGhpcyBwYXRjaD8KRm9yIHJlZmVyZW5jZSwg
-cGF0Y2ggMS81IGFuZCAyLzUgaGF2ZSBhbHJlYWR5IGJlZW4gYXBwbGllZCB0byBLcnp5c3p0b2Yg
-CnRyZWUuCgpCZXN0IHJlZ2FyZHMsCkhvZWdldW4KCgpPbiAwMy8wOC8yMDE3IDAxOjU0IFBNLCBI
-b2VnZXVuIEt3b24gd3JvdGU6Cj4gVGhlIGRzaSArIHBhbmVsIGlzIGEgcGFyZW50YWwgcmVsYXRp
-b25zaGlwLCBzbyBPRiBncnBhaCBpcyBub3QgbmVlZGVkLgo+IFRoZXJlZm9yZSwgdGhlIGN1cnJl
-bnQgZHNpX3BhcnNlX2R0IGZ1bmN0aW9uIHdpbGwgdGhyb3cgYW4gZXJyb3IsCj4gYmVjYXVzZSB0
-aGVyZSBpcyBubyBsaW5rZWQgT0YgZ3JhcGggZm9yIHRoZSBjYXNlIGZpbWQgKyBkc2kgKyBwYW5l
-bC4KPgo+IFBhcnNlIHRoZSBQbGwgYnVyc3QgYW5kIGVzYyBjbG9jayBmcmVxdWVuY3kgcHJvcGVy
-dGllcyBpbiBkc2lfcGFyc2VfZHQoKQo+IGFuZCBjcmVhdGUgYSBicmlkZ2Vfbm9kZSBvbmx5IGlm
-IHRoZXJlIGlzIGFuIE9GIGdyYXBoIGFzc29jaWF0ZWQgd2l0aCBkc2kuCj4KPiBTaWduZWQtb2Zm
-LWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4KPiBSZXZpZXdlZC1i
-eTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPiBSZXZpZXdlZC1ieTogQW5k
-aSBTaHl0aSA8YW5kaS5zaHl0aUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgIGRyaXZlcnMvZ3B1L2Ry
-bS9leHlub3MvZXh5bm9zX2RybV9kc2kuYyB8IDMyICsrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tCj4gICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAyNCBkZWxldGlvbnMo
-LSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNp
-LmMgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPiBpbmRleCBmNWMw
-NGQwLi4yZDRlMTE4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9z
-X2RybV9kc2kuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2ku
-Ywo+IEBAIC0xNjUyLDM5ICsxNjUyLDIzIEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9wYXJzZV9k
-dChzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQo+ICAgCWlmIChyZXQgPCAwKQo+ICAgCQlyZXR1cm4g
-cmV0Owo+ICAgCj4gLQllcCA9IG9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKG5vZGUsIERT
-SV9QT1JUX09VVCwgMCk7Cj4gLQlpZiAoIWVwKSB7Cj4gLQkJZGV2X2VycihkZXYsICJubyBvdXRw
-dXQgcG9ydCB3aXRoIGVuZHBvaW50IHNwZWNpZmllZFxuIik7Cj4gLQkJcmV0dXJuIC1FSU5WQUw7
-Cj4gLQl9Cj4gLQo+IC0JcmV0ID0gZXh5bm9zX2RzaV9vZl9yZWFkX3UzMihlcCwgInNhbXN1bmcs
-YnVyc3QtY2xvY2stZnJlcXVlbmN5IiwKPiArCXJldCA9IGV4eW5vc19kc2lfb2ZfcmVhZF91MzIo
-bm9kZSwgInNhbXN1bmcsYnVyc3QtY2xvY2stZnJlcXVlbmN5IiwKPiAgIAkJCQkgICAgICZkc2kt
-PmJ1cnN0X2Nsa19yYXRlKTsKPiAgIAlpZiAocmV0IDwgMCkKPiAtCQlnb3RvIGVuZDsKPiArCQly
-ZXR1cm4gcmV0Owo+ICAgCj4gLQlyZXQgPSBleHlub3NfZHNpX29mX3JlYWRfdTMyKGVwLCAic2Ft
-c3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5IiwKPiArCXJldCA9IGV4eW5vc19kc2lfb2ZfcmVhZF91
-MzIobm9kZSwgInNhbXN1bmcsZXNjLWNsb2NrLWZyZXF1ZW5jeSIsCj4gICAJCQkJICAgICAmZHNp
-LT5lc2NfY2xrX3JhdGUpOwo+ICAgCWlmIChyZXQgPCAwKQo+IC0JCWdvdG8gZW5kOwo+IC0KPiAt
-CW9mX25vZGVfcHV0KGVwKTsKPiArCQlyZXR1cm4gcmV0Owo+ICAgCj4gICAJZXAgPSBvZl9ncmFw
-aF9nZXRfbmV4dF9lbmRwb2ludChub2RlLCBOVUxMKTsKPiAtCWlmICghZXApIHsKPiAtCQlyZXQg
-PSAtRUlOVkFMOwo+IC0JCWdvdG8gZW5kOwo+IC0JfQo+IC0KPiAtCWRzaS0+YnJpZGdlX25vZGUg
-PSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGVwKTsKPiAtCWlmICghZHNpLT5icmlk
-Z2Vfbm9kZSkgewo+IC0JCXJldCA9IC1FSU5WQUw7Cj4gLQkJZ290byBlbmQ7Cj4gKwlpZiAoZXAp
-IHsKPiArCQlkc2ktPmJyaWRnZV9ub2RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVu
-dChlcCk7Cj4gKwkJb2Zfbm9kZV9wdXQoZXApOwo+ICAgCX0KPiAtZW5kOgo+IC0Jb2Zfbm9kZV9w
-dXQoZXApOwo+ICAgCj4gLQlyZXR1cm4gcmV0Owo+ICsJcmV0dXJuIDA7Cj4gICB9Cj4gICAKPiAg
-IHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRl
-dmljZSAqbWFzdGVyLAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+The Innolux P079ZCA is a 7.85" panel with a 768X1024 resolution and
+connected to DSI using four lanes.
+
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+
+Changes in v3: None
+Changes in v2: None
+
+ .../bindings/display/panel/innolux,p079zca.txt     | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
+new file mode 100644
+index 0000000..5c70a83
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
+@@ -0,0 +1,23 @@
++Innolux P079ZCA 7.85" 768x1024 TFT LCD panel
++
++Required properties:
++- compatible: should be "innolux,p079zca"
++- reg: DSI virtual channel of the peripheral
++- power-supply: phandle of the regulator that provides the supply voltage
++- enable-gpios: panel enable gpio
++
++Optional properties:
++- backlight: phandle of the backlight device attached to the panel
++
++Example:
++
++	&mipi_dsi {
++		panel {
++			compatible = "innolux,p079zca";
++			reg = <0>;
++			power-supply = <...>;
++			backlight = <&backlight>;
++			enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
++			status = "okay";
++		};
++	};
+-- 
+2.6.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
