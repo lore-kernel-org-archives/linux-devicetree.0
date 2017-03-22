@@ -1,60 +1,39 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 1/2] dt-bindings: Add INNOLUX P079ZCA panel bindings
-Date: Wed, 22 Mar 2017 09:53:06 +0800
-Message-ID: <1490147587-4382-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v4 0/4] RK3399 dw-mipi-dsi patches
+Date: Wed, 22 Mar 2017 09:54:47 +0800
+Message-ID: <1490147691-4489-1-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Innolux P079ZCA is a 7.85" panel with a 768X1024 resolution and
-connected to DSI using four lanes.
-
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-
-Changes in v3: None
-Changes in v2: None
-
- .../bindings/display/panel/innolux,p079zca.txt     | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-new file mode 100644
-index 0000000..5c70a83
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-@@ -0,0 +1,23 @@
-+Innolux P079ZCA 7.85" 768x1024 TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "innolux,p079zca"
-+- reg: DSI virtual channel of the peripheral
-+- power-supply: phandle of the regulator that provides the supply voltage
-+- enable-gpios: panel enable gpio
-+
-+Optional properties:
-+- backlight: phandle of the backlight device attached to the panel
-+
-+Example:
-+
-+	&mipi_dsi {
-+		panel {
-+			compatible = "innolux,p079zca";
-+			reg = <0>;
-+			power-supply = <...>;
-+			backlight = <&backlight>;
-+			enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-+			status = "okay";
-+		};
-+	};
--- 
-2.6.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgYWxsCgpUaGlzIHNlcmllcyBzZXQgdGhlIHBoeV9jZmdfY2xrIHRvIGJlIGEgcmVxdWlyZWQg
+Y2xvY2sgZm9yIFJLMzM5OSwgYW5kCmFkZCBhIGdyZiBjbG9jayBjb250cm9sIGluIGR3LW1pcGkt
+ZHNpIGRyaXZlci4gQW5kIHRoZW4gY29ycmVjdCBhCnJlZ2lzdGVyIG5hbWUuCgoKQ2hhbmdlcyBp
+biB2NDoKLSByZW1vdmUgImFkZGl0aW9uYWwiCi0gcHJpbnQgdGhlIGVyciBhZnRlciBjbGtfcHJl
+cGFyZV9lbmFibGUoZHNpLT5ncmZfY2xrKQoKQ2hhbmdlcyBpbiB2MzoKLSBhZGQgYSBEV19NSVBJ
+X05FRURTX1BIWV9DRkdfQ0xLIGZvciBSSzMzOTkKLSBhZGQgYSBEV19NSVBJX05FRURTX0dSRl9D
+TEsgZm9yIFJLMzM5OQoKQ2hhbmdlcyBpbiB2MjoKLSBjaGVjayB0aGUgZ3JmX2NsayBvbmx5IGZv
+ciBSSzMzOTkKCkNocmlzIFpob25nICg0KToKICBkcm0vcm9ja2NoaXAvZHNpOiBjaGVjayBwaHlf
+Y2ZnX2NsayBvbmx5IGZvciBSSzMzOTkKICBkdC1iaW5kaW5nczogYWRkIHRoZSBncmYgY2xvY2sg
+Zm9yIGR3LW1pcGktZHNpCiAgZHJtL3JvY2tjaGlwL2RzaTogZW5hYmxlIHRoZSBncmYgY2xrIGJl
+Zm9yZSB3cml0aW5nIGdyZiByZWdpc3RlcnMKICBkcm0vcm9ja2NoaXAvZHNpOiBjb3JyZWN0IHRo
+ZSBncmZfc3dpdGNoX3JlZyBuYW1lCgogLi4uL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lf
+cm9ja2NoaXAudHh0ICAgICAgfCAgMiArLQogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1p
+cGktZHNpLmMgICAgICAgICAgICAgfCA0MiArKysrKysrKysrKysrKysrKy0tLS0tCiAyIGZpbGVz
+IGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCgotLSAKMi42LjMKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
