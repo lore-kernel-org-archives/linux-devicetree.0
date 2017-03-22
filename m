@@ -1,7 +1,7 @@
 From: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 3/5] ARM: dts: stm32: Add watchdog support for STM32F429 SoC
-Date: Wed, 22 Mar 2017 16:04:41 +0100
-Message-ID: <1490195083-25117-4-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v3 4/5] ARM: dts: stm32: Add watchdog support for STM32F429 eval board
+Date: Wed, 22 Mar 2017 16:04:42 +0100
+Message-ID: <1490195083-25117-5-git-send-email-yannick.fertre@st.com>
 References: <1490195083-25117-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,28 @@ To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roec
 Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add watchdog into DT for stm32f429 family.
+This patch adds watchdog support for STM32x9I-Eval board.
 
-Signed-off-by: Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32429i-eval.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index ee0da97..9b71dde 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -65,7 +65,7 @@
- 			clock-frequency = <32768>;
- 		};
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 3c99466..1c7d0b9 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -126,6 +126,10 @@
+ 	};
+ };
  
--		clk-lsi {
-+		clk_lsi: clk-lsi {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <32000>;
-@@ -307,6 +307,13 @@
- 			status = "disabled";
- 		};
- 
-+		iwdg: iwdg@40003000 {
-+			compatible = "st,stm32-iwdg";
-+			reg = <0x40003000 0x400>;
-+			clocks = <&clk_lsi>;
-+			status = "disabled";
-+		};
++&iwdg {
++	status = "okay";
++};
 +
- 		usart2: serial@40004400 {
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004400 0x400>;
+ &adc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&adc3_in8_pin>;
 -- 
 1.9.1
 
