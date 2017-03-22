@@ -1,12 +1,12 @@
 From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 5/7] ARM: dts: r7s72100: add rtc to device tree
-Date: Wed, 22 Mar 2017 10:27:52 -0400
-Message-ID: <20170322142754.30888-6-chris.brandt@renesas.com>
+Subject: [PATCH v2 2/7] rtc: Add rtc-sh
+Date: Wed, 22 Mar 2017 10:27:49 -0400
+Message-ID: <20170322142754.30888-3-chris.brandt@renesas.com>
 References: <20170322142754.30888-1-chris.brandt@renesas.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXOFUXT2UGBBJUUZLDAKGQEZX2WB3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBDXOFUXT2UGBBIMUZLDAKGQEXDFNZYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170322142754.30888-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,42 +19,54 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the realtime clock device node.
+rtc-sh is an RTC for SuperH and RZ/A SoCs.
 
 Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
 v2:
-* added interrupt-names
-* added clock counting sources
-* added clock-names "fck", "rtc_x1", "rtc_x3", "extal"
+* added interrupt-names and clock-names
+* clocks now include counting sources
+* changed 'is a RTC' to 'is an RTC' in commit message
 ---
- arch/arm/boot/dts/r7s72100.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/rtc/rtc-sh.txt | 29 ++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-sh.txt
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index 632a6a4..f74a8ec 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -652,4 +652,18 @@
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-sh.txt b/Documentation/devicetree/bindings/rtc/rtc-sh.txt
+new file mode 100644
+index 0000000..adbb8af
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-sh.txt
+@@ -0,0 +1,29 @@
++* Real Time Clock for Renesas SH and ARM SoCs
 +
-+	rtc: rtc@fcff1000 {
-+		compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
-+		reg = <0xfcff1000 0x2e>;
-+		interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
-+			      GIC_SPI 277 IRQ_TYPE_EDGE_RISING
-+			      GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "alarm", "period", "carry";
-+		clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
-+			 <&rtc_x3_clk>, <&extal_clk>;
-+		clock-names = "fck", "rtc_x1", "rtc_x3", "extal";
-+		power-domains = <&cpg_clocks>;
-+		status = "disabled";
-+	};
- };
++Required properties:
++- compatible: Should be "renesas,r7s72100-rtc" and "renesas,sh-rtc" as a
++  fallback.
++- reg: physical base address and length of memory mapped region.
++- interrupts: 3 interrupts for alarm, period, and carry.
++- interrupt-names: The interrupts should be labeled as "alarm", "period", and
++  "carry".
++- clocks: The functional clock source for the RTC controller must be listed
++  first (if exists). Additionally, potential clock counting sources are to be
++  listed.
++- clock-names: The functional clock must be labeled as "fck". Other clocks
++  may be named in accordance to the SoC hardware manuals.
++
++
++Example:
++rtc: rtc@fcff1000 {
++	compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
++	reg = <0xfcff1000 0x2e>;
++	interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
++		      GIC_SPI 277 IRQ_TYPE_EDGE_RISING
++		      GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
++	interrupt-names = "alarm", "period", "carry";
++	clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
++		 <&rtc_x3_clk>, <&extal_clk>;
++	clock-names = "fck", "rtc_x1", "rtc_x3", "extal";
++	power-domains = <&cpg_clocks>;
++};
 -- 
 2.10.1
 
