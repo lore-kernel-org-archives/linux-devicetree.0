@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH 07/12] ARM: dts: imx6ul-isiot: Add Sound card with codec node
-Date: Wed, 22 Mar 2017 23:18:12 +0530
-Message-ID: <1490204897-14525-8-git-send-email-jagan@openedev.com>
+Subject: [PATCH 04/12] ARM: dts: imx6ul-isiot: Add i2c nodes
+Date: Wed, 22 Mar 2017 23:18:09 +0530
+Message-ID: <1490204897-14525-5-git-send-email-jagan@openedev.com>
 References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1490204897-14525-1-git-send-email-jagan@openedev.com>
@@ -12,80 +12,62 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-Add support for Sound card and related codec(via i2c1) nodes
-on Engicam Is.IoT MX6UL variant module boards.
+Add support for i2c nodes i2c1 and i2c2 on Is.IoT MX6UL
+eMMC variant boards.
 
 Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Matteo Lisi <matteo.lisi@engicam.com>
 Cc: Michael Trimarchi <michael@amarulasolutions.com>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 11 +++++++++++
- arch/arm/boot/dts/imx6ul-isiot.dtsi        | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+)
+ arch/arm/boot/dts/imx6ul-isiot.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-index b149b5e..c79fa42 100644
---- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-@@ -41,6 +41,17 @@
-  */
- 
- &i2c1 {
-+	codec: sgtl5000@0a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6UL_CLK_OSC>;
-+		clock-names = "mclk";
-+		wlf,shared-lrclk;
-+		VDDA-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+
- 	touch: stmpe811@44 {
- 		compatible = "st,stmpe811";
- 		reg = <0x44>;
 diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index ea30380..7cbcaea 100644
+index 5ccc3df..4697a04 100644
 --- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
 +++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -69,6 +69,36 @@
- 				    100>;
- 		default-brightness-level = <100>;
+@@ -71,6 +71,20 @@
  	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	sound {
-+		compatible = "fsl,imx-audio-sgtl5000";
-+		model = "imx6ul-isiot-sgtl5000";
-+		cpu-dai = <&sai2>;
-+		audio-codec = <&codec>;
-+		gpr = <&gpr>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+	};
  };
  
- &i2c1 {
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock_frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
+ &pwm8 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm8>;
+@@ -95,6 +109,20 @@
+ };
+ 
+ &iomuxc {
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
++			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO00__I2C2_SCL 0x4001b8b0
++			MX6UL_PAD_GPIO1_IO01__I2C2_SDA 0x4001b8b0
++		>;
++	};
++
+ 	pinctrl_pwm8: pwm8grp {
+ 		fsl,pins = <
+ 			MX6UL_PAD_ENET1_RX_ER__PWM8_OUT   0x110b0
 -- 
 1.9.1
