@@ -1,14 +1,11 @@
 From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v2 4/5] ARM: dts: stm32: Add watchdog support for STM32F429
- eval board
-Date: Wed, 22 Mar 2017 15:12:53 +0100
-Message-ID: <1490191974-29722-5-git-send-email-yannick.fertre@st.com>
-References: <1490191974-29722-1-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v2 0/5] STM32 Independant watchdog
+Date: Wed, 22 Mar 2017 15:12:49 +0100
+Message-ID: <1490191974-29722-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490191974-29722-1-git-send-email-yannick.fertre@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,24 +19,33 @@ To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob He
 Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds watchdog support for STM32x9I-Eval board.
+Version 2:
+- Add commit messages
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
----
- arch/arm/boot/dts/stm32429i-eval.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Version 1:
+- Initial commit
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 3c99466..aab81ed 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -181,3 +181,7 @@
- 	pinctrl-names = "default";
- 	status = "okay";
- };
-+
-+&iwdg {
-+	status = "okay";
-+};
+The purpose of this set of patches is to add a new watchdog driver for
+stm32f429.
+This driver was developed and tested on evaluation board stm32429i.
+
+Yannick Fertre (5):
+  dt-bindings: Document STM32 IWDG bindings
+  drivers: watchdog: Add STM32 IWDG driver
+  ARM: dts: stm32: Add watchdog support for STM32F429 SoC
+  ARM: dts: stm32: Add watchdog support for STM32F429 eval board
+  ARM: configs: Add watchdog support in STM32 defconfig
+
+ .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  15 ++
+ arch/arm/boot/dts/stm32429i-eval.dts               |   4 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |   9 +-
+ arch/arm/configs/stm32_defconfig                   |   1 +
+ drivers/watchdog/Kconfig                           |  11 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/stm32_iwdg.c                      | 289 +++++++++++++++++++++
+ 7 files changed, 329 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+ create mode 100644 drivers/watchdog/stm32_iwdg.c
+
 -- 
 1.9.1
