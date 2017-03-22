@@ -1,51 +1,78 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] power: supply: cpcap-charger: Add minimal CPCAP PMIC
- battery charger
-Date: Wed, 22 Mar 2017 10:22:35 -0700
-Message-ID: <20170322172235.GE10760@atomide.com>
-References: <20170317022152.21427-1-tony@atomide.com>
- <20170322021514.ewipilqbfm2cwua6@earth>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 3/5] coresight: add support for debug module
+Date: Wed, 22 Mar 2017 17:25:50 +0000
+Message-ID: <7a028460-d598-e337-5e09-234beddca88b@arm.com>
+References: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
+ <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
+ <671a0b39-b635-6e0e-d3fa-967651f2e29c@arm.com>
+ <CAJ9a7VgCjXNGC4C49PxL-nBxzhMCmA8Mb-0C_epahizA5EL2HA@mail.gmail.com>
+ <e7a97c52-f61a-e503-f626-09563fa100b8@arm.com>
+ <CAJ9a7VhvCS3xXAHBt0AUVB2Zp2P1HP_LQm4KiptiBT9VJ1fC0Q@mail.gmail.com>
+ <4961636d-d77c-0f9a-7076-4db1ef456073@arm.com>
+ <1e6d6a91-3bdc-7cfb-a96f-780c959e0316@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170322021514.ewipilqbfm2cwua6@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1e6d6a91-3bdc-7cfb-a96f-780c959e0316@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>, Mike Leach <mike.leach@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170321 19:17]:
-> Hi,
-> 
-> On Thu, Mar 16, 2017 at 07:21:52PM -0700, Tony Lindgren wrote:
-> > The custom CPCAP PMIC used on Motorola phones such as Droid 4 has a
-> > USB battery charger. It can optionally also have a companion chip that
-> > is used for wireless charging.
-> > 
-> > The charger on CPCAP also can feed VBUS for the USB host mode. This
-> > can be handled by the existing kernel phy_companion interface.
-> > 
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
-> > Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> 
-> Driver looks ok and works for me, but values are not scaled
-> correctly. The power-supply subsystem exposes values in microamps
-> and microvolt. IIO provides values in millivolt/milliamps instead,
-> so it should be scaled with 1000.
 
-Oh OK, will repost. There will also be a minor change for using
-the processed IIO values instead of the scaled values when I update
-the ADC driver.
 
+On 22/03/17 17:09, Suzuki K Poulose wrote:
+> On 22/03/17 16:17, Sudeep Holla wrote:
+
+[...]
+
+>> 
+>> Point taken. So we could just specify that all necessary power
+>> domains need to be on for proper functionality for this feature and
+>> that it's highly platform specific instead of mixing cpu/cluster
+>> idle details here.
+>> 
+>>> The key point is that the caveat in using this driver is that
+>>> the power management has to be considered on a platform specific
+>>> basis before it is configured; and appropriate actions may be
+>>> needed for it to work correctly. Without this then the driver
+>>> could cause more issues than it debugs. A user selecting this
+>>> _must_ be told about these issues
+>>> 
+> 
+> So given all the possible caveats, I think we :
+> 
+> 1) Shouldn't enable the driver by default at runtime even if it is 
+> built-in. 
+> 2) Should provide mechanisms to turn it on at boot (via
+> kernel commandline) or anytime later (via sysfs), which kind of puts
+> the responsibility back on the user : "You know what you are doing". 
+> 3) Shouldn't turn the driver on based on "nohlt" which the user
+> could use it for some other purposes, without explicit intention of
+> turning this driver on).
+> 4) Should document the fact that, on some
+> platforms, the user may have to disable CPUidle explicitly to get the
+> driver working. But let us not make it the default. The user with a
+> not so ideal platform could add "nohlt" and get it working.
+> 
+
+Agreed on all points and well summarized.
+I would like to highlight (3) and (4) as it needs to be well understood.
+
+"nohlt" has a *different* meaning already, so using that in this
+driver for something else is simple wrong as it affects the system in
+unintended ways. And yes if user (mis)uses it to get things working,
+it's fine but shouldn't be recommended way.
+
+-- 
 Regards,
-
-Tony
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sudeep
