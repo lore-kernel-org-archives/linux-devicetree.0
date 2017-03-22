@@ -1,86 +1,91 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 01/12] ARM: dts: imx6ul-geam: Add backlight support for lcdif
-Date: Wed, 22 Mar 2017 23:18:06 +0530
-Message-ID: <1490204897-14525-2-git-send-email-jagan@openedev.com>
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH 07/12] ARM: dts: imx6ul-isiot: Add Sound card with codec node
+Date: Wed, 22 Mar 2017 23:18:12 +0530
+Message-ID: <1490204897-14525-8-git-send-email-jagan@openedev.com>
 References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490204897-14525-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490204897-14525-1-git-send-email-jagan@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-This patch add support for lcdif backlight on GEAM6UL
-variant boards.
+Add support for Sound card and related codec(via i2c1) nodes
+on Engicam Is.IoT MX6UL variant module boards.
 
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/imx6ul-geam.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 11 +++++++++++
+ arch/arm/boot/dts/imx6ul-isiot.dtsi        | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dtsi b/arch/arm/boot/dts/imx6ul-geam.dtsi
-index 940aef6..ee5220c 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-geam.dtsi
-@@ -49,6 +49,23 @@
- 		reg = <0x80000000 0x08000000>;
- 	};
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+index b149b5e..c79fa42 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+@@ -41,6 +41,17 @@
+  */
  
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm8 0 100000>;
-+		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
-+				     10 11 12 13 14 15 16 17 18 19
-+				     20 21 22 23 24 25 26 27 28 29
-+				     30 31 32 33 34 35 36 37 38 39
-+				     40 41 42 43 44 45 46 47 48 49
-+				     50 51 52 53 54 55 56 57 58 59
-+				     60 61 62 63 64 65 66 67 68 69
-+				     70 71 72 73 74 75 76 77 78 79
-+				     80 81 82 83 84 85 86 87 88 89
-+				     90 91 92 93 94 95 96 97 98 99
-+				    100>;
-+		default-brightness-level = <100>;
+ &i2c1 {
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6UL_CLK_OSC>;
++		clock-names = "mclk";
++		wlf,shared-lrclk;
++		VDDA-supply = <&reg_3p3v>;
++		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
 +	};
 +
- 	chosen {
- 		stdout-path = &uart1;
+ 	touch: stmpe811@44 {
+ 		compatible = "st,stmpe811";
+ 		reg = <0x44>;
+diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+index ea30380..7cbcaea 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+@@ -69,6 +69,36 @@
+ 				    100>;
+ 		default-brightness-level = <100>;
  	};
-@@ -143,6 +160,12 @@
- 	display = <&display0>;
++
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	sound {
++		compatible = "fsl,imx-audio-sgtl5000";
++		model = "imx6ul-isiot-sgtl5000";
++		cpu-dai = <&sai2>;
++		audio-codec = <&codec>;
++		gpr = <&gpr>;
++		audio-routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"Headphone Jack", "HP_OUT";
++	};
  };
  
-+&pwm8 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm8>;
-+	status = "okay";
-+};
-+
- &tsc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_tsc>;
-@@ -290,6 +313,12 @@
- 		>;
- 	};
- 
-+	pinctrl_pwm8: pwm8grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET1_RX_ER__PWM8_OUT   0x110b0
-+		>;
-+	};
-+
- 	pinctrl_tsc: tscgrp {
- 		fsl,pin = <
- 			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
+ &i2c1 {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
