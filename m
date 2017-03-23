@@ -1,39 +1,46 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [RESEND PATCH v4 2/9] iio: adc: add support for
- X-Powers AXP20X and AXP22X PMICs ADCs
-Date: Thu, 23 Mar 2017 17:52:47 +0800
-Message-ID: <CAGb2v655AfEavMqVV-XTyYzHWt5qFsMnoMsTVd8HRDkCgjiTeQ@mail.gmail.com>
-References: <20170320081653.8884-1-quentin.schulz@free-electrons.com>
- <20170320081653.8884-3-quentin.schulz@free-electrons.com> <CAGb2v66JC65=9WiMy-Nu+9tTFRLsJL2Eyb0wfJV_K=65ABc6Zg@mail.gmail.com>
- <20170323093527.ojcdpvruzqnhvysq@earth>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
+Date: Thu, 23 Mar 2017 11:11:09 +0100
+Message-ID: <CACRpkdaqoJ6J+qoxOyGsT4X=-e1PH71_2oi0hQeQh72T0OnBfw@mail.gmail.com>
+References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
+ <20170316064218.9169-2-ralph.sennhauser@gmail.com> <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
+ <20170317101747.67a09ccd@gmail.com> <20170320135131.GP22463@ulmo.ba.sec>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCFWZ3DAKGQEVOKAE4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170323093527.ojcdpvruzqnhvysq@earth>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170320135131.GP22463@ulmo.ba.sec>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ralph Sennhauser <ralph.sennhauser@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 5:35 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Hi,
+On Mon, Mar 20, 2017 at 2:51 PM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
+> On Fri, Mar 17, 2017 at 10:17:47AM +0100, Ralph Sennhauser wrote:
+>> On Thu, 16 Mar 2017 17:03:05 +0100
+>> Linus Walleij <linus.walleij@linaro.org> wrote:
+> [...]
+>> > > +static void mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
+>> > > +static void mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
+>> >
+>> > I think both of these need to be tagged __maybe_unused to not give
+>> > noise in randconfig builds.
+>>
+>> I haven't seen any warnings with CONFIG_PWM disabled. Which
+>> configuration you expect to trigger a warning? mvebu_pwm_probe should
+>> be the same, right?
 >
-> On Wed, Mar 22, 2017 at 12:34:45PM +0800, Chen-Yu Tsai wrote:
->> P.S. I'm thinking about having MFD_AXP20X imply its various sub-drivers.
->> Not sure if that was the intended usage of the new imply syntax though.
->
-> I think adding "default MFD_AXP20X" to the sub-drivers is cleaner,
-> as you will not end up with a long list.
+> It's got nothing to do with CONFIG_PWM and as far as I can tell your
+> usage of IS_ENABLED() is fine here. However, if you try building the
+> driver with a !PM configuration, both *_suspend() and *_resume() end
+> up being unused and giving you a warning.
 
-I'd still need to add imply statements for the various subsystems though,
-like regulators, power supplies, extcon, etc..
-But I suppose that's cleaner, and fits the original intent of the syntax.
+Yes I was referring to the !PM case.
 
-ChenYu
+Those are not found by zeroday builds.
+
+But they are found a couple of days later by Arnd Bergmann running
+randconfig builds.
+
+Yours,
+Linus Walleij
