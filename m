@@ -1,7 +1,7 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 1/4] Documentation: dt-bindings: iio: Add max9611 ADC
-Date: Thu, 23 Mar 2017 13:41:10 +0100
-Message-ID: <1490272873-2532-2-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 4/4] arm64: dts: salvator-x: Add current sense amplifiers
+Date: Thu, 23 Mar 2017 13:41:13 +0100
+Message-ID: <1490272873-2532-5-git-send-email-jacopo+renesas@jmondi.org>
 References: <1490272873-2532-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1490272873-2532-1-git-send-email-jacopo+renesas@jmondi.org>
@@ -10,47 +10,42 @@ To: geert@linux-m68k.org, wsa+renesas@sang-engineering.com, magnus.damm@gmail.co
 Cc: linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Maxim max9611/max9612 current
-sense amplifier.
+Add device nodes for two Maxim max961x current sense amplifiers
+sensing VDD_08 and DVFS_08 lines.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- .../devicetree/bindings/iio/adc/max9611.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/max9611.txt
+ arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max9611.txt b/Documentation/devicetree/bindings/iio/adc/max9611.txt
-new file mode 100644
-index 0000000..aaaeec0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/max9611.txt
-@@ -0,0 +1,27 @@
-+* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
-+
-+Maxim max9611/max9612 is an high-side current sense amplifier with integrated
-+12-bits ADC communicating over I2c bus.
-+The device node for this driver shall be a child of a I2c controller.
-+
-+Required properties
-+  - compatible: Should be "maxim,max9611" or "maxim,max9612"
-+  - reg: The 7-bits long I2c address of the device
-+  - maxim,shunt-resistor-uohm: Resistor value, in uOhm, of the current sense
-+                               shunt resistor.
-+
-+Example:
-+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts
+index fd05c2b..ef8b723 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts
+@@ -261,6 +261,24 @@
+ 	status = "okay";
+ };
+ 
 +&i2c4 {
-+	csa: max9611@7c {
++	status = "okay";
++
++	csa_vdd: max9611_vdd@7c {
 +		compatible = "maxim,max9611";
 +		reg = <0x7c>;
 +
 +		maxim,shunt-resistor-uohm = <5000>;
 +	};
++
++	csa_dvfs: max9611_dvfs@7f {
++		compatible = "maxim,max9611";
++		reg = <0x7f>;
++
++		maxim,shunt-resistor-uohm = <5000>;
++	};
 +};
 +
-+This device node describes a current sense amplifier sitting on I2c4 bus
-+with address 0x7c (read address is 0xf9, write address is 0xf8).
-+A sense resistor of 0,005 Ohm is installed between RS+ and RS-
-+current-sensing inputs.
+ &wdt0 {
+ 	timeout-sec = <60>;
+ 	status = "okay";
 -- 
 2.7.4
