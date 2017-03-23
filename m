@@ -1,202 +1,127 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 2/4] mvebu: xp: Add pwm properties to .dtsi files
-Date: Thu, 23 Mar 2017 17:40:53 +0100
-Message-ID: <871stodjze.fsf@free-electrons.com>
-References: <20170318154305.28348-1-ralph.sennhauser@gmail.com>
-        <20170318154305.28348-3-ralph.sennhauser@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 04/11] Documentation: DT: bindings: mfd:
+ add A33 GPADC binding
+Date: Thu, 23 Mar 2017 16:45:57 +0000
+Message-ID: <20170323164557.a7h2eolmxeqfwg6b@dell>
+References: <20170321153611.16228-1-quentin.schulz@free-electrons.com>
+ <20170321153611.16228-5-quentin.schulz@free-electrons.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170318154305.28348-3-ralph.sennhauser@gmail.com> (Ralph
-        Sennhauser's message of "Sat, 18 Mar 2017 16:43:02 +0100")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "moderated list:ARM/Marvell
-        Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBSPXZ7DAKGQEEUXQEFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170321153611.16228-5-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ralph,
- 
- On sam., mars 18 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com> wrote:
+On Tue, 21 Mar 2017, Quentin Schulz wrote:
 
-It seems that I don't receive the 1st patch of the series.
-
-Also could you refresh my mind to expose why these patchse were not
-apply the first time and why we should apply them now?
-
-Thanks,
-
-Gregory
-
-
-> From: Andrew Lunn <andrew@lunn.ch>
->
-> Add properties to the gpio nodes to allow them to be also used as pwm
-> lines.
->
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> URL: https://patchwork.ozlabs.org/patch/427294/
-> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+> This patch adds documentation for the A33 GPADC binding.
+>=20
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/arm/boot/dts/armada-370.dtsi        | 10 ++++++++--
->  arch/arm/boot/dts/armada-xp-mv78230.dtsi | 10 ++++++++--
->  arch/arm/boot/dts/armada-xp-mv78260.dtsi |  8 ++++++--
->  arch/arm/boot/dts/armada-xp-mv78460.dtsi | 10 ++++++++--
->  4 files changed, 30 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-> index cc011c8..aa9fe72 100644
-> --- a/arch/arm/boot/dts/armada-370.dtsi
-> +++ b/arch/arm/boot/dts/armada-370.dtsi
-> @@ -138,24 +138,30 @@
->  
->  			gpio0: gpio@18100 {
->  				compatible = "marvell,orion-gpio";
-> -				reg = <0x18100 0x40>;
-> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
-> +				reg-names = "gpio", "pwm";
->  				ngpios = <32>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
-> +				#pwm-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <82>, <83>, <84>, <85>;
-> +				clocks = <&coreclk 0>;
->  			};
->  
->  			gpio1: gpio@18140 {
->  				compatible = "marvell,orion-gpio";
-> -				reg = <0x18140 0x40>;
-> +				reg = <0x18140 0x40>, <0x181c8 0x08>;
-> +				reg-names = "gpio", "pwm";
->  				ngpios = <32>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
-> +				#pwm-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <87>, <88>, <89>, <90>;
-> +				clocks = <&coreclk 0>;
->  			};
->  
->  			gpio2: gpio@18180 {
-> diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-> index 07c5090..fc3934f 100644
-> --- a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-> @@ -203,24 +203,30 @@
->  		internal-regs {
->  			gpio0: gpio@18100 {
->  				compatible = "marvell,orion-gpio";
-> -				reg = <0x18100 0x40>;
-> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
-> +				reg-names = "gpio", "pwm";
->  				ngpios = <32>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
-> +				#pwm-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <82>, <83>, <84>, <85>;
-> +				clocks = <&coreclk 0>;
->  			};
->  
->  			gpio1: gpio@18140 {
->  				compatible = "marvell,orion-gpio";
-> -				reg = <0x18140 0x40>;
-> +				reg = <0x18140 0x40>, <0x181c8 0x08>;
-> +				reg-names = "gpio", "pwm";
->  				ngpios = <17>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
-> +				#pwm-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <87>, <88>, <89>;
-> +				clocks = <&coreclk 0>;
->  			};
->  		};
->  	};
-> diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-> index 64e936a..04dda6a 100644
-> --- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-> @@ -286,24 +286,28 @@
->  		internal-regs {
->  			gpio0: gpio@18100 {
->  				compatible = "marvell,orion-gpio";
-> -				reg = <0x18100 0x40>;
-> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
-> +				reg-names = "gpio", "pwm";
->  				ngpios = <32>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
-> +				#pwm-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <82>, <83>, <84>, <85>;
-> +				clocks = <&coreclk 0>;
->  			};
->  
->  			gpio1: gpio@18140 {
->  				compatible = "marvell,orion-gpio";
-> -				reg = <0x18140 0x40>;
-> +				reg = <0x18140 0x40>, <0x181c8 0x08>;
->  				ngpios = <32>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <87>, <88>, <89>, <90>;
-> +				clocks = <&coreclk 0>;
->  			};
->  
->  			gpio2: gpio@18180 {
-> diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-> index d1383dd..fb6d28a 100644
-> --- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-> @@ -324,24 +324,30 @@
->  		internal-regs {
->  			gpio0: gpio@18100 {
->  				compatible = "marvell,orion-gpio";
-> -				reg = <0x18100 0x40>;
-> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
-> +				reg-names = "gpio", "pwm";
->  				ngpios = <32>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
-> +				#pwm-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <82>, <83>, <84>, <85>;
-> +				clocks = <&coreclk 0>;
->  			};
->  
->  			gpio1: gpio@18140 {
->  				compatible = "marvell,orion-gpio";
-> -				reg = <0x18140 0x40>;
-> +				reg = <0x18140 0x40>, <0x181c8 0x08>;
-> +				reg-names = "gpio", "pwm";
->  				ngpios = <32>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
-> +				#pwm-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <87>, <88>, <89>, <90>;
-> +				clocks = <&coreclk 0>;
->  			};
->  
->  			gpio2: gpio@18180 {
-> -- 
-> 2.10.2
->
+>=20
+> v3:
+>   - fixed missing allwinner in front of compatible,
+>   - updated compatible to allwinner,sun8i-a33-ths to better reflect the
+>   datasheet's name,
+>   - updated example's DT node name and label to ths,
+>=20
+> added in v2
+>=20
+>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 59 ++++++++++++++++=
+++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+This is going to need a DT Ack.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Docu=
+mentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> new file mode 100644
+> index 0000000..badff36
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> @@ -0,0 +1,59 @@
+> +Allwinner SoCs' GPADC Device Tree bindings
+> +------------------------------------------
+> +The Allwinner SoCs all have an ADC that can also act as a thermal sensor
+> +and sometimes as a touchscreen controller.
+> +
+> +Required properties:
+> +  - compatible: "allwinner,sun8i-a33-ths",
+> +  - reg: mmio address range of the chip,
+> +  - #thermal-sensor-cells: shall be 0,
+> +  - #io-channel-cells: shall be 0,
+> +
+> +Example:
+> +	ths: ths@01c25000 {
+> +		compatible =3D "allwinner,sun8i-a33-ths";
+> +		reg =3D <0x01c25000 0x100>;
+> +		#thermal-sensor-cells =3D <0>;
+> +		#io-channel-cells =3D <0>;
+> +	};
+> +
+> +sun4i, sun5i and sun6i SoCs are also supported via the older binding:
+> +
+> +sun4i resistive touchscreen controller
+> +--------------------------------------
+> +
+> +Required properties:
+> + - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
+> +   "allwinner,sun6i-a31-ts"
+> + - reg: mmio address range of the chip
+> + - interrupts: interrupt to which the chip is connected
+> + - #thermal-sensor-cells: shall be 0
+> +
+> +Optional properties:
+> + - allwinner,ts-attached	 : boolean indicating that an actual touchscree=
+n
+> +				   is attached to the controller
+> + - allwinner,tp-sensitive-adjust : integer (4 bits)
+> +				   adjust sensitivity of pen down detection
+> +				   between 0 (least sensitive) and 15
+> +				   (defaults to 15)
+> + - allwinner,filter-type	 : integer (2 bits)
+> +				   select median and averaging filter
+> +				   samples used for median / averaging filter
+> +				   0: 4/2
+> +				   1: 5/3
+> +				   2: 8/4
+> +				   3: 16/8
+> +				   (defaults to 1)
+> +
+> +Example:
+> +
+> +	rtp: rtp@01c25000 {
+> +		compatible =3D "allwinner,sun4i-a10-ts";
+> +		reg =3D <0x01c25000 0x100>;
+> +		interrupts =3D <29>;
+> +		allwinner,ts-attached;
+> +		#thermal-sensor-cells =3D <0>;
+> +		/* sensitive/noisy touch panel */
+> +		allwinner,tp-sensitive-adjust =3D <0>;
+> +		allwinner,filter-type =3D <3>;
+> +	};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
