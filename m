@@ -1,100 +1,71 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] Add Basic SoC support for MT6797
-Date: Thu, 23 Mar 2017 08:46:11 +0800
-Message-ID: <1490229971.25996.2.camel@mtkswgap22>
-References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] mfd: cpcap: Add missing include dependencies
+Date: Thu, 23 Mar 2017 02:00:05 +0100
+Message-ID: <20170323010005.xc3phqrimdcrbti4@earth>
+References: <20170322000912.24210-1-sre@kernel.org>
+ <20170322092708.GA26771@amd>
+ <20170322155716.GC10760@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="r33pvsik226nkcrw"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489937193-2953-1-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170322155716.GC10760-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias, Rob, Marc, Stephen
 
-gentle ping for this patch set.
+--r33pvsik226nkcrw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+Hi,
 
-On Sun, 2017-03-19 at 23:26 +0800, Mars Cheng wrote:
-> This patch set adds basic SoC support for mediatek's first 10-core
-> chip, X20, also known as MT6797.
-> 
-> - based on 4.11-rc1
-> - support multiple base address for sysirq
-> - support common clk framework
-> 
-> Changes since v2:
-> - prevent uncessary #intpol-bases for mtk-sysirq
-> - add fast path for mtk-sysirq set_type when introducing multiple bases
-> - add acked-by and tested-by
-> - remove wrong usage for timer node
-> 
-> Changes since v1:
-> - add multiple base addresses support, v1 only allow 2 bases
-> - clean up clk driver
-> 
-> 
-> Kevin-CW Chen (2):
->   dt-bindings: arm: mediatek: document clk bindings for MT6797
->   clk: mediatek: add clk support for MT6797
-> 
-> Mars Cheng (10):
->   dt-bindings: mediatek: multiple bases support for sysirq
->   irqchip: mtk-sysirq: extend intpol base to arbitrary number
->   irqchip: mtk-sysirq: prevent unnecessary visibility when set_type
->   dt-bindings: mediatek: Add bindings for mediatek MT6797 Platform
->   arm64: dts: mediatek: add mt6797 support
->   soc: mediatek: avoid using fixed spm power status defines
->   soc: mediatek: add vdec item for scpsys
->   dt-bindings: mediatek: add MT6797 power dt-bindings
->   soc: mediatek: add MT6797 scysys support
->   arm64: dts: mediatek: add clk and scp nodes for MT6797
-> 
->  Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
->  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
->  .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
->  .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
->  .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
->  .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
->  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
->  .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
->  .../interrupt-controller/mediatek,sysirq.txt       |   12 +-
->  .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
->  .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +-
->  arch/arm64/boot/dts/mediatek/Makefile              |    1 +
->  arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  245 +++++++
->  drivers/clk/mediatek/Kconfig                       |   32 +
->  drivers/clk/mediatek/Makefile                      |    5 +
->  drivers/clk/mediatek/clk-mt6797-img.c              |   76 +++
->  drivers/clk/mediatek/clk-mt6797-mm.c               |  136 ++++
->  drivers/clk/mediatek/clk-mt6797-vdec.c             |   93 +++
->  drivers/clk/mediatek/clk-mt6797-venc.c             |   78 +++
->  drivers/clk/mediatek/clk-mt6797.c                  |  716 ++++++++++++++++++++
->  drivers/irqchip/irq-mtk-sysirq.c                   |  116 +++-
->  drivers/soc/mediatek/mtk-scpsys.c                  |  149 +++-
->  include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
->  include/dt-bindings/power/mt6797-power.h           |   30 +
->  25 files changed, 1993 insertions(+), 33 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
->  create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
->  create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
->  create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
->  create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
->  create mode 100644 drivers/clk/mediatek/clk-mt6797.c
->  create mode 100644 include/dt-bindings/clock/mt6797-clk.h
->  create mode 100644 include/dt-bindings/power/mt6797-power.h
-> 
-> --
-> 1.7.9.5
-> 
+On Wed, Mar 22, 2017 at 08:57:16AM -0700, Tony Lindgren wrote:
+> * Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [170322 02:29]:
+> > On Wed 2017-03-22 01:09:11, Sebastian Reichel wrote:
+> > > This fixes compilation for files, that try to include the
+> > > cpcap header in alphabetically sorted #include lists.
+> > >=20
+> > > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >=20
+> > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+>=20
+> Hmm I wonder why I never ran into this so far. No objections
+> to the patch though if it fixes the issue with all the necessary
+> headers included.
 
+Because you usually sort includes differently moving headers
+=66rom linux/subdir/XYZ after linux/XYZ. That way regmap.h and
+device.h will already be included when the compiler includes
+motorola-cpcap.h.
 
+-- Sebastian
+
+--r33pvsik226nkcrw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljTHhIACgkQ2O7X88g7
++pqZaA/9FkTpwUyE5w4QKvskYnRBUEcqaXA07+rNOCs+hBMUSEBdfEHsDqxcKoPa
+RGxMnMM+j+nH7MfrFmRrnu6k+S2GZPANnr7JxvdlOQg0Mj036K6AVughkjTrc9Gf
+o2nRPjFkTjRgLvsctqjD97IY4Qb3Wg8AovwMArY2glO1Nw0Wijl6yUFlzIao0JD4
+8f59++YeYXXEhp7E25iKCChmC7IqdwoVQqDIUARBvgL3zXeTvySeHgWNf6wHK6/P
++qYWqcD4qJZmwsazJq4QLifBWfTP5hhzcoO9lcLIpPi5DRAeBfu1w1uITLKR0V82
+CnPqyJkXVQWUdVCkUKzhCL9fVltFA1lm+gp0wv4Ju14MlasNxpkvFIKTVPA+vfd0
+GI4mEx+SHuF+aDRNK5kI5qy4RSDssQDtREvo9C0uDMHniqaqcBSNuxFkHpJj+vP8
+hgITd2iY5IDo6VhqtBohLIknS7M1tLJESDamj4GT8Wdni/0rxFlZBz7Kz58Ijg6X
+avA5xgvy9rUV9izJxmZEwEcNTG99JLyneqA3WWQT4CKXGe6BjTBCwaUAA/tVm6JK
+ZMj0if3vb3uQpyt4WjO7jeEAPxmxmc1opKuh6ksLziTPas0+cgzY67ybOQZKJO5y
+tSh/BFk3YRsPQrdLNa01paR1ciYGQGn2NweAFcVqd0wKcx9wmZo=
+=yT+p
+-----END PGP SIGNATURE-----
+
+--r33pvsik226nkcrw--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
