@@ -1,64 +1,45 @@
-From: =?UTF-8?B?6ZmI5Lqu?= <cl@rock-chips.com>
-Subject: Re: [PATCH v2 4/6] arm64: dts: rockchip: add core dtsi file for
- RK3328 SoCs
-Date: Thu, 23 Mar 2017 11:33:28 +0800
-Message-ID: <58D34208.6090509@rock-chips.com>
-References: <1489670244-13328-1-git-send-email-cl@rock-chips.com>
- <1489670244-13328-5-git-send-email-cl@rock-chips.com>
- <14610453.rKm3MBREMz@diego>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 2/8] cpufreq: imx6q: Fix handling EPROBE_DEFER from
+ regulator
+Date: Thu, 23 Mar 2017 10:03:34 +0530
+Message-ID: <20170323043334.GD12094@vireshk-i7>
+References: <cover.1490199005.git.leonard.crestez@nxp.com>
+ <7f2618363d43b30db29f5f8ae822df413392f99d.1490199005.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <14610453.rKm3MBREMz@diego>
-Sender: linux-i2c-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, zhengxing@rock-chips.com, andy.yan@rock-chips.com, jay.xu@rock-chips.com, matthias.bgg@gmail.com, paweljarosz3691@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, wxt@rock-chips.com, david.wu@rock-chips.com, linux-iio@vger.kernel.org, shawn.lin@rock-chips.com, akpm@linux-foundation.org, dianders@chromium.org, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, afaerber@suse.de, shawnguo@kernel.org, khilman@baylibre.com, arnd@arndb.de, fabio.estevam@nxp.com, zhangqing@rock-chips.com, kever.yang@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7f2618363d43b30db29f5f8ae822df413392f99d.1490199005.git.leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Robin Gong <yibin.gong-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Heiko
+On 22-03-17, 18:53, Leonard Crestez wrote:
+> From: Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>
+> 
+> If there are any errors in getting the cpu0 regulators, the driver returns
+> -ENOENT. In case the regulators are not yet available, the devm_regulator_get
+> calls will return -EPROBE_DEFER, so that the driver can be probed later.
+> If we return -ENOENT, the driver will fail its initialization and will
+> not try to probe again (when the regulators become available).
+> 
+> Return the actual error received from regulator_get in probe. Print a
+> differentiated message in case we need to probe the device later and
+> in case we actually failed. Also add a message to inform when the
+> driver has been successfully registered.
+> 
+> Signed-off-by: Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  drivers/cpufreq/imx6q-cpufreq.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-在 2017年03月21日 16:55, Heiko Stübner 写道:
-> Hi,
->
-> Am Donnerstag, 16. März 2017, 21:17:22 CET schrieb cl@rock-chips.com:
->> +		assigned-clock-parents =
->> +			<&cru HDMIPHY>, <&cru PLL_APLL>,
->> +			<&cru PLL_GPLL>, <&xin24m>,
->> +			<&xin24m>, <&xin24m>;
->> +		assigned-clock-rates =
->> +			<0>, <61440000>,
->> +			<0>, <24000000>,
->> +			<24000000>, <24000000>,
->> +			<15000000>, <15000000>,
->> +			<100000000>, <100000000>,
->> +			<100000000>, <100000000>,
->> +			<50000000>, <100000000>,
->> +			<100000000>, <100000000>,
->> +			<50000000>, <50000000>,
->> +			<50000000>, <50000000>,
->> +			<24000000>, <600000000>,
->> +			<491520000>, <1200000000>,
->> +			<150000000>, <75000000>,
->> +			<75000000>, <150000000>,
->> +			<75000000>, <75000000>,
->> +			<300000000>, <100000000>,
->> +			<300000000>, <200000000>,
->> +			<400000000>, <500000000>,
->> +			<200000000>, <300000000>,
->> +			<300000000>, <250000000>,
->> +			<200000000>, <100000000>,
->> +			<24000000>, <100000000>,
->> +			<150000000>, <50000000>,
->> +			<32768>, <32768>;
->> +	};
->> +
->> +	gmac2io: eth@ff540000 {
-> phandle should be gmac instead?
-> Node name, ethernet@ff540000
-RK3328 have another gmac channel with PHY in the soc, so gmac2io mean 
-the channel with the PHY outside, and it is also called gmac2io in the TRM.
->
->
-> Heiko
->
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+-- 
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
