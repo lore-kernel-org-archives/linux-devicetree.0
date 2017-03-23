@@ -1,58 +1,37 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 3/5] i2c: i2c-stm32f7: add driver
-Date: Thu, 23 Mar 2017 21:42:06 +0100
-Message-ID: <20170323204206.daxgcczep2daxqet@ninjato>
-References: <1489744738-21632-1-git-send-email-cedric.madianga@gmail.com>
- <1489744738-21632-4-git-send-email-cedric.madianga@gmail.com>
- <20170323201719.i5bqrbxr2bejopky@ninjato>
- <CAOAejn383=Zk42nnJoG=qP=uEHpzEwf=5dePx_atyzWGDGBiyA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/5] ARM: OMAP2+: Add and enable operating-points-v2
+Date: Thu, 23 Mar 2017 13:59:51 -0700
+Message-ID: <20170323205950.GQ10760@atomide.com>
+References: <1488813822-26042-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xfk6kf4amhiu2yhk"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOAejn383=Zk42nnJoG=qP=uEHpzEwf=5dePx_atyzWGDGBiyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1488813822-26042-1-git-send-email-d-gerlach@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Lukasz Majewski <lukma@denx.de>, Yegor Yefremov <yegorslists@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
+* Dave Gerlach <d-gerlach@ti.com> [170306 07:26]:
+> Hi,
+> This series adds the necessary changes to get proper operating-points-v2 tables
+> for AM335x/AM437x/DRA7xx/AM57xx TI SoCs. Doing this enables the ti-cpufreq
+> driver and allows the platform to detect which CPU OPPs are valid for the
+> configuration in use and enable them.
+> 
+> This series adds complete tables for am335x and adds 1GHz support for all
+> beaglebone black boards and updates the already merged but unused am437x table
+> to match the finalized DT bindings. It also moves the existing dra7xx/am57xx
+> OPPs to OPPv2 but does not enable 1.5GHz yet as this requires multiregulator
+> support which will come at a later date.
+> 
+> Also, now that so many TI platforms will depend on the ti-cpufreq driver let's
+> add CONFIG_ARM_TI_CPUFREQ to omap2plus_defconfig to enable it as part of the
+> default configuration.
 
---xfk6kf4amhiu2yhk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applying all for v4.12 into dt-v2 and defconfig branches.
 
+Thanks,
 
-> Yes the STM32F7 has a new I2C IP core compared to STM32F4.
-> The engine, the machine state are very different.
-> I tried few months ago to write a common driver but it was very very
-> difficilcut as the 2 IP are not so much things in common.
-
-Good, thanks for the heads up!
-
-
---xfk6kf4amhiu2yhk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAljUMx4ACgkQFA3kzBSg
-KbZ+Eg//Z8os1O5VfTfzY3qa9ymLAh5sPqKeCMUPDYNJrARa+YgnTLo74CuAlMjl
-Q4mH/iwJoZ7QR1GtA7BY0H8xfsOHoxFTEyqTYXDrts1QrRWhVWebUsDboppS+g9S
-2ICaDcx+YgDBPbBcXRT/gc9NO1M9IxOmpSU7gX+Crj3/v4H/ej6NKVjXToBp6xwR
-5FlKDidRdZT/QjCReXBJXy3gUGQtvjWHqYUGMghhHmG6XcgpE2XcwhSIykavvg7L
-a8lC/NkTwX4L4eLRpRS4RCFmjZ0siH47I3Q4zifFxO7IidIdIhnRQwqER6V8qBKg
-QwITxQQrCIcKxutScGyO/nqqGi0O5baSp/hQJ8sJBrjrchffCq+6hPJXFjqU9xnR
-5az6WsS5I2srH1Kk6OApE7F901RfgDCYJQdAEyiysGa4p0m+bHMeLBoqA1kumvVs
-CekDPvCzF4DV0P644mNBdPWRW3JV/f/y99JH3e1tBzxYtcX12R8/JopU0OaKeCKS
-8X9kH9x4wkR09Ut95rLKWTEkrPv0rSFbYWwquG0bRzVAybMUmEAzC7bW7fwe3+bm
-Wpzm5WFZGNMBPlJyrglEsYJ2h4zwn3yhl8lb7Ko4At64lh8Uej6iixPPF9NL+iFl
-DMOWetfEsarzpOKcvVLwmcUMbbHyS4KZXhmXG3wtylpVsOZWLvA=
-=+uiq
------END PGP SIGNATURE-----
-
---xfk6kf4amhiu2yhk--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
