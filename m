@@ -1,166 +1,305 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] Docs: dt: document qcom iommu bindings
-Date: Thu, 23 Mar 2017 17:21:37 -0500
-Message-ID: <20170323222137.okq227mgsmsjy5zf@rob-hp-laptop>
-References: <20170314151811.17234-1-robdclark@gmail.com>
- <20170314151811.17234-4-robdclark@gmail.com>
+Subject: Re: [PATCH 2/2] MIPS: NI 169445 board support
+Date: Thu, 23 Mar 2017 17:29:45 -0500
+Message-ID: <20170323222945.bxz4qa6ydicrh4q6@rob-hp-laptop>
+References: <1489508003-25288-1-git-send-email-nathan.sullivan@ni.com>
+ <1489508003-25288-3-git-send-email-nathan.sullivan@ni.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170314151811.17234-4-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1489508003-25288-3-git-send-email-nathan.sullivan-acOepvfBmUk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 11:18:05AM -0400, Rob Clark wrote:
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, Mar 14, 2017 at 11:13:23AM -0500, Nathan Sullivan wrote:
+> Support the National Instruments 169445 board.
+> 
+> Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
 > ---
->  .../devicetree/bindings/iommu/qcom,iommu.txt       | 113 +++++++++++++++++++++
->  1 file changed, 113 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+>  Documentation/devicetree/bindings/mips/ni.txt   |   7 ++
+>  MAINTAINERS                                     |   8 ++
+>  arch/mips/boot/dts/Makefile                     |   1 +
+>  arch/mips/boot/dts/ni/169445.dts                | 100 ++++++++++++++++++++++++
+>  arch/mips/boot/dts/ni/Makefile                  |   7 ++
+>  arch/mips/configs/generic/board-ni169445.config |  27 +++++++
+>  arch/mips/generic/Kconfig                       |   6 ++
+>  arch/mips/generic/vmlinux.its.S                 |  25 ++++++
+>  8 files changed, 181 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/ni.txt
+>  create mode 100644 arch/mips/boot/dts/ni/169445.dts
+>  create mode 100644 arch/mips/boot/dts/ni/Makefile
+>  create mode 100644 arch/mips/configs/generic/board-ni169445.config
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> diff --git a/Documentation/devicetree/bindings/mips/ni.txt b/Documentation/devicetree/bindings/mips/ni.txt
 > new file mode 100644
-> index 0000000..fd5b7fa
+> index 0000000..722bf2d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-> @@ -0,0 +1,113 @@
-> +* QCOM IOMMU v1 Implementation
+> +++ b/Documentation/devicetree/bindings/mips/ni.txt
+> @@ -0,0 +1,7 @@
+> +National Instruments MIPS platforms
 > +
-> +Qualcomm "B" family devices which are not compatible with arm-smmu have
-> +a similar looking IOMMU but without access to the global register space,
-> +and optionally requiring additional configuration to route context irqs
-> +to non-secure vs secure interrupt line.
+> +required root node properties:
+> +	- compatible: must be "ni,169445"
 > +
-> +** Required properties:
+> +CPU Nodes
+> +	- compatible: must be "mti,mips14KEc"
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c265a5f..b72f059 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8887,6 +8887,14 @@ F:	include/linux/sunrpc/
+>  F:	include/uapi/linux/nfs*
+>  F:	include/uapi/linux/sunrpc/
+>  
+> +NI169445 MIPS ARCHITECTURE
+> +M:	Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+> +L:	linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+> +S:	Maintained
+> +F:	arch/mips/boot/dts/ni/
+> +F:	arch/mips/configs/generic/board-ni169445.config
+> +F:	Documentation/devicetree/bindings/mips/ni.txt
 > +
-> +- compatible       : Should be one of:
+>  NILFS2 FILESYSTEM
+>  M:	Ryusuke Konishi <konishi.ryusuke-Zyj7fXuS5i5L9jVzuh4AOg@public.gmane.org>
+>  L:	linux-nilfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+> index b9db492..27b0f37 100644
+> --- a/arch/mips/boot/dts/Makefile
+> +++ b/arch/mips/boot/dts/Makefile
+> @@ -4,6 +4,7 @@ dts-dirs	+= img
+>  dts-dirs	+= ingenic
+>  dts-dirs	+= lantiq
+>  dts-dirs	+= mti
+> +dts-dirs	+= ni
+>  dts-dirs	+= netlogic
+>  dts-dirs	+= pic32
+>  dts-dirs	+= qca
+> diff --git a/arch/mips/boot/dts/ni/169445.dts b/arch/mips/boot/dts/ni/169445.dts
+> new file mode 100644
+> index 0000000..9746576
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/ni/169445.dts
+> @@ -0,0 +1,100 @@
+> +/dts-v1/;
 > +
-> +                        "qcom,msm8916-iommu"
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	compatible = "ni,169445";
 > +
-> +- clock-names      : Should be a pair of "iface" (required for IOMMUs
-> +                     register group access) and "bus" (required for
-> +                     the IOMMUs underlying bus access).
-> +- clocks           : Phandles for respective clocks described by
-> +                     clock-names.
-> +- #address-cells   : must be 1.
-> +- #size-cells      : must be 1.
-> +- #iommu-cells     : Must be 1.
-> +- ranges           : Base address and size of the iommu context banks.
-> +- qcom,iommu-secure-id  : secure-id.
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "mti,mips14KEc";
+> +			clocks = <&baseclk>;
+> +			reg = <0>;
+> +		};
+> +	};
 > +
-> +- List of sub-nodes, one per translation context bank.  Each sub-node
-> +  has the following required properties:
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x10000000>;
+> +	};
 > +
-> +  - compatible     : Should be one of:
-> +        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
-> +        - "qcom,msm-iommu-v1-sec" : secure context bank
-> +  - reg            : Base address and size of context bank within the iommu
-> +  - interrupts     : The context fault irq.
+> +	baseclk: baseclock {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <50000000>;
+> +	};
 > +
-> +** Optional properties:
+> +	cpu_intc: cpu_intc {
+
+interrupt-controller {
+
+> +		#address-cells = <0>;
+> +		compatible = "mti,cpu-interrupt-controller";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +	};
 > +
-> +- reg              : Base address and size of the SMMU local base, should
-> +                     be only specified if the iommu requires configuration
-> +                     for routing of context bank irq's to secure vs non-
-> +                     secure lines.  (Ie. if the iommu contains secure
-> +                     context banks)
-> +
-> +
-> +** Examples:
-> +
-> +	apps_iommu: iommu@1e20000 {
+> +	ahb@0 {
+
+ahb@1f300000
+
+> +		compatible = "simple-bus";
 > +		#address-cells = <1>;
 > +		#size-cells = <1>;
-> +		#iommu-cells = <1>;
-> +		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-
-You didn't document the fallback above. Maybe just drop it if only a few 
-chips have this iommu.
-
-> +		ranges = <0 0x1e20000 0x40000>;
-> +		reg = <0x1ef0000 0x3000>;
-
-When you have both reg and ranges, use reg value for the unit-address.
-
-> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-> +			 <&gcc GCC_APSS_TCU_CLK>;
-> +		clock-names = "iface", "bus";
-> +		qcom,iommu-secure-id = <17>;
+> +		ranges = <0x0 0x1f300000 0x80FFF>;
 > +
-> +		// mdp_0:
-> +		iommu-ctx@4000 {
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x4000 0x1000>;
-> +			interrupts = <GIC_SPI 70 0>;
+> +		gpio1:gpio-controller@1f300010 {
+                      ^ space
+
+'gpio' is the standard node name, so
+
+gpio@...
+
+> +			compatible = "ni,169445-nand-gpio";
+> +			reg = <0x10 0x4>;
+> +			reg-names = "dat";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
 > +		};
 > +
-> +		// venus_ns:
-> +		iommu-ctx@5000 {
-> +			compatible = "qcom,msm-iommu-v1-sec";
-> +			reg = <0x5000 0x1000>;
-> +			interrupts = <GIC_SPI 70 0>;
+> +		gpio2:gpio-controller@1f300014 {
+
+ditto
+
+> +			compatible = "ni,169445-nand-gpio";
+> +			reg = <0x14 0x4>;
+> +			reg-names = "dat";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			no-output;
+> +		};
+> +
+> +		nand@1f300000 {
+> +			compatible = "gpio-control-nand";
+> +			nand-on-flash-bbt;
+> +			nand-ecc-mode = "soft_bch";
+> +			nand-ecc-step-size = <512>;
+> +			nand-ecc-strength = <4>;
+> +			reg = <0x0 4>;
+> +			gpios = <&gpio2 0 0>, /* rdy */
+> +				<&gpio1 1 0>, /* nce */
+> +				<&gpio1 2 0>, /* ale */
+> +				<&gpio1 3 0>, /* cle */
+> +				<&gpio1 4 0>; /* nwp */
+> +		};
+> +
+> +		serial@1f380000 {
+> +			compatible = "ns16550a";
+> +			reg = <0x80000 0x1000>;
+> +			interrupt-parent = <&cpu_intc>;
+> +			interrupts = <6>;
+> +			clocks = <&baseclk>;
+> +			reg-shift = <0>;
+> +		};
+> +
+> +		ethernet@1f340000 {
+> +			compatible = "snps,dwmac-4.10a";
+> +			interrupt-parent = <&cpu_intc>;
+> +			interrupts = <5>;
+> +			interrupt-names = "macirq";
+> +			reg = <0x40000 0x2000>;
+> +			clock-names = "stmmaceth", "pclk";
+> +			clocks = <&baseclk>, <&baseclk>;
+> +
+> +			phy-mode = "rgmii";
+> +
+> +			fixed-link {
+> +				speed = <1000>;
+> +				full-duplex;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/mips/boot/dts/ni/Makefile b/arch/mips/boot/dts/ni/Makefile
+> new file mode 100644
+> index 0000000..66cfdff
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/ni/Makefile
+> @@ -0,0 +1,7 @@
+> +dtb-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= 169445.dtb
+> +
+> +# Force kbuild to make empty built-in.o if necessary
+> +obj-					+= dummy.o
+> +
+> +always					:= $(dtb-y)
+> +clean-files				:= *.dtb *.dtb.S
+> diff --git a/arch/mips/configs/generic/board-ni169445.config b/arch/mips/configs/generic/board-ni169445.config
+> new file mode 100644
+> index 0000000..0bae1f8
+> --- /dev/null
+> +++ b/arch/mips/configs/generic/board-ni169445.config
+> @@ -0,0 +1,27 @@
+> +CONFIG_FIT_IMAGE_FDT_NI169445=y
+> +
+> +CONFIG_SERIAL_8250=y
+> +CONFIG_SERIAL_8250_CONSOLE=y
+> +CONFIG_SERIAL_OF_PLATFORM=y
+> +
+> +CONFIG_GPIOLIB=y
+> +CONFIG_GPIO_SYSFS=y
+> +CONFIG_GPIO_GENERIC_PLATFORM=y
+> +
+> +CONFIG_MTD=y
+> +CONFIG_MTD_BLOCK=y
+> +CONFIG_MTD_CMDLINE_PARTS=y
+> +
+> +CONFIG_MTD_NAND_ECC=y
+> +CONFIG_MTD_NAND_ECC_BCH=y
+> +CONFIG_MTD_NAND=y
+> +CONFIG_MTD_NAND_GPIO=y
+> +CONFIG_MTD_NAND_IDS=y
+> +
+> +CONFIG_MTD_UBI=y
+> +CONFIG_MTD_UBI_BLOCK=y
+> +
+> +CONFIG_NETDEVICES=y
+> +CONFIG_STMMAC_ETH=y
+> +CONFIG_STMMAC_PLATFORM=y
+> +CONFIG_DWMAC_GENERIC=y
+> diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
+> index a606b3f..fbf0813 100644
+> --- a/arch/mips/generic/Kconfig
+> +++ b/arch/mips/generic/Kconfig
+> @@ -16,4 +16,10 @@ config LEGACY_BOARD_SEAD3
+>  	  Enable this to include support for booting on MIPS SEAD-3 FPGA-based
+>  	  development boards, which boot using a legacy boot protocol.
+>  
+> +config FIT_IMAGE_FDT_NI169445
+> +	bool "Include FDT for NI 169445"
+> +	help
+> +	  Enable this to include the FDT for the 169445 platform from
+> +	  National Instruments in the FIT kernel image.
+> +
+>  endif
+> diff --git a/arch/mips/generic/vmlinux.its.S b/arch/mips/generic/vmlinux.its.S
+> index f67fbf1..de851f7 100644
+> --- a/arch/mips/generic/vmlinux.its.S
+> +++ b/arch/mips/generic/vmlinux.its.S
+> @@ -29,3 +29,28 @@
+>  		};
+>  	};
+>  };
+> +
+> +#ifdef CONFIG_FIT_IMAGE_FDT_NI169445
+> +/ {
+
+IMO, this shouldn't be in the kernel. Is the kernel supposed to 
+create board specific images for every bootloaders custom format? It 
+doesn't scale.
+
+> +	images {
+> +		fdt@ni169445 {
+> +			description = "NI 169445 device tree";
+> +			data = /incbin/("boot/dts/ni/169445.dtb");
+> +			type = "flat_dt";
+> +			arch = "mips";
+> +			compression = "none";
+> +			hash@0 {
+> +				algo = "sha1";
+> +			};
 > +		};
 > +	};
 > +
-> +	gpu_iommu: iommu@1f08000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		#iommu-cells = <1>;
-> +		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-> +		ranges = <0 0x1f08000 0x10000>;
-> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-> +			 <&gcc GCC_GFX_TCU_CLK>;
-> +		clock-names = "iface", "bus";
-> +		qcom,iommu-secure-id = <18>;
-> +
-> +		// gfx3d_user:
-> +		iommu-ctx@1f09000 {
-
-iommu-ctx@1000
-
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x1000 0x1000>;
-> +			interrupts = <GIC_SPI 241 0>;
-> +		};
-> +
-> +		// gfx3d_priv:
-> +		iommu-ctx@1f0a000 {
-
-iommu-ctx@2000
-
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x2000 0x1000>;
-> +			interrupts = <GIC_SPI 242 0>;
+> +	configurations {
+> +		conf@ni169445 {
+> +			description = "NI 169445 Linux Kernel";
+> +			kernel = "kernel@0";
+> +			fdt = "fdt@ni169445";
 > +		};
 > +	};
-> +
-> +	...
-> +
-> +	venus: video-codec@1d00000 {
-> +		...
-> +		iommus = <&apps_iommu 5>;
-> +	};
-> +
-> +	mdp: mdp@1a01000 {
-> +		...
-> +		iommus = <&apps_iommu 4>;
-> +	};
-> +
-> +	gpu@01c00000 {
-> +		...
-> +		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
-> +	};
+> +};
+> +#endif
 > -- 
-> 2.9.3
+> 2.1.4
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
