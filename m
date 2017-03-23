@@ -1,132 +1,212 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC RESEND] serdev binding for QCA7000 UART driver
-Date: Thu, 23 Mar 2017 10:55:25 -0500
-Message-ID: <CAL_JsqJsPKnzDdPmbSpOVbpMEfZaAfBHb4G+eibUruFBN3bR7w@mail.gmail.com>
-References: <b2273c4a-069b-0b9a-83d3-aed782920c34@i2se.com>
- <CAL_JsqJS05gw80B4oUWZHEHOg5iPpwKie8XdBr82UD=7WB1cdg@mail.gmail.com> <9127690c-3b6e-d60d-6af1-97bb9ad34628@i2se.com>
+From: jacopo <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
+Date: Thu, 23 Mar 2017 17:02:04 +0100
+Message-ID: <20170323160204.GL30223@w540>
+References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9127690c-3b6e-d60d-6af1-97bb9ad34628-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 10:13 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
-> Hi Rob,
->
-> Am 22.03.2017 um 21:32 schrieb Rob Herring:
->> On Mon, Mar 13, 2017 at 11:16 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
->>> Hi Rob,
->>>
->>> since serdev has been merged, i'm currently working on a
->>> suitable ethernet driver for the QCA7000 [1]. In order to provide a plug
->>> and play solution for the network interface i suggest the following
->>> binding, which uses common properties for UART configuration:
->>>
->>> * Qualcomm QCA7000 (Ethernet over UART protocol)
->>>
->>> Note: The QCA7000 is also useable as a UART slave device.
->> Should this be s/UART/SPI/ ?
->
-> i rewrote this note in my second version below.
->
->>
->>> Required properties:
->>> - compatible        : Should be "qca,qca7000-uart"
->>>
->>> Optional properties:
->>> - local-mac-address : 6 bytes, Specifies MAC address
->>> - current-speed     : Specifies current serial device speed in
->>>                       bits per second (default = 115200)
->>> - data-bits         : Specifies number of data bits (default = 8)
->>> - use-parity        : If present, this enables the parity
->>>                       error detection (default = off)
->>> - odd-parity        : If present, this specifies that the parity
->>>                       of each character must be odd (default = even)
->>>
->>> Example:
->>>
->>> /* Freescale i.MX28 UART */
->>> auart0: serial@8006a000 {
->>>     compatible = "fsl,imx28-auart", "fsl,imx23-auart";
->>>     reg = <0x8006a000 0x2000>;
->>>     pinctrl-names = "default";
->>>     pinctrl-0 = <&auart0_2pins_a>;
->>>     status = "okay";
->>>
->>>     qca7000: ethernet {
->>>         compatible = "qca,qca7000-uart";
->>>         local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
->>>         current-speed = <38400>;
->> Unless this device supports auto-baud (generally only AT command set
->> devices do), this is setup by a bootloader (and you have no way to
->> reset the device), or the speed changes with different firmware, I
->> don't think you should need this. Devices typically have a fixed,
->> initial baudrate that is known, so the driver should know it.
->
-> Unfortunately the QCA7000 firmware can be freely preconfigured to a
-> fixed baudrate and there is no way to determine, because Ethernet frames
-> are send nearly directly to the UART and vice versa. I agree this isn't
-> best practice.
->
->>>         data-bits = <8>;
->> Nearly everything uses 8 bits, so this should be the default.
->
-> I will drop it completly.
->
->>
->>>         use-parity;
->>>         odd-parity;
->> I don't think we need 2 properties here. "even-parity" and
->> "odd-parity" booleans should be enough to enable and set parity type.
->
-> Your suggestion is better, but it's possible to define wrongly both
-> which isn't nice per design.
-> Anyway i decide to drop this, too. So it could be implemented later.
+Hi Geert,
+   thanks for review
 
-could also do 'parity = "(even|odd)";' or a line-config property with
-"8N1", "7E1", etc. for values though I tend to prefer booleans and
-discreet properties per setting.
+On Wed, Mar 22, 2017 at 11:33:50AM +0100, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+> 
+> On Mon, Mar 20, 2017 at 5:14 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
+> 
+> for the Renesas ...
+> 
+> > controller.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 144 +++++++++++++++++++++
+> >  1 file changed, 144 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+> > new file mode 100644
+> > index 0000000..0474860
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+> > @@ -0,0 +1,144 @@
+> > +Renesas RZ/A1 combined Pin and GPIO controller
+> > +
+> > +Renesas SoCs of RZ/A1 family feature a combined Pin and GPIO controller
+> 
+> the RZ/A1 family
+> 
+> > +hardware controller, named "Ports" in the hardware reference manual.
+> 
+> bogus "hardware controller"
+> 
+> > +Sub-nodes
+> > +---------
+> > +
+> > +The child nodes of the pin controller node describe a pin multiplexing
+> > +function or a gpio controller alternatively.
+> > +
+> > +- Pin multiplexing sub-nodes:
+> > +  A pin multiplexing sub-node describes how to configure a set of
+> > +  (or a single) pin in some desired alternate function mode.
+> > +  A single sub-node may define several pin configurations groups.
+> > +
+> > +  Required properties:
+> > +    - renesas,pins
+> 
+> Just "pins"?
+> 
 
->
-> So here is the new version:
->
-> * Qualcomm QCA7000 (Ethernet over UART protocol)
->
-> Note: This binding applies in case the QCA7000 is configured as a
-> UART slave device. It is possible to preconfigure the UART settings
-> of the QCA7000 firmware, which can't be changed during runtime.
->
-> Required properties:
-> - compatible        : Should be "qca,qca7000-uart"
->
-> Optional properties:
-> - local-mac-address : 6 bytes, Specifies MAC address
-> - current-speed     : Specifies the serial device speed in
->                       bits per second (default = 115200), which is
->                       predefined by the QCA7000 firmware configuration
->
-> Example:
->
-> /* Freescale i.MX28 UART */
-> auart0: serial@8006a000 {
->     compatible = "fsl,imx28-auart", "fsl,imx23-auart";
->     reg = <0x8006a000 0x2000>;
->     pinctrl-names = "default";
->     pinctrl-0 = <&auart0_2pins_a>;
->     status = "okay";
->
->     qca7000: ethernet {
->         compatible = "qca,qca7000-uart";
->         local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
->         current-speed = <38400>;
->     };
-> };
+You know, I've been thinking about this, bu the "pins" property
+definition in pinctrl-bidings is the following one:
 
-Looks good to me.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+---
+- pins takes a list of pin names or IDs as a required argument. The
+  specific binding for the hardware defines:
+      - Whether the entries are integers or strings, and their
+        meaning.
+---
+
+And all examples there assume one "pin name" or "ID" per pin.
+
+Now, we use 2 values per each pin (the pin ID and the alternate
+function number), so to me this is different from what the generic
+binding describes.
+Also, pinctrl-single, and pinctrl-imx which have and ABI similar to
+the one this driver define, use "pinctrl-single,pins" and "fsl,pins"
+respectively as property names.
+So either they have to be updated yet, or we should keep using
+"renesas,pins" for our own defined ABI.
+
+Maybe Linus or other pinctrl people can give some suggestion here.
+
+Thanks
+   j
+
+> > +      describes an array of pin multiplexing configurations.
+> > +      When a pin has to be configured in alternate function mode, use this
+> > +      property to identify the pin by its global index, and provide its
+> > +      alternate function configuration description along with it.
+> > +      When multiple pins are required to be configured as part of the same
+> > +      alternate function (odds are single-pin alternate functions exist) they
+> > +      shall be specified as members of the same argument list of a single
+> > +      "renesas-pins" property.
+> > +      Helper macros to ease calculating the pin index from its position
+> > +      (port where it sits on and pin offset), and alternate function
+> > +      configuration options are provided in pin controller header file at:
+> 
+> the pin ... file
+> 
+> > +      include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+> 
+> Hence I'd include that file in this patch, as it's part of the bindings.
+> 
+> > +  Example:
+> > +  A serial communication interface with a TX output pin and a RX input pin.
+> 
+> an RX
+> 
+> > +
+> > +  &pinctrl {
+> > +       scif2_pins: serial2 {
+> > +               renesas,pins = <PIN(3, 0) 6>,
+> > +                              <PIN(3, 2) 4>;
+> 
+> Single line?
+> 
+> > +       };
+> > +  }
+> > +
+> > +  Pin #0 on port #3 is configured in alternate function #6.
+> > +  Pin #2 on port #3 is configured in alternate function #4.
+> 
+> as alternate function
+> 
+> > +
+> > +  Example 2:
+> > +  I2c master: both SDA and SCL pins need bi-directional operations
+> > +
+> > +  &pinctrl {
+> > +       i2c2_pins: i2c2 {
+> > +               renesas,pins = <PIN(1, 4) (1 | BI_DIR)>,
+> > +                              <PIN(1, 5) (1 | BI_DIR)>;
+> > +       };
+> > +  }
+> > +
+> > +  Pin #4 on port #1 is configured in alternate function #1.
+> > +  Pin #5 on port #1 is configured in alternate function #1.
+> 
+> as alternate function
+> 
+> > +  Both need to work in bi-directional mode.
+> > +
+> > +  Example 3:
+> > +  Multi-function timer input and output compare pins.
+> > +  The hardware manual prescribes this pins to have input/output direction
+> > +  specified by software. Configure TIOC0A as input and TIOC0B as output.
+> > +
+> > +  &pinctrl {
+> > +       tioc0_pins: tioc0 {
+> > +               renesas,pins = <PIN(4, 0) (2 | SWIO_IN)>,
+> > +                              <PIN(4, 1) (2 | SWIO_OUT)>;
+> > +       };
+> > +  }
+> > +
+> > +  Pin #0 on port #4 is configured in alternate function #2 with IO direction
+> > +  specified by software as input.
+> > +  Pin #1 on port #4 is configured in alternate function #1 with IO direction
+> > +  specified by software as output.
+> 
+> as alternate function
+> 
+> > +- GPIO controller sub-nodes:
+> > +  Each port of r7s72100 pin controller hardware is itself a gpio controller.
+> 
+> the r7s72100 pin controller hardware
+> 
+> > +  Different SoCs have different number of available pins per port, but
+> 
+> numbers of
+> 
+> > +  generally speaking, each of them can be configured in GPIO ("port") mode
+> > +  on this hardware.
+> > +  Describe gpio-controllers using sub-nodes with the following properties.
+> > +
+> > +  Required properties:
+> > +    - gpio-controller
+> > +      empty property as defined by gpio bindings documentation.
+> 
+> the gpio bindings documentation
+> 
+> > +    - #gpio-cells
+> > +      number of cells required to identify and configure a GPIO.
+> > +      Shall be 2.
+> > +    - gpio-ranges
+> > +      Describes a gpio controller specifying its specific pin base, the pin
+> > +      base in the global pin numbering space, and the number of controlled
+> > +      pins, as defined by gpio bindings documentation. Refer to this file
+> 
+> the gpio bindings documentation
+> 
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
