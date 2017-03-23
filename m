@@ -1,125 +1,88 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [RFC RESEND] serdev binding for QCA7000 UART driver
-Date: Thu, 23 Mar 2017 16:13:27 +0100
-Message-ID: <9127690c-3b6e-d60d-6af1-97bb9ad34628@i2se.com>
-References: <b2273c4a-069b-0b9a-83d3-aed782920c34@i2se.com>
- <CAL_JsqJS05gw80B4oUWZHEHOg5iPpwKie8XdBr82UD=7WB1cdg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJS05gw80B4oUWZHEHOg5iPpwKie8XdBr82UD=7WB1cdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 6/7] ARM64: dts: marvell: Add pinctrl nodes for Armada 3700
+Date: Thu, 23 Mar 2017 16:19:06 +0100
+Message-ID: <7bdf0804023c84af14bb7c00268635767ef59f69.1490282185.git-series.gregory.clement@free-electrons.com>
+References: <cover.72ded2a212a37139db2a4193482b04a84a545a48.1490282185.git-series.gregory.clement@free-electrons.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.72ded2a212a37139db2a4193482b04a84a545a48.1490282185.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <cover.72ded2a212a37139db2a4193482b04a84a545a48.1490282185.git-series.gregory.clement@free-electrons.com>
+References: <cover.72ded2a212a37139db2a4193482b04a84a545a48.1490282185.git-series.gregory.clement@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Add the nodes for the two pin controller present in the Armada 37xx SoCs.
 
-Am 22.03.2017 um 21:32 schrieb Rob Herring:
-> On Mon, Mar 13, 2017 at 11:16 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
->> Hi Rob,
->>
->> since serdev has been merged, i'm currently working on a
->> suitable ethernet driver for the QCA7000 [1]. In order to provide a plug
->> and play solution for the network interface i suggest the following
->> binding, which uses common properties for UART configuration:
->>
->> * Qualcomm QCA7000 (Ethernet over UART protocol)
->>
->> Note: The QCA7000 is also useable as a UART slave device.
-> Should this be s/UART/SPI/ ?
+Initially the node was named gpio1 using the same name that for the
+register range in the datasheet. However renaming it pinctr_nb (nb for
+North Bridge) makes more sens.
 
-i rewrote this note in my second version below.
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 42 +++++++++++++++++++--
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
->
->> Required properties:
->> - compatible        : Should be "qca,qca7000-uart"
->>
->> Optional properties:
->> - local-mac-address : 6 bytes, Specifies MAC address
->> - current-speed     : Specifies current serial device speed in
->>                       bits per second (default = 115200)
->> - data-bits         : Specifies number of data bits (default = 8)
->> - use-parity        : If present, this enables the parity
->>                       error detection (default = off)
->> - odd-parity        : If present, this specifies that the parity
->>                       of each character must be odd (default = even)
->>
->> Example:
->>
->> /* Freescale i.MX28 UART */
->> auart0: serial@8006a000 {
->>     compatible = "fsl,imx28-auart", "fsl,imx23-auart";
->>     reg = <0x8006a000 0x2000>;
->>     pinctrl-names = "default";
->>     pinctrl-0 = <&auart0_2pins_a>;
->>     status = "okay";
->>
->>     qca7000: ethernet {
->>         compatible = "qca,qca7000-uart";
->>         local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
->>         current-speed = <38400>;
-> Unless this device supports auto-baud (generally only AT command set
-> devices do), this is setup by a bootloader (and you have no way to
-> reset the device), or the speed changes with different firmware, I
-> don't think you should need this. Devices typically have a fixed,
-> initial baudrate that is known, so the driver should know it.
-
-Unfortunately the QCA7000 firmware can be freely preconfigured to a
-fixed baudrate and there is no way to determine, because Ethernet frames
-are send nearly directly to the UART and vice versa. I agree this isn't
-best practice.
-
->>         data-bits = <8>;
-> Nearly everything uses 8 bits, so this should be the default.
-
-I will drop it completly.
-
->
->>         use-parity;
->>         odd-parity;
-> I don't think we need 2 properties here. "even-parity" and
-> "odd-parity" booleans should be enough to enable and set parity type.
-
-Your suggestion is better, but it's possible to define wrongly both
-which isn't nice per design.
-Anyway i decide to drop this, too. So it could be implemented later.
-
-So here is the new version:
-
-* Qualcomm QCA7000 (Ethernet over UART protocol)
-
-Note: This binding applies in case the QCA7000 is configured as a
-UART slave device. It is possible to preconfigure the UART settings
-of the QCA7000 firmware, which can't be changed during runtime.
-
-Required properties:
-- compatible        : Should be "qca,qca7000-uart"
-
-Optional properties:
-- local-mac-address : 6 bytes, Specifies MAC address
-- current-speed     : Specifies the serial device speed in
-                      bits per second (default = 115200), which is
-                      predefined by the QCA7000 firmware configuration
-
-Example:
-
-/* Freescale i.MX28 UART */
-auart0: serial@8006a000 {
-    compatible = "fsl,imx28-auart", "fsl,imx23-auart";
-    reg = <0x8006a000 0x2000>;
-    pinctrl-names = "default";
-    pinctrl-0 = <&auart0_2pins_a>;
-    status = "okay";
-
-    qca7000: ethernet {
-        compatible = "qca,qca7000-uart";
-        local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
-        current-speed = <38400>;
-    };
-};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index b48d668a6ab6..c02b13479458 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -157,10 +157,29 @@
+ 				#clock-cells = <1>;
+ 			};
+ 
+-			gpio1: gpio@13800 {
+-				compatible = "marvell,mvebu-gpio-3700",
++			pinctrl_nb: pinctrl-nb@13800 {
++				compatible = "marvell,armada3710-nb-pinctrl",
+ 				"syscon", "simple-mfd";
+-				reg = <0x13800 0x500>;
++				reg = <0x13800 0x100>, <0x13C00 0x20>;
++				gpionb: gpionb {
++					#gpio-cells = <2>;
++					gpio-ranges = <&pinctrl_nb 0 0 36>;
++					gpio-controller;
++					interrupts =
++					<GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
++
++				};
+ 
+ 				xtalclk: xtal-clk {
+ 					compatible = "marvell,armada-3700-xtal-clock";
+@@ -169,6 +188,23 @@
+ 				};
+ 			};
+ 
++			pinctrl_sb: pinctrl-sb@18800 {
++				compatible = "marvell,armada3710-sb-pinctrl",
++				"syscon", "simple-mfd";
++				reg = <0x18800 0x100>, <0x18C00 0x20>;
++				gpiosb: gpiosb {
++					#gpio-cells = <2>;
++					gpio-ranges = <&pinctrl_sb 0 0 29>;
++					gpio-controller;
++					interrupts =
++					<GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++
+ 			eth0: ethernet@30000 {
+ 				   compatible = "marvell,armada-3700-neta";
+ 				   reg = <0x30000 0x4000>;
+-- 
+git-series 0.9.1
