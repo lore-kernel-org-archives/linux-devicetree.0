@@ -1,482 +1,523 @@
-From: jacopo <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 1/7] pinctrl: Renesas RZ/A1 pin and gpio controller
-Date: Thu, 23 Mar 2017 15:19:55 +0100
-Message-ID: <20170323141955.GK30223@w540>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490026491-21742-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdW=MKvjXOXOAL7LE7=R1v4jWGko6mMq_r_u9PRqYC2w2Q@mail.gmail.com>
+From: <michael.hennerich@analog.com>
+Subject: [PATCH] i2c/muxes/i2c-mux-ltc4306: LTC4306 and LTC4305 I2C multiplexer/switch
+Date: Thu, 23 Mar 2017 15:22:58 +0100
+Message-ID: <1490278978-28357-1-git-send-email-michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdW=MKvjXOXOAL7LE7=R1v4jWGko6mMq_r_u9PRqYC2w2Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: wsa@the-dreams.de, peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-   thanks for detailed review
+From: Michael Hennerich <michael.hennerich@analog.com>
 
-On Wed, Mar 22, 2017 at 11:26:58AM +0100, Geert Uytterhoeven wrote:
-> Hi Jacopo,
-> 
-> On Mon, Mar 20, 2017 at 5:14 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > Add combined gpio and pin controller driver for Renesas RZ/A1
-> > r7s72100 SoC.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> Thanks for your patch!
-> 
-> > --- /dev/null
-> > +++ b/drivers/pinctrl/pinctrl-rza1.c
-> 
-> > +/*
-> > + * This pincontroller/gpio combined driver support Renesas devices of RZ/A1
-> > + * family.
-> > + * This includes SoCs which are sub- or super- sets of this particular line,
-> > + * as RZ/A1H (r7s721000), RZ/A1M (r7s721001) and RZ/A1L (r7s721002) are.
-> 
-> RZ/A1M = r7s721010, RZ/A1L = r7s721020
-> 
-> > +#define RZA1_ADDR(mem, reg, port)      ((mem) + (reg) + ((port) * 4))
-> 
-> 
-> > +
-> > +#define RZA1_NPORTS                    12
-> > +#define RZA1_PINS_PER_PORT             16
-> > +#define RZA1_NPINS                     (RZA1_PINS_PER_PORT * RZA1_NPORTS)
-> > +#define RZA1_PIN_TO_PORT(pin)          ((pin) / RZA1_PINS_PER_PORT)
-> > +#define RZA1_PIN_TO_OFFSET(pin)                ((pin) % RZA1_PINS_PER_PORT)
-> > +
-> > +/*
-> > + * Be careful here: the pin configuration subnodes in device tree enumerates
-> 
-> enumerate
-> 
-> > + * alternate functions from 1 to 8; subtract 1 before using macros so to match
-> > + * registers configuration which expects numbers from 0 to 7 instead.
-> 
-> register configuration
-> 
-> > + */
-> > +#define MUX_FUNC_OFFS                  3
-> > +#define MUX_FUNC_MASK                  (BIT(MUX_FUNC_OFFS) - 1)
-> > +#define MUX_FUNC_PFC_MASK              BIT(0)
-> > +#define MUX_FUNC_PFCE_MASK             BIT(1)
-> > +#define MUX_FUNC_PFCEA_MASK            BIT(2)
-> > +#define MUX_CONF_BIDIR                 BIT(0)
-> > +#define MUX_CONF_SWIO_INPUT            BIT(1)
-> > +#define MUX_CONF_SWIO_OUTPUT           BIT(2)
-> > +
-> > +/**
-> > + * rza1_pin_conf - describes a pin position, id, mux config and output value
-> > + *
-> > + * Use uint32_t to match types used in of_device nodes argument lists.
-> > + *
-> > + * @id: the pin identifier from 0 to RZA1_NPINS
-> > + * @port: the port where pin sits on
-> > + * @offset: pin offset in the port
-> > + * @mux: alternate function configuration settings
-> > + * @value: output value to set the pin to
-> > + */
-> > +struct rza1_pin_conf {
-> > +       uint32_t id;
-> > +       uint32_t port;
-> > +       uint32_t offset;
-> > +       uint32_t mux_conf;
-> > +       uint32_t value;
-> 
-> In the kernel, we tend to use u32 instead of uint32_t.
-> But many of these fields can be smaller than 32 bits, right, saving some
-> memory (important when running with built-in RAM only).
-> 
+This patch adds support for the Analog Devices / Linear Technology
+LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
+The LTC4306 optionally provides two general purpose input/output pins
+(GPIOs) that can be configured as logic inputs, opendrain outputs or
+push-pull outputs via the generic GPIOLIB framework.
 
-I'll move these to u8 (and u16 where appropriate) and fix all the
-above grammar comments
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+---
+ .../devicetree/bindings/i2c/i2c-mux-ltc4306.txt    |  61 ++++
+ MAINTAINERS                                        |   8 +
+ drivers/i2c/muxes/Kconfig                          |  10 +
+ drivers/i2c/muxes/Makefile                         |   1 +
+ drivers/i2c/muxes/i2c-mux-ltc4306.c                | 365 +++++++++++++++++++++
+ 5 files changed, 445 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+ create mode 100644 drivers/i2c/muxes/i2c-mux-ltc4306.c
 
-> > +/**
-> > + * rza1_pinctrl - RZ pincontroller device
-> > + *
-> > + * @dev: parent device structure
-> > + * @mutex: protect [pinctrl|pinmux]_generic functions
-> > + * @base: logical address base
-> > + * @nports: number of pin controller ports
-> > + * @ports: pin controller banks
-> > + * @ngpiochips: number of gpio chips
-> > + * @gpio_ranges: gpio ranges for pinctrl core
-> > + * @pins: pin array for pinctrl core
-> > + * @desc: pincontroller desc for pinctrl core
-> > + * @pctl: pinctrl device
-> > + */
-> > +struct rza1_pinctrl {
-> > +       struct device *dev;
-> > +
-> > +       struct mutex mutex;
-> > +
-> > +       void __iomem *base;
-> > +
-> > +       unsigned int nport;
-> > +       struct rza1_port *ports;
-> > +
-> > +       unsigned int ngpiochips;
-> > +
-> > +       struct pinctrl_gpio_range *gpio_ranges;
-> > +       struct pinctrl_pin_desc *pins;
-> > +       struct pinctrl_desc desc;
-> > +       struct pinctrl_dev *pctl;
-> 
-> It's a good idea not to mix pointers and integers, as the pointers will
-> be 64-bit on 64-bit platforms, leading to gaps due to alignment rules.
-> Not super-important here, as (for now) this driver is meant for 32-bit SoCs.
-> 
-
-I grouped this variables "logically", and even if I understand your
-concerns, there will be a single "struct rza1_pinctrl" per driver
-instance, so I hope we can tollerate some padding bytes in favour of more
-clearness. Also, as you said, there are no 64-bits RZ platforms atm.
-
-> > +/**
-> > + * rza1_set_bit() - un-locked set/clear a single bit in pin configuration
-> > + *                 registers
-> > + */
-> > +static inline void rza1_set_bit(const struct rza1_port *port,
-> > +                               unsigned int reg, unsigned int offset,
-> > +                               bool set)
-> 
-> I think "reg" and "set" still fit on the previous lines (many more cases
-> in other functions).
-> 
-> I'd call "offset" "bit" (and "reg" "offset"?)
-
-I'll s/offset/bit and s/offset/pin where appropriate
-
-> 
-> > +{
-> > +       void __iomem *mem = RZA1_ADDR(port->base, reg, port->id);
-> 
-> I think this would be easier to read without using the RZA1_ADDR() macro.
-> 
-
-Don't know... I can change this if you prefer... there's nothing nasty
-hidden behind this macro...
-
-> > +       u16 val = ioread16(mem);
-> > +
-> > +       if (set)
-> > +               val |= BIT(offset);
-> > +       else
-> > +               val &= ~BIT(offset);
-> > +
-> > +       iowrite16(val, mem);
-> > +}
-> > +
-> > +static inline int rza1_get_bit(struct rza1_port *port,
-> > +                              unsigned int reg, unsigned int offset)
-> > +{
-> > +       void __iomem *mem = RZA1_ADDR(port->base, reg, port->id);
-> > +
-> > +       return ioread16(mem) & BIT(offset);
-> 
-> Same comments as for rza1_set_bit().
-> 
-> > +}
-> > +
-> > +/**
-> > + * rza1_pin_reset() - reset a pin to default initial state
-> > + *
-> > + * Reset pin state disabling input buffer and bi-directional control,
-> > + * and configure it as input port.
-> > + * Note that pin is now configured with direction as input but with input
-> > + * buffer disabled. This implies the pin value cannot be read in this state.
-> > + *
-> > + * @port: port where pin sits on
-> > + * @offset: pin offset
-> > + */
-> > +static void rza1_pin_reset(struct rza1_port *port,
-> > +                          unsigned int offset)
-> 
-> The above fits on a single line.
-> 
-> "pin" instead of "offset"?
-> 
-> > +{
-> > +       spin_lock(&port->lock);
-> 
-> spin_lock_irqsave()? (everywhere)
-> 
-
-Quoting spinlock.txt:
-
-----
-If you have a case where you have to protect a data structure across
-several CPU's and you want to use spinlocks you can potentially use
-cheaper versions of the spinlocks. IFF you know that the spinlocks are
-never used in interrupt handlers, you can use the non-irq versions:
-
-    spin_lock(&lock);
-        ...
-            spin_unlock(&lock);
-----
-
-And there's nothing  preventing an interrupt handling routine to
-set/change a gpio value, so I'll change these to the _irqsave version, thanks.
-
-> > +       rza1_set_bit(port, PIBC_REG, offset, 0);
-> > +       rza1_set_bit(port, PBDC_REG, offset, 0);
-> > +
-> > +       rza1_set_bit(port, PM_REG, offset, 1);
-> > +       rza1_set_bit(port, PMC_REG, offset, 0);
-> > +       rza1_set_bit(port, PIPC_REG, offset, 0);
-> > +       spin_unlock(&port->lock);
-> 
-> spin_unlock_irqrestore()? (everywhere)
-> 
-> > +}
-> > +
-> > +static inline int rza1_pin_get_direction(struct rza1_port *port,
-> > +                                        int offset)
-> 
-> The above fits on a single line.
-> 
-> "pin" instead of "offset" (many more below)?
-> 
-> > +/**
-> > + * rza1_pin_conf_validate() - make sure a single bit it set in mux_conf mask
-> 
-> is set
-> 
-> > + */
-> > +static inline int rza1_pin_conf_validate(u8 mux_conf)
-> > +{
-> > +       do {
-> > +               if (mux_conf & BIT(0))
-> > +                       break;
-> > +       } while ((mux_conf >>= 1));
-> > +
-> > +       return (mux_conf >> 1);
-> 
-> Please study <linux/bitops.h> to find a better way to do this ;-)
-> 
-
-Did my homework and I'm thinking of replacing this function with
-something like:
-    if (ffs(mask) != fls(mask))) { }
-
-Is this what you were suggesting?
-
-> > +/**
-> > + * rza1_gpio_get() - read a gpio pin value
-> > + *
-> > + * Read gpio pin value through PPR register.
-> > + * Requires bi-directional mode to work when reading value of a pin
-> 
-> the value
-> 
-> > + * in output mode
-> 
-> 
-> > +/**
-> > + * rza1_pinmux_set() - retrieve pins from a group and apply them mux settings
-> 
-> their
-> 
-> > + *
-> > + * @pctldev: pin controller device
-> > + * @selector: function selector
-> > + * @group: group selector
-> > + */
-> > +static int rza1_pinmux_set(struct pinctrl_dev *pctldev, unsigned int selector,
-> > +                          unsigned int group)
-> > +{
-> > +       int i;
-> > +       struct group_desc *grp;
-> > +       struct function_desc *func;
-> > +       struct rza1_pin_conf *pin_confs;
-> > +       struct rza1_pinctrl *rza1_pctl = pinctrl_dev_get_drvdata(pctldev);
-> 
-> Reverse Christmas tree ordering (longest line first)?
-> 
-> 
-> 
-> > +/**
-> > + * rza1_parse_pmx_function() - parse and register a pin mux function
-> > + *
-> > + * Pins for RZ SoC pin controller described by "renesas-pins" property.
-> > + *
-> > + * First argument in the list identifies the pin, while the second one
-> > + * describes the requested alternate function number and additional
-> > + * configuration parameter to be applied to the selected function.
-> > + *
-> > + * @rza1_pctl: RZ/A1 pin controller device
-> > + * @np: of pmx sub-node
-> > + */
-> > +static int rza1_parse_pmx_function(struct rza1_pinctrl *rza1_pctl,
-> > +                                  struct device_node *np)
-> > +{
-> > +       int ret;
-> > +       int of_pins;
-> 
-> npins?
-> 
-> > +       unsigned int i;
-> > +       unsigned int *grpins;
-> > +       const char *grpname;
-> > +       const char **fngrps;
-> > +       struct rza1_pin_conf *pin_confs;
-> > +       struct pinctrl_dev *pctldev = rza1_pctl->pctl;
-> > +       char const *prop_name = "renesas,pins";
-> 
-> const char *prop_name
-> 
-> Reverse Christmas tree ordering (longest line first)? (more below)
-
-or const char const * to make sure also the content is never changed. But
-that's an overkill maybe?
-
-Thanks
-   j
-> 
-> > +
-> > +       of_pins = pinctrl_count_index_with_args(np, prop_name);
-> > +       if (of_pins <= 0) {
-> > +               dev_err(rza1_pctl->dev, "Missing %s property\n", prop_name);
-> > +               return -ENOENT;
-> > +       }
-> > +
-> > +       /*
-> > +        * Functions are made of 1 group only;
-> > +        * in facts, functions and groups are identical for this pin controller
-> 
-> in fact
-> 
-> > +        * except that functions carry an array of per-pin configurations
-> 
-> configuration
-> 
-> > +        * settings.
-> > +        */
-> > +       pin_confs = devm_kcalloc(rza1_pctl->dev, of_pins, sizeof(*pin_confs),
-> > +                                GFP_KERNEL);
-> > +       grpins = devm_kcalloc(rza1_pctl->dev, of_pins, sizeof(*grpins),
-> > +                             GFP_KERNEL);
-> > +       fngrps = devm_kzalloc(rza1_pctl->dev, sizeof(*fngrps), GFP_KERNEL);
-> > +
-> > +       if (!pin_confs || !grpins || !fngrps)
-> > +               return -ENOMEM;
-> > +
-> > +       /* Collect pin positions and mux settings to store them in function */
-> > +       for (i = 0; i < of_pins; ++i) {
-> > +               struct rza1_pin_conf *pin_conf = &pin_confs[i];
-> > +               struct of_phandle_args of_pins_args;
-> > +
-> > +               ret = pinctrl_parse_index_with_args(np, prop_name, i,
-> > +                                                   &of_pins_args);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               if (of_pins_args.args_count < RZA1_PINMUX_OF_ARGS) {
-> > +                       dev_err(rza1_pctl->dev,
-> > +                               "Wrong arguments number for %s property\n",
-> 
-> number of arguments
-> 
-> 
-> > +/**
-> > + * rza1_parse_gpiochip() - parse and register a gpio chip and pin range
-> > + *
-> > + * The gpio controller subnode shall provide a "gpio-ranges" list property as
-> > + * defined by gpio device tree binding documentation.
-> > + * Gpio chips and pin ranges are here collected, but ranges are registered
-> > + * later, after pin controller has been registered too. Only gpiochips are
-> 
-> after the pin controller
-> 
-> > + * registered here.
-> > + *
-> > + * @rza1_pctl: RZ/A1 pin controller device
-> > + * @np: of gpio-controller node
-> > + * @chip: gpio chip to register to gpiolib
-> > + * @range: pin range to register to pinctrl core
-> > + */
-> > +static int rza1_parse_gpiochip(struct rza1_pinctrl *rza1_pctl,
-> > +                              struct device_node *np,
-> > +                              struct gpio_chip *chip,
-> > +                              struct pinctrl_gpio_range *range)
-> > +{
-> > +       int ret;
-> > +       u32 pinctrl_base;
-> > +       unsigned int gpioport;
-> > +       struct of_phandle_args of_args;
-> > +       const char *list_name = "gpio-ranges";
-> > +
-> > +       of_parse_phandle_with_fixed_args(np, list_name, 3, 0, &of_args);
-> 
-> This function can fail.
-> 
-> > +
-> > +       /*
-> > +        * Find out on which port this gpio-chip maps to inspecting the second
-> 
-> by inspecting
-> 
-> > +        * argument of "gpio-ranges" property.
-> 
-> the "gpio-ranges" property.
-> 
-> > +        */
-> > +       pinctrl_base = of_args.args[1];
-> > +       gpioport = RZA1_PIN_TO_PORT(pinctrl_base);
-> > +       if (gpioport > RZA1_NPORTS) {
-> > +               dev_err(rza1_pctl->dev,
-> > +                       "Invalid values in property %s\n", list_name);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       *chip           = rza1_gpiochip_template;
-> > +       chip->base      = -1;
-> > +       chip->label     = kasprintf(GFP_KERNEL, "%s-%d", np->name, gpioport);
-> 
-> devm_kasprintf()?
-> 
-> "%s-%u"
-> 
-> > +       chip->ngpio     = of_args.args[2];
-> > +       chip->of_node   = np;
-> > +       chip->parent    = rza1_pctl->dev;
-> > +
-> > +       range->id       = gpioport;
-> > +       range->name     = kasprintf(GFP_KERNEL, "%s-%d", np->name, gpioport);
-> 
-> Reuse chip->label?
-> 
-> 
-> > +/**
-> > + * rza1_pinctrl_register() - Enumerate pins, ports, gpiochips and functions and
-> > + *                          register to pinctrl and gpio cores
-> > + *
-> > + * @rza1_pctl: RZ/A1 pin controller device
-> > + */
-> > +static int rza1_pinctrl_register(struct rza1_pinctrl *rza1_pctl)
-> > +{
-> 
-> > +       for (i = 0; i < RZA1_NPINS; ++i) {
-> > +               unsigned int port = RZA1_PIN_TO_PORT(i);
-> > +               unsigned int offset = RZA1_PIN_TO_OFFSET(i);
-> > +
-> > +               pins[i].number = i;
-> > +               pins[i].name = kasprintf(GFP_KERNEL, "P%u-%u", port, offset);
-> 
-> devm_kasprintf()
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+new file mode 100644
+index 0000000..1e98c6b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+@@ -0,0 +1,61 @@
++* Linear Technology / Analog Devices I2C bus switch
++
++Required Properties:
++
++  - compatible: Must contain one of the following.
++    "lltc,ltc4305", "lltc,ltc4306"
++  - reg: The I2C address of the device.
++
++  The following required properties are defined externally:
++
++  - Standard I2C mux properties. See i2c-mux.txt in this directory.
++  - I2C child bus nodes. See i2c-mux.txt in this directory.
++
++Optional Properties:
++
++  - enable-gpios: Reference to the GPIO connected to the enable input.
++  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
++    children in idle state. This is necessary for example, if there are several
++    multiplexers on the bus and the devices behind them use same I2C addresses.
++  - gpio-controller: Marks the device node as a GPIO Controller.
++  - #gpio-cells: Should be two.  The first cell is the pin number and
++	the second cell is used to specify flags.
++	See ../gpio/gpio.txt for more information.
++  - ltc,downstream-accelerators-enable: Enables the rise time accelerators
++	on the downstream port.
++  - ltc,upstream-accelerators-enable: Enables the rise time accelerators
++	on the upstream port.
++
++Example:
++
++	ltc4306: i2c-mux@4a {
++		compatible = "lltc,ltc4306";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x4a>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			eeprom@50 {
++				compatible = "at,24c02";
++				reg = <0x50>;
++			};
++		};
++
++		i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			eeprom@50 {
++				compatible = "at,24c02";
++				reg = <0x50>;
++			};
++		};
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c776906..9a27a19 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7698,6 +7698,14 @@ S:	Maintained
+ F:	Documentation/hwmon/ltc4261
+ F:	drivers/hwmon/ltc4261.c
+ 
++LTC4306 I2C MULTIPLEXER DRIVER
++M:	Michael Hennerich <michael.hennerich@analog.com>
++W:	http://ez.analog.com/community/linux-device-drivers
++L:	linux-i2c@vger.kernel.org
++S:	Supported
++F:	drivers/i2c/muxes/i2c-mux-ltc4306.c
++F:	Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
++
+ LTP (Linux Test Project)
+ M:	Mike Frysinger <vapier@gentoo.org>
+ M:	Cyril Hrubis <chrubis@suse.cz>
+diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
+index 10b3d17..f501b3b 100644
+--- a/drivers/i2c/muxes/Kconfig
++++ b/drivers/i2c/muxes/Kconfig
+@@ -30,6 +30,16 @@ config I2C_MUX_GPIO
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-mux-gpio.
+ 
++config I2C_MUX_LTC4306
++	tristate "LTC LTC4306/5 I2C multiplexer"
++	select GPIOLIB
++	help
++	  If you say yes here you get support for the LTC LTC4306 or LTC4305
++	  I2C mux/switch devices.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called i2c-mux-ltc4306.
++
+ config I2C_MUX_PCA9541
+ 	tristate "NXP PCA9541 I2C Master Selector"
+ 	help
+diff --git a/drivers/i2c/muxes/Makefile b/drivers/i2c/muxes/Makefile
+index 9948fa4..a452d09 100644
+--- a/drivers/i2c/muxes/Makefile
++++ b/drivers/i2c/muxes/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_I2C_DEMUX_PINCTRL)		+= i2c-demux-pinctrl.o
+ 
+ obj-$(CONFIG_I2C_MUX_GPIO)	+= i2c-mux-gpio.o
+ obj-$(CONFIG_I2C_MUX_MLXCPLD)	+= i2c-mux-mlxcpld.o
++obj-$(CONFIG_I2C_MUX_LTC4306)	+= i2c-mux-ltc4306.o
+ obj-$(CONFIG_I2C_MUX_PCA9541)	+= i2c-mux-pca9541.o
+ obj-$(CONFIG_I2C_MUX_PCA954x)	+= i2c-mux-pca954x.o
+ obj-$(CONFIG_I2C_MUX_PINCTRL)	+= i2c-mux-pinctrl.o
+diff --git a/drivers/i2c/muxes/i2c-mux-ltc4306.c b/drivers/i2c/muxes/i2c-mux-ltc4306.c
+new file mode 100644
+index 0000000..f0fd4d1
+--- /dev/null
++++ b/drivers/i2c/muxes/i2c-mux-ltc4306.c
+@@ -0,0 +1,365 @@
++/*
++ * Linear Technology LTC4306 and LTC4305 I2C multiplexer/switch
++ *
++ * Copyright (C) 2017 Analog Devices Inc.
++ *
++ * Licensed under the GPL-2.
++ *
++ * Based on: i2c-mux-pca954x.c
++ *
++ * Datasheet: http://cds.linear.com/docs/en/datasheet/4306.pdf
++ */
++
++#include <linux/device.h>
++#include <linux/i2c.h>
++#include <linux/i2c-mux.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/slab.h>
++#include <linux/gpio.h>
++#include <linux/gpio/driver.h>
++#include <linux/gpio/consumer.h>
++
++#define LTC4306_MAX_NCHANS 4
++
++#define LTC_REG_STATUS	0x0
++#define LTC_REG_CONFIG	0x1
++#define LTC_REG_MODE	0x2
++#define LTC_REG_SWITCH	0x3
++
++#define LTC_DOWNSTREAM_ACCL_EN BIT(6)
++#define LTC_UPSTREAM_ACCL_EN BIT(7)
++
++#define LTC_GPIO_ALL_INPUT	0xC0
++
++enum ltc_type {
++	ltc_4305,
++	ltc_4306,
++};
++
++struct chip_desc {
++	u8 nchans;
++	u8 num_gpios;
++};
++
++struct ltc4306 {
++	struct i2c_client *client;
++	struct gpio_chip gpiochip;
++	const struct chip_desc *chip;
++
++	u8 deselect;
++	u8 regs[LTC_REG_SWITCH + 1];
++};
++
++/* Provide specs for the PCA954x types we know about */
++static const struct chip_desc chips[] = {
++	[ltc_4305] = {
++		.nchans = 2,
++	},
++	[ltc_4306] = {
++		.nchans = LTC4306_MAX_NCHANS,
++		.num_gpios = 2,
++	},
++};
++
++static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct ltc4306 *data = gpiochip_get_data(chip);
++	int ret = 0;
++
++	if (gpiochip_line_is_open_drain(chip, offset) ||
++		(data->regs[LTC_REG_MODE] & BIT(7 - offset))) {
++		/* Open Drain or Input */
++		ret = i2c_smbus_read_byte_data(data->client, LTC_REG_CONFIG);
++		if (ret < 0)
++			return ret;
++
++		return !!(ret & BIT(1 - offset));
++	} else {
++		return !!(data->regs[LTC_REG_CONFIG] & BIT(5 - offset));
++	}
++}
++
++static void ltc4306_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
++{
++	struct ltc4306 *data = gpiochip_get_data(chip);
++
++	if (value)
++		data->regs[LTC_REG_CONFIG] |= BIT(5 - offset);
++	else
++		data->regs[LTC_REG_CONFIG] &= ~BIT(5 - offset);
++
++
++	i2c_smbus_write_byte_data(data->client, LTC_REG_CONFIG,
++				 data->regs[LTC_REG_CONFIG]);
++}
++
++static int ltc4306_gpio_direction_input(struct gpio_chip *chip,
++					unsigned int offset)
++{
++	struct ltc4306 *data = gpiochip_get_data(chip);
++
++	data->regs[LTC_REG_MODE] |= BIT(7 - offset);
++
++	return i2c_smbus_write_byte_data(data->client, LTC_REG_MODE,
++					 data->regs[LTC_REG_MODE]);
++}
++
++static int ltc4306_gpio_direction_output(struct gpio_chip *chip,
++					 unsigned int offset, int value)
++{
++	struct ltc4306 *data = gpiochip_get_data(chip);
++
++	ltc4306_gpio_set(chip, offset, value);
++	data->regs[LTC_REG_MODE] &= ~BIT(7 - offset);
++
++	return i2c_smbus_write_byte_data(data->client, LTC_REG_MODE,
++					 data->regs[LTC_REG_MODE]);
++}
++
++static int ltc4306_gpio_set_config(struct gpio_chip *chip,
++				   unsigned int offset, unsigned long config)
++{
++	struct ltc4306 *data = gpiochip_get_data(chip);
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		data->regs[LTC_REG_MODE] &= ~BIT(4 - offset);
++		break;
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		data->regs[LTC_REG_MODE] |= BIT(4 - offset);
++		break;
++	default:
++		return -ENOTSUPP;
++	}
++
++	return i2c_smbus_write_byte_data(data->client, LTC_REG_MODE,
++					 data->regs[LTC_REG_MODE]);
++}
++
++static int ltc4306_gpio_init(struct ltc4306 *data)
++{
++	if (!data->chip->num_gpios)
++		return 0;
++
++	data->gpiochip.label = dev_name(&data->client->dev);
++	data->gpiochip.base = -1;
++	data->gpiochip.ngpio = data->chip->num_gpios;
++	data->gpiochip.parent = &data->client->dev;
++	data->gpiochip.can_sleep = true;
++	data->gpiochip.direction_input = ltc4306_gpio_direction_input;
++	data->gpiochip.direction_output = ltc4306_gpio_direction_output;
++	data->gpiochip.get = ltc4306_gpio_get;
++	data->gpiochip.set = ltc4306_gpio_set;
++	data->gpiochip.set_config = ltc4306_gpio_set_config;
++	data->gpiochip.owner = THIS_MODULE;
++
++	/* gpiolib assumes all GPIOs default input */
++	data->regs[LTC_REG_MODE] |= LTC_GPIO_ALL_INPUT;
++	i2c_smbus_write_byte_data(data->client, LTC_REG_MODE,
++					 data->regs[LTC_REG_MODE]);
++
++	return devm_gpiochip_add_data(&data->client->dev,
++				      &data->gpiochip, data);
++}
++
++/*
++ * Write to chip register. Don't use i2c_transfer()/i2c_smbus_xfer()
++ * as they will try to lock the adapter a second time.
++ */
++static int ltc4306_reg_write(struct i2c_adapter *adap,
++			     struct i2c_client *client, u8 reg, u8 val)
++{
++	int ret;
++
++	if (adap->algo->master_xfer) {
++		struct i2c_msg msg;
++		char buf[2];
++
++		msg.addr = client->addr;
++		msg.flags = 0;
++		msg.len = 2;
++		buf[0] = reg;
++		buf[1] = val;
++		msg.buf = buf;
++		ret = __i2c_transfer(adap, &msg, 1);
++	} else {
++		union i2c_smbus_data data;
++
++		data.byte = val;
++		ret = adap->algo->smbus_xfer(adap, client->addr,
++					     client->flags,
++					     I2C_SMBUS_WRITE,
++					     reg,
++					     I2C_SMBUS_BYTE_DATA, &data);
++	}
++
++	return ret;
++}
++
++static int ltc4306_select_chan(struct i2c_mux_core *muxc, u32 chan)
++{
++	struct ltc4306 *data = i2c_mux_priv(muxc);
++	struct i2c_client *client = data->client;
++	u8 regval;
++	int ret = 0;
++
++	regval = BIT(7 - chan);
++
++	/* Only select the channel if its different from the last channel */
++	if (data->regs[LTC_REG_SWITCH] != regval) {
++		ret = ltc4306_reg_write(muxc->parent, client,
++					LTC_REG_SWITCH, regval);
++		data->regs[LTC_REG_SWITCH] = ret < 0 ? 0 : regval;
++	}
++
++	return ret;
++}
++
++static int ltc4306_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
++{
++	struct ltc4306 *data = i2c_mux_priv(muxc);
++	struct i2c_client *client = data->client;
++
++	if (!(data->deselect & BIT(chan)))
++		return 0;
++
++	/* Deselect active channel */
++	data->regs[LTC_REG_SWITCH] = 0;
++
++	return ltc4306_reg_write(muxc->parent, client,
++				 LTC_REG_SWITCH, data->regs[LTC_REG_SWITCH]);
++}
++
++static const struct i2c_device_id ltc4306_id[] = {
++	{ "ltc4305", ltc_4305 },
++	{ "ltc4306", ltc_4306 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, ltc4306_id);
++
++static const struct of_device_id ltc4306_of_match[] = {
++	{ .compatible = "lltc,ltc4305", .data = &chips[ltc_4305] },
++	{ .compatible = "lltc,ltc4306", .data = &chips[ltc_4306] },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ltc4306_of_match);
++
++static int ltc4306_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct i2c_adapter *adap = to_i2c_adapter(client->dev.parent);
++	struct device_node *of_node = client->dev.of_node;
++	bool idle_disconnect_dt = false;
++	struct gpio_desc *gpio;
++	struct i2c_mux_core *muxc;
++	struct ltc4306 *data;
++	const struct of_device_id *match;
++	int num, ret;
++
++	if (!i2c_check_functionality(adap, I2C_FUNC_SMBUS_BYTE_DATA))
++		return -ENODEV;
++
++	muxc = i2c_mux_alloc(adap, &client->dev,
++			     LTC4306_MAX_NCHANS, sizeof(*data), 0,
++			     ltc4306_select_chan, ltc4306_deselect_mux);
++	if (!muxc)
++		return -ENOMEM;
++	data = i2c_mux_priv(muxc);
++
++	i2c_set_clientdata(client, muxc);
++	data->client = client;
++
++	/* Enable the mux if a enable GPIO is specified. */
++	gpio = devm_gpiod_get_optional(&client->dev, "enable", GPIOD_OUT_HIGH);
++	if (IS_ERR(gpio))
++		return PTR_ERR(gpio);
++
++	/* Write the mux register at addr to verify
++	 * that the mux is in fact present. This also
++	 * initializes the mux to disconnected state.
++	 */
++	if (i2c_smbus_write_byte_data(client, LTC_REG_SWITCH, 0) < 0) {
++		dev_warn(&client->dev, "probe failed\n");
++		return -ENODEV;
++	}
++
++	match = of_match_device(of_match_ptr(ltc4306_of_match), &client->dev);
++	if (match)
++		data->chip = of_device_get_match_data(&client->dev);
++	else
++		data->chip = &chips[id->driver_data];
++
++	if (of_node) {
++		idle_disconnect_dt =
++			of_property_read_bool(of_node,
++					      "i2c-mux-idle-disconnect");
++		if (of_property_read_bool(of_node,
++					  "ltc,downstream-accelerators-enable"))
++			data->regs[LTC_REG_CONFIG] |= LTC_DOWNSTREAM_ACCL_EN;
++
++		if (of_property_read_bool(of_node,
++					  "ltc,upstream-accelerators-enable"))
++			data->regs[LTC_REG_CONFIG] |= LTC_UPSTREAM_ACCL_EN;
++
++		if (i2c_smbus_write_byte_data(client, LTC_REG_CONFIG,
++					      data->regs[LTC_REG_CONFIG]) < 0) {
++			dev_warn(&client->dev, "probe failed\n");
++			return -ENODEV;
++		}
++	}
++
++	ret = ltc4306_gpio_init(data);
++	if (ret < 0)
++		return ret;
++
++	/* Now create an adapter for each channel */
++	for (num = 0; num < data->chip->nchans; num++) {
++
++		data->deselect |= idle_disconnect_dt << num;
++
++		ret = i2c_mux_add_adapter(muxc, 0, num, 0);
++		if (ret) {
++			dev_err(&client->dev,
++				"failed to register multiplexed adapter %d\n",
++				num);
++			goto virt_reg_failed;
++		}
++	}
++
++	dev_info(&client->dev,
++		 "registered %d multiplexed busses for I2C switch %s\n",
++		 num, client->name);
++
++	return 0;
++
++virt_reg_failed:
++	i2c_mux_del_adapters(muxc);
++	return ret;
++}
++
++static int ltc4306_remove(struct i2c_client *client)
++{
++	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
++
++	i2c_mux_del_adapters(muxc);
++	return 0;
++}
++
++static struct i2c_driver ltc4306_driver = {
++	.driver		= {
++		.name	= "ltc4306",
++		.of_match_table = of_match_ptr(ltc4306_of_match),
++	},
++	.probe		= ltc4306_probe,
++	.remove		= ltc4306_remove,
++	.id_table	= ltc4306_id,
++};
++
++module_i2c_driver(ltc4306_driver);
++
++MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
++MODULE_DESCRIPTION("Linear Technology LTC4306, LTC4305 I2C mux/switch driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
