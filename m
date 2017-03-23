@@ -1,170 +1,97 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2] ARM: dts: mvebu: linksys: enable buffer manager support
-Date: Thu, 23 Mar 2017 17:29:52 +0100
-Message-ID: <8760j0dkhr.fsf@free-electrons.com>
-References: <20170316055320.7929-1-ralph.sennhauser@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)
+Date: Thu, 23 Mar 2017 16:37:10 +0000
+Message-ID: <20170323163710.GK9287@leverpostej>
+References: <1490275097-39349-1-git-send-email-liudongdong3@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170316055320.7929-1-ralph.sennhauser@gmail.com> (Ralph
-        Sennhauser's message of "Thu, 16 Mar 2017 06:53:19 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x, ..." <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1490275097-39349-1-git-send-email-liudongdong3@huawei.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Dongdong Liu <liudongdong3@huawei.com>
+Cc: helgaas@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, wangzhou1@hisilicon.com, gabriele.paoloni@huawei.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ralph,
- 
- On jeu., mars 16 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com> wrote:
+On Thu, Mar 23, 2017 at 09:18:17PM +0800, Dongdong Liu wrote:
+> The "hisilicon,pcie-almost-ecam", which goes against the usual DT
+> conventions, and is non-sensical in that it describes the IP based on
+> what it isn't. Fix the DT binding with "hisilicon,hip06-pcie-ecam"
+> and "hisilicon,hip07-pcie-ecam".
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
 
-> Add appropriate properties to devices in the Linksys WRT AC Series for the
-> mvneta driver to use hardware buffer management.
->
-> Also update "soc" ranges property and set the status of bm and bm-bppi
-> to "okay" (SRAM).
->
-> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Thanks for sending this out.
 
-
-Applied on mvebu/dt
+As it may not be obvious, this is a fixup for v4.11, and needs to go
+through ASAP so as to avoid a release with the broken binding.
 
 Thanks,
-
-Gregory
+Mark.
 
 > ---
->
-> v1 -> v2:
-> 	Use independent pools for short (suggested by Gregory Clement)
->
->
->  arch/arm/boot/dts/armada-385-linksys.dtsi     | 17 ++++++++++++++++-
->  arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 17 ++++++++++++++++-
->  2 files changed, 32 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> index df47bf1..aa0d225 100644
-> --- a/arch/arm/boot/dts/armada-385-linksys.dtsi
-> +++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> @@ -59,7 +59,8 @@
->  		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
->  			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
->  			  MBUS_ID(0x09, 0x19) 0 0xf1100000 0x10000
-> -			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000>;
-> +			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000
-> +			  MBUS_ID(0x0c, 0x04) 0 0xf1200000 0x100000>;
->  
->  		internal-regs {
->  			i2c@11000 {
-> @@ -88,6 +89,9 @@
->  			ethernet@70000 {
->  				status = "okay";
->  				phy-mode = "rgmii-id";
-> +				buffer-manager = <&bm>;
-> +				bm,pool-long = <2>;
-> +				bm,pool-short = <3>;
->  				fixed-link {
->  					speed = <1000>;
->  					full-duplex;
-> @@ -97,6 +101,9 @@
->  			ethernet@34000 {
->  				status = "okay";
->  				phy-mode = "sgmii";
-> +				buffer-manager = <&bm>;
-> +				bm,pool-long = <0>;
-> +				bm,pool-short = <1>;
->  				fixed-link {
->  					speed = <1000>;
->  					full-duplex;
-> @@ -159,6 +166,10 @@
->  				status = "okay";
->  			};
->  
-> +			bm@c8000 {
-> +				status = "okay";
-> +			};
-> +
->  			/* USB part of the eSATA/USB 2.0 port */
->  			usb@58000 {
->  				status = "okay";
-> @@ -241,6 +252,10 @@
->  			};
->  		};
->  
-> +		bm-bppi {
-> +			status = "okay";
-> +		};
-> +
->  		pcie-controller {
->  			status = "okay";
->  
-> diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-> index 3744ba3..9efcf59 100644
-> --- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-> +++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-> @@ -71,7 +71,8 @@
->  		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
->  			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
->  			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
-> -			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
-> +			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000
-> +			  MBUS_ID(0x0c, 0x04) 0 0 0xf1200000 0x100000>;
->  
->  		internal-regs {
->  
-> @@ -95,6 +96,9 @@
->  				pinctrl-names = "default";
->  				status = "okay";
->  				phy-mode = "rgmii-id";
-> +				buffer-manager = <&bm>;
-> +				bm,pool-long = <0>;
-> +				bm,pool-short = <1>;
->  				fixed-link {
->  					speed = <1000>;
->  					full-duplex;
-> @@ -106,6 +110,9 @@
->  				pinctrl-names = "default";
->  				status = "okay";
->  				phy-mode = "rgmii-id";
-> +				buffer-manager = <&bm>;
-> +				bm,pool-long = <2>;
-> +				bm,pool-short = <3>;
->  				fixed-link {
->  					speed = <1000>;
->  					full-duplex;
-> @@ -186,6 +193,10 @@
->  				};
->  			};
->  
-> +			bm@c8000 {
-> +				status = "okay";
-> +			};
-> +
->  			nand@d0000 {
->  				status = "okay";
->  				num-cs = <1>;
-> @@ -259,6 +270,10 @@
->  				};
->  			};
->  		};
-> +
-> +		bm-bppi {
-> +			status = "okay";
-> +		};
+>  Documentation/devicetree/bindings/pci/hisilicon-pcie.txt | 10 ++++++++--
+>  drivers/pci/dwc/pcie-hisi.c                              |  6 +++++-
+>  2 files changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> index b7fa3b9..a339dbb 100644
+> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> @@ -44,13 +44,19 @@ Hip05 Example (note that Hip06 is the same except compatible):
 >  	};
 >  
->  	gpio_keys {
+>  HiSilicon Hip06/Hip07 PCIe host bridge DT (almost-ECAM) description.
+> +
+> +Some BIOSes place the host controller in a mode where it is ECAM
+> +compliant for all devices other than the root complex. In such cases,
+> +the host controller should be described as below.
+> +
+>  The properties and their meanings are identical to those described in
+>  host-generic-pci.txt except as listed below.
+>  
+>  Properties of the host controller node that differ from
+>  host-generic-pci.txt:
+>  
+> -- compatible     : Must be "hisilicon,pcie-almost-ecam"
+> +- compatible     : Must be "hisilicon,hip06-pcie-ecam", or
+> +		   "hisilicon,hip07-pcie-ecam"
+>  
+>  - reg            : Two entries: First the ECAM configuration space for any
+>  		   other bus underneath the root bus. Second, the base
+> @@ -59,7 +65,7 @@ host-generic-pci.txt:
+>  
+>  Example:
+>  	pcie0: pcie@a0090000 {
+> -		compatible = "hisilicon,pcie-almost-ecam";
+> +		compatible = "hisilicon,hip06-pcie-ecam";
+>  		reg = <0 0xb0000000 0 0x2000000>,  /*  ECAM configuration space */
+>  		      <0 0xa0090000 0 0x10000>; /* host bridge registers */
+>  		bus-range = <0  31>;
+> diff --git a/drivers/pci/dwc/pcie-hisi.c b/drivers/pci/dwc/pcie-hisi.c
+> index fd66a31..cf9d6a9 100644
+> --- a/drivers/pci/dwc/pcie-hisi.c
+> +++ b/drivers/pci/dwc/pcie-hisi.c
+> @@ -380,9 +380,13 @@ struct pci_ecam_ops hisi_pcie_platform_ops = {
+>  
+>  static const struct of_device_id hisi_pcie_almost_ecam_of_match[] = {
+>  	{
+> -		.compatible = "hisilicon,pcie-almost-ecam",
+> +		.compatible =  "hisilicon,hip06-pcie-ecam",
+>  		.data	    = (void *) &hisi_pcie_platform_ops,
+>  	},
+> +	{
+> +		.compatible =  "hisilicon,hip07-pcie-ecam",
+> +		.data       = (void *) &hisi_pcie_platform_ops,
+> +	},
+>  	{},
+>  };
+>  
 > -- 
-> 2.10.2
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
