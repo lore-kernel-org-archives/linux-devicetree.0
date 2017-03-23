@@ -1,120 +1,102 @@
-From: Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH v3 3/5] coresight: add support for debug module
-Date: Thu, 23 Mar 2017 12:27:09 +0000
-Message-ID: <CAJ9a7Vj8Rt7+Pq+pYg-K+xHNYnSyR+oN4RHM6XTb_Ju+akgbug@mail.gmail.com>
-References: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
- <1488520809-31670-4-git-send-email-leo.yan@linaro.org> <671a0b39-b635-6e0e-d3fa-967651f2e29c@arm.com>
- <CAJ9a7VgCjXNGC4C49PxL-nBxzhMCmA8Mb-0C_epahizA5EL2HA@mail.gmail.com>
- <e7a97c52-f61a-e503-f626-09563fa100b8@arm.com> <CAJ9a7VhvCS3xXAHBt0AUVB2Zp2P1HP_LQm4KiptiBT9VJ1fC0Q@mail.gmail.com>
- <4961636d-d77c-0f9a-7076-4db1ef456073@arm.com> <1e6d6a91-3bdc-7cfb-a96f-780c959e0316@arm.com>
- <7a028460-d598-e337-5e09-234beddca88b@arm.com> <20170323054319.GA7716@leoy-linaro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170323054319.GA7716@leoy-linaro>
-Sender: linux-clk-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/4] iio: adc: Maxim max9611 driver
+Date: Thu, 23 Mar 2017 13:41:09 +0100
+Message-ID: <1490272873-2532-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Also agree with Suzuki's excellent summary.
+Hello!
 
-A couple of notes on using EDPRCR....
+Second round for Maxim max9611/max9612 high-side current sense amplifier driver.
 
-The logic for this assuming a correctly implemented system should be
-something like.....
+For reference, a simplified integration schematic drawing is here reported:
 
-if (prsr() == powered_down) { // if we are powered down request power up.
-    sw_unlock()   // ensure that the sw lock register on the device is unlocked
-    write(prcr(bit3=1))
-    wait_with_timeout(prsr()==powered_up)   // must wait to see if the
-system does power up - otherwise bad things happen!
-    if(timed_out)
-       fail("power up request for CPU N failed.")  // nothing to do
-after this point though if a CPU can't be powered is should not be
-included in the list to be checked on crash.
-}
-ensure_os_lock_unlocked()  // os lock has to be unlocked for bit 0 of
-prcr to be writeable.
-sw_unlock()   // ensure that the sw lock register on the device is unlocked
-write(prcr(bit3=1 | bit0=1)) // the core is powered, set the
-nopowerdown request bit so we don't lose it & emulate power down
+ ----o----/\/\/-----o-------|LOAD|---
+     |    shunt     |
+ ____|______________|___
+ |  RS+            RS-  |
+ |   |-----gain-----|   |
+ |          |           |
+ |          |           |
+ |max9611   |->| ADC |===== I2c
+ |______________________|
 
+public datasheet available at
+https://datasheets.maximintegrated.com/en/ds/MAX9611-MAX9612.pdf
 
-I think that some of the above logic is already in the driver, so
-needs to be adapted for the PRCR handling.
+Compared to v1, all channels whose values are calculated using parameters
+depending on the applied gain have been transformed in "processed" channels.
 
+Gain selection procedure is performed in kernel space, and gain-dependent
+values (current sense amplifier gain and offset) are not exposed to userspace
+anymore.
 
-On the "bad" systems, the initial prsr check is likely to fail (crash
-/ buslock) if the debug logic is not correctly powered. The user will
-then have to use one or more of the PM mitigations previously
-discussed that are appropriate for that specific platform and retry
+output reported from iio_info tool:
+iio:device0: max9611_vdd
+                6 channels found:
+                        voltage0:  (input)
+                        1 channel-specific attributes found:
+                                attr 0: input value: 4.085000000
+                        voltage1:  (input)
+                        3 channel-specific attributes found:
+                                attr 0: scale value: 14
+                                attr 1: offset value: 1
+                                attr 2: raw value: 59
+                        shunt:  (input)
+                        2 channel-specific attributes found:
+                                attr 0: resistor_power value: 5000
+                                attr 1: resistor_current value: 5000
+                        power:  (input)
+                        1 channel-specific attributes found:
+                                attr 0: input value: 663.404000000
+                        temp:  (input)
+                        2 channel-specific attributes found:
+                                attr 0: scale value: 0.480076812
+                                attr 1: raw value: 59
+                        current:  (input)
+                        1 channel-specific attributes found:
+                                attr 0: input value: 817.000000000
 
-Regards
+Tested on Salvator-X M3-W board.
 
-Mike
+Thanks
+   j
 
+v1 -> v2:
+- Drop wildcard (max961x) in driver, documentation and dt-bindings. Use
+  max9611 instead.
+- Make 3 processed channels for csa voltage, csa current and power load
+- Remove wrapper functions around i2c buffer access
+- Add locking in read_raw()
+- Make 2 separate attributes for shunt resistor: current and power
+- Renamed shunt resistor attribute
+- Fixed several review comments
 
-On 23 March 2017 at 05:43, Leo Yan <leo.yan@linaro.org> wrote:
-> On Wed, Mar 22, 2017 at 05:25:50PM +0000, Sudeep Holla wrote:
->>
->>
->> On 22/03/17 17:09, Suzuki K Poulose wrote:
->> > On 22/03/17 16:17, Sudeep Holla wrote:
->>
->> [...]
->>
->> >>
->> >> Point taken. So we could just specify that all necessary power
->> >> domains need to be on for proper functionality for this feature and
->> >> that it's highly platform specific instead of mixing cpu/cluster
->> >> idle details here.
->> >>
->> >>> The key point is that the caveat in using this driver is that
->> >>> the power management has to be considered on a platform specific
->> >>> basis before it is configured; and appropriate actions may be
->> >>> needed for it to work correctly. Without this then the driver
->> >>> could cause more issues than it debugs. A user selecting this
->> >>> _must_ be told about these issues
->> >>>
->> >
->> > So given all the possible caveats, I think we :
->> >
->> > 1) Shouldn't enable the driver by default at runtime even if it is
->> > built-in.
->> > 2) Should provide mechanisms to turn it on at boot (via
->> > kernel commandline) or anytime later (via sysfs), which kind of puts
->> > the responsibility back on the user : "You know what you are doing".
->> > 3) Shouldn't turn the driver on based on "nohlt" which the user
->> > could use it for some other purposes, without explicit intention of
->> > turning this driver on).
->> > 4) Should document the fact that, on some
->> > platforms, the user may have to disable CPUidle explicitly to get the
->> > driver working. But let us not make it the default. The user with a
->> > not so ideal platform could add "nohlt" and get it working.
->> >
->>
->> Agreed on all points and well summarized.
->> I would like to highlight (3) and (4) as it needs to be well understood.
->>
->> "nohlt" has a *different* meaning already, so using that in this
->> driver for something else is simple wrong as it affects the system in
->> unintended ways. And yes if user (mis)uses it to get things working,
->> it's fine but shouldn't be recommended way.
->
-> Understand this point.
->
-> I will try to use general way to constraint CPUIdle like other
-> drivers.
->
-> Thanks all for these good suggestions :)
->
-> Thanks,
-> Leo Yan
+Jacopo Mondi (4):
+  Documentation: dt-bindings: iio: Add max9611 ADC
+  iio: Documentation: Add max9611 sysfs documentation
+  iio: adc: Add Maxim max9611 ADC driver
+  arm64: dts: salvator-x: Add current sense amplifiers
 
 
+ .../ABI/testing/sysfs-bus-iio-adc-max9611          |  16 +
+ .../devicetree/bindings/iio/adc/max9611.txt        |  27 +
+ arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts |  18 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/max9611.c                          | 590 +++++++++++++++++++++
+ 6 files changed, 662 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/max9611.txt
+ create mode 100644 drivers/iio/adc/max9611.c
 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Blackburn Design Centre. UK
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
