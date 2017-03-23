@@ -1,46 +1,51 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v4 8/8] ARM: configs: Add STM32 panel simple support in
- STM32 defconfig
-Date: Thu, 23 Mar 2017 18:26:59 +0100
-Message-ID: <5dfdedd9-9758-ed27-1022-d54ff5228303@st.com>
-References: <1489597334-16896-1-git-send-email-yannick.fertre@st.com>
- <1489597334-16896-9-git-send-email-yannick.fertre@st.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v3 5/5] ARM: configs: Add watchdog support in STM32
+ defconfig
+Date: Thu, 23 Mar 2017 18:28:27 +0100
+Message-ID: <59b86243-9454-1570-9d3d-28c258b7da01@st.com>
+References: <1490195083-25117-1-git-send-email-yannick.fertre@st.com>
+ <1490195083-25117-6-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489597334-16896-9-git-send-email-yannick.fertre-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-Cc: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490195083-25117-6-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yannick Fertre <yannick.fertre@st.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 03/15/2017 06:02 PM, Yannick Fertre wrote:
-> Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+On 03/22/2017 04:04 PM, Yannick Fertre wrote:
+> This patch adds STM32 watchdog support in stm32_defconfig file
+>
+> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
 > ---
 
-Same remarks than patch7
+Update commit header please (ARM: configs: stm32: Add watchdog support)
 
->  arch/arm/configs/stm32_defconfig | 2 ++
->  1 file changed, 2 insertions(+)
+>  arch/arm/configs/stm32_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 >
 > diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-> index 9c6ba54e..f7ddf29b 100644
+> index a9d8e3c..83afa73 100644
 > --- a/arch/arm/configs/stm32_defconfig
 > +++ b/arch/arm/configs/stm32_defconfig
-> @@ -50,6 +50,8 @@ CONFIG_SERIAL_STM32_CONSOLE=y
+> @@ -48,6 +48,7 @@ CONFIG_SERIAL_STM32=y
+>  CONFIG_SERIAL_STM32_CONSOLE=y
 >  # CONFIG_HW_RANDOM is not set
 >  # CONFIG_HWMON is not set
->  CONFIG_DRM=y
-> +CONFIG_DRM_PANEL_SIMPLE=y
-> +CONFIG_BACKLIGHT_LCD_SUPPORT=y
->  CONFIG_MFD_SYSCON=y
+> +CONFIG_WATCHDOG=y
+>  CONFIG_REGULATOR=y
+>  CONFIG_REGULATOR_FIXED_VOLTAGE=y
 >  # CONFIG_USB_SUPPORT is not set
->  CONFIG_NEW_LEDS=y
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
