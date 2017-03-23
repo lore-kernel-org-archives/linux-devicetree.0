@@ -1,44 +1,39 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [RFC 0/3] thermal: broadcom: complete and extend to NSP
-Date: Thu, 23 Mar 2017 15:29:31 -0400
-Message-ID: <20170323192930.GA9494@broadcom.com>
-References: <1490296728-14733-1-git-send-email-jon.mason@broadcom.com>
- <CACna6rwPAwMrrocNMbNko6iMhz+3BqGGrZdEgY1hBKrBisGu3g@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 04/15] ARM: dts: exynos: fix PCI bus dtc warnings
+Date: Thu, 23 Mar 2017 21:37:11 +0200
+Message-ID: <20170323193711.yu6nyjppformf3tb@kozik-lap>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-4-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACna6rwPAwMrrocNMbNko6iMhz+3BqGGrZdEgY1hBKrBisGu3g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+In-Reply-To: <20170322020313.24338-4-robh@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arm@kernel.org, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 08:21:57PM +0100, Rafał Miłecki wrote:
-> On 23 March 2017 at 20:18, Jon Mason <jon.mason@broadcom.com> wrote:
-> > This patch series is intended to complete the implementation submitted
-> > in http://www.spinics.net/lists/devicetree/msg168813.html
-> > It lacked the Kconfig select options and DT bindings for BCM5301X.
-> > Also, it did not allow for NSP to be selected.  This series addresses
-> > that.
-> >
-> > I'm sending this as an RFC, as that series has not been included (or
-> > reviewed) yet.  If Rafal wants to include these in a v2 of his series,
-> > then I am agreeable with that.
+On Tue, Mar 21, 2017 at 09:03:02PM -0500, Rob Herring wrote:
+> dtc recently added PCI bus checks. Fix these warnings.
 > 
-> This sounds great, but I think dts changes should go through separated
-> (Florian's) tree. So my plan is to combine my patch with your 1/3.
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+> Cc: linux-samsung-soc@vger.kernel.org
+> ---
+> Sub-arch maintainers, please apply to your trees unless arm-soc wants 
+> to take the whole lot.
 > 
-> Does it sound OK to you?
+>  arch/arm/boot/dts/exynos5440.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
 
-Sounds great.  I can send that as a follow-on, after your patch series
-is accepted.
+Hi,
 
-Thanks,
-Jon
+Unfortunately patch does not apply. There were some changes around PCIe
+this release so I think the best way would be to rebase on top of linux-next.
 
-BTW, I mean to show the console output in my 0/3 email.  For NSP, it
-is
-# cat /sys/class/thermal/thermal_zone0/temp
-46036
+Best regards,
+Krzysztof
