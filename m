@@ -1,306 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] MIPS: NI 169445 board support
-Date: Thu, 23 Mar 2017 17:29:45 -0500
-Message-ID: <20170323222945.bxz4qa6ydicrh4q6@rob-hp-laptop>
-References: <1489508003-25288-1-git-send-email-nathan.sullivan@ni.com>
- <1489508003-25288-3-git-send-email-nathan.sullivan@ni.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V2 1/2] dt-bindings: thermal: add support for Broadcom's Northstar thermal
+Date: Thu, 23 Mar 2017 23:30:44 +0100
+Message-ID: <20170323223045.15786-1-zajec5@gmail.com>
+References: <20170318155632.18099-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489508003-25288-3-git-send-email-nathan.sullivan-acOepvfBmUk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170318155632.18099-1-zajec5@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 11:13:23AM -0500, Nathan Sullivan wrote:
-> Support the National Instruments 169445 board.
-> 
-> Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mips/ni.txt   |   7 ++
->  MAINTAINERS                                     |   8 ++
->  arch/mips/boot/dts/Makefile                     |   1 +
->  arch/mips/boot/dts/ni/169445.dts                | 100 ++++++++++++++++++++++++
->  arch/mips/boot/dts/ni/Makefile                  |   7 ++
->  arch/mips/configs/generic/board-ni169445.config |  27 +++++++
->  arch/mips/generic/Kconfig                       |   6 ++
->  arch/mips/generic/vmlinux.its.S                 |  25 ++++++
->  8 files changed, 181 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ni.txt
->  create mode 100644 arch/mips/boot/dts/ni/169445.dts
->  create mode 100644 arch/mips/boot/dts/ni/Makefile
->  create mode 100644 arch/mips/configs/generic/board-ni169445.config
-> 
-> diff --git a/Documentation/devicetree/bindings/mips/ni.txt b/Documentation/devicetree/bindings/mips/ni.txt
-> new file mode 100644
-> index 0000000..722bf2d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/ni.txt
-> @@ -0,0 +1,7 @@
-> +National Instruments MIPS platforms
-> +
-> +required root node properties:
-> +	- compatible: must be "ni,169445"
-> +
-> +CPU Nodes
-> +	- compatible: must be "mti,mips14KEc"
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c265a5f..b72f059 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8887,6 +8887,14 @@ F:	include/linux/sunrpc/
->  F:	include/uapi/linux/nfs*
->  F:	include/uapi/linux/sunrpc/
->  
-> +NI169445 MIPS ARCHITECTURE
-> +M:	Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-> +L:	linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> +S:	Maintained
-> +F:	arch/mips/boot/dts/ni/
-> +F:	arch/mips/configs/generic/board-ni169445.config
-> +F:	Documentation/devicetree/bindings/mips/ni.txt
-> +
->  NILFS2 FILESYSTEM
->  M:	Ryusuke Konishi <konishi.ryusuke-Zyj7fXuS5i5L9jVzuh4AOg@public.gmane.org>
->  L:	linux-nilfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-> index b9db492..27b0f37 100644
-> --- a/arch/mips/boot/dts/Makefile
-> +++ b/arch/mips/boot/dts/Makefile
-> @@ -4,6 +4,7 @@ dts-dirs	+= img
->  dts-dirs	+= ingenic
->  dts-dirs	+= lantiq
->  dts-dirs	+= mti
-> +dts-dirs	+= ni
->  dts-dirs	+= netlogic
->  dts-dirs	+= pic32
->  dts-dirs	+= qca
-> diff --git a/arch/mips/boot/dts/ni/169445.dts b/arch/mips/boot/dts/ni/169445.dts
-> new file mode 100644
-> index 0000000..9746576
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/ni/169445.dts
-> @@ -0,0 +1,100 @@
-> +/dts-v1/;
-> +
-> +/ {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	compatible = "ni,169445";
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "mti,mips14KEc";
-> +			clocks = <&baseclk>;
-> +			reg = <0>;
-> +		};
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x10000000>;
-> +	};
-> +
-> +	baseclk: baseclock {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <50000000>;
-> +	};
-> +
-> +	cpu_intc: cpu_intc {
+From: Rafał Miłecki <rafal@milecki.pl>
 
-interrupt-controller {
+This commit documents binding for thermal used in Northstar family SoCs.
 
-> +		#address-cells = <0>;
-> +		compatible = "mti,cpu-interrupt-controller";
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +	};
-> +
-> +	ahb@0 {
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+ .../devicetree/bindings/thermal/brcm,ns-thermal         | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,ns-thermal
 
-ahb@1f300000
-
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x1f300000 0x80FFF>;
-> +
-> +		gpio1:gpio-controller@1f300010 {
-                      ^ space
-
-'gpio' is the standard node name, so
-
-gpio@...
-
-> +			compatible = "ni,169445-nand-gpio";
-> +			reg = <0x10 0x4>;
-> +			reg-names = "dat";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +		};
-> +
-> +		gpio2:gpio-controller@1f300014 {
-
-ditto
-
-> +			compatible = "ni,169445-nand-gpio";
-> +			reg = <0x14 0x4>;
-> +			reg-names = "dat";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			no-output;
-> +		};
-> +
-> +		nand@1f300000 {
-> +			compatible = "gpio-control-nand";
-> +			nand-on-flash-bbt;
-> +			nand-ecc-mode = "soft_bch";
-> +			nand-ecc-step-size = <512>;
-> +			nand-ecc-strength = <4>;
-> +			reg = <0x0 4>;
-> +			gpios = <&gpio2 0 0>, /* rdy */
-> +				<&gpio1 1 0>, /* nce */
-> +				<&gpio1 2 0>, /* ale */
-> +				<&gpio1 3 0>, /* cle */
-> +				<&gpio1 4 0>; /* nwp */
-> +		};
-> +
-> +		serial@1f380000 {
-> +			compatible = "ns16550a";
-> +			reg = <0x80000 0x1000>;
-> +			interrupt-parent = <&cpu_intc>;
-> +			interrupts = <6>;
-> +			clocks = <&baseclk>;
-> +			reg-shift = <0>;
-> +		};
-> +
-> +		ethernet@1f340000 {
-> +			compatible = "snps,dwmac-4.10a";
-> +			interrupt-parent = <&cpu_intc>;
-> +			interrupts = <5>;
-> +			interrupt-names = "macirq";
-> +			reg = <0x40000 0x2000>;
-> +			clock-names = "stmmaceth", "pclk";
-> +			clocks = <&baseclk>, <&baseclk>;
-> +
-> +			phy-mode = "rgmii";
-> +
-> +			fixed-link {
-> +				speed = <1000>;
-> +				full-duplex;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/mips/boot/dts/ni/Makefile b/arch/mips/boot/dts/ni/Makefile
-> new file mode 100644
-> index 0000000..66cfdff
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/ni/Makefile
-> @@ -0,0 +1,7 @@
-> +dtb-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= 169445.dtb
-> +
-> +# Force kbuild to make empty built-in.o if necessary
-> +obj-					+= dummy.o
-> +
-> +always					:= $(dtb-y)
-> +clean-files				:= *.dtb *.dtb.S
-> diff --git a/arch/mips/configs/generic/board-ni169445.config b/arch/mips/configs/generic/board-ni169445.config
-> new file mode 100644
-> index 0000000..0bae1f8
-> --- /dev/null
-> +++ b/arch/mips/configs/generic/board-ni169445.config
-> @@ -0,0 +1,27 @@
-> +CONFIG_FIT_IMAGE_FDT_NI169445=y
-> +
-> +CONFIG_SERIAL_8250=y
-> +CONFIG_SERIAL_8250_CONSOLE=y
-> +CONFIG_SERIAL_OF_PLATFORM=y
-> +
-> +CONFIG_GPIOLIB=y
-> +CONFIG_GPIO_SYSFS=y
-> +CONFIG_GPIO_GENERIC_PLATFORM=y
-> +
-> +CONFIG_MTD=y
-> +CONFIG_MTD_BLOCK=y
-> +CONFIG_MTD_CMDLINE_PARTS=y
-> +
-> +CONFIG_MTD_NAND_ECC=y
-> +CONFIG_MTD_NAND_ECC_BCH=y
-> +CONFIG_MTD_NAND=y
-> +CONFIG_MTD_NAND_GPIO=y
-> +CONFIG_MTD_NAND_IDS=y
-> +
-> +CONFIG_MTD_UBI=y
-> +CONFIG_MTD_UBI_BLOCK=y
-> +
-> +CONFIG_NETDEVICES=y
-> +CONFIG_STMMAC_ETH=y
-> +CONFIG_STMMAC_PLATFORM=y
-> +CONFIG_DWMAC_GENERIC=y
-> diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
-> index a606b3f..fbf0813 100644
-> --- a/arch/mips/generic/Kconfig
-> +++ b/arch/mips/generic/Kconfig
-> @@ -16,4 +16,10 @@ config LEGACY_BOARD_SEAD3
->  	  Enable this to include support for booting on MIPS SEAD-3 FPGA-based
->  	  development boards, which boot using a legacy boot protocol.
->  
-> +config FIT_IMAGE_FDT_NI169445
-> +	bool "Include FDT for NI 169445"
-> +	help
-> +	  Enable this to include the FDT for the 169445 platform from
-> +	  National Instruments in the FIT kernel image.
-> +
->  endif
-> diff --git a/arch/mips/generic/vmlinux.its.S b/arch/mips/generic/vmlinux.its.S
-> index f67fbf1..de851f7 100644
-> --- a/arch/mips/generic/vmlinux.its.S
-> +++ b/arch/mips/generic/vmlinux.its.S
-> @@ -29,3 +29,28 @@
->  		};
->  	};
->  };
-> +
-> +#ifdef CONFIG_FIT_IMAGE_FDT_NI169445
-> +/ {
-
-IMO, this shouldn't be in the kernel. Is the kernel supposed to 
-create board specific images for every bootloaders custom format? It 
-doesn't scale.
-
-> +	images {
-> +		fdt@ni169445 {
-> +			description = "NI 169445 device tree";
-> +			data = /incbin/("boot/dts/ni/169445.dtb");
-> +			type = "flat_dt";
-> +			arch = "mips";
-> +			compression = "none";
-> +			hash@0 {
-> +				algo = "sha1";
-> +			};
-> +		};
-> +	};
-> +
-> +	configurations {
-> +		conf@ni169445 {
-> +			description = "NI 169445 Linux Kernel";
-> +			kernel = "kernel@0";
-> +			fdt = "fdt@ni169445";
-> +		};
-> +	};
-> +};
-> +#endif
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/thermal/brcm,ns-thermal b/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
+new file mode 100644
+index 000000000000..9a22dd76ec01
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
+@@ -0,0 +1,17 @@
++* Broadcom Northstar Thermal
++
++This binding describes thermal sensor that is part of Northstar's DMU (Device
++Management Unit).
++
++Required properties:
++- compatible : Must be "brcm,ns-thermal"
++- reg : iomem address range of PVTMON registers
++- #thermal-sensor-cells : Should be <0>
++
++Example:
++
++thermal {
++	compatible = "brcm,ns-thermal";
++	reg = <0x1800c2c0 0x10>;
++	#thermal-sensor-cells = <0>;
++};
+-- 
+2.11.0
