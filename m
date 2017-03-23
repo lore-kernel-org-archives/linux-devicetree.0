@@ -1,127 +1,63 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 04/11] Documentation: DT: bindings: mfd:
- add A33 GPADC binding
-Date: Thu, 23 Mar 2017 16:45:57 +0000
-Message-ID: <20170323164557.a7h2eolmxeqfwg6b@dell>
-References: <20170321153611.16228-1-quentin.schulz@free-electrons.com>
- <20170321153611.16228-5-quentin.schulz@free-electrons.com>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBSPXZ7DAKGQEEUXQEFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170321153611.16228-5-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 8/8] ARM64: dts: meson-gxl: add spdif output pins
+Date: Thu, 23 Mar 2017 17:51:01 +0100
+Message-ID: <20170323165101.29262-9-jbrunet@baylibre.com>
+References: <20170323165101.29262-1-jbrunet@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170323165101.29262-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Mar 2017, Quentin Schulz wrote:
+Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-> This patch adds documentation for the A33 GPADC binding.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->=20
-> v3:
->   - fixed missing allwinner in front of compatible,
->   - updated compatible to allwinner,sun8i-a33-ths to better reflect the
->   datasheet's name,
->   - updated example's DT node name and label to ths,
->=20
-> added in v2
->=20
->  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 59 ++++++++++++++++=
-++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 88ad3490c124..8f57e74b719c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -138,6 +138,20 @@
+ 				function = "i2s_out_ao";
+ 			};
+ 		};
++
++		spdif_out_ao_6_pins: spdif_out_ao_6 {
++			mux {
++				groups = "spdif_out_ao_6";
++				function = "spdif_out_ao";
++			};
++		};
++
++		spdif_out_ao_9_pins: spdif_out_ao_9 {
++			mux {
++				groups = "spdif_out_ao_9";
++				function = "spdif_out_ao";
++			};
++		};
+ 	};
+ };
+ 
+@@ -359,6 +373,13 @@
+ 				function = "i2s_out";
+ 			};
+ 		};
++
++		spdif_out_h_pins: spdif_out_ao_h {
++			mux {
++				groups = "spdif_out_h";
++				function = "spdif_out";
++			};
++		};
+ 	};
+ 
+ 	eth-phy-mux {
+-- 
+2.9.3
 
-This is going to need a DT Ack.
-
-> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Docu=
-mentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> new file mode 100644
-> index 0000000..badff36
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> @@ -0,0 +1,59 @@
-> +Allwinner SoCs' GPADC Device Tree bindings
-> +------------------------------------------
-> +The Allwinner SoCs all have an ADC that can also act as a thermal sensor
-> +and sometimes as a touchscreen controller.
-> +
-> +Required properties:
-> +  - compatible: "allwinner,sun8i-a33-ths",
-> +  - reg: mmio address range of the chip,
-> +  - #thermal-sensor-cells: shall be 0,
-> +  - #io-channel-cells: shall be 0,
-> +
-> +Example:
-> +	ths: ths@01c25000 {
-> +		compatible =3D "allwinner,sun8i-a33-ths";
-> +		reg =3D <0x01c25000 0x100>;
-> +		#thermal-sensor-cells =3D <0>;
-> +		#io-channel-cells =3D <0>;
-> +	};
-> +
-> +sun4i, sun5i and sun6i SoCs are also supported via the older binding:
-> +
-> +sun4i resistive touchscreen controller
-> +--------------------------------------
-> +
-> +Required properties:
-> + - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
-> +   "allwinner,sun6i-a31-ts"
-> + - reg: mmio address range of the chip
-> + - interrupts: interrupt to which the chip is connected
-> + - #thermal-sensor-cells: shall be 0
-> +
-> +Optional properties:
-> + - allwinner,ts-attached	 : boolean indicating that an actual touchscree=
-n
-> +				   is attached to the controller
-> + - allwinner,tp-sensitive-adjust : integer (4 bits)
-> +				   adjust sensitivity of pen down detection
-> +				   between 0 (least sensitive) and 15
-> +				   (defaults to 15)
-> + - allwinner,filter-type	 : integer (2 bits)
-> +				   select median and averaging filter
-> +				   samples used for median / averaging filter
-> +				   0: 4/2
-> +				   1: 5/3
-> +				   2: 8/4
-> +				   3: 16/8
-> +				   (defaults to 1)
-> +
-> +Example:
-> +
-> +	rtp: rtp@01c25000 {
-> +		compatible =3D "allwinner,sun4i-a10-ts";
-> +		reg =3D <0x01c25000 0x100>;
-> +		interrupts =3D <29>;
-> +		allwinner,ts-attached;
-> +		#thermal-sensor-cells =3D <0>;
-> +		/* sensitive/noisy touch panel */
-> +		allwinner,tp-sensitive-adjust =3D <0>;
-> +		allwinner,filter-type =3D <3>;
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
