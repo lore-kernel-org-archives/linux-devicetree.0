@@ -1,203 +1,86 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [RESEND PATCH v2 26/53] mtd: nand: denali: support 1024 byte
- ECC step size
-Date: Thu, 23 Mar 2017 09:39:18 +0100
-Message-ID: <20170323093918.1e65916c@bbrezillon>
-References: <1490213273-8571-1-git-send-email-yamada.masahiro@socionext.com>
-        <1490213273-8571-27-git-send-email-yamada.masahiro@socionext.com>
-        <20170322223239.70a45053@bbrezillon>
-        <CAK7LNARafOYZ54k2QZhTKgt-KLFs7Rz5X=GzDVkZkkXOchtGNQ@mail.gmail.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: omap4-droid4: Add LCD
+Date: Thu, 23 Mar 2017 09:42:58 +0100
+Message-ID: <20170323084258.ydlymcjtvdl3zih7@earth>
+References: <20170305054359.8293-1-tony@atomide.com>
+ <20170305054359.8293-7-tony@atomide.com>
+ <20170319012927.kmyqngprpip7le4m@earth>
+ <20170319161030.GA20572@atomide.com>
+ <20170319225542.ts53qpwdhdrmy2ac@earth>
+ <9c4a5d88-4d2a-2120-9fdf-f3fbba69147c@ti.com>
+ <20170323063109.qhwxj74pbfztgopt@earth>
+ <b4666cd6-9925-6143-41c3-591e68c48456@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNARafOYZ54k2QZhTKgt-KLFs7Rz5X=GzDVkZkkXOchtGNQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mtd@lists.infradead.org, Laurent Monat <laurent.monat@idquantique.com>, thorsten.christiansson@idquantique.com, Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lxkwbwyaljtvk7gn"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <b4666cd6-9925-6143-41c3-591e68c48456-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Mar 2017 15:53:14 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-> Hi Boris,
-> 
-> 2017-03-23 6:32 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
-> > On Thu, 23 Mar 2017 05:07:25 +0900
-> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> >  
-> >> This driver was originally written for the Intel MRST platform with
-> >> several platform specific parameters hard-coded.  Another thing we
-> >> need to fix is the hard-coded ECC step size.  Currently, it is
-> >> defined as follows:
-> >>
-> >>   #define ECC_SECTOR_SIZE 512
-> >>
-> >> (somehow, it is defined in both denali.c and denali.h)
-> >>
-> >> This must be avoided because the Denali IP supports 1024B ECC size
-> >> as well.  The Denali User's Guide also says supporting both 512B and
-> >> 1024B ECC sectors is possible, though it would require instantiation
-> >> of two different ECC circuits.  So, possible cases are:
-> >>
-> >>  [1] only 512B ECC size is supported
-> >>  [2] only 1024B ECC size is supported
-> >>  [3] both 512B and 1024B ECC sizes are supported
-> >>
-> >> For [3], the actually used ECC size is specified by some registers.
-> >>
-> >> Newer versions of this IP have the following registers:
-> >>   CFG_DATA_BLOCK_SIZE       (0x6b0)
-> >>   CFG_LAST_DATA_BLOCK_SIZE  (0x6c0)
-> >>   CFG_NUM_DATA_BLOCKS       (0x6d0)
-> >>
-> >> For those versions, the software should set ecc.size and ecc.steps
-> >> to these registers.  Old versions do not have such registers, but
-> >> they are "reserved", so write accesses are safely ignored.
-> >>
-> >> This commit adds new flags DENALI_CAP_ECC_SIZE_{512,1024}.
-> >>
-> >> The DT property "nand-ecc-step-size" is still optional; a reasonable
-> >> default will be chosen for [1] and [2].  For case [3], if exists, it
-> >> is recommended to specify the desired ECC size explicitly.  
-> >
-> > Actually, the NAND chip gives some hints to help controller drivers
-> > decide which ecc-block-size/strength is appropriate
-> > (chip->ecc_strength_ds, chip->ecc_step_ds), so, in most cases
-> > nand-ecc-step-size is unneeded (unless you want to force a specific
-> > setting).  
-> 
-> 
-> But, if we look at nand_flash_detect_onfi(),
-> ->ecc_step_ds is almost a fixed value, 512, right?  
-> 
-> if (p->ecc_bits != 0xff) {
->         chip->ecc_strength_ds = p->ecc_bits;
->         chip->ecc_step_ds = 512;
-> 
+--lxkwbwyaljtvk7gn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Nope, if the NAND requires a different ECC block size, you will have
-0xff in this field and the real ECC requirements will be exposed in the
-extended parameter page [1].
+Hi,
 
-> 
-> As far as I understood,
-> ->ecc_step_ds is not a hint for drivers to decide ->ecc.size.  
-> 
-> Rather, ->ecc_step_ds just specifies the unit of ->ecc_strength_ds.
+On Thu, Mar 23, 2017 at 09:08:18AM +0200, Tomi Valkeinen wrote:
+> On 23/03/17 08:31, Sebastian Reichel wrote:
+>=20
+> >> It shouldn't matter when omapdrm is initialized. omapdrm should wait
+> >> until it has all the displays.
+> >=20
+> > I tried to trace this. I assume, that your "should wait until it has
+> > all the displays" refers to the code in "omap_connect_dssdevs()".
+> > Unfortunately that code does not work correctly:
+>=20
+> Indeed, sorry about the confusion. Apparently I was talking about TI's
+> kernel, which has fixes for this.
+>=20
+> I have actually posted the patches, along with a lot of other stuff,
+> last Nov. See "[PATCH 00/36] drm/omap: miscallaneous improvements"
+> series. The patches 23-25 should fix this particular issue.
 
-->ecc_xxx_ds are encoding the minimum ECC requirements as expressed by
-the NAND chip, so yes, it is an hint for the ECC engine configuration.
+Ok, I got both initializing correctly by cherry-picking (and
+rebasing) the following patches:
 
-It does not necessarily means it has to be exactly the same, but it
-should be used to determine which setting is appropriate. For example,
-if the NAND says it requires a minimum of 4bits/512bytes but your
-controller only supports 16bits/1024bytes, then it's fine.
+drm/omap: Use omapdss_stack_is_ready() to check that the display stack is up
+drm/omap: dss: Support for detecting display stack readiness
+drm/omap: move dss_initialized to omapdss-base
+drm/omap: add omapdss-base.ko
+drm/omap: dss: Functions to check components in the display/output list
 
+What's the plan with regarding patchset?
 
+-- Sebastian
 
-> 
-> 
-> 
-> >>                       int offset;
-> >>                       unsigned int flips_in_byte;
-> >>
-> >> -                     offset = (err_sector * ECC_SECTOR_SIZE + err_byte) *
-> >> +                     offset = (err_sector * ecc_size + err_byte) *
-> >>                                               denali->devnum + err_device;
-> >>
-> >>                       /* correct the ECC error */
-> >> @@ -1579,22 +1578,37 @@ int denali_init(struct denali_nand_info *denali)
-> >>       /* no subpage writes on denali */
-> >>       chip->options |= NAND_NO_SUBPAGE_WRITE;
-> >>
-> >> +     if (!chip->ecc.size) {  
-> >
-> > You should set it to chip->ecc_step_ds and pick a default value only if
-> > it's still 0 after that. Same goes for ecc.strength.  
-> 
-> Sorry, I still do not understand this.
-> 
-> ->ecc_strength_ds and ->ecc_step_ds  
-> shows how often bit-flip occurs in this device.
+--lxkwbwyaljtvk7gn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It represents the minimum ECC requirements to ensure a 'reliable' setup.
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> So, nand_ecc_strength_good() is a typical usage of these.
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljTio8ACgkQ2O7X88g7
++poElQ/9ENa8z6sjOMJUf0eLypUpiyvXh5bpsoM+EUClJmE7Qj8iunO3289rT05g
+23YlqjdKD7RfbGCAck6zyabsFbplKtnlWBZDE0bxeatP2Oim/O7WKvirxp+5cg1j
+/B2rnpcNoxk50whfYQLWyOZaXJjF5jo25xbcs+mXBRMlk1ydGXLFY0g+ga74/CJp
+GNGl1hWIHrS2JPcqrJeeIcJ0/Lceo0JisFNaxLnR4rCOMYH4XS0Kva90xTP9xXUU
+43OmAtVJor7XRygc+7db9pNPwxFzV+K8R6Hp52VUujO1eg6JN260HviYWAaCZy0E
+6eWpAu/Q4pG3YP8TAC+vV3YMS++EGji0x5/G2rHXt53S8fbjJ3wpMKBoMbut6WuY
+KZMR9bjaeY3pzrUP9rQdWgOX4v5qsAaWo+cJR0dxwN84FOK+wk3AJO0JF+/K/EBq
+/mHMvfHY4aEboERsi2Ap4MoZ/OdI1Zp5BHEqyYd8Vte4/x5PJi3YdJhpwiK7e86L
+Xfuc9VRO5INaWVVPtz8Kn5scazIEuhb910MBHhokpwJWyO1MMHukBYFvRmJvVRxk
+04yjoyqeB6nyOaVzOsJ9wWDbVsDZ3aKGhkl6QpZnodw/sP9qPgoBfi2ajJpfWBNY
+6bXiWZCpIoOVR39PTa+shRXAXqM1DXwWniDcHXpYr7kaN6iLDeA=
+=664m
+-----END PGP SIGNATURE-----
 
-nand_ecc_strength_good() is complaining if you choose an ECC setting
-that is below the minimum requirements.
-
-> 
-> How many sectors the driver actually splits the device into
-> is a different issue, I think.
-
-The choice is left to the ECC controller, but it should take the
-->ecc_strength_ds and ->ecc_step_ds information into account when
-choosing the ECC settings.
-
-> 
-> 
-> 
-> >> +             if (denali->caps & DENALI_CAP_ECC_SIZE_512)
-> >> +                     chip->ecc.size = 512;
-> >> +             if (denali->caps & DENALI_CAP_ECC_SIZE_1024)
-> >> +                     chip->ecc.size = 1024;
-> >> +             if (WARN(!chip->ecc.size, "must support at least 512 or 1024 ECC size"))
-> >> +                     goto failed_req_irq;
-> >> +     }
-> >> +
-> >> +     if ((chip->ecc.size != 512 && chip->ecc.size != 1024) ||
-> >> +         (chip->ecc.size == 512 && !(denali->caps & DENALI_CAP_ECC_SIZE_512)) ||
-> >> +         (chip->ecc.size == 1024 && !(denali->caps & DENALI_CAP_ECC_SIZE_1024))) {
-> >> +             dev_err(denali->dev, "specified ECC size %d in not supported",
-> >> +                     chip->ecc.size);
-> >> +             goto failed_req_irq;
-> >> +     }
-> >> +
-> >>       /*
-> >>        * Denali Controller only support 15bit and 8bit ECC in MRST,
-> >>        * so just let controller do 15bit ECC for MLC and 8bit ECC for
-> >>        * SLC if possible.  
-> >
-> > Usually the NAND chips expose the ECC requirements, so basing our
-> > decision only on the type of NAND sounds a bit weird.  
-> 
-> 
-> chip->ecc.size is one of the configuration of this controller IP.
-> 
-> SoC vendors choose 512, 1024, or both of them
-> when they buy this IP.
-
-Yes, and that's not a problem.
-
-> 
-> If both 512 and 1024 are supported, 1024 is usually a better choice
-> because bigger ecc.size uses ECC more efficiently.
-
-We agree.
-
-> 
-> 
-> It is unrelated to the chips' requirements.
-
-It is related to the chip requirements.
-Say you have a chip that requires a minimum of 4bits/512bytes. If you
-want to convert that to a 1024byte block setting it's perfectly fine,
-but then you'll have to meet (2 * ->ecc_strength_ds) for the
-ecc.strength parameter.
-
-The nand-ecc-strength and nand-ecc-step DT properties are here to
-override the chip requirements and force a specific setting. This is
-for example needed when the bootloader hardcodes an ECC setting without
-taking the NAND chip requirements into account, and since you want to
-read/write from both the bootloader and linux, you'll have to force this
-specific ECC setting, but this case should be the exception, not the
-default behavior.
-
-If you want an example on how to extrapolate ECC engine settings from
-->ecc_xxx_ds info, you can look at the sunxi_nand driver [2].
-
-[1]http://lxr.free-electrons.com/source/drivers/mtd/nand/nand_base.c#L3491
-[2]http://lxr.free-electrons.com/source/drivers/mtd/nand/sunxi_nand.c#L1946
+--lxkwbwyaljtvk7gn--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
