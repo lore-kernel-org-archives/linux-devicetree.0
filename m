@@ -1,161 +1,51 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: Add GPCv2 power gating driver
-Date: Fri, 24 Mar 2017 14:32:16 +0800
-Message-ID: <20170324063216.GC12604@b29396-OptiPlex-7040>
-References: <20170321145004.21265-1-andrew.smirnov@gmail.com>
- <20170321145004.21265-2-andrew.smirnov@gmail.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 15/15] arm64: dts: xilinx: fix PCI bus dtc warnings
+Date: Thu, 23 Mar 2017 15:35:38 +0100
+Message-ID: <71d943be-c0a1-cb83-7f39-d5c509323afa@xilinx.com>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-15-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170321145004.21265-2-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, yurovsky@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170322020313.24338-15-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 07:50:03AM -0700, Andrey Smirnov wrote:
-> Add DT bindings for power domain driver for GPCv2 IP block found in
-> i.MX7 SoCs.
+On 22.3.2017 03:03, Rob Herring wrote:
+> dtc recently added PCI bus checks. Fix these warnings.
 > 
-> Cc: yurovsky@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Dong Aisheng <dongas86@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: "Sören Brinkmann" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
->  include/dt-bindings/power/imx7-power.h             | 18 ++++++
->  2 files changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
->  create mode 100644 include/dt-bindings/power/imx7-power.h
+> Sub-arch maintainers, please apply to your trees unless arm-soc wants 
+> to take the whole lot.
 > 
-> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-> new file mode 100644
-> index 0000000..02f45c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-> @@ -0,0 +1,71 @@
-> +Freescale i.MX General Power Controller v2
-> +==========================================
-> +
-> +The i.MX7S/D General Power Control (GPC) block contains Power Gating
-> +Control (PGC) for various power domains.
-> +
-> +Required properties:
-> +
-> +- compatible: Should be "fsl,imx7d-gpc"
-> +
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +
-> +- interrupts: Should contain GPC interrupt request 1
-> +
-> +Power domains contained within GPC node are generic power domain
-> +providers, documented in
-> +Documentation/devicetree/bindings/power/power_domain.txt, which are
-> +described as subnodes of the power gating controller 'pgc' node,
-> +which, in turn, is expected to contain the following:
-> +
-> +Required properties:
-> +
-> +- reg: Power domain index. Valid values are defined in
-> +  include/dt-bindings/power/imx7-power.h
-> +
-> +- #power-domain-cells: Should be 0
-> +
-> +Optional properties:
-> +
-> +- power-supply: Power supply used to power the domain
-> +
-> +Example:
-> +
-> +	gpc: gpc@303a0000 {
-> +		compatible = "fsl,imx7d-gpc";
-> +		reg = <0x303a0000 0x1000>;
-> +		interrupt-controller;
-> +		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&intc>;
-> +
-> +		pgc {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			pgc_pcie_phy: power-domain@3 {
-> +				#power-domain-cells = <0>;
-> +
-> +				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
-> +				power-supply = <&reg_1p0d>;
-> +			};
-> +		};
-> +	};
-> +
-> +
-> +Specifying power domain for IP modules
-> +======================================
-> +
-> +IP cores belonging to a power domain should contain a 'power-domains'
-> +property that is a phandle for PGC node representing the domain.
-> +
-> +Example of a device that is part of the PCIE_PHY power domain:
-> +
-> +	pcie: pcie@33800000 {
-> +	      reg = <0x33800000 0x4000>,
-> +	            <0x4ff00000 0x80000>;
-> +		/* ... */
-> +		power-domains = <&pgc_pcie_phy>;
-> +		/* ... */
-> +	};
-> diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
-> new file mode 100644
-> index 0000000..eb70023
-> --- /dev/null
-> +++ b/include/dt-bindings/power/imx7-power.h
-> @@ -0,0 +1,18 @@
-> +/*
-> + *  Copyright (C) 2017 Impinj
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_IMX7_POWER_H__
-> +#define __DT_BINDINGS_IMX7_POWER_H__
-> +
-> +#define IMX7_POWER_DOMAIN_USB_HSIC_PHY	0
-> +#define IMX7_POWER_DOMAIN_USB_OTG2_PHY	1
-> +#define IMX7_POWER_DOMAIN_USB_OTG1_PHY	2
-> +#define IMX7_POWER_DOMAIN_PCIE_PHY	3
-> +#define IMX7_POWER_DOMAIN_MIPI_PHY	4
-
-Nitpick: Probably better to define according to the reference manual
-defined order.
-
-0x800 ~ 0x83F : PGC for A7 core0
-0x840 ~ 0x87F: PGC for A7 core1
-0x880 ~ 0x8BF: PGC for A7 SCU
-0xA00 ~ 0xA3F: PGC for fastmix/megamix
-0xC00 ~ 0xC3F: PGC for MIPI PHY
-0xC40 ~ 0xC7F: PGC for PCIE_PHY
-0xC80 ~ 0xCBF: Reserved
-0xCC0 ~ 0xCFF: Reserved
-0xD00 ~ 0xD3F: PGC for USB HSIC PHY
-
-You can drop A7 core/scu/fastmix/megamix as well.
-
-> +
-> +#endif
-> -- 
-> 2.9.3
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> index 54dc28351c8c..1a3f5e928bb9 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> @@ -221,6 +221,7 @@
+>  				  0x43000000 0x00000006 0x00000000 0x00000006
+>  				  0x00000000 0x00000002 0x00000000>;
+>  				  /* prefetchable memory */
+> +			bus-range = <0x00 0xff>;
+>  			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+>  			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
+>  					<0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
 > 
 
-Regards
-Dong Aisheng
+Applied to zynqmp/dt branch.
+
+Thanks,
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
