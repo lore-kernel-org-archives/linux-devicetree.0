@@ -1,35 +1,59 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 02/12] irqchip: mtk-sysirq: extend intpol base to
- arbitrary number
-Date: Thu, 23 Mar 2017 16:25:54 +0000
-Message-ID: <3790b6ad-12c0-0c48-c24e-0f3397c6bbba@arm.com>
-References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
- <1489937193-2953-3-git-send-email-mars.cheng@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1489937193-2953-3-git-send-email-mars.cheng@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-clk@vger.kernel.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [RFT PATCH 6/6] ARM64: dts: meson-gxbb: Add USB Hub GPIO hog
+Date: Thu, 23 Mar 2017 17:27:29 +0100
+Message-ID: <1490286449-19448-7-git-send-email-narmstrong@baylibre.com>
+References: <1490286449-19448-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490286449-19448-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/03/17 15:26, Mars Cheng wrote:
-> Originally driver only supports one base. However, MT6797 has
-> more than one bases to configure interrupt polarity. To support
-> possible design change, here comes a solution to use arbitrary
-> number of bases.
-> 
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+The ODroid-C2 on-board USB Hub needs to to have it's reset signal set to
+high level in order to be enumerated by the USB Host Controller.
 
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+But this management must be part of the currently in-development Generic
+Power Sequence patch that will allow a USB Controller driver to start and stop
+a power sequence associated to the USB Bus.
 
-What is the merge strategy for this? I'm happy to take the irqchip stuff
-through my tree, but there is much more in this series...
+In the meantime, a simple USB Hog will work to enable the USB Hub.
 
-Thanks,
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-	M.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index c59403a..6288538 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -177,6 +177,21 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&gpio_ao {
++	/*
++	 * WARNING: The USB Hub on the Odroid-C2 needs a reset signal
++	 * to be turned high in order to be detected by the USB Controller
++	 * This signal should be handled by a USB specific power sequence
++	 * in order to reset the Hub when USB bus is powered down.
++	 */
++	usb-hub {
++		gpio-hog;
++		gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "usb-hub-reset";
++	};
++};
++
+ &usb0_phy {
+ 	status = "okay";
+ 	phy-supply = <&usb_otg_pwr>;
 -- 
-Jazz is not dead. It just smells funny...
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
