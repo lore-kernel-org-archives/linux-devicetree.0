@@ -1,52 +1,132 @@
-From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/2] Documentation: dt-bindings: Document bindings for Aspeed ADC
-Date: Wed, 22 Mar 2017 23:27:34 -0700
-Message-ID: <20170323062735.7317-1-raltherr@google.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
+ Mediatek MT7530 switch
+Date: Thu, 23 Mar 2017 16:06:56 +0800
+Message-ID: <1490256416.14184.2.camel@mtkswgap22>
+References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
+         <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
+         <20170323072233.GA10076@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170323072233.GA10076@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, davem@davemloft.net, Landen.Chao@mediatek.com, keyhaede@gmail.com, objelf@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
+Hi Andrew,
 
-Changes in v3:
-- Consistently write hex contstants with lowercase letters
-- Drop model numbers from description as same IP is used in every generation
+The purpose for the regmap table registered is to 
 
-Changes in v2:
-- Rewritten as an IIO ADC device
+provide a way which helps us to look up a specific 
 
- .../devicetree/bindings/iio/adc/aspeed_adc.txt       | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+register on the switch through regmap-debugfs.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-new file mode 100644
-index 000000000000..674e133b7cd7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-@@ -0,0 +1,20 @@
-+Aspeed ADC
-+
-+This device is a 10-bit converter for 16 voltage channels.  All inputs are
-+single ended.
-+
-+Required properties:
-+- compatible: Should be "aspeed,ast2400-adc" or "aspeed,ast2500-adc"
-+- reg: memory window mapping address and length
-+- clocks: Input clock used to derive the sample clock. Expected to be the
-+          SoC's APB clock.
-+- #io-channel-cells: Must be set to <1> to indicate channels are selected
-+                     by index.
-+
-+Example:
-+	adc@1e6e9000 {
-+		compatible = "aspeed,ast2400-adc";
-+		reg = <0x1e6e9000 0xb0>;
-+		clocks = <&clk_apb>;
-+		#io-channel-cells = <1>;
-+	};
--- 
-2.12.1.500.gab5fba24ee-goog
+
+And not all ranges of register is defined
+
+so I only include the meaningful ones in a sparse way 
+
+for the table.
+
+	Sean
+
+
+On Thu, 2017-03-23 at 08:22 +0100, Andrew Lunn wrote:
+> > +static int
+> > +mt7623_trgmii_write(struct mt7530_priv *priv,  u32 reg, u32 val)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret =  regmap_write(priv->ethernet, TRGMII_BASE(reg), val);
+> > +	if (ret < 0)
+> > +		dev_err(priv->dev,
+> > +			"failed to priv write register\n");
+> > +	return ret;
+> > +}
+> > +
+> > +static u32
+> > +mt7623_trgmii_read(struct mt7530_priv *priv, u32 reg)
+> > +{
+> > +	int ret;
+> > +	u32 val;
+> > +
+> > +	ret = regmap_read(priv->ethernet, TRGMII_BASE(reg), &val);
+> > +	if (ret < 0) {
+> > +		dev_err(priv->dev,
+> > +			"failed to priv read register\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	return val;
+> > +}
+> 
+> Hi Sean
+> 
+> These appear to be the only two accessors which use the regmap.
+> 
+> > +static int
+> > +mt7530_regmap_read(void *ctx, uint32_t reg, uint32_t *val)
+> > +{
+> > +	struct mt7530_priv *priv = (struct mt7530_priv *)ctx;
+> > +
+> > +	/* BIT(15) is used as indication for pseudo registers
+> > +	 * which would be translated into the general MDIO
+> > +	 * access to leverage the unique regmap sys interface.
+> > +	 */
+> > +	if (reg & BIT(15))
+> > +		*val = mdiobus_read_nested(priv->bus,
+> > +					   (reg & 0xf00) >> 8,
+> > +					   (reg & 0xff) >> 2);
+> > +	else
+> > +		*val = mt7530_read(priv, reg);
+> > +
+> > +	return 0;
+> > +}
+> 
+> .....
+> 
+> > +static const struct regmap_range mt7530_readable_ranges[] = {
+> > +	regmap_reg_range(0x0000, 0x00ac), /* Global control */
+> > +	regmap_reg_range(0x2000, 0x202c), /* Port Control - P0 */
+> > +	regmap_reg_range(0x2100, 0x212c), /* Port Control - P1 */
+> > +	regmap_reg_range(0x2200, 0x222c), /* Port Control - P2 */
+> > +	regmap_reg_range(0x2300, 0x232c), /* Port Control - P3 */
+> > +	regmap_reg_range(0x2400, 0x242c), /* Port Control - P4 */
+> > +	regmap_reg_range(0x2500, 0x252c), /* Port Control - P5 */
+> > +	regmap_reg_range(0x2600, 0x262c), /* Port Control - P6 */
+> > +	regmap_reg_range(0x30e0, 0x30f8), /* Port MAC - SYS */
+> > +	regmap_reg_range(0x3000, 0x3014), /* Port MAC - P0 */
+> > +	regmap_reg_range(0x3100, 0x3114), /* Port MAC - P1 */
+> > +	regmap_reg_range(0x3200, 0x3214), /* Port MAC - P2*/
+> > +	regmap_reg_range(0x3300, 0x3314), /* Port MAC - P3*/
+> > +	regmap_reg_range(0x3400, 0x3414), /* Port MAC - P4 */
+> > +	regmap_reg_range(0x3500, 0x3514), /* Port MAC - P5 */
+> > +	regmap_reg_range(0x3600, 0x3614), /* Port MAC - P6 */
+> > +	regmap_reg_range(0x4000, 0x40d4), /* MIB - P0 */
+> > +	regmap_reg_range(0x4100, 0x41d4), /* MIB - P1 */
+> > +	regmap_reg_range(0x4200, 0x42d4), /* MIB - P2 */
+> > +	regmap_reg_range(0x4300, 0x43d4), /* MIB - P3 */
+> > +	regmap_reg_range(0x4400, 0x44d4), /* MIB - P4 */
+> > +	regmap_reg_range(0x4500, 0x45d4), /* MIB - P5 */
+> > +	regmap_reg_range(0x4600, 0x46d4), /* MIB - P6 */
+> > +	regmap_reg_range(0x4fe0, 0x4ff4), /* SYS */
+> > +	regmap_reg_range(0x7000, 0x700c), /* SYS 2 */
+> > +	regmap_reg_range(0x7018, 0x7028), /* SYS 3 */
+> > +	regmap_reg_range(0x7800, 0x7830), /* SYS 4 */
+> > +	regmap_reg_range(0x7a00, 0x7a7c), /* TRGMII */
+> > +	regmap_reg_range(0x8000, 0x8078), /* Psedo address for Phy - P0 */
+> > +	regmap_reg_range(0x8100, 0x8178), /* Psedo address for Phy - P1 */
+> > +	regmap_reg_range(0x8200, 0x8278), /* Psedo address for Phy - P2 */
+> > +	regmap_reg_range(0x8300, 0x8378), /* Psedo address for Phy - P3 */
+> > +	regmap_reg_range(0x8400, 0x8478), /* Psedo address for Phy - P4 */
+> > +};
+> 
+> It looks like your regmap accessor are only used for 0x7a00 to 0x7a7c.
+> 
+> It is not clear why you even bother with a regmap. If you have it, why
+> not use it for all registers within the regmap?
+> 
+>     Andrew
