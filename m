@@ -1,86 +1,43 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] power: supply: Add driver for TI BQ2416X battery charger
-Date: Thu, 23 Mar 2017 14:54:36 +0100
-Message-ID: <20170323135436.v7epznjbtclqkfsd@earth>
-References: <1486429749-12973-1-git-send-email-wojciech.ziemba@verifone.com>
- <20170320055845.3o7nyhcu66ridheb@earth>
- <BN6PR03MB2963F42E5F6AC2ECCDC5722B9F3C0@BN6PR03MB2963.namprd03.prod.outlook.com>
+From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
+ Mediatek MT7530 switch
+Date: Thu, 23 Mar 2017 15:09:06 +0100
+Message-ID: <c9ffd691-b959-1e19-5bea-6386b816bac2@nbd.name>
+References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
+ <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
+ <20170323072233.GA10076@lunn.ch> <1490256416.14184.2.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zx44lwxrosfxj6ja"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BN6PR03MB2963F42E5F6AC2ECCDC5722B9F3C0@BN6PR03MB2963.namprd03.prod.outlook.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Wojciech Ziemba <Wojciech.Ziemba@VERIFONE.com>
-Cc: Wojciech Ziemba <wo.ziemba@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490256416.14184.2.camel@mtkswgap22>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2017-03-23 09:06, Sean Wang wrote:
+> Hi Andrew,
+> 
+> The purpose for the regmap table registered is to 
+> 
+> provide a way which helps us to look up a specific 
+> 
+> register on the switch through regmap-debugfs.
+> 
+> 
+> And not all ranges of register is defined
+> 
+> so I only include the meaningful ones in a sparse way 
+> 
+> for the table.
+I think in that case it might be nice to make regmap support optional in
+order to avoid pulling in bloat on platforms that don't need it.
 
---zx44lwxrosfxj6ja
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+- Felix
 
-Hi,
 
-On Wed, Mar 22, 2017 at 01:53:19PM +0000, Wojciech Ziemba wrote:
-> [...]
->
-> >> and a number of knobs for controlling the charging process
-> > missing sysfs ABI documentation. Most of them are probably either
-> > not needed, or should become standard POWER_SUPPLY_PROP_ properties.
->=20
-> Well, it is up to you. POWER_SUPPLY props are already there.
-> If any new POWER_SUPPLY props should be introduced, it is an open questio=
-n.
-> I agree sysfs knobs could be not needed, but many PSY drivers
-> still use them. Couldn't them still be useful even if don't fit the model=
- directly?
-> Especially for more specialized embedded systems?
-
-Yes they may, they also may not. Let's add them once they are
-needed, because adding them means, that they become ABI.
-
-> [...]
->
-> >> +- ti,safety-timer:          Safety timer. enum:
-> >> +                    - TMR_27MIN (0)
-> >> +                    - TMR_6H (1)
-> >> +                    - TMR_9H (2)
-> >> +                    - TMR_OFF (3)
-> > This does not belong into DT. Just always set it to 27 minutes and
-> > properly reset the timer in the driver. You will also need a suspend
-> > handler, that disables the timer (or wakeup every now and then to
-> > reset it).
->=20
-> Do you mean, more flexible safety timer based on minimal 27min reset?
-> Will address wakeup in suspend, separately in this driver.
-
-I mean just always use TMR_27MIN in the driver + watchdog to keep
-the system charging. You can change the timer to something bigger
-in the suspend routine.
-
--- Sebastian
-
---zx44lwxrosfxj6ja
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljT05kACgkQ2O7X88g7
-+pqlzBAAlNFEC7gxoZZ6MGyS83tk68x6XVTugsM0GoA4Izyfpt2Cq3NQLVnwbZLG
-iEZKZo9QDSYUu2u2ZPwr8vqTCbv16phxCb8tgu5hzdDL8u1aE2VeSReOrPmWhzLR
-5n8QRUOAW3uoVPQU647s/hsviL0SYbAVYAKxjaijJGELqF+yJIut6nGszgDhnnVa
-MIkQz5h6QDWyB4V0VhY2kYZtKmySgx14CmTIBGuCndwjUrst2cGVrintB07+eeGh
-PFQthWqamNBiBJR7bwEzE8MONZX9x2M3+NSE+zCOBPYTSOM3dl770R4UCKISYeg3
-FcQ1cpZdKUwGCNreX2fthxjV41zaYXFQQWN8SsHDjz5c7LkMaj2v/uMlPty1YiLT
-MccuC9NO+6gPLBew80X+mEmtMXL1v+O+Ob1OqrfV8OTuOhMeHbv5w2RXTV1UzS32
-U509Vc57AXI/AGhriwtFzPTQR0M0XFrVUshtpf3Q3bHT83iedBN6v3k9OQyKx7q7
-TdQCJ0tA3pMukODoUk/XxTL725p0Oiy2lCepJCqwFyYocNqE1WQqdDnuUo2yyNKX
-lhXY1G6NltXBLdIhXoOd8to0lcApKW2M9sEzYS3jUAL2DSwwraqo4+dS9OARQyOp
-kbHso3o1AcZVFFLYcrAUpStkNpVFnFWzXyyyDAo6fNBnipKndAw=
-=ov61
------END PGP SIGNATURE-----
-
---zx44lwxrosfxj6ja--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
