@@ -1,56 +1,95 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [GIT PULL] Immutable branch between MFD and GPIO due for the v4.12
- merge window
-Date: Thu, 23 Mar 2017 11:48:43 +0000
-Message-ID: <20170323114843.q7zcakeajjnhqr4l@dell>
-References: <1489745120-2918-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/7] mfd: rk808: fix up the chip id get failed
+Date: Thu, 23 Mar 2017 12:14:15 +0000
+Message-ID: <20170323121415.tv7sljjgbjw57qyl@dell>
+References: <1489734377-1716-1-git-send-email-zhangqing@rock-chips.com>
+ <1489734377-1716-2-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489745120-2918-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+In-Reply-To: <1489734377-1716-2-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enjoy,
+On Fri, 17 Mar 2017, Elaine Zhang wrote:
 
-The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201:
+> the rk8xx chip id is:
+> ((MSB << 8) | LSB) & 0xfff0
+> 
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  drivers/mfd/rk808.c       | 21 +++++++++++++++------
+>  include/linux/mfd/rk808.h |  1 +
+>  2 files changed, 16 insertions(+), 6 deletions(-)
 
-  Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-v4.12
-
-for you to fetch changes up to 9f7c7ceefe5e824e8333859bded12257a6d3548a:
-
-  mfd: wm831x: Add device tree binding document (2017-03-23 11:46:00 +0000)
-
-----------------------------------------------------------------
-Immutable branch between MFD and GPIO due for the v4.12 merge window
-
-----------------------------------------------------------------
-Charles Keepax (3):
-      mfd: wm831x: Add basic device tree binding
-      gpio: wm831x: Add basic device tree support
-      mfd: wm831x: Add device tree binding document
-
- Documentation/devicetree/bindings/mfd/wm831x.txt | 81 ++++++++++++++++++++++++
- MAINTAINERS                                      |  1 +
- drivers/gpio/gpio-wm831x.c                       |  5 +-
- drivers/mfd/wm831x-core.c                        | 29 ++++++---
- drivers/mfd/wm831x-i2c.c                         | 19 +++++-
- drivers/mfd/wm831x-irq.c                         |  6 +-
- drivers/mfd/wm831x-spi.c                         | 18 +++++-
- include/linux/mfd/wm831x/core.h                  |  9 ++-
- 8 files changed, 152 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/wm831x.txt
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+  
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> index fd087cbb0bde..3334a2a7f3fb 100644
+> --- a/drivers/mfd/rk808.c
+> +++ b/drivers/mfd/rk808.c
+> @@ -325,7 +325,7 @@ static int rk808_probe(struct i2c_client *client,
+>  	void (*pm_pwroff_fn)(void);
+>  	int nr_pre_init_regs;
+>  	int nr_cells;
+> -	int pm_off = 0;
+> +	int pm_off = 0, msb, lsb;
+>  	int ret;
+>  	int i;
+>  
+> @@ -333,14 +333,23 @@ static int rk808_probe(struct i2c_client *client,
+>  	if (!rk808)
+>  		return -ENOMEM;
+>  
+> -	rk808->variant = i2c_smbus_read_word_data(client, RK808_ID_MSB);
+> -	if (rk808->variant < 0) {
+> -		dev_err(&client->dev, "Failed to read the chip id at 0x%02x\n",
+> +	/* read Chip variant */
+> +	msb = i2c_smbus_read_byte_data(client, RK808_ID_MSB);
+> +	if (msb < 0) {
+> +		dev_err(&client->dev, "failed to read the chip id at 0x%x\n",
+>  			RK808_ID_MSB);
+> -		return rk808->variant;
+> +		return msb;
+>  	}
+>  
+> -	dev_dbg(&client->dev, "Chip id: 0x%x\n", (unsigned int)rk808->variant);
+> +	lsb = i2c_smbus_read_byte_data(client, RK808_ID_LSB);
+> +	if (lsb < 0) {
+> +		dev_err(&client->dev, "failed to read the chip id at 0x%x\n",
+> +			RK808_ID_LSB);
+> +		return lsb;
+> +	}
+> +
+> +	rk808->variant = ((msb << 8) | lsb) & RK8XX_ID_MSK;
+> +	dev_info(&client->dev, "Chip id: 0x%x\n", (unsigned int)rk808->variant);
+>  
+>  	switch (rk808->variant) {
+>  	case RK808_ID:
+> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+> index 83701ef7d3c7..54feb140c210 100644
+> --- a/include/linux/mfd/rk808.h
+> +++ b/include/linux/mfd/rk808.h
+> @@ -298,6 +298,7 @@ enum rk818_reg {
+>  #define VOUT_LO_INT	BIT(0)
+>  #define CLK32KOUT2_EN	BIT(0)
+>  
+> +#define RK8XX_ID_MSK			0xfff0
+>  enum {
+>  	BUCK_ILMIN_50MA,
+>  	BUCK_ILMIN_100MA,
 
 -- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
