@@ -1,36 +1,144 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC 3/8] cpufreq: imx6q: Set max suspend_freq to avoid changes
- during suspend
-Date: Thu, 23 Mar 2017 10:04:27 +0530
-Message-ID: <20170323043427.GE12094@vireshk-i7>
-References: <cover.1490199005.git.leonard.crestez@nxp.com>
- <f2126423e233757eb113f115e0be562ea0902a7a.1490199005.git.leonard.crestez@nxp.com>
+From: Ziji Hu <huziji@marvell.com>
+Subject: Re: [EXT] Re: [PATCH v6 07/14] dt: bindings: Add bindings for Marvell
+ Xenon SD Host Controller
+Date: Thu, 23 Mar 2017 13:32:23 +0800
+Message-ID: <c3c97ce1-4aaa-4e85-d2c3-275f5247c0cc@marvell.com>
+References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
+ <3a4ce2fd25ed812482b0fc96f50dd305c8f40fe9.1487091464.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFrmb51cTR7B5S0JkmACH0=bw9+28RmWnjwWkuiT7N4wVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f2126423e233757eb113f115e0be562ea0902a7a.1490199005.git.leonard.crestez@nxp.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Robin Gong <yibin.gong@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Irina Tirdea <irina.tirdea@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFrmb51cTR7B5S0JkmACH0=bw9+28RmWnjwWkuiT7N4wVw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas
 List-Id: devicetree@vger.kernel.org
 
-On 22-03-17, 18:53, Leonard Crestez wrote:
-> If the cpufreq driver tries to modify voltage/freq during suspend/resume
-> it might need to control an external PMIC via I2C or SPI but those
-> devices might be already suspended.
-> 
-> To avoid this scenario we just increase cpufreq to highest setpoint
-> before suspend. This issue can easily be triggered by ldo-bypass but in
-> theory any regulator set_voltage call can end up having to modify
-> external supply voltages.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> ---
->  drivers/cpufreq/imx6q-cpufreq.c | 2 ++
->  1 file changed, 2 insertions(+)
+Hi Ulf,
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+On 2017/3/15 20:48, Ulf Hansson wrote:
+> [...]
+> 
+>> +
+>> +Example:
+>> +- For eMMC:
+>> +
+>> +       sdhci@aa0000 {
+>> +               compatible = "marvell,armada-ap806-sdhci";
+>> +               reg = <0xaa0000 0x1000>;
+>> +               interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
+>> +               clocks = <&emmc_clk>;
+>> +               clock-names = "core";
+>> +               bus-width = <4>;
+>> +               marvell,xenon-phy-slow-mode;
+>> +               marvell,xenon-tun-count = <11>;
+> 
+> There's no vmmc-supply here.
+> 
+> How do you control power to the eMMC card?
+> 
 
--- 
-viresh
+	Sorry for the delayed reply.
+	Just confirmed with the engineers.
+
+	It seems that there is a regulator.
+	I will ask for a complete node example.
+
+>> +
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               apm_mmccard: mmccard@0 {
+>> +                       compatible = "mmc-card";
+>> +                       reg = <0>;
+>> +               };
+>> +       };
+>> +
+>> +- For SD/SDIO:
+>> +
+>> +       sdhci@ab0000 {
+>> +               compatible = "marvell,armada-cp110-sdhci";
+>> +               reg = <0xab0000 0x1000>;
+>> +               interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
+>> +               vqmmc-supply = <&sd_regulator>;
+> 
+> I guess you know vqmmc is for the I/O voltage.
+> 
+> Again, how do you power the SD/SDIO card? No vmmc?
+
+	The vmmc-supply regulator does exist according to the engineer.
+	I will ask them to provide a complete one.
+
+> 
+>> +               clocks = <&sdclk>;
+>> +               clock-names = "core";
+>> +               bus-width = <4>;
+>> +               marvell,xenon-tun-count = <9>;
+>> +       };
+>> +
+>> +- For eMMC with compatible "marvell,armada-3700-sdhci":
+>> +
+>> +       sdhci@aa0000 {
+>> +               compatible = "marvell,armada-3700-sdhci";
+>> +               reg = <0xaa0000 0x1000>,
+>> +                     <phy_addr 0x4>;
+>> +               interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
+>> +               clocks = <&emmcclk>;
+>> +               clock-names = "core";
+>> +               bus-width = <8>;
+>> +               mmc-ddr-1_8v;
+>> +               mmc-hs400-1_8v;
+> 
+> Again, no vmmc?
+> 
+
+	The engineer told me the power to eMMC card is fixed on this platform.
+	They don't implement a specific regulator for eMMC core power.
+
+>> +
+>> +               marvell,pad-type = "fixed-1-8v";
+>> +
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               mmccard: mmccard@0 {
+>> +                       compatible = "mmc-card";
+>> +                       reg = <0>;
+>> +               };
+>> +       };
+>> +
+>> +- For SD/SDIO with compatible "marvell,armada-3700-sdhci":
+>> +
+>> +       sdhci@ab0000 {
+>> +               compatible = "marvell,armada-3700-sdhci";
+>> +               reg = <0xab0000 0x1000>,
+>> +                     <phy_addr 0x4>;
+>> +               interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
+>> +               vqmmc-supply = <&sd_regulator>;
+> 
+> Again, no vmmc?
+> 
+	
+	It seems that the core power to SD is also fixed.
+
+>> +               clocks = <&sdclk>;
+>> +               clock-names = "core";
+>> +               bus-width = <4>;
+>> +
+>> +               marvell,pad-type = "sd";
+>> +       };
+>> --
+>> git-series 0.9.1
+> 
+> 
+> Kind regards
+> Uffe
+> 
