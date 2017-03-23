@@ -1,83 +1,163 @@
-From: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-Subject: Re: [PATCH V11 6/6] thermal: bcm2835: add thermal driver for bcm2835 SoC
-Date: Fri, 24 Mar 2017 01:53:44 +0900
-Message-ID: <CABMQnVJx10e2qm0N=C_vxU9WAQGUJ3ZyAUgrK7WQZoxm9+P0wg@mail.gmail.com>
-References: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com> <1489356665-3175-7-git-send-email-stefan.wahren@i2se.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] usb: dwc2: Add support for STM32F429/439/469 USB
+ OTG HS/FS in FS mode (internal PHY)
+Date: Thu, 23 Mar 2017 18:06:05 +0100
+Message-ID: <58187797-2c11-c75b-571c-27fe64578099@st.com>
+References: <20170201012547.76158-1-bruherrera@gmail.com>
+ <20170201012547.76158-2-bruherrera@gmail.com>
+ <2B3535C5ECE8B5419E3ECBE300772909021B411720@US01WEMBX2.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1489356665-3175-7-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, kernel@martin.sperl.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2B3535C5ECE8B5419E3ECBE300772909021B411720-Yu2iAY70zvrYN67daEjeMPufCSb+aD3WLzEdoUbNIic@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stefan.
+Hi John,
 
-2017-03-13 7:11 GMT+09:00 Stefan Wahren <stefan.wahren@i2se.com>:
-> Add basic thermal driver for bcm2835 SoC.
+On 02/01/2017 04:37 AM, John Youn wrote:
+> On 1/31/2017 5:26 PM, Bruno Herrera wrote:
+>> This patch introduces a new parameter to activate USB OTG HS/FS core
+>> embedded phy transceiver. The STM32F4x9 SoC uses the GGPIO register
+>> to enable the transceiver.
+>> Also add the dwc2_set_params function for stm32f4 otg fs.
+>>
+>> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >
-> This driver currently make sure that tsense HW block is set up
-> correctly.
+> Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 >
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Acked-by: Eric Anholt <eric@anholt.net>
-> ---
->  drivers/thermal/Kconfig           |    8 +
->  drivers/thermal/Makefile          |    1 +
->  drivers/thermal/bcm2835_thermal.c |  315 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 324 insertions(+)
->  create mode 100644 drivers/thermal/bcm2835_thermal.c
+Do you plan to take those patches on your pull-request for 4.12?
+I was wondering if I take machine parts (DT) in my pull request for 4.12 
+or if I wait an official version with driver part merged.
+
+Regards
+Alex
+
+> Regards,
+> John
 >
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 776b343..3bd2406 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -453,4 +453,12 @@ config ZX2967_THERMAL
->           the primitive temperature sensor embedded in zx2967 SoCs.
->           This sensor generates the real time die temperature.
 >
-> +config BCM2835_THERMAL
-> +       tristate "Thermal sensors on bcm2835 SoC"
-> +       depends on ARCH_BCM2835 || COMPILE_TEST
-> +       depends on HAS_IOMEM
-> +       depends on THERMAL_OF
-> +       help
-> +         Support for thermal sensors on Broadcom bcm2835 SoCs.
-> +
->  endif
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 7adae20..f23cde0 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -58,3 +58,4 @@ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
->  obj-$(CONFIG_MTK_THERMAL)      += mtk_thermal.o
->  obj-$(CONFIG_GENERIC_ADC_THERMAL)      += thermal-generic-adc.o
->  obj-$(CONFIG_ZX2967_THERMAL)   += zx2967_thermal.o
-> +obj-$(CONFIG_BCM2835_THERMAL)  += bcm2835_thermal.o
-> diff --git a/drivers/thermal/bcm2835_thermal.c b/drivers/thermal/bcm2835_thermal.c
-> new file mode 100644
-> index 0000000..a9768f1
-> --- /dev/null
-> +++ b/drivers/thermal/bcm2835_thermal.c
-
-<snip>
-
-> +static struct thermal_zone_of_device_ops bcm2835_thermal_ops = {
-> +       .get_temp = bcm2835_thermal_get_temp,
-> +};
-> +
-> +static const struct of_device_id bcm2835_thermal_of_match_table[];
-
-bcm2835_thermal_of_match_table has been defined twice.
-I think that it is better to define bcm2835_thermal_of_match_table below
-or move bcm2835_thermal_probe to bottom.
-
-Best regards,
-  Nobuhiro
-
--- 
-Nobuhiro Iwamatsu
-   iwamatsu at {nigauri.org / debian.org}
-   GPG ID: 40AD1FA6
+>> ---
+>>  drivers/usb/dwc2/core.h   |  5 +++++
+>>  drivers/usb/dwc2/hcd.c    | 15 ++++++++++++++-
+>>  drivers/usb/dwc2/hw.h     |  2 ++
+>>  drivers/usb/dwc2/params.c | 19 +++++++++++++++++++
+>>  4 files changed, 40 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+>> index b9b62f1..252400b 100644
+>> --- a/drivers/usb/dwc2/core.h
+>> +++ b/drivers/usb/dwc2/core.h
+>> @@ -423,6 +423,10 @@ enum dwc2_ep0_state {
+>>   *			needed.
+>>   *			0 - No (default)
+>>   *			1 - Yes
+>> + * @activate_stm_fs_transceiver: Activate internal transceiver using GGPIO
+>> + *			register.
+>> + *			0 - Deactivate the transceiver (default)
+>> + *			1 - Activate the transceiver
+>>   * @g_dma:              Enables gadget dma usage (default: autodetect).
+>>   * @g_dma_desc:         Enables gadget descriptor DMA (default: autodetect).
+>>   * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
+>> @@ -477,6 +481,7 @@ struct dwc2_core_params {
+>>  	bool uframe_sched;
+>>  	bool external_id_pin_ctl;
+>>  	bool hibernation;
+>> +	bool activate_stm_fs_transceiver;
+>>  	u16 max_packet_count;
+>>  	u32 max_transfer_size;
+>>  	u32 ahbcfg;
+>> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+>> index a73722e..b5a70b6 100644
+>> --- a/drivers/usb/dwc2/hcd.c
+>> +++ b/drivers/usb/dwc2/hcd.c
+>> @@ -121,7 +121,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
+>>
+>>  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>>  {
+>> -	u32 usbcfg, i2cctl;
+>> +	u32 usbcfg, ggpio, i2cctl;
+>>  	int retval = 0;
+>>
+>>  	/*
+>> @@ -145,6 +145,19 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>>  				return retval;
+>>  			}
+>>  		}
+>> +
+>> +		if (hsotg->params.activate_stm_fs_transceiver) {
+>> +			ggpio = dwc2_readl(hsotg->regs + GGPIO);
+>> +			if (!(ggpio & GGPIO_STM32_OTG_GCCFG_PWRDWN)) {
+>> +				dev_dbg(hsotg->dev, "Activating transceiver\n");
+>> +				/*
+>> +				 * STM32F4x9 uses the GGPIO register as general
+>> +				 * core configuration register.
+>> +				 */
+>> +				ggpio |= GGPIO_STM32_OTG_GCCFG_PWRDWN;
+>> +				dwc2_writel(ggpio, hsotg->regs + GGPIO);
+>> +			}
+>> +		}
+>>  	}
+>>
+>>  	/*
+>> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
+>> index bde7248..4592012 100644
+>> --- a/drivers/usb/dwc2/hw.h
+>> +++ b/drivers/usb/dwc2/hw.h
+>> @@ -225,6 +225,8 @@
+>>
+>>  #define GPVNDCTL			HSOTG_REG(0x0034)
+>>  #define GGPIO				HSOTG_REG(0x0038)
+>> +#define GGPIO_STM32_OTG_GCCFG_PWRDWN	BIT(16)
+>> +
+>>  #define GUID				HSOTG_REG(0x003c)
+>>  #define GSNPSID				HSOTG_REG(0x0040)
+>>  #define GHWCFG1				HSOTG_REG(0x0044)
+>> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+>> index 2990c34..9cd8722 100644
+>> --- a/drivers/usb/dwc2/params.c
+>> +++ b/drivers/usb/dwc2/params.c
+>> @@ -120,6 +120,22 @@ static void dwc2_set_amcc_params(struct dwc2_hsotg *hsotg)
+>>  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 << GAHBCFG_HBSTLEN_SHIFT;
+>>  }
+>>
+>> +static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
+>> +{
+>> +	struct dwc2_core_params *p = &hsotg->params;
+>> +
+>> +	p->otg_cap = DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE;
+>> +	p->speed = DWC2_SPEED_PARAM_FULL;
+>> +	p->host_rx_fifo_size = 128;
+>> +	p->host_nperio_tx_fifo_size = 96;
+>> +	p->host_perio_tx_fifo_size = 96;
+>> +	p->max_packet_count = 256;
+>> +	p->phy_type = DWC2_PHY_TYPE_PARAM_FS;
+>> +	p->i2c_enable = false;
+>> +	p->uframe_sched = false;
+>> +	p->activate_stm_fs_transceiver = true;
+>> +}
+>> +
+>>  const struct of_device_id dwc2_of_match_table[] = {
+>>  	{ .compatible = "brcm,bcm2835-usb", .data = dwc2_set_bcm_params },
+>>  	{ .compatible = "hisilicon,hi6220-usb", .data = dwc2_set_his_params  },
+>> @@ -133,6 +149,9 @@ const struct of_device_id dwc2_of_match_table[] = {
+>>  	{ .compatible = "amlogic,meson-gxbb-usb",
+>>  	  .data = dwc2_set_amlogic_params },
+>>  	{ .compatible = "amcc,dwc-otg", .data = dwc2_set_amcc_params },
+>> +	{ .compatible = "st,stm32f4x9-fsotg",
+>> +	  .data = dwc2_set_stm32f4x9_fsotg_params },
+>> +	{ .compatible = "st,stm32f4x9-hsotg" },
+>>  	{},
+>>  };
+>>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+>>
+>
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
