@@ -1,51 +1,167 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: Re: [PATCH 1/4] gpio: mvebu: Add limited PWM support
-Date: Thu, 23 Mar 2017 11:35:02 +0100
-Message-ID: <20170323113502.36830c40@gmail.com>
-References: <20170316064218.9169-1-ralph.sennhauser@gmail.com>
-        <20170316064218.9169-2-ralph.sennhauser@gmail.com>
-        <CACRpkdZ=bor380ic_X36M7vVbopDCZe9Yb9TxkmOHyO75gdAnw@mail.gmail.com>
-        <20170317101747.67a09ccd@gmail.com>
-        <20170320135131.GP22463@ulmo.ba.sec>
-        <CACRpkdaqoJ6J+qoxOyGsT4X=-e1PH71_2oi0hQeQh72T0OnBfw@mail.gmail.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] iio/adc/ltc2497: Driver for Linear Technology LTC2497 ADC
+Date: Thu, 23 Mar 2017 12:05:10 +0100
+Message-ID: <6774c073-7fe4-e259-306e-3cf4621f7c69@metafoo.de>
+References: <1490265310-6162-1-git-send-email-michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaqoJ6J+qoxOyGsT4X=-e1PH71_2oi0hQeQh72T0OnBfw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490265310-6162-1-git-send-email-michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Mar 2017 11:11:09 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
+The subject should follow the standard subsystem subject scheme. E.g. in
+this case "iio: adc: Add driver for ..."
 
-> On Mon, Mar 20, 2017 at 2:51 PM, Thierry Reding
-> <thierry.reding@gmail.com> wrote:
-> > On Fri, Mar 17, 2017 at 10:17:47AM +0100, Ralph Sennhauser wrote:  
-> >> On Thu, 16 Mar 2017 17:03:05 +0100
-> >> Linus Walleij <linus.walleij@linaro.org> wrote:  
-> > [...]  
-> >> > > +static void mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
-> >> > > +static void mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)  
-> >> >
-> >> > I think both of these need to be tagged __maybe_unused to not
-> >> > give noise in randconfig builds.  
-> >>
-> >> I haven't seen any warnings with CONFIG_PWM disabled. Which
-> >> configuration you expect to trigger a warning? mvebu_pwm_probe
-> >> should be the same, right?  
-> >
-> > It's got nothing to do with CONFIG_PWM and as far as I can tell your
-> > usage of IS_ENABLED() is fine here. However, if you try building the
-> > driver with a !PM configuration, both *_suspend() and *_resume() end
-> > up being unused and giving you a warning.  
+On 03/23/2017 11:35 AM, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org wrote:
+> From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+
+Needs a commit message.
+
 > 
-> Yes I was referring to the !PM case.
+> Signed-off-by: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/adc/ltc2497.txt        |  13 +
+>  MAINTAINERS                                        |   1 +
+>  drivers/iio/adc/Kconfig                            |  11 +
+>  drivers/iio/adc/Makefile                           |   1 +
+>  drivers/iio/adc/ltc2497.c                          | 263 +++++++++++++++++++++
+>  5 files changed, 289 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ltc2497.txt
+>  create mode 100644 drivers/iio/adc/ltc2497.c
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ltc2497.txt b/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
+> new file mode 100644
+> index 0000000..c2829c19
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
+> @@ -0,0 +1,13 @@
+> +* Linear Technology / Analog Devices LTC2497 ADC
+> +
+> +Required properties:
+> + - compatible: Should be "lltc,ltc2497"
 
-Only this time around I did read !PM not as !PWM and so it became clear
-what you meant the first time around and why __maybe_unused is required.
+Replace 'should' with 'must'. It won't work if it isn't.
 
-Thanks
-Ralph
+> + - reg: Should contain the ADC I2C address
+
+Same here.
+
+> + - vref-supply: The regulator supply for ADC reference voltage
+> +
+> +Example:
+> +	ltc2497: adc@76 {
+> +		compatible = "lltc,ltc2497";
+> +		reg = <0x76>;
+> +		vref-supply = <&ltc2497_reg>;
+> +	};
+[...]
+> diff --git a/drivers/iio/adc/ltc2497.c b/drivers/iio/adc/ltc2497.c
+> new file mode 100644
+> index 0000000..0452715
+> --- /dev/null
+> +++ b/drivers/iio/adc/ltc2497.c
+> @@ -0,0 +1,263 @@
+> +/*
+> + * ltc2497.c - Driver for Linear Technology LTC2497 ADC
+
+That's the "Analog Devices LTC2497 ADC" now ;)
+
+> + *
+> + * Copyright (C) 2017 Analog Devices Inc.
+> + *
+> + * Licensed under the GPL-2.
+> + *
+> + * Datasheet: http://cds.linear.com/docs/en/datasheet/2497fd.pdf
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/delay.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/of.h>
+
+Sorting alphabetically is preferred.
+
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +#define LTC2497_ENABLE			0xA0
+> +#define LTC2497_SGL			(1 << 4)
+
+I'm sure 5 minutes after the patch has been applied somebody will send a
+patch to replace this with BIT(4)
+
+> +#define LTC2497_DIFF			(0 << 4)
+> +#define LTC2497_SIGN			(1 << 3)
+> +#define LTC2497_CONFIG_DEFAULT		LTC2497_ENABLE
+> +#define LTC2497_CONVERSION_TIME_MS	150ULL
+> +
+> +struct ltc2497_st {
+> +	struct i2c_client *client;
+> +	struct regulator *ref;
+> +	ktime_t	time_prev;
+> +	u8 addr_prev;
+> +};
+> +
+> +static int ltc2497_wait_conv(struct ltc2497_st *st)
+> +{
+> +	s64 time_elapsed;
+> +
+> +	time_elapsed = ktime_ms_delta(ktime_get(), st->time_prev);
+> +
+> +	if (time_elapsed < LTC2497_CONVERSION_TIME_MS) {
+> +		/* delay if conversion time not passed
+> +		 * since last read or write
+> +		 */
+> +		msleep(LTC2497_CONVERSION_TIME_MS - time_elapsed);
+
+Considering how long this sleeps msleep_interruptible() might be the better
+choice.
+
+> +		return 0;
+> +	}
+> +
+> +	if (time_elapsed - LTC2497_CONVERSION_TIME_MS <= 0) {
+> +		/* We're in automatic mode -
+> +		 * so the last reading is stil not outdated
+> +		 */
+> +		return 0;
+> +	}
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int ltc2497_read(struct ltc2497_st *st, u8 address, int *val)
+> +{
+> +	struct i2c_client *client = st->client;
+> +	__be32 buf = 0;
+
+transfer buffers must not be on the stack to avoid issues if the controller
+should use DMA.
+
+> +	int ret;
+> +
+> +	ret = ltc2497_wait_conv(st);
+> +	if (ret < 0 || st->addr_prev != address) {
+> +		ret = i2c_smbus_write_byte(st->client, 0xA0 | address);
+> +		if (ret < 0)
+> +			return ret;
+> +		st->addr_prev = address;
+> +		msleep(LTC2497_CONVERSION_TIME_MS);
+> +	}
+> +	ret = i2c_master_recv(client, (char *)&buf, 3);
+> +	if (ret < 0)  {
+> +		dev_err(&client->dev, "i2c_master_recv failed\n");
+> +		return ret;
+> +	}
+> +	st->time_prev = ktime_get();
+> +	*val = (be32_to_cpu(buf) >> 14) - (1 << 17);
+> +
+> +	return ret;
+> +}
+[...]
