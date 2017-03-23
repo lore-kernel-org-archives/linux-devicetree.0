@@ -1,150 +1,282 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v11 01/10] devicetree: power: Add battery.txt
-Date: Thu, 23 Mar 2017 13:18:04 +0100
-Message-ID: <20170323121804.c7qi2libbpchcl2a@earth>
-References: <20170320094335.19224-1-liam@networkimprov.net>
- <20170320094335.19224-2-liam@networkimprov.net>
- <20170323102006.2ftvsoukgmqh7dtv@earth>
- <CAKvHMgSEDAZregni_hb2e92BXD2d2gZDpmnd02DFjnvTOni0zA@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/7] mfd: rk808: Add RK805 support
+Date: Thu, 23 Mar 2017 12:23:54 +0000
+Message-ID: <20170323122354.3z5tagwue4tjees2@dell>
+References: <1489734377-1716-1-git-send-email-zhangqing@rock-chips.com>
+ <1489734377-1716-5-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4ifmackl52u7clku"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAKvHMgSEDAZregni_hb2e92BXD2d2gZDpmnd02DFjnvTOni0zA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: Rob Herring <robh@kernel.org>, "Andrew F. Davis" <afd@ti.com>, linux-pm@vger.kernel.org, Matt Ranostay <matt@ranostay.consulting>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
+In-Reply-To: <1489734377-1716-5-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 17 Mar 2017, Elaine Zhang wrote:
 
---4ifmackl52u7clku
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The RK805 chip is a Power Management IC (PMIC) for multimedia and handheld
+> devices. It contains the following components:
+> 
+>     - Regulators
+>     - RTC
+>     - Clocking
+> 
+> Both RK808 and RK805 chips are using a similar register map,
+> so we can reuse the RTC and Clocking functionality.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  drivers/mfd/Kconfig |   4 +-
+>  drivers/mfd/rk808.c | 122 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 124 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 55ecdfb74d31..b410a348b756 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -892,13 +892,13 @@ config MFD_RC5T583
+>  	  different functionality of the device.
+>  
+>  config MFD_RK808
+> -	tristate "Rockchip RK808/RK818 Power Management Chip"
+> +	tristate "Rockchip RK805/RK808/RK818 Power Management Chip"
+>  	depends on I2C && OF
+>  	select MFD_CORE
+>  	select REGMAP_I2C
+>  	select REGMAP_IRQ
+>  	help
+> -	  If you say yes here you get support for the RK808 and RK818
+> +	  If you say yes here you get support for the RK805, RK808 and RK818
+>  	  Power Management chips.
+>  	  This driver provides common support for accessing the device
+>  	  through I2C interface. The device supports multiple sub-devices
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> index 3334a2a7f3fb..fdd4449b14b0 100644
+> --- a/drivers/mfd/rk808.c
+> +++ b/drivers/mfd/rk808.c
+> @@ -70,6 +70,14 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+>  	.volatile_reg = rk808_is_volatile_reg,
+>  };
+>  
+> +static const struct regmap_config rk805_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = RK805_OFF_SOURCE_REG,
+> +	.cache_type = REGCACHE_RBTREE,
+> +	.volatile_reg = rk808_is_volatile_reg,
+> +};
+> +
+>  static const struct regmap_config rk808_regmap_config = {
+>  	.reg_bits = 8,
+>  	.val_bits = 8,
+> @@ -86,6 +94,16 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+>  	}
+>  };
+>  
+> +static const struct mfd_cell rk805s[] = {
+> +	{ .name = "rk808-clkout", },
+> +	{ .name = "rk808-regulator", },
+> +	{
+> +		.name = "rk808-rtc",
+> +		.num_resources = ARRAY_SIZE(rtc_resources),
+> +		.resources = &rtc_resources[0],
+> +	},
+> +};
+> +
+>  static const struct mfd_cell rk808s[] = {
+>  	{ .name = "rk808-clkout", },
+>  	{ .name = "rk808-regulator", },
+> @@ -106,6 +124,20 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+>  	},
+>  };
+>  
+> +static const struct rk808_reg_data rk805_pre_init_reg[] = {
+> +	{RK805_BUCK1_CONFIG_REG, RK805_BUCK1_2_ILMAX_MASK,
+> +				 RK805_BUCK1_2_ILMAX_4000MA},
+> +	{RK805_BUCK2_CONFIG_REG, RK805_BUCK1_2_ILMAX_MASK,
+> +				 RK805_BUCK1_2_ILMAX_4000MA},
+> +	{RK805_BUCK3_CONFIG_REG, RK805_BUCK3_4_ILMAX_MASK,
+> +				 RK805_BUCK3_ILMAX_3000MA},
+> +	{RK805_BUCK4_CONFIG_REG, RK805_BUCK3_4_ILMAX_MASK,
+> +				 RK805_BUCK4_ILMAX_3500MA},
+> +	{RK805_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK, BUCK_ILMIN_400MA},
+> +	{RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SLEEP_FUN},
+> +	{RK805_THERMAL_REG, TEMP_HOTDIE_MSK, TEMP115C},
+> +};
+> +
+>  static const struct rk808_reg_data rk808_pre_init_reg[] = {
+>  	{ RK808_BUCK3_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_150MA },
+>  	{ RK808_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_200MA },
+> @@ -135,6 +167,41 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+>  						    VB_LO_SEL_3500MV },
+>  };
+>  
+> +static const struct regmap_irq rk805_irqs[] = {
+> +	[RK805_IRQ_PWRON_RISE] = {
+> +		.mask = RK805_IRQ_PWRON_RISE_MSK,
+> +		.reg_offset = 0,
+> +	},
+> +	[RK805_IRQ_VB_LOW] = {
+> +		.mask = RK805_IRQ_VB_LOW_MSK,
+> +		.reg_offset = 0,
+> +	},
+> +	[RK805_IRQ_PWRON] = {
+> +		.mask = RK805_IRQ_PWRON_MSK,
+> +		.reg_offset = 0,
+> +	},
+> +	[RK805_IRQ_PWRON_LP] = {
+> +		.mask = RK805_IRQ_PWRON_LP_MSK,
+> +		.reg_offset = 0,
+> +	},
+> +	[RK805_IRQ_HOTDIE] = {
+> +		.mask = RK805_IRQ_HOTDIE_MSK,
+> +		.reg_offset = 0,
+> +	},
+> +	[RK805_IRQ_RTC_ALARM] = {
+> +		.mask = RK805_IRQ_RTC_ALARM_MSK,
+> +		.reg_offset = 0,
+> +	},
+> +	[RK805_IRQ_RTC_PERIOD] = {
+> +		.mask = RK805_IRQ_RTC_PERIOD_MSK,
+> +		.reg_offset = 0,
+> +	},
+> +	[RK805_IRQ_PWRON_FALL] = {
+> +		.mask = RK805_IRQ_PWRON_FALL_MSK,
+> +		.reg_offset = 0,
+> +	},
+> +};
+> +
+>  static const struct regmap_irq rk808_irqs[] = {
+>  	/* INT_STS */
+>  	[RK808_IRQ_VOUT_LO] = {
+> @@ -247,6 +314,17 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+>  	},
+>  };
+>  
+> +static struct regmap_irq_chip rk805_irq_chip = {
+> +	.name = "rk805",
+> +	.irqs = rk805_irqs,
+> +	.num_irqs = ARRAY_SIZE(rk805_irqs),
+> +	.num_regs = 1,
+> +	.status_base = RK805_INT_STS_REG,
+> +	.mask_base = RK805_INT_STS_MSK_REG,
+> +	.ack_base = RK805_INT_STS_REG,
+> +	.init_ack_masked = true,
+> +};
+> +
+>  static const struct regmap_irq_chip rk808_irq_chip = {
+>  	.name = "rk808",
+>  	.irqs = rk808_irqs,
+> @@ -272,6 +350,38 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+>  };
+>  
+>  static struct i2c_client *rk808_i2c_client;
+> +
+> +static void rk805_shutdown_prepare(void)
+> +{
+> +	int ret;
+> +	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
 
-Hi,
+Nit: Can you switch these two around?
 
-On Thu, Mar 23, 2017 at 03:30:42AM -0700, Liam Breck wrote:
-> On Thu, Mar 23, 2017 at 3:20 AM, Sebastian Reichel <sre@kernel.org> wrote:
-> > Hi,
-> >
-> > On Mon, Mar 20, 2017 at 02:43:26AM -0700, Liam Breck wrote:
-> >> From: Liam Breck <kernel@networkimprov.net>
-> >>
-> >> Documentation of static battery characteristics that can be defined
-> >> for batteries which cannot self-identify. This information is required
-> >> by fuel-gauge and charger chips for proper handling of the battery.
-> >>
-> >> Cc: Rob Herring <robh@kernel.org>
-> >> Cc: devicetree@vger.kernel.org
-> >> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-> >> Signed-off-by: Liam Breck <kernel@networkimprov.net>
-> >> ---
-> >>  .../devicetree/bindings/power/supply/battery.txt   | 43 +++++++++++++=
-+++++++++
-> >>  1 file changed, 43 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/power/supply/bat=
-tery.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/power/supply/battery.tx=
-t b/Documentation/devicetree/bindings/power/supply/battery.txt
-> >> new file mode 100644
-> >> index 0000000..53a68c0
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> >> @@ -0,0 +1,43 @@
-> >> +Battery Characteristics
-> >> +
-> >> +The devicetree battery node provides static battery characteristics.
-> >> +In smart batteries, these are typically stored in non-volatile memory
-> >> +on a fuel gauge chip. The battery node should be used where there is
-> >> +no appropriate non-volatile memory, or it is unprogrammed/incorrect.
-> >> +
-> >> +Required Properties:
-> >> + - compatible: Must be "simple-battery"
-> >> +
-> >> +Optional Properties:
-> >> + - voltage-min-design-microvolt: drained battery voltage
-> >> + - energy-full-design-microwatt-hours: battery design energy
-> >> + - charge-full-design-microamp-hours: battery design capacity
-> >> +
-> >> +Battery properties are named, where possible, for the corresponding
-> >> +elements in enum power_supply_property, defined in
-> >> +https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/include/linux/power_supply.h#n86
-> >
-> > The above paragraph does not belong into DT bindings. Apart
-> > from that
-> >
-> > Acked-by: Sebastian Reichel <sre@kernel.org>
->=20
-> How then should I indicate that there is a method to the madness of
-> the above names? More information in the docs is helpful than less!
+> +	if (!rk808) {
+> +		dev_warn(&rk808_i2c_client->dev,
+> +			 "have no rk808, so do nothing here\n");
+> +		return;
+> +	}
 
-You don't. This does not belong into the DT binding document. DT
-binding documents are _not_ Linux FW API. I thought we were through
-this already. FWIW if anything is not named like the power-supply
-subsystem names it, then that's not nice, but ok. Also if anybody
-adds stuff he will=20
+What's happening here?  Is it possible for rk808 to be NULL?  If so,
+under what circumstances can this happen?  And is that truly an error?
 
-1. send patches to the power-supply subsystem maintainer (me at
-   the moment), who can reject patches.
-2. implement the parsing in the driver, which asks for power-supply
-   naming to be used if possible.
+> +	/* close rtc int when power off */
 
--- Sebastian
+Use proper grammar, "Close RTC".
 
-> > FYI: I will wait for Acked-by from Rob Herring on this patch.
-> >
-> > -- Sebastian
-> >
-> >> +Batteries must be referenced by chargers and/or fuel-gauges
-> >> +using a phandle. The phandle's property should be named
-> >> +"monitored-battery".
-> >> +
-> >> +Example:
-> >> +
-> >> +     bat: battery {
-> >> +             compatible =3D "simple-battery";
-> >> +             voltage-min-design-microvolt =3D <3200000>;
-> >> +             energy-full-design-microwatt-hours =3D <5290000>;
-> >> +             charge-full-design-microamp-hours =3D <1430000>;
-> >> +     };
-> >> +
-> >> +     charger: charger@11 {
-> >> +             ....
-> >> +             monitored-battery =3D <&bat>;
-> >> +             ...
-> >> +     };
-> >> +
-> >> +     fuel_gauge: fuel-gauge@22 {
-> >> +             ....
-> >> +             monitored-battery =3D <&bat>;
-> >> +             ...
-> >> +     };
-> >> --
-> >> 2.9.3
-> >>
+What is int?  I'm guessing you mean either "interrupt" or "IRQ".
 
---4ifmackl52u7clku
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	regmap_update_bits(rk808->regmap,
+> +			   RK808_INT_STS_MSK_REG1,
 
------BEGIN PGP SIGNATURE-----
+"when power off" should either be "when we power off", "during
+power off", or something of that nature.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljTvPwACgkQ2O7X88g7
-+pqybg/5AavafWA3+e8yExRRwRMSWor/RFLSe79squOTF7yDXp14fZJdCy2FDBhH
-yuPetPnxPPZS8SreWO9eJx1NJcU3dLdz3yQuN5ligfLdXGGYLmJ6eHFwv2IrGEQc
-BupOOLm8MsFSf5eilBqlfzTmATGxrIiM20ZDJpNIlKqi/idLOhUacsMVAayJDkHC
-BmgYr9t/a3j2XpoiPJK9zgMzjAebmgZYazhfTs82QxdOFDcjQgjzQReULTu22h6C
-VrQCwj7SYC6kmD3AA/qDDtfw1Ovi6n8wTuXtrssy/sv+8ob25lUbZ/pUdYP9koqO
-EHowFBT4jpckQGiouNDFEneIcQSehQwnFp3QObF47Tq//8kve90qYq7imwA3WBmN
-DmT/2dyYTcwIIBF3F8z3azrPo1TX/FjzXabOze4pxch2e++qO/1TkHVraEfmpDOw
-u+TgZ/c/gkfReyJBW1ZkK2uuFaVDrCDxNKAltUczmxh7ya0ZdQ0U4uIZDw2PrrqD
-0G10gxbk0OWMiD9V5IrdQEgujgu0/sszDPeVihiKS5BxTcQ0yFalhgeBJLFlZZi3
-YQJugz8KSoc0VCNellWGu1DZ65XivsVkVoToR8a8oU5QoG/CkajDVdvCad55pKMf
-pIOHVly6/rIMPFdsNcL+L/wRDEKHm30uEds33Bl+xtSs0gi0apU=
-=qSJM
------END PGP SIGNATURE-----
+> +			   RK805_RTC_PERIOD_INT_MASK |
+> +			   RK805_RTC_ALARM_INT_MASK,
+> +			   RK805_RTC_PERIOD_INT_MASK |
+> +			   RK805_RTC_ALARM_INT_MASK);
+> +	regmap_update_bits(rk808->regmap,
+> +			   RK808_RTC_INT_REG,
+> +			   RK805_INT_ALARM_EN | RK805_INT_TIMER_EN,
+> +			   0);
+> +
+> +	/* pmic sleep shutdown function */
 
---4ifmackl52u7clku--
+"PMIC"
+
+'sleep' or 'shutdown' can't be both.
+
+Looks like shutdown to me.
+
+> +	ret = regmap_update_bits(rk808->regmap,
+> +				 RK805_GPIO_IO_POL_REG,
+> +				 SLP_SD_MSK, SHUTDOWN_FUN);
+> +	if (ret)
+> +		dev_err(&rk808_i2c_client->dev, "power off error!\n");
+> +}
+> +
+>  static void rk808_device_shutdown(void)
+>  {
+>  	int ret;
+> @@ -309,6 +419,7 @@ static void rk818_device_shutdown(void)
+>  }
+>  
+>  static const struct of_device_id rk808_of_match[] = {
+> +	{ .compatible = "rockchip,rk805" },
+>  	{ .compatible = "rockchip,rk808" },
+>  	{ .compatible = "rockchip,rk818" },
+>  	{ },
+> @@ -323,6 +434,7 @@ static int rk808_probe(struct i2c_client *client,
+>  	const struct rk808_reg_data *pre_init_reg;
+>  	const struct mfd_cell *cells;
+>  	void (*pm_pwroff_fn)(void);
+> +	void (*pm_shutdown_prepare_fn)(void);
+>  	int nr_pre_init_regs;
+>  	int nr_cells;
+>  	int pm_off = 0, msb, lsb;
+> @@ -352,6 +464,15 @@ static int rk808_probe(struct i2c_client *client,
+>  	dev_info(&client->dev, "Chip id: 0x%x\n", (unsigned int)rk808->variant);
+>  
+>  	switch (rk808->variant) {
+> +	case RK805_ID:
+> +		rk808->regmap_cfg = &rk805_regmap_config;
+> +		rk808->regmap_irq_chip = &rk805_irq_chip;
+> +		pre_init_reg = rk805_pre_init_reg;
+> +		nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
+> +		cells = rk805s;
+> +		nr_cells = ARRAY_SIZE(rk805s);
+> +		pm_shutdown_prepare_fn = rk805_shutdown_prepare;
+> +		break;
+>  	case RK808_ID:
+>  		rk808->regmap_cfg = &rk808_regmap_config;
+>  		rk808->regmap_irq_chip = &rk808_irq_chip;
+> @@ -444,6 +565,7 @@ static int rk808_remove(struct i2c_client *client)
+>  }
+>  
+>  static const struct i2c_device_id rk808_ids[] = {
+> +	{ "rk805" },
+>  	{ "rk808" },
+>  	{ "rk818" },
+>  	{ },
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
