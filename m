@@ -1,37 +1,108 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] clk: tegra: don't warn for PLL defaults
- unnecessarily
-Date: Thu, 23 Mar 2017 14:37:23 +0000
-Message-ID: <d6435129-4c67-1126-429d-ffef52d0b2d4@nvidia.com>
-References: <1487846686-6388-1-git-send-email-pdeschrijver@nvidia.com>
- <1487846686-6388-6-git-send-email-pdeschrijver@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487846686-6388-6-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/2] soc/imx: add workaround for i.MX6QP to the GPC PD driver
+Date: Thu, 23 Mar 2017 15:44:18 +0100
+Message-ID: <20170323144418.30977-3-l.stach@pengutronix.de>
+References: <20170323144418.30977-1-l.stach@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170323144418.30977-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On i.MX6QP, due to hardware erratum ERR009619, the PRE clocks may be
+stalled during the power up sequencing of the PU power domain. As this
+may lead to a complete loss of display output, the recommended
+workaround is to keep the PU domain enabled during normal system
+operation.
 
-On 23/02/17 10:44, Peter De Schrijver wrote:
-> If the PLL is on, only warn if the defaults are not yet set. Otherwise be
-> silent.
-> 
-> Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Implement this by rejecting the domain power down request on the
+affected SoC.
 
-This patch is breaking boot for Tegra210 Smaug on -next [0]. Reverting
-this on top of -next allows the board to boot again. I have not had
-chance to dig into this any further yet, but can unless you have some
-thoughts.
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/soc/imx/gpc.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Cheers
-Jon
-
-[0]
-https://nvtb.github.io//linux-next/test_next-20170323/20170323021534/boot/tegra210-smaug/tegra210-smaug/defconfig_log.txt
-
+diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
+index 4294287e5f6c..599e1e46f694 100644
+--- a/drivers/soc/imx/gpc.c
++++ b/drivers/soc/imx/gpc.c
+@@ -45,6 +45,7 @@ struct imx_pm_domain {
+ 	unsigned int reg_offs;
+ 	signed char cntr_pdn_bit;
+ 	unsigned int ipg_rate_mhz;
++	bool allow_dynamic_pd;
+ };
+ 
+ static inline struct imx_pm_domain *
+@@ -59,6 +60,9 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
+ 	int iso, iso2sw;
+ 	u32 val;
+ 
++	if (!pd->allow_dynamic_pd)
++		return -EBUSY;
++
+ 	/* Read ISO and ISO2SW power down delays */
+ 	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
+ 	iso = val & 0x3f;
+@@ -255,6 +259,7 @@ static struct imx_pm_domain imx_gpc_domains[] = {
+ 		},
+ 		.reg_offs = 0x260,
+ 		.cntr_pdn_bit = 0,
++		.allow_dynamic_pd = true,
+ 	}, {
+ 		.base = {
+ 			.name = "DISPLAY",
+@@ -263,23 +268,33 @@ static struct imx_pm_domain imx_gpc_domains[] = {
+ 		},
+ 		.reg_offs = 0x240,
+ 		.cntr_pdn_bit = 4,
++		.allow_dynamic_pd = true,
+ 	}
+ };
+ 
+ struct imx_gpc_dt_data {
+ 	int num_domains;
++	bool err009619_present;
+ };
+ 
+ static const struct imx_gpc_dt_data imx6q_dt_data = {
+ 	.num_domains = 2,
++	.err009619_present = false,
++};
++
++static const struct imx_gpc_dt_data imx6qp_dt_data = {
++	.num_domains = 2,
++	.err009619_present = true,
+ };
+ 
+ static const struct imx_gpc_dt_data imx6sl_dt_data = {
+ 	.num_domains = 3,
++	.err009619_present = false,
+ };
+ 
+ static const struct of_device_id imx_gpc_dt_ids[] = {
+ 	{ .compatible = "fsl,imx6q-gpc", .data = &imx6q_dt_data },
++	{ .compatible = "fsl,imx6qp-gpc", .data = &imx6qp_dt_data },
+ 	{ .compatible = "fsl,imx6sl-gpc", .data = &imx6sl_dt_data },
+ 	{ }
+ };
+@@ -377,6 +392,10 @@ static int imx_gpc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	/* Disable PU power down in normal operation if ERR009619 is present */
++	if (of_id_data->err009619_present)
++		imx_gpc_domains[1].allow_dynamic_pd = false;
++
+ 	if (!pgc_node) {
+ 		ret = imx_gpc_old_dt_init(&pdev->dev, regmap,
+ 					  of_id_data->num_domains);
 -- 
-nvpublic
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
