@@ -1,93 +1,42 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: omap4-droid4: Add LCD
-Date: Thu, 23 Mar 2017 09:08:18 +0200
-Message-ID: <b4666cd6-9925-6143-41c3-591e68c48456@ti.com>
-References: <20170305054359.8293-1-tony@atomide.com>
- <20170305054359.8293-7-tony@atomide.com>
- <20170319012927.kmyqngprpip7le4m@earth> <20170319161030.GA20572@atomide.com>
- <20170319225542.ts53qpwdhdrmy2ac@earth>
- <9c4a5d88-4d2a-2120-9fdf-f3fbba69147c@ti.com>
- <20170323063109.qhwxj74pbfztgopt@earth>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v4 2/9] iio: adc: add support for
+ X-Powers AXP20X and AXP22X PMICs ADCs
+Date: Thu, 23 Mar 2017 10:35:27 +0100
+Message-ID: <20170323093527.ojcdpvruzqnhvysq@earth>
+References: <20170320081653.8884-1-quentin.schulz@free-electrons.com>
+ <20170320081653.8884-3-quentin.schulz@free-electrons.com>
+ <CAGb2v66JC65=9WiMy-Nu+9tTFRLsJL2Eyb0wfJV_K=65ABc6Zg@mail.gmail.com>
+Reply-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature";
-        boundary="WvjSVUhpbv6Ooa6iixwDRvGbN5fUncnKR"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170323063109.qhwxj74pbfztgopt@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="f2zy62zyq673h3xo"
+Return-path: <linux-sunxi+bncBDXMLNOH5ANRBZNNZ3DAKGQEB3IIQOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66JC65=9WiMy-Nu+9tTFRLsJL2Eyb0wfJV_K=65ABc6Zg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---WvjSVUhpbv6Ooa6iixwDRvGbN5fUncnKR
-Content-Type: multipart/mixed; boundary="lAFFuphKTUL4P4neW7a2RsQOav0vUgivK";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>,
- Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Message-ID: <b4666cd6-9925-6143-41c3-591e68c48456-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: omap4-droid4: Add LCD
-References: <20170305054359.8293-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
- <20170305054359.8293-7-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
- <20170319012927.kmyqngprpip7le4m@earth> <20170319161030.GA20572-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
- <20170319225542.ts53qpwdhdrmy2ac@earth>
- <9c4a5d88-4d2a-2120-9fdf-f3fbba69147c-l0cyMroinI0@public.gmane.org>
- <20170323063109.qhwxj74pbfztgopt@earth>
-In-Reply-To: <20170323063109.qhwxj74pbfztgopt@earth>
 
---lAFFuphKTUL4P4neW7a2RsQOav0vUgivK
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+--f2zy62zyq673h3xo
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 23/03/17 08:31, Sebastian Reichel wrote:
+Hi,
 
->> It shouldn't matter when omapdrm is initialized. omapdrm should wait
->> until it has all the displays.
->=20
-> I tried to trace this. I assume, that your "should wait until it has
-> all the displays" refers to the code in "omap_connect_dssdevs()".
-> Unfortunately that code does not work correctly:
+On Wed, Mar 22, 2017 at 12:34:45PM +0800, Chen-Yu Tsai wrote:
+> P.S. I'm thinking about having MFD_AXP20X imply its various sub-drivers.
+> Not sure if that was the intended usage of the new imply syntax though.
 
-Indeed, sorry about the confusion. Apparently I was talking about TI's
-kernel, which has fixes for this.
+I think adding "default MFD_AXP20X" to the sub-drivers is cleaner,
+as you will not end up with a long list.
 
-I have actually posted the patches, along with a lot of other stuff,
-last Nov. See "[PATCH 00/36] drm/omap: miscallaneous improvements"
-series. The patches 23-25 should fix this particular issue.
-
- Tomi
-
-
---lAFFuphKTUL4P4neW7a2RsQOav0vUgivK--
-
---WvjSVUhpbv6Ooa6iixwDRvGbN5fUncnKR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJY03RjAAoJEPo9qoy8lh71k9YP/ic5y4aySB5zkyuu3vGUOFYt
-1nh3hYrE3XB8deRPvIzMayYrvVJhnBdk8DYXtXYXPK5JVssVqG0+9w/Oof3S1WOM
-udmR/lw0GEO7AGysSTRN38hcYWj0vLwoBntPoPNWoDR7VxdkFvOSmPU99zLq11mQ
-OfIj4rGMcQiRENvoKKEDjkf3BAyTdp2A+9EKsSA7fxUhttWCjbiiroMYg6V524Lo
-UBUdjTO6ZJxNJvy687hxXscazdVYCch5r4R//1+lKJbKux6s7p5IEVqIJkufDN7Z
-pgmUQN3Y1e3L93r3UFzXUUk2+q8uZXh8V6ibmriRnPJE0XnaoL7sBWa7lVDisJoP
-4DEtpEKDaUBa6xrs8WYg3SrPmBkuzu5hhWHrbleLG7QP0NWMuBGRzPPf8w18MyRP
-D5RqYtZrtU2MENggdUr8R/U2UQ1B6RGprLsVyF2u1JnkkFw0kwQpt0vJcY8c5Bie
-5tjDBGm4Y81Pia1jzT8YvgWSrRxH8wqbU/3CYAxROPr8VfL1/bW9ECo5Y+tI1nUn
-rojVAZRmhq/hTs6Qz1Z8p6suYgAkNtsSi6AFuRvnEU6NVxSNAd0Jb+5R9YVvof2J
-I5VJiWUI/1ueli2riUhPXX9HPP8D/yhuWdZqLnRW06xAb+fVnpCVYaUePOroxq3s
-cls+/vnzE/H7EijUYSJc
-=+fiF
------END PGP SIGNATURE-----
-
---WvjSVUhpbv6Ooa6iixwDRvGbN5fUncnKR--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- Sebastian
+--f2zy62zyq673h3xo--
