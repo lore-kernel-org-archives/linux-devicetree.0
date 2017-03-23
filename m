@@ -1,40 +1,132 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] Add Basic SoC support for MT6797
-Date: Thu, 23 Mar 2017 15:24:31 +0000
-Message-ID: <b22b31e0-a965-bc4f-e139-58f0d59d90a9@arm.com>
-References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
- <1490229971.25996.2.camel@mtkswgap22>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC RESEND] serdev binding for QCA7000 UART driver
+Date: Thu, 23 Mar 2017 10:55:25 -0500
+Message-ID: <CAL_JsqJsPKnzDdPmbSpOVbpMEfZaAfBHb4G+eibUruFBN3bR7w@mail.gmail.com>
+References: <b2273c4a-069b-0b9a-83d3-aed782920c34@i2se.com>
+ <CAL_JsqJS05gw80B4oUWZHEHOg5iPpwKie8XdBr82UD=7WB1cdg@mail.gmail.com> <9127690c-3b6e-d60d-6af1-97bb9ad34628@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1490229971.25996.2.camel@mtkswgap22>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9127690c-3b6e-d60d-6af1-97bb9ad34628-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mars,
+On Thu, Mar 23, 2017 at 10:13 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+> Hi Rob,
+>
+> Am 22.03.2017 um 21:32 schrieb Rob Herring:
+>> On Mon, Mar 13, 2017 at 11:16 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+>>> Hi Rob,
+>>>
+>>> since serdev has been merged, i'm currently working on a
+>>> suitable ethernet driver for the QCA7000 [1]. In order to provide a plug
+>>> and play solution for the network interface i suggest the following
+>>> binding, which uses common properties for UART configuration:
+>>>
+>>> * Qualcomm QCA7000 (Ethernet over UART protocol)
+>>>
+>>> Note: The QCA7000 is also useable as a UART slave device.
+>> Should this be s/UART/SPI/ ?
+>
+> i rewrote this note in my second version below.
+>
+>>
+>>> Required properties:
+>>> - compatible        : Should be "qca,qca7000-uart"
+>>>
+>>> Optional properties:
+>>> - local-mac-address : 6 bytes, Specifies MAC address
+>>> - current-speed     : Specifies current serial device speed in
+>>>                       bits per second (default = 115200)
+>>> - data-bits         : Specifies number of data bits (default = 8)
+>>> - use-parity        : If present, this enables the parity
+>>>                       error detection (default = off)
+>>> - odd-parity        : If present, this specifies that the parity
+>>>                       of each character must be odd (default = even)
+>>>
+>>> Example:
+>>>
+>>> /* Freescale i.MX28 UART */
+>>> auart0: serial@8006a000 {
+>>>     compatible = "fsl,imx28-auart", "fsl,imx23-auart";
+>>>     reg = <0x8006a000 0x2000>;
+>>>     pinctrl-names = "default";
+>>>     pinctrl-0 = <&auart0_2pins_a>;
+>>>     status = "okay";
+>>>
+>>>     qca7000: ethernet {
+>>>         compatible = "qca,qca7000-uart";
+>>>         local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+>>>         current-speed = <38400>;
+>> Unless this device supports auto-baud (generally only AT command set
+>> devices do), this is setup by a bootloader (and you have no way to
+>> reset the device), or the speed changes with different firmware, I
+>> don't think you should need this. Devices typically have a fixed,
+>> initial baudrate that is known, so the driver should know it.
+>
+> Unfortunately the QCA7000 firmware can be freely preconfigured to a
+> fixed baudrate and there is no way to determine, because Ethernet frames
+> are send nearly directly to the UART and vice versa. I agree this isn't
+> best practice.
+>
+>>>         data-bits = <8>;
+>> Nearly everything uses 8 bits, so this should be the default.
+>
+> I will drop it completly.
+>
+>>
+>>>         use-parity;
+>>>         odd-parity;
+>> I don't think we need 2 properties here. "even-parity" and
+>> "odd-parity" booleans should be enough to enable and set parity type.
+>
+> Your suggestion is better, but it's possible to define wrongly both
+> which isn't nice per design.
+> Anyway i decide to drop this, too. So it could be implemented later.
 
-On 23/03/17 00:46, Mars Cheng wrote:
-> Hi Matthias, Rob, Marc, Stephen
-> 
-> gentle ping for this patch set.
+could also do 'parity = "(even|odd)";' or a line-config property with
+"8N1", "7E1", etc. for values though I tend to prefer booleans and
+discreet properties per setting.
 
-I appreciate that you're eager to see this reviewed, but less than 4
-days between a posting and a reminder is a bit too eager. We're not
-machines! ;-)
+>
+> So here is the new version:
+>
+> * Qualcomm QCA7000 (Ethernet over UART protocol)
+>
+> Note: This binding applies in case the QCA7000 is configured as a
+> UART slave device. It is possible to preconfigure the UART settings
+> of the QCA7000 firmware, which can't be changed during runtime.
+>
+> Required properties:
+> - compatible        : Should be "qca,qca7000-uart"
+>
+> Optional properties:
+> - local-mac-address : 6 bytes, Specifies MAC address
+> - current-speed     : Specifies the serial device speed in
+>                       bits per second (default = 115200), which is
+>                       predefined by the QCA7000 firmware configuration
+>
+> Example:
+>
+> /* Freescale i.MX28 UART */
+> auart0: serial@8006a000 {
+>     compatible = "fsl,imx28-auart", "fsl,imx23-auart";
+>     reg = <0x8006a000 0x2000>;
+>     pinctrl-names = "default";
+>     pinctrl-0 = <&auart0_2pins_a>;
+>     status = "okay";
+>
+>     qca7000: ethernet {
+>         compatible = "qca,qca7000-uart";
+>         local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+>         current-speed = <38400>;
+>     };
+> };
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Looks good to me.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
