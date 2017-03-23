@@ -1,57 +1,30 @@
-From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 1/2] Documentation: dt-bindings: Document bindings for Aspeed ADC
-Date: Thu, 23 Mar 2017 11:41:34 -0700
-Message-ID: <20170323184136.7349-1-raltherr@google.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-baltos: disable EEE for Atheros 8035 PHY
+Date: Thu, 23 Mar 2017 11:43:12 -0700
+Message-ID: <20170323184311.GN10760@atomide.com>
+References: <1489395794-6243-1-git-send-email-yegorslists@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489395794-6243-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
+* yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> [170313 02:05]:
+> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> 
+> Though cpsw doesn't support EEE feature, Atheros 8035 provides
+> automatic EEE support that is enabled by default. This causes
+> occasional link drops when link partner also announces EEE support.
+> These link drops occur on both 100Mbit/s and 1000Mbit/s speeds.
+> So disable EEE advertising completely.
 
-Changes in v4: None
-Changes in v3:
-- Consistently write hex contstants with lowercase letters
-- Drop model numbers from description as same IP is used in every generation
+Applying into omap-for-v4.11/fixes thanks.
 
-Changes in v2:
-- Rewritten as an IIO ADC device
-
- .../devicetree/bindings/iio/adc/aspeed_adc.txt       | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-new file mode 100644
-index 000000000000..674e133b7cd7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-@@ -0,0 +1,20 @@
-+Aspeed ADC
-+
-+This device is a 10-bit converter for 16 voltage channels.  All inputs are
-+single ended.
-+
-+Required properties:
-+- compatible: Should be "aspeed,ast2400-adc" or "aspeed,ast2500-adc"
-+- reg: memory window mapping address and length
-+- clocks: Input clock used to derive the sample clock. Expected to be the
-+          SoC's APB clock.
-+- #io-channel-cells: Must be set to <1> to indicate channels are selected
-+                     by index.
-+
-+Example:
-+	adc@1e6e9000 {
-+		compatible = "aspeed,ast2400-adc";
-+		reg = <0x1e6e9000 0xb0>;
-+		clocks = <&clk_apb>;
-+		#io-channel-cells = <1>;
-+	};
--- 
-2.12.1.500.gab5fba24ee-goog
-
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
