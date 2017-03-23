@@ -1,39 +1,80 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFT PATCH 1/6] ARM64: dts: meson-gxbb: Add gpio-ranges properties
-Date: Thu, 23 Mar 2017 17:27:24 +0100
-Message-ID: <1490286449-19448-2-git-send-email-narmstrong@baylibre.com>
-References: <1490286449-19448-1-git-send-email-narmstrong@baylibre.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 05/23] MAINTAINERS: Add file patterns for dove device tree bindings
+Date: Thu, 23 Mar 2017 17:28:00 +0100
+Message-ID: <87a88cdkkv.fsf@free-electrons.com>
+References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
+        <1489324627-19126-6-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490286449-19448-1-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <1489324627-19126-6-git-send-email-geert@linux-m68k.org> (Geert
+        Uytterhoeven's message of "Sun, 12 Mar 2017 14:16:49 +0100")
 Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, carlo@caione.org, linus.walleij@linaro.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Hi Geert,
+ 
+ On dim., mars 12 2017, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 04b3324..84c590b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -129,6 +129,7 @@
- 			reg-names = "mux", "pull", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl_aobus 0 0 14>;
- 		};
- 
- 		uart_ao_a_pins: uart_ao_a {
-@@ -245,6 +246,7 @@
- 			reg-names = "mux", "pull", "pull-enable", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl_periphs 0 14 120>;
- 		};
- 
- 		emmc_pins: emmc {
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+>
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: Gregory Clement <gregory.clement@free-electrons.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+
+
+Applied on mvebu/soc
+
+Thanks,
+
+Gregory
+
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
+>
+> v2:
+>   - No changes.
+>
+> Impact on next-20170310:
+>
+> +Jason Cooper <jason@lakedaemon.net> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+> +Andrew Lunn <andrew@lunn.ch> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+> +Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+> +Gregory Clement <gregory.clement@free-electrons.com> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>  Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+> +linux-arm-kernel@lists.infradead.org (moderated list:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>  devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  linux-kernel@vger.kernel.org (open list)
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6428d3c82fce9670..ce461fefec6c9463 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1486,6 +1486,7 @@ M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>  M:	Gregory Clement <gregory.clement@free-electrons.com>
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/soc/dove/
+>  F:	arch/arm/mach-dove/
+>  F:	arch/arm/mach-mv78xx0/
+>  F:	arch/arm/mach-orion5x/
+> -- 
+> 2.7.4
+>
+
 -- 
-1.9.1
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
