@@ -1,40 +1,33 @@
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: imx-gpc: add i.MX6 QuadPlus compatible
-Date: Thu, 23 Mar 2017 15:44:17 +0100
-Message-ID: <20170323144418.30977-2-l.stach@pengutronix.de>
-References: <20170323144418.30977-1-l.stach@pengutronix.de>
+Subject: [PATCH 0/2] i.MX6QP GPC fixes
+Date: Thu, 23 Mar 2017 15:44:16 +0100
+Message-ID: <20170323144418.30977-1-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170323144418.30977-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-While the GPC on i.MX6QP is mostly comptible to the i.MX6Q one,
-the QuadPlus requires special workarounds for hardware erratum
-ERR009619.
+Hi Shawn,
 
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/devicetree/bindings/power/fsl,imx-gpc.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+those 2 patches implement the necessary workaround for the PU power
+domain on the i.MX6QP. Both are on top of Dong Aishengs GPC fixes
+series.
 
-diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-index 416e12c6755a..181d2cc6f054 100644
---- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-+++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-@@ -5,7 +5,10 @@ The i.MX6 General Power Control (GPC) block contains DVFS load tracking
- counters and Power Gating Control (PGC).
- 
- Required properties:
--- compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
-+- compatible: Should be one of the following:
-+  - fsl,imx6q-gpc
-+  - fsl,imx6qp-gpc
-+  - fsl,imx6sl-gpc
- - reg: should be register base and length as documented in the
-   datasheet
- - interrupts: Should contain one interrupt specifier for the GPC interrupt
+I'll submit the DT change to make use of the new compatible when
+the GPC driver branch has been merged upstream.
+
+Regards,
+Lucas
+
+Lucas Stach (2):
+  dt-bindings: imx-gpc: add i.MX6 QuadPlus compatible
+  soc/imx: add workaround for i.MX6QP to the GPC PD driver
+
+ .../devicetree/bindings/power/fsl,imx-gpc.txt         |  5 ++++-
+ drivers/soc/imx/gpc.c                                 | 19 +++++++++++++++++++
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+
 -- 
 2.11.0
 
