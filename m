@@ -1,181 +1,150 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/7] mfd: rk808: add rk805 regs addr and ID
-Date: Thu, 23 Mar 2017 12:15:19 +0000
-Message-ID: <20170323121519.uunupltcfdnximje@dell>
-References: <1489734377-1716-1-git-send-email-zhangqing@rock-chips.com>
- <1489734377-1716-3-git-send-email-zhangqing@rock-chips.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v11 01/10] devicetree: power: Add battery.txt
+Date: Thu, 23 Mar 2017 13:18:04 +0100
+Message-ID: <20170323121804.c7qi2libbpchcl2a@earth>
+References: <20170320094335.19224-1-liam@networkimprov.net>
+ <20170320094335.19224-2-liam@networkimprov.net>
+ <20170323102006.2ftvsoukgmqh7dtv@earth>
+ <CAKvHMgSEDAZregni_hb2e92BXD2d2gZDpmnd02DFjnvTOni0zA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4ifmackl52u7clku"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1489734377-1716-3-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
+In-Reply-To: <CAKvHMgSEDAZregni_hb2e92BXD2d2gZDpmnd02DFjnvTOni0zA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Liam Breck <liam@networkimprov.net>
+Cc: Rob Herring <robh@kernel.org>, "Andrew F. Davis" <afd@ti.com>, linux-pm@vger.kernel.org, Matt Ranostay <matt@ranostay.consulting>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Mar 2017, Elaine Zhang wrote:
 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  include/linux/mfd/rk808.h | 119 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 119 insertions(+)
-> 
-> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-> index 54feb140c210..a133309b52f9 100644
-> --- a/include/linux/mfd/rk808.h
-> +++ b/include/linux/mfd/rk808.h
-> @@ -206,6 +206,96 @@ enum rk818_reg {
->  #define RK818_USB_ILMIN_2000MA		0x7
->  #define RK818_USB_CHG_SD_VSEL_MASK	0x70
->  
-> +/* RK805 */
-> +enum rk805_reg {
-> +	RK805_ID_DCDC1,
-> +	RK805_ID_DCDC2,
-> +	RK805_ID_DCDC3,
-> +	RK805_ID_DCDC4,
-> +	RK805_ID_LDO1,
-> +	RK805_ID_LDO2,
-> +	RK805_ID_LDO3,
-> +};
-> +
-> +/* INTERRUPT REGISTER */
-> +#define RK805_INT_STS_REG		0x4C
-> +#define RK805_INT_STS_MSK_REG		0x4D
-> +#define RK805_GPIO_IO_POL_REG		0x50
-> +#define RK805_OUT_REG			0x52
-> +#define RK805_ON_SOURCE_REG		0xAE
-> +#define RK805_OFF_SOURCE_REG		0xAF
-> +
-> +/* POWER CHANNELS ENABLE REGISTER */
-> +#define RK805_DCDC_EN_REG		0x23
-> +#define RK805_SLP_DCDC_EN_REG		0x25
-> +#define RK805_SLP_LDO_EN_REG		0x26
-> +#define RK805_LDO_EN_REG		0x27
-> +
-> +/* CONFIG REGISTER */
-> +#define RK805_THERMAL_REG		0x22
-> +
-> +/* BUCK AND LDO CONFIG REGISTER */
-> +#define RK805_BUCK_LDO_SLP_LP_EN_REG	0x2A
-> +#define RK805_BUCK1_CONFIG_REG		0x2E
-> +#define RK805_BUCK1_ON_VSEL_REG		0x2F
-> +#define RK805_BUCK1_SLP_VSEL_REG	0x30
-> +#define RK805_BUCK2_CONFIG_REG		0x32
-> +#define RK805_BUCK2_ON_VSEL_REG		0x33
-> +#define RK805_BUCK2_SLP_VSEL_REG	0x34
-> +#define RK805_BUCK3_CONFIG_REG		0x36
-> +#define RK805_BUCK4_CONFIG_REG		0x37
-> +#define RK805_BUCK4_ON_VSEL_REG		0x38
-> +#define RK805_BUCK4_SLP_VSEL_REG	0x39
-> +#define RK805_LDO1_ON_VSEL_REG		0x3B
-> +#define RK805_LDO1_SLP_VSEL_REG		0x3C
-> +#define RK805_LDO2_ON_VSEL_REG		0x3D
-> +#define RK805_LDO2_SLP_VSEL_REG		0x3E
-> +#define RK805_LDO3_ON_VSEL_REG		0x3F
-> +#define RK805_LDO3_SLP_VSEL_REG		0x40
-> +#define RK805_OUT_REG			0x52
-> +#define RK805_ON_SOURCE_REG		0xAE
-> +#define RK805_OFF_SOURCE_REG		0xAF
+--4ifmackl52u7clku
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Why aren't all of these in numerical order?
+Hi,
 
-> +#define RK805_NUM_REGULATORS		7
-> +
-> +#define RK805_PWRON_FALL_RISE_INT_EN	0x0
-> +#define RK805_PWRON_FALL_RISE_INT_MSK	0x81
-> +
-> +/* RK805 IRQ Definitions */
-> +#define RK805_IRQ_PWRON_RISE		0
-> +#define RK805_IRQ_VB_LOW		1
-> +#define RK805_IRQ_PWRON			2
-> +#define RK805_IRQ_PWRON_LP		3
-> +#define RK805_IRQ_HOTDIE		4
-> +#define RK805_IRQ_RTC_ALARM		5
-> +#define RK805_IRQ_RTC_PERIOD		6
-> +#define RK805_IRQ_PWRON_FALL		7
-> +
-> +#define RK805_IRQ_PWRON_RISE_MSK	BIT(0)
-> +#define RK805_IRQ_VB_LOW_MSK		BIT(1)
-> +#define RK805_IRQ_PWRON_MSK		BIT(2)
-> +#define RK805_IRQ_PWRON_LP_MSK		BIT(3)
-> +#define RK805_IRQ_HOTDIE_MSK		BIT(4)
-> +#define RK805_IRQ_RTC_ALARM_MSK		BIT(5)
-> +#define RK805_IRQ_RTC_PERIOD_MSK	BIT(6)
-> +#define RK805_IRQ_PWRON_FALL_MSK	BIT(7)
-> +
-> +#define RK805_PWR_RISE_INT_STATUS	BIT(0)
-> +#define RK805_VB_LOW_INT_STATUS		BIT(1)
-> +#define RK805_PWRON_INT_STATUS		BIT(2)
-> +#define RK805_PWRON_LP_INT_STATUS	BIT(3)
-> +#define RK805_HOTDIE_INT_STATUS		BIT(4)
-> +#define RK805_ALARM_INT_STATUS		BIT(5)
-> +#define RK805_PERIOD_INT_STATUS		BIT(6)
-> +#define RK805_PWR_FALL_INT_STATUS	BIT(7)
-> +
-> +#define RK805_BUCK1_2_ILMAX_MASK	(3 << 6)
-> +#define RK805_BUCK3_4_ILMAX_MASK        (3 << 3)
-> +#define RK805_RTC_PERIOD_INT_MASK	(1 << 6)
-> +#define RK805_RTC_ALARM_INT_MASK	(1 << 5)
-> +#define RK805_INT_ALARM_EN		(1 << 3)
-> +#define RK805_INT_TIMER_EN		(1 << 2)
-> +
->  /* RK808 IRQ Definitions */
->  #define RK808_IRQ_VOUT_LO	0
->  #define RK808_IRQ_VB_LO		1
-> @@ -298,7 +388,14 @@ enum rk818_reg {
->  #define VOUT_LO_INT	BIT(0)
->  #define CLK32KOUT2_EN	BIT(0)
->  
-> +#define TEMP115C			0x0c
-> +#define TEMP_HOTDIE_MSK			0x0c
-> +#define SLP_SD_MSK			(0x3 << 2)
-> +#define SHUTDOWN_FUN			(0x2 << 2)
-> +#define SLEEP_FUN			(0x1 << 2)
->  #define RK8XX_ID_MSK			0xfff0
-> +#define FPWM_MODE			BIT(7)
-> +
->  enum {
->  	BUCK_ILMIN_50MA,
->  	BUCK_ILMIN_100MA,
-> @@ -322,6 +419,28 @@ enum {
->  };
->  
->  enum {
-> +	RK805_BUCK1_2_ILMAX_2500MA,
-> +	RK805_BUCK1_2_ILMAX_3000MA,
-> +	RK805_BUCK1_2_ILMAX_3500MA,
-> +	RK805_BUCK1_2_ILMAX_4000MA,
-> +};
-> +
-> +enum {
-> +	RK805_BUCK3_ILMAX_1500MA,
-> +	RK805_BUCK3_ILMAX_2000MA,
-> +	RK805_BUCK3_ILMAX_2500MA,
-> +	RK805_BUCK3_ILMAX_3000MA,
-> +};
-> +
-> +enum {
-> +	RK805_BUCK4_ILMAX_2000MA,
-> +	RK805_BUCK4_ILMAX_2500MA,
-> +	RK805_BUCK4_ILMAX_3000MA,
-> +	RK805_BUCK4_ILMAX_3500MA,
-> +};
-> +
-> +enum {
-> +	RK805_ID = 0x8050,
->  	RK808_ID = 0x0000,
->  	RK818_ID = 0x8181,
->  };
+On Thu, Mar 23, 2017 at 03:30:42AM -0700, Liam Breck wrote:
+> On Thu, Mar 23, 2017 at 3:20 AM, Sebastian Reichel <sre@kernel.org> wrote:
+> > Hi,
+> >
+> > On Mon, Mar 20, 2017 at 02:43:26AM -0700, Liam Breck wrote:
+> >> From: Liam Breck <kernel@networkimprov.net>
+> >>
+> >> Documentation of static battery characteristics that can be defined
+> >> for batteries which cannot self-identify. This information is required
+> >> by fuel-gauge and charger chips for proper handling of the battery.
+> >>
+> >> Cc: Rob Herring <robh@kernel.org>
+> >> Cc: devicetree@vger.kernel.org
+> >> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+> >> Signed-off-by: Liam Breck <kernel@networkimprov.net>
+> >> ---
+> >>  .../devicetree/bindings/power/supply/battery.txt   | 43 +++++++++++++=
++++++++++
+> >>  1 file changed, 43 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/power/supply/bat=
+tery.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/power/supply/battery.tx=
+t b/Documentation/devicetree/bindings/power/supply/battery.txt
+> >> new file mode 100644
+> >> index 0000000..53a68c0
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> >> @@ -0,0 +1,43 @@
+> >> +Battery Characteristics
+> >> +
+> >> +The devicetree battery node provides static battery characteristics.
+> >> +In smart batteries, these are typically stored in non-volatile memory
+> >> +on a fuel gauge chip. The battery node should be used where there is
+> >> +no appropriate non-volatile memory, or it is unprogrammed/incorrect.
+> >> +
+> >> +Required Properties:
+> >> + - compatible: Must be "simple-battery"
+> >> +
+> >> +Optional Properties:
+> >> + - voltage-min-design-microvolt: drained battery voltage
+> >> + - energy-full-design-microwatt-hours: battery design energy
+> >> + - charge-full-design-microamp-hours: battery design capacity
+> >> +
+> >> +Battery properties are named, where possible, for the corresponding
+> >> +elements in enum power_supply_property, defined in
+> >> +https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/include/linux/power_supply.h#n86
+> >
+> > The above paragraph does not belong into DT bindings. Apart
+> > from that
+> >
+> > Acked-by: Sebastian Reichel <sre@kernel.org>
+>=20
+> How then should I indicate that there is a method to the madness of
+> the above names? More information in the docs is helpful than less!
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You don't. This does not belong into the DT binding document. DT
+binding documents are _not_ Linux FW API. I thought we were through
+this already. FWIW if anything is not named like the power-supply
+subsystem names it, then that's not nice, but ok. Also if anybody
+adds stuff he will=20
+
+1. send patches to the power-supply subsystem maintainer (me at
+   the moment), who can reject patches.
+2. implement the parsing in the driver, which asks for power-supply
+   naming to be used if possible.
+
+-- Sebastian
+
+> > FYI: I will wait for Acked-by from Rob Herring on this patch.
+> >
+> > -- Sebastian
+> >
+> >> +Batteries must be referenced by chargers and/or fuel-gauges
+> >> +using a phandle. The phandle's property should be named
+> >> +"monitored-battery".
+> >> +
+> >> +Example:
+> >> +
+> >> +     bat: battery {
+> >> +             compatible =3D "simple-battery";
+> >> +             voltage-min-design-microvolt =3D <3200000>;
+> >> +             energy-full-design-microwatt-hours =3D <5290000>;
+> >> +             charge-full-design-microamp-hours =3D <1430000>;
+> >> +     };
+> >> +
+> >> +     charger: charger@11 {
+> >> +             ....
+> >> +             monitored-battery =3D <&bat>;
+> >> +             ...
+> >> +     };
+> >> +
+> >> +     fuel_gauge: fuel-gauge@22 {
+> >> +             ....
+> >> +             monitored-battery =3D <&bat>;
+> >> +             ...
+> >> +     };
+> >> --
+> >> 2.9.3
+> >>
+
+--4ifmackl52u7clku
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljTvPwACgkQ2O7X88g7
++pqybg/5AavafWA3+e8yExRRwRMSWor/RFLSe79squOTF7yDXp14fZJdCy2FDBhH
+yuPetPnxPPZS8SreWO9eJx1NJcU3dLdz3yQuN5ligfLdXGGYLmJ6eHFwv2IrGEQc
+BupOOLm8MsFSf5eilBqlfzTmATGxrIiM20ZDJpNIlKqi/idLOhUacsMVAayJDkHC
+BmgYr9t/a3j2XpoiPJK9zgMzjAebmgZYazhfTs82QxdOFDcjQgjzQReULTu22h6C
+VrQCwj7SYC6kmD3AA/qDDtfw1Ovi6n8wTuXtrssy/sv+8ob25lUbZ/pUdYP9koqO
+EHowFBT4jpckQGiouNDFEneIcQSehQwnFp3QObF47Tq//8kve90qYq7imwA3WBmN
+DmT/2dyYTcwIIBF3F8z3azrPo1TX/FjzXabOze4pxch2e++qO/1TkHVraEfmpDOw
+u+TgZ/c/gkfReyJBW1ZkK2uuFaVDrCDxNKAltUczmxh7ya0ZdQ0U4uIZDw2PrrqD
+0G10gxbk0OWMiD9V5IrdQEgujgu0/sszDPeVihiKS5BxTcQ0yFalhgeBJLFlZZi3
+YQJugz8KSoc0VCNellWGu1DZ65XivsVkVoToR8a8oU5QoG/CkajDVdvCad55pKMf
+pIOHVly6/rIMPFdsNcL+L/wRDEKHm30uEds33Bl+xtSs0gi0apU=
+=qSJM
+-----END PGP SIGNATURE-----
+
+--4ifmackl52u7clku--
