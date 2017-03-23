@@ -1,33 +1,33 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
-Date: Thu, 23 Mar 2017 15:56:02 +0800
-Message-ID: <20170323075602.GA6054@gondor.apana.org.au>
-References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
- <20170316100743.GA12137@gondor.apana.org.au>
- <m2mvcl6pwg.fsf@baylibre.com>
- <20170317083032.GA18512@gondor.apana.org.au>
- <m2lgrxnxlz.fsf@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/2] pinctrl: meson: gxl: add the missing PWM pin definitions
+Date: Thu, 23 Mar 2017 09:46:34 +0100
+Message-ID: <CACRpkdYYWut2aJMj1kVxisfcyur5BT9i9zSzYd8FVU9DY6taKQ@mail.gmail.com>
+References: <20170304212318.27076-1-martin.blumenstingl@googlemail.com>
+ <20170318122736.11592-1-martin.blumenstingl@googlemail.com> <20170318122736.11592-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <m2lgrxnxlz.fsf@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170318122736.11592-2-martin.blumenstingl@googlemail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 22, 2017 at 08:24:08AM -0700, Kevin Hilman wrote:
-> 
-> Because this will be causing conflicts with both the platform (amlogic)
-> tree and the clk tree, could provide an immutable branch where these are
-> applied to help us handle these conflicts?
+On Sat, Mar 18, 2017 at 1:27 PM, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 
-If you apply the same patches to your tree there should be no
-conflicts at all.  git is able to resolve this automatically.
+> This adds support for the missing PWM pins on Meson GXL SoCs, namely:
+> - PWM_A
+> - PWM_B
+> - PWM_C
+> - PWM_F (GPIOX_7 and GPIOCLK_1 can be selected as output)
+> - PWM_AO_A (GPIOAO_3 and GPIOAO_8 can be selected as output)
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Patch applied.
+
+Yours,
+Linus Walleij
