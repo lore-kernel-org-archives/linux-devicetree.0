@@ -1,7 +1,7 @@
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 2/2] soc/imx: add workaround for i.MX6QP to the GPC PD driver
-Date: Thu, 23 Mar 2017 15:44:18 +0100
-Message-ID: <20170323144418.30977-3-l.stach@pengutronix.de>
+Subject: [PATCH 1/2] dt-bindings: imx-gpc: add i.MX6 QuadPlus compatible
+Date: Thu, 23 Mar 2017 15:44:17 +0100
+Message-ID: <20170323144418.30977-2-l.stach@pengutronix.de>
 References: <20170323144418.30977-1-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170323144418.30977-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -10,95 +10,31 @@ To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6QP, due to hardware erratum ERR009619, the PRE clocks may be
-stalled during the power up sequencing of the PU power domain. As this
-may lead to a complete loss of display output, the recommended
-workaround is to keep the PU domain enabled during normal system
-operation.
-
-Implement this by rejecting the domain power down request on the
-affected SoC.
+While the GPC on i.MX6QP is mostly comptible to the i.MX6Q one,
+the QuadPlus requires special workarounds for hardware erratum
+ERR009619.
 
 Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/soc/imx/gpc.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/devicetree/bindings/power/fsl,imx-gpc.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
-index 4294287e5f6c..599e1e46f694 100644
---- a/drivers/soc/imx/gpc.c
-+++ b/drivers/soc/imx/gpc.c
-@@ -45,6 +45,7 @@ struct imx_pm_domain {
- 	unsigned int reg_offs;
- 	signed char cntr_pdn_bit;
- 	unsigned int ipg_rate_mhz;
-+	bool allow_dynamic_pd;
- };
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+index 416e12c6755a..181d2cc6f054 100644
+--- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+@@ -5,7 +5,10 @@ The i.MX6 General Power Control (GPC) block contains DVFS load tracking
+ counters and Power Gating Control (PGC).
  
- static inline struct imx_pm_domain *
-@@ -59,6 +60,9 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
- 	int iso, iso2sw;
- 	u32 val;
- 
-+	if (!pd->allow_dynamic_pd)
-+		return -EBUSY;
-+
- 	/* Read ISO and ISO2SW power down delays */
- 	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
- 	iso = val & 0x3f;
-@@ -255,6 +259,7 @@ static struct imx_pm_domain imx_gpc_domains[] = {
- 		},
- 		.reg_offs = 0x260,
- 		.cntr_pdn_bit = 0,
-+		.allow_dynamic_pd = true,
- 	}, {
- 		.base = {
- 			.name = "DISPLAY",
-@@ -263,23 +268,33 @@ static struct imx_pm_domain imx_gpc_domains[] = {
- 		},
- 		.reg_offs = 0x240,
- 		.cntr_pdn_bit = 4,
-+		.allow_dynamic_pd = true,
- 	}
- };
- 
- struct imx_gpc_dt_data {
- 	int num_domains;
-+	bool err009619_present;
- };
- 
- static const struct imx_gpc_dt_data imx6q_dt_data = {
- 	.num_domains = 2,
-+	.err009619_present = false,
-+};
-+
-+static const struct imx_gpc_dt_data imx6qp_dt_data = {
-+	.num_domains = 2,
-+	.err009619_present = true,
- };
- 
- static const struct imx_gpc_dt_data imx6sl_dt_data = {
- 	.num_domains = 3,
-+	.err009619_present = false,
- };
- 
- static const struct of_device_id imx_gpc_dt_ids[] = {
- 	{ .compatible = "fsl,imx6q-gpc", .data = &imx6q_dt_data },
-+	{ .compatible = "fsl,imx6qp-gpc", .data = &imx6qp_dt_data },
- 	{ .compatible = "fsl,imx6sl-gpc", .data = &imx6sl_dt_data },
- 	{ }
- };
-@@ -377,6 +392,10 @@ static int imx_gpc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/* Disable PU power down in normal operation if ERR009619 is present */
-+	if (of_id_data->err009619_present)
-+		imx_gpc_domains[1].allow_dynamic_pd = false;
-+
- 	if (!pgc_node) {
- 		ret = imx_gpc_old_dt_init(&pdev->dev, regmap,
- 					  of_id_data->num_domains);
+ Required properties:
+-- compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
++- compatible: Should be one of the following:
++  - fsl,imx6q-gpc
++  - fsl,imx6qp-gpc
++  - fsl,imx6sl-gpc
+ - reg: should be register base and length as documented in the
+   datasheet
+ - interrupts: Should contain one interrupt specifier for the GPC interrupt
 -- 
 2.11.0
 
