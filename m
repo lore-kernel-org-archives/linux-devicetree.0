@@ -1,167 +1,85 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH] iio/adc/ltc2497: Driver for Linear Technology LTC2497 ADC
-Date: Thu, 23 Mar 2017 12:05:10 +0100
-Message-ID: <6774c073-7fe4-e259-306e-3cf4621f7c69@metafoo.de>
-References: <1490265310-6162-1-git-send-email-michael.hennerich@analog.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: add Gateworks Ventana GW5903 support
+Date: Thu, 23 Mar 2017 19:13:18 +0800
+Message-ID: <20170323111317.GA30608@dragon>
+References: <1490125452-5712-1-git-send-email-tharvey@gateworks.com>
+ <CAL_JsqKVxpdS0cuXnwkux7zESXdjRA7RO0Pu0gGLdqKUTaMDpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490265310-6162-1-git-send-email-michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKVxpdS0cuXnwkux7zESXdjRA7RO0Pu0gGLdqKUTaMDpg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The subject should follow the standard subsystem subject scheme. E.g. in
-this case "iio: adc: Add driver for ..."
-
-On 03/23/2017 11:35 AM, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org wrote:
-> From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-
-Needs a commit message.
-
+On Wed, Mar 22, 2017 at 09:04:59AM -0500, Rob Herring wrote:
+> > diff --git a/arch/arm/boot/dts/imx6dl-gw5903.dts b/arch/arm/boot/dts/imx6dl-gw5903.dts
+> > new file mode 100644
+> > index 0000000..103261e
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6dl-gw5903.dts
+> > @@ -0,0 +1,55 @@
+> > +/*
+> > + * Copyright 2017 Gateworks Corporation
+> > + *
+> > + * This file is dual-licensed: you can use it either under the terms
+> > + * of the GPL or the X11 license, at your option. Note that this dual
+> > + * licensing only applies to this file, and not this project as a
+> > + * whole.
+> > + *
+> > + *  a) This file is free software; you can redistribute it and/or
+> > + *     modify it under the terms of the GNU General Public License as
+> > + *     published by the Free Software Foundation; either version 2 of
+> > + *     the License, or (at your option) any later version.
+> > + *
+> > + *     This file is distributed in the hope that it will be useful,
+> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + *     GNU General Public License for more details.
+> > + *
+> > + *     You should have received a copy of the GNU General Public
+> > + *     License along with this file; if not, write to the Free
+> > + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> > + *     MA 02110-1301 USA
+> > + *
+> > + * Or, alternatively,
+> > + *
+> > + *  b) Permission is hereby granted, free of charge, to any person
+> > + *     obtaining a copy of this software and associated documentation
+> > + *     files (the "Software"), to deal in the Software without
+> > + *     restriction, including without limitation the rights to use,
+> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > + *     sell copies of the Software, and to permit persons to whom the
+> > + *     Software is furnished to do so, subject to the following
+> > + *     conditions:
+> > + *
+> > + *     The above copyright notice and this permission notice shall be
+> > + *     included in all copies or substantial portions of the Software.
+> > + *
+> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> > + *     OTHER DEALINGS IN THE SOFTWARE.
+> > + */
 > 
-> Signed-off-by: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/ltc2497.txt        |  13 +
->  MAINTAINERS                                        |   1 +
->  drivers/iio/adc/Kconfig                            |  11 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/ltc2497.c                          | 263 +++++++++++++++++++++
->  5 files changed, 289 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ltc2497.txt
->  create mode 100644 drivers/iio/adc/ltc2497.c
+> You can use SPDX tag here:
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/ltc2497.txt b/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
-> new file mode 100644
-> index 0000000..c2829c19
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
-> @@ -0,0 +1,13 @@
-> +* Linear Technology / Analog Devices LTC2497 ADC
-> +
-> +Required properties:
-> + - compatible: Should be "lltc,ltc2497"
+> SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> 
+> While it says X11, this is really MIT license text as defined by SPDX.
 
-Replace 'should' with 'must'. It won't work if it isn't.
+Isn't it still controversial whether we should use SPDX tag or not?
 
-> + - reg: Should contain the ADC I2C address
+https://lkml.org/lkml/2017/2/28/750
 
-Same here.
-
-> + - vref-supply: The regulator supply for ADC reference voltage
-> +
-> +Example:
-> +	ltc2497: adc@76 {
-> +		compatible = "lltc,ltc2497";
-> +		reg = <0x76>;
-> +		vref-supply = <&ltc2497_reg>;
-> +	};
-[...]
-> diff --git a/drivers/iio/adc/ltc2497.c b/drivers/iio/adc/ltc2497.c
-> new file mode 100644
-> index 0000000..0452715
-> --- /dev/null
-> +++ b/drivers/iio/adc/ltc2497.c
-> @@ -0,0 +1,263 @@
-> +/*
-> + * ltc2497.c - Driver for Linear Technology LTC2497 ADC
-
-That's the "Analog Devices LTC2497 ADC" now ;)
-
-> + *
-> + * Copyright (C) 2017 Analog Devices Inc.
-> + *
-> + * Licensed under the GPL-2.
-> + *
-> + * Datasheet: http://cds.linear.com/docs/en/datasheet/2497fd.pdf
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/delay.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/of.h>
-
-Sorting alphabetically is preferred.
-
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +
-> +#define LTC2497_ENABLE			0xA0
-> +#define LTC2497_SGL			(1 << 4)
-
-I'm sure 5 minutes after the patch has been applied somebody will send a
-patch to replace this with BIT(4)
-
-> +#define LTC2497_DIFF			(0 << 4)
-> +#define LTC2497_SIGN			(1 << 3)
-> +#define LTC2497_CONFIG_DEFAULT		LTC2497_ENABLE
-> +#define LTC2497_CONVERSION_TIME_MS	150ULL
-> +
-> +struct ltc2497_st {
-> +	struct i2c_client *client;
-> +	struct regulator *ref;
-> +	ktime_t	time_prev;
-> +	u8 addr_prev;
-> +};
-> +
-> +static int ltc2497_wait_conv(struct ltc2497_st *st)
-> +{
-> +	s64 time_elapsed;
-> +
-> +	time_elapsed = ktime_ms_delta(ktime_get(), st->time_prev);
-> +
-> +	if (time_elapsed < LTC2497_CONVERSION_TIME_MS) {
-> +		/* delay if conversion time not passed
-> +		 * since last read or write
-> +		 */
-> +		msleep(LTC2497_CONVERSION_TIME_MS - time_elapsed);
-
-Considering how long this sleeps msleep_interruptible() might be the better
-choice.
-
-> +		return 0;
-> +	}
-> +
-> +	if (time_elapsed - LTC2497_CONVERSION_TIME_MS <= 0) {
-> +		/* We're in automatic mode -
-> +		 * so the last reading is stil not outdated
-> +		 */
-> +		return 0;
-> +	}
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static int ltc2497_read(struct ltc2497_st *st, u8 address, int *val)
-> +{
-> +	struct i2c_client *client = st->client;
-> +	__be32 buf = 0;
-
-transfer buffers must not be on the stack to avoid issues if the controller
-should use DMA.
-
-> +	int ret;
-> +
-> +	ret = ltc2497_wait_conv(st);
-> +	if (ret < 0 || st->addr_prev != address) {
-> +		ret = i2c_smbus_write_byte(st->client, 0xA0 | address);
-> +		if (ret < 0)
-> +			return ret;
-> +		st->addr_prev = address;
-> +		msleep(LTC2497_CONVERSION_TIME_MS);
-> +	}
-> +	ret = i2c_master_recv(client, (char *)&buf, 3);
-> +	if (ret < 0)  {
-> +		dev_err(&client->dev, "i2c_master_recv failed\n");
-> +		return ret;
-> +	}
-> +	st->time_prev = ktime_get();
-> +	*val = (be32_to_cpu(buf) >> 14) - (1 << 17);
-> +
-> +	return ret;
-> +}
-[...]
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
