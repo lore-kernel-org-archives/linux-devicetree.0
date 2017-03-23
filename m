@@ -1,97 +1,202 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)
-Date: Thu, 23 Mar 2017 16:37:10 +0000
-Message-ID: <20170323163710.GK9287@leverpostej>
-References: <1490275097-39349-1-git-send-email-liudongdong3@huawei.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 2/4] mvebu: xp: Add pwm properties to .dtsi files
+Date: Thu, 23 Mar 2017 17:40:53 +0100
+Message-ID: <871stodjze.fsf@free-electrons.com>
+References: <20170318154305.28348-1-ralph.sennhauser@gmail.com>
+        <20170318154305.28348-3-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1490275097-39349-1-git-send-email-liudongdong3@huawei.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Dongdong Liu <liudongdong3@huawei.com>
-Cc: helgaas@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, wangzhou1@hisilicon.com, gabriele.paoloni@huawei.com, linuxarm@huawei.com
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170318154305.28348-3-ralph.sennhauser@gmail.com> (Ralph
+        Sennhauser's message of "Sat, 18 Mar 2017 16:43:02 +0100")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "moderated list:ARM/Marvell
+        Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 09:18:17PM +0800, Dongdong Liu wrote:
-> The "hisilicon,pcie-almost-ecam", which goes against the usual DT
-> conventions, and is non-sensical in that it describes the IP based on
-> what it isn't. Fix the DT binding with "hisilicon,hip06-pcie-ecam"
-> and "hisilicon,hip07-pcie-ecam".
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+Hi Ralph,
+ 
+ On sam., mars 18 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com> wrote:
 
-Thanks for sending this out.
+It seems that I don't receive the 1st patch of the series.
 
-As it may not be obvious, this is a fixup for v4.11, and needs to go
-through ASAP so as to avoid a release with the broken binding.
+Also could you refresh my mind to expose why these patchse were not
+apply the first time and why we should apply them now?
 
 Thanks,
-Mark.
 
+Gregory
+
+
+> From: Andrew Lunn <andrew@lunn.ch>
+>
+> Add properties to the gpio nodes to allow them to be also used as pwm
+> lines.
+>
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> URL: https://patchwork.ozlabs.org/patch/427294/
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
 > ---
->  Documentation/devicetree/bindings/pci/hisilicon-pcie.txt | 10 ++++++++--
->  drivers/pci/dwc/pcie-hisi.c                              |  6 +++++-
->  2 files changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> index b7fa3b9..a339dbb 100644
-> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> @@ -44,13 +44,19 @@ Hip05 Example (note that Hip06 is the same except compatible):
+>  arch/arm/boot/dts/armada-370.dtsi        | 10 ++++++++--
+>  arch/arm/boot/dts/armada-xp-mv78230.dtsi | 10 ++++++++--
+>  arch/arm/boot/dts/armada-xp-mv78260.dtsi |  8 ++++++--
+>  arch/arm/boot/dts/armada-xp-mv78460.dtsi | 10 ++++++++--
+>  4 files changed, 30 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+> index cc011c8..aa9fe72 100644
+> --- a/arch/arm/boot/dts/armada-370.dtsi
+> +++ b/arch/arm/boot/dts/armada-370.dtsi
+> @@ -138,24 +138,30 @@
+>  
+>  			gpio0: gpio@18100 {
+>  				compatible = "marvell,orion-gpio";
+> -				reg = <0x18100 0x40>;
+> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
+> +				reg-names = "gpio", "pwm";
+>  				ngpios = <32>;
+>  				gpio-controller;
+>  				#gpio-cells = <2>;
+> +				#pwm-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+>  				interrupts = <82>, <83>, <84>, <85>;
+> +				clocks = <&coreclk 0>;
+>  			};
+>  
+>  			gpio1: gpio@18140 {
+>  				compatible = "marvell,orion-gpio";
+> -				reg = <0x18140 0x40>;
+> +				reg = <0x18140 0x40>, <0x181c8 0x08>;
+> +				reg-names = "gpio", "pwm";
+>  				ngpios = <32>;
+>  				gpio-controller;
+>  				#gpio-cells = <2>;
+> +				#pwm-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+>  				interrupts = <87>, <88>, <89>, <90>;
+> +				clocks = <&coreclk 0>;
+>  			};
+>  
+>  			gpio2: gpio@18180 {
+> diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
+> index 07c5090..fc3934f 100644
+> --- a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
+> @@ -203,24 +203,30 @@
+>  		internal-regs {
+>  			gpio0: gpio@18100 {
+>  				compatible = "marvell,orion-gpio";
+> -				reg = <0x18100 0x40>;
+> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
+> +				reg-names = "gpio", "pwm";
+>  				ngpios = <32>;
+>  				gpio-controller;
+>  				#gpio-cells = <2>;
+> +				#pwm-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+>  				interrupts = <82>, <83>, <84>, <85>;
+> +				clocks = <&coreclk 0>;
+>  			};
+>  
+>  			gpio1: gpio@18140 {
+>  				compatible = "marvell,orion-gpio";
+> -				reg = <0x18140 0x40>;
+> +				reg = <0x18140 0x40>, <0x181c8 0x08>;
+> +				reg-names = "gpio", "pwm";
+>  				ngpios = <17>;
+>  				gpio-controller;
+>  				#gpio-cells = <2>;
+> +				#pwm-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+>  				interrupts = <87>, <88>, <89>;
+> +				clocks = <&coreclk 0>;
+>  			};
+>  		};
 >  	};
+> diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
+> index 64e936a..04dda6a 100644
+> --- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
+> @@ -286,24 +286,28 @@
+>  		internal-regs {
+>  			gpio0: gpio@18100 {
+>  				compatible = "marvell,orion-gpio";
+> -				reg = <0x18100 0x40>;
+> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
+> +				reg-names = "gpio", "pwm";
+>  				ngpios = <32>;
+>  				gpio-controller;
+>  				#gpio-cells = <2>;
+> +				#pwm-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+>  				interrupts = <82>, <83>, <84>, <85>;
+> +				clocks = <&coreclk 0>;
+>  			};
 >  
->  HiSilicon Hip06/Hip07 PCIe host bridge DT (almost-ECAM) description.
-> +
-> +Some BIOSes place the host controller in a mode where it is ECAM
-> +compliant for all devices other than the root complex. In such cases,
-> +the host controller should be described as below.
-> +
->  The properties and their meanings are identical to those described in
->  host-generic-pci.txt except as listed below.
+>  			gpio1: gpio@18140 {
+>  				compatible = "marvell,orion-gpio";
+> -				reg = <0x18140 0x40>;
+> +				reg = <0x18140 0x40>, <0x181c8 0x08>;
+>  				ngpios = <32>;
+>  				gpio-controller;
+>  				#gpio-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+>  				interrupts = <87>, <88>, <89>, <90>;
+> +				clocks = <&coreclk 0>;
+>  			};
 >  
->  Properties of the host controller node that differ from
->  host-generic-pci.txt:
+>  			gpio2: gpio@18180 {
+> diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
+> index d1383dd..fb6d28a 100644
+> --- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
+> @@ -324,24 +324,30 @@
+>  		internal-regs {
+>  			gpio0: gpio@18100 {
+>  				compatible = "marvell,orion-gpio";
+> -				reg = <0x18100 0x40>;
+> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
+> +				reg-names = "gpio", "pwm";
+>  				ngpios = <32>;
+>  				gpio-controller;
+>  				#gpio-cells = <2>;
+> +				#pwm-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+>  				interrupts = <82>, <83>, <84>, <85>;
+> +				clocks = <&coreclk 0>;
+>  			};
 >  
-> -- compatible     : Must be "hisilicon,pcie-almost-ecam"
-> +- compatible     : Must be "hisilicon,hip06-pcie-ecam", or
-> +		   "hisilicon,hip07-pcie-ecam"
+>  			gpio1: gpio@18140 {
+>  				compatible = "marvell,orion-gpio";
+> -				reg = <0x18140 0x40>;
+> +				reg = <0x18140 0x40>, <0x181c8 0x08>;
+> +				reg-names = "gpio", "pwm";
+>  				ngpios = <32>;
+>  				gpio-controller;
+>  				#gpio-cells = <2>;
+> +				#pwm-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+>  				interrupts = <87>, <88>, <89>, <90>;
+> +				clocks = <&coreclk 0>;
+>  			};
 >  
->  - reg            : Two entries: First the ECAM configuration space for any
->  		   other bus underneath the root bus. Second, the base
-> @@ -59,7 +65,7 @@ host-generic-pci.txt:
->  
->  Example:
->  	pcie0: pcie@a0090000 {
-> -		compatible = "hisilicon,pcie-almost-ecam";
-> +		compatible = "hisilicon,hip06-pcie-ecam";
->  		reg = <0 0xb0000000 0 0x2000000>,  /*  ECAM configuration space */
->  		      <0 0xa0090000 0 0x10000>; /* host bridge registers */
->  		bus-range = <0  31>;
-> diff --git a/drivers/pci/dwc/pcie-hisi.c b/drivers/pci/dwc/pcie-hisi.c
-> index fd66a31..cf9d6a9 100644
-> --- a/drivers/pci/dwc/pcie-hisi.c
-> +++ b/drivers/pci/dwc/pcie-hisi.c
-> @@ -380,9 +380,13 @@ struct pci_ecam_ops hisi_pcie_platform_ops = {
->  
->  static const struct of_device_id hisi_pcie_almost_ecam_of_match[] = {
->  	{
-> -		.compatible = "hisilicon,pcie-almost-ecam",
-> +		.compatible =  "hisilicon,hip06-pcie-ecam",
->  		.data	    = (void *) &hisi_pcie_platform_ops,
->  	},
-> +	{
-> +		.compatible =  "hisilicon,hip07-pcie-ecam",
-> +		.data       = (void *) &hisi_pcie_platform_ops,
-> +	},
->  	{},
->  };
->  
+>  			gpio2: gpio@18180 {
 > -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.10.2
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
