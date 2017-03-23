@@ -1,91 +1,87 @@
-From: Dmitry Torokhov <dtor@chromium.org>
-Subject: Re: [PATCH v2 2/2] of/pci: Fix memory leak in of_pci_get_host_bridge_resources
-Date: Thu, 23 Mar 2017 15:58:56 -0700
-Message-ID: <CAE_wzQ9ZVDiDGP4k_2i2KL4JxtRn_S7gjFXUTYZncMLx2m77gQ@mail.gmail.com>
-References: <1490256755-889-1-git-send-email-jeffy.chen@rock-chips.com>
- <1490256755-889-3-git-send-email-jeffy.chen@rock-chips.com> <CAL_Jsq+xxG6w6J+Zz-kcJ+rA9jJomyHFiazHzcPHuQizn-4-wg@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH V11 1/6] of: base: Implement read function for s32 array
+Date: Thu, 23 Mar 2017 16:26:04 -0700
+Message-ID: <58D4598C.8030407@gmail.com>
+References: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com>
+ <1489356665-3175-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+xxG6w6J+Zz-kcJ+rA9jJomyHFiazHzcPHuQizn-4-wg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, toshi.kani@hpe.com, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, "bhelgaas@google.com" <bhelgaas@google.com>, Dmitry Torokhov <dtor@chromium.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1489356665-3175-2-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, kernel@martin.sperl.org
+Cc: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 3:07 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Mar 23, 2017 at 3:12 AM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
->> Currently we only free the allocated resource struct when error.
->> This would cause memory leak after pci_free_resource_list.
->>
->> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
->> ---
->>
->> Changes in v2:
->> Don't change the resource_list_create_entry's behavior.
->>
->>  drivers/of/of_pci.c | 57 +++++++++++++++++++++++------------------------------
->>  1 file changed, 25 insertions(+), 32 deletions(-)
->>
->> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
->> index 0ee42c3..a0ec246 100644
->> --- a/drivers/of/of_pci.c
->> +++ b/drivers/of/of_pci.c
->> @@ -190,8 +190,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->>                         struct list_head *resources, resource_size_t *io_base)
->>  {
->>         struct resource_entry *window;
->> -       struct resource *res;
->> -       struct resource *bus_range;
->> +       struct resource res;
->>         struct of_pci_range range;
->>         struct of_pci_range_parser parser;
->>         char range_type[4];
->> @@ -200,24 +199,24 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->>         if (io_base)
->>                 *io_base = (resource_size_t)OF_BAD_ADDR;
->>
->> -       bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
->> -       if (!bus_range)
->> -               return -ENOMEM;
->> -
->>         pr_info("host bridge %s ranges:\n", dev->full_name);
->>
->> -       err = of_pci_parse_bus_range(dev, bus_range);
->> +       err = of_pci_parse_bus_range(dev, &res);
->>         if (err) {
->> -               bus_range->start = busno;
->> -               bus_range->end = bus_max;
->> -               bus_range->flags = IORESOURCE_BUS;
->> -               pr_info("  No bus range found for %s, using %pR\n",
->> -                       dev->full_name, bus_range);
->> +               res.start = busno;
->> +               res.end = bus_max;
->> +               res.flags = IORESOURCE_BUS;
->> +               pr_info("  No bus range found for %s\n", dev->full_name);
->>         } else {
->> -               if (bus_range->end > bus_range->start + bus_max)
->> -                       bus_range->end = bus_range->start + bus_max;
->> +               if (res.end > res.start + bus_max)
->> +                       res.end = res.start + bus_max;
->> +       }
->> +       window = pci_add_resource(resources, NULL);
->> +       if (!window) {
->> +               err = -ENOMEM;
->> +               goto parse_failed;
->>         }
->> -       pci_add_resource(resources, bus_range);
->> +       *window->res = res;
->
-> Well, now this seems racy. You add a blank resource to the list first
-> and then fill it in.
->
+On 03/12/17 15:11, Stefan Wahren wrote:
+> In order to read signed thermal coefficients from DT we need a proper
+> function.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  include/linux/of.h |   35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 21e6323..98a046a 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -474,6 +474,34 @@ static inline int of_property_read_u32_array(const struct device_node *np,
+>  }
+>  
+>  /**
+> + * of_property_read_s32_array - Find and read an array of 32 bit signed integers
+> + * from a property.
+> + *
+> + * @np:		device node from which the property value is to be read.
+> + * @propname:	name of the property to be searched.
+> + * @out_values:	pointer to return value, modified only if return value is 0.
+> + * @sz:		number of array elements to read
+> + *
+> + * Search for a property in a device node and read 32-bit value(s) from
+> + * it. Returns 0 on success, -EINVAL if the property does not exist,
+> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
+> + * property data isn't large enough.
+> + *
+> + * The out_values is modified only if a valid s32 value can be decoded.
+> + */
+> +static inline int of_property_read_s32_array(const struct device_node *np,
+> +					     const char *propname,
+> +					     s32 *out_values, size_t sz)
+> +{
+> +	int ret = of_property_read_variable_u32_array(np, propname, out_values,
+> +						      sz, 0);
 
-Huh? There is absolutely no guarantees for concurrent access here.
-pcI_add_resource_offset() first adds a resource and then modifies
-offset. Here we add an empty resource and then fill it in.
+Add the type coercion of out_values to make it obvious:
 
-Thanks.
++       int ret = of_property_read_variable_u32_array(np, propname,
++                                                     (u32*) out_values, sz, 0);
 
--- 
-Dmitry
+> +	if (ret >= 0)
+> +		return 0;
+> +	else
+> +		return ret;
+> +}
+> +
+> +/**
+>   * of_property_read_u64_array - Find and read an array of 64 bit integers
+>   * from a property.
+>   *
+> @@ -676,6 +704,13 @@ static inline int of_property_read_u32_array(const struct device_node *np,
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline int of_property_read_s32_array(const struct device_node *np,
+> +					     const char *propname,
+> +					     s32 *out_values, size_t sz)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+>  static inline int of_property_read_u64_array(const struct device_node *np,
+>  					     const char *propname,
+>  					     u64 *out_values, size_t sz)
+> 
+
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
