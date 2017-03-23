@@ -1,115 +1,167 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2] iio: adc: cpcap: Add minimal support for CPCAP PMIC ADC
-Date: Thu, 23 Mar 2017 15:14:52 -0700
-Message-ID: <20170323221452.GU10760@atomide.com>
-References: <20170322233726.5391-1-tony@atomide.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/9] Docs: dt: document qcom iommu bindings
+Date: Thu, 23 Mar 2017 17:21:37 -0500
+Message-ID: <20170323222137.okq227mgsmsjy5zf@rob-hp-laptop>
+References: <20170314151811.17234-1-robdclark@gmail.com>
+ <20170314151811.17234-4-robdclark@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170322233726.5391-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170314151811.17234-4-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170322 16:39]:
-> +/**
-> + * enum cpcap_adc_type - cpcap adc types
-> + *
-> + * Two banks of channels with eight channels in each. The first two channels
-> + * in bank0 can be muxed for other functionality with CPCAP_ADC_TYPE_BATT_PI.
-> + */
-> +enum cpcap_adc_type {
-> +	CPCAP_ADC_TYPE_BANK_0,
-> +	CPCAP_ADC_TYPE_BANK_1,
-> +	CPCAP_ADC_TYPE_BATT_PI,
-> +};
-
-Hmm looks like I only got half done yesterday.. I can now get
-rid of the above in favor of using just channels.
-
-> +static void cpcap_adc_phase(struct cpcap_adc_request *req, int index)
-> +{
-> +	const struct cpcap_adc_conversion_tbl *conv_tbl;
-> +	const struct cpcap_adc_phasing_tbl *phase_tbl;
-> +	int tbl_index;
+On Tue, Mar 14, 2017 at 11:18:05AM -0400, Rob Clark wrote:
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iommu/qcom,iommu.txt       | 113 +++++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> new file mode 100644
+> index 0000000..fd5b7fa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> @@ -0,0 +1,113 @@
+> +* QCOM IOMMU v1 Implementation
 > +
-> +	switch (req->type) {
-> +	case CPCAP_ADC_TYPE_BANK_0:
-> +		conv_tbl = bank0_conversion;
-> +		phase_tbl = bank0_phasing;
-> +		tbl_index = index;
-> +		break;
-> +	case CPCAP_ADC_TYPE_BANK_1:
-> +		conv_tbl = bank1_conversion;
-> +		phase_tbl = bank1_phasing;
-> +		tbl_index = index;
-> +		break;
-> +	case CPCAP_ADC_TYPE_BATT_PI:
-> +		conv_tbl = bank0_conversion;
-> +		phase_tbl = bank0_phasing;
-> +		tbl_index = (index % 2) ? CPCAP_ADC_BATTI :
-> +			CPCAP_ADC_BATTP;
-> +		break;
-> +	default:
-> +		return;
-> +	}
-
-And then the above switch will go away.
-
-> +static void cpcap_adc_convert(struct cpcap_adc_request *req, int index)
-> +{
-> +	const struct cpcap_adc_conversion_tbl *conv_tbl;
-> +	int tbl_index;
+> +Qualcomm "B" family devices which are not compatible with arm-smmu have
+> +a similar looking IOMMU but without access to the global register space,
+> +and optionally requiring additional configuration to route context irqs
+> +to non-secure vs secure interrupt line.
 > +
-> +	switch (req->type) {
-> +	case CPCAP_ADC_TYPE_BANK_0:
-> +		conv_tbl = bank0_conversion;
-> +		tbl_index = index;
-> +		break;
-> +	case CPCAP_ADC_TYPE_BANK_1:
-> +		conv_tbl = bank1_conversion;
-> +		tbl_index = index;
-> +		break;
-> +	case CPCAP_ADC_TYPE_BATT_PI:
-> +		conv_tbl = bank0_conversion;
-> +		tbl_index = (index % 2) ?
-> +			CPCAP_ADC_BATTI : CPCAP_ADC_BATTP;
-> +		break;
-> +	default:
-> +		return;
-> +	}
-
-And here too.
-
-> +static int cpcap_adc_init_request(struct cpcap_adc_request *req,
-> +				  int channel)
-> +{
-> +	switch (channel) {
-> +	case 0 ... 7:
-> +		req->bank_index = channel;
-> +		req->type = CPCAP_ADC_TYPE_BANK_0;
-> +		break;
-> +	case 8 ... 15:
-> +		req->bank_index = channel - 8;
-> +		req->type = CPCAP_ADC_TYPE_BANK_1;
-> +		break;
-> +	case 16 ... 17:
-> +		req->bank_index = channel - 16;
-> +		req->type = CPCAP_ADC_TYPE_BATT_PI;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
+> +** Required properties:
 > +
-> +	return 0;
-> +}
+> +- compatible       : Should be one of:
+> +
+> +                        "qcom,msm8916-iommu"
+> +
+> +- clock-names      : Should be a pair of "iface" (required for IOMMUs
+> +                     register group access) and "bus" (required for
+> +                     the IOMMUs underlying bus access).
+> +- clocks           : Phandles for respective clocks described by
+> +                     clock-names.
+> +- #address-cells   : must be 1.
+> +- #size-cells      : must be 1.
+> +- #iommu-cells     : Must be 1.
+> +- ranges           : Base address and size of the iommu context banks.
+> +- qcom,iommu-secure-id  : secure-id.
+> +
+> +- List of sub-nodes, one per translation context bank.  Each sub-node
+> +  has the following required properties:
+> +
+> +  - compatible     : Should be one of:
+> +        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
+> +        - "qcom,msm-iommu-v1-sec" : secure context bank
+> +  - reg            : Base address and size of context bank within the iommu
+> +  - interrupts     : The context fault irq.
+> +
+> +** Optional properties:
+> +
+> +- reg              : Base address and size of the SMMU local base, should
+> +                     be only specified if the iommu requires configuration
+> +                     for routing of context bank irq's to secure vs non-
+> +                     secure lines.  (Ie. if the iommu contains secure
+> +                     context banks)
+> +
+> +
+> +** Examples:
+> +
+> +	apps_iommu: iommu@1e20000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		#iommu-cells = <1>;
+> +		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
 
-And this can be done by indexing everything with just the
-channels. So I'll be posting v3 of this patch at some point
-hopefully later on today.
+You didn't document the fallback above. Maybe just drop it if only a few 
+chips have this iommu.
 
-Regards,
+> +		ranges = <0 0x1e20000 0x40000>;
+> +		reg = <0x1ef0000 0x3000>;
 
-Tony
+When you have both reg and ranges, use reg value for the unit-address.
+
+> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
+> +			 <&gcc GCC_APSS_TCU_CLK>;
+> +		clock-names = "iface", "bus";
+> +		qcom,iommu-secure-id = <17>;
+> +
+> +		// mdp_0:
+> +		iommu-ctx@4000 {
+> +			compatible = "qcom,msm-iommu-v1-ns";
+> +			reg = <0x4000 0x1000>;
+> +			interrupts = <GIC_SPI 70 0>;
+> +		};
+> +
+> +		// venus_ns:
+> +		iommu-ctx@5000 {
+> +			compatible = "qcom,msm-iommu-v1-sec";
+> +			reg = <0x5000 0x1000>;
+> +			interrupts = <GIC_SPI 70 0>;
+> +		};
+> +	};
+> +
+> +	gpu_iommu: iommu@1f08000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		#iommu-cells = <1>;
+> +		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
+> +		ranges = <0 0x1f08000 0x10000>;
+> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
+> +			 <&gcc GCC_GFX_TCU_CLK>;
+> +		clock-names = "iface", "bus";
+> +		qcom,iommu-secure-id = <18>;
+> +
+> +		// gfx3d_user:
+> +		iommu-ctx@1f09000 {
+
+iommu-ctx@1000
+
+> +			compatible = "qcom,msm-iommu-v1-ns";
+> +			reg = <0x1000 0x1000>;
+> +			interrupts = <GIC_SPI 241 0>;
+> +		};
+> +
+> +		// gfx3d_priv:
+> +		iommu-ctx@1f0a000 {
+
+iommu-ctx@2000
+
+> +			compatible = "qcom,msm-iommu-v1-ns";
+> +			reg = <0x2000 0x1000>;
+> +			interrupts = <GIC_SPI 242 0>;
+> +		};
+> +	};
+> +
+> +	...
+> +
+> +	venus: video-codec@1d00000 {
+> +		...
+> +		iommus = <&apps_iommu 5>;
+> +	};
+> +
+> +	mdp: mdp@1a01000 {
+> +		...
+> +		iommus = <&apps_iommu 4>;
+> +	};
+> +
+> +	gpu@01c00000 {
+> +		...
+> +		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
+> +	};
+> -- 
+> 2.9.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
