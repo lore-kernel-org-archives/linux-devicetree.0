@@ -1,63 +1,35 @@
-From: jacopo <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 4/7] arm: dts: r7s72100: Add pin controller node
-Date: Thu, 23 Mar 2017 17:13:19 +0100
-Message-ID: <20170323161319.GM30223@w540>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490026491-21742-5-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdXZ4qoFrqQjxhD328XW_TPcEpo82mQSKyj6HKvaouot2w@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 02/12] irqchip: mtk-sysirq: extend intpol base to
+ arbitrary number
+Date: Thu, 23 Mar 2017 16:25:54 +0000
+Message-ID: <3790b6ad-12c0-0c48-c24e-0f3397c6bbba@arm.com>
+References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
+ <1489937193-2953-3-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXZ4qoFrqQjxhD328XW_TPcEpo82mQSKyj6HKvaouot2w@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1489937193-2953-3-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On 19/03/17 15:26, Mars Cheng wrote:
+> Originally driver only supports one base. However, MT6797 has
+> more than one bases to configure interrupt polarity. To support
+> possible design change, here comes a solution to use arbitrary
+> number of bases.
+> 
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 
-On Wed, Mar 22, 2017 at 02:12:04PM +0100, Geert Uytterhoeven wrote:
-> Hi Jacopo,
-> 
-> On Mon, Mar 20, 2017 at 5:14 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > Add pin controller node with 12 gpio controller sub-nodes to
-> > r7s72100 dtsi.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> > --- a/arch/arm/boot/dts/r7s72100.dtsi
-> > +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> > @@ -183,6 +183,86 @@
-> >                 };
-> >         };
-> >
-> > +       pinctrl: pinctrl@fcfe3000 {
-> > +               compatible = "renesas,r7s72100-ports";
-> > +
-> > +               #pinctrl-cells = <1>;
-> > +
-> > +               reg = <0xfcfe3000 0x4248>;
-> 
-> How did you get to 0x4248? I had expected 0x4230.
-> Not that it matters much, Linux rounds it up to a multiple of PAGE_SIZE anyway.
-> 
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 
-I guess I probably confused hex and dec values, as the correct
-calculation here would have been (4200 + C * 4)
-That 4248 value is what you get with (4200 + 12 * 4) so I probably
-typed 12 in the calculator instead of C :)
-I'll change this even if it does not make any difference..
+What is the merge strategy for this? I'm happy to take the irqchip stuff
+through my tree, but there is much more in this series...
 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
