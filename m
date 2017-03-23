@@ -1,89 +1,120 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 7/7] mfd: dt-bindings: Add RK805 device tree bindings
- document
-Date: Thu, 23 Mar 2017 12:25:39 +0000
-Message-ID: <20170323122539.svapjqvieir2aqum@dell>
-References: <1489734377-1716-1-git-send-email-zhangqing@rock-chips.com>
- <1489734525-23310-1-git-send-email-zhangqing@rock-chips.com>
+From: Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v3 3/5] coresight: add support for debug module
+Date: Thu, 23 Mar 2017 12:27:09 +0000
+Message-ID: <CAJ9a7Vj8Rt7+Pq+pYg-K+xHNYnSyR+oN4RHM6XTb_Ju+akgbug@mail.gmail.com>
+References: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
+ <1488520809-31670-4-git-send-email-leo.yan@linaro.org> <671a0b39-b635-6e0e-d3fa-967651f2e29c@arm.com>
+ <CAJ9a7VgCjXNGC4C49PxL-nBxzhMCmA8Mb-0C_epahizA5EL2HA@mail.gmail.com>
+ <e7a97c52-f61a-e503-f626-09563fa100b8@arm.com> <CAJ9a7VhvCS3xXAHBt0AUVB2Zp2P1HP_LQm4KiptiBT9VJ1fC0Q@mail.gmail.com>
+ <4961636d-d77c-0f9a-7076-4db1ef456073@arm.com> <1e6d6a91-3bdc-7cfb-a96f-780c959e0316@arm.com>
+ <7a028460-d598-e337-5e09-234beddca88b@arm.com> <20170323054319.GA7716@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489734525-23310-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170323054319.GA7716@leoy-linaro>
+Sender: linux-clk-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Mar 2017, Elaine Zhang wrote:
+Also agree with Suzuki's excellent summary.
 
-> Add device tree bindings documentation for Rockchip's RK805 PMIC.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/rk808.txt | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-> index 9636ae8d8d41..05eb07134483 100644
-> --- a/Documentation/devicetree/bindings/mfd/rk808.txt
-> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-> @@ -1,11 +1,12 @@
->  RK8XX Power Management Integrated Circuit
->  
->  The rk8xx family current members:
-> +rk805
->  rk808
->  rk818
->  
->  Required properties:
-> -- compatible: "rockchip,rk808", "rockchip,rk818"
-> +- compatible: "rockchip,rk805", "rockchip,rk808", "rockchip,rk818"
->  - reg: I2C slave address
->  - interrupt-parent: The parent interrupt controller.
->  - interrupts: the interrupt outputs of the controller.
-> @@ -18,6 +19,14 @@ Optional properties:
->  - rockchip,system-power-controller: Telling whether or not this pmic is controlling
->    the system power.
->  
-> +Optional RK805 properties:
-> +- vcc1-supply:  The input supply for DCDC_REG1
-> +- vcc2-supply:  The input supply for DCDC_REG2
-> +- vcc3-supply:  The input supply for DCDC_REG3
-> +- vcc4-supply:  The input supply for DCDC_REG4
-> +- vcc5-supply:  The input supply for LDO_REG1 and LDO_REG2
-> +- vcc6-supply:  The input supply for LDO_REG3
-> +
->  Optional RK808 properties:
->  - vcc1-supply:  The input supply for DCDC_REG1
->  - vcc2-supply:  The input supply for DCDC_REG2
-> @@ -56,6 +65,15 @@ by a child node of the 'regulators' node.
->  		/* standard regulator bindings here */
->  	};
->  
-> +Following regulators of the RK805 PMIC block are supported. Note that
+A couple of notes on using EDPRCR....
 
-"The following RK805 PMIC regulators are supported."
+The logic for this assuming a correctly implemented system should be
+something like.....
 
-> +the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-> +number as described in RK805 datasheet.
-> +
-> +	- DCDC_REGn
-> +		- valid values for n are 1 to 4.
-> +	- LDO_REGn
-> +		- valid values for n are 1 to 3
-> +
->  Following regulators of the RK808 PMIC block are supported. Note that
->  the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
->  number as described in RK808 datasheet.
+if (prsr() == powered_down) { // if we are powered down request power up.
+    sw_unlock()   // ensure that the sw lock register on the device is unlocked
+    write(prcr(bit3=1))
+    wait_with_timeout(prsr()==powered_up)   // must wait to see if the
+system does power up - otherwise bad things happen!
+    if(timed_out)
+       fail("power up request for CPU N failed.")  // nothing to do
+after this point though if a CPU can't be powered is should not be
+included in the list to be checked on crash.
+}
+ensure_os_lock_unlocked()  // os lock has to be unlocked for bit 0 of
+prcr to be writeable.
+sw_unlock()   // ensure that the sw lock register on the device is unlocked
+write(prcr(bit3=1 | bit0=1)) // the core is powered, set the
+nopowerdown request bit so we don't lose it & emulate power down
+
+
+I think that some of the above logic is already in the driver, so
+needs to be adapted for the PRCR handling.
+
+
+On the "bad" systems, the initial prsr check is likely to fail (crash
+/ buslock) if the debug logic is not correctly powered. The user will
+then have to use one or more of the PM mitigations previously
+discussed that are appropriate for that specific platform and retry
+
+Regards
+
+Mike
+
+
+On 23 March 2017 at 05:43, Leo Yan <leo.yan@linaro.org> wrote:
+> On Wed, Mar 22, 2017 at 05:25:50PM +0000, Sudeep Holla wrote:
+>>
+>>
+>> On 22/03/17 17:09, Suzuki K Poulose wrote:
+>> > On 22/03/17 16:17, Sudeep Holla wrote:
+>>
+>> [...]
+>>
+>> >>
+>> >> Point taken. So we could just specify that all necessary power
+>> >> domains need to be on for proper functionality for this feature and
+>> >> that it's highly platform specific instead of mixing cpu/cluster
+>> >> idle details here.
+>> >>
+>> >>> The key point is that the caveat in using this driver is that
+>> >>> the power management has to be considered on a platform specific
+>> >>> basis before it is configured; and appropriate actions may be
+>> >>> needed for it to work correctly. Without this then the driver
+>> >>> could cause more issues than it debugs. A user selecting this
+>> >>> _must_ be told about these issues
+>> >>>
+>> >
+>> > So given all the possible caveats, I think we :
+>> >
+>> > 1) Shouldn't enable the driver by default at runtime even if it is
+>> > built-in.
+>> > 2) Should provide mechanisms to turn it on at boot (via
+>> > kernel commandline) or anytime later (via sysfs), which kind of puts
+>> > the responsibility back on the user : "You know what you are doing".
+>> > 3) Shouldn't turn the driver on based on "nohlt" which the user
+>> > could use it for some other purposes, without explicit intention of
+>> > turning this driver on).
+>> > 4) Should document the fact that, on some
+>> > platforms, the user may have to disable CPUidle explicitly to get the
+>> > driver working. But let us not make it the default. The user with a
+>> > not so ideal platform could add "nohlt" and get it working.
+>> >
+>>
+>> Agreed on all points and well summarized.
+>> I would like to highlight (3) and (4) as it needs to be well understood.
+>>
+>> "nohlt" has a *different* meaning already, so using that in this
+>> driver for something else is simple wrong as it affects the system in
+>> unintended ways. And yes if user (mis)uses it to get things working,
+>> it's fine but shouldn't be recommended way.
+>
+> Understand this point.
+>
+> I will try to use general way to constraint CPUIdle like other
+> drivers.
+>
+> Thanks all for these good suggestions :)
+>
+> Thanks,
+> Leo Yan
+
+
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mike Leach
+Principal Engineer, ARM Ltd.
+Blackburn Design Centre. UK
