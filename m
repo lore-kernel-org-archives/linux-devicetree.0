@@ -1,41 +1,28 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: r7s72100: add power-domains to sdhi
-Date: Fri, 24 Mar 2017 11:17:25 +0000
-Message-ID: <SG2PR06MB116573C9325106B5ED4580578A3E0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170209133803.21539-1-chris.brandt@renesas.com>
- <CAMuHMdXRD3o7KdaADvPYxzeuEVo44nRVWHfCverPc+9s=0owPA@mail.gmail.com>
- <20170324070228.GI1319@verge.net.au>
- <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: iio: rockchip-saradc: add support for rk3328
+Date: Fri, 24 Mar 2017 12:19:23 +0100
+Message-ID: <1780135.7WnW6BDWeH@diego>
+References: <1490353287-25122-1-git-send-email-cl@rock-chips.com> <1490353287-25122-2-git-send-email-cl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490353287-25122-2-git-send-email-cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpZGF5LCBNYXJjaCAyNCwgMjAxNywgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+
-IFRoZSBmaXhlcyB0YWcgYWJvdmUgaW5kaWNhdGVzIHRoaXMgaXMgYSBmaXggZm9yIHY0LjEwLCBo
-b3dldmVyLCB3aGVuIEkNCj4gPiB0cmllZCB0byBhcHBseSBpdCBvbiB0b3Agb2YgdjQuMTEtcmMx
-IHRoZXJlIHdhcyBhIGNvbmZsaWN0LiAgU28gSQ0KPiA+IHRoaW5rIGEgYmFja3BvcnQgd2lsbCBi
-ZSByZXF1aXJlZCBpZiB3ZSB3YW50IGl0IHRvIGJlIGNvbnNpZGVyZWQgZm9yDQo+ID4gdjQuMTEg
-YW5kIGJlIGNvbnNpZGVyZWQgZm9yIGFuZCBpbiB0dXJuIHY0LjEwLXN0YWJsZS4NCj4gDQo+IFRo
-YXQncyBiZWNhdXNlIG9mIGNvbW1pdCAzZDJhYmRhMDJhZDJkMDZkDQo+ICgiQVJNOiBkdHM6IHI3
-czcyMTAwOiB1cGRhdGUgc2RoaSBjbG9jayBiaW5kaW5ncyIpDQoNCg0KQmV0d2VlbiB0aGUgdHdv
-LCAidXBkYXRlIHNkaGkgY2xvY2sgYmluZGluZ3MiIGlzIG1vcmUgaW1wb3J0YW50IHRoaXMgdGhp
-cyBwYXRjaCAoImFkZCBwb3dlci1kb21haW5zIikuDQpXaXRob3V0ICJ1cGRhdGUgc2RoaSBjbG9j
-ayBiaW5kaW5ncyIsIHRoZSBTREhJIC9taWdodC8gbm90IHdvcmsuDQoNCg0KQnV0LCAidXBkYXRl
-IHNkaGkgY2xvY2sgYmluZGluZ3MiLCBhbHNvIHJlbGllcyBvbiB0aGUgZHJpdmVyIHVwZGF0ZSAz
-NGExNjU0NzA2YzYgKCJtbWM6IHNoX21vYmlsZV9zZGhpOiBhZGQgc3VwcG9ydCBmb3IgMiBjbG9j
-a3MiKS4NClRoYXQgb25lIGlzIGluIHY0LjExLXJjMSwgYnV0IG5vdCBpbiA0LjEwLjUuDQoNCkkg
-anVzdCBub3RpY2VkIG5vdyB0aGF0IDM0YTE2NTQ3MDZjNiBkb2VzIG5vdCBoYXZlICJGaXhlcyIg
-aW4gdGhlIGNvbW1pdCBsb2csIHNvIGl0IGlzIHByb2JhYmx5IG5vdCBtYXJrZWQgdG8gZ28gaW50
-byB2NC4xMC1zdGFibGUsIHNvIGluIHRoYXQgY2FzZSBiYWNrcG9ydGluZyB0aGUgZHRzaSBpcyBw
-b2ludGxlc3MuDQoNCg0KQ2hyaXMNCg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Am Freitag, 24. März 2017, 19:01:22 CET schrieb cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org:
+> From: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> The rk3328 saradc is the same as rk3399.
+> 
+> Signed-off-by: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+when sending future version of patchseries, please _always_ also append 
+already received tags if a patch didn't undergo major changes.
+
+This one already got:
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
