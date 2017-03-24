@@ -1,80 +1,135 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: ls1012a: add crypto node
-Date: Fri, 24 Mar 2017 22:03:22 +0800
-Message-ID: <20170324140320.GP30608@dragon>
-References: <20170322122939.22117-1-horia.geanta@nxp.com>
- <20170324015606.GC30608@dragon>
- <DB4PR04MB0847D837CB2762D5094720CB983E0@DB4PR04MB0847.eurprd04.prod.outlook.com>
- <20170324073420.GM30608@dragon>
- <DB4PR04MB0847E3EE8F7FAC11DD85FAA8983E0@DB4PR04MB0847.eurprd04.prod.outlook.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv2] power: supply: cpcap-charger: Add minimal CPCAP PMIC
+ battery charger
+Date: Fri, 24 Mar 2017 07:08:07 -0700
+Message-ID: <20170324140807.GW10760@atomide.com>
+References: <20170322234210.5557-1-tony@atomide.com>
+ <20170324100622.mzra66z35xlndhdj@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <DB4PR04MB0847E3EE8F7FAC11DD85FAA8983E0-tLF+feb1Bz4/w1fYxD+T089NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <20170324100622.mzra66z35xlndhdj@earth>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bhaskar U <bhaskar.upadhaya-3arQi8VN3Tc@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Dan Douglass <dan.douglass-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 08:29:17AM +0000, Horia Geantă wrote:
-> On 3/24/2017 9:35 AM, Shawn Guo wrote:
-> > On Fri, Mar 24, 2017 at 07:17:50AM +0000, Horia Geantă wrote:
-> >>>> +		sec_mon: sec_mon@1e90000 {
-> >>>
-> >>> Hyphen is more preferred to be used in node name than underscore.
-> >>>
-> >> This would imply changing the
-> >> Documentation/devicetree/bindings/crypto/fsl-sec4.txt binding and
-> >> dealing with all the consequences, which IIUC is probably not worth.
-> > 
-> > I do not care the bindings doc that much, since I'm not the maintainer
-> > of it.  What are the consequences specifically, if we use a better node
-> > name in dts than bindings example?
-> > 
-> Users relying on finding the sec_mon node will obviously stop working.
-> I don't see any in-kernel users, however there could be others I am not
-> aware of and DT bindings should provide for backwards compatibility.
-
-Okay, point taken.  You can keep the node name as it is.
-
-> I could deprecate "sec_mon" in the bindings and suggest "sec-mon"
-> instead, while leaving all existing dts files as-is.
-> The risk is breaking LS1012A users relying on "sec_mon".
-
-For existing bindings, I do not care that much.  But for new ones, I do
-hope that we recommend to use hyphen, as that's more idiomatic at least
-for Linux kernel.
-
-> I see that ePAPR:
-> -allows both for hyphen and underline in case of node names
-> -allows only for hyphen (i.e. forbids underline) in case of alias nodes
+* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170324 03:08]:
+> On Wed, Mar 22, 2017 at 04:42:10PM -0700, Tony Lindgren wrote:
+> > +Required properties:
+> > +- compatible: Shall be "motorola,cpcap-charger" or
+> > +	      "motorola,mapphone-cpcap-charger"
+> > +- interrupts: Interrupts used on the CPCAP PMIC
+> > +- interrupt-names: Names of the interrupts
 > 
-> In the first case, I understand there's an (undocumented?) agreement to
-> prefer hyphen over underline.
+> That's usually done like
+> 
+> interrupts: Interrupt specifier for each name in interrupt-names
+> interrupt-names: Should contain the following entries:
+>  "bla", "foo", "42"
 
-Both are valid, but hyphen is more idiomatic for Linux kernel.
+Sure will update.
 
-> For the 2nd one, does this mean I should change alias names?
+> > +- io-channels: IIO ADC channels used by the charger
+> > +- io-channel-names: Names of the IIO ADC channels
+> 
+> Same as for interrupts.
 
-This is something I see difference between specification and DTC.
+OK
 
-	aliases {
-		alias-name = &label_name;
-	};
+> > +Optional properties:
+> > +- mode-gpios: Optionally CPCAP charger can have a companion wireless
+> > +	      charge controller that is controlled with two GPIOs
+> 
+> DT people prefer to have GPIO activity (high/low) to be specified in the
+> binding.
 
-	label_name: node-name {
-		...
-	};
+OK will add.
 
-The spec says that only hyphen is valid for alias name, but DTC works
-happily with underscore too.  From my experience with DTC playing, both
-hyphen and underscore are valid for alias and node name.  But for label
-name, only underscore is valid.  Using hyphen in label name will cause
-DTC to report syntax error.
+> > --- a/drivers/power/supply/Kconfig
+> > +++ b/drivers/power/supply/Kconfig
+> > @@ -317,6 +317,13 @@ config BATTERY_RX51
+> >  	  Say Y here to enable support for battery information on Nokia
+> >  	  RX-51, also known as N900 tablet.
+> >  
+> > +config CHARGER_CPCAP
+> > +	tristate "CPCAP PMIC Charger Driver"
+> > +	depends on MFD_CPCAP
+> > +	help
+> > +	  Say Y to enable support for CPCAP PMIC charger driver for Motorola
+> > +	  mobile devices such as Droid 4.
+> > +
+> 
+> I think adding "default MFD_CPCAP" for CPCPAP's subdrivers would be nice.
 
-Shawn
+OK
+
+> > diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+> > --- a/drivers/power/supply/Makefile
+> > +++ b/drivers/power/supply/Makefile
+> > 
+> > [...]
+> >
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/usb/phy_companion.h>
+> > +#include <linux/phy/omap_usb.h>
+> > +#include <linux/usb/otg.h>
+> > +#include <linux/iio/consumer.h>
+> > +#include <linux/mfd/motorola-cpcap.h>
+> 
+> This looks very entangled with mapphone specific things,
+> so maybe we should not add "motorola,cpcap-charger" for
+> now?
+
+Yeah I think that's a good idea as we have no documentation for
+the mystery companion charger chip there that has "6500" printed
+on it.
+
+> > +static int cpcap_charger_get_ints_state(struct cpcap_charger_ddata *ddata,
+> > +					struct cpcap_charger_ints_state *s)
+> > +{
+> > +	int val, error;
+> > +
+> > +	error = regmap_read(ddata->reg, CPCAP_REG_INTS1, &val);
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	s->chrg_det = val & BIT(13);
+> > +	s->rvrs_chrg = val & BIT(12);
+> > +	s->vbusov = val & BIT(11);
+> > +
+> > +	error = regmap_read(ddata->reg, CPCAP_REG_INTS2, &val);
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	s->chrg_se1b = val & BIT(13);
+> > +	s->rvrs_mode = val & BIT(6);
+> > +	s->chrgcurr1 = val & BIT(4);
+> > +	s->vbusvld = val & BIT(3);
+> > +
+> > +	error = regmap_read(ddata->reg, CPCAP_REG_INTS4, &val);
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	s->battdetb = val & BIT(6);
+> 
+> Did you avoid using cpcap_sense_virq() for performance reasons?
+
+I don't think performance is an issue here :)
+
+> s->battdetb = cpcap_sense_virq(ddata->reg, ddata->irq_battdetb);
+> (and so on)
+> 
+> looks cleaner IMHO.
+
+I figured I'll do a follow up patch for when available to remove
+dependencies between subsystems.
+
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
