@@ -1,52 +1,48 @@
-From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Subject: Re: [PATCH v11 01/10] devicetree: power: Add battery.txt
-Date: Fri, 24 Mar 2017 14:11:56 -0700
-Message-ID: <CAKvHMgTMWsQFNUYpoH-rbBpgCSeTF-CRdK42bEVeLoFOZPg5cQ@mail.gmail.com>
-References: <20170320094335.19224-1-liam@networkimprov.net>
- <20170320094335.19224-2-liam@networkimprov.net> <20170324155531.gn6iw6w3f5nqbpnx@rob-hp-laptop>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/8] pinctrl: meson: add audio output pins
+Date: Fri, 24 Mar 2017 22:23:30 +0100
+Message-ID: <1490390610.29739.18.camel@baylibre.com>
+References: <20170323165101.29262-1-jbrunet@baylibre.com>
+ <m2wpbeh2pf.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324155531.gn6iw6w3f5nqbpnx@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <m2wpbeh2pf.fsf@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Fri, 2017-03-24 at 12:52 -0700, Kevin Hilman wrote:
+> Jerome Brunet <jbrunet@baylibre.com> writes:
+> 
+> > This patchset adds the pinctrl definition and the related device-tree
+> > bindings of the i2s output and spdif output pins on the meson gxbb and
+> > gxl SoCs.
+> > 
+> > This is part of the ongoing work to bring audio output suppot on the
+> > meson family. It was tested on the gxbb p200 and gxl p230.
+> 
+> Series looks good to me,
+> 
+> However, I'm not sure about Linus's preference, but most maintainers
+> (myself included) prefer a small description in the changelog, even if
+> it restates (with slightly more description) what's already in the
+> $SUBJECT.
 
-On Fri, Mar 24, 2017 at 8:55 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Mar 20, 2017 at 02:43:26AM -0700, Liam Breck wrote:
->> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->>
->> Documentation of static battery characteristics that can be defined
->> for batteries which cannot self-identify. This information is required
->> by fuel-gauge and charger chips for proper handling of the battery.
->>
->> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
->> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->> ---
->>  .../devicetree/bindings/power/supply/battery.txt   | 43 ++++++++++++++++++++++
->>  1 file changed, 43 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
->
-> While "simple" is not generally something I like to see in a compatible
-> string, we've beat this one to death.
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Understood. thanks for pointing it out.
+This series was going to clash with Neil's pinctrl fixes anyway.
 
-Thanks. Are you in agreement with Sebastian on the following, or is
-this OK to include?
+I'll respin it taking this into account.
 
-On Thu, Mar 23, 2017 at 3:20 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> +Battery properties are named, where possible, for the corresponding
->> +elements in enum power_supply_property, defined in
->> +https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/power_supply.h#n86
->
->The above paragraph does not belong into DT bindings.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Kevin
