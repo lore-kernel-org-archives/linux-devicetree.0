@@ -1,186 +1,90 @@
-From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Subject: [PATCH] ARM: dts: am335x-baltos: add LED support
-Date: Fri, 24 Mar 2017 16:15:03 +0100
-Message-ID: <1490368503-4798-1-git-send-email-yegorslists@googlemail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/9] arm64: mm: install SError abort handler
+Date: Fri, 24 Mar 2017 15:16:54 +0000
+Message-ID: <20170324151654.GD29588@leverpostej>
+References: <20170324144632.5896-1-opendmb@gmail.com>
+ <20170324144632.5896-4-opendmb@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170324144632.5896-4-opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, vladimir.murzin-5wv7dgnIgG8@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, cmetcalf-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sandeepa.s.prabhu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shijie.huang-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Fri, Mar 24, 2017 at 07:46:26AM -0700, Doug Berger wrote:
+> This commit adds support for minimal handling of SError aborts and
+> allows them to be hooked by a driver or other part of the kernel to
+> install a custom SError abort handler.  The hook function returns
+> the previously registered handler so that handlers may be chained if
+> desired.
+> 
+> The handler should return the value 0 if the error has been handled,
+> otherwise the handler should either call the next handler in the
+> chain or return a non-zero value.
 
-All three devices provide GPIO based LEDs named power,
-wlan and app.
+... so the order these get calls is completely dependent on probe
+order...
 
-Place the same definition in all three DTS files, as
-there are other devices (not currently upstreamed), that
-use am335x-baltos.dtsi but use different GPIOs for these
-LEDs.
+> Since the Instruction Specific Syndrome value for SError aborts is
+> implementation specific the registerred handlers must implement
+> their own parsing of the syndrome.
 
-Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/boot/dts/am335x-baltos-ir2110.dts | 32 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/am335x-baltos-ir3220.dts | 32 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/am335x-baltos-ir5221.dts | 34 ++++++++++++++++++++++++++++--
- 3 files changed, 96 insertions(+), 2 deletions(-)
+... and drivers have to be intimately familiar with the CPU, in order to
+be able to parse its IMPLEMENTATION DEFINED ESR_ELx.ISS value.
 
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir2110.dts b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-index 501c752..e9b5544 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
-@@ -17,9 +17,41 @@
- 
- / {
- 	model = "OnRISC Baltos iR 2110";
-+
-+	leds {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&user_leds>;
-+
-+		compatible = "gpio-leds";
-+
-+		power {
-+			label = "onrisc:red:power";
-+			linux,default-trigger = "default-on";
-+			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-+			default-state = "on";
-+		};
-+		wlan {
-+			label = "onrisc:blue:wlan";
-+			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		app {
-+			label = "onrisc:green:app";
-+			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &am33xx_pinmux {
-+	user_leds: pinmux_user_leds {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x908, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_col.gpio3_0 PWR LED */
-+			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd3.gpio0_16 WLAN LED */
-+			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd2.gpio0_17 APP LED */
-+		>;
-+	};
-+
- 	uart1_pins: pinmux_uart1_pins {
- 		pinctrl-single,pins = <
- 			AM33XX_IOPAD(0x980, PIN_INPUT | MUX_MODE0)      /* uart1_rxd */
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir3220.dts b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-index 19f53b8..0878379 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-@@ -17,9 +17,41 @@
- 
- / {
- 	model = "OnRISC Baltos iR 3220";
-+
-+	leds {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&user_leds>;
-+
-+		compatible = "gpio-leds";
-+
-+		power {
-+			label = "onrisc:red:power";
-+			linux,default-trigger = "default-on";
-+			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-+			default-state = "on";
-+		};
-+		wlan {
-+			label = "onrisc:blue:wlan";
-+			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		app {
-+			label = "onrisc:green:app";
-+			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &am33xx_pinmux {
-+	user_leds: pinmux_user_leds {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x908, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_col.gpio3_0 PWR LED */
-+			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd3.gpio0_16 WLAN LED */
-+			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd2.gpio0_17 APP LED */
-+		>;
-+	};
-+
- 	tca6416_pins: pinmux_tca6416_pins {
- 		pinctrl-single,pins = <
- 			AM33XX_IOPAD(0x9b4, PIN_INPUT_PULLUP | MUX_MODE7)      /* xdma_event_intr1.gpio0[20] tca6416 stuff */
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir5221.dts b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-index 2b9d7f4..e2da0aa 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-@@ -17,16 +17,47 @@
- 
- / {
- 	model = "OnRISC Baltos iR 5221";
-+
-+	leds {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&user_leds>;
-+
-+		compatible = "gpio-leds";
-+
-+		power {
-+			label = "onrisc:red:power";
-+			linux,default-trigger = "default-on";
-+			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-+			default-state = "on";
-+		};
-+		wlan {
-+			label = "onrisc:blue:wlan";
-+			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		app {
-+			label = "onrisc:green:app";
-+			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &am33xx_pinmux {
-+	user_leds: pinmux_user_leds {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x908, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_col.gpio3_0 PWR LED */
-+			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd3.gpio0_16 WLAN LED */
-+			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd2.gpio0_17 APP LED */
-+		>;
-+	};
-+
- 	tca6416_pins: pinmux_tca6416_pins {
- 		pinctrl-single,pins = <
- 			AM33XX_IOPAD(0x9b4, PIN_INPUT_PULLUP | MUX_MODE7)      /* xdma_event_intr1.gpio0[20] tca6416 stuff */
- 		>;
- 	};
- 
--
- 	dcan1_pins: pinmux_dcan1_pins {
- 		pinctrl-single,pins = <
- 			AM33XX_IOPAD(0x968, PIN_OUTPUT | MUX_MODE2)      /* uart0_ctsn.dcan1_tx_mux0 */
-@@ -61,7 +92,6 @@
- 			AM33XX_IOPAD(0x9a0, PIN_INPUT_PULLUP | MUX_MODE7)      /* mcasp0_aclkr.gpio3[18], INPUT_PULLDOWN | MODE7 */
- 		>;
- 	};
--
- };
- 
- &uart1 {
--- 
-2.1.4
+Even then, there's no guarantee there's anything useful there, since it
+is IMPLEMENTATION DEFINED and could simply be RES0 or UNKNOWN in all
+cases.
 
+I do not think it is a good idea to allow arbitrary drivers to hook
+this fault in this manner.
+
+> +	.align	6
+> +el0_error:
+> +	kernel_entry 0
+> +el0_error_naked:
+> +	mrs	x25, esr_el1			// read the syndrome register
+> +	lsr	x24, x25, #ESR_ELx_EC_SHIFT	// exception class
+> +	cmp	x24, #ESR_ELx_EC_SERROR		// SError exception in EL0
+> +	b.ne	el0_error_inv
+> +el0_serr:
+> +	mrs	x26, far_el1
+> +	// enable interrupts before calling the main handler
+> +	enable_dbg_and_irq
+
+... why?
+
+We don't do this for inv_entry today.
+
+> +	ct_user_exit
+> +	bic	x0, x26, #(0xff << 56)
+> +	mov	x1, x25
+> +	mov	x2, sp
+> +	bl	do_serr_abort
+> +	b	ret_to_user
+> +el0_error_inv:
+> +	enable_dbg
+> +	mov	x0, sp
+> +	mov	x1, #BAD_ERROR
+> +	mov	x2, x25
+> +	b	bad_mode
+> +ENDPROC(el0_error)
+
+Clearly you expect these to be delivered at arbitrary times during
+execution. What if a KVM guest is executing at the time the SError is
+delivered?
+
+To be quite frank, I don't believe that we can reliably and safely
+handle this misfeature in the kernel, and this infrastructure only
+provides the illusion that we can.
+
+I do not think it makes sense to do this.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
