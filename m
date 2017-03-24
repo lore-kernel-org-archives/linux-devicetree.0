@@ -1,120 +1,86 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH V11 2/6] thermal: of-thermal: Implement signed coefficient
- support
-Date: Fri, 24 Mar 2017 10:23:24 -0700
-Message-ID: <58D5560C.7040503@gmail.com>
-References: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com>
- <1489356665-3175-3-git-send-email-stefan.wahren@i2se.com>
- <58D45B0A.5050500@gmail.com> <872776681.149555.1490340443231@email.1und1.de>
+From: Alan Tull <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v3 1/2] doc: Add bindings document for Xilinx LogiCore PR
+ Decoupler
+Date: Fri, 24 Mar 2017 12:25:25 -0500
+Message-ID: <CANk1AXSHimnjsMsCJwbtwrkRppFCRxY7KQemFikgu+hqCTiO5Q@mail.gmail.com>
+References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
+ <20170324145908.aiijqixf5xcnkksa@rob-hp-laptop>
+ <20170324152318.GA13089@tyrael.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <872776681.149555.1490340443231@email.1und1.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, kernel@martin.sperl.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170324152318.GA13089@tyrael.amer.corp.natinst.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Moritz Fischer <moritz.fischer.private@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-fpga@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel <linux-kernel@vger.kernel.org>, Moritz Fischer <mdf@kernel.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/17 00:27, Stefan Wahren wrote:
-> 
->> Frank Rowand <frowand.list@gmail.com> hat am 24. März 2017 um 00:32 geschrieben:
->>
->>
->> On 03/12/17 15:11, Stefan Wahren wrote:
->>> Use the new function of_property_read_s32_array() to prepare
->>> of-thermal for negative coefficients. These are used by
->>> the upcoming bcm2835_thermal driver.
->>>
->>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>> ---
->>>  drivers/thermal/of-thermal.c |    5 +++--
->>>  1 file changed, 3 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
->>> index d04ec3b..491d58a 100644
->>> --- a/drivers/thermal/of-thermal.c
->>> +++ b/drivers/thermal/of-thermal.c
->>> @@ -821,7 +821,8 @@ __init *thermal_of_build_thermal_zone(struct device_node *np)
->>>  	struct device_node *child = NULL, *gchild;
->>>  	struct __thermal_zone *tz;
->>>  	int ret, i;
->>> -	u32 prop, coef[2];
->>> +	u32 prop;
->>> +	s32 coef[2];
->>>  
->>>  	if (!np) {
->>>  		pr_err("no thermal zone np\n");
->>> @@ -851,7 +852,7 @@ __init *thermal_of_build_thermal_zone(struct device_node *np)
->>>  	 * one sensor per thermal zone. Thus, we are considering
->>>  	 * only the first two values as slope and offset.
->>>  	 */
->>> -	ret = of_property_read_u32_array(np, "coefficients", coef, 2);
->>> +	ret = of_property_read_s32_array(np, "coefficients", coef, 2);
->>>  	if (ret == 0) {
->>>  		tz->slope = coef[0];
->>>  		tz->offset = coef[1];
->>>
->>
->> Since you are doing so much work to fix reading the array of s32 property, you
->> might also want to do the same for the s32 properties, "polling-delay-passive"
->> and "polling-delay".  Just change of_property_read_u32() to of_property_read_s32()
->> and change the type of prop to match.
->>
-> 
-> The intension behind this patch series is adding a new thermal driver
-> not fixing of-thermal. Since the initial version of this series was
-> posted by Martin in May 2016 i do not want to wait much longer.
-
-Not my driver, your choice, I was just pointing out some compile warnings
-(without thinking enough about the context of the warnings - see below).
-
-> 
-> Btw changing polling-delay-passive and polling-delay into a signed
-> doesn't make any sense to me. Why do we need negative delays?
-
-Good point.  I did not actually look at what the meaning of the two
-properties is, and whether it makes sense for them to have a negative
-value.  I also did not check the binding description (doing so now,
-it clearly states that these property values are unsigned), I just
-noted that there is a mismatch between the type of the properties
-(u32) and the variables they are assigned to.  As the compile warnings
-below indicate, if the property value is large enough, it will be a
-negative value after assignment to the int variable.  The proper
-answer is probably to change the variables to unsigned.
-
-> 
-> I suggest to send a separate patch for this issue.
-
-It would be good if someone did.
-
-Not a critical issue, just a trap waiting to catch someone who puts
-a very large value for one of those properties in a device tree source
-file and does not realize it will be a negative number in the driver.
-
-> 
-> Thanks for the review.
-> 
->>
->> drivers/thermal/of-thermal.c: In function 'thermal_of_build_thermal_zone':
->> drivers/thermal/of-thermal.c:841:2: warning: conversion to 'int' from 'u32' may change the sign of the result [-Wsign-conversion]
->> drivers/thermal/of-thermal.c:848:2: warning: conversion to 'int' from 'u32' may change the sign of the result [-Wsign-conversion]
->>
->>
->>  836         ret = of_property_read_u32(np, "polling-delay-passive", &prop);
->>  837         if (ret < 0) {
->>  838                 pr_err("missing polling-delay-passive property\n");
->>  839                 goto free_tz;
->>  840         }
->>  841         tz->passive_delay = prop;
->>  842
->>  843         ret = of_property_read_u32(np, "polling-delay", &prop);
->>  844         if (ret < 0) {
->>  845                 pr_err("missing polling-delay property\n");
->>  846                 goto free_tz;
->>  847         }
->>  848         tz->polling_delay = prop;
->>
->>
->> -Frank
-> 
+T24gRnJpLCBNYXIgMjQsIDIwMTcgYXQgMTA6MjMgQU0sIE1vcml0eiBGaXNjaGVyCjxtb3JpdHou
+ZmlzY2hlci5wcml2YXRlQGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gRnJpLCBNYXIgMjQsIDIwMTcg
+YXQgMDk6NTk6MDhBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+IE9uIEZyaSwgTWFyIDE3
+LCAyMDE3IGF0IDAxOjExOjEyUE0gLTA3MDAsIE1vcml0eiBGaXNjaGVyIHdyb3RlOgo+PiA+IFRo
+aXMgYWRkcyB0aGUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUgWGlsaW54IExvZ2lDT1JF
+IFBSCj4+ID4gRGVjb3VwbGVyIHNvZnQgY29yZS4KPj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IE1v
+cml0eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz4KPj4gPiBDYzogTWljaGFsIFNpbWVrIDxtaWNo
+YWwuc2ltZWtAeGlsaW54LmNvbT4KPj4gPiBDYzogU8O2cmVuIEJyaW5rbWFubiA8c29yZW4uYnJp
+bmttYW5uQHhpbGlueC5jb20+Cj4+ID4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcK
+Pj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gPiAtLS0KPj4gPgo+PiA+IENo
+YW5nZXMgZnJvbSB2MjoKPj4gPiAtIEFkZGVkIHJlZmVuY2UgdG8gZ2VuZXJpYyBmcGdhLXJlZ2lv
+biBiaW5kaW5ncwo+PiA+IC0gRml4ZWQgdXAgcmVnIHByb3BlcnR5IGluIGV4YW1wbGUKPj4gPiAt
+IEFkZGVkIGZhbGxiYWNrIHRvICJ4bG54LHByLWRlY291cGxlciIgd2l0aG91dCB2ZXJzaW9uCj4+
+ID4KPj4gPiBDaGFuZ2VzIGZyb20gdjE6Cj4+ID4gLSBBZGRlZCBjbG9jayBuYW1lcyAmIGNsb2Nr
+IHRvIGV4YW1wbGUKPj4gPiAtIE1lcmdlZCBzb21lIG9mIHRoZSBkZXNjcmlwdGlvbiBmcm9tIE1p
+Y2hhbCdzIHZlcnNpb24KPj4gPgo+PiA+IC0tLQo+PiA+ICAuLi4vYmluZGluZ3MvZnBnYS94aWxp
+bngtcHItZGVjb3VwbGVyLnR4dCAgICAgICAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysK
+Pj4gPiAgMSBmaWxlIGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKykKPj4gPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9mcGdhL3hpbGlueC1wci1k
+ZWNvdXBsZXIudHh0Cj4+ID4KPj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLnR4dAo+PiA+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4+ID4gaW5kZXggMDAwMDAwMC4uMTYxNDFiZAo+PiA+IC0tLSAv
+ZGV2L251bGwKPj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZnBn
+YS94aWxpbngtcHItZGVjb3VwbGVyLnR4dAo+PiA+IEBAIC0wLDAgKzEsMzUgQEAKPj4gPiArWGls
+aW54IExvZ2lDT1JFIFBhcnRpYWwgUmVjb25maWcgRGVjb3VwbGVyIFNvZnRjb3JlCj4+ID4gKwo+
+PiA+ICtUaGUgWGlsaW54IExvZ2lDT1JFIFBhcnRpYWwgUmVjb25maWcgRGVjb3VwbGVyIG1hbmFn
+ZXMgb25lIG9yIG1vcmUKPj4gPiArZGVjb3VwbGVycyAvIGZwZ2EgYnJpZGdlcy4KPj4gPiArVGhl
+IGNvbnRyb2xsZXIgY2FuIGRlY291cGxlL2Rpc2FibGUgdGhlIGJyaWRnZXMgd2hpY2ggcHJldmVu
+dHMgc2lnbmFsCj4+ID4gK2NoYW5nZXMgZnJvbSBwYXNzaW5nIHRocm91Z2ggdGhlIGJyaWRnZS4g
+IFRoZSBjb250cm9sbGVyIGNhbiBhbHNvCj4+ID4gK2NvdXBsZSAvIGVuYWJsZSB0aGUgYnJpZGdl
+cyB3aGljaCBhbGxvd3MgdHJhZmZpYyB0byBwYXNzIHRocm91Z2ggdGhlCj4+ID4gK2JyaWRnZSBu
+b3JtYWxseS4KPj4gPiArCj4+ID4gK1RoZSBEcml2ZXIgc3VwcG9ydHMgb25seSBNTUlPIGhhbmRs
+aW5nLiBBIFBSIHJlZ2lvbiBjYW4gaGF2ZSBtdWx0aXBsZQo+PiA+ICtQUiBEZWNvdXBsZXMgd2hp
+Y2ggY2FuIGJoZSBoYW5kbGVkIGluZGVwZW5kZW50bHkgb3IgY2hhaW5lcyB2aWEgZGVjb3VwbGUv
+Cj4+Cj4+IHMvY2hhaW5lcy9jaGFpbnMvCj4KPiBGaXhlZCBpbiB2NC4KPgo+PiA+ICtkZWNvdXBs
+ZV9zdGF0dXMgc2lnbmFscy4KPj4gPiArCj4+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ID4g
+Ky0gY29tcGF0aWJsZSAgICAgICAgICAgICAgIDogU2hvdWxkIGNvbnRhaW4gInhsbngscHItZGVj
+b3VwbGVyLTEuMDAiCj4+ID4gKy0gcmVncyAgICAgICAgICAgICAgICAgICAgIDogYmFzZSBhZGRy
+ZXNzIGFuZCBzaXplIGZvciBkZWNvdXBsZXIgbW9kdWxlCj4+ID4gKy0gY2xvY2tzICAgICAgICAg
+ICA6IGlucHV0IGNsb2NrIHRvIElQCj4+ID4gKy0gY2xvY2stbmFtZXMgICAgICAgICAgICAgIDog
+c2hvdWxkIGNvbnRhaW4gImFjbGsiCj4+ID4gKwo+PiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+
+PiA+ICstIGJyaWRnZS1lbmFibGUgICAgICAgICAgICA6IDAgaWYgZHJpdmVyIHNob3VsZCBkaXNh
+YmxlIGJyaWRnZSBhdCBzdGFydHVwCj4+ID4gKyAgICAgICAgICAgICAgICAgICAgIDEgaWYgZHJp
+dmVyIHNob3VsZCBlbmFibGUgYnJpZGdlIGF0IHN0YXJ0dXAKPj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgRGVmYXVsdCBpcyB0byBsZWF2ZSBicmlkZ2UgaW4gY3VycmVudCBzdGF0ZS4KPj4KPj4g
+VGhpcyBpcyBjb21tb24gYW5kIHNob3VsZCBtb3ZlIGludG8gYSBjb21tb24gZG9jLiBNYXliZSBm
+cGdhLXJlZ2lvbi50eHQKPj4gd29ya3M/Cj4KPiBPayB3aWxsIGFkZCBwYXRjaCBmb3IgdGhhdCB0
+byB2NSBzZXJpZXMuCgpBcmcsIG91ciBlbWFpbHMgY3Jpc3MtY3Jvc3NlZC4gIEkndmUgYWxyZWFk
+eSBzZW50IHY0IHRvIEdyZWcuICBJIGhvcGUKd2UgZG9uJ3QgbmVlZCB2NSBmb3IgdGhpcyBvbmUg
+dGhpbmcuICBicmlkZ2UtZW5hYmxlIGlzIGNvbW1vbiBmb3IgdGhlCmZwZ2EgYnJpZGdlcyAoYWx0
+ZXJhLWZwZ2Eyc2RyYW0tYnJpZGdlLnR4dCwgYWx0ZXJhLWZyZWV6ZS1icmlkZ2UudHh0LAphbHRl
+cmEtaHBzMmZwZ2EtYnJpZGdlLnR4dCwgeGlsaW54LXByLWRlY291cGxlci50eHQpLiAgUHJvYmFi
+bHkgd2UKbmVlZCBhIG5ldyBwYXRjaCB0byBtb3ZlIHRoaXMgY29tbW9uIGJyaWRnZXMgYmluZGlu
+ZyBmcm9tIGFsbCB0aGUKYWJvdmUgdG8gZnBnYS1yZWdpb24udHh0IG9yIGNyZWF0ZSBhIG5ldyBm
+cGdhLWJyaWRnZXMudHh0LiAgQXQgZmlyc3QKYmx1c2gsIEkgcHJlZmVyIHRoZSBsYXRlci4KCkFs
+YW4KCgo+Cj4gVGhhbmtzIGZvciB5b3VyIGZlZWRiYWNrLAo+Cj4gTW9yaXR6CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
