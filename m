@@ -1,7 +1,7 @@
 From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH 5/9] bus: brcmstb_gisb: Correct hooking of ARM aborts
-Date: Fri, 24 Mar 2017 07:46:28 -0700
-Message-ID: <20170324144632.5896-6-opendmb@gmail.com>
+Subject: [PATCH 7/9] bus: brcmstb_gisb: Add ARM64 support
+Date: Fri, 24 Mar 2017 07:46:30 -0700
+Message-ID: <20170324144632.5896-8-opendmb@gmail.com>
 References: <20170324144632.5896-1-opendmb@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170324144632.5896-1-opendmb@gmail.com>
@@ -10,80 +10,82 @@ To: catalin.marinas@arm.com
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, vladimir.murzin@arm.com, panand@redhat.com, andre.przywara@arm.com, cmetcalf@mellanox.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, horms+renesas@verge.net.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, opendmb@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The fault status reporting in the FSR registers is different depending
-on whether the Long Physical Address Extension (LPAE) is being used.
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-This commit corrects the registerring of fault handlers for arm
-architecture kernels when the LPAE is enabled.  It also forces the
-handler to report that the abort exception was unhandled so that the
-appropriate signal is sent to the offending user process.
+Hook to the ARM64 data abort exception #16: synchronous external
+abort, which is how the GISB errors will be funneled back to the
+ARM64 CPU in case of problems
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/bus/brcmstb_gisb.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/bus/Kconfig        |  2 +-
+ drivers/bus/brcmstb_gisb.c | 15 ++++++++++++---
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index 0a52da439abf..d2a5f1184022 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -57,7 +57,7 @@ config ARM_CCN
+ 
+ config BRCMSTB_GISB_ARB
+ 	bool "Broadcom STB GISB bus arbiter"
+-	depends on ARM || MIPS
++	depends on ARM || ARM64 || MIPS
+ 	default ARCH_BRCMSTB || BMIPS_GENERIC
+ 	help
+ 	  Driver for the Broadcom Set Top Box System-on-a-chip internal bus
 diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index a94598d0945a..9eba0143f1a4 100644
+index c8d2a61d21ed..bf26b4017a2c 100644
 --- a/drivers/bus/brcmstb_gisb.c
 +++ b/drivers/bus/brcmstb_gisb.c
-@@ -225,27 +225,29 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+@@ -30,6 +30,11 @@
+ #include <asm/signal.h>
+ #endif
+ 
++#ifdef CONFIG_ARM64
++#include <asm/signal.h>
++#include <asm/system_misc.h>
++#endif
++
+ #ifdef CONFIG_MIPS
+ #include <asm/traps.h>
+ #endif
+@@ -225,7 +230,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_ARM
++#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
  static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
  				     struct pt_regs *regs)
  {
--	int ret = 0;
- 	struct brcmstb_gisb_arb_device *gdev;
- 
- 	/* iterate over each GISB arb registered handlers */
+@@ -235,7 +240,7 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
  	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
--		ret |= brcmstb_gisb_arb_decode_addr(gdev, "bus error");
-+		brcmstb_gisb_arb_decode_addr(gdev, "bus error");
-+
-+#if !defined(CONFIG_ARM_LPAE)
+ 		brcmstb_gisb_arb_decode_addr(gdev, "bus error");
+ 
+-#if !defined(CONFIG_ARM_LPAE)
++#if defined(CONFIG_ARM) && !defined(CONFIG_ARM_LPAE)
  	/*
  	 * If it was an imprecise abort, then we need to correct the
  	 * return address to be _after_ the instruction.
- 	*/
- 	if (fsr & (1 << 10))
- 		regs->ARM_pc += 4;
-+#endif
- 
--	return ret;
-+	/* Always report unhandled exception */
-+	return 1;
+@@ -247,7 +252,7 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+ 	/* Always report unhandled exception */
+ 	return 1;
  }
- #endif
+-#endif
++#endif /* CONFIG_ARM || CONFIG_ARM64 */
  
  #ifdef CONFIG_MIPS
  static int brcmstb_bus_error_handler(struct pt_regs *regs, int is_fixup)
- {
--	int ret = 0;
- 	struct brcmstb_gisb_arb_device *gdev;
- 	u32 cap_status;
- 
-@@ -258,7 +260,7 @@ static int brcmstb_bus_error_handler(struct pt_regs *regs, int is_fixup)
- 			goto out;
- 		}
- 
--		ret |= brcmstb_gisb_arb_decode_addr(gdev, "bus error");
-+		brcmstb_gisb_arb_decode_addr(gdev, "bus error");
- 	}
- out:
- 	return is_fixup ? MIPS_BE_FIXUP : MIPS_BE_FATAL;
-@@ -379,9 +381,16 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
- 	list_add_tail(&gdev->next, &brcmstb_gisb_arb_device_list);
- 
- #ifdef CONFIG_ARM
-+#ifdef CONFIG_ARM_LPAE
-+	hook_fault_code(16, brcmstb_bus_error_handler, SIGBUS, 0,
-+			"synchronous external abort");
-+	hook_fault_code(17, brcmstb_bus_error_handler, SIGBUS, 0,
-+			"asynchronous external abort");
-+#else
- 	hook_fault_code(22, brcmstb_bus_error_handler, SIGBUS, 0,
+@@ -395,6 +400,10 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
  			"imprecise external abort");
  #endif
-+#endif /* CONFIG_ARM */
+ #endif /* CONFIG_ARM */
++#ifdef CONFIG_ARM64
++	hook_fault_code(16, brcmstb_bus_error_handler, SIGBUS, 0,
++			"synchronous external abort");
++#endif
  #ifdef CONFIG_MIPS
  	board_be_handler = brcmstb_bus_error_handler;
  #endif
