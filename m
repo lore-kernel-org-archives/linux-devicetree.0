@@ -1,89 +1,49 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH v2 3/5] mfd: palmas: Reset the POWERHOLD mux during power
- off
-Date: Fri, 24 Mar 2017 15:30:38 +0530
-Message-ID: <ee4f7c28-7847-ab4f-4d8f-1dce288f809a@ti.com>
-References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
- <1478754560-27923-4-git-send-email-j-keerthy@ti.com>
- <20161122130308.GE316@dell.lan>
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [PATCH v2 2/5] crypto: stm32 - Support for STM32 CRC32 crypto
+ module
+Date: Fri, 24 Mar 2017 15:30:56 +0530
+Message-ID: <CANc+2y4pZ9TOijOea5bkV35D2R+JunLGrTsuN7s2fWWU_hPQjw@mail.gmail.com>
+References: <1490109211-4869-1-git-send-email-fabien.dessenne@st.com>
+ <1490109211-4869-3-git-send-email-fabien.dessenne@st.com>
+ <CANc+2y4w=HhB230CD4MfxhvFZ2vM7Wsphz0zawhr0nVDSkREzQ@mail.gmail.com>
+ <a6c05e57-bdcc-4396-4a72-4d1b2977b8e4@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161122130308.GE316@dell.lan>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: tony@atomide.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a6c05e57-bdcc-4396-4a72-4d1b2977b8e4@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabien DESSENNE <fabien.dessenne@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "David S . Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>
 List-Id: devicetree@vger.kernel.org
 
+On 24 March 2017 at 15:26, Fabien DESSENNE <fabien.dessenne@st.com> wrote:
+> On 24/03/17 05:28, PrasannaKumar Muralidharan wrote:
+>> On 21 March 2017 at 20:43, Fabien Dessenne <fabien.dessenne@st.com> wrote:
+>>> This module registers a CRC32 ("Ethernet") and a CRC32C (Castagnoli)
+>>> algorithm that make use of the STMicroelectronics STM32 crypto hardware.
+>>>
+>>> Theses algorithms are compatible with the little-endian generic ones.
+>>> Both algorithms use ~0 as default seed (key).
+>>> With CRC32C the output is xored with ~0.
+>>>
+>>> Using TCRYPT CRC32C speed test, this shows up to 900% speedup compared
+>>> to the crc32c-generic algorithm.
+>> Comparing with crc3c-generic alogrithm does not sound like a good
+>> metric for someone who has to decide between hw crypto or not.
+>> Wouldn't it be better if the comparison is between crc32 using NEON
+>> with hw crypto module? It will help in choosing between hw crypto or
+>> arch optimised crc routiene.
+>
+> The STM32 microcontrollers are based on ARM Cortex-M7 (or older core)
+> that do not have NEON support.
 
-
-On Tuesday 22 November 2016 06:33 PM, Lee Jones wrote:
-> On Thu, 10 Nov 2016, Keerthy wrote:
-> 
->> POWERHOLD signal has higher priority  over the DEV_ON bit.
->> So power off will not happen if the POWERHOLD is held high.
->> Hence reset the MUX to GPIO_7 mode to release the POWERHOLD
->> and the DEV_ON bit to take effect to power off the PMIC.
->>
->> PMIC Power off happens in dire situations like thermal shutdown
->> so irrespective of the POWERHOLD setting go ahead and turn off
->> the powerhold.  Currently poweroff is broken on boards that have
->> powerhold enabled. This fixes poweroff on those boards.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>
->> Changes in v2:
->>
->>   * Changed pr_err to dev_err
->>   * removed redundant boolean variable override-powerhold
->>
->>  drivers/mfd/palmas.c | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
-> 
-> Applied, thanks.
-
-Lee Jones,
-
-For some strange reason this patch is missing!
-The other patch in the series is applied through mfd tree but somehow
-this particular patch is missed out.
-
-https://patchwork.kernel.org/patch/9420631/ is applied.
-
-https://patchwork.kernel.org/patch/9420655/ is not.
-
-I tried applying this very patch and it applies cleanly on the next
-branch. Let me know if you want me to send this again on top of latest
-next branch.
-
-- Keerthy
-
-> 
->> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
->> index ee9e9ea..da90124 100644
->> --- a/drivers/mfd/palmas.c
->> +++ b/drivers/mfd/palmas.c
->> @@ -430,6 +430,20 @@ static void palmas_power_off(void)
->>  {
->>  	unsigned int addr;
->>  	int ret, slave;
->> +	struct device_node *np = palmas_dev->dev->of_node;
->> +
->> +	if (of_property_read_bool(np, "ti,palmas-override-powerhold")) {
->> +		addr = PALMAS_BASE_TO_REG(PALMAS_PU_PD_OD_BASE,
->> +					  PALMAS_PRIMARY_SECONDARY_PAD2);
->> +		slave = PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
->> +
->> +		ret = regmap_update_bits(palmas_dev->regmap[slave], addr,
->> +				PALMAS_PRIMARY_SECONDARY_PAD2_GPIO_7_MASK, 0);
->> +		if (ret)
->> +			dev_err(palmas_dev->dev,
->> +				"Unable to write PRIMARY_SECONDARY_PAD2 %d\n",
->> +				ret);
->> +	}
->>  
->>  	slave = PALMAS_BASE_TO_SLAVE(PALMAS_PMU_CONTROL_BASE);
->>  	addr = PALMAS_BASE_TO_REG(PALMAS_PMU_CONTROL_BASE, PALMAS_DEV_CTRL);
-> 
+I was not aware of the absence of NEON support. Sorry for the noise.
