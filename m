@@ -1,46 +1,22 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v4 0/4] RK3399 dw-mipi-dsi patches
-Date: Fri, 24 Mar 2017 15:38:54 -0400
-Message-ID: <20170324193854.wxnco6mmxf5n6bhl@art_vandelay>
-References: <1490147691-4489-1-git-send-email-zyw@rock-chips.com>
+From: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 5/5] firmware: google memconsole: Add ARM/ARM64 support
+Date: Fri, 24 Mar 2017 12:50:40 -0700
+Message-ID: <CAODwPW-XKuwHLimNOL4HX9xY+MkoURRM0W+ibaDjPdoAN70BxQ@mail.gmail.com>
+References: <1490303069-13230-1-git-send-email-thierry.escande@collabora.com>
+ <1490303069-13230-6-git-send-email-thierry.escande@collabora.com> <20170324122858.GF22771@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1490147691-4489-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170324122858.GF22771@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Thierry Escande <thierry.escande-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMjIsIDIwMTcgYXQgMDk6NTQ6NDdBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gSGkgYWxsCj4gCj4gVGhpcyBzZXJpZXMgc2V0IHRoZSBwaHlfY2ZnX2NsayB0byBiZSBh
-IHJlcXVpcmVkIGNsb2NrIGZvciBSSzMzOTksIGFuZAo+IGFkZCBhIGdyZiBjbG9jayBjb250cm9s
-IGluIGR3LW1pcGktZHNpIGRyaXZlci4gQW5kIHRoZW4gY29ycmVjdCBhCj4gcmVnaXN0ZXIgbmFt
-ZS4KPiAKCkFwcGxpZWQgdG8gZHJtLW1pc2MKClRoYW5rcywKClNlYW4KCgo+IAo+IENoYW5nZXMg
-aW4gdjQ6Cj4gLSByZW1vdmUgImFkZGl0aW9uYWwiCj4gLSBwcmludCB0aGUgZXJyIGFmdGVyIGNs
-a19wcmVwYXJlX2VuYWJsZShkc2ktPmdyZl9jbGspCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIGFk
-ZCBhIERXX01JUElfTkVFRFNfUEhZX0NGR19DTEsgZm9yIFJLMzM5OQo+IC0gYWRkIGEgRFdfTUlQ
-SV9ORUVEU19HUkZfQ0xLIGZvciBSSzMzOTkKPiAKPiBDaGFuZ2VzIGluIHYyOgo+IC0gY2hlY2sg
-dGhlIGdyZl9jbGsgb25seSBmb3IgUkszMzk5Cj4gCj4gQ2hyaXMgWmhvbmcgKDQpOgo+ICAgZHJt
-L3JvY2tjaGlwL2RzaTogY2hlY2sgcGh5X2NmZ19jbGsgb25seSBmb3IgUkszMzk5Cj4gICBkdC1i
-aW5kaW5nczogYWRkIHRoZSBncmYgY2xvY2sgZm9yIGR3LW1pcGktZHNpCj4gICBkcm0vcm9ja2No
-aXAvZHNpOiBlbmFibGUgdGhlIGdyZiBjbGsgYmVmb3JlIHdyaXRpbmcgZ3JmIHJlZ2lzdGVycwo+
-ICAgZHJtL3JvY2tjaGlwL2RzaTogY29ycmVjdCB0aGUgZ3JmX3N3aXRjaF9yZWcgbmFtZQo+IAo+
-ICAuLi4vZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgICAgICB8ICAy
-ICstCj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jICAgICAgICAgICAg
-IHwgNDIgKysrKysrKysrKysrKysrKystLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDM1IGluc2Vy
-dGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCj4gCj4gLS0gCj4gMi42LjMKPiAKCi0tIApTZWFuIFBh
-dWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+> What exactly is the "memory console"? Is it a log that coreboot writes into?
+
+Yes. It contains log messages, like coreboot's equivalent of dmesg.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
