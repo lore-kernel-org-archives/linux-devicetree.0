@@ -1,59 +1,56 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
- Mediatek MT7530 switch
-Date: Fri, 24 Mar 2017 08:53:00 +0100
-Message-ID: <20170324075300.GC16730@lunn.ch>
-References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
- <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
- <20170323072233.GA10076@lunn.ch>
- <1490256416.14184.2.camel@mtkswgap22>
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RESEND PATCH v4 2/9] iio: adc: add support for
+ X-Powers AXP20X and AXP22X PMICs ADCs
+Date: Fri, 24 Mar 2017 08:55:19 +0100
+Message-ID: <13f2f8ba-af9e-576e-24ee-60c3a1609f80@free-electrons.com>
+References: <20170320081653.8884-1-quentin.schulz@free-electrons.com>
+ <20170320081653.8884-3-quentin.schulz@free-electrons.com>
+ <CAGb2v66JC65=9WiMy-Nu+9tTFRLsJL2Eyb0wfJV_K=65ABc6Zg@mail.gmail.com>
+ <20170323093527.ojcdpvruzqnhvysq@earth>
+ <CAGb2v655AfEavMqVV-XTyYzHWt5qFsMnoMsTVd8HRDkCgjiTeQ@mail.gmail.com>
+Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1490256416.14184.2.camel@mtkswgap22>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBB2NB2PDAKGQECVUJZYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v655AfEavMqVV-XTyYzHWt5qFsMnoMsTVd8HRDkCgjiTeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 04:06:56PM +0800, Sean Wang wrote:
-> Hi Andrew,
-> 
-> The purpose for the regmap table registered is to 
-> 
-> provide a way which helps us to look up a specific 
-> 
-> register on the switch through regmap-debugfs.
-> 
-> 
-> And not all ranges of register is defined
-> 
-> so I only include the meaningful ones in a sparse way 
-> 
-> for the table.
+Hi,
 
-Many of there registers can be dumped using existing tools.  You can
-dump the port registers using ethtool -r, if you implement
-get_regs/get_regs_len in your driver. mii-tool can dump the PHY
-registers.
+On 23/03/2017 10:52, Chen-Yu Tsai wrote:
+> On Thu, Mar 23, 2017 at 5:35 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On Wed, Mar 22, 2017 at 12:34:45PM +0800, Chen-Yu Tsai wrote:
+>>> P.S. I'm thinking about having MFD_AXP20X imply its various sub-drivers.
+>>> Not sure if that was the intended usage of the new imply syntax though.
+>>
+>> I think adding "default MFD_AXP20X" to the sub-drivers is cleaner,
+>> as you will not end up with a long list.
+> 
+> I'd still need to add imply statements for the various subsystems though,
+> like regulators, power supplies, extcon, etc..
+> But I suppose that's cleaner, and fits the original intent of the syntax.
+> 
 
-What you cannot see are global registers, so i can understand the
-usage of regmap-debugfs. However, i have a hard time with you only
-actually using the regmap for get/set for one small subset of
-registers. Either you need to use regmap to get/set all registers, or
-you remove it from the mainline driver, and keep it as a private patch
-which you use for your development work. For the Marvell driver we
-have an out of tree patch which exports a log of information via
-debugfs.
+Hum. I don't really understand what you are saying.. Am I supposed to
+modify something or, is it okay and we're waiting for Lee to apply on
+his tree?
 
-	Andrew
+Thanks in advance for clearing it up,
+
+Quentin
+
+-- 
+Quentin Schulz, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
