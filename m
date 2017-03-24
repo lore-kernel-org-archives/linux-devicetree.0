@@ -1,31 +1,99 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 01/12] dt-bindings: mediatek: multiple bases support
- for sysirq
-Date: Fri, 24 Mar 2017 10:20:01 -0500
-Message-ID: <20170324152001.nmzivwtietre27iq@rob-hp-laptop>
-References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
- <1489937193-2953-2-git-send-email-mars.cheng@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] gpio: mvebu: Add limited PWM support
+Date: Fri, 24 Mar 2017 10:18:29 -0500
+Message-ID: <20170324151829.awmhshsent4ngqb5@rob-hp-laptop>
+References: <20170318154305.28348-1-ralph.sennhauser@gmail.com>
+ <20170318154305.28348-2-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1489937193-2953-2-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170318154305.28348-2-ralph.sennhauser@gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guenter Roeck <linux@roeck-us.net>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 19, 2017 at 11:26:22PM +0800, Mars Cheng wrote:
-> This describes how to specify multiple base addresses for sysirq
-> in mediatek platforms.
+On Sat, Mar 18, 2017 at 04:43:01PM +0100, Ralph Sennhauser wrote:
+> From: Andrew Lunn <andrew@lunn.ch>
 > 
-> Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Armada 370/XP devices can 'blink' gpio lines with a configurable on
+> and off period. This can be modelled as a PWM.
+> 
+> However, there are only two sets of PWM configuration registers for
+> all the gpio lines. This driver simply allows a single gpio line per
+> gpio chip of 32 lines to be used as a PWM. Attempts to use more return
+> EBUSY.
+> 
+> Due to the interleaving of registers it is not simple to separate the
+> PWM driver from the gpio driver. Thus the gpio driver has been
+> extended with a PWM driver.
+> 
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> URL: https://patchwork.ozlabs.org/patch/427287/
+> URL: https://patchwork.ozlabs.org/patch/427295/
+> [Ralph Sennhauser:
+>   * port forward
+>   * merge pwm portion into gpio-mvebu.c
+>   * merge documentation patch
+>   * update MAINTAINERS]
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
 > ---
->  .../interrupt-controller/mediatek,sysirq.txt       |   11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/gpio/gpio-mvebu.txt        |  31 +++
+>  MAINTAINERS                                        |   2 +
+>  drivers/gpio/gpio-mvebu.c                          | 291 +++++++++++++++++++--
+>  3 files changed, 307 insertions(+), 17 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> index a6f3bec..86932e3 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> @@ -38,6 +38,23 @@ Required properties:
+>  - #gpio-cells: Should be two. The first cell is the pin number. The
+>    second cell is reserved for flags, unused at the moment.
+>  
+> +Optional properties:
+> +
+> +In order to use the gpio lines in PWM mode, some additional optional
+> +properties are required. Only Armada 370 and XP support these properties.
+> +
+> +- reg: an additional register set is needed, for the GPIO Blink
+> +  Counter on/off registers.
+> +
+> +- reg-names: Must contain an entry "pwm" corresponding to the
+> +  additional register range needed for pwm operation.
+> +
+> +- #pwm-cells: Should be two. The first cell is the pin number. The
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+s/pin number/gpio line/ ?
+
+> +  second cell is reserved for flags and should be set to 0, so it has a
+> +  known value. It then becomes possible to use it in the future.
+> +
+> +- clocks: Must be a phandle to the clock for the gpio controller.
+> +
+>  Example:
+>  
+>  		gpio0: gpio@d0018100 {
+> @@ -51,3 +68,17 @@ Example:
+>  			#interrupt-cells = <2>;
+>  			interrupts = <16>, <17>, <18>, <19>;
+>  		};
+> +
+> +		gpio1: gpio@18140 {
+> +			compatible = "marvell,orion-gpio";
+
+If only 370 and XP support this, I'd expect a compatible string for one 
+of them here.
+
+> +			reg = <0x18140 0x40>, <0x181c8 0x08>;
+> +			reg-names = "gpio", "pwm";
+> +			ngpios = <17>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			#pwm-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			interrupts = <87>, <88>, <89>;
+> +			clocks = <&coreclk 0>;
+> +		};
