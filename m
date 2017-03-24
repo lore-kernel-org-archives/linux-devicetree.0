@@ -1,251 +1,159 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [RESEND PATCH v2 26/53] mtd: nand: denali: support 1024 byte ECC
- step size
-Date: Fri, 24 Mar 2017 12:23:01 +0900
-Message-ID: <CAK7LNAT3nVvTWUb9bCB_7XN-wb4k+XrHn-f6FHHoU9gcVeytrg@mail.gmail.com>
-References: <1490213273-8571-1-git-send-email-yamada.masahiro@socionext.com>
- <1490213273-8571-27-git-send-email-yamada.masahiro@socionext.com>
- <20170322223239.70a45053@bbrezillon>
- <CAK7LNARafOYZ54k2QZhTKgt-KLFs7Rz5X=GzDVkZkkXOchtGNQ@mail.gmail.com>
- <20170323093918.1e65916c@bbrezillon>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: bus: TI interconnect target module binding
+Date: Thu, 23 Mar 2017 20:30:09 -0700
+Message-ID: <20170324033008.GV10760@atomide.com>
+References: <20170314212304.2875-1-tony@atomide.com>
+ <20170324015523.dul3j4lc2nyrmvkl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170323093918.1e65916c@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Laurent Monat <laurent.monat@idquantique.com>, devicetree@vger.kernel.org, thorsten.christiansson@idquantique.com, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Enrico Jorns <ejo@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Graham Moore <grmoore@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170324015523.dul3j4lc2nyrmvkl@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi,
 
+* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170323 18:57]:
+> On Tue, Mar 14, 2017 at 02:23:04PM -0700, Tony Lindgren wrote:
+> > +- clocks	shall contain the clocks managed by the interconnect target
+> > +		module, typically at least the clkctrl clock of the module
+> 
+> Where do we document exactly how many clocks?
 
-2017-03-23 17:39 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
-> On Thu, 23 Mar 2017 15:53:14 +0900
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->
->> Hi Boris,
->>
->> 2017-03-23 6:32 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
->> > On Thu, 23 Mar 2017 05:07:25 +0900
->> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->> >
->> >> This driver was originally written for the Intel MRST platform with
->> >> several platform specific parameters hard-coded.  Another thing we
->> >> need to fix is the hard-coded ECC step size.  Currently, it is
->> >> defined as follows:
->> >>
->> >>   #define ECC_SECTOR_SIZE 512
->> >>
->> >> (somehow, it is defined in both denali.c and denali.h)
->> >>
->> >> This must be avoided because the Denali IP supports 1024B ECC size
->> >> as well.  The Denali User's Guide also says supporting both 512B and
->> >> 1024B ECC sectors is possible, though it would require instantiation
->> >> of two different ECC circuits.  So, possible cases are:
->> >>
->> >>  [1] only 512B ECC size is supported
->> >>  [2] only 1024B ECC size is supported
->> >>  [3] both 512B and 1024B ECC sizes are supported
->> >>
->> >> For [3], the actually used ECC size is specified by some registers.
->> >>
->> >> Newer versions of this IP have the following registers:
->> >>   CFG_DATA_BLOCK_SIZE       (0x6b0)
->> >>   CFG_LAST_DATA_BLOCK_SIZE  (0x6c0)
->> >>   CFG_NUM_DATA_BLOCKS       (0x6d0)
->> >>
->> >> For those versions, the software should set ecc.size and ecc.steps
->> >> to these registers.  Old versions do not have such registers, but
->> >> they are "reserved", so write accesses are safely ignored.
->> >>
->> >> This commit adds new flags DENALI_CAP_ECC_SIZE_{512,1024}.
->> >>
->> >> The DT property "nand-ecc-step-size" is still optional; a reasonable
->> >> default will be chosen for [1] and [2].  For case [3], if exists, it
->> >> is recommended to specify the desired ECC size explicitly.
->> >
->> > Actually, the NAND chip gives some hints to help controller drivers
->> > decide which ecc-block-size/strength is appropriate
->> > (chip->ecc_strength_ds, chip->ecc_step_ds), so, in most cases
->> > nand-ecc-step-size is unneeded (unless you want to force a specific
->> > setting).
->>
->>
->> But, if we look at nand_flash_detect_onfi(),
->> ->ecc_step_ds is almost a fixed value, 512, right?
->>
->> if (p->ecc_bits != 0xff) {
->>         chip->ecc_strength_ds = p->ecc_bits;
->>         chip->ecc_step_ds = 512;
->>
->
-> Nope, if the NAND requires a different ECC block size, you will have
-> 0xff in this field and the real ECC requirements will be exposed in the
-> extended parameter page [1].
->
->>
->> As far as I understood,
->> ->ecc_step_ds is not a hint for drivers to decide ->ecc.size.
->>
->> Rather, ->ecc_step_ds just specifies the unit of ->ecc_strength_ds.
->
-> ->ecc_xxx_ds are encoding the minimum ECC requirements as expressed by
-> the NAND chip, so yes, it is an hint for the ECC engine configuration.
->
-> It does not necessarily means it has to be exactly the same, but it
-> should be used to determine which setting is appropriate. For example,
-> if the NAND says it requires a minimum of 4bits/512bytes but your
-> controller only supports 16bits/1024bytes, then it's fine.
->
->
->
->>
->>
->>
->> >>                       int offset;
->> >>                       unsigned int flips_in_byte;
->> >>
->> >> -                     offset = (err_sector * ECC_SECTOR_SIZE + err_byte) *
->> >> +                     offset = (err_sector * ecc_size + err_byte) *
->> >>                                               denali->devnum + err_device;
->> >>
->> >>                       /* correct the ECC error */
->> >> @@ -1579,22 +1578,37 @@ int denali_init(struct denali_nand_info *denali)
->> >>       /* no subpage writes on denali */
->> >>       chip->options |= NAND_NO_SUBPAGE_WRITE;
->> >>
->> >> +     if (!chip->ecc.size) {
->> >
->> > You should set it to chip->ecc_step_ds and pick a default value only if
->> > it's still 0 after that. Same goes for ecc.strength.
->>
->> Sorry, I still do not understand this.
->>
->> ->ecc_strength_ds and ->ecc_step_ds
->> shows how often bit-flip occurs in this device.
->
-> It represents the minimum ECC requirements to ensure a 'reliable' setup.
->
->>
->> So, nand_ecc_strength_good() is a typical usage of these.
->
-> nand_ecc_strength_good() is complaining if you choose an ECC setting
-> that is below the minimum requirements.
->
->>
->> How many sectors the driver actually splits the device into
->> is a different issue, I think.
->
-> The choice is left to the ECC controller, but it should take the
-> ->ecc_strength_ds and ->ecc_step_ds information into account when
-> choosing the ECC settings.
->
->>
->>
->>
->> >> +             if (denali->caps & DENALI_CAP_ECC_SIZE_512)
->> >> +                     chip->ecc.size = 512;
->> >> +             if (denali->caps & DENALI_CAP_ECC_SIZE_1024)
->> >> +                     chip->ecc.size = 1024;
->> >> +             if (WARN(!chip->ecc.size, "must support at least 512 or 1024 ECC size"))
->> >> +                     goto failed_req_irq;
->> >> +     }
->> >> +
->> >> +     if ((chip->ecc.size != 512 && chip->ecc.size != 1024) ||
->> >> +         (chip->ecc.size == 512 && !(denali->caps & DENALI_CAP_ECC_SIZE_512)) ||
->> >> +         (chip->ecc.size == 1024 && !(denali->caps & DENALI_CAP_ECC_SIZE_1024))) {
->> >> +             dev_err(denali->dev, "specified ECC size %d in not supported",
->> >> +                     chip->ecc.size);
->> >> +             goto failed_req_irq;
->> >> +     }
->> >> +
->> >>       /*
->> >>        * Denali Controller only support 15bit and 8bit ECC in MRST,
->> >>        * so just let controller do 15bit ECC for MLC and 8bit ECC for
->> >>        * SLC if possible.
->> >
->> > Usually the NAND chips expose the ECC requirements, so basing our
->> > decision only on the type of NAND sounds a bit weird.
->>
->>
->> chip->ecc.size is one of the configuration of this controller IP.
->>
->> SoC vendors choose 512, 1024, or both of them
->> when they buy this IP.
->
-> Yes, and that's not a problem.
->
->>
->> If both 512 and 1024 are supported, 1024 is usually a better choice
->> because bigger ecc.size uses ECC more efficiently.
->
-> We agree.
->
->>
->>
->> It is unrelated to the chips' requirements.
->
-> It is related to the chip requirements.
-> Say you have a chip that requires a minimum of 4bits/512bytes. If you
-> want to convert that to a 1024byte block setting it's perfectly fine,
-> but then you'll have to meet (2 * ->ecc_strength_ds) for the
-> ecc.strength parameter.
+That's the clkctrl clock binding done earlier. Will add a note
+about that.
 
-I think this example case is always fine from the
-"bigger ecc.size uses ECC more efficiently" we agreed.
-If 4bits/512bytes is achievable, 8bits/1024bytes is always met.
+> > +Example: Single instance of MUSB controller on omap4 using interconnect ranges:
+> > +
+> > +	target_module@2b000 {			/* 0x4a0ab000, ap 84 12.0 */
+> 
+> target-module@
+> 
+> This unit address doesn't look right?
 
+Oh OK sure will update.
 
-The reverse is not always true.
-If the chip requires 8bits/1024bytes then controller uses 4bit/512bytes,
-this could be a reliability problem.
+> > +		compatible = "ti,sysc-type1", "simple-bus";
+> 
+> Seems fairly complicated to claim "simple-bus"?
 
+Hmm that allows to update the dts files and keep things working
+with the current "ti,hwmods" property. Then the "ti,hwmods" can be
+just removed to switch over to the new interconnect target driver.
+So both legacy "simple-bus" + "ti,hwmods" will work and new
+"ti,sysc-type1" and no "ti,hwmods". Or do you see some issues with
+that approach?
 
-
-> The nand-ecc-strength and nand-ecc-step DT properties are here to
-> override the chip requirements and force a specific setting. This is
-> for example needed when the bootloader hardcodes an ECC setting without
-> taking the NAND chip requirements into account, and since you want to
-> read/write from both the bootloader and linux, you'll have to force this
-> specific ECC setting, but this case should be the exception, not the
-> default behavior.
-
-Yes, I also thought the case where the boot-loader hardcodes an ECC setting.
-
-Moreover, the Boot ROM really hard-codes (hard-wires)
-the ECC setting in some cases.   On some Socionext UniPhier boards,
-users have no freedom to change the ECC settings.
-
-So, DT property need to be supported somehow.
-
-
+> > +		#address-cells = <2>;
 >
-> If you want an example on how to extrapolate ECC engine settings from
-> ->ecc_xxx_ds info, you can look at the sunxi_nand driver [2].
->
-> [1]http://lxr.free-electrons.com/source/drivers/mtd/nand/nand_base.c#L3491
-> [2]http://lxr.free-electrons.com/source/drivers/mtd/nand/sunxi_nand.c#L1946
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The target module really needs 64-bits of address space? 
 
+I guess not :)
 
+> > +		#size-cells = <1>;
+> > +		reg = <0x54 0x400 0x4
+> > +		       0x54 0x404 0x4
+> > +		       0x54 0x408 0x4
+> > +		       0x54 0 0x001000>;
+> 
+> You have overlapping regions. Don't do that.
 
--- 
-Best Regards
-Masahiro Yamada
+Yeah that can be left out for the interconnect target module if
+we move some of the quirk handling for idling the unused child
+devices into the child device drivers with the earlier proposed
+status = "incomplete" stuff.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+That way the interconnect target module does not have to access the
+child IO range. The child will need the 0x54 0x1000 as a range
+though, so it would roughly like this with #address-cells = <1>:
+
+	target-module@2b000 {			/* 0x4a0ab000, ap 84 12.0 */
+		compatible = "ti,sysc-type1", "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		reg = <0x54 0x400 0x4
+		       0x54 0x404 0x4
+		       0x54 0x408 0x4>;
+		reg-names = "rev", "sysc", "syss";
+		ranges = <0 0x54 0x001000>;
+		clocks = <&cm_l3init_clkctrl OMAP4_OTG_CLKCTRL 0>;
+		clock-names = "clkctrl";
+
+		ti,sysc-has-autoidle;
+		ti,sysc-has-enawakeup;
+		ti,sysc-has-softreset;
+		...
+
+		usb_otg_hs: usb_otg_hs@0 {
+			compatible = "ti,omap4-musb";
+			reg = <0 0x7ff>;
+			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
+				     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIH>;
+			...
+		};
+	};
+
+Note how the ranges provided by the interconnect target module
+still overlaps with the interconnect module control registers.
+Does that look OK to you or do you have some better idea in mind
+for dealing with that?
+
+Splitting the child range into sections would break ioremap for all
+drivers I believe.
+
+> And for the first 3, if you have that much variation, maybe you need 
+> more specific compatible strings?
+
+The first three target module regions can be all over the map
+within the child range unfortunately.. See for example just the
+sysc registers below.
+
+Regards,
+
+Tony
+
+8< ------------
+$ git grep sysc_offs arch/arm/mach-omap2/*hwmod*data*.c | \
+	cut -d'=' -f2 | sort | uniq
+ 0x0000,
+ 0x0004,
+ 0x0010,
+ 0x0014,
+ 0x002c,
+ 0x0034,
+ 0x0038,
+ 0x0054,
+ 0x0078,
+ 0x0084,
+ 0x008C,
+ 0x008c,
+ 0x010,
+ 0x0110,
+ 0x0210,
+ 0x0404,
+ 0x10,
+ 0x104,
+ 0x110,
+ 0x14,
+ 0x1fc10,
+ 0x1fe4,
+ 0x20,
+ 0x24,
+ 0x34,
+ 0x38,
+ 0x4,
+ 0x40,
+ 0x48,
+ 0x54,
+ 0x60,
+ 0x64,
+ 0x78,
+ 0x8,
+ 0x84,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
