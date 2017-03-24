@@ -1,56 +1,54 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 07/12] ARM: dts: imx6ul-isiot: Add Sound card with codec node
-Date: Fri, 24 Mar 2017 14:02:38 +0530
-Message-ID: <CAMty3ZBSVgL==LsCzsODkL117WFL4Pv4kwhXhxc3wDWre3i-zA@mail.gmail.com>
-References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
- <1490204897-14525-8-git-send-email-jagan@openedev.com> <20170324052324.GF30608@dragon>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: add power-domains to sdhi
+Date: Fri, 24 Mar 2017 08:55:44 +0100
+Message-ID: <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
+References: <20170209133803.21539-1-chris.brandt@renesas.com>
+ <CAMuHMdXRD3o7KdaADvPYxzeuEVo44nRVWHfCverPc+9s=0owPA@mail.gmail.com> <20170324070228.GI1319@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324052324.GF30608@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170324070228.GI1319@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 10:53 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Mar 22, 2017 at 11:18:12PM +0530, Jagan Teki wrote:
->> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Hi Simon,
+
+On Fri, Mar 24, 2017 at 8:02 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Wed, Mar 22, 2017 at 02:25:04PM +0100, Geert Uytterhoeven wrote:
+>> (this time reply-to-all)
 >>
->> Add support for Sound card and related codec(via i2c1) nodes
->> on Engicam Is.IoT MX6UL variant module boards.
+>> On Thu, Feb 9, 2017 at 2:38 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+>> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+>> > Fixes: 66474697923c ("ARM: dts: r7s72100: add sdhi to device tree")
 >>
->> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
->> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 11 +++++++++++
->>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 30 ++++++++++++++++++++++++++++++
->>  2 files changed, 41 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
->> index b149b5e..c79fa42 100644
->> --- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
->> +++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
->> @@ -41,6 +41,17 @@
->>   */
->>
->>  &i2c1 {
->> +     codec: sgtl5000@0a {
+>> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
->         sgtl5000: codec@a {
+> Thanks, I have queued this up for v4.12.
+>
+> The fixes tag above indicates this is a fix for v4.10, however, when I
+> tried to apply it on top of v4.11-rc1 there was a conflict.  So I think a
+> backport will be required if we want it to be considered for v4.11 and be
+> considered for and in turn v4.10-stable.
 
-Just to understand, why codec: sgtl5000@0a not a suitable notation?
-couldn't see any Documentation.
+That's because of commit 3d2abda02ad2d06d
+("ARM: dts: r7s72100: update sdhi clock bindings")
 
-thanks!
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+> This makes things a bit messy with regards to conflicts between v4.11 and
+> v4.12 and I'm inclined to pass on the backport.
+
+If you ever want to backport, you'll have two backport changes too the
+SDHI driver, too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
