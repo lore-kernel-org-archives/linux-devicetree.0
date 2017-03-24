@@ -1,54 +1,100 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 02/12] irqchip: mtk-sysirq: extend intpol base to
- arbitrary number
-Date: Fri, 24 Mar 2017 09:42:10 +0000
-Message-ID: <c2fcee41-f78f-da13-bf01-a0a01c7e8b39@arm.com>
-References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
- <1489937193-2953-3-git-send-email-mars.cheng@mediatek.com>
- <3790b6ad-12c0-0c48-c24e-0f3397c6bbba@arm.com>
- <1490313138.25996.10.camel@mtkswgap22>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 5/6] mfd: arizona: Add support for new
+	micbias regulators
+Date: Fri, 24 Mar 2017 09:42:23 +0000
+Message-ID: <20170324094223.ncuq3uhd2tmbonmp@dell>
+References: <1490107539-23995-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1490107539-23995-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1490313138.25996.10.camel@mtkswgap22>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-clk@vger.kernel.org, chieh-jay.liu@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <1490107539-23995-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/03/17 23:52, Mars Cheng wrote:
-> On Thu, 2017-03-23 at 16:25 +0000, Marc Zyngier wrote:
->> On 19/03/17 15:26, Mars Cheng wrote:
->>> Originally driver only supports one base. However, MT6797 has
->>> more than one bases to configure interrupt polarity. To support
->>> possible design change, here comes a solution to use arbitrary
->>> number of bases.
->>>
->>> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
->>
->> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
->>
->> What is the merge strategy for this? I'm happy to take the irqchip stuff
->> through my tree, but there is much more in this series...
->>
-> Hi Marc
-> 
-> Thanks for your review.
-> 
-> Hi Matthias
-> 
-> Would you comment on this? If Marc take the following stuff first in his
-> tree:
-> 
-> [PATCH v3 01/12] dt-bindings: mediatek: multiple bases support for
-> sysirq  
-
-Before taking this patch, I still need one of the DT maintainer to ack
-the binding extension.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+T24gVHVlLCAyMSBNYXIgMjAxNywgQ2hhcmxlcyBLZWVwYXggd3JvdGU6Cgo+IEFkZCBtZmRfY2Vs
+bCdzIGZvciBlYWNoIG9mIHRoZSBuZXcgbWljYmlhcyByZWd1bGF0b3JzLCAgcHJvdmlkZSB0aGUK
+PiBhcHByb3ByaWF0ZSBzdXBwbHkgbWFwcGluZyBmb3IgdGhlc2UsIGFuZCByZW1vdmUgdGhlIG9s
+ZCBjb2RlIHRoYXQKPiBjb25maWd1cmVkIHRoZSBtaWNiaWFzZXMgbm93IHRoYXQgdGhlIHJlZ3Vs
+YXRvciBkcml2ZXIgZG9lcyBzby4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBDaGFybGVzIEtlZXBheCA8
+Y2tlZXBheEBvcGVuc291cmNlLndvbGZzb25taWNyby5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvbWZk
+L2FyaXpvbmEtY29yZS5jIHwgNTYgKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKSwgMzQgZGVsZXRp
+b25zKC0pCgpBcHBsaWVkLCB0aGFua3MuCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9hcml6
+b25hLWNvcmUuYyBiL2RyaXZlcnMvbWZkL2FyaXpvbmEtY29yZS5jCj4gaW5kZXggYjZkNGJjNi4u
+ZTdlYmE1ZCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9hcml6b25hLWNvcmUuYwo+ICsrKyBi
+L2RyaXZlcnMvbWZkL2FyaXpvbmEtY29yZS5jCj4gQEAgLTkzNiwxMCArOTM2LDE2IEBAIHN0YXRp
+YyBjb25zdCBjaGFyICogY29uc3Qgd201MTAyX3N1cHBsaWVzW10gPSB7Cj4gIAkiQ1BWREQiLAo+
+ICAJIlNQS1ZEREwiLAo+ICAJIlNQS1ZERFIiLAo+ICsJIk1JQ0JJQVMxIiwKPiArCSJNSUNCSUFT
+MiIsCj4gKwkiTUlDQklBUzMiLAo+ICB9Owo+ICAKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtZmRf
+Y2VsbCB3bTUxMDJfZGV2c1tdID0gewo+ICAJeyAubmFtZSA9ICJhcml6b25hLW1pY3N1cHAiIH0s
+Cj4gKwl7IC5uYW1lID0gImFyaXpvbmEtbWljYmlhcyIsIC5pZCA9IDEgfSwKPiArCXsgLm5hbWUg
+PSAiYXJpem9uYS1taWNiaWFzIiwgLmlkID0gMiB9LAo+ICsJeyAubmFtZSA9ICJhcml6b25hLW1p
+Y2JpYXMiLCAuaWQgPSAzIH0sCj4gIAl7IC5uYW1lID0gImFyaXpvbmEtZ3BpbyIgfSwKPiAgCXsK
+PiAgCQkubmFtZSA9ICJhcml6b25hLWV4dGNvbiIsCj4gQEAgLTk1Nyw2ICs5NjMsOSBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IG1mZF9jZWxsIHdtNTEwMl9kZXZzW10gPSB7Cj4gIAo+ICBzdGF0aWMg
+Y29uc3Qgc3RydWN0IG1mZF9jZWxsIHdtNTExMF9kZXZzW10gPSB7Cj4gIAl7IC5uYW1lID0gImFy
+aXpvbmEtbWljc3VwcCIgfSwKPiArCXsgLm5hbWUgPSAiYXJpem9uYS1taWNiaWFzIiwgLmlkID0g
+MSB9LAo+ICsJeyAubmFtZSA9ICJhcml6b25hLW1pY2JpYXMiLCAuaWQgPSAyIH0sCj4gKwl7IC5u
+YW1lID0gImFyaXpvbmEtbWljYmlhcyIsIC5pZCA9IDMgfSwKPiAgCXsgLm5hbWUgPSAiYXJpem9u
+YS1ncGlvIiB9LAo+ICAJewo+ICAJCS5uYW1lID0gImFyaXpvbmEtZXh0Y29uIiwKPiBAQCAtOTc2
+LDkgKzk4NSwxMyBAQCBzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGNzNDdsMjRfc3VwcGxpZXNb
+XSA9IHsKPiAgCSJNSUNWREQiLAo+ICAJIkNQVkREIiwKPiAgCSJTUEtWREQiLAo+ICsJIk1JQ0JJ
+QVMxIiwKPiArCSJNSUNCSUFTMiIsCj4gIH07Cj4gIAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG1m
+ZF9jZWxsIGNzNDdsMjRfZGV2c1tdID0gewo+ICsJeyAubmFtZSA9ICJhcml6b25hLW1pY2JpYXMi
+LCAuaWQgPSAxIH0sCj4gKwl7IC5uYW1lID0gImFyaXpvbmEtbWljYmlhcyIsIC5pZCA9IDIgfSwK
+PiAgCXsgLm5hbWUgPSAiYXJpem9uYS1ncGlvIiB9LAo+ICAJeyAubmFtZSA9ICJhcml6b25hLWhh
+cHRpY3MiIH0sCj4gIAl7IC5uYW1lID0gImFyaXpvbmEtcHdtIiB9LAo+IEBAIC05OTQsMTAgKzEw
+MDcsMTYgQEAgc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCB3bTg5OTdfc3VwcGxpZXNbXSA9IHsK
+PiAgCSJEQlZERDIiLAo+ICAJIkNQVkREIiwKPiAgCSJTUEtWREQiLAo+ICsJIk1JQ0JJQVMxIiwK
+PiArCSJNSUNCSUFTMiIsCj4gKwkiTUlDQklBUzMiLAo+ICB9Owo+ICAKPiAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBtZmRfY2VsbCB3bTg5OTdfZGV2c1tdID0gewo+ICAJeyAubmFtZSA9ICJhcml6b25h
+LW1pY3N1cHAiIH0sCj4gKwl7IC5uYW1lID0gImFyaXpvbmEtbWljYmlhcyIsIC5pZCA9IDEgfSwK
+PiArCXsgLm5hbWUgPSAiYXJpem9uYS1taWNiaWFzIiwgLmlkID0gMiB9LAo+ICsJeyAubmFtZSA9
+ICJhcml6b25hLW1pY2JpYXMiLCAuaWQgPSAzIH0sCj4gIAl7IC5uYW1lID0gImFyaXpvbmEtZ3Bp
+byIgfSwKPiAgCXsKPiAgCQkubmFtZSA9ICJhcml6b25hLWV4dGNvbiIsCj4gQEAgLTEwMTUsNiAr
+MTAzNCw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgd204OTk3X2RldnNbXSA9IHsK
+PiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgd204OTk4X2RldnNbXSA9IHsKPiAg
+CXsgLm5hbWUgPSAiYXJpem9uYS1taWNzdXBwIiB9LAo+ICsJeyAubmFtZSA9ICJhcml6b25hLW1p
+Y2JpYXMiLCAuaWQgPSAxIH0sCj4gKwl7IC5uYW1lID0gImFyaXpvbmEtbWljYmlhcyIsIC5pZCA9
+IDIgfSwKPiArCXsgLm5hbWUgPSAiYXJpem9uYS1taWNiaWFzIiwgLmlkID0gMyB9LAo+ICAJeyAu
+bmFtZSA9ICJhcml6b25hLWdwaW8iIH0sCj4gIAl7Cj4gIAkJLm5hbWUgPSAiYXJpem9uYS1leHRj
+b24iLAo+IEBAIC0xNDA0LDQwICsxNDI2LDYgQEAgaW50IGFyaXpvbmFfZGV2X2luaXQoc3RydWN0
+IGFyaXpvbmEgKmFyaXpvbmEpCj4gIAkJZ290byBlcnJfcmVzZXQ7Cj4gIAl9Cj4gIAo+IC0JZm9y
+IChpID0gMDsgaSA8IEFSSVpPTkFfTUFYX01JQ0JJQVM7IGkrKykgewo+IC0JCWlmICghYXJpem9u
+YS0+cGRhdGEubWljYmlhc1tpXS5tViAmJgo+IC0JCSAgICAhYXJpem9uYS0+cGRhdGEubWljYmlh
+c1tpXS5ieXBhc3MpCj4gLQkJCWNvbnRpbnVlOwo+IC0KPiAtCQkvKiBBcHBseSBkZWZhdWx0IGZv
+ciBieXBhc3MgbW9kZSAqLwo+IC0JCWlmICghYXJpem9uYS0+cGRhdGEubWljYmlhc1tpXS5tVikK
+PiAtCQkJYXJpem9uYS0+cGRhdGEubWljYmlhc1tpXS5tViA9IDI4MDA7Cj4gLQo+IC0JCXZhbCA9
+IChhcml6b25hLT5wZGF0YS5taWNiaWFzW2ldLm1WIC0gMTUwMCkgLyAxMDA7Cj4gLQo+IC0JCXZh
+bCA8PD0gQVJJWk9OQV9NSUNCMV9MVkxfU0hJRlQ7Cj4gLQo+IC0JCWlmIChhcml6b25hLT5wZGF0
+YS5taWNiaWFzW2ldLmV4dF9jYXApCj4gLQkJCXZhbCB8PSBBUklaT05BX01JQ0IxX0VYVF9DQVA7
+Cj4gLQo+IC0JCWlmIChhcml6b25hLT5wZGF0YS5taWNiaWFzW2ldLmRpc2NoYXJnZSkKPiAtCQkJ
+dmFsIHw9IEFSSVpPTkFfTUlDQjFfRElTQ0g7Cj4gLQo+IC0JCWlmIChhcml6b25hLT5wZGF0YS5t
+aWNiaWFzW2ldLnNvZnRfc3RhcnQpCj4gLQkJCXZhbCB8PSBBUklaT05BX01JQ0IxX1JBVEU7Cj4g
+LQo+IC0JCWlmIChhcml6b25hLT5wZGF0YS5taWNiaWFzW2ldLmJ5cGFzcykKPiAtCQkJdmFsIHw9
+IEFSSVpPTkFfTUlDQjFfQllQQVNTOwo+IC0KPiAtCQlyZWdtYXBfdXBkYXRlX2JpdHMoYXJpem9u
+YS0+cmVnbWFwLAo+IC0JCQkJICAgQVJJWk9OQV9NSUNfQklBU19DVFJMXzEgKyBpLAo+IC0JCQkJ
+ICAgQVJJWk9OQV9NSUNCMV9MVkxfTUFTSyB8Cj4gLQkJCQkgICBBUklaT05BX01JQ0IxX0VYVF9D
+QVAgfAo+IC0JCQkJICAgQVJJWk9OQV9NSUNCMV9ESVNDSCB8Cj4gLQkJCQkgICBBUklaT05BX01J
+Q0IxX0JZUEFTUyB8Cj4gLQkJCQkgICBBUklaT05BX01JQ0IxX1JBVEUsIHZhbCk7Cj4gLQl9Cj4g
+LQo+ICAJZm9yIChpID0gMDsgaSA8IEFSSVpPTkFfTUFYX0lOUFVUOyBpKyspIHsKPiAgCQkvKiBE
+ZWZhdWx0IGZvciBib3RoIGlzIDAgc28gbm9vcCB3aXRoIGRlZmF1bHRzICovCj4gIAkJdmFsID0g
+YXJpem9uYS0+cGRhdGEuZG1pY19yZWZbaV0KCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9l
+bGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBz
+b2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwg
+QmxvZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNh
+LWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21h
+aWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
