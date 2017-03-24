@@ -1,49 +1,229 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r7s72100: add power-domains to sdhi
-Date: Fri, 24 Mar 2017 10:40:55 +0100
-Message-ID: <20170324094054.GA7422@verge.net.au>
-References: <20170209133803.21539-1-chris.brandt@renesas.com>
- <CAMuHMdXRD3o7KdaADvPYxzeuEVo44nRVWHfCverPc+9s=0owPA@mail.gmail.com>
- <20170324070228.GI1319@verge.net.au>
- <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
+Date: Fri, 24 Mar 2017 10:41:28 +0100
+Message-ID: <dce20025-9f42-e747-e325-e1667504e615@st.com>
+References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
+ <20170324020630.vhffmeeb6wto53zx@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170324020630.vhffmeeb6wto53zx@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, radoslaw.pietrzyk@gmail.com, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, andrea.merello@gmail.com, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 08:55:44AM +0100, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Fri, Mar 24, 2017 at 8:02 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Wed, Mar 22, 2017 at 02:25:04PM +0100, Geert Uytterhoeven wrote:
-> >> (this time reply-to-all)
-> >>
-> >> On Thu, Feb 9, 2017 at 2:38 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
-> >> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> >> > Fixes: 66474697923c ("ARM: dts: r7s72100: add sdhi to device tree")
-> >>
-> >> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Thanks, I have queued this up for v4.12.
-> >
-> > The fixes tag above indicates this is a fix for v4.10, however, when I
-> > tried to apply it on top of v4.11-rc1 there was a conflict.  So I think a
-> > backport will be required if we want it to be considered for v4.11 and be
-> > considered for and in turn v4.10-stable.
-> 
-> That's because of commit 3d2abda02ad2d06d
-> ("ARM: dts: r7s72100: update sdhi clock bindings")
-> 
-> > This makes things a bit messy with regards to conflicts between v4.11 and
-> > v4.12 and I'm inclined to pass on the backport.
-> 
-> If you ever want to backport, you'll have two backport changes too the
-> SDHI driver, too.
+Hi Rob,
 
-Is that the case if only this patch (and not 3d2abda02ad2d06d) is backported?
+Thanks for reviewing
+
+
+On 03/24/2017 03:06 AM, Rob Herring wrote:
+> On Wed, Mar 15, 2017 at 10:23:30AM +0100, gabriel.fernandez@st.com wrote:
+>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>
+>> This patch enables clocks for STM32H743 boards.
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> ---
+>>   .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |  152 ++
+>>   drivers/clk/Makefile                               |    1 +
+>>   drivers/clk/clk-stm32h7.c                          | 1586 ++++++++++++++++++++
+>>   include/dt-bindings/clock/stm32h7-clks.h           |  165 ++
+>>   include/dt-bindings/mfd/stm32h7-rcc.h              |  138 ++
+>>   5 files changed, 2042 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>   create mode 100644 drivers/clk/clk-stm32h7.c
+>>   create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+>>   create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>> new file mode 100644
+>> index 0000000..9d4b587
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>> @@ -0,0 +1,152 @@
+>> +STMicroelectronics STM32H7 Reset and Clock Controller
+>> +=====================================================
+>> +
+>> +The RCC IP is both a reset and a clock controller.
+>> +
+>> +Please refer to clock-bindings.txt for common clock controller binding usage.
+>> +Please also refer to reset.txt for common reset controller binding usage.
+>> +
+>> +Required properties:
+>> +- compatible: Should be:
+>> +  "st,stm32h743-rcc"
+>> +
+>> +- reg: should be register base and length as documented in the
+>> +  datasheet
+>> +
+>> +- #reset-cells: 1, see below
+>> +
+>> +- #clock-cells : from common clock binding; shall be set to 1
+>> +
+>> +- clocks: External oscillator clock phandle
+>> +  - high speed external clock signal (HSE)
+>> +  - low speed external clock signal (LSE)
+>> +  - external I2S clock (I2S_CKIN)
+>> +
+>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
+>> +  write protection (RTC clock).
+>> +
+>> +- pll x node: Allow to register a pll with specific parameters.
+>> +  Please see PLL section below.
+>> +
+>> +Example:
+>> +
+>> +	rcc: rcc@58024400 {
+>> +		#reset-cells = <1>;
+>> +		#clock-cells = <2>
+>> +		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+>> +		reg = <0x58024400 0x400>;
+>> +		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+>> +
+>> +		st,syscfg = <&pwrcfg>;
+>> +
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		vco1@58024430 {
+>> +			#clock-cells = <0>;
+>> +			compatible = "stm32,pll";
+>> +			reg = <0>;
+> The reg addr value and unit address don't match.
+ok il will change into
+
+	vco1@0 {
+		reg = <0>;
+
+>
+>> +		};
+>> +
+>> +		vco2@58024438 {
+>> +			#clock-cells = <0>;
+>> +			compatible = "stm32,pll";
+>> +			reg = <1>;
+>> +			st,clock-div = <2>;
+>> +			st,clock-mult = <40>;
+>> +			st,frac-status = <0>;
+>> +			st,frac = <0>;
+>> +			st,vcosel = <1>;
+>> +			st,pllrge = <2>;
+>> +		};
+>> +	};
+>> +
+>> +
+>> +STM32H7 PLL
+>> +-----------
+>> +
+>> +The VCO of STM32 PLL could be reprensented like this:
+>> +
+>> +  Vref    ---------       --------
+>> +    ---->| / DIVM  |---->| x DIVN | ------> VCO
+>> +          ---------       --------
+>> +		             ^
+>> +			     |
+>> +	                  -------
+>> +		         | FRACN |
+>> +		          -------
+>> +
+>> +When the PLL is configured in integer mode:
+>> +- VCO = ( Vref / DIVM ) * DIVN
+>> +
+>> +When the PLL is configured in fractional mode:
+>> +- VCO = ( Vref / DIVM ) * ( DIVN + FRACN / 2^13)
+>> +
+>> +
+>> +Required properties for pll node:
+>> +- compatible: Should be:
+>> +  "stm32,pll"
+> Only 1 single PLL design for all STM32 chips ever?
+no, i can change into "stm32h7,pll"
+
+>> +
+>> +- #clock-cells: from common clock binding; shall be set to 0
+>> +- reg: Should be the pll number.
+>> +
+>> +Optional properties:
+>> +- st,clock-div:  DIVM division factor       : <1..63>
+>> +- st,clock-mult: DIVN multiplication factor : <4..512>
+>> +
+>> +- st,frac-status:
+>> +   - 0 Pll is configured in integer mode
+>> +   - 1 Pll is configure in fractional mode
+> Isn't this implied by the presence of the next property?
+do you prefer this ?
+
+- st,frac :
+0 : pll is configured in integer mode
+1..8191 : Fractional part of the multiplication factor and pll is 
+configured in fractional mode
+
+>> +
+>> +- st,frac: Fractional part of the multiplication factor : <0..8191>
+>> +
+>> +- st,vcosel: VCO selection
+>> +  - 0: Wide VCO range:192 to 836 MHz
+>> +  - 1: Medium VCO range:150 to 420 MHz
+>> +
+>> +- st,pllrge: PLL input frequency range
+>> +  - 0: The PLL input (Vref / DIVM) clock range frequency is between 1 and 2 MHz
+>> +  - 1: The PLL input (Vref / DIVM) clock range frequency is between 2 and 4 MHz
+>> +  - 2: The PLL input (Vref / DIVM) clock range frequency is between 4 and 8 MHz
+>> +  - 3: The PLL input (Vref / DIVM) clock range frequency is between 8 and 16 MHz
+> Seems like you could figure this out based on the input freq and other
+> properties.
+ok i will try to integrate pllrge configuration in the code.
+
+>
+>> +
+>> +
+>> +The peripheral clock consumer should specify the desired clock by
+>> +having the clock ID in its "clocks" phandle cell.
+>> +
+>> +All available clocks are defined as preprocessor macros in
+>> +dt-bindings/clock/stm32h7-clks.h header and can be used in device
+>> +tree sources.
+>> +
+>> +Example:
+>> +
+>> +		timer5: timer@40000c00 {
+>> +			compatible = "st,stm32-timer";
+>> +			reg = <0x40000c00 0x400>;
+>> +			interrupts = <50>;
+>> +			clocks = <&rcc TIM5_CK>;
+>> +
+>> +		};
+>> +
+>> +Specifying softreset control of devices
+>> +=======================================
+>> +
+>> +Device nodes should specify the reset channel required in their "resets"
+>> +property, containing a phandle to the reset device node and an index specifying
+>> +which channel to use.
+>> +The index is the bit number within the RCC registers bank, starting from RCC
+>> +base address.
+>> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
+>> +Where bit_offset is the bit offset within the register.
+>> +
+>> +For example, for CRC reset:
+>> +  crc = AHB4RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x88 / 4 * 32 + 19 = 1107
+>> +
+>> +All available preprocessor macros for reset are defined dt-bindings//mfd/stm32h7-rcc.h
+>> +header and can be used in device tree sources.
+>> +
+>> +example:
+>> +
+>> +	timer2 {
+>> +		resets	= <&rcc STM32H7_APB1L_RESET(TIM2)>;
+>> +	};
