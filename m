@@ -1,100 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 3/5] mfd: palmas: Reset the POWERHOLD mux during power
- off
-Date: Fri, 24 Mar 2017 11:30:14 +0000
-Message-ID: <20170324113014.fpkfoc5n7qpo2l5d@dell>
-References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
- <1478754560-27923-4-git-send-email-j-keerthy@ti.com>
- <20161122130308.GE316@dell.lan>
- <ee4f7c28-7847-ab4f-4d8f-1dce288f809a@ti.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH 1/3] device property: Move FW type specific functionality
+ to FW specific files
+Date: Fri, 24 Mar 2017 13:42:13 +0200
+Message-ID: <20170324114212.GA16657@valkosipuli.retiisi.org.uk>
+References: <1490353432-12017-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <ee4f7c28-7847-ab4f-4d8f-1dce288f809a@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: tony@atomide.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
+In-Reply-To: <1490353432-12017-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Mar 2017, Keerthy wrote:
+On Fri, Mar 24, 2017 at 01:03:50PM +0200, Sakari Ailus wrote:
+> The device and fwnode property API supports Devicetree, ACPI and pset
+> properties. The implementation of this functionality for each firmware
+> type was embedded in the fwnode property core. Move it out to firmware
+> type specific locations, making it easier to maintain.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-> 
-> 
-> On Tuesday 22 November 2016 06:33 PM, Lee Jones wrote:
-> > On Thu, 10 Nov 2016, Keerthy wrote:
-> > 
-> >> POWERHOLD signal has higher priority  over the DEV_ON bit.
-> >> So power off will not happen if the POWERHOLD is held high.
-> >> Hence reset the MUX to GPIO_7 mode to release the POWERHOLD
-> >> and the DEV_ON bit to take effect to power off the PMIC.
-> >>
-> >> PMIC Power off happens in dire situations like thermal shutdown
-> >> so irrespective of the POWERHOLD setting go ahead and turn off
-> >> the powerhold.  Currently poweroff is broken on boards that have
-> >> powerhold enabled. This fixes poweroff on those boards.
-> >>
-> >> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> >> ---
-> >>
-> >> Changes in v2:
-> >>
-> >>   * Changed pr_err to dev_err
-> >>   * removed redundant boolean variable override-powerhold
-> >>
-> >>  drivers/mfd/palmas.c | 14 ++++++++++++++
-> >>  1 file changed, 14 insertions(+)
-> > 
-> > Applied, thanks.
-> 
-> Lee Jones,
-> 
-> For some strange reason this patch is missing!
-> The other patch in the series is applied through mfd tree but somehow
-> this particular patch is missed out.
-> 
-> https://patchwork.kernel.org/patch/9420631/ is applied.
-> 
-> https://patchwork.kernel.org/patch/9420655/ is not.
-> 
-> I tried applying this very patch and it applies cleanly on the next
-> branch. Let me know if you want me to send this again on top of latest
-> next branch.
+Oh, this escaped me a bit early.
 
-Sorry about this.
+This set is the other part split off from the earlier "Move firmware
+specific code to firmware specific locations" set. It depends on my earlier
+the fwnode fixes, ACPI graph support patchsets and patch "device property:
+Read strings using string array reading functions" that are intended for the
+PM tree. They also depend on patch "of: Move OF property and graph API from
+base.c to property.c" which is intended for the DT tree --- this patch
+additionally depends on the patches on DT tree.
 
-Reapplied and re-pushed.
+The only change in the patches from the previous set is rebase, and a new
+patch adding support for fwnode_graph_get_remote_node() has been added. The
+last patch is currently untested. I'll test it in the near future; this set
+is not mergeable for a while until the dependent patches have been merged to
+the respective trees and a new rc1 release is available.
 
-> >> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
-> >> index ee9e9ea..da90124 100644
-> >> --- a/drivers/mfd/palmas.c
-> >> +++ b/drivers/mfd/palmas.c
-> >> @@ -430,6 +430,20 @@ static void palmas_power_off(void)
-> >>  {
-> >>  	unsigned int addr;
-> >>  	int ret, slave;
-> >> +	struct device_node *np = palmas_dev->dev->of_node;
-> >> +
-> >> +	if (of_property_read_bool(np, "ti,palmas-override-powerhold")) {
-> >> +		addr = PALMAS_BASE_TO_REG(PALMAS_PU_PD_OD_BASE,
-> >> +					  PALMAS_PRIMARY_SECONDARY_PAD2);
-> >> +		slave = PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
-> >> +
-> >> +		ret = regmap_update_bits(palmas_dev->regmap[slave], addr,
-> >> +				PALMAS_PRIMARY_SECONDARY_PAD2_GPIO_7_MASK, 0);
-> >> +		if (ret)
-> >> +			dev_err(palmas_dev->dev,
-> >> +				"Unable to write PRIMARY_SECONDARY_PAD2 %d\n",
-> >> +				ret);
-> >> +	}
-> >>  
-> >>  	slave = PALMAS_BASE_TO_SLAVE(PALMAS_PMU_CONTROL_BASE);
-> >>  	addr = PALMAS_BASE_TO_REG(PALMAS_PMU_CONTROL_BASE, PALMAS_DEV_CTRL);
-> > 
+I'm uploading the patches to the two branches here:
+
+Fwnode fixes + ACPI graph support + "device property:
+Read strings using string array reading functions":
+
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph-all>
+
+The previous patches on Rob H's for-next branch + "of: Move OF property
+and graph API from base.c to property.c" + this patchset:
+
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph-cleaned-on-next>
+
+It may still take a while until the patches get there.
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
