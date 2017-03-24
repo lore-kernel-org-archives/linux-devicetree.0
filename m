@@ -1,28 +1,30 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v2 11/15] ARM: dts: imx6qdl-icore-rqs: Replace codec 'lable: node@addr'
-Date: Fri, 24 Mar 2017 21:48:46 +0530
-Message-ID: <1490372330-5611-12-git-send-email-jagan@openedev.com>
+Subject: [PATCH v2 04/15] ARM: dts: imx6ul-isiot: Add i2c nodes
+Date: Fri, 24 Mar 2017 21:48:39 +0530
+Message-ID: <1490372330-5611-5-git-send-email-jagan@openedev.com>
 References: <1490372330-5611-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1490372330-5611-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-According to devicetree specification from ePAPER v1.1
-[label:] node-name[@unit-address] { };
-
-label: should be human readable string describing a device.
-node-name: The name of a node should be somewhat generic,
-reflecting the function of the device and not its
-unit-address: match the first address specified in the
-reg property of the node and shouldn't have leading zeros.
-
-So replaced
-codec: sgtl5000@0a => sgtl5000: codec@a
+Add support for i2c nodes i2c1 and i2c2 on Is.IoT MX6UL
+eMMC variant boards.
 
 Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Matteo Lisi <matteo.lisi@engicam.com>
@@ -30,51 +32,56 @@ Cc: Michael Trimarchi <michael@amarulasolutions.com>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- Newly added patch
+- none
 
- arch/arm/boot/dts/imx6dl-icore-rqs.dts   | 2 +-
- arch/arm/boot/dts/imx6q-icore-rqs.dts    | 2 +-
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6ul-isiot.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore-rqs.dts b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-index 5b4c14c..053e7cb 100644
---- a/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-@@ -51,7 +51,7 @@
+diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+index 5ccc3df..4697a04 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+@@ -71,6 +71,20 @@
+ 	};
  };
  
- &i2c3 {
--	codec: sgtl5000@0a {
-+	sgtl5000: codec@a {
- 		compatible = "fsl,sgtl5000";
- 		reg = <0x0a>;
- 		clocks = <&clks IMX6QDL_CLK_CKO>;
-diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-index 441a28e5..d45e4f5 100644
---- a/arch/arm/boot/dts/imx6q-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-@@ -50,7 +50,7 @@
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock_frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
+ &pwm8 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm8>;
+@@ -95,6 +109,20 @@
  };
  
- &i2c3 {
--	codec: sgtl5000@0a {
-+	sgtl5000: codec@a {
- 		compatible = "fsl,sgtl5000";
- 		reg = <0x0a>;
- 		clocks = <&clks IMX6QDL_CLK_CKO>;
-diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-index 4032d38..d24e531 100644
---- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -123,7 +123,7 @@
- 		compatible = "fsl,imx-audio-sgtl5000";
- 		model = "imx-audio-sgtl5000";
- 		ssi-controller = <&ssi1>;
--		audio-codec = <&codec>;
-+		audio-codec = <&sgtl5000>;
- 		audio-routing =
- 			"MIC_IN", "Mic Jack",
- 			"Mic Jack", "Mic Bias",
+ &iomuxc {
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
++			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO00__I2C2_SCL 0x4001b8b0
++			MX6UL_PAD_GPIO1_IO01__I2C2_SDA 0x4001b8b0
++		>;
++	};
++
+ 	pinctrl_pwm8: pwm8grp {
+ 		fsl,pins = <
+ 			MX6UL_PAD_ENET1_RX_ER__PWM8_OUT   0x110b0
 -- 
 1.9.1
