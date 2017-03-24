@@ -1,38 +1,38 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 01/15] ARM: dts: alpine: fix PCIe node name
-Date: Fri, 24 Mar 2017 18:00:30 +0100
-Message-ID: <CAK8P3a2WOeNrz3J8vO+n+rhwn3N_vdOswZ0NMmYrdNvmkD8obQ@mail.gmail.com>
-References: <20170322020313.24338-1-robh@kernel.org> <20170322080137.st3osq5ckfis6uwz@kwain>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Fri, 24 Mar 2017 13:20:01 -0400
+Message-ID: <32114de2-8ab7-daec-9b36-209cab0ea550@timesys.com>
+References: <1489785040-26477-1-git-send-email-akshay.bhat@timesys.com>
+ <1489785040-26477-2-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170322080137.st3osq5ckfis6uwz@kwain>
+In-Reply-To: <1489785040-26477-2-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tsahee Zidenberg <tsahee-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
+To: wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 22, 2017 at 9:01 AM, Antoine Tenart
-<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Tue, Mar 21, 2017 at 09:02:59PM -0500, Rob Herring wrote:
->> PCIe bridges should have a node name of 'pcie'.
->>
->> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Acked-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> This can go through arm-soc directly. If not I'll take it.
-> Thanks!
+Hi Marc,
 
-I have a mild preference for this kind of patch to get picked up by
-platform maintainers.
+On 03/17/2017 05:10 PM, Akshay Bhat wrote:
+> This patch adds support for the Holt HI-311x CAN controller. The HI311x
+> CAN controller is capable of transmitting and receiving standard data
+> frames, extended data frames and remote frames. The HI311x interfaces
+> with the host over SPI.
+> 
+> Datasheet: www.holtic.com/documents/371-hi-3110_v-rev-jpdf.do
+> 
+> Signed-off-by: Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> 
 
-Rob, once replies stop coming in, please send a pull request for anything
-that did not get picked up by anyone else.
+If there are no further review comments can this series be applied to
+can-next or does it need to wait for the next kernel release cycle (4.13)?
 
-     Arnd
+Thanks,
+Akshay
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
