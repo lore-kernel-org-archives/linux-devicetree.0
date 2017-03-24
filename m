@@ -1,77 +1,100 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] extcon: usb-gpio: Add level trigger support
-Date: Fri, 24 Mar 2017 19:56:12 +0800
-Message-ID: <CAMz4kuJrUtC6HL0Lbuqsoa2cMB9-2zuHMii1v7Y_-jCyKiL8qQ@mail.gmail.com>
-References: <CGME20170320080127epcas1p120786738dd2e3cd371bf6410d5f2b3a6@epcas1p1.samsung.com>
- <0db99bd509c94ea8a80f633022d15235a99391a9.1489995966.git.baolin.wang@linaro.org>
- <58D4FE1D.9040404@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 4/5] firmware: Add coreboot device tree binding
+ documentation
+Date: Fri, 24 Mar 2017 12:21:46 +0000
+Message-ID: <20170324122146.GE22771@leverpostej>
+References: <1490303069-13230-1-git-send-email-thierry.escande@collabora.com>
+ <1490303069-13230-5-git-send-email-thierry.escande@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58D4FE1D.9040404-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1490303069-13230-5-git-send-email-thierry.escande@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Escande <thierry.escande@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Mar 23, 2017 at 10:04:28PM +0100, Thierry Escande wrote:
+> From: Julius Werner <jwerner@chromium.org>
+> 
+> This patch adds documentation describing a device tree binding for the
+> coreboot firmware. It is meant to be dynamically added during boot and
+> contains address definitions for the coreboot table (a list of
+> variable-sized descriptors providing information about various compile-
+> and run-time generated firmware parameters) and the CBMEM area (the
+> structure containing most run-time resident memory regions set up by
+> coreboot).
+> 
+> These definitions allow kernel drivers to easily access data contained
+> in and pointed to by these regions (such as coreboot's in-memory log).
+> (An example implementation can be seen in the following patch)
+> 
+> Signed-off-by: Julius Werner <jwerner@chromium.org>
+> Signed-off-by: Thierry Escande <thierry.escande@collabora.com>
+> ---
+>  .../devicetree/bindings/firmware/coreboot.txt      | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/coreboot.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/coreboot.txt b/Documentation/devicetree/bindings/firmware/coreboot.txt
+> new file mode 100644
+> index 0000000..4c95570
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/coreboot.txt
+> @@ -0,0 +1,33 @@
+> +COREBOOT firmware information
+> +
+> +The device tree node to communicate the location of coreboot's memory-resident
+> +bookkeeping structures to the kernel. Since coreboot itself cannot boot a
+> +device-tree-based kernel (yet), this node needs to be inserted by a
+> +second-stage bootloader (a coreboot "payload").
+> +
+> +Required properties:
+> + - compatible: Should be "coreboot"
 
-On 24 March 2017 at 19:08, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi,
->
-> On 2017=EB=85=84 03=EC=9B=94 20=EC=9D=BC 16:59, Baolin Wang wrote:
->> Now extcon-usb-gpio only supports for GPIO egdge trigger, but VBUS/ID
->> gpios' detection can be triggered by the level trigger on some platforms=
-.
->> Thus intoduce one property 'extcon-gpio,level-trigger' to identify this
->> situation.
->>
->> Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |    3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.tx=
-t b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> index dfc14f7..191504b 100644
->> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> @@ -9,6 +9,9 @@ Required properties:
->>  Either one of id-gpio or vbus-gpio must be present. Both can be present=
- as well.
->>  - id-gpio: gpio for USB ID pin. See gpio binding.
->>  - vbus-gpio: gpio for USB VBUS pin.
->> +- extcon-gpio,level-trigger: Boolean, set this gpio's interrupt flag to
->
-> It is 'extcon-usb-gpio' instead of 'extcon-gpio'.
+Devicetree bindings should be in vendor,prefix format. This doesn't
+represent every aspect of coreboot, so it needs a more descriptive
+string.
 
-Sure.
+> + - reg: Address and length of the following two memory regions, in order:
+> +	1.) The coreboot table. This is a list of variable-sized descriptors
+> +	that contain various compile- and run-time generated firmware
+> +	parameters. It is identified by the magic string "LBIO" in its first
+> +	four bytes.
+> +	See coreboot's src/commonlib/include/commonlib/coreboot_tables.h for
+> +	details.
 
->
->> +level trigger. If not specified defaults to false, gpio's interrupt fla=
-g
->> +defaults to edge trigger.
->
-> I understand why you need the new flag.
-> But, I'm not sure it is right way to add the new flag for interrupt flag.
->
-> IMHO, I think that we need to find the more proper way to get the interru=
-pt flag
-> or maybe, we may need to implement the new helper api to get the interrup=
-t
-> flag for gpio pin when we use the gpio as the interrupt source,
+Given this is a memory region, it should be described under the
+reserved-memory node.
 
-Yes, I agree with you. We already have helper functions to get
-interrupt flag from device tree, but we can not get the irq number of
-GPIO to configure in device tree, then I introduce one new flag to
-indicate the trigger type. But I like to change the patch if there are
-any good suggestion. Thanks.
+> +	2.) The CBMEM area. This is a downward-growing memory region used by
+> +	coreboot to dynamically allocate data structures that remain resident.
+> +	It may or may not include the coreboot table as one of its members. It
+> +	is identified by a root node descriptor with the magic number
+> +	0xc0389481 that resides in the topmost 8 bytes of the area.
+> +	See coreboot's src/include/imd.h for details.
 
---=20
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I beleive likewise here.
+
+Thanks,
+Mark.
+
+> +
+> +Example:
+> +	firmware {
+> +		ranges;
+> +
+> +		coreboot {
+> +			compatible = "coreboot";
+> +			reg = <0xfdfea000 0x264>,
+> +			      <0xfdfea000 0x16000>;
+> +		}
+> +	};
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
