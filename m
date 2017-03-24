@@ -1,123 +1,80 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for GLINK RPM
-Date: Fri, 24 Mar 2017 11:07:31 -0500
-Message-ID: <20170324160731.caxbdgpqm7u35po6@rob-hp-laptop>
-References: <20170320210956.29641-1-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5] hwmon: ads7828 optional parameters from the device
+ tree
+Date: Fri, 24 Mar 2017 11:12:58 -0500
+Message-ID: <20170324161258.m5wech6u6g7ezx7d@rob-hp-laptop>
+References: <20170321032434.9268-1-kernel.development@povil.us>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170320210956.29641-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+In-Reply-To: <20170321032434.9268-1-kernel.development@povil.us>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Sam Povilus <kernel.development@povil.us>
+Cc: wsa@the-dreams.de, jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 02:09:55PM -0700, Bjorn Andersson wrote:
-> Add device tree binding documentation for the Qualcomm GLINK RPM, used
-> for communication with the Resource Power Management subsystem in
-> various Qualcomm SoCs.
+On Mon, Mar 20, 2017 at 09:24:34PM -0600, Sam Povilus wrote:
+> Adding the ability for the ads7828 and ads7830 to use the device tree to
+> get their optional parameters, instead of using platform devices. This
+> allows people using custom boards to also use the ads7828 in a non-default
+> manner.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> v2: conforming to coding style
+> v3: changing from "_" to "-" for device tree entries
+> v4: using regulator subsystem for voltage source, renaming differential
+>     input property
+> v5: checking for invalid vref values sooner and returning error if they are
+>     bad, not warning user.
+> 
+> Signed-off-by: Sam Povilus <kernel.development@povil.us>
 > ---
+>  .../devicetree/bindings/hwmon/ads7828.txt          | 26 ++++++++++++++++++++++
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |  2 --
+>  drivers/hwmon/ads7828.c                            | 21 +++++++++++++++++
+>  3 files changed, 47 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
 > 
-> Changes since v1:
-> - None
-> 
->  .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
 > new file mode 100644
-> index 000000000000..da92c4f787f3
+> index 000000000000..5a0c4a7c6144
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> @@ -0,0 +1,73 @@
-> +Qualcomm RPM GLINK binding
+> +++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
+> @@ -0,0 +1,26 @@
+> +ads7828 properties
 > +
-> +This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
-> +communication with the Resource Power Management system on various Qualcomm
-> +platforms.
+> +Required properties:
+> +- compatible: Should be one of
+> +	       ti,ads7828
+> +	       ti,ads7830
+> +- reg: I2C address
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,glink-rpm"
+> +Optional properties:
+> +
+> +- ti,differential-input
+> +  Set to use the device in differential mode.
+> +- vref
 
-SoC specific compatibles please.
+What does this point to?
 
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: should specify the IRQ used by the remote processor to
-> +		    signal this processor about communication related events
-> +
-> +- qcom,rpm-msg-ram:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: handle to RPM message memory resource
-> +
-> +- qcom,ipc:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: three entries specifying the outgoing ipc bit used for
-> +		    signaling the remote processor:
-> +		    - phandle to a syscon node representing the apcs registers
-> +		    - u32 representing offset to the register within the syscon
-> +		    - u32 representing the ipc bit within the register
-> +
-> += GLINK DEVICES
-> +Each subnode of the GLINK node represent function tied to a virtual
-> +communication channel. The name of the nodes are not important. The properties
-> +of these nodes are defined by the individual bindings for the specific function
-> +- but must contain the following property:
-> +
-> +- qcom,glink-channels:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: a list of channels tied to this function, used for matching
-> +		    the function to a set of virtual channels
-> +
-> += EXAMPLE
-> +The following example represents the GLINK RPM node on a MSM8996 device, with
-> +the function for the "rpm_request" channel defined, which is used for
-> +regualtors and root clocks.
-> +
-> +	apcs: syscon@f9011000 {
-> +		compatible = "syscon";
+Should be vref-supply?
 
-syscon alone is not valid.
+> +  The external reference on the device is set to this regulators output. If it
+> +  does not exists the internal reference will be used and output by the ads78xx
+> +  on the "external vref" pin.
+> +
+> +  Example ADS7828 node:
+> +
+> +  ads7828: ads@48 {
 
-> +		reg = <0xf9011000 0x1000>;
-> +	};
-> +
-> +	rpm_msg_ram: memory@68000 {
-> +		compatible = "qcom,rpm-msg-ram";
+adc@...
 
-Is this more than just mmio-sram?
+> +  	   comatible = "ti,ads7828";
+> +	   reg = <0x48>;
+> +	   vref = <&vref>;
 
-Or with a fixed use could be part of another node?
+Add a vref node to the example.
 
-> +		reg = <0x68000 0x6000>;
-> +	};
+> +	   ti,differential-input;
+> +  };
 > +
-> +        rpm-glink {
-> +		compatible = "qcom,glink-rpm";
-> +
-> +		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-> +
-> +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-> +		qcom,ipc = <&apcs 0x10 0>;
-> +
-> +		rpm-requests {
-> +			compatible = "qcom,rpm-msm8996";
-> +			qcom,glink-channels = "rpm_requests";
-> +
-> +			...
-> +		};
-> +	};
-> -- 
-> 2.12.0
-> 
