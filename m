@@ -1,104 +1,106 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 10/15] ARM: dts: imx6dl-icore-rqs: Add sgtl5000 codec node
-Date: Fri, 24 Mar 2017 21:48:45 +0530
-Message-ID: <1490372330-5611-11-git-send-email-jagan@openedev.com>
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH v2 07/15] ARM: dts: imx6ul-isiot: Add Sound card with codec
+ node
+Date: Fri, 24 Mar 2017 21:48:42 +0530
+Message-ID: <1490372330-5611-8-git-send-email-jagan@openedev.com>
 References: <1490372330-5611-1-git-send-email-jagan@openedev.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490372330-5611-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490372330-5611-1-git-send-email-jagan@openedev.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-- Moved sound card node on imx6qdl-icore-rqs.dtsi
-- Added codec node in imx6dl-icore-rqs from imx6q-icore-rqs
+Add support for Sound card and related codec(via i2c1) nodes
+on Engicam Is.IoT MX6UL variant module boards.
 
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- Newly added patch
+- Use proper [label:] node-name[@unit-address] for codec
+- Remove incorrect codec property 'wlf,shared-lrclk'
+- Remove 'gpr' from sound card node
 
- arch/arm/boot/dts/imx6dl-icore-rqs.dts   | 11 +++++++++++
- arch/arm/boot/dts/imx6q-icore-rqs.dts    | 13 -------------
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 13 +++++++++++++
- 3 files changed, 24 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 ++++++++++
+ arch/arm/boot/dts/imx6ul-isiot.dtsi        | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore-rqs.dts b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-index cf42c2f..5b4c14c 100644
---- a/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-@@ -49,3 +49,14 @@
- 	model = "Engicam i.CoreM6 DualLite/Solo RQS Starter Kit";
- 	compatible = "engicam,imx6-icore-rqs", "fsl,imx6dl";
- };
-+
-+&i2c3 {
-+	codec: sgtl5000@0a {
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+index 827f0dc..15dcf5f 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+@@ -41,6 +41,16 @@
+  */
+ 
+ &i2c1 {
++	sgtl5000: codec@a {
 +		compatible = "fsl,sgtl5000";
 +		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
++		clocks = <&clks IMX6UL_CLK_OSC>;
++		clock-names = "mclk";
++		VDDA-supply = <&reg_3p3v>;
 +		VDDIO-supply = <&reg_3p3v>;
 +		VDDD-supply = <&reg_1p8v>;
 +	};
-+};
-diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-index e451b4c..441a28e5 100644
---- a/arch/arm/boot/dts/imx6q-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-@@ -47,19 +47,6 @@
- / {
- 	model = "Engicam i.CoreM6 Quad/Dual RQS Starter Kit";
- 	compatible = "engicam,imx6-icore-rqs", "fsl,imx6q";
--
--	sound {
--		compatible = "fsl,imx-audio-sgtl5000";
--		model = "imx-audio-sgtl5000";
--		ssi-controller = <&ssi1>;
--		audio-codec = <&codec>;
--		audio-routing =
--			"MIC_IN", "Mic Jack",
--			"Mic Jack", "Mic Bias",
--			"Headphone Jack", "HP_OUT";
--		mux-int-port = <1>;
--		mux-ext-port = <4>;
--	};
- };
- 
- &i2c3 {
-diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-index 5fab5be..4032d38 100644
---- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -118,6 +118,19 @@
- 		clocks = <&clks IMX6QDL_CLK_LVDS2_GATE>;
- 		clock-names = "refclk";
++
+ 	stmpe811: gpio-expander@44 {
+ 		compatible = "st,stmpe811";
+ 		reg = <0x44>;
+diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+index ea30380..9648de9 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+@@ -69,6 +69,35 @@
+ 				    100>;
+ 		default-brightness-level = <100>;
  	};
++
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
 +
 +	sound {
 +		compatible = "fsl,imx-audio-sgtl5000";
-+		model = "imx-audio-sgtl5000";
-+		ssi-controller = <&ssi1>;
-+		audio-codec = <&codec>;
++		model = "imx6ul-isiot-sgtl5000";
++		cpu-dai = <&sai2>;
++		audio-codec = <&sgtl5000>;
 +		audio-routing =
 +			"MIC_IN", "Mic Jack",
 +			"Mic Jack", "Mic Bias",
 +			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <1>;
-+		mux-ext-port = <4>;
 +	};
  };
  
- &clks {
+ &i2c1 {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
