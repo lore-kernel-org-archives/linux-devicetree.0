@@ -1,62 +1,49 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v5.1 11/13] of: Add nop implementation of
- of_get_next_parent()
-Date: Fri, 24 Mar 2017 11:28:15 +0200
-Message-ID: <20170324092814.GS10701@valkosipuli.retiisi.org.uk>
-References: <1489667481-28521-12-git-send-email-sakari.ailus@linux.intel.com>
- <1489752538-23543-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r7s72100: add power-domains to sdhi
+Date: Fri, 24 Mar 2017 10:40:55 +0100
+Message-ID: <20170324094054.GA7422@verge.net.au>
+References: <20170209133803.21539-1-chris.brandt@renesas.com>
+ <CAMuHMdXRD3o7KdaADvPYxzeuEVo44nRVWHfCverPc+9s=0owPA@mail.gmail.com>
+ <20170324070228.GI1319@verge.net.au>
+ <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1489752538-23543-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 02:08:58PM +0200, Sakari Ailus wrote:
-> of_get_next_parent() was only defined if CONFIG_OF was set. Using the
-> function thus requires #ifdef CONFIG_OF ... #endif in all cases. Avoid
-> having to use pre-processor macros around the function by providing a nop
-> implementation of of_get_next_parent().
+On Fri, Mar 24, 2017 at 08:55:44AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> On Fri, Mar 24, 2017 at 8:02 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, Mar 22, 2017 at 02:25:04PM +0100, Geert Uytterhoeven wrote:
+> >> (this time reply-to-all)
+> >>
+> >> On Thu, Feb 9, 2017 at 2:38 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> >> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> >> > Fixes: 66474697923c ("ARM: dts: r7s72100: add sdhi to device tree")
+> >>
+> >> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Thanks, I have queued this up for v4.12.
+> >
+> > The fixes tag above indicates this is a fix for v4.10, however, when I
+> > tried to apply it on top of v4.11-rc1 there was a conflict.  So I think a
+> > backport will be required if we want it to be considered for v4.11 and be
+> > considered for and in turn v4.10-stable.
+> 
+> That's because of commit 3d2abda02ad2d06d
+> ("ARM: dts: r7s72100: update sdhi clock bindings")
+> 
+> > This makes things a bit messy with regards to conflicts between v4.11 and
+> > v4.12 and I'm inclined to pass on the backport.
+> 
+> If you ever want to backport, you'll have two backport changes too the
+> SDHI driver, too.
 
-As a result of the changes in v5.1 in the patch 12/13 ("device property: Add
-fwnode_get_next_parent()") of this set, this patch is no longer needed. If
-there are no objections, I'll drop it from the set.
-
-> ---
-> since v5:
-> 
-> - Improved commit message.
-> 
->  include/linux/of.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index e5d4225f..cc212a0 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -586,6 +586,12 @@ static inline struct device_node *of_get_parent(const struct device_node *node)
->  	return NULL;
->  }
->  
-> +static inline struct device_node *of_get_next_parent(
-> +	const struct device_node *node)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline struct device_node *of_get_next_child(
->  	const struct device_node *node, struct device_node *prev)
->  {
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is that the case if only this patch (and not 3d2abda02ad2d06d) is backported?
