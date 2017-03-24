@@ -1,147 +1,48 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH V7 5/7] ACPI: Delay the enumeration on the devices whose
- dependency has not met
-Date: Fri, 24 Mar 2017 00:23:55 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E204B678C@FRAEML521-MBX.china.huawei.com>
-References: <1489372963-9000-1-git-send-email-yuanzhichang@hisilicon.com>
- <1489372963-9000-6-git-send-email-yuanzhichang@hisilicon.com>
- <4600523.rWNiWKrYZC@aspire.rjw.lan> <58C9F6C6.4090700@hisilicon.com>
- <CAK8P3a2QZ_j9RQ0U=4MoAAcRcZyu0L5AiYM22QZkiRxh7Ca-iA@mail.gmail.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E20492A4C@FRAEML521-MBX.china.huawei.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v4 1/2] dt-bindings: Add INNOLUX P079ZCA panel bindings
+Date: Fri, 24 Mar 2017 08:51:31 +0800
+Message-ID: <1490316692-20506-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E20492A4C@FRAEML521-MBX.china.huawei.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>, Arnd Bergmann <arnd@arndb.de>, Yuanzhichang <yuanzhichang@hisilicon.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rafael Wysocki <rafael@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, Frank Rowand <frowand.list@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Corey Minyard <minyard@acm.org>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "zhichang.yuan02@gmail.com" <zhichang.yuan02@gmail.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "kantyzc@163.com" <kantyzc@163.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-pci <linux-pci@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>Linux
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-rockchip@lists.infradead.org, thierry.reding@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd
-
-> -----Original Message-----
-> From: linuxarm-bounces@huawei.com [mailto:linuxarm-bounces@huawei.com]
-> On Behalf Of Gabriele Paoloni
-> Sent: 16 March 2017 16:14
-> To: Arnd Bergmann; Yuanzhichang
-> Cc: Mark Rutland; Benjamin Herrenschmidt; Rafael Wysocki; linux-pci;
-> Will Deacon; Linuxarm; Frank Rowand; Lorenzo Pieralisi; ACPI Devel
-> Maling List; linux-serial@vger.kernel.org; Catalin Marinas;
-> devicetree@vger.kernel.org; Corey Minyard; liviu.dudau@arm.com; Rob
-> Herring; Bjorn Helgaas; kantyzc@163.com; zhichang.yuan02@gmail.com;
-> Linux ARM; Rafael J. Wysocki; Linux Kernel Mailing List; Zou Rongrong
-> Subject: RE: [PATCH V7 5/7] ACPI: Delay the enumeration on the devices
-> whose dependency has not met
-> 
-> Hi Arnd
-> 
-> > -----Original Message-----
-> > From: arndbergmann@gmail.com [mailto:arndbergmann@gmail.com] On
-> Behalf
-> > Of Arnd Bergmann
-> > Sent: 16 March 2017 10:13
-> > To: Yuanzhichang
-> > Cc: Rafael J. Wysocki; Catalin Marinas; Will Deacon; Rob Herring;
-> Frank
-> > Rowand; Bjorn Helgaas; Rafael Wysocki; Mark Rutland; Linux ARM; ACPI
-> > Devel Maling List; Lorenzo Pieralisi; Benjamin Herrenschmidt; Linux
-> > Kernel Mailing List; Linuxarm; devicetree@vger.kernel.org; linux-pci;
-> > linux-serial@vger.kernel.org; Corey Minyard; liviu.dudau@arm.com; Zou
-> > Rongrong; John Garry; Gabriele Paoloni; zhichang.yuan02@gmail.com;
-> > kantyzc@163.com; xuwei (O)
-> > Subject: Re: [PATCH V7 5/7] ACPI: Delay the enumeration on the
-> devices
-> > whose dependency has not met
-> >
-> > On Thu, Mar 16, 2017 at 3:21 AM, zhichang.yuan
-> > <yuanzhichang@hisilicon.com> wrote:
-> > > Hi, Rafael,
-> > >
-> > > Thanks for your review!
-> > >
-> > > On 2017/3/14 5:24, Rafael J. Wysocki wrote:
-> > >> On Monday, March 13, 2017 10:42:41 AM zhichang.yuan wrote:
-> > >>> In commit 40e7fcb1929(ACPI: Add _DEP support to fix battery issue
-> > on Asus
-> > >>> T100TA), the '_DEP' was supported to solve the dependency of Asus
-> > battery. But
-> > >>> this patch is specific to Asus battery device.
-> > >>> In the real world, there are other devices which need the
-> > dependency to play the
-> > >>> role on the enumeration order. For example, all the Hip06 LPC
-> > >>> periperals(IPMI-BT, uart, etc) must be scanned after the LPC host
-> > driver
-> > >>> finished the probing. So, it makes sense to add a checking
-> whether
-> > the ACPI
-> > >>> device meet all the dependencies during its enumeration slot, if
-> > not, the
-> > >>> enumeration will be delayed till all dependency master finish
-> their
-> > work.
-> > >>>
-> > >>> This patch adds the dependency checking in ACPI enumeration, also
-> > the
-> > >>> corresponding handling to retrigger the Hip06 LPC peripherals'
-> > scanning.
-> > >>
-> > >> AFAICS, _DEP is generally abused in the wild and cannot be made
-> > generic.  Sorry.
-> > >>
-> > >
-> > > From the ACPI specification, _DEP is for operation region accesses.
-> > > You are right...
-> > >
-> > > How about we add a ACPI handler for our LPC bus?? Just like amba.
-> > > In this way, we also can solve the issue about LPC enumeration
-> order.
-> >
-> > As far as I can tell, PCI and LPC have exactly the same requirement
-> > here,
-> > so whatever you end up doing for one should be used for the other as
-> > well.
-> 
-> Well as you know PCI has got his own handler, identified by his own
-> namespace id "PNP0A03".
-> Now when you say "you end up doing for one should be used for the
-> other"
-> are you saying that we should introduce a new class of devices?
-> i.e. should we have an ACPI namespace identifier for non-PCI IO Host
-> Controllers?
-> 
-> Otherwise, if my understanding is correct, having a specific new ACPI
-> handler for HiSilicon LPC would mean to adding another function_init()
-> in the list of acpi handlers inits in acpi_scan_init().
-> 
-> But then every vendor would declare his own one...is this really
-> correct?
-
-Do you have any feedback on this?
-
-Otherwise I think that maybe we could consider moving back to the
-arch_initcall approach as proposed in V6:
-https://lkml.org/lkml/2017/1/24/28
-
-Thanks
-Gab
-
-> 
-> Many Thanks
-> Gab
-> 
-> >
-> >       Arnd
-> _______________________________________________
-> linuxarm mailing list
-> linuxarm@huawei.com
-> http://rnd-openeuler.huawei.com/mailman/listinfo/linuxarm
+VGhlIElubm9sdXggUDA3OVpDQSBpcyBhIDcuODUiIHBhbmVsIHdpdGggYSA3NjhYMTAyNCByZXNv
+bHV0aW9uIGFuZApjb25uZWN0ZWQgdG8gRFNJIHVzaW5nIGZvdXIgbGFuZXMuCgpTaWduZWQtb2Zm
+LWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgpSZXZpZXdlZC1ieTogQnJpYW4g
+Tm9ycmlzIDxicmlhbm5vcnJpc0BjaHJvbWl1bS5vcmc+Ci0tLQoKQ2hhbmdlcyBpbiB2NDogTm9u
+ZQpDaGFuZ2VzIGluIHYzOiBOb25lCkNoYW5nZXMgaW4gdjI6IE5vbmUKCiAuLi4vYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwNzl6Y2EudHh0ICAgICB8IDIzICsrKysrKysrKysrKysr
+KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5u
+b2x1eCxwMDc5emNhLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgscDA3OXpjYS50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwNzl6Y2EudHh0Cm5l
+dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjVjNzBhODMKLS0tIC9kZXYvbnVsbAor
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
+bHV4LHAwNzl6Y2EudHh0CkBAIC0wLDAgKzEsMjMgQEAKK0lubm9sdXggUDA3OVpDQSA3Ljg1IiA3
+Njh4MTAyNCBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGli
+bGU6IHNob3VsZCBiZSAiaW5ub2x1eCxwMDc5emNhIgorLSByZWc6IERTSSB2aXJ0dWFsIGNoYW5u
+ZWwgb2YgdGhlIHBlcmlwaGVyYWwKKy0gcG93ZXItc3VwcGx5OiBwaGFuZGxlIG9mIHRoZSByZWd1
+bGF0b3IgdGhhdCBwcm92aWRlcyB0aGUgc3VwcGx5IHZvbHRhZ2UKKy0gZW5hYmxlLWdwaW9zOiBw
+YW5lbCBlbmFibGUgZ3BpbworCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBiYWNrbGlnaHQ6IHBo
+YW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCisKK0V4
+YW1wbGU6CisKKwkmbWlwaV9kc2kgeworCQlwYW5lbCB7CisJCQljb21wYXRpYmxlID0gImlubm9s
+dXgscDA3OXpjYSI7CisJCQlyZWcgPSA8MD47CisJCQlwb3dlci1zdXBwbHkgPSA8Li4uPjsKKwkJ
+CWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKKwkJCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbzEgMTMg
+R1BJT19BQ1RJVkVfSElHSD47CisJCQlzdGF0dXMgPSAib2theSI7CisJCX07CisJfTsKLS0gCjIu
+Ni4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
