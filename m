@@ -1,81 +1,72 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH RFC 1/3] thermal: allow hwmon devices to be created for
- of-thermal zones
-Date: Fri, 24 Mar 2017 13:23:13 +0000
-Message-ID: <20170324132312.GF7909@n2100.armlinux.org.uk>
-References: <E1cn8qC-0002uz-PB@rmk-PC.armlinux.org.uk>
- <20170320171552.o2ye73c2okcvhluq@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170320171552.o2ye73c2okcvhluq@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, linux-pm@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH/RFC v2 2/2] arm64: dts: r8a7795: salvator-x: Add support for R-Car H3 ES2.0
+Date: Fri, 24 Mar 2017 14:37:45 +0100
+Message-ID: <1490362665-4422-3-git-send-email-geert+renesas@glider.be>
+References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490362665-4422-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Wolfram Sang <wsa-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 12:15:52PM -0500, Rob Herring wrote:
-> On Sun, Mar 12, 2017 at 07:07:40PM +0000, Russell King wrote:
-> > Allow hwmon devices to be optionally created for of-thermal zones,
-> > rather than permanently denying them "in case" there is a hwmon
-> > driver duplicating the thermal driver.
-> > 
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > ---
-> > Without this, "sensors" is unable to report the temperature of the
-> > Dove SoC when it supports thermal zones.
-> > 
-> >  Documentation/devicetree/bindings/thermal/thermal.txt | 3 +++
-> >  arch/arm/boot/dts/dove.dtsi                           | 1 +
-> >  drivers/thermal/of-thermal.c                          | 3 ++-
-> >  3 files changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> > index 88b6ea1ad290..1478735fff85 100644
-> > --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> > +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> > @@ -175,6 +175,9 @@ containing trip nodes and one sub-node containing all the zone cooling maps.
-> >  			2000mW, while on a 10'' tablet is around
-> >  			4500mW.
-> >  
-> > +- linux,hwmon:		Allow Linux to create hwmon devices for the thermal
-> > +  Type: bool		zone.
-> > +
-> >  Note: The delay properties are bound to the maximum dT/dt (temperature
-> >  derivative over time) in two situations for a thermal zone:
-> >  (i)  - when passive cooling is activated (polling-delay-passive); and
-> > diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-> > index 40fb98687230..00f5971cd039 100644
-> > --- a/arch/arm/boot/dts/dove.dtsi
-> > +++ b/arch/arm/boot/dts/dove.dtsi
-> > @@ -804,6 +804,7 @@
-> >  
-> >  	thermal-zones {
-> >  		soc-thermal {
-> > +			linux,hwmon;
-> 
-> I'd prefer to see a black or white list of sensor compatibles here. Then 
-> the dtb doesn't need to change if things move between hwmon and thermal 
-> zones.
+Split off support for Salvator-X boards with the ES1.x revision of the
+R-Car H3 SoC into a separate file.  The main r8a7795-salvator-x.dts file
+now corresponds to Salvator-X with R-Car H3 ES2.0 or later.
 
-I'm not sure what you mean, and I can't see how that would be coded up.
-The thermal layer doesn't give the option of individually selecting
-which sensors have hwmon stuff created - it seems to be all or nothing.
-I suspect what you're asking would require something of a rewrite of
-the thermal code.  The sensors are registered completely independently
-of parsing the thermal zone data.
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+v2:
+  - Use a separate file for ES1.x instead of for ES2.0, so
+    r8a7795-salvator-x.dts always corresponds to the board with the
+    latest SoC revision,
+  - Add a dash between SoC part number and revision, for compatibility
+    with the BSP,
+  - Enhance the hardware description from basic support to everything
+    already supported on ES1.x.
+---
+ arch/arm64/boot/dts/renesas/Makefile                                  | 1 +
+ .../renesas/{r8a7795-salvator-x.dts => r8a7795-es1-salvator-x.dts}    | 0
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts                    | 4 ++--
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+ copy arch/arm64/boot/dts/renesas/{r8a7795-salvator-x.dts => r8a7795-es1-salvator-x.dts} (100%)
 
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 1618e0a3c81d48bd..b6c723d8f6875f2d 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,4 +1,5 @@
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
++dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-es1-salvator-x.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb r8a7796-m3ulcb.dtb
+ 
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dts
+similarity index 100%
+copy from arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+copy to arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dts
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+index 7758b479dd98d2e9..baf5d34653d27e28 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+@@ -32,11 +32,11 @@
+  */
+ 
+ /dts-v1/;
+-#include "r8a7795-es1.dtsi"
++#include "r8a7795.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+-	model = "Renesas Salvator-X board based on r8a7795 ES1.x";
++	model = "Renesas Salvator-X board based on r8a7795 ES2.0+";
+ 	compatible = "renesas,salvator-x", "renesas,r8a7795";
+ 
+ 	aliases {
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
