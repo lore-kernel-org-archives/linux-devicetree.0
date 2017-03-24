@@ -1,49 +1,138 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt-bindings: rng: clocks property on omap_rng not
- always mandatory
-Date: Fri, 24 Mar 2017 09:19:05 -0500
-Message-ID: <20170324141905.scn7vrzrcrmzplk5@rob-hp-laptop>
-References: <1489755519-32664-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20170324135200.j7m3zzgphbetqn7p@rob-hp-laptop>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
+ Mediatek MT7530 switch
+Date: Fri, 24 Mar 2017 15:19:53 +0100
+Message-ID: <20170324141953.GH28518@lunn.ch>
+References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
+ <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170324135200.j7m3zzgphbetqn7p@rob-hp-laptop>
+In-Reply-To: <1490088910-19405-6-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 08:52:00AM -0500, Rob Herring wrote:
-> On Fri, Mar 17, 2017 at 01:58:39PM +0100, Thomas Petazzoni wrote:
-> > Commit 52060836f79 ("dt-bindings: omap-rng: Document SafeXcel IP-76
-> > device variant") update the omap_rng Device Tree binding to add support
-> > for the IP-76 variation of the IP. As part of this change, a "clocks"
-> > property was added, but is indicated as "Required", without indicated
-> > it's actually only required for some compatible strings.
-> > 
-> > This commit fixes that, by explicitly stating that the clocks property
-> > is only required with the inside-secure,safexcel-eip76 compatible
-> > string.
-> > 
-> > Fixes: 52060836f79 ("dt-bindings: omap-rng: Document SafeXcel IP-76 device variant")
-> > Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> > Changes since v1:
-> >  - Instead of indicating the property as optional, indicate it as
-> >    mandatory for the inside-secure,safexcel-eip76 compatible string, as
-> >    suggested by Rob Herring.
-> > ---
-> >  Documentation/devicetree/bindings/rng/omap_rng.txt | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Tue, Mar 21, 2017 at 05:35:10PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
 
-And applied.
+Hi Sean
 
-Rob
+> +	/* Lower Tx Driving */
+> +	for (i = 0 ; i < 6 ; i++)
+
+Could MT7530_CPU_PORT be used here? 
+
+> +		mt7530_write(priv, MT7530_TRGMII_TD_ODT(i),
+> +			     TD_DM_DRVP(8) | TD_DM_DRVN(8));
+> +
+> +	/* Setup MT7530 core clock */
+> +	if (!trgint) {
+> +		/* Disable MT7530 core clock */
+> +		core_clear(priv, CORE_TRGMII_GSW_CLK_CG, REG_GSWCK_EN);
+> +
+> +		/* Disable MT7530 PLL, since phy_device has not yet been
+> +		 * created when this function is called. So we provide
+> +		 * core_write_mmd_indirect to complete this function
+> +		 */
+> +		core_write_mmd_indirect(priv,
+> +					CORE_GSWPLL_GRP1,
+> +					MDIO_MMD_VEND2,
+> +					0);
+> +
+> +		/* Setup MT7530 core clock into 500Mhz */
+> +		core_write(priv, CORE_GSWPLL_GRP2,
+> +			   RG_GSWPLL_POSDIV_500M(1) |
+> +			   RG_GSWPLL_FBKDIV_500M(25));
+> +
+> +		/* Enable MT7530 PLL */
+> +		core_write(priv, CORE_GSWPLL_GRP1,
+> +			   RG_GSWPLL_EN_PRE |
+> +			   RG_GSWPLL_POSDIV_200M(2) |
+> +			   RG_GSWPLL_FBKDIV_200M(32));
+> +
+> +		/* Enable MT7530 core clock */
+> +		core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_GSWCK_EN);
+> +	}
+> +
+> +	/* Setup the MT7530 TRGMII Tx Clock */
+> +	core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_GSWCK_EN);
+> +	core_write(priv, CORE_PLL_GROUP5, RG_LCDDS_PCW_NCPO1(ncpo1));
+> +	core_write(priv, CORE_PLL_GROUP6, RG_LCDDS_PCW_NCPO0(0));
+> +	core_write(priv, CORE_PLL_GROUP10, RG_LCDDS_SSC_DELTA(ssc_delta));
+> +	core_write(priv, CORE_PLL_GROUP11, RG_LCDDS_SSC_DELTA1(ssc_delta));
+> +	core_write(priv, CORE_PLL_GROUP4,
+> +		   RG_SYSPLL_DDSFBK_EN | RG_SYSPLL_BIAS_EN |
+> +		   RG_SYSPLL_BIAS_LPF_EN);
+> +	core_write(priv, CORE_PLL_GROUP2,
+> +		   RG_SYSPLL_EN_NORMAL | RG_SYSPLL_VODEN |
+> +		   RG_SYSPLL_POSDIV(1));
+> +	core_write(priv, CORE_PLL_GROUP7,
+> +		   RG_LCDDS_PCW_NCPO_CHG | RG_LCCDS_C(3) |
+> +		   RG_LCDDS_PWDB | RG_LCDDS_ISO_EN);
+> +	core_set(priv, CORE_TRGMII_GSW_CLK_CG,
+> +		 REG_GSWCK_EN | REG_TRGMIICK_EN);
+> +
+> +	if (!trgint)
+> +		for (i = 0 ; i < 5 ; i++)
+
+Why only 5 here? All other similar loops are to 6.  Replacing 5 with a
+#define might help make this more readable.
+
+> +			mt7530_rmw(priv, MT7530_TRGMII_RD(i),
+> +				   RD_TAP_MASK, RD_TAP(16));
+> +	else
+> +		mt7623_trgmii_set(priv, GSW_INTF_MODE, INTF_MODE_TRGMII);
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +mt7623_pad_clk_setup(struct dsa_switch *ds)
+> +{
+> +	struct mt7530_priv *priv = ds->priv;
+> +	int i;
+> +
+> +	for (i = 0 ; i < 6; i++)
+
+MT7530_CPU_PORT?
+
+> +
+> +/* Registers to mac forward conrol for unknown frames */
+
+/conrol/control
+
+> +
+> +/* Registor for port control */
+
+Register
+
+> +/* Regiser for TOP signal control */
+
+Register
+
+> +/* struct mt7530_priv -	This is the main datasructure for holding the state
+
+data structure
+
+> + *			of the driver
+> + * @dev:		The device pointer
+> + * @ds:			The pointer to the dsa core structure
+> + * @bus:		The bus used for the device and built-in PHY
+> + * @ethsys:		The regmap used for enabling the necessary PLL
+> + * @ethernet:		The regmap used for access TRGMII-based registers
+> + * @core_pwr:		The power supplied into the core
+> + * @io_pwr:		The power supplied into the I/O
+> + * @mcm:		Flag for distinguishing if standalone IC or module
+> + *			coupling
+> + * @reset:		The descriptor for GPIO line tied to its reset pin
+> + * @phy_mode:		The xMII for cpu port used
+> + * @ports:		Holding the state amongs ports
+
+among
+
+	Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
