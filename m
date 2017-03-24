@@ -1,7 +1,7 @@
 From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH 7/9] bus: brcmstb_gisb: Add ARM64 support
-Date: Fri, 24 Mar 2017 07:46:30 -0700
-Message-ID: <20170324144632.5896-8-opendmb@gmail.com>
+Subject: [PATCH 8/9] bus: brcmstb_gisb: add ARM64 SError support
+Date: Fri, 24 Mar 2017 07:46:31 -0700
+Message-ID: <20170324144632.5896-9-opendmb@gmail.com>
 References: <20170324144632.5896-1-opendmb@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170324144632.5896-1-opendmb@gmail.com>
@@ -10,84 +10,56 @@ To: catalin.marinas@arm.com
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, vladimir.murzin@arm.com, panand@redhat.com, andre.przywara@arm.com, cmetcalf@mellanox.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, horms+renesas@verge.net.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, opendmb@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+Asynchronous external aborts (e.g. for buffered writes) trigger SError
+aborts on the arm64 architecture.  This commit hooks the SError abort
+handling to check for GISB arbitration errors.
 
-Hook to the ARM64 data abort exception #16: synchronous external
-abort, which is how the GISB errors will be funneled back to the
-ARM64 CPU in case of problems
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/bus/Kconfig        |  2 +-
- drivers/bus/brcmstb_gisb.c | 15 ++++++++++++---
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ drivers/bus/brcmstb_gisb.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 0a52da439abf..d2a5f1184022 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -57,7 +57,7 @@ config ARM_CCN
- 
- config BRCMSTB_GISB_ARB
- 	bool "Broadcom STB GISB bus arbiter"
--	depends on ARM || MIPS
-+	depends on ARM || ARM64 || MIPS
- 	default ARCH_BRCMSTB || BMIPS_GENERIC
- 	help
- 	  Driver for the Broadcom Set Top Box System-on-a-chip internal bus
 diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index c8d2a61d21ed..bf26b4017a2c 100644
+index bf26b4017a2c..52b5d96081eb 100644
 --- a/drivers/bus/brcmstb_gisb.c
 +++ b/drivers/bus/brcmstb_gisb.c
-@@ -30,6 +30,11 @@
- #include <asm/signal.h>
- #endif
- 
-+#ifdef CONFIG_ARM64
-+#include <asm/signal.h>
-+#include <asm/system_misc.h>
-+#endif
-+
- #ifdef CONFIG_MIPS
- #include <asm/traps.h>
- #endif
-@@ -225,7 +230,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
- 	return 0;
- }
- 
--#ifdef CONFIG_ARM
-+#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
- static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
- 				     struct pt_regs *regs)
- {
-@@ -235,7 +240,7 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
- 	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
- 		brcmstb_gisb_arb_decode_addr(gdev, "bus error");
- 
--#if !defined(CONFIG_ARM_LPAE)
-+#if defined(CONFIG_ARM) && !defined(CONFIG_ARM_LPAE)
- 	/*
- 	 * If it was an imprecise abort, then we need to correct the
- 	 * return address to be _after_ the instruction.
-@@ -247,7 +252,7 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+@@ -252,6 +252,28 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
  	/* Always report unhandled exception */
  	return 1;
  }
--#endif
-+#endif /* CONFIG_ARM || CONFIG_ARM64 */
++
++#ifdef CONFIG_ARM64
++static int (*serror_chain)(unsigned long addr, unsigned int esr,
++				struct pt_regs *regs);
++static int do_brahma_b53_serror(unsigned long addr, unsigned int esr,
++				struct pt_regs *regs)
++{
++	struct brcmstb_gisb_arb_device *gdev;
++
++	if (((esr & (3 << 22)) == 0) && ((esr & 3) == 2)) {
++		/* iterate over each GISB arb registered handlers */
++		list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
++			brcmstb_gisb_arb_decode_addr(gdev, "bus error");
++	}
++
++	if (serror_chain)
++		return serror_chain(addr, esr, regs);
++
++	/* Always report unhandled exception */
++	return 1;
++}
++#endif
+ #endif /* CONFIG_ARM || CONFIG_ARM64 */
  
  #ifdef CONFIG_MIPS
- static int brcmstb_bus_error_handler(struct pt_regs *regs, int is_fixup)
-@@ -395,6 +400,10 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
- 			"imprecise external abort");
+@@ -403,6 +425,8 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
+ #ifdef CONFIG_ARM64
+ 	hook_fault_code(16, brcmstb_bus_error_handler, SIGBUS, 0,
+ 			"synchronous external abort");
++	if (list_is_singular(&brcmstb_gisb_arb_device_list))
++		serror_chain = hook_serror_handler(do_brahma_b53_serror);
  #endif
- #endif /* CONFIG_ARM */
-+#ifdef CONFIG_ARM64
-+	hook_fault_code(16, brcmstb_bus_error_handler, SIGBUS, 0,
-+			"synchronous external abort");
-+#endif
  #ifdef CONFIG_MIPS
  	board_be_handler = brcmstb_bus_error_handler;
- #endif
 -- 
 2.12.0
