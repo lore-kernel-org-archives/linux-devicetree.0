@@ -1,87 +1,97 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/7] coresight: bindings for CPU debug module
-Date: Fri, 24 Mar 2017 09:54:31 -0500
-Message-ID: <20170324145431.5bqkpv2h27kmqimu@rob-hp-laptop>
-References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
- <1489762943-25849-2-git-send-email-leo.yan@linaro.org>
- <20170317161335.GB20435@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] doc: Add bindings document for Xilinx LogiCore PR
+ Decoupler
+Date: Fri, 24 Mar 2017 09:59:08 -0500
+Message-ID: <20170324145908.aiijqixf5xcnkksa@rob-hp-laptop>
+References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170317161335.GB20435@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Suzuki.Poulose@arm.com, sudeep.holla@arm.com
+In-Reply-To: <1489781473-30772-1-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 10:13:35AM -0600, Mathieu Poirier wrote:
-> On Fri, Mar 17, 2017 at 11:02:17PM +0800, Leo Yan wrote:
-> > According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
-> > Chapter 'Part H: External debug', the CPU can integrate debug module
-> > and it can support self-hosted debug and external debug. Especially
-> > for supporting self-hosted debug, this means the program can access
-> > the debug module from mmio region; and usually the mmio region is
-> > integrated with coresight.
-> > 
-> > So add document for binding debug component, includes binding to APB
-> > clock; and also need specify the CPU node which the debug module is
-> > dedicated to specific CPU.
-> > 
-> > Suggested-by: Mike Leach <mike.leach@linaro.org>
-> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  .../bindings/arm/coresight-cpu-debug.txt           | 46 ++++++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-> > new file mode 100644
-> > index 0000000..f6855c3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-> > @@ -0,0 +1,46 @@
-> > +* CoreSight CPU Debug Component:
-> > +
-> > +CoreSight cpu debug component are compliant with the ARMv8 architecture
-> > +reference manual (ARM DDI 0487A.k) Chapter 'Part H: External debug'. The
-> > +external debug module is mainly used for two modes: self-hosted debug and
-> > +external debug, and it can be accessed from mmio region from Coresight
-> > +and eventually the debug module connects with CPU for debugging. And the
-> > +debug module provides sample-based profiling extension, which can be used
-> > +to sample CPU program counter, secure state and exception level, etc;
-> > +usually every CPU has one dedicated debug module to be connected.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : should be
-> > +	     * "arm,coresight-cpu-debug"; supplemented with "arm,primecell"
-> > +	       since this driver is using the AMBA bus interface.
+On Fri, Mar 17, 2017 at 01:11:12PM -0700, Moritz Fischer wrote:
+> This adds the binding documentation for the Xilinx LogiCORE PR
+> Decoupler soft core.
 > 
-> This description needs to be refactored - see my comment from an earlier post
-> for more details.
+> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
 > 
-> > +
-> > +- reg : physical base address and length of the register set.
-> > +
-> > +- clocks : the clock associated to this component.
-> > +
-> > +- clock-names : the name of the clock referenced by the code. Since we are
-> > +                using the AMBA framework, the name of the clock providing
-> > +		the interconnect should be "apb_pclk" and the clock is
-> > +		mandatory. The interface between the debug logic and the
-> > +		processor core is clocked by the internal CPU clock, so it
-> > +		is enabled with CPU clock by default.
-> > +
-> > +- cpu : the cpu phandle the debug module is affined to. When omitted
-> > +	the module is considered to belong to CPU0.
-> > +
-> > +Optional properties:
+> Changes from v2:
+> - Added refence to generic fpga-region bindings
+> - Fixed up reg property in example
+> - Added fallback to "xlnx,pr-decoupler" without version
 > 
-> s/properties/property
+> Changes from v1:
+> - Added clock names & clock to example
+> - Merged some of the description from Michal's version
+> 
+> ---
+>  .../bindings/fpga/xilinx-pr-decoupler.txt          | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> new file mode 100644
+> index 0000000..16141bd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> @@ -0,0 +1,35 @@
+> +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
+> +
+> +The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
+> +decouplers / fpga bridges.
+> +The controller can decouple/disable the bridges which prevents signal
+> +changes from passing through the bridge.  The controller can also
+> +couple / enable the bridges which allows traffic to pass through the
+> +bridge normally.
+> +
+> +The Driver supports only MMIO handling. A PR region can have multiple
+> +PR Decouples which can bhe handled independently or chaines via decouple/
 
-I prefer it as-is. Then it doesn't need to be changed if we add 
-properties.
+s/chaines/chains/
 
-Rob
+> +decouple_status signals.
+> +
+> +Required properties:
+> +- compatible		: Should contain "xlnx,pr-decoupler-1.00"
+> +- regs			: base address and size for decoupler module
+> +- clocks		: input clock to IP
+> +- clock-names		: should contain "aclk"
+> +
+> +Optional properties:
+> +- bridge-enable		: 0 if driver should disable bridge at startup
+> +			  1 if driver should enable bridge at startup
+> +			  Default is to leave bridge in current state.
+
+This is common and should move into a common doc. Maybe fpga-region.txt 
+works?
+
+> +
+> +See Documentation/devicetree/bindings/fpga/fpga-region.txt for generic bindings.
+> +
+> +Example:
+> +	fpga-bridge@100000450 {
+> +		compatible = "xlnx,pr-decoupler-1.00",
+> +			     "xlnx-pr-decoupler";
+> +		regs = <0x10000045 0x10>;
+> +		clocks = <&clkc 15>;
+> +		clock-names = "aclk";
+> +		bridge-enable = <0>;
+> +	};
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
