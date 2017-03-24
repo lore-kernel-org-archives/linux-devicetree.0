@@ -1,48 +1,46 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v4 1/2] dt-bindings: Add INNOLUX P079ZCA panel bindings
-Date: Fri, 24 Mar 2017 08:51:31 +0800
-Message-ID: <1490316692-20506-1-git-send-email-zyw@rock-chips.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 05/15] ARM: dts: imx: fix PCI bus dtc warnings
+Date: Fri, 24 Mar 2017 09:28:36 +0800
+Message-ID: <20170324012831.GB30608@dragon>
+References: <20170322020313.24338-1-robh@kernel.org>
+ <20170322020313.24338-5-robh@kernel.org>
+ <20170322081942.GM3443@dragon>
+ <CAL_JsqKmbLP07zKN1SJAoe0xHjzjn80HQDRvqASXvhnUOBgAyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-rockchip@lists.infradead.org, thierry.reding@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKmbLP07zKN1SJAoe0xHjzjn80HQDRvqASXvhnUOBgAyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIElubm9sdXggUDA3OVpDQSBpcyBhIDcuODUiIHBhbmVsIHdpdGggYSA3NjhYMTAyNCByZXNv
-bHV0aW9uIGFuZApjb25uZWN0ZWQgdG8gRFNJIHVzaW5nIGZvdXIgbGFuZXMuCgpTaWduZWQtb2Zm
-LWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgpSZXZpZXdlZC1ieTogQnJpYW4g
-Tm9ycmlzIDxicmlhbm5vcnJpc0BjaHJvbWl1bS5vcmc+Ci0tLQoKQ2hhbmdlcyBpbiB2NDogTm9u
-ZQpDaGFuZ2VzIGluIHYzOiBOb25lCkNoYW5nZXMgaW4gdjI6IE5vbmUKCiAuLi4vYmluZGluZ3Mv
-ZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwNzl6Y2EudHh0ICAgICB8IDIzICsrKysrKysrKysrKysr
-KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5u
-b2x1eCxwMDc5emNhLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgscDA3OXpjYS50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwNzl6Y2EudHh0Cm5l
-dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjVjNzBhODMKLS0tIC9kZXYvbnVsbAor
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
-bHV4LHAwNzl6Y2EudHh0CkBAIC0wLDAgKzEsMjMgQEAKK0lubm9sdXggUDA3OVpDQSA3Ljg1IiA3
-Njh4MTAyNCBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGli
-bGU6IHNob3VsZCBiZSAiaW5ub2x1eCxwMDc5emNhIgorLSByZWc6IERTSSB2aXJ0dWFsIGNoYW5u
-ZWwgb2YgdGhlIHBlcmlwaGVyYWwKKy0gcG93ZXItc3VwcGx5OiBwaGFuZGxlIG9mIHRoZSByZWd1
-bGF0b3IgdGhhdCBwcm92aWRlcyB0aGUgc3VwcGx5IHZvbHRhZ2UKKy0gZW5hYmxlLWdwaW9zOiBw
-YW5lbCBlbmFibGUgZ3BpbworCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBiYWNrbGlnaHQ6IHBo
-YW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCisKK0V4
-YW1wbGU6CisKKwkmbWlwaV9kc2kgeworCQlwYW5lbCB7CisJCQljb21wYXRpYmxlID0gImlubm9s
-dXgscDA3OXpjYSI7CisJCQlyZWcgPSA8MD47CisJCQlwb3dlci1zdXBwbHkgPSA8Li4uPjsKKwkJ
-CWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKKwkJCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbzEgMTMg
-R1BJT19BQ1RJVkVfSElHSD47CisJCQlzdGF0dXMgPSAib2theSI7CisJCX07CisJfTsKLS0gCjIu
-Ni4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
++Tim who is the owner of Gateworks Ventana boards.
+
+On Wed, Mar 22, 2017 at 08:53:34AM -0500, Rob Herring wrote:
+> On Wed, Mar 22, 2017 at 3:19 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, Mar 21, 2017 at 09:03:03PM -0500, Rob Herring wrote:
+> >> dtc recently added PCI bus checks. Fix these warnings.
+> >>
+> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> >
+> > Applied with a couple of changes below.
+> 
+> Thanks. BTW, forget to mention there's still one i.MX warning I did
+> not fix. It's with the "sky2@8" PCI device node. The unit address is
+> completely wrong. The comment says bus #8 which doesn't seem right
+> either. The unit address should be "<device num>[,<function]". There
+> should be a reg property which also has the bus number.
+
+@Tim, these DTC warnings come from Ventana boards.  Can you take care of
+them?
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
