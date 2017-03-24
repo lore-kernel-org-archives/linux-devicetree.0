@@ -1,42 +1,187 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/4 v5] PCI: add driver for Faraday Technology Host Bridge
-Date: Fri, 24 Mar 2017 16:14:43 +0100
-Message-ID: <CACRpkdbkhui0iwJbOeD8uwurdWvOYdPKtRPQhSkg0atpAB174Q@mail.gmail.com>
-References: <20170312222403.2473-1-linus.walleij@linaro.org> <20170324150753.GC25380@bhelgaas-glaptop.roam.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170324150753.GC25380@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, openwrt-devel@openwrt.org, Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Greentime Hu <green.hu@gmail.com>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Subject: [PATCH] ARM: dts: am335x-baltos: add LED support
+Date: Fri, 24 Mar 2017 16:15:03 +0100
+Message-ID: <1490368503-4798-1-git-send-email-yegorslists@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 4:07 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+All three devices provide GPIO based LEDs named power,
+wlan and app.
 
-Thanks!
+Place the same definition in all three DTS files, as
+there are other devices (not currently upstreamed), that
+use am335x-baltos.dtsi but use different GPIOs for these
+LEDs.
 
-> I don't know enough to review the DT patch, but you have Rob's ack
-> already.
->
-> Not sure how you want to merge these; if you want to feed the whole
-> thing via ARM SoC, that's fine with me.  Otherwise, let me know if
-> you'd like me to take anything.
+Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-baltos-ir2110.dts | 32 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/am335x-baltos-ir3220.dts | 32 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/am335x-baltos-ir5221.dts | 34 ++++++++++++++++++++++++++++--
+ 3 files changed, 96 insertions(+), 2 deletions(-)
 
-It'd be perfect if you could merge patches 1+2 into the PCI tree,
-there are no dependencies to the ARM tree.
+diff --git a/arch/arm/boot/dts/am335x-baltos-ir2110.dts b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
+index 501c752..e9b5544 100644
+--- a/arch/arm/boot/dts/am335x-baltos-ir2110.dts
++++ b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
+@@ -17,9 +17,41 @@
+ 
+ / {
+ 	model = "OnRISC Baltos iR 2110";
++
++	leds {
++		pinctrl-names = "default";
++		pinctrl-0 = <&user_leds>;
++
++		compatible = "gpio-leds";
++
++		power {
++			label = "onrisc:red:power";
++			linux,default-trigger = "default-on";
++			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++		wlan {
++			label = "onrisc:blue:wlan";
++			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		app {
++			label = "onrisc:green:app";
++			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
+ };
+ 
+ &am33xx_pinmux {
++	user_leds: pinmux_user_leds {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x908, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_col.gpio3_0 PWR LED */
++			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd3.gpio0_16 WLAN LED */
++			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd2.gpio0_17 APP LED */
++		>;
++	};
++
+ 	uart1_pins: pinmux_uart1_pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_IOPAD(0x980, PIN_INPUT | MUX_MODE0)      /* uart1_rxd */
+diff --git a/arch/arm/boot/dts/am335x-baltos-ir3220.dts b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
+index 19f53b8..0878379 100644
+--- a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
++++ b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
+@@ -17,9 +17,41 @@
+ 
+ / {
+ 	model = "OnRISC Baltos iR 3220";
++
++	leds {
++		pinctrl-names = "default";
++		pinctrl-0 = <&user_leds>;
++
++		compatible = "gpio-leds";
++
++		power {
++			label = "onrisc:red:power";
++			linux,default-trigger = "default-on";
++			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++		wlan {
++			label = "onrisc:blue:wlan";
++			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		app {
++			label = "onrisc:green:app";
++			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
+ };
+ 
+ &am33xx_pinmux {
++	user_leds: pinmux_user_leds {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x908, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_col.gpio3_0 PWR LED */
++			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd3.gpio0_16 WLAN LED */
++			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd2.gpio0_17 APP LED */
++		>;
++	};
++
+ 	tca6416_pins: pinmux_tca6416_pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_IOPAD(0x9b4, PIN_INPUT_PULLUP | MUX_MODE7)      /* xdma_event_intr1.gpio0[20] tca6416 stuff */
+diff --git a/arch/arm/boot/dts/am335x-baltos-ir5221.dts b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
+index 2b9d7f4..e2da0aa 100644
+--- a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
++++ b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
+@@ -17,16 +17,47 @@
+ 
+ / {
+ 	model = "OnRISC Baltos iR 5221";
++
++	leds {
++		pinctrl-names = "default";
++		pinctrl-0 = <&user_leds>;
++
++		compatible = "gpio-leds";
++
++		power {
++			label = "onrisc:red:power";
++			linux,default-trigger = "default-on";
++			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++		wlan {
++			label = "onrisc:blue:wlan";
++			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		app {
++			label = "onrisc:green:app";
++			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
+ };
+ 
+ &am33xx_pinmux {
++	user_leds: pinmux_user_leds {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x908, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_col.gpio3_0 PWR LED */
++			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd3.gpio0_16 WLAN LED */
++			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd2.gpio0_17 APP LED */
++		>;
++	};
++
+ 	tca6416_pins: pinmux_tca6416_pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_IOPAD(0x9b4, PIN_INPUT_PULLUP | MUX_MODE7)      /* xdma_event_intr1.gpio0[20] tca6416 stuff */
+ 		>;
+ 	};
+ 
+-
+ 	dcan1_pins: pinmux_dcan1_pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_IOPAD(0x968, PIN_OUTPUT | MUX_MODE2)      /* uart0_ctsn.dcan1_tx_mux0 */
+@@ -61,7 +92,6 @@
+ 			AM33XX_IOPAD(0x9a0, PIN_INPUT_PULLUP | MUX_MODE7)      /* mcasp0_aclkr.gpio3[18], INPUT_PULLDOWN | MODE7 */
+ 		>;
+ 	};
+-
+ };
+ 
+ &uart1 {
+-- 
+2.1.4
 
-> Noticed one trivial typo below.
->
->> + * Special configuration registers directly in the first few words
->> + * in he I/O space.
->
-> s/he//
-
-Can you fix it when applying or do you want me to resend it with
-this fixed?
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
