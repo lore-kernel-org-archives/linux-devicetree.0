@@ -1,121 +1,44 @@
-From: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH linux v5 1/2] Documentation: dt-bindings: Document bindings for ASPEED AST2400/AST2500 PWM and Fan tach controller device driver
-Date: Fri, 24 Mar 2017 11:17:22 -0700
-Message-ID: <20170324181723.29379-2-jaghu@google.com>
-References: <20170324181723.29379-1-jaghu@google.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324181723.29379-1-jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+Subject: [PATCH linux v5 0/2] Support for ASPEED AST2400/AST2500 PWM and Fan Tach driver
+Date: Fri, 24 Mar 2017 11:17:21 -0700
+Message-ID: <20170324181723.29379-1-jaghu@google.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: joel@jms.id.au, jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
 List-Id: devicetree@vger.kernel.org
 
-This binding provides interface for adding values related to ASPEED
-AST2400/2500 PWM and Fan tach controller support.
-The PWM controller can support upto 8 PWM output ports.
-The Fan tach controller can support upto 16 tachometer inputs.
+Support for ASPEED AST2400/AST2500 PWM and Fan Tach driver.
+Patches based on the upstream tag 4.9. Changes made in Version 4 are indicated
+in the individual patches.
+The AST2400/AST2500 PWM controller can support 8 PWM output ports.
+The AST2400/AST2500 Fan Tach controller can support 16 tachometer inputs.
+The hwmon driver provides sysfs entries through which the user can configure the
+duty cycle for the particular PWM output port and read the fan rpm value for
+the particular tachometer input.
+Added devicetree binding documentation for AST2400/AST2500 PWM and Fan Tach
+support.
 
-Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
- v5:
-- Changed the naming scheme to aspeed,ast2400/2500-pwm-tacho
-- Removed gpio pin muxing
-- Added aspeed vendor prefix for fan-tach-ch
-- Changed to fan@0/1
-- Changed reg to 32 bits
+Tested on Zaius board (which has AST2500 chip) and observed that when
+duty cycle is lowered then the fan speed is lowered and lower fan rpm value(
+corresponding to the duty cycle) is reported and when the duty cycle is
+increased then the fan speed increases and higher fan rpm value(corresponding
+to the duty cycle) is reported.
 
- v4:
-- Used 'reg'
+Jaghathiswari Rankappagounder Natarajan (2):
+  Documentation: dt-bindings: Document bindings for ASPEED
+    AST2400/AST2500 PWM and Fan tach controller device driver
+  drivers: hwmon: Support for ASPEED PWM/Fan tach
 
- v3:
-- Made the structure more common
-
- v2:
-- Removed '_' in node and property names
-- Gave some explanation for the properties used
-
- .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 68 ++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt |  68 ++
+ Documentation/hwmon/aspeed-pwm-tacho               |  22 +
+ drivers/hwmon/Kconfig                              |  13 +-
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/aspeed-pwm-tacho.c                   | 854 +++++++++++++++++++++
+ 5 files changed, 956 insertions(+), 2 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+ create mode 100644 Documentation/hwmon/aspeed-pwm-tacho
+ create mode 100644 drivers/hwmon/aspeed-pwm-tacho.c
 
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-new file mode 100644
-index 000000000000..f96d32bfcdfa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-@@ -0,0 +1,68 @@
-+ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
-+
-+The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED Fan Tacho
-+controller can support upto 16 Fan tachometer inputs.
-+
-+There can be upto 8 fans supported. Each fan can have one PWM output and
-+one/two Fan tach inputs.
-+
-+Required properties for pwm-tacho node:
-+- #address-cells : should be 1.
-+
-+- #size-cells : should be 1.
-+
-+- reg : address and length of the register set for the device.
-+
-+- pinctrl-names : a pinctrl state named "default" must be defined.
-+
-+- pinctrl-0 : phandle referencing pin configuration of the PWM ports.
-+
-+- compatible : should be "aspeed,ast2400-pwm-tacho" for AST2400 and
-+	       "aspeed,ast2500-pwm-tacho" for AST2500.
-+
-+- clocks : a fixed clock providing input clock frequency(PWM
-+	   and Fan Tach clock)
-+
-+fan subnode format:
-+===================
-+Under fan subnode there can upto 8 child nodes, with each child node
-+representing a fan. If there are 8 fans each fan can have one PWM port and
-+one/two Fan tach inputs.
-+
-+Required properties for each child node:
-+- reg : should specify PWM source port.
-+	integer value in the range 0 to 7 with 0 indicating PWM port A and
-+	7 indicating PWM port H.
-+
-+- aspeed-fan-tach-ch : should specify the Fan tach input channel.
-+                integer value in the range 0 through 15, with 0 indicating
-+		Fan tach channel 0 and 15 indicating Fan tach channel 15.
-+		Atleast one Fan tach input channel is required.
-+
-+Examples:
-+
-+pwm_tacho_fixed_clk: fixedclk {
-+	compatible = "fixed-clock";
-+	#clock-cells = <0>;
-+	clock-frequency = <24000000>;
-+}
-+
-+pwm_tacho: pwmtachocontroller@1e786000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	reg = <0x1E786000 0x1000>;
-+	compatible = "aspeed,ast2500-pwm-tacho";
-+	clocks = <&pwm_tacho_fixed_clk>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed-fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed-fan-tach-ch = /bits/ 8 <0x01 0x02>;
-+	};
-+};
 --
 2.12.1.578.ge9c3154ca4-goog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
