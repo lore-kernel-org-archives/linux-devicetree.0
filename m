@@ -1,54 +1,84 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: dts: r7s72100: add power-domains to sdhi
-Date: Fri, 24 Mar 2017 08:55:44 +0100
-Message-ID: <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
-References: <20170209133803.21539-1-chris.brandt@renesas.com>
- <CAMuHMdXRD3o7KdaADvPYxzeuEVo44nRVWHfCverPc+9s=0owPA@mail.gmail.com> <20170324070228.GI1319@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170324070228.GI1319@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+From: Alexander Kochetkov <al.kochet@gmail.com>
+Subject: Re: [PATCH v7 5/7] clocksource/drivers/rockchip_timer: implement
+ clocksource timer
+Date: Fri, 24 Mar 2017 11:41:26 +0300
+Message-ID: <B771814D-541A-4D89-AC8A-5FFF84DE2E66@gmail.com>
+References: <201703241631.5BKa33uG%fengguang.wu@intel.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201703241631.5BKa33uG%fengguang.wu@intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Huang Tao <huangtao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Thomas Gleixner <tglx@linutronix.de>, LAK <linux-arm-kernel@lists.infradead.org>, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Fri, Mar 24, 2017 at 8:02 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Wed, Mar 22, 2017 at 02:25:04PM +0100, Geert Uytterhoeven wrote:
->> (this time reply-to-all)
->>
->> On Thu, Feb 9, 2017 at 2:38 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
->> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
->> > Fixes: 66474697923c ("ARM: dts: r7s72100: add sdhi to device tree")
->>
->> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Thanks, I have queued this up for v4.12.
->
-> The fixes tag above indicates this is a fix for v4.10, however, when I
-> tried to apply it on top of v4.11-rc1 there was a conflict.  So I think a
-> backport will be required if we want it to be considered for v4.11 and be
-> considered for and in turn v4.10-stable.
-
-That's because of commit 3d2abda02ad2d06d
-("ARM: dts: r7s72100: update sdhi clock bindings")
-
-> This makes things a bit messy with regards to conflicts between v4.11 and
-> v4.12 and I'm inclined to pass on the backport.
-
-If you ever want to backport, you'll have two backport changes too the
-SDHI driver, too.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+VGhlIHBhdGNoIHNlcmllcyBzaG91bGQgYmUgYXBwbGllZCBhZnRlciB0aGUgcGF0Y2hlcyBbMV0g
+YW5kIFsyXSBoYXZlbuKAmXQgbWVyZ2VkIHlldCBpbnRvIHRoZSBrZXJuZWwuClRoYXQgbWVudGlv
+biBpbiB0aGUgY292ZXIgbGV0dGVyLgoKWzFdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE3LzMv
+MjIvNDIwClsyXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNy8zLzIyLzQyNgoKPiAyNCDQvNCw
+0YDRgtCwIDIwMTcg0LMuLCDQsiAxMToyOSwga2J1aWxkIHRlc3Qgcm9ib3QgPGxrcEBpbnRlbC5j
+b20+INC90LDQv9C40YHQsNC7KNCwKToKPiAKPiBIaSBBbGV4YW5kZXIsCj4gCj4gW2F1dG8gYnVp
+bGQgdGVzdCBFUlJPUiBvbiB0aXAvdGltZXJzL2NvcmVdCj4gW2Fsc28gYnVpbGQgdGVzdCBFUlJP
+UiBvbiB2NC4xMS1yYzMgbmV4dC0yMDE3MDMyM10KPiBbY2Fubm90IGFwcGx5IHRvIHJvY2tjaGlw
+L2Zvci1uZXh0XQo+IFtpZiB5b3VyIHBhdGNoIGlzIGFwcGxpZWQgdG8gdGhlIHdyb25nIGdpdCB0
+cmVlLCBwbGVhc2UgZHJvcCB1cyBhIG5vdGUgdG8gaGVscCBpbXByb3ZlIHRoZSBzeXN0ZW1dCj4g
+Cj4gdXJsOiAgICBodHRwczovL2dpdGh1Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRzL0FsZXhh
+bmRlci1Lb2NoZXRrb3YvSW1wbGVtZW50LWNsb2Nrc291cmNlLWZvci1yb2NrY2hpcC1Tb0MtdXNp
+bmctcm9ja2NoaXAtdGltZXIvMjAxNzAzMjQtMTEzMDA4Cj4gY29uZmlnOiBhcm02NC1kZWZjb25m
+aWcgKGF0dGFjaGVkIGFzIC5jb25maWcpCj4gY29tcGlsZXI6IGFhcmNoNjQtbGludXgtZ251LWdj
+YyAoRGViaWFuIDYuMS4xLTkpIDYuMS4xIDIwMTYwNzA1Cj4gcmVwcm9kdWNlOgo+ICAgICAgICB3
+Z2V0IGh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS8wMW9yZy9sa3AtdGVzdHMvbWFz
+dGVyL3NiaW4vbWFrZS5jcm9zcyAtTyB+L2Jpbi9tYWtlLmNyb3NzCj4gICAgICAgIGNobW9kICt4
+IH4vYmluL21ha2UuY3Jvc3MKPiAgICAgICAgIyBzYXZlIHRoZSBhdHRhY2hlZCAuY29uZmlnIHRv
+IGxpbnV4IGJ1aWxkIHRyZWUKPiAgICAgICAgbWFrZS5jcm9zcyBBUkNIPWFybTY0IAo+IAo+IEFs
+bCBlcnJvcnMgKG5ldyBvbmVzIHByZWZpeGVkIGJ5ID4+KToKPiAKPiAgIEluIGZpbGUgaW5jbHVk
+ZWQgZnJvbSBpbmNsdWRlL2xpbnV4L3RpY2suaDo3OjAsCj4gICAgICAgICAgICAgICAgICAgIGZy
+b20gZHJpdmVycy8vYWNwaS9wcm9jZXNzb3JfaWRsZS5jOjMyOgo+Pj4gaW5jbHVkZS9saW51eC9j
+bG9ja2NoaXBzLmg6MjMyOjI6IGVycm9yOiBpbnZhbGlkIHByZXByb2Nlc3NpbmcgZGlyZWN0aXZl
+ICNlbHMKPiAgICAjZWxzCj4gICAgIF5+fgo+Pj4gaW5jbHVkZS9saW51eC9jbG9ja2NoaXBzLmg6
+MjMzOjE5OiBlcnJvcjogc3RhdGljIGRlY2xhcmF0aW9uIG9mICdjbG9ja2V2ZW50X3Byb2JlJyBm
+b2xsb3dzIG5vbi1zdGF0aWMgZGVjbGFyYXRpb24KPiAgICBzdGF0aWMgaW5saW5lIGludCBjbG9j
+a2V2ZW50X3Byb2JlKHZvaWQpIHsgcmV0dXJuIDA7IH0KPiAgICAgICAgICAgICAgICAgICAgICBe
+fn5+fn5+fn5+fn5+fn5+Cj4gICBpbmNsdWRlL2xpbnV4L2Nsb2NrY2hpcHMuaDoyMzE6MTI6IG5v
+dGU6IHByZXZpb3VzIGRlY2xhcmF0aW9uIG9mICdjbG9ja2V2ZW50X3Byb2JlJyB3YXMgaGVyZQo+
+ICAgIGV4dGVybiBpbnQgY2xvY2tldmVudF9wcm9iZSh2b2lkKTsKPiAgICAgICAgICAgICAgIF5+
+fn5+fn5+fn5+fn5+fn4KPiAtLQo+Pj4gZHJpdmVycy8vY2xvY2tzb3VyY2UvY2xrZXZ0LXByb2Jl
+LmM6MjA6Mjk6IGZhdGFsIGVycm9yOiBsaW51eC9jbG9ja2NoaXAuaDogTm8gc3VjaCBmaWxlIG9y
+IGRpcmVjdG9yeQo+ICAgICNpbmNsdWRlIDxsaW51eC9jbG9ja2NoaXAuaD4KPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgXgo+ICAgY29tcGlsYXRpb24gdGVybWluYXRlZC4KPiAKPiB2
+aW0gKzIzMiBpbmNsdWRlL2xpbnV4L2Nsb2NrY2hpcHMuaAo+IAo+IGQzMTZjNTdmIFRob21hcyBH
+bGVpeG5lciAyMDA3LTAyLTE2ICAyMjYgIAo+IDM3NmJjMjcxIERhbmllbCBMZXpjYW5vICAyMDE2
+LTA0LTE5ICAyMjcgICNkZWZpbmUgQ0xPQ0tFVkVOVF9PRl9ERUNMQVJFKG5hbWUsIGNvbXBhdCwg
+Zm4pIFwKPiAzNzZiYzI3MSBEYW5pZWwgTGV6Y2FubyAgMjAxNi0wNC0xOSAgMjI4ICAJT0ZfREVD
+TEFSRV8xX1JFVChjbGtldnQsIG5hbWUsIGNvbXBhdCwgZm4pCj4gMzc2YmMyNzEgRGFuaWVsIExl
+emNhbm8gIDIwMTYtMDQtMTkgIDIyOSAgCj4gMzc2YmMyNzEgRGFuaWVsIExlemNhbm8gIDIwMTYt
+MDQtMTkgIDIzMCAgI2lmZGVmIENPTkZJR19DTEtFVlRfUFJPQkUKPiAzNzZiYzI3MSBEYW5pZWwg
+TGV6Y2FubyAgMjAxNi0wNC0xOSAgMjMxICBleHRlcm4gaW50IGNsb2NrZXZlbnRfcHJvYmUodm9p
+ZCk7Cj4gMzc2YmMyNzEgRGFuaWVsIExlemNhbm8gIDIwMTYtMDQtMTkgQDIzMiAgI2Vscwo+IDM3
+NmJjMjcxIERhbmllbCBMZXpjYW5vICAyMDE2LTA0LTE5IEAyMzMgIHN0YXRpYyBpbmxpbmUgaW50
+IGNsb2NrZXZlbnRfcHJvYmUodm9pZCkgeyByZXR1cm4gMDsgfQo+IDM3NmJjMjcxIERhbmllbCBM
+ZXpjYW5vICAyMDE2LTA0LTE5ICAyMzQgICNlbmRpZgo+IDM3NmJjMjcxIERhbmllbCBMZXpjYW5v
+ICAyMDE2LTA0LTE5ICAyMzUgIAo+IDllZWQ1NmU4IEluZ28gTW9sbmFyICAgICAyMDE1LTA0LTAy
+ICAyMzYgICNlbmRpZiAvKiBfTElOVVhfQ0xPQ0tDSElQU19IICovCj4gCj4gOjo6Ojo6IFRoZSBj
+b2RlIGF0IGxpbmUgMjMyIHdhcyBmaXJzdCBpbnRyb2R1Y2VkIGJ5IGNvbW1pdAo+IDo6Ojo6OiAz
+NzZiYzI3MTUwZjE4MGQ5ZjVlZGRlYzZhMTQxMTc3ODAxNzc1ODlkIGNsb2NrZXZlbnRzOiBBZGQg
+YSBjbGtldnQtb2YgbWVjaGFuaXNtIGxpa2UgY2xrc3JjLW9mCj4gCj4gOjo6Ojo6IFRPOiBEYW5p
+ZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4KPiA6Ojo6OjogQ0M6IERhbmll
+bCBMZXpjYW5vIDxkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnPgo+IAo+IC0tLQo+IDAtREFZIGtl
+cm5lbCB0ZXN0IGluZnJhc3RydWN0dXJlICAgICAgICAgICAgICAgIE9wZW4gU291cmNlIFRlY2hu
+b2xvZ3kgQ2VudGVyCj4gaHR0cHM6Ly9saXN0cy4wMS5vcmcvcGlwZXJtYWlsL2tidWlsZC1hbGwg
+ICAgICAgICAgICAgICAgICAgSW50ZWwgQ29ycG9yYXRpb24KPiA8LmNvbmZpZy5nej4KCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
