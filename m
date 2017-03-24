@@ -1,50 +1,223 @@
+Return-Path: <SRS0=7UnC=3B=gmail.com=ralph.sennhauser@kernel.org>
+Date: Fri, 24 Mar 2017 09:11:28 +0100
+From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Subject: Re: [PATCH v2 2/4] mvebu: xp: Add pwm properties to .dtsi files
+Message-ID: <20170324091128.329364eb@gmail.com>
+In-Reply-To: <871stodjze.fsf@free-electrons.com>
+References: <20170318154305.28348-1-ralph.sennhauser@gmail.com>
+	<20170318154305.28348-3-ralph.sennhauser@gmail.com>
+	<871stodjze.fsf@free-electrons.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqL3z1dqYZ68jtt2coNhM8sbZZWimuCku2mTHWDuS+kj6g@mail.gmail.com>
-References: <20170321161958.9658-1-robh@kernel.org>
-	<CAOesGMiWFPERPapOLCW4iqSuFWiqesBBjGN0ny6XjzFXNfKr4g@mail.gmail.com>
-	<CAL_JsqL3z1dqYZ68jtt2coNhM8sbZZWimuCku2mTHWDuS+kj6g@mail.gmail.com>
-Date: Wed, 29 Mar 2017 16:41:38 -0500
-Message-ID: <CAL_JsqKUNzQvnpV-0BYOBcKjZgtC+atDBAPUzYtgpOW2Z4T17w@mail.gmail.com>
-Subject: Re: [PATCH 0/3] dtc updates for 4.12
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Olof Johansson <olof@lixom.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "arm@kernel.org" <arm@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "moderated list:ARM/Marvell Kirkwood" <linux-arm-kernel@lists.infradead.org>and, "open list:OPEN FIRMWARE AND" <devicetree@vger.kernel.org>, FLATTENED, open list <linux-kernel@vger.kernel.org>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
+On Thu, 23 Mar 2017 17:40:53 +0100
+Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
 
+> Hi Ralph,
+>  
+>  On sam., mars 18 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com>
+> wrote:
+> 
+> It seems that I don't receive the 1st patch of the series.
 
-On Tue, Mar 21, 2017 at 2:55 PM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Mar 21, 2017 at 2:15 PM, Olof Johansson <olof@lixom.net> wrote:
->> On Tue, Mar 21, 2017 at 9:19 AM, Rob Herring <robh@kernel.org> wrote:
->>> This series syncs dtc with current mainline. The primary motivation is
->>> to pull in the new checks I've worked on. This gives lots of new
->>> warnings which are turned off by default.
->>>
->>> Arm-soc folks, I've left the PCI checks enabled as they are pretty much
->>> all real errors and there aren't that many (about 1200, but that's lots
->>> of duplicates). I have a patch for some of them.
->>
->> Yay for better warnings!
->>
->> But as with all changes of this kind, when new warnings are introduced
->> please give people some time to remove them without turning them on by
->> default. We had a cycle like that already.
->
-> Which I quickly fixed and learned my lesson. That's why I tried
-> getting this out earlier as well.
->
->> Main reason is that it becomes too hard to spot new warnings when they
->> come in if the logs are flooded with 1200 existing warnings.
->
-> Yeah. Since almost everything is an include, the warnings really multiply.
->
->> How many of them do you have patches for, per chance? If we can see
->> them show up quickly the answer to the above might be a bit different.
->
-> Okay, I lied or lost them... It looks like it is 79 unique warnings
-> for arm. I'll take a stab at fixing them.
+Hi Gregory,
 
-Well, after all the fixes, there's still some false positives, so I'm going to turn off the warnings by default anyway.
+it makes no sense to only send part of a series to a recipient. Will
+have to improve my use of --cc-cmd it seems. Will pay attention to this
+for v3.
 
-Rob
+Sorry
+Ralph
+
+> 
+> Also could you refresh my mind to expose why these patchse were not
+> apply the first time and why we should apply them now?
+> 
+> Thanks,
+> 
+> Gregory
+> 
+> 
+> > From: Andrew Lunn <andrew@lunn.ch>
+> >
+> > Add properties to the gpio nodes to allow them to be also used as
+> > pwm lines.
+> >
+> > Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> > URL: https://patchwork.ozlabs.org/patch/427294/
+> > Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/armada-370.dtsi        | 10 ++++++++--
+> >  arch/arm/boot/dts/armada-xp-mv78230.dtsi | 10 ++++++++--
+> >  arch/arm/boot/dts/armada-xp-mv78260.dtsi |  8 ++++++--
+> >  arch/arm/boot/dts/armada-xp-mv78460.dtsi | 10 ++++++++--
+> >  4 files changed, 30 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/armada-370.dtsi
+> > b/arch/arm/boot/dts/armada-370.dtsi index cc011c8..aa9fe72 100644
+> > --- a/arch/arm/boot/dts/armada-370.dtsi
+> > +++ b/arch/arm/boot/dts/armada-370.dtsi
+> > @@ -138,24 +138,30 @@
+> >  
+> >  			gpio0: gpio@18100 {
+> >  				compatible = "marvell,orion-gpio";
+> > -				reg = <0x18100 0x40>;
+> > +				reg = <0x18100 0x40>, <0x181c0
+> > 0x08>;
+> > +				reg-names = "gpio", "pwm";
+> >  				ngpios = <32>;
+> >  				gpio-controller;
+> >  				#gpio-cells = <2>;
+> > +				#pwm-cells = <2>;
+> >  				interrupt-controller;
+> >  				#interrupt-cells = <2>;
+> >  				interrupts = <82>, <83>, <84>,
+> > <85>;
+> > +				clocks = <&coreclk 0>;
+> >  			};
+> >  
+> >  			gpio1: gpio@18140 {
+> >  				compatible = "marvell,orion-gpio";
+> > -				reg = <0x18140 0x40>;
+> > +				reg = <0x18140 0x40>, <0x181c8
+> > 0x08>;
+> > +				reg-names = "gpio", "pwm";
+> >  				ngpios = <32>;
+> >  				gpio-controller;
+> >  				#gpio-cells = <2>;
+> > +				#pwm-cells = <2>;
+> >  				interrupt-controller;
+> >  				#interrupt-cells = <2>;
+> >  				interrupts = <87>, <88>, <89>,
+> > <90>;
+> > +				clocks = <&coreclk 0>;
+> >  			};
+> >  
+> >  			gpio2: gpio@18180 {
+> > diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
+> > b/arch/arm/boot/dts/armada-xp-mv78230.dtsi index 07c5090..fc3934f
+> > 100644 --- a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
+> > +++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
+> > @@ -203,24 +203,30 @@
+> >  		internal-regs {
+> >  			gpio0: gpio@18100 {
+> >  				compatible = "marvell,orion-gpio";
+> > -				reg = <0x18100 0x40>;
+> > +				reg = <0x18100 0x40>, <0x181c0
+> > 0x08>;
+> > +				reg-names = "gpio", "pwm";
+> >  				ngpios = <32>;
+> >  				gpio-controller;
+> >  				#gpio-cells = <2>;
+> > +				#pwm-cells = <2>;
+> >  				interrupt-controller;
+> >  				#interrupt-cells = <2>;
+> >  				interrupts = <82>, <83>, <84>,
+> > <85>;
+> > +				clocks = <&coreclk 0>;
+> >  			};
+> >  
+> >  			gpio1: gpio@18140 {
+> >  				compatible = "marvell,orion-gpio";
+> > -				reg = <0x18140 0x40>;
+> > +				reg = <0x18140 0x40>, <0x181c8
+> > 0x08>;
+> > +				reg-names = "gpio", "pwm";
+> >  				ngpios = <17>;
+> >  				gpio-controller;
+> >  				#gpio-cells = <2>;
+> > +				#pwm-cells = <2>;
+> >  				interrupt-controller;
+> >  				#interrupt-cells = <2>;
+> >  				interrupts = <87>, <88>, <89>;
+> > +				clocks = <&coreclk 0>;
+> >  			};
+> >  		};
+> >  	};
+> > diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
+> > b/arch/arm/boot/dts/armada-xp-mv78260.dtsi index 64e936a..04dda6a
+> > 100644 --- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
+> > +++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
+> > @@ -286,24 +286,28 @@
+> >  		internal-regs {
+> >  			gpio0: gpio@18100 {
+> >  				compatible = "marvell,orion-gpio";
+> > -				reg = <0x18100 0x40>;
+> > +				reg = <0x18100 0x40>, <0x181c0
+> > 0x08>;
+> > +				reg-names = "gpio", "pwm";
+> >  				ngpios = <32>;
+> >  				gpio-controller;
+> >  				#gpio-cells = <2>;
+> > +				#pwm-cells = <2>;
+> >  				interrupt-controller;
+> >  				#interrupt-cells = <2>;
+> >  				interrupts = <82>, <83>, <84>,
+> > <85>;
+> > +				clocks = <&coreclk 0>;
+> >  			};
+> >  
+> >  			gpio1: gpio@18140 {
+> >  				compatible = "marvell,orion-gpio";
+> > -				reg = <0x18140 0x40>;
+> > +				reg = <0x18140 0x40>, <0x181c8
+> > 0x08>; ngpios = <32>;
+> >  				gpio-controller;
+> >  				#gpio-cells = <2>;
+> >  				interrupt-controller;
+> >  				#interrupt-cells = <2>;
+> >  				interrupts = <87>, <88>, <89>,
+> > <90>;
+> > +				clocks = <&coreclk 0>;
+> >  			};
+> >  
+> >  			gpio2: gpio@18180 {
+> > diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
+> > b/arch/arm/boot/dts/armada-xp-mv78460.dtsi index d1383dd..fb6d28a
+> > 100644 --- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
+> > +++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
+> > @@ -324,24 +324,30 @@
+> >  		internal-regs {
+> >  			gpio0: gpio@18100 {
+> >  				compatible = "marvell,orion-gpio";
+> > -				reg = <0x18100 0x40>;
+> > +				reg = <0x18100 0x40>, <0x181c0
+> > 0x08>;
+> > +				reg-names = "gpio", "pwm";
+> >  				ngpios = <32>;
+> >  				gpio-controller;
+> >  				#gpio-cells = <2>;
+> > +				#pwm-cells = <2>;
+> >  				interrupt-controller;
+> >  				#interrupt-cells = <2>;
+> >  				interrupts = <82>, <83>, <84>,
+> > <85>;
+> > +				clocks = <&coreclk 0>;
+> >  			};
+> >  
+> >  			gpio1: gpio@18140 {
+> >  				compatible = "marvell,orion-gpio";
+> > -				reg = <0x18140 0x40>;
+> > +				reg = <0x18140 0x40>, <0x181c8
+> > 0x08>;
+> > +				reg-names = "gpio", "pwm";
+> >  				ngpios = <32>;
+> >  				gpio-controller;
+> >  				#gpio-cells = <2>;
+> > +				#pwm-cells = <2>;
+> >  				interrupt-controller;
+> >  				#interrupt-cells = <2>;
+> >  				interrupts = <87>, <88>, <89>,
+> > <90>;
+> > +				clocks = <&coreclk 0>;
+> >  			};
+> >  
+> >  			gpio2: gpio@18180 {
+> > -- 
+> > 2.10.2
+> >  
+> 
