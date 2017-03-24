@@ -1,58 +1,129 @@
-From: Patrick Menschel <menschel.p@posteo.de>
-Subject: [PATCH v2 2/2] ARM: dts: sun7i: Add CAN node and can0_pins_a pinctrl settings
-Date: Fri, 24 Mar 2017 22:52:19 +0100
-Message-ID: <1490392339-23565-3-git-send-email-menschel.p@posteo.de>
-References: <1490392339-23565-1-git-send-email-menschel.p@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490392339-23565-1-git-send-email-menschel.p@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
-Cc: Patrick Menschel <menschel.p@posteo.de>
+From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] gpio: mvebu: Add limited PWM support
+Date: Fri, 24 Mar 2017 23:21:15 +0100
+Message-ID: <20170324232115.3d97aff2@gmail.com>
+References: <20170318154305.28348-1-ralph.sennhauser@gmail.com>
+        <20170318154305.28348-2-ralph.sennhauser@gmail.com>
+        <20170324151829.awmhshsent4ngqb5@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170324151829.awmhshsent4ngqb5@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "open list:PWM SUBSYSTEM" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A20 SoC has an on-board CAN controller. This patch adds the device node
-and the corresponding pinctrl settings for pins PH20 and PH21.
+On Fri, 24 Mar 2017 10:18:29 -0500
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-The CAN controller is inherited from the A10 SoC and uses the same driver.
+> On Sat, Mar 18, 2017 at 04:43:01PM +0100, Ralph Sennhauser wrote:
+> > From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > 
+> > Armada 370/XP devices can 'blink' gpio lines with a configurable on
+> > and off period. This can be modelled as a PWM.
+> > 
+> > However, there are only two sets of PWM configuration registers for
+> > all the gpio lines. This driver simply allows a single gpio line per
+> > gpio chip of 32 lines to be used as a PWM. Attempts to use more
+> > return EBUSY.
+> > 
+> > Due to the interleaving of registers it is not simple to separate
+> > the PWM driver from the gpio driver. Thus the gpio driver has been
+> > extended with a PWM driver.
+> > 
+> > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > URL: https://patchwork.ozlabs.org/patch/427287/
+> > URL: https://patchwork.ozlabs.org/patch/427295/
+> > [Ralph Sennhauser:
+> >   * port forward
+> >   * merge pwm portion into gpio-mvebu.c
+> >   * merge documentation patch
+> >   * update MAINTAINERS]
+> > Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-mvebu.txt        |  31 +++
+> >  MAINTAINERS                                        |   2 +
+> >  drivers/gpio/gpio-mvebu.c                          | 291
+> > +++++++++++++++++++-- 3 files changed, 307 insertions(+), 17
+> > deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> > b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt index
+> > a6f3bec..86932e3 100644 ---
+> > a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt +++
+> > b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt @@ -38,6
+> > +38,23 @@ Required properties:
+> >  - #gpio-cells: Should be two. The first cell is the pin number. The
+> >    second cell is reserved for flags, unused at the moment.
+> >  
+> > +Optional properties:
+> > +
+> > +In order to use the gpio lines in PWM mode, some additional
+> > optional +properties are required. Only Armada 370 and XP support
+> > these properties. +
+> > +- reg: an additional register set is needed, for the GPIO Blink
+> > +  Counter on/off registers.
+> > +
+> > +- reg-names: Must contain an entry "pwm" corresponding to the
+> > +  additional register range needed for pwm operation.
+> > +
+> > +- #pwm-cells: Should be two. The first cell is the pin number.
+> > The  
+> 
+> s/pin number/gpio line/ ?
 
-This patch is adapted from the description in
-Documentation/devicetree/bindings/net/can/sun4i_can.txt
+Better indeed.
 
-Signed-off-by: Patrick Menschel <menschel.p@posteo.de>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> 
+> > +  second cell is reserved for flags and should be set to 0, so it
+> > has a
+> > +  known value. It then becomes possible to use it in the future.
+> > +
+> > +- clocks: Must be a phandle to the clock for the gpio controller.
+> > +
+> >  Example:
+> >  
+> >  		gpio0: gpio@d0018100 {
+> > @@ -51,3 +68,17 @@ Example:
+> >  			#interrupt-cells = <2>;
+> >  			interrupts = <16>, <17>, <18>, <19>;
+> >  		};
+> > +
+> > +		gpio1: gpio@18140 {
+> > +			compatible = "marvell,orion-gpio";  
+> 
+> If only 370 and XP support this, I'd expect a compatible string for
+> one of them here.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 2db97fc..25af586 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1096,6 +1096,11 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
- 
-+			can0_pins_a: can0@0 {
-+				pins = "PH20","PH21";
-+				function = "can";
-+			};
-+
- 			clk_out_a_pins_a: clk_out_a@0 {
- 				pins = "PI12";
- 				function = "clk_out_a";
-@@ -1582,6 +1587,14 @@
- 			#size-cells = <0>;
- 		};
- 
-+		can0: can@01c2bc00 {
-+			compatible = "allwinner,sun4i-a10-can";
-+			reg = <0x01c2bc00 0x400>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&apb1_gates 4>;
-+			status = "disabled";
-+		};
-+
- 		i2c4: i2c@01c2c000 {
- 			compatible = "allwinner,sun7i-a20-i2c",
- 				     "allwinner,sun4i-a10-i2c";
--- 
-1.9.1
+Commit 5f79c651e81e ("arm: mvebu: use global interrupts for GPIOs on
+Armada XP") changes it from "marvell,armadaxp-gpio". The commit message
+says for 3.8 basically leaving it open for a "fix" later.
+
+Adding Thomas Petazzoni as the author.
+
+Thomas, would you happen to know if this is still how it's supposed to
+be for now?
+
+Thanks
+Ralph
+
+
+> 
+> > +			reg = <0x18140 0x40>, <0x181c8 0x08>;
+> > +			reg-names = "gpio", "pwm";
+> > +			ngpios = <17>;
+> > +			gpio-controller;
+> > +			#gpio-cells = <2>;
+> > +			#pwm-cells = <2>;
+> > +			interrupt-controller;
+> > +			#interrupt-cells = <2>;
+> > +			interrupts = <87>, <88>, <89>;
+> > +			clocks = <&coreclk 0>;
+> > +		};  
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
