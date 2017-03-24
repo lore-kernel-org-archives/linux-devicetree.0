@@ -1,142 +1,129 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4 v5] PCI: add driver for Faraday Technology Host Bridge
-Date: Fri, 24 Mar 2017 10:07:53 -0500
-Message-ID: <20170324150753.GC25380@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170312222403.2473-1-linus.walleij@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] iio: xoadc: augment DT bindings a bit
+Date: Fri, 24 Mar 2017 10:12:35 -0500
+Message-ID: <20170324151235.cb73gokg26qy7fvc@rob-hp-laptop>
+References: <20170318133358.22314-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170312222403.2473-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170318133358.22314-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Feng-Hsin Chiang <john453-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 12, 2017 at 11:24:03PM +0100, Linus Walleij wrote:
-> This adds a host bridge driver for the Faraday Technology
-> FPPCI100 host bridge, used for Cortina Systems Gemini SoC
-> (SL3516) PCI Host Bridge.
+On Sat, Mar 18, 2017 at 02:33:58PM +0100, Linus Walleij wrote:
+> In order to accommodate in a logical manner for the premuxed channels
+> in PM8921 and the similarly addressed channels in later PMICs, we
+> need a twocell arrangement with premux and analog mux setting as
+> a tuple to uniquely identify a hardware channel.
 > 
-> This code is inspired by the out-of-tree OpenWRT patch and
-> then extensively rewritten for device tree and using the modern
-> helpers to cut down and modernize the code to all new PCI
-> frameworks. A driver exists in U-Boot as well.
+> These bindings are not yet in use, so it should be find to augment
+> them before we actually start using it in drivers and device trees.
 > 
-> Tested on the ITian Square One SQ201 NAS with the following
-> result in the boot log (trimmed to relevant parts):
+> This scheme came out of lengthy discussions and reverse-engineering
+> and reading of the few information sources we have.
 > 
-> OF: PCI: host bridge /soc/pci@50000000 ranges:
-> OF: PCI:    IO 0x50000000..0x500fffff -> 0x00000000
-> OF: PCI:   MEM 0x58000000..0x5fffffff -> 0x58000000
-> ftpci100 50000000.pci: PCI host bridge to bus 0000:00
-> pci_bus 0000:00: root bus resource [bus 00-ff]
-> pci_bus 0000:00: root bus resource [io  0x0000-0xfffff]
-> pci_bus 0000:00: root bus resource [mem 0x58000000-0x5fffffff]
-> ftpci100 50000000.pci:
->   DMA MEM1 BASE: 0x0000000000000000 -> 0x0000000007ffffff config 00070000
-> ftpci100 50000000.pci:
->   DMA MEM2 BASE: 0x0000000000000000 -> 0x0000000003ffffff config 00060000
-> ftpci100 50000000.pci:
->   DMA MEM3 BASE: 0x0000000000000000 -> 0x0000000003ffffff config 00060000
-> PCI: bus0: Fast back to back transfers disabled
-> pci 0000:00:00.0: of_irq_parse_pci() failed with rc=-22
-> pci 0000:00:0c.0: BAR 0: assigned [mem 0x58000000-0x58007fff]
-> pci 0000:00:09.2: BAR 0: assigned [mem 0x58008000-0x580080ff]
-> pci 0000:00:09.0: BAR 4: assigned [io  0x1000-0x101f]
-> pci 0000:00:09.1: BAR 4: assigned [io  0x1020-0x103f]
-> pci 0000:00:09.0: enabling device (0140 -> 0141)
-> pci 0000:00:09.0: HCRESET not completed yet!
-> pci 0000:00:09.1: enabling device (0140 -> 0141)
-> pci 0000:00:09.1: HCRESET not completed yet!
-> pci 0000:00:09.2: enabling device (0140 -> 0142)
-> rt61pci 0000:00:0c.0: enabling device (0140 -> 0142)
-> ieee80211 phy0: rt2x00_set_chip: Info - Chipset detected -
->    rt: 2561, rf: 0003, rev: 000c
-> ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-> ehci-pci: EHCI PCI platform driver
-> ehci-pci 0000:00:09.2: EHCI Host Controller
-> ehci-pci 0000:00:09.2: new USB bus registered, assigned bus number 1
-> ehci-pci 0000:00:09.2: irq 125, io mem 0x58008000
-> ehci-pci 0000:00:09.2: USB 2.0 started, EHCI 1.00
-> hub 1-0:1.0: USB hub found
-> hub 1-0:1.0: 4 ports detected
-> uhci_hcd: USB Universal Host Controller Interface driver
-> uhci_hcd 0000:00:09.0: UHCI Host Controller
-> uhci_hcd 0000:00:09.0: new USB bus registered, assigned bus number 2
-> uhci_hcd 0000:00:09.0: HCRESET not completed yet!
-> uhci_hcd 0000:00:09.0: irq 123, io base 0x00001000
-> hub 2-0:1.0: USB hub found
-> hub 2-0:1.0: config failed, hub doesn't have any ports! (err -19)
-> uhci_hcd 0000:00:09.1: UHCI Host Controller
-> uhci_hcd 0000:00:09.1: new USB bus registered, assigned bus number 3
-> uhci_hcd 0000:00:09.1: HCRESET not completed yet!
-> uhci_hcd 0000:00:09.1: irq 124, io base 0x00001020
-> hub 3-0:1.0: USB hub found
-> hub 3-0:1.0: config failed, hub doesn't have any ports! (err -19)
-> scsi 0:0:0:0: Direct-Access     USB      Flash Disk       1.00 PQ: 0 ANSI: 2
-> sd 0:0:0:0: [sda] 7900336 512-byte logical blocks: (4.04 GB/3.77 GiB)
-> sd 0:0:0:0: [sda] Write Protect is off
-> sd 0:0:0:0: [sda] No Caching mode page found
-> sd 0:0:0:0: [sda] Assuming drive cache: write through
->  sda: sda1 sda2 sda3
-> sd 0:0:0:0: [sda] Attached SCSI removable disk
-> ieee80211 phy0: rt2x00lib_request_firmware: Info -
->    Loading firmware file 'rt2561s.bin'
-> ieee80211 phy0: rt2x00lib_request_firmware: Info -
->    Firmware detected - version: 0.8
-> IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
-> 
-> $ lspci
-> 00:00.0 Class 0600: 159b:4321
-> 00:09.2 Class 0c03: 1106:3104
-> 00:09.0 Class 0c03: 1106:3038
-> 00:09.1 Class 0c03: 1106:3038
-> 00:0c.0 Class 0280: 1814:0301
-> 
-> cat /proc/interrupts
->            CPU0
-> 123:          0       PCI   0 Edge      uhci_hcd:usb2
-> 124:          0       PCI   1 Edge      uhci_hcd:usb3
-> 125:        159       PCI   2 Edge      ehci_hcd:usb1
-> 126:       1082       PCI   3 Edge      rt61pci
-> 
-> cat /proc/iomem
-> 50000000-500000ff : /soc/pci@50000000
-> 58000000-5fffffff : Gemini PCI MEM
->   58000000-58007fff : 0000:00:0c.0
->     58000000-58007fff : 0000:00:0c.0
->   58008000-580080ff : 0000:00:09.2
->     58008000-580080ff : ehci_hcd
-> 
-> The EHCI USB hub works fine, I can mount and manage
-> files and the IRQs just keep ticking up. I can issue
-> iwlist wlan0 scanning and see all the WLANs here, I don't have
-> wpa_supplicant so have not tried connecting to them.
-> 
-> Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Feng-Hsin Chiang <john453-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
-> Cc: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 117 ++++++++++++---------
+>  1 file changed, 69 insertions(+), 48 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> index 53cd146d8096..680bb7a29dd5 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> @@ -19,32 +19,42 @@ Required properties:
+>    with PMIC variant but is typically something like 2.2 or 1.8V.
+>  
+>  The following required properties are standard for IO channels, see
+> -iio-bindings.txt for more details:
+> +iio-bindings.txt for more details, but noitice that this particular
+> +ADC has a special adressing scheme that require two cells for
+> +identifying each ADC channel:
+>  
+> -- #address-cells: should be set to <1>
+> +- #address-cells: should be set to <2>, the first cell is the
+> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
+> +  so legal values are 0x00, 0x01 or 0x02. The second cell
+> +  is the main analog mux setting (0x00..0x0f). The combination
+> +  of prescaler/premux and analog mux uniquely addresses a hardware
+> +  channel on all systems.
 
-Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+64-bits to describe 48 possible combinations... I'd just combine these 
+into 1 cell.
 
-I don't know enough to review the DT patch, but you have Rob's ack
-already.
+>  - #size-cells: should be set to <0>
+>  
+> -- #io-channel-cells: should be set to <1>
+> +- #io-channel-cells: should be set to <2>, again the cells are
+> +  precaler or premux followed by the analog muxing line.
+>  
+>  - interrupts: should refer to the parent PMIC interrupt controller
+>    and reference the proper ADC interrupt.
+>  
+>  Required subnodes:
+>  
+> -The ADC channels are configured as subnodes of the ADC. Since some of
+> -them are used for calibrating the ADC, these nodes are compulsory:
+> +The ADC channels are configured as subnodes of the ADC.
+>  
+> -adc-channel@c {
+> -	reg = <0x0c>;
+> +Since some of them are used for calibrating the ADC, these nodes are
+> +compulsory:
+> +
+> +adc-channel@0c {
+> +	reg = <0x00 0x0c>;
+>  };
+>  
+> -adc-channel@d {
+> -	reg = <0x0d>;
+> +adc-channel@0d {
+> +	reg = <0x00 0x0d>;
+>  };
+>  
+> -adc-channel@f {
+> -	reg = <0x0f>;
+> +adc-channel@0f {
+> +	reg = <0x00 0x0f>;
+>  };
+>  
+>  These three nodes are used for absolute and ratiometric calibration
+> @@ -52,13 +62,26 @@ and only need to have these reg values: they are by hardware definition
+>  1:1 ratio converters that sample 625, 1250 and 0 milliV and create
+>  an interpolation calibration for all other ADCs.
+>  
+> -Optional subnodes: any channels other than channel 0x0c, 0x0d and
+> -0x0f are optional.
+> +Optional subnodes: any channels other than channels [0x00 0x0c],
+> +[0x00 0x0d] and [0x00 0x0f] are optional.
+>  
+>  Required channel node properties:
+>  
+>  - reg: should contain the hardware channel number in the range
+> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
+> +  0 .. 0xff (8 bits).
+> +
+> +  On PM8058 the hardware only supports 16 channels, but we get the same
+> +  channels repeating with its input divided down by 1 or 3. Channels 00,
+> +  10, 20, ... f0 are the raw values, 04, 14, 24 .. f4 are "unity" channels
+> +  divided by 1, and 08, 18, 28 .. f8 are channels divided by 3. Bits 0
+> +  and 1 of the channel index should always be 0.
+> +
+> +  On PM8921 the hardware supports more than 16 channels through a complex
+> +  routing matrix using a premux, so 00, 10, 20 .. f0 are the basic raw
+> +  channels while another set of channels appear for 04, 14, 24 .. f4,
+> +  and again some of the same channels appear again divided down by 3
+> +  in 08, 18, 28 .. f8. Again bits 0 and 1 of the channel index should
+> +  always be 0.
 
-Not sure how you want to merge these; if you want to feed the whole
-thing via ARM SoC, that's fine with me.  Otherwise, let me know if
-you'd like me to take anything.
+Now I'm lost...
 
-Noticed one trivial typo below.
-
-> + * Special configuration registers directly in the first few words
-> + * in he I/O space.
-
-s/he//
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
