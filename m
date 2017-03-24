@@ -1,156 +1,111 @@
-From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH 6/9] bus: brcmstb_gisb: correct support for 64-bit address
- output
-Date: Fri, 24 Mar 2017 07:46:29 -0700
-Message-ID: <20170324144632.5896-7-opendmb@gmail.com>
-References: <20170324144632.5896-1-opendmb@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 10/11] ASoC: add bindings for stm32
+	DFSDM filter
+Date: Fri, 24 Mar 2017 09:52:08 -0500
+Message-ID: <20170324145208.6tj5swol5du5lkyc@rob-hp-laptop>
+References: <1489759704-30217-1-git-send-email-arnaud.pouliquen@st.com>
+ <1489759704-30217-11-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170324144632.5896-1-opendmb@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: catalin.marinas@arm.com
-Cc: mark.rutland@arm.com, wangkefeng.wang@huawei.com, linus.walleij@linaro.org, will.deacon@arm.com, mingo@kernel.org, panand@redhat.com, f.fainelli@gmail.com, jonathanh@nvidia.com, bgolaszewski@baylibre.com, bcm-kernel-feedback-list@broadcom.com, shijie.huang@arm.com, opendmb@gmail.com, treding@nvidia.com, devicetree@vger.kernel.org, vladimir.murzin@arm.com, cmetcalf@mellanox.com, suzuki.poulose@arm.com, andre.przywara@arm.com, robh+dt@kernel.org, gregory.0xf0@gmail.com, sandeepa.s.prabhu@gmail.com, horms+renesas@verge.net.au, linux-arm-kernel@lists.infradead.org, mirza.krak@gmail.com, linux-kernel@vger.kernel.org, james.morse@arm.com, olof@lixom.net, computersforpeace@gmail.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <1489759704-30217-11-git-send-email-arnaud.pouliquen@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, olivier moysan <olivier.moysan@st.com>, kernel@stlinux.com, Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The GISB bus can support addresses beyond 32-bits.  So this commit
-corrects support for reading a captured 64-bit address into a 64-bit
-variable by obtaining the high bits from the ARB_ERR_CAP_HI_ADDR
-register (when present) and then outputting the full 64-bit value.
+On Fri, Mar 17, 2017 at 03:08:23PM +0100, Arnaud Pouliquen wrote:
+> Add bindings that describes audio settings to support
+> Digital Filter for pulse density modulation(PDM) microphone.
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> ---
+> V2->V3:
+>    Fixes based on V2 comments
+> 
+>  .../devicetree/bindings/sound/st,stm32-adfsdm.txt  | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt b/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
+> new file mode 100644
+> index 0000000..ab610bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
+> @@ -0,0 +1,40 @@
+> +STMicroelectronics audio DFSDM DT bindings
+> +
+> +This driver supports audio PDM microphone capture through Digital Filter format
+> +Sigma Delta modulators (DFSDM).
+> +
+> +Required properties:
+> +  - compatible: "st,stm32h7-adfsdm".
+> +
+> +  - #sound-dai-cells : Must be equal to 0
+> +
+> +  - io-channels : phandle to iio dfsdm instance node.
+> +
+> +
+> +Example of a simple sound card using audio DFSDM node.
+> +
+> +	dmic0: dmic_@0 {
 
-It also removes unused definitions.
+Drop the '_' and unit address.
 
-Fixes: 44127b771d9c ("bus: add Broadcom GISB bus arbiter timeout/error handler")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- drivers/bus/brcmstb_gisb.c | 36 ++++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 16 deletions(-)
+> +		compatible = "dmic-codec";
+> +		#sound-dai-cells = <0>;
+> +	};
+> +
+> +	asoc-pdm@0 {
 
-diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index 9eba0143f1a4..c8d2a61d21ed 100644
---- a/drivers/bus/brcmstb_gisb.c
-+++ b/drivers/bus/brcmstb_gisb.c
-@@ -37,8 +37,6 @@
- #define  ARB_ERR_CAP_CLEAR		(1 << 0)
- #define  ARB_ERR_CAP_STATUS_TIMEOUT	(1 << 12)
- #define  ARB_ERR_CAP_STATUS_TEA		(1 << 11)
--#define  ARB_ERR_CAP_STATUS_BS_SHIFT	(1 << 2)
--#define  ARB_ERR_CAP_STATUS_BS_MASK	0x3c
- #define  ARB_ERR_CAP_STATUS_WRITE	(1 << 1)
- #define  ARB_ERR_CAP_STATUS_VALID	(1 << 0)
- 
-@@ -47,7 +45,6 @@ enum {
- 	ARB_ERR_CAP_CLR,
- 	ARB_ERR_CAP_HI_ADDR,
- 	ARB_ERR_CAP_ADDR,
--	ARB_ERR_CAP_DATA,
- 	ARB_ERR_CAP_STATUS,
- 	ARB_ERR_CAP_MASTER,
- };
-@@ -57,7 +54,6 @@ static const int gisb_offsets_bcm7038[] = {
- 	[ARB_ERR_CAP_CLR]	= 0x0c4,
- 	[ARB_ERR_CAP_HI_ADDR]	= -1,
- 	[ARB_ERR_CAP_ADDR]	= 0x0c8,
--	[ARB_ERR_CAP_DATA]	= 0x0cc,
- 	[ARB_ERR_CAP_STATUS]	= 0x0d0,
- 	[ARB_ERR_CAP_MASTER]	= -1,
- };
-@@ -67,7 +63,6 @@ static const int gisb_offsets_bcm7400[] = {
- 	[ARB_ERR_CAP_CLR]	= 0x0c8,
- 	[ARB_ERR_CAP_HI_ADDR]	= -1,
- 	[ARB_ERR_CAP_ADDR]	= 0x0cc,
--	[ARB_ERR_CAP_DATA]	= 0x0d0,
- 	[ARB_ERR_CAP_STATUS]	= 0x0d4,
- 	[ARB_ERR_CAP_MASTER]	= 0x0d8,
- };
-@@ -77,7 +72,6 @@ static const int gisb_offsets_bcm7435[] = {
- 	[ARB_ERR_CAP_CLR]	= 0x168,
- 	[ARB_ERR_CAP_HI_ADDR]	= -1,
- 	[ARB_ERR_CAP_ADDR]	= 0x16c,
--	[ARB_ERR_CAP_DATA]	= 0x170,
- 	[ARB_ERR_CAP_STATUS]	= 0x174,
- 	[ARB_ERR_CAP_MASTER]	= 0x178,
- };
-@@ -87,7 +81,6 @@ static const int gisb_offsets_bcm7445[] = {
- 	[ARB_ERR_CAP_CLR]	= 0x7e4,
- 	[ARB_ERR_CAP_HI_ADDR]	= 0x7e8,
- 	[ARB_ERR_CAP_ADDR]	= 0x7ec,
--	[ARB_ERR_CAP_DATA]	= 0x7f0,
- 	[ARB_ERR_CAP_STATUS]	= 0x7f4,
- 	[ARB_ERR_CAP_MASTER]	= 0x7f8,
- };
-@@ -109,9 +102,13 @@ static u32 gisb_read(struct brcmstb_gisb_arb_device *gdev, int reg)
- {
- 	int offset = gdev->gisb_offsets[reg];
- 
--	/* return 1 if the hardware doesn't have ARB_ERR_CAP_MASTER */
--	if (offset == -1)
--		return 1;
-+	if (offset < 0) {
-+		/* return 1 if the hardware doesn't have ARB_ERR_CAP_MASTER */
-+		if (reg == ARB_ERR_CAP_MASTER)
-+			return 1;
-+		else
-+			return 0;
-+	}
- 
- 	if (gdev->big_endian)
- 		return ioread32be(gdev->base + offset);
-@@ -119,6 +116,16 @@ static u32 gisb_read(struct brcmstb_gisb_arb_device *gdev, int reg)
- 		return ioread32(gdev->base + offset);
- }
- 
-+static u64 gisb_read_address(struct brcmstb_gisb_arb_device *gdev)
-+{
-+	u64 value;
-+
-+	value = (u64)gisb_read(gdev, ARB_ERR_CAP_ADDR);
-+	value |= (u64)gisb_read(gdev, ARB_ERR_CAP_HI_ADDR) << 32;
-+
-+	return value;
-+}
-+
- static void gisb_write(struct brcmstb_gisb_arb_device *gdev, u32 val, int reg)
- {
- 	int offset = gdev->gisb_offsets[reg];
-@@ -185,7 +192,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
- 					const char *reason)
- {
- 	u32 cap_status;
--	unsigned long arb_addr;
-+	u64 arb_addr;
- 	u32 master;
- 	const char *m_name;
- 	char m_fmt[11];
-@@ -197,10 +204,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
- 		return 1;
- 
- 	/* Read the address and master */
--	arb_addr = gisb_read(gdev, ARB_ERR_CAP_ADDR) & 0xffffffff;
--#if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
--	arb_addr |= (u64)gisb_read(gdev, ARB_ERR_CAP_HI_ADDR) << 32;
--#endif
-+	arb_addr = gisb_read_address(gdev);
- 	master = gisb_read(gdev, ARB_ERR_CAP_MASTER);
- 
- 	m_name = brcmstb_gisb_master_to_str(gdev, master);
-@@ -209,7 +213,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
- 		m_name = m_fmt;
- 	}
- 
--	pr_crit("%s: %s at 0x%lx [%c %s], core: %s\n",
-+	pr_crit("%s: %s at 0x%llx [%c %s], core: %s\n",
- 		__func__, reason, arb_addr,
- 		cap_status & ARB_ERR_CAP_STATUS_WRITE ? 'W' : 'R',
- 		cap_status & ARB_ERR_CAP_STATUS_TIMEOUT ? "timeout" : "",
--- 
-2.12.0
+asoc is a Linux term. Drop the unit address.
+
+> +		compatible = "st,stm32h7-adfsdm";
+
+Is this a separate block from the ADC? A drawing of the h/w blocks and 
+connections would help.
+
+> +		#sound-dai-cells = <0>;
+> +		io-channels = <&dfsdm_adc0 0>;
+> +	};
+> +
+> +	sound_dfsdm_pdm {
+
+sound-card {
+
+> + 		compatible = "simple-audio-card";
+> + 		simple-audio-card,name = "dfsdm_pdm";
+> +
+> + 		dfsdm0_mic0: simple-audio-card,dai-link@0 {
+
+I'd suggest moving to the graph card.
+
+> + 			format = "pdm";
+> + 			cpu {
+> + 				sound-dai = <&asoc_pdm1>;
+
+This phandle doesn't point to anything.
+
+> + 			};
+> + 			dmic0_codec: codec {
+> + 				sound-dai = <&dmic0>;
+> + 			};
+> + 		};
+> +	};
+> \ No newline at end of file
+
+^^^
+
+> -- 
+> 1.9.1
+> 
