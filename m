@@ -1,36 +1,43 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/8] pinctrl: meson: add audio output pins
-Date: Fri, 24 Mar 2017 12:52:44 -0700
-Message-ID: <m2wpbeh2pf.fsf@baylibre.com>
-References: <20170323165101.29262-1-jbrunet@baylibre.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5] hwmon: ads7828 optional parameters from the device
+ tree
+Date: Fri, 24 Mar 2017 12:55:26 -0700
+Message-ID: <20170324195526.GA28270@roeck-us.net>
+References: <20170321032434.9268-1-kernel.development@povil.us>
+ <20170322084240.xspj432z2mpyzykq@ninjato>
+ <20170322130555.wgwrkeju43dvj232@irascible.povil.us>
+ <20170324161003.hv2bqpyspjdkx5j4@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170323165101.29262-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
-        message of "Thu, 23 Mar 2017 17:50:53 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170324161003.hv2bqpyspjdkx5j4@rob-hp-laptop>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sam Povilus <kernel.development@povil.us>, Wolfram Sang <wsa@the-dreams.de>, jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+On Fri, Mar 24, 2017 at 11:10:03AM -0500, Rob Herring wrote:
+> On Wed, Mar 22, 2017 at 07:05:55AM -0600, Sam Povilus wrote:
+> > On Wed, Mar 22, 2017 at 09:42:40AM +0100, Wolfram Sang wrote:
+> > > 
+> > > >  .../devicetree/bindings/i2c/trivial-devices.txt    |  2 --
+> > > 
+> > > This file is about to get moved one directory up:
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=b7e252fcddfa573bb1ee275b53bba6cef85671d4
+> > > 
+> > > Just so you know already...
+> > > 
+> > 
+> > Thanks! I'm a bit new to this, what's the best way for me to handle
+> > this? Submit against Linus' tree (presumably making a merge nightmare
+> > for someone) or rebase my branch off robh's (and presumably risking some
+> > other branch's patch conflicting)?
+> 
+> Send me a separate patch for just this file and I'll pick it up.
+> 
+Agreed, that seems to be the best approach.
 
-> This patchset adds the pinctrl definition and the related device-tree
-> bindings of the i2s output and spdif output pins on the meson gxbb and
-> gxl SoCs.
->
-> This is part of the ongoing work to bring audio output suppot on the
-> meson family. It was tested on the gxbb p200 and gxl p230.
-
-Series looks good to me,
-
-However, I'm not sure about Linus's preference, but most maintainers
-(myself included) prefer a small description in the changelog, even if
-it restates (with slightly more description) what's already in the
-$SUBJECT.
-
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Guenter
