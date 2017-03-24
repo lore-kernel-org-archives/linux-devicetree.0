@@ -1,47 +1,62 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2 5/7] clk: tegra: don't warn for PLL defaults
- unnecessarily
-Date: Fri, 24 Mar 2017 09:27:50 +0000
-Message-ID: <6a7a5f58-08e1-c8e8-c32f-f57b63690863@nvidia.com>
-References: <1487846686-6388-1-git-send-email-pdeschrijver@nvidia.com>
- <1487846686-6388-6-git-send-email-pdeschrijver@nvidia.com>
- <d6435129-4c67-1126-429d-ffef52d0b2d4@nvidia.com>
- <20170324092546.GA22128@tbergstrom-lnx.Nvidia.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v5.1 11/13] of: Add nop implementation of
+ of_get_next_parent()
+Date: Fri, 24 Mar 2017 11:28:15 +0200
+Message-ID: <20170324092814.GS10701@valkosipuli.retiisi.org.uk>
+References: <1489667481-28521-12-git-send-email-sakari.ailus@linux.intel.com>
+ <1489752538-23543-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170324092546.GA22128@tbergstrom-lnx.Nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489752538-23543-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 24/03/17 09:25, Peter De Schrijver wrote:
-> On Thu, Mar 23, 2017 at 02:37:23PM +0000, Jon Hunter wrote:
->> Hi Peter,
->>
->> On 23/02/17 10:44, Peter De Schrijver wrote:
->>> If the PLL is on, only warn if the defaults are not yet set. Otherwise be
->>> silent.
->>>
->>> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
->>
->> This patch is breaking boot for Tegra210 Smaug on -next [0]. Reverting
->> this on top of -next allows the board to boot again. I have not had
->> chance to dig into this any further yet, but can unless you have some
->> thoughts.
+On Fri, Mar 17, 2017 at 02:08:58PM +0200, Sakari Ailus wrote:
+> of_get_next_parent() was only defined if CONFIG_OF was set. Using the
+> function thus requires #ifdef CONFIG_OF ... #endif in all cases. Avoid
+> having to use pre-processor macros around the function by providing a nop
+> implementation of of_get_next_parent().
 > 
-> My guess would be pllm. Maybe the bootloader on Smaug switches to pllm for
-> a higher emc frequency? On jetson cboot doesn't do that, so at least that
-> could be a difference.
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Thanks. I will take a closer look at what is going on either today or
-Monday and let you know what I find.
+As a result of the changes in v5.1 in the patch 12/13 ("device property: Add
+fwnode_get_next_parent()") of this set, this patch is no longer needed. If
+there are no objections, I'll drop it from the set.
 
-Cheers
-Jon
+> ---
+> since v5:
+> 
+> - Improved commit message.
+> 
+>  include/linux/of.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index e5d4225f..cc212a0 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -586,6 +586,12 @@ static inline struct device_node *of_get_parent(const struct device_node *node)
+>  	return NULL;
+>  }
+>  
+> +static inline struct device_node *of_get_next_parent(
+> +	const struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +
+>  static inline struct device_node *of_get_next_child(
+>  	const struct device_node *node, struct device_node *prev)
+>  {
 
 -- 
-nvpublic
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
