@@ -1,65 +1,156 @@
 From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH 9/9] bus: brcmstb_gisb: update to support new revision
-Date: Fri, 24 Mar 2017 07:46:32 -0700
-Message-ID: <20170324144632.5896-10-opendmb@gmail.com>
+Subject: [PATCH 6/9] bus: brcmstb_gisb: correct support for 64-bit address
+ output
+Date: Fri, 24 Mar 2017 07:46:29 -0700
+Message-ID: <20170324144632.5896-7-opendmb@gmail.com>
 References: <20170324144632.5896-1-opendmb@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170324144632.5896-1-opendmb@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: catalin.marinas@arm.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, vladimir.murzin@arm.com, panand@redhat.com, andre.przywara@arm.com, cmetcalf@mellanox.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, horms+renesas@verge.net.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, opendmb@gmail.com
+Cc: mark.rutland@arm.com, wangkefeng.wang@huawei.com, linus.walleij@linaro.org, will.deacon@arm.com, mingo@kernel.org, panand@redhat.com, f.fainelli@gmail.com, jonathanh@nvidia.com, bgolaszewski@baylibre.com, bcm-kernel-feedback-list@broadcom.com, shijie.huang@arm.com, opendmb@gmail.com, treding@nvidia.com, devicetree@vger.kernel.org, vladimir.murzin@arm.com, cmetcalf@mellanox.com, suzuki.poulose@arm.com, andre.przywara@arm.com, robh+dt@kernel.org, gregory.0xf0@gmail.com, sandeepa.s.prabhu@gmail.com, horms+renesas@verge.net.au, linux-arm-kernel@lists.infradead.org, mirza.krak@gmail.com, linux-kernel@vger.kernel.org, james.morse@arm.com, olof@lixom.net, computersforpeace@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The 7278 introduces a new version of this core.  This
-commit adds support for that revision.
+The GISB bus can support addresses beyond 32-bits.  So this commit
+corrects support for reading a captured 64-bit address into a 64-bit
+variable by obtaining the high bits from the ARB_ERR_CAP_HI_ADDR
+register (when present) and then outputting the full 64-bit value.
 
+It also removes unused definitions.
+
+Fixes: 44127b771d9c ("bus: add Broadcom GISB bus arbiter timeout/error handler")
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt |  3 ++-
- drivers/bus/brcmstb_gisb.c                              | 10 ++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ drivers/bus/brcmstb_gisb.c | 36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-index 1eceefb20f01..8a6c3c2e58fe 100644
---- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-+++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-@@ -3,7 +3,8 @@ Broadcom GISB bus Arbiter controller
- Required properties:
- 
- - compatible:
--    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for 28nm chips
-+    "brcm,bcm7278-gisb-arb" for V7 28nm chips
-+    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for other 28nm chips
-     "brcm,bcm7435-gisb-arb" for newer 40nm chips
-     "brcm,bcm7400-gisb-arb" for older 40nm chips and all 65nm chips
-     "brcm,bcm7038-gisb-arb" for 130nm chips
 diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index 52b5d96081eb..a91c4ae63e74 100644
+index 9eba0143f1a4..c8d2a61d21ed 100644
 --- a/drivers/bus/brcmstb_gisb.c
 +++ b/drivers/bus/brcmstb_gisb.c
-@@ -63,6 +63,15 @@ static const int gisb_offsets_bcm7038[] = {
+@@ -37,8 +37,6 @@
+ #define  ARB_ERR_CAP_CLEAR		(1 << 0)
+ #define  ARB_ERR_CAP_STATUS_TIMEOUT	(1 << 12)
+ #define  ARB_ERR_CAP_STATUS_TEA		(1 << 11)
+-#define  ARB_ERR_CAP_STATUS_BS_SHIFT	(1 << 2)
+-#define  ARB_ERR_CAP_STATUS_BS_MASK	0x3c
+ #define  ARB_ERR_CAP_STATUS_WRITE	(1 << 1)
+ #define  ARB_ERR_CAP_STATUS_VALID	(1 << 0)
+ 
+@@ -47,7 +45,6 @@ enum {
+ 	ARB_ERR_CAP_CLR,
+ 	ARB_ERR_CAP_HI_ADDR,
+ 	ARB_ERR_CAP_ADDR,
+-	ARB_ERR_CAP_DATA,
+ 	ARB_ERR_CAP_STATUS,
+ 	ARB_ERR_CAP_MASTER,
+ };
+@@ -57,7 +54,6 @@ static const int gisb_offsets_bcm7038[] = {
+ 	[ARB_ERR_CAP_CLR]	= 0x0c4,
+ 	[ARB_ERR_CAP_HI_ADDR]	= -1,
+ 	[ARB_ERR_CAP_ADDR]	= 0x0c8,
+-	[ARB_ERR_CAP_DATA]	= 0x0cc,
+ 	[ARB_ERR_CAP_STATUS]	= 0x0d0,
  	[ARB_ERR_CAP_MASTER]	= -1,
  };
- 
-+static const int gisb_offsets_bcm7278[] = {
-+	[ARB_TIMER]		= 0x008,
-+	[ARB_ERR_CAP_CLR]	= 0x7f8,
-+	[ARB_ERR_CAP_HI_ADDR]	= -1,
-+	[ARB_ERR_CAP_ADDR]	= 0x7e0,
-+	[ARB_ERR_CAP_STATUS]	= 0x7f0,
-+	[ARB_ERR_CAP_MASTER]	= 0x7f4,
-+};
-+
- static const int gisb_offsets_bcm7400[] = {
- 	[ARB_TIMER]		= 0x00c,
+@@ -67,7 +63,6 @@ static const int gisb_offsets_bcm7400[] = {
  	[ARB_ERR_CAP_CLR]	= 0x0c8,
-@@ -329,6 +338,7 @@ static const struct of_device_id brcmstb_gisb_arb_of_match[] = {
- 	{ .compatible = "brcm,bcm7445-gisb-arb", .data = gisb_offsets_bcm7445 },
- 	{ .compatible = "brcm,bcm7435-gisb-arb", .data = gisb_offsets_bcm7435 },
- 	{ .compatible = "brcm,bcm7400-gisb-arb", .data = gisb_offsets_bcm7400 },
-+	{ .compatible = "brcm,bcm7278-gisb-arb", .data = gisb_offsets_bcm7278 },
- 	{ .compatible = "brcm,bcm7038-gisb-arb", .data = gisb_offsets_bcm7038 },
- 	{ },
+ 	[ARB_ERR_CAP_HI_ADDR]	= -1,
+ 	[ARB_ERR_CAP_ADDR]	= 0x0cc,
+-	[ARB_ERR_CAP_DATA]	= 0x0d0,
+ 	[ARB_ERR_CAP_STATUS]	= 0x0d4,
+ 	[ARB_ERR_CAP_MASTER]	= 0x0d8,
  };
+@@ -77,7 +72,6 @@ static const int gisb_offsets_bcm7435[] = {
+ 	[ARB_ERR_CAP_CLR]	= 0x168,
+ 	[ARB_ERR_CAP_HI_ADDR]	= -1,
+ 	[ARB_ERR_CAP_ADDR]	= 0x16c,
+-	[ARB_ERR_CAP_DATA]	= 0x170,
+ 	[ARB_ERR_CAP_STATUS]	= 0x174,
+ 	[ARB_ERR_CAP_MASTER]	= 0x178,
+ };
+@@ -87,7 +81,6 @@ static const int gisb_offsets_bcm7445[] = {
+ 	[ARB_ERR_CAP_CLR]	= 0x7e4,
+ 	[ARB_ERR_CAP_HI_ADDR]	= 0x7e8,
+ 	[ARB_ERR_CAP_ADDR]	= 0x7ec,
+-	[ARB_ERR_CAP_DATA]	= 0x7f0,
+ 	[ARB_ERR_CAP_STATUS]	= 0x7f4,
+ 	[ARB_ERR_CAP_MASTER]	= 0x7f8,
+ };
+@@ -109,9 +102,13 @@ static u32 gisb_read(struct brcmstb_gisb_arb_device *gdev, int reg)
+ {
+ 	int offset = gdev->gisb_offsets[reg];
+ 
+-	/* return 1 if the hardware doesn't have ARB_ERR_CAP_MASTER */
+-	if (offset == -1)
+-		return 1;
++	if (offset < 0) {
++		/* return 1 if the hardware doesn't have ARB_ERR_CAP_MASTER */
++		if (reg == ARB_ERR_CAP_MASTER)
++			return 1;
++		else
++			return 0;
++	}
+ 
+ 	if (gdev->big_endian)
+ 		return ioread32be(gdev->base + offset);
+@@ -119,6 +116,16 @@ static u32 gisb_read(struct brcmstb_gisb_arb_device *gdev, int reg)
+ 		return ioread32(gdev->base + offset);
+ }
+ 
++static u64 gisb_read_address(struct brcmstb_gisb_arb_device *gdev)
++{
++	u64 value;
++
++	value = (u64)gisb_read(gdev, ARB_ERR_CAP_ADDR);
++	value |= (u64)gisb_read(gdev, ARB_ERR_CAP_HI_ADDR) << 32;
++
++	return value;
++}
++
+ static void gisb_write(struct brcmstb_gisb_arb_device *gdev, u32 val, int reg)
+ {
+ 	int offset = gdev->gisb_offsets[reg];
+@@ -185,7 +192,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+ 					const char *reason)
+ {
+ 	u32 cap_status;
+-	unsigned long arb_addr;
++	u64 arb_addr;
+ 	u32 master;
+ 	const char *m_name;
+ 	char m_fmt[11];
+@@ -197,10 +204,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+ 		return 1;
+ 
+ 	/* Read the address and master */
+-	arb_addr = gisb_read(gdev, ARB_ERR_CAP_ADDR) & 0xffffffff;
+-#if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
+-	arb_addr |= (u64)gisb_read(gdev, ARB_ERR_CAP_HI_ADDR) << 32;
+-#endif
++	arb_addr = gisb_read_address(gdev);
+ 	master = gisb_read(gdev, ARB_ERR_CAP_MASTER);
+ 
+ 	m_name = brcmstb_gisb_master_to_str(gdev, master);
+@@ -209,7 +213,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+ 		m_name = m_fmt;
+ 	}
+ 
+-	pr_crit("%s: %s at 0x%lx [%c %s], core: %s\n",
++	pr_crit("%s: %s at 0x%llx [%c %s], core: %s\n",
+ 		__func__, reason, arb_addr,
+ 		cap_status & ARB_ERR_CAP_STATUS_WRITE ? 'W' : 'R',
+ 		cap_status & ARB_ERR_CAP_STATUS_TIMEOUT ? "timeout" : "",
 -- 
 2.12.0
