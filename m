@@ -1,96 +1,39 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv4] mfd: cpcap: implement irq sense helper
-Date: Fri, 24 Mar 2017 09:42:40 +0100
-Message-ID: <20170324084240.23251-1-sre@kernel.org>
-References: <20170323142337.4c4d6lnhqtugbb2r@dell>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170323142337.4c4d6lnhqtugbb2r@dell>
-Sender: linux-input-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Lee Jones <lee.jones@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 5/7] clocksource/drivers/rockchip_timer: implement
+ clocksource timer
+Date: Fri, 24 Mar 2017 09:55:45 +0100
+Message-ID: <99b43b0a-6b91-9ee7-10b9-3ec48350a4db@linaro.org>
+References: <201703241631.5BKa33uG%fengguang.wu@intel.com>
+ <B771814D-541A-4D89-AC8A-5FFF84DE2E66@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <B771814D-541A-4D89-AC8A-5FFF84DE2E66-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CPCAP can sense if IRQ is currently set or not. This
-functionality is required for a few subdevices, such
-as the power button and usb phy modules.
+On 24/03/2017 09:41, Alexander Kochetkov wrote:
+> The patch series should be applied after the patches [1] and [2] haven’t merged yet into the kernel.
+> That mention in the cover letter.
+> 
+> [1] https://lkml.org/lkml/2017/3/22/420
+> [2] https://lkml.org/lkml/2017/3/22/426
 
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
+Thanks for the fix Alexander.
 
----
-Hi Lee,
+  -- Daniel
 
-I hope this is fine with you. I tried to come up
-with a sensible macro for reg, but everything I
-came up with actually reduced readability.
-
--- Sebastian
-
-Changes since PATCHv3:
- - add explicit extern to function definition
- - use BIT macro for mask variable
- - avoid magic numbers
----
- drivers/mfd/motorola-cpcap.c       | 28 ++++++++++++++++++++++++++++
- include/linux/mfd/motorola-cpcap.h |  2 ++
- 2 files changed, 30 insertions(+)
-
-diff --git a/drivers/mfd/motorola-cpcap.c b/drivers/mfd/motorola-cpcap.c
-index 6aeada7d7ce5..c80997a377a1 100644
---- a/drivers/mfd/motorola-cpcap.c
-+++ b/drivers/mfd/motorola-cpcap.c
-@@ -23,6 +23,8 @@
- 
- #define CPCAP_NR_IRQ_REG_BANKS	6
- #define CPCAP_NR_IRQ_CHIPS	3
-+#define CPCAP_REGISTER_SIZE 4
-+#define CPCAP_REGISTER_BITS 16
- 
- struct cpcap_ddata {
- 	struct spi_device *spi;
-@@ -32,6 +34,32 @@ struct cpcap_ddata {
- 	struct regmap *regmap;
- };
- 
-+static int cpcap_sense_irq(struct regmap *regmap, int irq)
-+{
-+	int regnum = irq / CPCAP_REGISTER_BITS;
-+	int mask = BIT(irq % CPCAP_REGISTER_BITS);
-+	int reg = CPCAP_REG_INTS1 + (regnum * CPCAP_REGISTER_SIZE);
-+	int err, val;
-+
-+	if (reg < CPCAP_REG_INTS1 || reg > CPCAP_REG_INTS4)
-+		return -EINVAL;
-+
-+	err = regmap_read(regmap, reg, &val);
-+	if (err)
-+		return err;
-+
-+	return !!(val & mask);
-+}
-+
-+int cpcap_sense_virq(struct regmap *regmap, int virq)
-+{
-+	struct regmap_irq_chip_data *d = irq_get_chip_data(virq);
-+	int base = regmap_irq_chip_get_base(d);
-+
-+	return cpcap_sense_irq(regmap, virq - base);
-+}
-+EXPORT_SYMBOL_GPL(cpcap_sense_virq);
-+
- static int cpcap_check_revision(struct cpcap_ddata *cpcap)
- {
- 	u16 vendor, rev;
-diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motorola-cpcap.h
-index b4031c2b2214..793aa695faa0 100644
---- a/include/linux/mfd/motorola-cpcap.h
-+++ b/include/linux/mfd/motorola-cpcap.h
-@@ -290,3 +290,5 @@ static inline int cpcap_get_vendor(struct device *dev,
- 
- 	return 0;
- }
-+
-+extern int cpcap_sense_virq(struct regmap *regmap, int virq);
 -- 
-2.11.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
