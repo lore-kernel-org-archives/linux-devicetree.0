@@ -1,57 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] of: add stub for of_n_addr_cells
-Date: Fri, 24 Mar 2017 22:23:48 +0100
-Message-ID: <CAK8P3a3ojRSpC3GVU6P05GEtj7AHxrYD_ZrAZaa68KT14H9Hew@mail.gmail.com>
-References: <20170324103940.30902-1-tobias.regnery@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324103940.30902-1-tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tobias Regnery <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+From: Patrick Menschel <menschel.p@posteo.de>
+Subject: [PATCH v2 0/2] ARM: dts: sunxi: Add CAN node and can0_pins_a pinctrl setting
+Date: Fri, 24 Mar 2017 22:52:17 +0100
+Message-ID: <1490392339-23565-1-git-send-email-menschel.p@posteo.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
+Cc: Patrick Menschel <menschel.p@posteo.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 11:39 AM, Tobias Regnery
-<tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> With CONFIG_OF=n and CONFIG_COMPILE_TEST=y the rcar pci-e driver fails to
-> build on arm:
->
-> drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
-> drivers/pci/host/pcie-rcar.c:1035:16: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
->   parser->pna = of_n_addr_cells(node);
->                 ^~~~~~~~~~~~~~~
->
-> Fix this by adding an inline stub for of_n_addr_cells
->
-> Signed-off-by: Tobias Regnery <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> This is against next-20140324
->
->  include/linux/of.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 21e6323de0f3..9978c918222e 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -710,6 +710,11 @@ static inline struct device_node *of_get_cpu_node(int cpu,
->         return NULL;
->  }
->
-> +static inline int of_n_addr_cells(struct device_node *np)
-> +{
-> +       return 0;
-> +}
-> +
+The Allwinner A10/A20 SoCs have an on-board CAN (Controller Area Network)
+controller. This patch adds the CAN core to the SoC's include files,
+sun4i-a10.dtsi and sun7i-a20.dtsi.
 
-This looks good, but we should also do the same thing for of_n_size_cells().
+On linux-can mailing list was a discussion about updating the device tree bindings
+https://lkml.org/lkml/2015/9/17/220
+but it did not progress past writing the documentation file.
+Documentation/devicetree/bindings/net/can/sun4i_can.txt
 
-I think I sent something like this a few years ago, but never resubmitted it
-when it was ignored at first.
+The CAN controller can be enabled in a board specific dts file as
+described in the documentation file or by using a device tree overlay.
 
-        Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have tested the patch v2 on a Banana Pi (A20 SoC) with mainline kernel 4.10.5.
+
+History:
+    v2: changed can0_pins_a node contents to new generic binding method, 
+	changed can0_pins_a node position by alphabetical order,
+        changed can0 device node position by rising physical address order
+
+    v1: initial
+
+Patrick Menschel (2):
+  ARM: dts: sun4i: Add CAN node and can0_pins_a pinctrl settings
+  ARM: dts: sun7i: Add CAN node and can0_pins_a pinctrl settings
+
+ arch/arm/boot/dts/sun4i-a10.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi | 13 +++++++++++++
+ 2 files changed, 26 insertions(+)
+
+-- 
+1.9.1
