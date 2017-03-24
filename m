@@ -1,65 +1,83 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 3/4] dt-bindings: serial: add a new compatible string
- for SC9860
-Date: Thu, 23 Mar 2017 21:36:57 -0500
-Message-ID: <20170324023657.2iyh22lr52rme5bu@rob-hp-laptop>
-References: <1489729898-774-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1489729898-774-4-git-send-email-chunyan.zhang@spreadtrum.com>
+Subject: Re: [PATCH v4 7/7] mfd: dt-bindings: Add RK805 device tree bindings
+ document
+Date: Thu, 23 Mar 2017 21:38:14 -0500
+Message-ID: <20170324023814.vgljiqinplaggo37@rob-hp-laptop>
+References: <1489734377-1716-1-git-send-email-zhangqing@rock-chips.com>
+ <1489734525-23310-1-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489729898-774-4-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+In-Reply-To: <1489734525-23310-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 01:51:37PM +0800, Chunyan Zhang wrote:
-> SC9860 use the same serial device which SC9836 uses, so added a new
-> compatible string to support SC9860 as well, also added an example
-> of how to describe this serial device in DT.
+On Fri, Mar 17, 2017 at 03:08:45PM +0800, Elaine Zhang wrote:
+> Add device tree bindings documentation for Rockchip's RK805 PMIC.
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/serial/sprd-uart.txt | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/mfd/rk808.txt | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> index 2aff0f2..1db5d6f 100644
-> --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> @@ -1,7 +1,19 @@
->  * Spreadtrum serial UART
+> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+> index 9636ae8d8d41..05eb07134483 100644
+> --- a/Documentation/devicetree/bindings/mfd/rk808.txt
+> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+> @@ -1,11 +1,12 @@
+>  RK8XX Power Management Integrated Circuit
+>  
+>  The rk8xx family current members:
+> +rk805
+>  rk808
+>  rk818
 >  
 >  Required properties:
-> -- compatible: must be "sprd,sc9836-uart"
-> +- compatible: must be one of:
-> +  * "sprd,sc9836-uart"
-> +  * "sprd,sc9860-uart", "sprd,sc9836-uart"
+> -- compatible: "rockchip,rk808", "rockchip,rk818"
+> +- compatible: "rockchip,rk805", "rockchip,rk808", "rockchip,rk818"
+
+Please make this one valid combination per line
+
+>  - reg: I2C slave address
+>  - interrupt-parent: The parent interrupt controller.
+>  - interrupts: the interrupt outputs of the controller.
+> @@ -18,6 +19,14 @@ Optional properties:
+>  - rockchip,system-power-controller: Telling whether or not this pmic is controlling
+>    the system power.
+>  
+> +Optional RK805 properties:
+> +- vcc1-supply:  The input supply for DCDC_REG1
+> +- vcc2-supply:  The input supply for DCDC_REG2
+> +- vcc3-supply:  The input supply for DCDC_REG3
+> +- vcc4-supply:  The input supply for DCDC_REG4
+> +- vcc5-supply:  The input supply for LDO_REG1 and LDO_REG2
+> +- vcc6-supply:  The input supply for LDO_REG3
 > +
->  - reg: offset and length of the register set for the device
->  - interrupts: exactly one interrupt specifier
->  - clocks: phandles to input clocks.
+>  Optional RK808 properties:
+>  - vcc1-supply:  The input supply for DCDC_REG1
+>  - vcc2-supply:  The input supply for DCDC_REG2
+> @@ -56,6 +65,15 @@ by a child node of the 'regulators' node.
+>  		/* standard regulator bindings here */
+>  	};
+>  
+> +Following regulators of the RK805 PMIC block are supported. Note that
+> +the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+> +number as described in RK805 datasheet.
 > +
-> +Example:
-> +	uart0: serial@000000 {
-
-serial@0
-
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
-> +		compatible = "sprd,sc9860-uart",
-> +			     "sprd,sc9836-uart";
-> +		reg = <0x000000 0x100>;
-> +		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&ext_26m>;
-> +	};
+> +	- DCDC_REGn
+> +		- valid values for n are 1 to 4.
+> +	- LDO_REGn
+> +		- valid values for n are 1 to 3
+> +
+>  Following regulators of the RK808 PMIC block are supported. Note that
+>  the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+>  number as described in RK808 datasheet.
 > -- 
-> 2.7.4
+> 1.9.1
+> 
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
