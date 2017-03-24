@@ -1,251 +1,116 @@
-From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 2/2] fpga: Add support for Xilinx LogiCORE PR Decoupler
-Date: Thu, 23 Mar 2017 22:43:36 -0700
-Message-ID: <1490334216-31068-2-git-send-email-mdf@kernel.org>
-References: <1490334216-31068-1-git-send-email-mdf@kernel.org>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v4 3/8] phy: sun4i-usb: add PHYCTL offset
+ for H3 SoC
+Date: Fri, 24 Mar 2017 14:27:24 +0800
+Message-ID: <1157651490336844@web12m.yandex.ru>
+References: <20170319161951.55834-1-icenowy@aosc.xyz> <20170319161951.55834-4-icenowy@aosc.xyz> <CAGb2v65NHgDDPGChR4rg28NS1tuj2RZ9ERrQz2cSa_haZLypXA@mail.gmail.com>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490334216-31068-1-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBT7Y2LDAKGQEJSAOU2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v65NHgDDPGChR4rg28NS1tuj2RZ9ERrQz2cSa_haZLypXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Xilinx LogiCORE PR Decoupler
-soft-ip that does decoupling of PR regions in the FPGA
-fabric during partial reconfiguration.
 
-Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-Changes from v3:
-- Adressed build bot issues
 
-Changes from v2:
-- Added Michal's Signed-off-by
-- Added "xlnx,pr-decoupler" unversioned fallback
+24.03.2017, 11:05, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
+> On Mon, Mar 20, 2017 at 12:19 AM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+>> =C2=A0The config structure of H3 in phy-sun4i-usb driver have the PHYCTL
+>> =C2=A0register offset missing.
+>>
+>> =C2=A0Add it. Because it's a SoC after A33, its PHYCTL offset should be =
+0x10.
+>
+> You are implying that all SoCs after A33 have PHYCTL at 0x10.
+>
+> This is not true. As the A83T, which was released after the A33, has
+> PHYCTL at the old offset.
 
-Changes from v1:
-- Added Michal as Co-Author since I pulled in some of his code
-- Reworked clk handling in _remove()
-- Pulled in Michal's version of show_enable(), ditched priv->enabled
+No, in Allwinner's BSP A83T is using also PHYCTL at 0x10.
 
----
- drivers/fpga/Kconfig               |  10 +++
- drivers/fpga/Makefile              |   1 +
- drivers/fpga/xilinx-pr-decoupler.c | 161 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 172 insertions(+)
- create mode 100644 drivers/fpga/xilinx-pr-decoupler.c
+The code in linux-3.4/drivers/usb/sunxi_usb/include/sunxi_usb_bsp.c is
+```
+#if defined (CONFIG_ARCH_SUN8IW5) || defined (CONFIG_ARCH_SUN8IW6) || defin=
+ed (CONFIG_ARCH_SUN8IW9) || defined (CONFIG_ARCH_SUN8IW8) || defined (CONFI=
+G_ARCH_SUN8IW7)
+#define  USBPHYC_REG_o_PHYCTL		    0x0410
+#else
+#define  USBPHYC_REG_o_PHYCTL		    0x0404
+#endif
+```
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index ce861a2..6eabfbe 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -63,6 +63,16 @@ config ALTERA_FREEZE_BRIDGE
- 	  isolate one region of the FPGA from the busses while that
- 	  region is being reprogrammed.
- 
-+config XILINX_PR_DECOUPLER
-+	tristate "Xilinx LogiCORE PR Decoupler"
-+	depends on FPGA_BRIDGE
-+	depends on HAS_IOMEM
-+	help
-+	  Say Y to enable drivers for Xilinx LogiCORE PR Decoupler.
-+	  The PR Decoupler exists in the FPGA fabric to isolate one
-+	  region of the FPGA from the busses while that region is
-+	  being reprogrammed during partial reconfig.
-+
- endif # FPGA
- 
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 8df07bc..ba94b79 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
- obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
- obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
- obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)	+= altera-freeze-bridge.o
-+obj-$(CONFIG_XILINX_PR_DECOUPLER)	+= xilinx-pr-decoupler.o
- 
- # High Level Interfaces
- obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
-diff --git a/drivers/fpga/xilinx-pr-decoupler.c b/drivers/fpga/xilinx-pr-decoupler.c
-new file mode 100644
-index 0000000..e359930
---- /dev/null
-+++ b/drivers/fpga/xilinx-pr-decoupler.c
-@@ -0,0 +1,161 @@
-+/*
-+ * Copyright (c) 2017, National Instruments Corp.
-+ * Copyright (c) 2017, Xilix Inc
-+ *
-+ * FPGA Bridge Driver for the Xilinx LogiCORE Partial Reconfiguration
-+ * Decoupler IP Core.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/of_device.h>
-+#include <linux/module.h>
-+#include <linux/fpga/fpga-bridge.h>
-+
-+#define CTRL_CMD_DECOUPLE	BIT(0)
-+#define CTRL_CMD_COUPLE		0
-+#define CTRL_OFFSET		0
-+
-+struct xlnx_pr_decoupler_data {
-+	void __iomem *io_base;
-+	struct clk *clk;
-+};
-+
-+static inline void xlnx_pr_decoupler_write(struct xlnx_pr_decoupler_data *d,
-+					   u32 offset, u32 val)
-+{
-+	writel(val, d->io_base + offset);
-+}
-+
-+static inline u32 xlnx_pr_decouple_read(const struct xlnx_pr_decoupler_data *d,
-+					u32 offset)
-+{
-+	return readl(d->io_base + offset);
-+}
-+
-+static int xlnx_pr_decoupler_enable_set(struct fpga_bridge *bridge, bool enable)
-+{
-+	int err;
-+	struct xlnx_pr_decoupler_data *priv = bridge->priv;
-+
-+	err = clk_enable(priv->clk);
-+	if (err)
-+		return err;
-+
-+	if (enable)
-+		xlnx_pr_decoupler_write(priv, CTRL_OFFSET, CTRL_CMD_COUPLE);
-+	else
-+		xlnx_pr_decoupler_write(priv, CTRL_OFFSET, CTRL_CMD_DECOUPLE);
-+
-+	clk_disable(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int xlnx_pr_decoupler_enable_show(struct fpga_bridge *bridge)
-+{
-+	const struct xlnx_pr_decoupler_data *priv = bridge->priv;
-+	u32 status;
-+	int err;
-+
-+	err = clk_enable(priv->clk);
-+	if (err)
-+		return err;
-+
-+	status = readl(priv->io_base);
-+
-+	clk_disable(priv->clk);
-+
-+	return !status;
-+}
-+
-+static struct fpga_bridge_ops xlnx_pr_decoupler_br_ops = {
-+	.enable_set = xlnx_pr_decoupler_enable_set,
-+	.enable_show = xlnx_pr_decoupler_enable_show,
-+};
-+
-+static const struct of_device_id xlnx_pr_decoupler_of_match[] = {
-+	{ .compatible = "xlnx,pr-decoupler-1.00", },
-+	{ .compatible = "xlnx,pr-decoupler", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, xlnx_pr_decoupler_of_match);
-+
-+static int xlnx_pr_decoupler_probe(struct platform_device *pdev)
-+{
-+	struct xlnx_pr_decoupler_data *priv;
-+	int err;
-+	struct resource *res;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->io_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->io_base))
-+		return PTR_ERR(priv->io_base);
-+
-+	priv->clk = devm_clk_get(&pdev->dev, "aclk");
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(&pdev->dev, "input clock not found\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+
-+	err = clk_prepare_enable(priv->clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "unable to enable clock\n");
-+		return err;
-+	}
-+
-+	clk_disable(priv->clk);
-+
-+	err = fpga_bridge_register(&pdev->dev, "Xilinx PR Decoupler",
-+				   &xlnx_pr_decoupler_br_ops, priv);
-+
-+	if (err) {
-+		dev_err(&pdev->dev, "unable to register Xilinx PR Decoupler");
-+		clk_unprepare(priv->clk);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int xlnx_pr_decoupler_remove(struct platform_device *pdev)
-+{
-+	struct fpga_bridge *bridge = platform_get_drvdata(pdev);
-+	struct xlnx_pr_decoupler_data *p = bridge->priv;
-+
-+	fpga_bridge_unregister(&pdev->dev);
-+
-+	clk_unprepare(p->clk);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver xlnx_pr_decoupler_driver = {
-+	.probe = xlnx_pr_decoupler_probe,
-+	.remove = xlnx_pr_decoupler_remove,
-+	.driver = {
-+		.name = "xlnx_pr_decoupler",
-+		.of_match_table = of_match_ptr(xlnx_pr_decoupler_of_match),
-+	},
-+};
-+
-+module_platform_driver(xlnx_pr_decoupler_driver);
-+
-+MODULE_DESCRIPTION("Xilinx Partial Reconfiguration Decoupler");
-+MODULE_AUTHOR("Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
-+MODULE_AUTHOR("Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+In linux-3.10/drivers/usb/sunxi_usb/include/sunxi_usb_bsp.c is
+```
+#if defined (CONFIG_ARCH_SUN50I) || defined (CONFIG_ARCH_SUN8IW10) || defin=
+ed (CONFIG_ARCH_SUN8IW11)
+#define  USBPHYC_REG_o_PHYCTL		    0x0410
+#else
+#define  USBPHYC_REG_o_PHYCTL		    0x0404
+#endif
+```
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So sun50i* and sun50iw5~w11 all use PHYCTL at 0x10.
+
+>
+> Just state that H3 has PHYCTL at 0x10.
+>
+> ChenYu
+>
+>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> =C2=A0---
+>> =C2=A0New patch in v4.
+>>
+>> =C2=A0=C2=A0drivers/phy/phy-sun4i-usb.c | 1 +
+>> =C2=A0=C2=A01 file changed, 1 insertion(+)
+>>
+>> =C2=A0diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-u=
+sb.c
+>> =C2=A0index 62b4d25448c6..a650f283f6ff 100644
+>> =C2=A0--- a/drivers/phy/phy-sun4i-usb.c
+>> =C2=A0+++ b/drivers/phy/phy-sun4i-usb.c
+>> =C2=A0@@ -821,6 +821,7 @@ static const struct sun4i_usb_phy_cfg sun8i_h3=
+_cfg =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.num_phys =3D 4,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.type =3D sun8i_h3=
+_phy,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.disc_thresh =3D 3=
+,
+>> =C2=A0+ .phyctl_offset =3D REG_PHYCTL_A33,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.dedicated_clocks =
+=3D true,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.enable_pmu_unk1 =
+=3D true,
+>> =C2=A0=C2=A0};
+>> =C2=A0--
+>> =C2=A02.12.0
+>>
+>> =C2=A0--
+>> =C2=A0You received this message because you are subscribed to the Google=
+ Groups "linux-sunxi" group.
+>> =C2=A0To unsubscribe from this group and stop receiving emails from it, =
+send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+>> =C2=A0For more options, visit https://groups.google.com/d/optout.
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
