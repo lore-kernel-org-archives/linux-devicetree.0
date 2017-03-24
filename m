@@ -1,93 +1,75 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v1 1/7] devicetree: power: battery: Add properties for
- pre-charge and end-charge current
-Date: Fri, 24 Mar 2017 10:01:58 +0100
-Message-ID: <20170324090158.tl55neisjws66naf@earth>
-References: <20170321220921.5834-1-liam@networkimprov.net>
- <20170321220921.5834-2-liam@networkimprov.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="apesiipwl2ie4wgu"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170321220921.5834-2-liam@networkimprov.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: Tony Lindgren <tony@atomide.com>, linux-pm@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v5.1 12/13] device property: Add fwnode_get_next_parent()
+Date: Fri, 24 Mar 2017 11:21:59 +0200
+Message-ID: <1490347319-9531-1-git-send-email-sakari.ailus@linux.intel.com>
+References: <1489667481-28521-13-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1489667481-28521-13-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
+In order to differentiate the functionality between dropping a reference
+to the node (or not) for the benefit of OF, introduce
+fwnode_get_next_parent().
 
---apesiipwl2ie4wgu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+since v5:
 
-Hi,
+- Call fwnode_get_parent() to get the parent, independently of the FW
+  type. In other words, squashed "device property: Implement
+  fwnode_get_next_parent() using fwnode interface" to this one.
 
-On Tue, Mar 21, 2017 at 03:09:15PM -0700, Liam Breck wrote:
-> From: Liam Breck <kernel@networkimprov.net>
->=20
-> precharge-current-microamp and endcharge-current-microamp are used
-> by battery chargers at the beginning and end of a charging cycle.
->=20
-> Depends-on: https://patchwork.kernel.org/patch/9633605/
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Liam Breck <kernel@networkimprov.net>
+ drivers/base/property.c  | 21 +++++++++++++++++++++
+ include/linux/property.h |  1 +
+ 2 files changed, 22 insertions(+)
 
-Acked-by: Sebastian Reichel <sre@kernel.org>
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index a4fe66c..0a120e3 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -976,6 +976,27 @@ int device_add_properties(struct device *dev,
+ EXPORT_SYMBOL_GPL(device_add_properties);
+ 
+ /**
++ * fwnode_get_next_parent - Iterate to the node's parent
++ * @fwnode: Firmware whose parent is retrieved
++ *
++ * This is like fwnode_get_parent() except that it drops the refcount
++ * on the passed node, making it suitable for iterating through a
++ * node's parents.
++ *
++ * Returns a node pointer with refcount incremented, use
++ * fwnode_handle_node() on it when done.
++ */
++struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
++{
++	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
++
++	fwnode_handle_put(fwnode);
++
++	return parent;
++}
++EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
++
++/**
+  * fwnode_get_parent - Return parent firwmare node
+  * @fwnode: Firmware whose parent is retrieved
+  *
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 3a4e435..2f48261 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -73,6 +73,7 @@ int fwnode_property_match_string(struct fwnode_handle *fwnode,
+ 				 const char *propname, const char *string);
+ 
+ struct fwnode_handle *fwnode_get_parent(struct fwnode_handle *fwnode);
++struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode);
+ struct fwnode_handle *fwnode_get_next_child_node(struct fwnode_handle *fwnode,
+ 						 struct fwnode_handle *child);
+ 
+-- 
+2.7.4
 
-I think it makes sense to merge this into the patch adding
-simple-battery.
-
->  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b=
-/Documentation/devicetree/bindings/power/supply/battery.txt
-> index 53a68c0..494374a 100644
-> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -12,6 +12,8 @@ Optional Properties:
->   - voltage-min-design-microvolt: drained battery voltage
->   - energy-full-design-microwatt-hours: battery design energy
->   - charge-full-design-microamp-hours: battery design capacity
-> + - precharge-current-microamp: current for pre-charge phase
-> + - endcharge-current-microamp: current for charge termination phase
-> =20
->  Battery properties are named, where possible, for the corresponding=20
->  elements in enum power_supply_property, defined in
-> @@ -28,6 +30,8 @@ Example:
->  		voltage-min-design-microvolt =3D <3200000>;
->  		energy-full-design-microwatt-hours =3D <5290000>;
->  		charge-full-design-microamp-hours =3D <1430000>;
-> +		precharge-current-microamp =3D <256000>;
-> +		endcharge-current-microamp =3D <128000>;
->  	};
-> =20
->  	charger: charger@11 {
-> --=20
-> 2.9.3
->=20
-
---apesiipwl2ie4wgu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljU4IYACgkQ2O7X88g7
-+ppkKw//egZ52BHeixWjHkjw1EtV3depVzzo/cW8BZF65s6iU0ko6XdTF/oEKzs/
-o5fPQLVvxfNiasiLcQ1+sUAQP9Tkzd3XJNiXucS1xBshyq0VLST0d+cZAf0igrQu
-y0OARC5NQd8uNjcCFLRh0aqb9Q9yIZzOdWaw7gzVk6muLPREQegq3N5XEAr+4IJE
-+7BCbyE4/p3W8oYLvbslZj+7M/qQ2rwfLQRRd1WFulKkPscNko6O4ALN4WJtp6cG
-/ZZ4EGGB29xGBgZ/cREA34c7BmkPaH3dqH0s084CxNuLWuuOr5VfihoWpBKBqmJ4
-/yGLD2hG+h+vXh7/liD+v6aq62dIUp+N29Qr2iiccxvFJ5G+QJbSKtgxwuBMEZos
-VJqeRqAL/hn/A/oaLDGfjHeFixksv8ahusRt6llrg0QGntWnu+vGc8w0cYLcFMa5
-r+fWhMLYinslHLXvQFSJ8O4w917BOsyUuqS/tIQf2GCcVo5yD1aSsXqJ3ot/bVMM
-H/txJOYeys5X212lkQysTXlyACqsiMZdZ9zcRxWknwyFBatol+Vz0dEb5ZRXgYEW
-V4bHYAFlF7MgU+WwzEFAu9Y+ntc2zPfqE72Zcn2vFr5UioLaVvJX3I0/Ao5ZAa6K
-f6a2V/vi6EeMm5itzhvI2u0BSTsUkY4FxkYmM4mB0syYDYMkR2U=
-=BflX
------END PGP SIGNATURE-----
-
---apesiipwl2ie4wgu--
