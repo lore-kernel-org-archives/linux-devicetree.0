@@ -1,107 +1,40 @@
-From: Moritz Fischer <moritz.fischer.private@gmail.com>
-Subject: Re: [PATCH v3 1/2] doc: Add bindings document for Xilinx LogiCore PR
- Decoupler
-Date: Fri, 24 Mar 2017 08:23:18 -0700
-Message-ID: <20170324152318.GA13089@tyrael.amer.corp.natinst.com>
-References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
- <20170324145908.aiijqixf5xcnkksa@rob-hp-laptop>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 2/2] ata: ahci: add support for DaVinci DM816 SATA controller
+Date: Fri, 24 Mar 2017 16:22:50 +0100
+Message-ID: <CAMpxmJVppunC4HeXuyTXFno93HXoft2+k40JjEpjt5box4qAGg@mail.gmail.com>
+References: <1489489491-14195-1-git-send-email-bgolaszewski@baylibre.com> <1489489491-14195-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170324145908.aiijqixf5xcnkksa@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-fpga@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489489491-14195-3-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: linux-ide@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Patrick Titiano <ptitiano@baylibre.com>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 09:59:08AM -0500, Rob Herring wrote:
-> On Fri, Mar 17, 2017 at 01:11:12PM -0700, Moritz Fischer wrote:
-> > This adds the binding documentation for the Xilinx LogiCORE PR
-> > Decoupler soft core.
-> > =
+2017-03-14 12:04 GMT+01:00 Bartosz Golaszewski <bgolaszewski@baylibre.com>:
+> This SATA controller is quite similar to the one present on the DA850
+> SoC, but the PHY configuration is different and it supports two HBA
+> ports.
+>
+> The IP suffers from the same PMP issue the DA850 does - if we enable
+> PMP but don't use it - softreset fails. Appropriate workaround was
+> implemented in this driver as well.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/ata/Kconfig      |   9 +++
+>  drivers/ata/Makefile     |   1 +
+>  drivers/ata/ahci_dm816.c | 200 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 210 insertions(+)
+>  create mode 100644 drivers/ata/ahci_dm816.c
+>
 
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > Cc: Michal Simek <michal.simek@xilinx.com>
-> > Cc: S=F6ren Brinkmann <soren.brinkmann@xilinx.com>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> > =
+Hi Tejun,
 
-> > Changes from v2:
-> > - Added refence to generic fpga-region bindings
-> > - Fixed up reg property in example
-> > - Added fallback to "xlnx,pr-decoupler" without version
-> > =
+the DT bindings have been acked by Rob Herring and Tony Lindgren has
+picked up the arch/arm patches. If there are no objections, could you
+merge this driver and DT bindings for 4.12?
 
-> > Changes from v1:
-> > - Added clock names & clock to example
-> > - Merged some of the description from Michal's version
-> > =
-
-> > ---
-> >  .../bindings/fpga/xilinx-pr-decoupler.txt          | 35 ++++++++++++++=
-++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-de=
-coupler.txt
-> > =
-
-> > diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler=
-.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-> > new file mode 100644
-> > index 0000000..16141bd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-> > @@ -0,0 +1,35 @@
-> > +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
-> > +
-> > +The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
-> > +decouplers / fpga bridges.
-> > +The controller can decouple/disable the bridges which prevents signal
-> > +changes from passing through the bridge.  The controller can also
-> > +couple / enable the bridges which allows traffic to pass through the
-> > +bridge normally.
-> > +
-> > +The Driver supports only MMIO handling. A PR region can have multiple
-> > +PR Decouples which can bhe handled independently or chaines via decoup=
-le/
-> =
-
-> s/chaines/chains/
-
-Fixed in v4.
-
-> > +decouple_status signals.
-> > +
-> > +Required properties:
-> > +- compatible		: Should contain "xlnx,pr-decoupler-1.00"
-> > +- regs			: base address and size for decoupler module
-> > +- clocks		: input clock to IP
-> > +- clock-names		: should contain "aclk"
-> > +
-> > +Optional properties:
-> > +- bridge-enable		: 0 if driver should disable bridge at startup
-> > +			  1 if driver should enable bridge at startup
-> > +			  Default is to leave bridge in current state.
-> =
-
-> This is common and should move into a common doc. Maybe fpga-region.txt =
-
-> works?
-
-Ok will add patch for that to v5 series.
-
-Thanks for your feedback,
-
-Moritz
+Thanks,
+Bartosz
