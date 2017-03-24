@@ -1,130 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] iio: xoadc: augment DT bindings a bit
-Date: Fri, 24 Mar 2017 10:12:35 -0500
-Message-ID: <20170324151235.cb73gokg26qy7fvc@rob-hp-laptop>
-References: <20170318133358.22314-1-linus.walleij@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/4 v5] PCI: add driver for Faraday Technology Host Bridge
+Date: Fri, 24 Mar 2017 16:14:43 +0100
+Message-ID: <CACRpkdbkhui0iwJbOeD8uwurdWvOYdPKtRPQhSkg0atpAB174Q@mail.gmail.com>
+References: <20170312222403.2473-1-linus.walleij@linaro.org> <20170324150753.GC25380@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170318133358.22314-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170324150753.GC25380@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, openwrt-devel@openwrt.org, Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Greentime Hu <green.hu@gmail.com>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 18, 2017 at 02:33:58PM +0100, Linus Walleij wrote:
-> In order to accommodate in a logical manner for the premuxed channels
-> in PM8921 and the similarly addressed channels in later PMICs, we
-> need a twocell arrangement with premux and analog mux setting as
-> a tuple to uniquely identify a hardware channel.
-> 
-> These bindings are not yet in use, so it should be find to augment
-> them before we actually start using it in drivers and device trees.
-> 
-> This scheme came out of lengthy discussions and reverse-engineering
-> and reading of the few information sources we have.
-> 
-> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 117 ++++++++++++---------
->  1 file changed, 69 insertions(+), 48 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> index 53cd146d8096..680bb7a29dd5 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> @@ -19,32 +19,42 @@ Required properties:
->    with PMIC variant but is typically something like 2.2 or 1.8V.
->  
->  The following required properties are standard for IO channels, see
-> -iio-bindings.txt for more details:
-> +iio-bindings.txt for more details, but noitice that this particular
-> +ADC has a special adressing scheme that require two cells for
-> +identifying each ADC channel:
->  
-> -- #address-cells: should be set to <1>
-> +- #address-cells: should be set to <2>, the first cell is the
-> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
-> +  so legal values are 0x00, 0x01 or 0x02. The second cell
-> +  is the main analog mux setting (0x00..0x0f). The combination
-> +  of prescaler/premux and analog mux uniquely addresses a hardware
-> +  channel on all systems.
+On Fri, Mar 24, 2017 at 4:07 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-64-bits to describe 48 possible combinations... I'd just combine these 
-into 1 cell.
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
->  - #size-cells: should be set to <0>
->  
-> -- #io-channel-cells: should be set to <1>
-> +- #io-channel-cells: should be set to <2>, again the cells are
-> +  precaler or premux followed by the analog muxing line.
->  
->  - interrupts: should refer to the parent PMIC interrupt controller
->    and reference the proper ADC interrupt.
->  
->  Required subnodes:
->  
-> -The ADC channels are configured as subnodes of the ADC. Since some of
-> -them are used for calibrating the ADC, these nodes are compulsory:
-> +The ADC channels are configured as subnodes of the ADC.
->  
-> -adc-channel@c {
-> -	reg = <0x0c>;
-> +Since some of them are used for calibrating the ADC, these nodes are
-> +compulsory:
-> +
-> +adc-channel@0c {
-> +	reg = <0x00 0x0c>;
->  };
->  
-> -adc-channel@d {
-> -	reg = <0x0d>;
-> +adc-channel@0d {
-> +	reg = <0x00 0x0d>;
->  };
->  
-> -adc-channel@f {
-> -	reg = <0x0f>;
-> +adc-channel@0f {
-> +	reg = <0x00 0x0f>;
->  };
->  
->  These three nodes are used for absolute and ratiometric calibration
-> @@ -52,13 +62,26 @@ and only need to have these reg values: they are by hardware definition
->  1:1 ratio converters that sample 625, 1250 and 0 milliV and create
->  an interpolation calibration for all other ADCs.
->  
-> -Optional subnodes: any channels other than channel 0x0c, 0x0d and
-> -0x0f are optional.
-> +Optional subnodes: any channels other than channels [0x00 0x0c],
-> +[0x00 0x0d] and [0x00 0x0f] are optional.
->  
->  Required channel node properties:
->  
->  - reg: should contain the hardware channel number in the range
-> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-> +  0 .. 0xff (8 bits).
-> +
-> +  On PM8058 the hardware only supports 16 channels, but we get the same
-> +  channels repeating with its input divided down by 1 or 3. Channels 00,
-> +  10, 20, ... f0 are the raw values, 04, 14, 24 .. f4 are "unity" channels
-> +  divided by 1, and 08, 18, 28 .. f8 are channels divided by 3. Bits 0
-> +  and 1 of the channel index should always be 0.
-> +
-> +  On PM8921 the hardware supports more than 16 channels through a complex
-> +  routing matrix using a premux, so 00, 10, 20 .. f0 are the basic raw
-> +  channels while another set of channels appear for 04, 14, 24 .. f4,
-> +  and again some of the same channels appear again divided down by 3
-> +  in 08, 18, 28 .. f8. Again bits 0 and 1 of the channel index should
-> +  always be 0.
+Thanks!
 
-Now I'm lost...
+> I don't know enough to review the DT patch, but you have Rob's ack
+> already.
+>
+> Not sure how you want to merge these; if you want to feed the whole
+> thing via ARM SoC, that's fine with me.  Otherwise, let me know if
+> you'd like me to take anything.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It'd be perfect if you could merge patches 1+2 into the PCI tree,
+there are no dependencies to the ARM tree.
+
+> Noticed one trivial typo below.
+>
+>> + * Special configuration registers directly in the first few words
+>> + * in he I/O space.
+>
+> s/he//
+
+Can you fix it when applying or do you want me to resend it with
+this fixed?
+
+Yours,
+Linus Walleij
