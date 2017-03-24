@@ -1,65 +1,54 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
-Date: Fri, 24 Mar 2017 16:22:10 +0100
-Message-ID: <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 7/7] arm: dts: genmai: Add user led device nodes
+Date: Fri, 24 Mar 2017 16:22:14 +0100
+Message-ID: <1490368934-12494-8-git-send-email-jacopo+renesas@jmondi.org>
 References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add dt-bindings for Renesas r7s72100 pin controller header file.
+Add device nodes for user leds on Genmai board.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- include/dt-bindings/pinctrl/r7s72100-pinctrl.h | 36 ++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+ arch/arm/boot/dts/r7s72100-genmai.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/include/dt-bindings/pinctrl/r7s72100-pinctrl.h b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-new file mode 100644
-index 0000000..170338b
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-@@ -0,0 +1,36 @@
-+/*
-+ * Defines macros and constants for Renesas RZ/A1 pin controller pin
-+ * muxing functions.
-+ */
-+#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
-+#define __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
+diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
+index 30992b1..94b9ab7 100644
+--- a/arch/arm/boot/dts/r7s72100-genmai.dts
++++ b/arch/arm/boot/dts/r7s72100-genmai.dts
+@@ -11,6 +11,7 @@
+ 
+ /dts-v1/;
+ #include "r7s72100.dtsi"
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
+ 
+ / {
+@@ -35,6 +36,19 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 	};
 +
-+#define RZA1_PINS_PER_PORT	16
++	leds {
++		status = "okay";
++		compatible = "gpio-leds";
 +
-+/* Create the pin index from its bank and position numbers */
-+#define PIN(b, p)		((b) * RZA1_PINS_PER_PORT + (p))
++		led1 {
++			gpios = <&port4 10 GPIO_ACTIVE_LOW>;
++		};
 +
-+/*
-+ * Flags to apply to alternate function configuration
-+ * All of the following are mutually exclusive.
-+ */
-+
-+/*
-+ * Pin is bi-directional.
-+ * An alternate function that needs both input/output functionalities shall
-+ * be configured as bidirectional.
-+ * Eg. SDA/SCL pins of an I2c interface.
-+ */
-+#define BI_DIR			(1 << 3)
-+
-+/*
-+ * Flags used to ask software to drive the pin I/O direction overriding the
-+ * alternate function configuration.
-+ * Some alternate functions require software to force I/O direction of a pin,
-+ * overriding the designated one.
-+ * Refer to the HW manual to know when this flag shall be used.
-+ */
-+#define SWIO_IN			(1 << 4)
-+#define SWIO_OUT		(1 << 5)
-+
-+#endif
++		led2 {
++			gpios = <&port4 11 GPIO_ACTIVE_LOW>;
++		};
++	};
+ };
+ 
+ &pinctrl {
 -- 
 2.7.4
-
