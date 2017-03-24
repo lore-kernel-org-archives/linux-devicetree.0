@@ -1,99 +1,126 @@
-From: jacopo <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 1/7] pinctrl: Renesas RZ/A1 pin and gpio controller
-Date: Fri, 24 Mar 2017 17:45:59 +0100
-Message-ID: <20170324164559.GA15925@w540>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490368934-12494-2-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdYjZJ7e0tJy6_jfpRT+UDFWqnu8ZX18-gaAHVZLgW-prA@mail.gmail.com>
+From: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/9] arm64: mm: install SError abort handler
+Date: Fri, 24 Mar 2017 09:48:40 -0700
+Message-ID: <58D54DE8.9020707@gmail.com>
+References: <20170324144632.5896-1-opendmb@gmail.com>
+ <20170324144632.5896-4-opendmb@gmail.com>
+ <20170324151654.GD29588@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYjZJ7e0tJy6_jfpRT+UDFWqnu8ZX18-gaAHVZLgW-prA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170324151654.GD29588@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, vladimir.murzin-5wv7dgnIgG8@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, cmetcalf-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sandeepa.s.prabhu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shijie.huang-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On 03/24/2017 08:16 AM, Mark Rutland wrote:
+> On Fri, Mar 24, 2017 at 07:46:26AM -0700, Doug Berger wrote:
+>> This commit adds support for minimal handling of SError aborts and
+>> allows them to be hooked by a driver or other part of the kernel to
+>> install a custom SError abort handler.  The hook function returns
+>> the previously registered handler so that handlers may be chained if
+>> desired.
+>>
+>> The handler should return the value 0 if the error has been handled,
+>> otherwise the handler should either call the next handler in the
+>> chain or return a non-zero value.
+>
+> ... so the order these get calls is completely dependent on probe
+> order...
+Yes, but this was an attempt to keep some flexibility in handling a
+very ambiguous event.
 
-On Fri, Mar 24, 2017 at 04:42:47PM +0100, Linus Walleij wrote:
-> On Fri, Mar 24, 2017 at 4:22 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> 
-> I assume Geert will queue this driver even if it is outside of sh-pfc?
-> 
-> > Add combined gpio and pin controller driver for Renesas RZ/A1
-> > r7s72100 SoC.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  drivers/pinctrl/Kconfig        |  10 +
-> >  drivers/pinctrl/Makefile       |   1 +
-> >  drivers/pinctrl/pinctrl-rza1.c | 961 +++++++++++++++++++++++++++++++++++++++++
-> 
-> So this is very different from the SH-PFC family and should not
-> be in drivers/pinctrl/sh-pfc?
-> 
+>
+>> Since the Instruction Specific Syndrome value for SError aborts is
+>> implementation specific the registerred handlers must implement
+>> their own parsing of the syndrome.
+>
+> ... and drivers have to be intimately familiar with the CPU, in order to
+> be able to parse its IMPLEMENTATION DEFINED ESR_ELx.ISS value.
+>
+> Even then, there's no guarantee there's anything useful there, since it
+> is IMPLEMENTATION DEFINED and could simply be RES0 or UNKNOWN in all
+> cases.
+>
+> I do not think it is a good idea to allow arbitrary drivers to hook
+> this fault in this manner.
+>
+I agree.  It should really be resolved in the fault handling code like 
+it is for the ARM architecture, but the IMPLEMENTATION DEFINED nature of 
+the event for ARM64 makes this unmanageable but for the most specific 
+use cases, which is what is attempted here.
 
-Correct. The pin controller hardware in RZ/A(1) devices configures pin
-functions per-pin and not per-group as the SH/R-Car family does.
+>> +	.align	6
+>> +el0_error:
+>> +	kernel_entry 0
+>> +el0_error_naked:
+>> +	mrs	x25, esr_el1			// read the syndrome register
+>> +	lsr	x24, x25, #ESR_ELx_EC_SHIFT	// exception class
+>> +	cmp	x24, #ESR_ELx_EC_SERROR		// SError exception in EL0
+>> +	b.ne	el0_error_inv
+>> +el0_serr:
+>> +	mrs	x26, far_el1
+>> +	// enable interrupts before calling the main handler
+>> +	enable_dbg_and_irq
+>
+> ... why?
+>
+> We don't do this for inv_entry today.
+>
+Yes, my initial downstream implementation modified inv_entry, but after 
+commit 7d9e8f71b989 ("arm64: avoid returning from bad mode") added the
+user abort handling for el0_inv I tried to follow that approach so user
+mode errors (i.e. bad writes) wouldn't kill the kernel.
 
-There has been an attempt to support this platforms with the existing
-sh-pfc/ infrastructure in the past (https://lwn.net/Articles/573222/)
-which I re-proposed for v4.9, but that driver simply does not fit
-this hardware which is different from the one found in R-Car
-devices.
+>> +	ct_user_exit
+>> +	bic	x0, x26, #(0xff << 56)
+>> +	mov	x1, x25
+>> +	mov	x2, sp
+>> +	bl	do_serr_abort
+>> +	b	ret_to_user
+>> +el0_error_inv:
+>> +	enable_dbg
+>> +	mov	x0, sp
+>> +	mov	x1, #BAD_ERROR
+>> +	mov	x2, x25
+>> +	b	bad_mode
+>> +ENDPROC(el0_error)
+>
+> Clearly you expect these to be delivered at arbitrary times during
+> execution. What if a KVM guest is executing at the time the SError is
+> delivered?
+The timing isn't really arbitrary in our particular use case.  It is 
+just after the bus interface has moved on from the failing transaction 
+so from the bus interfaces perspective it is asynchronous.  The main 
+benefit is to help debug user mode code that accidentally maps a bad 
+address since we would never make such an egregious error in the kernel ;)
 
-More on the background of this series in this email thread:
-https://marc.info/?l=linux-gpio&m=148536779917834&w=2
+I'm afraid I'm not fully versed on the implications to KVM here.
+>
+> To be quite frank, I don't believe that we can reliably and safely
+> handle this misfeature in the kernel, and this infrastructure only
+> provides the illusion that we can.
+>
+> I do not think it makes sense to do this.
+>
+> Thanks,
+> Mark.
+>
+I understand your position since this was the cleanest approach I came 
+up with and it is admittedly ugly.  I would be happy to entertain any 
+better suggestion on how this could be handled more cleanly.
 
-I initially created a whole new sub-directory where all the Renesas
-devices with this kind of pin controller would have gone
-(drivers/pinctrl/rz-pfc) but since as of now the only available
-hardware of that type is RZ/A1 and some of its variants, we decided to go
-with a single driver supporting that platform only.
-If more will come, we'll think about supporting them through this
-driver if possible, or create a dedicated directory.
+If you would consider an alternative implementation where we scrap the 
+SError handler (i.e. maintain the ugliness in our downstream kernel) in 
+favor of a more gentle user mode crash on SError that allows the kernel 
+the opportunity to service the interrupt for diagnostic purposes I could 
+try to repackage that.
 
-Are you ok with this?
-
-Thanks
-  j
-
-> > +config PINCTRL_RZA1
-> > +       bool "Renesas RZ/A1 gpio and pinctrl driver"
-> > +       depends on OF
-> > +       depends on ARCH_R7S72100 || COMPILE_TEST
-> > +       select GENERIC_PINCTRL_GROUPS
-> > +       select GENERIC_PINMUX_FUNCTIONS
-> > +       select GENERIC_PINCONF
-> 
-> If it is also a GPIO driver I guess it should
-> select GPIOLIB as well.
-> 
-> This was not possible in the past, but it is possible nowadays.
-> 
-> > +struct gpio_chip rza1_gpiochip_template = {
-> > +       .request                = rza1_gpio_request,
-> > +       .free                   = rza1_gpio_free,
-> > +       .get_direction          = rza1_gpio_get_direction,
-> > +       .direction_input        = rza1_gpio_direction_input,
-> > +       .direction_output       = rza1_gpio_direction_output,
-> > +       .get                    = rza1_gpio_get,
-> > +       .set                    = rza1_gpio_set,
-> > +};
-> 
-> We now also have .set_multiple() and more interestingly
-> .set_config() which can be backed by pinctrl if you want
-> to e.g. support debouncing and/or open drain/open source.
-> 
-> Maybe this is stuff your pin controller can do, but not needed
-> in the initial submission for sure.
-> 
-> > +static int rza1_pinmux_set(struct pinctrl_dev *pctldev, unsigned int selector,
-> > +                          unsigned int group)
-> 
-> Please name it rza1_set_mux() to correspond with the ops field.
-> 
-> Yours,
-> Linus Walleij
+Thanks for the review!
+     Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
