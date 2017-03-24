@@ -1,70 +1,96 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 0/8] Renesas RZ/A1 pin and gpio controller
-Date: Fri, 24 Mar 2017 16:22:07 +0100
-Message-ID: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] ASoC: Add support for Maxim Integrated
+	MAX98927 Amplifier
+Date: Fri, 24 Mar 2017 10:26:13 -0500
+Message-ID: <20170324152613.qzvsviznhiz5f3sj@rob-hp-laptop>
+References: <1489970423-29353-1-git-send-email-ryans.lee@maximintegrated.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <1489970423-29353-1-git-send-email-ryans.lee@maximintegrated.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Ryan Lee <ryans.lee@maximintegrated.com>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com, tiwai@suse.com, srinivas.kandagatla@linaro.org, romain.perier@collabora.com, bardliao@realtek.com, lars@metafoo.de, axel.lin@ingics.com, Paul.Handrigan@cirrus.com, devicetree@vger.kernel.org, arnd@arndb.de, nh6z@nh6z.net, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com, dgreid@google.com, oder_chiou@realtek.com, KCHSU0@nuvoton.com, linux-kernel@vger.kernel.org, petr@barix.com
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Mon, Mar 20, 2017 at 09:40:23AM +0900, Ryan Lee wrote:
+> Signed-off-by: Ryan Lee <ryans.lee@maximintegrated.com>
+> ---
+> Resubmit the intial version of MAX98927 driver. Added all fixes into the initial patch.
+> 
+>  .../devicetree/bindings/sound/max98927.txt         |   39 +
+>  sound/soc/codecs/Kconfig                           |    5 +
+>  sound/soc/codecs/Makefile                          |    2 +
+>  sound/soc/codecs/max98927.c                        | 1040 ++++++++++++++++++++
+>  sound/soc/codecs/max98927.h                        |  267 +++++
+>  5 files changed, 1353 insertions(+)
+>  create mode 100755 Documentation/devicetree/bindings/sound/max98927.txt
+>  mode change 100644 => 100755 sound/soc/codecs/Kconfig
+>  mode change 100644 => 100755 sound/soc/codecs/Makefile
+>  create mode 100755 sound/soc/codecs/max98927.c
+>  create mode 100755 sound/soc/codecs/max98927.h
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/max98927.txt b/Documentation/devicetree/bindings/sound/max98927.txt
+> new file mode 100755
+> index 0000000..d610879
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/max98927.txt
+> @@ -0,0 +1,39 @@
+> +max98927 audio CODEC
+> +
+> +This device supports I2C.
 
-Third round for Renesas RZ/A1 PFC gpio and pin controller.
+Can we combine this and the other max9892x bindings. They all look 
+similar.
 
-V3 fixes review comments on grammar and spelling by Geert.
-Some other fixes from Geert's review as update of function argument names
-to reflect the function purpose (s/offset/[pin|bit]), use irqsave/irqrestore
-version of spinlocks locking/unlocking methods and other style fixes.
+> +
+> +Required properties:
+> +
+> +  - compatible : "maxim,max98927"
+> +
+> +  - maxim,vmon-slot-no : slot number used to send voltage information
 
-Still an open question on the use of "pins" or "renesas,pins" property in
-device tree bindings:
-https://www.spinics.net/lists/linux-renesas-soc/msg12765.html
+While vendor prefix is preferred, so is using the same property names. 
+Either use the existing names or deprecate the old ones in favor of 
+these.
 
-Tested on Genmai and RSK boards with SCIF, I2c and GPIO (genmai) and SCIF, I2c,
-SDHI and ethernet on RSK (thanks Chris).
-
-Thanks
-   j
-
-v1 -> v2:
-- change pin configuration flags as suggested by Chris
-- gpio set direction function fixed as suggested by Chris
-- add some more example on pin configuration flag usage to dt-binding doc
-- fix gpio-controller names to remove unit address as suggested by Geert
-- some comments chopped here and there to make the driver less verbose
-
-v2 -> v3:
-- fix grammar and syntax in comment and documentation
-- fix code style (reverse xmas tree ordering in variable declaration)
-- use irqsave/irqrestore in spinlock lock/unlock
-- use devm_ version of kasprintf (memory returned was not properly free)
-- use bitops.h operation ffs and fls to make sure a single bit is set in pmx
-  mask
-- Add Geert's reviewed-by to DTS patches
-
-Jacopo Mondi (8):
-  pinctrl: Renesas RZ/A1 pin and gpio controller
-  dt-bindings: pinctrl: Add RZ/A1 bindings doc
-  arm: dts: dt-bindings: Add Renesas RZ pinctrl header
-  arm: dts: r7s72100: Add pin controller node
-  arm: dts: genmai: Add SCIF2 pin group
-  arm: dts: genmai: Add RIIC2 pin group
-  arm: dts: genmai: Add user led device nodes
-  arm: dts: genmai: Add ethernet pin group
-
- .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 143 +++
- arch/arm/boot/dts/r7s72100-genmai.dts              |  68 ++
- arch/arm/boot/dts/r7s72100.dtsi                    |  80 ++
- drivers/pinctrl/Kconfig                            |  10 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-rza1.c                     | 961 +++++++++++++++++++++
- include/dt-bindings/pinctrl/r7s72100-pinctrl.h     |  36 +
- 7 files changed, 1299 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
- create mode 100644 drivers/pinctrl/pinctrl-rza1.c
- create mode 100644 include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-
--- 
-2.7.4
-
+> +                   or in inteleave mode this will be used as
+> +                   interleave slot.
+> +                   This property can be set to values from 0 to 15 for slot 0 to 15.
+> +                   Default value is 0.
+> +
+> +  - maxim,imon-slot-no : slot number used to send current information
+> +                   This property can be set to values from 0 to 15 for slot 0 to 15.
+> +                   Default value is 0.
+> +
+> +  - maxim,interleave-mode : When using two MAX98927 in a system it is
+> +                   possible to create ADC data that that will
+> +                   overflow the frame size. Digital Audio Interleave
+> +                   mode provides a means to output VMON and IMON data
+> +                   from two devices on a single DOUT line when running
+> +                   smaller frames sizes such as 32 BCLKS per LRCLK or
+> +                   48 BCLKS per LRCLK.
+> +                   This property can be set to values from 0 to 1 for off and on.
+> +                   Default value is 0.
+> +
+> +  - reg : the I2C address of the device for I2C
+> +
+> +Example:
+> +
+> +codec: max98927@3a {
+> +   compatible = "maxim,max98927";
+> +   maxim,vmon-slot-no = <0>;
+> +   maxim,imon-slot-no = <1>;
+> +   maxim,interleave-mode = <0>;
+> +   reg = <0x3a>;
+> +};
