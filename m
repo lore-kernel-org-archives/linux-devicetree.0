@@ -1,50 +1,47 @@
-From: Tobias Regnery <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: add stub for of_n_addr_cells
-Date: Fri, 24 Mar 2017 11:39:40 +0100
-Message-ID: <20170324103940.30902-1-tobias.regnery@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, Tobias Regnery <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: <cl@rock-chips.com>
+Subject: [PATCH v3 0/6] initialize dtsi file and dts file for RK3328 SoCs
+Date: Fri, 24 Mar 2017 19:01:21 +0800
+Message-ID: <1490353287-25122-1-git-send-email-cl@rock-chips.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, zhengxing@rock-chips.com, andy.yan@rock-chips.com, jay.xu@rock-chips.com, matthias.bgg@gmail.com, paweljarosz3691@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, wxt@rock-chips.com, david.wu@rock-chips.com, linux-iio@vger.kernel.org, shawn.lin@rock-chips.com, akpm@linux-foundation.org, dianders@chromium.org, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, afaerber@suse.de, shawnguo@kernel.org, khilman@baylibre.com, arnd@arndb.de, fabio.estevam@nxp.com, zhangqing@rock-chips.com, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-With CONFIG_OF=n and CONFIG_COMPILE_TEST=y the rcar pci-e driver fails to
-build on arm:
+From: Liang Chen <cl@rock-chips.com>
 
-drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
-drivers/pci/host/pcie-rcar.c:1035:16: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
-  parser->pna = of_n_addr_cells(node);
-                ^~~~~~~~~~~~~~~
+Changes in v3:
+    Adjust some descriptions in dtsi.
 
-Fix this by adding an inline stub for of_n_addr_cells
+Changes in v2:
+    Remove RK_FUNC_* in dtsi as it dose not help understand things better.
+    Adjust the order of description in dt-bindings.
 
-Signed-off-by: Tobias Regnery <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-This is against next-20140324
+v1:
+These patchs depend on pinctrl patchs as below:
 
- include/linux/of.h | 5 +++++
- 1 file changed, 5 insertions(+)
+https://patchwork.kernel.org/patch/9566427/
+https://patchwork.kernel.org/patch/9566425/
+https://patchwork.kernel.org/patch/9566431/
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 21e6323de0f3..9978c918222e 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -710,6 +710,11 @@ static inline struct device_node *of_get_cpu_node(int cpu,
- 	return NULL;
- }
- 
-+static inline int of_n_addr_cells(struct device_node *np)
-+{
-+	return 0;
-+}
-+
- static inline int of_property_read_u64(const struct device_node *np,
- 				       const char *propname, u64 *out_value)
- {
+Liang Chen (6):
+  dt-bindings: iio: rockchip-saradc: add support for rk3328
+  dt-bindings: i2c: rk3x: add support for rk3328
+  dt-bindings: soc: rockchip: grf: add support for rk3328
+  arm64: dts: rockchip: add core dtsi file for RK3328 SoCs
+  arm64: dts: rockchip: add dts file for RK3328
+  dt-bindings: document rockchip rk3328-evb board
+
+ Documentation/devicetree/bindings/arm/rockchip.txt |    4 +
+ Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |    1 +
+ .../bindings/iio/adc/rockchip-saradc.txt           |    1 +
+ .../devicetree/bindings/soc/rockchip/grf.txt       |    1 +
+ arch/arm64/boot/dts/rockchip/Makefile              |    1 +
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |   57 +
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 1286 ++++++++++++++++++++
+ 7 files changed, 1351 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3328.dtsi
+
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
