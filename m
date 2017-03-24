@@ -1,61 +1,41 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 1/2] extcon: usb-gpio: Add level trigger support
-Date: Fri, 24 Mar 2017 20:08:13 +0900
-Message-ID: <58D4FE1D.9040404@samsung.com>
-References: <CGME20170320080127epcas1p120786738dd2e3cd371bf6410d5f2b3a6@epcas1p1.samsung.com>
- <0db99bd509c94ea8a80f633022d15235a99391a9.1489995966.git.baolin.wang@linaro.org>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: r7s72100: add power-domains to sdhi
+Date: Fri, 24 Mar 2017 11:17:25 +0000
+Message-ID: <SG2PR06MB116573C9325106B5ED4580578A3E0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170209133803.21539-1-chris.brandt@renesas.com>
+ <CAMuHMdXRD3o7KdaADvPYxzeuEVo44nRVWHfCverPc+9s=0owPA@mail.gmail.com>
+ <20170324070228.GI1319@verge.net.au>
+ <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <0db99bd509c94ea8a80f633022d15235a99391a9.1489995966.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>, myungjoo.ham@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: broonie@kernel.org, linaro-kernel@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2017년 03월 20일 16:59, Baolin Wang wrote:
-> Now extcon-usb-gpio only supports for GPIO egdge trigger, but VBUS/ID
-> gpios' detection can be triggered by the level trigger on some platforms.
-> Thus intoduce one property 'extcon-gpio,level-trigger' to identify this
-> situation.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> index dfc14f7..191504b 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> @@ -9,6 +9,9 @@ Required properties:
->  Either one of id-gpio or vbus-gpio must be present. Both can be present as well.
->  - id-gpio: gpio for USB ID pin. See gpio binding.
->  - vbus-gpio: gpio for USB VBUS pin.
-> +- extcon-gpio,level-trigger: Boolean, set this gpio's interrupt flag to
-
-It is 'extcon-usb-gpio' instead of 'extcon-gpio'.
-
-> +level trigger. If not specified defaults to false, gpio's interrupt flag
-> +defaults to edge trigger.
-
-I understand why you need the new flag.
-But, I'm not sure it is right way to add the new flag for interrupt flag.
-
-IMHO, I think that we need to find the more proper way to get the interrupt flag
-or maybe, we may need to implement the new helper api to get the interrupt
-flag for gpio pin when we use the gpio as the interrupt source, 
-
->  
->  Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
->  	extcon_usb1 {
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+T24gRnJpZGF5LCBNYXJjaCAyNCwgMjAxNywgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+
+IFRoZSBmaXhlcyB0YWcgYWJvdmUgaW5kaWNhdGVzIHRoaXMgaXMgYSBmaXggZm9yIHY0LjEwLCBo
+b3dldmVyLCB3aGVuIEkNCj4gPiB0cmllZCB0byBhcHBseSBpdCBvbiB0b3Agb2YgdjQuMTEtcmMx
+IHRoZXJlIHdhcyBhIGNvbmZsaWN0LiAgU28gSQ0KPiA+IHRoaW5rIGEgYmFja3BvcnQgd2lsbCBi
+ZSByZXF1aXJlZCBpZiB3ZSB3YW50IGl0IHRvIGJlIGNvbnNpZGVyZWQgZm9yDQo+ID4gdjQuMTEg
+YW5kIGJlIGNvbnNpZGVyZWQgZm9yIGFuZCBpbiB0dXJuIHY0LjEwLXN0YWJsZS4NCj4gDQo+IFRo
+YXQncyBiZWNhdXNlIG9mIGNvbW1pdCAzZDJhYmRhMDJhZDJkMDZkDQo+ICgiQVJNOiBkdHM6IHI3
+czcyMTAwOiB1cGRhdGUgc2RoaSBjbG9jayBiaW5kaW5ncyIpDQoNCg0KQmV0d2VlbiB0aGUgdHdv
+LCAidXBkYXRlIHNkaGkgY2xvY2sgYmluZGluZ3MiIGlzIG1vcmUgaW1wb3J0YW50IHRoaXMgdGhp
+cyBwYXRjaCAoImFkZCBwb3dlci1kb21haW5zIikuDQpXaXRob3V0ICJ1cGRhdGUgc2RoaSBjbG9j
+ayBiaW5kaW5ncyIsIHRoZSBTREhJIC9taWdodC8gbm90IHdvcmsuDQoNCg0KQnV0LCAidXBkYXRl
+IHNkaGkgY2xvY2sgYmluZGluZ3MiLCBhbHNvIHJlbGllcyBvbiB0aGUgZHJpdmVyIHVwZGF0ZSAz
+NGExNjU0NzA2YzYgKCJtbWM6IHNoX21vYmlsZV9zZGhpOiBhZGQgc3VwcG9ydCBmb3IgMiBjbG9j
+a3MiKS4NClRoYXQgb25lIGlzIGluIHY0LjExLXJjMSwgYnV0IG5vdCBpbiA0LjEwLjUuDQoNCkkg
+anVzdCBub3RpY2VkIG5vdyB0aGF0IDM0YTE2NTQ3MDZjNiBkb2VzIG5vdCBoYXZlICJGaXhlcyIg
+aW4gdGhlIGNvbW1pdCBsb2csIHNvIGl0IGlzIHByb2JhYmx5IG5vdCBtYXJrZWQgdG8gZ28gaW50
+byB2NC4xMC1zdGFibGUsIHNvIGluIHRoYXQgY2FzZSBiYWNrcG9ydGluZyB0aGUgZHRzaSBpcyBw
+b2ludGxlc3MuDQoNCg0KQ2hyaXMNCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
