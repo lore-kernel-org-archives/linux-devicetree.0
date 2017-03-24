@@ -1,51 +1,50 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: [PATCH v3 3/4] ARM: mvebu: Enable SENSORS_PWM_FAN in defconfig
-Date: Fri, 24 Mar 2017 15:18:13 +0100
-Message-ID: <20170324141815.7252-4-ralph.sennhauser@gmail.com>
-References: <20170324141815.7252-1-ralph.sennhauser@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] dt-bindings: rng: clocks property on omap_rng not
+ always mandatory
+Date: Fri, 24 Mar 2017 09:19:05 -0500
+Message-ID: <20170324141905.scn7vrzrcrmzplk5@rob-hp-laptop>
+References: <1489755519-32664-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20170324135200.j7m3zzgphbetqn7p@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170324141815.7252-1-ralph.sennhauser@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-gpio@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Ralph Sennhauser <ralph.sennhauser@gmail.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170324135200.j7m3zzgphbetqn7p@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+On Fri, Mar 24, 2017 at 08:52:00AM -0500, Rob Herring wrote:
+> On Fri, Mar 17, 2017 at 01:58:39PM +0100, Thomas Petazzoni wrote:
+> > Commit 52060836f79 ("dt-bindings: omap-rng: Document SafeXcel IP-76
+> > device variant") update the omap_rng Device Tree binding to add support
+> > for the IP-76 variation of the IP. As part of this change, a "clocks"
+> > property was added, but is indicated as "Required", without indicated
+> > it's actually only required for some compatible strings.
+> > 
+> > This commit fixes that, by explicitly stating that the clocks property
+> > is only required with the inside-secure,safexcel-eip76 compatible
+> > string.
+> > 
+> > Fixes: 52060836f79 ("dt-bindings: omap-rng: Document SafeXcel IP-76 device variant")
+> > Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> > Changes since v1:
+> >  - Instead of indicating the property as optional, indicate it as
+> >    mandatory for the inside-secure,safexcel-eip76 compatible string, as
+> >    suggested by Rob Herring.
+> > ---
+> >  Documentation/devicetree/bindings/rng/omap_rng.txt | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Now that the GPIO driver also supports PWM operation, enable the PWM
-framework and fan driver in mvebu_v7_defconfig.
+And applied.
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-URL: https://patchwork.ozlabs.org/patch/427297/
-[Ralph Sennhauser: add fan driver to defconfig]
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
----
- arch/arm/configs/mvebu_v7_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
-index f1a0e25..6955370 100644
---- a/arch/arm/configs/mvebu_v7_defconfig
-+++ b/arch/arm/configs/mvebu_v7_defconfig
-@@ -135,6 +135,8 @@ CONFIG_DMADEVICES=y
- CONFIG_MV_XOR=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_MEMORY=y
-+CONFIG_PWM=y
-+CONFIG_SENSORS_PWM_FAN=y
- CONFIG_EXT4_FS=y
- CONFIG_ISO9660_FS=y
- CONFIG_JOLIET=y
--- 
-2.10.2
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
