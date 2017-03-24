@@ -1,96 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ASoC: Add support for Maxim Integrated
-	MAX98927 Amplifier
-Date: Fri, 24 Mar 2017 10:26:13 -0500
-Message-ID: <20170324152613.qzvsviznhiz5f3sj@rob-hp-laptop>
-References: <1489970423-29353-1-git-send-email-ryans.lee@maximintegrated.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/3] device property: Move FW type specific functionality to FW specific files
+Date: Fri, 24 Mar 2017 16:21:17 +0100
+Message-ID: <23298688.xfS8SVR2Ym@aspire.rjw.lan>
+References: <1490353432-12017-1-git-send-email-sakari.ailus@linux.intel.com> <20170324114212.GA16657@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1489970423-29353-1-git-send-email-ryans.lee@maximintegrated.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ryan Lee <ryans.lee@maximintegrated.com>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com, tiwai@suse.com, srinivas.kandagatla@linaro.org, romain.perier@collabora.com, bardliao@realtek.com, lars@metafoo.de, axel.lin@ingics.com, Paul.Handrigan@cirrus.com, devicetree@vger.kernel.org, arnd@arndb.de, nh6z@nh6z.net, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com, dgreid@google.com, oder_chiou@realtek.com, KCHSU0@nuvoton.com, linux-kernel@vger.kernel.org, petr@barix.com
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170324114212.GA16657@valkosipuli.retiisi.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, ahs3@redhat.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 09:40:23AM +0900, Ryan Lee wrote:
-> Signed-off-by: Ryan Lee <ryans.lee@maximintegrated.com>
-> ---
-> Resubmit the intial version of MAX98927 driver. Added all fixes into the initial patch.
+On Friday, March 24, 2017 01:42:13 PM Sakari Ailus wrote:
+> On Fri, Mar 24, 2017 at 01:03:50PM +0200, Sakari Ailus wrote:
+> > The device and fwnode property API supports Devicetree, ACPI and pset
+> > properties. The implementation of this functionality for each firmware
+> > type was embedded in the fwnode property core. Move it out to firmware
+> > type specific locations, making it easier to maintain.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > 
->  .../devicetree/bindings/sound/max98927.txt         |   39 +
->  sound/soc/codecs/Kconfig                           |    5 +
->  sound/soc/codecs/Makefile                          |    2 +
->  sound/soc/codecs/max98927.c                        | 1040 ++++++++++++++++++++
->  sound/soc/codecs/max98927.h                        |  267 +++++
->  5 files changed, 1353 insertions(+)
->  create mode 100755 Documentation/devicetree/bindings/sound/max98927.txt
->  mode change 100644 => 100755 sound/soc/codecs/Kconfig
->  mode change 100644 => 100755 sound/soc/codecs/Makefile
->  create mode 100755 sound/soc/codecs/max98927.c
->  create mode 100755 sound/soc/codecs/max98927.h
+> Oh, this escaped me a bit early.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/max98927.txt b/Documentation/devicetree/bindings/sound/max98927.txt
-> new file mode 100755
-> index 0000000..d610879
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/max98927.txt
-> @@ -0,0 +1,39 @@
-> +max98927 audio CODEC
-> +
-> +This device supports I2C.
+> This set is the other part split off from the earlier "Move firmware
+> specific code to firmware specific locations" set. It depends on my earlier
+> the fwnode fixes, ACPI graph support patchsets and patch "device property:
+> Read strings using string array reading functions" that are intended for the
+> PM tree. They also depend on patch "of: Move OF property and graph API from
+> base.c to property.c" which is intended for the DT tree --- this patch
+> additionally depends on the patches on DT tree.
+> 
+> The only change in the patches from the previous set is rebase, and a new
+> patch adding support for fwnode_graph_get_remote_node() has been added. The
+> last patch is currently untested. I'll test it in the near future; this set
+> is not mergeable for a while until the dependent patches have been merged to
+> the respective trees and a new rc1 release is available.
+> 
+> I'm uploading the patches to the two branches here:
+> 
+> Fwnode fixes + ACPI graph support + "device property:
+> Read strings using string array reading functions":
+> 
+> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph-all>
+> 
+> The previous patches on Rob H's for-next branch + "of: Move OF property
+> and graph API from base.c to property.c" + this patchset:
+> 
+> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph-cleaned-on-next>
+> 
+> It may still take a while until the patches get there.
 
-Can we combine this and the other max9892x bindings. They all look 
-similar.
+I'd prefer to see them in Patchwork, though.
 
-> +
-> +Required properties:
-> +
-> +  - compatible : "maxim,max98927"
-> +
-> +  - maxim,vmon-slot-no : slot number used to send voltage information
+Can you please repost all stuff you want to go into 4.12 that has no
+dependencies in other trees afresh?
 
-While vendor prefix is preferred, so is using the same property names. 
-Either use the existing names or deprecate the old ones in favor of 
-these.
+Thanks,
+Rafael
 
-> +                   or in inteleave mode this will be used as
-> +                   interleave slot.
-> +                   This property can be set to values from 0 to 15 for slot 0 to 15.
-> +                   Default value is 0.
-> +
-> +  - maxim,imon-slot-no : slot number used to send current information
-> +                   This property can be set to values from 0 to 15 for slot 0 to 15.
-> +                   Default value is 0.
-> +
-> +  - maxim,interleave-mode : When using two MAX98927 in a system it is
-> +                   possible to create ADC data that that will
-> +                   overflow the frame size. Digital Audio Interleave
-> +                   mode provides a means to output VMON and IMON data
-> +                   from two devices on a single DOUT line when running
-> +                   smaller frames sizes such as 32 BCLKS per LRCLK or
-> +                   48 BCLKS per LRCLK.
-> +                   This property can be set to values from 0 to 1 for off and on.
-> +                   Default value is 0.
-> +
-> +  - reg : the I2C address of the device for I2C
-> +
-> +Example:
-> +
-> +codec: max98927@3a {
-> +   compatible = "maxim,max98927";
-> +   maxim,vmon-slot-no = <0>;
-> +   maxim,imon-slot-no = <1>;
-> +   maxim,interleave-mode = <0>;
-> +   reg = <0x3a>;
-> +};
