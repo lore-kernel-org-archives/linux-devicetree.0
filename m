@@ -1,173 +1,74 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Fri, 24 Mar 2017 16:22:09 +0100
-Message-ID: <1490368934-12494-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] iio: xoadc: augment DT bindings a bit
+Date: Fri, 24 Mar 2017 16:25:31 +0100
+Message-ID: <CACRpkdaZmauodn+xvSudUELCRrO4j7Dj+SM+H4bkkqQMeJ6EoA@mail.gmail.com>
+References: <20170318133358.22314-1-linus.walleij@linaro.org> <20170324151235.cb73gokg26qy7fvc@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170324151235.cb73gokg26qy7fvc@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
-controller.
+On Fri, Mar 24, 2017 at 4:12 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sat, Mar 18, 2017 at 02:33:58PM +0100, Linus Walleij wrote:
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 143 +++++++++++++++++++++
- 1 file changed, 143 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+>> -- #address-cells: should be set to <1>
+>> +- #address-cells: should be set to <2>, the first cell is the
+>> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
+>> +  so legal values are 0x00, 0x01 or 0x02. The second cell
+>> +  is the main analog mux setting (0x00..0x0f). The combination
+>> +  of prescaler/premux and analog mux uniquely addresses a hardware
+>> +  channel on all systems.
+>
+> 64-bits to describe 48 possible combinations... I'd just combine these
+> into 1 cell.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-new file mode 100644
-index 0000000..69aafd1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-@@ -0,0 +1,143 @@
-+Renesas RZ/A1 combined Pin and GPIO controller
-+
-+The Renesas SoCs of RZ/A1 family feature a combined Pin and GPIO controller
-+hardware controller, named "Ports" in the hardware reference manual.
-+Pin multiplexing and GPIO configuration is performed on a per-pin basis
-+writing configuration values to per-port register sets.
-+Each "port" features up to 16 pins, each of them configurable for GPIO
-+function (port mode) or in alternate function mode.
-+Up to 8 different alternate function modes exist for each single pin.
-+
-+Pin controller node
-+-------------------
-+
-+Required properties:
-+  - compatible
-+    this shall be "renesas,r7s72100-ports".
-+
-+  - #pinctrl-cells
-+    as defined by pinctrl-bindings.txt, this is the number
-+    of cells (in addition to pin index) required to configure a single pin.
-+    Shall be set to 1.
-+
-+  - reg
-+    address base and length of the memory area where pin controller
-+    hardware is mapped to.
-+
-+Example:
-+Pin controller node for RZ/A1H SoC (r7s72100)
-+
-+pinctrl: pinctrl@fcfe3000 {
-+	compatible = "renesas,r7s72100-ports";
-+
-+	#pinctrl-cells = <1>;
-+
-+	reg = <0xfcfe3000 0x4230>;
-+};
-+
-+Sub-nodes
-+---------
-+
-+The child nodes of the pin controller node describe a pin multiplexing
-+function or a gpio controller alternatively.
-+
-+- Pin multiplexing sub-nodes:
-+  A pin multiplexing sub-node describes how to configure a set of
-+  (or a single) pin in some desired alternate function mode.
-+  A single sub-node may define several pin configurations groups.
-+
-+  Required properties:
-+    - renesas,pins
-+      describes an array of pin multiplexing configurations.
-+      When a pin has to be configured in alternate function mode, use this
-+      property to identify the pin by its global index, and provide its
-+      alternate function configuration description along with it.
-+      When multiple pins are required to be configured as part of the same
-+      alternate function (odds are single-pin alternate functions exist) they
-+      shall be specified as members of the same argument list of a single
-+      "renesas-pins" property.
-+      Helper macros to ease calculating the pin index from its position
-+      (port where it sits on and pin offset), and alternate function
-+      configuration options are provided in the pin controller header file at:
-+      include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-+
-+  Example:
-+  A serial communication interface with a TX output pin and an RX input pin.
-+
-+  &pinctrl {
-+	scif2_pins: serial2 {
-+		renesas,pins = <PIN(3, 0) 6>, <PIN(3, 2) 4>;
-+	};
-+  }
-+
-+  Pin #0 on port #3 is configured as alternate function #6.
-+  Pin #2 on port #3 is configured as alternate function #4.
-+
-+  Example 2:
-+  I2c master: both SDA and SCL pins need bi-directional operations
-+
-+  &pinctrl {
-+	i2c2_pins: i2c2 {
-+		renesas,pins = <PIN(1, 4) (1 | BI_DIR)>,
-+			       <PIN(1, 5) (1 | BI_DIR)>;
-+	};
-+  }
-+
-+  Pin #4 on port #1 is configured as alternate function #1.
-+  Pin #5 on port #1 is configured as alternate function #1.
-+  Both need to work in bi-directional mode.
-+
-+  Example 3:
-+  Multi-function timer input and output compare pins.
-+  The hardware manual prescribes this pins to have input/output direction
-+  specified by software. Configure TIOC0A as input and TIOC0B as output.
-+
-+  &pinctrl {
-+	tioc0_pins: tioc0 {
-+		renesas,pins = <PIN(4, 0) (2 | SWIO_IN)>,
-+			       <PIN(4, 1) (2 | SWIO_OUT)>;
-+	};
-+  }
-+
-+  Pin #0 on port #4 is configured as alternate function #2 with IO direction
-+  specified by software as input.
-+  Pin #1 on port #4 is configured as alternate function #1 with IO direction
-+  specified by software as output.
-+
-+- GPIO controller sub-nodes:
-+  Each port of the r7s72100 pin controller hardware is itself a gpio controller.
-+  Different SoCs have different number of available pins per port, but
-+  generally speaking, each of them can be configured in GPIO ("port") mode
-+  on this hardware.
-+  Describe gpio-controllers using sub-nodes with the following properties.
-+
-+  Required properties:
-+    - gpio-controller
-+      empty property as defined by the gpio bindings documentation.
-+    - #gpio-cells
-+      number of cells required to identify and configure a GPIO.
-+      Shall be 2.
-+    - gpio-ranges
-+      Describes a gpio controller specifying its specific pin base, the pin
-+      base in the global pin numbering space, and the number of controlled
-+      pins, as defined by the gpio bindings documentation. Refer to this file
-+      for a more detailed description.
-+
-+  Example:
-+  A gpio controller node, controlling 16 pins indexed from 0.
-+  The gpio controller base in the global pin indexing space is pin 48, thus
-+  pins [0 - 15] on this controller map to pins [48 - 63] in the global pin
-+  indexing space.
-+
-+  port3: gpio-3 {
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	gpio-ranges = <&pinctrl 0 48 16>;
-+  };
-+
-+  A device node willing to use pins controlled by this gpio controller, shall
-+  refer to it as follows:
-+
-+  led1 {
-+	gpios = <&port3 10 GPIO_ACTIVE_LOW>;
-+  };
--- 
-2.7.4
+That was what I did first but it becomes very unintuitive and
+require translation using tables etc from the datasheets. You
+have to shuffle and stuff bits to get that one cell value.
 
+The addressing is really done in two steps:
+
+premux -> mux -> channel
+
+Example:
+
+Premux 0x02
+Mux 0x08
+
+I guess I could of course put that into one cell using 4+4 bits
+and form 0x28.
+
+On the other hand, that is not how the hardware works, because
+there premux/prescaler and analog mux are two separate things.
+
+>>  - reg: should contain the hardware channel number in the range
+>> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
+>> +  0 .. 0xff (8 bits).
+>> +
+>> +  On PM8058 the hardware only supports 16 channels, but we get the same
+>> +  channels repeating with its input divided down by 1 or 3. Channels 00,
+>> +  10, 20, ... f0 are the raw values, 04, 14, 24 .. f4 are "unity" channels
+>> +  divided by 1, and 08, 18, 28 .. f8 are channels divided by 3. Bits 0
+>> +  and 1 of the channel index should always be 0.
+>> +
+>> +  On PM8921 the hardware supports more than 16 channels through a complex
+>> +  routing matrix using a premux, so 00, 10, 20 .. f0 are the basic raw
+>> +  channels while another set of channels appear for 04, 14, 24 .. f4,
+>> +  and again some of the same channels appear again divided down by 3
+>> +  in 08, 18, 28 .. f8. Again bits 0 and 1 of the channel index should
+>> +  always be 0.
+>
+> Now I'm lost...
+
+That is actually how it looks with the old scheme, which you are
+kind of requesting that I use instead. In a way it's good that I left
+the old documentation in there because it illustrates my problem
+with what you request above: lots of "holes" in that address
+space and very unituitive numbers.
+
+Yours,
+Linus Walleij
