@@ -1,127 +1,170 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/9] arm64: mm: install SError abort handler
-Date: Fri, 24 Mar 2017 12:02:05 -0700
-Message-ID: <b6090e54-a1f8-701a-6f86-6968d3effcf8@gmail.com>
-References: <20170324144632.5896-1-opendmb@gmail.com>
- <20170324144632.5896-4-opendmb@gmail.com>
- <20170324151654.GD29588@leverpostej> <58D54DE8.9020707@gmail.com>
- <20170324173515.GB10746@leverpostej>
- <710c4142-ae20-9715-3e51-910a2073a64e@gmail.com>
- <20170324183051.GD10746@leverpostej>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and GXL
+Date: Fri, 24 Mar 2017 12:20:31 -0700
+Message-ID: <m237e2iirk.fsf@baylibre.com>
+References: <1490177935-9646-1-git-send-email-narmstrong@baylibre.com>
+        <1490177935-9646-4-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324183051.GD10746@leverpostej>
+In-Reply-To: <1490177935-9646-4-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Wed, 22 Mar 2017 11:18:55 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, vladimir.murzin-5wv7dgnIgG8@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, cmetcalf-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sandeepa.s.prabhu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shijie.huang-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2017 11:31 AM, Mark Rutland wrote:
-> Hi Florian,
-> 
-> On Fri, Mar 24, 2017 at 10:53:48AM -0700, Florian Fainelli wrote:
->> On 03/24/2017 10:35 AM, Mark Rutland wrote:
->>> On Fri, Mar 24, 2017 at 09:48:40AM -0700, Doug Berger wrote:
->>>> On 03/24/2017 08:16 AM, Mark Rutland wrote:
->>>>> On Fri, Mar 24, 2017 at 07:46:26AM -0700, Doug Berger wrote:
->>>
->>>> If you would consider an alternative implementation where we scrap
->>>> the SError handler (i.e. maintain the ugliness in our downstream
->>>> kernel) in favor of a more gentle user mode crash on SError that
->>>> allows the kernel the opportunity to service the interrupt for
->>>> diagnostic purposes I could try to repackage that.
->>>
->>> If this is just for diagnostic purposes, I believe you can register a
->>> panic notifier, which can then read from the bus. The panic will occur,
->>> but you'll have the opportunity to log some information to dmesg.
->>
->> And crash the kernel? That sounds awful, FWIW the ARM/Linux kernel is
->> able to recover just fine from user-space accessing e.g: invalid
->> physical addresses in the GISB register space, bringing the same level
->> of functionality to ARM64/Linux sounds reasonable to me.
-> 
-> I disagree, given that:
-> 
-> (a) You cannot determine the (HW) origin of the SError in an
->     architecturally portable way. i.e. when you take an SError, you have
->     no way of determining what asynchronous event caused it.
-> 
-> (b) SError is effectively an edge-triggered interrupt for fatal system
->     errors (e.g. it may be triggered in resonse to ECC errors,
->     corruption detected in caches, etc). Even if you can determine that
->     the GISB triggered *an* SError, this does not tell you that this was
->     the *only* SError.
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-Correct, which is why Doug's changes allow chaining of handlers.
+> The same MALI-450 MP3 GPU is present in the GXBB and GXL SoCs.
+>
+> The node is simply added in the meson-gxbb.dtsi file.
+>
+> For GXL, since a lot is shared with the GXM that has a MALI-T820 IP, this
+> patch adds a new meson-gxl-mali.dtsi and is included in the SoC specific
+> dtsi files.
+>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-> 
->     If you take an SError, something bad has already happened. Your data
->     may already have been corrupted, and worse, you don't know when or
->     where specifically this occurred (nor how many times).
+LGTM, I can apply this when the clk driver changes are merged (feel free
+to let me know when that happens, in case I'm not paying attention.)
 
-Sure, but that still allows you to send the correct signal to a faulting
-application (unless I am missing something here).
+<bikeshed>
+nit: This series (and previous ones) use MALI, but I believe the correct
+way is Mali. Could you standarize on that throughout the series?
+</bikeshed>
 
->     
-> (c) You cannot determine the (SW) origin of an SError without relying
->     upon implementation details. This cannot be written in a way that
->     does not rely on microarchitecture, integration, etc, and would need
->     to be updated for every future system with this misfeature.
+Kevin
 
-Which is exactly what is being done here, with the help of platform
-specific information (we would not load brcmstb_gisb.c if we were not on
-a platform where it makes sense to use that HW).
-
-> 
-> (d) Even if you can determine the (SW) origin of an SError by relying on
->     IMPLEMENTATION DEFINED details, your handler needs to be intimately
->     familiar with the arch in question in order to attempt to recover.
-> 
->     For example, the existing code tries to skip an ARM instruction in
->     some cases. For arm64 there are three cases that would need to be
->     handled (AArch64 A64, AArch32 A32/ARM, AArch32 T32/Thumb).
-> 
->     Further, it appears to me that the existing code is broken given
->     that it doesn't handle Thumb, and given that it's skipping an
->     instruction in response to an asynchronous event -- i.e. some
->     arbitrary instruction after the one which triggered the abort.
-
-OK, that could presumably be fixed though.
-
-> 
-> For better or worse, SError *must* be treated as fatal.
-
-I disagree here, since this is a platform specific SError exception that
-we can actually handle correctly there is a chance to actually not take
-down the system on something that can be made non fatal and informative
-at the same time.
-
-> 
-> As Doug stated:
-> 
->     The main benefit is to help debug user mode code that accidentally
->     maps a bad address since we would never make such an egregious error
->     in the kernel ;)
-> 
-> This is just one of many ways a userspace application with direct HW
-> access can bring down the system. I see no reason to treat it any
-> differently, especially given the above points.
-
-Partially disagree, in the absence of a way to specifically deal with
-the exception, I would almost agree, but this is not the case here, we
-have a piece of HW that can help us locate the problem, display an
-informative message, and send a SIGBUS to the faulting application.
-
-Anyway, I won't argue much further than that, but I certainly don't
-think taking down an entire system is going to prove itself useful when
-you need to deploy such a kernel to hundreds of people who have no clue
-what so ever what their actual problem is in the first place. Taking a
-SIGBUS and printing a message can at least allow us to say: read more
-carefully, it say exactly what's wrong.
--- 
-Florian
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi      | 37 ++++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi  | 43 ++++++++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi |  1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi |  1 +
+>  4 files changed, 82 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index 04b3324..0617a3d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -478,6 +478,43 @@
+>  	};
+>  };
+>  
+> +&apb {
+> +	mali: gpu@c0000 {
+> +		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
+> +		reg = <0x0 0xc0000 0x0 0x40000>;
+> +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "gp", "gpmmu", "pp", "pmu",
+> +			"pp0", "ppmmu0", "pp1", "ppmmu1",
+> +			"pp2", "ppmmu2";
+> +		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
+> +		clock-names = "bus", "core";
+> +
+> +		/*
+> +		 * Mali clocking is provided by two identical clock paths
+> +		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
+> +		 * free mux to safely change frequency while running.
+> +		 */
+> +		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
+> +				  <&clkc CLKID_MALI_0>,
+> +				  <&clkc CLKID_MALI>; /* Glitch free mux */
+> +		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
+> +					 <0>, /* Do Nothing */
+> +					 <&clkc CLKID_MALI_0>;
+> +		assigned-clock-rates = <0>, /* Do Nothing */
+> +				       <666666666>,
+> +				       <0>; /* Do Nothing */
+> +	};
+> +};
+> +
+>  &i2c_A {
+>  	clocks = <&clkc CLKID_I2C>;
+>  };
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+> new file mode 100644
+> index 0000000..f06cc234
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+> @@ -0,0 +1,43 @@
+> +/*
+> + * Copyright (c) 2017 BayLibre SAS
+> + * Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + */
+> +
+> +&apb {
+> +	mali: gpu@c0000 {
+> +		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
+> +		reg = <0x0 0xc0000 0x0 0x40000>;
+> +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "gp", "gpmmu", "pp", "pmu",
+> +			"pp0", "ppmmu0", "pp1", "ppmmu1",
+> +			"pp2", "ppmmu2";
+> +		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
+> +		clock-names = "bus", "core";
+> +
+> +		/*
+> +		 * Mali clocking is provided by two identical clock paths
+> +		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
+> +		 * free mux to safely change frequency while running.
+> +		 */
+> +		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
+> +				  <&clkc CLKID_MALI_0>,
+> +				  <&clkc CLKID_MALI>; /* Glitch free mux */
+> +		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
+> +					 <0>, /* Do Nothing */
+> +					 <&clkc CLKID_MALI_0>;
+> +		assigned-clock-rates = <0>, /* Do Nothing */
+> +				       <666666666>,
+> +				       <0>; /* Do Nothing */
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+> index 615308e..5a90e30 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+> @@ -42,6 +42,7 @@
+>   */
+>  
+>  #include "meson-gxl.dtsi"
+> +#include "meson-gxl-mali.dtsi"
+>  
+>  / {
+>  	compatible = "amlogic,s905d", "amlogic,meson-gxl";
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+> index 08237ee..0f78d83 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+> @@ -42,6 +42,7 @@
+>   */
+>  
+>  #include "meson-gxl.dtsi"
+> +#include "meson-gxl-mali.dtsi"
+>  
+>  / {
+>  	compatible = "amlogic,s905x", "amlogic,meson-gxl";
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
