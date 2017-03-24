@@ -1,185 +1,117 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v2 09/15] ARM: dts: imx6qdl-icore: Add Sound card with codec node
-Date: Fri, 24 Mar 2017 21:48:44 +0530
-Message-ID: <1490372330-5611-10-git-send-email-jagan@openedev.com>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 14/15] ARM: dts: imx6qdl-icore-rqs: Add CAN nodes
+Date: Fri, 24 Mar 2017 21:48:49 +0530
+Message-ID: <1490372330-5611-15-git-send-email-jagan@openedev.com>
 References: <1490372330-5611-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490372330-5611-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490372330-5611-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Add support for Sound card and related codec(via i2c1) nodes
-on below Engicam module boards.
-- i.CoreM6 DualLite/Solo Starter kit
-- i.CoreM6 Quad/Dual Starter kit
-- i.CoreM6 Quad/Dual OpenFrame Cap touch 10.1
-- i.CoreM6 Quad/Dual OpenFrame Cap touch 12.3
+Add support for can1 and can2 nodes on Engicam i.CoreM6 RQS
+QDL module boards.
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
-- Use proper [label:] node-name[@unit-address] for codec
+- s/flexcan/can
+- s/pinctrl_flexcan/pinctrl_can 
 
- arch/arm/boot/dts/imx6dl-icore.dts        | 11 +++++++++
- arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 11 +++++++++
- arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 11 +++++++++
- arch/arm/boot/dts/imx6q-icore.dts         | 11 +++++++++
- arch/arm/boot/dts/imx6qdl-icore.dtsi      | 37 +++++++++++++++++++++++++++++++
- 5 files changed, 81 insertions(+)
+ arch/arm/boot/dts/imx6dl-icore-rqs.dts   |  8 ++++++++
+ arch/arm/boot/dts/imx6q-icore-rqs.dts    |  8 ++++++++
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 26 ++++++++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
-index 6de83c7..0562ce4 100644
---- a/arch/arm/boot/dts/imx6dl-icore.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore.dts
-@@ -57,3 +57,14 @@
- &can2 {
- 	status = "okay";
- };
-+
-+&i2c3 {
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-index 49b60ca..f63b87f 100644
---- a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-@@ -50,6 +50,17 @@
- 	compatible = "engicam,imx6-icore", "fsl,imx6q";
- };
- 
-+&i2c3 {
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-index 9e230f5..68ca828 100644
---- a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-@@ -50,6 +50,17 @@
- 	compatible = "engicam,imx6-icore", "fsl,imx6q";
- };
- 
-+&i2c3 {
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
-index 5613dd9..1ae7294 100644
---- a/arch/arm/boot/dts/imx6q-icore.dts
-+++ b/arch/arm/boot/dts/imx6q-icore.dts
-@@ -67,6 +67,17 @@
+diff --git a/arch/arm/boot/dts/imx6dl-icore-rqs.dts b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
+index 053e7cb..74335c4 100644
+--- a/arch/arm/boot/dts/imx6dl-icore-rqs.dts
++++ b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
+@@ -60,3 +60,11 @@
+ 		VDDD-supply = <&reg_1p8v>;
  	};
  };
- 
-+&i2c3 {
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
-+};
 +
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 56d0c5d..09600eb 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -55,6 +55,25 @@
- 		default-brightness-level = <7>;
- 	};
- 
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+
-+	reg_2p5v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2P5V";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3P3V";
-@@ -87,6 +106,20 @@
- 		#clock-cells = <0>;
- 		clock-frequency = <25000000>;  /* 25MHz for example */
- 	};
-+
-+	sound {
-+		compatible = "fsl,imx6-icore-sgtl5000",
-+			     "fsl,imx-audio-sgtl5000";
-+		model = "imx6q-icore-sgtl5000";
-+		ssi-controller = <&ssi1>;
-+		audio-codec = <&sgtl5000>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <1>;
-+		mux-ext-port = <4>;
-+	};
- };
- 
- &can1 {
-@@ -149,6 +182,10 @@
- 	status = "okay";
- };
- 
-+&ssi1 {
++&can1 {
 +	status = "okay";
 +};
 +
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart4>;
++&can2 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
+index d45e4f5..2d4539a 100644
+--- a/arch/arm/boot/dts/imx6q-icore-rqs.dts
++++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
+@@ -49,6 +49,14 @@
+ 	compatible = "engicam,imx6-icore-rqs", "fsl,imx6q";
+ };
+ 
++&can1 {
++	status = "okay";
++};
++
++&can2 {
++	status = "okay";
++};
++
+ &i2c3 {
+ 	sgtl5000: codec@a {
+ 		compatible = "fsl,sgtl5000";
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+index d24e531..1bd3f4a 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+@@ -133,6 +133,18 @@
+ 	};
+ };
+ 
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_can1>;
++	xceiver-supply = <&reg_3p3v>;
++};
++
++&can2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_can2>;
++	xceiver-supply = <&reg_3p3v>;
++};
++
+ &clks {
+ 	assigned-clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>;
+ 	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
+@@ -284,6 +296,20 @@
+ 		>;
+ 	};
+ 
++	pinctrl_can1: can1grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x1b020
++			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX 0x1b020
++		>;
++	};
++
++	pinctrl_can2: can2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x1b020
++			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x1b020
++		>;
++	};
++
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
