@@ -1,110 +1,94 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 3/8] phy: sun4i-usb: add PHYCTL offset
- for H3 SoC
-Date: Fri, 24 Mar 2017 14:55:44 +0800
-Message-ID: <CAGb2v64DgFdmHiJ1r4NJR6Ck5ny1Mik_XhTEd_7=XMyptrD2uA@mail.gmail.com>
-References: <20170319161951.55834-1-icenowy@aosc.xyz> <20170319161951.55834-4-icenowy@aosc.xyz>
- <CAGb2v65NHgDDPGChR4rg28NS1tuj2RZ9ERrQz2cSa_haZLypXA@mail.gmail.com> <1157651490336844@web12m.yandex.ru>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 05/12] ARM: dts: imx6ul-isiot-common: Add touchscreen node
+Date: Fri, 24 Mar 2017 12:29:49 +0530
+Message-ID: <CAMty3ZBfdjrbvL7F9CbhfD_Wdowr4zM_Rdot=TGKMxq0JPyHjg@mail.gmail.com>
+References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
+ <1490204897-14525-6-git-send-email-jagan@openedev.com>
+ <20170324051632.GD30608@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCMG2PDAKGQEFCJCR6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1157651490336844-slj663OZ0j5xpj1cXAZ9Bg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170324051632.GD30608@dragon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@openedev.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 2:27 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
->
->
-> 24.03.2017, 11:05, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
->> On Mon, Mar 20, 2017 at 12:19 AM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
->>>  The config structure of H3 in phy-sun4i-usb driver have the PHYCTL
->>>  register offset missing.
->>>
->>>  Add it. Because it's a SoC after A33, its PHYCTL offset should be 0x10.
+On Fri, Mar 24, 2017 at 10:46 AM, Shawn Guo <shawnguo@kernel.org> wrote:
+> On Wed, Mar 22, 2017 at 11:18:10PM +0530, Jagan Teki wrote:
+>> From: Jagan Teki <jagan@amarulasolutions.com>
 >>
->> You are implying that all SoCs after A33 have PHYCTL at 0x10.
+>> Add touchscreen node as i2c1 slave device on Engicam Is.IoT MX6UL
+>> modules, the touchscreen controlled 'st,stmpe-ts' connected via
+>> i2c with st,stmpe811 mfb interface.
+>
+> s/mfb/mfd?
+>
 >>
->> This is not true. As the A83T, which was released after the A33, has
->> PHYCTL at the old offset.
+>> Cc: Shawn Guo <shawnguo@kernel.org>
+>> Cc: Matteo Lisi <matteo.lisi@engicam.com>
+>> Cc: Michael Trimarchi <michael@amarulasolutions.com>
+>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>> ---
+>>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 34 ++++++++++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+>> index 9660e20..b149b5e 100644
+>> --- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+>> +++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+>> @@ -40,6 +40,34 @@
+>>   *     OTHER DEALINGS IN THE SOFTWARE.
+>>   */
+>>
+>> +&i2c1 {
+>> +     touch: stmpe811@44 {
 >
-> No, in Allwinner's BSP A83T is using also PHYCTL at 0x10.
->
-> The code in linux-3.4/drivers/usb/sunxi_usb/include/sunxi_usb_bsp.c is
-> ```
-> #if defined (CONFIG_ARCH_SUN8IW5) || defined (CONFIG_ARCH_SUN8IW6) || defined (CONFIG_ARCH_SUN8IW9) || defined (CONFIG_ARCH_SUN8IW8) || defined (CONFIG_ARCH_SUN8IW7)
-> #define  USBPHYC_REG_o_PHYCTL               0x0410
-> #else
-> #define  USBPHYC_REG_o_PHYCTL               0x0404
-> #endif
-> ```
->
-> In linux-3.10/drivers/usb/sunxi_usb/include/sunxi_usb_bsp.c is
-> ```
-> #if defined (CONFIG_ARCH_SUN50I) || defined (CONFIG_ARCH_SUN8IW10) || defined (CONFIG_ARCH_SUN8IW11)
-> #define  USBPHYC_REG_o_PHYCTL               0x0410
-> #else
-> #define  USBPHYC_REG_o_PHYCTL               0x0404
-> #endif
-> ```
->
-> So sun50i* and sun50iw5~w11 all use PHYCTL at 0x10.
->
+> Label a MFD device 'touch'?  Also, the node name should be generic.  Not
+> sure what should be used for MFD device though.
 
-Seems you are right. However I think it's best to not assume or infer
-anything. Who knows, Allwinner might re-release some old SoC under a
-different under a different name again.
+May be I can use stmpe811@41 the existing imx6qdl-apalis.dtsi using
+the similar notation.
 
-Just state the facts: H3 has its PHYCTL at 0x10.
-
-ChenYu
-
->>
->> Just state that H3 has PHYCTL at 0x10.
->>
->> ChenYu
->>
->>>  Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>  ---
->>>  New patch in v4.
->>>
->>>   drivers/phy/phy-sun4i-usb.c | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>>  diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
->>>  index 62b4d25448c6..a650f283f6ff 100644
->>>  --- a/drivers/phy/phy-sun4i-usb.c
->>>  +++ b/drivers/phy/phy-sun4i-usb.c
->>>  @@ -821,6 +821,7 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
->>>          .num_phys = 4,
->>>          .type = sun8i_h3_phy,
->>>          .disc_thresh = 3,
->>>  + .phyctl_offset = REG_PHYCTL_A33,
->>>          .dedicated_clocks = true,
->>>          .enable_pmu_unk1 = true,
->>>   };
->>>  --
->>>  2.12.0
->>>
->>>  --
->>>  You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
->>>  To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->>>  For more options, visit https://groups.google.com/d/optout.
->>
->> --
->> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
->> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->> For more options, visit https://groups.google.com/d/optout.
 >
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+>> +             compatible = "st,stmpe811";
+>> +             reg = <0x44>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&pinctrl_stmpe_ts>;
+>
+> If this is for stmpe-ts, shouldn't be put into touchscreen child node?
+
+Actually this is interrupt pad, for the touch controller via stmpe so
+I can rename pinctrl_touch_int.
+
+>
+>> +             interrupt-parent = <&gpio1>;
+>> +             interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+>> +             interrupt-controller;
+>> +             #interrupt-cells = <2>;
+>> +
+>> +             stmpe_touchscreen {
+>
+> 'stmpe: touchscreen {' might be better.
+
+stmpe_touchscreen {
+
+This is also compatible with existing dtsi files
+
+thanks!
+-- 
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
