@@ -1,74 +1,46 @@
-From: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 4/5] firmware: Add coreboot device tree binding documentation
-Date: Fri, 24 Mar 2017 12:33:34 -0700
-Message-ID: <CAODwPW-GHWBmYeX-XkpO1sxk=JXfPaijoLEoKxuiBHHS3LTBXg@mail.gmail.com>
-References: <1490303069-13230-1-git-send-email-thierry.escande@collabora.com>
- <1490303069-13230-5-git-send-email-thierry.escande@collabora.com>
- <20170324122146.GE22771@leverpostej> <20170324175727.GB119093@google.com> <CAODwPW94vsaWF8+DrLduWhHpbBvdvynbDocXCv2ekZH178BHjQ@mail.gmail.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v4 0/4] RK3399 dw-mipi-dsi patches
+Date: Fri, 24 Mar 2017 15:38:54 -0400
+Message-ID: <20170324193854.wxnco6mmxf5n6bhl@art_vandelay>
+References: <1490147691-4489-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAODwPW94vsaWF8+DrLduWhHpbBvdvynbDocXCv2ekZH178BHjQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Escande <thierry.escande-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1490147691-4489-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-...and again in plaintext, sorry about that.
-
-On Fri, Mar 24, 2017 at 12:32 PM, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> > Devicetree bindings should be in vendor,prefix format. This doesn't
->> > represent every aspect of coreboot, so it needs a more descriptive
->> > string.
->>
->> Any particular suggestion? I suppose this is Google's interpretation of
->> coreboot tables, so "google,coreboot"?
->
->
-> No. This binding is for the coreboot project in general and has nothing to
-> do with Google. coreboot is both the vendor and the product, so I think
-> "coreboot" would look better than "coreboot,coreboot". And yes, it is
-> supposed to represent every aspect of coreboot (right now the "coreboot
-> tables" are already sort of a catch-all data structure used by coreboot to
-> pass on any sort of info it wants later stages to know... and if we ever
-> have any additional things we'd like to pass on, we'd probably want to add
-> them to this binding as well).
->
->>
->> > > + - reg: Address and length of the following two memory regions, in
->> > > order:
->> > > +   1.) The coreboot table. This is a list of variable-sized
->> > > descriptors
->> > > +   that contain various compile- and run-time generated firmware
->> > > +   parameters. It is identified by the magic string "LBIO" in its
->> > > first
->> > > +   four bytes.
->> > > +   See coreboot's src/commonlib/include/commonlib/coreboot_tables.h
->> > > for
->> > > +   details.
->> >
->> > Given this is a memory region, it should be described under the
->> > reserved-memory node.
->>
->> We've painted this bikeshed before. I guess the result was either to use
->> /reserved-memory or /memreserve/. I believe we've been using
->> /memreserve/. I suppose we could document a method to use either, but
->> the main "agreement" was to use the /firmware/coreboot path instead of
->> /reserved-memory/coreboot.
->
->
-> See the old thread Brian linked for some arguments for and against this. I
-> think particularly because we want this node to represent every aspect of
-> coreboot (which I think makes more sense than spreading stuff all over the
-> place), treating it as reserved memory would not work well if we might later
-> add other fields.
->
-> Also, since we didn't get any more responses the last time we tried to
-> upstream this and had schedules to keep, we had to go ahead with what we
-> had. So right now there are already millions of devices shipped with this
-> binding in firmware, and the only question we still have left to decide is
-> whether Linux wants to support them upstream or not.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBNYXIgMjIsIDIwMTcgYXQgMDk6NTQ6NDdBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
+dGU6Cj4gSGkgYWxsCj4gCj4gVGhpcyBzZXJpZXMgc2V0IHRoZSBwaHlfY2ZnX2NsayB0byBiZSBh
+IHJlcXVpcmVkIGNsb2NrIGZvciBSSzMzOTksIGFuZAo+IGFkZCBhIGdyZiBjbG9jayBjb250cm9s
+IGluIGR3LW1pcGktZHNpIGRyaXZlci4gQW5kIHRoZW4gY29ycmVjdCBhCj4gcmVnaXN0ZXIgbmFt
+ZS4KPiAKCkFwcGxpZWQgdG8gZHJtLW1pc2MKClRoYW5rcywKClNlYW4KCgo+IAo+IENoYW5nZXMg
+aW4gdjQ6Cj4gLSByZW1vdmUgImFkZGl0aW9uYWwiCj4gLSBwcmludCB0aGUgZXJyIGFmdGVyIGNs
+a19wcmVwYXJlX2VuYWJsZShkc2ktPmdyZl9jbGspCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIGFk
+ZCBhIERXX01JUElfTkVFRFNfUEhZX0NGR19DTEsgZm9yIFJLMzM5OQo+IC0gYWRkIGEgRFdfTUlQ
+SV9ORUVEU19HUkZfQ0xLIGZvciBSSzMzOTkKPiAKPiBDaGFuZ2VzIGluIHYyOgo+IC0gY2hlY2sg
+dGhlIGdyZl9jbGsgb25seSBmb3IgUkszMzk5Cj4gCj4gQ2hyaXMgWmhvbmcgKDQpOgo+ICAgZHJt
+L3JvY2tjaGlwL2RzaTogY2hlY2sgcGh5X2NmZ19jbGsgb25seSBmb3IgUkszMzk5Cj4gICBkdC1i
+aW5kaW5nczogYWRkIHRoZSBncmYgY2xvY2sgZm9yIGR3LW1pcGktZHNpCj4gICBkcm0vcm9ja2No
+aXAvZHNpOiBlbmFibGUgdGhlIGdyZiBjbGsgYmVmb3JlIHdyaXRpbmcgZ3JmIHJlZ2lzdGVycwo+
+ICAgZHJtL3JvY2tjaGlwL2RzaTogY29ycmVjdCB0aGUgZ3JmX3N3aXRjaF9yZWcgbmFtZQo+IAo+
+ICAuLi4vZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgICAgICB8ICAy
+ICstCj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jICAgICAgICAgICAg
+IHwgNDIgKysrKysrKysrKysrKysrKystLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDM1IGluc2Vy
+dGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCj4gCj4gLS0gCj4gMi42LjMKPiAKCi0tIApTZWFuIFBh
+dWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
