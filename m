@@ -1,111 +1,87 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 10/11] ASoC: add bindings for stm32
-	DFSDM filter
-Date: Fri, 24 Mar 2017 09:52:08 -0500
-Message-ID: <20170324145208.6tj5swol5du5lkyc@rob-hp-laptop>
-References: <1489759704-30217-1-git-send-email-arnaud.pouliquen@st.com>
- <1489759704-30217-11-git-send-email-arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v4 1/7] coresight: bindings for CPU debug module
+Date: Fri, 24 Mar 2017 09:54:31 -0500
+Message-ID: <20170324145431.5bqkpv2h27kmqimu@rob-hp-laptop>
+References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
+ <1489762943-25849-2-git-send-email-leo.yan@linaro.org>
+ <20170317161335.GB20435@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1489759704-30217-11-git-send-email-arnaud.pouliquen@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, olivier moysan <olivier.moysan@st.com>, kernel@stlinux.com, Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>
+In-Reply-To: <20170317161335.GB20435@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Suzuki.Poulose@arm.com, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 03:08:23PM +0100, Arnaud Pouliquen wrote:
-> Add bindings that describes audio settings to support
-> Digital Filter for pulse density modulation(PDM) microphone.
+On Fri, Mar 17, 2017 at 10:13:35AM -0600, Mathieu Poirier wrote:
+> On Fri, Mar 17, 2017 at 11:02:17PM +0800, Leo Yan wrote:
+> > According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
+> > Chapter 'Part H: External debug', the CPU can integrate debug module
+> > and it can support self-hosted debug and external debug. Especially
+> > for supporting self-hosted debug, this means the program can access
+> > the debug module from mmio region; and usually the mmio region is
+> > integrated with coresight.
+> > 
+> > So add document for binding debug component, includes binding to APB
+> > clock; and also need specify the CPU node which the debug module is
+> > dedicated to specific CPU.
+> > 
+> > Suggested-by: Mike Leach <mike.leach@linaro.org>
+> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  .../bindings/arm/coresight-cpu-debug.txt           | 46 ++++++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+> > new file mode 100644
+> > index 0000000..f6855c3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+> > @@ -0,0 +1,46 @@
+> > +* CoreSight CPU Debug Component:
+> > +
+> > +CoreSight cpu debug component are compliant with the ARMv8 architecture
+> > +reference manual (ARM DDI 0487A.k) Chapter 'Part H: External debug'. The
+> > +external debug module is mainly used for two modes: self-hosted debug and
+> > +external debug, and it can be accessed from mmio region from Coresight
+> > +and eventually the debug module connects with CPU for debugging. And the
+> > +debug module provides sample-based profiling extension, which can be used
+> > +to sample CPU program counter, secure state and exception level, etc;
+> > +usually every CPU has one dedicated debug module to be connected.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : should be
+> > +	     * "arm,coresight-cpu-debug"; supplemented with "arm,primecell"
+> > +	       since this driver is using the AMBA bus interface.
 > 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
-> V2->V3:
->    Fixes based on V2 comments
+> This description needs to be refactored - see my comment from an earlier post
+> for more details.
 > 
->  .../devicetree/bindings/sound/st,stm32-adfsdm.txt  | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
+> > +
+> > +- reg : physical base address and length of the register set.
+> > +
+> > +- clocks : the clock associated to this component.
+> > +
+> > +- clock-names : the name of the clock referenced by the code. Since we are
+> > +                using the AMBA framework, the name of the clock providing
+> > +		the interconnect should be "apb_pclk" and the clock is
+> > +		mandatory. The interface between the debug logic and the
+> > +		processor core is clocked by the internal CPU clock, so it
+> > +		is enabled with CPU clock by default.
+> > +
+> > +- cpu : the cpu phandle the debug module is affined to. When omitted
+> > +	the module is considered to belong to CPU0.
+> > +
+> > +Optional properties:
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt b/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
-> new file mode 100644
-> index 0000000..ab610bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
-> @@ -0,0 +1,40 @@
-> +STMicroelectronics audio DFSDM DT bindings
-> +
-> +This driver supports audio PDM microphone capture through Digital Filter format
-> +Sigma Delta modulators (DFSDM).
-> +
-> +Required properties:
-> +  - compatible: "st,stm32h7-adfsdm".
-> +
-> +  - #sound-dai-cells : Must be equal to 0
-> +
-> +  - io-channels : phandle to iio dfsdm instance node.
-> +
-> +
-> +Example of a simple sound card using audio DFSDM node.
-> +
-> +	dmic0: dmic_@0 {
+> s/properties/property
 
-Drop the '_' and unit address.
+I prefer it as-is. Then it doesn't need to be changed if we add 
+properties.
 
-> +		compatible = "dmic-codec";
-> +		#sound-dai-cells = <0>;
-> +	};
-> +
-> +	asoc-pdm@0 {
-
-asoc is a Linux term. Drop the unit address.
-
-> +		compatible = "st,stm32h7-adfsdm";
-
-Is this a separate block from the ADC? A drawing of the h/w blocks and 
-connections would help.
-
-> +		#sound-dai-cells = <0>;
-> +		io-channels = <&dfsdm_adc0 0>;
-> +	};
-> +
-> +	sound_dfsdm_pdm {
-
-sound-card {
-
-> + 		compatible = "simple-audio-card";
-> + 		simple-audio-card,name = "dfsdm_pdm";
-> +
-> + 		dfsdm0_mic0: simple-audio-card,dai-link@0 {
-
-I'd suggest moving to the graph card.
-
-> + 			format = "pdm";
-> + 			cpu {
-> + 				sound-dai = <&asoc_pdm1>;
-
-This phandle doesn't point to anything.
-
-> + 			};
-> + 			dmic0_codec: codec {
-> + 				sound-dai = <&dmic0>;
-> + 			};
-> + 		};
-> +	};
-> \ No newline at end of file
-
-^^^
-
-> -- 
-> 1.9.1
-> 
+Rob
