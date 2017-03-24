@@ -1,91 +1,52 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] clk: qcom: Update DT bindings for MSM8660 LCC
-Date: Fri, 24 Mar 2017 09:24:24 +0100
-Message-ID: <20170324082424.6143-1-linus.walleij@linaro.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>
+Subject: Re: [PATCH] arm64: dts: ls1012a: add crypto node
+Date: Fri, 24 Mar 2017 08:29:17 +0000
+Message-ID: <DB4PR04MB0847E3EE8F7FAC11DD85FAA8983E0@DB4PR04MB0847.eurprd04.prod.outlook.com>
+References: <20170322122939.22117-1-horia.geanta@nxp.com>
+ <20170324015606.GC30608@dragon>
+ <DB4PR04MB0847D837CB2762D5094720CB983E0@DB4PR04MB0847.eurprd04.prod.outlook.com>
+ <20170324073420.GM30608@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-crypto-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Harninder Rai <harninder.rai@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhaskar U <bhaskar.upadhaya@nxp.com>, Will Deacon <will.deacon@arm.com>, Dan Douglass <dan.douglass@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the right compatible string and header for the
-MSM8660 LCC and some new defines to the dt-bindings header.
-
-Take this opportunity to spell out the acronym LPASS for
-Low-power Audio Subsystem.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../devicetree/bindings/clock/qcom,lcc.txt         |  5 +--
- include/dt-bindings/clock/qcom,lcc-msm8660.h       | 40 ++++++++++++++++++++++
- 2 files changed, 43 insertions(+), 2 deletions(-)
- create mode 100644 include/dt-bindings/clock/qcom,lcc-msm8660.h
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,lcc.txt b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
-index a3c78aa88038..4de51df37f1a 100644
---- a/Documentation/devicetree/bindings/clock/qcom,lcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
-@@ -1,10 +1,11 @@
--Qualcomm LPASS Clock & Reset Controller Binding
--------------------------------------------------
-+Qualcomm Low-power Audio Subsystem (LPASS) Clock & Reset Controller Binding
-+---------------------------------------------------------------------------
- 
- Required properties :
- - compatible : shall contain only one of the following:
- 
- 			"qcom,lcc-msm8960"
-+			"qcom,lcc-msm8660"
- 			"qcom,lcc-apq8064"
- 			"qcom,lcc-ipq8064"
- 			"qcom,lcc-mdm9615"
-diff --git a/include/dt-bindings/clock/qcom,lcc-msm8660.h b/include/dt-bindings/clock/qcom,lcc-msm8660.h
-new file mode 100644
-index 000000000000..7cddcbd6b1ee
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,lcc-msm8660.h
-@@ -0,0 +1,40 @@
-+/*
-+ * Copyright (c) 2017 Linus Walleij <linus.walleij@linaro.org>
-+ * Qualcomm MSM8660 Low-power Audio Subsystem (LPASS) Clock Controller
-+ * devicetree definitions
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_LCC_MSM8660_H
-+#define _DT_BINDINGS_CLK_LCC_MSM8660_H
-+
-+#define LPA_PLL0			0
-+#define MI2S_OSR_SRC			1
-+#define MI2S_OSR_CLK			2
-+#define MI2S_DIV_CLK			3
-+#define MI2S_BIT_DIV_CLK		4
-+#define MI2S_BIT_CLK			5
-+#define CODEC_I2S_MIC_OSR_SRC		6
-+#define CODEC_I2S_MIC_OSR_CLK		7
-+#define CODEC_I2S_MIC_DIV_CLK		8
-+#define CODEC_I2S_MIC_BIT_DIV_CLK	9
-+#define CODEC_I2S_MIC_BIT_CLK		10
-+#define SPARE_I2S_MIC_OSR_SRC		11
-+#define SPARE_I2S_MIC_OSR_CLK		12
-+#define SPARE_I2S_MIC_DIV_CLK		13
-+#define SPARE_I2S_MIC_BIT_DIV_CLK	14
-+#define SPARE_I2S_MIC_BIT_CLK		15
-+#define CODEC_I2S_SPKR_OSR_SRC		16
-+#define CODEC_I2S_SPKR_OSR_CLK		17
-+#define CODEC_I2S_SPKR_DIV_CLK		18
-+#define CODEC_I2S_SPKR_BIT_DIV_CLK	19
-+#define CODEC_I2S_SPKR_BIT_CLK		20
-+#define SPARE_I2S_SPKR_OSR_SRC		21
-+#define SPARE_I2S_SPKR_OSR_CLK		22
-+#define SPARE_I2S_SPKR_DIV_CLK		23
-+#define SPARE_I2S_SPKR_BIT_DIV_CLK	24
-+#define SPARE_I2S_SPKR_BIT_CLK		25
-+#define PCM_SRC				26
-+#define PCM_CLK_OUT			27
-+#define PCM_CLK				28
-+
-+#endif
--- 
-2.9.3
-
+On 3/24/2017 9:35 AM, Shawn Guo wrote:=0A=
+> On Fri, Mar 24, 2017 at 07:17:50AM +0000, Horia Geant=E3 wrote:=0A=
+>>>> +		sec_mon: sec_mon@1e90000 {=0A=
+>>>=0A=
+>>> Hyphen is more preferred to be used in node name than underscore.=0A=
+>>>=0A=
+>> This would imply changing the=0A=
+>> Documentation/devicetree/bindings/crypto/fsl-sec4.txt binding and=0A=
+>> dealing with all the consequences, which IIUC is probably not worth.=0A=
+> =0A=
+> I do not care the bindings doc that much, since I'm not the maintainer=0A=
+> of it.  What are the consequences specifically, if we use a better node=
+=0A=
+> name in dts than bindings example?=0A=
+> =0A=
+Users relying on finding the sec_mon node will obviously stop working.=0A=
+I don't see any in-kernel users, however there could be others I am not=0A=
+aware of and DT bindings should provide for backwards compatibility.=0A=
+=0A=
+I could deprecate "sec_mon" in the bindings and suggest "sec-mon"=0A=
+instead, while leaving all existing dts files as-is.=0A=
+The risk is breaking LS1012A users relying on "sec_mon".=0A=
+=0A=
+I see that ePAPR:=0A=
+-allows both for hyphen and underline in case of node names=0A=
+-allows only for hyphen (i.e. forbids underline) in case of alias nodes=0A=
+=0A=
+In the first case, I understand there's an (undocumented?) agreement to=0A=
+prefer hyphen over underline.=0A=
+For the 2nd one, does this mean I should change alias names?=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
+=0A=
