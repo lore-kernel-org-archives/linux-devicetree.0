@@ -1,70 +1,55 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] arm64: dts: rockchip: add core dtsi file for RK3328 SoCs
-Date: Fri, 24 Mar 2017 08:12:07 +0100
-Message-ID: <3271639.DkaRJdVeCG@diego>
-References: <1489670244-13328-1-git-send-email-cl@rock-chips.com> <58D34208.6090509@rock-chips.com> <58D4BD40.5090900@rock-chips.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] ARM64: dts: mediatek: configure some fixed mmc parameters
+Date: Fri, 24 Mar 2017 08:17:58 +0100
+Message-ID: <CAPDyKFp=VjTe0NQ2a4QN4CE1+n+fJJa=kMVNc-zZQUaO8-nrYw@mail.gmail.com>
+References: <1489562800-27431-1-git-send-email-yong.mao@mediatek.com> <1489562800-27431-3-git-send-email-yong.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58D4BD40.5090900-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?6ZmI5Lqu?= <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489562800-27431-3-git-send-email-yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 24. März 2017, 14:31:28 CET schrieb 陈亮:
-> Hi, Heiko:
-> 
-> 在 2017年03月23日 11:33, 陈亮 写道:
-> > Hi, Heiko
-> > 
-> > 在 2017年03月21日 16:55, Heiko Stübner 写道:
-> >> Hi,
-> >> 
-> >> Am Donnerstag, 16. März 2017, 21:17:22 CET schrieb cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org:
-> >>> +        assigned-clock-parents =
-> >>> +            <&cru HDMIPHY>, <&cru PLL_APLL>,
-> >>> +            <&cru PLL_GPLL>, <&xin24m>,
-> >>> +            <&xin24m>, <&xin24m>;
-> >>> +        assigned-clock-rates =
-> >>> +            <0>, <61440000>,
-> >>> +            <0>, <24000000>,
-> >>> +            <24000000>, <24000000>,
-> >>> +            <15000000>, <15000000>,
-> >>> +            <100000000>, <100000000>,
-> >>> +            <100000000>, <100000000>,
-> >>> +            <50000000>, <100000000>,
-> >>> +            <100000000>, <100000000>,
-> >>> +            <50000000>, <50000000>,
-> >>> +            <50000000>, <50000000>,
-> >>> +            <24000000>, <600000000>,
-> >>> +            <491520000>, <1200000000>,
-> >>> +            <150000000>, <75000000>,
-> >>> +            <75000000>, <150000000>,
-> >>> +            <75000000>, <75000000>,
-> >>> +            <300000000>, <100000000>,
-> >>> +            <300000000>, <200000000>,
-> >>> +            <400000000>, <500000000>,
-> >>> +            <200000000>, <300000000>,
-> >>> +            <300000000>, <250000000>,
-> >>> +            <200000000>, <100000000>,
-> >>> +            <24000000>, <100000000>,
-> >>> +            <150000000>, <50000000>,
-> >>> +            <32768>, <32768>;
-> >>> +    };
-> >>> +
-> >>> +    gmac2io: eth@ff540000 {
-> >> 
-> >> phandle should be gmac instead?
-> >> Node name, ethernet@ff540000
-> > 
-> > RK3328 have another gmac channel with PHY in the soc, so gmac2io mean
-> > the channel with the PHY outside, and it is also called gmac2io in the
-> > TRM.
-> 
-> So we remain gmac2io, or you have other idea?
++Mattias
 
-No, that is ok in that case.
+On 15 March 2017 at 08:26, Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> From: yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>
+> configure some fixed mmc parameters
+>
+> Signed-off-by: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Heiko
+This one is for Mattias Brugger to pick up - unless I get an ack then
+I can pick it.
+
+Kind regards
+Uffe
+
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts |    3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> index 0ecaad4..1c3634f 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> @@ -134,6 +134,9 @@
+>         bus-width = <8>;
+>         max-frequency = <50000000>;
+>         cap-mmc-highspeed;
+> +       mediatek,hs200-cmd-int-delay=<26>;
+> +       mediatek,hs400-cmd-int-delay=<14>;
+> +       mediatek,hs400-cmd-resp-sel-rising;
+>         vmmc-supply = <&mt6397_vemc_3v3_reg>;
+>         vqmmc-supply = <&mt6397_vio18_reg>;
+>         non-removable;
+> --
+> 1.7.9.5
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
