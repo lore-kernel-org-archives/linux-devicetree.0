@@ -1,16 +1,16 @@
-From: Alan Tull <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH v3 1/2] doc: Add bindings document for Xilinx LogiCore PR
- Decoupler
-Date: Fri, 24 Mar 2017 12:25:25 -0500
-Message-ID: <CANk1AXSHimnjsMsCJwbtwrkRppFCRxY7KQemFikgu+hqCTiO5Q@mail.gmail.com>
-References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
- <20170324145908.aiijqixf5xcnkksa@rob-hp-laptop>
- <20170324152318.GA13089@tyrael.amer.corp.natinst.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/9] arm64: mm: install SError abort handler
+Date: Fri, 24 Mar 2017 17:35:15 +0000
+Message-ID: <20170324173515.GB10746@leverpostej>
+References: <20170324144632.5896-1-opendmb@gmail.com>
+ <20170324144632.5896-4-opendmb@gmail.com>
+ <20170324151654.GD29588@leverpostej> <58D54DE8.9020707@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170324152318.GA13089@tyrael.amer.corp.natinst.com>
+Content-Disposition: inline
+In-Reply-To: <58D54DE8.9020707@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,67 +20,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-fpga@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel <linux-kernel@vger.kernel.org>, Moritz Fischer <mdf@kernel.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Doug Berger <opendmb@gmail.com>
+Cc: wangkefeng.wang@huawei.com, catalin.marinas@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, mingo@kernel.org, panand@redhat.com, f.fainelli@gmail.com, jonathanh@nvidia.com, bgolaszewski@baylibre.com, bcm-kernel-feedback-list@broadcom.com, shijie.huang@arm.com, treding@nvidia.com, devicetree@vger.kernel.org, vladimir.murzin@arm.com, cmetcalf@mellanox.com, suzuki.poulose@arm.com, andre.przywara@arm.com, robh+dt@kernel.org, gregory.0xf0@gmail.com, sandeepa.s.prabhu@gmail.com, horms+renesas@verge.net.au, linux-arm-kernel@lists.infradead.org, mirza.krak@gmail.com, linux-kernel@vger.kernel.org, james.morse@arm.com, olof@lixom.net, computersforpeace@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXIgMjQsIDIwMTcgYXQgMTA6MjMgQU0sIE1vcml0eiBGaXNjaGVyCjxtb3JpdHou
-ZmlzY2hlci5wcml2YXRlQGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gRnJpLCBNYXIgMjQsIDIwMTcg
-YXQgMDk6NTk6MDhBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+IE9uIEZyaSwgTWFyIDE3
-LCAyMDE3IGF0IDAxOjExOjEyUE0gLTA3MDAsIE1vcml0eiBGaXNjaGVyIHdyb3RlOgo+PiA+IFRo
-aXMgYWRkcyB0aGUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUgWGlsaW54IExvZ2lDT1JF
-IFBSCj4+ID4gRGVjb3VwbGVyIHNvZnQgY29yZS4KPj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IE1v
-cml0eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz4KPj4gPiBDYzogTWljaGFsIFNpbWVrIDxtaWNo
-YWwuc2ltZWtAeGlsaW54LmNvbT4KPj4gPiBDYzogU8O2cmVuIEJyaW5rbWFubiA8c29yZW4uYnJp
-bmttYW5uQHhpbGlueC5jb20+Cj4+ID4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcK
-Pj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gPiAtLS0KPj4gPgo+PiA+IENo
-YW5nZXMgZnJvbSB2MjoKPj4gPiAtIEFkZGVkIHJlZmVuY2UgdG8gZ2VuZXJpYyBmcGdhLXJlZ2lv
-biBiaW5kaW5ncwo+PiA+IC0gRml4ZWQgdXAgcmVnIHByb3BlcnR5IGluIGV4YW1wbGUKPj4gPiAt
-IEFkZGVkIGZhbGxiYWNrIHRvICJ4bG54LHByLWRlY291cGxlciIgd2l0aG91dCB2ZXJzaW9uCj4+
-ID4KPj4gPiBDaGFuZ2VzIGZyb20gdjE6Cj4+ID4gLSBBZGRlZCBjbG9jayBuYW1lcyAmIGNsb2Nr
-IHRvIGV4YW1wbGUKPj4gPiAtIE1lcmdlZCBzb21lIG9mIHRoZSBkZXNjcmlwdGlvbiBmcm9tIE1p
-Y2hhbCdzIHZlcnNpb24KPj4gPgo+PiA+IC0tLQo+PiA+ICAuLi4vYmluZGluZ3MvZnBnYS94aWxp
-bngtcHItZGVjb3VwbGVyLnR4dCAgICAgICAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysK
-Pj4gPiAgMSBmaWxlIGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKykKPj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9mcGdhL3hpbGlueC1wci1k
-ZWNvdXBsZXIudHh0Cj4+ID4KPj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2ZwZ2EveGlsaW54LXByLWRlY291cGxlci50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZnBnYS94aWxpbngtcHItZGVjb3VwbGVyLnR4dAo+PiA+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4+ID4gaW5kZXggMDAwMDAwMC4uMTYxNDFiZAo+PiA+IC0tLSAv
-ZGV2L251bGwKPj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZnBn
-YS94aWxpbngtcHItZGVjb3VwbGVyLnR4dAo+PiA+IEBAIC0wLDAgKzEsMzUgQEAKPj4gPiArWGls
-aW54IExvZ2lDT1JFIFBhcnRpYWwgUmVjb25maWcgRGVjb3VwbGVyIFNvZnRjb3JlCj4+ID4gKwo+
-PiA+ICtUaGUgWGlsaW54IExvZ2lDT1JFIFBhcnRpYWwgUmVjb25maWcgRGVjb3VwbGVyIG1hbmFn
-ZXMgb25lIG9yIG1vcmUKPj4gPiArZGVjb3VwbGVycyAvIGZwZ2EgYnJpZGdlcy4KPj4gPiArVGhl
-IGNvbnRyb2xsZXIgY2FuIGRlY291cGxlL2Rpc2FibGUgdGhlIGJyaWRnZXMgd2hpY2ggcHJldmVu
-dHMgc2lnbmFsCj4+ID4gK2NoYW5nZXMgZnJvbSBwYXNzaW5nIHRocm91Z2ggdGhlIGJyaWRnZS4g
-IFRoZSBjb250cm9sbGVyIGNhbiBhbHNvCj4+ID4gK2NvdXBsZSAvIGVuYWJsZSB0aGUgYnJpZGdl
-cyB3aGljaCBhbGxvd3MgdHJhZmZpYyB0byBwYXNzIHRocm91Z2ggdGhlCj4+ID4gK2JyaWRnZSBu
-b3JtYWxseS4KPj4gPiArCj4+ID4gK1RoZSBEcml2ZXIgc3VwcG9ydHMgb25seSBNTUlPIGhhbmRs
-aW5nLiBBIFBSIHJlZ2lvbiBjYW4gaGF2ZSBtdWx0aXBsZQo+PiA+ICtQUiBEZWNvdXBsZXMgd2hp
-Y2ggY2FuIGJoZSBoYW5kbGVkIGluZGVwZW5kZW50bHkgb3IgY2hhaW5lcyB2aWEgZGVjb3VwbGUv
-Cj4+Cj4+IHMvY2hhaW5lcy9jaGFpbnMvCj4KPiBGaXhlZCBpbiB2NC4KPgo+PiA+ICtkZWNvdXBs
-ZV9zdGF0dXMgc2lnbmFscy4KPj4gPiArCj4+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ID4g
-Ky0gY29tcGF0aWJsZSAgICAgICAgICAgICAgIDogU2hvdWxkIGNvbnRhaW4gInhsbngscHItZGVj
-b3VwbGVyLTEuMDAiCj4+ID4gKy0gcmVncyAgICAgICAgICAgICAgICAgICAgIDogYmFzZSBhZGRy
-ZXNzIGFuZCBzaXplIGZvciBkZWNvdXBsZXIgbW9kdWxlCj4+ID4gKy0gY2xvY2tzICAgICAgICAg
-ICA6IGlucHV0IGNsb2NrIHRvIElQCj4+ID4gKy0gY2xvY2stbmFtZXMgICAgICAgICAgICAgIDog
-c2hvdWxkIGNvbnRhaW4gImFjbGsiCj4+ID4gKwo+PiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+
-PiA+ICstIGJyaWRnZS1lbmFibGUgICAgICAgICAgICA6IDAgaWYgZHJpdmVyIHNob3VsZCBkaXNh
-YmxlIGJyaWRnZSBhdCBzdGFydHVwCj4+ID4gKyAgICAgICAgICAgICAgICAgICAgIDEgaWYgZHJp
-dmVyIHNob3VsZCBlbmFibGUgYnJpZGdlIGF0IHN0YXJ0dXAKPj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgRGVmYXVsdCBpcyB0byBsZWF2ZSBicmlkZ2UgaW4gY3VycmVudCBzdGF0ZS4KPj4KPj4g
-VGhpcyBpcyBjb21tb24gYW5kIHNob3VsZCBtb3ZlIGludG8gYSBjb21tb24gZG9jLiBNYXliZSBm
-cGdhLXJlZ2lvbi50eHQKPj4gd29ya3M/Cj4KPiBPayB3aWxsIGFkZCBwYXRjaCBmb3IgdGhhdCB0
-byB2NSBzZXJpZXMuCgpBcmcsIG91ciBlbWFpbHMgY3Jpc3MtY3Jvc3NlZC4gIEkndmUgYWxyZWFk
-eSBzZW50IHY0IHRvIEdyZWcuICBJIGhvcGUKd2UgZG9uJ3QgbmVlZCB2NSBmb3IgdGhpcyBvbmUg
-dGhpbmcuICBicmlkZ2UtZW5hYmxlIGlzIGNvbW1vbiBmb3IgdGhlCmZwZ2EgYnJpZGdlcyAoYWx0
-ZXJhLWZwZ2Eyc2RyYW0tYnJpZGdlLnR4dCwgYWx0ZXJhLWZyZWV6ZS1icmlkZ2UudHh0LAphbHRl
-cmEtaHBzMmZwZ2EtYnJpZGdlLnR4dCwgeGlsaW54LXByLWRlY291cGxlci50eHQpLiAgUHJvYmFi
-bHkgd2UKbmVlZCBhIG5ldyBwYXRjaCB0byBtb3ZlIHRoaXMgY29tbW9uIGJyaWRnZXMgYmluZGlu
-ZyBmcm9tIGFsbCB0aGUKYWJvdmUgdG8gZnBnYS1yZWdpb24udHh0IG9yIGNyZWF0ZSBhIG5ldyBm
-cGdhLWJyaWRnZXMudHh0LiAgQXQgZmlyc3QKYmx1c2gsIEkgcHJlZmVyIHRoZSBsYXRlci4KCkFs
-YW4KCgo+Cj4gVGhhbmtzIGZvciB5b3VyIGZlZWRiYWNrLAo+Cj4gTW9yaXR6CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Mar 24, 2017 at 09:48:40AM -0700, Doug Berger wrote:
+> On 03/24/2017 08:16 AM, Mark Rutland wrote:
+> >On Fri, Mar 24, 2017 at 07:46:26AM -0700, Doug Berger wrote:
+
+> If you would consider an alternative implementation where we scrap
+> the SError handler (i.e. maintain the ugliness in our downstream
+> kernel) in favor of a more gentle user mode crash on SError that
+> allows the kernel the opportunity to service the interrupt for
+> diagnostic purposes I could try to repackage that.
+
+If this is just for diagnostic purposes, I believe you can register a
+panic notifier, which can then read from the bus. The panic will occur,
+but you'll have the opportunity to log some information to dmesg.
+
+Thanks,
+Mark.
