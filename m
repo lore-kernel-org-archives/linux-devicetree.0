@@ -1,182 +1,70 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 06/15] ARM: dts: r8a779x: fix PCI bus dtc warnings
-Date: Fri, 24 Mar 2017 08:06:14 +0100
-Message-ID: <20170324070614.GJ1319@verge.net.au>
-References: <20170322020313.24338-1-robh@kernel.org>
- <20170322020313.24338-6-robh@kernel.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] arm64: dts: rockchip: add core dtsi file for RK3328 SoCs
+Date: Fri, 24 Mar 2017 08:12:07 +0100
+Message-ID: <3271639.DkaRJdVeCG@diego>
+References: <1489670244-13328-1-git-send-email-cl@rock-chips.com> <58D34208.6090509@rock-chips.com> <58D4BD40.5090900@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170322020313.24338-6-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, arm@kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58D4BD40.5090900-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?6ZmI5Lqu?= <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 09:03:04PM -0500, Rob Herring wrote:
-> dtc recently added PCI bus checks. Fix these warnings.
+Am Freitag, 24. März 2017, 14:31:28 CET schrieb 陈亮:
+> Hi, Heiko:
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> ---
-> Sub-arch maintainers, please apply to your trees unless arm-soc wants 
-> to take the whole lot.
+> 在 2017年03月23日 11:33, 陈亮 写道:
+> > Hi, Heiko
+> > 
+> > 在 2017年03月21日 16:55, Heiko Stübner 写道:
+> >> Hi,
+> >> 
+> >> Am Donnerstag, 16. März 2017, 21:17:22 CET schrieb cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org:
+> >>> +        assigned-clock-parents =
+> >>> +            <&cru HDMIPHY>, <&cru PLL_APLL>,
+> >>> +            <&cru PLL_GPLL>, <&xin24m>,
+> >>> +            <&xin24m>, <&xin24m>;
+> >>> +        assigned-clock-rates =
+> >>> +            <0>, <61440000>,
+> >>> +            <0>, <24000000>,
+> >>> +            <24000000>, <24000000>,
+> >>> +            <15000000>, <15000000>,
+> >>> +            <100000000>, <100000000>,
+> >>> +            <100000000>, <100000000>,
+> >>> +            <50000000>, <100000000>,
+> >>> +            <100000000>, <100000000>,
+> >>> +            <50000000>, <50000000>,
+> >>> +            <50000000>, <50000000>,
+> >>> +            <24000000>, <600000000>,
+> >>> +            <491520000>, <1200000000>,
+> >>> +            <150000000>, <75000000>,
+> >>> +            <75000000>, <150000000>,
+> >>> +            <75000000>, <75000000>,
+> >>> +            <300000000>, <100000000>,
+> >>> +            <300000000>, <200000000>,
+> >>> +            <400000000>, <500000000>,
+> >>> +            <200000000>, <300000000>,
+> >>> +            <300000000>, <250000000>,
+> >>> +            <200000000>, <100000000>,
+> >>> +            <24000000>, <100000000>,
+> >>> +            <150000000>, <50000000>,
+> >>> +            <32768>, <32768>;
+> >>> +    };
+> >>> +
+> >>> +    gmac2io: eth@ff540000 {
+> >> 
+> >> phandle should be gmac instead?
+> >> Node name, ethernet@ff540000
+> > 
+> > RK3328 have another gmac channel with PHY in the soc, so gmac2io mean
+> > the channel with the PHY outside, and it is also called gmac2io in the
+> > TRM.
+> 
+> So we remain gmac2io, or you have other idea?
 
-I would prefer to take these through my tree to reduce the chances of
-conflicts emerging later.
+No, that is ok in that case.
 
-Geert, are you happy with this patch and its changelog as-is?
-
-> 
->  arch/arm/boot/dts/r8a7790.dtsi | 16 ++++++----------
->  arch/arm/boot/dts/r8a7791.dtsi | 16 ++++++----------
->  arch/arm/boot/dts/r8a7794.dtsi | 16 ++++++----------
->  3 files changed, 18 insertions(+), 30 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-> index 6d10450de6d7..c16a37e9fb5d 100644
-> --- a/arch/arm/boot/dts/r8a7790.dtsi
-> +++ b/arch/arm/boot/dts/r8a7790.dtsi
-> @@ -1598,16 +1598,14 @@
->  				 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
->  				 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -		usb@0,1 {
-> +		usb@1,0 {
->  			reg = <0x800 0 0 0 0>;
-> -			device_type = "pci";
->  			phys = <&usb0 0>;
->  			phy-names = "usb";
->  		};
->  
-> -		usb@0,2 {
-> +		usb@2,0 {
->  			reg = <0x1000 0 0 0 0>;
-> -			device_type = "pci";
->  			phys = <&usb0 0>;
->  			phy-names = "usb";
->  		};
-> @@ -1654,16 +1652,14 @@
->  				 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
->  				 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -		usb@0,1 {
-> -			reg = <0x800 0 0 0 0>;
-> -			device_type = "pci";
-> +		usb@1,0 {
-> +			reg = <0x20800 0 0 0 0>;
->  			phys = <&usb2 0>;
->  			phy-names = "usb";
->  		};
->  
-> -		usb@0,2 {
-> -			reg = <0x1000 0 0 0 0>;
-> -			device_type = "pci";
-> +		usb@2,0 {
-> +			reg = <0x21000 0 0 0 0>;
->  			phys = <&usb2 0>;
->  			phy-names = "usb";
->  		};
-> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-> index 9f9e48511836..a1d8686eaea5 100644
-> --- a/arch/arm/boot/dts/r8a7791.dtsi
-> +++ b/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -1596,16 +1596,14 @@
->  				 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
->  				 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -		usb@0,1 {
-> +		usb@1,0 {
->  			reg = <0x800 0 0 0 0>;
-> -			device_type = "pci";
->  			phys = <&usb0 0>;
->  			phy-names = "usb";
->  		};
->  
-> -		usb@0,2 {
-> +		usb@2,0 {
->  			reg = <0x1000 0 0 0 0>;
-> -			device_type = "pci";
->  			phys = <&usb0 0>;
->  			phy-names = "usb";
->  		};
-> @@ -1631,16 +1629,14 @@
->  				 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
->  				 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -		usb@0,1 {
-> -			reg = <0x800 0 0 0 0>;
-> -			device_type = "pci";
-> +		usb@1,0 {
-> +			reg = <0x10800 0 0 0 0>;
->  			phys = <&usb2 0>;
->  			phy-names = "usb";
->  		};
->  
-> -		usb@0,2 {
-> -			reg = <0x1000 0 0 0 0>;
-> -			device_type = "pci";
-> +		usb@2,0 {
-> +			reg = <0x11000 0 0 0 0>;
->  			phys = <&usb2 0>;
->  			phy-names = "usb";
->  		};
-> diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-> index 319c1069b7ee..c07495185cc4 100644
-> --- a/arch/arm/boot/dts/r8a7794.dtsi
-> +++ b/arch/arm/boot/dts/r8a7794.dtsi
-> @@ -817,16 +817,14 @@
->  				 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
->  				 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -		usb@0,1 {
-> +		usb@1,0 {
->  			reg = <0x800 0 0 0 0>;
-> -			device_type = "pci";
->  			phys = <&usb0 0>;
->  			phy-names = "usb";
->  		};
->  
-> -		usb@0,2 {
-> +		usb@2,0 {
->  			reg = <0x1000 0 0 0 0>;
-> -			device_type = "pci";
->  			phys = <&usb0 0>;
->  			phy-names = "usb";
->  		};
-> @@ -852,16 +850,14 @@
->  				 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
->  				 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -		usb@0,1 {
-> -			reg = <0x800 0 0 0 0>;
-> -			device_type = "pci";
-> +		usb@1,0 {
-> +			reg = <0x10800 0 0 0 0>;
->  			phys = <&usb2 0>;
->  			phy-names = "usb";
->  		};
->  
-> -		usb@0,2 {
-> -			reg = <0x1000 0 0 0 0>;
-> -			device_type = "pci";
-> +		usb@2,0 {
-> +			reg = <0x11000 0 0 0 0>;
->  			phys = <&usb2 0>;
->  			phy-names = "usb";
->  		};
-> -- 
-> 2.10.1
-> 
+Heiko
