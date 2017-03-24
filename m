@@ -1,52 +1,69 @@
-From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v5 00/13] ACPI graph support
-Date: Fri, 24 Mar 2017 17:45:56 +0200
-Message-ID: <20170324154556.GD2957@lahna.fi.intel.com>
-References: <1489667481-28521-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] ARM: dts: sun8i: NanoPi NEO Air add
+ WiFi / eMMC
+Date: Fri, 24 Mar 2017 16:46:14 +0100
+Message-ID: <20170324154614.mjfl6dnvwddp364b@lukather>
+References: <20170323212444.20685-1-jelle@vdwaa.nl>
+ <20170323212444.20685-2-jelle@vdwaa.nl>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="d6a3borbt5syvx4u"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBR762TDAKGQE3WODIHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1489667481-28521-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+In-Reply-To: <20170323212444.20685-2-jelle-oJJ1AqDjjO4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 16, 2017 at 02:31:08PM +0200, Sakari Ailus wrote:
-> Hello everyone,
-> 
-> This is the fifth version of the ACPI graph support patchset.
-> 
-> The previous RFC version of the set is available here:
-> 
-> <URL:http://www.spinics.net/lists/linux-acpi/msg69547.html> 
-> 
-> There are also v1, v2, v3 and v4 which can be found here:
-> 
-> <URL:http://www.spinics.net/lists/linux-acpi/msg71661.html>
-> <URL:http://www.spinics.net/lists/linux-acpi/msg71809.html>
-> <URL:http://www.spinics.net/lists/linux-acpi/msg72171.html>
-> <URL:http://www.spinics.net/lists/linux-acpi/msg72346.html>
-> 
-> This set contains patches written by Mika Westerberg and by myself. The 
-> patchset brings support for graphs to ACPI. The functionality achieved by 
-> these patches is very similar to what the Device tree provides: the port
-> and the endpoint concept are being employed. The patches make use of the
-> _DSD property and data extensions to achieve this. The fwnode interface is
-> extended by graph functionality; this way graph information originating 
-> from both OF and ACPI may be accessed using the same interface, without 
-> being aware of the underlying firmware interface. 
-> 
-> The last patch of the set contains ASL documentation including an example.
 
-It would be helpful if you include similar diffstat here as running 'git
-format-patch --cover-letter ...' generates.
+--d6a3borbt5syvx4u
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Anyway for patches 7-13,
+Hi,
 
-Reviewed-by: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Mar 23, 2017 at 10:24:44PM +0100, Jelle van der Waa wrote:
+> Enable the WiFi (AP6212) chip and eMMC support for the NanoPi NEO Air.
+> 
+> Signed-off-by: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts | 45 +++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
+> index 3ba081c1f555..457a28e56514 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
+> @@ -73,6 +73,13 @@
+>  			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>; /* PA10 */
+>  		};
+>  	};
+> +
+> +	wifi-pwrseq: wifi-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wifi-en-nanopi-neo-air>;
+
+Could you please drop that pinctrl group for that GPIO? It will help
+us prevent a bug in the future in the pinctrl driver that allows two
+GPIO users to claim the same pin.
+
+Unfortunately, that will require removing all those pinctrl properties
+for the GPIOs, so we'd better not introduce them in the first place :)
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--d6a3borbt5syvx4u--
