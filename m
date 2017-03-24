@@ -1,68 +1,57 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 06/15] ARM: dts: r8a779x: fix PCI bus dtc warnings
-Date: Fri, 24 Mar 2017 08:59:56 +0100
-Message-ID: <CAMuHMdXLqsLMdjZrHnWhho50JOqQHuOMD3HUr2Skiujq8OPG-A@mail.gmail.com>
-References: <20170322020313.24338-1-robh@kernel.org>
- <20170322020313.24338-6-robh@kernel.org>
- <20170324070614.GJ1319@verge.net.au>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [RESEND PATCH v4 2/9] iio: adc: add support for
+ X-Powers AXP20X and AXP22X PMICs ADCs
+Date: Fri, 24 Mar 2017 16:01:37 +0800
+Message-ID: <CAGb2v65whWFfHFi9BULqvh8to8BbQCub_phOS3wpFVNWuPER0A@mail.gmail.com>
+References: <20170320081653.8884-1-quentin.schulz@free-electrons.com>
+ <20170320081653.8884-3-quentin.schulz@free-electrons.com> <CAGb2v66JC65=9WiMy-Nu+9tTFRLsJL2Eyb0wfJV_K=65ABc6Zg@mail.gmail.com>
+ <20170323093527.ojcdpvruzqnhvysq@earth> <CAGb2v655AfEavMqVV-XTyYzHWt5qFsMnoMsTVd8HRDkCgjiTeQ@mail.gmail.com>
+ <13f2f8ba-af9e-576e-24ee-60c3a1609f80@free-electrons.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170324070614.GJ1319@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6NE2PDAKGQE24MAJGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <13f2f8ba-af9e-576e-24ee-60c3a1609f80-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Fri, Mar 24, 2017 at 8:06 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Mar 21, 2017 at 09:03:04PM -0500, Rob Herring wrote:
->> dtc recently added PCI bus checks. Fix these warnings.
+On Fri, Mar 24, 2017 at 3:55 PM, Quentin Schulz
+<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On 23/03/2017 10:52, Chen-Yu Tsai wrote:
+>> On Thu, Mar 23, 2017 at 5:35 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>> On Wed, Mar 22, 2017 at 12:34:45PM +0800, Chen-Yu Tsai wrote:
+>>>> P.S. I'm thinking about having MFD_AXP20X imply its various sub-drivers.
+>>>> Not sure if that was the intended usage of the new imply syntax though.
+>>>
+>>> I think adding "default MFD_AXP20X" to the sub-drivers is cleaner,
+>>> as you will not end up with a long list.
 >>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> Cc: Simon Horman <horms@verge.net.au>
->> Cc: Magnus Damm <magnus.damm@gmail.com>
->> Cc: linux-renesas-soc@vger.kernel.org
->> ---
->> Sub-arch maintainers, please apply to your trees unless arm-soc wants
->> to take the whole lot.
+>> I'd still need to add imply statements for the various subsystems though,
+>> like regulators, power supplies, extcon, etc..
+>> But I suppose that's cleaner, and fits the original intent of the syntax.
+>>
 >
-> I would prefer to take these through my tree to reduce the chances of
-> conflicts emerging later.
+> Hum. I don't really understand what you are saying.. Am I supposed to
+> modify something or, is it okay and we're waiting for Lee to apply on
+> his tree?
 >
-> Geert, are you happy with this patch and its changelog as-is?
+> Thanks in advance for clearing it up,
+>
+> Quentin
 
-I'd use something like:
+I'm just mentioning some follow up tasks I want to do.
+The patch is fine and we're waiting for Lee to take it.
 
----8<----------
-The bogus 'device_type = "pci"' confuses dtc, causing lots of totally
-unrelated warnings.  After fixing that, real warnings like
-
-    arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg):
-Node /pci@ee090000/usb@0,1 PCI unit address format error, expected
-"1,0"
-
-are left.  Correct the unit-adresses and reg properties of the subnodes
-to fix these.
----------->8---
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ChenYu
