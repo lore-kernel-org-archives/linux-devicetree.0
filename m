@@ -1,48 +1,58 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 6/8] regulator: core: Add regulator_is_bypass function
-Date: Fri, 24 Mar 2017 12:55:06 +0000
-Message-ID: <20170324125506.5cxiykpq2tzzkltb@sirena.org.uk>
-References: <cover.1490199005.git.leonard.crestez@nxp.com>
- <e74c2f4d2b452cbe01aa2a48edde5c024212ffcb.1490199005.git.leonard.crestez@nxp.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 07/12] ARM: dts: imx6ul-isiot: Add Sound card with codec
+ node
+Date: Fri, 24 Mar 2017 21:09:36 +0800
+Message-ID: <20170324130934.GO30608@dragon>
+References: <1490204897-14525-1-git-send-email-jagan@openedev.com>
+ <1490204897-14525-8-git-send-email-jagan@openedev.com>
+ <20170324052324.GF30608@dragon>
+ <CAMty3ZBSVgL==LsCzsODkL117WFL4Pv4kwhXhxc3wDWre3i-zA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mxjbbgni576g7z4k"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <e74c2f4d2b452cbe01aa2a48edde5c024212ffcb.1490199005.git.leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <CAMty3ZBSVgL==LsCzsODkL117WFL4Pv4kwhXhxc3wDWre3i-zA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Robin Gong <yibin.gong-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 24, 2017 at 02:02:38PM +0530, Jagan Teki wrote:
+> On Fri, Mar 24, 2017 at 10:53 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, Mar 22, 2017 at 11:18:12PM +0530, Jagan Teki wrote:
+> >> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> >>
+> >> Add support for Sound card and related codec(via i2c1) nodes
+> >> on Engicam Is.IoT MX6UL variant module boards.
+> >>
+> >> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+> >> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> >> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 11 +++++++++++
+> >>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 30 ++++++++++++++++++++++++++++++
+> >>  2 files changed, 41 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+> >> index b149b5e..c79fa42 100644
+> >> --- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+> >> +++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+> >> @@ -41,6 +41,17 @@
+> >>   */
+> >>
+> >>  &i2c1 {
+> >> +     codec: sgtl5000@0a {
+> >
+> >         sgtl5000: codec@a {
+> 
+> Just to understand, why codec: sgtl5000@0a not a suitable notation?
+> couldn't see any Documentation.
 
---mxjbbgni576g7z4k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The node name should be generic.  Please see ePAPR '2.2.2 Generic Names
+Recommendation'.  Also, the unit-address shouldn't have leading zeros.
 
-On Wed, Mar 22, 2017 at 06:53:08PM +0200, Leonard Crestez wrote:
-
->  /**
-> + * regulator_is_bypass - Determine if the regulator is in bypass mode
-
-Bypass is a verb so this should be regulator_is_bypassed()
-
---mxjbbgni576g7z4k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljVFyoACgkQJNaLcl1U
-h9Cp4gf/amxDv6E7U6vF/bSis4X66YACCr46vlRbpd1JmHhuCUMkZCWo6WHq384O
-AHOp0BzJsAWQ383h5U7zNPOfS+zhAiH9x99T1ZITRHkUWXH6QuISoqAjMb6lsI2N
-Y/kC7iY+FIilp+U5qPy5XIUj2aishnNKd2tq69HKHnsEHBl1Lxua1PwO7Kc3ZDWx
-iAXrS4F6eJINhEDlQji//mSYsHb91vCLlfnQD1QKvNCs7+SAgZGJ9rIbgAAhBdyo
-t/OKQxu0g4UJKEg0TpEy9Eq6vkSRLlXI744njppaVOzflITDbxw8eu8r0zQ5ScVK
-fSv5M920sFZMXgbqhzz8cXJj/WhU5w==
-=45TB
------END PGP SIGNATURE-----
-
---mxjbbgni576g7z4k--
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
