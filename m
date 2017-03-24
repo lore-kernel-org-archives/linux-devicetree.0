@@ -1,47 +1,91 @@
 From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH 2/9] arm64: mm: mark fault_info __ro_after_init
-Date: Fri, 24 Mar 2017 07:46:25 -0700
-Message-ID: <20170324144632.5896-3-opendmb@gmail.com>
+Subject: [PATCH 5/9] bus: brcmstb_gisb: Correct hooking of ARM aborts
+Date: Fri, 24 Mar 2017 07:46:28 -0700
+Message-ID: <20170324144632.5896-6-opendmb@gmail.com>
 References: <20170324144632.5896-1-opendmb@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170324144632.5896-1-opendmb@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: catalin.marinas@arm.com
-Cc: mark.rutland@arm.com, wangkefeng.wang@huawei.com, linus.walleij@linaro.org, will.deacon@arm.com, mingo@kernel.org, panand@redhat.com, f.fainelli@gmail.com, jonathanh@nvidia.com, bgolaszewski@baylibre.com, bcm-kernel-feedback-list@broadcom.com, shijie.huang@arm.com, opendmb@gmail.com, treding@nvidia.com, devicetree@vger.kernel.org, vladimir.murzin@arm.com, cmetcalf@mellanox.com, suzuki.poulose@arm.com, andre.przywara@arm.com, robh+dt@kernel.org, gregory.0xf0@gmail.com, sandeepa.s.prabhu@gmail.com, horms+renesas@verge.net.au, linux-arm-kernel@lists.infradead.org, mirza.krak@gmail.com, linux-kernel@vger.kernel.org, james.morse@arm.com, olof@lixom.net, computersforpeace@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, vladimir.murzin@arm.com, panand@redhat.com, andre.przywara@arm.com, cmetcalf@mellanox.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, horms+renesas@verge.net.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, opendmb@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The fault_info table must be made writeable to allow installation
-of custom memory abort handlers, but it can be made read-only
-after initialization to provide some protection.
+The fault status reporting in the FSR registers is different depending
+on whether the Long Physical Address Extension (LPAE) is being used.
+
+This commit corrects the registerring of fault handlers for arm
+architecture kernels when the LPAE is enabled.  It also forces the
+handler to report that the abort exception was unhandled so that the
+appropriate signal is sent to the offending user process.
 
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- arch/arm64/mm/fault.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bus/brcmstb_gisb.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index cdf1260f1005..43319ed58a47 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -493,7 +493,7 @@ static struct fault_info {
- 	int	sig;
- 	int	code;
- 	const char *name;
--} fault_info[] = {
-+} fault_info[] __ro_after_init = {
- 	{ do_bad,		SIGBUS,  0,		"ttbr address size fault"	},
- 	{ do_bad,		SIGBUS,  0,		"level 1 address size fault"	},
- 	{ do_bad,		SIGBUS,  0,		"level 2 address size fault"	},
+diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
+index a94598d0945a..9eba0143f1a4 100644
+--- a/drivers/bus/brcmstb_gisb.c
++++ b/drivers/bus/brcmstb_gisb.c
+@@ -225,27 +225,29 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+ 				     struct pt_regs *regs)
+ {
+-	int ret = 0;
+ 	struct brcmstb_gisb_arb_device *gdev;
+ 
+ 	/* iterate over each GISB arb registered handlers */
+ 	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
+-		ret |= brcmstb_gisb_arb_decode_addr(gdev, "bus error");
++		brcmstb_gisb_arb_decode_addr(gdev, "bus error");
++
++#if !defined(CONFIG_ARM_LPAE)
+ 	/*
+ 	 * If it was an imprecise abort, then we need to correct the
+ 	 * return address to be _after_ the instruction.
+ 	*/
+ 	if (fsr & (1 << 10))
+ 		regs->ARM_pc += 4;
++#endif
+ 
+-	return ret;
++	/* Always report unhandled exception */
++	return 1;
+ }
+ #endif
+ 
+ #ifdef CONFIG_MIPS
+ static int brcmstb_bus_error_handler(struct pt_regs *regs, int is_fixup)
+ {
+-	int ret = 0;
+ 	struct brcmstb_gisb_arb_device *gdev;
+ 	u32 cap_status;
+ 
+@@ -258,7 +260,7 @@ static int brcmstb_bus_error_handler(struct pt_regs *regs, int is_fixup)
+ 			goto out;
+ 		}
+ 
+-		ret |= brcmstb_gisb_arb_decode_addr(gdev, "bus error");
++		brcmstb_gisb_arb_decode_addr(gdev, "bus error");
+ 	}
+ out:
+ 	return is_fixup ? MIPS_BE_FIXUP : MIPS_BE_FATAL;
+@@ -379,9 +381,16 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
+ 	list_add_tail(&gdev->next, &brcmstb_gisb_arb_device_list);
+ 
+ #ifdef CONFIG_ARM
++#ifdef CONFIG_ARM_LPAE
++	hook_fault_code(16, brcmstb_bus_error_handler, SIGBUS, 0,
++			"synchronous external abort");
++	hook_fault_code(17, brcmstb_bus_error_handler, SIGBUS, 0,
++			"asynchronous external abort");
++#else
+ 	hook_fault_code(22, brcmstb_bus_error_handler, SIGBUS, 0,
+ 			"imprecise external abort");
+ #endif
++#endif /* CONFIG_ARM */
+ #ifdef CONFIG_MIPS
+ 	board_be_handler = brcmstb_bus_error_handler;
+ #endif
 -- 
 2.12.0
