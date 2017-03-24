@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 7/8] ARM: sun8i: h2+: enable USB OTG for
- Orange Pi Zero board
-Date: Fri, 24 Mar 2017 10:57:54 +0800
-Message-ID: <CAGb2v65sWjn9RWTgv4U00_1h9bgmYPY8mNbx9hAy5Cd0dyxxyA@mail.gmail.com>
-References: <20170319163118.56301-1-icenowy@aosc.xyz> <20170319163118.56301-3-icenowy@aosc.xyz>
+Subject: Re: [PATCH v4 8/8] arm64: allwinner: h5: enable USB OTG
+ on Orange Pi PC 2 board
+Date: Fri, 24 Mar 2017 10:58:53 +0800
+Message-ID: <CAGb2v64ZEXGX4ie1Mkmp04xHHHT62OmzTuG1dWNK2R=sFqeZhQ@mail.gmail.com>
+References: <20170319163118.56301-1-icenowy@aosc.xyz> <20170319163118.56301-4-icenowy@aosc.xyz>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBSUW2LDAKGQEVQZPPFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBBMX2LDAKGQERW7OJCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170319163118.56301-3-icenowy-ymACFijhrKM@public.gmane.org>
+In-Reply-To: <20170319163118.56301-4-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,17 +21,11 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Mar 20, 2017 at 12:31 AM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-> Orange Pi Zero board features a USB OTG port, which has a ID pin, and
-> can be used to power up the board. However, even if the board is powered
-> via +5V pin in GPIO/expansion headers, the VBUS in the OTG port cannot
-> be powered up, thus it's impossible to use it in host mode with simple
-> OTG cables.
+> Orange Pi PC 2 board features a OTG port like the one on older H3 Orange
+> Pi's, with PG12 pin being the id det pin and PL2 being the vbus driver
+> pin.
 >
-> Add support for it in peripheral mode.
->
-> If someone really want to use it in host mode, the mode of PHY can be
-> switch via sysfs, then use a powered USB OTG cable or powered USB HUB to
-> power up external USB devices.
+> Add support for it.
 >
 > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
