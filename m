@@ -1,21 +1,35 @@
-From: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 5/5] firmware: google memconsole: Add ARM/ARM64 support
-Date: Fri, 24 Mar 2017 12:50:40 -0700
-Message-ID: <CAODwPW-XKuwHLimNOL4HX9xY+MkoURRM0W+ibaDjPdoAN70BxQ@mail.gmail.com>
-References: <1490303069-13230-1-git-send-email-thierry.escande@collabora.com>
- <1490303069-13230-6-git-send-email-thierry.escande@collabora.com> <20170324122858.GF22771@leverpostej>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/8] pinctrl: meson: add audio output pins
+Date: Fri, 24 Mar 2017 12:52:44 -0700
+Message-ID: <m2wpbeh2pf.fsf@baylibre.com>
+References: <20170323165101.29262-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324122858.GF22771@leverpostej>
+In-Reply-To: <20170323165101.29262-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
+        message of "Thu, 23 Mar 2017 17:50:53 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Thierry Escande <thierry.escande-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> What exactly is the "memory console"? Is it a log that coreboot writes into?
+Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-Yes. It contains log messages, like coreboot's equivalent of dmesg.
+> This patchset adds the pinctrl definition and the related device-tree
+> bindings of the i2s output and spdif output pins on the meson gxbb and
+> gxl SoCs.
+>
+> This is part of the ongoing work to bring audio output suppot on the
+> meson family. It was tested on the gxbb p200 and gxl p230.
+
+Series looks good to me,
+
+However, I'm not sure about Linus's preference, but most maintainers
+(myself included) prefer a small description in the changelog, even if
+it restates (with slightly more description) what's already in the
+$SUBJECT.
+
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
