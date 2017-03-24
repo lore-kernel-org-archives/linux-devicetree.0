@@ -1,109 +1,133 @@
-Return-Path: <SRS0=y46S=3E=aosc.io=icenowy@kernel.org>
-Date: Mon, 27 Mar 2017 17:11:29 +0800
-Subject: Re: [PATCH v2 1/5] dt-bindings: update device tree binding for
- Allwinner PRCM CCUs
-From: Icenowy Zheng <icenowy@aosc.io>
+Return-Path: <SRS0=Hlfv=3B=google.com=jwerner@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Message-Id: <20170327091147.6B24A7C19A5@relay.mailchannels.net>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Icenowy Zheng <icenowy@aosc.xyz>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+Sender: jwerner@google.com
+In-Reply-To: <20170324175727.GB119093@google.com>
+References: <1490303069-13230-1-git-send-email-thierry.escande@collabora.com>
+ <1490303069-13230-5-git-send-email-thierry.escande@collabora.com>
+ <20170324122146.GE22771@leverpostej> <20170324175727.GB119093@google.com>
+From: Julius Werner <jwerner@chromium.org>
+Date: Fri, 24 Mar 2017 12:32:16 -0700
+Message-ID: <CAODwPW94vsaWF8+DrLduWhHpbBvdvynbDocXCv2ekZH178BHjQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] firmware: Add coreboot device tree binding documentation
+Content-Type: multipart/alternative; boundary=001a1140338a2e3d61054b7f0dee
+To: Brian Norris <briannorris@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Escande <thierry.escande@collabora.com>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Julius Werner <jwerner@chromium.org>
 List-ID: <devicetree@vger.kernel.org>
 
-CjIwMTflubQz5pyIMjbml6UgMjE6MTDkuo4gTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBm
-cmVlLWVsZWN0cm9ucy5jb20+5YaZ6YGT77yaCj4KPiBPbiBUaHUsIE1hciAyMywgMjAxNyBhdCAw
-NzoxNzowM0FNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOiAKPiA+IAo+ID4gCj4gPiAyMy4w
-My4yMDE3LCAwNDowOSwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ry
-b25zLmNvbT46IAo+ID4gPiBPbiBXZWQsIE1hciAyMiwgMjAxNyBhdCAwMjoyMjoyMkFNICswODAw
-LCBJY2Vub3d5IFpoZW5nIHdyb3RlOiAKPiA+ID4+IMKgMjEuMDMuMjAxNywgMTU6NDEsICJNYXhp
-bWUgUmlwYXJkIiA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+OiAKPiA+ID4+IMKg
-PiBPbiBUaHUsIE1hciAxNiwgMjAxNyBhdCAwMToyODowNEFNICswODAwLCBJY2Vub3d5IFpoZW5n
-IHdyb3RlOiAKPiA+ID4+IMKgPj4gwqBNYW55IEFsbHdpbm5lciBTb0NzIGFmdGVyIEEzMSBoYXZl
-IGEgQ0NVIGluIFBSQ00gYmxvY2suIAo+ID4gPj4gwqA+PiAKPiA+ID4+IMKgPj4gwqBHaXZlIHRo
-ZSBvbmVzIG9uIEgzIGFuZCBBNjQgY29tcGF0aWJsZSBzdHJpbmdzLiAKPiA+ID4+IMKgPj4gCj4g
-PiA+PiDCoD4+IMKgU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5
-ej4gCj4gPiA+PiDCoD4+IMKgLS0tIAo+ID4gPj4gwqA+PiDCoENoYW5nZXMgaW4gdjI6IAo+ID4g
-Pj4gwqA+PiDCoC0gQWRkIGlvc2MgZm9yIFJfQ0NVJ3Mgb24gSDMvQTY0LiAoQTMxLCBBMjMgYW5k
-IEEzMyBzZWVtIHRvIGhhdmUgZGlmZmVyZW50IAo+ID4gPj4gwqA+PiDCoMKgwqBjbG9jayBmb3Ig
-bXV4IDMgb2YgYXIxMDAgY2xrLiBJbnZlc3RnYXRpb25zIGFyZSBuZWVkZWQgZm9yIHRoZW0uKSAK
-PiA+ID4+IMKgPj4gCj4gPiA+PiDCoD4+IMKgwqBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvY2xvY2svc3VueGktY2N1LnR4dCB8IDE4ICsrKysrKysrKysrKysrKysrLSAKPiA+ID4+
-IMKgPj4gwqDCoDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
-IAo+ID4gPj4gwqA+PiAKPiA+ID4+IMKgPj4gwqBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N1bnhpLWNjdS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvY2xvY2svc3VueGktY2N1LnR4dCAKPiA+ID4+IMKgPj4gwqBpbmRl
-eCA2ODUxMmFhMzk4YTkuLjRhNGFkZGZmNTk1ZCAxMDA2NDQgCj4gPiA+PiDCoD4+IMKgLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N1bnhpLWNjdS50eHQgCj4g
-PiA+PiDCoD4+IMKgKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
-L3N1bnhpLWNjdS50eHQgCj4gPiA+PiDCoD4+IMKgQEAgLTcsOSArNywxMSBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzIDogCj4gPiA+PiDCoD4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoC0gImFsbHdpbm5lcixzdW44aS1hMjMtY2N1IiAKPiA+ID4+IMKgPj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLSAiYWxsd2lubmVyLHN1bjhpLWEzMy1jY3UiIAo+ID4g
-Pj4gwqA+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAtICJhbGx3aW5uZXIs
-c3VuOGktaDMtY2N1IiAKPiA+ID4+IMKgPj4gwqArIC0gImFsbHdpbm5lcixzdW44aS1oMy1yLWNj
-dSIgCj4gPiA+PiDCoD4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC0gImFs
-bHdpbm5lcixzdW44aS12M3MtY2N1IiAKPiA+ID4+IMKgPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgLSAiYWxsd2lubmVyLHN1bjlpLWE4MC1jY3UiIAo+ID4gPj4gwqA+PiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAtICJhbGx3aW5uZXIsc3VuNTBpLWE2
-NC1jY3UiIAo+ID4gPj4gwqA+PiDCoCsgLSAiYWxsd2lubmVyLHN1bjUwaS1hNjQtci1jY3UiIAo+
-ID4gPj4gwqA+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAtICJhbGx3aW5u
-ZXIsc3VuNTBpLWg1LWNjdSIgCj4gPiA+PiDCoD4+IAo+ID4gPj4gwqA+PiDCoMKgLSByZWc6IE11
-c3QgY29udGFpbiB0aGUgcmVnaXN0ZXJzIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIAo+ID4gPj4g
-wqA+PiDCoEBAIC0yMCw3ICsyMiwxMSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzIDogCj4gPiA+PiDC
-oD4+IMKgwqAtICNjbG9jay1jZWxscyA6IG11c3QgY29udGFpbiAxIAo+ID4gPj4gwqA+PiDCoMKg
-LSAjcmVzZXQtY2VsbHMgOiBtdXN0IGNvbnRhaW4gMSAKPiA+ID4+IMKgPj4gCj4gPiA+PiDCoD4+
-IMKgLUV4YW1wbGU6IAo+ID4gPj4gwqA+PiDCoCtGb3IgdGhlIFBSQ00gQ0NVcyBvbiBIMy9BNjQs
-IG9uZSBtb3JlIGNsb2NrIGlzIG5lZWRlZDogCj4gPiA+PiDCoD4+IMKgKy0gImlvc2MiOiBhbm90
-aGVyIGZyZXF1ZW5jeSBvc2NpbGxhdG9yIHVzZWQgZm9yIENQVVMgKHVzdWFsbHkgYXQgMzIwMDBI
-eiwgCj4gPiA+PiDCoD4+IMKgKyBub3QgdGhlIHNhbWUgd2l0aCBsb3NjKSAKPiA+ID4+IMKgPiAK
-PiA+ID4+IMKgPiBUaGlzIGlzIGNhbGxlZCB0aGUgaW50ZXJuYWwgb3NjaWxsYXRvciBpbiB0aGUg
-ZGF0YXNoZWV0LCBpdCB3b3VsZCAKPiA+ID4+IMKgPiBwcm9iYWJseSBtYWtlIG1vcmUgc2Vuc2Ug
-dG8gY2FsbCBpdCB0aGF0IHdheSBpbiB0aGUgZG9jdW1lbnRhdGlvbiB0b28uIAo+ID4gPj4gwqA+
-IAo+ID4gPj4gwqA+IFRoaXMgb3NjaWxsYXRvciBzZWVtcyB0byBiZSBjbG9ja2VkIGF0IDE2TUh6
-LCBzbyB3ZSBzaG91bGQgcmVwcmVzZW50IAo+ID4gPj4gwqA+IGl0IGFzIHN1Y2guIAo+ID4gPj4g
-wqA+IAo+ID4gPj4gwqA+IEFuZCBJJ20gd29uZGVyaW5nLCBhcmUgeW91ICpzdXJlKiB0aGF0IGl0
-J3MgZmVkIGRpcmVjdGx5IGZyb20gdGhlIAo+ID4gPj4gwqA+IGludGVybmFsIG9zY2lsbGF0b3Is
-IG9yIGdvZXMgdGhyb3VnaCB0aGUgcmVnaXN0ZXJzIGluIHRoZSBSVEMsIHdpdGggCj4gPiA+PiDC
-oD4gdGhlIDMyIGRpdmlkZXIgYW5kIDE2IHByZXNjYWxlciBieSBkZWZhdWx0IHRoYXQgbWFrZXMg
-aXQgYXQgcm91Z2hseSAKPiA+ID4+IMKgPiB0aGUgc2FtZSByYXRlICgzMS4yNWtIeikuIAo+ID4g
-Pj4gCj4gPiA+PiDCoEluIGZhY3QgSSBrbm93IG5vdGhpbmcgYWJvdXQgaXQgLS0gSSBvbmx5IHJl
-cHJlc2VudGVkIHRoZSBjb2RlIGluIEJTUCAKPiA+ID4+IMKgY2xvY2sgZHJpdmVyLiAKPiA+ID4+
-IAo+ID4gPj4gwqBUaGUgbXV4IHZhbHVlIDMgdmFyaWVzIGZyb20gU29DIHRvIFNvQy4gRm9yIEE2
-NC9INSBpdCdzIDMyMDAwLCAKPiA+ID4+IMKgZm9yIEEzMyBpdCdzIDY2NzAwMCAoc2VlbXMgdG8g
-YmUgZGlyZWN0bHkgdGhlIGludGVybmFsIE9TQywgYXMgdGhlIAo+ID4gPj4gwqB1c2VyIG1hbnVh
-bCBzYXlzIHRoZSBpbnRlcm5hbCBPU0MgaXMgNjAwfjcwMGtIejsgYnV0IGl0J3MgbmFtZWQgCj4g
-PiA+PiDCoGNwdW9zYyByYXRoZXIgdGhhbiBpb3NjIGluIEEzMyBCU1AgY2xvY2sgZHJpdmVyKTsg
-Zm9yIEE4MCBpdCdzIGV2ZW4gCj4gPiA+PiDCoFBMTF9BVURJTy4gCj4gPiA+IAo+ID4gPiBXaGVy
-ZSBhcmUgeW91IGdldHRpbmcgdGhvc2UgaW5mbyBmcm9tPyAKPiA+ID4gCj4gPiA+IEFzIGZhciBh
-cyBJIGtub3csIHRoZSBBMzMgUFJDTSB0YWtlcyB0aGUgaG9zYywgbG9zYywgcGxsNiBhbmQgQ1BV
-IAo+ID4gPiAoaW50ZXJuYWwpIG9zY2lsbGF0b3I6IAo+ID4gPiBodHRwczovL2dpdGh1Yi5jb20v
-YWxsd2lubmVyLXpoL2xpbnV4LTMuNC1zdW54aS9ibG9iL21hc3Rlci9kcml2ZXJzL2Nsay9zdW54
-aS9jbGstc3VuOGl3NS5jI0w1MDggCj4gPiA+IAo+ID4gPiBUaGUgSDMgdGFrZXMgdGhlIGhvc2Mg
-YW5kIGxvc2M6IAo+ID4gPiBodHRwczovL2dpdGh1Yi5jb20vYWxsd2lubmVyLXpoL2xpbnV4LTMu
-NC1zdW54aS9ibG9iL21hc3Rlci9kcml2ZXJzL2Nsay9zdW54aS9jbGstc3VuOGl3Ny5jI0wzNzkg
-Cj4gPiA+IAo+ID4gPiBUaGUgQTgwIHRha2VzIHRoZSBob3NjIGFuZCBsb3NjOiAKPiA+ID4gaHR0
-cHM6Ly9naXRodWIuY29tL2FsbHdpbm5lci16aC9saW51eC0zLjQtc3VueGkvYmxvYi9tYXN0ZXIv
-ZHJpdmVycy9jbGsvc3VueGkvY2xrLXN1bjlpdzEuYyNMMjgxIAo+ID4gPiAKPiA+ID4gVGhlIEE2
-NCB0YWtlcyB0aGUgaG9zYywgbG9zYywgcGxsLXBlcmlwaDAgYW5kIHRoZSBpb3NjLCB3aGljaCBp
-bmRlZWQgCj4gPiA+IHNlZW1zIHRvIGJlIGZlZCBmcm9tIHRoZSBpbnRlcm5hbCBvc2NpbGxhdG9y
-IHdpdGggdGhlIGRpdmlkZXIgaW4gdGhlIAo+ID4gPiBSVEM6IAo+ID4gPiBodHRwczovL2dpdGh1
-Yi5jb20vbG9uZ3NsZWVwL2xpbnV4LXBpbmU2NC9ibG9iL2xpY2hlZS1kZXYtdjMuMTAuNjUtYnNw
-Mi4wL2FyY2gvYXJtNjQvYm9vdC9kdHMvc3VuNTBpdzFwMS1jbGsuZHRzaSNMMTkgCj4gPiA+IGh0
-dHBzOi8vZ2l0aHViLmNvbS9sb25nc2xlZXAvbGludXgtcGluZTY0L2Jsb2IvbGljaGVlLWRldi12
-My4xMC42NS1ic3AyLjAvZHJpdmVycy9jbGsvc3VueGkvY2xrLXN1bjUwaXcxLmMjTDYwMyAKPiA+
-IAo+ID4gQnV0IHRoZW4gaW4gc3VueGlfaW5pdF9jbG9ja3MgZnVuY3Rpb24sIHRoZSBpb3NjIGNs
-b2NrIGlzIGluaXRpYWxpemVkIAo+ID4gYXMgYSBmaXhlZCBjbG9jayB3aXRoIDMyMDAwSHouIAo+
-ID4gCj4gPiBUaGUgY2xvY2sgbm9kZSBpbiBCU1AgZGV2aWNlIHRyZWUgaGF2ZSBhIGNvbXBhdGli
-bGUgb2YgCj4gPiBhbGx3aW5uZXIsZml4ZWQtY2xvY2ssIGJ1dCBub3QgZml4ZWQtY2xvY2ssIHdo
-aWNoIG1ha2VzIGl0IG5vdCBhYmxlIAo+ID4gdG8gYmUgcmVhbGx5IHByb2JlZC4gCj4KPiBUaGF0
-IGNsb2NrIGlzIHJlZ2lzdGVyZWQ6IAo+IGh0dHBzOi8vZ2l0aHViLmNvbS9sb25nc2xlZXAvbGlu
-dXgtcGluZTY0L2Jsb2IvbGljaGVlLWRldi12My4xMC42NS1ic3AyLjAvZHJpdmVycy9jbGsvc3Vu
-eGkvY2xrLXN1bjUwaXcxLmMjTDExOTMgCj4KCk9oIHllcywgYnV0IGNvbmZsaWN0cyBleGlzdCBi
-ZXR3ZWVuIHRoZSBpb3NjIHJlZ2lzdGVyZWQgaW4gY2xrLXN1bjUwaXcxLmMgYW5kIGRlc2NyaWJl
-ZCBpbiBzdW41MGl3MXAxLWNsay5kdHNpIC4gVGhlIGZvcm1lciBpcyAzMjAwMCwgYW5kIHRoZSBs
-YXR0ZXIgaXMgMTYwMDAwMDAuCgpXaGF0IHNob3VsZCB3ZSBkbyB0aGVuPwoKKE1heWJlIGl0IHdp
-bGwgYmUgYmV0dGVyIHRvIHRlbXBvcmFyaWx5IGlnbm9yZSB0aGlzIG11eCwgYXMgaXQncyBkaWZm
-aWN1bHQgdG8gZmluYWxseSBmaW5kIG91dCB0aGlzIGNvcnJlY3QgbXV4Li4uKQoKPiBNYXhpbWUg
-Cj4KPiAtLSAKPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucyAKPiBFbWJlZGRlZCBMaW51
-eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nIAo+IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20gCg==
+--001a1140338a2e3d61054b7f0dee
+Content-Type: text/plain; charset=UTF-8
+
+>
+> > Devicetree bindings should be in vendor,prefix format. This doesn't
+> > represent every aspect of coreboot, so it needs a more descriptive
+> > string.
+>
+> Any particular suggestion? I suppose this is Google's interpretation of
+> coreboot tables, so "google,coreboot"?
+
+
+No. This binding is for the coreboot project in general and has nothing to
+do with Google. coreboot is both the vendor and the product, so I think
+"coreboot" would look better than "coreboot,coreboot". And yes, it is
+supposed to represent every aspect of coreboot (right now the "coreboot
+tables" are already sort of a catch-all data structure used by coreboot to
+pass on any sort of info it wants later stages to know... and if we ever
+have any additional things we'd like to pass on, we'd probably want to add
+them to this binding as well).
+
+
+> > > + - reg: Address and length of the following two memory regions, in
+> order:
+> > > +   1.) The coreboot table. This is a list of variable-sized
+> descriptors
+> > > +   that contain various compile- and run-time generated firmware
+> > > +   parameters. It is identified by the magic string "LBIO" in its
+> first
+> > > +   four bytes.
+> > > +   See coreboot's src/commonlib/include/commonlib/coreboot_tables.h
+> for
+> > > +   details.
+> >
+> > Given this is a memory region, it should be described under the
+> > reserved-memory node.
+>
+> We've painted this bikeshed before. I guess the result was either to use
+> /reserved-memory or /memreserve/. I believe we've been using
+> /memreserve/. I suppose we could document a method to use either, but
+> the main "agreement" was to use the /firmware/coreboot path instead of
+> /reserved-memory/coreboot.
+>
+
+See the old thread Brian linked for some arguments for and against this. I
+think particularly because we want this node to represent every aspect of
+coreboot (which I think makes more sense than spreading stuff all over the
+place), treating it as reserved memory would not work well if we might
+later add other fields.
+
+Also, since we didn't get any more responses the last time we tried to
+upstream this and had schedules to keep, we had to go ahead with what we
+had. So right now there are already millions of devices shipped with this
+binding in firmware, and the only question we still have left to decide is
+whether Linux wants to support them upstream or not.
+
+--001a1140338a2e3d61054b7f0dee
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote"><blo=
+ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
+:1px solid rgb(204,204,204);padding-left:1ex"><div><div class=3D"gmail-h5">=
+&gt; Devicetree bindings should be in vendor,prefix format. This doesn&#39;=
+t<br>
+&gt; represent every aspect of coreboot, so it needs a more descriptive<br>
+&gt; string.<br>
+<br>
+</div></div>Any particular suggestion? I suppose this is Google&#39;s inter=
+pretation of<br>
+coreboot tables, so &quot;google,coreboot&quot;?</blockquote><div><br></div=
+><div>No. This binding is for the coreboot project in general and has nothi=
+ng to do with Google. coreboot is both the vendor and the product, so I thi=
+nk &quot;coreboot&quot; would look better than &quot;coreboot,coreboot&quot=
+;. And yes, it is supposed to represent every aspect of coreboot (right now=
+ the &quot;coreboot tables&quot; are already sort of a catch-all data struc=
+ture used by coreboot to pass on any sort of info it wants later stages to =
+know... and if we ever have any additional things we&#39;d like to pass on,=
+ we&#39;d probably want to add them to this binding as well).</div><div>=C2=
+=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex"><span class=3D"g=
+mail-">
+&gt; &gt; + - reg: Address and length of the following two memory regions, =
+in order:<br>
+&gt; &gt; +=C2=A0 =C2=A01.) The coreboot table. This is a list of variable-=
+sized descriptors<br>
+&gt; &gt; +=C2=A0 =C2=A0that contain various compile- and run-time generate=
+d firmware<br>
+&gt; &gt; +=C2=A0 =C2=A0parameters. It is identified by the magic string &q=
+uot;LBIO&quot; in its first<br>
+&gt; &gt; +=C2=A0 =C2=A0four bytes.<br>
+&gt; &gt; +=C2=A0 =C2=A0See coreboot&#39;s src/commonlib/include/<wbr>commo=
+nlib/coreboot_tables.h for<br>
+&gt; &gt; +=C2=A0 =C2=A0details.<br>
+&gt;<br>
+&gt; Given this is a memory region, it should be described under the<br>
+&gt; reserved-memory node.<br>
+<br>
+</span>We&#39;ve painted this bikeshed before. I guess the result was eithe=
+r to use<br>
+/reserved-memory or /memreserve/. I believe we&#39;ve been using<br>
+/memreserve/. I suppose we could document a method to use either, but<br>
+the main &quot;agreement&quot; was to use the /firmware/coreboot path inste=
+ad of<br>
+/reserved-memory/coreboot.<br></blockquote><div><br></div><div>See the old =
+thread Brian linked for some arguments for and against this. I think partic=
+ularly because we want this node to represent every aspect of coreboot (whi=
+ch I think makes more sense than spreading stuff all over the place), treat=
+ing it as reserved memory would not work well if we might later add other f=
+ields.</div><div><br></div><div>Also, since we didn&#39;t get any more resp=
+onses the last time we tried to upstream this and had schedules to keep, we=
+ had to go ahead with what we had. So right now there are already millions =
+of devices shipped with this binding in firmware, and the only question we =
+still have left to decide is whether Linux wants to support them upstream o=
+r not.</div></div></div></div>
+
+--001a1140338a2e3d61054b7f0dee--
