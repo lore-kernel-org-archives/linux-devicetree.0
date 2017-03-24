@@ -1,157 +1,124 @@
-From: Moritz Fischer <moritz.fischer.private@gmail.com>
-Subject: Re: [PATCH v3 1/2] doc: Add bindings document for Xilinx LogiCore PR
- Decoupler
-Date: Fri, 24 Mar 2017 11:07:14 -0700
-Message-ID: <20170324180714.GA4736@tyrael.amer.corp.natinst.com>
-References: <1489781473-30772-1-git-send-email-mdf@kernel.org>
- <20170324145908.aiijqixf5xcnkksa@rob-hp-laptop>
- <20170324152318.GA13089@tyrael.amer.corp.natinst.com>
- <CANk1AXSHimnjsMsCJwbtwrkRppFCRxY7KQemFikgu+hqCTiO5Q@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/7] coresight: refactor with function
+ of_coresight_get_cpu
+Date: Fri, 24 Mar 2017 11:14:21 -0700
+Message-ID: <20170324181421.GB25840@codeaurora.org>
+References: <1489762943-25849-1-git-send-email-leo.yan@linaro.org>
+ <1489762943-25849-4-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5555839602354102969=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANk1AXSHimnjsMsCJwbtwrkRppFCRxY7KQemFikgu+hqCTiO5Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alan Tull <delicious.quinoa@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-fpga@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel <linux-kernel@vger.kernel.org>, Moritz Fischer <mdf@kernel.org>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489762943-25849-4-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 03/17, Leo Yan wrote:
+> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+> index 917ca39..7a60f2b 100644
+> --- a/drivers/hwtracing/coresight/of_coresight.c
+> +++ b/drivers/hwtracing/coresight/of_coresight.c
+> @@ -101,15 +101,38 @@ static int of_coresight_alloc_memory(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +int of_coresight_get_cpu(struct device_node *node)
 
---===============5555839602354102969==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-Content-Disposition: inline
+const node?
 
+> +{
+> +	int cpu;
+> +	bool found;
+> +	struct device_node *dn, *np;
+> +
+> +	dn = of_parse_phandle(node, "cpu", 0);
+> +
+> +	/* Affinity defaults to CPU0 */
+> +	if (!dn)
+> +		return 0;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		np = of_get_cpu_node(cpu, NULL);
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+of_cpu_device_node_get()?
 
-On Fri, Mar 24, 2017 at 12:25:25PM -0500, Alan Tull wrote:
-> On Fri, Mar 24, 2017 at 10:23 AM, Moritz Fischer
-> <moritz.fischer.private@gmail.com> wrote:
-> > On Fri, Mar 24, 2017 at 09:59:08AM -0500, Rob Herring wrote:
-> >> On Fri, Mar 17, 2017 at 01:11:12PM -0700, Moritz Fischer wrote:
-> >> > This adds the binding documentation for the Xilinx LogiCORE PR
-> >> > Decoupler soft core.
-> >> >
-> >> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> >> > Cc: Michal Simek <michal.simek@xilinx.com>
-> >> > Cc: S=F6ren Brinkmann <soren.brinkmann@xilinx.com>
-> >> > Cc: linux-kernel@vger.kernel.org
-> >> > Cc: devicetree@vger.kernel.org
-> >> > ---
-> >> >
-> >> > Changes from v2:
-> >> > - Added refence to generic fpga-region bindings
-> >> > - Fixed up reg property in example
-> >> > - Added fallback to "xlnx,pr-decoupler" without version
-> >> >
-> >> > Changes from v1:
-> >> > - Added clock names & clock to example
-> >> > - Merged some of the description from Michal's version
-> >> >
-> >> > ---
-> >> >  .../bindings/fpga/xilinx-pr-decoupler.txt          | 35 +++++++++++=
-+++++++++++
-> >> >  1 file changed, 35 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr=
--decoupler.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoup=
-ler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-> >> > new file mode 100644
-> >> > index 0000000..16141bd
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-> >> > @@ -0,0 +1,35 @@
-> >> > +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
-> >> > +
-> >> > +The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
-> >> > +decouplers / fpga bridges.
-> >> > +The controller can decouple/disable the bridges which prevents sign=
-al
-> >> > +changes from passing through the bridge.  The controller can also
-> >> > +couple / enable the bridges which allows traffic to pass through the
-> >> > +bridge normally.
-> >> > +
-> >> > +The Driver supports only MMIO handling. A PR region can have multip=
-le
-> >> > +PR Decouples which can bhe handled independently or chaines via dec=
-ouple/
-> >>
-> >> s/chaines/chains/
-> >
-> > Fixed in v4.
-> >
-> >> > +decouple_status signals.
-> >> > +
-> >> > +Required properties:
-> >> > +- compatible               : Should contain "xlnx,pr-decoupler-1.00"
-> >> > +- regs                     : base address and size for decoupler mo=
-dule
-> >> > +- clocks           : input clock to IP
-> >> > +- clock-names              : should contain "aclk"
-> >> > +
-> >> > +Optional properties:
-> >> > +- bridge-enable            : 0 if driver should disable bridge at s=
-tartup
-> >> > +                     1 if driver should enable bridge at startup
-> >> > +                     Default is to leave bridge in current state.
-> >>
-> >> This is common and should move into a common doc. Maybe fpga-region.txt
-> >> works?
-> >
-> > Ok will add patch for that to v5 series.
->=20
-> Arg, our emails criss-crossed.  I've already sent v4 to Greg.  I hope
-> we don't need v5 for this one thing.  bridge-enable is common for the
-> fpga bridges (altera-fpga2sdram-bridge.txt, altera-freeze-bridge.txt,
-> altera-hps2fpga-bridge.txt, xilinx-pr-decoupler.txt).  Probably we
-> need a new patch to move this common bridges binding from all the
-> above to fpga-region.txt or create a new fpga-bridges.txt.  At first
-> blush, I prefer the later.
+> +		found = (dn == np);
+> +		of_node_put(np);
+> +		if (found)
+> +			break;
+> +	}
+> +	of_node_put(dn);
+> +
+> +	/* Affinity to CPU0 if no cpu nodes are found */
+> +	return found ? cpu : 0;
+> +}
+> +
+>  struct coresight_platform_data *of_get_coresight_platform_data(
+>  				struct device *dev, struct device_node *node)
+>  {
+> -	int i = 0, ret = 0, cpu;
+> +	int i = 0, ret = 0;
+>  	struct coresight_platform_data *pdata;
+>  	struct of_endpoint endpoint, rendpoint;
+>  	struct device *rdev;
+> -	bool found;
+> -	struct device_node *dn, *np;
+>  	struct device_node *ep = NULL;
+>  	struct device_node *rparent = NULL;
+>  	struct device_node *rport = NULL;
+> @@ -176,18 +199,7 @@ struct coresight_platform_data *of_get_coresight_platform_data(
+>  		} while (ep);
+>  	}
+>  
+> -	dn = of_parse_phandle(node, "cpu", 0);
+> -	for_each_possible_cpu(cpu) {
+> -		np = of_get_cpu_node(cpu, NULL);
+> -		found = (dn == np);
+> -		of_node_put(np);
+> -		if (found)
+> -			break;
+> -	}
+> -	of_node_put(dn);
+> -
 
-Yeah, I'll just send a follow-up patch, it's not that it breaks anything
-the way it is.
+Ok yeah the code is moving, so perhaps another patch to make the
+changes suggested above.
 
-- Moritz
+> -	/* Affinity to CPU0 if no cpu nodes are found */
+> -	pdata->cpu = found ? cpu : 0;
+> +	pdata->cpu = of_coresight_get_cpu(node);
+>  
+>  	return pdata;
+>  }
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index 2a5982c..7b29743 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -263,9 +263,11 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
+>  #endif
+>  
+>  #ifdef CONFIG_OF
+> +extern int of_coresight_get_cpu(struct device_node *node);
+>  extern struct coresight_platform_data *of_get_coresight_platform_data(
+>  				struct device *dev, struct device_node *node);
+>  #else
+> +static int of_coresight_get_cpu(struct device_node *node) { return 0; }
 
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
+inline?
 
------BEGIN PGP SIGNATURE-----
+>  static inline struct coresight_platform_data *of_get_coresight_platform_data(
+>  	struct device *dev, struct device_node *node) { return NULL; }
+>  #endif
+> -- 
+> 2.7.4
+> 
 
-iQEcBAEBAgAGBQJY1WBQAAoJEL5CEHepFqov1YoIAJ+JNJJMTQ2KHuEgT/IUvMLk
-3tm8YmtavV0Q9G79nQfCSe2LSLuM4kiSMw5t0yCV5pVuwIuYpxdQeShl7BLf/kZ5
-wl8+13fO431aF1vLPAYhI8Ti0FcFkI64bXVKzYsTUk8tsfEE73CNoNQsEks/5BX1
-79jFyciQXCHHZjfftKGACz4R4P3fHmoEt6RcPNuowa7ciexNip2QIDNU4eEDni3A
-V2QlJ5VdXFWn4Dt5OOXJcE6vlI31ANN7SI46xyl32GeboMg9yFHhpulfO8jctJO2
-CH02frabhAtYgjOf7zZ2NRcg6DKNub737SBBwrNBTo+OvuY34p/BYDcrU1RviSk=
-=L0by
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
-
-
---===============5555839602354102969==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5555839602354102969==--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
