@@ -1,98 +1,70 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 1/9] coresight: bindings for CPU debug module
-Date: Sun, 26 Mar 2017 02:23:09 +0800
-Message-ID: <1490466197-29163-2-git-send-email-leo.yan@linaro.org>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 9/9] arm64: dts: qcom: msm8916: Add debug unit
+Date: Sun, 26 Mar 2017 02:23:17 +0800
+Message-ID: <1490466197-29163-10-git-send-email-leo.yan@linaro.org>
 References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Suzuki.Poulose@arm.com, sudeep.holla@arm.com
-Cc: Leo Yan <leo.yan@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490466197-29163-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
-Chapter 'Part H: External debug', the CPU can integrate debug module
-and it can support self-hosted debug and external debug. Especially
-for supporting self-hosted debug, this means the program can access
-the debug module from mmio region; and usually the mmio region is
-integrated with coresight.
+Add debug unit on Qualcomm msm8916 based platforms, including the
+DragonBoard 410c board.
 
-So add document for binding debug component, includes binding to APB
-clock; and also need specify the CPU node which the debug module is
-dedicated to specific CPU.
-
-Suggested-by: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../bindings/arm/coresight-cpu-debug.txt           | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-new file mode 100644
-index 0000000..7ef3824
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-@@ -0,0 +1,48 @@
-+* CoreSight CPU Debug Component:
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 68a8e67..3af814b 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -1104,6 +1104,38 @@
+ 			};
+ 		};
+ 
++		debug@850000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0x850000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&CPU0>;
++		};
 +
-+CoreSight CPU debug component are compliant with the ARMv8 architecture
-+reference manual (ARM DDI 0487A.k) Chapter 'Part H: External debug'. The
-+external debug module is mainly used for two modes: self-hosted debug and
-+external debug, and it can be accessed from mmio region from Coresight
-+and eventually the debug module connects with CPU for debugging. And the
-+debug module provides sample-based profiling extension, which can be used
-+to sample CPU program counter, secure state and exception level, etc;
-+usually every CPU has one dedicated debug module to be connected.
++		debug@852000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0x852000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&CPU1>;
++		};
 +
-+Required properties:
++		debug@854000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0x854000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&CPU2>;
++		};
 +
-+- compatible : should be "arm,coresight-cpu-debug"; supplemented with
-+               "arm,primecell" since this driver is using the AMBA bus
-+	       interface.
++		debug@856000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0x856000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&CPU3>;
++		};
 +
-+- reg : physical base address and length of the register set.
-+
-+- clocks : the clock associated to this component.
-+
-+- clock-names : the name of the clock referenced by the code. Since we are
-+                using the AMBA framework, the name of the clock providing
-+		the interconnect should be "apb_pclk" and the clock is
-+		mandatory. The interface between the debug logic and the
-+		processor core is clocked by the internal CPU clock, so it
-+		is enabled with CPU clock by default.
-+
-+- cpu : the CPU phandle the debug module is affined to. When omitted
-+	the module is considered to belong to CPU0.
-+
-+Optional properties:
-+
-+- power-domains: a phandle to the debug power domain. We use "power-domains"
-+                 binding to turn on the debug logic if it has own dedicated
-+		 power domain and if necessary to use "idle_constraint" in
-+		 kernel command line or debugfs node to constrain idle states
-+		 to ensure registers in the CPU power domain are accessible.
-+
-+Example:
-+
-+	debug@f6590000 {
-+		compatible = "arm,coresight-cpu-debug","arm,primecell";
-+		reg = <0 0xf6590000 0 0x1000>;
-+		clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+		clock-names = "apb_pclk";
-+		cpu = <&cpu0>;
-+	};
+ 		etm@85c000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85c000 0x1000>;
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
