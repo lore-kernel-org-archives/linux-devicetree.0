@@ -1,13 +1,12 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v5 2/8] phy: sun4i-usb: change PHYCTL register
- clearing code
-Date: Sat, 25 Mar 2017 22:50:09 +0800
-Message-ID: <20170325145015.22076-3-icenowy@aosc.xyz>
+Subject: [PATCH v5 3/8] phy: sun4i-usb: add PHYCTL offset for H3 SoC
+Date: Sat, 25 Mar 2017 22:50:10 +0800
+Message-ID: <20170325145015.22076-4-icenowy@aosc.xyz>
 References: <20170325145015.22076-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB4MH3LDAKGQEURRBXPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB7MH3LDAKGQEK555EOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170325145015.22076-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,36 +19,31 @@ To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <r
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It seems that all SoCs with the PHYCTL register offset as 0x10 need the
-PHYCTL register to be cleared before it's written.
+The config structure of H3 in phy-sun4i-usb driver have the PHYCTL
+register offset missing.
 
-Change PHYCTL register clearing code to judge whether clearing is needed
-based on the PHYCTL offset.
+Add it. From the BSP source code, we know that the offset should be
+0x10.
 
 Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
 Changes in v5:
-- Commit message fix.
+- Changed commit message.
 
- drivers/phy/phy-sun4i-usb.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/phy/phy-sun4i-usb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index a21b5f24a340..62b4d25448c6 100644
+index 62b4d25448c6..a650f283f6ff 100644
 --- a/drivers/phy/phy-sun4i-usb.c
 +++ b/drivers/phy/phy-sun4i-usb.c
-@@ -188,10 +188,8 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
- 
- 	spin_lock_irqsave(&phy_data->reg_lock, flags);
- 
--	if (phy_data->cfg->type == sun8i_a33_phy ||
--	    phy_data->cfg->type == sun50i_a64_phy ||
--	    phy_data->cfg->type == sun8i_v3s_phy) {
--		/* A33 or A64 needs us to set phyctl to 0 explicitly */
-+	if (phy_data->cfg->phyctl_offset == REG_PHYCTL_A33) {
-+		/* SoCs newer than A33 need us to set phyctl to 0 explicitly */
- 		writel(0, phyctl);
- 	}
- 
+@@ -821,6 +821,7 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
+ 	.num_phys = 4,
+ 	.type = sun8i_h3_phy,
+ 	.disc_thresh = 3,
++	.phyctl_offset = REG_PHYCTL_A33,
+ 	.dedicated_clocks = true,
+ 	.enable_pmu_unk1 = true,
+ };
 -- 
 2.12.0
