@@ -1,71 +1,96 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 3/9] coresight: of_get_coresight_platform_data: Add missing of_node_put
-Date: Sun, 26 Mar 2017 02:23:11 +0800
-Message-ID: <1490466197-29163-4-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v5 8/9] arm64: dts: hi6220: register debug module
+Date: Sun, 26 Mar 2017 02:23:16 +0800
+Message-ID: <1490466197-29163-9-git-send-email-leo.yan@linaro.org>
 References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Suzuki.Poulose@arm.com, sudeep.holla@arm.com
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Bind debug module driver for Hi6220.
 
-The of_get_coresight_platform_data iterates over the possible CPU nodes
-to find a given cpu phandle. However it does not drop the reference
-to the node pointer returned by the of_get_coresight_platform_data.
-
-This patch also introduces another minor fix is to use
-of_cpu_device_node_get() to replace of_get_cpu_node().
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-[Leo: minor tweaks for of_get_coresight_platform_data]
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- drivers/hwtracing/coresight/of_coresight.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 64 +++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-index 629e031..1a77280 100644
---- a/drivers/hwtracing/coresight/of_coresight.c
-+++ b/drivers/hwtracing/coresight/of_coresight.c
-@@ -108,7 +108,8 @@ struct coresight_platform_data *of_get_coresight_platform_data(
- 	struct coresight_platform_data *pdata;
- 	struct of_endpoint endpoint, rendpoint;
- 	struct device *rdev;
--	struct device_node *dn;
-+	bool found;
-+	struct device_node *dn, *np;
- 	struct device_node *ep = NULL;
- 	struct device_node *rparent = NULL;
- 	struct device_node *rport = NULL;
-@@ -175,17 +176,19 @@ struct coresight_platform_data *of_get_coresight_platform_data(
- 		} while (ep);
- 	}
- 
--	/* Affinity defaults to CPU0 */
--	pdata->cpu = 0;
- 	dn = of_parse_phandle(node, "cpu", 0);
--	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
--		if (dn == of_get_cpu_node(cpu, NULL)) {
--			pdata->cpu = cpu;
-+	for_each_possible_cpu(cpu) {
-+		np = of_cpu_device_node_get(cpu);
-+		found = (dn == np);
-+		of_node_put(np);
-+		if (found)
- 			break;
--		}
- 	}
- 	of_node_put(dn);
- 
-+	/* Affinity to CPU0 if no cpu nodes are found */
-+	pdata->cpu = found ? cpu : 0;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 470461d..467aa15 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -913,5 +913,69 @@
+ 				};
+ 			};
+ 		};
 +
- 	return pdata;
- }
- EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
++		debug@f6590000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf6590000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu0>;
++		};
++
++		debug@f6592000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf6592000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu1>;
++		};
++
++		debug@f6594000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf6594000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu2>;
++		};
++
++		debug@f6596000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf6596000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu3>;
++		};
++
++		debug@f65d0000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf65d0000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu4>;
++		};
++
++		debug@f65d2000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf65d2000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu5>;
++		};
++
++		debug@f65d4000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf65d4000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu6>;
++		};
++
++		debug@f65d6000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf65d6000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu7>;
++		};
+ 	};
+ };
 -- 
 2.7.4
+
