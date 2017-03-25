@@ -1,119 +1,85 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [RESEND PATCH v2 00/53] mtd: nand: denali: 2nd round of Denali
- NAND IP patch bomb
-Date: Sat, 25 Mar 2017 23:40:38 +0900
-Message-ID: <CAK7LNARNUhyFpVRKYwmadkTGpR-aAjUNs2WgwYn3ao5Y+zTH1w@mail.gmail.com>
-References: <1490213273-8571-1-git-send-email-yamada.masahiro@socionext.com> <20170324211330.0e463621@bbrezillon>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v5 0/8] Add dual-role OTG support for Allwinner H3
+Date: Sat, 25 Mar 2017 22:50:07 +0800
+Message-ID: <20170325145015.22076-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170324211330.0e463621@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-mtd@lists.infradead.org, Laurent Monat <laurent.monat@idquantique.com>, thorsten.christiansson@idquantique.com, Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBSMH3LDAKGQEPTS674Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Allwinner H3 have a its USB PHY0 routed to two USB controllers: one is
+a MUSB controller, which can work in peripheral mode, but works badly in
+host mode (several hardware will fail on the MUSB controller, even connect
+one MUSB controller in peripheral mode to another one in host mode cannot
+work); the other is a pair of EHCI/OHCI controller, which can work only
+in host mode, but have better compatibillity. The route is controlled in
+a register, which we have set it to HCI only when we do not know about
+it well.
 
+Add support to route to the best controller according to current USB mode
+(host/peripheral).
 
+Note: Currently even if hardware only support hostmode, we should still
+enable the MUSB controller, as it controls the USB mode. (Some this kind
+of hardware can also work in peripheral mode by settings in the sysfs
+node of MUSB, then connect it to another host via a USB Type-A to Type-A
+cable.)
 
-2017-03-25 5:13 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
+Patch 1 changes the device tree binding to include the "pmu0" for HCI pair.
 
->>
->> Masahiro Yamada (53):
->>   mtd: nand: allow to set only one of ECC size and ECC strength from DT
->>   mtd: nand: use read_oob() instead of cmdfunc() for bad block check
->>   mtd: nand: denali: remove unused CONFIG option and macros
->>   mtd: nand: denali: remove redundant define of BANK(x)
->>   mtd: nand: denali: remove more unused struct members
->>   mtd: nand: denali: fix comment of denali_nand_info::flash_mem
->>   mtd: nand: denali: consolidate INTR_STATUS__* and INTR_EN__* macros
->>   mtd: nand: denali: introduce capability flag
->>   mtd: nand: denali: use int where no reason to use fixed width variable
->>   mtd: nand: denali: fix erased page checking
->>   mtd: nand: denali: fix bitflips calculation in handle_ecc()
->>   mtd: nand: denali: support HW_ECC_FIXUP capability
->>   mtd: nand: denali_dt: enable HW_ECC_FIXUP for Altera SOCFPGA variant
->>   mtd: nand: denali: support 64bit capable DMA engine
->>   mtd: nand: denali_dt: remove dma-mask DT property
->>   mtd: nand: denali_dt: use pdev instead of ofdev for platform_device
->>   mtd: nand: denali: allow to override revision number
->>   mtd: nand: denali: use nand_chip to hold frequently accessed data
->>   mtd: nand: denali: call nand_set_flash_node() to set DT node
->>   mtd: nand: denali: do not set mtd->name
->>   mtd: nand: denali: move multi device fixup code to a helper function
->>   mtd: nand: denali: simplify multi device fixup code
->>   mtd: nand: denali: set DEVICES_CONNECTED 1 if not set
->>   mtd: nand: denali: remove meaningless writes to read-only registers
->>   mtd: nand: denali: remove unnecessary writes to ECC_CORRECTION
->>   mtd: nand: denali: support 1024 byte ECC step size
->>   mtd: nand: denali: avoid hard-coding ecc.strength and ecc.bytes
->>   mtd: nand: denali: support "nand-ecc-strength" DT property
->>   mtd: nand: denali: remove Toshiba and Hynix specific fixup code
->>   mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
->>   mtd: nand: denali: set NAND_ECC_CUSTOM_PAGE_ACCESS
->>   mtd: nand: denali: do not propagate NAND_STATUS_FAIL to waitfunc()
->>   mtd: nand: denali: use BIT() and GENMASK() for register macros
->>   mtd: nand: denali: remove unneeded find_valid_banks()
->>   mtd: nand: denali: handle timing parameters by setup_data_interface()
->>   mtd: nand: denali: remove meaningless pipeline read-ahead operation
->>   mtd: nand: denali: rework interrupt handling
->>   mtd: nand: denali: fix NAND_CMD_STATUS handling
->>   mtd: nand: denali: fix NAND_CMD_PARAM handling
->>   mtd: nand: do not check R/B# for CMD_READID in nand_command(_lp)
->>   mtd: nand: do not check R/B# for CMD_SET_FEATURES in nand_command(_lp)
->>   mtd: nand: denali: switch over to cmd_ctrl instead of cmdfunc
->>   mtd: nand: denali: fix bank reset function
->>   mtd: nand: denali: use interrupt instead of polling for bank reset
->>   mtd: nand: denali: propagate page to helpers via function argument
->>   mtd: nand: denali: merge struct nand_buf into struct denali_nand_info
->>   mtd: nand: denali: use flag instead of register macro for direction
->>   mtd: nand: denali: fix raw and oob accessors for syndrome page layout
->>   mtd: nand: denali: support hardware-assisted erased page detection
->>   mtd: nand: allocate aligned buffers if NAND_OWN_BUFFERS is unset
->>   mtd: nand: denali: skip driver internal bounce buffer when possible
->>   mtd: nand: denali: use non-managed kmalloc() for DMA buffer
->>   mtd: nand: denali: enable bad block table scan
->
-> Applied patch 1 to 9, 40 and 41. I'll see what else I can apply so that
-> you don't have to re-post the remaining 42 patches, but I fear some of
-> them won't apply correctly without patch 10 on which I had comments.
+Patch 2 and 3 are fixes for H3 PHY, in order to make MUSB really working
+on H3.
 
-Thanks!
+Patch 4 adds support for auto routing of PHY0. It's currently only enabled
+on H3, but it's easy to extend it to other SoCs which feature this
+route control.
 
-This will be very helpful when sending the next version.
+Patch 5 adds necessary device tree nodes to the H3/H5 DTSI file. Note: The
+phy is not bind for OHCI/EHCI0, as OHCI/EHCI drivers will keep the VBUS
+on. Only MUSB driver can properly handle a dual-role PHY.
 
-If you like, you can also apply the following 9 patches cleanly in this order.
+Patch 6 enables USB OTG functionality on Orange Pi One board, which is
+the only H3 board I have that have proper OTG function. It's easy to
+enable OTG on other boards with their schematics.
 
-18/53 mtd: nand: denali: use nand_chip to hold frequently accessed data
-19/53 mtd: nand: denali: call nand_set_flash_node() to set DT node
-20/53 mtd: nand: denali: do not set mtd->name
-21/53 mtd: nand: denali: move multi device fixup code to a helper function
-22/53 mtd: nand: denali: simplify multi device fixup code
-23/53 mtd: nand: denali: set DEVICES_CONNECTED 1 if not set
-24/53 mtd: nand: denali: remove meaningless writes to read-only registers
-25/53 mtd: nand: denali: remove unnecessary writes to ECC_CORRECTION
-36/53 mtd: nand: denali: remove meaningless pipeline read-ahead operation
+Patch 7 enables USB OTG functionality on Orange Pi Zero board, as the
+board cannot output power on Vbus, I only enabled peripheral mode by
+default.
 
-These are less controversial, and have no dependency on 10/53-17/53.
+Patch 8 enables USB OTG funcionality on Orange Pi PC2 board, which is
+the newly support H5 board, and have USB-related pins same as Orange
+Pi One.
 
+The USB PHY on V3s/A64 SoCs also feature this capability, and it will
+be soon enabled on these SoCs after this patchset is merged.
 
+Icenowy Zheng (8):
+  dt: bindings: add pmu0 regs for USB PHYs on Allwinner H3/V3s/A64
+  phy: sun4i-usb: change PHYCTL register clearing code
+  phy: sun4i-usb: add PHYCTL offset for H3 SoC
+  phy: sun4i-usb: support automatically switch PHY0 route to MUSB/HCI
+  ARM: sunxi: h3/h5: add usb_otg and OHCI/EHCI for usbc0 on H3/H5
+  ARM: sun8i: h3: enable USB OTG on Orange Pi One
+  ARM: sun8i: h2+: enable USB OTG for Orange Pi Zero board
+  arm64: allwinner: h5: enable USB OTG on Orange Pi PC 2 board
 
-
-50/53 "mtd: nand: allocate aligned buffers if NAND_OWN_BUFFERS is unset"
-is a change to the NAND framework.  (used as a pre-requisite for 51/53)
-
-Surely no dependency on the others, but If you wait more for comments
-from other developers, that's no problem.
-
-
-
-I will update the commented parts,
-and hopefully send v3 next week.
-
-Thanks!
-
+ .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts  | 20 +++++++-
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        | 22 ++++++++-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 32 ++++++++++++
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 27 +++++++++-
+ drivers/phy/phy-sun4i-usb.c                        | 57 ++++++++++++++--------
+ 6 files changed, 135 insertions(+), 24 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.12.0
