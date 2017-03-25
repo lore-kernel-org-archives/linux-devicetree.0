@@ -1,734 +1,279 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] iio: adc: Add Maxim max9611 ADC driver
-Date: Sat, 25 Mar 2017 17:37:52 +0000
-Message-ID: <834f03d3-36d2-9b86-6b1e-04a23d440e10@kernel.org>
-References: <1490369323-13866-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490369323-13866-4-git-send-email-jacopo+renesas@jmondi.org>
- <a911f5d1-e019-772f-0889-849cf42e6827@kernel.org>
- <20170325171735.GA5981@w540>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 07/11] iio: adc: sun4i-gpadc-iio: add support for A33
+ thermal sensor
+Date: Sat, 25 Mar 2017 17:48:34 +0000
+Message-ID: <d43b29c4-7e9c-1cce-6529-e7cd4688a6ac@kernel.org>
+References: <20170321153611.16228-1-quentin.schulz@free-electrons.com>
+ <20170321153611.16228-8-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170325171735.GA5981@w540>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170321153611.16228-8-quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>, dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, lee.jones@linaro.org, linux@armlinux.org.uk, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, icenowy@aosc.xyz, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/03/17 17:21, jacopo wrote:
-> Hi Jonathan,
->     thanks for review
+On 21/03/17 15:36, Quentin Schulz wrote:
+> This adds support for the Allwinner A33 thermal sensor.
 > 
-> On Sat, Mar 25, 2017 at 03:45:05PM +0000, Jonathan Cameron wrote:
->> On 24/03/17 15:28, Jacopo Mondi wrote:
->>> Add iio driver for Maxim max9611 and max9612 current-sense amplifiers
->>> with 12-bits ADC interface.
->>>
->>> Datasheet publicly available at:
->>> https://datasheets.maximintegrated.com/en/ds/MAX9611-MAX9612.pdf
->>>
->>> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
->> A few more little things inline.  Coming together nicely.
->>
->> The channel set here is just odd enough that it might aid review to have
->> a quick listing of the resulting sysfs entries. One or two authors do
->> this an it is always useful for a quick sanity check.
->>
->> Perhaps even a set of typical values.  Put this below the --- as we don't
->> need it in the git history, only to assist lazy reviewers like me ;)
->>
+> Unlike the A10, A13 and A31, the Allwinner A33 only has one channel
+> which is dedicated to the thermal sensor. Moreover, its thermal sensor
+> does not generate interruptions, thus we only need to directly read the
+> register storing the temperature value.
 > 
-> I included the output of iio_info in the cover letter, I can add some
-> more info here for sure!
-Just goes to show I don't always remember to check cover letters ;)
+> The MFD used by the A10, A13 and A31, was created to avoid breaking the
+> DT binding, but since the nodes for the ADC weren't there for the A33,
+> it is not needed.
 > 
->> Thanks,
->>
->> Jonathan
->>> ---
->>>  drivers/iio/adc/Kconfig   |  10 +
->>>  drivers/iio/adc/Makefile  |   1 +
->>>  drivers/iio/adc/max9611.c | 590 ++++++++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 601 insertions(+)
->>>  create mode 100644 drivers/iio/adc/max9611.c
->>>
->>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>> index dedae7a..82f2e7b8 100644
->>> --- a/drivers/iio/adc/Kconfig
->>> +++ b/drivers/iio/adc/Kconfig
->>> @@ -354,6 +354,16 @@ config MAX1363
->>>  	  To compile this driver as a module, choose M here: the module will be
->>>  	  called max1363.
->>>  
->>> +config	MAX9611
->>> +	tristate "Maxim max9611/max9612 ADC driver"
->>> +	depends on I2C
->>> +	help
->>> +	  Say yes here to build support for Maxim max9611/max9612 current sense
->>> +	  amplifier with 12-bits ADC interface.
->>> +
->>> +	  To compile this driver as a module, choose M here: the module will be
->>> +	  called max9611.
->>> +
->>>  config MCP320X
->>>  	tristate "Microchip Technology MCP3x01/02/04/08"
->>>  	depends on SPI
->>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
->>> index d001262..149f979 100644
->>> --- a/drivers/iio/adc/Makefile
->>> +++ b/drivers/iio/adc/Makefile
->>> @@ -34,6 +34,7 @@ obj-$(CONFIG_LTC2485) += ltc2485.o
->>>  obj-$(CONFIG_MAX1027) += max1027.o
->>>  obj-$(CONFIG_MAX11100) += max11100.o
->>>  obj-$(CONFIG_MAX1363) += max1363.o
->>> +obj-$(CONFIG_MAX9611) += max9611.o
->>>  obj-$(CONFIG_MCP320X) += mcp320x.o
->>>  obj-$(CONFIG_MCP3422) += mcp3422.o
->>>  obj-$(CONFIG_MEDIATEK_MT6577_AUXADC) += mt6577_auxadc.o
->>> diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
->>> new file mode 100644
->>> index 0000000..61566ec
->>> --- /dev/null
->>> +++ b/drivers/iio/adc/max9611.c
->>> @@ -0,0 +1,590 @@
->>> +/*
->>> + * iio/adc/max9611.c
->>> + *
->>> + * Maxim max9611/max9612 high side current sense amplifier with
->>> + * 12-bit ADC interface.
->>> + *
->>> + * Copyright (C) 2017 Jacopo Mondi
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + */
->>> +
->>> +/*
->>> + * This driver supports input common-mode voltage, current-sense
->>> + * amplifier with programmable gains and die temperature reading from
->>> + * Maxim max9611/max9612.
->>> + *
->>> + * Op-amp, analog comparator, and watchdog functionalities are not
->>> + * supported by this driver.
->>> + */
->>> +
->>> +#include <linux/delay.h>
->>> +#include <linux/i2c.h>
->>> +#include <linux/iio/iio.h>
->>> +#include <linux/iio/sysfs.h>
->>> +#include <linux/module.h>
->>> +
->>> +#define DRIVER_NAME "max9611"
->>> +
->>> +/* max9611 register addresses */
->>> +#define MAX9611_REG_CSA_DATA		0x00
->>> +#define MAX9611_REG_RS_DATA		0x02
->>> +#define MAX9611_REG_TEMP_DATA		0x08
->>> +#define MAX9611_REG_CTRL1		0x0a
->>> +#define MAX9611_REG_CTRL2		0x0b
->>> +
->>> +/* max9611 REG1 mux configuration options */
->>> +#define MAX9611_MUX_MASK		0x07
->>> +#define MAX9611_MUX_SENSE_1x		0x00
->>> +#define MAX9611_MUX_SENSE_4x		0x01
->>> +#define MAX9611_MUX_SENSE_8x		0x02
->>> +#define MAX9611_INPUT_VOLT		0x03
->>> +#define MAX9611_MUX_TEMP		0x06
->>> +
->>> +/* max9611 voltage (both csa and input) helper macros */
->>> +#define MAX9611_VOLTAGE_SHIFT		0x04
->>> +#define MAX9611_VOLTAGE_RAW(_r)		((_r) >> MAX9611_VOLTAGE_SHIFT)
->>> +
->>> +/*
->>> + * max9611 current sense amplifier voltage output:
->>> + * LSB and offset values depends on selected gain (1x, 4x, 8x)
->>> + *
->>> + * GAIN		LSB (nV)	OFFSET (LSB steps)
->>> + * 1x		107500		1
->>> + * 4x		26880		1
->>> + * 8x		13440		3
->>> + *
->>> + * The complete formula to calculate current sense voltage is:
->>> + *     (((adc_read >> 4) - offset) / ((1 / LSB) * 10^-3)
->>> + */
->>> +#define CSA_VOLT_1x_LSB_nV		107500
->>> +#define CSA_VOLT_4x_LSB_nV		26880
->>> +#define CSA_VOLT_8x_LSB_nV		13440
->>> +
->>> +#define CSA_VOLT_1x_OFFS_RAW		1
->>> +#define CSA_VOLT_4x_OFFS_RAW		1
->>> +#define CSA_VOLT_8x_OFFS_RAW		3
->>> +
->>> +/*
->>> + * max9611 common input mode (CIM): LSB is 14mV, with 14mV offset at 25 C
->>> + *
->>> + * The complete formula to calculate input common voltage is:
->>> + *     (((adc_read >> 4) * 1000) - offset) / (1 / 14 * 1000)
->>> + */
->>> +#define CIM_VOLTAGE_LSB_mV		14
->>> +#define CIM_VOLTAGE_OFFSET_RAW		1
->>> +
->>> +/*
->>> + * max9611 temperature reading: LSB is 0.48 degrees Celsius
->>> + *
->>> + * The complete formula to calculate temperature is:
->>> + *     ((adc_read >> 7) * 1000) / (1 / 0.48 * 1000)
->>> + */
->> I'd prefer these defines to be prefixed with MAX9611_
->> Easiest to just do the lot.  Some of these are 'standard' enough
->> the might well clash with something that turns up in an included header
->> at somepoint in the future.
->>
->>> +#define TEMP_SHIFT			0x07
->>> +#define TEMP_MAX_RAW_POS		0x7f80
->>> +#define TEMP_MAX_RAW_NEG		0xff80
->>> +#define TEMP_MIN_RAW_NEG		0xd980
->>> +#define TEMP_MASK			((1 << TEMP_SHIFT) - 1)
->>> +#define TEMP_RAW(_r)			((_r) >> TEMP_SHIFT)
->>> +#define TEMP_LSB_mC			480
->>> +#define TEMP_SCALE_NUM			1000
->>> +#define TEMP_SCALE_DIV			2083
->>> +
->>> +struct max9611_dev {
->>> +	struct device *dev;
->>> +	struct i2c_client *i2c_client;
->>> +	struct mutex lock;
->>> +	unsigned int shunt_resistor_uohm;
->>> +};
->>> +
->>> +enum max9611_conf_ids {
->>> +	CONF_SENSE_1x,
->>> +	CONF_SENSE_4x,
->>> +	CONF_SENSE_8x,
->>> +	CONF_IN_VOLT,
->>> +	CONF_TEMP,
->>> +};
->>> +
->>> +/**
->>> + * max9611_mux_conf - associate ADC mux configuration with register address
->>> + *		       where data shall be read from
->>> + */
->>> +static unsigned int max9611_mux_conf[][2] = {
->>> +	/* CONF_SENSE_1x */
->>> +	{ MAX9611_MUX_SENSE_1x, MAX9611_REG_CSA_DATA },
->>> +	/* CONF_SENSE_4x */
->>> +	{ MAX9611_MUX_SENSE_4x, MAX9611_REG_CSA_DATA },
->>> +	/* CONF_SENSE_8x */
->>> +	{ MAX9611_MUX_SENSE_8x, MAX9611_REG_CSA_DATA },
->>> +	/* CONF_IN_VOLT */
->>> +	{ MAX9611_INPUT_VOLT, MAX9611_REG_RS_DATA },
->>> +	/* CONF_TEMP */
->>> +	{ MAX9611_MUX_TEMP, MAX9611_REG_TEMP_DATA },
->>> +};
->>> +
->>> +enum max9611_csa_gain {
->>> +	CSA_GAIN_1x,
->>> +	CSA_GAIN_4x,
->>> +	CSA_GAIN_8x,
->>> +};
->>> +
->>> +enum max9611_csa_gain_params {
->>> +	CSA_GAIN_LSB_nV,
->>> +	CSA_GAIN_OFFS_RAW,
->>> +};
->>> +
->>> +/**
->>> + * max9611_csa_gain_conf - associate gain multiplier with LSB and
->>> + *			    offset values.
->>> + *
->>> + * Group together parameters associated with configurable gain
->>> + * on current sense amplifier path to ADC interface.
->>> + * Current sense read routine adjusts gain until it gets a meaningful
->>> + * value; use this structure to retrieve the correct LSB and offset values.
->>> + */
->>> +static unsigned int max9611_gain_conf[][2] = {
->>> +	{ /* [0] CSA_GAIN_1x */
->>> +		CSA_VOLT_1x_LSB_nV,
->>> +		CSA_VOLT_1x_OFFS_RAW,
->>> +	},
->>> +	{ /* [1] CSA_GAIN_4x */
->>> +		CSA_VOLT_4x_LSB_nV,
->>> +		CSA_VOLT_4x_OFFS_RAW,
->>> +	},
->>> +	{ /* [2] CSA_GAIN_8x */
->>> +		CSA_VOLT_8x_LSB_nV,
->>> +		CSA_VOLT_8x_OFFS_RAW,
->>> +	},
->>> +};
->>> +
->>> +enum max9611_chan_addrs {
->>> +	MAX9611_CHAN_VOLTAGE_INPUT,
->>> +	MAX9611_CHAN_VOLTAGE_SENSE,
->>> +	MAX9611_CHAN_TEMPERATURE,
->>> +	MAX9611_CHAN_CURRENT_LOAD,
->>> +	MAX9611_CHAN_POWER_LOAD,
->>> +};
->>> +
->>> +static struct iio_chan_spec max9611_channels[] = {
->>> +	{
->>> +	  .type			= IIO_TEMP,
->>> +	  .info_mask_separate	= BIT(IIO_CHAN_INFO_RAW) |
->>> +				  BIT(IIO_CHAN_INFO_SCALE),
->>> +	  .address		= MAX9611_CHAN_TEMPERATURE,
->>> +	},
->>> +	{
->>> +	  .type			= IIO_VOLTAGE,
->>> +	  .info_mask_separate	= BIT(IIO_CHAN_INFO_RAW)   |
->>> +				  BIT(IIO_CHAN_INFO_SCALE) |
->>> +				  BIT(IIO_CHAN_INFO_OFFSET),
->>> +	  .address		= MAX9611_CHAN_VOLTAGE_INPUT,
->>> +	  .indexed		= 1,
->>> +	  .channel		= 1,
->>> +	},
->>> +	{
->>> +	  .type			= IIO_VOLTAGE,
->>> +	  .info_mask_separate	= BIT(IIO_CHAN_INFO_PROCESSED),
->>> +	  .address		= MAX9611_CHAN_VOLTAGE_SENSE,
->>> +	  .indexed		= 1,
->>> +	  .channel		= 0,
->> Unusual to have the channels in here other than in channel order...
->>> +	},
->>> +	{
->>> +	  .type			= IIO_CURRENT,
->>> +	  .info_mask_separate	= BIT(IIO_CHAN_INFO_PROCESSED),
->>> +	  .address		= MAX9611_CHAN_CURRENT_LOAD,
->>> +	},
->>> +	{
->>> +	  .type			= IIO_POWER,
->>> +	  .info_mask_separate	= BIT(IIO_CHAN_INFO_PROCESSED),
->>> +	  .address		= MAX9611_CHAN_POWER_LOAD
->>> +	},
->>> +};
->>> +
->>> +/**
->>> + * max9611_read_single() - read a single vale from ADC interface
->> value
->>> + *
->>> + * Data registers are 16 bit long, spread between two 8 bit registers
->>> + * with consecutive addresses.
->>> + * Configure ADC mux first, then read register at address "reg_addr".
->>> + * The smbus_read_word routine asks for 16 bits and the ADC is kind enough
->>> + * to return values from "reg_addr" and "reg_addr + 1" consecutively.
->>> + *
->>> + * @max9611: max9611 device
->>> + * @selector: index for mux and register configuration
->>> + * @raw_val: the value returned from ADC
->>> + */
->>> +static int max9611_read_single(struct max9611_dev *max9611,
->>> +			       enum max9611_conf_ids selector,
->>> +			       u16 *raw_val)
->>> +{
->>> +	int ret;
->>> +
->>> +	u8 mux_conf = max9611_mux_conf[selector][0] & MAX9611_MUX_MASK;
->>> +	u8 reg_addr = max9611_mux_conf[selector][1];
->>> +
->>> +	ret = i2c_smbus_write_byte_data(max9611->i2c_client,
->>> +					MAX9611_REG_CTRL1, mux_conf);
->>> +	if (ret) {
->>> +		dev_err(max9611->dev, "i2c write byte failed: 0x%2x - 0x%2x\n",
->>> +			MAX9611_REG_CTRL1, mux_conf);
->>> +		return ret;
->>> +	}
->>> +
->>> +	/*
->>> +	 * need a delay here to make register configuration
->>> +	 * stabilize. 1 msec at least, from empirical testing.
->>> +	 */
->>> +	usleep_range(1000, 2000);
->>> +
->>> +	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
->>> +	if (ret < 0) {
->>> +		dev_err(max9611->dev, "i2c read word from 0x%2x failed\n",
->>> +			reg_addr);
->>> +		return ret;
->>> +	}
->>> +	*raw_val = ret;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +/**
->>> + * max9611_read_csa_voltage() - read current sense amplifier output voltage
->>> + *
->>> + * Current sense amplifier output voltage is read through a configurable
->>> + * 1x, 4x or 8x gain.
->>> + * Start with plain 1x gain, and adjust gain control properly until a
->>> + * meaningful value is read from ADC output.
->>> + *
->>> + * @max9611: max9611 device
->>> + * @adc_raw: raw value read from ADC output
->>> + * @csa_gain: gain configuration option selector
->>> + */
->>> +static int max9611_read_csa_voltage(struct max9611_dev *max9611,
->>> +				    u16 *adc_raw,
->>> +				    enum max9611_csa_gain *csa_gain)
->>> +{
->>> +	enum max9611_conf_ids gain_selectors[] = {
->>> +		CONF_SENSE_1x,
->>> +		CONF_SENSE_4x,
->>> +		CONF_SENSE_8x
->>> +	};
->>> +	unsigned int i;
->>> +	int ret;
->>> +
->>> +	for (i = 0; i < ARRAY_SIZE(gain_selectors); ++i) {
->>> +		ret = max9611_read_single(max9611, gain_selectors[i], adc_raw);
->>> +		if (ret)
->>> +			return ret;
->>> +
->>> +		if (*adc_raw > 0) {
->>> +			*csa_gain = gain_selectors[i];
->>> +			return 0;
->>> +		}
->>> +	}
->>> +
->>> +	return -EIO;
->>> +}
->>> +
->>> +static int max9611_read_raw(struct iio_dev *indio_dev,
->>> +			    struct iio_chan_spec const *chan,
->>> +			    int *val, int *val2, long mask)
->>> +{
->>> +	struct max9611_dev *dev = iio_priv(indio_dev);
->>> +	enum max9611_csa_gain gain_selector;
->>> +	unsigned int *csa_gain;
->>> +	u16 adc_data;
->>> +	int ret;
->>> +
->>> +	switch (mask) {
->>> +	case IIO_CHAN_INFO_RAW:
->>> +		mutex_lock(&dev->lock);
->>> +
->>> +		switch (chan->address) {
->>> +		case MAX9611_CHAN_TEMPERATURE:
->>> +			ret = max9611_read_single(dev, CONF_TEMP,
->>> +						  &adc_data);
->>> +			if (ret)
->> I'm not personally keen on jumping out of deep indentations like this
->> just save on repeating one line.  I'd pull the unlock back here and return
->> directly as I feel it'll improve readability.
+> Though the A33 does not have an internal ADC, it has a thermal sensor
+> which shares the same registers with GPADC of the already supported SoCs
+> and almost the same bits, for the same purpose (thermal sensor).
 > 
-> I'll change it, with this and Peter's suggestion on this function in
-> his review.
+> The thermal sensor behaves exactly the same (except the presence of
+> interrupts or not) on the different SoCs.
 > 
->> Actually come to think of it, why does the lock need to be held for
->> the next line anyway?  adc_data is on the stack so doesn't matter if we
->> have concurrent readers, once the i2c transaction is finished.
->> Just unlock before checking ret.
-> 
-> I naively overvalued 'style' (ret assignment and check  in two
-> consecutive lines) over practicality... I'll change this
-> 
->>> +				goto unlock_fail;
->>> +
->>> +			*val = TEMP_RAW(adc_data);
->>> +
->>> +			mutex_unlock(&dev->lock);
->>> +			return IIO_VAL_INT;
->>> +
->>> +		case MAX9611_CHAN_VOLTAGE_INPUT:
->>> +			ret = max9611_read_single(dev, CONF_IN_VOLT,
->>> +						  &adc_data);
->>> +			if (ret)
->>> +				goto unlock_fail;
->>> +
->>> +			*val = MAX9611_VOLTAGE_RAW(adc_data);
->>> +
->>> +			mutex_unlock(&dev->lock);
->>> +			return IIO_VAL_INT;
->>> +		}
->>> +
->>> +	case IIO_CHAN_INFO_OFFSET:
->>> +		switch (chan->address) {
->>> +		case MAX9611_CHAN_VOLTAGE_INPUT:
->>> +			*val = CIM_VOLTAGE_OFFSET_RAW;
->>> +
->>> +			return IIO_VAL_INT;
->>> +		}
->>> +
->>> +	case IIO_CHAN_INFO_SCALE:
->>> +		switch (chan->address) {
->>> +		case MAX9611_CHAN_TEMPERATURE:
->>> +			*val = TEMP_SCALE_NUM;
->>> +			*val2 = TEMP_SCALE_DIV;
->>> +
->>> +			return IIO_VAL_FRACTIONAL;
->>> +
->>> +		case MAX9611_CHAN_VOLTAGE_INPUT:
->>> +			*val = CIM_VOLTAGE_LSB_mV;
->>> +			return IIO_VAL_INT;
->>> +		}
->>> +
->>> +	case IIO_CHAN_INFO_PROCESSED:
->>> +		mutex_lock(&dev->lock);
->>> +
->>> +		switch (chan->address) {
->>> +		case MAX9611_CHAN_VOLTAGE_SENSE:
->>> +			/*
->>> +			 * processed (mV): (raw - offset) * LSB (nV) / 10^6
->>> +			 *
->>> +			 * Even if max9611 can output raw csa voltage readings,
->>> +			 * use a produced value as scale depends on gain.
->>> +			 */
->>> +			ret = max9611_read_csa_voltage(dev, &adc_data,
->>> +						       &gain_selector);
->>> +			if (ret)
->>> +				goto unlock_fail;
->>> +
->>> +			csa_gain = max9611_gain_conf[gain_selector];
->>> +
->>> +			adc_data -= csa_gain[CSA_GAIN_OFFS_RAW];
->>> +			*val = MAX9611_VOLTAGE_RAW(adc_data) *
->>> +			       csa_gain[CSA_GAIN_LSB_nV];
->>> +			*val2 = 1000000;
->>> +
->>> +			mutex_unlock(&dev->lock);
->>> +			return IIO_VAL_FRACTIONAL;
->>> +
->>> +		case MAX9611_CHAN_CURRENT_LOAD:
->>> +			/* processed (mA): Vcsa (nV) / Rshunt (uOhm)  */
->>> +			ret = max9611_read_csa_voltage(dev, &adc_data,
->>> +						       &gain_selector);
->>> +			if (ret)
->>> +				goto unlock_fail;
->>> +
->>> +			csa_gain = max9611_gain_conf[gain_selector];
->>> +
->>> +			adc_data -= csa_gain[CSA_GAIN_OFFS_RAW];
->>> +			*val = MAX9611_VOLTAGE_RAW(adc_data) *
->>> +			       csa_gain[CSA_GAIN_LSB_nV];
->>> +			*val2 = dev->shunt_resistor_uohm;
->>> +
->>> +			mutex_unlock(&dev->lock);
->>> +			return IIO_VAL_FRACTIONAL;
->>> +
->>> +		case MAX9611_CHAN_POWER_LOAD:
->>> +			/*
->>> +			 * processed (mW): Vin (mV) * Vcsa (uV) /
->>> +			 *		   Rshunt (uOhm)
->>> +			 */
->>> +			ret = max9611_read_single(dev, CONF_IN_VOLT,
->>> +						  &adc_data);
->>> +			if (ret)
->>> +				goto unlock_fail;
->>> +
->>> +			adc_data -= CIM_VOLTAGE_OFFSET_RAW;
->>> +			*val = MAX9611_VOLTAGE_RAW(adc_data) *
->>> +			       CIM_VOLTAGE_LSB_mV;
->>> +
->>> +			ret = max9611_read_csa_voltage(dev, &adc_data,
->>> +						       &gain_selector);
->>> +			if (ret)
->>> +				goto unlock_fail;
->>> +
->>> +			csa_gain = max9611_gain_conf[gain_selector];
->>> +
->>> +			/* divide by 10^3 here to avoid 32bit overflow */
->>> +			adc_data -= csa_gain[CSA_GAIN_OFFS_RAW];
->>> +			*val *= MAX9611_VOLTAGE_RAW(adc_data) *
->>> +				csa_gain[CSA_GAIN_LSB_nV] / 1000;
->>> +			*val2 = dev->shunt_resistor_uohm;
->>> +
->>> +			mutex_unlock(&dev->lock);
->>> +			return IIO_VAL_FRACTIONAL;
->>> +		}
->>> +	}
->>> +
->>> +	ret = -EINVAL;
->>> +
->>> +unlock_fail:
->>> +	mutex_unlock(&dev->lock);
->>> +	return ret;
->>> +
->>> +}
->>> +
->>> +static ssize_t max9611_shunt_resistor_show(struct device *dev,
->>> +					   struct device_attribute *attr,
->>> +					   char *buf)
->>> +{
->>> +	struct max9611_dev *max9611 = iio_priv(dev_to_iio_dev(dev));
->>> +
->>> +	return sprintf(buf, "%d\n", max9611->shunt_resistor_uohm);
->>> +}
->>> +
->>> +static IIO_DEVICE_ATTR(in_shunt_resistor_power, 0444,
->>> +		       max9611_shunt_resistor_show, NULL, 0);
->>> +static IIO_DEVICE_ATTR(in_shunt_resistor_current, 0444,
->>> +		       max9611_shunt_resistor_show, NULL, 0);
->>> +
->>> +static struct attribute *max9611_attributes[] = {
->>> +	&iio_dev_attr_in_shunt_resistor_power.dev_attr.attr,
->>> +	&iio_dev_attr_in_shunt_resistor_current.dev_attr.attr,
->>> +	NULL,
->>> +};
->>> +
->>> +static const struct attribute_group max9611_attribute_group = {
->>> +	.attrs = max9611_attributes,
->>> +};
->>> +
->>> +static const struct iio_info indio_info = {
->>> +	.driver_module	= THIS_MODULE,
->>> +	.read_raw	= max9611_read_raw,
->>> +	.attrs		= &max9611_attribute_group,
->>> +};
->>> +
->>> +static int max9611_init(struct max9611_dev *max9611)
->>> +{
->>> +	struct i2c_client *client = max9611->i2c_client;
->>> +	u16 regval;
->>> +	int ret;
->>> +
->>> +	if (!i2c_check_functionality(client->adapter,
->>> +				     I2C_FUNC_SMBUS_WRITE_BYTE	|
->>> +				     I2C_FUNC_SMBUS_READ_WORD_DATA)) {
->>> +		dev_err(max9611->dev,
->>> +			"No smbus support in I2c adapter: aborting probe.\n");
->> This isn't necessarily an accurate message.  I2c adapter might support
->> smbus_read_byte only rather than word reads for example.
->>
->> Maybe make it more explict as to what we need?
-> 
-> Chopped away some details to make it fit in 80 columns.. I'll make it
-> more verbose...
-> 
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	/* Configure MUX to read temperature */
->>> +	ret = i2c_smbus_write_byte_data(max9611->i2c_client,
->>> +					MAX9611_REG_CTRL1, MAX9611_MUX_TEMP);
->>> +	if (ret) {
->>> +		dev_err(max9611->dev, "i2c write byte failed: 0x%2x - 0x%2x\n",
->>> +			MAX9611_REG_CTRL1, MAX9611_MUX_TEMP);
->>> +		return ret;
->>> +	}
->>> +	ret = i2c_smbus_write_byte_data(max9611->i2c_client,
->>> +					MAX9611_REG_CTRL2, 0);
->>> +	if (ret) {
->>> +		dev_err(max9611->dev, "i2c write byte failed: 0x%2x - 0x%2x\n",
->>> +			MAX9611_REG_CTRL2, 0);
->>> +		return ret;
->>> +	}
->>> +	usleep_range(1000, 2000);
->>> +
->>> +	/* Make sure die temperature is in range to test communications. */
->>> +	ret = i2c_smbus_read_word_swapped(max9611->i2c_client,
->>> +					  MAX9611_REG_TEMP_DATA);
->>> +	if (ret < 0) {
->>> +		dev_err(max9611->dev, "i2c read word from 0x%2x failed\n",
->>> +			MAX9611_REG_TEMP_DATA);
->>> +		return ret;
->>> +	}
->>> +	regval = ret & ~TEMP_MASK;
->>> +
->>> +	if ((regval > TEMP_MAX_RAW_POS &&
->>> +	     regval < TEMP_MIN_RAW_NEG) ||
->>> +	     regval > TEMP_MAX_RAW_NEG) {
->>> +		dev_err(max9611->dev,
->>> +			"Invalid value received from ADC 0x%4x: aborting\n",
->>> +			regval);
->>> +		return -EIO;
->>> +	}
->>> +
->>> +	/* Mux shall be zeroed back before applying other configurations */
->>> +	ret = i2c_smbus_write_byte_data(max9611->i2c_client,
->>> +					MAX9611_REG_CTRL1, 0);
->>> +	if (ret) {
->>> +		dev_err(max9611->dev, "i2c write byte failed: 0x%2x - 0x%2x\n",
->>> +			MAX9611_REG_CTRL1, 0);
->>> +		return ret;
->>> +	}
->>> +	usleep_range(1000, 2000);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int max9611_probe(struct i2c_client *client,
->>> +			 const struct i2c_device_id *id)
->>> +{
->>> +	const char * const shunt_res_prop = "shunt-resistor-uohm";
->>> +	struct device_node *of_node = client->dev.of_node;
->>> +	struct max9611_dev *max9611;
->>> +	struct iio_dev *indio_dev;
->>> +	unsigned int of_shunt;
->>> +	int ret;
->>> +
->>> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*max9611));
->>> +	if (IS_ERR(indio_dev))
->>> +		return PTR_ERR(indio_dev);
->>> +
->>> +	i2c_set_clientdata(client, indio_dev);
->>> +
->>> +	max9611			= iio_priv(indio_dev);
->>> +	max9611->dev		= &client->dev;
->>> +	max9611->i2c_client	= client;
->>> +	mutex_init(&max9611->lock);
->>> +
->>> +	ret = of_property_read_u32(of_node, shunt_res_prop, &of_shunt);
->>> +	if (ret) {
->>> +		dev_err(&client->dev,
->>> +			"Missing %s property for %s node\n",
->>> +			shunt_res_prop, of_node->full_name);
->>> +		return ret;
->>> +	}
->>> +	max9611->shunt_resistor_uohm = of_shunt;
->>> +
->>> +	ret = max9611_init(max9611);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	indio_dev->dev.parent	= &client->dev;
->>> +	indio_dev->dev.of_node	= client->dev.of_node;
->>> +	indio_dev->name		= client->dev.of_node->name;
->> What's this going to give for the name?  Name in IIO is supposed to
->> be an indication of the part rather than anything more explicit.
->> That's not easily obtained from device tree directly...
->>
-> 
-> I used the one coming from device tree as otherwise device entries
-> have the same name, and I wanted to have it to inclued the unit
-> address (eg. adc@7c and not just adc)
-> But from you comment I guess it's fine just adc, so I'll change this
-> back to v1).
-Should be the part number - so max9611 or similar..
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Jonathan Cameron <jic23@kernel.org>
 
-You can query the device node details directly if you need to identify
-which is which.
+I'm assuming this is going through your tree Lee, let me know if you want
+to do it differently.
+
+Jonathan
+> ---
 > 
-> Thanks
->   j
+> v3:
+>   - switched compatible from allwinner,sun8i-a33-gpadc-iio to
+>   allwinner,sun8i-a33-ths to better reflect the datasheet's name,
+>   - fixed the non-working if (!IS_ENABLED(THERMAL_OF)) by prefixing it with
+>   CONFIG,
 > 
->>> +	indio_dev->modes	= INDIO_DIRECT_MODE;
->>> +	indio_dev->info		= &indio_info;
->>> +	indio_dev->channels	= max9611_channels;
->>> +	indio_dev->num_channels	= ARRAY_SIZE(max9611_channels);
->>> +
->>> +	return devm_iio_device_register(&client->dev, indio_dev);
->>> +}
->>> +
->>> +static const struct of_device_id max9611_of_table[] = {
->>> +	{.compatible = "maxim,max9611"},
->>> +	{.compatible = "maxim,max9612"},
->>> +	{ },
->>> +};
->>> +
->>> +MODULE_DEVICE_TABLE(of, max9611_of_table);
->>> +
->>> +static struct i2c_driver max9611_driver = {
->>> +	.driver = {
->>> +		   .name = DRIVER_NAME,
->>> +		   .owner = THIS_MODULE,
->>> +		   .of_match_table = max9611_of_table,
->>> +	},
->>> +	.probe = max9611_probe,
->>> +};
->>> +module_i2c_driver(max9611_driver);
->>> +
->>> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>");
->>> +MODULE_DESCRIPTION("Maxim max9611/12 current sense amplifier with 12bit ADC");
->>> +MODULE_LICENSE("GPL v2");
->>>
->>
+> v2:
+>   - removed added comments in Kconfig,
+>   - simplified Kconfig depends on condition,
+>   - removed THERMAL_OF requirement for sun8i,
+>   - renamed sun8i_gpadc_channels to sun8i_a33_gpadc_channels,
+>   - renamed use_dt boolean in no_irq as it reflects better why we need it,
+>   - removed spurious/unneeded modifications done in v1,
+> 
+>  drivers/iio/adc/Kconfig           |   2 +-
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 100 ++++++++++++++++++++++++++++++++++++--
+>  include/linux/mfd/sun4i-gpadc.h   |   4 ++
+>  3 files changed, 102 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 9f8b4b1..8c8ead6 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -562,7 +562,7 @@ config STX104
+>  config SUN4I_GPADC
+>  	tristate "Support for the Allwinner SoCs GPADC"
+>  	depends on IIO
+> -	depends on MFD_SUN4I_GPADC
+> +	depends on MFD_SUN4I_GPADC || MACH_SUN8I
+>  	help
+>  	  Say yes here to build support for Allwinner (A10, A13 and A31) SoCs
+>  	  GPADC. This ADC provides 4 channels which can be used as an ADC or as
+> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+> index 7cb997a..74705aa 100644
+> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> @@ -85,6 +85,12 @@ static const struct gpadc_data sun6i_gpadc_data = {
+>  	.adc_chan_mask = SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
+>  };
+>  
+> +static const struct gpadc_data sun8i_a33_gpadc_data = {
+> +	.temp_offset = -1662,
+> +	.temp_scale = 162,
+> +	.tp_mode_en = SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
+> +};
+> +
+>  struct sun4i_gpadc_iio {
+>  	struct iio_dev			*indio_dev;
+>  	struct completion		completion;
+> @@ -96,6 +102,7 @@ struct sun4i_gpadc_iio {
+>  	unsigned int			temp_data_irq;
+>  	atomic_t			ignore_temp_data_irq;
+>  	const struct gpadc_data		*data;
+> +	bool				no_irq;
+>  	/* prevents concurrent reads of temperature and ADC */
+>  	struct mutex			mutex;
+>  };
+> @@ -138,6 +145,23 @@ static const struct iio_chan_spec sun4i_gpadc_channels_no_temp[] = {
+>  	SUN4I_GPADC_ADC_CHANNEL(3, "adc_chan3"),
+>  };
+>  
+> +static const struct iio_chan_spec sun8i_a33_gpadc_channels[] = {
+> +	{
+> +		.type = IIO_TEMP,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE) |
+> +				      BIT(IIO_CHAN_INFO_OFFSET),
+> +		.datasheet_name = "temp_adc",
+> +	},
+> +};
+> +
+> +static const struct regmap_config sun4i_gpadc_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.fast_io = true,
+> +};
+> +
+>  static int sun4i_prepare_for_irq(struct iio_dev *indio_dev, int channel,
+>  				 unsigned int irq)
+>  {
+> @@ -247,6 +271,17 @@ static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val)
+>  {
+>  	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
+>  
+> +	if (info->no_irq) {
+> +		pm_runtime_get_sync(indio_dev->dev.parent);
+> +
+> +		regmap_read(info->regmap, SUN4I_GPADC_TEMP_DATA, val);
+> +
+> +		pm_runtime_mark_last_busy(indio_dev->dev.parent);
+> +		pm_runtime_put_autosuspend(indio_dev->dev.parent);
+> +
+> +		return 0;
+> +	}
+> +
+>  	return sun4i_gpadc_read(indio_dev, 0, val, info->temp_data_irq);
+>  }
+>  
+> @@ -454,6 +489,58 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id sun4i_gpadc_of_id[] = {
+> +	{
+> +		.compatible = "allwinner,sun8i-a33-ths",
+> +		.data = &sun8i_a33_gpadc_data,
+> +	},
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
+> +				struct iio_dev *indio_dev)
+> +{
+> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
+> +	const struct of_device_id *of_dev;
+> +	struct thermal_zone_device *tzd;
+> +	struct resource *mem;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	of_dev = of_match_device(sun4i_gpadc_of_id, &pdev->dev);
+> +	if (!of_dev)
+> +		return -ENODEV;
+> +
+> +	info->no_irq = true;
+> +	info->data = (struct gpadc_data *)of_dev->data;
+> +	indio_dev->num_channels = ARRAY_SIZE(sun8i_a33_gpadc_channels);
+> +	indio_dev->channels = sun8i_a33_gpadc_channels;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(&pdev->dev, mem);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+> +					     &sun4i_gpadc_regmap_config);
+> +	if (IS_ERR(info->regmap)) {
+> +		ret = PTR_ERR(info->regmap);
+> +		dev_err(&pdev->dev, "failed to init regmap: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (!IS_ENABLED(CONFIG_THERMAL_OF))
+> +		return 0;
+> +
+> +	tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, info,
+> +						   &sun4i_ts_tz_ops);
+> +	if (IS_ERR(tzd))
+> +		dev_err(&pdev->dev, "could not register thermal sensor: %ld\n",
+> +			PTR_ERR(tzd));
+> +
+> +	return PTR_ERR_OR_ZERO(tzd);
+> +}
+> +
+>  static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
+>  				 struct iio_dev *indio_dev)
+>  {
+> @@ -462,6 +549,7 @@ static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
+>  		dev_get_drvdata(pdev->dev.parent);
+>  	int ret;
+>  
+> +	info->no_irq = false;
+>  	info->regmap = sun4i_gpadc_dev->regmap;
+>  
+>  	indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
+> @@ -561,7 +649,11 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
+>  	indio_dev->info = &sun4i_gpadc_iio_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+> -	ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
+> +	if (pdev->dev.of_node)
+> +		ret = sun4i_gpadc_probe_dt(pdev, indio_dev);
+> +	else
+> +		ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
+> +
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -580,7 +672,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err_map:
+> -	if (IS_ENABLED(CONFIG_THERMAL_OF))
+> +	if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))
+>  		iio_map_array_unregister(indio_dev);
+>  
+>  	pm_runtime_put(&pdev->dev);
+> @@ -592,10 +684,11 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
+>  static int sun4i_gpadc_remove(struct platform_device *pdev)
+>  {
+>  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
+>  
+>  	pm_runtime_put(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+> -	if (IS_ENABLED(CONFIG_THERMAL_OF))
+> +	if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))
+>  		iio_map_array_unregister(indio_dev);
+>  
+>  	return 0;
+> @@ -611,6 +704,7 @@ static const struct platform_device_id sun4i_gpadc_id[] = {
+>  static struct platform_driver sun4i_gpadc_driver = {
+>  	.driver = {
+>  		.name = "sun4i-gpadc-iio",
+> +		.of_match_table = sun4i_gpadc_of_id,
+>  		.pm = &sun4i_gpadc_pm_ops,
+>  	},
+>  	.id_table = sun4i_gpadc_id,
+> diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+> index 509e736..139872c 100644
+> --- a/include/linux/mfd/sun4i-gpadc.h
+> +++ b/include/linux/mfd/sun4i-gpadc.h
+> @@ -38,6 +38,10 @@
+>  #define SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(x)		(GENMASK(3, 0) & BIT(x))
+>  #define SUN6I_GPADC_CTRL1_ADC_CHAN_MASK			GENMASK(3, 0)
+>  
+> +/* TP_CTRL1 bits for sun8i SoCs */
+> +#define SUN8I_GPADC_CTRL1_CHOP_TEMP_EN			BIT(8)
+> +#define SUN8I_GPADC_CTRL1_GPADC_CALI_EN			BIT(7)
+> +
+>  #define SUN4I_GPADC_CTRL2				0x08
+>  
+>  #define SUN4I_GPADC_CTRL2_TP_SENSITIVE_ADJUST(x)	((GENMASK(3, 0) & (x)) << 28)
+> 
