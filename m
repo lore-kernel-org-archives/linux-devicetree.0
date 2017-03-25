@@ -1,98 +1,67 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v5 8/8] arm64: allwinner: h5: enable USB OTG on
- Orange Pi PC 2 board
-Date: Sat, 25 Mar 2017 22:50:15 +0800
-Message-ID: <20170325145015.22076-9-icenowy@aosc.xyz>
-References: <20170325145015.22076-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] Documentation: dt-bindings: iio: Add max9611 ADC
+Date: Sat, 25 Mar 2017 15:27:44 +0000
+Message-ID: <12426276-4388-c323-7d08-6bc8ee9eebca@kernel.org>
+References: <1490369323-13866-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490369323-13866-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB7EI3LDAKGQEWZ5FXBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170325145015.22076-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490369323-13866-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Orange Pi PC 2 board features a OTG port like the one on older H3 Orange
-Pi's, with PG12 pin being the id det pin and PL2 being the vbus driver
-pin.
+On 24/03/17 15:28, Jacopo Mondi wrote:
+> Add device tree bindings documentation for Maxim max9611/max9612 current
+> sense amplifier.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Fine with me, waiting for Mark or Rob to take a look though....
+> ---
+>  .../devicetree/bindings/iio/adc/max9611.txt        | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max9611.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/max9611.txt b/Documentation/devicetree/bindings/iio/adc/max9611.txt
+> new file mode 100644
+> index 0000000..8430d3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/max9611.txt
+> @@ -0,0 +1,26 @@
+> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
+> +
+> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
+> +12-bits ADC communicating over I2c bus.
+> +The device node for this driver shall be a child of a I2c controller.
+> +
+> +Required properties
+> +  - compatible: Should be "maxim,max9611" or "maxim,max9612"
+> +  - reg: The 7-bits long I2c address of the device
+> +  - shunt-resistor-uohm: Value, in uOhm, of the current sense shunt resistor
+I'm fine with this being generic, but it makes this just non trivial enough that
+I'll wait for Rob or Mark to have a chance to take a look at the binding.
+> +
+> +Example:
+> +
+> +&i2c4 {
+> +	csa: adc@7c {
+> +		compatible = "maxim,max9611";
+> +		reg = <0x7c>;
+> +
+> +		shunt-resistor-uohm = <5000>;
+> +	};
+> +};
+> +
+> +This device node describes a current sense amplifier sitting on I2c4 bus
+> +with address 0x7c (read address is 0xf9, write address is 0xf8).
+> +A sense resistor of 0,005 Ohm is installed between RS+ and RS- current-sensing
+> +inputs.
+> 
 
-Add support for it.
-
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
-Changes in v5:
-- Add Chen-Yu's ACK.
-
- .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 27 +++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-index 30639729920d..dfecc17dcc92 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-@@ -90,6 +90,16 @@
- 			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
- 		};
- 	};
-+
-+	reg_usb0_vbus: usb0-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb0-vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
-+		status = "okay";
-+	};
- };
- 
- &codec {
-@@ -100,6 +110,10 @@
- 	status = "okay";
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -127,6 +141,10 @@
- 	status = "okay";
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
-@@ -157,7 +175,14 @@
- 	status = "disabled";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
--	/* USB VBUS is always on */
-+	/* USB Type-A ports' VBUS is always on */
-+	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
- 	status = "okay";
- };
--- 
-2.12.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
