@@ -1,147 +1,140 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for GLINK RPM
-Date: Sat, 25 Mar 2017 21:31:59 -0700
-Message-ID: <20170326043159.GA70446@Bjorns-MacBook-Pro-2.local>
-References: <20170320210956.29641-1-bjorn.andersson@linaro.org>
- <20170324160731.caxbdgpqm7u35po6@rob-hp-laptop>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] iio: xoadc: augment DT bindings a bit
+Date: Sat, 25 Mar 2017 21:57:17 -0700
+Message-ID: <20170326045717.GB70446@Bjorns-MacBook-Pro-2.local>
+References: <20170318133358.22314-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170324160731.caxbdgpqm7u35po6@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+In-Reply-To: <20170318133358.22314-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 24 Mar 09:07 PDT 2017, Rob Herring wrote:
+On Sat 18 Mar 06:33 PDT 2017, Linus Walleij wrote:
 
-> On Mon, Mar 20, 2017 at 02:09:55PM -0700, Bjorn Andersson wrote:
-> > Add device tree binding documentation for the Qualcomm GLINK RPM, used
-> > for communication with the Resource Power Management subsystem in
-> > various Qualcomm SoCs.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v1:
-> > - None
-> > 
-> >  .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
-> >  1 file changed, 73 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> > new file mode 100644
-> > index 000000000000..da92c4f787f3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> > @@ -0,0 +1,73 @@
-> > +Qualcomm RPM GLINK binding
-> > +
-> > +This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
-> > +communication with the Resource Power Management system on various Qualcomm
-> > +platforms.
-> > +
-> > +- compatible:
-> > +	Usage: required
-> > +	Value type: <stringlist>
-> > +	Definition: must be "qcom,glink-rpm"
+> In order to accommodate in a logical manner for the premuxed channels
+> in PM8921 and the similarly addressed channels in later PMICs, we
+> need a twocell arrangement with premux and analog mux setting as
+> a tuple to uniquely identify a hardware channel.
 > 
-> SoC specific compatibles please.
+> These bindings are not yet in use, so it should be find to augment
+
+s/find/fine?
+
+> them before we actually start using it in drivers and device trees.
+> 
+> This scheme came out of lengthy discussions and reverse-engineering
+> and reading of the few information sources we have.
 > 
 
-In addition to the generic qcom,glink-rpm I presume?
+As there's no documentation of how this works I find it  quite important
+to make something that is intuitive - so more than you and I can use
+this binding. So I like this.
 
-> > +
-> > +- interrupts:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: should specify the IRQ used by the remote processor to
-> > +		    signal this processor about communication related events
-> > +
-> > +- qcom,rpm-msg-ram:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: handle to RPM message memory resource
-> > +
-> > +- qcom,ipc:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: three entries specifying the outgoing ipc bit used for
-> > +		    signaling the remote processor:
-> > +		    - phandle to a syscon node representing the apcs registers
-> > +		    - u32 representing offset to the register within the syscon
-> > +		    - u32 representing the ipc bit within the register
-> > +
-> > += GLINK DEVICES
-> > +Each subnode of the GLINK node represent function tied to a virtual
-> > +communication channel. The name of the nodes are not important. The properties
-> > +of these nodes are defined by the individual bindings for the specific function
-> > +- but must contain the following property:
-> > +
-> > +- qcom,glink-channels:
-> > +	Usage: required
-> > +	Value type: <stringlist>
-> > +	Definition: a list of channels tied to this function, used for matching
-> > +		    the function to a set of virtual channels
-> > +
-> > += EXAMPLE
-> > +The following example represents the GLINK RPM node on a MSM8996 device, with
-> > +the function for the "rpm_request" channel defined, which is used for
-> > +regualtors and root clocks.
-> > +
-> > +	apcs: syscon@f9011000 {
-> > +		compatible = "syscon";
+> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 117 ++++++++++++---------
+>  1 file changed, 69 insertions(+), 48 deletions(-)
 > 
-> syscon alone is not valid.
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> index 53cd146d8096..680bb7a29dd5 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> @@ -19,32 +19,42 @@ Required properties:
+>    with PMIC variant but is typically something like 2.2 or 1.8V.
+>  
+>  The following required properties are standard for IO channels, see
+> -iio-bindings.txt for more details:
+> +iio-bindings.txt for more details, but noitice that this particular
+> +ADC has a special adressing scheme that require two cells for
+> +identifying each ADC channel:
+>  
+> -- #address-cells: should be set to <1>
+> +- #address-cells: should be set to <2>, the first cell is the
+> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
+> +  so legal values are 0x00, 0x01 or 0x02. The second cell
+> +  is the main analog mux setting (0x00..0x0f). The combination
+> +  of prescaler/premux and analog mux uniquely addresses a hardware
+> +  channel on all systems.
+>  
+>  - #size-cells: should be set to <0>
+>  
+> -- #io-channel-cells: should be set to <1>
+> +- #io-channel-cells: should be set to <2>, again the cells are
+> +  precaler or premux followed by the analog muxing line.
+>  
+>  - interrupts: should refer to the parent PMIC interrupt controller
+>    and reference the proper ADC interrupt.
+>  
+>  Required subnodes:
+>  
+> -The ADC channels are configured as subnodes of the ADC. Since some of
+> -them are used for calibrating the ADC, these nodes are compulsory:
+> +The ADC channels are configured as subnodes of the ADC.
+>  
+> -adc-channel@c {
+> -	reg = <0x0c>;
+> +Since some of them are used for calibrating the ADC, these nodes are
+> +compulsory:
+> +
+> +adc-channel@0c {
 
-This is equivalent to how we have done this on all previous platforms.
-On previous platforms this generally maps to one of the "Krait Processor
-SubSystem" blocks, so I'm quite worried with coming up with a compatible
-for this block will not be compatible with any future description of
-this block.
+Shouldn't the @ be followed by the value of the first cell in "reg"?
+(Which will collide if we name them all "adc-channel").
 
-> > +		reg = <0xf9011000 0x1000>;
-> > +	};
-> > +
-> > +	rpm_msg_ram: memory@68000 {
-> > +		compatible = "qcom,rpm-msg-ram";
-> 
-> Is this more than just mmio-sram?
-> 
-> Or with a fixed use could be part of another node?
-> 
+> +	reg = <0x00 0x0c>;
+>  };
+>  
+> -adc-channel@d {
+> -	reg = <0x0d>;
+> +adc-channel@0d {
+> +	reg = <0x00 0x0d>;
+>  };
+>  
+> -adc-channel@f {
+> -	reg = <0x0f>;
+> +adc-channel@0f {
+> +	reg = <0x00 0x0f>;
+>  };
+>  
+>  These three nodes are used for absolute and ratiometric calibration
+> @@ -52,13 +62,26 @@ and only need to have these reg values: they are by hardware definition
+>  1:1 ratio converters that sample 625, 1250 and 0 milliV and create
+>  an interpolation calibration for all other ADCs.
+>  
+> -Optional subnodes: any channels other than channel 0x0c, 0x0d and
+> -0x0f are optional.
+> +Optional subnodes: any channels other than channels [0x00 0x0c],
+> +[0x00 0x0d] and [0x00 0x0f] are optional.
+>  
+>  Required channel node properties:
+>  
+>  - reg: should contain the hardware channel number in the range
+> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
+> +  0 .. 0xff (8 bits).
+> +
+> +  On PM8058 the hardware only supports 16 channels, but we get the same
+> +  channels repeating with its input divided down by 1 or 3. Channels 00,
+> +  10, 20, ... f0 are the raw values, 04, 14, 24 .. f4 are "unity" channels
+> +  divided by 1, and 08, 18, 28 .. f8 are channels divided by 3. Bits 0
+> +  and 1 of the channel index should always be 0.
+> +
+> +  On PM8921 the hardware supports more than 16 channels through a complex
+> +  routing matrix using a premux, so 00, 10, 20 .. f0 are the basic raw
+> +  channels while another set of channels appear for 04, 14, 24 .. f4,
+> +  and again some of the same channels appear again divided down by 3
+> +  in 08, 18, 28 .. f8. Again bits 0 and 1 of the channel index should
+> +  always be 0.
 
-It represents one of the RAM modules of one of the other ARM cores in
-the SoC, used for shared memory communication with this ARM core. So the
-hardware is essentially mmio-sram. But it has none of the properties
-that a mmio-sram seem to have.
-
-The reason I did not put it in the rpm-glink node is that in previous
-Qualcomm platforms we have exactly the same system design, but the data
-structure of the RAM was different, so it felt natural to just keep the
-same description of the hardware.
-
-> > +		reg = <0x68000 0x6000>;
-> > +	};
-> > +
-> > +        rpm-glink {
-> > +		compatible = "qcom,glink-rpm";
-> > +
-> > +		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-> > +
-> > +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-> > +		qcom,ipc = <&apcs 0x10 0>;
-> > +
-> > +		rpm-requests {
-> > +			compatible = "qcom,rpm-msm8996";
-> > +			qcom,glink-channels = "rpm_requests";
-> > +
-> > +			...
-> > +		};
-> > +	};
+While I believe documenting this is a good thing I do not think it adds
+value to this binding document (other than showing Rob the absurdness of
+the addressing scheme). Please consider moving it to the driver (haven't
+checked how you commented it yet) and drop it from here.
 
 Regards,
 Bjorn
