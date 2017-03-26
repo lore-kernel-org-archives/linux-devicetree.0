@@ -1,140 +1,42 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] iio: xoadc: augment DT bindings a bit
-Date: Sat, 25 Mar 2017 21:57:17 -0700
-Message-ID: <20170326045717.GB70446@Bjorns-MacBook-Pro-2.local>
-References: <20170318133358.22314-1-linus.walleij@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/3] firmware: qcom: scm: Expose download-mode control
+Date: Sat, 25 Mar 2017 22:13:28 -0700
+Message-ID: <20170326051328.GD70446@Bjorns-MacBook-Pro-2.local>
+References: <20170318041523.29757-1-bjorn.andersson@linaro.org>
+ <20170318041523.29757-2-bjorn.andersson@linaro.org>
+ <20170324150633.2s3o3kiecnoeo4qt@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170318133358.22314-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170324150633.2s3o3kiecnoeo4qt@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat 18 Mar 06:33 PDT 2017, Linus Walleij wrote:
+On Fri 24 Mar 08:06 PDT 2017, Rob Herring wrote:
 
-> In order to accommodate in a logical manner for the premuxed channels
-> in PM8921 and the similarly addressed channels in later PMICs, we
-> need a twocell arrangement with premux and analog mux setting as
-> a tuple to uniquely identify a hardware channel.
+> On Fri, Mar 17, 2017 at 09:15:22PM -0700, Bjorn Andersson wrote:
+[..]
+> > diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> > index 20f26fbce875..8467a181f22c 100644
+> > --- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> > +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> > @@ -18,6 +18,7 @@ Required properties:
+> >   * Core, iface, and bus clocks required for "qcom,scm"
+> >  - clock-names: Must contain "core" for the core clock, "iface" for the interface
+> >    clock and "bus" for the bus clock per the requirements of the compatible.
+> > +- qcom,dload-mode-addr: Specifies the address for the download mode magic (optional)
 > 
-> These bindings are not yet in use, so it should be find to augment
-
-s/find/fine?
-
-> them before we actually start using it in drivers and device trees.
-> 
-> This scheme came out of lengthy discussions and reverse-engineering
-> and reading of the few information sources we have.
+> Size? 1 cell, 2 cell(, red cell, blue cell) or follows #addr-cells?
 > 
 
-As there's no documentation of how this works I find it  quite important
-to make something that is intuitive - so more than you and I can use
-this binding. So I like this.
+I believe this implementation only applies to the 64-bit systems, but
+it's probably better to make it follow (or at least claim that it
+follows) #address-cells.
 
-> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 117 ++++++++++++---------
->  1 file changed, 69 insertions(+), 48 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> index 53cd146d8096..680bb7a29dd5 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> @@ -19,32 +19,42 @@ Required properties:
->    with PMIC variant but is typically something like 2.2 or 1.8V.
->  
->  The following required properties are standard for IO channels, see
-> -iio-bindings.txt for more details:
-> +iio-bindings.txt for more details, but noitice that this particular
-> +ADC has a special adressing scheme that require two cells for
-> +identifying each ADC channel:
->  
-> -- #address-cells: should be set to <1>
-> +- #address-cells: should be set to <2>, the first cell is the
-> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
-> +  so legal values are 0x00, 0x01 or 0x02. The second cell
-> +  is the main analog mux setting (0x00..0x0f). The combination
-> +  of prescaler/premux and analog mux uniquely addresses a hardware
-> +  channel on all systems.
->  
->  - #size-cells: should be set to <0>
->  
-> -- #io-channel-cells: should be set to <1>
-> +- #io-channel-cells: should be set to <2>, again the cells are
-> +  precaler or premux followed by the analog muxing line.
->  
->  - interrupts: should refer to the parent PMIC interrupt controller
->    and reference the proper ADC interrupt.
->  
->  Required subnodes:
->  
-> -The ADC channels are configured as subnodes of the ADC. Since some of
-> -them are used for calibrating the ADC, these nodes are compulsory:
-> +The ADC channels are configured as subnodes of the ADC.
->  
-> -adc-channel@c {
-> -	reg = <0x0c>;
-> +Since some of them are used for calibrating the ADC, these nodes are
-> +compulsory:
-> +
-> +adc-channel@0c {
-
-Shouldn't the @ be followed by the value of the first cell in "reg"?
-(Which will collide if we name them all "adc-channel").
-
-> +	reg = <0x00 0x0c>;
->  };
->  
-> -adc-channel@d {
-> -	reg = <0x0d>;
-> +adc-channel@0d {
-> +	reg = <0x00 0x0d>;
->  };
->  
-> -adc-channel@f {
-> -	reg = <0x0f>;
-> +adc-channel@0f {
-> +	reg = <0x00 0x0f>;
->  };
->  
->  These three nodes are used for absolute and ratiometric calibration
-> @@ -52,13 +62,26 @@ and only need to have these reg values: they are by hardware definition
->  1:1 ratio converters that sample 625, 1250 and 0 milliV and create
->  an interpolation calibration for all other ADCs.
->  
-> -Optional subnodes: any channels other than channel 0x0c, 0x0d and
-> -0x0f are optional.
-> +Optional subnodes: any channels other than channels [0x00 0x0c],
-> +[0x00 0x0d] and [0x00 0x0f] are optional.
->  
->  Required channel node properties:
->  
->  - reg: should contain the hardware channel number in the range
-> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-> +  0 .. 0xff (8 bits).
-> +
-> +  On PM8058 the hardware only supports 16 channels, but we get the same
-> +  channels repeating with its input divided down by 1 or 3. Channels 00,
-> +  10, 20, ... f0 are the raw values, 04, 14, 24 .. f4 are "unity" channels
-> +  divided by 1, and 08, 18, 28 .. f8 are channels divided by 3. Bits 0
-> +  and 1 of the channel index should always be 0.
-> +
-> +  On PM8921 the hardware supports more than 16 channels through a complex
-> +  routing matrix using a premux, so 00, 10, 20 .. f0 are the basic raw
-> +  channels while another set of channels appear for 04, 14, 24 .. f4,
-> +  and again some of the same channels appear again divided down by 3
-> +  in 08, 18, 28 .. f8. Again bits 0 and 1 of the channel index should
-> +  always be 0.
-
-While I believe documenting this is a good thing I do not think it adds
-value to this binding document (other than showing Rob the absurdness of
-the addressing scheme). Please consider moving it to the driver (haven't
-checked how you commented it yet) and drop it from here.
+I can update the description to include this.
 
 Regards,
 Bjorn
