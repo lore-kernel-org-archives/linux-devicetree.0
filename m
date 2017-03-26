@@ -1,48 +1,71 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] mvebu: wrt1900ac: Use pwm-fan rather than
- gpio-fan
-Date: Sun, 26 Mar 2017 23:05:58 +0200
-Message-ID: <20170326230558.6b6c4ec6@gmail.com>
-References: <20170324141815.7252-1-ralph.sennhauser@gmail.com>
- <20170324141815.7252-5-ralph.sennhauser@gmail.com>
- <20170324143505.GK28518@lunn.ch>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v5 00/13] ACPI graph support
+Date: Mon, 27 Mar 2017 00:17:50 +0300
+Message-ID: <0b9104c2-4a3a-47db-ff1d-8f835fe3b567@linux.intel.com>
+References: <1489667481-28521-1-git-send-email-sakari.ailus@linux.intel.com>
+ <20170324154556.GD2957@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324143505.GK28518-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170324154556.GD2957@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Mar 2017 15:35:05 +0100
-Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+Hi Mika,
 
-> > +	pwm_fan {
-> >  		/* SUNON HA4010V4-0000-C99 */
-> > -		compatible = "gpio-fan";
-> > -		gpios = <&gpio0 24 0>;
-> >  
-> > -		gpio-fan,speed-map = <0    0
-> > -				      4500 1>;
-> > +		compatible = "pwm-fan";
-> > +		pwms = <&gpio0 24 4000 0>;  
-> 
-> Hi Ralph
-> 
-> I believe this last 0 is the flags parameter. Now that we have
-> #pwm-cells = 1, i think this last 0 should be dropped.
-> 
-> 	  Andrew
+Mika Westerberg wrote:
+> On Thu, Mar 16, 2017 at 02:31:08PM +0200, Sakari Ailus wrote:
+>> Hello everyone,
+>>
+>> This is the fifth version of the ACPI graph support patchset.
+>>
+>> The previous RFC version of the set is available here:
+>>
+>> <URL:http://www.spinics.net/lists/linux-acpi/msg69547.html>
+>>
+>> There are also v1, v2, v3 and v4 which can be found here:
+>>
+>> <URL:http://www.spinics.net/lists/linux-acpi/msg71661.html>
+>> <URL:http://www.spinics.net/lists/linux-acpi/msg71809.html>
+>> <URL:http://www.spinics.net/lists/linux-acpi/msg72171.html>
+>> <URL:http://www.spinics.net/lists/linux-acpi/msg72346.html>
+>>
+>> This set contains patches written by Mika Westerberg and by myself. The
+>> patchset brings support for graphs to ACPI. The functionality achieved by
+>> these patches is very similar to what the Device tree provides: the port
+>> and the endpoint concept are being employed. The patches make use of the
+>> _DSD property and data extensions to achieve this. The fwnode interface is
+>> extended by graph functionality; this way graph information originating
+>> from both OF and ACPI may be accessed using the same interface, without
+>> being aware of the underlying firmware interface.
+>>
+>> The last patch of the set contains ASL documentation including an example.
+>
+> It would be helpful if you include similar diffstat here as running 'git
+> format-patch --cover-letter ...' generates.
+>
+> Anyway for patches 7-13,
+>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Hi Andrew,
+Thanks! This is much appreciated.
 
-isn't the 4000 (period?) pwm-cell #2 and 0 (flags?) pwm-cell #3? I
-actually expect "pwms = <&gpio0 24>;" here or "#pwm-cells = <2>;"
+Could you also review the other related patches? There are just a few 
+and they're relatively simple:
 
-Ralph
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Set of three patches (which precedes what you reviewed):
+
+<URL:http://www.spinics.net/lists/linux-acpi/msg72895.html>
+
+And then finally:
+
+<URL:http://www.spinics.net/lists/linux-acpi/msg72888.html>
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
