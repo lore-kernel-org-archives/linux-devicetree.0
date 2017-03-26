@@ -1,116 +1,33 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] iio:imu:mpu6050 add explicit mpu9250 support
-Date: Sun, 26 Mar 2017 12:11:00 +0100
-Message-ID: <20170326111100.2571-3-jic23@kernel.org>
-References: <20170326111100.2571-1-jic23@kernel.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170326111100.2571-1-jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: dts: clearfog: keep dts alphabetically ordered
+Date: Sun, 26 Mar 2017 16:02:21 +0200
+Message-ID: <20170326140221.GA18128@lunn.ch>
+References: <E1crlBu-0002Gp-V4@rmk-PC.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <E1crlBu-0002Gp-V4@rmk-PC.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The mpu9250 is a SIP containing an mpu6500 and an ak8975.  If this was all
-there was too it there would be no need for explicit handling in the driver.
-Arguably the bindings would also only reflect the presence of an mpu6500 with
-the ak8975 hanging off it, as the kernel doesn't care that they are in one
-package.
+On Sat, Mar 25, 2017 at 12:53:10PM +0000, Russell King wrote:
+> Keep the clearfog DTS file ordered alphabetically - Florian placed the
+> MDIO entry after pinctrl, which mis-orders the file.
+> 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-However, the WHOAMI value changes as well so best to add explicit support.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Signed-off-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 2 +-
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c                | 6 ++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c                 | 5 +++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h                 | 2 ++
- drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c                 | 1 +
- 5 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-index e18e04f3c6f4..10c1abdcc34d 100644
---- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-@@ -4,7 +4,7 @@ http://www.invensense.com/mems/gyro/mpu6050.html
- 
- Required properties:
-  - compatible : should be "invensense,mpu6050", "invensense,mpu6500",
--   "invensense,mpu9150" or "invensense,icm20608"
-+   "invensense,mpu9150", "invensense,mpu9250" or "invensense,icm20608"
-  - reg : the I2C address of the sensor
-  - interrupt-parent : should be the phandle for the interrupt controller
-  - interrupts : interrupt mapping for GPIO IRQ
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index b9fcbf18aa99..96dabbd2f004 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -114,6 +114,12 @@ static const struct inv_mpu6050_hw hw_info[] = {
- 		.config = &chip_config_6050,
- 	},
- 	{
-+		.whoami = INV_MPU9250_WHOAMI_VALUE,
-+		.name = "MPU9250",
-+		.reg = &reg_set_6500,
-+		.config = &chip_config_6050,
-+	},
-+	{
- 		.whoami = INV_ICM20608_WHOAMI_VALUE,
- 		.name = "ICM20608",
- 		.reg = &reg_set_6500,
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-index a8e6330cb906..64b5f5b92200 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-@@ -178,6 +178,7 @@ static const struct i2c_device_id inv_mpu_id[] = {
- 	{"mpu6050", INV_MPU6050},
- 	{"mpu6500", INV_MPU6500},
- 	{"mpu9150", INV_MPU9150},
-+	{"mpu9250", INV_MPU9250},
- 	{"icm20608", INV_ICM20608},
- 	{}
- };
-@@ -198,6 +199,10 @@ static const struct of_device_id inv_of_match[] = {
- 		.data = (void *)INV_MPU9150
- 	},
- 	{
-+		.compatible = "invensense,mpu9250",
-+		.data = (void *)INV_MPU9250
-+	},
-+	{
- 		.compatible = "invensense,icm20608",
- 		.data = (void *)INV_ICM20608
- 	},
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index f0e8c5dd9fae..ef13de7a2c20 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -70,6 +70,7 @@ enum inv_devices {
- 	INV_MPU6500,
- 	INV_MPU6000,
- 	INV_MPU9150,
-+	INV_MPU9250,
- 	INV_ICM20608,
- 	INV_NUM_PARTS
- };
-@@ -226,6 +227,7 @@ struct inv_mpu6050_state {
- #define INV_MPU6050_WHOAMI_VALUE		0x68
- #define INV_MPU6500_WHOAMI_VALUE		0x70
- #define INV_MPU9150_WHOAMI_VALUE		0x68
-+#define INV_MPU9250_WHOAMI_VALUE		0x71
- #define INV_ICM20608_WHOAMI_VALUE		0xAF
- 
- /* scan element definition */
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-index 6e6476dfa188..74506e5ac0db 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-@@ -82,6 +82,7 @@ static const struct spi_device_id inv_mpu_id[] = {
- 	{"mpu6000", INV_MPU6000},
- 	{"mpu6500", INV_MPU6500},
- 	{"mpu9150", INV_MPU9150},
-+	{"mpu9250", INV_MPU9250},
- 	{"icm20608", INV_ICM20608},
- 	{}
- };
--- 
-2.12.0
+    Andrew
