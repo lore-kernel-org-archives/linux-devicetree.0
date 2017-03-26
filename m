@@ -1,143 +1,94 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 0/4] iio: adc: Maxim max9611 driver
-Date: Sun, 26 Mar 2017 11:07:58 +0200
-Message-ID: <CAMuHMdWojCNtJBQxP6E+hdscCQ7U28RGWsPfhXidxJDu-aTQOw@mail.gmail.com>
-References: <1490369323-13866-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: script to setup pipeline was Re: [PATCH v4 14/36] [media] v4l2-mc:
+ add a function to inherit controls from a pipeline
+Date: Sun, 26 Mar 2017 11:12:57 +0200
+Message-ID: <20170326091257.GA17728@amd>
+References: <20170311101408.272a9187@vento.lan>
+ <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
+ <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
+ <20170311184551.GD21222@n2100.armlinux.org.uk>
+ <1f1b350a-5523-34bc-07b7-f3cd2d1fd4c1@gmail.com>
+ <20170311185959.GF21222@n2100.armlinux.org.uk>
+ <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
+ <20170312073745.GI21222@n2100.armlinux.org.uk>
+ <fba73c10-4b95-f0d2-e681-0b14ef1fbc1c@gmail.com>
+ <20170312185845.5c18ffd0@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1490369323-13866-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170312185845.5c18ffd0@vento.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, robert.jarzmik@free.fr, geert@linux-m68k.org, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo, Jonathan,
 
-On Fri, Mar 24, 2017 at 4:28 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Third round for Maxim max9611/max9612 high-side current sense amplifier driver.
->
-> For reference, a simplified integration schematic drawing is here reported:
->
->  ----o----/\/\/-----o-------|LOAD|---
->      |    shunt     |
->  ____|______________|___
->  |  RS+            RS-  |
->  |   |-----gain-----|   |
->  |          |           |
->  |          |           |
->  |max9611   |->| ADC |===== I2c
->  |______________________|
->
-> public datasheet available at
-> https://datasheets.maximintegrated.com/en/ds/MAX9611-MAX9612.pdf
->
-> In v2 all channels whose values are calculated using parameters
-> depending on the applied gain have been transformed in "processed" channels.
->
-> In v3 fixed DT bindings to use a more generic name for ADC nodes, and shunt
-> resistor description property.
->
-> output reported from iio_info tool:
-> iio:device0: max9611_vdd
->                 6 channels found:
->                         voltage0:  (input)
->                         1 channel-specific attributes found:
->                                 attr 0: input value: 4.085000000
->                         voltage1:  (input)
->                         3 channel-specific attributes found:
->                                 attr 0: scale value: 14
->                                 attr 1: offset value: 1
->                                 attr 2: raw value: 59
->                         shunt:  (input)
->                         2 channel-specific attributes found:
->                                 attr 0: resistor_power value: 5000
->                                 attr 1: resistor_current value: 5000
->                         power:  (input)
->                         1 channel-specific attributes found:
->                                 attr 0: input value: 663.404000000
->                         temp:  (input)
->                         2 channel-specific attributes found:
->                                 attr 0: scale value: 0.480076812
->                                 attr 1: raw value: 59
->                         current:  (input)
->                         1 channel-specific attributes found:
->                                 attr 0: input value: 817.000000000
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm a bit puzzled about Jonathan's request to have two separate attributes
-for the single shunt resistor value.  While they do apply to two calculated
-channels, they're the same physical property, and can never be different.
+Hi!
 
-Furthermore, in the above output they do not show up as attributes of the
-"power" and "current" channels, but as attributes of a separate "shunt"
-channel. Is that intentional?
+> > I do agree with you that MC places a lot of burden on the user to
+> > attain a lot of knowledge of the system's architecture.
+>=20
+> Setting up the pipeline is not the hard part. One could write a
+> script to do that.=20
 
-For comparison, with ina226 on BayLibre ACME, which uses a similar
-configuration, I get:
+Can you try to write that script? I believe it would solve big part of
+the problem.
 
-    iio:device0: ina226
-        5 channels found:
-            voltage0:  (input)
-            6 channel-specific attributes found:
-                attr 0: scale value: 0.002500000
-                attr 1: raw value: 979
-                attr 2: integration_time value: 0.001100
-                attr 3: index value: 0
-                attr 4: en value: 0
-                attr 5: type value: le:u16/16>>0
-            voltage1:  (input)
-            6 channel-specific attributes found:
-                attr 0: integration_time value: 0.001100
-                attr 1: raw value: 4007
-                attr 2: scale value: 1.250000000
-                attr 3: en value: 0
-                attr 4: index value: 1
-                attr 5: type value: le:u16/16>>0
-            power2:  (input)
-            5 channel-specific attributes found:
-                attr 0: raw value: 49
-                attr 1: scale value: 25.000000000
-                attr 2: index value: 2
-                attr 3: type value: le:u16/16>>0
-                attr 4: en value: 0
-            current3:  (input)
-            5 channel-specific attributes found:
-                attr 0: scale value: 1
-                attr 1: raw value: 245
-                attr 2: type value: le:u16/16>>0
-                attr 3: index value: 3
-                attr 4: en value: 0
-            timestamp:  (input)
-            3 channel-specific attributes found:
-                attr 0: type value: le:s64/64>>0
-                attr 1: index value: 4
-                attr 2: en value: 0
-        6 device-specific attributes found:
-                attr 0: in_oversampling_ratio value: 4
-                attr 1: in_shunt_resistor value: 10000
-                attr 2: in_allow_async_readout value: 0
-                attr 3: integration_time_available value: 0.000140
-0.000204 0.000332 0.000588 0.001100 0.002116 0.004156 0.008244
-                attr 4: in_sampling_frequency value: 114
-                attr 5: in_active value: 1
+> > And my other point is, I think most people who have a need to work with
+> > the media framework on a particular platform will likely already be
+> > quite familiar with that platform.
+>=20
+> I disagree. The most popular platform device currently is Raspberry PI.
+>=20
+> I doubt that almost all owners of RPi + camera module know anything
+> about MC. They just use Raspberry's official driver with just provides
+> the V4L2 interface.
+>=20
+> I have a strong opinion that, for hardware like RPi, just the V4L2
+> API is enough for more than 90% of the cases.
 
-(note that the last "in_active" property does not exist in the mainline
- version of the driver).
+Maybe V4L2 API is enough for 90% of the users. But I don't believe
+that means that we should provide compatibility. V4L2 API is not good
+enough for complex devices, and if we can make RPi people fix
+userspace... that's a good thing.
 
-Here the shunt resistor value is a (single) device-specific attribute, which
-makes more sense to me, as in-se the shunt resistor value is not a property
-of just the "current" and "power" channels, but a property of the (external)
-device configuration.
+> > The media graph for imx6 is fairly self-explanatory in my opinion.
+> > Yes that graph has to be generated, but just with a simple 'media-ctl
+> > --print-dot', I don't see how that is difficult for the user.
+>=20
+> Again, IMHO, the problem is not how to setup the pipeline, but, instead,
+> the need to forward controls to the subdevices.
+>=20
+> To use a camera, the user needs to set up a set of controls for the
+> image to make sense (bright, contrast, focus, etc). If the driver
+> doesn't forward those controls to the subdevs, an application like
+> "camorama" won't actually work for real, as the user won't be able
+> to adjust those parameters via GUI.
 
-Thanks!
+I believe this can be fixed in libv4l2.
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Gr{oetje,eeting}s,
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iEYEARECAAYFAljXhhkACgkQMOfwapXb+vI2pgCfVZ5AHsBdDv5WQPiCdCAa7ea4
+kjkAnRvsjbRH8D5GAj3SxXqJPU94KdQD
+=l5bl
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--45Z9DzgjV8m4Oswq--
