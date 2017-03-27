@@ -1,86 +1,45 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 4/4] mvebu: wrt1900ac: Use pwm-fan rather than gpio-fan
-Date: Mon, 27 Mar 2017 15:17:25 +0200
-Message-ID: <20170327131725.GA25549@lunn.ch>
-References: <20170324141815.7252-1-ralph.sennhauser@gmail.com>
- <20170324141815.7252-5-ralph.sennhauser@gmail.com>
- <20170324143505.GK28518@lunn.ch>
- <20170326230558.6b6c4ec6@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170326230558.6b6c4ec6@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Jason Cooper <jason@lakedaemon.net>, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 3/9] arm: fix return value of parse_cpu_capacity
+Date: Mon, 27 Mar 2017 14:18:19 +0100
+Message-ID: <20170327131825.32134-4-juri.lelli@arm.com>
+References: <20170327131825.32134-1-juri.lelli@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170327131825.32134-1-juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, juri.lelli-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 26, 2017 at 11:05:58PM +0200, Ralph Sennhauser wrote:
-> On Fri, 24 Mar 2017 15:35:05 +0100
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > > +	pwm_fan {
-> > >  		/* SUNON HA4010V4-0000-C99 */
-> > > -		compatible = "gpio-fan";
-> > > -		gpios = <&gpio0 24 0>;
-> > >  
-> > > -		gpio-fan,speed-map = <0    0
-> > > -				      4500 1>;
-> > > +		compatible = "pwm-fan";
-> > > +		pwms = <&gpio0 24 4000 0>;  
-> > 
-> > Hi Ralph
-> > 
-> > I believe this last 0 is the flags parameter. Now that we have
-> > #pwm-cells = 1, i think this last 0 should be dropped.
-> > 
-> > 	  Andrew
-> 
-> Hi Andrew,
-> 
-> isn't the 4000 (period?) pwm-cell #2 and 0 (flags?) pwm-cell #3? I
-> actually expect "pwms = <&gpio0 24>;" here or "#pwm-cells = <2>;"
+parse_cpu_capacity() has to return 0 on failure, but it currently returns
+1 instead if raw_capacity kcalloc failed.
 
-Hi Ralph
+Fix it by removing the negation of the return value.
 
->From Documentation/devicetree/bindings/pwm/pwm.txt:
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Reported-by: Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>
+Fixes: 06073ee26775 ('ARM: 8621/3: parse cpu capacity-dmips-mhz from DT')
+Signed-off-by: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/kernel/topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-        pwm-list ::= <single-pwm> [pwm-list]
-        single-pwm ::= <pwm-phandle> <pwm-specifier>
-        pwm-phandle : phandle to PWM controller node
-        pwm-specifier : array of #pwm-cells specifying the given PWM
-                        (controller specific)
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index f8a3ab82e77f..4e4af809606a 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -166,7 +166,7 @@ static int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+ 			if (!raw_capacity) {
+ 				pr_err("cpu_capacity: failed to allocate memory for raw capacities\n");
+ 				cap_parsing_failed = true;
+-				return !ret;
++				return ret;
+ 			}
+ 		}
+ 		capacity_scale = max(cpu_capacity, capacity_scale);
+-- 
+2.10.0
 
-Our pwm-list has a single single-pwm.
-phandle is &gpio0.
-The remaining parts are the specifier, or which there should be #pwm-calls.
-
->From Documentation/devicetree/bindings/pwm/pwm.txt again:
-
-pwm-specifier typically encodes the chip-relative PWM number and the PWM
-period in nanoseconds.
-
-Optionally, the pwm-specifier can encode a number of flags (defined in
-<dt-bindings/pwm/pwm.h>) in a third cell:
-- PWM_POLARITY_INVERTED: invert the PWM signal polarity
-
-So we are using the 24th PWM and 4000 nanosecod period. We don't want
-any flags.
-
-So
-
-pwms = <&gpio0 24 4000>;  
-
-has a phandle, and then 2 cells.
-
-    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
