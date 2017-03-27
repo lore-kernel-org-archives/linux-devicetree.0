@@ -1,59 +1,43 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 1/2] mfd: cpcap: Add missing include dependencies
-Date: Mon, 27 Mar 2017 15:26:08 +0100
-Message-ID: <20170327142608.qcobnqrvyu7u4ybz@dell>
-References: <20170324084732.31255-1-sre@kernel.org>
- <d1a18390-fb5f-e192-a54c-1c2574238225@gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v11 11/12] iio: multiplexer: fix unsigned check with less
+ than zero
+Date: Mon, 27 Mar 2017 16:33:33 +0200
+Message-ID: <20170327143333.GB15708@localhost>
+References: <1490617069-13119-1-git-send-email-peda@axentia.se>
+ <1490617069-13119-12-git-send-email-peda@axentia.se>
+ <20170327130653.GA15708@localhost>
+ <c8195c34-3f96-b848-e01f-83c63a960153@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d1a18390-fb5f-e192-a54c-1c2574238225-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <c8195c34-3f96-b848-e01f-83c63a960153@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Mar 2017, Jacek Anaszewski wrote:
-> On 03/24/2017 09:47 AM, Sebastian Reichel wrote:
-> > This fixes compilation for files, that try to include the
-> > cpcap header in alphabetically sorted #include lists.
+On Mon, Mar 27, 2017 at 03:46:47PM +0200, Peter Rosin wrote:
+> On 2017-03-27 15:06, Johan Hovold wrote:
+> > On Mon, Mar 27, 2017 at 02:17:48PM +0200, Peter Rosin wrote:
+> >> Comparing a size_t with less than zero is always false as size_t
+> >> is unsigned. So, change the type of the variable to ssize_t and
+> >> replicate the size check from mux_configure_channel() into
+> >> mux_write_ext_info() thus ensuring that the size will fit in the
+> >> ssize_t variable.
+> >>
+> >> Detected by CoverityScan, CID#1415278 ("Unsigned compared against 0")
+> >>
+> >> Fixes: 1da8e16d2812 ("iio: multiplexer: new iio category and iio-mux driver")
 > > 
-> > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> > Changes since PATCHv2:
-> >  - Add Acked-by from Tony & Pavel
-> > ---
-> >  include/linux/mfd/motorola-cpcap.h | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motorola-cpcap.h
-> > index 793aa695faa0..aefc49cb7ba9 100644
-> > --- a/include/linux/mfd/motorola-cpcap.h
-> > +++ b/include/linux/mfd/motorola-cpcap.h
-> > @@ -14,6 +14,9 @@
-> >   * published by the Free Software Foundation.
-> >   */
-> >  
-> > +#include <linux/device.h>
-> > +#include <linux/regmap.h>
-> > +
-> >  #define CPCAP_VENDOR_ST		0
-> >  #define CPCAP_VENDOR_TI		1
-> 
-> Both patches applied to the for-next branch of linux-leds.git, thanks.
+> > You should fold this one and the next patch into the patches that they
+> > fix up instead fixing stuff that's not yet merged incrementally like you
+> > do here (specifically, the SHA id above will have no matching commit).
 
-Que?
+> I forgot about that. And similar for the next patch. But how do you
+> propose that I attribute the reporters and CoverityScan?
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You can mention it in the cover letter and/or commit messages as you
+would for other kinds of review feedback.
+
+Johan
