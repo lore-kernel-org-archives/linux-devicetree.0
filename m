@@ -1,95 +1,164 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 0/8] Add dual-role OTG support for
- Allwinner H3
-Date: Mon, 27 Mar 2017 15:35:25 +0530
-Message-ID: <73c148dd-fe21-da12-45d1-0c70d9a5b998@ti.com>
-References: <20170325145015.22076-1-icenowy@aosc.xyz>
-Reply-To: kishon-l0cyMroinI0@public.gmane.org
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [RESEND PATCH V5 7/8] thermal: da9062/61: Thermal junction
+ temperature monitoring driver
+Date: Mon, 27 Mar 2017 10:09:35 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CD69BD3@SW-EX-MBX02.diasemi.com>
+References: <cover.1486026227.git.stwiss.opensource@diasemi.com>
+ <6a1a651530fdaedd3e380aa33749ca5fce1a80a8.1486026227.git.stwiss.opensource@diasemi.com>
+ <20170219014007.GA20845@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCOOP4VF5IDRBJWK4PDAKGQEVFXKMZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170325145015.22076-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170219014007.GA20845-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lukasz Luba <lukasz.luba-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 19 February 2017 01:40, Eduardo Valentin wrote:
 
+Hi Eduardo,
 
-On Saturday 25 March 2017 08:20 PM, Icenowy Zheng wrote:
-> Allwinner H3 have a its USB PHY0 routed to two USB controllers: one is
-> a MUSB controller, which can work in peripheral mode, but works badly in
-> host mode (several hardware will fail on the MUSB controller, even connect
-> one MUSB controller in peripheral mode to another one in host mode cannot
-> work); the other is a pair of EHCI/OHCI controller, which can work only
-> in host mode, but have better compatibillity. The route is controlled in
-> a register, which we have set it to HCI only when we do not know about
-> it well.
-> 
-> Add support to route to the best controller according to current USB mode
-> (host/peripheral).
-> 
-> Note: Currently even if hardware only support hostmode, we should still
-> enable the MUSB controller, as it controls the USB mode. (Some this kind
-> of hardware can also work in peripheral mode by settings in the sysfs
-> node of MUSB, then connect it to another host via a USB Type-A to Type-A
-> cable.)
-> 
-> Patch 1 changes the device tree binding to include the "pmu0" for HCI pair.
-> 
-> Patch 2 and 3 are fixes for H3 PHY, in order to make MUSB really working
-> on H3.
-> 
-> Patch 4 adds support for auto routing of PHY0. It's currently only enabled
-> on H3, but it's easy to extend it to other SoCs which feature this
-> route control.
+My apologies in taking so long to reply.
+There were *no* problems with implementing your requests. See below.
+I will have sent these changes as PATCH V6.
 
-merged the 1st four patch of this series.
+https://lkml.org/lkml/2017/3/27/253
 
-Thanks
-Kishon
+Regards,
+Steve
 
+> To: Steve Twiss
+> Subject: Re: [RESEND PATCH V5 7/8] thermal: da9062/61: Thermal junction
+> temperature monitoring driver
+
+[...]
+
+> I see no reason why this driver cannot have the COMPILE_TEST flag.
+> Tested myself here so:
 > 
-> Patch 5 adds necessary device tree nodes to the H3/H5 DTSI file. Note: The
-> phy is not bind for OHCI/EHCI0, as OHCI/EHCI drivers will keep the VBUS
-> on. Only MUSB driver can properly handle a dual-role PHY.
+> +	depends on MFD_DA9062 || COMPILE_TEST
+
+Added.
+
+> please cleanup the minor issues checkpatch complains:
+> /scripts/checkpatch.pl --strict <your patch>
+
+I have fixed all of those for latest checkpatch.pl script, this time using "--strict".
+
+[...]
+
+> > +static void da9062_thermal_poll_on(struct work_struct *work)
+> > +{
+> > +	struct da9062_thermal *thermal = container_of(work,
+> > +						struct da9062_thermal,
+> > +						work.work);
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	/* clear E_TEMP */
+> > +	ret = regmap_write(thermal->hw->regmap,
+> > +				DA9062AA_EVENT_B,
+> > +				DA9062AA_E_TEMP_MASK);
+> > +	if (ret < 0) {
+> > +		dev_err(thermal->dev,
+> > +			"Cannot clear the TJUNC temperature status\n");
+> > +		goto err_enable_irq;
+> > +	}
+> > +
+> > +	/* Now read E_TEMP again: it is acting like a status bit.
+> > +	 * If over-temperature, then this status will be true.
+> > +	 * If not over-temperature, this status will be false.
+> > +	 */
+> > +	ret = regmap_read(thermal->hw->regmap,
+> > +			  DA9062AA_EVENT_B,
+> > +			  &val);
+> > +	if (ret < 0) {
+> > +		dev_err(thermal->dev,
+> > +			"Cannot check the TJUNC temperature status\n");
+> > +		goto err_enable_irq;
+> > +	} else {
+> > +		if (val & DA9062AA_E_TEMP_MASK) {
+> > +			mutex_lock(&thermal->lock);
+> > +			thermal->temperature = DA9062_MILLI_CELSIUS(125);
+> > +			mutex_unlock(&thermal->lock);
+> > +			thermal_zone_device_update(thermal->zone,
+> > +				THERMAL_EVENT_UNSPECIFIED);
+> > +
+> > +			schedule_delayed_work(&thermal->work,
+> > +				msecs_to_jiffies(thermal->zone->passive_delay));
+> > +			return;
+> > +		} else {
+> > +			mutex_lock(&thermal->lock);
+> > +			thermal->temperature = DA9062_MILLI_CELSIUS(0);
+> > +			mutex_unlock(&thermal->lock);
+> > +			thermal_zone_device_update(thermal->zone,
+> > +				THERMAL_EVENT_UNSPECIFIED);
+> > +		}
+> > +	}
 > 
-> Patch 6 enables USB OTG functionality on Orange Pi One board, which is
-> the only H3 board I have that have proper OTG function. It's easy to
-> enable OTG on other boards with their schematics.
+> The above code is a little confusing, can it be maybe, better read like
+> this?
 > 
-> Patch 7 enables USB OTG functionality on Orange Pi Zero board, as the
-> board cannot output power on Vbus, I only enabled peripheral mode by
-> default.
+> diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-
+> thermal.c
+> index 52a095d..6ac8574 100644
+> --- a/drivers/thermal/da9062-thermal.c
+> +++ b/drivers/thermal/da9062-thermal.c
+> @@ -95,26 +95,26 @@ static void da9062_thermal_poll_on(struct work_struct
+> *work)
+>  		dev_err(thermal->dev,
+>  			"Cannot check the TJUNC temperature status\n");
+>  		goto err_enable_irq;
+> -	} else {
+> -		if (val & DA9062AA_E_TEMP_MASK) {
+> -			mutex_lock(&thermal->lock);
+> -			thermal->temperature = DA9062_MILLI_CELSIUS(125);
+> -			mutex_unlock(&thermal->lock);
+> -			thermal_zone_device_update(thermal->zone,
+> -				THERMAL_EVENT_UNSPECIFIED);
+> -
+> -			schedule_delayed_work(&thermal->work,
+> +	}
+> +
+> +	if (val & DA9062AA_E_TEMP_MASK) {
+> +		mutex_lock(&thermal->lock);
+> +		thermal->temperature = DA9062_MILLI_CELSIUS(125);
+> +		mutex_unlock(&thermal->lock);
+> +		thermal_zone_device_update(thermal->zone,
+> +				THERMAL_EVENT_UNSPECIFIED);
+> +
+> +		schedule_delayed_work(&thermal->work,
+>  				msecs_to_jiffies(thermal->zone->passive_delay));
+> -			return;
+> -		} else {
+> -			mutex_lock(&thermal->lock);
+> -			thermal->temperature = DA9062_MILLI_CELSIUS(0);
+> -			mutex_unlock(&thermal->lock);
+> -			thermal_zone_device_update(thermal->zone,
+> -			THERMAL_EVENT_UNSPECIFIED);
+> -		}
+> +		return;
+>  	}
 > 
-> Patch 8 enables USB OTG funcionality on Orange Pi PC2 board, which is
-> the newly support H5 board, and have USB-related pins same as Orange
-> Pi One.
-> 
-> The USB PHY on V3s/A64 SoCs also feature this capability, and it will
-> be soon enabled on these SoCs after this patchset is merged.
-> 
-> Icenowy Zheng (8):
->   dt: bindings: add pmu0 regs for USB PHYs on Allwinner H3/V3s/A64
->   phy: sun4i-usb: change PHYCTL register clearing code
->   phy: sun4i-usb: add PHYCTL offset for H3 SoC
->   phy: sun4i-usb: support automatically switch PHY0 route to MUSB/HCI
->   ARM: sunxi: h3/h5: add usb_otg and OHCI/EHCI for usbc0 on H3/H5
->   ARM: sun8i: h3: enable USB OTG on Orange Pi One
->   ARM: sun8i: h2+: enable USB OTG for Orange Pi Zero board
->   arm64: allwinner: h5: enable USB OTG on Orange Pi PC 2 board
-> 
->  .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
->  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts  | 20 +++++++-
->  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        | 22 ++++++++-
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 32 ++++++++++++
->  .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 27 +++++++++-
->  drivers/phy/phy-sun4i-usb.c                        | 57 ++++++++++++++--------
->  6 files changed, 135 insertions(+), 24 deletions(-)
-> 
+> +	mutex_lock(&thermal->lock);
+> +	thermal->temperature = DA9062_MILLI_CELSIUS(0);
+> +	mutex_unlock(&thermal->lock);
+> +	thermal_zone_device_update(thermal->zone,
+> +			THERMAL_EVENT_UNSPECIFIED);
+> +
+>  err_enable_irq:
+>  	enable_irq(thermal->irq);
+>  }
+
+That makes more sense getting rid of those else clauses.
+Applied that, thanks.
+
+Regards,
+Steve
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
