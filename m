@@ -1,36 +1,55 @@
-From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] Input: add STMicroelectronics FingerTip
- touchscreen driver
-Date: Mon, 27 Mar 2017 22:11:13 +0900
-Message-ID: <20170327131113.exxsrn5xu4oz54sy@gangnam.samsung>
-References: <20170327130743.27783-1-andi.shyti@samsung.com>
-        <CGME20170327130756epcas1p3134e88ccee37242db029357ae3d52603@epcas1p3.samsung.com>
-        <20170327130743.27783-2-andi.shyti@samsung.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 1/2] drivers: pwm: pwm-atmel: switch to atomic PWM
+Date: Mon, 27 Mar 2017 15:15:30 +0200
+Message-ID: <20170327131530.ifexyrgrp5egtbtr@piout.net>
+References: <1490189375-20384-1-git-send-email-claudiu.beznea@microchip.com>
+ <1490189375-20384-2-git-send-email-claudiu.beznea@microchip.com>
+ <20170327150237.69d8523f@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-disposition: inline
-In-reply-to: <20170327130743.27783-2-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170327150237.69d8523f@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>, thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@microchip.com, cristian.birsan@microchip.com, andrei.pistirica@microchip.com, tudor.ambarus@microchip.com, eugen.hristev@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Mar 27, 2017 at 10:07:42PM +0900, Andi Shyti wrote:
-> Add binding for the STMicroelectronics FingerTip (stmfts)
-> touchscreen driver.
+On 27/03/2017 at 15:02:37 +0200, Boris Brezillon wrote:
+> Hi Claudiu,
 > 
-> Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> On Wed, 22 Mar 2017 15:29:34 +0200
+> Claudiu Beznea <claudiu.beznea@microchip.com> wrote:
+> 
+> >  static const struct platform_device_id atmel_pwm_devtypes[] = {
+> >  	{
+> >  		.name = "at91sam9rl-pwm",
+> > -		.driver_data = (kernel_ulong_t)&atmel_pwm_data_v1,
+> > +		.driver_data = (kernel_ulong_t)&atmel_pwm_regs_v1,
+> >  	}, {
+> >  		.name = "sama5d3-pwm",
+> > -		.driver_data = (kernel_ulong_t)&atmel_pwm_data_v2,
+> > +		.driver_data = (kernel_ulong_t)&atmel_pwm_regs_v2,
+> >  	}, {
+> >  		/* sentinel */
+> >  	},
+> 
+> Unrelated to this series, but can you prepare a patch to get rid of
+> this platform id table (AT91 platforms have completely switched to DT
+> for quite some time now).
+> 
 
-I'm sorry, I forgot to add:
+Please, don't until AVR32 is gone.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> You can also get rid of the "if (pdev->dev.of_node)" condition in
+> atmel_pwm_probe() since it's guaranteed to be true, otherwise the
+> ->probe() method wouldn't be called.
+> 
+> Thanks,
+> 
+> Boris
 
-Andi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
