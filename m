@@ -1,88 +1,191 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v1.1 3/3] device property:
- fwnode_property_read_string_array() returns nr of strings
-Date: Tue, 28 Mar 2017 00:46:12 +0300
-Message-ID: <28c01bed-d2cb-153f-1e1f-a04b6c045581@linux.intel.com>
-References: <1488806791-25488-4-git-send-email-sakari.ailus@linux.intel.com>
- <1489584688-15624-1-git-send-email-sakari.ailus@linux.intel.com>
- <20170327133618.GH2957@lahna.fi.intel.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for GLINK RPM
+Date: Mon, 27 Mar 2017 16:30:35 -0700
+Message-ID: <20170327233035.GM20094@minitux>
+References: <20170320210956.29641-1-bjorn.andersson@linaro.org>
+ <20170324160731.caxbdgpqm7u35po6@rob-hp-laptop>
+ <20170326043159.GA70446@Bjorns-MacBook-Pro-2.local>
+ <CAL_JsqKt+JXVbsZpQpXZeDQ6cD33DiQ8R1oszcfX3y5QwQVjJQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170327133618.GH2957@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKt+JXVbsZpQpXZeDQ6cD33DiQ8R1oszcfX3y5QwQVjJQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mika,
+On Mon 27 Mar 11:44 PDT 2017, Rob Herring wrote:
 
-Mika Westerberg wrote:
-> On Wed, Mar 15, 2017 at 03:31:28PM +0200, Sakari Ailus wrote:
->> Functionally fwnode_property_read_string_array() should match
->> of_property_read_string_array() and work as a drop-in substitute for the
->> latter. of_property_read_string_array() returns the number of strings read
->> if the target string pointer array is non-NULL. Make
->> fwnode_property_read_string_array() do the same.
->>
->> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> ---
->> This patch replaces v1 3/3 patch in this set.
->>
->> Instead of changing the return value of fwnode / device property API
->> string array access on OF, change the behaviour on pset and ACPI instead.
->> This makes them to return the number of strings read on success.
->>
->> I can merge this with patch 2/3 which is changing the same part of the
->> file, however I'm sending this separately at least for now as I think it's
->> easier to review this way, rather than making a bugfix and a change of the
->> behaviour in the same patch.
->>
->> Regards,
->> Sakari
->>
->>  drivers/base/property.c | 64 +++++++++++++++++++++++++++++++++++--------------
->>  1 file changed, 46 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/base/property.c b/drivers/base/property.c
->> index 8c98390..82187ac 100644
->> --- a/drivers/base/property.c
->> +++ b/drivers/base/property.c
->> @@ -340,8 +340,8 @@ EXPORT_SYMBOL_GPL(device_property_read_u64_array);
->>   * Function reads an array of string properties with @propname from the device
->>   * firmware description and stores them to @val if found.
->>   *
->> - * Return: number of values if @val was %NULL,
->> - *         %0 if the property was found (success),
->> + * Return: number of values read on success if @val is non-NULL,
->> + *	   number of values available on success if @val is NULL,
->>   *	   %-EINVAL if given arguments are not valid,
->>   *	   %-ENODATA if the property does not have a value,
->>   *	   %-EPROTO or %-EILSEQ if the property is not an array of strings,
->> @@ -549,29 +549,57 @@ static int __fwnode_property_read_string_array(struct fwnode_handle *fwnode,
->>  			of_property_read_string_array(to_of_node(fwnode),
->>  						      propname, val, nval) :
->>  			of_property_count_strings(to_of_node(fwnode), propname);
->> -	else if (is_acpi_node(fwnode))
->> -		return acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
->> -					   val, nval);
->> -	else if (is_pset_node(fwnode)) {
->> +	else if (is_acpi_node(fwnode)) {
->> +		int array_len =
->> +			acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
->
-> Why not change acpi_node_prop_read() instead? This way you don't need to
-> add the extra code dealing with the return value here.
->
-> Ditto for the pset counterpart.
+> On Sat, Mar 25, 2017 at 11:31 PM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > On Fri 24 Mar 09:07 PDT 2017, Rob Herring wrote:
+> >
+> >> On Mon, Mar 20, 2017 at 02:09:55PM -0700, Bjorn Andersson wrote:
+> >> > Add device tree binding documentation for the Qualcomm GLINK RPM, used
+> >> > for communication with the Resource Power Management subsystem in
+> >> > various Qualcomm SoCs.
+> >> >
+> >> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >> > ---
+> >> >
+> >> > Changes since v1:
+> >> > - None
+> >> >
+> >> >  .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
+> >> >  1 file changed, 73 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> >> > new file mode 100644
+> >> > index 000000000000..da92c4f787f3
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> >> > @@ -0,0 +1,73 @@
+> >> > +Qualcomm RPM GLINK binding
+> >> > +
+> >> > +This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
+> >> > +communication with the Resource Power Management system on various Qualcomm
+> >> > +platforms.
+> >> > +
+> >> > +- compatible:
+> >> > +   Usage: required
+> >> > +   Value type: <stringlist>
+> >> > +   Definition: must be "qcom,glink-rpm"
+> >>
+> >> SoC specific compatibles please.
+> >>
+> >
+> > In addition to the generic qcom,glink-rpm I presume?
+> 
+> Right.
+> 
+> >
+> >> > +
+> >> > +- interrupts:
+> >> > +   Usage: required
+> >> > +   Value type: <prop-encoded-array>
+> >> > +   Definition: should specify the IRQ used by the remote processor to
+> >> > +               signal this processor about communication related events
+> >> > +
+> >> > +- qcom,rpm-msg-ram:
+> >> > +   Usage: required
+> >> > +   Value type: <prop-encoded-array>
+> >> > +   Definition: handle to RPM message memory resource
+> >> > +
+> >> > +- qcom,ipc:
+> >> > +   Usage: required
+> >> > +   Value type: <prop-encoded-array>
+> >> > +   Definition: three entries specifying the outgoing ipc bit used for
+> >> > +               signaling the remote processor:
+> >> > +               - phandle to a syscon node representing the apcs registers
+> >> > +               - u32 representing offset to the register within the syscon
+> >> > +               - u32 representing the ipc bit within the register
+> >> > +
+> >> > += GLINK DEVICES
+> >> > +Each subnode of the GLINK node represent function tied to a virtual
+> >> > +communication channel. The name of the nodes are not important. The properties
+> >> > +of these nodes are defined by the individual bindings for the specific function
+> >> > +- but must contain the following property:
+> >> > +
+> >> > +- qcom,glink-channels:
+> >> > +   Usage: required
+> >> > +   Value type: <stringlist>
+> >> > +   Definition: a list of channels tied to this function, used for matching
+> >> > +               the function to a set of virtual channels
+> >> > +
+> >> > += EXAMPLE
+> >> > +The following example represents the GLINK RPM node on a MSM8996 device, with
+> >> > +the function for the "rpm_request" channel defined, which is used for
+> >> > +regualtors and root clocks.
+> >> > +
+> >> > +   apcs: syscon@f9011000 {
+> >> > +           compatible = "syscon";
+> >>
+> >> syscon alone is not valid.
+> >>
+> >
+> > This is equivalent to how we have done this on all previous platforms.
+> 
+> Then they are wrong...
+> 
+> > On previous platforms this generally maps to one of the "Krait Processor
+> > SubSystem" blocks, so I'm quite worried with coming up with a compatible
+> > for this block will not be compatible with any future description of
+> > this block.
+> 
+> Perhaps why we should get rid of syscon. It's not supposed to be a "I
+> don't know how to define a binding, so just make all registers
+> available for now".
+> 
 
-There are a few other users of acpi_node_prop_read() albeit there are 
-not too many of them. acpi_node_prop_read() is just calling 
-acpi_dev_prop_read() which is public but apparently has no users. I 
-think changing that would be quite feasible, I'll take that into account 
-in the next version. Same for pset.
+I know...
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> I don't really see how a compatible string alone would create problems
+> to extend the binding if you need to later. Even if it did, you can
+> always rev compatible strings.
+> 
+
+The problem is that the "apcs" region is just one of the regions related
+to the KPSS; this one being the "global" region.
+
+I could just replace the current occurrences with
+"qcom,msm8974-apcs-kpss-glb" and "qcom,msm8916-apcs-kpss-glb" and then
+try to figure out what it's called in this platform. I am worried,
+however, that this description of the "kpss" hardware won't be the right
+approach if/when anyone else tries to actually model it.
+
+
+There has been talks about replacing the use of syscon here with a new
+"ipc-kicker" description. Should I propose a completely new binding for
+"invoking IRQs on remote processors" instead of using syscon? What's the
+name of such a bike shed?
+
+> >> > +           reg = <0xf9011000 0x1000>;
+> >> > +   };
+> >> > +
+> >> > +   rpm_msg_ram: memory@68000 {
+> >> > +           compatible = "qcom,rpm-msg-ram";
+> >>
+> >> Is this more than just mmio-sram?
+> >>
+> >> Or with a fixed use could be part of another node?
+> >>
+
+On prior platforms it was part of the qcom,smem node but was extracted
+to better represent the hardware design.
+
+> >
+> > It represents one of the RAM modules of one of the other ARM cores in
+> > the SoC, used for shared memory communication with this ARM core. So the
+> > hardware is essentially mmio-sram. But it has none of the properties
+> > that a mmio-sram seem to have.
+> 
+> Properties such as?
+> 
+
+Probably unwise of me to use the word "properties" here, as I wasn't
+thinking in DT lingo, but the first paragraph of sram.txt states:
+
+"Simple IO memory regions to be managed by the genalloc API."
+
+This memory is not managed by genalloc, it consists of a read-only
+section where we can find a pointer to the subregion that we are allowed
+to read and write - any accesses outside this region will cause a access
+violation.
+
+The subregion provided is shared with a remote processor and as such
+must follow the predefined data-structure - implemented by something
+claiming to implement "qcom,glink-rpm".
+
+Looking at the sram implementation there's nothing even close to useful
+for us there. Claiming that this memory is something that the Linux
+implementation of mmio-sram will deal with just wrong.
+
+
+It might be SRAM (although I believe it's on-chip DRAM) and it is memory
+mapped, but that's where the similarities ends...
+
+Regards,
+Bjorn
