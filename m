@@ -1,175 +1,189 @@
-From: Madalin-Cristian Bucur <madalin.bucur@nxp.com>
-Subject: RE: [PATCH v2 1/2] dts: arm64: add LS1043A DPAA support
-Date: Mon, 27 Mar 2017 08:11:33 +0000
-Message-ID: <HE1PR04MB1129DA747FC5B7B977CADF43EC330@HE1PR04MB1129.eurprd04.prod.outlook.com>
-References: <1488382505-17554-1-git-send-email-madalin.bucur@nxp.com>
- <1488382505-17554-2-git-send-email-madalin.bucur@nxp.com>
- <20170314070732.GH3618@dragon>
- <HE1PR04MB11297D944241012F44C0ADF8EC3C0@HE1PR04MB1129.eurprd04.prod.outlook.com>
- <20170327062719.GQ30608@dragon>
- <HE1PR04MB1129A2CA69EB29CD45DBCD17EC330@HE1PR04MB1129.eurprd04.prod.outlook.com>
- <20170327075546.GR30608@dragon>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] clk: sunxi-ng: Add sun4i/sun7i CCU driver
+Date: Mon, 27 Mar 2017 09:54:38 +0200
+Message-ID: <20170327075438.cw3d6s7zyeemenwr@lukather>
+References: <cover.a58841efb571d44013658505f3fa140536a89d1c.1490545262.git-series.plaes@plaes.org>
+ <ac8c4dab4f160ec605d52120517774bf1de87c2e.1490545262.git-series.plaes@plaes.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170327075546.GR30608@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Pledge <roy.pledge@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
-Cc: Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@armlinux.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gsmomqsq6zdsfons"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB55C4PDAKGQEU2DPQPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <ac8c4dab4f160ec605d52120517774bf1de87c2e.1490545262.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Monday, March 27, 2017 10:56 AM
-> Subject: Re: [PATCH v2 1/2] dts: arm64: add LS1043A DPAA support
-> 
-> On Mon, Mar 27, 2017 at 07:03:40AM +0000, Madalin-Cristian Bucur wrote:
-> > > > > > +	fman@1a00000 {
-> > > > > > +		enet0: ethernet@e0000 {
-> > > > > > +		};
-> > > > > > +
-> > > > > > +		enet1: ethernet@e2000 {
-> > > > > > +		};
-> > > > > > +
-> > > > > > +		enet2: ethernet@e4000 {
-> > > > > > +		};
-> > > > > > +
-> > > > > > +		enet3: ethernet@e6000 {
-> > > > > > +		};
-> > > > > > +
-> > > > > > +		enet4: ethernet@e8000 {
-> > > > > > +		};
-> > > > > > +
-> > > > > > +		enet5: ethernet@ea000 {
-> > > > > > +		};
-> > > > > > +
-> > > > > > +		enet6: ethernet@f0000 {
-> > > > > > +		};
-> > > > > > +	};
-> > > > >
-> > > > > I do not quite understand why these nodes are empty.
-> > > >
-> > > > These nodes provide the aliases (and custom SoC mapping) for the
-> > > > FMan ports that are used on this particular SoC. The particular
-> > > > node details are found in the port dtsi file thus no information
-> > > > is required here. Given the fact that the numbering and actual
-> > > > ports that are in use can vary between SoCs, the aliases cannot
-> > > > be included in the port dtsi nor in the FMan dtsi.
-> > >
-> > > Do not completely follow.  What do you mean by 'port dtsi file'?
-> Maybe
-> > > I should wait for you new patches with better commit log and comments
-> to
-> > > understand these odd empty nodes.
-> >
-> > The DPAA IP can have a certain number of ports. Out of those, a certain
-> > SoC can use all or only a subset, with diverse decisions on actual
-> numbering
-> > of the used ports. Next, when using the SoC on a particular board, some
-> > ports will be used, some will not. The file hierarchy relates to this
-> > hierarchy - you have individual port files that are included by the
-> > SoC dtsi which in turn is included by the board dts. These nodes do not
-> > need any new content as all the node details are provided by the port
-> > dtsi files. The information they provide is the alias used for each
-> port.
-> 
-> My impression is that such hierarchy mapping is not really necessary and
-> only makes the device tree source messy and hard to follow.  I do not
-> like it.
 
-Hi Shawn, I respect your opinion on this, I'm sure it is the result of an
-extensive experience dealing with less complicated devices. Before breaking
-a construct that to date has served the DPAA users well I'd like to hear
-more thoughts on this topic.
+--gsmomqsq6zdsfons
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> >
-> > > >
-> > > > > > +};
-> > > > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> > > > > b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> > > > > > index 0989d63..ee66bb2 100644
-> > > > > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> > > > > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> > > > > > @@ -181,3 +181,5 @@
-> > > > > >  		reg = <0>;
-> > > > > >  	};
-> > > > > >  };
-> > > > > > +
-> > > > > > +/include/ "fsl-ls1043-post.dtsi"
-> > > > >
-> > > > > Move it to header of the file.
-> > > >
-> > > > This is to be included at the end, to make sure the references are
-> > > > met and to allow overrides if needed.
-> > >
-> > > What is broken if you move the include to header?
-> >
-> > Not much besides the structure we've always used for our SoCs device
-> > trees. The file is called "-post.dtsi" because here is the place any
-> > required overrides can be made, if needed. Moving to the top renders
-> > having this separate file useless.
-> 
-> That's great, and let's kill it then.
-> 
-> >
-> > > >
-> > > > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> > > > > b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> > > > > > index c37110b..d94f003 100644
-> > > > > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> > > > > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> > > > > > @@ -139,3 +139,78 @@
-> > > > > >  &duart1 {
-> > > > > >  	status = "okay";
-> > > > > >  };
-> > > > > > +
-> > > > > > +/include/ "fsl-ls1043-post.dtsi"
-> > > > > > +
-> > > > >
-> > > > > Ditto
-> > > > >
-> > > > > > +&soc {
-> > > > > > +	fman@1a00000 {
-> > > > > > +		ethernet@e0000 {
-> > > > >
-> > > > > You defined enet0 label.  Why don't you use it?
-> > > > >
-> > > >
-> > > > The enet0 label is used by u-boot for fix-ups, providing the
-> > > > actual offset here makes it easier to follow.
-> > >
-> > > You will not need to construct the node hierarchy with label.  And
-> > > alias/label name is more easier to follow than offset.
-> > >
-> > > Shawn
-> >
-> > When I said easier to follow I was referring to someone creating a
-> > new device tree for his custom board, not someone reading the device
-> > tree. If you have the board and SoC reference manuals in your hands
-> > and you are writing a new board device tree, having the offset here
-> > makes things easier. The benefit of having one less indentation level
-> > is lesser than that.
-> 
-> The while complex and messy file hierarchy makes users' life harder,
-> both the ones reading the device tree and the ones creating board device
-> tree.  I would suggest you go the opposite, making the device tree
-> simple and easy for users by allowing data duplication.  In arm/arm64
-> device tree world, we do not consider DT data reusing/sharing among
-> different SoCs that much.
-> 
-> Shawn
+Hi,
 
-Complex it is, mirroring the IP, but messy it is a word I would not use.
+Thanks a lot for working on this.
 
-Regards,
-Madalin
+On Sun, Mar 26, 2017 at 08:20:16PM +0300, Priit Laes wrote:
+> Introduce a clock controller driver for sun4i A10 and sun7i A20
+> series SoCs.
+> 
+> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> ---
+>  drivers/clk/sunxi-ng/Kconfig                  |   13 +-
+>  drivers/clk/sunxi-ng/Makefile                 |    1 +-
+>  drivers/clk/sunxi-ng/ccu-sunxi-a10-a20.c      | 1532 ++++++++++++++++++-
+>  drivers/clk/sunxi-ng/ccu-sunxi-a10-a20.h      |   59 +-
+>  include/dt-bindings/clock/sunxi-a10-a20-ccu.h |  208 ++-
+>  include/dt-bindings/reset/sunxi-a10-a20-ccu.h |   66 +-
+
+I'm not too fond of those sunxi-<all the SoCs supported>. We're not
+doing that for any other driver, I don't really know why this has
+became a trend lately.
+
+You can call them ccu-sun4i-a10.h, and it will work just fine.
+
+> +/* Not documented on A10 */
+> +static SUNXI_CCU_GATE(pll_periph_sata_clk, "pll-periph-sata", "pll-periph",
+> +		      0x028, BIT(14), 0);
+
+The rate doesn't come from pll-periph directly, does it?
+
+> +#define SUN4I_AHB_REG		0x054
+> +static struct ccu_mux cpu_clk = {
+> +	.mux		= {
+> +		.shift		= 16,
+> +		.width		= 2,
+> +		.fixed_predivs	= cpu_predivs,
+> +		.n_predivs	= ARRAY_SIZE(cpu_predivs),
+> +	},
+> +	.common		= {
+> +		.reg		= 0x054,
+
+Why did you define this one, even though you don't seem to be using it
+anywhere?
+
+> +static const char *const ahb_parents[] = { "axi", "pll-periph",
+> +					   "pll-periph-2x" };
+> +static const struct ccu_mux_fixed_prediv ahb_predivs[] = {
+> +	{ .index = 2, .div = 2, },
+> +};
+
+This seems to be only true for the A20, and not the A10.
+
+Are you sure here? The pll-periph-2x seem to be only used in the MBUS
+clock in our current code.
+
+And then, using pll-periph-2x, and then dividing it by 2 just gives us
+pll-periph, which is also our previous parent :)
+
+> +/* Undocumented on A10 */
+> +static SUNXI_CCU_PHASE(mmc0_output_clk, "mmc0_output", "mmc0",
+> +		       0x088, 8, 3, 0);
+> +/* Undocumented on A10 */
+> +static SUNXI_CCU_PHASE(mmc0_sample_clk, "mmc0_sample", "mmc0",
+> +		       0x088, 20, 3, 0);
+
+The A10 doesn't have them.
+
+> +/* TODO: Check whether A10 actually supports osc32k as 4th parent? */
+> +static const char *const ir_parents_sun4i[] = { "hosc", "pll-periph",
+> +						"pll-ddr-other" };
+
+What does the BSP say about this?
+
+> +/* Undocumented on A10 */
+> +static SUNXI_CCU_MUX_WITH_GATE(spdif_clk, "spdif", audio_parents,
+> +			       0x0c0, 16, 2, BIT(31), CLK_SET_RATE_PARENT);
+
+This doesn't seem to exist at all on the A10
+
+> +/*
+> + * TODO: SATA clock also supports external clock as parent via BIT(24)
+> + * The external clock is probably an optional crystal or oscillator
+> + * that can be connected to the SATA-CLKM / SATA-CLKP pins.
+> + */
+> +static SUNXI_CCU_GATE(sata_clk, "sata", "pll-periph-sata",
+> +		      0x0c8, BIT(31), 0);
+
+The rate won't be good here either. This is supposed to be 100MHz.
+
+> +static const char *const csi_isp_parents[] = { "pll-video0", "pll-ve",
+> +					       "pll-ddr-other", "pll-sata" };
+> +
+> +static SUNXI_CCU_M_WITH_MUX_GATE(csi_isp_clk, "csi-isp",
+> +				 csi_isp_parents,
+> +				 0x120, 0, 4, 24, 2, BIT(31), 0);
+
+We've been calling it sclk in the other SoC iirc. Any particular
+reason to call it differently?
+
+> +static const char *const out_parents[] = { "hosc", "osc32k", "hosc" };
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(out_a_clk, "out-a", out_parents,
+> +				  0x1f0, 8, 5, 20, 2, 24, 2, BIT(31), 0);
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(out_b_clk, "out-b", out_parents,
+> +				  0x1f4, 8, 5, 20, 2, 24, 2, BIT(31), 0);
+
+There's a fixed pre-divider on the first hosc of 750.
+
+> +static void init_clocks(void __iomem *reg)
+> +{
+> +	u32 val;
+> +
+> +	/* Force the PLL-Audio-1x divider to 4 */
+> +	val = readl(reg + SUN4I_PLL_AUDIO_REG);
+> +	val &= ~GENMASK(19, 16);
+> +	writel(val | (3 << 16), reg + SUN4I_PLL_AUDIO_REG);
+> +
+> +	/* Use PLL6 as parent for AHB */
+> +	val = readl(reg + SUN4I_AHB_REG);
+> +	val &= ~GENMASK(7, 6);
+> +	writel(val | (2 << 6), reg + SUN4I_AHB_REG);
+
+Keeping some kind of comment similar to what was in the DT would be
+great, otherwise we lose *why* we need to do so.
+
+> +}
+> +
+> +static void __init sun4i_a10_ccu_setup(struct device_node *node)
+> +{
+> +	void __iomem *reg;
+> +
+> +	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
+> +	if (IS_ERR(reg)) {
+> +		pr_err("%s: Could not map the clock registers\n",
+> +		       of_node_full_name(node));
+> +		return;
+> +	}
+> +
+> +	init_clocks(reg);
+> +
+> +	sunxi_ccu_probe(node, reg, &sun4i_a10_ccu_desc);
+
+Can't you move the request_and_map / probe in the common function?
+
+> +#ifndef _DT_BINDINGS_CLK_SUNXI_A10_A20_H_
+> +#define _DT_BINDINGS_CLK_SUNXI_A10_A20_H_
+> +
+> +#define CLK_HOSC		1
+> +#define CLK_PLL_PERIPH_SATA	16
+
+That one looks suspicious. I don't see why we would need the PLL,
+while we have a perfectly functional SATA clock below. Have you tried
+gating the bit31 of the register 0xc8 to see if it has any impact?
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--gsmomqsq6zdsfons--
