@@ -1,43 +1,196 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] firmware: qcom: scm: Expose download-mode control
-Date: Mon, 27 Mar 2017 13:53:32 -0500
-Message-ID: <CAL_JsqL=mhE9AJCszT-pKfmi6u-+dx-RRWcgKzUHSLQeTdYy7Q@mail.gmail.com>
-References: <20170318041523.29757-1-bjorn.andersson@linaro.org>
- <20170318041523.29757-2-bjorn.andersson@linaro.org> <20170324150633.2s3o3kiecnoeo4qt@rob-hp-laptop>
- <20170326051328.GD70446@Bjorns-MacBook-Pro-2.local>
+Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
+Date: Mon, 27 Mar 2017 14:04:02 -0500
+Message-ID: <CAL_Jsq++rdPqNZk54S7gQaeLBdzSptogp3dp9P1HmNTV67Sk9w@mail.gmail.com>
+References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
+ <20170324020630.vhffmeeb6wto53zx@rob-hp-laptop>
+ <dce20025-9f42-e747-e325-e1667504e615@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170326051328.GD70446@Bjorns-MacBook-Pro-2.local>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dce20025-9f42-e747-e325-e1667504e615@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gabriel Fernandez <gabriel.fernandez@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, =?UTF-8?Q?Rados=C5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Olivier Bideau <olivier.bideau@st.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Amelie Delaunay <amelie.delaunay@st.com>, Lee Jones <lee.jones@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 26, 2017 at 12:13 AM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Fri 24 Mar 08:06 PDT 2017, Rob Herring wrote:
+On Fri, Mar 24, 2017 at 4:41 AM, Gabriel Fernandez
+<gabriel.fernandez@st.com> wrote:
+> Hi Rob,
 >
->> On Fri, Mar 17, 2017 at 09:15:22PM -0700, Bjorn Andersson wrote:
-> [..]
->> > diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
->> > index 20f26fbce875..8467a181f22c 100644
->> > --- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
->> > +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
->> > @@ -18,6 +18,7 @@ Required properties:
->> >   * Core, iface, and bus clocks required for "qcom,scm"
->> >  - clock-names: Must contain "core" for the core clock, "iface" for the interface
->> >    clock and "bus" for the bus clock per the requirements of the compatible.
->> > +- qcom,dload-mode-addr: Specifies the address for the download mode magic (optional)
->>
->> Size? 1 cell, 2 cell(, red cell, blue cell) or follows #addr-cells?
->>
+> Thanks for reviewing
 >
-> I believe this implementation only applies to the 64-bit systems, but
-> it's probably better to make it follow (or at least claim that it
-> follows) #address-cells.
+>
+>
+> On 03/24/2017 03:06 AM, Rob Herring wrote:
+>>
+>> On Wed, Mar 15, 2017 at 10:23:30AM +0100, gabriel.fernandez@st.com wrote:
+>>>
+>>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>>
+>>> This patch enables clocks for STM32H743 boards.
+>>>
+>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>> ---
+>>>   .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |  152 ++
+>>>   drivers/clk/Makefile                               |    1 +
+>>>   drivers/clk/clk-stm32h7.c                          | 1586
+>>> ++++++++++++++++++++
+>>>   include/dt-bindings/clock/stm32h7-clks.h           |  165 ++
+>>>   include/dt-bindings/mfd/stm32h7-rcc.h              |  138 ++
+>>>   5 files changed, 2042 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>   create mode 100644 drivers/clk/clk-stm32h7.c
+>>>   create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+>>>   create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>> b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>> new file mode 100644
+>>> index 0000000..9d4b587
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>> @@ -0,0 +1,152 @@
+>>> +STMicroelectronics STM32H7 Reset and Clock Controller
+>>> +=====================================================
+>>> +
+>>> +The RCC IP is both a reset and a clock controller.
+>>> +
+>>> +Please refer to clock-bindings.txt for common clock controller binding
+>>> usage.
+>>> +Please also refer to reset.txt for common reset controller binding
+>>> usage.
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be:
+>>> +  "st,stm32h743-rcc"
+>>> +
+>>> +- reg: should be register base and length as documented in the
+>>> +  datasheet
+>>> +
+>>> +- #reset-cells: 1, see below
+>>> +
+>>> +- #clock-cells : from common clock binding; shall be set to 1
+>>> +
+>>> +- clocks: External oscillator clock phandle
+>>> +  - high speed external clock signal (HSE)
+>>> +  - low speed external clock signal (LSE)
+>>> +  - external I2S clock (I2S_CKIN)
+>>> +
+>>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup
+>>> domain
+>>> +  write protection (RTC clock).
+>>> +
+>>> +- pll x node: Allow to register a pll with specific parameters.
+>>> +  Please see PLL section below.
+>>> +
+>>> +Example:
+>>> +
+>>> +       rcc: rcc@58024400 {
+>>> +               #reset-cells = <1>;
+>>> +               #clock-cells = <2>
+>>> +               compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+>>> +               reg = <0x58024400 0x400>;
+>>> +               clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+>>> +
+>>> +               st,syscfg = <&pwrcfg>;
+>>> +
+>>> +               #address-cells = <1>;
+>>> +               #size-cells = <0>;
+>>> +
+>>> +               vco1@58024430 {
+>>> +                       #clock-cells = <0>;
+>>> +                       compatible = "stm32,pll";
+>>> +                       reg = <0>;
+>>
+>> The reg addr value and unit address don't match.
+>
+> ok il will change into
+>
+>         vco1@0 {
+>                 reg = <0>;
+>
+>
+>>
+>>> +               };
+>>> +
+>>> +               vco2@58024438 {
+>>> +                       #clock-cells = <0>;
+>>> +                       compatible = "stm32,pll";
+>>> +                       reg = <1>;
+>>> +                       st,clock-div = <2>;
+>>> +                       st,clock-mult = <40>;
+>>> +                       st,frac-status = <0>;
+>>> +                       st,frac = <0>;
+>>> +                       st,vcosel = <1>;
+>>> +                       st,pllrge = <2>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +
+>>> +STM32H7 PLL
+>>> +-----------
+>>> +
+>>> +The VCO of STM32 PLL could be reprensented like this:
+>>> +
+>>> +  Vref    ---------       --------
+>>> +    ---->| / DIVM  |---->| x DIVN | ------> VCO
+>>> +          ---------       --------
+>>> +                            ^
+>>> +                            |
+>>> +                         -------
+>>> +                        | FRACN |
+>>> +                         -------
+>>> +
+>>> +When the PLL is configured in integer mode:
+>>> +- VCO = ( Vref / DIVM ) * DIVN
+>>> +
+>>> +When the PLL is configured in fractional mode:
+>>> +- VCO = ( Vref / DIVM ) * ( DIVN + FRACN / 2^13)
+>>> +
+>>> +
+>>> +Required properties for pll node:
+>>> +- compatible: Should be:
+>>> +  "stm32,pll"
+>>
+>> Only 1 single PLL design for all STM32 chips ever?
+>
+> no, i can change into "stm32h7,pll"
 
-Saying it is fixed 2 cells is fine and slightly easier to parse. Just
-be explicit.
+Actually, should be "st,stm32h7-pll".
+
+>
+>>> +
+>>> +- #clock-cells: from common clock binding; shall be set to 0
+>>> +- reg: Should be the pll number.
+>>> +
+>>> +Optional properties:
+>>> +- st,clock-div:  DIVM division factor       : <1..63>
+>>> +- st,clock-mult: DIVN multiplication factor : <4..512>
+>>> +
+>>> +- st,frac-status:
+>>> +   - 0 Pll is configured in integer mode
+>>> +   - 1 Pll is configure in fractional mode
+>>
+>> Isn't this implied by the presence of the next property?
+>
+> do you prefer this ?
+>
+> - st,frac :
+> 0 : pll is configured in integer mode
+> 1..8191 : Fractional part of the multiplication factor and pll is configured
+> in fractional mode
+
+Why not no st,frac property means integer mode?
 
 Rob
