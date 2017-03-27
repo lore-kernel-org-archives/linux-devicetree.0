@@ -1,64 +1,168 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCHv3 1/2] mfd: cpcap: Add missing include dependencies
-Date: Mon, 27 Mar 2017 20:38:24 +0200
-Message-ID: <e4f0fb62-8fe1-bf32-6aee-b87c04bbd942@gmail.com>
-References: <20170324084732.31255-1-sre@kernel.org>
- <d1a18390-fb5f-e192-a54c-1c2574238225@gmail.com>
- <20170327142608.qcobnqrvyu7u4ybz@dell>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: Add GPCv2 power gating driver
+Date: Mon, 27 Mar 2017 11:42:51 -0700
+Message-ID: <CAHQ1cqH4HnVsiAT6wxVJ=b-AJKWCK6L7kTxLZ7JFrZ4B-t2PQg@mail.gmail.com>
+References: <20170321145004.21265-1-andrew.smirnov@gmail.com>
+ <20170321145004.21265-2-andrew.smirnov@gmail.com>
+ <20170324063216.GC12604@b29396-OptiPlex-7040>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170327142608.qcobnqrvyu7u4ybz@dell>
-Sender: linux-leds-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170324063216.GC12604@b29396-OptiPlex-7040>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <dongas86@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Andrey Yurovsky <yurovsky@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2017 04:26 PM, Lee Jones wrote:
-> On Fri, 24 Mar 2017, Jacek Anaszewski wrote:
->> On 03/24/2017 09:47 AM, Sebastian Reichel wrote:
->>> This fixes compilation for files, that try to include the
->>> cpcap header in alphabetically sorted #include lists.
->>>
->>> Acked-by: Pavel Machek <pavel@ucw.cz>
->>> Acked-by: Tony Lindgren <tony@atomide.com>
->>> Signed-off-by: Sebastian Reichel <sre@kernel.org>
->>> ---
->>> Changes since PATCHv2:
->>>  - Add Acked-by from Tony & Pavel
->>> ---
->>>  include/linux/mfd/motorola-cpcap.h | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motorola-cpcap.h
->>> index 793aa695faa0..aefc49cb7ba9 100644
->>> --- a/include/linux/mfd/motorola-cpcap.h
->>> +++ b/include/linux/mfd/motorola-cpcap.h
->>> @@ -14,6 +14,9 @@
->>>   * published by the Free Software Foundation.
->>>   */
->>>  
->>> +#include <linux/device.h>
->>> +#include <linux/regmap.h>
->>> +
->>>  #define CPCAP_VENDOR_ST		0
->>>  #define CPCAP_VENDOR_TI		1
+On Thu, Mar 23, 2017 at 11:32 PM, Dong Aisheng <dongas86@gmail.com> wrote:
+> On Tue, Mar 21, 2017 at 07:50:03AM -0700, Andrey Smirnov wrote:
+>> Add DT bindings for power domain driver for GPCv2 IP block found in
+>> i.MX7 SoCs.
 >>
->> Both patches applied to the for-next branch of linux-leds.git, thanks.
-> 
-> Que?
+>> Cc: yurovsky@gmail.com
+>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+>> Cc: Dong Aisheng <dongas86@gmail.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>> ---
+>>  .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
+>>  include/dt-bindings/power/imx7-power.h             | 18 ++++++
+>>  2 files changed, 89 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+>>  create mode 100644 include/dt-bindings/power/imx7-power.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+>> new file mode 100644
+>> index 0000000..02f45c6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+>> @@ -0,0 +1,71 @@
+>> +Freescale i.MX General Power Controller v2
+>> +==========================================
+>> +
+>> +The i.MX7S/D General Power Control (GPC) block contains Power Gating
+>> +Control (PGC) for various power domains.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: Should be "fsl,imx7d-gpc"
+>> +
+>> +- reg: should be register base and length as documented in the
+>> +  datasheet
+>> +
+>> +- interrupts: Should contain GPC interrupt request 1
+>> +
+>> +Power domains contained within GPC node are generic power domain
+>> +providers, documented in
+>> +Documentation/devicetree/bindings/power/power_domain.txt, which are
+>> +described as subnodes of the power gating controller 'pgc' node,
+>> +which, in turn, is expected to contain the following:
+>> +
+>> +Required properties:
+>> +
+>> +- reg: Power domain index. Valid values are defined in
+>> +  include/dt-bindings/power/imx7-power.h
+>> +
+>> +- #power-domain-cells: Should be 0
+>> +
+>> +Optional properties:
+>> +
+>> +- power-supply: Power supply used to power the domain
+>> +
+>> +Example:
+>> +
+>> +     gpc: gpc@303a0000 {
+>> +             compatible = "fsl,imx7d-gpc";
+>> +             reg = <0x303a0000 0x1000>;
+>> +             interrupt-controller;
+>> +             interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+>> +             #interrupt-cells = <3>;
+>> +             interrupt-parent = <&intc>;
+>> +
+>> +             pgc {
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <0>;
+>> +
+>> +                     pgc_pcie_phy: power-domain@3 {
+>> +                             #power-domain-cells = <0>;
+>> +
+>> +                             reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
+>> +                             power-supply = <&reg_1p0d>;
+>> +                     };
+>> +             };
+>> +     };
+>> +
+>> +
+>> +Specifying power domain for IP modules
+>> +======================================
+>> +
+>> +IP cores belonging to a power domain should contain a 'power-domains'
+>> +property that is a phandle for PGC node representing the domain.
+>> +
+>> +Example of a device that is part of the PCIE_PHY power domain:
+>> +
+>> +     pcie: pcie@33800000 {
+>> +           reg = <0x33800000 0x4000>,
+>> +                 <0x4ff00000 0x80000>;
+>> +             /* ... */
+>> +             power-domains = <&pgc_pcie_phy>;
+>> +             /* ... */
+>> +     };
+>> diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
+>> new file mode 100644
+>> index 0000000..eb70023
+>> --- /dev/null
+>> +++ b/include/dt-bindings/power/imx7-power.h
+>> @@ -0,0 +1,18 @@
+>> +/*
+>> + *  Copyright (C) 2017 Impinj
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#ifndef __DT_BINDINGS_IMX7_POWER_H__
+>> +#define __DT_BINDINGS_IMX7_POWER_H__
+>> +
+>> +#define IMX7_POWER_DOMAIN_USB_HSIC_PHY       0
+>> +#define IMX7_POWER_DOMAIN_USB_OTG2_PHY       1
+>> +#define IMX7_POWER_DOMAIN_USB_OTG1_PHY       2
+>> +#define IMX7_POWER_DOMAIN_PCIE_PHY   3
+>> +#define IMX7_POWER_DOMAIN_MIPI_PHY   4
+>
+> Nitpick: Probably better to define according to the reference manual
+> defined order.
+>
+> 0x800 ~ 0x83F : PGC for A7 core0
+> 0x840 ~ 0x87F: PGC for A7 core1
+> 0x880 ~ 0x8BF: PGC for A7 SCU
+> 0xA00 ~ 0xA3F: PGC for fastmix/megamix
+> 0xC00 ~ 0xC3F: PGC for MIPI PHY
+> 0xC40 ~ 0xC7F: PGC for PCIE_PHY
+> 0xC80 ~ 0xCBF: Reserved
+> 0xCC0 ~ 0xCFF: Reserved
+> 0xD00 ~ 0xD3F: PGC for USB HSIC PHY
+>
+> You can drop A7 core/scu/fastmix/megamix as well.
+>
 
-Ah, sorry, for some reason I silently assumed that Tony gave ack on
-your behalf :-) Probably due to lack of your activity in the subject
-and Tony's understanding thereof [0].
+Sure, will do.
 
-
-Can I have your ack for this patch going through LED tree then?
-
-
-[0] https://lkml.org/lkml/2017/3/23/413
-
--- 
-Best regards,
-Jacek Anaszewski
+Thanks,
+Andrey Smirnov
