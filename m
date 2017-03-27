@@ -1,74 +1,189 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v1.1 3/3] device property:
- fwnode_property_read_string_array() returns nr of strings
-Date: Mon, 27 Mar 2017 16:36:18 +0300
-Message-ID: <20170327133618.GH2957@lahna.fi.intel.com>
-References: <1488806791-25488-4-git-send-email-sakari.ailus@linux.intel.com>
- <1489584688-15624-1-git-send-email-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1489584688-15624-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC v4 10/10] tty: serdev: add functions to retrieve common UART settings
+Date: Mon, 27 Mar 2017 15:37:28 +0200
+Message-ID: <1490621848-24828-11-git-send-email-stefan.wahren@i2se.com>
+References: <1490621848-24828-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490621848-24828-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sre@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 03:31:28PM +0200, Sakari Ailus wrote:
-> Functionally fwnode_property_read_string_array() should match
-> of_property_read_string_array() and work as a drop-in substitute for the
-> latter. of_property_read_string_array() returns the number of strings read
-> if the target string pointer array is non-NULL. Make
-> fwnode_property_read_string_array() do the same.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
-> This patch replaces v1 3/3 patch in this set.
-> 
-> Instead of changing the return value of fwnode / device property API
-> string array access on OF, change the behaviour on pset and ACPI instead.
-> This makes them to return the number of strings read on success.
-> 
-> I can merge this with patch 2/3 which is changing the same part of the
-> file, however I'm sending this separately at least for now as I think it's
-> easier to review this way, rather than making a bugfix and a change of the
-> behaviour in the same patch.
-> 
-> Regards,
-> Sakari
-> 
->  drivers/base/property.c | 64 +++++++++++++++++++++++++++++++++++--------------
->  1 file changed, 46 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 8c98390..82187ac 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -340,8 +340,8 @@ EXPORT_SYMBOL_GPL(device_property_read_u64_array);
->   * Function reads an array of string properties with @propname from the device
->   * firmware description and stores them to @val if found.
->   *
-> - * Return: number of values if @val was %NULL,
-> - *         %0 if the property was found (success),
-> + * Return: number of values read on success if @val is non-NULL,
-> + *	   number of values available on success if @val is NULL,
->   *	   %-EINVAL if given arguments are not valid,
->   *	   %-ENODATA if the property does not have a value,
->   *	   %-EPROTO or %-EILSEQ if the property is not an array of strings,
-> @@ -549,29 +549,57 @@ static int __fwnode_property_read_string_array(struct fwnode_handle *fwnode,
->  			of_property_read_string_array(to_of_node(fwnode),
->  						      propname, val, nval) :
->  			of_property_count_strings(to_of_node(fwnode), propname);
-> -	else if (is_acpi_node(fwnode))
-> -		return acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
-> -					   val, nval);
-> -	else if (is_pset_node(fwnode)) {
-> +	else if (is_acpi_node(fwnode)) {
-> +		int array_len =
-> +			acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
+Currently serdev core doesn't provide functions to retrieve common
+UART settings like data bits, stop bits or parity. This patch adds
+the interface to the core and the necessary implementation for
+serdev-ttyport.
 
-Why not change acpi_node_prop_read() instead? This way you don't need to
-add the extra code dealing with the return value here.
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ drivers/tty/serdev/core.c           | 33 ++++++++++++++++++++++++++
+ drivers/tty/serdev/serdev-ttyport.c | 47 +++++++++++++++++++++++++++++++++++++
+ include/linux/serdev.h              | 22 +++++++++++++++++
+ 3 files changed, 102 insertions(+)
 
-Ditto for the pset counterpart.
+diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+index 531aa89..7b1e5bf 100644
+--- a/drivers/tty/serdev/core.c
++++ b/drivers/tty/serdev/core.c
+@@ -173,6 +173,39 @@ void serdev_device_set_flow_control(struct serdev_device *serdev, bool enable)
+ }
+ EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
+ 
++int serdev_device_get_data_bits(struct serdev_device *serdev)
++{
++	struct serdev_controller *ctrl = serdev->ctrl;
++
++	if (!ctrl || !ctrl->ops->get_data_bits)
++		return -EINVAL;
++
++	return ctrl->ops->get_data_bits(ctrl);
++}
++EXPORT_SYMBOL_GPL(serdev_device_get_data_bits);
++
++int serdev_device_get_parity(struct serdev_device *serdev)
++{
++	struct serdev_controller *ctrl = serdev->ctrl;
++
++	if (!ctrl || !ctrl->ops->get_parity)
++		return -EINVAL;
++
++	return ctrl->ops->get_parity(ctrl);
++}
++EXPORT_SYMBOL_GPL(serdev_device_get_parity);
++
++int serdev_device_get_stop_bits(struct serdev_device *serdev)
++{
++	struct serdev_controller *ctrl = serdev->ctrl;
++
++	if (!ctrl || !ctrl->ops->get_stop_bits)
++		return -EINVAL;
++
++	return ctrl->ops->get_stop_bits(ctrl);
++}
++EXPORT_SYMBOL_GPL(serdev_device_get_stop_bits);
++
+ static int serdev_drv_probe(struct device *dev)
+ {
+ 	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
+diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
+index 8a30abe..5698682 100644
+--- a/drivers/tty/serdev/serdev-ttyport.c
++++ b/drivers/tty/serdev/serdev-ttyport.c
+@@ -167,6 +167,50 @@ static void ttyport_set_flow_control(struct serdev_controller *ctrl, bool enable
+ 	tty_set_termios(tty, &ktermios);
+ }
+ 
++static int ttyport_get_data_bits(struct serdev_controller *ctrl)
++{
++	struct serport *serport = serdev_controller_get_drvdata(ctrl);
++	struct tty_struct *tty = serport->tty;
++	struct ktermios ktermios = tty->termios;
++
++	switch (ktermios.c_cflag & CSIZE) {
++	case CS5:
++		return 5;
++	case CS6:
++		return 6;
++	case CS7:
++		return 7;
++	case CS8:
++		return 8;
++	}
++
++	return 0;
++}
++
++static int ttyport_get_parity(struct serdev_controller *ctrl)
++{
++	struct serport *serport = serdev_controller_get_drvdata(ctrl);
++	struct tty_struct *tty = serport->tty;
++	struct ktermios ktermios = tty->termios;
++
++	if (!(ktermios.c_cflag & PARENB))
++		return SERDEV_PARITY_NONE;
++
++	if (ktermios.c_cflag & PARODD)
++		return SERDEV_PARITY_ODD;
++
++	return SERDEV_PARITY_EVEN;
++}
++
++static int ttyport_get_stop_bits(struct serdev_controller *ctrl)
++{
++	struct serport *serport = serdev_controller_get_drvdata(ctrl);
++	struct tty_struct *tty = serport->tty;
++	struct ktermios ktermios = tty->termios;
++
++	return (ktermios.c_cflag & CSTOPB) ? 2 : 1;
++}
++
+ static const struct serdev_controller_ops ctrl_ops = {
+ 	.write_buf = ttyport_write_buf,
+ 	.write_flush = ttyport_write_flush,
+@@ -175,6 +219,9 @@ static const struct serdev_controller_ops ctrl_ops = {
+ 	.close = ttyport_close,
+ 	.set_flow_control = ttyport_set_flow_control,
+ 	.set_baudrate = ttyport_set_baudrate,
++	.get_data_bits = ttyport_get_data_bits,
++	.get_parity = ttyport_get_parity,
++	.get_stop_bits = ttyport_get_stop_bits,
+ };
+ 
+ struct device *serdev_tty_port_register(struct tty_port *port,
+diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+index 5176cdc..6180aa2 100644
+--- a/include/linux/serdev.h
++++ b/include/linux/serdev.h
+@@ -16,6 +16,10 @@
+ #include <linux/types.h>
+ #include <linux/device.h>
+ 
++#define SERDEV_PARITY_NONE	0
++#define SERDEV_PARITY_ODD	1
++#define SERDEV_PARITY_EVEN	2
++
+ struct serdev_controller;
+ struct serdev_device;
+ 
+@@ -81,6 +85,9 @@ struct serdev_controller_ops {
+ 	void (*close)(struct serdev_controller *);
+ 	void (*set_flow_control)(struct serdev_controller *, bool);
+ 	unsigned int (*set_baudrate)(struct serdev_controller *, unsigned int);
++	int (*get_data_bits)(struct serdev_controller *);
++	int (*get_parity)(struct serdev_controller *);
++	int (*get_stop_bits)(struct serdev_controller *);
+ };
+ 
+ /**
+@@ -189,6 +196,9 @@ void serdev_device_set_flow_control(struct serdev_device *, bool);
+ int serdev_device_write_buf(struct serdev_device *, const unsigned char *, size_t);
+ void serdev_device_write_flush(struct serdev_device *);
+ int serdev_device_write_room(struct serdev_device *);
++int serdev_device_get_data_bits(struct serdev_device *);
++int serdev_device_get_parity(struct serdev_device *);
++int serdev_device_get_stop_bits(struct serdev_device *);
+ 
+ /*
+  * serdev device driver functions
+@@ -232,6 +242,18 @@ static inline int serdev_device_write_room(struct serdev_device *sdev)
+ {
+ 	return 0;
+ }
++static inline int serdev_device_get_data_bits(struct serdev_device *sdev)
++{
++	return -ENODEV;
++}
++static inline int serdev_device_get_parity(struct serdev_device *sdev)
++{
++	return -ENODEV;
++}
++static inline int serdev_device_get_stop_bits(struct serdev_device *sdev)
++{
++	return -ENODEV;
++}
+ 
+ #define serdev_device_driver_register(x)
+ #define serdev_device_driver_unregister(x)
+-- 
+2.1.4
