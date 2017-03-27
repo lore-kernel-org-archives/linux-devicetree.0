@@ -1,36 +1,36 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3 4/7] arm: dts: r7s72100: Add pin controller node
-Date: Mon, 27 Mar 2017 17:12:04 +0000
-Message-ID: <SG2PR06MB11651E209BC332719059CC3F8A330@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490368934-12494-5-git-send-email-jacopo+renesas@jmondi.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-baltos: add LED support
+Date: Mon, 27 Mar 2017 10:38:53 -0700
+Message-ID: <20170327173852.GN10760@atomide.com>
+References: <1490368503-4798-1-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490368934-12494-5-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1490368503-4798-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+* yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> [170324 08:17]:
+> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> 
+> All three devices provide GPIO based LEDs named power,
+> wlan and app.
+> 
+> Place the same definition in all three DTS files, as
+> there are other devices (not currently upstreamed), that
+> use am335x-baltos.dtsi but use different GPIOs for these
+> LEDs.
 
+How about just add am335x-baltos-leds.dtsi and include
+it for the three boards to avoid duplication?
 
-On Friday, March 24, 2017, Jacopo Mondi
-> +	pinctrl: pinctrl@fcfe3000 {
-> +		compatible =3D "renesas,r7s72100-ports";
-> +
-> +		#pinctrl-cells =3D <1>;
-> +
-> +		reg =3D <0xfcfe3000 0x42C0>;
+Regards,
 
-Out of curiosity, why did you change this from 0x4248 to 0x42C0?
-
-In your update for renesas,rza1-pinctrl.txt, for the 'Example', you changed=
- it from 0x4248 to 0x4230 (which Geert pointed out makes more sense), but t=
-hen in the actual DT file you changed it to 0x42C0. Typo?
-
-
-Chris
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
