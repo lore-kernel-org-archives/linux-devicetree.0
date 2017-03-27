@@ -1,42 +1,29 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am335x-baltos: add LED support
-Date: Mon, 27 Mar 2017 10:45:05 -0700
-Message-ID: <20170327174504.GO10760@atomide.com>
-References: <1490368503-4798-1-git-send-email-yegorslists@googlemail.com>
- <20170327173852.GN10760@atomide.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: ata: add DT bindings for ahci-dm816
+ SATA controller
+Date: Mon, 27 Mar 2017 14:06:10 -0400
+Message-ID: <20170327180610.GE13353@htj.duckdns.org>
+References: <1489489491-14195-1-git-send-email-bgolaszewski@baylibre.com>
+ <1489489491-14195-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170327173852.GN10760-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1489489491-14195-2-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170327 10:42]:
-> * yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> [170324 08:17]:
-> > From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> > 
-> > All three devices provide GPIO based LEDs named power,
-> > wlan and app.
-> > 
-> > Place the same definition in all three DTS files, as
-> > there are other devices (not currently upstreamed), that
-> > use am335x-baltos.dtsi but use different GPIOs for these
-> > LEDs.
+On Tue, Mar 14, 2017 at 12:04:50PM +0100, Bartosz Golaszewski wrote:
+> Add DT bindings for the onboard SATA controller present on the DM816x
+> SoCs.
 > 
-> How about just add am335x-baltos-leds.dtsi and include
-> it for the three boards to avoid duplication?
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Or maybe even am335x-baltos-xyz-devices.dtsi or something if
-you have more devices that are shared across some group
-of baltos devices.
+Applied to libata/for-4.12.
 
-Regards,
+Thanks.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+tejun
