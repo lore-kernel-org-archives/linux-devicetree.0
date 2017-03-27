@@ -1,168 +1,165 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: Add GPCv2 power gating driver
-Date: Mon, 27 Mar 2017 11:42:51 -0700
-Message-ID: <CAHQ1cqH4HnVsiAT6wxVJ=b-AJKWCK6L7kTxLZ7JFrZ4B-t2PQg@mail.gmail.com>
-References: <20170321145004.21265-1-andrew.smirnov@gmail.com>
- <20170321145004.21265-2-andrew.smirnov@gmail.com>
- <20170324063216.GC12604@b29396-OptiPlex-7040>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] soc: qcom: Add device tree binding for GLINK RPM
+Date: Mon, 27 Mar 2017 13:44:22 -0500
+Message-ID: <CAL_JsqKt+JXVbsZpQpXZeDQ6cD33DiQ8R1oszcfX3y5QwQVjJQ@mail.gmail.com>
+References: <20170320210956.29641-1-bjorn.andersson@linaro.org>
+ <20170324160731.caxbdgpqm7u35po6@rob-hp-laptop> <20170326043159.GA70446@Bjorns-MacBook-Pro-2.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170324063216.GC12604@b29396-OptiPlex-7040>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <dongas86@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Andrey Yurovsky <yurovsky@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170326043159.GA70446@Bjorns-MacBook-Pro-2.local>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 11:32 PM, Dong Aisheng <dongas86@gmail.com> wrote:
-> On Tue, Mar 21, 2017 at 07:50:03AM -0700, Andrey Smirnov wrote:
->> Add DT bindings for power domain driver for GPCv2 IP block found in
->> i.MX7 SoCs.
+On Sat, Mar 25, 2017 at 11:31 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Fri 24 Mar 09:07 PDT 2017, Rob Herring wrote:
+>
+>> On Mon, Mar 20, 2017 at 02:09:55PM -0700, Bjorn Andersson wrote:
+>> > Add device tree binding documentation for the Qualcomm GLINK RPM, used
+>> > for communication with the Resource Power Management subsystem in
+>> > various Qualcomm SoCs.
+>> >
+>> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> > ---
+>> >
+>> > Changes since v1:
+>> > - None
+>> >
+>> >  .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
+>> >  1 file changed, 73 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> > new file mode 100644
+>> > index 000000000000..da92c4f787f3
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> > @@ -0,0 +1,73 @@
+>> > +Qualcomm RPM GLINK binding
+>> > +
+>> > +This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
+>> > +communication with the Resource Power Management system on various Qualcomm
+>> > +platforms.
+>> > +
+>> > +- compatible:
+>> > +   Usage: required
+>> > +   Value type: <stringlist>
+>> > +   Definition: must be "qcom,glink-rpm"
 >>
->> Cc: yurovsky@gmail.com
->> Cc: Lucas Stach <l.stach@pengutronix.de>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Fabio Estevam <fabio.estevam@nxp.com>
->> Cc: Dong Aisheng <dongas86@gmail.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Acked-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->> ---
->>  .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
->>  include/dt-bindings/power/imx7-power.h             | 18 ++++++
->>  2 files changed, 89 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
->>  create mode 100644 include/dt-bindings/power/imx7-power.h
+>> SoC specific compatibles please.
 >>
->> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
->> new file mode 100644
->> index 0000000..02f45c6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
->> @@ -0,0 +1,71 @@
->> +Freescale i.MX General Power Controller v2
->> +==========================================
->> +
->> +The i.MX7S/D General Power Control (GPC) block contains Power Gating
->> +Control (PGC) for various power domains.
->> +
->> +Required properties:
->> +
->> +- compatible: Should be "fsl,imx7d-gpc"
->> +
->> +- reg: should be register base and length as documented in the
->> +  datasheet
->> +
->> +- interrupts: Should contain GPC interrupt request 1
->> +
->> +Power domains contained within GPC node are generic power domain
->> +providers, documented in
->> +Documentation/devicetree/bindings/power/power_domain.txt, which are
->> +described as subnodes of the power gating controller 'pgc' node,
->> +which, in turn, is expected to contain the following:
->> +
->> +Required properties:
->> +
->> +- reg: Power domain index. Valid values are defined in
->> +  include/dt-bindings/power/imx7-power.h
->> +
->> +- #power-domain-cells: Should be 0
->> +
->> +Optional properties:
->> +
->> +- power-supply: Power supply used to power the domain
->> +
->> +Example:
->> +
->> +     gpc: gpc@303a0000 {
->> +             compatible = "fsl,imx7d-gpc";
->> +             reg = <0x303a0000 0x1000>;
->> +             interrupt-controller;
->> +             interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
->> +             #interrupt-cells = <3>;
->> +             interrupt-parent = <&intc>;
->> +
->> +             pgc {
->> +                     #address-cells = <1>;
->> +                     #size-cells = <0>;
->> +
->> +                     pgc_pcie_phy: power-domain@3 {
->> +                             #power-domain-cells = <0>;
->> +
->> +                             reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
->> +                             power-supply = <&reg_1p0d>;
->> +                     };
->> +             };
->> +     };
->> +
->> +
->> +Specifying power domain for IP modules
->> +======================================
->> +
->> +IP cores belonging to a power domain should contain a 'power-domains'
->> +property that is a phandle for PGC node representing the domain.
->> +
->> +Example of a device that is part of the PCIE_PHY power domain:
->> +
->> +     pcie: pcie@33800000 {
->> +           reg = <0x33800000 0x4000>,
->> +                 <0x4ff00000 0x80000>;
->> +             /* ... */
->> +             power-domains = <&pgc_pcie_phy>;
->> +             /* ... */
->> +     };
->> diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
->> new file mode 100644
->> index 0000000..eb70023
->> --- /dev/null
->> +++ b/include/dt-bindings/power/imx7-power.h
->> @@ -0,0 +1,18 @@
->> +/*
->> + *  Copyright (C) 2017 Impinj
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#ifndef __DT_BINDINGS_IMX7_POWER_H__
->> +#define __DT_BINDINGS_IMX7_POWER_H__
->> +
->> +#define IMX7_POWER_DOMAIN_USB_HSIC_PHY       0
->> +#define IMX7_POWER_DOMAIN_USB_OTG2_PHY       1
->> +#define IMX7_POWER_DOMAIN_USB_OTG1_PHY       2
->> +#define IMX7_POWER_DOMAIN_PCIE_PHY   3
->> +#define IMX7_POWER_DOMAIN_MIPI_PHY   4
 >
-> Nitpick: Probably better to define according to the reference manual
-> defined order.
->
-> 0x800 ~ 0x83F : PGC for A7 core0
-> 0x840 ~ 0x87F: PGC for A7 core1
-> 0x880 ~ 0x8BF: PGC for A7 SCU
-> 0xA00 ~ 0xA3F: PGC for fastmix/megamix
-> 0xC00 ~ 0xC3F: PGC for MIPI PHY
-> 0xC40 ~ 0xC7F: PGC for PCIE_PHY
-> 0xC80 ~ 0xCBF: Reserved
-> 0xCC0 ~ 0xCFF: Reserved
-> 0xD00 ~ 0xD3F: PGC for USB HSIC PHY
->
-> You can drop A7 core/scu/fastmix/megamix as well.
->
+> In addition to the generic qcom,glink-rpm I presume?
 
-Sure, will do.
+Right.
 
-Thanks,
-Andrey Smirnov
+>
+>> > +
+>> > +- interrupts:
+>> > +   Usage: required
+>> > +   Value type: <prop-encoded-array>
+>> > +   Definition: should specify the IRQ used by the remote processor to
+>> > +               signal this processor about communication related events
+>> > +
+>> > +- qcom,rpm-msg-ram:
+>> > +   Usage: required
+>> > +   Value type: <prop-encoded-array>
+>> > +   Definition: handle to RPM message memory resource
+>> > +
+>> > +- qcom,ipc:
+>> > +   Usage: required
+>> > +   Value type: <prop-encoded-array>
+>> > +   Definition: three entries specifying the outgoing ipc bit used for
+>> > +               signaling the remote processor:
+>> > +               - phandle to a syscon node representing the apcs registers
+>> > +               - u32 representing offset to the register within the syscon
+>> > +               - u32 representing the ipc bit within the register
+>> > +
+>> > += GLINK DEVICES
+>> > +Each subnode of the GLINK node represent function tied to a virtual
+>> > +communication channel. The name of the nodes are not important. The properties
+>> > +of these nodes are defined by the individual bindings for the specific function
+>> > +- but must contain the following property:
+>> > +
+>> > +- qcom,glink-channels:
+>> > +   Usage: required
+>> > +   Value type: <stringlist>
+>> > +   Definition: a list of channels tied to this function, used for matching
+>> > +               the function to a set of virtual channels
+>> > +
+>> > += EXAMPLE
+>> > +The following example represents the GLINK RPM node on a MSM8996 device, with
+>> > +the function for the "rpm_request" channel defined, which is used for
+>> > +regualtors and root clocks.
+>> > +
+>> > +   apcs: syscon@f9011000 {
+>> > +           compatible = "syscon";
+>>
+>> syscon alone is not valid.
+>>
+>
+> This is equivalent to how we have done this on all previous platforms.
+
+Then they are wrong...
+
+> On previous platforms this generally maps to one of the "Krait Processor
+> SubSystem" blocks, so I'm quite worried with coming up with a compatible
+> for this block will not be compatible with any future description of
+> this block.
+
+Perhaps why we should get rid of syscon. It's not supposed to be a "I
+don't know how to define a binding, so just make all registers
+available for now".
+
+I don't really see how a compatible string alone would create problems
+to extend the binding if you need to later. Even if it did, you can
+always rev compatible strings.
+
+>> > +           reg = <0xf9011000 0x1000>;
+>> > +   };
+>> > +
+>> > +   rpm_msg_ram: memory@68000 {
+>> > +           compatible = "qcom,rpm-msg-ram";
+>>
+>> Is this more than just mmio-sram?
+>>
+>> Or with a fixed use could be part of another node?
+>>
+>
+> It represents one of the RAM modules of one of the other ARM cores in
+> the SoC, used for shared memory communication with this ARM core. So the
+> hardware is essentially mmio-sram. But it has none of the properties
+> that a mmio-sram seem to have.
+
+Properties such as?
+
+>
+> The reason I did not put it in the rpm-glink node is that in previous
+> Qualcomm platforms we have exactly the same system design, but the data
+> structure of the RAM was different, so it felt natural to just keep the
+> same description of the hardware.
+>
+>> > +           reg = <0x68000 0x6000>;
+>> > +   };
+>> > +
+>> > +        rpm-glink {
+>> > +           compatible = "qcom,glink-rpm";
+>> > +
+>> > +           interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+>> > +
+>> > +           qcom,rpm-msg-ram = <&rpm_msg_ram>;
+>> > +           qcom,ipc = <&apcs 0x10 0>;
+>> > +
+>> > +           rpm-requests {
+>> > +                   compatible = "qcom,rpm-msm8996";
+>> > +                   qcom,glink-channels = "rpm_requests";
+>> > +
+>> > +                   ...
+>> > +           };
+>> > +   };
+>
+> Regards,
+> Bjorn
