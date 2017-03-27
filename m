@@ -1,47 +1,64 @@
-From: Nandor Han <nandor.han@ge.com>
-Subject: [PATCH 0/3] XRA1403,gpio - add XRA1403 gpio expander driver
-Date: Mon, 27 Mar 2017 09:22:59 +0300
-Message-ID: <cover.1490595641.git.nandor.han@ge.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Nandor Han <nandor.han@ge.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] iio: xoadc: augment DT bindings a bit
+Date: Mon, 27 Mar 2017 09:56:03 +0200
+Message-ID: <CACRpkdZwB9D_DrgKxTUUA-87qK7U4+tMPV+MCFM2zgVVO4t8ow@mail.gmail.com>
+References: <20170318133358.22314-1-linus.walleij@linaro.org> <20170326045717.GB70446@Bjorns-MacBook-Pro-2.local>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170326045717.GB70446-iTMlPVAvTYNoL7IsjepNBwq4bfNCki47rNQQ6b5fDX0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patchset will add a driver to support basic functionality for
-XRA1403 device. Features supported:
-	- configure gpin as input/out
-	- get/set gpio status
+On Sun, Mar 26, 2017 at 6:57 AM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Sat 18 Mar 06:33 PDT 2017, Linus Walleij wrote:
+>
 
-Documentation: A gpio-xra1403.txt file was added to document the DTS
-	bindings related to driver.
+>> +adc-channel@0c {
+>
+> Shouldn't the @ be followed by the value of the first cell in "reg"?
+> (Which will collide if we name them all "adc-channel").
 
-Testing:
+I don't think we have a rule about these other than that they should
+be unique. I renamed them so that it is unique using the combined
+premux+amux number:
 
-1. XRA1403 connected to iMX53 MCU
-2. Export gpio from userspace
-3. Verify that corresponding gpio directories are created
-   in `/sys/class/gpio/gpioXX`
-4. Export gpios from first and second bank as output
-5. Set the output gpio pin to high/low and verify with the 
-   oscilloscope that gpio status is according with the configured
-   value.
+>> +     reg = <0x00 0x0c>;
 
-Nandor Han (3):
-  gpio - Add EXAR XRA1403 SPI GPIO expander driver
-  doc,dts - add XRA1403 DTS binding documentation
-  Add XRA1403 support to MAINTAINERS file
+So this becomes
 
- .../devicetree/bindings/gpio/gpio-xra1403.txt      |  37 +++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- MAINTAINERS                                        |   8 +
- drivers/gpio/Kconfig                               |   5 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-xra1403.c                        | 252 +++++++++++++++++++++
- 6 files changed, 304 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
- create mode 100644 drivers/gpio/gpio-xra1403.c
+adc-channel@000c {
+    reg = <0x00 0x0c>;
+};
 
--- 
-2.10.1
+>> +  On PM8058 the hardware only supports 16 channels, but we get the same
+>> +  channels repeating with its input divided down by 1 or 3. Channels 00,
+>> +  10, 20, ... f0 are the raw values, 04, 14, 24 .. f4 are "unity" channels
+>> +  divided by 1, and 08, 18, 28 .. f8 are channels divided by 3. Bits 0
+>> +  and 1 of the channel index should always be 0.
+>> +
+>> +  On PM8921 the hardware supports more than 16 channels through a complex
+>> +  routing matrix using a premux, so 00, 10, 20 .. f0 are the basic raw
+>> +  channels while another set of channels appear for 04, 14, 24 .. f4,
+>> +  and again some of the same channels appear again divided down by 3
+>> +  in 08, 18, 28 .. f8. Again bits 0 and 1 of the channel index should
+>> +  always be 0.
+>
+> While I believe documenting this is a good thing I do not think it adds
+> value to this binding document (other than showing Rob the absurdness of
+> the addressing scheme). Please consider moving it to the driver (haven't
+> checked how you commented it yet) and drop it from here.
 
+Dropped it.
+
+I'm sending this modified version as v2.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
