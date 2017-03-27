@@ -1,97 +1,67 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6qp-nitrogen6_som2: add Quad Plus variant of the SOM
-Date: Mon, 27 Mar 2017 18:06:01 +0200
-Message-ID: <20170327160601.12871-1-gary.bisson@boundarydevices.com>
+From: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Subject: [RFC PATCH 1/2] dt-bindings: mtd: Add Cavium SOCs NAND bindings
+Date: Mon, 27 Mar 2017 18:05:23 +0200
+Message-ID: <20170327160524.29019-2-jglauber@cavium.com>
+References: <20170327160524.29019-1-jglauber@cavium.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170327160524.29019-1-jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-https://boundarydevices.com/product/nit6x-som-v2/
+Add device tree binding description for Cavium SOC nand flash controller.
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                  |  1 +
- arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts | 55 +++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts
+ .../devicetree/bindings/mtd/cavium_nand.txt        | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cavium_nand.txt
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 011808490fed..6190afe94371 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -426,6 +426,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-wandboard.dtb \
- 	imx6q-wandboard-revb1.dtb \
- 	imx6qp-nitrogen6_max.dtb \
-+	imx6qp-nitrogen6_som2.dtb \
- 	imx6qp-sabreauto.dtb \
- 	imx6qp-sabresd.dtb
- dtb-$(CONFIG_SOC_IMX6SL) += \
-diff --git a/arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts b/arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts
+diff --git a/Documentation/devicetree/bindings/mtd/cavium_nand.txt b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
 new file mode 100644
-index 000000000000..011726c836cd
+index 0000000..4698d1f
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts
-@@ -0,0 +1,55 @@
-+/*
-+ * Copyright 2017 Boundary Devices, Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
++++ b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
+@@ -0,0 +1,32 @@
++* Cavium NAND controller
 +
-+/dts-v1/;
++Required properties:
 +
-+#include "imx6qp.dtsi"
-+#include "imx6qdl-nitrogen6_som2.dtsi"
++- compatible:		should be "cavium,cn8xxx-nand"
++- reg:			PCI devfn
++- clocks:		must contain system clock
++- #address-cells:	<1>
++- #size-cells:		<0>
 +
-+/ {
-+	model = "Boundary Devices i.MX6 Quad Plus Nitrogen6_SOM2 Board";
-+	compatible = "boundary,imx6qp-nitrogen6_som2", "fsl,imx6qp";
-+};
++The nand flash controller may contain up to 8 subnodes representing
++NAND flash chips. Their properties are as follows.
 +
-+&sata {
-+	status = "okay";
++Required properties:
++- compatible:		should be "cavium,nandcs"
++- reg:			a single integer representing the chip-select number
++- nand-ecc-mode:	see nand.txt
++
++Example:
++
++nfc: nand@b,0 {
++	compatible = "cavium,cn8xxx-nand";
++	reg = <0x5800 0 0 0 0>;
++	clocks = <&sclk>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nand@1 {
++		compatible = "cavium,nandcs";
++		reg = <1>;
++		nand-ecc-mode = "on-die";
 +};
 -- 
-2.11.0
+2.9.0.rc0.21.g7777322
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
