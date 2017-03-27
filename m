@@ -1,43 +1,67 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v5 23/24] MAINTAINERS: add PCI EP maintainer
-Date: Mon, 27 Mar 2017 15:15:19 +0530
-Message-ID: <20170327094520.3129-24-kishon@ti.com>
-References: <20170327094520.3129-1-kishon@ti.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 2/8] pinctrl: stm32: use gpio-ranges to declare bank range
+Date: Mon, 27 Mar 2017 12:23:49 +0200
+Message-ID: <7be9d251-f177-ce15-9d91-d8533ddffa06@st.com>
+References: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com>
+ <1485533721-9019-3-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdYtZCJVrZhXOPXd-MNMX0Ry_H1dLQopKwsj9HnO03BtKg@mail.gmail.com>
+ <2d0cd144-9a72-52d5-b2c9-c6c9e09ac494@st.com>
+ <CACRpkdbhqT688-1MajRshqgn0bH0h2s=LM06gEQYgRmMZC_n0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170327094520.3129-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: hch@infradead.org, nsekhar@ti.com, kishon@ti.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdbhqT688-1MajRshqgn0bH0h2s=LM06gEQYgRmMZC_n0g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Patrice Chotard <patrice.chotard@st.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainer for the newly introduced PCI EP framework.
+Hi Linus
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 02/01/2017 04:01 PM, Linus Walleij wrote:
+> On Mon, Jan 30, 2017 at 5:29 PM, Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+>> On 01/30/2017 04:19 PM, Linus Walleij wrote:
+>
+>>>> +       if (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0,
+>>>> &args))
+>>>> +               bank_nr = args.args[1] / STM32_GPIO_PINS_PER_BANK;
+>>>> +       else {
+>>>> +               range->name = bank->gpio_chip.label;
+>>>> +               range->id = bank_nr;
+>>>> +               range->pin_base = range->id * STM32_GPIO_PINS_PER_BANK;
+>>>> +               range->base = range->id * STM32_GPIO_PINS_PER_BANK;
+>>>> +               range->npins = npins;
+>>>> +               range->gc = &bank->gpio_chip;
+>>>> +               pinctrl_add_gpio_range(pctl->pctl_dev,
+>>>> +                                      &pctl->banks[bank_nr].range);
+>>>> +       }
+>>
+>>
+>> I Keep the old way to get range in order to keep compatibility with older
+>> device tree (if no gpio ranges are defined).
+>
+> Aha I understand. Sorry for my stupidity.
+>
+> Go ahead with this!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c265a5fe4848..3c1b947811e2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9581,6 +9581,15 @@ F:	include/linux/pci*
- F:	arch/x86/pci/
- F:	arch/x86/kernel/quirks.c
- 
-+PCI EP SUBSYSTEM
-+M:	Kishon Vijay Abraham I <kishon@ti.com>
-+L:	linux-pci@vger.kernel.org
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kishon/pci-endpoint.git
-+S:	Supported
-+F:	drivers/pci/endpoint/
-+F:	drivers/misc/pci_endpoint_test.c
-+F:	tools/pci/
-+
- PCI DRIVER FOR ALTERA PCIE IP
- M:	Ley Foon Tan <lftan@altera.com>
- L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
--- 
-2.11.0
+I saw an issue about this patch. It doesn't seem to be merged, so I will 
+send a V2 only for this patch.
+
+Regards
+Alex
+
+
+>
+> Yours,
+> Linus Walleij
+>
