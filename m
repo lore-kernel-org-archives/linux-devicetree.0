@@ -1,133 +1,154 @@
-Return-Path: <SRS0=Hlfv=3B=google.com=jwerner@kernel.org>
 MIME-Version: 1.0
-Sender: jwerner@google.com
-In-Reply-To: <20170324175727.GB119093@google.com>
-References: <1490303069-13230-1-git-send-email-thierry.escande@collabora.com>
- <1490303069-13230-5-git-send-email-thierry.escande@collabora.com>
- <20170324122146.GE22771@leverpostej> <20170324175727.GB119093@google.com>
-From: Julius Werner <jwerner@chromium.org>
-Date: Fri, 24 Mar 2017 12:32:16 -0700
-Message-ID: <CAODwPW94vsaWF8+DrLduWhHpbBvdvynbDocXCv2ekZH178BHjQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] firmware: Add coreboot device tree binding documentation
-Content-Type: multipart/alternative; boundary=001a1140338a2e3d61054b7f0dee
-To: Brian Norris <briannorris@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Escande <thierry.escande@collabora.com>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Julius Werner <jwerner@chromium.org>
+In-Reply-To: <20170324033008.GV10760@atomide.com>
+References: <20170314212304.2875-1-tony@atomide.com>
+	<20170324015523.dul3j4lc2nyrmvkl@rob-hp-laptop>
+	<20170324033008.GV10760@atomide.com>
+Date: Mon, 27 Mar 2017 11:44:07 -0500
+Message-ID: <CAL_JsqJhyAkXiqzc==jhM5zS8JVeWqqv6KaOgLkWZs3kbyNrBQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: bus: TI interconnect target module binding
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap <linux-omap@vger.kernel.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Matthijs van Duin <matthijsvanduin@gmail.com>, Paul Walmsley <paul@pwsan.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a1140338a2e3d61054b7f0dee
-Content-Type: text/plain; charset=UTF-8
-
+On Thu, Mar 23, 2017 at 10:30 PM, Tony Lindgren <tony@atomide.com> wrote:
+> Hi,
 >
-> > Devicetree bindings should be in vendor,prefix format. This doesn't
-> > represent every aspect of coreboot, so it needs a more descriptive
-> > string.
+> * Rob Herring <robh@kernel.org> [170323 18:57]:
+>> On Tue, Mar 14, 2017 at 02:23:04PM -0700, Tony Lindgren wrote:
+>> > +- clocks   shall contain the clocks managed by the interconnect target
+>> > +           module, typically at least the clkctrl clock of the module
+>>
+>> Where do we document exactly how many clocks?
 >
-> Any particular suggestion? I suppose this is Google's interpretation of
-> coreboot tables, so "google,coreboot"?
-
-
-No. This binding is for the coreboot project in general and has nothing to
-do with Google. coreboot is both the vendor and the product, so I think
-"coreboot" would look better than "coreboot,coreboot". And yes, it is
-supposed to represent every aspect of coreboot (right now the "coreboot
-tables" are already sort of a catch-all data structure used by coreboot to
-pass on any sort of info it wants later stages to know... and if we ever
-have any additional things we'd like to pass on, we'd probably want to add
-them to this binding as well).
-
-
-> > > + - reg: Address and length of the following two memory regions, in
-> order:
-> > > +   1.) The coreboot table. This is a list of variable-sized
-> descriptors
-> > > +   that contain various compile- and run-time generated firmware
-> > > +   parameters. It is identified by the magic string "LBIO" in its
-> first
-> > > +   four bytes.
-> > > +   See coreboot's src/commonlib/include/commonlib/coreboot_tables.h
-> for
-> > > +   details.
-> >
-> > Given this is a memory region, it should be described under the
-> > reserved-memory node.
+> That's the clkctrl clock binding done earlier. Will add a note
+> about that.
 >
-> We've painted this bikeshed before. I guess the result was either to use
-> /reserved-memory or /memreserve/. I believe we've been using
-> /memreserve/. I suppose we could document a method to use either, but
-> the main "agreement" was to use the /firmware/coreboot path instead of
-> /reserved-memory/coreboot.
+>> > +Example: Single instance of MUSB controller on omap4 using interconnect ranges:
+>> > +
+>> > +   target_module@2b000 {                   /* 0x4a0ab000, ap 84 12.0 */
+>>
+>> target-module@
+>>
+>> This unit address doesn't look right?
 >
-
-See the old thread Brian linked for some arguments for and against this. I
-think particularly because we want this node to represent every aspect of
-coreboot (which I think makes more sense than spreading stuff all over the
-place), treating it as reserved memory would not work well if we might
-later add other fields.
-
-Also, since we didn't get any more responses the last time we tried to
-upstream this and had schedules to keep, we had to go ahead with what we
-had. So right now there are already millions of devices shipped with this
-binding in firmware, and the only question we still have left to decide is
-whether Linux wants to support them upstream or not.
-
---001a1140338a2e3d61054b7f0dee
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote"><blo=
-ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
-:1px solid rgb(204,204,204);padding-left:1ex"><div><div class=3D"gmail-h5">=
-&gt; Devicetree bindings should be in vendor,prefix format. This doesn&#39;=
-t<br>
-&gt; represent every aspect of coreboot, so it needs a more descriptive<br>
-&gt; string.<br>
-<br>
-</div></div>Any particular suggestion? I suppose this is Google&#39;s inter=
-pretation of<br>
-coreboot tables, so &quot;google,coreboot&quot;?</blockquote><div><br></div=
-><div>No. This binding is for the coreboot project in general and has nothi=
-ng to do with Google. coreboot is both the vendor and the product, so I thi=
-nk &quot;coreboot&quot; would look better than &quot;coreboot,coreboot&quot=
-;. And yes, it is supposed to represent every aspect of coreboot (right now=
- the &quot;coreboot tables&quot; are already sort of a catch-all data struc=
-ture used by coreboot to pass on any sort of info it wants later stages to =
-know... and if we ever have any additional things we&#39;d like to pass on,=
- we&#39;d probably want to add them to this binding as well).</div><div>=C2=
-=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
-x;border-left:1px solid rgb(204,204,204);padding-left:1ex"><span class=3D"g=
-mail-">
-&gt; &gt; + - reg: Address and length of the following two memory regions, =
-in order:<br>
-&gt; &gt; +=C2=A0 =C2=A01.) The coreboot table. This is a list of variable-=
-sized descriptors<br>
-&gt; &gt; +=C2=A0 =C2=A0that contain various compile- and run-time generate=
-d firmware<br>
-&gt; &gt; +=C2=A0 =C2=A0parameters. It is identified by the magic string &q=
-uot;LBIO&quot; in its first<br>
-&gt; &gt; +=C2=A0 =C2=A0four bytes.<br>
-&gt; &gt; +=C2=A0 =C2=A0See coreboot&#39;s src/commonlib/include/<wbr>commo=
-nlib/coreboot_tables.h for<br>
-&gt; &gt; +=C2=A0 =C2=A0details.<br>
-&gt;<br>
-&gt; Given this is a memory region, it should be described under the<br>
-&gt; reserved-memory node.<br>
-<br>
-</span>We&#39;ve painted this bikeshed before. I guess the result was eithe=
-r to use<br>
-/reserved-memory or /memreserve/. I believe we&#39;ve been using<br>
-/memreserve/. I suppose we could document a method to use either, but<br>
-the main &quot;agreement&quot; was to use the /firmware/coreboot path inste=
-ad of<br>
-/reserved-memory/coreboot.<br></blockquote><div><br></div><div>See the old =
-thread Brian linked for some arguments for and against this. I think partic=
-ularly because we want this node to represent every aspect of coreboot (whi=
-ch I think makes more sense than spreading stuff all over the place), treat=
-ing it as reserved memory would not work well if we might later add other f=
-ields.</div><div><br></div><div>Also, since we didn&#39;t get any more resp=
-onses the last time we tried to upstream this and had schedules to keep, we=
- had to go ahead with what we had. So right now there are already millions =
-of devices shipped with this binding in firmware, and the only question we =
-still have left to decide is whether Linux wants to support them upstream o=
-r not.</div></div></div></div>
-
---001a1140338a2e3d61054b7f0dee--
+> Oh OK sure will update.
+>
+>> > +           compatible = "ti,sysc-type1", "simple-bus";
+>>
+>> Seems fairly complicated to claim "simple-bus"?
+>
+> Hmm that allows to update the dts files and keep things working
+> with the current "ti,hwmods" property. Then the "ti,hwmods" can be
+> just removed to switch over to the new interconnect target driver.
+> So both legacy "simple-bus" + "ti,hwmods" will work and new
+> "ti,sysc-type1" and no "ti,hwmods". Or do you see some issues with
+> that approach?
+>
+>> > +           #address-cells = <2>;
+>>
+>> The target module really needs 64-bits of address space?
+>
+> I guess not :)
+>
+>> > +           #size-cells = <1>;
+>> > +           reg = <0x54 0x400 0x4
+>> > +                  0x54 0x404 0x4
+>> > +                  0x54 0x408 0x4
+>> > +                  0x54 0 0x001000>;
+>>
+>> You have overlapping regions. Don't do that.
+>
+> Yeah that can be left out for the interconnect target module if
+> we move some of the quirk handling for idling the unused child
+> devices into the child device drivers with the earlier proposed
+> status = "incomplete" stuff.
+>
+> That way the interconnect target module does not have to access the
+> child IO range. The child will need the 0x54 0x1000 as a range
+> though, so it would roughly like this with #address-cells = <1>:
+>
+>         target-module@2b000 {                   /* 0x4a0ab000, ap 84 12.0 */
+>                 compatible = "ti,sysc-type1", "simple-bus";
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+>                 reg = <0x54 0x400 0x4
+>                        0x54 0x404 0x4
+>                        0x54 0x408 0x4>;
+>                 reg-names = "rev", "sysc", "syss";
+>                 ranges = <0 0x54 0x001000>;
+>                 clocks = <&cm_l3init_clkctrl OMAP4_OTG_CLKCTRL 0>;
+>                 clock-names = "clkctrl";
+>
+>                 ti,sysc-has-autoidle;
+>                 ti,sysc-has-enawakeup;
+>                 ti,sysc-has-softreset;
+>                 ...
+>
+>                 usb_otg_hs: usb_otg_hs@0 {
+>                         compatible = "ti,omap4-musb";
+>                         reg = <0 0x7ff>;
+>                         interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 93 IRQ_TYPE_LEVEL_HIH>;
+>                         ...
+>                 };
+>         };
+>
+> Note how the ranges provided by the interconnect target module
+> still overlaps with the interconnect module control registers.
+> Does that look OK to you or do you have some better idea in mind
+> for dealing with that?
+>
+> Splitting the child range into sections would break ioremap for all
+> drivers I believe.
+>
+>> And for the first 3, if you have that much variation, maybe you need
+>> more specific compatible strings?
+>
+> The first three target module regions can be all over the map
+> within the child range unfortunately.. See for example just the
+> sysc registers below.
+>
+> Regards,
+>
+> Tony
+>
+> 8< ------------
+> $ git grep sysc_offs arch/arm/mach-omap2/*hwmod*data*.c | \
+>         cut -d'=' -f2 | sort | uniq
+>  0x0000,
+>  0x0004,
+>  0x0010,
+>  0x0014,
+>  0x002c,
+>  0x0034,
+>  0x0038,
+>  0x0054,
+>  0x0078,
+>  0x0084,
+>  0x008C,
+>  0x008c,
+>  0x010,
+>  0x0110,
+>  0x0210,
+>  0x0404,
+>  0x10,
+>  0x104,
+>  0x110,
+>  0x14,
+>  0x1fc10,
+>  0x1fe4,
+>  0x20,
+>  0x24,
+>  0x34,
+>  0x38,
+>  0x4,
+>  0x40,
+>  0x48,
+>  0x54,
+>  0x60,
+>  0x64,
+>  0x78,
+>  0x8,
+>  0x84,
