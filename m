@@ -1,34 +1,53 @@
-From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v5 00/13] ACPI graph support
-Date: Mon, 27 Mar 2017 14:03:21 +0300
-Message-ID: <20170327110321.GX2957@lahna.fi.intel.com>
-References: <1489667481-28521-1-git-send-email-sakari.ailus@linux.intel.com>
- <20170324154556.GD2957@lahna.fi.intel.com>
- <0b9104c2-4a3a-47db-ff1d-8f835fe3b567@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] drm: rcar-du: Document the vsps property in the DT
+ bindings
+Date: Mon, 27 Mar 2017 13:05:48 +0200
+Message-ID: <CAMuHMdUiDzGt6bz96D-5yRLF-HiZfpQTTxKP5Y4+j-9HiF1LLQ@mail.gmail.com>
+References: <20170327095652.5755-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0b9104c2-4a3a-47db-ff1d-8f835fe3b567-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170327095652.5755-1-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 12:17:50AM +0300, Sakari Ailus wrote:
-> Could you also review the other related patches? There are just a few and
-> they're relatively simple:
-> 
-> Set of three patches (which precedes what you reviewed):
-> 
-> <URL:http://www.spinics.net/lists/linux-acpi/msg72895.html>
-> 
-> And then finally:
-> 
-> <URL:http://www.spinics.net/lists/linux-acpi/msg72888.html>
-
-Sure, I'll go ahead and check those now.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTGF1cmVudCwKCk9uIE1vbiwgTWFyIDI3LCAyMDE3IGF0IDExOjU2IEFNLCBMYXVyZW50IFBp
+bmNoYXJ0CjxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6
+Cj4gVGhlIHByb3BlcnR5IGlzIHVzZWQgYnkgdGhlIGRyaXZlciBidXQgaXMgbWlzc2luZyBmcm9t
+IHRoZSBEVCBiaW5kaW5ncy4KPiBEb2N1bWVudCBpdC4KPgo+IFJlcG9ydGVkLWJ5OiBHZWVydCBV
+eXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPgo+IFNpZ25lZC1vZmYtYnk6IExhdXJl
+bnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+
+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2Fz
+LGR1LnR4dCB8IDUgKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQo+Cj4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jl
+bmVzYXMsZHUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cmVuZXNhcyxkdS50eHQKPiBpbmRleCAxYTAyZjA5OWEwZmYuLmNmMzQ4OTNhMWI1MyAxMDA2NDQK
+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2Fz
+LGR1LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3JlbmVzYXMsZHUudHh0Cj4gQEAgLTM2LDYgKzM2LDExIEBAIFJlcXVpcmVkIFByb3BlcnRpZXM6
+Cj4gICAgICAgIFdoZW4gc3VwcGxpZWQgdGhleSBtdXN0IGJlIG5hbWVkICJkY2xraW4ueCIgd2l0
+aCAieCIgYmVpbmcgdGhlIGlucHV0Cj4gICAgICAgIGNsb2NrIG51bWVyaWNhbCBpbmRleC4KPgo+
+ICtPcHRpb25hbCBQcm9wZXJ0aWVzOgo+ICsKPiArICAtIHZzcHM6IEEgbGlzdCBvZiBwaGFuZGxl
+cyB0byB0aGUgVlNQIG5vZGVzIHRoYXQgaGFuZGxlIHRoZSBtZW1vcnkKPiArICAgIGludGVyZmFj
+ZXMgZm9yIHRoZSBEVSBjaGFubmVscyAoR2VuMyBvbmx5KS4KCiIsIG9uZSBwZXIgY2hhbm5lbCI/
+CgpSZXF1aXJlZCBmb3IgR2VuMywgb3B0aW9uYWwgZm9yIEdlbjI/IChjZnIuIFNlcmdlaSdzIHBh
+dGNoZXMpLgoKR3J7b2V0amUsZWV0aW5nfXMsCgogICAgICAgICAgICAgICAgICAgICAgICBHZWVy
+dAoKLS0KR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQg
+aWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZwoKSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3
+aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEkn
+bSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0
+aGluZyBsaWtlIHRoYXQuCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMg
+VG9ydmFsZHMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
