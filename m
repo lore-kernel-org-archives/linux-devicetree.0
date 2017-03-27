@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V5 2/4] dt-bindings: arm: Add bindings for SP9860G
-Date: Mon, 27 Mar 2017 14:06:40 +0800
-Message-ID: <1490594802-27073-3-git-send-email-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V5 3/4] dt-bindings: serial: add a new compatible string for SC9860
+Date: Mon, 27 Mar 2017 14:06:41 +0800
+Message-ID: <1490594802-27073-4-git-send-email-chunyan.zhang@spreadtrum.com>
 References: <1490594802-27073-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,39 +12,40 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, catali
 Cc: mathieu.poirier@linaro.org, orson.zhai@spreadtrum.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhang.lyra@gmail.com, chunyan.zhang@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-Added bindings for Spreadtrum SP9860G board and SC9860 SoC.
-This patch also revised bindings of SC9836 to make the format
-more clear.
+SC9860 use the same serial device which SC9836 uses, so added a new
+compatible string to support SC9860 as well, also added an example
+of how to describe this serial device in DT.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/sprd.txt | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/serial/sprd-uart.txt | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
-index 31a629d..3df034b 100644
---- a/Documentation/devicetree/bindings/arm/sprd.txt
-+++ b/Documentation/devicetree/bindings/arm/sprd.txt
-@@ -1,11 +1,14 @@
- Spreadtrum SoC Platforms Device Tree Bindings
- ----------------------------------------------------
+diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+index 2aff0f2..cab40f0 100644
+--- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
++++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+@@ -1,7 +1,19 @@
+ * Spreadtrum serial UART
  
--Sharkl64 is a Spreadtrum's SoC Platform which is based
--on ARM 64-bit processor.
-+SC9836 openphone Board
-+Required root node properties:
-+	- compatible = "sprd,sc9836-openphone", "sprd,sc9836";
- 
--SC9836 openphone board with SC9836 SoC based on the
--Sharkl64 Platform shall have the following properties.
-+SC9860 SoC
-+Required root node properties:
-+	- compatible = "sprd,sc9860"
- 
-+SP9860G 3GFHD Board
- Required root node properties:
--        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
-+	- compatible = "sprd,sp9860g-1h10", "sprd,sc9860";
+ Required properties:
+-- compatible: must be "sprd,sc9836-uart"
++- compatible: must be one of:
++  * "sprd,sc9836-uart"
++  * "sprd,sc9860-uart", "sprd,sc9836-uart"
++
+ - reg: offset and length of the register set for the device
+ - interrupts: exactly one interrupt specifier
+ - clocks: phandles to input clocks.
++
++Example:
++	uart0: serial@0 {
++		compatible = "sprd,sc9860-uart",
++			     "sprd,sc9836-uart";
++		reg = <0x0 0x100>;
++		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&ext_26m>;
++	};
 -- 
 2.7.4
