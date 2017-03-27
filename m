@@ -1,25 +1,73 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH RFC v4 09/10] tty: serdev-ttyport: return actual baudrate
- from ttyport_set_baudrate
-Date: Mon, 27 Mar 2017 14:50:28 -0500
-Message-ID: <CAL_JsqJcyRG-am_XjZ2W_oJS0HAshD4nPcX4s--j7XBbUU+-Og@mail.gmail.com>
-References: <1490621848-24828-1-git-send-email-stefan.wahren@i2se.com> <1490621848-24828-10-git-send-email-stefan.wahren@i2se.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2 0/5] clk: meson: Fix GXBB and GXL/GXM GP0 PLL
+Date: Mon, 27 Mar 2017 13:02:16 -0700
+Message-ID: <149064493648.54062.5595306508519104671@resonance>
+References: <1490178747-14837-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1490621848-24828-10-git-send-email-stefan.wahren@i2se.com>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sre@kernel.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490178747-14837-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sboyd@codeaurora.org, carlo@caione.org, khilman@baylibre.com
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 8:37 AM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> Instead of returning the requested baudrate, we better return the
-> actual one because it isn't always the same.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  drivers/tty/serdev/serdev-ttyport.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Neil,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Quoting Neil Armstrong (2017-03-22 03:32:22)
+> This patchset fixes support for the Amlogic GXBB then GXL/GXM embedded GP0 PLL.
+> 
+> The current support is done via a very generic interface where only the
+> N/M/OD parameters are changed in the control registers.
+> 
+> But unlike the Fixed PLL, this PLL is not initialized by the bootloader or
+> firmware, and needs some parameters to initialize and lock correctly.
+> 
+> This patchset also adds the GXL variant compatible string which is already
+> supported by the GXL and GXM DT nodes.
+> 
+> Changes since v1 at [1]:
+>  - Rebase on the Mali clocks patchset at [2]
+>  - also depends on v2 Audio Clocks patchset from Jerome Brunet at [3]
+>  - Add match table and separate tables for gxl
+>  - Switch to probe function to use match table data only
+>  - Rename unreset_for_lock to clear_reset_for_lock
+
+Thanks for the quick changes. Applied to clk-meson, a stable branch,
+which was merged into clk-next.
+
+Best regards,
+Mike
+
+> 
+> [1] http://lkml.kernel.org/r/1489411604-18700-1-git-send-email-narmstrong@baylibre.com
+> [2] http://lkml.kernel.org/r/1490177935-9646-1-git-send-email-narmstrong@baylibre.com
+> [3] http://lkml.kernel.org/r/20170309104154.28295-1-jbrunet@baylibre.com
+> 
+> Neil Armstrong (5):
+>   clk: meson: Add support for parameters for specific PLLs
+>   clk: meson-gxbb: Add GP0 PLL init parameters
+>   clk: meson-gxbb: Add GXL/GXM GP0 Variant
+>   clk: meson-gxbb: Expose GP0 dt-bindings clock id
+>   dt-bindings: clock: gxbb-clkc: Add GXL compatible variant
+> 
+>  .../bindings/clock/amlogic,gxbb-clkc.txt           |   3 +-
+>  drivers/clk/meson/clk-pll.c                        |  53 +++-
+>  drivers/clk/meson/clkc.h                           |  23 ++
+>  drivers/clk/meson/gxbb.c                           | 314 +++++++++++++++++++--
+>  drivers/clk/meson/gxbb.h                           |   4 +-
+>  include/dt-bindings/clock/gxbb-clkc.h              |   1 +
+>  6 files changed, 366 insertions(+), 32 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
