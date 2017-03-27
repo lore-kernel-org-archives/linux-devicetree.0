@@ -1,336 +1,381 @@
-From: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-Subject: [PATCH 1/3] gpio - Add EXAR XRA1403 SPI GPIO expander driver
-Date: Mon, 27 Mar 2017 09:23:00 +0300
-Message-ID: <6bf04ba1761f0692cb461558f0c8836f0d1f7ad8.1490595641.git.nandor.han@ge.com>
-References: <cover.1490595641.git.nandor.han@ge.com>
+From: <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] iio:adc: Driver for Linear Technology LTC2497 ADC
+Date: Mon, 27 Mar 2017 09:23:53 +0200
+Message-ID: <1490599433-6103-1-git-send-email-michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1490595641.git.nandor.han-JJi787mZWgc@public.gmane.org>
-In-Reply-To: <cover.1490595641.git.nandor.han-JJi787mZWgc@public.gmane.org>
-References: <cover.1490595641.git.nandor.han-JJi787mZWgc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Semi Malinen <semi.malinen-JJi787mZWgc@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a simple driver that provides a /sys/class/gpio
-interface for controlling and configuring the GPIO lines.
-It does not provide support for chip select or interrupts.
+From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-Signed-off-by: Semi Malinen <semi.malinen-JJi787mZWgc@public.gmane.org>
+This patch adds support for the Analog Devices / Linear Technology
+LTC2497 ADCs. The LTC2497 is a 16-channel (eight differential),
+16-bit, high precision, delta-sigma ADC with an automatic, differential,
+input current cancellation front end and a 2-wire, I2C interface.
+
+Signed-off-by: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+
 ---
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- drivers/gpio/Kconfig                               |   5 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-xra1403.c                        | 252 +++++++++++++++++++++
- 4 files changed, 259 insertions(+)
- create mode 100644 drivers/gpio/gpio-xra1403.c
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0ad67d5..7ca9d41 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -103,6 +103,7 @@ ettus	NI Ettus Research
- eukrea  Eukréa Electromatique
- everest	Everest Semiconductor Co. Ltd.
- everspin	Everspin Technologies, Inc.
-+exar	Exar Corporation
- excito	Excito
- ezchip	EZchip Semiconductor
- faraday	Faraday Technology Corporation
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index d6e3cfd..3a6c9a3 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1208,6 +1208,11 @@ config GPIO_PISOSR
- 	  GPIO driver for SPI compatible parallel-in/serial-out shift
- 	  registers. These are input only devices.
- 
-+config GPIO_XRA1403
-+	tristate "EXAR XRA1403 16-bit GPIO expander"
-+	help
-+	  GPIO driver for EXAR XRA1403 16-bit SPI-based GPIO expander.
-+
- endmenu
- 
- menu "SPI or I2C GPIO expanders"
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index bd995dc..8f50844 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -139,6 +139,7 @@ obj-$(CONFIG_GPIO_XGENE)	+= gpio-xgene.o
- obj-$(CONFIG_GPIO_XGENE_SB)	+= gpio-xgene-sb.o
- obj-$(CONFIG_GPIO_XILINX)	+= gpio-xilinx.o
- obj-$(CONFIG_GPIO_XLP)		+= gpio-xlp.o
-+obj-$(CONFIG_GPIO_XRA1403)	+= gpio-xra1403.o
- obj-$(CONFIG_GPIO_XTENSA)	+= gpio-xtensa.o
- obj-$(CONFIG_GPIO_ZEVIO)	+= gpio-zevio.o
- obj-$(CONFIG_GPIO_ZYNQ)		+= gpio-zynq.o
-diff --git a/drivers/gpio/gpio-xra1403.c b/drivers/gpio/gpio-xra1403.c
+Changes since v1:
+
+ - remove confusing kconfig help text
+ - use proper defines
+ - add descriptive comment
+ - fix removal order
+ - add poper commit mssage
+---
+ .../devicetree/bindings/iio/adc/ltc2497.txt        |  13 +
+ MAINTAINERS                                        |   1 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/ltc2497.c                          | 269 +++++++++++++++++++++
+ 5 files changed, 294 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ltc2497.txt
+ create mode 100644 drivers/iio/adc/ltc2497.c
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/ltc2497.txt b/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
 new file mode 100644
-index 0000000..1b7138a8
+index 0000000..c2829c19
 --- /dev/null
-+++ b/drivers/gpio/gpio-xra1403.c
-@@ -0,0 +1,252 @@
++++ b/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
+@@ -0,0 +1,13 @@
++* Linear Technology / Analog Devices LTC2497 ADC
++
++Required properties:
++ - compatible: Should be "lltc,ltc2497"
++ - reg: Should contain the ADC I2C address
++ - vref-supply: The regulator supply for ADC reference voltage
++
++Example:
++	ltc2497: adc@76 {
++		compatible = "lltc,ltc2497";
++		reg = <0x76>;
++		vref-supply = <&ltc2497_reg>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a7d6f9a..173043c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -813,6 +813,7 @@ W:	http://wiki.analog.com/
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/*/ad*
++F:	drivers/iio/adc/ltc2497*
+ X:	drivers/iio/*/adjd*
+ F:	drivers/staging/iio/*/ad*
+ F:	drivers/staging/iio/trigger/iio-trig-bfin-timer.c
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 2268a6f..acc115b 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -326,6 +326,16 @@ config LTC2485
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called ltc2485.
+ 
++config LTC2497
++	tristate "Linear Technology LTC2497 ADC driver"
++	depends on I2C
++	help
++	  Say yes here to build support for Linear Technology LTC2497
++	  16-Bit 8-/16-Channel Delta Sigma ADC.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called ltc2497.
++
+ config MAX1027
+ 	tristate "Maxim max1027 ADC driver"
+ 	depends on SPI
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index 73dbe39..9d626b5 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -32,6 +32,7 @@ obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+ obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
+ obj-$(CONFIG_LPC32XX_ADC) += lpc32xx_adc.o
+ obj-$(CONFIG_LTC2485) += ltc2485.o
++obj-$(CONFIG_LTC2497) += ltc2497.o
+ obj-$(CONFIG_MAX1027) += max1027.o
+ obj-$(CONFIG_MAX11100) += max11100.o
+ obj-$(CONFIG_MAX1363) += max1363.o
+diff --git a/drivers/iio/adc/ltc2497.c b/drivers/iio/adc/ltc2497.c
+new file mode 100644
+index 0000000..7907534
+--- /dev/null
++++ b/drivers/iio/adc/ltc2497.c
+@@ -0,0 +1,269 @@
 +/*
-+ * GPIO driver for EXAR XRA1403 16-bit GPIO expander
++ * ltc2497.c - Driver for Linear Technology LTC2497 ADC
 + *
-+ * Copyright (c) 2017, General Electric Company
++ * Copyright (C) 2017 Analog Devices Inc.
 + *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
++ * Licensed under the GPL-2.
 + *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Datasheet: http://cds.linear.com/docs/en/datasheet/2497fd.pdf
 + */
 +
-+#include <linux/bitops.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/spi/spi.h>
++#include <linux/i2c.h>
++#include <linux/delay.h>
++#include <linux/regulator/consumer.h>
++#include <linux/of.h>
 +
-+/* XRA1403 registers */
-+#define XRA_GSR  0x00 /* GPIO State */
-+#define XRA_OCR  0x02 /* Output Control */
-+#define XRA_GCR  0x06 /* GPIO Configuration */
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
 +
-+/* SPI headers */
-+#define XRA_READ 0x80 /* read bit of the SPI command byte */
++#define LTC2497_ENABLE			0xA0
++#define LTC2497_SGL			(1 << 4)
++#define LTC2497_DIFF			(0 << 4)
++#define LTC2497_SIGN			(1 << 3)
++#define LTC2497_CONFIG_DEFAULT		LTC2497_ENABLE
++#define LTC2497_CONVERSION_TIME_MS	150ULL
 +
-+struct xra1403 {
-+	struct mutex      lock;
-+	struct gpio_chip  chip;
-+	struct spi_device *spi;
++struct ltc2497_st {
++	struct i2c_client *client;
++	struct regulator *ref;
++	ktime_t	time_prev;
++	u8 addr_prev;
 +};
 +
-+static int xra1403_get_byte(struct xra1403 *xra, unsigned int addr)
++static int ltc2497_wait_conv(struct ltc2497_st *st)
 +{
-+	return spi_w8r8(xra->spi, XRA_READ | (addr << 1));
-+}
++	s64 time_elapsed;
 +
-+static int xra1403_get_bit(struct xra1403 *xra, unsigned int addr,
-+			   unsigned int bit)
-+{
-+	int ret;
++	time_elapsed = ktime_ms_delta(ktime_get(), st->time_prev);
 +
-+	ret = xra1403_get_byte(xra, addr + (bit > 7));
-+	if (ret < 0)
-+		return ret;
-+
-+	return !!(ret & BIT(bit % 8));
-+}
-+
-+static int xra1403_set_bit(struct xra1403 *xra, unsigned int addr,
-+			   unsigned int bit, int value)
-+{
-+	int ret;
-+	u8 mask;
-+	u8 tx[2];
-+
-+	addr += bit > 7;
-+
-+	mutex_lock(&xra->lock);
-+
-+	ret = xra1403_get_byte(xra, addr);
-+	if (ret < 0)
-+		goto out_unlock;
-+
-+	mask = BIT(bit % 8);
-+	if (value)
-+		value = ret | mask;
-+	else
-+		value = ret & ~mask;
-+
-+	if (value != ret) {
-+		tx[0] = addr << 1;
-+		tx[1] = value;
-+		ret = spi_write(xra->spi, tx, sizeof(tx));
-+	} else {
-+		ret = 0;
++	if (time_elapsed < LTC2497_CONVERSION_TIME_MS) {
++		/* delay if conversion time not passed
++		 * since last read or write
++		 */
++		msleep(LTC2497_CONVERSION_TIME_MS - time_elapsed);
++		return 0;
 +	}
 +
-+out_unlock:
-+	mutex_unlock(&xra->lock);
++	if (time_elapsed - LTC2497_CONVERSION_TIME_MS <= 0) {
++		/* We're in automatic mode -
++		 * so the last reading is stil not outdated
++		 */
++		return 0;
++	}
++
++	return -ETIMEDOUT;
++}
++
++static int ltc2497_read(struct ltc2497_st *st, u8 address, int *val)
++{
++	struct i2c_client *client = st->client;
++	__be32 buf = 0;
++	int ret;
++
++	ret = ltc2497_wait_conv(st);
++	if (ret < 0 || st->addr_prev != address) {
++		ret = i2c_smbus_write_byte(st->client,
++					   LTC2497_ENABLE | address);
++		if (ret < 0)
++			return ret;
++		st->addr_prev = address;
++		msleep(LTC2497_CONVERSION_TIME_MS);
++	}
++	ret = i2c_master_recv(client, (char *)&buf, 3);
++	if (ret < 0)  {
++		dev_err(&client->dev, "i2c_master_recv failed\n");
++		return ret;
++	}
++	st->time_prev = ktime_get();
++
++	/* convert and shift the result,
++	 * and finally convert from offset binary to signed integer
++	 */
++	*val = (be32_to_cpu(buf) >> 14) - (1 << 17);
 +
 +	return ret;
 +}
 +
-+static int xra1403_direction_input(struct gpio_chip *chip, unsigned int offset)
++static int ltc2497_read_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan,
++			    int *val, int *val2, long mask)
 +{
-+	return xra1403_set_bit(gpiochip_get_data(chip), XRA_GCR, offset, 1);
-+}
-+
-+static int xra1403_direction_output(struct gpio_chip *chip, unsigned int offset,
-+				    int value)
-+{
++	struct ltc2497_st *st = iio_priv(indio_dev);
 +	int ret;
-+	struct xra1403 *xra = gpiochip_get_data(chip);
 +
-+	ret = xra1403_set_bit(xra, XRA_OCR, offset, value);
-+	if (ret)
-+		return ret;
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		mutex_lock(&indio_dev->mlock);
++		ret = ltc2497_read(st, chan->address, val);
++		mutex_unlock(&indio_dev->mlock);
++		if (ret < 0)
++			return ret;
 +
-+	ret = xra1403_set_bit(xra, XRA_GCR, offset, 0);
++		return IIO_VAL_INT;
 +
-+	return ret;
-+}
++	case IIO_CHAN_INFO_SCALE:
++		ret = regulator_get_voltage(st->ref);
++		if (ret < 0)
++			return ret;
 +
-+static int xra1403_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	return xra1403_get_bit(gpiochip_get_data(chip), XRA_GSR, offset);
-+}
++		*val = ret / 1000;
++		*val2 = 17;
 +
-+static void xra1403_set(struct gpio_chip *chip, unsigned int offset, int value)
-+{
-+	xra1403_set_bit(gpiochip_get_data(chip), XRA_OCR, offset, value);
-+}
++		return IIO_VAL_FRACTIONAL_LOG2;
 +
-+#ifdef CONFIG_DEBUG_FS
-+#define XRA_REGS 0x16
-+static void xra1403_dbg_show(struct seq_file *s, struct gpio_chip *chip)
-+{
-+	int reg;
-+	struct xra1403 *xra = gpiochip_get_data(chip);
-+	int value[XRA_REGS];
-+	int i;
-+	unsigned int gcr;
-+	unsigned int gsr;
-+
-+	seq_puts(s, "xra reg:");
-+	for (reg = 0; reg < XRA_REGS; reg++)
-+		seq_printf(s, " %2.2x", reg);
-+	seq_puts(s, "\n  value:");
-+	for (reg = 0; reg < XRA_REGS; reg++) {
-+		value[reg] = xra1403_get_byte(xra, reg);
-+		seq_printf(s, " %2.2x", value[reg]);
-+	}
-+	seq_puts(s, "\n");
-+
-+	gcr = value[XRA_GCR + 1] << 8 | value[XRA_GCR];
-+	gsr = value[XRA_GSR + 1] << 8 | value[XRA_GSR];
-+	for (i = 0; i < chip->ngpio; i++) {
-+		const char *label = gpiochip_is_requested(chip, i);
-+
-+		if (!label)
-+			continue;
-+
-+		seq_printf(s, " gpio-%-3d (%-12s) %s %s\n",
-+			   chip->base + i, label,
-+			   (gcr & BIT(i)) ? "in" : "out",
-+			   (gsr & BIT(i)) ? "hi" : "lo");
++	default:
++		return -EINVAL;
 +	}
 +}
-+#else
-+#define xra1403_dbg_show NULL
-+#endif
 +
-+static int xra1403_probe(struct spi_device *spi)
++#define LTC2497_CHAN(_chan, _addr) { \
++	.type = IIO_VOLTAGE, \
++	.indexed = 1, \
++	.channel = (_chan), \
++	.address = (_addr | (_chan / 2) | ((_chan & 1) ? LTC2497_SIGN : 0)), \
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
++	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
++}
++
++#define LTC2497_CHAN_DIFF(_chan, _addr) { \
++	.type = IIO_VOLTAGE, \
++	.indexed = 1, \
++	.channel = (_chan) * 2 + ((_addr) & LTC2497_SIGN ? 1 : 0), \
++	.channel2 = (_chan) * 2 + ((_addr) & LTC2497_SIGN ? 0 : 1),\
++	.address = (_addr | _chan), \
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
++	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
++	.differential = 1, \
++}
++
++static const struct iio_chan_spec ltc2497_channel[] = {
++	LTC2497_CHAN(0, LTC2497_SGL),
++	LTC2497_CHAN(1, LTC2497_SGL),
++	LTC2497_CHAN(2, LTC2497_SGL),
++	LTC2497_CHAN(3, LTC2497_SGL),
++	LTC2497_CHAN(4, LTC2497_SGL),
++	LTC2497_CHAN(5, LTC2497_SGL),
++	LTC2497_CHAN(6, LTC2497_SGL),
++	LTC2497_CHAN(7, LTC2497_SGL),
++	LTC2497_CHAN(8, LTC2497_SGL),
++	LTC2497_CHAN(9, LTC2497_SGL),
++	LTC2497_CHAN(10, LTC2497_SGL),
++	LTC2497_CHAN(11, LTC2497_SGL),
++	LTC2497_CHAN(12, LTC2497_SGL),
++	LTC2497_CHAN(13, LTC2497_SGL),
++	LTC2497_CHAN(14, LTC2497_SGL),
++	LTC2497_CHAN(15, LTC2497_SGL),
++	LTC2497_CHAN_DIFF(0, LTC2497_DIFF),
++	LTC2497_CHAN_DIFF(1, LTC2497_DIFF),
++	LTC2497_CHAN_DIFF(2, LTC2497_DIFF),
++	LTC2497_CHAN_DIFF(3, LTC2497_DIFF),
++	LTC2497_CHAN_DIFF(4, LTC2497_DIFF),
++	LTC2497_CHAN_DIFF(5, LTC2497_DIFF),
++	LTC2497_CHAN_DIFF(6, LTC2497_DIFF),
++	LTC2497_CHAN_DIFF(7, LTC2497_DIFF),
++	LTC2497_CHAN_DIFF(0, LTC2497_DIFF | LTC2497_SIGN),
++	LTC2497_CHAN_DIFF(1, LTC2497_DIFF | LTC2497_SIGN),
++	LTC2497_CHAN_DIFF(2, LTC2497_DIFF | LTC2497_SIGN),
++	LTC2497_CHAN_DIFF(3, LTC2497_DIFF | LTC2497_SIGN),
++	LTC2497_CHAN_DIFF(4, LTC2497_DIFF | LTC2497_SIGN),
++	LTC2497_CHAN_DIFF(5, LTC2497_DIFF | LTC2497_SIGN),
++	LTC2497_CHAN_DIFF(6, LTC2497_DIFF | LTC2497_SIGN),
++	LTC2497_CHAN_DIFF(7, LTC2497_DIFF | LTC2497_SIGN),
++};
++
++static const struct iio_info ltc2497_info = {
++	.read_raw = ltc2497_read_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int ltc2497_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
 +{
-+	struct xra1403 *xra;
-+	struct gpio_desc *reset_gpio;
++	struct iio_dev *indio_dev;
++	struct ltc2497_st *st;
++	int ret;
 +
-+	xra = devm_kzalloc(&spi->dev, sizeof(*xra), GFP_KERNEL);
-+	if (!xra)
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C |
++				     I2C_FUNC_SMBUS_WRITE_BYTE))
++		return -EOPNOTSUPP;
++
++	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*st));
++	if (!indio_dev)
 +		return -ENOMEM;
 +
-+	/* bring the chip out of reset */
-+	reset_gpio = gpiod_get_optional(&spi->dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(reset_gpio))
-+		dev_warn(&spi->dev, "could not get reset-gpios\n");
-+	else if (reset_gpio)
-+		gpiod_put(reset_gpio);
++	st = iio_priv(indio_dev);
++	i2c_set_clientdata(client, indio_dev);
++	st->client = client;
 +
-+	mutex_init(&xra->lock);
++	indio_dev->dev.parent = &client->dev;
++	indio_dev->name = id->name;
++	indio_dev->info = &ltc2497_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = ltc2497_channel;
++	indio_dev->num_channels = ARRAY_SIZE(ltc2497_channel);
 +
-+	xra->chip.direction_input = xra1403_direction_input;
-+	xra->chip.direction_output = xra1403_direction_output;
-+	xra->chip.get = xra1403_get;
-+	xra->chip.set = xra1403_set;
-+	xra->chip.dbg_show = xra1403_dbg_show;
++	st->ref = devm_regulator_get(&client->dev, "vref");
++	if (IS_ERR(st->ref))
++		return PTR_ERR(st->ref);
 +
-+	xra->chip.ngpio = 16;
-+	xra->chip.label = "xra1403";
++	ret = regulator_enable(st->ref);
++	if (ret < 0)
++		return ret;
 +
-+	xra->chip.base = -1;
-+	xra->chip.can_sleep = true;
-+	xra->chip.parent = &spi->dev;
-+	xra->chip.owner = THIS_MODULE;
++	ret = i2c_smbus_write_byte(st->client, LTC2497_CONFIG_DEFAULT);
++	if (ret < 0)
++		goto err_regulator_disable;
 +
-+	xra->spi = spi;
-+	spi_set_drvdata(spi, xra);
++	st->addr_prev = LTC2497_CONFIG_DEFAULT;
++	st->time_prev = ktime_get();
 +
-+	return gpiochip_add_data(&xra->chip, xra);
++	ret = iio_device_register(indio_dev);
++	if (ret < 0)
++		goto err_regulator_disable;
++
++	return 0;
++
++err_regulator_disable:
++	regulator_disable(st->ref);
++
++	return ret;
 +}
 +
-+static int xra1403_remove(struct spi_device *spi)
++static int ltc2497_remove(struct i2c_client *client)
 +{
-+	struct xra1403 *xra = spi_get_drvdata(spi);
++	struct iio_dev *indio_dev = i2c_get_clientdata(client);
++	struct ltc2497_st *st = iio_priv(indio_dev);
 +
-+	gpiochip_remove(&xra->chip);
++	iio_device_unregister(indio_dev);
++	regulator_disable(st->ref);
 +
 +	return 0;
 +}
 +
-+static const struct spi_device_id xra1403_ids[] = {
-+	{ "xra1403" },
++static const struct i2c_device_id ltc2497_id[] = {
++	{ "ltc2497", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, ltc2497_id);
++
++static const struct of_device_id ltc2497_of_match[] = {
++	{ .compatible = "lltc,ltc2497", },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(spi, xra1403_ids);
++MODULE_DEVICE_TABLE(of, ltc2497_of_match);
 +
-+static const struct of_device_id xra1403_spi_of_match[] = {
-+	{ .compatible = "exar,xra1403" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, xra1403_spi_of_match);
-+
-+static struct spi_driver xra1403_driver = {
-+	.probe    = xra1403_probe,
-+	.remove   = xra1403_remove,
-+	.id_table = xra1403_ids,
-+	.driver   = {
-+		.name           = "xra1403",
-+		.of_match_table = of_match_ptr(xra1403_spi_of_match),
++static struct i2c_driver ltc2497_driver = {
++	.driver = {
++		.name = "ltc2497",
++		.of_match_table = of_match_ptr(ltc2497_of_match),
 +	},
++	.probe = ltc2497_probe,
++	.remove = ltc2497_remove,
++	.id_table = ltc2497_id,
 +};
++module_i2c_driver(ltc2497_driver);
 +
-+static int __init xra1403_init(void)
-+{
-+	return spi_register_driver(&xra1403_driver);
-+}
-+
-+/*
-+ * register after spi postcore initcall and before
-+ * subsys initcalls that may rely on these GPIOs
-+ */
-+subsys_initcall(xra1403_init);
-+
-+static void __exit xra1403_exit(void)
-+{
-+	spi_unregister_driver(&xra1403_driver);
-+}
-+module_exit(xra1403_exit);
-+
-+MODULE_AUTHOR("Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>");
-+MODULE_AUTHOR("Semi Malinen <semi.malinen-JJi787mZWgc@public.gmane.org>");
-+MODULE_DESCRIPTION("GPIO expander driver for EXAR XRA1403");
++MODULE_AUTHOR("Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>");
++MODULE_DESCRIPTION("Linear Technology LTC2497 ADC driver");
 +MODULE_LICENSE("GPL v2");
 -- 
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
