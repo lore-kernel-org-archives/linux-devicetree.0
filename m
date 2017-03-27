@@ -1,66 +1,80 @@
-From: Tobias Regnery <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: add stub for of_n_addr_cells
-Date: Mon, 27 Mar 2017 07:54:54 +0200
-Message-ID: <20170327055454.c6kj4keeudqn4bps@builder>
-References: <20170324103940.30902-1-tobias.regnery@gmail.com>
- <CAK8P3a3ojRSpC3GVU6P05GEtj7AHxrYD_ZrAZaa68KT14H9Hew@mail.gmail.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V5 0/4] Add Spreadtrum SP9860G support
+Date: Mon, 27 Mar 2017 14:06:38 +0800
+Message-ID: <1490594802-27073-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3ojRSpC3GVU6P05GEtj7AHxrYD_ZrAZaa68KT14H9Hew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
+Cc: mathieu.poirier@linaro.org, orson.zhai@spreadtrum.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhang.lyra@gmail.com, chunyan.zhang@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-On 24.03.17, Arnd Bergmann wrote:
-> On Fri, Mar 24, 2017 at 11:39 AM, Tobias Regnery
-> <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > With CONFIG_OF=n and CONFIG_COMPILE_TEST=y the rcar pci-e driver fails to
-> > build on arm:
-> >
-> > drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
-> > drivers/pci/host/pcie-rcar.c:1035:16: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
-> >   parser->pna = of_n_addr_cells(node);
-> >                 ^~~~~~~~~~~~~~~
-> >
-> > Fix this by adding an inline stub for of_n_addr_cells
-> >
-> > Signed-off-by: Tobias Regnery <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> > This is against next-20140324
-> >
-> >  include/linux/of.h | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/include/linux/of.h b/include/linux/of.h
-> > index 21e6323de0f3..9978c918222e 100644
-> > --- a/include/linux/of.h
-> > +++ b/include/linux/of.h
-> > @@ -710,6 +710,11 @@ static inline struct device_node *of_get_cpu_node(int cpu,
-> >         return NULL;
-> >  }
-> >
-> > +static inline int of_n_addr_cells(struct device_node *np)
-> > +{
-> > +       return 0;
-> > +}
-> > +
-> 
-> This looks good, but we should also do the same thing for of_n_size_cells().
-> 
-> I think I sent something like this a few years ago, but never resubmitted it
-> when it was ignored at first.
-> 
->         Arnd
+SC9860 is a Spreadtrum SoC with eight Cortex A53, which are divided
+into 4 Big cores and 4 little cores.
 
-This seems sensible, I can send an updated patch with this change or I can 
-send it as a separate patch, whatever the maintainers prefer.
+This patch-set provides a basic configuration for SC9860 in device tree
+to make it run to console.  After this we will continue to submit other
+device drivers step by step, which are using on most of Spreadtrum's SoCs.
 
---
-Tobias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from v4:
+* Addressed Rob's comments
+  use serial@0 instead of serial@000000;
+* Added Rob's Acked-by on patch 2/4 and 3/4.
+
+Changes from v3:
+* Rebased v4.11-rc2;
+* Added Reviewed-by of Mathieu;
+* Addressed Rob's comments:
+  - Documented sprd serial competible according to Rob's suggestion
+  - Revised serial node name to match its offset;
+* Added STM device node in dt.
+
+Changes from v2:
+* Addressed comments from Mathieu:
+  - Removed CoreSight devices' lables from DT;
+  - Added another level of imbrication for ETFs which have more than one port;
+* Addressed comments from Rob:
+  - Switched to use SPDX-License-Identifier tag instead;
+  - Moved the 26m fixed clock node to top level in DT;
+  - Splited the patch into two, since they were revising two dt-bindings;
+  - Removed redundant space from sprd-usrt.txt;
+  - Removed useless property from the sprd_uart example of DT configuration.
+
+Changes from v1:
+* Removed useless idle-state node 'deep_sleep' from DT
+* Removed useless property 'sc-id' from DT
+* Removed 'clock-frequency' property from the node 'timer'
+* Added another compatible string '"arm,cortex-a53-pmu"' and property
+  'interrupt-affinity' for pmu
+* Kept using the existed compatible string of sprd_serial driver, and added
+  a new one for sc9860 in DT.
+
+Thanks,
+Chunyan
+
+
+Chunyan Zhang (2):
+  dt-bindings: arm: Add bindings for SP9860G
+  dt-bindings: serial: add a new compatible string for SC9860
+
+Orson Zhai (1):
+  arm64: dts: Add basic DT to support Spreadtrum's SP9860G
+
+Wei Qiao (1):
+  serial: sprd: adjust TIMEOUT to a big value
+
+ Documentation/devicetree/bindings/arm/sprd.txt     |  13 +-
+ .../devicetree/bindings/serial/sprd-uart.txt       |  14 +-
+ arch/arm64/boot/dts/sprd/Makefile                  |   3 +-
+ arch/arm64/boot/dts/sprd/sc9860.dtsi               | 569 +++++++++++++++++++++
+ arch/arm64/boot/dts/sprd/sp9860g-1h10.dts          |  56 ++
+ arch/arm64/boot/dts/sprd/whale2.dtsi               |  71 +++
+ drivers/tty/serial/sprd_serial.c                   |   2 +-
+ 7 files changed, 720 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/sprd/sc9860.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+ create mode 100644 arch/arm64/boot/dts/sprd/whale2.dtsi
+
+-- 
+2.7.4
