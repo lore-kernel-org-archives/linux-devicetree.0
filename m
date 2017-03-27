@@ -1,77 +1,129 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 7/15] dt-bindings: display: sun4i: Add
- allwinner,tcon-channel property
-Date: Sun, 26 Mar 2017 23:11:22 +0200
-Message-ID: <20170326211122.ofbl4z25imyyyn3f@lukather>
-References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
- <46fdec2d680d539652f87d79c627973b3a568438.1488876832.git-series.maxime.ripard@free-electrons.com>
- <20170315173753.6zywfxapdczu2i34@rob-hp-laptop>
- <CAGb2v67A2T4KeLBttAGLKoo7igBTnQH+5yxN-jJo1k7Ewfd9mQ@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: sun7i: Add CAN node and can0_pins_a
+ pinctrl settings
+Date: Mon, 27 Mar 2017 08:46:25 +0200
+Message-ID: <20170327064625.we7ydn2oapwizncb@lukather>
+References: <1490392339-23565-1-git-send-email-menschel.p@posteo.de>
+ <1490392339-23565-3-git-send-email-menschel.p@posteo.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zyqbyw7y52pdpduq"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5FC4PDAKGQEM2BTNZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67A2T4KeLBttAGLKoo7igBTnQH+5yxN-jJo1k7Ewfd9mQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============8107342982921785068=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490392339-23565-3-git-send-email-menschel.p@posteo.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Patrick Menschel <menschel.p@posteo.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---zyqbyw7y52pdpduq
-Content-Type: text/plain; charset=UTF-8
+--===============8107342982921785068==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mzddxfrgk3es52ce"
 Content-Disposition: inline
 
-On Fri, Mar 17, 2017 at 11:34:45AM +0800, Chen-Yu Tsai wrote:
-> On Thu, Mar 16, 2017 at 1:37 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Tue, Mar 07, 2017 at 09:56:26AM +0100, Maxime Ripard wrote:
-> >> The Allwinner Timings Controller has two, mutually exclusive, channels.
-> >> When the binding has been introduced, it was assumed that there would be
-> >> only a single user per channel in the system.
-> >>
-> >> While this is likely for the channel 0 which only connects to LCD displays,
-> >> it turns out that the channel 1 can be connected to multiple controllers in
-> >> the SoC (HDMI and TV encoders for example). And while the simultaneous use
-> >> of HDMI and TV outputs cannot be achieved, switching from one to the other
-> >> at runtime definitely sounds plausible.
-> >>
-> >> Add an extra property, allwinner,tcon-channel, to specify for a given
-> >> endpoint which TCON channel it is connected to, while falling back to the
-> >> previous mechanism if that property is missing.
-> >
-> > I think perhaps TCON channels should have been ports rather than
-> > endpoints. The fact that the channels are mutually exclusive can be
-> > handled in the driver and doesn't really matter in the binding. How
-> > painful would it be to rework things to move TCON channel 1 from port 0,
-> > endpoint 1 to port 1?
-> 
-> Having a separate output port for channel 1 was one option we discussed.
-> However it wouldn't work well with the kernel's of_graph based crtc
-> detection (drm_of_find_possible_crtcs / drm_of_find_possible_crtcs),
-> which has the crtcs bound via the output port. As the logic is used
-> by multiple drivers, I'm not sure it's easy to rework or test.
 
-Can't we use a different logic than drm_of_find_possible_crtcs to fill
-the same role?
+--mzddxfrgk3es52ce
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Also, we still have to support old device trees using channel 1 from
-> output port 0 endpoint 1. This is the TV encoder on sun5i (A10s/A13/R8).
+Hi Patrick,
 
-We could probably work something out if we go that way to deal with
-old DTs though.
+On Fri, Mar 24, 2017 at 10:52:19PM +0100, Patrick Menschel wrote:
+> The A20 SoC has an on-board CAN controller. This patch adds the device no=
+de
+> and the corresponding pinctrl settings for pins PH20 and PH21.
+>=20
+> The CAN controller is inherited from the A10 SoC and uses the same driver.
+>=20
+> This patch is adapted from the description in
+> Documentation/devicetree/bindings/net/can/sun4i_can.txt
+>=20
+> Signed-off-by: Patrick Menschel <menschel.p@posteo.de>
+> ---
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a=
+20.dtsi
+> index 2db97fc..25af586 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -1096,6 +1096,11 @@
+>  			#interrupt-cells =3D <3>;
+>  			#gpio-cells =3D <3>;
+> =20
+> +			can0_pins_a: can0@0 {
+> +				pins =3D "PH20","PH21";
+> +				function =3D "can";
+> +			};
+> +
+>  			clk_out_a_pins_a: clk_out_a@0 {
+>  				pins =3D "PI12";
+>  				function =3D "clk_out_a";
+> @@ -1582,6 +1587,14 @@
+>  			#size-cells =3D <0>;
+>  		};
+> =20
+> +		can0: can@01c2bc00 {
+> +			compatible =3D "allwinner,sun4i-a10-can";
+
+Sorry for not spotting this earlier, but this would need an A20
+compatible too, to deal with the case where it turns out not to be
+compatible.
+
+you can do something like this:
+compatible =3D "allwinner,sun7i-a20-can", "allwinner,sun4i-a10-can";
+
+Ideally the pinctrl groups addition should be split out in a separate
+patch too.
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---zyqbyw7y52pdpduq--
+
+--mzddxfrgk3es52ce
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJY2LU9AAoJEBx+YmzsjxAgxnkP/3eCpzS2BMEhdTRVQ792kWix
+vAcCnNHB/BMKWS4px1UlHr4KCOqg/9sKA3DiC/w+UFgMGLieEhp+YPGFDYCIVnOs
+UMxzLCcjfYElg52Qpya3Y/67fuThRil0joOQif/q6AfpTgfHdUQo2Dy1jYoxipIS
+UxnsPc4UVkejpGueI3vBLbgu0x1tcMyc/04z60pAB7TjKuBSEFEQCRTfSoYOXNrN
+jYAwQxpidqns3mRIQGkJbNCbiUQsRtkCPNWW5JcldMy+/83J6B9uk4qxN9mJS2BM
+hHRZXo1E+UfWtcv1U/WMeGr19qWwo37SNlzSvSb6T+h+EHrLP3m7ro1udF4saxY+
+XxZ2nbYQcsaXzq1qdg0svtYmdqwvXMbzCIn2GgdTkBZqAaXxga4oKLfs3gMcTZLu
+TPT4aIU18wI1+8MwhDd2J/Y9oWIDFUanOwZfYl5svdfOuDQAjRqenv8PXFOEa5fn
+HEz0A2wQdUO9tkprFJrXW4CH+3po36CVuwrbRvXP9xB8RAsc7h0orsCxvXim0KVO
+1VNpjf313fcnm3LddH/Gil/zj4v4+JhoFKPWgpdv7DBOfyYtBWZiMC7yRZvzRpe1
+kWB4jYcjkfI1HLz6/ycMn2elkvPeIZdOtkeRoRPlH5VT1y6L/A5VxKnGxnZfw5Kk
+RXGO5IEKC1sJjlIDk7Qa
+=LXxa
+-----END PGP SIGNATURE-----
+
+--mzddxfrgk3es52ce--
+
+
+--===============8107342982921785068==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8107342982921785068==--
