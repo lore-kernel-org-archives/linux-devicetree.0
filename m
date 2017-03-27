@@ -1,35 +1,51 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFC v4 09/10] tty: serdev-ttyport: return actual baudrate from ttyport_set_baudrate
-Date: Mon, 27 Mar 2017 15:37:27 +0200
-Message-ID: <1490621848-24828-10-git-send-email-stefan.wahren@i2se.com>
-References: <1490621848-24828-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490621848-24828-1-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sre@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v11 11/12] iio: multiplexer: fix unsigned check with less
+ than zero
+Date: Mon, 27 Mar 2017 15:46:47 +0200
+Message-ID: <c8195c34-3f96-b848-e01f-83c63a960153@axentia.se>
+References: <1490617069-13119-1-git-send-email-peda@axentia.se>
+ <1490617069-13119-12-git-send-email-peda@axentia.se>
+ <20170327130653.GA15708@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170327130653.GA15708@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of returning the requested baudrate, we better return the
-actual one because it isn't always the same.
+On 2017-03-27 15:06, Johan Hovold wrote:
+> On Mon, Mar 27, 2017 at 02:17:48PM +0200, Peter Rosin wrote:
+>> Comparing a size_t with less than zero is always false as size_t
+>> is unsigned. So, change the type of the variable to ssize_t and
+>> replicate the size check from mux_configure_channel() into
+>> mux_write_ext_info() thus ensuring that the size will fit in the
+>> ssize_t variable.
+>>
+>> Detected by CoverityScan, CID#1415278 ("Unsigned compared against 0")
+>>
+>> Fixes: 1da8e16d2812 ("iio: multiplexer: new iio category and iio-mux driver")
+> 
+> You should fold this one and the next patch into the patches that they
+> fix up instead fixing stuff that's not yet merged incrementally like you
+> do here (specifically, the SHA id above will have no matching commit).
+> 
+> Johan
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- drivers/tty/serdev/serdev-ttyport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I forgot about that. And similar for the next patch. But how do you
+propose that I attribute the reporters and CoverityScan? Crap, it
+would have been so much easier if the series was just pulled they
+way I expected it...
 
-diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
-index d053935..8a30abe 100644
---- a/drivers/tty/serdev/serdev-ttyport.c
-+++ b/drivers/tty/serdev/serdev-ttyport.c
-@@ -150,7 +150,7 @@ static unsigned int ttyport_set_baudrate(struct serdev_controller *ctrl, unsigne
- 
- 	/* tty_set_termios() return not checked as it is always 0 */
- 	tty_set_termios(tty, &ktermios);
--	return speed;
-+	return ktermios.c_ospeed;
- }
- 
- static void ttyport_set_flow_control(struct serdev_controller *ctrl, bool enable)
--- 
-2.1.4
+Greg, how do you want to play this? Can you perhaps update the fixes
+tag here and in 12/12 if/when you apply the series?
+
+Cheers,
+peda
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
