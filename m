@@ -1,74 +1,107 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/7] regulator: rk808: Add regulator driver for RK805
-Date: Mon, 27 Mar 2017 10:40:46 +0100
-Message-ID: <20170327094046.rav53kz5zzujewnx@sirena.org.uk>
-References: <1490595705-28844-1-git-send-email-zhangqing@rock-chips.com>
- <1490595705-28844-4-git-send-email-zhangqing@rock-chips.com>
+From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 2/2] drm/panel: simple: Add support for Winstar WF35LTIACD
+Date: Mon, 27 Mar 2017 11:43:58 +0200
+Message-ID: <CACQ1gAimmXHEoBok9=Q3cjCn-=KPOT5HWEBqB0NXPBsa1Tv8Bw@mail.gmail.com>
+References: <20170320133222.21773-1-richard.genoud@gmail.com> <20170324155821.2xjginqluhjnrr2x@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8353501959017419832=="
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1490595705-28844-4-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170324155821.2xjginqluhjnrr2x@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+2017-03-24 16:58 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Mon, Mar 20, 2017 at 02:32:22PM +0100, Richard Genoud wrote:
+>> This adds support for the Winstar Display Co. WF35LTIACD 3.5" QVGA TFT
+>> LCD panel, which can be supported by the simple panel driver.
+>>
+>> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>
+>> Changes since v1:
+>> Add power-supply property and an example in documentation
+>>
+>>  .../bindings/display/panel/winstar,wf35ltiacd      | 53 ++++++++++++++++++++++
+>>  drivers/gpu/drm/panel/panel-simple.c               | 28 ++++++++++++
+>>  2 files changed, 81 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd b/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
+>> new file mode 100644
+>> index 000000000000..9ff59b868b28
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
+>> @@ -0,0 +1,53 @@
+>> +Winstar Display Corporation 3.5" QVGA (320x240) TFT LCD panel
+>> +
+>> +Required properties:
+>> +- compatible: should be "winstar,wf35ltiacd"
+>> +- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
+>> +
+>> +This binding is compatible with the simple-panel binding, which is specified
+>> +in simple-panel.txt in this directory.
+>> +
+>> +Example:
+>> +     backlight: backlight {
+>> +             compatible = "pwm-backlight";
+>> +             pwms = <&hlcdc_pwm 0 50000 PWM_POLARITY_INVERTED>;
+>> +             brightness-levels = <0 31 63 95 127 159 191 223 255>;
+>> +             default-brightness-level = <191>;
+>> +             power-supply = <&bl_reg>;
+>> +             status = "okay";
+>
+> Drop status from examples.
+>
+>> +     };
+>> +
+>> +     bl_reg: backlight_regulator {
+>> +             compatible = "regulator-fixed";
+>> +             regulator-name = "backlight-power-supply";
+>> +             regulator-min-microvolt = <5000000>;
+>> +             regulator-max-microvolt = <5000000>;
+>> +             status = "okay";
+>> +     };
+>> +
+>> +     panel: panel {
+>> +             compatible = "winstar,wf35ltiacd", "simple-panel";
+>> +             backlight = <&backlight>;
+>> +             power-supply = <&panel_reg>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             status = "okay";
+>> +
+>> +             port@0 {
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <0>;
+>> +
+>> +                     panel_input: endpoint@0 {
+>> +                             reg = <0>;
+>
+> You don't need reg and unit-addresses for these.
+>
+> With that,
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+Ok, I'll resend the patch with reg and unit-addresses removed.
 
---===============8353501959017419832==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ozr2dvjsiatex4ic"
-Content-Disposition: inline
+Thanks !
 
-
---ozr2dvjsiatex4ic
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 27, 2017 at 02:21:41PM +0800, Elaine Zhang wrote:
-> Add support for the rk805 regulator. The regulator module consists
-> of 4 DCDCs, 3 LDOs.
->=20
-> The output voltages are configurable and are meant to supply power
-> to the main processor and other components.
-
-Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
---ozr2dvjsiatex4ic
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljY3h4ACgkQJNaLcl1U
-h9CnAgf/X+oRDps33ZbH8h81NTJpNj/6mB2fa1cg/Aa8wTpr5riDPK0yiqHZkrIy
-6II14llV9SURWMY7eLatta/5+VXwnQZSqHdm4mrxZxtJwYR7/mmOCJNtUQuqv33s
-S9Es7Rxap8epQ2+Q/bajkYYXjU6/5mCnZP8+u+up1R7r85CX/SUbchJc+ye2MLD3
-vRsL639Om5aGs5zXDIHNjxhggmDa9wyJkKMpT+HYWUbwCM2NRJWhSNe3bzuPbRfM
-Xa1/ZlJf1b9XoPqhxumCOvs4H+okUZJ3B0wzJiiVyF9kuM89MVV8fzojNlnfvW+V
-bGbrsYBDUZARUolFaVR8wIoYjacXDg==
-=2tAJ
------END PGP SIGNATURE-----
-
---ozr2dvjsiatex4ic--
-
-
---===============8353501959017419832==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linux-rockchip mailing list
-Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
---===============8353501959017419832==--
+>> +                             remote-endpoint = <&hlcdc_panel_output>;
+>> +                     };
+>> +             };
+>> +     };
+>> +
+>> +     panel_reg: panel_regulator {
+>> +             compatible = "regulator-fixed";
+>> +             regulator-name = "panel-power-supply";
+>> +             regulator-min-microvolt = <3300000>;
+>> +             regulator-max-microvolt = <3300000>;
+>> +             status = "okay";
+>> +     };
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
