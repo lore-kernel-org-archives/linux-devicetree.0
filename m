@@ -1,43 +1,43 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] of: add stub for of_n_addr_cells
-Date: Mon, 27 Mar 2017 09:31:09 +0200
-Message-ID: <CAK8P3a1C=ffeg7CgmpgZauYiaUYL1vQNa=5yA7_Eefkc-bKLVQ@mail.gmail.com>
-References: <20170324103940.30902-1-tobias.regnery@gmail.com>
- <CAK8P3a3ojRSpC3GVU6P05GEtj7AHxrYD_ZrAZaa68KT14H9Hew@mail.gmail.com> <20170327055454.c6kj4keeudqn4bps@builder>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170327055454.c6kj4keeudqn4bps@builder>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tobias Regnery <tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+From: Nandor Han <nandor.han@ge.com>
+Subject: [PATCH 3/3] Add XRA1403 support to MAINTAINERS file
+Date: Mon, 27 Mar 2017 09:23:02 +0300
+Message-ID: <d9521d04c4abe989ed5ba939b70ab31727f52eee.1490595641.git.nandor.han@ge.com>
+References: <cover.1490595641.git.nandor.han@ge.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.1490595641.git.nandor.han@ge.com>
+In-Reply-To: <cover.1490595641.git.nandor.han@ge.com>
+References: <cover.1490595641.git.nandor.han@ge.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Nandor Han <nandor.han@ge.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 7:54 AM, Tobias Regnery
-<tobias.regnery-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 24.03.17, Arnd Bergmann wrote:
+Add the XRA1403 support to MAINTAINERS list.
 
->> >
->> > +static inline int of_n_addr_cells(struct device_node *np)
->> > +{
->> > +       return 0;
->> > +}
->> > +
->>
->> This looks good, but we should also do the same thing for of_n_size_cells().
->>
->> I think I sent something like this a few years ago, but never resubmitted it
->> when it was ignored at first.
->>
->>         Arnd
->
-> This seems sensible, I can send an updated patch with this change or I can
-> send it as a separate patch, whatever the maintainers prefer.
+Signed-off-by: Nandor Han <nandor.han@ge.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I'd recommend sending an updated patch.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 58b3a22..539c88c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13903,6 +13903,14 @@ L:	linux-kernel@vger.kernel.org
+ S:	Supported
+ F:	drivers/char/xillybus/
+ 
++XRA1403 GPIO EXPANDER
++M:	Nandor Han <nandor.han@ge.com>
++M:	Semi Malinen <semi.malinen@ge.com>
++L:	linux-gpio@vger.kernel.org
++S:	Maintained
++F:	drivers/gpio/gpio-xra1403.c
++F:	Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
++
+ XTENSA XTFPGA PLATFORM SUPPORT
+ M:	Max Filippov <jcmvbkbc@gmail.com>
+ L:	linux-xtensa@linux-xtensa.org
+-- 
+2.10.1
 
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
