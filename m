@@ -1,133 +1,155 @@
-From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V6 2/7] Documentation: devicetree: thermal: da9062/61 TJUNC
- temperature binding
-Date: Mon, 27 Mar 2017 10:51:31 +0100
-Message-ID: <424365ddd4773bba21fba39fae7fe95fb1344905.1490608293.git.stwiss.opensource@diasemi.com>
-References: <cover.1490608293.git.stwiss.opensource@diasemi.com>
+From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Document the STM32 MDMA bindings
+Date: Mon, 27 Mar 2017 12:06:10 +0200
+Message-ID: <CAOAejn10dPjYTj8vBTDj5bc_RPTmkYC7uuBMPnP-R0BsQiRwhw@mail.gmail.com>
+References: <1489417599-31308-1-git-send-email-cedric.madianga@gmail.com>
+ <1489417599-31308-2-git-send-email-cedric.madianga@gmail.com> <20170320215250.wwhq6lzwe45jmwks@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1490608293.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lukasz Luba <lukasz.luba-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170320215250.wwhq6lzwe45jmwks@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Hi Rob,
 
-Device tree binding information for DA9062 and DA9061 thermal junction
-temperature monitor.
+2017-03-20 22:52 GMT+01:00 Rob Herring <robh@kernel.org>:
+> On Mon, Mar 13, 2017 at 04:06:38PM +0100, M'boumba Cedric Madianga wrote:
+>> This patch adds documentation of device tree bindings for the STM32 MDMA
+>> controller.
+>>
+>> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+>> Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
+>> ---
+>>  .../devicetree/bindings/dma/stm32-mdma.txt         | 94 ++++++++++++++++++++++
+>>  1 file changed, 94 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/stm32-mdma.txt b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>> new file mode 100644
+>> index 0000000..26a930c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>> @@ -0,0 +1,94 @@
+>> +* STMicroelectronics STM32 MDMA controller
+>> +
+>> +The STM32 MDMA is a general-purpose direct memory access controller capable of
+>> +supporting 64 independent DMA channels with 256 HW requests.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "st,stm32-mdma"
+>
+> Should be more specific.
 
-Binding descriptions for the DA9061 and DA9062 thermal TJUNC supervisor
-device driver, using a single THERMAL_TRIP_HOT trip-wire and allowing for
-a configurable polling period for over-temperature polling.
+The compatible string is not specific enough ? I don't see how to specific more.
 
-This patch also adds two examples, one for DA9062 and one for DA9061. The 
-DA9061 example uses a fall-back compatible string for the DA9062.
+>
+>> +- reg: Should contain MDMA registers location and length. This should include
+>> +  all of the per-channel registers.
+>> +- interrupts: Should contain the MDMA interrupt.
+>> +- clocks: Should contain the input clock of the DMA instance.
+>> +- resets: Reference to a reset controller asserting the DMA controller.
+>> +- #dma-cells : Must be <5>. See DMA client paragraph for more details.
+>> +
+>> +Optional properties:
+>> +- dma-channels: Number of DMA channels supported by the controller.
+>> +- dma-requests: Number of DMA request signals supported by the controller.
+>> +- st,ahb-addr-masks: Array of u32 mask to list memory devices addressed via
+>> +  AHB bus.
+>
+> I don't understand what this is.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+The MDMA is able to address memories and devices from AHB bus or AXI bus.
+The MDMA has a little different way of working to address AHB
+device/memory and AXI device/memory.
+In STM32H7 platform, almost all devices are addressed by AXI bus.
+But we have some memories adress by AHB bus.
+So, we add these parameter to be able to handle this.
 
----
-This patch applies against linux-next and v4.11-rc3
+>
+>> +
+>> +Example:
+>
+> Put the 2 examples together.
 
-v5 -> v6
- - NO CODE CHANGE
- - Rebased from v4.9 to v4.11-rc3
- - Added Acked-by Rob Herring
+OK
 
-v4 -> v5
- - Rebased from v4.8 to v4.9
- - Updates from comments by Eduardo Valentin
- - Replace vendor defined dlg,tjunc-temp-polling-period-ms with standard
-   thermal core polling-delay-passive as part of the device tree
-   initialisation
- - Remove Acked-by Rob Herring
-
-v3 -> v4
- - NO CODE CHANGE
- - Patch renamed from [PATCH V3 3/9] to [PATCH V4 2/8]
- - Added Acked-by Rob Herring
-
-v2 -> v3
- - Patch renamed from [PATCH V2 03/10] to [PATCH V3 3/9]
- - Changes suggested from other component reviews by Rob Herring:
- - Each compatible line should be a valid combination of compatible
-   strings: alter DA9061 line to include the fall back compatible string
-   and update the commit message accordingly
- - Add e-mail information about associated patches from this set without
-   describing them as being explicitly dependent on this binding
-
-v1 -> v2
- - Patch renamed from [PATCH V1 08/10] to [PATCH V2 03/10] -- these
-   changes were made to fix checkpatch warnings caused by the patch
-   set dependency order
- - A second example for DA9061 is provided to highlight the use of a
-   fall-back compatible option for the DA9062
-
-Hi,
-
-No code changes for this version PATCH V5.
-
-As previously:
-The device driver from this patch set (associated with this binding) is:
-  [PATCH V5 7/8] thermal: da9061: TJUNC temperature driver 
-
-Regards,
-Steve Twiss, Dialog Semiconductor
-
-
- .../devicetree/bindings/thermal/da9062-thermal.txt | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/da9062-thermal.txt
-
-diff --git a/Documentation/devicetree/bindings/thermal/da9062-thermal.txt b/Documentation/devicetree/bindings/thermal/da9062-thermal.txt
-new file mode 100644
-index 0000000..08cc72e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/da9062-thermal.txt
-@@ -0,0 +1,37 @@
-+* Dialog DA9062/61 TJUNC Thermal Module
-+
-+This module is part of the DA9061/DA9062. For more details about entire
-+DA9062 and DA9061 chips see Documentation/devicetree/bindings/mfd/da9062.txt
-+
-+Junction temperature thermal module uses an interrupt signal to identify
-+high THERMAL_TRIP_HOT temperatures for the PMIC device.
-+
-+Required properties:
-+
-+- compatible: should be one of the following valid compatible string lines:
-+        "dlg,da9061-thermal", "dlg,da9062-thermal"
-+        "dlg,da9062-thermal"
-+
-+Optional properties:
-+
-+- polling-delay-passive : Specify the polling period, measured in
-+    milliseconds, between thermal zone device update checks.
-+
-+Example: DA9062
-+
-+	pmic0: da9062@58 {
-+		thermal {
-+			compatible = "dlg,da9062-thermal";
-+			polling-delay-passive = <3000>;
-+		};
-+	};
-+
-+Example: DA9061 using a fall-back compatible for the DA9062 onkey driver
-+
-+	pmic0: da9061@58 {
-+		thermal {
-+			compatible = "dlg,da9061-thermal", "dlg,da9062-thermal";
-+			polling-delay-passive = <3000>;
-+		};
-+	};
-+
--- 
-end-of-patch for PATCH V6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +
+>> +     mdma1: dma@52000000 {
+>> +             compatible = "st,stm32-mdma";
+>> +             reg = <0x52000000 0x1000>;
+>> +             interrupts = <122>;
+>> +             clocks = <&clk_dummy>;
+>> +             resets = <&rcc 992>;
+>> +             #dma-cells = <5>;
+>> +             dma-channels = <16>;
+>> +             dma-requests = <32>;
+>> +             st,ahb-addr-masks = <0x20000000>, <0x00000000>;
+>> +     };
+>> +
+>> +* DMA client
+>> +
+>> +DMA clients connected to the STM32 MDMA controller must use the format
+>> +described in the dma.txt file, using a six-cell specifier for each channel:
+>> +a phandle to the MDMA controller plus the following five integer cells:
+>> +
+>> +1. The request line number
+>> +2. The priority level
+>> +     0x00: Low
+>> +     0x01: Medium
+>> +     0x10: High
+>> +     0x11: Very high
+>> +3. A 32bit mask specifying the DMA channel configuration
+>> + -bit 0-1: Source increment mode
+>> +     0x00: Source address pointer is fixed
+>> +     0x10: Source address pointer is incremented after each data transfer
+>> +     0x11: Source address pointer is decremented after each data transfer
+>> + -bit 2-3: Destination increment mode
+>> +     0x00: Destination address pointer is fixed
+>> +     0x10: Destination address pointer is incremented after each data
+>> +     transfer
+>> +     0x11: Destination address pointer is decremented after each data
+>> +     transfer
+>> + -bit 8-9: Source increment offset size
+>> +     0x00: byte (8bit)
+>> +     0x01: half-word (16bit)
+>> +     0x10: word (32bit)
+>> +     0x11: double-word (64bit)
+>> + -bit 10-11: Destination increment offset size
+>> +     0x00: byte (8bit)
+>> +     0x01: half-word (16bit)
+>> +     0x10: word (32bit)
+>> +     0x11: double-word (64bit)
+>> +-bit 25-18: The number of bytes to be transferred in a single transfer
+>> +     (min = 1 byte, max = 128 bytes)
+>> +-bit 29:28: Trigger Mode
+>> +     0x00: Each MDMA request triggers a buffer transfer (max 128 bytes)
+>> +     0x01: Each MDMA request triggers a block transfer (max 64K bytes)
+>> +     0x10: Each MDMA request triggers a repeated block transfer
+>> +     0x11: Each MDMA request triggers a linked list transfer
+>> +4. A 32bit value specifying the register to be used to acknowledge the request
+>> +   if no HW ack signal is used by the MDMA client
+>> +5. A 32bit mask specifying the value to be written to acknowledge the request
+>> +   if no HW ack signal is used by the MDMA client
+>> +
+>> +Example:
+>> +
+>> +     i2c4: i2c@5c002000 {
+>> +             compatible = "st,stm32f7-i2c";
+>> +             reg = <0x5c002000 0x400>;
+>> +             interrupts = <GIC_SPI 95 IRQ_TYPE_NONE>,
+>> +                          <GIC_SPI 96 IRQ_TYPE_NONE>;
+>> +             clocks = <&clk_hsi>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             dmas = <&mdma1 36 0x0 0x40008 0x0 0x0>,
+>> +                    <&mdma1 37 0x0 0x40002 0x0 0x0>;
+>> +             dma-names = "rx", "tx";
+>> +             status = "disabled";
+>> +     };
+>> --
+>> 1.9.1
+>>
