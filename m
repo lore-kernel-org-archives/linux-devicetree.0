@@ -1,40 +1,80 @@
-From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 2/3] device property: Move fwnode graph ops to firmware
- specific locations
-Date: Mon, 27 Mar 2017 14:52:00 +0300
-Message-ID: <20170327115200.GB2957@lahna.fi.intel.com>
-References: <1490353432-12017-1-git-send-email-sakari.ailus@linux.intel.com>
- <1490353432-12017-2-git-send-email-sakari.ailus@linux.intel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 08/11] ASoC: Add bindings for DMIC codec
+	driver
+Date: Mon, 27 Mar 2017 12:59:20 +0100
+Message-ID: <20170327115920.opbtui7mor5q6tch@sirena.org.uk>
+References: <1489759704-30217-1-git-send-email-arnaud.pouliquen@st.com>
+ <1489759704-30217-9-git-send-email-arnaud.pouliquen@st.com>
+ <20170324144603.zos7n4oqelaag433@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1490353432-12017-2-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6801548893965807654=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170324144603.zos7n4oqelaag433@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, olivier moysan <olivier.moysan@st.com>, kernel@stlinux.com, Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 01:03:51PM +0200, Sakari Ailus wrote:
->  const struct fwnode_operations acpi_fwnode_ops = {
->  	.property_present = acpi_fwnode_property_present,
->  	.property_read_int_array = acpi_fwnode_property_read_int_array,
-> @@ -1193,4 +1248,9 @@ const struct fwnode_operations acpi_fwnode_ops = {
->  	.get_parent = acpi_fwnode_get_parent,
->  	.get_next_child_node = acpi_get_next_subnode,
->  	.get_named_child_node = acpi_fwnode_get_named_child_node,
-> +	.graph_get_next_endpoint = acpi_fwnode_graph_get_next_endpoint,
-> +	.graph_get_remote_endpoint = acpi_fwnode_graph_get_remote_endpoint,
-> +	.graph_get_remote_port = acpi_fwnode_graph_get_remote_port,
-> +	.graph_get_remote_port_parent = acpi_fwnode_graph_get_remote_port_parent,
-> +	.graph_parse_endpoint = acpi_fwnode_graph_parse_endpoint,
->  };
 
-Not sure if it is possible but it would be nice to have a single
-primitive implementation specific graph callback and then build
-everything else on top of that in generic code. Here you have 5
-callbacks just for graph support.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============6801548893965807654==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pe5njdkllemkgbb4"
+Content-Disposition: inline
+
+
+--pe5njdkllemkgbb4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Mar 24, 2017 at 09:46:03AM -0500, Rob Herring wrote:
+> On Fri, Mar 17, 2017 at 03:08:21PM +0100, Arnaud Pouliquen wrote:
+
+> > +Device-Tree bindings for dmic codec
+
+> Please define what is and isn't a DMIC here. What's the interface?
+
+Digital microphones are a well understood concept for anyone familiar
+with the problem domain, they all provide a PDM output.
+
+> > +
+> > +Required properties:
+> > +	- compatible: should be "dmic-codec".
+
+> DMICs don't have part numbers?
+
+Not meaningfully in this context any more than analogue microphones do -
+they have no software visible interface.
+
+--pe5njdkllemkgbb4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljY/pcACgkQJNaLcl1U
+h9AjgAf+JxDZOC2ncfYHSTbxJzxXceJREmXx466ytDR2JZj6LWiFlJiqjeM/3v3Z
+TFzeM98xHgkX06G7VYOZ9YUFR9tai7IxR9fPXS5yiWLwvb2ZEw5rowCKmFIClWxL
+E7CQRhqYzbJa94XUtfY6qYXMuNk7NZ56EQfEoM/nZ46bw7iZTstVWVZrcxQzmPpL
+tmEhguZYZ8DN0BCRU6fu7u68UHrEEGOsWg+fmoK0JfkW//9xaVXRe1xq5DhHZG5A
+DJkqa1U4ssmq70X9LF/6MSrs746d13PXq+aCu06t0XvEokVpY3dyOEg1X3qoLyIU
+7U2s5OaUoflzOsMKHu6UBQVEl4T/Xw==
+=W9ta
+-----END PGP SIGNATURE-----
+
+--pe5njdkllemkgbb4--
+
+--===============6801548893965807654==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6801548893965807654==--
