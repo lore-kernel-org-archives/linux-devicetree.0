@@ -1,51 +1,62 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v11 11/12] iio: multiplexer: fix unsigned check with less
- than zero
-Date: Mon, 27 Mar 2017 16:03:12 +0200
-Message-ID: <20170327140312.GA28431@kroah.com>
-References: <1490617069-13119-1-git-send-email-peda@axentia.se>
- <1490617069-13119-12-git-send-email-peda@axentia.se>
- <20170327130653.GA15708@localhost>
- <c8195c34-3f96-b848-e01f-83c63a960153@axentia.se>
+From: m18063 <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v3 1/2] drivers: pwm: pwm-atmel: switch to atomic PWM
+Date: Mon, 27 Mar 2017 17:05:58 +0300
+Message-ID: <08b1036a-bb4d-5ae2-1a68-68ccdc0b3fef@microchip.com>
+References: <1490189375-20384-1-git-send-email-claudiu.beznea@microchip.com>
+ <1490189375-20384-2-git-send-email-claudiu.beznea@microchip.com>
+ <20170327150237.69d8523f@bbrezillon>
+ <20170327131530.ifexyrgrp5egtbtr@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c8195c34-3f96-b848-e01f-83c63a960153@axentia.se>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Johan Hovold <johan@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170327131530.ifexyrgrp5egtbtr@piout.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tudor.ambarus@microchip.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, andrei.pistirica@microchip.com, devicetree@vger.kernel.org, thierry.reding@gmail.com, cristian.birsan@microchip.com, galak@codeaurora.org, eugen.hristev@microchip.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 03:46:47PM +0200, Peter Rosin wrote:
-> On 2017-03-27 15:06, Johan Hovold wrote:
-> > On Mon, Mar 27, 2017 at 02:17:48PM +0200, Peter Rosin wrote:
-> >> Comparing a size_t with less than zero is always false as size_t
-> >> is unsigned. So, change the type of the variable to ssize_t and
-> >> replicate the size check from mux_configure_channel() into
-> >> mux_write_ext_info() thus ensuring that the size will fit in the
-> >> ssize_t variable.
-> >>
-> >> Detected by CoverityScan, CID#1415278 ("Unsigned compared against 0")
-> >>
-> >> Fixes: 1da8e16d2812 ("iio: multiplexer: new iio category and iio-mux driver")
-> > 
-> > You should fold this one and the next patch into the patches that they
-> > fix up instead fixing stuff that's not yet merged incrementally like you
-> > do here (specifically, the SHA id above will have no matching commit).
-> > 
-> > Johan
-> 
-> I forgot about that. And similar for the next patch. But how do you
-> propose that I attribute the reporters and CoverityScan? Crap, it
-> would have been so much easier if the series was just pulled they
-> way I expected it...
-> 
-> Greg, how do you want to play this? Can you perhaps update the fixes
-> tag here and in 12/12 if/when you apply the series?
 
-Please fix this up and resend the patches properly.
+On 27.03.2017 16:15, Alexandre Belloni wrote:
+> On 27/03/2017 at 15:02:37 +0200, Boris Brezillon wrote:
+>> Hi Claudiu,
+>>
+>> On Wed, 22 Mar 2017 15:29:34 +0200
+>> Claudiu Beznea <claudiu.beznea@microchip.com> wrote:
+>>
+>>>  static const struct platform_device_id atmel_pwm_devtypes[] = {
+>>>  	{
+>>>  		.name = "at91sam9rl-pwm",
+>>> -		.driver_data = (kernel_ulong_t)&atmel_pwm_data_v1,
+>>> +		.driver_data = (kernel_ulong_t)&atmel_pwm_regs_v1,
+>>>  	}, {
+>>>  		.name = "sama5d3-pwm",
+>>> -		.driver_data = (kernel_ulong_t)&atmel_pwm_data_v2,
+>>> +		.driver_data = (kernel_ulong_t)&atmel_pwm_regs_v2,
+>>>  	}, {
+>>>  		/* sentinel */
+>>>  	},
+>> Unrelated to this series, but can you prepare a patch to get rid of
+>> this platform id table (AT91 platforms have completely switched to DT
+>> for quite some time now).
+>>
+> Please, don't until AVR32 is gone.
 
-thanks,
+Sure, I will wait for it.
 
-greg k-h
+>
+>> You can also get rid of the "if (pdev->dev.of_node)" condition in
+>> atmel_pwm_probe() since it's guaranteed to be true, otherwise the
+>> ->probe() method wouldn't be called.
+>>
+>> Thanks,
+>>
+>> Boris
