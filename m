@@ -1,7 +1,7 @@
 From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 5/7] clk: Kconfig: Name RK805 in Kconfig for COMMON_CLK_RK808
-Date: Mon, 27 Mar 2017 14:23:00 +0800
-Message-ID: <1490595780-30559-1-git-send-email-zhangqing@rock-chips.com>
+Subject: [PATCH v5 6/7] rtc: Kconfig: Name RK805 in Kconfig for RTC_DRV_RK808
+Date: Mon, 27 Mar 2017 14:23:17 +0800
+Message-ID: <1490595797-30789-1-git-send-email-zhangqing@rock-chips.com>
 References: <1490595705-28844-1-git-send-email-zhangqing@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1490595705-28844-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
@@ -11,31 +11,32 @@ Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw
 List-Id: devicetree@vger.kernel.org
 
 The RK808 and RK805 PMICs are using a similar register map.
-We can reuse the clk driver for the RK805 PMIC. So let's add
+We can reuse the rtc driver for the RK805 PMIC. So let's add
 the RK805 in the Kconfig description.
 
 Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- drivers/clk/Kconfig | 4 ++--
+ drivers/rtc/Kconfig | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 9356ab4b7d76..7ca8f02a1232 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -39,10 +39,10 @@ config COMMON_CLK_MAX77686
- 	  clock.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 5dc673dc9487..47d6a8df06db 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -352,11 +352,11 @@ config RTC_DRV_MAX77686
+ 	  will be called rtc-max77686.
  
- config COMMON_CLK_RK808
--	tristate "Clock driver for RK808/RK818"
-+	tristate "Clock driver for RK805/RK808/RK818"
+ config RTC_DRV_RK808
+-	tristate "Rockchip RK808/RK818 RTC"
++	tristate "Rockchip RK805/RK808/RK818 RTC"
  	depends on MFD_RK808
- 	---help---
--	  This driver supports RK808 and RK818 crystal oscillator clock. These
-+	  This driver supports RK805, RK808 and RK818 crystal oscillator clock. These
- 	  multi-function devices have two fixed-rate oscillators,
- 	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
- 	  by control register.
+ 	help
+ 	  If you say yes here you will get support for the
+-	  RTC of RK808 and RK818 PMIC.
++	  RTC of RK805, RK808 and RK818 PMIC.
+ 
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rk808-rtc.
 -- 
 1.9.1
 
