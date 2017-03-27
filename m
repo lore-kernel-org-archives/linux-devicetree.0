@@ -1,219 +1,100 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: [PATCH v4 2/4] mvebu: xp: Add PWM properties to .dtsi files
-Date: Mon, 27 Mar 2017 21:42:58 +0200
-Message-ID: <20170327194301.1104-3-ralph.sennhauser@gmail.com>
-References: <20170327194301.1104-1-ralph.sennhauser@gmail.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] clk: meson: update clock controller for audio support
+Date: Mon, 27 Mar 2017 12:52:52 -0700
+Message-ID: <149064437219.54062.14490095828514639237@resonance>
+References: <20170309104154.28295-1-jbrunet@baylibre.com> <m2r324bq9s.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170327194301.1104-1-ralph.sennhauser@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ralph Sennhauser <ralph.sennhauser@gmail.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <m2r324bq9s.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+Quoting Kevin Hilman (2017-03-10 16:39:27)
+> Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+> =
 
-Add properties to the GPIO nodes to allow them to be also used as PWM
-lines.
+> > This patchset is a first round of update to the meson clock controllers
+> > to bring audio support. The patchset is based on clk-next. It could be
+> > rebased on amlogic tree later on, if you prefer the patches to go throu=
+gh
+> > Kevin's tree.
+> =
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-URL: https://patchwork.ozlabs.org/patch/427294/
-[Ralph Sennhauser:
-  * Use new compatible string marvell,armada-370-xp-gpio
-  * Add missing reg-names / #pwm-cell properties to armada-xp-mv78260.dtsi
-    'gpio1' node]
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
----
- arch/arm/boot/dts/armada-370.dtsi        | 16 +++++++++++-----
- arch/arm/boot/dts/armada-xp-mv78230.dtsi | 14 ++++++++++----
- arch/arm/boot/dts/armada-xp-mv78260.dtsi | 16 +++++++++++-----
- arch/arm/boot/dts/armada-xp-mv78460.dtsi | 16 +++++++++++-----
- 4 files changed, 43 insertions(+), 19 deletions(-)
+> I'd prefer these go through the clk tree, and get an immutable branch
+> that I can use for my stuff that goes through the arm-soc tree.
 
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index cc011c8..e30b076 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -137,29 +137,35 @@
- 			};
- 
- 			gpio0: gpio@18100 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18100 0x40>;
-+				compatible = "marvell,armada-370-xp-gpio";
-+				reg = <0x18100 0x40>, <0x181c0 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <82>, <83>, <84>, <85>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			gpio1: gpio@18140 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18140 0x40>;
-+				compatible = "marvell,armada-370-xp-gpio";
-+				reg = <0x18140 0x40>, <0x181c8 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <87>, <88>, <89>, <90>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			gpio2: gpio@18180 {
--				compatible = "marvell,orion-gpio";
-+				compatible = "marvell,armada-370-xp-gpio";
- 				reg = <0x18180 0x40>;
- 				ngpios = <2>;
- 				gpio-controller;
-diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-index 07c5090..429ac10 100644
---- a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-@@ -202,25 +202,31 @@
- 
- 		internal-regs {
- 			gpio0: gpio@18100 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18100 0x40>;
-+				compatible = "marvell,armada-370-xp-gpio";
-+				reg = <0x18100 0x40>, <0x181c0 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <82>, <83>, <84>, <85>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			gpio1: gpio@18140 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18140 0x40>;
-+				compatible = "marvell,armada-370-xp-gpio";
-+				reg = <0x18140 0x40>, <0x181c8 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <17>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <87>, <88>, <89>;
-+				clocks = <&coreclk 0>;
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-index 64e936a..333c470 100644
---- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-@@ -285,29 +285,35 @@
- 
- 		internal-regs {
- 			gpio0: gpio@18100 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18100 0x40>;
-+				compatible = "marvell,armada-370-xp-gpio";
-+				reg = <0x18100 0x40>, <0x181c0 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <82>, <83>, <84>, <85>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			gpio1: gpio@18140 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18140 0x40>;
-+				compatible = "marvell,armada-370-xp-gpio";
-+				reg = <0x18140 0x40>, <0x181c8 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <87>, <88>, <89>, <90>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			gpio2: gpio@18180 {
--				compatible = "marvell,orion-gpio";
-+				compatible = "marvell,armada-370-xp-gpio";
- 				reg = <0x18180 0x40>;
- 				ngpios = <3>;
- 				gpio-controller;
-diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-index d1383dd..2ff825d 100644
---- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-@@ -323,29 +323,35 @@
- 
- 		internal-regs {
- 			gpio0: gpio@18100 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18100 0x40>;
-+				compatible = "marvell,armada-370-xp-gpio";
-+				reg = <0x18100 0x40>, <0x181c0 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <82>, <83>, <84>, <85>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			gpio1: gpio@18140 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18140 0x40>;
-+				compatible = "marvell,armada-370-xp-gpio";
-+				reg = <0x18140 0x40>, <0x181c8 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <87>, <88>, <89>, <90>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			gpio2: gpio@18180 {
--				compatible = "marvell,orion-gpio";
-+				compatible = "marvell,armada-370-xp-gpio";
- 				reg = <0x18180 0x40>;
- 				ngpios = <3>;
- 				gpio-controller;
--- 
-2.10.2
+Applied to clk-meson, a stable branch, which has been merged into
+clk-next.
+
+Kevin, feel free to use clk-meson or any commit id therein: they will
+not be rebased.
+
+Regards,
+Mike
+
+> =
+
+> Kevin
+> =
+
+> > First patch fix an issue found while writing patch 5 (Giving ternary
+> > operator to SET_PARM)
+> >
+> > Following Stephen comment on the v1, patch 2 adds the const qualifiers
+> > missing upstream.
+> >
+> > Patches 3 and 4 put the generic muxes and divisors declaration in table=
+s so
+> > the register address fixup works in the same way as the clock gates. We=
+ are
+> > going to add more of these clock types for audio or gpu support, so we
+> > can't continue to fix addresses individually like it is currently done.
+> >
+> > Patches 5 to 8 improve the support of the mpll clocks, now allowing the
+> > rate to be set. Among other things, the mplls are the parent clocks of =
+the
+> > i2s and spdif clocks.
+> >
+> > Patch 9 expose the clock gates required to power on the i2s output.
+> >
+> > These patches have been tested on the meson gxbb p200 board, as part of=
+ the
+> > ongoing work to bring audio support to meson SoC family.
+> >
+> > Changes since v1 [0]:
+> >  * Add SET_PARM fix to the series
+> >  * Add missing const qualifiers to the clock arrays
+> >  * No more additional patches required as SAR clocks have been merged
+> >
+> > [0]: http://lkml.kernel.org/r/20170228133002.17894-1-jbrunet@baylibre.c=
+om
+> >
+> > Jerome Brunet (9):
+> >   clk: meson: fix SET_PARM macro
+> >   clk: meson: add missing const qualifiers on gate arrays
+> >   clk: meson8b: put dividers and muxes in tables
+> >   clk: gxbb: put dividers and muxes in tables
+> >   clk: meson: mpll: add rw operation
+> >   clk: meson: gxbb: mpll: use rw operation
+> >   clk: meson8b: add the mplls clocks 0, 1 and 2
+> >   clk: meson: mpll: correct N2 maximum value
+> >   dt-bindings: clk: gxbb: expose i2s output clock gates
+> >
+> >  drivers/clk/meson/clk-mpll.c          | 152 ++++++++++++++++++++++++++=
+++++++--
+> >  drivers/clk/meson/clkc.h              |   6 +-
+> >  drivers/clk/meson/gxbb.c              |  66 ++++++++++++---
+> >  drivers/clk/meson/gxbb.h              |  10 +--
+> >  drivers/clk/meson/meson8b.c           | 127 ++++++++++++++++++++++++++=
+--
+> >  drivers/clk/meson/meson8b.h           |  20 ++++-
+> >  include/dt-bindings/clock/gxbb-clkc.h |   5 ++
+> >  7 files changed, 356 insertions(+), 30 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
