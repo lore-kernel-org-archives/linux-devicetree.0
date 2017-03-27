@@ -1,41 +1,58 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v12 01/10] devres: trivial whitespace fix
-Date: Mon, 27 Mar 2017 16:21:56 +0200
-Message-ID: <1490624525-15865-2-git-send-email-peda@axentia.se>
-References: <1490624525-15865-1-git-send-email-peda@axentia.se>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 1/2] mfd: cpcap: Add missing include dependencies
+Date: Mon, 27 Mar 2017 15:26:08 +0100
+Message-ID: <20170327142608.qcobnqrvyu7u4ybz@dell>
+References: <20170324084732.31255-1-sre@kernel.org>
+ <d1a18390-fb5f-e192-a54c-1c2574238225@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490624525-15865-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d1a18390-fb5f-e192-a54c-1c2574238225-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Everything else is indented with two spaces, so fix the odd one out.
+On Fri, 24 Mar 2017, Jacek Anaszewski wrote:
+> On 03/24/2017 09:47 AM, Sebastian Reichel wrote:
+> > This fixes compilation for files, that try to include the
+> > cpcap header in alphabetically sorted #include lists.
+> > 
+> > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> > Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> > Changes since PATCHv2:
+> >  - Add Acked-by from Tony & Pavel
+> > ---
+> >  include/linux/mfd/motorola-cpcap.h | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motorola-cpcap.h
+> > index 793aa695faa0..aefc49cb7ba9 100644
+> > --- a/include/linux/mfd/motorola-cpcap.h
+> > +++ b/include/linux/mfd/motorola-cpcap.h
+> > @@ -14,6 +14,9 @@
+> >   * published by the Free Software Foundation.
+> >   */
+> >  
+> > +#include <linux/device.h>
+> > +#include <linux/regmap.h>
+> > +
+> >  #define CPCAP_VENDOR_ST		0
+> >  #define CPCAP_VENDOR_TI		1
+> 
+> Both patches applied to the for-next branch of linux-leds.git, thanks.
 
-Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- Documentation/driver-model/devres.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Que?
 
-diff --git a/Documentation/driver-model/devres.txt b/Documentation/driver-model/devres.txt
-index bf34d5b3a733..efb8200819d6 100644
---- a/Documentation/driver-model/devres.txt
-+++ b/Documentation/driver-model/devres.txt
-@@ -335,7 +335,7 @@ MEM
-   devm_kzalloc()
- 
- MFD
-- devm_mfd_add_devices()
-+  devm_mfd_add_devices()
- 
- PER-CPU MEM
-   devm_alloc_percpu()
 -- 
-2.1.4
-
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
