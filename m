@@ -1,43 +1,37 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v11 11/12] iio: multiplexer: fix unsigned check with less
- than zero
-Date: Mon, 27 Mar 2017 16:33:33 +0200
-Message-ID: <20170327143333.GB15708@localhost>
-References: <1490617069-13119-1-git-send-email-peda@axentia.se>
- <1490617069-13119-12-git-send-email-peda@axentia.se>
- <20170327130653.GA15708@localhost>
- <c8195c34-3f96-b848-e01f-83c63a960153@axentia.se>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 3/3] of: fix node traversing in of_dma_get_range
+Date: Mon, 27 Mar 2017 09:34:35 -0500
+Message-ID: <CAL_Jsq+1f2pHEy7=2Q7xGYYJjuQk3rLHH4pPTKRVN4QTtSr4Kw@mail.gmail.com>
+References: <1490419893-5073-1-git-send-email-oza.oza@broadcom.com>
+	<1490419893-5073-3-git-send-email-oza.oza@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c8195c34-3f96-b848-e01f-83c63a960153@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1490419893-5073-3-git-send-email-oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 03:46:47PM +0200, Peter Rosin wrote:
-> On 2017-03-27 15:06, Johan Hovold wrote:
-> > On Mon, Mar 27, 2017 at 02:17:48PM +0200, Peter Rosin wrote:
-> >> Comparing a size_t with less than zero is always false as size_t
-> >> is unsigned. So, change the type of the variable to ssize_t and
-> >> replicate the size check from mux_configure_channel() into
-> >> mux_write_ext_info() thus ensuring that the size will fit in the
-> >> ssize_t variable.
-> >>
-> >> Detected by CoverityScan, CID#1415278 ("Unsigned compared against 0")
-> >>
-> >> Fixes: 1da8e16d2812 ("iio: multiplexer: new iio category and iio-mux driver")
-> > 
-> > You should fold this one and the next patch into the patches that they
-> > fix up instead fixing stuff that's not yet merged incrementally like you
-> > do here (specifically, the SHA id above will have no matching commit).
+On Sat, Mar 25, 2017 at 12:31 AM, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> it jumps to the parent node without examining the child node.
+> also with that, it throws "no dma-ranges found for node"
+> for pci dma-ranges.
+>
+> this patch fixes device node traversing for dma-ranges.
 
-> I forgot about that. And similar for the next patch. But how do you
-> propose that I attribute the reporters and CoverityScan?
+What's the DT look like that doesn't work?
 
-You can mention it in the cover letter and/or commit messages as you
-would for other kinds of review feedback.
+dma-ranges is supposed to be a bus property, not a device's property.
+So looking at the parent is correct behavior generally.
 
-Johan
+Rob
