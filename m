@@ -1,125 +1,175 @@
-From: "Y.B. Lu" <yangbo.lu@nxp.com>
-Subject: RE: [v2, 4/7] mmc: sdhci: add a quirk to restore delay in tuning
-Date: Mon, 27 Mar 2017 08:05:58 +0000
-Message-ID: <DB6PR0401MB25364664A5A3D9BE8A80C19FF8330@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <1488529129-23560-1-git-send-email-yangbo.lu@nxp.com>
- <1488529129-23560-5-git-send-email-yangbo.lu@nxp.com>
- <878da006-5b83-a9d9-6136-07d8f07ea65f@intel.com>
+From: Madalin-Cristian Bucur <madalin.bucur@nxp.com>
+Subject: RE: [PATCH v2 1/2] dts: arm64: add LS1043A DPAA support
+Date: Mon, 27 Mar 2017 08:11:33 +0000
+Message-ID: <HE1PR04MB1129DA747FC5B7B977CADF43EC330@HE1PR04MB1129.eurprd04.prod.outlook.com>
+References: <1488382505-17554-1-git-send-email-madalin.bucur@nxp.com>
+ <1488382505-17554-2-git-send-email-madalin.bucur@nxp.com>
+ <20170314070732.GH3618@dragon>
+ <HE1PR04MB11297D944241012F44C0ADF8EC3C0@HE1PR04MB1129.eurprd04.prod.outlook.com>
+ <20170327062719.GQ30608@dragon>
+ <HE1PR04MB1129A2CA69EB29CD45DBCD17EC330@HE1PR04MB1129.eurprd04.prod.outlook.com>
+ <20170327075546.GR30608@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <878da006-5b83-a9d9-6136-07d8f07ea65f@intel.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170327075546.GR30608@dragon>
 Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Xiaobo Xie <xiaobo.xie@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Pledge <roy.pledge@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+Cc: Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian,
-
-Thanks a lot for your suggestion.
-I have sent out the new version patch-set.
-
-Please help to review :)
-
-
-Best regards,
-Yangbo Lu
-
 > -----Original Message-----
-> From: Adrian Hunter [mailto:adrian.hunter@intel.com]
-> Sent: Thursday, March 23, 2017 3:04 PM
-> To: Y.B. Lu; linux-mmc@vger.kernel.org; ulf.hansson@linaro.org; Rob
-> Herring; Mark Rutland; Catalin Marinas; Will Deacon
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> Xiaobo Xie
-> Subject: Re: [v2, 4/7] mmc: sdhci: add a quirk to restore delay in tuning
->=20
-> On 03/03/17 10:18, Yangbo Lu wrote:
-> > There was a mdelay between tuning cycles which is removed since eMMC
-> > spec didn't require that. However it's observed that eSDHC needed this
-> > delay for HS200 successful tuning. Maybe it's also needed for some
-> > other controllers. This patch is to add a quirk to fix it.
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Monday, March 27, 2017 10:56 AM
+> Subject: Re: [PATCH v2 1/2] dts: arm64: add LS1043A DPAA support
+> 
+> On Mon, Mar 27, 2017 at 07:03:40AM +0000, Madalin-Cristian Bucur wrote:
+> > > > > > +	fman@1a00000 {
+> > > > > > +		enet0: ethernet@e0000 {
+> > > > > > +		};
+> > > > > > +
+> > > > > > +		enet1: ethernet@e2000 {
+> > > > > > +		};
+> > > > > > +
+> > > > > > +		enet2: ethernet@e4000 {
+> > > > > > +		};
+> > > > > > +
+> > > > > > +		enet3: ethernet@e6000 {
+> > > > > > +		};
+> > > > > > +
+> > > > > > +		enet4: ethernet@e8000 {
+> > > > > > +		};
+> > > > > > +
+> > > > > > +		enet5: ethernet@ea000 {
+> > > > > > +		};
+> > > > > > +
+> > > > > > +		enet6: ethernet@f0000 {
+> > > > > > +		};
+> > > > > > +	};
+> > > > >
+> > > > > I do not quite understand why these nodes are empty.
+> > > >
+> > > > These nodes provide the aliases (and custom SoC mapping) for the
+> > > > FMan ports that are used on this particular SoC. The particular
+> > > > node details are found in the port dtsi file thus no information
+> > > > is required here. Given the fact that the numbering and actual
+> > > > ports that are in use can vary between SoCs, the aliases cannot
+> > > > be included in the port dtsi nor in the FMan dtsi.
+> > >
+> > > Do not completely follow.  What do you mean by 'port dtsi file'?
+> Maybe
+> > > I should wait for you new patches with better commit log and comments
+> to
+> > > understand these odd empty nodes.
 > >
-> > Fixes: 197160d52e85 ("mmc: sdhci: remove mdelay in eMMC tuning")
-> > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> > ---
->=20
-> I would prefer to do something like this:
->=20
-> ---
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> Date: Thu, 23 Mar 2017 08:54:06 +0200
-> Subject: [PATCH] mmc: sdhci: Control the delay between tuning commands
->=20
-> The delay between tuning commands for SD cards is not part of the
-> specification. A driver that needs it probably needs it for eMMC too,
-> whereas most drivers would probably like to set it to 0. Make it a host
-> member (host->tuning_delay) that defaults to the existing behaviour.
-> Drivers can set it to zero to eliminate the delay, or set it to a
-> positive value to always have a delay.
->=20
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  drivers/mmc/host/sdhci.c | 11 ++++++++---  drivers/mmc/host/sdhci.h |  1
-> +
->  2 files changed, 9 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c index
-> a33102fc800b..2fc33485df1d 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2100,9 +2100,9 @@ static void __sdhci_execute_tuning(struct
-> sdhci_host *host, u32 opcode)
->  			break;
->  		}
->=20
-> -		/* eMMC spec does not require a delay between tuning cycles
-> */
-> -		if (opcode =3D=3D MMC_SEND_TUNING_BLOCK)
-> -			mdelay(1);
-> +		/* Spec does not require a delay between tuning cycles */
-> +		if (host->tuning_delay > 0)
-> +			mdelay(host->tuning_delay);
->  	}
->=20
->  	pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
-> @@ -2164,6 +2164,9 @@ int sdhci_execute_tuning(struct mmc_host *mmc, u32
-> opcode)
->=20
->  	host->mmc->retune_period =3D tuning_count;
->=20
-> +	if (host->tuning_delay < 0)
-> +		host->tuning_delay =3D opcode =3D=3D MMC_SEND_TUNING_BLOCK;
-> +
->  	sdhci_start_tuning(host);
->=20
->  	__sdhci_execute_tuning(host, opcode);
-> @@ -3108,6 +3111,8 @@ struct sdhci_host *sdhci_alloc_host(struct device
-> *dev,
->  	host->cqe_ier     =3D SDHCI_CQE_INT_MASK;
->  	host->cqe_err_ier =3D SDHCI_CQE_INT_ERR_MASK;
->=20
-> +	host->tuning_delay =3D -1;
-> +
->  	return host;
->  }
->=20
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h index
-> 35b41da0a636..b0f416fc9548 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -538,6 +538,7 @@ struct sdhci_host {
->  #define SDHCI_TUNING_MODE_1	0
->  #define SDHCI_TUNING_MODE_2	1
->  #define SDHCI_TUNING_MODE_3	2
-> +	int			tuning_delay;	/* Delay (ms) between tuning
-> commands */
->=20
->  	unsigned long private[0] ____cacheline_aligned;  };
-> --
-> 1.9.1
->=20
->=20
+> > The DPAA IP can have a certain number of ports. Out of those, a certain
+> > SoC can use all or only a subset, with diverse decisions on actual
+> numbering
+> > of the used ports. Next, when using the SoC on a particular board, some
+> > ports will be used, some will not. The file hierarchy relates to this
+> > hierarchy - you have individual port files that are included by the
+> > SoC dtsi which in turn is included by the board dts. These nodes do not
+> > need any new content as all the node details are provided by the port
+> > dtsi files. The information they provide is the alias used for each
+> port.
+> 
+> My impression is that such hierarchy mapping is not really necessary and
+> only makes the device tree source messy and hard to follow.  I do not
+> like it.
 
+Hi Shawn, I respect your opinion on this, I'm sure it is the result of an
+extensive experience dealing with less complicated devices. Before breaking
+a construct that to date has served the DPAA users well I'd like to hear
+more thoughts on this topic.
+
+> >
+> > > >
+> > > > > > +};
+> > > > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> > > > > b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> > > > > > index 0989d63..ee66bb2 100644
+> > > > > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> > > > > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> > > > > > @@ -181,3 +181,5 @@
+> > > > > >  		reg = <0>;
+> > > > > >  	};
+> > > > > >  };
+> > > > > > +
+> > > > > > +/include/ "fsl-ls1043-post.dtsi"
+> > > > >
+> > > > > Move it to header of the file.
+> > > >
+> > > > This is to be included at the end, to make sure the references are
+> > > > met and to allow overrides if needed.
+> > >
+> > > What is broken if you move the include to header?
+> >
+> > Not much besides the structure we've always used for our SoCs device
+> > trees. The file is called "-post.dtsi" because here is the place any
+> > required overrides can be made, if needed. Moving to the top renders
+> > having this separate file useless.
+> 
+> That's great, and let's kill it then.
+> 
+> >
+> > > >
+> > > > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> > > > > b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> > > > > > index c37110b..d94f003 100644
+> > > > > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> > > > > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> > > > > > @@ -139,3 +139,78 @@
+> > > > > >  &duart1 {
+> > > > > >  	status = "okay";
+> > > > > >  };
+> > > > > > +
+> > > > > > +/include/ "fsl-ls1043-post.dtsi"
+> > > > > > +
+> > > > >
+> > > > > Ditto
+> > > > >
+> > > > > > +&soc {
+> > > > > > +	fman@1a00000 {
+> > > > > > +		ethernet@e0000 {
+> > > > >
+> > > > > You defined enet0 label.  Why don't you use it?
+> > > > >
+> > > >
+> > > > The enet0 label is used by u-boot for fix-ups, providing the
+> > > > actual offset here makes it easier to follow.
+> > >
+> > > You will not need to construct the node hierarchy with label.  And
+> > > alias/label name is more easier to follow than offset.
+> > >
+> > > Shawn
+> >
+> > When I said easier to follow I was referring to someone creating a
+> > new device tree for his custom board, not someone reading the device
+> > tree. If you have the board and SoC reference manuals in your hands
+> > and you are writing a new board device tree, having the offset here
+> > makes things easier. The benefit of having one less indentation level
+> > is lesser than that.
+> 
+> The while complex and messy file hierarchy makes users' life harder,
+> both the ones reading the device tree and the ones creating board device
+> tree.  I would suggest you go the opposite, making the device tree
+> simple and easy for users by allowing data duplication.  In arm/arm64
+> device tree world, we do not consider DT data reusing/sharing among
+> different SoCs that much.
+> 
+> Shawn
+
+Complex it is, mirroring the IP, but messy it is a word I would not use.
+
+Regards,
+Madalin
