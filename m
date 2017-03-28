@@ -1,175 +1,71 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v6 29/39] media: imx: csi: add __csi_get_fmt
-Date: Mon, 27 Mar 2017 17:40:46 -0700
-Message-ID: <1490661656-10318-30-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v6 33/39] media: imx: csi: Avoid faulty sensor frames at stream start
+Date: Mon, 27 Mar 2017 17:40:50 -0700
+Message-ID: <1490661656-10318-34-git-send-email-steve_longerbeam@mentor.com>
 References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Add __csi_get_fmt() and use it to return the correct mbus format
-(active or try) in get_fmt. Use it in other places as well.
+If the attached sensor reports faulty frames at stream start via
+g_skip_frames callback, add a delay to avoid them before enabling
+the CSI hardware. Especially for sensors with a bt.656 interface,
+any shifts in the SAV/EAV sync codes will cause the CSI to lose
+vert/horiz sync.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-Suggested-by: Russell King <linux@armlinux.org.uk>
 ---
- drivers/staging/media/imx/imx-media-csi.c | 61 ++++++++++++++++++++++++-------
- 1 file changed, 47 insertions(+), 14 deletions(-)
+ drivers/staging/media/imx/imx-media-csi.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 730966b..f4c6a33 100644
+index d9c3a3b..8597d7e 100644
 --- a/drivers/staging/media/imx/imx-media-csi.c
 +++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -843,13 +843,26 @@ static int csi_eof_isr(struct v4l2_subdev *sd, u32 status, bool *handled)
- 	return 0;
- }
+@@ -9,6 +9,7 @@
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  */
++#include <linux/delay.h>
+ #include <linux/gcd.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+@@ -591,6 +592,7 @@ static int csi_setup(struct csi_priv *priv)
  
--static int csi_try_crop(struct csi_priv *priv, struct v4l2_rect *crop,
-+static struct v4l2_mbus_framefmt *
-+__csi_get_fmt(struct csi_priv *priv, struct v4l2_subdev_pad_config *cfg,
-+	      unsigned int pad, enum v4l2_subdev_format_whence which)
-+{
-+	if (which == V4L2_SUBDEV_FORMAT_TRY)
-+		return v4l2_subdev_get_try_format(&priv->sd, cfg, pad);
-+	else
-+		return &priv->format_mbus[pad];
-+}
-+
-+static int csi_try_crop(struct csi_priv *priv,
-+			struct v4l2_rect *crop,
-+			struct v4l2_subdev_pad_config *cfg,
-+			enum v4l2_subdev_format_whence which,
- 			struct imx_media_subdev *sensor)
+ static int csi_start(struct csi_priv *priv)
  {
- 	struct v4l2_of_endpoint *sensor_ep;
- 	struct v4l2_mbus_framefmt *infmt;
++	u32 bad_frames = 0;
+ 	int ret;
  
--	infmt = &priv->format_mbus[CSI_SINK_PAD];
-+	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, which);
- 	sensor_ep = &sensor->sensor_ep;
- 
- 	crop->width = min_t(__u32, infmt->width, crop->width);
-@@ -899,17 +912,24 @@ static int csi_get_fmt(struct v4l2_subdev *sd,
- 		       struct v4l2_subdev_format *sdformat)
- {
- 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-+	struct v4l2_mbus_framefmt *fmt;
-+	int ret = 0;
- 
- 	if (sdformat->pad >= CSI_NUM_PADS)
+ 	if (!priv->sensor) {
+@@ -598,6 +600,25 @@ static int csi_start(struct csi_priv *priv)
  		return -EINVAL;
- 
- 	mutex_lock(&priv->lock);
- 
--	sdformat->format = priv->format_mbus[sdformat->pad];
-+	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
-+	if (!fmt) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 
-+	sdformat->format = *fmt;
-+out:
- 	mutex_unlock(&priv->lock);
--
--	return 0;
-+	return ret;
- }
- 
- static int csi_set_fmt(struct v4l2_subdev *sd,
-@@ -940,8 +960,6 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
- 		goto out;
  	}
  
--	infmt = &priv->format_mbus[CSI_SINK_PAD];
--
- 	v4l_bound_align_image(&sdformat->format.width, MIN_W, MAX_W,
- 			      W_ALIGN, &sdformat->format.height,
- 			      MIN_H, MAX_H, H_ALIGN, S_ALIGN);
-@@ -949,6 +967,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
- 	switch (sdformat->pad) {
- 	case CSI_SRC_PAD_DIRECT:
- 	case CSI_SRC_PAD_IDMAC:
-+		infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sdformat->which);
++	ret = v4l2_subdev_call(priv->sensor->sd, sensor,
++			       g_skip_frames, &bad_frames);
++	if (!ret && bad_frames) {
++		struct v4l2_fract *fi = &priv->frame_interval;
++		u32 delay_usec;
 +
- 		if (sdformat->format.width < priv->crop.width * 3 / 4)
- 			sdformat->format.width = priv->crop.width / 2;
- 		else
-@@ -1007,7 +1027,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
- 		crop.top = 0;
- 		crop.width = sdformat->format.width;
- 		crop.height = sdformat->format.height;
--		ret = csi_try_crop(priv, &crop, sensor);
-+		ret = csi_try_crop(priv, &crop, cfg,
-+				   sdformat->which, sensor);
++		/*
++		 * This sensor has bad frames when it is turned on,
++		 * add a delay to avoid them before enabling the CSI
++		 * hardware. Especially for sensors with a bt.656 interface,
++		 * any shifts in the SAV/EAV sync codes will cause the CSI
++		 * to lose vert/horiz sync.
++		 */
++		delay_usec = DIV_ROUND_UP_ULL(
++			(u64)USEC_PER_SEC * fi->numerator * bad_frames,
++			fi->denominator);
++		usleep_range(delay_usec, delay_usec + 1000);
++	}
++
+ 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
+ 		ret = csi_idmac_start(priv);
  		if (ret)
- 			goto out;
- 
-@@ -1052,7 +1073,11 @@ static int csi_get_selection(struct v4l2_subdev *sd,
- 
- 	mutex_lock(&priv->lock);
- 
--	infmt = &priv->format_mbus[CSI_SINK_PAD];
-+	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sel->which);
-+	if (!infmt) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 
- 	switch (sel->target) {
- 	case V4L2_SEL_TGT_CROP_BOUNDS:
-@@ -1062,12 +1087,20 @@ static int csi_get_selection(struct v4l2_subdev *sd,
- 		sel->r.height = infmt->height;
- 		break;
- 	case V4L2_SEL_TGT_CROP:
--		sel->r = priv->crop;
-+		if (sel->which == V4L2_SUBDEV_FORMAT_TRY) {
-+			struct v4l2_rect *try_crop =
-+				v4l2_subdev_get_try_crop(&priv->sd,
-+							 cfg, sel->pad);
-+			sel->r = *try_crop;
-+		} else {
-+			sel->r = priv->crop;
-+		}
- 		break;
- 	default:
- 		ret = -EINVAL;
- 	}
- 
-+out:
- 	mutex_unlock(&priv->lock);
- 	return ret;
- }
-@@ -1077,7 +1110,6 @@ static int csi_set_selection(struct v4l2_subdev *sd,
- 			     struct v4l2_subdev_selection *sel)
- {
- 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
--	struct v4l2_mbus_framefmt *outfmt;
- 	struct imx_media_subdev *sensor;
- 	int ret = 0;
- 
-@@ -1111,15 +1143,16 @@ static int csi_set_selection(struct v4l2_subdev *sd,
- 		goto out;
- 	}
- 
--	outfmt = &priv->format_mbus[sel->pad];
--
--	ret = csi_try_crop(priv, &sel->r, sensor);
-+	ret = csi_try_crop(priv, &sel->r, cfg, sel->which, sensor);
- 	if (ret)
- 		goto out;
- 
- 	if (sel->which == V4L2_SUBDEV_FORMAT_TRY) {
- 		cfg->try_crop = sel->r;
- 	} else {
-+		struct v4l2_mbus_framefmt *outfmt =
-+			&priv->format_mbus[sel->pad];
-+
- 		priv->crop = sel->r;
- 		/* Update the source format */
- 		outfmt->width = sel->r.width;
 -- 
 2.7.4
