@@ -1,36 +1,63 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 15/23] MAINTAINERS: Add file patterns for perf device
- tree bindings
-Date: Tue, 28 Mar 2017 15:36:58 +0100
-Message-ID: <20170328143657.GP7398@arm.com>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
- <1489324627-19126-16-git-send-email-geert@linux-m68k.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v4 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and
+ GXL
+Date: Tue, 28 Mar 2017 07:49:54 -0700
+Message-ID: <m2d1d1bgml.fsf@baylibre.com>
+References: <1490177935-9646-1-git-send-email-narmstrong@baylibre.com>
+ <1490177935-9646-4-git-send-email-narmstrong@baylibre.com>
+ <m237e2iirk.fsf@baylibre.com>
+ <149064443540.54062.12740186024138662455@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489324627-19126-16-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <149064443540.54062.12740186024138662455@resonance> (Michael
+ Turquette's message of "Mon, 27 Mar 2017 12:53:55 -0700")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 12, 2017 at 02:16:59PM +0100, Geert Uytterhoeven wrote:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> ---
-> Please apply this patch directly if you want to be involved in device
-> tree binding documentation for your subsystem.
+Michael Turquette <mturquette@baylibre.com> writes:
 
-Thanks Geert, I'll pick this up.
+> Quoting Kevin Hilman (2017-03-24 12:20:31)
+>> Neil Armstrong <narmstrong@baylibre.com> writes:
+>> 
+>> > The same MALI-450 MP3 GPU is present in the GXBB and GXL SoCs.
+>> >
+>> > The node is simply added in the meson-gxbb.dtsi file.
+>> >
+>> > For GXL, since a lot is shared with the GXM that has a MALI-T820 IP, this
+>> > patch adds a new meson-gxl-mali.dtsi and is included in the SoC specific
+>> > dtsi files.
+>> >
+>> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> 
+>> LGTM, I can apply this when the clk driver changes are merged (feel free
+>> to let me know when that happens, in case I'm not paying attention.)
+>
+> Applied to clk-meson, a stable branch, which has been merged into
+> clk-next.
+>
+> Kevin, the dtsi is all yours.
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I applied it...
+
+>> 
+>> <bikeshed>
+>> nit: This series (and previous ones) use MALI, but I believe the correct
+>> way is Mali. Could you standarize on that throughout the series?
+>> </bikeshed>
+>> 
+
+... after s/MALI/Mali/ in the changelog.
+
+Kevin
