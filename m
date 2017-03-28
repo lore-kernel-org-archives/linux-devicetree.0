@@ -1,55 +1,202 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/7] Documentation: dt: net: Update the ath9k binding for
- SoC devices
-Date: Tue, 28 Mar 2017 17:18:37 +0200
-Message-ID: <20170328151837.GC3152@lunn.ch>
-References: <1489439116-4233-1-git-send-email-albeu@free.fr>
- <1897671.fKa4XTnU1K@debian64>
- <20170328104441.5feedcf4@avionic-0020>
- <2357006.NGKQYCh4BG@debian64>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
+Date: Tue, 28 Mar 2017 10:19:10 -0500
+Message-ID: <CAL_JsqJ6ND_CdW5ktSf_mVxaVyye=ZRVbGiJk6E5-ExvoBN9Hg@mail.gmail.com>
+References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
+ <20170324020630.vhffmeeb6wto53zx@rob-hp-laptop> <dce20025-9f42-e747-e325-e1667504e615@st.com>
+ <CAL_Jsq++rdPqNZk54S7gQaeLBdzSptogp3dp9P1HmNTV67Sk9w@mail.gmail.com> <461b2321-c43c-6d88-c805-97a887cc431d@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2357006.NGKQYCh4BG@debian64>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, QCA ath9k Development <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m@kresin.me
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <461b2321-c43c-6d88-c805-97a887cc431d@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Thompson <daniel.thompson@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, =?UTF-8?Q?Rados=C5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Ludovic Barre <ludovic.barre>
 List-Id: devicetree@vger.kernel.org
 
-> But LEDE/OpenWRT rely on the firmware loading API more than ever and 
-> currently there is not a replacement for it.
+On Tue, Mar 28, 2017 at 1:20 AM, Gabriel Fernandez
+<gabriel.fernandez@st.com> wrote:
+>
+>
+> On 03/27/2017 09:04 PM, Rob Herring wrote:
+>>
+>> On Fri, Mar 24, 2017 at 4:41 AM, Gabriel Fernandez
+>> <gabriel.fernandez@st.com> wrote:
+>>>
+>>> Hi Rob,
+>>>
+>>> Thanks for reviewing
+>>>
+>>>
+>>>
+>>> On 03/24/2017 03:06 AM, Rob Herring wrote:
+>>>>
+>>>> On Wed, Mar 15, 2017 at 10:23:30AM +0100, gabriel.fernandez@st.com
+>>>> wrote:
+>>>>>
+>>>>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>>>>
+>>>>> This patch enables clocks for STM32H743 boards.
+>>>>>
+>>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>>>> ---
+>>>>>    .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |  152 ++
+>>>>>    drivers/clk/Makefile                               |    1 +
+>>>>>    drivers/clk/clk-stm32h7.c                          | 1586
+>>>>> ++++++++++++++++++++
+>>>>>    include/dt-bindings/clock/stm32h7-clks.h           |  165 ++
+>>>>>    include/dt-bindings/mfd/stm32h7-rcc.h              |  138 ++
+>>>>>    5 files changed, 2042 insertions(+)
+>>>>>    create mode 100644
+>>>>> Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>>>    create mode 100644 drivers/clk/clk-stm32h7.c
+>>>>>    create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+>>>>>    create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>>> b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..9d4b587
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>>> @@ -0,0 +1,152 @@
+>>>>> +STMicroelectronics STM32H7 Reset and Clock Controller
+>>>>> +=====================================================
+>>>>> +
+>>>>> +The RCC IP is both a reset and a clock controller.
+>>>>> +
+>>>>> +Please refer to clock-bindings.txt for common clock controller binding
+>>>>> usage.
+>>>>> +Please also refer to reset.txt for common reset controller binding
+>>>>> usage.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible: Should be:
+>>>>> +  "st,stm32h743-rcc"
+>>>>> +
+>>>>> +- reg: should be register base and length as documented in the
+>>>>> +  datasheet
+>>>>> +
+>>>>> +- #reset-cells: 1, see below
+>>>>> +
+>>>>> +- #clock-cells : from common clock binding; shall be set to 1
+>>>>> +
+>>>>> +- clocks: External oscillator clock phandle
+>>>>> +  - high speed external clock signal (HSE)
+>>>>> +  - low speed external clock signal (LSE)
+>>>>> +  - external I2S clock (I2S_CKIN)
+>>>>> +
+>>>>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup
+>>>>> domain
+>>>>> +  write protection (RTC clock).
+>>>>> +
+>>>>> +- pll x node: Allow to register a pll with specific parameters.
+>>>>> +  Please see PLL section below.
+>>>>> +
+>>>>> +Example:
+>>>>> +
+>>>>> +       rcc: rcc@58024400 {
+>>>>> +               #reset-cells = <1>;
+>>>>> +               #clock-cells = <2>
+>>>>> +               compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+>>>>> +               reg = <0x58024400 0x400>;
+>>>>> +               clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+>>>>> +
+>>>>> +               st,syscfg = <&pwrcfg>;
+>>>>> +
+>>>>> +               #address-cells = <1>;
+>>>>> +               #size-cells = <0>;
+>>>>> +
+>>>>> +               vco1@58024430 {
+>>>>> +                       #clock-cells = <0>;
+>>>>> +                       compatible = "stm32,pll";
+>>>>> +                       reg = <0>;
+>>>>
+>>>> The reg addr value and unit address don't match.
+>>>
+>>> ok il will change into
+>>>
+>>>          vco1@0 {
+>>>                  reg = <0>;
+>>>
+>>>
+>>>>> +               };
+>>>>> +
+>>>>> +               vco2@58024438 {
+>>>>> +                       #clock-cells = <0>;
+>>>>> +                       compatible = "stm32,pll";
+>>>>> +                       reg = <1>;
+>>>>> +                       st,clock-div = <2>;
+>>>>> +                       st,clock-mult = <40>;
+>>>>> +                       st,frac-status = <0>;
+>>>>> +                       st,frac = <0>;
+>>>>> +                       st,vcosel = <1>;
+>>>>> +                       st,pllrge = <2>;
+>>>>> +               };
+>>>>> +       };
+>>>>> +
+>>>>> +
+>>>>> +STM32H7 PLL
+>>>>> +-----------
+>>>>> +
+>>>>> +The VCO of STM32 PLL could be reprensented like this:
+>>>>> +
+>>>>> +  Vref    ---------       --------
+>>>>> +    ---->| / DIVM  |---->| x DIVN | ------> VCO
+>>>>> +          ---------       --------
+>>>>> +                            ^
+>>>>> +                            |
+>>>>> +                         -------
+>>>>> +                        | FRACN |
+>>>>> +                         -------
+>>>>> +
+>>>>> +When the PLL is configured in integer mode:
+>>>>> +- VCO = ( Vref / DIVM ) * DIVN
+>>>>> +
+>>>>> +When the PLL is configured in fractional mode:
+>>>>> +- VCO = ( Vref / DIVM ) * ( DIVN + FRACN / 2^13)
+>>>>> +
+>>>>> +
+>>>>> +Required properties for pll node:
+>>>>> +- compatible: Should be:
+>>>>> +  "stm32,pll"
+>>>>
+>>>> Only 1 single PLL design for all STM32 chips ever?
+>>>
+>>> no, i can change into "stm32h7,pll"
+>>
+>> Actually, should be "st,stm32h7-pll".
+>
+> ok
+>
+>>>>> +
+>>>>> +- #clock-cells: from common clock binding; shall be set to 0
+>>>>> +- reg: Should be the pll number.
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +- st,clock-div:  DIVM division factor       : <1..63>
+>>>>> +- st,clock-mult: DIVN multiplication factor : <4..512>
+>>>>> +
+>>>>> +- st,frac-status:
+>>>>> +   - 0 Pll is configured in integer mode
+>>>>> +   - 1 Pll is configure in fractional mode
+>>>>
+>>>> Isn't this implied by the presence of the next property?
+>>>
+>>> do you prefer this ?
+>>>
+>>> - st,frac :
+>>> 0 : pll is configured in integer mode
+>>> 1..8191 : Fractional part of the multiplication factor and pll is
+>>> configured
+>>> in fractional mode
+>>
+>> Why not no st,frac property means integer mode?
+>
+> No
+>
+> no st,frac property means no change (keep default values from bootloader)
 
-....
+Okay, then 0 for integer mode is fine. Also state what the default means.
 
-
-> I looked into 10-ath9k-eeprom [0] of LEDE's AR71XX target and I noticed
-> that quite a few devices patch the MACs of the wifi.
-> If you look at the code for the Airtight C-55 and C-60, Meraki MR18,
-> Meraki Z1, you'll notice that each one has to add a fixed value (+1,
-> +2, ...) to the extraced MAC-Address. So how would you replicate this,
-> with "nvmem-cell-names = address" without some sort of 
-> nvmem-provider-processor?
-
-...
- 
-> https://github.com/lede-project/source/blob/master/target/linux/ar71xx/files/arch/mips/ath79/dev-eth.c#L1204
-> 
-> and grep lists the following devices:
-> mach-dgl-5500-a1.c, mach-dhp-1565-a1.c, mach-dir-505-a1.c, mach-dir-615-c1.c
-> mach-dir-615-i1.c, mach-dir-825-b1.c, mach-dir-825-c1.c, mach-tew-673gru.c
-> mach-tew-712br.c, mach-tew-732br.c, mach-tew-823dru.c
-
-I would say a big part of the problem is that all of these use cases
-are outside of mainline. Why should mainline support something which
-is not actually used in mainline.
-
-So i would suggest your first step is to bring some of these devices
-into mainline. Once in mainline, it becomes a mainline issue, and
-people will help get it solved.
-
-       Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
