@@ -1,50 +1,60 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] pinctrl: dt-bindings: Add documentation for Armada 37xx pin controllers
-Date: Tue, 28 Mar 2017 11:35:28 +0200
-Message-ID: <87zig5agm7.fsf@free-electrons.com>
-References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
-        <2dc869315a1b6bcc6d7eedd67b9ea8c0483b9789.1490120798.git-series.gregory.clement@free-electrons.com>
-        <CACRpkdaP9Q=3ZeARTYizCKKtH6NdCrCnapxS7p=EdV1gvCZe8w@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 2/5] irqchip/aspeed-i2c-ic: Add I2C IRQ controller for
+ Aspeed
+Date: Tue, 28 Mar 2017 10:40:38 +0100
+Message-ID: <91936f1a-0a0d-4091-b981-976503a6f7cd@arm.com>
+References: <20170328051226.21677-1-brendanhiggins@google.com>
+ <20170328051226.21677-3-brendanhiggins@google.com>
+ <49a13bbc-aec3-a349-4323-3c8d2728c62f@arm.com>
+ <1490692375.3177.119.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdaP9Q=3ZeARTYizCKKtH6NdCrCnapxS7p=EdV1gvCZe8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-        (Linus Walleij's message of "Mon, 27 Mar 2017 11:18:48 +0200")
+In-Reply-To: <1490692375.3177.119.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, mouse-Pma6HLj0uuo@public.gmane.org, clg-Bxea+6Xhats@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
- 
- On lun., mars 27 2017, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On 28/03/17 10:12, Benjamin Herrenschmidt wrote:
+> On Tue, 2017-03-28 at 09:32 +0100, Marc Zyngier wrote:
+>> I'm a bit concerned by this. It means that you can't even mask an
+>> interrupt. Is that really what you intend to do? Or all that the HW can
+>> do? If you cannot mask an interrupt, you're at the mercy of a screaming
+>> device...
+> 
+> This is not really an interrupt controller. It's a "summary" register
+> that reflects the state of the 14 i2c controller interrupts.
+> 
+> This approach does have the advantage of providing separate counters in
+> /proc/interrupts which is rather nice, but it does have overhead. On
+> those shittly little ARMv9 400Mhz cores it can be significant.
 
-> On Tue, Mar 21, 2017 at 7:28 PM, Gregory CLEMENT
-> <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->
->> Document the device tree binding for the pin controllers found on the
->> Armada 37xx SoCs.
->>
->> Update the binding documention of the xtal clk which is a subnode of this
->> syscon node.
->>
->> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> These look all right to me, but let's see what the DT people say.
->
-> This business with a subnode named "gpio-controller" that the code is
-> checking for is not in the bindings or examples, is this part of the old
-> Armada bindings?
+<pedantic>
+s/ARMv9/ARM9/, as we're still on variations of the ARMv8 architecture ;-)
+</pedantic>
 
-It was updated in the version 3 I sent last week.
+A 400MHz ARM9 (which is either ARMv4 or ARMv5) is not too bad (hey, we
+still have a couple of Versatile-ABs here...). Caches are pretty small
+though.
 
-Gregory
+> I would personally have some kind of trick to register a single
+> interrupt handler that calls directly the handlers of the respective
+> i2c busses via a simple indirection for speed, maybe adding my custom
+> sysfs or debugfs statistics. But that's just me trying to suck the last
+> cycle out of the bloody thing ;-)
 
+I'd hope the irqdomain itself to be pretty light (the revmap should help
+here), but of course you're going to do more work. Counters also come at
+a cost. It'd be interesting to see if Brendan has any overhead data
+about this.
+
+Cheers,
+
+	M.
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
