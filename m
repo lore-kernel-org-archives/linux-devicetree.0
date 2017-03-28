@@ -1,75 +1,51 @@
-From: Helmut Klein <hgkr.klein@gmail.com>
-Subject: Re: [PATCH v2, 2/3] tty/serial: meson_uart: add documentation for the
- dt-bindings
-Date: Tue, 28 Mar 2017 20:20:43 +0200
-Message-ID: <c233fb1c-7ae5-cfdf-938d-6e9dfa7bbcca@gmail.com>
-References: <20170328092545.4644-1-hgkr.klein@gmail.com>
- <20170328092545.4644-3-hgkr.klein@gmail.com>
- <20170328100551.GA24221@leverpostej>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: tegra: Add CPU and PSCI nodes for NVIDIA Tegra210
+ platforms
+Date: Tue, 28 Mar 2017 19:54:09 +0100
+Message-ID: <20170328185409.GG8643@leverpostej>
+References: <1490701718-16571-1-git-send-email-jonathanh@nvidia.com>
+ <9069e2fd-bf7b-b1df-3d1b-071ee21642ef@wwwdotorg.org>
+ <f9c59c65-de48-108d-73df-c659cc3300e6@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170328100551.GA24221@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f9c59c65-de48-108d-73df-c659cc3300e6-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hallo Mark,
+On Tue, Mar 28, 2017 at 05:49:41PM +0100, Jon Hunter wrote:
+> 
+> On 28/03/17 17:23, Stephen Warren wrote:
+> > On 03/28/2017 05:48 AM, Jon Hunter wrote:
+> >> Add the CPU and PSCI nodes for the NVIDIA Tegra210 platforms so that
+> >> all CPUs can be enabled on boot. This assumes that the PSCI firmware
+> >> has been loaded during the initial bootstrap on the device before the
+> >> kernel starts (which is typically the case for these platforms). The
+> >> PSCI firmware version is set to v0.2 which aligns with the current
+> >> shipping version for Tegra.
+> > 
+> > This seems fine, although I'd expect PSCI to be used everywhere on
+> > Tegra, so putting this in tegra210.dtsi would make more sense.
+> 
+> It's fine with me. Although technically, tegra210-smaug ships with
+> psci-v1.0 and tegra210-jetson-tx1 currently have psci-v0.2. However, I
+> did test both with the psci version set to v1.0 and the jetson-tx1, did
+> detect the version automatically and reverted to v0.2 (which is a
+> feature of psci >= v0.2). 
 
-i will add your text to the patch.
+Please don't rely upon that.
 
-Helmut
+If the DT lists 0.2 and the FW reports 1.0 we deliberately upgrade and
+treat it as 1.0, but the other way around was not a deliberate decision.
 
-On 28.03.2017 12:05, Mark Rutland wrote:
-> On Tue, Mar 28, 2017 at 11:25:44AM +0200, Helmut Klein wrote:
->> Add the documentation for the device tree binding of meson_uart
->>
->> Signed-off-by: Helmut Klein <hgkr.klein@gmail.com>
->> ---
->>  .../bindings/serial/amlogic,meson_uart.txt         | 25 ++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt
->>
->> diff --git a/Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt b/Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt
->> new file mode 100644
->> index 000000000000..6f94ba25760d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt
->> @@ -0,0 +1,25 @@
->> +* Amlogic Meson UART, used in multiple SoCs (e.g. S905, s905X, ...)
->> +
->> +Required properties:
->> +- compatible	: "amlogic,meson-uart"
->> +- reg		: offset and length of the register set for the device.
->> +- interrupts	: device interrupt
->> +- clocks	: the baud rate clock for the UART and optionally the core clock for the none AO uarts
->> +e.g.
->> +uart_A: serial@84c0 {
->> +	compatible = "amlogic,meson-uart";
->> +	reg = <0x0 0x84c0 0x0 0x14>;
->> +	pinctrl-0 = <&uart_a_pins &uart_a_cts_rts_pins>;
->> +	interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
->> +	clocks = <&xtal>, <&clkc CLKID_UART0>;
->> +	clock-names = "xtal", "core";
->
-> Please define these explicitly above, e.g.
->
-> - clocks: a list of phandle + clock-specifier pairs, one for each entry
->           in clock names.
-> - clock-names: contains:
->   * "xtal" for the baud rate clock
->   * "core" for the non-AO UARTs (optional)
->
-> Thanks,
-> Mark.
->
+If the FW is not necessarily 1.0, please do not list 1.0 in the DT.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
