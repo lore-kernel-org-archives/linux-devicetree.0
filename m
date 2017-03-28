@@ -1,115 +1,132 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv6 05/14] ov7670: add devicetree support
-Date: Tue, 28 Mar 2017 10:23:38 +0200
-Message-ID: <20170328082347.11159-6-hverkuil@xs4all.nl>
-References: <20170328082347.11159-1-hverkuil@xs4all.nl>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170328082347.11159-1-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCHv6 00/14] atmel-isi/ov7670/ov2640: convert to standalone drivers
+Date: Tue, 28 Mar 2017 10:23:33 +0200
+Message-ID: <20170328082347.11159-1-hverkuil@xs4all.nl>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Add DT support. Use it to get the reset and pwdn pins (if there are any).
-Tested with one sensor requiring reset/pwdn and one sensor that doesn't
-have reset/pwdn pins.
+This patch series converts the soc-camera atmel-isi to a standalone V4L2
+driver.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/i2c/ov7670.c | 40 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+The same is done for the ov7670 and ov2640 sensor drivers: the ov7670 was
+used to test the atmel-isi driver. The ov2640 is needed because the em28xx
+driver has a soc_camera include dependency. Both ov7670 and ov2640 sensors
+have been tested with the atmel-isi driver.
 
-diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index 912ff09c6100..7270c68ed18a 100644
---- a/drivers/media/i2c/ov7670.c
-+++ b/drivers/media/i2c/ov7670.c
-@@ -17,6 +17,8 @@
- #include <linux/i2c.h>
- #include <linux/delay.h>
- #include <linux/videodev2.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-mediabus.h>
-@@ -229,6 +231,8 @@ struct ov7670_info {
- 	};
- 	struct ov7670_format_struct *fmt;  /* Current format */
- 	struct clk *clk;
-+	struct gpio_desc *resetb_gpio;
-+	struct gpio_desc *pwdn_gpio;
- 	int min_width;			/* Filter out smaller sizes */
- 	int min_height;			/* Filter out smaller sizes */
- 	int clock_speed;		/* External clock speed (MHz) */
-@@ -591,8 +595,6 @@ static int ov7670_init(struct v4l2_subdev *sd, u32 val)
- 	return ov7670_write_array(sd, ov7670_default_regs);
- }
- 
--
--
- static int ov7670_detect(struct v4l2_subdev *sd)
- {
- 	unsigned char v;
-@@ -1549,6 +1551,27 @@ static const struct ov7670_devtype ov7670_devdata[] = {
- 	},
- };
- 
-+static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
-+{
-+	info->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-+			GPIOD_OUT_LOW);
-+	if (IS_ERR(info->pwdn_gpio)) {
-+		dev_info(&client->dev, "can't get %s GPIO\n", "powerdown");
-+		return PTR_ERR(info->pwdn_gpio);
-+	}
-+
-+	info->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-+			GPIOD_OUT_LOW);
-+	if (IS_ERR(info->resetb_gpio)) {
-+		dev_info(&client->dev, "can't get %s GPIO\n", "reset");
-+		return PTR_ERR(info->resetb_gpio);
-+	}
-+
-+	usleep_range(3000, 5000);
-+
-+	return 0;
-+}
-+
- static int ov7670_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -1594,6 +1617,10 @@ static int ov7670_probe(struct i2c_client *client,
- 		return -EPROBE_DEFER;
- 	clk_prepare_enable(info->clk);
- 
-+	ret = ov7670_init_gpio(client, info);
-+	if (ret)
-+		goto clk_disable;
-+
- 	info->clock_speed = clk_get_rate(info->clk) / 1000000;
- 	if (info->clock_speed < 10 || info->clock_speed > 48) {
- 		ret = -EINVAL;
-@@ -1693,9 +1720,18 @@ static const struct i2c_device_id ov7670_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ov7670_id);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id ov7670_of_match[] = {
-+	{ .compatible = "ovti,ov7670", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ov7670_of_match);
-+#endif
-+
- static struct i2c_driver ov7670_driver = {
- 	.driver = {
- 		.name	= "ov7670",
-+		.of_match_table = of_match_ptr(ov7670_of_match),
- 	},
- 	.probe		= ov7670_probe,
- 	.remove		= ov7670_remove,
+The first 5 patches improve the ov7670 sensor driver, mostly adding modern
+features such as DT support.
+
+The next three convert the atmel-isi and move it out of soc_camera.
+
+The following 6 patches convert ov2640 and drop the soc_camera dependency
+in em28xx. I have tested that this works with my 'SpeedLink Vicious And
+Divine Laplace webcam'.
+
+Tested with my sama5d3-Xplained board, the ov2640 sensor and two ov7670
+sensors: one with and one without reset/pwdn pins. Also tested with my
+em28xx-based webcam.
+
+I'd like to get this in for 4.12. Fingers crossed.
+
+Regards,
+
+        Hans
+
+Changes since v5:
+- Dropped the last two dts patches as these were for demonstration purposes
+  only.
+- Simplified isi_graph_init() return handling as suggested by Sakari.
+- Simplified atmel-isi format handling as suggested by Guennadi. Thanks for
+  the suggestion, this improves the code nicely!
+- Improved RGB handling in atmel-isi, allowing for all YUV ordering and not
+  just YUYV. Tested with YUYV and UYVY (the only two I can test with my
+  hardware).
+- Improved commit message of the "atmel-isi: document device tree bindings"
+  patch and dropped unnecessary properties from the example as per Rob's
+  comments.
+
+Changes since v4:
+- the ov2640 colorspace fixes were inexplicably part of an atmel-isi patch.
+  Split it off as a separate patch.
+- add V4L2_SUBDEV_FL_HAS_DEVNODE to ov2640.
+- drop #if defined(CONFIG_MEDIA_CONTROLLER) guard around media_entity_cleanup
+  in ov2640.
+
+Changes since v3:
+- ov2640/ov7670: call clk_disable_unprepare where needed. I assumed this was
+  done by the devm_clk_get cleanup, but that wasn't the case.
+- bindings: be even more explicit about which properties are mandatory.
+- ov2640/ov7670: drop unused bus-width from the dts binding examples and from
+  the actual dts patches.
+
+Changes since v2:
+- Incorporated Sakari's and Rob's device tree bindings comments.
+- ov2640: dropped the reset/power changes. These actually broke the em28xx
+  and there was really nothing wrong with it.
+- merged the "ov2640: allow use inside em28xx" into patches 10 and 11.
+  It really shouldn't have been a separate patch in the first place.
+- rebased on top of 4.11-rc1.
+
+Changes since v1:
+
+- Dropped MC support from atmel-isi and ov7670: not needed to make this
+  work. Only for the ov2640 was it kept since the em28xx driver requires it.
+- Use devm_clk_get instead of clk_get.
+- The ov7670 lower limit of the clock speed is 10 MHz instead of 12. Adjust
+  accordingly.
+
+
+Hans Verkuil (14):
+  ov7670: document device tree bindings
+  ov7670: call v4l2_async_register_subdev
+  ov7670: fix g/s_parm
+  ov7670: get xclk
+  ov7670: add devicetree support
+  atmel-isi: update device tree bindings documentation
+  atmel-isi: remove dependency of the soc-camera framework
+  atmel-isi: move out of soc_camera to atmel
+  ov2640: fix colorspace handling
+  ov2640: update bindings
+  ov2640: convert from soc-camera to a standard subdev sensor driver.
+  ov2640: use standard clk and enable it.
+  ov2640: add MC support
+  em28xx: drop last soc_camera link
+
+ .../devicetree/bindings/media/atmel-isi.txt        |   91 +-
+ .../devicetree/bindings/media/i2c/ov2640.txt       |   23 +-
+ .../devicetree/bindings/media/i2c/ov7670.txt       |   43 +
+ MAINTAINERS                                        |    1 +
+ drivers/media/i2c/Kconfig                          |   11 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/{soc_camera => }/ov2640.c        |  153 +--
+ drivers/media/i2c/ov7670.c                         |   75 +-
+ drivers/media/i2c/soc_camera/Kconfig               |    6 -
+ drivers/media/i2c/soc_camera/Makefile              |    1 -
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/atmel/Kconfig               |   11 +-
+ drivers/media/platform/atmel/Makefile              |    1 +
+ drivers/media/platform/atmel/atmel-isi.c           | 1368 ++++++++++++++++++++
+ .../platform/{soc_camera => atmel}/atmel-isi.h     |    0
+ drivers/media/platform/soc_camera/Kconfig          |   11 -
+ drivers/media/platform/soc_camera/Makefile         |    1 -
+ drivers/media/platform/soc_camera/atmel-isi.c      | 1167 -----------------
+ drivers/media/usb/em28xx/em28xx-camera.c           |    9 -
+ 19 files changed, 1614 insertions(+), 1360 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7670.txt
+ rename drivers/media/i2c/{soc_camera => }/ov2640.c (92%)
+ create mode 100644 drivers/media/platform/atmel/atmel-isi.c
+ rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.h (100%)
+ delete mode 100644 drivers/media/platform/soc_camera/atmel-isi.c
+
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
