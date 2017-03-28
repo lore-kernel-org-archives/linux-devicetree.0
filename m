@@ -1,213 +1,67 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v6 30/39] media: imx: csi/fim: add support for frame intervals
-Date: Mon, 27 Mar 2017 17:40:47 -0700
-Message-ID: <1490661656-10318-31-git-send-email-steve_longerbeam@mentor.com>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: omap4-droid4: Stop disabling SRAM and GPMC
+Date: Mon, 27 Mar 2017 17:46:12 -0700
+Message-ID: <20170328004612.16350-1-tony@atomide.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+I disabled SRAM and GPMC originally when seeing errors with
+omap_barriers_init(). But that is no longer happening probably
+because the memory range is now properly configured to 1021 MB
+instead of 1024 MB. So let's enable SRAM and GPMC so we get
+omap_barriers_init() working and can idle the GPMC.
 
-Add support to CSI for negotiation of frame intervals, and use this
-information to configure the frame interval monitor.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
+Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/staging/media/imx/imx-media-csi.c | 46 +++++++++++++++++++++++++++++--
- drivers/staging/media/imx/imx-media-fim.c | 28 +++++++------------
- drivers/staging/media/imx/imx-media.h     |  2 +-
- 3 files changed, 54 insertions(+), 22 deletions(-)
+ arch/arm/boot/dts/omap4-droid4-xt894.dts | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index f4c6a33..59d80ba 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -63,6 +63,7 @@ struct csi_priv {
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -24,8 +24,7 @@
  
- 	struct v4l2_mbus_framefmt format_mbus[CSI_NUM_PADS];
- 	const struct imx_media_pixfmt *cc[CSI_NUM_PADS];
-+	struct v4l2_fract frame_interval;
- 	struct v4l2_rect crop;
- 
- 	/* active vb2 buffers to send to video dev sink */
-@@ -589,7 +590,8 @@ static int csi_start(struct csi_priv *priv)
- 
- 	/* start the frame interval monitor */
- 	if (priv->fim) {
--		ret = imx_media_fim_set_stream(priv->fim, priv->sensor, true);
-+		ret = imx_media_fim_set_stream(priv->fim,
-+					       &priv->frame_interval, true);
- 		if (ret)
- 			goto idmac_stop;
- 	}
-@@ -604,7 +606,8 @@ static int csi_start(struct csi_priv *priv)
- 
- fim_off:
- 	if (priv->fim)
--		imx_media_fim_set_stream(priv->fim, priv->sensor, false);
-+		imx_media_fim_set_stream(priv->fim,
-+					 &priv->frame_interval, false);
- idmac_stop:
- 	if (priv->dest == IPU_CSI_DEST_IDMAC)
- 		csi_idmac_stop(priv);
-@@ -618,7 +621,8 @@ static void csi_stop(struct csi_priv *priv)
- 
- 	/* stop the frame interval monitor */
- 	if (priv->fim)
--		imx_media_fim_set_stream(priv->fim, priv->sensor, false);
-+		imx_media_fim_set_stream(priv->fim,
-+					 &priv->frame_interval, false);
- 
- 	ipu_csi_disable(priv->csi);
- }
-@@ -627,6 +631,36 @@ static void csi_stop(struct csi_priv *priv)
-  * V4L2 subdev operations.
-  */
- 
-+static int csi_g_frame_interval(struct v4l2_subdev *sd,
-+				struct v4l2_subdev_frame_interval *fi)
-+{
-+	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-+
-+	mutex_lock(&priv->lock);
-+	fi->interval = priv->frame_interval;
-+	mutex_unlock(&priv->lock);
-+
-+	return 0;
-+}
-+
-+static int csi_s_frame_interval(struct v4l2_subdev *sd,
-+				struct v4l2_subdev_frame_interval *fi)
-+{
-+	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-+
-+	mutex_lock(&priv->lock);
-+
-+	/* Output pads mirror active input pad, no limits on input pads */
-+	if (fi->pad == CSI_SRC_PAD_IDMAC || fi->pad == CSI_SRC_PAD_DIRECT)
-+		fi->interval = priv->frame_interval;
-+
-+	priv->frame_interval = fi->interval;
-+
-+	mutex_unlock(&priv->lock);
-+
-+	return 0;
-+}
-+
- static int csi_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-@@ -1216,6 +1250,10 @@ static int csi_registered(struct v4l2_subdev *sd)
- 			goto put_csi;
- 	}
- 
-+	/* init default frame interval */
-+	priv->frame_interval.numerator = 1;
-+	priv->frame_interval.denominator = 30;
-+
- 	priv->fim = imx_media_fim_init(&priv->sd);
- 	if (IS_ERR(priv->fim)) {
- 		ret = PTR_ERR(priv->fim);
-@@ -1266,6 +1304,8 @@ static struct v4l2_subdev_core_ops csi_core_ops = {
+ 	/*
+ 	 * We seem to have only 1021 MB accessible, 1021 - 1022 is locked,
+-	 * then 1023 - 1024 seems to contain mbm. For SRAM, see the notes
+-	 * below about SRAM and L3_ICLK2 being unused by default,
++	 * then 1023 - 1024 seems to contain mbm.
+ 	 */
+ 	memory {
+ 		device_type = "memory";
+@@ -176,11 +175,6 @@
+ 	};
  };
  
- static struct v4l2_subdev_video_ops csi_video_ops = {
-+	.g_frame_interval = csi_g_frame_interval,
-+	.s_frame_interval = csi_s_frame_interval,
- 	.s_stream = csi_s_stream,
- };
- 
-diff --git a/drivers/staging/media/imx/imx-media-fim.c b/drivers/staging/media/imx/imx-media-fim.c
-index 0623bc5..e9525cd 100644
---- a/drivers/staging/media/imx/imx-media-fim.c
-+++ b/drivers/staging/media/imx/imx-media-fim.c
-@@ -67,26 +67,18 @@ struct imx_media_fim {
- };
- 
- static void update_fim_nominal(struct imx_media_fim *fim,
--			       struct imx_media_subdev *sensor)
-+			       const struct v4l2_fract *fi)
- {
--	struct v4l2_streamparm parm;
--	struct v4l2_fract tpf;
--	int ret;
+-/* L3_2 interconnect is unused, SRAM, GPMC and L3_ICLK2 disabled */
+-&gpmc {
+-	status = "disabled";
+-};
 -
--	parm.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
--	ret = v4l2_subdev_call(sensor->sd, video, g_parm, &parm);
--	tpf = parm.parm.capture.timeperframe;
+ &hdmi {
+ 	status = "okay";
+ 	pinctrl-0 = <&dss_hdmi_pins>;
+@@ -356,11 +350,6 @@
+ 	};
+ };
+ 
+-/* L3_2 interconnect is unused, SRAM, GPMC and L3_ICLK2 disabled */
+-&ocmcram {
+-	status = "disabled";
+-};
 -
--	if (ret || tpf.denominator == 0) {
--		dev_dbg(fim->sd->dev, "no tpf from sensor, FIM disabled\n");
-+	if (fi->denominator == 0) {
-+		dev_dbg(fim->sd->dev, "no frame interval, FIM disabled\n");
- 		fim->enabled = false;
- 		return;
- 	}
+ &omap4_pmx_core {
  
--	fim->nominal = DIV_ROUND_CLOSEST(1000 * 1000 * tpf.numerator,
--					 tpf.denominator);
-+	fim->nominal = DIV_ROUND_CLOSEST_ULL(1000000ULL * (u64)fi->numerator,
-+					     fi->denominator);
- 
--	dev_dbg(fim->sd->dev, "sensor FI=%lu usec\n", fim->nominal);
-+	dev_dbg(fim->sd->dev, "FI=%lu usec\n", fim->nominal);
- }
- 
- static void reset_fim(struct imx_media_fim *fim, bool curval)
-@@ -130,8 +122,8 @@ static void send_fim_event(struct imx_media_fim *fim, unsigned long error)
- 
- /*
-  * Monitor an averaged frame interval. If the average deviates too much
-- * from the sensor's nominal frame rate, send the frame interval error
-- * event. The frame intervals are averaged in order to quiet noise from
-+ * from the nominal frame rate, send the frame interval error event. The
-+ * frame intervals are averaged in order to quiet noise from
-  * (presumably random) interrupt latency.
-  */
- static void frame_interval_monitor(struct imx_media_fim *fim,
-@@ -422,12 +414,12 @@ EXPORT_SYMBOL_GPL(imx_media_fim_set_power);
- 
- /* Called by the subdev in its s_stream callback */
- int imx_media_fim_set_stream(struct imx_media_fim *fim,
--			     struct imx_media_subdev *sensor,
-+			     const struct v4l2_fract *fi,
- 			     bool on)
- {
- 	if (on) {
- 		reset_fim(fim, true);
--		update_fim_nominal(fim, sensor);
-+		update_fim_nominal(fim, fi);
- 
- 		if (fim->icap_channel >= 0)
- 			fim_acquire_first_ts(fim);
-diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-index b991081..b6a0e41 100644
---- a/drivers/staging/media/imx/imx-media.h
-+++ b/drivers/staging/media/imx/imx-media.h
-@@ -256,7 +256,7 @@ struct imx_media_fim;
- void imx_media_fim_eof_monitor(struct imx_media_fim *fim, struct timespec *ts);
- int imx_media_fim_set_power(struct imx_media_fim *fim, bool on);
- int imx_media_fim_set_stream(struct imx_media_fim *fim,
--			     struct imx_media_subdev *sensor,
-+			     const struct v4l2_fract *frame_interval,
- 			     bool on);
- struct imx_media_fim *imx_media_fim_init(struct v4l2_subdev *sd);
- void imx_media_fim_free(struct imx_media_fim *fim);
+ 	/* hdmi_hpd.gpio_63 */
 -- 
-2.7.4
+2.12.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
