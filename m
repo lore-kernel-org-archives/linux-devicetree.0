@@ -1,110 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 5/7] pinctrl: aramda-37xx: Add irqchip support
-Date: Tue, 28 Mar 2017 15:04:39 +0200
-Message-ID: <CACRpkdY0DzMGiRTWeS23iCY3Vja9dnXJVaMqOnhJRpBLowfYTA@mail.gmail.com>
-References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
- <0e60fccd7913b83ee53d2921ce8f297927e8b6f3.1490120798.git-series.gregory.clement@free-electrons.com>
- <CACRpkdYv6WDWM60dRMaYfEt50M8N-yLYk2TRguNi78aQtt6X9A@mail.gmail.com> <87vaqtadry.fsf@free-electrons.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] device property:
+ fwnode_property_read_string_array() returns nr of strings
+Date: Tue, 28 Mar 2017 16:07:13 +0300
+Message-ID: <20170328130712.GC16657@valkosipuli.retiisi.org.uk>
+References: <1490703739-28270-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1490703739-28270-4-git-send-email-sakari.ailus@linux.intel.com>
+ <20170328125231.GP2957@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <87vaqtadry.fsf@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170328125231.GP2957-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 12:36 PM, Gregory CLEMENT
-<gregory.clement@free-electrons.com> wrote:
->  On lun., mars 27 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
+Hi Mika,
 
->>> +                       u32 virq = irq_linear_revmap(d, hwirq +
->>> +                                                    i * GPIO_PER_REG);
->>
->> Use irq_find_mapping() instead please.
->
-> As we are in the interrupt handler I chose to use this function because
-> according to its documentation: "This is a fast path alternative to
-> irq_find_mapping() that can be called directly by irq controller code to
-> save a handful of instructions".
->
-> The only restriction is "It is always safe to call, but won't find irqs
-> mapped using the radix tree.". So I think that for this driver it is
-> okay.
+Thank you for the review!
 
-So you are relying on the core code in gpiolib to select a linear
-map. That is implicit semantics, and either all drivers using
-GPIOLIB_IRQCHIP should be changed to irq_linear_revmap()
-or all stay with irq_find_mapping().
+On Tue, Mar 28, 2017 at 03:52:31PM +0300, Mika Westerberg wrote:
+> On Tue, Mar 28, 2017 at 03:22:19PM +0300, Sakari Ailus wrote:
+> > -		ret = acpi_copy_property_array_string(items, (char **)val, nval);
+> > +		ret = acpi_copy_property_array_string(
+> > +			items, (char **)val,
+> > +			min_t(u32, nval, obj->package.count));
+> 
+> I think this looks better if written like:
+> 
+> 		ret = acpi_copy_property_array_string(items, (char **)val,
+> 					min_t(u32, nval, obj->package.count));
 
-In this case, I doubt it that you are actually so timing critical that
-it matters. Please use irq_find_mapping().
+I prefer the former although I have no strong opinion either way. Using an
+indentation that is automatically intended by a text editor is also an
+advantage.
 
->>> +       nr_irq_parent = of_irq_count(np);
->>> +       spin_lock_init(&info->irq_lock);
->>> +
->>> +       if (!nr_irq_parent) {
->>> +               dev_err(&pdev->dev, "Invalid or no IRQ\n");
->>> +               return 0;
->>> +       }
->>
->> What if it is > 1? That doesn't seem to work but will pass this
->> check silently.
->
-> If we have nr_irq_parent > 1, it will work and it is actually expected.
+I can change it if you insist. :-)
 
-Ah, I get it. Nice.
+> 
+> Regardless of that,
+> 
+> Reviewed-by: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
->>> +       ret = gpiochip_irqchip_add(gc, irqchip, 0,
->>> +                                  handle_level_irq, IRQ_TYPE_NONE);
->>
->> If you also set up the handler in .set_type() you can assign
->> handle_bad_irq() here and let .set_type set the right handler
->> as e.g. drivers/gpio/gpio-pl061.c.
->
-> Well the hardware can only manage the edge trigger, so there is no
-> benefit to modify it each time we want to change the kind of edge we
-> want (raising or falling). But your comment make me realized that I used
-> the wrong one, I will move to handle_edge_irq in the v4.
+Thanks!
 
-Ooops, yeah handle_edge_irq() is what calls the ACK callback.
+-- 
+Regards,
 
->>> +       for (i = 0; i < nrirqs; i++) {
->>> +               struct irq_data *d = irq_get_irq_data(gc->irq_base + i);
->>> +
->>> +               d->mask = 1 << (i % GPIO_PER_REG);
->>> +       }
->>
->> What is this? It looks like a big hack. At least put in a fat
->> comment about what is going on and why.
->
-> I can reuse a part of the commit log here: "The only unusual "feature"
-> is that many interrupts are connected to the parent interrupt
-> controller. But we do not take advantage of this and use the chained irq
-> with all of them."
-
-What you're doing is mocking around with core irqchip semantics.
-Is ->mask really supposed to be played around with from the outsid
-like this?
-
-Anyways: BIT(i % GPIO_PER_REG) is nicer.
-
->>> +       for (i = 0; i < nr_irq_parent; i++) {
->>> +               int irq = irq_of_parse_and_map(np, i);
->>
->> I think gpiochip_irqchip_add() will do this for you already,
->> as it calls irq_create_mapping() for all offsets which will call
->> irq_of_parse_and_map() am I right?
->
-> After reading the code, it doesn't seem it is the case. At least there
-> is no irq_of_parse_and_map() call from gpiochip_irqchip_add(). And waht
-> we need here is to associate each IRQ to the same GPIO handler.
->
-> I can still try without this line to confirm it.
-
-It has irq_create_mapping(gpiochip->irqdomain, offset); that get
-called for every IRQ, and that will eventually call irq_of_parse_and_map()
-if the IRQs are defined in the device tree. (IIRC)
-
-Yours,
-Linus Walleij
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
