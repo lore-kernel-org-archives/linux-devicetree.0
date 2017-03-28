@@ -1,202 +1,134 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
-Date: Tue, 28 Mar 2017 10:19:10 -0500
-Message-ID: <CAL_JsqJ6ND_CdW5ktSf_mVxaVyye=ZRVbGiJk6E5-ExvoBN9Hg@mail.gmail.com>
-References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
- <20170324020630.vhffmeeb6wto53zx@rob-hp-laptop> <dce20025-9f42-e747-e325-e1667504e615@st.com>
- <CAL_Jsq++rdPqNZk54S7gQaeLBdzSptogp3dp9P1HmNTV67Sk9w@mail.gmail.com> <461b2321-c43c-6d88-c805-97a887cc431d@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <461b2321-c43c-6d88-c805-97a887cc431d@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Thompson <daniel.thompson@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, =?UTF-8?Q?Rados=C5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Ludovic Barre <ludovic.barre>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v8 1/2] dt-bindings: Add GPCv2 power gating driver
+Date: Tue, 28 Mar 2017 08:19:44 -0700
+Message-ID: <20170328151945.32665-2-andrew.smirnov@gmail.com>
+References: <20170328151945.32665-1-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170328151945.32665-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Dong Aisheng <dongas86@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 1:20 AM, Gabriel Fernandez
-<gabriel.fernandez@st.com> wrote:
->
->
-> On 03/27/2017 09:04 PM, Rob Herring wrote:
->>
->> On Fri, Mar 24, 2017 at 4:41 AM, Gabriel Fernandez
->> <gabriel.fernandez@st.com> wrote:
->>>
->>> Hi Rob,
->>>
->>> Thanks for reviewing
->>>
->>>
->>>
->>> On 03/24/2017 03:06 AM, Rob Herring wrote:
->>>>
->>>> On Wed, Mar 15, 2017 at 10:23:30AM +0100, gabriel.fernandez@st.com
->>>> wrote:
->>>>>
->>>>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>>>>
->>>>> This patch enables clocks for STM32H743 boards.
->>>>>
->>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->>>>> ---
->>>>>    .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |  152 ++
->>>>>    drivers/clk/Makefile                               |    1 +
->>>>>    drivers/clk/clk-stm32h7.c                          | 1586
->>>>> ++++++++++++++++++++
->>>>>    include/dt-bindings/clock/stm32h7-clks.h           |  165 ++
->>>>>    include/dt-bindings/mfd/stm32h7-rcc.h              |  138 ++
->>>>>    5 files changed, 2042 insertions(+)
->>>>>    create mode 100644
->>>>> Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>>>    create mode 100644 drivers/clk/clk-stm32h7.c
->>>>>    create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
->>>>>    create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>>> b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>>> new file mode 100644
->>>>> index 0000000..9d4b587
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>>> @@ -0,0 +1,152 @@
->>>>> +STMicroelectronics STM32H7 Reset and Clock Controller
->>>>> +=====================================================
->>>>> +
->>>>> +The RCC IP is both a reset and a clock controller.
->>>>> +
->>>>> +Please refer to clock-bindings.txt for common clock controller binding
->>>>> usage.
->>>>> +Please also refer to reset.txt for common reset controller binding
->>>>> usage.
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible: Should be:
->>>>> +  "st,stm32h743-rcc"
->>>>> +
->>>>> +- reg: should be register base and length as documented in the
->>>>> +  datasheet
->>>>> +
->>>>> +- #reset-cells: 1, see below
->>>>> +
->>>>> +- #clock-cells : from common clock binding; shall be set to 1
->>>>> +
->>>>> +- clocks: External oscillator clock phandle
->>>>> +  - high speed external clock signal (HSE)
->>>>> +  - low speed external clock signal (LSE)
->>>>> +  - external I2S clock (I2S_CKIN)
->>>>> +
->>>>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup
->>>>> domain
->>>>> +  write protection (RTC clock).
->>>>> +
->>>>> +- pll x node: Allow to register a pll with specific parameters.
->>>>> +  Please see PLL section below.
->>>>> +
->>>>> +Example:
->>>>> +
->>>>> +       rcc: rcc@58024400 {
->>>>> +               #reset-cells = <1>;
->>>>> +               #clock-cells = <2>
->>>>> +               compatible = "st,stm32h743-rcc", "st,stm32-rcc";
->>>>> +               reg = <0x58024400 0x400>;
->>>>> +               clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
->>>>> +
->>>>> +               st,syscfg = <&pwrcfg>;
->>>>> +
->>>>> +               #address-cells = <1>;
->>>>> +               #size-cells = <0>;
->>>>> +
->>>>> +               vco1@58024430 {
->>>>> +                       #clock-cells = <0>;
->>>>> +                       compatible = "stm32,pll";
->>>>> +                       reg = <0>;
->>>>
->>>> The reg addr value and unit address don't match.
->>>
->>> ok il will change into
->>>
->>>          vco1@0 {
->>>                  reg = <0>;
->>>
->>>
->>>>> +               };
->>>>> +
->>>>> +               vco2@58024438 {
->>>>> +                       #clock-cells = <0>;
->>>>> +                       compatible = "stm32,pll";
->>>>> +                       reg = <1>;
->>>>> +                       st,clock-div = <2>;
->>>>> +                       st,clock-mult = <40>;
->>>>> +                       st,frac-status = <0>;
->>>>> +                       st,frac = <0>;
->>>>> +                       st,vcosel = <1>;
->>>>> +                       st,pllrge = <2>;
->>>>> +               };
->>>>> +       };
->>>>> +
->>>>> +
->>>>> +STM32H7 PLL
->>>>> +-----------
->>>>> +
->>>>> +The VCO of STM32 PLL could be reprensented like this:
->>>>> +
->>>>> +  Vref    ---------       --------
->>>>> +    ---->| / DIVM  |---->| x DIVN | ------> VCO
->>>>> +          ---------       --------
->>>>> +                            ^
->>>>> +                            |
->>>>> +                         -------
->>>>> +                        | FRACN |
->>>>> +                         -------
->>>>> +
->>>>> +When the PLL is configured in integer mode:
->>>>> +- VCO = ( Vref / DIVM ) * DIVN
->>>>> +
->>>>> +When the PLL is configured in fractional mode:
->>>>> +- VCO = ( Vref / DIVM ) * ( DIVN + FRACN / 2^13)
->>>>> +
->>>>> +
->>>>> +Required properties for pll node:
->>>>> +- compatible: Should be:
->>>>> +  "stm32,pll"
->>>>
->>>> Only 1 single PLL design for all STM32 chips ever?
->>>
->>> no, i can change into "stm32h7,pll"
->>
->> Actually, should be "st,stm32h7-pll".
->
-> ok
->
->>>>> +
->>>>> +- #clock-cells: from common clock binding; shall be set to 0
->>>>> +- reg: Should be the pll number.
->>>>> +
->>>>> +Optional properties:
->>>>> +- st,clock-div:  DIVM division factor       : <1..63>
->>>>> +- st,clock-mult: DIVN multiplication factor : <4..512>
->>>>> +
->>>>> +- st,frac-status:
->>>>> +   - 0 Pll is configured in integer mode
->>>>> +   - 1 Pll is configure in fractional mode
->>>>
->>>> Isn't this implied by the presence of the next property?
->>>
->>> do you prefer this ?
->>>
->>> - st,frac :
->>> 0 : pll is configured in integer mode
->>> 1..8191 : Fractional part of the multiplication factor and pll is
->>> configured
->>> in fractional mode
->>
->> Why not no st,frac property means integer mode?
->
-> No
->
-> no st,frac property means no change (keep default values from bootloader)
+Add DT bindings for power domain driver for GPCv2 IP block found in
+i.MX7 SoCs.
 
-Okay, then 0 for integer mode is fine. Also state what the default means.
+Cc: yurovsky@gmail.com
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Dong Aisheng <dongas86@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
+ include/dt-bindings/power/imx7-power.h             | 16 +++++
+ 2 files changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+ create mode 100644 include/dt-bindings/power/imx7-power.h
 
-Rob
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+new file mode 100644
+index 0000000..02f45c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+@@ -0,0 +1,71 @@
++Freescale i.MX General Power Controller v2
++==========================================
++
++The i.MX7S/D General Power Control (GPC) block contains Power Gating
++Control (PGC) for various power domains.
++
++Required properties:
++
++- compatible: Should be "fsl,imx7d-gpc"
++
++- reg: should be register base and length as documented in the
++  datasheet
++
++- interrupts: Should contain GPC interrupt request 1
++
++Power domains contained within GPC node are generic power domain
++providers, documented in
++Documentation/devicetree/bindings/power/power_domain.txt, which are
++described as subnodes of the power gating controller 'pgc' node,
++which, in turn, is expected to contain the following:
++
++Required properties:
++
++- reg: Power domain index. Valid values are defined in
++  include/dt-bindings/power/imx7-power.h
++
++- #power-domain-cells: Should be 0
++
++Optional properties:
++
++- power-supply: Power supply used to power the domain
++
++Example:
++
++	gpc: gpc@303a0000 {
++		compatible = "fsl,imx7d-gpc";
++		reg = <0x303a0000 0x1000>;
++		interrupt-controller;
++		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&intc>;
++
++		pgc {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			pgc_pcie_phy: power-domain@3 {
++				#power-domain-cells = <0>;
++
++				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
++				power-supply = <&reg_1p0d>;
++			};
++		};
++	};
++
++
++Specifying power domain for IP modules
++======================================
++
++IP cores belonging to a power domain should contain a 'power-domains'
++property that is a phandle for PGC node representing the domain.
++
++Example of a device that is part of the PCIE_PHY power domain:
++
++	pcie: pcie@33800000 {
++	      reg = <0x33800000 0x4000>,
++	            <0x4ff00000 0x80000>;
++		/* ... */
++		power-domains = <&pgc_pcie_phy>;
++		/* ... */
++	};
+diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
+new file mode 100644
+index 0000000..3a181e4
+--- /dev/null
++++ b/include/dt-bindings/power/imx7-power.h
+@@ -0,0 +1,16 @@
++/*
++ *  Copyright (C) 2017 Impinj
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __DT_BINDINGS_IMX7_POWER_H__
++#define __DT_BINDINGS_IMX7_POWER_H__
++
++#define IMX7_POWER_DOMAIN_MIPI_PHY		0
++#define IMX7_POWER_DOMAIN_PCIE_PHY		1
++#define IMX7_POWER_DOMAIN_USB_HSIC_PHY		2
++
++#endif
+-- 
+2.9.3
