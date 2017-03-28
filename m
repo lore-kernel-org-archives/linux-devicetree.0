@@ -1,50 +1,35 @@
-From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] [kernel] ARM: lpc32xx: migrate CLCD config to
- device tree
-Date: Tue, 28 Mar 2017 13:28:23 -0400
-Message-ID: <1490722103.24147.5.camel@gmail.com>
-References: <20170308174638.25578-1-slemieux.tyco@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [RFC PATCH 0/3] IIO-based thermal sensor driver for Allwinner H3 SoC
+Date: Wed, 29 Mar 2017 01:30:10 +0800
+Message-ID: <20170328173013.16539-1-icenowy@aosc.io>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170308174638.25578-1-slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+Allwiner H3 SoC has a thermal sensor, which is a large refactored version of
+the old Allwinner "GPADC" (although it have already only thermal part left
+in A33).
 
-On Wed, 2017-03-08 at 12:46 -0500, Sylvain Lemieux wrote:
-> From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
-> 
-> Migrate the CLCD configurations to the device tree and
-> remove custom functions from board files.
-> 
-> This change depends on the following change:
-> "video: ARM CLCD: fix dma allocation size"
-> https://www.spinics.net/lists/arm-kernel/msg567178.html
-> 
-> Note:
-> * We tested a similar change on a custom LPC32xx board with a 480x272 LCD.
-> * We did not test this change on hardware;
->   we do not have access to a PHY3250 board with the 240x320 LCD.
-> 
-> Liam Beguin (2):
->   ARM: dts: lpc32xx: phy3250: add clcd configuration
->   ARM: lpc32xx: drop CLCD configuration
-> 
->  arch/arm/boot/dts/lpc3250-phy3250.dts | 35 ++++++++++++++++++
->  arch/arm/mach-lpc32xx/phy3250.c       | 70 -----------------------------------
->  2 files changed, 35 insertions(+), 70 deletions(-)
-> 
-do you think you can look at this patchset?
+This patch tried to add support for the sensor in H3 based on the A33
+thermal sensor patchset by Quentin Schulz at [1].
 
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2017-March/495505.html
 
-Regards,
-Sylvain
+Icenowy Zheng (3):
+  dt-bindings: update the Allwinner GPADC device tree binding for H3
+  iio: adc: sun4i-gpadc-iio: add support for H3 thermal sensor
+  ARM: sun8i: h3: add support for the thermal sensor in H3
 
+ .../devicetree/bindings/mfd/sun4i-gpadc.txt        |  23 +++-
+ arch/arm/boot/dts/sun8i-h3.dtsi                    |  26 +++++
+ drivers/iio/adc/sun4i-gpadc-iio.c                  | 130 ++++++++++++++++++---
+ include/linux/mfd/sun4i-gpadc.h                    |  33 +++++-
+ 4 files changed, 188 insertions(+), 24 deletions(-)
+
+-- 
+2.12.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
