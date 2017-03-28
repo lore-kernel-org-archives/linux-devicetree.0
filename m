@@ -1,76 +1,43 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v6 2/5] irqchip/aspeed-i2c-ic: Add I2C IRQ controller
- for Aspeed
-Date: Wed, 29 Mar 2017 07:50:16 +1100
-Message-ID: <1490734216.3177.140.camel@kernel.crashing.org>
-References: <20170328051226.21677-1-brendanhiggins@google.com>
-         <20170328051226.21677-3-brendanhiggins@google.com>
-         <49a13bbc-aec3-a349-4323-3c8d2728c62f@arm.com>
-         <1490692375.3177.119.camel@kernel.crashing.org>
-         <91936f1a-0a0d-4091-b981-976503a6f7cd@arm.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
+Date: Tue, 28 Mar 2017 15:07:24 -0700
+Message-ID: <CAEG3pNCop22g0SbKfPma+iaHrSzv6sBXTJRsrjwtwUw+HGYV7Q@mail.gmail.com>
+References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
+ <20170316100743.GA12137@gondor.apana.org.au> <m2mvcl6pwg.fsf@baylibre.com>
+ <20170317083032.GA18512@gondor.apana.org.au> <m2lgrxnxlz.fsf@baylibre.com> <20170323075602.GA6054@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <91936f1a-0a0d-4091-b981-976503a6f7cd-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, mouse-Pma6HLj0uuo@public.gmane.org, clg-Bxea+6Xhats@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170323075602.GA6054@gondor.apana.org.au>
+Sender: linux-clk-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Kevin Hilman <khilman@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-03-28 at 10:40 +0100, Marc Zyngier wrote:
-> On 28/03/17 10:12, Benjamin Herrenschmidt wrote:
-> > On Tue, 2017-03-28 at 09:32 +0100, Marc Zyngier wrote:
-> > > I'm a bit concerned by this. It means that you can't even mask an
-> > > interrupt. Is that really what you intend to do? Or all that the HW can
-> > > do? If you cannot mask an interrupt, you're at the mercy of a screaming
-> > > device...
-> > 
-> > This is not really an interrupt controller. It's a "summary" register
-> > that reflects the state of the 14 i2c controller interrupts.
-> > 
-> > This approach does have the advantage of providing separate counters in
-> > /proc/interrupts which is rather nice, but it does have overhead. On
-> > those shittly little ARMv9 400Mhz cores it can be significant.
-> 
-> <pedantic>
-> s/ARMv9/ARM9/, as we're still on variations of the ARMv8 architecture ;-)
-> </pedantic>
+Herbert,
 
-It was a typo, I meant ARM9/ARMv5 :-)
+On Thu, Mar 23, 2017 at 12:56 AM, Herbert Xu
+<herbert@gondor.apana.org.au> wrote:
+> On Wed, Mar 22, 2017 at 08:24:08AM -0700, Kevin Hilman wrote:
+>>
+>> Because this will be causing conflicts with both the platform (amlogic)
+>> tree and the clk tree, could provide an immutable branch where these are
+>> applied to help us handle these conflicts?
+>
+> If you apply the same patches to your tree there should be no
+> conflicts at all.  git is able to resolve this automatically.
 
-The 2 SOC families we are talking about (Aspeed 24xx and 25xx) are
-based on a ARM926EJ at 400Mhz and an ARM1176JZFS at 800Mhz
-respectively, so cycles do count :-)
- 
-> A 400MHz ARM9 (which is either ARMv4 or ARMv5) is not too bad (hey, we
-> still have a couple of Versatile-ABs here...). Caches are pretty small
-> though.
+The commits will have different SHA1 hashes (commit id's). Having
+multiple "copies" of the same patch with separate id's is undesirable
+and completely avoidable. Immutable, shared branches resolve this
+issue.
 
-16K/16K, no L2 :) 
+Best regards,
+Mike
 
-> > I would personally have some kind of trick to register a single
-> > interrupt handler that calls directly the handlers of the respective
-> > i2c busses via a simple indirection for speed, maybe adding my custom
-> > sysfs or debugfs statistics. But that's just me trying to suck the last
-> > cycle out of the bloody thing ;-)
-> 
-> I'd hope the irqdomain itself to be pretty light (the revmap should help
-> here), but of course you're going to do more work. Counters also come at
-> a cost. It'd be interesting to see if Brendan has any overhead data
-> about this.
-
-Thankfully, the HW supports buffered sends/receive or even DMA. The
-current patch doesn't yet support these but they would be a good way to
-alleviate the cost of the interrupts if it becomes a problem.
-
-Cheers,
-Ben.
-
+>
 > Cheers,
-> 
-> 	M.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
