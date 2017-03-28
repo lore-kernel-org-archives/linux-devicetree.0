@@ -1,74 +1,37 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFC 4/8] regulator: core: Check enabling bypass respects
- constraints
-Date: Tue, 28 Mar 2017 15:39:41 +0300
-Message-ID: <1490704781.3546.57.camel@nxp.com>
-References: <cover.1490199005.git.leonard.crestez@nxp.com>
- <1edff9bc610969b0c53fa1080d5db021c8e00b2d.1490199005.git.leonard.crestez@nxp.com>
- <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3 1/6] ARM: tegra: Remove unnecessary inclusion of flowctrl header
+Date: Tue, 28 Mar 2017 13:42:53 +0100
+Message-ID: <1490704978-22906-2-git-send-email-jonathanh@nvidia.com>
+References: <1490704978-22906-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>, Irina Tirdea <irina.tirdea@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Octavian Purdila <octavian.purdila@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490704978-22906-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE3LTAzLTI0IGF0IDEyOjUyICswMDAwLCBNYXJrIEJyb3duIHdyb3RlOgo+IE9u
-IFdlZCwgTWFyIDIyLCAyMDE3IGF0IDA2OjUzOjA2UE0gKzAyMDAsIExlb25hcmQgQ3Jlc3RleiB3
-cm90ZToKPiAKPiA+IAo+ID4gRW5hYmxpbmcgYnlwYXNzIG1vZGUgbWFrZXMgYSByZWd1bGF0b3Ig
-cGFzc3Rocm91Z2ggdGhlIHN1cHBseSB2b2x0YWdlCj4gPiBkaXJlY3RseS4gSXQgaXMgcG9zc2li
-bGUgdGhhdCB0aGUgc3VwcGx5IHZvbHRhZ2UgaXMgc2V0IGhpZ2ggZW5vdWdoIHRoYXQKPiA+IGl0
-IHZpb2xhdGVzIG1hY2hpbmUgY29uc3RyYWludHMgc28gbGV0J3MgY2hlY2sgZm9yIHRoYXQuCj4g
-PiAKPiA+IFRoZSBzdXBwbHkgdm9sdGFnZSBtaWdodCBiZSBoaWdoZXIgYmVjYXVzZSBvZiBtaW5f
-ZHJvcG91dF91ViBvciBtYXliZQo+ID4gdGhlcmUgaXMganVzdCBhbiB1bnJlbGF0ZWQgY29uc3Vt
-ZXIgd2hvIHJlcXVlc3RlZCBhIGhpZ2hlciB2b2x0YWdlLgo+IEkgd291bGQgZXhwZWN0IHRoYXQg
-aWYgYnlwYXNzIGlzIGVuYWJsZWQgdGhlbiB0aGUgY29uc3RyYWludHMgb24gdGhlCj4gcGFyZW50
-IHJlZ3VsYXRvciB3b3VsZCBiZSBzZXQgYXBwcm9wcmlhdGVseSB0byBzdXBwb3J0IHRoaXMsIEkg
-d291bGRuJ3QKPiBleHBlY3QgdGhhdCB3ZSdkIHRyeSB0byBhcHBseSB0aGUgb3BlcmF0aW5nIGNv
-bnN0cmFpbnRzIG9mIHRoZSByZWd1bGF0b3IKPiB0byB0aGUgc3VwcGx5LsKgwqBVc3VhbGx5IGJ5
-cGFzcyBpcyB1c2VkIGZvciBsb3cgcG93ZXIgcmV0ZW50aW9uIG1vZGVzCj4gd2l0aCBkaWZmZXJl
-bnQgc2V0dGluZ3MgdG8gdGhvc2UgdXNlZCBpbiBub3JtYWwgb3BlcmF0aW9uIHRoYXQgd291bGRu
-J3QKPiBiZSBkZXNpcmVkIGluIG5vcm1hbCBvcGVyYXRpb24sIGlmIHdlIHdlcmUgZ29pbmcgdG8g
-aGF2ZSBjb25zdHJhaW50cyBmb3IKPiB0aGlzIEknZCBleHBlY3QgYSBzZXBhcmF0ZSBzZXQgdXNl
-ZCBkdXJpbmcgYnlwYXNzLgoKSW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UgaXQncyBub3QgcG9zc2li
-bGUgdG8gc2V0IGNvbnN0cmFpbnRzIG9uIHRoZSBwYXJlbnQKcmVndWxhdG9yIHNvIHRoYXQgYm90
-aCBsZG8tZW5hYmxlIGFuZCBsZG8tYnlwYXNzIG1vZGVzIHdvcmsuIFRoZSBtYXhpbXVtIGFsbG93
-ZWQKdm9sdGFnZSBmb3IgbGRvLWJ5cGFzcyBpcyBsb3dlciB0aGFuIHRoZSBtaW5pbXVtIHJlcXVp
-cmVkIHRvIHN1cHBvcnQgdGhlIGNoaXAgYXQKbWF4IGZyZXF1ZW5jeSB3aXQgbGRvLWVuYWJsZS4K
-Ckl0IHdvdWxkIGJlIHBvc3NpYmxlIHRvIGFsc28gY2hhbmdlIHRoZSBjb25zdHJhaW50IHZhbHVl
-cyBvbiB0aGUgUE1JQyB0b2dldGhlcgp3aXRoIGxkby1ieXBhc3MgaW4gdGhlIC5kdHMgZmlsZXMg
-YnV0IHRoYXQgc2VlbXMgYXdmdWwuCgpJJ20gbm90IHN1cmUgSSB1bmRlcnN0YW5kIHdoeSB5b3Ug
-YXJlIGFnYWluc3QgYXBwbHlpbmcgY29uc3RyYWludHMgdG8gdGhlIHBhcmVudAp3aGVuIGluIGJ5
-cGFzcyBtb2RlLCBpdCBzZWVtcyBsaWtlIHRoZSBvYnZpb3VzIHRoaW5nIHRvIGRvIGlmIHlvdSB3
-YW50IHRvCnN1cHBvcnQgZmxleGlibGUgY29uZmlndXJhdGlvbi4gVGhlIGNoZWNrIEkgaW50cm9k
-dWNlZCBpcyBwcm9iYWJseSBub3QgZW5vdWdoIHRvCmNvdmVyIGFsbCBjYXNlcywgZm9yIGV4YW1w
-bGUgaXQgd291bGQgc3RpbGwgYmUgcG9zc2libGUgdG8gZXhwbGljaXRseSBjaGFuZ2UKcGFyZW50
-IHZvbHRhZ2UgYWZ0ZXJ3YXJkcy4KCkEgcmVndWxhdG9yX2RldiByZWdpc3RlcnMgYSBjb25zdW1l
-ciBmb3IgdGhlIHN1cHBseS4gUmlnaHQgbm93IHRoaXMgaXMgYmVpbmcKdXNlZCB0byBwcm9wYWdh
-dGUgbWluaW11bSB2b2x0YWdlcyB1cHdhcmRzIHNpbmNlIGNvbW1pdCBmYzQyMTEyYzBlYWEgKCJQ
-cm9wYWdhdGUKdm9sdGFnZSBjaGFuZ2VzIHRvIHN1cHBseSByZWd1bGF0b3JzIikuIEl0IHNlZW1z
-IHRvIG1lIGxpa2UgaXQgd291bGQgYmUKcmVhc29uYWJsZSB0byBhbHNvIHVzZSBpdCB0byBwcm9w
-YWdhdGUgbWF4aW11bSB2b2x0YWdlIGZyb20gY29uc3RyYWludHMsIHJpZ2h0PwoKSW5zdGVhZCBv
-ZiBhc2tpbmcgZm9yIFtiZXN0X3VWICsgbWluX2Ryb3BvdXRfdVYsIElOVF9NQVhdIGl0IGNvdWxk
-IGluc3RlYWQgYXNrCmZvciBbbWluX3VWICsgYnlwYXNzID8gbWluX2Ryb3BvdXRfdVYgOiAwLCBt
-aW4obWF4X3VWLCBjb25zdHJhaW50cy0+bWF4X3VWKV0uClRoZSBfcmVndWxhdG9yX2RvX3NldF92
-b2x0YWdlIGNhbGwgb24gdGhlIHN1cHBseSBjYW4gZGVhbCB3aXRoIHN0dWZmIGxpa2UKbWFwcGlu
-ZyBpdCB0byBhIHNlbGVjdG9yLCBqdXN0IGxpa2UgaXQgZG9lcyBmb3IgcmVndWxhdG9yIGNvbnN1
-bWVycy4KCklmIG1vcmUgZWxhYm9yYXRlIGNvbnN0cmFpbnRzIGFyZSByZXF1aXJlZCBpbnN0ZWFk
-IG9mIHRoaXMgc2ltcGxlIGJlaGF2aW9yIGl0CmNvdWxkIGJlIGhhbmRsZWQgYnnCoGFkZGluZyBh
-biBpbnRlcmZhY2UgZm9yIGRyaXZlcnMgdG8gZXhwb3NlIGV4cGxpY2l0IGR5bmFtaWMKbWluL21h
-eCBjb25zdHJhaW50cy4KCi0tClJlZ2FyZHMsCkxlb25hcmQKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+The Tegra flowctrl.h header is included unnecessarily by the Tegra
+sleep.S source file. Remove this unnecessary inclusion.
+
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/mach-tegra/sleep.S | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/arm/mach-tegra/sleep.S b/arch/arm/mach-tegra/sleep.S
+index f024a5109e8e..5e3496753df1 100644
+--- a/arch/arm/mach-tegra/sleep.S
++++ b/arch/arm/mach-tegra/sleep.S
+@@ -30,8 +30,6 @@
+ #include <asm/hardware/cache-l2x0.h>
+ 
+ #include "iomap.h"
+-
+-#include "flowctrl.h"
+ #include "sleep.h"
+ 
+ #define CLK_RESET_CCLK_BURST	0x20
+-- 
+2.7.4
