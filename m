@@ -1,170 +1,100 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
- Mediatek MT7530 switch
-Date: Tue, 28 Mar 2017 14:50:17 +0800
-Message-ID: <1490683817.14184.49.camel@mtkswgap22>
-References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
-         <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
-         <20170324141953.GH28518@lunn.ch>
+From: =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>
+Subject: Re: [PATCH] arm64: dts: ls1012a: add crypto node
+Date: Tue, 28 Mar 2017 07:19:43 +0000
+Message-ID: <VI1PR0401MB259164F1B575677D65CB8F2E98320@VI1PR0401MB2591.eurprd04.prod.outlook.com>
+References: <20170322122939.22117-1-horia.geanta@nxp.com>
+ <20170324015606.GC30608@dragon>
+ <DB4PR04MB0847D837CB2762D5094720CB983E0@DB4PR04MB0847.eurprd04.prod.outlook.com>
+ <20170324073420.GM30608@dragon>
+ <DB4PR04MB0847E3EE8F7FAC11DD85FAA8983E0@DB4PR04MB0847.eurprd04.prod.outlook.com>
+ <20170324140320.GP30608@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324141953.GH28518-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-crypto-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Harninder Rai <harninder.rai@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhaskar U <bhaskar.upadhaya@nxp.com>, Will Deacon <will.deacon@arm.com>, Dan Douglass <dan.douglass@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew 
-
-
-On Fri, 2017-03-24 at 15:19 +0100, Andrew Lunn wrote:
-> On Tue, Mar 21, 2017 at 05:35:10PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> 
-> Hi Sean
-> 
-> > +	/* Lower Tx Driving */
-> > +	for (i = 0 ; i < 6 ; i++)
-> 
-> Could MT7530_CPU_PORT be used here? 
-> 
-
-I should create meaningful definition instead of avoiding hard coding 
-
-where 6 should be corrected into 5 which is meant for the number for
-
-control register to configure TRGMII path
-
-
-> > +		mt7530_write(priv, MT7530_TRGMII_TD_ODT(i),
-> > +			     TD_DM_DRVP(8) | TD_DM_DRVN(8));
-> > +
-> > +	/* Setup MT7530 core clock */
-> > +	if (!trgint) {
-> > +		/* Disable MT7530 core clock */
-> > +		core_clear(priv, CORE_TRGMII_GSW_CLK_CG, REG_GSWCK_EN);
-> > +
-> > +		/* Disable MT7530 PLL, since phy_device has not yet been
-> > +		 * created when this function is called. So we provide
-> > +		 * core_write_mmd_indirect to complete this function
-> > +		 */
-> > +		core_write_mmd_indirect(priv,
-> > +					CORE_GSWPLL_GRP1,
-> > +					MDIO_MMD_VEND2,
-> > +					0);
-> > +
-> > +		/* Setup MT7530 core clock into 500Mhz */
-> > +		core_write(priv, CORE_GSWPLL_GRP2,
-> > +			   RG_GSWPLL_POSDIV_500M(1) |
-> > +			   RG_GSWPLL_FBKDIV_500M(25));
-> > +
-> > +		/* Enable MT7530 PLL */
-> > +		core_write(priv, CORE_GSWPLL_GRP1,
-> > +			   RG_GSWPLL_EN_PRE |
-> > +			   RG_GSWPLL_POSDIV_200M(2) |
-> > +			   RG_GSWPLL_FBKDIV_200M(32));
-> > +
-> > +		/* Enable MT7530 core clock */
-> > +		core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_GSWCK_EN);
-> > +	}
-> > +
-> > +	/* Setup the MT7530 TRGMII Tx Clock */
-> > +	core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_GSWCK_EN);
-> > +	core_write(priv, CORE_PLL_GROUP5, RG_LCDDS_PCW_NCPO1(ncpo1));
-> > +	core_write(priv, CORE_PLL_GROUP6, RG_LCDDS_PCW_NCPO0(0));
-> > +	core_write(priv, CORE_PLL_GROUP10, RG_LCDDS_SSC_DELTA(ssc_delta));
-> > +	core_write(priv, CORE_PLL_GROUP11, RG_LCDDS_SSC_DELTA1(ssc_delta));
-> > +	core_write(priv, CORE_PLL_GROUP4,
-> > +		   RG_SYSPLL_DDSFBK_EN | RG_SYSPLL_BIAS_EN |
-> > +		   RG_SYSPLL_BIAS_LPF_EN);
-> > +	core_write(priv, CORE_PLL_GROUP2,
-> > +		   RG_SYSPLL_EN_NORMAL | RG_SYSPLL_VODEN |
-> > +		   RG_SYSPLL_POSDIV(1));
-> > +	core_write(priv, CORE_PLL_GROUP7,
-> > +		   RG_LCDDS_PCW_NCPO_CHG | RG_LCCDS_C(3) |
-> > +		   RG_LCDDS_PWDB | RG_LCDDS_ISO_EN);
-> > +	core_set(priv, CORE_TRGMII_GSW_CLK_CG,
-> > +		 REG_GSWCK_EN | REG_TRGMIICK_EN);
-> > +
-> > +	if (!trgint)
-> > +		for (i = 0 ; i < 5 ; i++)
-> 
-> Why only 5 here? All other similar loops are to 6.  Replacing 5 with a
-> #define might help make this more readable.
-
-the same as above, it should be corrected
-
-> > +			mt7530_rmw(priv, MT7530_TRGMII_RD(i),
-> > +				   RD_TAP_MASK, RD_TAP(16));
-> > +	else
-> > +		mt7623_trgmii_set(priv, GSW_INTF_MODE, INTF_MODE_TRGMII);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int
-> > +mt7623_pad_clk_setup(struct dsa_switch *ds)
-> > +{
-> > +	struct mt7530_priv *priv = ds->priv;
-> > +	int i;
-> > +
-> > +	for (i = 0 ; i < 6; i++)
-> 
-> MT7530_CPU_PORT?
-
-
-the same as above , it should be corrected
-> > +
-> > +/* Registers to mac forward conrol for unknown frames */
-> 
-> /conrol/control
-> 
-
-will fix it up
-> > +
-> > +/* Registor for port control */
-> 
-> Register
-> 
-
-will fix it up
-> > +/* Regiser for TOP signal control */
-> 
-> Register
-> 
-
-will fix it up
-> > +/* struct mt7530_priv -	This is the main datasructure for holding the state
-> 
-> data structure
-> 
-> > + *			of the driver
-> > + * @dev:		The device pointer
-> > + * @ds:			The pointer to the dsa core structure
-> > + * @bus:		The bus used for the device and built-in PHY
-> > + * @ethsys:		The regmap used for enabling the necessary PLL
-> > + * @ethernet:		The regmap used for access TRGMII-based registers
-> > + * @core_pwr:		The power supplied into the core
-> > + * @io_pwr:		The power supplied into the I/O
-> > + * @mcm:		Flag for distinguishing if standalone IC or module
-> > + *			coupling
-> > + * @reset:		The descriptor for GPIO line tied to its reset pin
-> > + * @phy_mode:		The xMII for cpu port used
-> > + * @ports:		Holding the state amongs ports
-> 
-> among
-
-will fix it up
-
-thank for your careful reviewing again!!
-
-
-
-> 	Andrew
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 3/24/2017 4:04 PM, Shawn Guo wrote:=0A=
+> On Fri, Mar 24, 2017 at 08:29:17AM +0000, Horia Geant=E3 wrote:=0A=
+>> On 3/24/2017 9:35 AM, Shawn Guo wrote:=0A=
+>>> On Fri, Mar 24, 2017 at 07:17:50AM +0000, Horia Geant=E3 wrote:=0A=
+>>>>>> +		sec_mon: sec_mon@1e90000 {=0A=
+>>>>>=0A=
+>>>>> Hyphen is more preferred to be used in node name than underscore.=0A=
+>>>>>=0A=
+>>>> This would imply changing the=0A=
+>>>> Documentation/devicetree/bindings/crypto/fsl-sec4.txt binding and=0A=
+>>>> dealing with all the consequences, which IIUC is probably not worth.=
+=0A=
+>>>=0A=
+>>> I do not care the bindings doc that much, since I'm not the maintainer=
+=0A=
+>>> of it.  What are the consequences specifically, if we use a better node=
+=0A=
+>>> name in dts than bindings example?=0A=
+>>>=0A=
+>> Users relying on finding the sec_mon node will obviously stop working.=
+=0A=
+>> I don't see any in-kernel users, however there could be others I am not=
+=0A=
+>> aware of and DT bindings should provide for backwards compatibility.=0A=
+> =0A=
+> Okay, point taken.  You can keep the node name as it is.=0A=
+> =0A=
+>> I could deprecate "sec_mon" in the bindings and suggest "sec-mon"=0A=
+>> instead, while leaving all existing dts files as-is.=0A=
+>> The risk is breaking LS1012A users relying on "sec_mon".=0A=
+> =0A=
+> For existing bindings, I do not care that much.  But for new ones, I do=
+=0A=
+> hope that we recommend to use hyphen, as that's more idiomatic at least=
+=0A=
+> for Linux kernel.=0A=
+> =0A=
+>> I see that ePAPR:=0A=
+>> -allows both for hyphen and underline in case of node names=0A=
+>> -allows only for hyphen (i.e. forbids underline) in case of alias nodes=
+=0A=
+>>=0A=
+>> In the first case, I understand there's an (undocumented?) agreement to=
+=0A=
+>> prefer hyphen over underline.=0A=
+> =0A=
+> Both are valid, but hyphen is more idiomatic for Linux kernel.=0A=
+> =0A=
+>> For the 2nd one, does this mean I should change alias names?=0A=
+> =0A=
+> This is something I see difference between specification and DTC.=0A=
+> =0A=
+> 	aliases {=0A=
+> 		alias-name =3D &label_name;=0A=
+> 	};=0A=
+> =0A=
+> 	label_name: node-name {=0A=
+> 		...=0A=
+> 	};=0A=
+> =0A=
+> The spec says that only hyphen is valid for alias name, but DTC works=0A=
+> happily with underscore too.  From my experience with DTC playing, both=
+=0A=
+> hyphen and underscore are valid for alias and node name.  But for label=
+=0A=
+> name, only underscore is valid.  Using hyphen in label name will cause=0A=
+> DTC to report syntax error.=0A=
+> =0A=
+Yes indeed, thanks for pointing it out.=0A=
+=0A=
+For the sake of current patch, please clarify whether a v2 is needed.=0A=
+IIUC:=0A=
+-sec_mon node name could stay the same (existing binding)=0A=
+-label names are ok, since underline is the only option allowed by DTC=0A=
+-alias names are out-of-spec but accepted by DTC; if changing underline=0A=
+to hyphen is requested, I will push out v2=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
+=0A=
