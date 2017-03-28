@@ -1,70 +1,78 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv3 1/2] mfd: cpcap: Add missing include dependencies
-Date: Tue, 28 Mar 2017 09:16:33 +0100
-Message-ID: <20170328081633.dgt6b6nnomkluxre@dell>
-References: <20170324084732.31255-1-sre@kernel.org>
- <d1a18390-fb5f-e192-a54c-1c2574238225@gmail.com>
- <20170327142608.qcobnqrvyu7u4ybz@dell>
- <e4f0fb62-8fe1-bf32-6aee-b87c04bbd942@gmail.com>
+Subject: Re: [PATCH V6 4/7] mfd: da9061: MFD core support
+Date: Tue, 28 Mar 2017 09:21:41 +0100
+Message-ID: <20170328082141.u2rgnhei5yhhzxdn@dell>
+References: <539b8756120ab3558c906f7457e65f94dbe37425.1490608293.git.stwiss.opensource@diasemi.com>
+ <201703272258.hWlipe1g%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e4f0fb62-8fe1-bf32-6aee-b87c04bbd942@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <201703272258.hWlipe1g%fengguang.wu@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Steve Twiss <stwiss.opensource@diasemi.com>, kbuild-all@01.org, LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Mar 2017, Jacek Anaszewski wrote:
-> On 03/27/2017 04:26 PM, Lee Jones wrote:
-> > On Fri, 24 Mar 2017, Jacek Anaszewski wrote:
-> >> On 03/24/2017 09:47 AM, Sebastian Reichel wrote:
-> >>> This fixes compilation for files, that try to include the
-> >>> cpcap header in alphabetically sorted #include lists.
-> >>>
-> >>> Acked-by: Pavel Machek <pavel@ucw.cz>
-> >>> Acked-by: Tony Lindgren <tony@atomide.com>
-> >>> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> >>> ---
-> >>> Changes since PATCHv2:
-> >>>  - Add Acked-by from Tony & Pavel
-> >>> ---
-> >>>  include/linux/mfd/motorola-cpcap.h | 3 +++
-> >>>  1 file changed, 3 insertions(+)
-> >>>
-> >>> diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motorola-cpcap.h
-> >>> index 793aa695faa0..aefc49cb7ba9 100644
-> >>> --- a/include/linux/mfd/motorola-cpcap.h
-> >>> +++ b/include/linux/mfd/motorola-cpcap.h
-> >>> @@ -14,6 +14,9 @@
-> >>>   * published by the Free Software Foundation.
-> >>>   */
-> >>>  
-> >>> +#include <linux/device.h>
-> >>> +#include <linux/regmap.h>
-> >>> +
-> >>>  #define CPCAP_VENDOR_ST		0
-> >>>  #define CPCAP_VENDOR_TI		1
-> >>
-> >> Both patches applied to the for-next branch of linux-leds.git, thanks.
-> > 
-> > Que?
+On Mon, 27 Mar 2017, kbuild test robot wrote:
+
+> Hi Steve,
 > 
-> Ah, sorry, for some reason I silently assumed that Tony gave ack on
-> your behalf :-) Probably due to lack of your activity in the subject
-> and Tony's understanding thereof [0].
+> [auto build test WARNING on ljones-mfd/for-mfd-next]
+> [also build test WARNING on v4.11-rc4 next-20170327]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Steve-Twiss/Documentation-devicetree-watchdog-da9062-61-watchdog-timer-binding/20170327-215359
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+> config: x86_64-randconfig-x009-201713 (attached as .config)
+> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers//mfd/da9062-core.c: In function 'da9062_i2c_probe':
+> >> drivers//mfd/da9062-core.c:845:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>       chip->chip_type = (int)match->data;
+>                         ^
 
-Right, but you still need to align with other Maintainers despite
-expert reviews, since they are in a better position to help avoid
-potential merge conflicts.
+Please use longs or enums.
 
-> Can I have your ack for this patch going through LED tree then?
+> vim +845 drivers//mfd/da9062-core.c
+> 
+>    829		unsigned int irq_base;
+>    830		const struct mfd_cell *cell;
+>    831		const struct regmap_irq_chip *irq_chip;
+>    832		const struct regmap_config *config;
+>    833		int cell_num;
+>    834		int ret;
+>    835	
+>    836		chip = devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL);
+>    837		if (!chip)
+>    838			return -ENOMEM;
+>    839	
+>    840		if (i2c->dev.of_node) {
+>    841			match = of_match_node(da9062_dt_ids, i2c->dev.of_node);
+>    842			if (!match)
+>    843				return -EINVAL;
+>    844	
+>  > 845			chip->chip_type = (int)match->data;
+>    846		} else {
+>    847			chip->chip_type = id->driver_data;
+>    848		}
+>    849	
+>    850		i2c_set_clientdata(i2c, chip);
+>    851		chip->dev = &i2c->dev;
+>    852	
+>    853		if (!i2c->irq) {
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-I've gone one better and provided you with a pull-request.  It's the
-best way to avoid merge conflict, subsequently upsetting the Big
-Penguin.
+
 
 -- 
 Lee Jones
