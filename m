@@ -1,105 +1,44 @@
-From: jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org
-Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Tue, 28 Mar 2017 16:38:22 +0200
-Message-ID: <b9eaac8a63dced229bb152ba412e8ec1@jmondi.org>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com>
- <20170323160204.GL30223@w540>
- <CACRpkdYmitsPvv_1bsb-EKkhcWqaKNsLBfxZgf8cjVvcqCpYXA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYmitsPvv_1bsb-EKkhcWqaKNsLBfxZgf8cjVvcqCpYXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v1 0/8] clk: meson: gxbb: more clock controller update for audio support
+Date: Tue, 28 Mar 2017 16:45:57 +0200
+Message-ID: <20170328144605.25278-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+The patchset is the 2nd round of update to the meson gxbb clock controller
+to add initial audio support. The patchset is based on clk-next.
 
-On 2017-03-28 11:46, Linus Walleij wrote:
-> On Thu, Mar 23, 2017 at 5:02 PM, jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> 
->>> > +  Required properties:
->>> > +    - renesas,pins
->>> 
->>> Just "pins"?
->>> 
->> 
->> You know, I've been thinking about this, bu the "pins" property
->> definition in pinctrl-bidings is the following one:
->> 
->> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> ---
->> - pins takes a list of pin names or IDs as a required argument. The
->>   specific binding for the hardware defines:
->>       - Whether the entries are integers or strings, and their
->>         meaning.
->> ---
->> 
->> And all examples there assume one "pin name" or "ID" per pin.
->> 
->> Now, we use 2 values per each pin (the pin ID and the alternate
->> function number), so to me this is different from what the generic
->> binding describes.
->> Also, pinctrl-single, and pinctrl-imx which have and ABI similar to
->> the one this driver define, use "pinctrl-single,pins" and "fsl,pins"
->> respectively as property names.
->> So either they have to be updated yet, or we should keep using
->> "renesas,pins" for our own defined ABI.
->> 
->> Maybe Linus or other pinctrl people can give some suggestion here.
-> 
-> To me as subsystem maintainer any "necessarily different" bindings
-> are just a big confusion for the head.
-> 
+There is not much out of the ordinary here (adding new clocks and exposing
+them) except maybe for 2 patches:
+Patch #2: Adds a safety check while registering clocks to protect against
+          holes in clk_hw_onecell_data, if it ever happens. Same thing is
+	  done for the meson8b clock controller. 
+Patch #3: Adds a new clock divider driver to implement the necessary
+          policy for the i2s master clock (see patch changelog)
 
-Understandable :)
+This patchset has been test on the gxbb p200 and gxl p230.
 
-> Since you're adding a new driver, try to stick to the generic bindings
-> even if it deviates from what you are used to for Renesas, because
-> even if it may be more work for you guys or make you annoyed that
-> now a certain Renesas is different from all other Renesas platforms,
-> for the community this makes things easier to maintain because
-> we can look at the driver and its bindings and say "ah I know this".
-> 
-> The fact that historically all the early adopters of pinctrl in device 
-> tree
-> have these funky custom bindings is unfortunate but just something
-> that we need to live with.
-> 
+Jerome Brunet (8):
+  dt-bindings: clock: gxbb: expose spdif clock gates
+  clk: meson: gxbb: protect against holes in the onecell_data array
+  clk: meson: add audio clock divider support
+  clk: meson: gxbb: add cts_amclk
+  clk: meson: gxbb: add cts_mclk_i958
+  clk: meson: gxbb: add cts_i958 clock
+  dt-bindings: clock: gxbb: expose i2s master clock
+  dt-bindings: clock: gxbb: expose spdif master clock
 
-To avoid any confusion, please bear with me and clarify this once and 
-for all,
-since I'm not certain I fully got you here.
+ drivers/clk/meson/Makefile            |   2 +-
+ drivers/clk/meson/clk-audio-divider.c | 149 ++++++++++++++++++++++++++++++++++
+ drivers/clk/meson/clkc.h              |  10 +++
+ drivers/clk/meson/gxbb.c              | 144 ++++++++++++++++++++++++++++++++
+ drivers/clk/meson/gxbb.h              |  13 ++-
+ include/dt-bindings/clock/gxbb-clkc.h |   5 ++
+ 6 files changed, 319 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/clk/meson/clk-audio-divider.c
 
-Are you suggesting:
-
-1) Use "pins" property with the currently implemented ABI (which 
-slightly differs
-    from the standard documented one as explained above. Not sure it is 
-fine overriding
-    it or not)
-
-2) Use "pins" property and change our ABI to match the documented one: 
-one ID (integer
-    or string) per pin, not 2 as we're doing now.
-
-Both solutions are easily implementable; 2) requires some more work to 
-make pin id, function number
-and pin configuration fit in one single integer, but is achievable for 
-sure.
-
-Thanks
-    j
-
-> Yours,
-> Linus Walleij
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.9.3
