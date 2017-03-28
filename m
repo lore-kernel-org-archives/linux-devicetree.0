@@ -1,109 +1,222 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv4] mfd: cpcap: implement irq sense helper
-Date: Tue, 28 Mar 2017 11:27:16 +0100
-Message-ID: <20170328102716.gz7agm7kx3gz56jt@dell>
-References: <20170323142337.4c4d6lnhqtugbb2r@dell>
- <20170324084240.23251-1-sre@kernel.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] pinctrl: aramda-37xx: Add irqchip support
+Date: Tue, 28 Mar 2017 12:36:49 +0200
+Message-ID: <87vaqtadry.fsf@free-electrons.com>
+References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
+        <0e60fccd7913b83ee53d2921ce8f297927e8b6f3.1490120798.git-series.gregory.clement@free-electrons.com>
+        <CACRpkdYv6WDWM60dRMaYfEt50M8N-yLYk2TRguNi78aQtt6X9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170324084240.23251-1-sre@kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Mar 2017, Sebastian Reichel wrote:
+Hi Linus,
+ 
+ On lun., mars 27 2017, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-> CPCAP can sense if IRQ is currently set or not. This
-> functionality is required for a few subdevices, such
-> as the power button and usb phy modules.
-> 
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> 
-> ---
-> Hi Lee,
-> 
-> I hope this is fine with you. I tried to come up
-> with a sensible macro for reg, but everything I
-> came up with actually reduced readability.
-> 
-> -- Sebastian
-> 
-> Changes since PATCHv3:
->  - add explicit extern to function definition
->  - use BIT macro for mask variable
->  - avoid magic numbers
-> ---
->  drivers/mfd/motorola-cpcap.c       | 28 ++++++++++++++++++++++++++++
->  include/linux/mfd/motorola-cpcap.h |  2 ++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/drivers/mfd/motorola-cpcap.c b/drivers/mfd/motorola-cpcap.c
-> index 6aeada7d7ce5..c80997a377a1 100644
-> --- a/drivers/mfd/motorola-cpcap.c
-> +++ b/drivers/mfd/motorola-cpcap.c
-> @@ -23,6 +23,8 @@
->  
->  #define CPCAP_NR_IRQ_REG_BANKS	6
->  #define CPCAP_NR_IRQ_CHIPS	3
-> +#define CPCAP_REGISTER_SIZE 4
-> +#define CPCAP_REGISTER_BITS 16
->  
->  struct cpcap_ddata {
->  	struct spi_device *spi;
-> @@ -32,6 +34,32 @@ struct cpcap_ddata {
->  	struct regmap *regmap;
->  };
->  
-> +static int cpcap_sense_irq(struct regmap *regmap, int irq)
-> +{
-> +	int regnum = irq / CPCAP_REGISTER_BITS;
-> +	int mask = BIT(irq % CPCAP_REGISTER_BITS);
-> +	int reg = CPCAP_REG_INTS1 + (regnum * CPCAP_REGISTER_SIZE);
-> +	int err, val;
-> +
-> +	if (reg < CPCAP_REG_INTS1 || reg > CPCAP_REG_INTS4)
-> +		return -EINVAL;
-> +
-> +	err = regmap_read(regmap, reg, &val);
-> +	if (err)
-> +		return err;
-> +
-> +	return !!(val & mask);
-> +}
-> +
-> +int cpcap_sense_virq(struct regmap *regmap, int virq)
-> +{
-> +	struct regmap_irq_chip_data *d = irq_get_chip_data(virq);
-> +	int base = regmap_irq_chip_get_base(d);
+> On Tue, Mar 21, 2017 at 7:28 PM, Gregory CLEMENT
+> <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>
+>> The Armada 37xx SoCs can handle interrupt through GPIO. However it can
+>> only manage the edge ones.
+>>
+>> The way the interrupt are managed are classical so we can use the generic
+>> interrupt chip model.
+>>
+>> The only unusual "feature" is that many interrupts are connected to the
+>> parent interrupt controller. But we do not take advantage of this and use
+>> the chained irq with all of them.
+>>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> You need something in your Kconfig
+> doing select GPIOLIB_IRQCHIP unless there is
+> something I miss here.
 
-What base is this?  Could it be used to avoid some calculations in
-cpcap_sense_irq()?
+I forgot to add it, I will do it in the v4.
 
-> +	return cpcap_sense_irq(regmap, virq - base);
-> +}
-> +EXPORT_SYMBOL_GPL(cpcap_sense_virq);
-> +
->  static int cpcap_check_revision(struct cpcap_ddata *cpcap)
->  {
->  	u16 vendor, rev;
-> diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motorola-cpcap.h
-> index b4031c2b2214..793aa695faa0 100644
-> --- a/include/linux/mfd/motorola-cpcap.h
-> +++ b/include/linux/mfd/motorola-cpcap.h
-> @@ -290,3 +290,5 @@ static inline int cpcap_get_vendor(struct device *dev,
->  
->  	return 0;
->  }
-> +
-> +extern int cpcap_sense_virq(struct regmap *regmap, int virq);
+>
+>> +#define IRQ_EN         0x0
+>> +#define IRQ_POL                0x08
+>> +#define IRQ_STATUS     0x10
+>
+> This just cries out to me that there is a register 0x0c
+> and I bet it handles edges vs levels so you could also implement
+> level IRQs. Am I right?
+
+Unfortunately, no :(
+
+As far as I know there is now way to handle level.
+The 0xc register is the IRQ_POL for the GPIO above 32.
+
+>
+>> -       aramda_37xx_update_reg(&reg, offset);
+>> +       armada_37xx_update_reg(&reg, offset);
+> (...)
+>> -       aramda_37xx_update_reg(&reg, offset);
+>> +       armada_37xx_update_reg(&reg, offset);
+>
+> These spelling fixes, do not do them in this patch, fix the first
+> patch adding them
+> instead. It's super-confusing. Applies everywhere.
+
+It was a typo (too much 'a' in the same word) that I properly fixed in
+the v3. (But I still need to fix the title of the patch in the v4)
+
+
+>> +static void armada_37xx_irq_handler(struct irq_desc *desc)
+>> +{
+>> +       struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+>> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+>> +       struct armada_37xx_pinctrl *info = gpiochip_get_data(gc);
+>> +       struct irq_domain *d = gc->irqdomain;
+>> +       int i;
+>> +
+>> +       chained_irq_enter(chip, desc);
+>> +       for (i = 0; i <= d->revmap_size / GPIO_PER_REG; i++) {
+>> +               u32 status;
+>> +               unsigned long flags;
+>> +
+>> +               spin_lock_irqsave(&info->irq_lock, flags);
+>> +               status = readl_relaxed(info->base + IRQ_STATUS + 4 * i);
+>> +               /* Manage only the interrupt that was enabled */
+>> +               status &= readl_relaxed(info->base + IRQ_EN + 4 * i);
+>> +               spin_unlock_irqrestore(&info->irq_lock, flags);
+>> +               while (status) {
+>> +                       u32 hwirq = ffs(status) - 1;
+>> +                       u32 virq = irq_linear_revmap(d, hwirq +
+>> +                                                    i * GPIO_PER_REG);
+>
+> Use irq_find_mapping() instead please.
+
+As we are in the interrupt handler I chose to use this function because
+according to its documentation: "This is a fast path alternative to
+irq_find_mapping() that can be called directly by irq controller code to
+save a handful of instructions".
+
+The only restriction is "It is always safe to call, but won't find irqs
+mapped using the radix tree.". So I think that for this driver it is
+okay.
+
+
+>
+>> +                       generic_handle_irq(virq);
+>> +                       status &= ~(1 << hwirq);
+>
+> Why not status &= ~BIT(hwirq);
+
+OK
+
+>
+>> +               }
+>> +       }
+>> +       chained_irq_exit(chip, desc);
+>
+> Apart from that nice, it re-reads status on every iteration which is
+> good.
+>
+>> +static int armada_37xx_irqchip_register(struct platform_device *pdev,
+>> +                                       struct armada_37xx_pinctrl *info)
+>> +{
+>> +       struct device_node *np = info->dev->of_node;
+>> +       int nrirqs = info->data->nr_pins;
+>> +       struct gpio_chip *gc = &info->gpio_chip;
+>> +       struct irq_chip *irqchip = &info->irq_chip;
+>> +       struct resource res;
+>> +       int ret, i, nr_irq_parent;
+>> +
+>> +       for_each_child_of_node(info->dev->of_node, np) {
+>> +               if (of_find_property(np, "gpio-controller", NULL)) {
+>> +                       ret = 0;
+>> +                       break;
+>> +               }
+>> +       };
+>
+> Now there is this thing again looping over the nodes.
+
+As explained in the other patch we will only have one GPIO subnode.
+
+>
+>> +       if (ret)
+>> +               return ret;
+>
+> ret may be used uninitialized here, if you loop over all nodes
+> and do not find any "gpio-controller".
+>
+> The static code checks will just scream about this.
+>
+> (Please fix in the other patch as well if present there.)
+
+OK
+
+>
+>> +       nr_irq_parent = of_irq_count(np);
+>> +       spin_lock_init(&info->irq_lock);
+>> +
+>> +       if (!nr_irq_parent) {
+>> +               dev_err(&pdev->dev, "Invalid or no IRQ\n");
+>> +               return 0;
+>> +       }
+>
+> What if it is > 1? That doesn't seem to work but will pass this
+> check silently.
+
+If we have nr_irq_parent > 1, it will work and it is actually expected.
+
+>
+>> +       ret = gpiochip_irqchip_add(gc, irqchip, 0,
+>> +                                  handle_level_irq, IRQ_TYPE_NONE);
+>
+> If you also set up the handler in .set_type() you can assign
+> handle_bad_irq() here and let .set_type set the right handler
+> as e.g. drivers/gpio/gpio-pl061.c.
+
+Well the hardware can only manage the edge trigger, so there is no
+benefit to modify it each time we want to change the kind of edge we
+want (raising or falling). But your comment make me realized that I used
+the wrong one, I will move to handle_edge_irq in the v4.
+
+>
+>> +       for (i = 0; i < nrirqs; i++) {
+>> +               struct irq_data *d = irq_get_irq_data(gc->irq_base + i);
+>> +
+>> +               d->mask = 1 << (i % GPIO_PER_REG);
+>> +       }
+>
+> What is this? It looks like a big hack. At least put in a fat
+> comment about what is going on and why.
+
+I can reuse a part of the commit log here: "The only unusual "feature"
+is that many interrupts are connected to the parent interrupt
+controller. But we do not take advantage of this and use the chained irq
+with all of them."
+
+>
+>> +       for (i = 0; i < nr_irq_parent; i++) {
+>> +               int irq = irq_of_parse_and_map(np, i);
+>
+> I think gpiochip_irqchip_add() will do this for you already,
+> as it calls irq_create_mapping() for all offsets which will call
+> irq_of_parse_and_map() am I right?
+
+After reading the code, it doesn't seem it is the case. At least there
+is no irq_of_parse_and_map() call from gpiochip_irqchip_add(). And waht
+we need here is to associate each IRQ to the same GPIO handler.
+
+I can still try without this line to confirm it.
+
+Gregory
+
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
