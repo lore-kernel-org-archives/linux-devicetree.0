@@ -1,87 +1,29 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: mtd: Add Cavium SOCs NAND bindings
-Date: Tue, 28 Mar 2017 22:20:35 +0200
-Message-ID: <20170328222035.29f4ed31@bbrezillon>
-References: <20170327160524.29019-1-jglauber@cavium.com>
-        <20170327160524.29019-2-jglauber@cavium.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Enable sata support on rock2 square
+Date: Tue, 28 Mar 2017 22:22:31 +0200
+Message-ID: <3611879.WML2keYtTn@phil>
+References: <20170317135118.17333-1-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170327160524.29019-2-jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170317135118.17333-1-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jan,
-
-On Mon, 27 Mar 2017 18:05:23 +0200
-Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
-
-> Add device tree binding description for Cavium SOC nand flash controller.
+Am Freitag, 17. März 2017, 14:51:17 CEST schrieb Sjoerd Simons:
+> The Rock 2 square board has a USB -> SATA converter hooked up to its usb
+> host1 connection. Enable the usb controller and always turn on the power
+> on the 5V sata power connector (controlled by gpio).
 > 
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/mtd/cavium_nand.txt        | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/cavium_nand.txt b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> new file mode 100644
-> index 0000000..4698d1f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> @@ -0,0 +1,32 @@
-> +* Cavium NAND controller
-> +
-> +Required properties:
-> +
-> +- compatible:		should be "cavium,cn8xxx-nand"
-> +- reg:			PCI devfn
-> +- clocks:		must contain system clock
-> +- #address-cells:	<1>
-> +- #size-cells:		<0>
-> +
-> +The nand flash controller may contain up to 8 subnodes representing
-> +NAND flash chips. Their properties are as follows.
-> +
-> +Required properties:
-> +- compatible:		should be "cavium,nandcs"
+> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-Why do you need a compatible here? All sub-nodes should be representing
-NAND devices connected to the NAND controller. If you need an extra
-subnode to represent something that is not a NAND device, then it should
-not have a reg property, so testing if reg is present to detect if the
-subnode is reprensenting a NAND device should be enough.
+applied for 4.12
 
-Am I missing something?
-
-> +- reg:			a single integer representing the chip-select number
-> +- nand-ecc-mode:	see nand.txt
-> +
-> +Example:
-> +
-> +nfc: nand@b,0 {
-
-        ^ nand-controller@xxx
-
-> +	compatible = "cavium,cn8xxx-nand";
-> +	reg = <0x5800 0 0 0 0>;
-> +	clocks = <&sclk>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	nand@1 {
-> +		compatible = "cavium,nandcs";
-> +		reg = <1>;
-> +		nand-ecc-mode = "on-die";
-> +};
-
+Thanks
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
