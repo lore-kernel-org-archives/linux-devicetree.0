@@ -1,64 +1,74 @@
-From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 1/3] Add DT bindings documentation for NS2 USB DRD phy
-Date: Tue, 28 Mar 2017 17:57:30 +0530
-Message-ID: <1490704052-11314-2-git-send-email-raviteja.garimella@broadcom.com>
-References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490704052-11314-1-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [RFC 4/8] regulator: core: Check enabling bypass respects
+ constraints
+Date: Tue, 28 Mar 2017 15:39:41 +0300
+Message-ID: <1490704781.3546.57.camel@nxp.com>
+References: <cover.1490199005.git.leonard.crestez@nxp.com>
+ <1edff9bc610969b0c53fa1080d5db021c8e00b2d.1490199005.git.leonard.crestez@nxp.com>
+ <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>, Irina Tirdea <irina.tirdea@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Octavian Purdila <octavian.purdila@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for NS2 DRD Phy driver DT bindings
-
-Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt b/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
-new file mode 100644
-index 0000000..04f063a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
-@@ -0,0 +1,30 @@
-+BROADCOM NORTHSTAR2 USB2 (DUAL ROLE DEVICE) PHY
-+
-+Required properties:
-+ - compatible: brcm,ns2-drd-phy
-+ - reg: offset and length of the NS2 PHY related registers.
-+ - reg-names
-+   The below registers must be provided.
-+   icfg - for DRD ICFG configurations
-+   rst-ctrl - for DRD IDM reset
-+   crmu-ctrl - for CRMU core vdd, PHY and PHY PLL reset
-+   usb2-strap - for port over current polarity reversal
-+ - #phy-cells: Must be 0. No args required.
-+ - vbus-gpios: vbus gpio binding
-+ - id-gpios: id gpio binding
-+
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties
-+
-+Example:
-+	usbdrd_phy: phy@66000960 {
-+			#phy-cells = <0>;
-+			compatible = "brcm,ns2-drd-phy";
-+			reg = <0x66000960 0x24>,
-+			      <0x67012800 0x4>,
-+			      <0x6501d148 0x4>,
-+			      <0x664d0700 0x4>;
-+			reg-names = "icfg", "rst-ctrl",
-+				    "crmu-ctrl", "usb2-strap";
-+			id-gpios = <&gpio_g 30 0>;
-+			vbus-gpios = <&gpio_g 31 0>;
-+	};
--- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyMDE3LTAzLTI0IGF0IDEyOjUyICswMDAwLCBNYXJrIEJyb3duIHdyb3RlOgo+IE9u
+IFdlZCwgTWFyIDIyLCAyMDE3IGF0IDA2OjUzOjA2UE0gKzAyMDAsIExlb25hcmQgQ3Jlc3RleiB3
+cm90ZToKPiAKPiA+IAo+ID4gRW5hYmxpbmcgYnlwYXNzIG1vZGUgbWFrZXMgYSByZWd1bGF0b3Ig
+cGFzc3Rocm91Z2ggdGhlIHN1cHBseSB2b2x0YWdlCj4gPiBkaXJlY3RseS4gSXQgaXMgcG9zc2li
+bGUgdGhhdCB0aGUgc3VwcGx5IHZvbHRhZ2UgaXMgc2V0IGhpZ2ggZW5vdWdoIHRoYXQKPiA+IGl0
+IHZpb2xhdGVzIG1hY2hpbmUgY29uc3RyYWludHMgc28gbGV0J3MgY2hlY2sgZm9yIHRoYXQuCj4g
+PiAKPiA+IFRoZSBzdXBwbHkgdm9sdGFnZSBtaWdodCBiZSBoaWdoZXIgYmVjYXVzZSBvZiBtaW5f
+ZHJvcG91dF91ViBvciBtYXliZQo+ID4gdGhlcmUgaXMganVzdCBhbiB1bnJlbGF0ZWQgY29uc3Vt
+ZXIgd2hvIHJlcXVlc3RlZCBhIGhpZ2hlciB2b2x0YWdlLgo+IEkgd291bGQgZXhwZWN0IHRoYXQg
+aWYgYnlwYXNzIGlzIGVuYWJsZWQgdGhlbiB0aGUgY29uc3RyYWludHMgb24gdGhlCj4gcGFyZW50
+IHJlZ3VsYXRvciB3b3VsZCBiZSBzZXQgYXBwcm9wcmlhdGVseSB0byBzdXBwb3J0IHRoaXMsIEkg
+d291bGRuJ3QKPiBleHBlY3QgdGhhdCB3ZSdkIHRyeSB0byBhcHBseSB0aGUgb3BlcmF0aW5nIGNv
+bnN0cmFpbnRzIG9mIHRoZSByZWd1bGF0b3IKPiB0byB0aGUgc3VwcGx5LsKgwqBVc3VhbGx5IGJ5
+cGFzcyBpcyB1c2VkIGZvciBsb3cgcG93ZXIgcmV0ZW50aW9uIG1vZGVzCj4gd2l0aCBkaWZmZXJl
+bnQgc2V0dGluZ3MgdG8gdGhvc2UgdXNlZCBpbiBub3JtYWwgb3BlcmF0aW9uIHRoYXQgd291bGRu
+J3QKPiBiZSBkZXNpcmVkIGluIG5vcm1hbCBvcGVyYXRpb24sIGlmIHdlIHdlcmUgZ29pbmcgdG8g
+aGF2ZSBjb25zdHJhaW50cyBmb3IKPiB0aGlzIEknZCBleHBlY3QgYSBzZXBhcmF0ZSBzZXQgdXNl
+ZCBkdXJpbmcgYnlwYXNzLgoKSW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UgaXQncyBub3QgcG9zc2li
+bGUgdG8gc2V0IGNvbnN0cmFpbnRzIG9uIHRoZSBwYXJlbnQKcmVndWxhdG9yIHNvIHRoYXQgYm90
+aCBsZG8tZW5hYmxlIGFuZCBsZG8tYnlwYXNzIG1vZGVzIHdvcmsuIFRoZSBtYXhpbXVtIGFsbG93
+ZWQKdm9sdGFnZSBmb3IgbGRvLWJ5cGFzcyBpcyBsb3dlciB0aGFuIHRoZSBtaW5pbXVtIHJlcXVp
+cmVkIHRvIHN1cHBvcnQgdGhlIGNoaXAgYXQKbWF4IGZyZXF1ZW5jeSB3aXQgbGRvLWVuYWJsZS4K
+Ckl0IHdvdWxkIGJlIHBvc3NpYmxlIHRvIGFsc28gY2hhbmdlIHRoZSBjb25zdHJhaW50IHZhbHVl
+cyBvbiB0aGUgUE1JQyB0b2dldGhlcgp3aXRoIGxkby1ieXBhc3MgaW4gdGhlIC5kdHMgZmlsZXMg
+YnV0IHRoYXQgc2VlbXMgYXdmdWwuCgpJJ20gbm90IHN1cmUgSSB1bmRlcnN0YW5kIHdoeSB5b3Ug
+YXJlIGFnYWluc3QgYXBwbHlpbmcgY29uc3RyYWludHMgdG8gdGhlIHBhcmVudAp3aGVuIGluIGJ5
+cGFzcyBtb2RlLCBpdCBzZWVtcyBsaWtlIHRoZSBvYnZpb3VzIHRoaW5nIHRvIGRvIGlmIHlvdSB3
+YW50IHRvCnN1cHBvcnQgZmxleGlibGUgY29uZmlndXJhdGlvbi4gVGhlIGNoZWNrIEkgaW50cm9k
+dWNlZCBpcyBwcm9iYWJseSBub3QgZW5vdWdoIHRvCmNvdmVyIGFsbCBjYXNlcywgZm9yIGV4YW1w
+bGUgaXQgd291bGQgc3RpbGwgYmUgcG9zc2libGUgdG8gZXhwbGljaXRseSBjaGFuZ2UKcGFyZW50
+IHZvbHRhZ2UgYWZ0ZXJ3YXJkcy4KCkEgcmVndWxhdG9yX2RldiByZWdpc3RlcnMgYSBjb25zdW1l
+ciBmb3IgdGhlIHN1cHBseS4gUmlnaHQgbm93IHRoaXMgaXMgYmVpbmcKdXNlZCB0byBwcm9wYWdh
+dGUgbWluaW11bSB2b2x0YWdlcyB1cHdhcmRzIHNpbmNlIGNvbW1pdCBmYzQyMTEyYzBlYWEgKCJQ
+cm9wYWdhdGUKdm9sdGFnZSBjaGFuZ2VzIHRvIHN1cHBseSByZWd1bGF0b3JzIikuIEl0IHNlZW1z
+IHRvIG1lIGxpa2UgaXQgd291bGQgYmUKcmVhc29uYWJsZSB0byBhbHNvIHVzZSBpdCB0byBwcm9w
+YWdhdGUgbWF4aW11bSB2b2x0YWdlIGZyb20gY29uc3RyYWludHMsIHJpZ2h0PwoKSW5zdGVhZCBv
+ZiBhc2tpbmcgZm9yIFtiZXN0X3VWICsgbWluX2Ryb3BvdXRfdVYsIElOVF9NQVhdIGl0IGNvdWxk
+IGluc3RlYWQgYXNrCmZvciBbbWluX3VWICsgYnlwYXNzID8gbWluX2Ryb3BvdXRfdVYgOiAwLCBt
+aW4obWF4X3VWLCBjb25zdHJhaW50cy0+bWF4X3VWKV0uClRoZSBfcmVndWxhdG9yX2RvX3NldF92
+b2x0YWdlIGNhbGwgb24gdGhlIHN1cHBseSBjYW4gZGVhbCB3aXRoIHN0dWZmIGxpa2UKbWFwcGlu
+ZyBpdCB0byBhIHNlbGVjdG9yLCBqdXN0IGxpa2UgaXQgZG9lcyBmb3IgcmVndWxhdG9yIGNvbnN1
+bWVycy4KCklmIG1vcmUgZWxhYm9yYXRlIGNvbnN0cmFpbnRzIGFyZSByZXF1aXJlZCBpbnN0ZWFk
+IG9mIHRoaXMgc2ltcGxlIGJlaGF2aW9yIGl0CmNvdWxkIGJlIGhhbmRsZWQgYnnCoGFkZGluZyBh
+biBpbnRlcmZhY2UgZm9yIGRyaXZlcnMgdG8gZXhwb3NlIGV4cGxpY2l0IGR5bmFtaWMKbWluL21h
+eCBjb25zdHJhaW50cy4KCi0tClJlZ2FyZHMsCkxlb25hcmQKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
