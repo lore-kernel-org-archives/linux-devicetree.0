@@ -1,81 +1,62 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V6 4/7] mfd: da9061: MFD core support
-Date: Tue, 28 Mar 2017 09:21:41 +0100
-Message-ID: <20170328082141.u2rgnhei5yhhzxdn@dell>
-References: <539b8756120ab3558c906f7457e65f94dbe37425.1490608293.git.stwiss.opensource@diasemi.com>
- <201703272258.hWlipe1g%fengguang.wu@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201703272258.hWlipe1g%fengguang.wu@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Steve Twiss <stwiss.opensource@diasemi.com>, kbuild-all@01.org, LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCHv6 02/14] ov7670: call v4l2_async_register_subdev
+Date: Tue, 28 Mar 2017 10:23:35 +0200
+Message-ID: <20170328082347.11159-3-hverkuil@xs4all.nl>
+References: <20170328082347.11159-1-hverkuil@xs4all.nl>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170328082347.11159-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Mar 2017, kbuild test robot wrote:
+From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-> Hi Steve,
-> 
-> [auto build test WARNING on ljones-mfd/for-mfd-next]
-> [also build test WARNING on v4.11-rc4 next-20170327]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Steve-Twiss/Documentation-devicetree-watchdog-da9062-61-watchdog-timer-binding/20170327-215359
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-> config: x86_64-randconfig-x009-201713 (attached as .config)
-> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    drivers//mfd/da9062-core.c: In function 'da9062_i2c_probe':
-> >> drivers//mfd/da9062-core.c:845:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->       chip->chip_type = (int)match->data;
->                         ^
+Add v4l2-async support for this driver.
 
-Please use longs or enums.
+Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ drivers/media/i2c/ov7670.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-> vim +845 drivers//mfd/da9062-core.c
-> 
->    829		unsigned int irq_base;
->    830		const struct mfd_cell *cell;
->    831		const struct regmap_irq_chip *irq_chip;
->    832		const struct regmap_config *config;
->    833		int cell_num;
->    834		int ret;
->    835	
->    836		chip = devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL);
->    837		if (!chip)
->    838			return -ENOMEM;
->    839	
->    840		if (i2c->dev.of_node) {
->    841			match = of_match_node(da9062_dt_ids, i2c->dev.of_node);
->    842			if (!match)
->    843				return -EINVAL;
->    844	
->  > 845			chip->chip_type = (int)match->data;
->    846		} else {
->    847			chip->chip_type = id->driver_data;
->    848		}
->    849	
->    850		i2c_set_clientdata(i2c, chip);
->    851		chip->dev = &i2c->dev;
->    852	
->    853		if (!i2c->irq) {
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
-
-
+diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+index 56cfb5ca9c95..9af8d3b8f848 100644
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -1636,10 +1636,9 @@ static int ov7670_probe(struct i2c_client *client,
+ 			V4L2_EXPOSURE_AUTO);
+ 	sd->ctrl_handler = &info->hdl;
+ 	if (info->hdl.error) {
+-		int err = info->hdl.error;
++		ret = info->hdl.error;
+ 
+-		v4l2_ctrl_handler_free(&info->hdl);
+-		return err;
++		goto hdl_free;
+ 	}
+ 	/*
+ 	 * We have checked empirically that hw allows to read back the gain
+@@ -1651,7 +1650,15 @@ static int ov7670_probe(struct i2c_client *client,
+ 	v4l2_ctrl_cluster(2, &info->saturation);
+ 	v4l2_ctrl_handler_setup(&info->hdl);
+ 
++	ret = v4l2_async_register_subdev(&info->sd);
++	if (ret < 0)
++		goto hdl_free;
++
+ 	return 0;
++
++hdl_free:
++	v4l2_ctrl_handler_free(&info->hdl);
++	return ret;
+ }
+ 
+ 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
