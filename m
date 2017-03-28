@@ -1,20 +1,17 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1012a: add crypto node
-Date: Tue, 28 Mar 2017 18:41:19 +0800
-Message-ID: <20170328104115.GT30608@dragon>
-References: <20170322122939.22117-1-horia.geanta@nxp.com>
- <20170324015606.GC30608@dragon>
- <DB4PR04MB0847D837CB2762D5094720CB983E0@DB4PR04MB0847.eurprd04.prod.outlook.com>
- <20170324073420.GM30608@dragon>
- <DB4PR04MB0847E3EE8F7FAC11DD85FAA8983E0@DB4PR04MB0847.eurprd04.prod.outlook.com>
- <20170324140320.GP30608@dragon>
- <VI1PR0401MB259164F1B575677D65CB8F2E98320@VI1PR0401MB2591.eurprd04.prod.outlook.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 3/7] pinctrl: armada-37xx: Add pin controller support
+ for Armada 37xx
+Date: Tue, 28 Mar 2017 12:43:34 +0200
+Message-ID: <87r31hadgp.fsf@free-electrons.com>
+References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
+ <087ef357fa23193d135d37ec2206a5798d27aab5.1490120798.git-series.gregory.clement@free-electrons.com>
+ <CACRpkdYQb9wL+g5T08Mgv+RQYaUZPoS+0RXXfk2XdD+AHSs9gA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR0401MB259164F1B575677D65CB8F2E98320@VI1PR0401MB2591.eurprd04.prod.outlook.com>
+In-Reply-To: <CACRpkdYQb9wL+g5T08Mgv+RQYaUZPoS+0RXXfk2XdD+AHSs9gA@mail.gmail.com>
+ (Linus Walleij's message of "Mon, 27 Mar 2017 11:26:49 +0200")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,20 +21,189 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Harninder Rai <harninder.rai@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhaskar U <bhaskar.upadhaya@nxp.com>, Will Deacon <will.deacon@arm.com>, Dan Douglass <dan.douglass@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Victor Gu <xigu@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXIgMjgsIDIwMTcgYXQgMDc6MTk6NDNBTSArMDAwMCwgSG9yaWEgR2VhbnTEgyB3
-cm90ZToKPiBGb3IgdGhlIHNha2Ugb2YgY3VycmVudCBwYXRjaCwgcGxlYXNlIGNsYXJpZnkgd2hl
-dGhlciBhIHYyIGlzIG5lZWRlZC4KPiBJSVVDOgo+IC1zZWNfbW9uIG5vZGUgbmFtZSBjb3VsZCBz
-dGF5IHRoZSBzYW1lIChleGlzdGluZyBiaW5kaW5nKQo+IC1sYWJlbCBuYW1lcyBhcmUgb2ssIHNp
-bmNlIHVuZGVybGluZSBpcyB0aGUgb25seSBvcHRpb24gYWxsb3dlZCBieSBEVEMKPiAtYWxpYXMg
-bmFtZXMgYXJlIG91dC1vZi1zcGVjIGJ1dCBhY2NlcHRlZCBieSBEVEM7IGlmIGNoYW5naW5nIHVu
-ZGVybGluZQo+IHRvIGh5cGhlbiBpcyByZXF1ZXN0ZWQsIEkgd2lsbCBwdXNoIG91dCB2MgoKQWxs
-IHRoZXNlIGFyZSBmaW5lLiAgQnV0IHdlIGFncmVlZCB0aGF0IHRoZSBhbGlhcyBkZWZpbml0aW9u
-cyBjYW4gYmUKc2hhcmVkIGFuZCBzaG91bGQgYmUgbW92ZWQgdG8gZnNsLWxzMTAxMmEuZHRzaSwg
-cmlnaHQ/CgpTaGF3bgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Linus,
+ 
+ On lun., mars 27 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
+
+> On Tue, Mar 21, 2017 at 7:28 PM, Gregory CLEMENT
+> <gregory.clement@free-electrons.com> wrote:
+>
+>> The Armada 37xx SoC come with 2 pin controllers: one on the south
+>> bridge (managing 28 pins) and one on the north bridge (managing 36 pins).
+>>
+>> At the hardware level the controller configure the pins by group and not
+>> pin by pin. This constraint is reflected in the design of the driver:
+>> only the group related functions are implemented.
+>
+> Interesting!
+>
+>> +static int armada_37xx_pmx_direction_input(struct armada_37xx_pinctrl *info,
+>> +                                          unsigned int offset)
+>> +{
+>> +       unsigned int reg = OUTPUT_EN;
+>> +       unsigned int mask;
+>> +
+>> +       if (offset >= GPIO_PER_REG) {
+>> +               offset -= GPIO_PER_REG;
+>> +               reg += sizeof(u32);
+>> +       }
+>> +       mask = BIT(offset);
+>> +
+>> +       return regmap_update_bits(info->regmap, reg, mask, 0);
+>> +}
+>> +
+>> +
+>> +
+>
+> A bit of excess whitespace, OK nitpicking.
+>
+
+As I need to send a v4, I will fix it in the same time.
+
+> Then this stuff:
+>
+>> +static int armada_37xx_add_function(struct armada_37xx_pmx_func *funcs,
+>> +                                   int *funcsize, const char *name)
+>> +{
+>> +       int i = 0;
+>> +
+>> +       if (*funcsize <= 0)
+>> +               return -EOVERFLOW;
+>> +
+>> +       while (funcs->ngroups) {
+>> +               /* function already there */
+>> +               if (strcmp(funcs->name, name) == 0) {
+>> +                       funcs->ngroups++;
+>> +
+>> +                       return -EEXIST;
+>> +               }
+>> +               funcs++;
+>> +               i++;
+>> +       }
+>> +
+>> +       /* append new unique function */
+>> +       funcs->name = name;
+>> +       funcs->ngroups = 1;
+>> +       (*funcsize)--;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int armada_37xx_fill_group(struct armada_37xx_pinctrl *info, int base)
+>> +{
+>> +       int n, num = 0, funcsize = info->data->nr_pins;
+>> +
+>> +       for (n = 0; n < info->ngroups; n++) {
+>> +               struct armada_37xx_pin_group *grp = &info->groups[n];
+>> +               int i, j, f;
+>> +
+>> +               grp->pins = devm_kzalloc(info->dev,
+>> +                                        (grp->npins + grp->extra_npins) *
+>> +                                        sizeof(*grp->pins), GFP_KERNEL);
+>> +               if (!grp->pins)
+>> +                       return -ENOMEM;
+>> +
+>> +               for (i = 0; i < grp->npins; i++)
+>> +                       grp->pins[i] = grp->start_pin + base + i;
+>> +
+>> +               for (j = 0; j < grp->extra_npins; j++)
+>> +                       grp->pins[i+j] = grp->extra_pin + base + j;
+>> +
+>> +               for (f = 0; f < NB_FUNCS; f++) {
+>> +                       int ret;
+>> +                       /* check for unique functions and count groups */
+>> +                       ret = armada_37xx_add_function(info->funcs, &funcsize,
+>> +                                           grp->funcs[f]);
+>> +                       if (ret == -EOVERFLOW)
+>> +                               dev_err(info->dev,
+>> +                                       "More functions than pins(%d)\n",
+>> +                                       info->data->nr_pins);
+>> +                       if (ret < 0)
+>> +                               continue;
+>> +                       num++;
+>> +               }
+>> +       }
+>> +
+>> +       info->nfuncs = num;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int armada_37xx_fill_func(struct armada_37xx_pinctrl *info)
+>> +{
+>> +       struct armada_37xx_pmx_func *funcs = info->funcs;
+>> +       int n;
+>> +
+>> +       for (n = 0; n < info->nfuncs; n++) {
+>> +               const char *name = funcs[n].name;
+>> +               const char **groups;
+>> +               int g;
+>> +
+>> +               funcs[n].groups = devm_kzalloc(info->dev, funcs[n].ngroups *
+>> +                                              sizeof(*(funcs[n].groups)),
+>> +                                              GFP_KERNEL);
+>> +               if (!funcs[n].groups)
+>> +                       return -ENOMEM;
+>> +
+>> +               groups = funcs[n].groups;
+>> +
+>> +               for (g = 0; g < info->ngroups; g++) {
+>> +                       struct armada_37xx_pin_group *gp = &info->groups[g];
+>> +                       int f;
+>> +
+>> +                       for (f = 0; f < NB_FUNCS; f++) {
+>> +                               if (strcmp(gp->funcs[f], name) == 0) {
+>> +                                       *groups = gp->name;
+>> +                                       groups++;
+>> +                               }
+>> +                       }
+>> +               }
+>> +       }
+>> +       return 0;
+>> +}
+>
+> I would be happy if you add kerneldoc to these functions and explain
+> what they do. Because I don't get it. I guess they are filling in the data
+> structures but yeah. Hard to follow.
+
+OK
+
+>
+>> +       match = of_match_node(armada_37xx_pinctrl_of_match, np);
+>> +       info->data = (struct armada_37xx_pin_data *)match->data;
+>
+> Use of_device_get_match_data()
+
+OK
+
+>
+>
+>> +static struct platform_driver armada_37xx_pinctrl_driver = {
+>> +       .driver = {
+>> +               .name = "armada-37xx-pinctrl",
+>> +               .of_match_table = armada_37xx_pinctrl_of_match,
+>> +       },
+>> +       .probe = armada_37xx_pinctrl_probe,
+>> +};
+>> +
+>> +builtin_platform_driver(armada_37xx_pinctrl_driver);
+>
+> It almost looks like your could use builting_platform_driver_probe() actually,
+> and tag the costly initfunctions with __init so they get dicarded
+> after probe.
+
+Sure, I will do it
+
+Thanks,
+
+Gregory
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
