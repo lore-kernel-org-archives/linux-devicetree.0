@@ -1,134 +1,66 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v8 1/2] dt-bindings: Add GPCv2 power gating driver
-Date: Tue, 28 Mar 2017 08:19:44 -0700
-Message-ID: <20170328151945.32665-2-andrew.smirnov@gmail.com>
-References: <20170328151945.32665-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170328151945.32665-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Dong Aisheng <dongas86@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] arm64: tegra: Add CPU and PSCI nodes for NVIDIA Tegra210
+ platforms
+Date: Tue, 28 Mar 2017 16:32:24 +0100
+Message-ID: <e3ab2e09-ee32-96e2-b0c8-f7def668bf31@nvidia.com>
+References: <1490701718-16571-1-git-send-email-jonathanh@nvidia.com>
+ <bf527c4b-f17c-bfcf-e7fa-dab64b131996@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <bf527c4b-f17c-bfcf-e7fa-dab64b131996-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for power domain driver for GPCv2 IP block found in
-i.MX7 SoCs.
 
-Cc: yurovsky@gmail.com
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Dong Aisheng <dongas86@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
- include/dt-bindings/power/imx7-power.h             | 16 +++++
- 2 files changed, 87 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
- create mode 100644 include/dt-bindings/power/imx7-power.h
+On 28/03/17 15:55, Sudeep Holla wrote:
+> On 28/03/17 12:48, Jon Hunter wrote:
+>> Add the CPU and PSCI nodes for the NVIDIA Tegra210 platforms so that
+>> all CPUs can be enabled on boot. This assumes that the PSCI firmware
+>> has been loaded during the initial bootstrap on the device before the
+>> kernel starts (which is typically the case for these platforms). The
+>> PSCI firmware version is set to v0.2 which aligns with the current
+>> shipping version for Tegra.
+>>
+>> Reported-by: Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 23 +++++++++++++++++++++++
+>>  arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi | 24 ++++++++++++++++++++++++
+>>  2 files changed, 47 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+>> index 906fb836d241..de1696c28140 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+>> @@ -296,6 +296,29 @@
+>>  		};
+>>  	};
+>>  
+>> +	cpus {
+>> +		cpu@0 {
+>> +			enable-method = "psci";
+> 
+> Is some firmware expected to populate other required properties ?
+> 
+> If yes, why not populate everything in the firmware ?
+> 
+> If no, how does it even boot secondaries without the "reg" property
+> that usually contains MPIDR.
 
-diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-new file mode 100644
-index 0000000..02f45c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-@@ -0,0 +1,71 @@
-+Freescale i.MX General Power Controller v2
-+==========================================
-+
-+The i.MX7S/D General Power Control (GPC) block contains Power Gating
-+Control (PGC) for various power domains.
-+
-+Required properties:
-+
-+- compatible: Should be "fsl,imx7d-gpc"
-+
-+- reg: should be register base and length as documented in the
-+  datasheet
-+
-+- interrupts: Should contain GPC interrupt request 1
-+
-+Power domains contained within GPC node are generic power domain
-+providers, documented in
-+Documentation/devicetree/bindings/power/power_domain.txt, which are
-+described as subnodes of the power gating controller 'pgc' node,
-+which, in turn, is expected to contain the following:
-+
-+Required properties:
-+
-+- reg: Power domain index. Valid values are defined in
-+  include/dt-bindings/power/imx7-power.h
-+
-+- #power-domain-cells: Should be 0
-+
-+Optional properties:
-+
-+- power-supply: Power supply used to power the domain
-+
-+Example:
-+
-+	gpc: gpc@303a0000 {
-+		compatible = "fsl,imx7d-gpc";
-+		reg = <0x303a0000 0x1000>;
-+		interrupt-controller;
-+		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&intc>;
-+
-+		pgc {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pgc_pcie_phy: power-domain@3 {
-+				#power-domain-cells = <0>;
-+
-+				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
-+				power-supply = <&reg_1p0d>;
-+			};
-+		};
-+	};
-+
-+
-+Specifying power domain for IP modules
-+======================================
-+
-+IP cores belonging to a power domain should contain a 'power-domains'
-+property that is a phandle for PGC node representing the domain.
-+
-+Example of a device that is part of the PCIE_PHY power domain:
-+
-+	pcie: pcie@33800000 {
-+	      reg = <0x33800000 0x4000>,
-+	            <0x4ff00000 0x80000>;
-+		/* ... */
-+		power-domains = <&pgc_pcie_phy>;
-+		/* ... */
-+	};
-diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
-new file mode 100644
-index 0000000..3a181e4
---- /dev/null
-+++ b/include/dt-bindings/power/imx7-power.h
-@@ -0,0 +1,16 @@
-+/*
-+ *  Copyright (C) 2017 Impinj
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __DT_BINDINGS_IMX7_POWER_H__
-+#define __DT_BINDINGS_IMX7_POWER_H__
-+
-+#define IMX7_POWER_DOMAIN_MIPI_PHY		0
-+#define IMX7_POWER_DOMAIN_PCIE_PHY		1
-+#define IMX7_POWER_DOMAIN_USB_HSIC_PHY		2
-+
-+#endif
+Please see 'arch/arm64/boot/dts/nvidia/tegra210.dtsi' which has these
+fields. So far we have been populating the psci information at the board
+level and so I have kept with that here and so the above is just the
+delta. Maybe the $subject could be a little clearer!
+
+Jon
+
 -- 
-2.9.3
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
