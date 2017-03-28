@@ -1,7 +1,7 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v6 27/39] media: imx: csi: add support for bayer formats
-Date: Mon, 27 Mar 2017 17:40:44 -0700
-Message-ID: <1490661656-10318-28-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v6 37/39] media: imx-csi: add frame size/interval enumeration
+Date: Mon, 27 Mar 2017 17:40:54 -0700
+Message-ID: <1490661656-10318-38-git-send-email-steve_longerbeam@mentor.com>
 References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
@@ -12,140 +12,100 @@ List-Id: devicetree@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Bayer formats must be treated as generic data and passthrough mode must
-be used.  Add the correct setup for these formats.
+Add frame size and frame interval enumeration to CSI.
+
+CSI can downscale the image independently horizontally and vertically by a
+factor of two, which enumerates to four different frame sizes at the
+output pads. The input pad supports a range of frame sizes.
+
+CSI can also drop frames, resulting in frame rate reduction, so
+enumerate the resulting possible output frame rates.
 
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-
-- added check to csi_link_validate() to verify that destination is
-  IDMAC output pad when passthrough conditions exist: bayer formats
-  and 16-bit parallel buses.
-
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- drivers/staging/media/imx/imx-media-csi.c | 75 +++++++++++++++++++++++--------
- 1 file changed, 57 insertions(+), 18 deletions(-)
+ drivers/staging/media/imx/imx-media-csi.c | 62 +++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
 diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 9e2a73c..37c68d8 100644
+index 19609a7..b11e80f 100644
 --- a/drivers/staging/media/imx/imx-media-csi.c
 +++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -285,10 +285,11 @@ static int csi_idmac_setup_channel(struct csi_priv *priv)
- 	struct imx_media_video_dev *vdev = priv->vdev;
- 	struct v4l2_of_endpoint *sensor_ep;
- 	struct v4l2_mbus_framefmt *infmt;
--	unsigned int burst_size;
- 	struct ipu_image image;
-+	u32 passthrough_bits;
- 	dma_addr_t phys[2];
- 	bool passthrough;
-+	u32 burst_size;
- 	int ret;
- 
- 	infmt = &priv->format_mbus[CSI_SINK_PAD];
-@@ -306,24 +307,52 @@ static int csi_idmac_setup_channel(struct csi_priv *priv)
- 	image.phys0 = phys[0];
- 	image.phys1 = phys[1];
- 
--	ret = ipu_cpmem_set_image(priv->idmac_ch, &image);
--	if (ret)
--		goto unsetup_vb2;
--
--	burst_size = (image.pix.width & 0xf) ? 8 : 16;
--
--	ipu_cpmem_set_burstsize(priv->idmac_ch, burst_size);
--
- 	/*
--	 * If the sensor uses 16-bit parallel CSI bus, we must handle
--	 * the data internally in the IPU as 16-bit generic, aka
--	 * passthrough mode.
-+	 * Check for conditions that require the IPU to handle the
-+	 * data internally as generic data, aka passthrough mode:
-+	 * - raw bayer formats
-+	 * - the sensor bus is 16-bit parallel
- 	 */
--	passthrough = (sensor_ep->bus_type != V4L2_MBUS_CSI2 &&
--		       sensor_ep->bus.parallel.bus_width >= 16);
-+	switch (image.pix.pixelformat) {
-+	case V4L2_PIX_FMT_SBGGR8:
-+	case V4L2_PIX_FMT_SGBRG8:
-+	case V4L2_PIX_FMT_SGRBG8:
-+	case V4L2_PIX_FMT_SRGGB8:
-+		burst_size = 8;
-+		passthrough = true;
-+		passthrough_bits = 8;
-+		break;
-+	case V4L2_PIX_FMT_SBGGR16:
-+	case V4L2_PIX_FMT_SGBRG16:
-+	case V4L2_PIX_FMT_SGRBG16:
-+	case V4L2_PIX_FMT_SRGGB16:
-+		burst_size = 4;
-+		passthrough = true;
-+		passthrough_bits = 16;
-+		break;
-+	default:
-+		burst_size = (image.pix.width & 0xf) ? 8 : 16;
-+		passthrough = (sensor_ep->bus_type != V4L2_MBUS_CSI2 &&
-+			       sensor_ep->bus.parallel.bus_width >= 16);
-+		passthrough_bits = 16;
-+		break;
-+	}
- 
--	if (passthrough)
--		ipu_cpmem_set_format_passthrough(priv->idmac_ch, 16);
-+	if (passthrough) {
-+		ipu_cpmem_set_resolution(priv->idmac_ch, image.rect.width,
-+					 image.rect.height);
-+		ipu_cpmem_set_stride(priv->idmac_ch, image.pix.bytesperline);
-+		ipu_cpmem_set_buffer(priv->idmac_ch, 0, image.phys0);
-+		ipu_cpmem_set_buffer(priv->idmac_ch, 1, image.phys1);
-+		ipu_cpmem_set_format_passthrough(priv->idmac_ch,
-+						 passthrough_bits);
-+	} else {
-+		ret = ipu_cpmem_set_image(priv->idmac_ch, &image);
-+		if (ret)
-+			goto unsetup_vb2;
-+	}
-+
-+	ipu_cpmem_set_burstsize(priv->idmac_ch, burst_size);
- 
- 	/*
- 	 * Set the channel for the direct CSI-->memory via SMFC
-@@ -737,6 +766,7 @@ static int csi_link_validate(struct v4l2_subdev *sd,
- 			     struct v4l2_subdev_format *sink_fmt)
- {
- 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-+	const struct imx_media_pixfmt *incc;
- 	struct v4l2_of_endpoint *sensor_ep;
- 	struct imx_media_subdev *sensor;
- 	bool is_csi2;
-@@ -757,8 +787,17 @@ static int csi_link_validate(struct v4l2_subdev *sd,
- 
- 	priv->sensor = sensor;
- 	sensor_ep = &priv->sensor->sensor_ep;
--
- 	is_csi2 = (sensor_ep->bus_type == V4L2_MBUS_CSI2);
-+	incc = priv->cc[CSI_SINK_PAD];
-+
-+	if (priv->dest != IPU_CSI_DEST_IDMAC &&
-+	    (incc->bayer || (!is_csi2 &&
-+			     sensor_ep->bus.parallel.bus_width >= 16))) {
-+		v4l2_err(&priv->sd,
-+			 "bayer/16-bit parallel buses must go to IDMAC pad\n");
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 
- 	if (is_csi2) {
- 		int vc_num = 0;
-@@ -783,7 +822,7 @@ static int csi_link_validate(struct v4l2_subdev *sd,
- 
- 	/* select either parallel or MIPI-CSI2 as input to CSI */
- 	ipu_set_csi_src_mux(priv->ipu, priv->csi_id, is_csi2);
--
-+out:
- 	mutex_unlock(&priv->lock);
+@@ -1123,6 +1123,66 @@ static int csi_enum_mbus_code(struct v4l2_subdev *sd,
  	return ret;
  }
+ 
++static int csi_enum_frame_size(struct v4l2_subdev *sd,
++			       struct v4l2_subdev_pad_config *cfg,
++			       struct v4l2_subdev_frame_size_enum *fse)
++{
++	struct csi_priv *priv = v4l2_get_subdevdata(sd);
++	struct v4l2_rect *crop;
++	int ret = 0;
++
++	if (fse->pad >= CSI_NUM_PADS ||
++	    fse->index > (fse->pad == CSI_SINK_PAD ? 0 : 3))
++		return -EINVAL;
++
++	mutex_lock(&priv->lock);
++
++	if (fse->pad == CSI_SINK_PAD) {
++		fse->min_width = MIN_W;
++		fse->max_width = MAX_W;
++		fse->min_height = MIN_H;
++		fse->max_height = MAX_H;
++	} else {
++		crop = __csi_get_crop(priv, cfg, fse->which);
++
++		fse->min_width = fse->max_width = fse->index & 1 ?
++			crop->width / 2 : crop->width;
++		fse->min_height = fse->max_height = fse->index & 2 ?
++			crop->height / 2 : crop->height;
++	}
++
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++static int csi_enum_frame_interval(struct v4l2_subdev *sd,
++				   struct v4l2_subdev_pad_config *cfg,
++				   struct v4l2_subdev_frame_interval_enum *fie)
++{
++	struct csi_priv *priv = v4l2_get_subdevdata(sd);
++	struct v4l2_rect *crop;
++	int ret = 0;
++
++	if (fie->pad >= CSI_NUM_PADS ||
++	    fie->index >= (fie->pad == CSI_SINK_PAD ? 1 : ARRAY_SIZE(csi_skip)))
++		return -EINVAL;
++
++	mutex_lock(&priv->lock);
++
++	crop = __csi_get_crop(priv, cfg, fie->which);
++
++	if ((fie->width == crop->width || fie->width == crop->width / 2) &&
++	    (fie->height == crop->height || fie->height == crop->height / 2)) {
++		fie->interval = priv->frame_interval;
++		csi_apply_skip_interval(&csi_skip[fie->index], &fie->interval);
++	} else {
++		ret = -EINVAL;
++	}
++	mutex_unlock(&priv->lock);
++
++	return ret;
++}
++
+ static int csi_get_fmt(struct v4l2_subdev *sd,
+ 		       struct v4l2_subdev_pad_config *cfg,
+ 		       struct v4l2_subdev_format *sdformat)
+@@ -1587,6 +1647,8 @@ static struct v4l2_subdev_video_ops csi_video_ops = {
+ 
+ static struct v4l2_subdev_pad_ops csi_pad_ops = {
+ 	.enum_mbus_code = csi_enum_mbus_code,
++	.enum_frame_size = csi_enum_frame_size,
++	.enum_frame_interval = csi_enum_frame_interval,
+ 	.get_fmt = csi_get_fmt,
+ 	.set_fmt = csi_set_fmt,
+ 	.get_selection = csi_get_selection,
 -- 
 2.7.4
