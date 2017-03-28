@@ -1,75 +1,99 @@
-From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH v3 1/2] dt-bindings: i2c: Add Mediatek MT2701 i2c
- binding
-Date: Tue, 28 Mar 2017 17:50:12 +0800
-Message-ID: <1490694612.18582.11.camel@mhfsdcap03>
-References: <1489029185-21447-1-git-send-email-jun.gao@mediatek.com>
-         <1489029185-21447-2-git-send-email-jun.gao@mediatek.com>
-         <20170322090543.sxacnddn2o7stjnq@ninjato>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 7/15] dt-bindings: display: sun4i: Add
+ allwinner,tcon-channel property
+Date: Tue, 28 Mar 2017 18:05:08 +0800
+Message-ID: <58da355e.0219620a.618f7.6caeSMTPIN_ADDED_MISSING@gmr-mx.google.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170322090543.sxacnddn2o7stjnq@ninjato>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBXXK5DDAKGQEVRQHSTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-03-22 at 10:05 +0100, Wolfram Sang wrote:
-> On Thu, Mar 09, 2017 at 11:13:04AM +0800, Jun Gao wrote:
-> > From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > Add MT2701 i2c binding to i2c-mt6577.txt and there is no need to
-> > modify i2c driver.
-> > 
-> > Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> There is still the issue which Matthias Brugger pointed out on January,
-> 24th: you need to describe the fallback compatibles.
-> 
 
-IMHO the value under compatible are just inputs which can be accepted.
-It's little strange to add fallback information in binding. Some other
-bindings do not describe so detailedly.
-Is it OK to make binding as minimum standard?
-If we describe it very detailedly, we will have to modify binding if
-there are some changes for mt2701.
+2017=E5=B9=B43=E6=9C=8827=E6=97=A5 =E4=B8=8A=E5=8D=885:11=E4=BA=8E Maxime R=
+ipard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Fri, Mar 17, 2017 at 11:34:45AM +0800, Chen-Yu Tsai wrote:=20
+> > On Thu, Mar 16, 2017 at 1:37 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:=
+=20
+> > > On Tue, Mar 07, 2017 at 09:56:26AM +0100, Maxime Ripard wrote:=20
+> > >> The Allwinner Timings Controller has two, mutually exclusive, channe=
+ls.=20
+> > >> When the binding has been introduced, it was assumed that there woul=
+d be=20
+> > >> only a single user per channel in the system.=20
+> > >>=20
+> > >> While this is likely for the channel 0 which only connects to LCD di=
+splays,=20
+> > >> it turns out that the channel 1 can be connected to multiple control=
+lers in=20
+> > >> the SoC (HDMI and TV encoders for example). And while the simultaneo=
+us use=20
+> > >> of HDMI and TV outputs cannot be achieved, switching from one to the=
+ other=20
+> > >> at runtime definitely sounds plausible.=20
+> > >>=20
+> > >> Add an extra property, allwinner,tcon-channel, to specify for a give=
+n=20
+> > >> endpoint which TCON channel it is connected to, while falling back t=
+o the=20
+> > >> previous mechanism if that property is missing.=20
+> > >=20
+> > > I think perhaps TCON channels should have been ports rather than=20
+> > > endpoints. The fact that the channels are mutually exclusive can be=
+=20
+> > > handled in the driver and doesn't really matter in the binding. How=
+=20
+> > > painful would it be to rework things to move TCON channel 1 from port=
+ 0,=20
+> > > endpoint 1 to port 1?=20
+> >=20
+> > Having a separate output port for channel 1 was one option we discussed=
+.=20
+> > However it wouldn't work well with the kernel's of_graph based crtc=20
+> > detection (drm_of_find_possible_crtcs / drm_of_find_possible_crtcs),=20
+> > which has the crtcs bound via the output port. As the logic is used=20
+> > by multiple drivers, I'm not sure it's easy to rework or test.=20
+>
+> Can't we use a different logic than drm_of_find_possible_crtcs to fill=20
+> the same role?=20
+>
+> > Also, we still have to support old device trees using channel 1 from=20
+> > output port 0 endpoint 1. This is the TV encoder on sun5i (A10s/A13/R8)=
+.=20
 
-Rob, could you give some suggestions?  Thanks!
+And from A83T on we will face channel-1 only TCONs., which do not
+have channel 0 at all in hardware.
 
-> > ---
-> >  .../devicetree/bindings/i2c/i2c-mt6577.txt         |   11 ++++++-----
-> >  1 file changed, 6 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
-> > index 0ce6fa3..27dbbf9 100644
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
-> > @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
-> >  
-> >  Required properties:
-> >    - compatible: value should be either of the following.
-> > -      (a) "mediatek,mt6577-i2c", for i2c compatible with mt6577 i2c.
-> > -      (b) "mediatek,mt6589-i2c", for i2c compatible with mt6589 i2c.
-> > -      (c) "mediatek,mt8127-i2c", for i2c compatible with mt8127 i2c.
-> > -      (d) "mediatek,mt8135-i2c", for i2c compatible with mt8135 i2c.
-> > -      (e) "mediatek,mt8173-i2c", for i2c compatible with mt8173 i2c.
-> > +	"mediatek,mt2701-i2c"
-> > +	"mediatek,mt6577-i2c"
-> > +	"mediatek,mt6589-i2c"
-> > +	"mediatek,mt8127-i2c"
-> > +	"mediatek,mt8135-i2c"
-> > +	"mediatek,mt8173-i2c"
-> >    - reg: physical base address of the controller and dma base, length of memory
-> >      mapped region.
-> >    - interrupts: interrupt number to the cpu.
-> > -- 
-> > 1.7.9.5
-> > 
+>
+> We could probably work something out if we go that way to deal with=20
+> old DTs though.=20
+>
+> Maxime=20
+>
+> --=20
+> Maxime Ripard, Free Electrons=20
+> Embedded Linux and Kernel engineering=20
+> http://free-electrons.com
+>
+> _______________________________________________=20
+> linux-arm-kernel mailing list=20
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org=20
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel=20
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
