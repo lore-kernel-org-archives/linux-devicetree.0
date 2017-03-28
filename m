@@ -1,426 +1,329 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 2/2] drivers/serial: Add driver for Aspeed virtual UART
-Date: Tue, 28 Mar 2017 16:14:58 +1030
-Message-ID: <20170328054458.29341-3-joel@jms.id.au>
-References: <20170328054458.29341-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170328054458.29341-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Jeremy Kerr <jk@ozlabs.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
+ Mediatek MT7530 switch
+Date: Tue, 28 Mar 2017 13:51:30 +0800
+Message-ID: <1490680290.14184.28.camel@mtkswgap22>
+References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
+ <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
+ <842616ad-1e04-9e56-3137-dd8aed1dd896@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <842616ad-1e04-9e56-3137-dd8aed1dd896-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+Hi Florian,
 
-This change adds a driver for the 16550-based Aspeed virtual UART
-device. We use a similar process to the of_serial driver for device
-probe, but expose some VUART-specific functions through sysfs too.
+Thank for taking your time on reviewing. Add comment as inline.
 
-OpenPOWER host firmware doesn't like it when the host-side of the
-VUART's FIFO is not drained. This driver only disables host TX discard
-mode when the port is in use. We set the VUART enabled bit when we bind
-to the device, and clear it on unbind.
+On Wed, 2017-03-22 at 11:39 -0700, Florian Fainelli wrote:
+> On 03/21/2017 02:35 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > MT7530 is a 7-ports Gigabit Ethernet Switch that could be found on
+> > Mediatek router platforms such as MT7623A or MT7623N platform which
+> > includes 7-port Gigabit Ethernet MAC and 5-port Gigabit Ethernet PHY.
+> > Among these ports, The port from 0 to 4 are the user ports connecting
+> > with the remote devices while the port 5 and 6 are the CPU ports
+> > connecting into Mediatek Ethernet GMAC.
+> > 
+> > For port 6, it can communicate with the CPU via Mediatek Ethernet GMAC
+> > through either the TRGMII or RGMII which could be controlled by phy-mode
+> > in the dt-bindings to specify which mode is preferred to use. And for
+> > port 5, only RGMII can be specified. However, currently, only port 6 is
+> > being supported in this DSA driver.
+> > 
+> > The driver is made with the reference to qca8k and other existing DSA
+> > driver. The most of the essential callbacks of the DSA are already
+> > support in the driver, including tag insert for user port distinguishing,
+> > port control, bridge offloading, STP setup and ethtool operation to allow
+> > DSA to model each user port into a standalone netdevice as the other DSA
+> > driver had done.
+> 
+> Overall, this looks pretty nice and clean, a few comments below
+> 
+> > 
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Landen Chao <Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> 
+> > +static void
+> > +mt7530_fdb_read(struct mt7530_priv *priv, struct mt7530_fdb *fdb)
+> > +{
+> > +	u32 reg[3];
+> > +	int i;
+> > +
+> > +	/* Read from ARL table into an array */
+> > +	for (i = 0; i < 3; i++) {
+> > +		reg[i] = mt7530_read(priv, MT7530_TSRA1 + (i * 4));
+> > +
+> > +		dev_dbg(priv->dev, "%s(%d) reg[%d]=0x%x\n",
+> > +			__func__, __LINE__, i, reg[i]);
+> > +	}
+> > +
+> > +	/* vid - 11:0 on reg[1] */
+> > +	fdb->vid = (reg[1] >> 0) & 0xfff;
+> > +	/* aging - 31:24 on reg[2] */
+> > +	fdb->aging = (reg[2] >> 24) & 0xff;
+> > +	/* portmask - 11:4 on reg[2] */
+> > +	fdb->port_mask = (reg[2] >> 4) & 0xff;
+> > +	/* mac - 31:0 on reg[0] and 31:16 on reg[1] */
+> > +	fdb->mac[0] = (reg[0] >> 24) & 0xff;
+> > +	fdb->mac[1] = (reg[0] >> 16) & 0xff;
+> > +	fdb->mac[2] = (reg[0] >>  8) & 0xff;
+> > +	fdb->mac[3] = (reg[0] >>  0) & 0xff;
+> > +	fdb->mac[4] = (reg[1] >> 24) & 0xff;
+> > +	fdb->mac[5] = (reg[1] >> 16) & 0xff;
+> > +	/* noarp - 3:2 on reg[2] */
+> > +	fdb->noarp = ((reg[2] >> 2) & 0x3) == STATIC_ENT;
+> 
+> Could you add some definitions for the bits and masks that you are
+> shifting here?
+> 
 
-We don't want to do this on open/release, as the host may be using this
-bit to configure serial output modes, which is independent of whether
-the devices has been opened by BMC userspace.
+Okay, I'll make into proper macro for readability  
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- Documentation/devicetree/bindings/serial/8250.txt |   2 +
- drivers/tty/serial/Kconfig                        |  10 +
- drivers/tty/serial/Makefile                       |   1 +
- drivers/tty/serial/aspeed-vuart.c                 | 335 ++++++++++++++++++++++
- 4 files changed, 348 insertions(+)
- create mode 100644 drivers/tty/serial/aspeed-vuart.c
+> > +}
+> > +
+> > +static void
+> > +mt7530_fdb_write(struct mt7530_priv *priv, u16 vid,
+> > +		 u8 port_mask, const u8 *mac,
+> > +		 u8 aging, u8 type)
+> > +{
+> > +	u32 reg[3] = { 0 };
+> > +	int i;
+> > +
+> > +	/* vid - 11:0 on reg[1] */
+> > +	reg[1] |= (vid & 0xfff) << 0;
+> > +	/* aging - 31:25 on reg[2] */
+> > +	reg[2] |= (aging & 0xff) << 24;
+> > +	/* portmask - 11:4 on reg[2] */
+> > +	reg[2] |= (port_mask & 0xff) << 4;
+> > +	/* type - 3 indicate that entry is static wouldn't
+> > +	 * be aged out and 0 specified as erasing an entry
+> > +	 */
+> > +	reg[2] |= (type & 0x3) << 2;
+> > +	/* mac - 31:0 on reg[0] and 31:16 on reg[1] */
+> > +	reg[1] |= mac[5] << 16;
+> > +	reg[1] |= mac[4] << 24;
+> > +	reg[0] |= mac[3] << 0;
+> > +	reg[0] |= mac[2] << 8;
+> > +	reg[0] |= mac[1] << 16;
+> > +	reg[0] |= mac[0] << 24;
+> > +
+> > +	/* Wrirte array into the ARL table */
+> > +	for (i = 0; i < 3; i++)
+> > +		mt7530_write(priv, MT7530_ATA1 + (i * 4), reg[i]);
+> > +}
+> 
+> Same here.
+> 
 
-diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-index f86bb06c39e9..a12e9277ac5d 100644
---- a/Documentation/devicetree/bindings/serial/8250.txt
-+++ b/Documentation/devicetree/bindings/serial/8250.txt
-@@ -19,6 +19,8 @@ Required properties:
- 	- "altr,16550-FIFO128"
- 	- "fsl,16550-FIFO64"
- 	- "fsl,ns16550"
-+	- "aspeed,ast2400-vuart"
-+	- "aspeed,ast2500-vuart"
- 	- "serial" if the port type is unknown.
- - reg : offset and length of the register set for the device.
- - interrupts : should contain uart interrupt.
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index e9cf5b67f1b7..758b69a51078 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1129,6 +1129,16 @@ config SERIAL_NETX_CONSOLE
- 	  If you have enabled the serial port on the Hilscher NetX SoC
- 	  you can make it the console by answering Y to this option.
- 
-+config SERIAL_ASPEED_VUART
-+	tristate "Aspeed Virtual UART"
-+	depends on OF
-+	depends on SERIAL_8250
-+	help
-+	  If you want to use the virtual UART (VUART) device on Aspeed
-+	  BMC platforms, enable this option. This enables the 16550A-
-+	  compatible device on the local LPC bus, giving a UART device
-+	  with no physical RS232 connections.
-+
- config SERIAL_OMAP
- 	tristate "OMAP serial port support"
- 	depends on ARCH_OMAP2PLUS
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index 2d6288bc4554..5b97b0fa29e2 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_SERIAL_8250) += 8250/
- 
- obj-$(CONFIG_SERIAL_AMBA_PL010) += amba-pl010.o
- obj-$(CONFIG_SERIAL_AMBA_PL011) += amba-pl011.o
-+obj-$(CONFIG_SERIAL_ASPEED_VUART) += aspeed-vuart.o
- obj-$(CONFIG_SERIAL_CLPS711X) += clps711x.o
- obj-$(CONFIG_SERIAL_PXA_NON8250) += pxa.o
- obj-$(CONFIG_SERIAL_PNX8XXX) += pnx8xxx_uart.o
-diff --git a/drivers/tty/serial/aspeed-vuart.c b/drivers/tty/serial/aspeed-vuart.c
-new file mode 100644
-index 000000000000..fc6fa6d243c8
---- /dev/null
-+++ b/drivers/tty/serial/aspeed-vuart.c
-@@ -0,0 +1,335 @@
-+/*
-+ *  Serial Port driver for Aspeed VUART device
-+ *
-+ *    Copyright (C) 2016 Jeremy Kerr <jk@ozlabs.org>, IBM Corp.
-+ *    Copyright (C) 2006 Arnd Bergmann <arnd@arndb.de>, IBM Corp.
-+ *
-+ *  This program is free software; you can redistribute it and/or
-+ *  modify it under the terms of the GNU General Public License
-+ *  as published by the Free Software Foundation; either version
-+ *  2 of the License, or (at your option) any later version.
-+ *
-+ */
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/clk.h>
-+
-+#include "8250/8250.h"
-+
-+#define AST_VUART_GCRA		0x20
-+#define AST_VUART_GCRA_VUART_EN		0x01
-+#define AST_VUART_GCRA_HOST_TX_DISCARD	0x20
-+#define AST_VUART_GCRB		0x24
-+#define AST_VUART_GCRB_HOST_SIRQ_MASK	0xf0
-+#define AST_VUART_GCRB_HOST_SIRQ_SHIFT	4
-+#define AST_VUART_ADDRL		0x28
-+#define AST_VUART_ADDRH		0x2c
-+
-+struct ast_vuart {
-+	struct platform_device *pdev;
-+	void __iomem		*regs;
-+	struct clk		*clk;
-+	int			line;
-+};
-+
-+static ssize_t ast_vuart_show_addr(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct ast_vuart *vuart = dev_get_drvdata(dev);
-+	u16 addr;
-+
-+	addr = (readb(vuart->regs + AST_VUART_ADDRH) << 8) |
-+		(readb(vuart->regs + AST_VUART_ADDRL));
-+
-+	return snprintf(buf, PAGE_SIZE - 1, "0x%x\n", addr);
-+}
-+
-+static ssize_t ast_vuart_set_addr(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t count)
-+{
-+	struct ast_vuart *vuart = dev_get_drvdata(dev);
-+	unsigned long val;
-+	int err;
-+
-+	err = kstrtoul(buf, 0, &val);
-+	if (err)
-+		return err;
-+
-+	writeb((val >> 8) & 0xff, vuart->regs + AST_VUART_ADDRH);
-+	writeb((val >> 0) & 0xff, vuart->regs + AST_VUART_ADDRL);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR(lpc_address, 0664,
-+		ast_vuart_show_addr, ast_vuart_set_addr);
-+
-+static ssize_t ast_vuart_show_sirq(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct ast_vuart *vuart = dev_get_drvdata(dev);
-+	u8 reg;
-+
-+	reg = readb(vuart->regs + AST_VUART_GCRB);
-+	reg &= AST_VUART_GCRB_HOST_SIRQ_MASK;
-+	reg >>= AST_VUART_GCRB_HOST_SIRQ_SHIFT;
-+
-+	return snprintf(buf, PAGE_SIZE - 1, "%u\n", reg);
-+}
-+
-+static ssize_t ast_vuart_set_sirq(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t count)
-+{
-+	struct ast_vuart *vuart = dev_get_drvdata(dev);
-+	unsigned long val;
-+	int err;
-+	u8 reg;
-+
-+	err = kstrtoul(buf, 0, &val);
-+	if (err)
-+		return err;
-+
-+	val <<= AST_VUART_GCRB_HOST_SIRQ_SHIFT;
-+	val &= AST_VUART_GCRB_HOST_SIRQ_MASK;
-+
-+	reg = readb(vuart->regs + AST_VUART_GCRB);
-+	reg &= ~AST_VUART_GCRB_HOST_SIRQ_MASK;
-+	reg |= val;
-+	writeb(reg, vuart->regs + AST_VUART_GCRB);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR(sirq, 0664,
-+		ast_vuart_show_sirq, ast_vuart_set_sirq);
-+
-+static void ast_vuart_set_enabled(struct ast_vuart *vuart, bool enabled)
-+{
-+	u8 reg;
-+
-+	reg = readb(vuart->regs + AST_VUART_GCRA);
-+	reg &= ~AST_VUART_GCRA_VUART_EN;
-+	if (enabled)
-+		reg |= AST_VUART_GCRA_VUART_EN;
-+	writeb(reg, vuart->regs + AST_VUART_GCRA);
-+}
-+
-+static void ast_vuart_set_host_tx_discard(struct ast_vuart *vuart, bool discard)
-+{
-+	u8 reg;
-+
-+	reg = readb(vuart->regs + AST_VUART_GCRA);
-+
-+	/* if the HOST_TX_DISCARD bit is set, discard is *disabled* */
-+	reg &= ~AST_VUART_GCRA_HOST_TX_DISCARD;
-+	if (!discard)
-+		reg |= AST_VUART_GCRA_HOST_TX_DISCARD;
-+
-+	writeb(reg, vuart->regs + AST_VUART_GCRA);
-+}
-+
-+static int ast_vuart_startup(struct uart_port *uart_port)
-+{
-+	struct uart_8250_port *uart_8250_port = up_to_u8250p(uart_port);
-+	struct ast_vuart *vuart = uart_8250_port->port.private_data;
-+	int rc;
-+
-+	rc = serial8250_do_startup(uart_port);
-+	if (rc)
-+		return rc;
-+
-+	ast_vuart_set_host_tx_discard(vuart, false);
-+
-+	return 0;
-+}
-+
-+static void ast_vuart_shutdown(struct uart_port *uart_port)
-+{
-+	struct uart_8250_port *uart_8250_port = up_to_u8250p(uart_port);
-+	struct ast_vuart *vuart = uart_8250_port->port.private_data;
-+
-+	ast_vuart_set_host_tx_discard(vuart, true);
-+
-+	serial8250_do_shutdown(uart_port);
-+}
-+
-+
-+/**
-+ * The device tree parsing code here is heavily based on that of the of_serial
-+ * driver, but we have a few core differences, as we need to use our own
-+ * ioremapping for extra register support
-+ */
-+static int ast_vuart_probe(struct platform_device *pdev)
-+{
-+	struct uart_8250_port port;
-+	struct resource resource;
-+	struct ast_vuart *vuart;
-+	struct device_node *np;
-+	u32 clk, prop;
-+	int rc;
-+
-+	np = pdev->dev.of_node;
-+
-+	vuart = devm_kzalloc(&pdev->dev, sizeof(*vuart), GFP_KERNEL);
-+	if (!vuart)
-+		return -ENOMEM;
-+
-+	vuart->pdev = pdev;
-+	rc = of_address_to_resource(np, 0, &resource);
-+	if (rc) {
-+		dev_warn(&pdev->dev, "invalid address\n");
-+		return rc;
-+	}
-+
-+	/* create our own mapping for VUART-specific registers */
-+	vuart->regs = devm_ioremap_resource(&pdev->dev, &resource);
-+	if (IS_ERR(vuart->regs)) {
-+		dev_warn(&pdev->dev, "failed to map registers\n");
-+		return PTR_ERR(vuart->regs);
-+	}
-+
-+	memset(&port, 0, sizeof(port));
-+	port.port.private_data = vuart;
-+	port.port.membase = vuart->regs;
-+	port.port.mapbase = resource.start;
-+	port.port.mapsize = resource_size(&resource);
-+	port.port.startup = ast_vuart_startup;
-+	port.port.shutdown = ast_vuart_shutdown;
-+
-+	if (of_property_read_u32(np, "clock-frequency", &clk)) {
-+		vuart->clk = devm_clk_get(&pdev->dev, NULL);
-+		if (IS_ERR(vuart->clk)) {
-+			dev_warn(&pdev->dev,
-+				"clk or clock-frequency not defined\n");
-+			return PTR_ERR(vuart->clk);
-+		}
-+
-+		rc = clk_prepare_enable(vuart->clk);
-+		if (rc < 0)
-+			return rc;
-+
-+		clk = clk_get_rate(vuart->clk);
-+	}
-+
-+	/* If current-speed was set, then try not to change it. */
-+	if (of_property_read_u32(np, "current-speed", &prop) == 0)
-+		port.port.custom_divisor = clk / (16 * prop);
-+
-+	/* Check for shifted address mapping */
-+	if (of_property_read_u32(np, "reg-offset", &prop) == 0)
-+		port.port.mapbase += prop;
-+
-+	/* Check for registers offset within the devices address range */
-+	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
-+		port.port.regshift = prop;
-+
-+	/* Check for fifo size */
-+	if (of_property_read_u32(np, "fifo-size", &prop) == 0)
-+		port.port.fifosize = prop;
-+
-+	/* Check for a fixed line number */
-+	rc = of_alias_get_id(np, "serial");
-+	if (rc >= 0)
-+		port.port.line = rc;
-+
-+	port.port.irq = irq_of_parse_and_map(np, 0);
-+	port.port.irqflags = IRQF_SHARED;
-+	port.port.iotype = UPIO_MEM;
-+	if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
-+		switch (prop) {
-+		case 1:
-+			port.port.iotype = UPIO_MEM;
-+			break;
-+		case 4:
-+			port.port.iotype = of_device_is_big_endian(np) ?
-+				       UPIO_MEM32BE : UPIO_MEM32;
-+			break;
-+		default:
-+			dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
-+				 prop);
-+			rc = -EINVAL;
-+			goto err_clk_disable;
-+		}
-+	}
-+
-+	port.port.type = PORT_16550A;
-+	port.port.uartclk = clk;
-+	port.port.flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF
-+		| UPF_FIXED_PORT | UPF_FIXED_TYPE | UPF_NO_THRE_TEST;
-+
-+	if (of_find_property(np, "no-loopback-test", NULL))
-+		port.port.flags |= UPF_SKIP_TEST;
-+
-+	port.port.dev = &pdev->dev;
-+
-+	if (port.port.fifosize)
-+		port.capabilities = UART_CAP_FIFO;
-+
-+	if (of_property_read_bool(pdev->dev.of_node,
-+				  "auto-flow-control"))
-+		port.capabilities |= UART_CAP_AFE;
-+
-+	rc = serial8250_register_8250_port(&port);
-+	if (rc < 0)
-+		goto err_clk_disable;
-+
-+
-+	vuart->line = rc;
-+	ast_vuart_set_enabled(vuart, true);
-+	ast_vuart_set_host_tx_discard(vuart, true);
-+	platform_set_drvdata(pdev, vuart);
-+
-+	/* extra sysfs control */
-+	rc = device_create_file(&pdev->dev, &dev_attr_lpc_address);
-+	if (rc)
-+		dev_warn(&pdev->dev, "can't create lpc_address file\n");
-+	rc = device_create_file(&pdev->dev, &dev_attr_sirq);
-+	if (rc)
-+		dev_warn(&pdev->dev, "can't create sirq file\n");
-+
-+	return 0;
-+
-+err_clk_disable:
-+	if (vuart->clk)
-+		clk_disable_unprepare(vuart->clk);
-+
-+	irq_dispose_mapping(port.port.irq);
-+	return rc;
-+}
-+
-+static int ast_vuart_remove(struct platform_device *pdev)
-+{
-+	struct ast_vuart *vuart = platform_get_drvdata(pdev);
-+
-+	ast_vuart_set_enabled(vuart, false);
-+
-+	if (vuart->clk)
-+		clk_disable_unprepare(vuart->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id ast_vuart_table[] = {
-+	{ .compatible = "aspeed,ast2400-vuart" },
-+	{ .compatible = "aspeed,ast2500-vuart" },
-+	{ },
-+};
-+
-+static struct platform_driver ast_vuart_driver = {
-+	.driver = {
-+		.name = "aspeed-vuart",
-+		.of_match_table = ast_vuart_table,
-+	},
-+	.probe = ast_vuart_probe,
-+	.remove = ast_vuart_remove,
-+};
-+
-+module_platform_driver(ast_vuart_driver);
-+
-+MODULE_AUTHOR("Jeremy Kerr <jk@ozlabs.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Driver for Aspeed VUART device");
--- 
-2.11.0
+As above. I will improve them.
+
+
+> > +
+> > +static int
+> > +mt7530_pad_clk_setup(struct dsa_switch *ds, int mode)
+> > +{
+> > +	struct mt7530_priv *priv = ds->priv;
+> > +	u32 ncpo1, ssc_delta, trgint, i;
+> > +
+> > +	switch (mode) {
+> > +	case PHY_INTERFACE_MODE_RGMII:
+> > +		trgint = 0;
+> > +		ncpo1 = 0x0c80;
+> > +		ssc_delta = 0x87;
+> > +		break;
+> > +	case PHY_INTERFACE_MODE_TRGMII:
+> > +		trgint = 1;
+> > +		ncpo1 = 0x1400;
+> > +		ssc_delta = 0x57;
+> > +		break;
+> > +	default:
+> > +		pr_err("xMII mode %d not supported\n", mode);
+> > +		return -EINVAL;
+> > +	}
+> 
+> You may be able to move this to an adjust_link callback that the PHY
+> library would call when the PHY gets setup and the port is finally used,
+> as opposed to doing this upfront during driver initialization.
+> 
+
+
+Good point. i will follow up
+
+
+> 
+> > +mt7530_setup(struct dsa_switch *ds)
+> > +{
+> > +	struct mt7530_priv *priv = ds->priv;
+> > +	int ret, i, phy_mode;
+> > +	u8  cpup_mask = 0;
+> > +	u32 id, val;
+> > +	struct regmap *regmap;
+> > +	struct device_node *dn;
+> > +
+> > +	/* Make sure that cpu port specfied on the dt is appropriate */
+> > +	if (!dsa_is_cpu_port(ds, MT7530_CPU_PORT)) {
+> > +		dev_err(priv->dev, "port not matched with the CPU port\n");
+> > +		return -EINVAL;
+> > +	}
+> 
+> This is kind of a hard error, in that case, a sensible thing to do could
+> be issue a warning to the user telling that the configuration does not
+> permit the use of Mediatek tags. Your get_tag_protocol() function could
+> then return DSA_TAG_PROTO_NONE here instead of DSA_TAG_PROTO_MTK. It
+> would still allow an user to utilize the switch, and we would know what
+> is wrong with the configuration/board setup though.
+> 
+
+I seems making a hard requirement.
+
+I will improve it with showing warning message if the number of cpu port
+is not right.
+
+It at least allows the other user ports can work in case cpu port
+doesn't work.
+
+
+> > +
+> > +	/* The parent node of master_netdev which holds the common system
+> > +	 * controller also is the container for two GMACs nodes representing
+> > +	 * as two netdev instances.
+> > +	 */
+> > +	dn = ds->master_netdev->dev.of_node->parent;
+> > +	priv->ethernet = syscon_node_to_regmap(dn);
+> > +	if (IS_ERR(priv->ethernet))
+> > +		return PTR_ERR(priv->ethernet);
+> > +
+> > +	regmap = devm_regmap_init(ds->dev, NULL, priv,
+> > +				  &mt7530_regmap_config);
+> > +	if (IS_ERR(regmap))
+> > +		dev_warn(priv->dev, "phy regmap initialization failed");
+> > +
+> > +	phy_mode = of_get_phy_mode(ds->ports[ds->dst->cpu_port].dn);
+> > +	if (phy_mode < 0) {
+> > +		dev_err(priv->dev, "Can't find phy-mode for master device\n");
+> > +		return phy_mode;
+> > +	}
+> > +	dev_info(priv->dev, "phy-mode for master device = %x\n", phy_mode);
+> 
+> An adjust_link() callback which has a proper PHY device structure would
+> be more appropriate to look up the phy_mode rather than doing this here.
+> 
+
+As above. I will follow up 
+
+> [snip]
+> 
+> > +	mt7530_clear(priv, MT7530_MFC, UNU_FFP_MASK);
+> > +
+> > +	/* Fabric setup for the cpu port */
+> > +	for (i = 0; i < MT7530_NUM_PORTS; i++)
+> 
+> Are not you missing an opening parenthesis here in the for() statement?
+> 
+
+It is missing because the following is single statement. 
+I admits it is better to add the parenthesis for readability, so I will
+add it.
+
+> > +		if (dsa_is_cpu_port(ds, i)) {
+> > +			/* Enable Mediatek header mode on the cpu port */
+> > +			mt7530_write(priv, MT7530_PVC_P(i),
+> > +				     PORT_SPEC_TAG);
+> > +
+> > +			/* Setup the MAC by default for the cpu port */
+> > +			mt7530_write(priv, MT7530_PMCR_P(i), PMCR_CPUP_LINK);
+> > +
+> > +			/* Disable auto learning on the cpu port */
+> > +			mt7530_set(priv, MT7530_PSC_P(i), SA_DIS);
+> > +
+> > +			/* Unknown unicast frame fordwarding to the cpu port */
+> > +			mt7530_set(priv, MT7530_MFC, UNU_FFP(BIT(i)));
+> > +
+> > +			/* CPU port gets connected to all user ports of
+> > +			 * the switch
+> > +			 */
+> > +			mt7530_write(priv, MT7530_PCR_P(i),
+> > +				     PCR_MATRIX(ds->enabled_port_mask));
+> > +
+> > +			cpup_mask |= BIT(i);
+> > +		}
+> > +
+> > +	/* Fabric setup for the all user ports */
+> > +	for (i = 0; i < MT7530_NUM_PORTS; i++)
+> > +		if (ds->enabled_port_mask & BIT(i)) {
+> > +			/* Setup the MAC by default for all user ports */
+> > +			mt7530_write(priv, MT7530_PMCR_P(i),
+> > +				     PMCR_USERP_LINK);
+> > +
+> > +			/* The user port gets connected to the cpu port only */
+> > +			mt7530_write(priv, MT7530_PCR_P(i),
+> > +				     PCR_MATRIX(cpup_mask));
+> > +		}
+> 
+> This should be moved to the port_enable() function.
+> 
+
+okay. i will follow up.
+
+> [snip]
+*_poll_timeout
+> > +#define wait_condition_timeout(condition, timeout)			\
+> > +({									\
+> > +	long __ret = 0;							\
+> > +	unsigned long toj;						\
+> > +	toj = jiffies + msecs_to_jiffies(timeout);			\
+> > +									\
+> > +	for ( ; !(condition) && !time_after_eq(jiffies, toj) ; )	\
+> > +		cond_resched();						\
+> > +									\
+> > +	if (time_after_eq(jiffies, toj))				\
+> > +		__ret = -ETIMEDOUT;					\
+> > +	__ret;								\
+> > +})
+> 
+> Can you use read*_poll_timeout() instead of this?
+> 
+
+I will try to reuse them
+
+the function pointer for op in *_poll_timeout seems only accepting
+only single argument for address. which implies I need creating another
+function for mt7530_readX() used by *_poll_timeout and keeping another
+static pointer to mt7530 internal for mt7530_readX() to work.
+
+
+> > +/* struct mt7530_priv -	This is the main datasructure for holding the state
+> > + *			of the driver
+> > + * @dev:		The device pointer
+> > + * @ds:			The pointer to the dsa core structure
+> > + * @bus:		The bus used for the device and built-in PHY
+> > + * @ethsys:		The regmap used for enabling the necessary PLL
+> > + * @ethernet:		The regmap used for access TRGMII-based registers
+> > + * @core_pwr:		The power supplied into the core
+> > + * @io_pwr:		The power supplied into the I/O
+> > + * @mcm:		Flag for distinguishing if standalone IC or module
+> > + *			coupling
+> > + * @reset:		The descriptor for GPIO line tied to its reset pin
+> > + * @phy_mode:		The xMII for cpu port used
+> > + * @ports:		Holding the state amongs ports
+> > + * @reg_mutex:		The lock for protecting among process accessing
+> > + *			registers
+> > + */
+> 
+> Kudos for using kernel doc here.
