@@ -1,71 +1,143 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH 7/15] dt-bindings: display: sun4i: Add
- allwinner,tcon-channel property
-Date: Tue, 28 Mar 2017 18:05:08 +0800
-Message-ID: <20170328100519.145DE203419@relay.mailchannels.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Daniel Vetter <daniel.vetter@intel.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v2 3/3] device property: fwnode_property_read_string_array() returns nr of strings
+Date: Tue, 28 Mar 2017 15:22:19 +0300
+Message-ID: <1490703739-28270-4-git-send-email-sakari.ailus@linux.intel.com>
+References: <1490703739-28270-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490703739-28270-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CjIwMTflubQz5pyIMjfml6Ug5LiK5Y2INToxMeS6jiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
-YXJkQGZyZWUtZWxlY3Ryb25zLmNvbT7lhpnpgZPvvJoKPgo+IE9uIEZyaSwgTWFyIDE3LCAyMDE3
-IGF0IDExOjM0OjQ1QU0gKzA4MDAsIENoZW4tWXUgVHNhaSB3cm90ZTogCj4gPiBPbiBUaHUsIE1h
-ciAxNiwgMjAxNyBhdCAxOjM3IEFNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90
-ZTogCj4gPiA+IE9uIFR1ZSwgTWFyIDA3LCAyMDE3IGF0IDA5OjU2OjI2QU0gKzAxMDAsIE1heGlt
-ZSBSaXBhcmQgd3JvdGU6IAo+ID4gPj4gVGhlIEFsbHdpbm5lciBUaW1pbmdzIENvbnRyb2xsZXIg
-aGFzIHR3bywgbXV0dWFsbHkgZXhjbHVzaXZlLCBjaGFubmVscy4gCj4gPiA+PiBXaGVuIHRoZSBi
-aW5kaW5nIGhhcyBiZWVuIGludHJvZHVjZWQsIGl0IHdhcyBhc3N1bWVkIHRoYXQgdGhlcmUgd291
-bGQgYmUgCj4gPiA+PiBvbmx5IGEgc2luZ2xlIHVzZXIgcGVyIGNoYW5uZWwgaW4gdGhlIHN5c3Rl
-bS4gCj4gPiA+PiAKPiA+ID4+IFdoaWxlIHRoaXMgaXMgbGlrZWx5IGZvciB0aGUgY2hhbm5lbCAw
-IHdoaWNoIG9ubHkgY29ubmVjdHMgdG8gTENEIGRpc3BsYXlzLCAKPiA+ID4+IGl0IHR1cm5zIG91
-dCB0aGF0IHRoZSBjaGFubmVsIDEgY2FuIGJlIGNvbm5lY3RlZCB0byBtdWx0aXBsZSBjb250cm9s
-bGVycyBpbiAKPiA+ID4+IHRoZSBTb0MgKEhETUkgYW5kIFRWIGVuY29kZXJzIGZvciBleGFtcGxl
-KS4gQW5kIHdoaWxlIHRoZSBzaW11bHRhbmVvdXMgdXNlIAo+ID4gPj4gb2YgSERNSSBhbmQgVFYg
-b3V0cHV0cyBjYW5ub3QgYmUgYWNoaWV2ZWQsIHN3aXRjaGluZyBmcm9tIG9uZSB0byB0aGUgb3Ro
-ZXIgCj4gPiA+PiBhdCBydW50aW1lIGRlZmluaXRlbHkgc291bmRzIHBsYXVzaWJsZS4gCj4gPiA+
-PiAKPiA+ID4+IEFkZCBhbiBleHRyYSBwcm9wZXJ0eSwgYWxsd2lubmVyLHRjb24tY2hhbm5lbCwg
-dG8gc3BlY2lmeSBmb3IgYSBnaXZlbiAKPiA+ID4+IGVuZHBvaW50IHdoaWNoIFRDT04gY2hhbm5l
-bCBpdCBpcyBjb25uZWN0ZWQgdG8sIHdoaWxlIGZhbGxpbmcgYmFjayB0byB0aGUgCj4gPiA+PiBw
-cmV2aW91cyBtZWNoYW5pc20gaWYgdGhhdCBwcm9wZXJ0eSBpcyBtaXNzaW5nLiAKPiA+ID4gCj4g
-PiA+IEkgdGhpbmsgcGVyaGFwcyBUQ09OIGNoYW5uZWxzIHNob3VsZCBoYXZlIGJlZW4gcG9ydHMg
-cmF0aGVyIHRoYW4gCj4gPiA+IGVuZHBvaW50cy4gVGhlIGZhY3QgdGhhdCB0aGUgY2hhbm5lbHMg
-YXJlIG11dHVhbGx5IGV4Y2x1c2l2ZSBjYW4gYmUgCj4gPiA+IGhhbmRsZWQgaW4gdGhlIGRyaXZl
-ciBhbmQgZG9lc24ndCByZWFsbHkgbWF0dGVyIGluIHRoZSBiaW5kaW5nLiBIb3cgCj4gPiA+IHBh
-aW5mdWwgd291bGQgaXQgYmUgdG8gcmV3b3JrIHRoaW5ncyB0byBtb3ZlIFRDT04gY2hhbm5lbCAx
-IGZyb20gcG9ydCAwLCAKPiA+ID4gZW5kcG9pbnQgMSB0byBwb3J0IDE/IAo+ID4gCj4gPiBIYXZp
-bmcgYSBzZXBhcmF0ZSBvdXRwdXQgcG9ydCBmb3IgY2hhbm5lbCAxIHdhcyBvbmUgb3B0aW9uIHdl
-IGRpc2N1c3NlZC4gCj4gPiBIb3dldmVyIGl0IHdvdWxkbid0IHdvcmsgd2VsbCB3aXRoIHRoZSBr
-ZXJuZWwncyBvZl9ncmFwaCBiYXNlZCBjcnRjIAo+ID4gZGV0ZWN0aW9uIChkcm1fb2ZfZmluZF9w
-b3NzaWJsZV9jcnRjcyAvIGRybV9vZl9maW5kX3Bvc3NpYmxlX2NydGNzKSwgCj4gPiB3aGljaCBo
-YXMgdGhlIGNydGNzIGJvdW5kIHZpYSB0aGUgb3V0cHV0IHBvcnQuIEFzIHRoZSBsb2dpYyBpcyB1
-c2VkIAo+ID4gYnkgbXVsdGlwbGUgZHJpdmVycywgSSdtIG5vdCBzdXJlIGl0J3MgZWFzeSB0byBy
-ZXdvcmsgb3IgdGVzdC4gCj4KPiBDYW4ndCB3ZSB1c2UgYSBkaWZmZXJlbnQgbG9naWMgdGhhbiBk
-cm1fb2ZfZmluZF9wb3NzaWJsZV9jcnRjcyB0byBmaWxsIAo+IHRoZSBzYW1lIHJvbGU/IAo+Cj4g
-PiBBbHNvLCB3ZSBzdGlsbCBoYXZlIHRvIHN1cHBvcnQgb2xkIGRldmljZSB0cmVlcyB1c2luZyBj
-aGFubmVsIDEgZnJvbSAKPiA+IG91dHB1dCBwb3J0IDAgZW5kcG9pbnQgMS4gVGhpcyBpcyB0aGUg
-VFYgZW5jb2RlciBvbiBzdW41aSAoQTEwcy9BMTMvUjgpLiAKCkFuZCBmcm9tIEE4M1Qgb24gd2Ug
-d2lsbCBmYWNlIGNoYW5uZWwtMSBvbmx5IFRDT05zLiwgd2hpY2ggZG8gbm90CmhhdmUgY2hhbm5l
-bCAwIGF0IGFsbCBpbiBoYXJkd2FyZS4KCj4KPiBXZSBjb3VsZCBwcm9iYWJseSB3b3JrIHNvbWV0
-aGluZyBvdXQgaWYgd2UgZ28gdGhhdCB3YXkgdG8gZGVhbCB3aXRoIAo+IG9sZCBEVHMgdGhvdWdo
-LiAKPgo+IE1heGltZSAKPgo+IC0tIAo+IE1heGltZSBSaXBhcmQsIEZyZWUgRWxlY3Ryb25zIAo+
-IEVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcgCj4gaHR0cDovL2ZyZWUtZWxl
-Y3Ryb25zLmNvbQo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18gCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QgCj4gbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnIAo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbCAKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+Functionally fwnode_property_read_string_array() should match
+of_property_read_string_array() and work as a drop-in substitute for the
+latter. of_property_read_string_array() returns the number of strings read
+if the target string pointer array is non-NULL. Make
+fwnode_property_read_string_array() do the same.
+
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ drivers/acpi/property.c | 22 +++++++++++++++++-----
+ drivers/base/property.c | 12 ++++++------
+ 2 files changed, 23 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index 3afddcd..06f8fda 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -699,6 +699,8 @@ static int acpi_data_prop_read_single(struct acpi_device_data *data,
+ 			return ret;
+ 
+ 		*(char **)val = obj->string.pointer;
++
++		return 1;
+ 	} else {
+ 		ret = -EINVAL;
+ 	}
+@@ -708,7 +710,15 @@ static int acpi_data_prop_read_single(struct acpi_device_data *data,
+ int acpi_dev_prop_read_single(struct acpi_device *adev, const char *propname,
+ 			      enum dev_prop_type proptype, void *val)
+ {
+-	return adev ? acpi_data_prop_read_single(&adev->data, propname, proptype, val) : -EINVAL;
++	int ret;
++
++	if (!adev)
++		return -EINVAL;
++
++	ret = acpi_data_prop_read_single(&adev->data, propname, proptype, val);
++	if (ret < 0 || proptype != ACPI_TYPE_STRING)
++		return ret;
++	return 0;
+ }
+ 
+ static int acpi_copy_property_array_u8(const union acpi_object *items, u8 *val,
+@@ -784,7 +794,7 @@ static int acpi_copy_property_array_string(const union acpi_object *items,
+ 
+ 		val[i] = items[i].string.pointer;
+ 	}
+-	return 0;
++	return nval;
+ }
+ 
+ static int acpi_data_prop_read(struct acpi_device_data *data,
+@@ -798,7 +808,7 @@ static int acpi_data_prop_read(struct acpi_device_data *data,
+ 
+ 	if (val && nval == 1) {
+ 		ret = acpi_data_prop_read_single(data, propname, proptype, val);
+-		if (!ret)
++		if (ret >= 0)
+ 			return ret;
+ 	}
+ 
+@@ -809,7 +819,7 @@ static int acpi_data_prop_read(struct acpi_device_data *data,
+ 	if (!val)
+ 		return obj->package.count;
+ 
+-	if (nval > obj->package.count)
++	if (proptype != DEV_PROP_STRING && nval > obj->package.count)
+ 		return -EOVERFLOW;
+ 	else if (nval <= 0)
+ 		return -EINVAL;
+@@ -830,7 +840,9 @@ static int acpi_data_prop_read(struct acpi_device_data *data,
+ 		ret = acpi_copy_property_array_u64(items, (u64 *)val, nval);
+ 		break;
+ 	case DEV_PROP_STRING:
+-		ret = acpi_copy_property_array_string(items, (char **)val, nval);
++		ret = acpi_copy_property_array_string(
++			items, (char **)val,
++			min_t(u32, nval, obj->package.count));
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 686e985..b517485 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -176,7 +176,7 @@ static int pset_prop_read_string_array(struct property_set *pset,
+ 
+ 	memcpy(strings, pointer, length);
+ 
+-	return 0;
++	return array_len;
+ }
+ 
+ static int pset_prop_read_string(struct property_set *pset,
+@@ -362,8 +362,8 @@ EXPORT_SYMBOL_GPL(device_property_read_u64_array);
+  * Function reads an array of string properties with @propname from the device
+  * firmware description and stores them to @val if found.
+  *
+- * Return: number of values if @val was %NULL,
+- *         %0 if the property was found (success),
++ * Return: number of values read on success if @val is non-NULL,
++ *	   number of values available on success if @val is NULL,
+  *	   %-EINVAL if given arguments are not valid,
+  *	   %-ENODATA if the property does not have a value,
+  *	   %-EPROTO or %-EILSEQ if the property is not an array of strings,
+@@ -603,8 +603,8 @@ static int __fwnode_property_read_string(struct fwnode_handle *fwnode,
+  * Read an string list property @propname from the given firmware node and store
+  * them to @val if found.
+  *
+- * Return: number of values if @val was %NULL,
+- *         %0 if the property was found (success),
++ * Return: number of values read on success if @val is non-NULL,
++ *	   number of values available on success if @val is NULL,
+  *	   %-EINVAL if given arguments are not valid,
+  *	   %-ENODATA if the property does not have a value,
+  *	   %-EPROTO or %-EILSEQ if the property is not an array of strings,
+@@ -651,7 +651,7 @@ int fwnode_property_read_string(struct fwnode_handle *fwnode,
+ 	    !IS_ERR_OR_NULL(fwnode->secondary))
+ 		ret = __fwnode_property_read_string(fwnode->secondary,
+ 						    propname, val);
+-	return ret;
++	return ret < 0 ? ret : 0;
+ }
+ EXPORT_SYMBOL_GPL(fwnode_property_read_string);
+ 
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
