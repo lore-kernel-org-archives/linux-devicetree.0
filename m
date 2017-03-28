@@ -1,7 +1,8 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v6 03/39] [media] dt/bindings: Add bindings for OV5640
-Date: Mon, 27 Mar 2017 17:40:20 -0700
-Message-ID: <1490661656-10318-4-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v6 04/39] ARM: dts: imx6qdl: Add compatible, clocks,
+ irqs to MIPI CSI-2 node
+Date: Mon, 27 Mar 2017 17:40:21 -0700
+Message-ID: <1490661656-10318-5-git-send-email-steve_longerbeam@mentor.com>
 References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,64 +22,32 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengut
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the OV5640 camera sensor.
+Add to the MIPI CSI2 receiver node: compatible strings,
+interrupt sources, and clocks.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- .../devicetree/bindings/media/i2c/ov5640.txt       | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
+ arch/arm/boot/dts/imx6qdl.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
-new file mode 100644
-index 0000000..540b36c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
-@@ -0,0 +1,45 @@
-+* Omnivision OV5640 MIPI CSI-2 sensor
-+
-+Required Properties:
-+- compatible: should be "ovti,ov5640"
-+- clocks: reference to the xclk input clock.
-+- clock-names: should be "xclk".
-+- DOVDD-supply: Digital I/O voltage supply, 1.8 volts
-+- AVDD-supply: Analog voltage supply, 2.8 volts
-+- DVDD-supply: Digital core voltage supply, 1.5 volts
-+
-+Optional Properties:
-+- reset-gpios: reference to the GPIO connected to the reset pin, if any.
-+	       This is an active low signal to the OV5640.
-+- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
-+		   if any. This is an active high signal to the OV5640.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+&i2c1 {
-+	ov5640: camera@3c {
-+		compatible = "ovti,ov5640";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov5640>;
-+		reg = <0x3c>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		clock-names = "xclk";
-+		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
-+		AVDD-supply = <&vgen3_reg>;  /* 2.8v */
-+		DVDD-supply = <&vgen2_reg>;  /* 1.5v */
-+		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
-+
-+		port {
-+			ov5640_to_mipi_csi2: endpoint {
-+				remote-endpoint = <&mipi_csi2_from_ov5640>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+	};
-+};
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 6d7bf64..d28a413 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1134,7 +1134,14 @@
+ 			};
+ 
+ 			mipi_csi: mipi@021dc000 {
++				compatible = "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
+ 				reg = <0x021dc000 0x4000>;
++				interrupts = <0 100 0x04>, <0 101 0x04>;
++				clocks = <&clks IMX6QDL_CLK_HSI_TX>,
++					 <&clks IMX6QDL_CLK_VIDEO_27M>,
++					 <&clks IMX6QDL_CLK_EIM_PODF>;
++				clock-names = "dphy", "ref", "pix";
++				status = "disabled";
+ 			};
+ 
+ 			mipi_dsi: mipi@021e0000 {
 -- 
 2.7.4
