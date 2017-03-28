@@ -1,103 +1,87 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
-Date: Tue, 28 Mar 2017 17:26:32 +0900
-Message-ID: <58DA1E38.50907@samsung.com>
-References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
- <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
- <93e79e92-a102-e931-8d63-843031848888@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <93e79e92-a102-e931-8d63-843031848888@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: javier@osg.samsung.com, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, a.hajda@samsung.com, andi.shyti@samsung.com, LW@KARO-electronics.de
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv6 04/14] ov7670: get xclk
+Date: Tue, 28 Mar 2017 10:23:37 +0200
+Message-ID: <20170328082347.11159-5-hverkuil@xs4all.nl>
+References: <20170328082347.11159-1-hverkuil@xs4all.nl>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170328082347.11159-1-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Merged.
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Thanks,
-Inki Dae
+Get the clock for this sensor.
 
-2017년 03월 22일 10:36에 Hoegeun Kwon 이(가) 쓴 글:
-> Hi inki,
-> 
-> Could you check the this patch?
-> For reference, patch 1/5 and 2/5 have already been applied to Krzysztof tree.
-> 
-> Best regards,
-> Hoegeun
-> 
-> 
-> On 03/08/2017 01:54 PM, Hoegeun Kwon wrote:
->> The dsi + panel is a parental relationship, so OF grpah is not needed.
->> Therefore, the current dsi_parse_dt function will throw an error,
->> because there is no linked OF graph for the case fimd + dsi + panel.
->>
->> Parse the Pll burst and esc clock frequency properties in dsi_parse_dt()
->> and create a bridge_node only if there is an OF graph associated with dsi.
->>
->> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
->> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
->> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
->> ---
->>   drivers/gpu/drm/exynos/exynos_drm_dsi.c | 32 ++++++++------------------------
->>   1 file changed, 8 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> index f5c04d0..2d4e118 100644
->> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> @@ -1652,39 +1652,23 @@ static int exynos_dsi_parse_dt(struct exynos_dsi *dsi)
->>       if (ret < 0)
->>           return ret;
->>   -    ep = of_graph_get_endpoint_by_regs(node, DSI_PORT_OUT, 0);
->> -    if (!ep) {
->> -        dev_err(dev, "no output port with endpoint specified\n");
->> -        return -EINVAL;
->> -    }
->> -
->> -    ret = exynos_dsi_of_read_u32(ep, "samsung,burst-clock-frequency",
->> +    ret = exynos_dsi_of_read_u32(node, "samsung,burst-clock-frequency",
->>                        &dsi->burst_clk_rate);
->>       if (ret < 0)
->> -        goto end;
->> +        return ret;
->>   -    ret = exynos_dsi_of_read_u32(ep, "samsung,esc-clock-frequency",
->> +    ret = exynos_dsi_of_read_u32(node, "samsung,esc-clock-frequency",
->>                        &dsi->esc_clk_rate);
->>       if (ret < 0)
->> -        goto end;
->> -
->> -    of_node_put(ep);
->> +        return ret;
->>         ep = of_graph_get_next_endpoint(node, NULL);
->> -    if (!ep) {
->> -        ret = -EINVAL;
->> -        goto end;
->> -    }
->> -
->> -    dsi->bridge_node = of_graph_get_remote_port_parent(ep);
->> -    if (!dsi->bridge_node) {
->> -        ret = -EINVAL;
->> -        goto end;
->> +    if (ep) {
->> +        dsi->bridge_node = of_graph_get_remote_port_parent(ep);
->> +        of_node_put(ep);
->>       }
->> -end:
->> -    of_node_put(ep);
->>   -    return ret;
->> +    return 0;
->>   }
->>     static int exynos_dsi_bind(struct device *dev, struct device *master,
-> 
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/i2c/ov7670.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+index 50e4466a2b37..912ff09c6100 100644
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -10,6 +10,7 @@
+  * This file may be distributed under the terms of the GNU General
+  * Public License, version 2.
+  */
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -227,6 +228,7 @@ struct ov7670_info {
+ 		struct v4l2_ctrl *hue;
+ 	};
+ 	struct ov7670_format_struct *fmt;  /* Current format */
++	struct clk *clk;
+ 	int min_width;			/* Filter out smaller sizes */
+ 	int min_height;			/* Filter out smaller sizes */
+ 	int clock_speed;		/* External clock speed (MHz) */
+@@ -1587,13 +1589,24 @@ static int ov7670_probe(struct i2c_client *client,
+ 			info->pclk_hb_disable = true;
+ 	}
+ 
++	info->clk = devm_clk_get(&client->dev, "xclk");
++	if (IS_ERR(info->clk))
++		return -EPROBE_DEFER;
++	clk_prepare_enable(info->clk);
++
++	info->clock_speed = clk_get_rate(info->clk) / 1000000;
++	if (info->clock_speed < 10 || info->clock_speed > 48) {
++		ret = -EINVAL;
++		goto clk_disable;
++	}
++
+ 	/* Make sure it's an ov7670 */
+ 	ret = ov7670_detect(sd);
+ 	if (ret) {
+ 		v4l_dbg(1, debug, client,
+ 			"chip found @ 0x%x (%s) is not an ov7670 chip.\n",
+ 			client->addr << 1, client->adapter->name);
+-		return ret;
++		goto clk_disable;
+ 	}
+ 	v4l_info(client, "chip found @ 0x%02x (%s)\n",
+ 			client->addr << 1, client->adapter->name);
+@@ -1656,6 +1669,8 @@ static int ov7670_probe(struct i2c_client *client,
+ 
+ hdl_free:
+ 	v4l2_ctrl_handler_free(&info->hdl);
++clk_disable:
++	clk_disable_unprepare(info->clk);
+ 	return ret;
+ }
+ 
+@@ -1667,6 +1682,7 @@ static int ov7670_remove(struct i2c_client *client)
+ 
+ 	v4l2_device_unregister_subdev(sd);
+ 	v4l2_ctrl_handler_free(&info->hdl);
++	clk_disable_unprepare(info->clk);
+ 	return 0;
+ }
+ 
+-- 
+2.11.0
