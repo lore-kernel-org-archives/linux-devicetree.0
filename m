@@ -1,86 +1,175 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 38/39] media: imx-ic-prpencvf: add frame size enumeration
-Date: Mon, 27 Mar 2017 17:40:55 -0700
-Message-ID: <1490661656-10318-39-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH v6 29/39] media: imx: csi: add __csi_get_fmt
+Date: Mon, 27 Mar 2017 17:40:46 -0700
+Message-ID: <1490661656-10318-30-git-send-email-steve_longerbeam@mentor.com>
 References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Add frame size enumeration operation. The PRP ENC/VF subdevices
-are scalers, so they can output a continuous range of widths/
-heights on their source pads.
+Add __csi_get_fmt() and use it to return the correct mbus format
+(active or try) in get_fmt. Use it in other places as well.
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Suggested-by: Russell King <linux@armlinux.org.uk>
 ---
- drivers/staging/media/imx/imx-ic-prpencvf.c | 40 +++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/staging/media/imx/imx-media-csi.c | 61 ++++++++++++++++++++++++-------
+ 1 file changed, 47 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
-index 4123b03..860b406 100644
---- a/drivers/staging/media/imx/imx-ic-prpencvf.c
-+++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
-@@ -875,6 +875,45 @@ static int prp_set_fmt(struct v4l2_subdev *sd,
- 	return ret;
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 730966b..f4c6a33 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -843,13 +843,26 @@ static int csi_eof_isr(struct v4l2_subdev *sd, u32 status, bool *handled)
+ 	return 0;
  }
  
-+static int prp_enum_frame_size(struct v4l2_subdev *sd,
-+			       struct v4l2_subdev_pad_config *cfg,
-+			       struct v4l2_subdev_frame_size_enum *fse)
+-static int csi_try_crop(struct csi_priv *priv, struct v4l2_rect *crop,
++static struct v4l2_mbus_framefmt *
++__csi_get_fmt(struct csi_priv *priv, struct v4l2_subdev_pad_config *cfg,
++	      unsigned int pad, enum v4l2_subdev_format_whence which)
 +{
-+	struct prp_priv *priv = sd_to_priv(sd);
-+	struct v4l2_subdev_format format = {0};
-+	const struct imx_media_pixfmt *cc;
++	if (which == V4L2_SUBDEV_FORMAT_TRY)
++		return v4l2_subdev_get_try_format(&priv->sd, cfg, pad);
++	else
++		return &priv->format_mbus[pad];
++}
++
++static int csi_try_crop(struct csi_priv *priv,
++			struct v4l2_rect *crop,
++			struct v4l2_subdev_pad_config *cfg,
++			enum v4l2_subdev_format_whence which,
+ 			struct imx_media_subdev *sensor)
+ {
+ 	struct v4l2_of_endpoint *sensor_ep;
+ 	struct v4l2_mbus_framefmt *infmt;
+ 
+-	infmt = &priv->format_mbus[CSI_SINK_PAD];
++	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, which);
+ 	sensor_ep = &sensor->sensor_ep;
+ 
+ 	crop->width = min_t(__u32, infmt->width, crop->width);
+@@ -899,17 +912,24 @@ static int csi_get_fmt(struct v4l2_subdev *sd,
+ 		       struct v4l2_subdev_format *sdformat)
+ {
+ 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
++	struct v4l2_mbus_framefmt *fmt;
 +	int ret = 0;
-+
-+	if (fse->pad >= PRPENCVF_NUM_PADS || fse->index != 0)
-+		return -EINVAL;
-+
-+	mutex_lock(&priv->lock);
-+
-+	format.pad = fse->pad;
-+	format.which = fse->which;
-+	format.format.code = fse->code;
-+	format.format.width = 1;
-+	format.format.height = 1;
-+	prp_try_fmt(priv, cfg, &format, &cc);
-+	fse->min_width = format.format.width;
-+	fse->min_height = format.format.height;
-+
-+	if (format.format.code != fse->code) {
+ 
+ 	if (sdformat->pad >= CSI_NUM_PADS)
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&priv->lock);
+ 
+-	sdformat->format = priv->format_mbus[sdformat->pad];
++	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
++	if (!fmt) {
 +		ret = -EINVAL;
 +		goto out;
 +	}
-+
-+	format.format.code = fse->code;
-+	format.format.width = -1;
-+	format.format.height = -1;
-+	prp_try_fmt(priv, cfg, &format, &cc);
-+	fse->max_width = format.format.width;
-+	fse->max_height = format.format.height;
-+out:
-+	mutex_unlock(&priv->lock);
-+	return ret;
-+}
-+
- static int prp_link_setup(struct media_entity *entity,
- 			  const struct media_pad *local,
- 			  const struct media_pad *remote, u32 flags)
-@@ -1125,6 +1164,7 @@ static void prp_unregistered(struct v4l2_subdev *sd)
  
- static struct v4l2_subdev_pad_ops prp_pad_ops = {
- 	.enum_mbus_code = prp_enum_mbus_code,
-+	.enum_frame_size = prp_enum_frame_size,
- 	.get_fmt = prp_get_fmt,
- 	.set_fmt = prp_set_fmt,
- 	.link_validate = prp_link_validate,
++	sdformat->format = *fmt;
++out:
+ 	mutex_unlock(&priv->lock);
+-
+-	return 0;
++	return ret;
+ }
+ 
+ static int csi_set_fmt(struct v4l2_subdev *sd,
+@@ -940,8 +960,6 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 		goto out;
+ 	}
+ 
+-	infmt = &priv->format_mbus[CSI_SINK_PAD];
+-
+ 	v4l_bound_align_image(&sdformat->format.width, MIN_W, MAX_W,
+ 			      W_ALIGN, &sdformat->format.height,
+ 			      MIN_H, MAX_H, H_ALIGN, S_ALIGN);
+@@ -949,6 +967,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 	switch (sdformat->pad) {
+ 	case CSI_SRC_PAD_DIRECT:
+ 	case CSI_SRC_PAD_IDMAC:
++		infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sdformat->which);
++
+ 		if (sdformat->format.width < priv->crop.width * 3 / 4)
+ 			sdformat->format.width = priv->crop.width / 2;
+ 		else
+@@ -1007,7 +1027,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 		crop.top = 0;
+ 		crop.width = sdformat->format.width;
+ 		crop.height = sdformat->format.height;
+-		ret = csi_try_crop(priv, &crop, sensor);
++		ret = csi_try_crop(priv, &crop, cfg,
++				   sdformat->which, sensor);
+ 		if (ret)
+ 			goto out;
+ 
+@@ -1052,7 +1073,11 @@ static int csi_get_selection(struct v4l2_subdev *sd,
+ 
+ 	mutex_lock(&priv->lock);
+ 
+-	infmt = &priv->format_mbus[CSI_SINK_PAD];
++	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sel->which);
++	if (!infmt) {
++		ret = -EINVAL;
++		goto out;
++	}
+ 
+ 	switch (sel->target) {
+ 	case V4L2_SEL_TGT_CROP_BOUNDS:
+@@ -1062,12 +1087,20 @@ static int csi_get_selection(struct v4l2_subdev *sd,
+ 		sel->r.height = infmt->height;
+ 		break;
+ 	case V4L2_SEL_TGT_CROP:
+-		sel->r = priv->crop;
++		if (sel->which == V4L2_SUBDEV_FORMAT_TRY) {
++			struct v4l2_rect *try_crop =
++				v4l2_subdev_get_try_crop(&priv->sd,
++							 cfg, sel->pad);
++			sel->r = *try_crop;
++		} else {
++			sel->r = priv->crop;
++		}
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+ 
++out:
+ 	mutex_unlock(&priv->lock);
+ 	return ret;
+ }
+@@ -1077,7 +1110,6 @@ static int csi_set_selection(struct v4l2_subdev *sd,
+ 			     struct v4l2_subdev_selection *sel)
+ {
+ 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+-	struct v4l2_mbus_framefmt *outfmt;
+ 	struct imx_media_subdev *sensor;
+ 	int ret = 0;
+ 
+@@ -1111,15 +1143,16 @@ static int csi_set_selection(struct v4l2_subdev *sd,
+ 		goto out;
+ 	}
+ 
+-	outfmt = &priv->format_mbus[sel->pad];
+-
+-	ret = csi_try_crop(priv, &sel->r, sensor);
++	ret = csi_try_crop(priv, &sel->r, cfg, sel->which, sensor);
+ 	if (ret)
+ 		goto out;
+ 
+ 	if (sel->which == V4L2_SUBDEV_FORMAT_TRY) {
+ 		cfg->try_crop = sel->r;
+ 	} else {
++		struct v4l2_mbus_framefmt *outfmt =
++			&priv->format_mbus[sel->pad];
++
+ 		priv->crop = sel->r;
+ 		/* Update the source format */
+ 		outfmt->width = sel->r.width;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
