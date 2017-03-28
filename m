@@ -1,51 +1,199 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v6 20/39] media: imx: Add Capture Device Interface
-Date: Mon, 27 Mar 2017 17:40:37 -0700
-Message-ID: <1490661656-10318-21-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 23/39] media: imx: Add IC subdev drivers
+Date: Mon, 27 Mar 2017 17:40:40 -0700
+Message-ID: <1490661656-10318-24-git-send-email-steve_longerbeam@mentor.com>
 References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the capture device interface driver that provides the v4l2
-user interface. Frames can be received from various sources:
+This is a set of three media entity subdevice drivers for the i.MX
+Image Converter:
 
-- directly from CSI for capturing unconverted images directly from
-  camera sensors.
+- Pre-process Router: Takes input frames from CSI0, CSI1, or VDIC.
+  Two output pads enable either or both of the preprocess tasks
+  below. If the input is from one of the CSIs, both proprocess task
+  links can be enabled to process frames from that CSI simultaneously.
+  If the input is the VDIC, only the Pre-processing Viewfinder task
+  link can be enabled.
 
-- from the IC pre-process encode task.
+- Pre-processing Encode task: video frames are routed directly from
+  the CSI and can be scaled, color-space converted, and rotated.
+  Scaled output is limited to 1024x1024 resolution. Output frames
+  are routed to the capture device.
 
-- from the IC pre-process viewfinder task.
+- Pre-processing Viewfinder task: this task can perform the same
+  conversions as the pre-process encode task, but in addition can
+  be used for hardware motion compensated deinterlacing. Frames can
+  come either directly from the CSI or from the VDIC. Scaled output
+  is limited to 1024x1024 resolution. Output frames are routed to
+  the capture device.
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/staging/media/imx/Makefile            |   1 +
- drivers/staging/media/imx/imx-media-capture.c | 663 ++++++++++++++++++++++++++
- 2 files changed, 664 insertions(+)
- create mode 100644 drivers/staging/media/imx/imx-media-capture.c
+ drivers/staging/media/imx/Makefile          |    2 +
+ drivers/staging/media/imx/imx-ic-common.c   |  113 +++
+ drivers/staging/media/imx/imx-ic-prp.c      |  434 ++++++++++
+ drivers/staging/media/imx/imx-ic-prpencvf.c | 1170 +++++++++++++++++++++++++++
+ drivers/staging/media/imx/imx-ic.h          |   38 +
+ 5 files changed, 1757 insertions(+)
+ create mode 100644 drivers/staging/media/imx/imx-ic-common.c
+ create mode 100644 drivers/staging/media/imx/imx-ic-prp.c
+ create mode 100644 drivers/staging/media/imx/imx-ic-prpencvf.c
+ create mode 100644 drivers/staging/media/imx/imx-ic.h
 
 diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
-index ddd7d94..4606a3a 100644
+index 1f01520..878a126 100644
 --- a/drivers/staging/media/imx/Makefile
 +++ b/drivers/staging/media/imx/Makefile
-@@ -3,3 +3,4 @@ imx-media-common-objs := imx-media-utils.o imx-media-fim.o
+@@ -1,9 +1,11 @@
+ imx-media-objs := imx-media-dev.o imx-media-internal-sd.o imx-media-of.o
+ imx-media-common-objs := imx-media-utils.o imx-media-fim.o
++imx-media-ic-objs := imx-ic-common.o imx-ic-prp.o imx-ic-prpencvf.o
  
  obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media.o
  obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-common.o
-+obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-capture.o
-diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
+ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-capture.o
+ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-vdic.o
++obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-ic.o
+ 
+ obj-$(CONFIG_VIDEO_IMX_CSI) += imx-media-csi.o
+diff --git a/drivers/staging/media/imx/imx-ic-common.c b/drivers/staging/media/imx/imx-ic-common.c
 new file mode 100644
-index 0000000..3a09710
+index 0000000..cfdd490
 --- /dev/null
-+++ b/drivers/staging/media/imx/imx-media-capture.c
-@@ -0,0 +1,663 @@
++++ b/drivers/staging/media/imx/imx-ic-common.c
+@@ -0,0 +1,113 @@
 +/*
-+ * Video Capture Subdev for Freescale i.MX5/6 SOC
++ * V4L2 Image Converter Subdev for Freescale i.MX5/6 SOC
 + *
-+ * Copyright (c) 2012-2016 Mentor Graphics Inc.
++ * Copyright (c) 2014-2016 Mentor Graphics Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <media/v4l2-device.h>
++#include <media/v4l2-subdev.h>
++#include "imx-media.h"
++#include "imx-ic.h"
++
++#define IC_TASK_PRP IC_NUM_TASKS
++#define IC_NUM_OPS  (IC_NUM_TASKS + 1)
++
++static struct imx_ic_ops *ic_ops[IC_NUM_OPS] = {
++	[IC_TASK_PRP]            = &imx_ic_prp_ops,
++	[IC_TASK_ENCODER]        = &imx_ic_prpencvf_ops,
++	[IC_TASK_VIEWFINDER]     = &imx_ic_prpencvf_ops,
++};
++
++static int imx_ic_probe(struct platform_device *pdev)
++{
++	struct imx_media_internal_sd_platformdata *pdata;
++	struct imx_ic_priv *priv;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, &priv->sd);
++	priv->dev = &pdev->dev;
++
++	/* get our ipu_id, grp_id and IC task id */
++	pdata = priv->dev->platform_data;
++	priv->ipu_id = pdata->ipu_id;
++	switch (pdata->grp_id) {
++	case IMX_MEDIA_GRP_ID_IC_PRP:
++		priv->task_id = IC_TASK_PRP;
++		break;
++	case IMX_MEDIA_GRP_ID_IC_PRPENC:
++		priv->task_id = IC_TASK_ENCODER;
++		break;
++	case IMX_MEDIA_GRP_ID_IC_PRPVF:
++		priv->task_id = IC_TASK_VIEWFINDER;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	v4l2_subdev_init(&priv->sd, ic_ops[priv->task_id]->subdev_ops);
++	v4l2_set_subdevdata(&priv->sd, priv);
++	priv->sd.internal_ops = ic_ops[priv->task_id]->internal_ops;
++	priv->sd.entity.ops = ic_ops[priv->task_id]->entity_ops;
++	priv->sd.entity.function = MEDIA_ENT_F_PROC_VIDEO_SCALER;
++	priv->sd.dev = &pdev->dev;
++	priv->sd.owner = THIS_MODULE;
++	priv->sd.flags = V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_HAS_EVENTS;
++	priv->sd.grp_id = pdata->grp_id;
++	strncpy(priv->sd.name, pdata->sd_name, sizeof(priv->sd.name));
++
++	ret = ic_ops[priv->task_id]->init(priv);
++	if (ret)
++		return ret;
++
++	ret = v4l2_async_register_subdev(&priv->sd);
++	if (ret)
++		ic_ops[priv->task_id]->remove(priv);
++
++	return ret;
++}
++
++static int imx_ic_remove(struct platform_device *pdev)
++{
++	struct v4l2_subdev *sd = platform_get_drvdata(pdev);
++	struct imx_ic_priv *priv = container_of(sd, struct imx_ic_priv, sd);
++
++	v4l2_info(sd, "Removing\n");
++
++	ic_ops[priv->task_id]->remove(priv);
++
++	v4l2_async_unregister_subdev(sd);
++	media_entity_cleanup(&sd->entity);
++
++	return 0;
++}
++
++static const struct platform_device_id imx_ic_ids[] = {
++	{ .name = "imx-ipuv3-ic" },
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, imx_ic_ids);
++
++static struct platform_driver imx_ic_driver = {
++	.probe = imx_ic_probe,
++	.remove = imx_ic_remove,
++	.id_table = imx_ic_ids,
++	.driver = {
++		.name = "imx-ipuv3-ic",
++	},
++};
++module_platform_driver(imx_ic_driver);
++
++MODULE_DESCRIPTION("i.MX IC subdev driver");
++MODULE_AUTHOR("Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:imx-ipuv3-ic");
+diff --git a/drivers/staging/media/imx/imx-ic-prp.c b/drivers/staging/media/imx/imx-ic-prp.c
+new file mode 100644
+index 0000000..d0f4e82
+--- /dev/null
++++ b/drivers/staging/media/imx/imx-ic-prp.c
+@@ -0,0 +1,434 @@
++/*
++ * V4L2 Capture IC Preprocess Subdev for Freescale i.MX5/6 SOC
++ *
++ * This subdevice handles capture of video frames from the CSI or VDIC,
++ * which are routed directly to the Image Converter preprocess tasks,
++ * for resizing, colorspace conversion, and rotation.
++ *
++ * Copyright (c) 2012-2017 Mentor Graphics Inc.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -53,657 +201,1649 @@ index 0000000..3a09710
 + * (at your option) any later version.
 + */
 +#include <linux/delay.h>
-+#include <linux/fs.h>
++#include <linux/interrupt.h>
 +#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/platform_device.h>
 +#include <linux/sched.h>
 +#include <linux/slab.h>
 +#include <linux/spinlock.h>
 +#include <linux/timer.h>
 +#include <media/v4l2-ctrls.h>
 +#include <media/v4l2-device.h>
-+#include <media/v4l2-event.h>
 +#include <media/v4l2-ioctl.h>
-+#include <media/v4l2-of.h>
-+#include <media/v4l2-mc.h>
 +#include <media/v4l2-subdev.h>
-+#include <media/videobuf2-dma-contig.h>
-+#include <video/imx-ipu-v3.h>
 +#include <media/imx.h>
 +#include "imx-media.h"
-+
-+struct capture_priv {
-+	struct imx_media_video_dev vdev;
-+
-+	struct v4l2_subdev    *src_sd;
-+	int                   src_sd_pad;
-+	struct device         *dev;
-+
-+	struct media_pipeline mp;
-+	struct imx_media_dev  *md;
-+
-+	struct media_pad      vdev_pad;
-+
-+	struct mutex          mutex;       /* capture device mutex */
-+
-+	/* the videobuf2 queue */
-+	struct vb2_queue       q;
-+	/* list of ready imx_media_buffer's from q */
-+	struct list_head       ready_q;
-+	/* protect ready_q */
-+	spinlock_t             q_lock;
-+
-+	/* controls inherited from subdevs */
-+	struct v4l2_ctrl_handler ctrl_hdlr;
-+
-+	/* misc status */
-+	bool                  stop;          /* streaming is stopping */
-+};
-+
-+#define to_capture_priv(v) container_of(v, struct capture_priv, vdev)
-+
-+/* In bytes, per queue */
-+#define VID_MEM_LIMIT	SZ_64M
-+
-+static struct vb2_ops capture_qops;
++#include "imx-ic.h"
 +
 +/*
-+ * Video ioctls follow
++ * Min/Max supported width and heights.
 + */
++#define MIN_W       176
++#define MIN_H       144
++#define MAX_W      4096
++#define MAX_H      4096
++#define W_ALIGN    4 /* multiple of 16 pixels */
++#define H_ALIGN    1 /* multiple of 2 lines */
++#define S_ALIGN    1 /* multiple of 2 */
 +
-+static int vidioc_querycap(struct file *file, void *fh,
-+			   struct v4l2_capability *cap)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
++struct prp_priv {
++	struct imx_media_dev *md;
++	struct imx_ic_priv *ic_priv;
++	struct media_pad pad[PRP_NUM_PADS];
 +
-+	strncpy(cap->driver, "imx-media-capture", sizeof(cap->driver) - 1);
-+	strncpy(cap->card, "imx-media-capture", sizeof(cap->card) - 1);
-+	snprintf(cap->bus_info, sizeof(cap->bus_info),
-+		 "platform:%s", priv->src_sd->name);
++	/* lock to protect all members below */
++	struct mutex lock;
 +
-+	return 0;
-+}
++	/* IPU units we require */
++	struct ipu_soc *ipu;
 +
-+static int capture_enum_fmt_vid_cap(struct file *file, void *fh,
-+				    struct v4l2_fmtdesc *f)
-+{
-+	u32 fourcc;
-+	int ret;
++	struct v4l2_subdev *src_sd;
++	struct v4l2_subdev *sink_sd_prpenc;
++	struct v4l2_subdev *sink_sd_prpvf;
 +
-+	ret = imx_media_enum_format(&fourcc, NULL, f->index, true, true);
-+	if (ret)
-+		return ret;
++	/* the CSI id at link validate */
++	int csi_id;
 +
-+	f->pixelformat = fourcc;
++	struct v4l2_mbus_framefmt format_mbus[PRP_NUM_PADS];
++	const struct imx_media_pixfmt *cc[PRP_NUM_PADS];
 +
-+	return 0;
-+}
-+
-+static int capture_g_fmt_vid_cap(struct file *file, void *fh,
-+				 struct v4l2_format *f)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+
-+	*f = priv->vdev.fmt;
-+
-+	return 0;
-+}
-+
-+static int capture_try_fmt_vid_cap(struct file *file, void *fh,
-+				   struct v4l2_format *f)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+	struct v4l2_subdev_format fmt_src;
-+	const struct imx_media_pixfmt *cc, *src_cc;
-+	u32 fourcc;
-+	int ret;
-+
-+	fourcc = f->fmt.pix.pixelformat;
-+	cc = imx_media_find_format(fourcc, 0, true, true);
-+	if (!cc) {
-+		imx_media_enum_format(&fourcc, NULL, 0, true, true);
-+		cc = imx_media_find_format(fourcc, 0, true, true);
-+	}
-+
-+	/*
-+	 * user frame dimensions are the same as src_sd's pad.
-+	 */
-+	fmt_src.pad = priv->src_sd_pad;
-+	fmt_src.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-+	ret = v4l2_subdev_call(priv->src_sd, pad, get_fmt, NULL, &fmt_src);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * but we can allow planar pixel formats if the src_sd's
-+	 * pad configured a YUV format
-+	 */
-+	src_cc = imx_media_find_format(0, fmt_src.format.code, true, false);
-+	if (src_cc->cs == IPUV3_COLORSPACE_YUV &&
-+	    cc->cs == IPUV3_COLORSPACE_YUV) {
-+		imx_media_mbus_fmt_to_pix_fmt(&f->fmt.pix,
-+					      &fmt_src.format, cc);
-+	} else {
-+		imx_media_mbus_fmt_to_pix_fmt(&f->fmt.pix,
-+					      &fmt_src.format, src_cc);
-+	}
-+
-+	return 0;
-+}
-+
-+static int capture_s_fmt_vid_cap(struct file *file, void *fh,
-+				 struct v4l2_format *f)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+	int ret;
-+
-+	if (vb2_is_busy(&priv->q)) {
-+		v4l2_err(priv->src_sd, "%s queue busy\n", __func__);
-+		return -EBUSY;
-+	}
-+
-+	ret = capture_try_fmt_vid_cap(file, priv, f);
-+	if (ret)
-+		return ret;
-+
-+	priv->vdev.fmt.fmt.pix = f->fmt.pix;
-+	priv->vdev.cc = imx_media_find_format(f->fmt.pix.pixelformat, 0,
-+					      true, true);
-+
-+	return 0;
-+}
-+
-+static int capture_querystd(struct file *file, void *fh, v4l2_std_id *std)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+
-+	return v4l2_subdev_call(priv->src_sd, video, querystd, std);
-+}
-+
-+static int capture_g_std(struct file *file, void *fh, v4l2_std_id *std)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+
-+	return v4l2_subdev_call(priv->src_sd, video, g_std, std);
-+}
-+
-+static int capture_s_std(struct file *file, void *fh, v4l2_std_id std)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+
-+	if (vb2_is_busy(&priv->q))
-+		return -EBUSY;
-+
-+	return v4l2_subdev_call(priv->src_sd, video, s_std, std);
-+}
-+
-+static int capture_g_parm(struct file *file, void *fh,
-+			  struct v4l2_streamparm *a)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+	struct v4l2_subdev_frame_interval fi;
-+	int ret;
-+
-+	if (a->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+
-+	memset(&fi, 0, sizeof(fi));
-+	fi.pad = priv->src_sd_pad;
-+	ret = v4l2_subdev_call(priv->src_sd, video, g_frame_interval, &fi);
-+	if (ret < 0)
-+		return ret;
-+
-+	a->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
-+	a->parm.capture.timeperframe = fi.interval;
-+
-+	return 0;
-+}
-+
-+static int capture_s_parm(struct file *file, void *fh,
-+			  struct v4l2_streamparm *a)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+	struct v4l2_subdev_frame_interval fi;
-+	int ret;
-+
-+	if (a->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+
-+	memset(&fi, 0, sizeof(fi));
-+	fi.pad = priv->src_sd_pad;
-+	fi.interval = a->parm.capture.timeperframe;
-+	ret = v4l2_subdev_call(priv->src_sd, video, s_frame_interval, &fi);
-+	if (ret < 0)
-+		return ret;
-+
-+	a->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
-+	a->parm.capture.timeperframe = fi.interval;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_ioctl_ops capture_ioctl_ops = {
-+	.vidioc_querycap	= vidioc_querycap,
-+
-+	.vidioc_enum_fmt_vid_cap        = capture_enum_fmt_vid_cap,
-+	.vidioc_g_fmt_vid_cap           = capture_g_fmt_vid_cap,
-+	.vidioc_try_fmt_vid_cap         = capture_try_fmt_vid_cap,
-+	.vidioc_s_fmt_vid_cap           = capture_s_fmt_vid_cap,
-+
-+	.vidioc_querystd        = capture_querystd,
-+	.vidioc_g_std           = capture_g_std,
-+	.vidioc_s_std           = capture_s_std,
-+
-+	.vidioc_g_parm          = capture_g_parm,
-+	.vidioc_s_parm          = capture_s_parm,
-+
-+	.vidioc_reqbufs		= vb2_ioctl_reqbufs,
-+	.vidioc_create_bufs     = vb2_ioctl_create_bufs,
-+	.vidioc_prepare_buf     = vb2_ioctl_prepare_buf,
-+	.vidioc_querybuf	= vb2_ioctl_querybuf,
-+	.vidioc_qbuf		= vb2_ioctl_qbuf,
-+	.vidioc_dqbuf		= vb2_ioctl_dqbuf,
-+	.vidioc_expbuf		= vb2_ioctl_expbuf,
-+	.vidioc_streamon	= vb2_ioctl_streamon,
-+	.vidioc_streamoff	= vb2_ioctl_streamoff,
++	bool stream_on; /* streaming is on */
 +};
 +
-+/*
-+ * Queue operations
-+ */
-+
-+static int capture_queue_setup(struct vb2_queue *vq,
-+			       unsigned int *nbuffers,
-+			       unsigned int *nplanes,
-+			       unsigned int sizes[],
-+			       struct device *alloc_devs[])
++static inline struct prp_priv *sd_to_priv(struct v4l2_subdev *sd)
 +{
-+	struct capture_priv *priv = vb2_get_drv_priv(vq);
-+	struct v4l2_pix_format *pix = &priv->vdev.fmt.fmt.pix;
-+	unsigned int count = *nbuffers;
++	struct imx_ic_priv *ic_priv = v4l2_get_subdevdata(sd);
 +
-+	if (vq->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
++	return ic_priv->prp_priv;
++}
 +
-+	if (*nplanes) {
-+		if (*nplanes != 1 || sizes[0] < pix->sizeimage)
-+			return -EINVAL;
-+		count += vq->num_buffers;
-+	}
++static int prp_start(struct prp_priv *priv)
++{
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
 +
-+	count = min_t(__u32, VID_MEM_LIMIT / pix->sizeimage, count);
++	priv->ipu = priv->md->ipu[ic_priv->ipu_id];
 +
-+	if (*nplanes)
-+		*nbuffers = (count < vq->num_buffers) ? 0 :
-+			count - vq->num_buffers;
++	/* set IC to receive from CSI or VDI depending on source */
++	if (priv->src_sd->grp_id & IMX_MEDIA_GRP_ID_VDIC)
++		ipu_set_ic_src_mux(priv->ipu, 0, true);
 +	else
-+		*nbuffers = count;
-+
-+	*nplanes = 1;
-+	sizes[0] = pix->sizeimage;
++		ipu_set_ic_src_mux(priv->ipu, priv->csi_id, false);
 +
 +	return 0;
 +}
 +
-+static int capture_buf_init(struct vb2_buffer *vb)
++static void prp_stop(struct prp_priv *priv)
 +{
-+	struct imx_media_buffer *buf = to_imx_media_vb(vb);
-+
-+	INIT_LIST_HEAD(&buf->list);
-+
-+	return 0;
 +}
 +
-+static int capture_buf_prepare(struct vb2_buffer *vb)
++static int prp_enum_mbus_code(struct v4l2_subdev *sd,
++			      struct v4l2_subdev_pad_config *cfg,
++			      struct v4l2_subdev_mbus_code_enum *code)
 +{
-+	struct vb2_queue *vq = vb->vb2_queue;
-+	struct capture_priv *priv = vb2_get_drv_priv(vq);
-+	struct v4l2_pix_format *pix = &priv->vdev.fmt.fmt.pix;
-+
-+	if (vb2_plane_size(vb, 0) < pix->sizeimage) {
-+		v4l2_err(priv->src_sd,
-+			 "data will not fit into plane (%lu < %lu)\n",
-+			 vb2_plane_size(vb, 0), (long)pix->sizeimage);
++	if (code->pad >= PRP_NUM_PADS)
 +		return -EINVAL;
-+	}
 +
-+	vb2_set_plane_payload(vb, 0, pix->sizeimage);
-+
-+	return 0;
++	return imx_media_enum_ipu_format(NULL, &code->code, code->index, true);
 +}
 +
-+static void capture_buf_queue(struct vb2_buffer *vb)
++static struct v4l2_mbus_framefmt *
++__prp_get_fmt(struct prp_priv *priv, struct v4l2_subdev_pad_config *cfg,
++	      unsigned int pad, enum v4l2_subdev_format_whence which)
 +{
-+	struct capture_priv *priv = vb2_get_drv_priv(vb->vb2_queue);
-+	struct imx_media_buffer *buf = to_imx_media_vb(vb);
-+	unsigned long flags;
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
 +
-+	spin_lock_irqsave(&priv->q_lock, flags);
-+
-+	list_add_tail(&buf->list, &priv->ready_q);
-+
-+	spin_unlock_irqrestore(&priv->q_lock, flags);
++	if (which == V4L2_SUBDEV_FORMAT_TRY)
++		return v4l2_subdev_get_try_format(&ic_priv->sd, cfg, pad);
++	else
++		return &priv->format_mbus[pad];
 +}
-+
-+static int capture_start_streaming(struct vb2_queue *vq, unsigned int count)
-+{
-+	struct capture_priv *priv = vb2_get_drv_priv(vq);
-+	struct imx_media_buffer *buf, *tmp;
-+	unsigned long flags;
-+	int ret;
-+
-+	if (vb2_is_streaming(vq))
-+		return 0;
-+
-+	ret = imx_media_pipeline_set_stream(priv->md, &priv->src_sd->entity,
-+					    &priv->mp, true);
-+	if (ret) {
-+		v4l2_err(priv->src_sd, "pipeline start failed with %d\n", ret);
-+		goto return_bufs;
-+	}
-+
-+	priv->stop = false;
-+
-+	return 0;
-+
-+return_bufs:
-+	spin_lock_irqsave(&priv->q_lock, flags);
-+	list_for_each_entry_safe(buf, tmp, &priv->ready_q, list) {
-+		list_del(&buf->list);
-+		vb2_buffer_done(&buf->vbuf.vb2_buf, VB2_BUF_STATE_QUEUED);
-+	}
-+	spin_unlock_irqrestore(&priv->q_lock, flags);
-+	return ret;
-+}
-+
-+static void capture_stop_streaming(struct vb2_queue *vq)
-+{
-+	struct capture_priv *priv = vb2_get_drv_priv(vq);
-+	struct imx_media_buffer *frame;
-+	unsigned long flags;
-+	int ret;
-+
-+	if (!vb2_is_streaming(vq))
-+		return;
-+
-+	spin_lock_irqsave(&priv->q_lock, flags);
-+	priv->stop = true;
-+	spin_unlock_irqrestore(&priv->q_lock, flags);
-+
-+	ret = imx_media_pipeline_set_stream(priv->md, &priv->src_sd->entity,
-+					    &priv->mp, false);
-+	if (ret)
-+		v4l2_warn(priv->src_sd, "pipeline stop failed with %d\n", ret);
-+
-+	/* release all active buffers */
-+	spin_lock_irqsave(&priv->q_lock, flags);
-+	while (!list_empty(&priv->ready_q)) {
-+		frame = list_entry(priv->ready_q.next,
-+				   struct imx_media_buffer, list);
-+		list_del(&frame->list);
-+		vb2_buffer_done(&frame->vbuf.vb2_buf, VB2_BUF_STATE_ERROR);
-+	}
-+	spin_unlock_irqrestore(&priv->q_lock, flags);
-+}
-+
-+static struct vb2_ops capture_qops = {
-+	.queue_setup	 = capture_queue_setup,
-+	.buf_init        = capture_buf_init,
-+	.buf_prepare	 = capture_buf_prepare,
-+	.buf_queue	 = capture_buf_queue,
-+	.wait_prepare	 = vb2_ops_wait_prepare,
-+	.wait_finish	 = vb2_ops_wait_finish,
-+	.start_streaming = capture_start_streaming,
-+	.stop_streaming  = capture_stop_streaming,
-+};
 +
 +/*
-+ * File operations
++ * V4L2 subdev operations.
 + */
-+static int capture_open(struct file *file)
++
++static int prp_get_fmt(struct v4l2_subdev *sd,
++		       struct v4l2_subdev_pad_config *cfg,
++		       struct v4l2_subdev_format *sdformat)
 +{
-+	struct capture_priv *priv = video_drvdata(file);
-+	struct video_device *vfd = priv->vdev.vfd;
-+	int ret;
-+
-+	if (mutex_lock_interruptible(&priv->mutex))
-+		return -ERESTARTSYS;
-+
-+	ret = v4l2_fh_open(file);
-+	if (ret)
-+		v4l2_err(priv->src_sd, "v4l2_fh_open failed\n");
-+
-+	ret = v4l2_pipeline_pm_use(&vfd->entity, 1);
-+	if (ret)
-+		v4l2_fh_release(file);
-+
-+	mutex_unlock(&priv->mutex);
-+	return ret;
-+}
-+
-+static int capture_release(struct file *file)
-+{
-+	struct capture_priv *priv = video_drvdata(file);
-+	struct video_device *vfd = priv->vdev.vfd;
-+	struct vb2_queue *vq = &priv->q;
++	struct prp_priv *priv = sd_to_priv(sd);
++	struct v4l2_mbus_framefmt *fmt;
 +	int ret = 0;
 +
-+	mutex_lock(&priv->mutex);
++	if (sdformat->pad >= PRP_NUM_PADS)
++		return -EINVAL;
 +
-+	if (file->private_data == vq->owner) {
-+		vb2_queue_release(vq);
-+		vq->owner = NULL;
++	mutex_lock(&priv->lock);
++
++	fmt = __prp_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
++	if (!fmt) {
++		ret = -EINVAL;
++		goto out;
 +	}
 +
-+	v4l2_pipeline_pm_use(&vfd->entity, 0);
-+
-+	v4l2_fh_release(file);
-+	mutex_unlock(&priv->mutex);
++	sdformat->format = *fmt;
++out:
++	mutex_unlock(&priv->lock);
 +	return ret;
 +}
 +
-+static const struct v4l2_file_operations capture_fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= capture_open,
-+	.release	= capture_release,
-+	.poll		= vb2_fop_poll,
-+	.unlocked_ioctl	= video_ioctl2,
-+	.mmap		= vb2_fop_mmap,
-+};
-+
-+static struct video_device capture_videodev = {
-+	.fops		= &capture_fops,
-+	.ioctl_ops	= &capture_ioctl_ops,
-+	.minor		= -1,
-+	.release	= video_device_release,
-+	.vfl_dir	= VFL_DIR_RX,
-+	.tvnorms	= V4L2_STD_NTSC | V4L2_STD_PAL | V4L2_STD_SECAM,
-+	.device_caps	= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING,
-+};
-+
-+struct imx_media_buffer *
-+imx_media_capture_device_next_buf(struct imx_media_video_dev *vdev)
++static int prp_set_fmt(struct v4l2_subdev *sd,
++		       struct v4l2_subdev_pad_config *cfg,
++		       struct v4l2_subdev_format *sdformat)
 +{
-+	struct capture_priv *priv = to_capture_priv(vdev);
-+	struct imx_media_buffer *buf = NULL;
-+	unsigned long flags;
++	struct prp_priv *priv = sd_to_priv(sd);
++	const struct imx_media_pixfmt *cc = NULL;
++	struct v4l2_mbus_framefmt *infmt;
++	int ret = 0;
++	u32 code;
 +
-+	spin_lock_irqsave(&priv->q_lock, flags);
++	if (sdformat->pad >= PRP_NUM_PADS)
++		return -EINVAL;
 +
-+	/* get next queued buffer */
-+	if (!list_empty(&priv->ready_q)) {
-+		buf = list_entry(priv->ready_q.next, struct imx_media_buffer,
-+				 list);
-+		list_del(&buf->list);
++	mutex_lock(&priv->lock);
++
++	if (priv->stream_on) {
++		ret = -EBUSY;
++		goto out;
 +	}
 +
-+	spin_unlock_irqrestore(&priv->q_lock, flags);
++	cc = imx_media_find_ipu_format(0, sdformat->format.code, true);
++	if (!cc) {
++		imx_media_enum_ipu_format(NULL, &code, 0, true);
++		cc = imx_media_find_ipu_format(0, code, true);
++		sdformat->format.code = cc->codes[0];
++	}
 +
-+	return buf;
++	v4l_bound_align_image(&sdformat->format.width, MIN_W, MAX_W,
++			      W_ALIGN, &sdformat->format.height,
++			      MIN_H, MAX_H, H_ALIGN, S_ALIGN);
++
++	/* Output pads mirror input pad */
++	if (sdformat->pad == PRP_SRC_PAD_PRPENC ||
++	    sdformat->pad == PRP_SRC_PAD_PRPVF) {
++		infmt = __prp_get_fmt(priv, cfg, PRP_SINK_PAD,
++				      sdformat->which);
++		sdformat->format = *infmt;
++	}
++
++	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
++		cfg->try_fmt = sdformat->format;
++	} else {
++		priv->format_mbus[sdformat->pad] = sdformat->format;
++		priv->cc[sdformat->pad] = cc;
++	}
++
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(imx_media_capture_device_next_buf);
 +
-+void imx_media_capture_device_error(struct imx_media_video_dev *vdev)
++static int prp_link_setup(struct media_entity *entity,
++			  const struct media_pad *local,
++			  const struct media_pad *remote, u32 flags)
 +{
-+	struct capture_priv *priv = to_capture_priv(vdev);
-+	struct vb2_queue *vq = &priv->q;
-+	unsigned long flags;
++	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
++	struct imx_ic_priv *ic_priv = v4l2_get_subdevdata(sd);
++	struct prp_priv *priv = ic_priv->prp_priv;
++	struct v4l2_subdev *remote_sd;
++	int ret = 0;
 +
-+	if (!vb2_is_streaming(vq))
-+		return;
++	dev_dbg(ic_priv->dev, "link setup %s -> %s", remote->entity->name,
++		local->entity->name);
 +
-+	spin_lock_irqsave(&priv->q_lock, flags);
-+	vb2_queue_error(vq);
-+	spin_unlock_irqrestore(&priv->q_lock, flags);
++	remote_sd = media_entity_to_v4l2_subdev(remote->entity);
++
++	mutex_lock(&priv->lock);
++
++	if (local->flags & MEDIA_PAD_FL_SINK) {
++		if (flags & MEDIA_LNK_FL_ENABLED) {
++			if (priv->src_sd) {
++				ret = -EBUSY;
++				goto out;
++			}
++			if (priv->sink_sd_prpenc && (remote_sd->grp_id &
++						     IMX_MEDIA_GRP_ID_VDIC)) {
++				ret = -EINVAL;
++				goto out;
++			}
++			priv->src_sd = remote_sd;
++		} else {
++			priv->src_sd = NULL;
++		}
++
++		goto out;
++	}
++
++	/* this is a source pad */
++	if (flags & MEDIA_LNK_FL_ENABLED) {
++		switch (local->index) {
++		case PRP_SRC_PAD_PRPENC:
++			if (priv->sink_sd_prpenc) {
++				ret = -EBUSY;
++				goto out;
++			}
++			if (priv->src_sd && (priv->src_sd->grp_id &
++					     IMX_MEDIA_GRP_ID_VDIC)) {
++				ret = -EINVAL;
++				goto out;
++			}
++			priv->sink_sd_prpenc = remote_sd;
++			break;
++		case PRP_SRC_PAD_PRPVF:
++			if (priv->sink_sd_prpvf) {
++				ret = -EBUSY;
++				goto out;
++			}
++			priv->sink_sd_prpvf = remote_sd;
++			break;
++		default:
++			ret = -EINVAL;
++		}
++	} else {
++		switch (local->index) {
++		case PRP_SRC_PAD_PRPENC:
++			priv->sink_sd_prpenc = NULL;
++			break;
++		case PRP_SRC_PAD_PRPVF:
++			priv->sink_sd_prpvf = NULL;
++			break;
++		default:
++			ret = -EINVAL;
++		}
++	}
++
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(imx_media_capture_device_error);
 +
-+int imx_media_capture_device_register(struct imx_media_video_dev *vdev)
++static int prp_link_validate(struct v4l2_subdev *sd,
++			     struct media_link *link,
++			     struct v4l2_subdev_format *source_fmt,
++			     struct v4l2_subdev_format *sink_fmt)
 +{
-+	struct capture_priv *priv = to_capture_priv(vdev);
-+	struct v4l2_subdev *sd = priv->src_sd;
-+	struct video_device *vfd = vdev->vfd;
-+	struct vb2_queue *vq = &priv->q;
-+	struct v4l2_subdev_format fmt_src;
++	struct imx_ic_priv *ic_priv = v4l2_get_subdevdata(sd);
++	struct prp_priv *priv = ic_priv->prp_priv;
++	struct imx_media_subdev *csi;
 +	int ret;
++
++	ret = v4l2_subdev_link_validate_default(sd, link,
++						source_fmt, sink_fmt);
++	if (ret)
++		return ret;
++
++	csi = imx_media_find_pipeline_subdev(priv->md, &ic_priv->sd.entity,
++					     IMX_MEDIA_GRP_ID_CSI);
++	if (IS_ERR(csi))
++		csi = NULL;
++
++	mutex_lock(&priv->lock);
++
++	if (priv->src_sd->grp_id & IMX_MEDIA_GRP_ID_VDIC) {
++		/*
++		 * the ->PRPENC link cannot be enabled if the source
++		 * is the VDIC
++		 */
++		if (priv->sink_sd_prpenc)
++			ret = -EINVAL;
++		goto out;
++	} else {
++		/* the source is a CSI */
++		if (!csi) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		switch (csi->sd->grp_id) {
++		case IMX_MEDIA_GRP_ID_CSI0:
++			priv->csi_id = 0;
++			break;
++		case IMX_MEDIA_GRP_ID_CSI1:
++			priv->csi_id = 1;
++			break;
++		default:
++			ret = -EINVAL;
++		}
++	}
++
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++static int prp_s_stream(struct v4l2_subdev *sd, int enable)
++{
++	struct imx_ic_priv *ic_priv = v4l2_get_subdevdata(sd);
++	struct prp_priv *priv = ic_priv->prp_priv;
++	int ret = 0;
++
++	mutex_lock(&priv->lock);
++
++	if (!priv->src_sd || (!priv->sink_sd_prpenc && !priv->sink_sd_prpvf)) {
++		ret = -EPIPE;
++		goto out;
++	}
++
++	dev_dbg(ic_priv->dev, "stream %s\n", enable ? "ON" : "OFF");
++
++	if (enable && !priv->stream_on)
++		ret = prp_start(priv);
++	else if (!enable && priv->stream_on)
++		prp_stop(priv);
++
++	if (!ret)
++		priv->stream_on = enable;
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++/*
++ * retrieve our pads parsed from the OF graph by the media device
++ */
++static int prp_registered(struct v4l2_subdev *sd)
++{
++	struct prp_priv *priv = sd_to_priv(sd);
++	int i, ret;
++	u32 code;
 +
 +	/* get media device */
 +	priv->md = dev_get_drvdata(sd->v4l2_dev->dev);
 +
-+	vfd->v4l2_dev = sd->v4l2_dev;
++	for (i = 0; i < PRP_NUM_PADS; i++) {
++		priv->pad[i].flags = (i == PRP_SINK_PAD) ?
++			MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
 +
-+	ret = video_register_device(vfd, VFL_TYPE_GRABBER, -1);
++		/* set a default mbus format  */
++		imx_media_enum_ipu_format(NULL, &code, 0, true);
++		ret = imx_media_init_mbus_fmt(&priv->format_mbus[i],
++					      640, 480, code, V4L2_FIELD_NONE,
++					      &priv->cc[i]);
++		if (ret)
++			return ret;
++	}
++
++	return media_entity_pads_init(&sd->entity, PRP_NUM_PADS, priv->pad);
++}
++
++static struct v4l2_subdev_pad_ops prp_pad_ops = {
++	.enum_mbus_code = prp_enum_mbus_code,
++	.get_fmt = prp_get_fmt,
++	.set_fmt = prp_set_fmt,
++	.link_validate = prp_link_validate,
++};
++
++static struct v4l2_subdev_video_ops prp_video_ops = {
++	.s_stream = prp_s_stream,
++};
++
++static struct media_entity_operations prp_entity_ops = {
++	.link_setup = prp_link_setup,
++	.link_validate = v4l2_subdev_link_validate,
++};
++
++static struct v4l2_subdev_ops prp_subdev_ops = {
++	.video = &prp_video_ops,
++	.pad = &prp_pad_ops,
++};
++
++static struct v4l2_subdev_internal_ops prp_internal_ops = {
++	.registered = prp_registered,
++};
++
++static int prp_init(struct imx_ic_priv *ic_priv)
++{
++	struct prp_priv *priv;
++
++	priv = devm_kzalloc(ic_priv->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	mutex_init(&priv->lock);
++	ic_priv->prp_priv = priv;
++	priv->ic_priv = ic_priv;
++
++	return 0;
++}
++
++static void prp_remove(struct imx_ic_priv *ic_priv)
++{
++	struct prp_priv *priv = ic_priv->prp_priv;
++
++	mutex_destroy(&priv->lock);
++}
++
++struct imx_ic_ops imx_ic_prp_ops = {
++	.subdev_ops = &prp_subdev_ops,
++	.internal_ops = &prp_internal_ops,
++	.entity_ops = &prp_entity_ops,
++	.init = prp_init,
++	.remove = prp_remove,
++};
+diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
+new file mode 100644
+index 0000000..4f8714f
+--- /dev/null
++++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
+@@ -0,0 +1,1170 @@
++/*
++ * V4L2 Capture IC Preprocess Subdev for Freescale i.MX5/6 SOC
++ *
++ * This subdevice handles capture of video frames from the CSI or VDIC,
++ * which are routed directly to the Image Converter preprocess tasks,
++ * for resizing, colorspace conversion, and rotation.
++ *
++ * Copyright (c) 2012-2017 Mentor Graphics Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#include <linux/delay.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/sched.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/timer.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-device.h>
++#include <media/v4l2-ioctl.h>
++#include <media/v4l2-mc.h>
++#include <media/v4l2-subdev.h>
++#include <media/imx.h>
++#include "imx-media.h"
++#include "imx-ic.h"
++
++/*
++ * Min/Max supported width and heights.
++ *
++ * We allow planar output, so we have to align width at the source pad
++ * by 16 pixels to meet IDMAC alignment requirements for possible planar
++ * output.
++ *
++ * TODO: move this into pad format negotiation, if capture device
++ * has not requested a planar format, we should allow 8 pixel
++ * alignment at the source pad.
++ */
++#define MIN_W_SINK  176
++#define MIN_H_SINK  144
++#define MAX_W_SINK 4096
++#define MAX_H_SINK 4096
++#define W_ALIGN_SINK  3 /* multiple of 8 pixels */
++#define H_ALIGN_SINK  1 /* multiple of 2 lines */
++
++#define MAX_W_SRC  1024
++#define MAX_H_SRC  1024
++#define W_ALIGN_SRC   4 /* multiple of 16 pixels */
++#define H_ALIGN_SRC   1 /* multiple of 2 lines */
++
++#define S_ALIGN       1 /* multiple of 2 */
++
++struct prp_priv {
++	struct imx_media_dev *md;
++	struct imx_ic_priv *ic_priv;
++	struct media_pad pad[PRPENCVF_NUM_PADS];
++	/* the video device at output pad */
++	struct imx_media_video_dev *vdev;
++
++	/* lock to protect all members below */
++	struct mutex lock;
++
++	/* IPU units we require */
++	struct ipu_soc *ipu;
++	struct ipu_ic *ic;
++	struct ipuv3_channel *out_ch;
++	struct ipuv3_channel *rot_in_ch;
++	struct ipuv3_channel *rot_out_ch;
++
++	/* active vb2 buffers to send to video dev sink */
++	struct imx_media_buffer *active_vb2_buf[2];
++	struct imx_media_dma_buf underrun_buf;
++
++	int ipu_buf_num;  /* ipu double buffer index: 0-1 */
++
++	/* the sink for the captured frames */
++	struct media_entity *sink;
++	/* the source subdev */
++	struct v4l2_subdev *src_sd;
++
++	/* the attached CSI at stream on */
++	struct v4l2_subdev *csi_sd;
++
++	struct v4l2_mbus_framefmt format_mbus[PRPENCVF_NUM_PADS];
++	const struct imx_media_pixfmt *cc[PRPENCVF_NUM_PADS];
++
++	struct imx_media_dma_buf rot_buf[2];
++
++	/* controls */
++	struct v4l2_ctrl_handler ctrl_hdlr;
++	int  rotation; /* degrees */
++	bool hflip;
++	bool vflip;
++
++	/* derived from rotation, hflip, vflip controls */
++	enum ipu_rotate_mode rot_mode;
++
++	spinlock_t irqlock; /* protect eof_irq handler */
++
++	struct timer_list eof_timeout_timer;
++	int eof_irq;
++	int nfb4eof_irq;
++
++	bool stream_on; /* streaming is on */
++	bool last_eof;  /* waiting for last EOF at stream off */
++	bool nfb4eof;    /* NFB4EOF encountered during streaming */
++	struct completion last_eof_comp;
++};
++
++static const struct prp_channels {
++	u32 out_ch;
++	u32 rot_in_ch;
++	u32 rot_out_ch;
++} prp_channel[] = {
++	[IC_TASK_ENCODER] = {
++		.out_ch = IPUV3_CHANNEL_IC_PRP_ENC_MEM,
++		.rot_in_ch = IPUV3_CHANNEL_MEM_ROT_ENC,
++		.rot_out_ch = IPUV3_CHANNEL_ROT_ENC_MEM,
++	},
++	[IC_TASK_VIEWFINDER] = {
++		.out_ch = IPUV3_CHANNEL_IC_PRP_VF_MEM,
++		.rot_in_ch = IPUV3_CHANNEL_MEM_ROT_VF,
++		.rot_out_ch = IPUV3_CHANNEL_ROT_VF_MEM,
++	},
++};
++
++static inline struct prp_priv *sd_to_priv(struct v4l2_subdev *sd)
++{
++	struct imx_ic_priv *ic_priv = v4l2_get_subdevdata(sd);
++
++	return ic_priv->task_priv;
++}
++
++static void prp_put_ipu_resources(struct prp_priv *priv)
++{
++	if (!IS_ERR_OR_NULL(priv->ic))
++		ipu_ic_put(priv->ic);
++	priv->ic = NULL;
++
++	if (!IS_ERR_OR_NULL(priv->out_ch))
++		ipu_idmac_put(priv->out_ch);
++	priv->out_ch = NULL;
++
++	if (!IS_ERR_OR_NULL(priv->rot_in_ch))
++		ipu_idmac_put(priv->rot_in_ch);
++	priv->rot_in_ch = NULL;
++
++	if (!IS_ERR_OR_NULL(priv->rot_out_ch))
++		ipu_idmac_put(priv->rot_out_ch);
++	priv->rot_out_ch = NULL;
++}
++
++static int prp_get_ipu_resources(struct prp_priv *priv)
++{
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++	int ret, task = ic_priv->task_id;
++
++	priv->ipu = priv->md->ipu[ic_priv->ipu_id];
++
++	priv->ic = ipu_ic_get(priv->ipu, task);
++	if (IS_ERR(priv->ic)) {
++		v4l2_err(&ic_priv->sd, "failed to get IC\n");
++		ret = PTR_ERR(priv->ic);
++		goto out;
++	}
++
++	priv->out_ch = ipu_idmac_get(priv->ipu,
++				     prp_channel[task].out_ch);
++	if (IS_ERR(priv->out_ch)) {
++		v4l2_err(&ic_priv->sd, "could not get IDMAC channel %u\n",
++			 prp_channel[task].out_ch);
++		ret = PTR_ERR(priv->out_ch);
++		goto out;
++	}
++
++	priv->rot_in_ch = ipu_idmac_get(priv->ipu,
++					prp_channel[task].rot_in_ch);
++	if (IS_ERR(priv->rot_in_ch)) {
++		v4l2_err(&ic_priv->sd, "could not get IDMAC channel %u\n",
++			 prp_channel[task].rot_in_ch);
++		ret = PTR_ERR(priv->rot_in_ch);
++		goto out;
++	}
++
++	priv->rot_out_ch = ipu_idmac_get(priv->ipu,
++					 prp_channel[task].rot_out_ch);
++	if (IS_ERR(priv->rot_out_ch)) {
++		v4l2_err(&ic_priv->sd, "could not get IDMAC channel %u\n",
++			 prp_channel[task].rot_out_ch);
++		ret = PTR_ERR(priv->rot_out_ch);
++		goto out;
++	}
++
++	return 0;
++out:
++	prp_put_ipu_resources(priv);
++	return ret;
++}
++
++static void prp_vb2_buf_done(struct prp_priv *priv, struct ipuv3_channel *ch)
++{
++	struct imx_media_video_dev *vdev = priv->vdev;
++	struct imx_media_buffer *done, *next;
++	struct vb2_buffer *vb;
++	dma_addr_t phys;
++
++	done = priv->active_vb2_buf[priv->ipu_buf_num];
++	if (done) {
++		vb = &done->vbuf.vb2_buf;
++		vb->timestamp = ktime_get_ns();
++		vb2_buffer_done(vb, priv->nfb4eof ?
++				VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE);
++	}
++
++	priv->nfb4eof = false;
++
++	/* get next queued buffer */
++	next = imx_media_capture_device_next_buf(vdev);
++	if (next) {
++		phys = vb2_dma_contig_plane_dma_addr(&next->vbuf.vb2_buf, 0);
++		priv->active_vb2_buf[priv->ipu_buf_num] = next;
++	} else {
++		phys = priv->underrun_buf.phys;
++		priv->active_vb2_buf[priv->ipu_buf_num] = NULL;
++	}
++
++	if (ipu_idmac_buffer_is_ready(ch, priv->ipu_buf_num))
++		ipu_idmac_clear_buffer(ch, priv->ipu_buf_num);
++
++	ipu_cpmem_set_buffer(ch, priv->ipu_buf_num, phys);
++}
++
++static irqreturn_t prp_eof_interrupt(int irq, void *dev_id)
++{
++	struct prp_priv *priv = dev_id;
++	struct ipuv3_channel *channel;
++
++	spin_lock(&priv->irqlock);
++
++	if (priv->last_eof) {
++		complete(&priv->last_eof_comp);
++		priv->last_eof = false;
++		goto unlock;
++	}
++
++	/*
++	 * if there is a CSI in the pipeline, inform it of this EOF
++	 * so it can monitor frame intervals.
++	 */
++	if (priv->csi_sd)
++		v4l2_subdev_call(priv->csi_sd, core,
++				 interrupt_service_routine,
++				 0, NULL);
++
++	channel = (ipu_rot_mode_is_irt(priv->rot_mode)) ?
++		priv->rot_out_ch : priv->out_ch;
++
++	prp_vb2_buf_done(priv, channel);
++
++	/* select new IPU buf */
++	ipu_idmac_select_buffer(channel, priv->ipu_buf_num);
++	/* toggle IPU double-buffer index */
++	priv->ipu_buf_num ^= 1;
++
++	/* bump the EOF timeout timer */
++	mod_timer(&priv->eof_timeout_timer,
++		  jiffies + msecs_to_jiffies(IMX_MEDIA_EOF_TIMEOUT));
++
++unlock:
++	spin_unlock(&priv->irqlock);
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t prp_nfb4eof_interrupt(int irq, void *dev_id)
++{
++	struct prp_priv *priv = dev_id;
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++
++	spin_lock(&priv->irqlock);
++
++	/*
++	 * this is not an unrecoverable error, just mark
++	 * the next captured frame with vb2 error flag.
++	 */
++	priv->nfb4eof = true;
++
++	v4l2_err(&ic_priv->sd, "NFB4EOF\n");
++
++	spin_unlock(&priv->irqlock);
++
++	return IRQ_HANDLED;
++}
++
++/*
++ * EOF timeout timer function.
++ */
++/*
++ * EOF timeout timer function. This is an unrecoverable condition
++ * without a stream restart.
++ */
++static void prp_eof_timeout(unsigned long data)
++{
++	struct prp_priv *priv = (struct prp_priv *)data;
++	struct imx_media_video_dev *vdev = priv->vdev;
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++
++	v4l2_err(&ic_priv->sd, "EOF timeout\n");
++
++	/* signal a fatal error to capture device */
++	imx_media_capture_device_error(vdev);
++}
++
++static void prp_setup_vb2_buf(struct prp_priv *priv, dma_addr_t *phys)
++{
++	struct imx_media_video_dev *vdev = priv->vdev;
++	struct imx_media_buffer *buf;
++	int i;
++
++	for (i = 0; i < 2; i++) {
++		buf = imx_media_capture_device_next_buf(vdev);
++		priv->active_vb2_buf[i] = buf;
++		phys[i] = vb2_dma_contig_plane_dma_addr(&buf->vbuf.vb2_buf, 0);
++	}
++}
++
++static void prp_unsetup_vb2_buf(struct prp_priv *priv,
++				enum vb2_buffer_state return_status)
++{
++	struct imx_media_buffer *buf;
++	int i;
++
++	/* return any remaining active frames with return_status */
++	for (i = 0; i < 2; i++) {
++		buf = priv->active_vb2_buf[i];
++		if (buf) {
++			struct vb2_buffer *vb = &buf->vbuf.vb2_buf;
++
++			vb->timestamp = ktime_get_ns();
++			vb2_buffer_done(vb, return_status);
++		}
++	}
++}
++
++static int prp_setup_channel(struct prp_priv *priv,
++			     struct ipuv3_channel *channel,
++			     enum ipu_rotate_mode rot_mode,
++			     dma_addr_t addr0, dma_addr_t addr1,
++			     bool rot_swap_width_height)
++{
++	struct imx_media_video_dev *vdev = priv->vdev;
++	const struct imx_media_pixfmt *outcc;
++	struct v4l2_mbus_framefmt *infmt;
++	unsigned int burst_size;
++	struct ipu_image image;
++	int ret;
++
++	infmt = &priv->format_mbus[PRPENCVF_SINK_PAD];
++	outcc = vdev->cc;
++
++	ipu_cpmem_zero(channel);
++
++	memset(&image, 0, sizeof(image));
++	image.pix = vdev->fmt.fmt.pix;
++	image.rect.width = image.pix.width;
++	image.rect.height = image.pix.height;
++
++	if (rot_swap_width_height) {
++		swap(image.pix.width, image.pix.height);
++		swap(image.rect.width, image.rect.height);
++		/* recalc stride using swapped width */
++		image.pix.bytesperline = outcc->planar ?
++			image.pix.width :
++			(image.pix.width * outcc->bpp) >> 3;
++	}
++
++	image.phys0 = addr0;
++	image.phys1 = addr1;
++
++	ret = ipu_cpmem_set_image(channel, &image);
++	if (ret)
++		return ret;
++
++	if (channel == priv->rot_in_ch ||
++	    channel == priv->rot_out_ch) {
++		burst_size = 8;
++		ipu_cpmem_set_block_mode(channel);
++	} else {
++		burst_size = (image.pix.width & 0xf) ? 8 : 16;
++	}
++
++	ipu_cpmem_set_burstsize(channel, burst_size);
++
++	if (rot_mode)
++		ipu_cpmem_set_rotation(channel, rot_mode);
++
++	if (image.pix.field == V4L2_FIELD_NONE &&
++	    V4L2_FIELD_HAS_BOTH(infmt->field) &&
++	    channel == priv->out_ch)
++		ipu_cpmem_interlaced_scan(channel, image.pix.bytesperline);
++
++	ret = ipu_ic_task_idma_init(priv->ic, channel,
++				    image.pix.width, image.pix.height,
++				    burst_size, rot_mode);
++	if (ret)
++		return ret;
++
++	ipu_cpmem_set_axi_id(channel, 1);
++
++	ipu_idmac_set_double_buffer(channel, true);
++
++	return 0;
++}
++
++static int prp_setup_rotation(struct prp_priv *priv)
++{
++	struct imx_media_video_dev *vdev = priv->vdev;
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++	const struct imx_media_pixfmt *outcc, *incc;
++	struct v4l2_mbus_framefmt *infmt;
++	struct v4l2_pix_format *outfmt;
++	dma_addr_t phys[2];
++	int ret;
++
++	infmt = &priv->format_mbus[PRPENCVF_SINK_PAD];
++	outfmt = &vdev->fmt.fmt.pix;
++	incc = priv->cc[PRPENCVF_SINK_PAD];
++	outcc = vdev->cc;
++
++	ret = imx_media_alloc_dma_buf(priv->md, &priv->rot_buf[0],
++				      outfmt->sizeimage);
 +	if (ret) {
-+		v4l2_err(sd, "Failed to register video device\n");
++		v4l2_err(&ic_priv->sd, "failed to alloc rot_buf[0], %d\n", ret);
++		return ret;
++	}
++	ret = imx_media_alloc_dma_buf(priv->md, &priv->rot_buf[1],
++				      outfmt->sizeimage);
++	if (ret) {
++		v4l2_err(&ic_priv->sd, "failed to alloc rot_buf[1], %d\n", ret);
++		goto free_rot0;
++	}
++
++	ret = ipu_ic_task_init(priv->ic,
++			       infmt->width, infmt->height,
++			       outfmt->height, outfmt->width,
++			       incc->cs, outcc->cs);
++	if (ret) {
++		v4l2_err(&ic_priv->sd, "ipu_ic_task_init failed, %d\n", ret);
++		goto free_rot1;
++	}
++
++	/* init the IC-PRP-->MEM IDMAC channel */
++	ret = prp_setup_channel(priv, priv->out_ch, IPU_ROTATE_NONE,
++				priv->rot_buf[0].phys, priv->rot_buf[1].phys,
++				true);
++	if (ret) {
++		v4l2_err(&ic_priv->sd,
++			 "prp_setup_channel(out_ch) failed, %d\n", ret);
++		goto free_rot1;
++	}
++
++	/* init the MEM-->IC-PRP ROT IDMAC channel */
++	ret = prp_setup_channel(priv, priv->rot_in_ch, priv->rot_mode,
++				priv->rot_buf[0].phys, priv->rot_buf[1].phys,
++				true);
++	if (ret) {
++		v4l2_err(&ic_priv->sd,
++			 "prp_setup_channel(rot_in_ch) failed, %d\n", ret);
++		goto free_rot1;
++	}
++
++	prp_setup_vb2_buf(priv, phys);
++
++	/* init the destination IC-PRP ROT-->MEM IDMAC channel */
++	ret = prp_setup_channel(priv, priv->rot_out_ch, IPU_ROTATE_NONE,
++				phys[0], phys[1],
++				false);
++	if (ret) {
++		v4l2_err(&ic_priv->sd,
++			 "prp_setup_channel(rot_out_ch) failed, %d\n", ret);
++		goto unsetup_vb2;
++	}
++
++	/* now link IC-PRP-->MEM to MEM-->IC-PRP ROT */
++	ipu_idmac_link(priv->out_ch, priv->rot_in_ch);
++
++	/* enable the IC */
++	ipu_ic_enable(priv->ic);
++
++	/* set buffers ready */
++	ipu_idmac_select_buffer(priv->out_ch, 0);
++	ipu_idmac_select_buffer(priv->out_ch, 1);
++	ipu_idmac_select_buffer(priv->rot_out_ch, 0);
++	ipu_idmac_select_buffer(priv->rot_out_ch, 1);
++
++	/* enable the channels */
++	ipu_idmac_enable_channel(priv->out_ch);
++	ipu_idmac_enable_channel(priv->rot_in_ch);
++	ipu_idmac_enable_channel(priv->rot_out_ch);
++
++	/* and finally enable the IC PRP task */
++	ipu_ic_task_enable(priv->ic);
++
++	return 0;
++
++unsetup_vb2:
++	prp_unsetup_vb2_buf(priv, VB2_BUF_STATE_QUEUED);
++free_rot1:
++	imx_media_free_dma_buf(priv->md, &priv->rot_buf[1]);
++free_rot0:
++	imx_media_free_dma_buf(priv->md, &priv->rot_buf[0]);
++	return ret;
++}
++
++static void prp_unsetup_rotation(struct prp_priv *priv)
++{
++	ipu_ic_task_disable(priv->ic);
++
++	ipu_idmac_disable_channel(priv->out_ch);
++	ipu_idmac_disable_channel(priv->rot_in_ch);
++	ipu_idmac_disable_channel(priv->rot_out_ch);
++
++	ipu_idmac_unlink(priv->out_ch, priv->rot_in_ch);
++
++	ipu_ic_disable(priv->ic);
++
++	imx_media_free_dma_buf(priv->md, &priv->rot_buf[0]);
++	imx_media_free_dma_buf(priv->md, &priv->rot_buf[1]);
++}
++
++static int prp_setup_norotation(struct prp_priv *priv)
++{
++	struct imx_media_video_dev *vdev = priv->vdev;
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++	const struct imx_media_pixfmt *outcc, *incc;
++	struct v4l2_mbus_framefmt *infmt;
++	struct v4l2_pix_format *outfmt;
++	dma_addr_t phys[2];
++	int ret;
++
++	infmt = &priv->format_mbus[PRPENCVF_SINK_PAD];
++	outfmt = &vdev->fmt.fmt.pix;
++	incc = priv->cc[PRPENCVF_SINK_PAD];
++	outcc = vdev->cc;
++
++	ret = ipu_ic_task_init(priv->ic,
++			       infmt->width, infmt->height,
++			       outfmt->width, outfmt->height,
++			       incc->cs, outcc->cs);
++	if (ret) {
++		v4l2_err(&ic_priv->sd, "ipu_ic_task_init failed, %d\n", ret);
 +		return ret;
 +	}
 +
-+	vq->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-+	vq->io_modes = VB2_MMAP | VB2_DMABUF;
-+	vq->drv_priv = priv;
-+	vq->buf_struct_size = sizeof(struct imx_media_buffer);
-+	vq->ops = &capture_qops;
-+	vq->mem_ops = &vb2_dma_contig_memops;
-+	vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-+	vq->lock = &priv->mutex;
-+	vq->min_buffers_needed = 2;
-+	vq->dev = priv->dev;
++	prp_setup_vb2_buf(priv, phys);
 +
-+	ret = vb2_queue_init(vq);
++	/* init the IC PRP-->MEM IDMAC channel */
++	ret = prp_setup_channel(priv, priv->out_ch, priv->rot_mode,
++				phys[0], phys[1], false);
 +	if (ret) {
-+		v4l2_err(sd, "vb2_queue_init failed\n");
-+		goto unreg;
++		v4l2_err(&ic_priv->sd,
++			 "prp_setup_channel(out_ch) failed, %d\n", ret);
++		goto unsetup_vb2;
 +	}
 +
-+	INIT_LIST_HEAD(&priv->ready_q);
++	ipu_cpmem_dump(priv->out_ch);
++	ipu_ic_dump(priv->ic);
++	ipu_dump(priv->ipu);
 +
-+	priv->vdev_pad.flags = MEDIA_PAD_FL_SINK;
-+	ret = media_entity_pads_init(&vfd->entity, 1, &priv->vdev_pad);
-+	if (ret) {
-+		v4l2_err(sd, "failed to init dev pad\n");
-+		goto unreg;
-+	}
++	ipu_ic_enable(priv->ic);
 +
-+	/* create the link from the src_sd devnode pad to device node */
-+	ret = media_create_pad_link(&sd->entity, priv->src_sd_pad,
-+				    &vfd->entity, 0, 0);
-+	if (ret) {
-+		v4l2_err(sd, "failed to create link to device node\n");
-+		goto unreg;
-+	}
++	/* set buffers ready */
++	ipu_idmac_select_buffer(priv->out_ch, 0);
++	ipu_idmac_select_buffer(priv->out_ch, 1);
 +
-+	/* setup default format */
-+	fmt_src.pad = priv->src_sd_pad;
-+	fmt_src.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-+	v4l2_subdev_call(sd, pad, get_fmt, NULL, &fmt_src);
-+	if (ret) {
-+		v4l2_err(sd, "failed to get src_sd format\n");
-+		goto unreg;
-+	}
++	/* enable the channels */
++	ipu_idmac_enable_channel(priv->out_ch);
 +
-+	vdev->fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-+	imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix,
-+				      &fmt_src.format, NULL);
-+	vdev->cc = imx_media_find_format(0, fmt_src.format.code,
-+					 true, false);
-+
-+	v4l2_info(sd, "Registered %s as /dev/%s\n", vfd->name,
-+		  video_device_node_name(vfd));
-+
-+	vfd->ctrl_handler = &priv->ctrl_hdlr;
++	/* enable the IC task */
++	ipu_ic_task_enable(priv->ic);
 +
 +	return 0;
-+unreg:
-+	video_unregister_device(vfd);
++
++unsetup_vb2:
++	prp_unsetup_vb2_buf(priv, VB2_BUF_STATE_QUEUED);
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(imx_media_capture_device_register);
 +
-+void imx_media_capture_device_unregister(struct imx_media_video_dev *vdev)
++static void prp_unsetup_norotation(struct prp_priv *priv)
 +{
-+	struct capture_priv *priv = to_capture_priv(vdev);
-+	struct video_device *vfd = priv->vdev.vfd;
++	ipu_ic_task_disable(priv->ic);
++	ipu_idmac_disable_channel(priv->out_ch);
++	ipu_ic_disable(priv->ic);
++}
 +
-+	mutex_lock(&priv->mutex);
++static void prp_unsetup(struct prp_priv *priv,
++			enum vb2_buffer_state state)
++{
++	if (ipu_rot_mode_is_irt(priv->rot_mode))
++		prp_unsetup_rotation(priv);
++	else
++		prp_unsetup_norotation(priv);
 +
-+	if (video_is_registered(vfd)) {
-+		video_unregister_device(vfd);
-+		media_entity_cleanup(&vfd->entity);
++	prp_unsetup_vb2_buf(priv, state);
++}
++
++static int prp_start(struct prp_priv *priv)
++{
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++	struct imx_media_video_dev *vdev = priv->vdev;
++	struct v4l2_pix_format *outfmt;
++	int ret;
++
++	ret = prp_get_ipu_resources(priv);
++	if (ret)
++		return ret;
++
++	outfmt = &vdev->fmt.fmt.pix;
++
++	ret = imx_media_alloc_dma_buf(priv->md, &priv->underrun_buf,
++				      outfmt->sizeimage);
++	if (ret)
++		goto out_put_ipu;
++
++	priv->ipu_buf_num = 0;
++
++	/* init EOF completion waitq */
++	init_completion(&priv->last_eof_comp);
++	priv->last_eof = false;
++	priv->nfb4eof = false;
++
++	if (ipu_rot_mode_is_irt(priv->rot_mode))
++		ret = prp_setup_rotation(priv);
++	else
++		ret = prp_setup_norotation(priv);
++	if (ret)
++		goto out_free_underrun;
++
++	priv->nfb4eof_irq = ipu_idmac_channel_irq(priv->ipu,
++						  priv->out_ch,
++						  IPU_IRQ_NFB4EOF);
++	ret = devm_request_irq(ic_priv->dev, priv->nfb4eof_irq,
++			       prp_nfb4eof_interrupt, 0,
++			       "imx-ic-prp-nfb4eof", priv);
++	if (ret) {
++		v4l2_err(&ic_priv->sd,
++			 "Error registering NFB4EOF irq: %d\n", ret);
++		goto out_unsetup;
 +	}
 +
-+	mutex_unlock(&priv->mutex);
++	if (ipu_rot_mode_is_irt(priv->rot_mode))
++		priv->eof_irq = ipu_idmac_channel_irq(
++			priv->ipu, priv->rot_out_ch, IPU_IRQ_EOF);
++	else
++		priv->eof_irq = ipu_idmac_channel_irq(
++			priv->ipu, priv->out_ch, IPU_IRQ_EOF);
++
++	ret = devm_request_irq(ic_priv->dev, priv->eof_irq,
++			       prp_eof_interrupt, 0,
++			       "imx-ic-prp-eof", priv);
++	if (ret) {
++		v4l2_err(&ic_priv->sd,
++			 "Error registering eof irq: %d\n", ret);
++		goto out_free_nfb4eof_irq;
++	}
++
++	/* start the EOF timeout timer */
++	mod_timer(&priv->eof_timeout_timer,
++		  jiffies + msecs_to_jiffies(IMX_MEDIA_EOF_TIMEOUT));
++
++	return 0;
++
++out_free_nfb4eof_irq:
++	devm_free_irq(ic_priv->dev, priv->nfb4eof_irq, priv);
++out_unsetup:
++	prp_unsetup(priv, VB2_BUF_STATE_QUEUED);
++out_free_underrun:
++	imx_media_free_dma_buf(priv->md, &priv->underrun_buf);
++out_put_ipu:
++	prp_put_ipu_resources(priv);
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(imx_media_capture_device_unregister);
 +
-+struct imx_media_video_dev *
-+imx_media_capture_device_init(struct v4l2_subdev *src_sd, int pad)
++static void prp_stop(struct prp_priv *priv)
 +{
-+	struct capture_priv *priv;
-+	struct video_device *vfd;
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++	unsigned long flags;
++	int ret;
 +
-+	priv = devm_kzalloc(src_sd->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return ERR_PTR(-ENOMEM);
++	/* mark next EOF interrupt as the last before stream off */
++	spin_lock_irqsave(&priv->irqlock, flags);
++	priv->last_eof = true;
++	spin_unlock_irqrestore(&priv->irqlock, flags);
 +
-+	priv->src_sd = src_sd;
-+	priv->src_sd_pad = pad;
-+	priv->dev = src_sd->dev;
++	/*
++	 * and then wait for interrupt handler to mark completion.
++	 */
++	ret = wait_for_completion_timeout(
++		&priv->last_eof_comp,
++		msecs_to_jiffies(IMX_MEDIA_EOF_TIMEOUT));
++	if (ret == 0)
++		v4l2_warn(&ic_priv->sd, "wait last EOF timeout\n");
 +
-+	mutex_init(&priv->mutex);
-+	spin_lock_init(&priv->q_lock);
++	devm_free_irq(ic_priv->dev, priv->eof_irq, priv);
++	devm_free_irq(ic_priv->dev, priv->nfb4eof_irq, priv);
 +
-+	snprintf(capture_videodev.name, sizeof(capture_videodev.name),
-+		 "%s capture", src_sd->name);
++	prp_unsetup(priv, VB2_BUF_STATE_ERROR);
 +
-+	vfd = video_device_alloc();
-+	if (!vfd)
-+		return ERR_PTR(-ENOMEM);
++	imx_media_free_dma_buf(priv->md, &priv->underrun_buf);
 +
-+	*vfd = capture_videodev;
-+	vfd->lock = &priv->mutex;
-+	vfd->queue = &priv->q;
-+	priv->vdev.vfd = vfd;
++	/* cancel the EOF timeout timer */
++	del_timer_sync(&priv->eof_timeout_timer);
 +
-+	video_set_drvdata(vfd, priv);
-+
-+	v4l2_ctrl_handler_init(&priv->ctrl_hdlr, 0);
-+
-+	return &priv->vdev;
++	prp_put_ipu_resources(priv);
 +}
-+EXPORT_SYMBOL_GPL(imx_media_capture_device_init);
 +
-+void imx_media_capture_device_remove(struct imx_media_video_dev *vdev)
++static int prp_enum_mbus_code(struct v4l2_subdev *sd,
++			      struct v4l2_subdev_pad_config *cfg,
++			      struct v4l2_subdev_mbus_code_enum *code)
 +{
-+	struct capture_priv *priv = to_capture_priv(vdev);
++	if (code->pad >= PRPENCVF_NUM_PADS)
++		return -EINVAL;
 +
++	if (code->pad == PRPENCVF_SRC_PAD)
++		return imx_media_enum_format(NULL, &code->code, code->index,
++					     true, false);
++
++	return imx_media_enum_ipu_format(NULL, &code->code, code->index, true);
++}
++
++static struct v4l2_mbus_framefmt *
++__prp_get_fmt(struct prp_priv *priv, struct v4l2_subdev_pad_config *cfg,
++	      unsigned int pad, enum v4l2_subdev_format_whence which)
++{
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++
++	if (which == V4L2_SUBDEV_FORMAT_TRY)
++		return v4l2_subdev_get_try_format(&ic_priv->sd, cfg, pad);
++	else
++		return &priv->format_mbus[pad];
++}
++
++/*
++ * V4L2 subdev operations.
++ */
++
++static int prp_get_fmt(struct v4l2_subdev *sd,
++		       struct v4l2_subdev_pad_config *cfg,
++		       struct v4l2_subdev_format *sdformat)
++{
++	struct prp_priv *priv = sd_to_priv(sd);
++	struct v4l2_mbus_framefmt *fmt;
++	int ret = 0;
++
++	if (sdformat->pad >= PRPENCVF_NUM_PADS)
++		return -EINVAL;
++
++	mutex_lock(&priv->lock);
++
++	fmt = __prp_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
++	if (!fmt) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	sdformat->format = *fmt;
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++static int prp_set_fmt(struct v4l2_subdev *sd,
++		       struct v4l2_subdev_pad_config *cfg,
++		       struct v4l2_subdev_format *sdformat)
++{
++	struct prp_priv *priv = sd_to_priv(sd);
++	const struct imx_media_pixfmt *cc;
++	struct v4l2_mbus_framefmt *infmt;
++	int ret = 0;
++	u32 code;
++
++	if (sdformat->pad >= PRPENCVF_NUM_PADS)
++		return -EINVAL;
++
++	mutex_lock(&priv->lock);
++
++	if (priv->stream_on) {
++		ret = -EBUSY;
++		goto out;
++	}
++
++	if (sdformat->pad == PRPENCVF_SRC_PAD) {
++		infmt = __prp_get_fmt(priv, cfg, PRPENCVF_SINK_PAD,
++				      sdformat->which);
++
++		cc = imx_media_find_format(0, sdformat->format.code,
++					   true, false);
++		if (!cc) {
++			imx_media_enum_format(NULL, &code, 0, true, false);
++			cc = imx_media_find_format(0, code, true, false);
++			sdformat->format.code = cc->codes[0];
++		}
++
++		if (sdformat->format.field != V4L2_FIELD_NONE)
++			sdformat->format.field = infmt->field;
++
++		/* IC resizer cannot downsize more than 4:1 */
++		if (ipu_rot_mode_is_irt(priv->rot_mode))
++			v4l_bound_align_image(&sdformat->format.width,
++					      infmt->height / 4, MAX_H_SRC,
++					      H_ALIGN_SRC,
++					      &sdformat->format.height,
++					      infmt->width / 4, MAX_W_SRC,
++					      W_ALIGN_SRC, S_ALIGN);
++		else
++			v4l_bound_align_image(&sdformat->format.width,
++					      infmt->width / 4, MAX_W_SRC,
++					      W_ALIGN_SRC,
++					      &sdformat->format.height,
++					      infmt->height / 4, MAX_H_SRC,
++					      H_ALIGN_SRC, S_ALIGN);
++	} else {
++		cc = imx_media_find_ipu_format(0, sdformat->format.code,
++					       true);
++		if (!cc) {
++			imx_media_enum_ipu_format(NULL, &code, 0, true);
++			cc = imx_media_find_ipu_format(0, code, true);
++			sdformat->format.code = cc->codes[0];
++		}
++
++		v4l_bound_align_image(&sdformat->format.width,
++				      MIN_W_SINK, MAX_W_SINK, W_ALIGN_SINK,
++				      &sdformat->format.height,
++				      MIN_H_SINK, MAX_H_SINK, H_ALIGN_SINK,
++				      S_ALIGN);
++	}
++
++	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
++		cfg->try_fmt = sdformat->format;
++	} else {
++		priv->format_mbus[sdformat->pad] = sdformat->format;
++		priv->cc[sdformat->pad] = cc;
++	}
++
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++static int prp_link_setup(struct media_entity *entity,
++			  const struct media_pad *local,
++			  const struct media_pad *remote, u32 flags)
++{
++	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
++	struct imx_ic_priv *ic_priv = v4l2_get_subdevdata(sd);
++	struct prp_priv *priv = ic_priv->task_priv;
++	struct v4l2_subdev *remote_sd;
++	int ret = 0;
++
++	dev_dbg(ic_priv->dev, "link setup %s -> %s", remote->entity->name,
++		local->entity->name);
++
++	mutex_lock(&priv->lock);
++
++	if (local->flags & MEDIA_PAD_FL_SINK) {
++		if (!is_media_entity_v4l2_subdev(remote->entity)) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		remote_sd = media_entity_to_v4l2_subdev(remote->entity);
++
++		if (flags & MEDIA_LNK_FL_ENABLED) {
++			if (priv->src_sd) {
++				ret = -EBUSY;
++				goto out;
++			}
++			priv->src_sd = remote_sd;
++		} else {
++			priv->src_sd = NULL;
++		}
++
++		goto out;
++	}
++
++	/* this is the source pad */
++
++	/* the remote must be the device node */
++	if (!is_media_entity_v4l2_video_device(remote->entity)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (flags & MEDIA_LNK_FL_ENABLED) {
++		if (priv->sink) {
++			ret = -EBUSY;
++			goto out;
++		}
++	} else {
++		priv->sink = NULL;
++		goto out;
++	}
++
++	priv->sink = remote->entity;
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++static int prp_link_validate(struct v4l2_subdev *sd,
++			     struct media_link *link,
++			     struct v4l2_subdev_format *source_fmt,
++			     struct v4l2_subdev_format *sink_fmt)
++{
++	struct imx_ic_priv *ic_priv = v4l2_get_subdevdata(sd);
++	struct prp_priv *priv = ic_priv->task_priv;
++	struct imx_media_subdev *csi;
++	int ret;
++
++	ret = v4l2_subdev_link_validate_default(sd, link,
++						source_fmt, sink_fmt);
++	if (ret)
++		return ret;
++
++	csi = imx_media_find_pipeline_subdev(priv->md, &ic_priv->sd.entity,
++					     IMX_MEDIA_GRP_ID_CSI);
++	if (IS_ERR(csi))
++		csi = NULL;
++
++	mutex_lock(&priv->lock);
++	priv->csi_sd = csi ? csi->sd : NULL;
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++static int prp_s_ctrl(struct v4l2_ctrl *ctrl)
++{
++	struct prp_priv *priv = container_of(ctrl->handler,
++					       struct prp_priv, ctrl_hdlr);
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++	enum ipu_rotate_mode rot_mode;
++	int rotation, ret = 0;
++	bool hflip, vflip;
++
++	mutex_lock(&priv->lock);
++
++	rotation = priv->rotation;
++	hflip = priv->hflip;
++	vflip = priv->vflip;
++
++	switch (ctrl->id) {
++	case V4L2_CID_HFLIP:
++		hflip = (ctrl->val == 1);
++		break;
++	case V4L2_CID_VFLIP:
++		vflip = (ctrl->val == 1);
++		break;
++	case V4L2_CID_ROTATE:
++		rotation = ctrl->val;
++		break;
++	default:
++		v4l2_err(&ic_priv->sd, "Invalid control\n");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	ret = ipu_degrees_to_rot_mode(&rot_mode, rotation, hflip, vflip);
++	if (ret)
++		goto out;
++
++	if (rot_mode != priv->rot_mode) {
++		/* can't change rotation mid-streaming */
++		if (priv->stream_on) {
++			ret = -EBUSY;
++			goto out;
++		}
++		priv->rot_mode = rot_mode;
++		priv->rotation = rotation;
++		priv->hflip = hflip;
++		priv->vflip = vflip;
++	}
++
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++static const struct v4l2_ctrl_ops prp_ctrl_ops = {
++	.s_ctrl = prp_s_ctrl,
++};
++
++static int prp_init_controls(struct prp_priv *priv)
++{
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
++	struct v4l2_ctrl_handler *hdlr = &priv->ctrl_hdlr;
++	int ret;
++
++	v4l2_ctrl_handler_init(hdlr, 3);
++
++	v4l2_ctrl_new_std(hdlr, &prp_ctrl_ops, V4L2_CID_HFLIP,
++			  0, 1, 1, 0);
++	v4l2_ctrl_new_std(hdlr, &prp_ctrl_ops, V4L2_CID_VFLIP,
++			  0, 1, 1, 0);
++	v4l2_ctrl_new_std(hdlr, &prp_ctrl_ops, V4L2_CID_ROTATE,
++			  0, 270, 90, 0);
++
++	ic_priv->sd.ctrl_handler = hdlr;
++
++	if (hdlr->error) {
++		ret = hdlr->error;
++		goto out_free;
++	}
++
++	v4l2_ctrl_handler_setup(hdlr);
++	return 0;
++
++out_free:
++	v4l2_ctrl_handler_free(hdlr);
++	return ret;
++}
++
++static int prp_s_stream(struct v4l2_subdev *sd, int enable)
++{
++	struct imx_ic_priv *ic_priv = v4l2_get_subdevdata(sd);
++	struct prp_priv *priv = ic_priv->task_priv;
++	int ret = 0;
++
++	mutex_lock(&priv->lock);
++
++	if (!priv->src_sd || !priv->sink) {
++		ret = -EPIPE;
++		goto out;
++	}
++
++	dev_dbg(ic_priv->dev, "stream %s\n", enable ? "ON" : "OFF");
++
++	if (enable && !priv->stream_on)
++		ret = prp_start(priv);
++	else if (!enable && priv->stream_on)
++		prp_stop(priv);
++
++	if (!ret)
++		priv->stream_on = enable;
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++/*
++ * retrieve our pads parsed from the OF graph by the media device
++ */
++static int prp_registered(struct v4l2_subdev *sd)
++{
++	struct prp_priv *priv = sd_to_priv(sd);
++	int i, ret;
++	u32 code;
++
++	/* get media device */
++	priv->md = dev_get_drvdata(sd->v4l2_dev->dev);
++
++	for (i = 0; i < PRPENCVF_NUM_PADS; i++) {
++		if (i == PRPENCVF_SINK_PAD) {
++			priv->pad[i].flags = MEDIA_PAD_FL_SINK;
++			imx_media_enum_ipu_format(NULL, &code, 0, true);
++		} else {
++			priv->pad[i].flags = MEDIA_PAD_FL_SOURCE;
++			code = 0;
++		}
++
++		/* set a default mbus format  */
++		ret = imx_media_init_mbus_fmt(&priv->format_mbus[i],
++					      640, 480, code, V4L2_FIELD_NONE,
++					      &priv->cc[i]);
++		if (ret)
++			return ret;
++	}
++
++	ret = media_entity_pads_init(&sd->entity, PRPENCVF_NUM_PADS,
++				     priv->pad);
++	if (ret)
++		return ret;
++
++	ret = imx_media_capture_device_register(priv->vdev);
++	if (ret)
++		return ret;
++
++	ret = prp_init_controls(priv);
++	if (ret)
++		imx_media_capture_device_unregister(priv->vdev);
++
++	return ret;
++}
++
++static void prp_unregistered(struct v4l2_subdev *sd)
++{
++	struct prp_priv *priv = sd_to_priv(sd);
++
++	imx_media_capture_device_unregister(priv->vdev);
 +	v4l2_ctrl_handler_free(&priv->ctrl_hdlr);
 +}
-+EXPORT_SYMBOL_GPL(imx_media_capture_device_remove);
 +
-+MODULE_DESCRIPTION("i.MX5/6 v4l2 video capture interface driver");
-+MODULE_AUTHOR("Steve Longerbeam <steve_longerbeam@mentor.com>");
-+MODULE_LICENSE("GPL");
++static struct v4l2_subdev_pad_ops prp_pad_ops = {
++	.enum_mbus_code = prp_enum_mbus_code,
++	.get_fmt = prp_get_fmt,
++	.set_fmt = prp_set_fmt,
++	.link_validate = prp_link_validate,
++};
++
++static struct v4l2_subdev_video_ops prp_video_ops = {
++	.s_stream = prp_s_stream,
++};
++
++static struct media_entity_operations prp_entity_ops = {
++	.link_setup = prp_link_setup,
++	.link_validate = v4l2_subdev_link_validate,
++};
++
++static struct v4l2_subdev_ops prp_subdev_ops = {
++	.video = &prp_video_ops,
++	.pad = &prp_pad_ops,
++};
++
++static struct v4l2_subdev_internal_ops prp_internal_ops = {
++	.registered = prp_registered,
++	.unregistered = prp_unregistered,
++};
++
++static int prp_init(struct imx_ic_priv *ic_priv)
++{
++	struct prp_priv *priv;
++
++	priv = devm_kzalloc(ic_priv->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	ic_priv->task_priv = priv;
++	priv->ic_priv = ic_priv;
++
++	spin_lock_init(&priv->irqlock);
++	init_timer(&priv->eof_timeout_timer);
++	priv->eof_timeout_timer.data = (unsigned long)priv;
++	priv->eof_timeout_timer.function = prp_eof_timeout;
++
++	priv->vdev = imx_media_capture_device_init(&ic_priv->sd,
++						   PRPENCVF_SRC_PAD);
++	if (IS_ERR(priv->vdev))
++		return PTR_ERR(priv->vdev);
++
++	mutex_init(&priv->lock);
++
++	return 0;
++}
++
++static void prp_remove(struct imx_ic_priv *ic_priv)
++{
++	struct prp_priv *priv = ic_priv->task_priv;
++
++	mutex_destroy(&priv->lock);
++	imx_media_capture_device_remove(priv->vdev);
++}
++
++struct imx_ic_ops imx_ic_prpencvf_ops = {
++	.subdev_ops = &prp_subdev_ops,
++	.internal_ops = &prp_internal_ops,
++	.entity_ops = &prp_entity_ops,
++	.init = prp_init,
++	.remove = prp_remove,
++};
+diff --git a/drivers/staging/media/imx/imx-ic.h b/drivers/staging/media/imx/imx-ic.h
+new file mode 100644
+index 0000000..5535111
+--- /dev/null
++++ b/drivers/staging/media/imx/imx-ic.h
+@@ -0,0 +1,38 @@
++/*
++ * V4L2 Image Converter Subdev for Freescale i.MX5/6 SOC
++ *
++ * Copyright (c) 2016 Mentor Graphics Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef _IMX_IC_H
++#define _IMX_IC_H
++
++#include <media/v4l2-subdev.h>
++
++struct imx_ic_priv {
++	struct device *dev;
++	struct v4l2_subdev sd;
++	int    ipu_id;
++	int    task_id;
++	void   *prp_priv;
++	void   *task_priv;
++};
++
++struct imx_ic_ops {
++	struct v4l2_subdev_ops *subdev_ops;
++	struct v4l2_subdev_internal_ops *internal_ops;
++	struct media_entity_operations *entity_ops;
++
++	int (*init)(struct imx_ic_priv *ic_priv);
++	void (*remove)(struct imx_ic_priv *ic_priv);
++};
++
++extern struct imx_ic_ops imx_ic_prp_ops;
++extern struct imx_ic_ops imx_ic_prpencvf_ops;
++extern struct imx_ic_ops imx_ic_pp_ops;
++
++#endif
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
