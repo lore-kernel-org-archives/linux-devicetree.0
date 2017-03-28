@@ -1,115 +1,117 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2,1/3] meson_uart: expose CLKID_UARTx
-Date: Tue, 28 Mar 2017 21:14:50 +0200
-Message-ID: <1490728490.20764.8.camel@baylibre.com>
-References: <20170328092545.4644-1-hgkr.klein@gmail.com>
-         <20170328092545.4644-2-hgkr.klein@gmail.com>
-         <1490716277.20764.6.camel@baylibre.com>
-         <71489b62-78c8-7082-587e-8598dc43ca59@gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 1/2] dt-bindings: i2c: Add Mediatek MT2701 i2c
+ binding
+Date: Tue, 28 Mar 2017 21:22:58 +0200
+Message-ID: <20170328192258.GA4525@katana>
+References: <1489029185-21447-1-git-send-email-jun.gao@mediatek.com>
+ <1489029185-21447-2-git-send-email-jun.gao@mediatek.com>
+ <20170322090543.sxacnddn2o7stjnq@ninjato>
+ <1490694612.18582.11.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <71489b62-78c8-7082-587e-8598dc43ca59@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Helmut Klein <hgkr.klein@gmail.com>, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1490694612.18582.11.camel@mhfsdcap03>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-03-28 at 20:18 +0200, Helmut Klein wrote:
-> i know for sure that the bluetooth chip of my system is connected to 
-> uart_A. so this clock must be exposed.
-> 
-> i don't know if the other 2 uarts are used on other hardware. so i will 
-> remove them from my patch.
 
-What I meant is device trees "upstream". 
-I would expect such patch as part of a series to add support for your board in
-device-tree, with its bluetooth chipset.
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think it would better to drop this patch from the series.
-You can either keep it for your personal work, or send it again when upstreaming
-the support for your board and/or add the support for the bluetooth chip.
+On Tue, Mar 28, 2017 at 05:50:12PM +0800, Jun Gao wrote:
+> On Wed, 2017-03-22 at 10:05 +0100, Wolfram Sang wrote:
+> > On Thu, Mar 09, 2017 at 11:13:04AM +0800, Jun Gao wrote:
+> > > From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > >=20
+> > > Add MT2701 i2c binding to i2c-mt6577.txt and there is no need to
+> > > modify i2c driver.
+> > >=20
+> > > Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >=20
+> > There is still the issue which Matthias Brugger pointed out on January,
+> > 24th: you need to describe the fallback compatibles.
+> >=20
+>=20
+> IMHO the value under compatible are just inputs which can be accepted.
+> It's little strange to add fallback information in binding. Some other
+> bindings do not describe so detailedly.
+> Is it OK to make binding as minimum standard?
+> If we describe it very detailedly, we will have to modify binding if
+> there are some changes for mt2701.
 
-Cheers
-Jerome
+My reading of the below is that I could simply use "mediatek,mt2701-i2c"
+as compatible and things will work. But it won't, we don't have that in
+the driver IIRC. So, we need a fallback for that to work.
 
-> 
-> Helmut
-> 
-> On 28.03.2017 17:51, Jerome Brunet wrote:
-> > On Tue, 2017-03-28 at 11:25 +0200, Helmut Klein wrote:
-> > > Expose the clock ids for the three none AO uarts to the dt-bindings
-> > 
-> > Are they all used in the device tree ?
-> > We try to only expose what we need in the DT
-> > The recent discussion over CLKID_CPUCLK proved it was a sane thing to do.
-> > 
-> > > 
-> > > Signed-off-by: Helmut Klein <hgkr.klein@gmail.com>
+> Rob, could you give some suggestions?  Thanks!
+
+Would be welcome, yes. I lost track what the preferred solution is.
+
+>=20
 > > > ---
-> > >  drivers/clk/meson/gxbb.h              | 6 +++---
-> > >  include/dt-bindings/clock/gxbb-clkc.h | 3 +++
-> > >  2 files changed, 6 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
-> > > index 8ee2022ce5d5..1edfaa5fe307 100644
-> > > --- a/drivers/clk/meson/gxbb.h
-> > > +++ b/drivers/clk/meson/gxbb.h
-> > > @@ -194,7 +194,7 @@
-> > >  /* #define CLKID_SAR_ADC */
-> > >  #define CLKID_SMART_CARD	  24
-> > >  #define CLKID_RNG0		  25
-> > > -#define CLKID_UART0		  26
-> > > +/* CLKID_UART0 */
-> > >  #define CLKID_SDHC		  27
-> > >  #define CLKID_STREAM		  28
-> > >  #define CLKID_ASYNC_FIFO	  29
-> > > @@ -216,7 +216,7 @@
-> > >  #define CLKID_ADC		  45
-> > >  #define CLKID_BLKMV		  46
-> > >  #define CLKID_AIU		  47
-> > > -#define CLKID_UART1		  48
-> > > +/* CLKID_UART1 */
-> > >  #define CLKID_G2D		  49
-> > >  /* CLKID_USB0 */
-> > >  /* CLKID_USB1 */
-> > > @@ -236,7 +236,7 @@
-> > >  /* CLKID_USB0_DDR_BRIDGE */
-> > >  #define CLKID_MMC_PCLK		  66
-> > >  #define CLKID_DVIN		  67
-> > > -#define CLKID_UART2		  68
-> > > +/* CLKID_UART2 */
-> > >  /* #define CLKID_SANA */
-> > >  #define CLKID_VPU_INTR		  70
-> > >  #define CLKID_SEC_AHB_AHB3_BRIDGE 71
-> > > diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-
-> > > bindings/clock/gxbb-clkc.h
-> > > index 692846c7941b..7b329df47752 100644
-> > > --- a/include/dt-bindings/clock/gxbb-clkc.h
-> > > +++ b/include/dt-bindings/clock/gxbb-clkc.h
-> > > @@ -15,13 +15,16 @@
-> > >  #define CLKID_SPI		34
-> > >  #define CLKID_I2C		22
-> > >  #define CLKID_SAR_ADC		23
-> > > +#define CLKID_UART0		26
-> > >  #define CLKID_ETH		36
-> > > +#define CLKID_UART1		48
-> > >  #define CLKID_USB0		50
-> > >  #define CLKID_USB1		51
-> > >  #define CLKID_USB		55
-> > >  #define CLKID_HDMI_PCLK		63
-> > >  #define CLKID_USB1_DDR_BRIDGE	64
-> > >  #define CLKID_USB0_DDR_BRIDGE	65
-> > > +#define CLKID_UART2		68
-> > >  #define CLKID_SANA		69
-> > >  #define CLKID_GCLK_VENCI_INT0	77
-> > >  #define CLKID_AO_I2C		93
-> > > --
-> > > 2.11.0
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-amlogic mailing list
-> > > linux-amlogic@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> > >  .../devicetree/bindings/i2c/i2c-mt6577.txt         |   11 ++++++-----
+> > >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt b/D=
+ocumentation/devicetree/bindings/i2c/i2c-mt6577.txt
+> > > index 0ce6fa3..27dbbf9 100644
+> > > --- a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+> > > +++ b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+> > > @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface =
+with I2C devices.
+> > > =20
+> > >  Required properties:
+> > >    - compatible: value should be either of the following.
+> > > -      (a) "mediatek,mt6577-i2c", for i2c compatible with mt6577 i2c.
+> > > -      (b) "mediatek,mt6589-i2c", for i2c compatible with mt6589 i2c.
+> > > -      (c) "mediatek,mt8127-i2c", for i2c compatible with mt8127 i2c.
+> > > -      (d) "mediatek,mt8135-i2c", for i2c compatible with mt8135 i2c.
+> > > -      (e) "mediatek,mt8173-i2c", for i2c compatible with mt8173 i2c.
+> > > +	"mediatek,mt2701-i2c"
+> > > +	"mediatek,mt6577-i2c"
+> > > +	"mediatek,mt6589-i2c"
+> > > +	"mediatek,mt8127-i2c"
+> > > +	"mediatek,mt8135-i2c"
+> > > +	"mediatek,mt8173-i2c"
+> > >    - reg: physical base address of the controller and dma base, lengt=
+h of memory
+> > >      mapped region.
+> > >    - interrupts: interrupt number to the cpu.
+> > > --=20
+> > > 1.7.9.5
+> > >=20
+>=20
+>=20
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJY2rgRAAoJEBQN5MwUoCm2QPUP/RKSUMu/CfirGXi+l3xVQZDN
+dMrIEX+y79HfavvLgG6juaSqVREn6s27LmmO5pSqr/JyfzuhStx2H0c9/wmIjRqA
+s+jq8BKnWmL7+QnxG49ksqM+t/yp9hE3LIEHWMdfZkMGLgpK4R1SGiHxAa71ppnb
+B3B7gNunzH6bc/3OnkXHT3TVN8YfqukkV4OJCsdIU4/kZiO8dV6X1rx5OjlvqFNY
+16ksH12rIfQ6QAqs0Fzsp5uOUsxEltO1msFpXyXic34eprR16duiSyXteYz8fVSR
+ZUjuFe/A4cpPT5jw0sjO9qvVzHqdeJtzqVVvLNiwNZfFj8WplSAoIbc0hWZ0B/Rt
+KwobM7eGrPC45eMmLIHde1AL90mCIKobBzAjx9vaRQrzg13R5G/7h9v/Yo6tVRkR
+jOMTTc9PNK0TXOAagQYJ2XoH6SspJpcRZLXDjeMBmUmfl6x6YRTj8u/aeJ6jG/bi
+sJ/3H1wqabX/l9AelNkEZO3IHuKcbtYn53LPSb2Xj16BrSBe/oLcSOGY9rA2xfMZ
+c/n3GCGBEENSuE6Ievifj2PMdWktD2qAFh+yTiwhb62pXaOPqh9bRnWKN9BZoO7K
+7+IppUh3fFzmZjy8hlCCqG5k2qlQS0NtWcWfrjUXpG2n/KzKmyecQ/FCVPQ3gFg6
+mu+esTsYSByGlfUrcvfw
+=yz7H
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
