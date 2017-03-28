@@ -1,11 +1,15 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 0/2] memory: Introduce ti-emif-sram driver
-Date: Tue, 28 Mar 2017 15:55:09 -0500
-Message-ID: <20170328205511.21166-1-d-gerlach@ti.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC 3/8] cpufreq: imx6q: Set max suspend_freq to avoid changes
+ during suspend
+Date: Tue, 28 Mar 2017 22:50:50 +0200
+Message-ID: <45185440.SBt0mf6LXq@aspire.rjw.lan>
+References: <cover.1490199005.git.leonard.crestez@nxp.com>
+ <20170323043427.GE12094@vireshk-i7> <1490731431.15830.9.camel@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490731431.15830.9.camel@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,69 +19,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy J <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>, Irina Tirdea <irina.tirdea@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Octavian Purdila <octavian.purdila@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This series introduces a ti-emif-sram driver to be used on am335x and am437x.
-These SoCs have low power modes that require that the PER power domain be shut
-off. Because the EMIF (DDR Controller) resides within this power domain, it
-will lose context during a suspend operation, so we must save it so we can
-restore once we resume. However, we cannot execute this code from external
-memory, as it is not available at this point, so the code must be executed late
-in the suspend path and early in the resume path from SRAM.
+On Tuesday, March 28, 2017 11:03:51 PM Leonard Crestez wrote:
+> On Thu, 2017-03-23 at 10:04 +0530, Viresh Kumar wrote:
+> > On 22-03-17, 18:53, Leonard Crestez wrote:
+> > > If the cpufreq driver tries to modify voltage/freq during suspend/resume
+> > > it might need to control an external PMIC via I2C or SPI but those
+> > > devices might be already suspended.
+> > > 
+> > > To avoid this scenario we just increase cpufreq to highest setpoint
+> > > before suspend. This issue can easily be triggered by ldo-bypass but in
+> > > theory any regulator set_voltage call can end up having to modify
+> > > external supply voltages.
+> > > 
+> > > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> > > ---
+> > >  drivers/cpufreq/imx6q-cpufreq.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > 
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> 
+> The first couple of patches are obvious fixes despite being marked as
+> RFC. It would be great if you could apply them to your tree separately
 
-Patch 2 includes several functions written in ARM ASM that can be relocated to
-on-chip SRAM.  It also exports a table containing the absolute addresses of the
-available PM functions so that other PM code also running from SRAM can branch
-to them. It must also calculate virtual addresses for the suspend path, but
-physical addresses for the resume path as the MMU is not active when the code
-runs.
+Why?
 
-One thing that may not be immediately clear in the driver is that we can only
-get read-only exectuable memory regions from the mmio-sram driver so we also
-provide a second region to the driver that is read/write to be used for data
-during execution. This is the reason two sram regions are mapped and so many
-offsets must be provided to the code section.
+> from the rest of the series but I'm not sure what the process is here.
 
-In order for structs to co-exist in C and ASM, I went ahead and extended the
-generic asm-offsets.c for ARM and added a single function call for this driver
-that adds all the constants needed for the ASM code to get offsets into the
-struct members. I managed to do it without many direct additions to the
-asm-offsets file so I do not think it is too intrusive. This was the only way I
-saw to do peaceful C and ASM data structure co-existence. Due to the
-dependencies of all of the code on this I did not not split ARM vs drivers/
-changes into separate patches because I think it would be more confusing that
-way but if needed I think it can be done.
+Well, you have to talk to me.
 
-This code is required for low-power modes to work on AM335x and AM437x and a
-forthcoming PM series for those platforms will depend on this series. After
-both this and the PM series are reviewed I will send the necessary device tree
-changes for both, but in the meantime all remaining patches for am335x and
-am437x PM can be found here [1].
-
-Regards,
-Dave
-
-[1] https://github.com/dgerlach/linux-pm/tree/upstream/v4.11/amx3-suspend-dev
-
-Dave Gerlach (2):
-  Documentation: dt: Update ti,emif bindings
-  memory: ti-emif-sram: introduce relocatable suspend/resume handlers
-
- .../bindings/memory-controllers/ti/emif.txt        |  18 +-
- arch/arm/kernel/asm-offsets.c                      |   6 +
- drivers/memory/Kconfig                             |  10 +
- drivers/memory/Makefile                            |   4 +
- drivers/memory/emif.h                              |  17 ++
- drivers/memory/ti-emif-pm.c                        | 295 ++++++++++++++++++
- drivers/memory/ti-emif-sram-pm.S                   | 334 +++++++++++++++++++++
- include/linux/ti-emif-sram.h                       | 143 +++++++++
- 8 files changed, 826 insertions(+), 1 deletion(-)
- create mode 100644 drivers/memory/ti-emif-pm.c
- create mode 100644 drivers/memory/ti-emif-sram-pm.S
- create mode 100644 include/linux/ti-emif-sram.h
-
--- 
-2.11.0
+Thanks,
+Rafael
