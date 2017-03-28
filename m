@@ -1,13 +1,12 @@
-From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-Subject: [PATCH v2] arm64: dts: ls1012a: add crypto node
-Date: Tue, 28 Mar 2017 14:46:19 +0300
-Message-ID: <20170328114619.16568-1-horia.geanta@nxp.com>
-References: <20170328104115.GT30608@dragon>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH] arm64: tegra: Add CPU and PSCI nodes for NVIDIA Tegra210
+ platforms
+Date: Tue, 28 Mar 2017 12:48:38 +0100
+Message-ID: <1490701718-16571-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170328104115.GT30608@dragon>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,76 +16,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Harninder Rai <harninder.rai@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>, Will Deacon <will.deacon@arm.com>, Dan Douglass <dan.douglass@nxp.com>, linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Stephen Warren <swarren@nvidia.com>
+Cc: devicetree@vger.kernel.org, Vagrant Cascadian <vagrant@debian.org>, Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-TFMxMDEyQSBoYXMgYSBTRUMgdjUuNCBzZWN1cml0eSBlbmdpbmUuCgpTaWduZWQtb2ZmLWJ5OiBI
-b3JpYSBHZWFudMSDIDxob3JpYS5nZWFudGFAbnhwLmNvbT4KLS0tCnYyOiBtb3ZlIGFsaWFzZXMg
-ZnJvbSBib2FyZCBzcGVjaWZpYyBmaWxlcyBpbnRvIHRoZSBzaGFyZWQgZHRzaS4KCiBhcmNoL2Fy
-bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDEyYS5kdHNpIHwgMTAwICsrKysrKysrKysr
-KysrKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCA5OSBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
-MTAxMmEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMTJhLmR0
-c2kKaW5kZXggY2ZmZWJiNGIzZGYxLi4xYzM0OTM2MDZjY2EgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMTJhLmR0c2kKKysrIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAxMmEuZHRzaQpAQCAtNDIsNyArNDIsNyBAQAogICog
-ICAgIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KICAqLwogCi0jaW5jbHVkZSA8ZHQt
-YmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+CisjaW5jbHVkZSA8ZHQtYmluZGlu
-Z3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPgogCiAvIHsKIAljb21wYXRpYmxlID0g
-ImZzbCxsczEwMTJhIjsKQEAgLTUwLDYgKzUwLDE1IEBACiAJI2FkZHJlc3MtY2VsbHMgPSA8Mj47
-CiAJI3NpemUtY2VsbHMgPSA8Mj47CiAKKwlhbGlhc2VzIHsKKwkJY3J5cHRvID0gJmNyeXB0bzsK
-KwkJcnRpY19hID0gJnJ0aWNfYTsKKwkJcnRpY19iID0gJnJ0aWNfYjsKKwkJcnRpY19jID0gJnJ0
-aWNfYzsKKwkJcnRpY19kID0gJnJ0aWNfZDsKKwkJc2VjX21vbiA9ICZzZWNfbW9uOworCX07CisK
-IAljcHVzIHsKIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CiAJCSNzaXplLWNlbGxzID0gPDA+OwpA
-QCAtMTEzLDYgKzEyMiw5NSBAQAogCQkJYmlnLWVuZGlhbjsKIAkJfTsKIAorCQljcnlwdG86IGNy
-eXB0b0AxNzAwMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiZnNsLHNlYy12NS40IiwgImZzbCxzZWMt
-djUuMCIsCisJCQkJICAgICAiZnNsLHNlYy12NC4wIjsKKwkJCWZzbCxzZWMtZXJhID0gPDg+Owor
-CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJCXJhbmdl
-cyA9IDwweDAgMHgwMCAweDE3MDAwMDAgMHgxMDAwMDA+OworCQkJcmVnID0gPDB4MDAgMHgxNzAw
-MDAwIDB4MCAweDEwMDAwMD47CisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzUgSVJRX1RZUEVf
-TEVWRUxfSElHSD47CisKKwkJCXNlY19qcjA6IGpyQDEwMDAwIHsKKwkJCQljb21wYXRpYmxlID0g
-ImZzbCxzZWMtdjUuNC1qb2ItcmluZyIsCisJCQkJCSAgICAgImZzbCxzZWMtdjUuMC1qb2Itcmlu
-ZyIsCisJCQkJCSAgICAgImZzbCxzZWMtdjQuMC1qb2ItcmluZyI7CisJCQkJcmVnCSAgID0gPDB4
-MTAwMDAgMHgxMDAwMD47CisJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDcxIElSUV9UWVBFX0xF
-VkVMX0hJR0g+OworCQkJfTsKKworCQkJc2VjX2pyMToganJAMjAwMDAgeworCQkJCWNvbXBhdGli
-bGUgPSAiZnNsLHNlYy12NS40LWpvYi1yaW5nIiwKKwkJCQkJICAgICAiZnNsLHNlYy12NS4wLWpv
-Yi1yaW5nIiwKKwkJCQkJICAgICAiZnNsLHNlYy12NC4wLWpvYi1yaW5nIjsKKwkJCQlyZWcJICAg
-PSA8MHgyMDAwMCAweDEwMDAwPjsKKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzIgSVJRX1RZ
-UEVfTEVWRUxfSElHSD47CisJCQl9OworCisJCQlzZWNfanIyOiBqckAzMDAwMCB7CisJCQkJY29t
-cGF0aWJsZSA9ICJmc2wsc2VjLXY1LjQtam9iLXJpbmciLAorCQkJCQkgICAgICJmc2wsc2VjLXY1
-LjAtam9iLXJpbmciLAorCQkJCQkgICAgICJmc2wsc2VjLXY0LjAtam9iLXJpbmciOworCQkJCXJl
-ZwkgICA9IDwweDMwMDAwIDB4MTAwMDA+OworCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3MyBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCX07CisKKwkJCXNlY19qcjM6IGpyQDQwMDAwIHsKKwkJ
-CQljb21wYXRpYmxlID0gImZzbCxzZWMtdjUuNC1qb2ItcmluZyIsCisJCQkJCSAgICAgImZzbCxz
-ZWMtdjUuMC1qb2ItcmluZyIsCisJCQkJCSAgICAgImZzbCxzZWMtdjQuMC1qb2ItcmluZyI7CisJ
-CQkJcmVnCSAgID0gPDB4NDAwMDAgMHgxMDAwMD47CisJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDc0IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQkJfTsKKworCQkJcnRpY0A2MDAwMCB7CisJCQkJ
-Y29tcGF0aWJsZSA9ICJmc2wsc2VjLXY1LjQtcnRpYyIsCisJCQkJCSAgICAgImZzbCxzZWMtdjUu
-MC1ydGljIiwKKwkJCQkJICAgICAiZnNsLHNlYy12NC4wLXJ0aWMiOworCQkJCSNhZGRyZXNzLWNl
-bGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDE+OworCQkJCXJlZyA9IDwweDYwMDAwIDB4
-MTAwIDB4NjBlMDAgMHgxOD47CisJCQkJcmFuZ2VzID0gPDB4MCAweDYwMTAwIDB4NTAwPjsKKwor
-CQkJCXJ0aWNfYTogcnRpYy1hQDAgeworCQkJCQljb21wYXRpYmxlID0gImZzbCxzZWMtdjUuNC1y
-dGljLW1lbW9yeSIsCisJCQkJCQkgICAgICJmc2wsc2VjLXY1LjAtcnRpYy1tZW1vcnkiLAorCQkJ
-CQkJICAgICAiZnNsLHNlYy12NC4wLXJ0aWMtbWVtb3J5IjsKKwkJCQkJcmVnID0gPDB4MDAgMHgy
-MCAweDEwMCAweDEwMD47CisJCQkJfTsKKworCQkJCXJ0aWNfYjogcnRpYy1iQDIwIHsKKwkJCQkJ
-Y29tcGF0aWJsZSA9ICJmc2wsc2VjLXY1LjQtcnRpYy1tZW1vcnkiLAorCQkJCQkJICAgICAiZnNs
-LHNlYy12NS4wLXJ0aWMtbWVtb3J5IiwKKwkJCQkJCSAgICAgImZzbCxzZWMtdjQuMC1ydGljLW1l
-bW9yeSI7CisJCQkJCXJlZyA9IDwweDIwIDB4MjAgMHgyMDAgMHgxMDA+OworCQkJCX07CisKKwkJ
-CQlydGljX2M6IHJ0aWMtY0A0MCB7CisJCQkJCWNvbXBhdGlibGUgPSAiZnNsLHNlYy12NS40LXJ0
-aWMtbWVtb3J5IiwKKwkJCQkJCSAgICAgImZzbCxzZWMtdjUuMC1ydGljLW1lbW9yeSIsCisJCQkJ
-CQkgICAgICJmc2wsc2VjLXY0LjAtcnRpYy1tZW1vcnkiOworCQkJCQlyZWcgPSA8MHg0MCAweDIw
-IDB4MzAwIDB4MTAwPjsKKwkJCQl9OworCisJCQkJcnRpY19kOiBydGljLWRANjAgeworCQkJCQlj
-b21wYXRpYmxlID0gImZzbCxzZWMtdjUuNC1ydGljLW1lbW9yeSIsCisJCQkJCQkgICAgICJmc2ws
-c2VjLXY1LjAtcnRpYy1tZW1vcnkiLAorCQkJCQkJICAgICAiZnNsLHNlYy12NC4wLXJ0aWMtbWVt
-b3J5IjsKKwkJCQkJcmVnID0gPDB4NjAgMHgyMCAweDQwMCAweDEwMD47CisJCQkJfTsKKwkJCX07
-CisJCX07CisKKwkJc2VjX21vbjogc2VjX21vbkAxZTkwMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAi
-ZnNsLHNlYy12NS40LW1vbiIsICJmc2wsc2VjLXY1LjAtbW9uIiwKKwkJCQkgICAgICJmc2wsc2Vj
-LXY0LjAtbW9uIjsKKwkJCXJlZyA9IDwweDAgMHgxZTkwMDAwIDB4MCAweDEwMDAwPjsKKwkJCWlu
-dGVycnVwdHMgPSA8R0lDX1NQSSA3OCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQkgICAgIDxH
-SUNfU1BJIDc5IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQl9OworCiAJCWRjZmc6IGRjZmdAMWVl
-MDAwMCB7CiAJCQljb21wYXRpYmxlID0gImZzbCxsczEwMTJhLWRjZmciLAogCQkJCSAgICAgInN5
-c2NvbiI7Ci0tIAoyLjEyLjAuMjY0LmdkNmRiM2YyMTY1NDQKCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Add the CPU and PSCI nodes for the NVIDIA Tegra210 platforms so that
+all CPUs can be enabled on boot. This assumes that the PSCI firmware
+has been loaded during the initial bootstrap on the device before the
+kernel starts (which is typically the case for these platforms). The
+PSCI firmware version is set to v0.2 which aligns with the current
+shipping version for Tegra.
+
+Reported-by: Martin Michlmayr <tbm@cyrius.com>
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 23 +++++++++++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi | 24 ++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+index 906fb836d241..de1696c28140 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+@@ -296,6 +296,29 @@
+ 		};
+ 	};
+ 
++	cpus {
++		cpu@0 {
++			enable-method = "psci";
++		};
++
++		cpu@1 {
++			enable-method = "psci";
++		};
++
++		cpu@2 {
++			enable-method = "psci";
++		};
++
++		cpu@3 {
++			enable-method = "psci";
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
+ 	regulators {
+ 		vdd_gpu: regulator@100 {
+ 			compatible = "pwm-regulator";
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi
+index 0ec92578cacb..67cb039965fd 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi
+@@ -51,4 +51,28 @@
+ 			clock-frequency = <32768>;
+ 		};
+ 	};
++
++	cpus {
++		cpu@0 {
++			enable-method = "psci";
++		};
++
++		cpu@1 {
++			enable-method = "psci";
++		};
++
++		cpu@2 {
++			enable-method = "psci";
++		};
++
++		cpu@3 {
++			enable-method = "psci";
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
+ };
+-- 
+2.7.4
