@@ -1,122 +1,34 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V3 6/6] soc/tegra: Add initial flowctrl support for
- Tegra132/210
-Date: Tue, 28 Mar 2017 13:42:58 +0100
-Message-ID: <1490704978-22906-7-git-send-email-jonathanh@nvidia.com>
-References: <1490704978-22906-1-git-send-email-jonathanh@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] of: add stubs for of_n_{addr, size}_cells
+Date: Tue, 28 Mar 2017 14:38:19 +0200
+Message-ID: <CAK8P3a1qpabP12wzeHmWWJeD=1Z=-NeHEX2-MZvVsoOz-6d+HQ@mail.gmail.com>
+References: <20170328093742.21528-1-tobias.regnery@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490704978-22906-1-git-send-email-jonathanh@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, Russell King <linux@armlinux.org.uk>, Jon Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170328093742.21528-1-tobias.regnery@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tobias Regnery <tobias.regnery@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Tegra132 and Tegra210 support the flowctrl module and so add initial
-support for these devices.
+On Tue, Mar 28, 2017 at 11:37 AM, Tobias Regnery
+<tobias.regnery@gmail.com> wrote:
+> With CONFIG_OF=n and CONFIG_COMPILE_TEST=y the rcar pci-e driver fails to
+> build on arm:
+>
+> drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
+> drivers/pci/host/pcie-rcar.c:1035:16: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
+>   parser->pna = of_n_addr_cells(node);
+>                 ^~~~~~~~~~~~~~~
+>
+> Fix this by adding an inline stub for of_n_addr_cells
+>
+> While at it also provide a stub for of_n_size_cells for consistency reasons.
+>
+> Signed-off-by: Tobias Regnery <tobias.regnery@gmail.com>
+> ---
+> Changes in v2:
+>         - add a stub for of_n_size_cells as suggested by Arnd
 
-Please note that Tegra186 does not support the flowctrl module, so
-update the initialisation function such that we do not fall back and
-attempt to map the 'hardcoded' address range for Tegra186. Furthermore
-64-bit Tegra devices have always had the flowctrl node defined in their
-device-tree and so only use the 'hardcoded' addresses for 32-bit Tegra
-devices.
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/soc/tegra/Kconfig    |  2 ++
- drivers/soc/tegra/flowctrl.c | 31 +++++++++++++++++++++----------
- 2 files changed, 23 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/soc/tegra/Kconfig b/drivers/soc/tegra/Kconfig
-index c7e8ddfb574e..dcf088db40b6 100644
---- a/drivers/soc/tegra/Kconfig
-+++ b/drivers/soc/tegra/Kconfig
-@@ -63,6 +63,7 @@ if ARM64
- config ARCH_TEGRA_132_SOC
- 	bool "NVIDIA Tegra132 SoC"
- 	select PINCTRL_TEGRA124
-+	select SOC_TEGRA_FLOWCTRL
- 	select SOC_TEGRA_PMC
- 	help
- 	  Enable support for NVIDIA Tegra132 SoC, based on the Denver
-@@ -73,6 +74,7 @@ config ARCH_TEGRA_132_SOC
- config ARCH_TEGRA_210_SOC
- 	bool "NVIDIA Tegra210 SoC"
- 	select PINCTRL_TEGRA210
-+	select SOC_TEGRA_FLOWCTRL
- 	select SOC_TEGRA_PMC
- 	help
- 	  Enable support for the NVIDIA Tegra210 SoC. Also known as Tegra X1,
-diff --git a/drivers/soc/tegra/flowctrl.c b/drivers/soc/tegra/flowctrl.c
-index 25eddfc8475d..0e345c05fc65 100644
---- a/drivers/soc/tegra/flowctrl.c
-+++ b/drivers/soc/tegra/flowctrl.c
-@@ -165,6 +165,7 @@ static int tegra_flowctrl_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id tegra_flowctrl_match[] = {
-+	{ .compatible = "nvidia,tegra210-flowctrl" },
- 	{ .compatible = "nvidia,tegra124-flowctrl" },
- 	{ .compatible = "nvidia,tegra114-flowctrl" },
- 	{ .compatible = "nvidia,tegra30-flowctrl" },
-@@ -184,9 +185,7 @@ builtin_platform_driver(tegra_flowctrl_driver);
- 
- static int __init tegra_flowctrl_init(void)
- {
--	/* hardcoded fallback if device tree node is missing */
--	unsigned long base = 0x60007000;
--	unsigned long size = SZ_4K;
-+	struct resource res;
- 	struct device_node *np;
- 
- 	if (!soc_is_tegra())
-@@ -194,17 +193,29 @@ static int __init tegra_flowctrl_init(void)
- 
- 	np = of_find_matching_node(NULL, tegra_flowctrl_match);
- 	if (np) {
--		struct resource res;
--
--		if (of_address_to_resource(np, 0, &res) == 0) {
--			size = resource_size(&res);
--			base = res.start;
-+		if (of_address_to_resource(np, 0, &res) < 0) {
-+			pr_err("failed to get flowctrl register\n");
-+			return -ENXIO;
- 		}
--
- 		of_node_put(np);
-+	} else if (IS_ENABLED(CONFIG_ARM)) {
-+		/*
-+		 * Hardcoded fallback for 32-bit Tegra
-+		 * devices if device tree node is missing.
-+		 */
-+		res.start = 0x60007000;
-+		res.end = 0x60007fff;
-+		res.flags = IORESOURCE_MEM;
-+	} else {
-+		/*
-+		 * At this point we're running on a Tegra,
-+		 * that doesn't support the flow controller
-+		 * (eg. Tegra186), so just return.
-+		 */
-+		return 0;
- 	}
- 
--	tegra_flowctrl_base = ioremap_nocache(base, size);
-+	tegra_flowctrl_base = ioremap_nocache(res.start, resource_size(&res));
- 	if (!tegra_flowctrl_base)
- 		return -ENXIO;
- 
--- 
-2.7.4
+Acked-by: Arnd Bergmann <arnd@arndb.de>
