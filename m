@@ -1,72 +1,197 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
- Mediatek MT7530 switch
-Date: Tue, 28 Mar 2017 14:05:13 +0800
-Message-ID: <1490681113.14184.39.camel@mtkswgap22>
-References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
-         <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
-         <20170324140215.GG28518@lunn.ch>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
+Date: Tue, 28 Mar 2017 08:20:24 +0200
+Message-ID: <461b2321-c43c-6d88-c805-97a887cc431d@st.com>
+References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
+ <20170324020630.vhffmeeb6wto53zx@rob-hp-laptop>
+ <dce20025-9f42-e747-e325-e1667504e615@st.com>
+ <CAL_Jsq++rdPqNZk54S7gQaeLBdzSptogp3dp9P1HmNTV67Sk9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170324140215.GG28518@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, davem@davemloft.net, Landen.Chao@mediatek.com, keyhaede@gmail.com, objelf@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq++rdPqNZk54S7gQaeLBdzSptogp3dp9P1HmNTV67Sk9w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, =?UTF-8?Q?Rados=c5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Olivier Bideau <olivier.bideau@st.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Amelie Delaunay <amelie.delaunay@st.com>, Lee Jones <lee.jones@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Andrew,
 
-Add comment as below inline
+On 03/27/2017 09:04 PM, Rob Herring wrote:
+> On Fri, Mar 24, 2017 at 4:41 AM, Gabriel Fernandez
+> <gabriel.fernandez@st.com> wrote:
+>> Hi Rob,
+>>
+>> Thanks for reviewing
+>>
+>>
+>>
+>> On 03/24/2017 03:06 AM, Rob Herring wrote:
+>>> On Wed, Mar 15, 2017 at 10:23:30AM +0100, gabriel.fernandez@st.com wrote:
+>>>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>>>
+>>>> This patch enables clocks for STM32H743 boards.
+>>>>
+>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>>> ---
+>>>>    .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |  152 ++
+>>>>    drivers/clk/Makefile                               |    1 +
+>>>>    drivers/clk/clk-stm32h7.c                          | 1586
+>>>> ++++++++++++++++++++
+>>>>    include/dt-bindings/clock/stm32h7-clks.h           |  165 ++
+>>>>    include/dt-bindings/mfd/stm32h7-rcc.h              |  138 ++
+>>>>    5 files changed, 2042 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>>    create mode 100644 drivers/clk/clk-stm32h7.c
+>>>>    create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+>>>>    create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>> b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>> new file mode 100644
+>>>> index 0000000..9d4b587
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>> @@ -0,0 +1,152 @@
+>>>> +STMicroelectronics STM32H7 Reset and Clock Controller
+>>>> +=====================================================
+>>>> +
+>>>> +The RCC IP is both a reset and a clock controller.
+>>>> +
+>>>> +Please refer to clock-bindings.txt for common clock controller binding
+>>>> usage.
+>>>> +Please also refer to reset.txt for common reset controller binding
+>>>> usage.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: Should be:
+>>>> +  "st,stm32h743-rcc"
+>>>> +
+>>>> +- reg: should be register base and length as documented in the
+>>>> +  datasheet
+>>>> +
+>>>> +- #reset-cells: 1, see below
+>>>> +
+>>>> +- #clock-cells : from common clock binding; shall be set to 1
+>>>> +
+>>>> +- clocks: External oscillator clock phandle
+>>>> +  - high speed external clock signal (HSE)
+>>>> +  - low speed external clock signal (LSE)
+>>>> +  - external I2S clock (I2S_CKIN)
+>>>> +
+>>>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup
+>>>> domain
+>>>> +  write protection (RTC clock).
+>>>> +
+>>>> +- pll x node: Allow to register a pll with specific parameters.
+>>>> +  Please see PLL section below.
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +       rcc: rcc@58024400 {
+>>>> +               #reset-cells = <1>;
+>>>> +               #clock-cells = <2>
+>>>> +               compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+>>>> +               reg = <0x58024400 0x400>;
+>>>> +               clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+>>>> +
+>>>> +               st,syscfg = <&pwrcfg>;
+>>>> +
+>>>> +               #address-cells = <1>;
+>>>> +               #size-cells = <0>;
+>>>> +
+>>>> +               vco1@58024430 {
+>>>> +                       #clock-cells = <0>;
+>>>> +                       compatible = "stm32,pll";
+>>>> +                       reg = <0>;
+>>> The reg addr value and unit address don't match.
+>> ok il will change into
+>>
+>>          vco1@0 {
+>>                  reg = <0>;
+>>
+>>
+>>>> +               };
+>>>> +
+>>>> +               vco2@58024438 {
+>>>> +                       #clock-cells = <0>;
+>>>> +                       compatible = "stm32,pll";
+>>>> +                       reg = <1>;
+>>>> +                       st,clock-div = <2>;
+>>>> +                       st,clock-mult = <40>;
+>>>> +                       st,frac-status = <0>;
+>>>> +                       st,frac = <0>;
+>>>> +                       st,vcosel = <1>;
+>>>> +                       st,pllrge = <2>;
+>>>> +               };
+>>>> +       };
+>>>> +
+>>>> +
+>>>> +STM32H7 PLL
+>>>> +-----------
+>>>> +
+>>>> +The VCO of STM32 PLL could be reprensented like this:
+>>>> +
+>>>> +  Vref    ---------       --------
+>>>> +    ---->| / DIVM  |---->| x DIVN | ------> VCO
+>>>> +          ---------       --------
+>>>> +                            ^
+>>>> +                            |
+>>>> +                         -------
+>>>> +                        | FRACN |
+>>>> +                         -------
+>>>> +
+>>>> +When the PLL is configured in integer mode:
+>>>> +- VCO = ( Vref / DIVM ) * DIVN
+>>>> +
+>>>> +When the PLL is configured in fractional mode:
+>>>> +- VCO = ( Vref / DIVM ) * ( DIVN + FRACN / 2^13)
+>>>> +
+>>>> +
+>>>> +Required properties for pll node:
+>>>> +- compatible: Should be:
+>>>> +  "stm32,pll"
+>>> Only 1 single PLL design for all STM32 chips ever?
+>> no, i can change into "stm32h7,pll"
+> Actually, should be "st,stm32h7-pll".
+ok
+
+>>>> +
+>>>> +- #clock-cells: from common clock binding; shall be set to 0
+>>>> +- reg: Should be the pll number.
+>>>> +
+>>>> +Optional properties:
+>>>> +- st,clock-div:  DIVM division factor       : <1..63>
+>>>> +- st,clock-mult: DIVN multiplication factor : <4..512>
+>>>> +
+>>>> +- st,frac-status:
+>>>> +   - 0 Pll is configured in integer mode
+>>>> +   - 1 Pll is configure in fractional mode
+>>> Isn't this implied by the presence of the next property?
+>> do you prefer this ?
+>>
+>> - st,frac :
+>> 0 : pll is configured in integer mode
+>> 1..8191 : Fractional part of the multiplication factor and pll is configured
+>> in fractional mode
+> Why not no st,frac property means integer mode?
+No
+
+no st,frac property means no change (keep default values from bootloader)
 
 
-On Fri, 2017-03-24 at 15:02 +0100, Andrew Lunn wrote:
-> Hi Sean
-> 
-> > +	regmap = devm_regmap_init(ds->dev, NULL, priv,
-> > +				  &mt7530_regmap_config);
-> > +	if (IS_ERR(regmap))
-> > +		dev_warn(priv->dev, "phy regmap initialization failed");
-> > +
-> 
-> Shouldn't this be a fatal error? If you keep going when there is an
-> error, what happens when you actually try to use the regmap?
-> 
+Best Regards
 
-Initial thought is that it is just for debugging purpose so if it fails,
-it should break any functionality of switch and only have implication as
-a warning message. 
+Gabriel
 
-Anyway, i will remove it in the next one since it seems better being
-kept in private place as you suggested in the previous mail.  
-
-> > +	phy_mode = of_get_phy_mode(ds->ports[ds->dst->cpu_port].dn);
-> > +	if (phy_mode < 0) {
-> > +		dev_err(priv->dev, "Can't find phy-mode for master device\n");
-> > +		return phy_mode;
-> > +	}
-> > +	dev_info(priv->dev, "phy-mode for master device = %x\n", phy_mode);
-> 
-> dev_dbg? 
-> 
-
-Sorry. i forgot turned it into dev_dbg
-
-> > +
-> > +	id = mt7530_read(priv, MT7530_CREV);
-> > +	id >>= CHIP_NAME_SHIFT;
-> > +	if (id != MT7530_ID)
-> > +		return -ENODEV;
-> 
-> It might be helpful to say what ID has been found, if it is not the
-> supported ID.
-
-
-I will fix it up to make users know what was going on 
-
-thanks for taking your time on those reviewing again!
-
-
-> 	Andrew
+> Rob
