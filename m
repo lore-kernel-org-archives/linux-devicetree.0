@@ -1,68 +1,36 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv3 07/10] Bluetooth: hci_serdev: do not open device in hci open
-Date: Tue, 28 Mar 2017 17:59:36 +0200
-Message-ID: <20170328155939.31566-8-sre@kernel.org>
-References: <20170328155939.31566-1-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170328155939.31566-1-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-baltos: add LED support
+Date: Tue, 28 Mar 2017 09:07:17 -0700
+Message-ID: <20170328160716.GX10760@atomide.com>
+References: <1490706556-30046-1-git-send-email-yegorslists@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1490706556-30046-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The device driver may need to communicate with the UART
-device while the Bluetooth device is closed (e.g. due
-to interrupts).
+* yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> [170328 06:11]:
+> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> 
+> All three devices provide GPIO based LEDs named power,
+> wlan and app.
+> 
+> Place LEDs definition into a separate dtsi file as not all
+> devices including am335x-baltos.dtsi have the same LED layout.
+> 
+> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+> Changes v1 -> v2:
+>   - move LEDs definition to a separate dtsi file (Tony Lindgren)
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
- drivers/bluetooth/hci_serdev.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+Thanks for updating it, applying into omap-for-v4.12/dt-v2.
 
-diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
-index f5ccb2c7ef92..3b8ac0ece3fb 100644
---- a/drivers/bluetooth/hci_serdev.c
-+++ b/drivers/bluetooth/hci_serdev.c
-@@ -104,13 +104,9 @@ static void hci_uart_write_work(struct work_struct *work)
- /* Initialize device */
- static int hci_uart_open(struct hci_dev *hdev)
- {
--	struct hci_uart *hu  = hci_get_drvdata(hdev);
--
- 	BT_DBG("%s %p", hdev->name, hdev);
- 
--	serdev_device_set_client_ops(hu->serdev, &hci_serdev_client_ops);
--
--	return serdev_device_open(hu->serdev);
-+	return 0;
- }
- 
- /* Reset device */
-@@ -136,15 +132,11 @@ static int hci_uart_flush(struct hci_dev *hdev)
- /* Close device */
- static int hci_uart_close(struct hci_dev *hdev)
- {
--	struct hci_uart *hu  = hci_get_drvdata(hdev);
--
- 	BT_DBG("hdev %p", hdev);
- 
- 	hci_uart_flush(hdev);
- 	hdev->flush = NULL;
- 
--	serdev_device_close(hu->serdev);
--
- 	return 0;
- }
- 
-@@ -289,6 +281,8 @@ int hci_uart_register_device(struct hci_uart *hu,
- 
- 	BT_DBG("");
- 
-+	serdev_device_set_client_ops(hu->serdev, &hci_serdev_client_ops);
-+
- 	err = p->open(hu);
- 	if (err)
- 		return err;
--- 
-2.11.0
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
