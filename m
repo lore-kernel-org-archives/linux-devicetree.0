@@ -1,71 +1,68 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v6 33/39] media: imx: csi: Avoid faulty sensor frames at stream start
-Date: Mon, 27 Mar 2017 17:40:50 -0700
-Message-ID: <1490661656-10318-34-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v6 18/39] media: Add userspace header file for i.MX
+Date: Mon, 27 Mar 2017 17:40:35 -0700
+Message-ID: <1490661656-10318-19-git-send-email-steve_longerbeam@mentor.com>
 References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-media-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-media-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-If the attached sensor reports faulty frames at stream start via
-g_skip_frames callback, add a delay to avoid them before enabling
-the CSI hardware. Especially for sensors with a bt.656 interface,
-any shifts in the SAV/EAV sync codes will cause the CSI to lose
-vert/horiz sync.
+This adds a header file for use by userspace programs wanting to interact
+with the i.MX media driver. It defines custom events and v4l2 controls for
+the i.MX v4l2 subdevices.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- drivers/staging/media/imx/imx-media-csi.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ include/linux/imx-media.h | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 include/linux/imx-media.h
 
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index d9c3a3b..8597d7e 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -9,6 +9,7 @@
-  * the Free Software Foundation; either version 2 of the License, or
-  * (at your option) any later version.
-  */
-+#include <linux/delay.h>
- #include <linux/gcd.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-@@ -591,6 +592,7 @@ static int csi_setup(struct csi_priv *priv)
- 
- static int csi_start(struct csi_priv *priv)
- {
-+	u32 bad_frames = 0;
- 	int ret;
- 
- 	if (!priv->sensor) {
-@@ -598,6 +600,25 @@ static int csi_start(struct csi_priv *priv)
- 		return -EINVAL;
- 	}
- 
-+	ret = v4l2_subdev_call(priv->sensor->sd, sensor,
-+			       g_skip_frames, &bad_frames);
-+	if (!ret && bad_frames) {
-+		struct v4l2_fract *fi = &priv->frame_interval;
-+		u32 delay_usec;
+diff --git a/include/linux/imx-media.h b/include/linux/imx-media.h
+new file mode 100644
+index 0000000..267777f
+--- /dev/null
++++ b/include/linux/imx-media.h
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (c) 2014-2017 Mentor Graphics Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version
++ */
 +
-+		/*
-+		 * This sensor has bad frames when it is turned on,
-+		 * add a delay to avoid them before enabling the CSI
-+		 * hardware. Especially for sensors with a bt.656 interface,
-+		 * any shifts in the SAV/EAV sync codes will cause the CSI
-+		 * to lose vert/horiz sync.
-+		 */
-+		delay_usec = DIV_ROUND_UP_ULL(
-+			(u64)USEC_PER_SEC * fi->numerator * bad_frames,
-+			fi->denominator);
-+		usleep_range(delay_usec, delay_usec + 1000);
-+	}
++#ifndef __LINUX_IMX_MEDIA_H__
++#define __LINUX_IMX_MEDIA_H__
 +
- 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
- 		ret = csi_idmac_start(priv);
- 		if (ret)
++/*
++ * events from the subdevs
++ */
++#define V4L2_EVENT_IMX_CLASS                V4L2_EVENT_PRIVATE_START
++#define V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR (V4L2_EVENT_IMX_CLASS + 1)
++
++enum imx_ctrl_id {
++	V4L2_CID_IMX_FIM_ENABLE = (V4L2_CID_USER_IMX_BASE + 0),
++	V4L2_CID_IMX_FIM_NUM,
++	V4L2_CID_IMX_FIM_TOLERANCE_MIN,
++	V4L2_CID_IMX_FIM_TOLERANCE_MAX,
++	V4L2_CID_IMX_FIM_NUM_SKIP,
++};
++
++#endif
 -- 
 2.7.4
