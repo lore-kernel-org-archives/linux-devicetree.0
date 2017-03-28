@@ -1,58 +1,75 @@
-From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 1/2] Documentation: dt-bindings: Document bindings for Aspeed ADC
-Date: Tue, 28 Mar 2017 14:52:58 -0700
-Message-ID: <20170328215259.31622-1-raltherr@google.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v6 2/5] irqchip/aspeed-i2c-ic: Add I2C IRQ controller
+ for Aspeed
+Date: Wed, 29 Mar 2017 07:50:16 +1100
+Message-ID: <1490734216.3177.140.camel@kernel.crashing.org>
+References: <20170328051226.21677-1-brendanhiggins@google.com>
+         <20170328051226.21677-3-brendanhiggins@google.com>
+         <49a13bbc-aec3-a349-4323-3c8d2728c62f@arm.com>
+         <1490692375.3177.119.camel@kernel.crashing.org>
+         <91936f1a-0a0d-4091-b981-976503a6f7cd@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <91936f1a-0a0d-4091-b981-976503a6f7cd-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, mouse-Pma6HLj0uuo@public.gmane.org, clg-Bxea+6Xhats@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
+On Tue, 2017-03-28 at 10:40 +0100, Marc Zyngier wrote:
+> On 28/03/17 10:12, Benjamin Herrenschmidt wrote:
+> > On Tue, 2017-03-28 at 09:32 +0100, Marc Zyngier wrote:
+> > > I'm a bit concerned by this. It means that you can't even mask an
+> > > interrupt. Is that really what you intend to do? Or all that the HW can
+> > > do? If you cannot mask an interrupt, you're at the mercy of a screaming
+> > > device...
+> > 
+> > This is not really an interrupt controller. It's a "summary" register
+> > that reflects the state of the 14 i2c controller interrupts.
+> > 
+> > This approach does have the advantage of providing separate counters in
+> > /proc/interrupts which is rather nice, but it does have overhead. On
+> > those shittly little ARMv9 400Mhz cores it can be significant.
+> 
+> <pedantic>
+> s/ARMv9/ARM9/, as we're still on variations of the ARMv8 architecture ;-)
+> </pedantic>
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
-- Consistently write hex contstants with lowercase letters
-- Drop model numbers from description as same IP is used in every generation
+It was a typo, I meant ARM9/ARMv5 :-)
 
-Changes in v2:
-- Rewritten as an IIO ADC device
+The 2 SOC families we are talking about (Aspeed 24xx and 25xx) are
+based on a ARM926EJ at 400Mhz and an ARM1176JZFS at 800Mhz
+respectively, so cycles do count :-)
+ 
+> A 400MHz ARM9 (which is either ARMv4 or ARMv5) is not too bad (hey, we
+> still have a couple of Versatile-ABs here...). Caches are pretty small
+> though.
 
- .../devicetree/bindings/iio/adc/aspeed_adc.txt       | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+16K/16K, no L2 :) 
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-new file mode 100644
-index 000000000000..674e133b7cd7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-@@ -0,0 +1,20 @@
-+Aspeed ADC
-+
-+This device is a 10-bit converter for 16 voltage channels.  All inputs are
-+single ended.
-+
-+Required properties:
-+- compatible: Should be "aspeed,ast2400-adc" or "aspeed,ast2500-adc"
-+- reg: memory window mapping address and length
-+- clocks: Input clock used to derive the sample clock. Expected to be the
-+          SoC's APB clock.
-+- #io-channel-cells: Must be set to <1> to indicate channels are selected
-+                     by index.
-+
-+Example:
-+	adc@1e6e9000 {
-+		compatible = "aspeed,ast2400-adc";
-+		reg = <0x1e6e9000 0xb0>;
-+		clocks = <&clk_apb>;
-+		#io-channel-cells = <1>;
-+	};
--- 
-2.12.2.564.g063fe858b8-goog
+> > I would personally have some kind of trick to register a single
+> > interrupt handler that calls directly the handlers of the respective
+> > i2c busses via a simple indirection for speed, maybe adding my custom
+> > sysfs or debugfs statistics. But that's just me trying to suck the last
+> > cycle out of the bloody thing ;-)
+> 
+> I'd hope the irqdomain itself to be pretty light (the revmap should help
+> here), but of course you're going to do more work. Counters also come at
+> a cost. It'd be interesting to see if Brendan has any overhead data
+> about this.
 
+Thankfully, the HW supports buffered sends/receive or even DMA. The
+current patch doesn't yet support these but they would be a good way to
+alleviate the cost of the interrupts if it becomes a problem.
+
+Cheers,
+Ben.
+
+> Cheers,
+> 
+> 	M.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
