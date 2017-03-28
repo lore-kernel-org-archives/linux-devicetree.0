@@ -1,77 +1,56 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v6 4/5] i2c: aspeed: added driver for Aspeed I2C
-Date: Tue, 28 Mar 2017 20:09:28 +1100
-Message-ID: <1490692168.3177.117.camel@kernel.crashing.org>
-References: <20170328051226.21677-1-brendanhiggins@google.com>
-         <20170328051226.21677-5-brendanhiggins@google.com>
+From: Helmut Klein <hgkr.klein@gmail.com>
+Subject: [PATCH v2,
+ 0/3] tty/serial: meson_uart: add support for core clock handling
+Date: Tue, 28 Mar 2017 11:25:42 +0200
+Message-ID: <20170328092545.4644-1-hgkr.klein@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170328051226.21677-5-brendanhiggins@google.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, joel@jms.id.au, vz@mleia.com, mouse@mayc.ru, clg@kaod.org
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Helmut Klein <hgkr.klein@gmail.com>, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-03-27 at 22:12 -0700, Brendan Higgins wrote:
-> +       /* Set AC Timing */
-> +       if (clk_freq / 1000 > 1000) {
-> +               aspeed_i2c_write(bus, aspeed_i2c_read(bus,
-> +                                                     ASPEED_I2C_FUN_CTRL_REG) |
-> +                               ASPEED_I2CD_M_HIGH_SPEED_EN |
-> +                               ASPEED_I2CD_M_SDA_DRIVE_1T_EN |
+To be able to use the three none AO uarts of the s905 SoCs (uart_A, uart_B
+& uart_C), the core clock has to be enabled. (see chapter 22.3 of the
+public s905 data sheet) At least the u-boot of my s905 based media player
+(netxeon minimx) doesn't do this. so the driver must do it.
 
-s/ASPEED_I2CD_M_SDA_DRIVE_1T_EN/ASPEED_I2CD_M_SCL_DRIVE_1T_EN/
+This patch set does:
+- exposes the clock ids to the dtb
+- adds documentation for the dt-bindings of meson_uart
+- adds the core clock handling to the driver
 
-(and in the definition too)
+The patchset is based on the branch master of the repository in [1]
 
-> +                               ASPEED_I2CD_SDA_DRIVE_1T_EN,
-> +                               ASPEED_I2C_FUN_CTRL_REG);
-> +
-> +               aspeed_i2c_write(bus, 0x3, ASPEED_I2C_AC_TIMING_REG2);
-> +               aspeed_i2c_write(bus, aspeed_i2c_get_clk_reg_val(divisor),
-> +                                ASPEED_I2C_AC_TIMING_REG1);
-> +       } else {
+Changes since v1
+- use git to produce the patch set
+- added the clock ids for uart_B and uart_C
 
-I don't think that's right. AFAIK ASPEED_I2CD_M_HIGH_SPEED_EN is about
-ignoring the timing register completely and going for full speed which
-is a few Mhz (I forgot how much). At least from my (possibly incorrect)
-reading of the spec and the SDK driver.
+None of the available s905 dts use uart_A actively. So there is no patch
+for any of the existing dts files.
 
-Or maybe that's what you intend by the above ? Anything above 1Mhz ?
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git
 
-I think there's a blurb somewhere that says that setting that bit makes
-it ignore the timing register completely. The definition is:
+Helmut Klein (3):
+  tty/serial: meson_uart: expose CLKID_UARTx
+  tty/serial: meson_uart: add documentation for the dt-bindings
+  tty/serial: meson_uart: add the core clock handling to the driver
 
-<<
-Enable High Speed master mode
-0 : normal speed mode
-1 : high speed mode (3.4Mbps)
-High speed mode can only use buffer mode for transfer. And only master
-mode supports speed switching capability
->>
+ .../bindings/serial/amlogic,meson_uart.txt         | 25 ++++++++++++++++++++++
+ drivers/clk/meson/gxbb.h                           |  6 +++---
+ drivers/tty/serial/meson_uart.c                    | 10 +++++++++
+ include/dt-bindings/clock/gxbb-clkc.h              |  3 +++
+ 4 files changed, 41 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt
 
-The spec of the base clock field of the timing register also says
-
-<<
-When switch to High Speed (HS) mode, the divisor will be switch to 0 by
-hardware automatically
->>
-
-Note also that we aren't use buffer mode anyway so this can't work as-
-is, we're using byte mode.
-
-The other interesting question is what is the frequency threshold for
-setting ASPEED_I2CD_M_SCL_DRIVE_1T_EN (and the SDA one) ? 
-
-Those bits are somewhat orthogonal to ASPEED_I2CD_M_HIGH_SPEED_EN. They
-make the device drive the signals for a clock when they go up to "speed
-up" the rising edge more than a normal pull up would do.
-
-If you have some fast devices, it would be interesting to scope the
-signal see from what speed it becomes interesting to set the 1T enable
-bits to speed up rising edges.
-
-Cheers,
-Ben.
+--
+2.11.0
