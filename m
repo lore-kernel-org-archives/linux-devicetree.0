@@ -1,93 +1,119 @@
-From: Oza Oza via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] of/pci: dma-ranges to account highest possible
-	host bridge dma_mask
-Date: Tue, 28 Mar 2017 10:57:39 +0530
-Message-ID: <CAMSpPPdnQdWeyTsnESRFx52gtxQLxwfPQwQgDFSN=katfW7suA@mail.gmail.com>
-References: <1490419893-5073-1-git-send-email-oza.oza@broadcom.com>
-	<CAL_JsqLtTiH7DhqKf_x7xy1KZYQyiOreK=M90HFr=8BDW9542w@mail.gmail.com>
-Reply-To: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] Make EN2 pin optional in the TRF7970A driver
+Date: Tue, 28 Mar 2017 07:37:20 +0200
+Message-ID: <58D9F690.5050801@denx.de>
+References: <1486444924-18444-1-git-send-email-hs@denx.de>
+ <20170210155114.pvjahqqjqurw5jdc@rob-hp-laptop> <58A15454.4030602@denx.de>
+ <CAL_JsqKM4fEcfPekYkt-+TVNXE3nMF1AEfSHWW+3wAgdYDMXEg@mail.gmail.com>
+ <58AA7C5D.60801@denx.de>
+ <CAL_JsqKo_Y6i5otiEfQASqa4YRdqnr=+Got5XJp+ZfPCGZoxAg@mail.gmail.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAL_JsqLtTiH7DhqKf_x7xy1KZYQyiOreK=M90HFr=8BDW9542w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKo_Y6i5otiEfQASqa4YRdqnr=+Got5XJp+ZfPCGZoxAg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>, Mark Jonas <mark.jonas-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 8:16 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sat, Mar 25, 2017 at 12:31 AM, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->> it is possible that PCI device supports 64-bit DMA addressing,
->> and thus it's driver sets device's dma_mask to DMA_BIT_MASK(64),
->> however PCI host bridge may have limitations on the inbound
->> transaction addressing. As an example, consider NVME SSD device
->> connected to iproc-PCIe controller.
+Hello all,
+
+Am 21.02.2017 um 17:43 schrieb Rob Herring:
+> On Sun, Feb 19, 2017 at 11:19 PM, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
+>> Hello all,
 >>
->> Currently, the IOMMU DMA ops only considers PCI device dma_mask
->> when allocating an IOVA. This is particularly problematic on
->> ARM/ARM64 SOCs where the IOMMU (i.e. SMMU) translates IOVA to
->> PA for in-bound transactions only after PCI Host has forwarded
->> these transactions on SOC IO bus. This means on such ARM/ARM64
->> SOCs the IOVA of in-bound transactions has to honor the addressing
->> restrictions of the PCI Host.
+>> Am 13.02.2017 um 22:31 schrieb Rob Herring:
+>>>
+>>> On Mon, Feb 13, 2017 at 12:38 AM, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
+>>>>
+>>>> Hello Rob,
+>>>>
+>>>>
+>>>> Am 10.02.2017 um 16:51 schrieb Rob Herring:
+>>>>>
+>>>>>
+>>>>> On Tue, Feb 07, 2017 at 06:22:04AM +0100, Heiko Schocher wrote:
+>>>>>>
+>>>>>>
+>>>>>> From: Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>
+>>>>>>
+>>>>>> Make the EN2 pin optional. This is useful for boards,
+>>>>>> which have this pin fix wired, for example to ground.
+>>>>>>
+>>>>>> Signed-off-by: Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>
+>>>>>> Signed-off-by: Mark Jonas <mark.jonas-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+>>>>>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>>>>>>
+>>>>>> ---
+>>>>>>
+>>>>>>     .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++--
+>>>>>>     drivers/nfc/trf7970a.c                             | 26
+>>>>>> ++++++++++++----------
+>>>>>>     2 files changed, 16 insertions(+), 14 deletions(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>>>>> b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>>>>> index 32b35a0..5889a3d 100644
+>>>>>> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>>>>> @@ -5,8 +5,8 @@ Required properties:
+>>>>>>     - spi-max-frequency: Maximum SPI frequency (<= 2000000).
+>>>>>>     - interrupt-parent: phandle of parent interrupt handler.
+>>>>>>     - interrupts: A single interrupt specifier.
+>>>>>> -- ti,enable-gpios: Two GPIO entries used for 'EN' and 'EN2' pins on
+>>>>>> the
+>>>>>> -  TRF7970A.
+>>>>>> +- ti,enable-gpios: One or two GPIO entries used for 'EN' and 'EN2'
+>>>>>> pins
+>>>>>> on the
+>>>>>> +  TRF7970A. EN2 is optional.
+>>>>>
+>>>>>
+>>>>>
+>>>>> Could EN ever be optional/fixed? If so, perhaps deprecate this property
+>>>>> and do 2 properties, one for each pin.
+>>>>
+>>>>
+>>>>
+>>>> The hardware I have has the EN2 pin fix connected to ground. Looking
+>>>> into http://www.ti.com/lit/ds/slos743k/slos743k.pdf page 19 table 6-3
+>>>> and 6-4 the EN2 pin is a don;t core if EN = 1. If EN = 0 EN2 pin
+>>>> selects between Power Down and Sleep Mode ... I see no reason why
+>>>> this is not possible/allowed ...
+>>>>
+>>>> Hmm.. I do not like the idea of deprecating the "ti,enable-gpios"
+>>>> property into 2 seperate properties ... but if this would be a reason
+>>>> for not accepting this patch, I can do this ... How should I name
+>>>> the 2 new properties?
+>>>
+>>>
+>>> I guess if this ever happens, then we just add "ti,enable2-gpios" and
+>>> ti,enable-gpios continues to point to EN. We don't need to deprecate
+>>> anything (or maybe just deprecate having both GPIOs on single
+>>> property).
+>>>
+>>> In that case,
+>>>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >>
->> current pcie frmework and of framework integration assumes dma-ranges
->> in a way where memory-mapped devices define their dma-ranges.
->> dma-ranges: (child-bus-address, parent-bus-address, length).
 >>
->> but iproc based SOCs and even Rcar based SOCs has PCI world dma-ranges.
->> dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
+>> gentle ping.
+>>
+>> Are there any more comments to this patch? Is it acceptable as it
+>> is?
 >
-> If you implement a common function, then I expect to see other users
-> converted to use it. There's also PCI hosts in arch/powerpc that parse
-> dma-ranges.
+> I acked it, so yes, it is fine.
 
-the common function should be similar to what
-of_pci_get_host_bridge_resources is doing right now.
-it parses ranges property right now.
+Gentle ping. Any more issues or can this patch go into mainline?
 
-the new function would look look following.
-
-of_pci_get_dma_ranges(struct device_node *dev, struct list_head *resources)
-where resources would return the dma-ranges.
-
-but right now if you see the patch, of_dma_configure calls the new
-function, which actually returns the largest possible size.
-so this new function has to be generic in a way where other PCI hosts
-can use it. but certainly iproc(Broadcom SOC) , rcar based SOCs can
-use it for sure.
-
-although having powerpc using it;  is a separate exercise, since I do
-not have any access to other PCI hosts such as powerpc. but we can
-workout with them on thsi forum if required.
-
-so overall, of_pci_get_dma_ranges has to serve following 2 purposes.
-
-1) it has to return largest possible size to of_dma_configure to
-generate largest possible dma_mask.
-
-2) it also has to return resources (dma-ranges) parsed, to the users.
-
-so to address above needs
-
-of_pci_get_dma_ranges(struct device_node *dev, struct list_head
-*resources, u64 *size)
-
-dev -> device node.
-resources -> dma-ranges in allocated list.
-size -> highest possible size to generate possible dma_mask for
-of_dma_configure.
-
-let em know how this sounds.
-
-Regards,
-Oza.
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
