@@ -1,95 +1,131 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2,1/3] meson_uart: expose CLKID_UARTx
-Date: Tue, 28 Mar 2017 17:51:17 +0200
-Message-ID: <1490716277.20764.6.camel@baylibre.com>
-References: <20170328092545.4644-1-hgkr.klein@gmail.com>
-         <20170328092545.4644-2-hgkr.klein@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170328092545.4644-2-hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Helmut Klein <hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv3 02/10] serdev: add serdev_device_wait_until_sent
+Date: Tue, 28 Mar 2017 17:59:31 +0200
+Message-ID: <20170328155939.31566-3-sre@kernel.org>
+References: <20170328155939.31566-1-sre@kernel.org>
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170328155939.31566-1-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-03-28 at 11:25 +0200, Helmut Klein wrote:
-> Expose the clock ids for the three none AO uarts to the dt-bindings
+Add method, which waits until the transmission buffer has been sent.
+Note, that the change in ttyport_write_wakeup is related, since
+tty_wait_until_sent will hang without that change.
 
-Are they all used in the device tree ?
-We try to only expose what we need in the DT
-The recent discussion over CLKID_CPUCLK proved it was a sane thing to do.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes since PATCHv2:
+ * Avoid goto in ttyport_write_wakeup
+---
+ drivers/tty/serdev/core.c           | 11 +++++++++++
+ drivers/tty/serdev/serdev-ttyport.c | 18 ++++++++++++++----
+ include/linux/serdev.h              |  3 +++
+ 3 files changed, 28 insertions(+), 4 deletions(-)
 
-> 
-> Signed-off-by: Helmut Klein <hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/clk/meson/gxbb.h              | 6 +++---
->  include/dt-bindings/clock/gxbb-clkc.h | 3 +++
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
-> index 8ee2022ce5d5..1edfaa5fe307 100644
-> --- a/drivers/clk/meson/gxbb.h
-> +++ b/drivers/clk/meson/gxbb.h
-> @@ -194,7 +194,7 @@
->  /* #define CLKID_SAR_ADC */
->  #define CLKID_SMART_CARD	  24
->  #define CLKID_RNG0		  25
-> -#define CLKID_UART0		  26
-> +/* CLKID_UART0 */
->  #define CLKID_SDHC		  27
->  #define CLKID_STREAM		  28
->  #define CLKID_ASYNC_FIFO	  29
-> @@ -216,7 +216,7 @@
->  #define CLKID_ADC		  45
->  #define CLKID_BLKMV		  46
->  #define CLKID_AIU		  47
-> -#define CLKID_UART1		  48
-> +/* CLKID_UART1 */
->  #define CLKID_G2D		  49
->  /* CLKID_USB0 */
->  /* CLKID_USB1 */
-> @@ -236,7 +236,7 @@
->  /* CLKID_USB0_DDR_BRIDGE */
->  #define CLKID_MMC_PCLK		  66
->  #define CLKID_DVIN		  67
-> -#define CLKID_UART2		  68
-> +/* CLKID_UART2 */
->  /* #define CLKID_SANA */
->  #define CLKID_VPU_INTR		  70
->  #define CLKID_SEC_AHB_AHB3_BRIDGE 71
-> diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-
-> bindings/clock/gxbb-clkc.h
-> index 692846c7941b..7b329df47752 100644
-> --- a/include/dt-bindings/clock/gxbb-clkc.h
-> +++ b/include/dt-bindings/clock/gxbb-clkc.h
-> @@ -15,13 +15,16 @@
->  #define CLKID_SPI		34
->  #define CLKID_I2C		22
->  #define CLKID_SAR_ADC		23
-> +#define CLKID_UART0		26
->  #define CLKID_ETH		36
-> +#define CLKID_UART1		48
->  #define CLKID_USB0		50
->  #define CLKID_USB1		51
->  #define CLKID_USB		55
->  #define CLKID_HDMI_PCLK		63
->  #define CLKID_USB1_DDR_BRIDGE	64
->  #define CLKID_USB0_DDR_BRIDGE	65
-> +#define CLKID_UART2		68
->  #define CLKID_SANA		69
->  #define CLKID_GCLK_VENCI_INT0	77
->  #define CLKID_AO_I2C		93
-> --
-> 2.11.0
-> 
-> 
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+index f4c6c90add78..a63b74031e22 100644
+--- a/drivers/tty/serdev/core.c
++++ b/drivers/tty/serdev/core.c
+@@ -173,6 +173,17 @@ void serdev_device_set_flow_control(struct serdev_device *serdev, bool enable)
+ }
+ EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
+ 
++void serdev_device_wait_until_sent(struct serdev_device *serdev, long timeout)
++{
++	struct serdev_controller *ctrl = serdev->ctrl;
++
++	if (!ctrl || !ctrl->ops->wait_until_sent)
++		return;
++
++	ctrl->ops->wait_until_sent(ctrl, timeout);
++}
++EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
++
+ static int serdev_drv_probe(struct device *dev)
+ {
+ 	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
+diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
+index d05393594f15..50dc75c4d204 100644
+--- a/drivers/tty/serdev/serdev-ttyport.c
++++ b/drivers/tty/serdev/serdev-ttyport.c
+@@ -14,6 +14,7 @@
+ #include <linux/serdev.h>
+ #include <linux/tty.h>
+ #include <linux/tty_driver.h>
++#include <linux/poll.h>
+ 
+ #define SERPORT_ACTIVE		1
+ 
+@@ -46,11 +47,11 @@ static void ttyport_write_wakeup(struct tty_port *port)
+ 	struct serdev_controller *ctrl = port->client_data;
+ 	struct serport *serport = serdev_controller_get_drvdata(ctrl);
+ 
+-	if (!test_and_clear_bit(TTY_DO_WRITE_WAKEUP, &port->tty->flags))
+-		return;
+-
+-	if (test_bit(SERPORT_ACTIVE, &serport->flags))
++	if (test_and_clear_bit(TTY_DO_WRITE_WAKEUP, &port->tty->flags) &&
++	    test_bit(SERPORT_ACTIVE, &serport->flags))
+ 		serdev_controller_write_wakeup(ctrl);
++
++	wake_up_interruptible_poll(&port->tty->write_wait, POLLOUT);
+ }
+ 
+ static const struct tty_port_client_operations client_ops = {
+@@ -167,6 +168,14 @@ static void ttyport_set_flow_control(struct serdev_controller *ctrl, bool enable
+ 	tty_set_termios(tty, &ktermios);
+ }
+ 
++static void ttyport_wait_until_sent(struct serdev_controller *ctrl, long timeout)
++{
++	struct serport *serport = serdev_controller_get_drvdata(ctrl);
++	struct tty_struct *tty = serport->tty;
++
++	tty_wait_until_sent(tty, timeout);
++}
++
+ static const struct serdev_controller_ops ctrl_ops = {
+ 	.write_buf = ttyport_write_buf,
+ 	.write_flush = ttyport_write_flush,
+@@ -175,6 +184,7 @@ static const struct serdev_controller_ops ctrl_ops = {
+ 	.close = ttyport_close,
+ 	.set_flow_control = ttyport_set_flow_control,
+ 	.set_baudrate = ttyport_set_baudrate,
++	.wait_until_sent = ttyport_wait_until_sent,
+ };
+ 
+ struct device *serdev_tty_port_register(struct tty_port *port,
+diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+index 9519da6253a8..a308b206d204 100644
+--- a/include/linux/serdev.h
++++ b/include/linux/serdev.h
+@@ -81,6 +81,7 @@ struct serdev_controller_ops {
+ 	void (*close)(struct serdev_controller *);
+ 	void (*set_flow_control)(struct serdev_controller *, bool);
+ 	unsigned int (*set_baudrate)(struct serdev_controller *, unsigned int);
++	void (*wait_until_sent)(struct serdev_controller *, long);
+ };
+ 
+ /**
+@@ -186,6 +187,7 @@ int serdev_device_open(struct serdev_device *);
+ void serdev_device_close(struct serdev_device *);
+ unsigned int serdev_device_set_baudrate(struct serdev_device *, unsigned int);
+ void serdev_device_set_flow_control(struct serdev_device *, bool);
++void serdev_device_wait_until_sent(struct serdev_device *, long);
+ int serdev_device_write_buf(struct serdev_device *, const unsigned char *, size_t);
+ void serdev_device_write_flush(struct serdev_device *);
+ int serdev_device_write_room(struct serdev_device *);
+@@ -223,6 +225,7 @@ static inline unsigned int serdev_device_set_baudrate(struct serdev_device *sdev
+ 	return 0;
+ }
+ static inline void serdev_device_set_flow_control(struct serdev_device *sdev, bool enable) {}
++static inline void serdev_device_wait_until_sent(struct serdev_device *sdev, long timeout) {}
+ static inline int serdev_device_write_buf(struct serdev_device *sdev, const unsigned char *buf, size_t count)
+ {
+ 	return -ENODEV;
+-- 
+2.11.0
