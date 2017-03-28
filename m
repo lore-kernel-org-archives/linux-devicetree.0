@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv6 12/14] ov2640: use standard clk and enable it.
-Date: Tue, 28 Mar 2017 10:23:45 +0200
-Message-ID: <20170328082347.11159-13-hverkuil@xs4all.nl>
+Subject: [PATCHv6 13/14] ov2640: add MC support
+Date: Tue, 28 Mar 2017 10:23:46 +0200
+Message-ID: <20170328082347.11159-14-hverkuil@xs4all.nl>
 References: <20170328082347.11159-1-hverkuil@xs4all.nl>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170328082347.11159-1-hverkuil@xs4all.nl>
@@ -12,105 +12,78 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Convert v4l2_clk to normal clk and enable the clock.
+The MC support is needed by the em28xx driver.
 
 Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/i2c/ov2640.c | 31 ++++++++++++++-----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
+ drivers/media/i2c/ov2640.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
-index 83f88efbce69..0445963c5fae 100644
+index 0445963c5fae..e8875cc19e3d 100644
 --- a/drivers/media/i2c/ov2640.c
 +++ b/drivers/media/i2c/ov2640.c
-@@ -16,6 +16,7 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/i2c.h>
-+#include <linux/clk.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/gpio.h>
-@@ -24,7 +25,6 @@
- #include <linux/v4l2-mediabus.h>
- #include <linux/videodev2.h>
+@@ -282,6 +282,9 @@ struct ov2640_win_size {
  
--#include <media/v4l2-clk.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-subdev.h>
- #include <media/v4l2-ctrls.h>
-@@ -284,7 +284,7 @@ struct ov2640_priv {
+ struct ov2640_priv {
  	struct v4l2_subdev		subdev;
++#if defined(CONFIG_MEDIA_CONTROLLER)
++	struct media_pad pad;
++#endif
  	struct v4l2_ctrl_handler	hdl;
  	u32	cfmt_code;
--	struct v4l2_clk			*clk;
-+	struct clk			*clk;
- 	const struct ov2640_win_size	*win;
+ 	struct clk			*clk;
+@@ -1063,6 +1066,7 @@ static int ov2640_probe(struct i2c_client *client,
+ 		goto err_clk;
  
- 	struct gpio_desc *resetb_gpio;
-@@ -1051,14 +1051,11 @@ static int ov2640_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	}
- 
--	priv->clk = v4l2_clk_get(&client->dev, "xvclk");
--	if (IS_ERR(priv->clk))
--		return -EPROBE_DEFER;
--
--	if (!client->dev.of_node) {
--		dev_err(&client->dev, "Missing platform_data for driver\n");
--		ret = -EINVAL;
--		goto err_clk;
-+	if (client->dev.of_node) {
-+		priv->clk = devm_clk_get(&client->dev, "xvclk");
-+		if (IS_ERR(priv->clk))
-+			return -EPROBE_DEFER;
-+		clk_prepare_enable(priv->clk);
- 	}
- 
- 	ret = ov2640_probe_dt(client, priv);
-@@ -1074,25 +1071,25 @@ static int ov2640_probe(struct i2c_client *client,
- 	priv->subdev.ctrl_handler = &priv->hdl;
- 	if (priv->hdl.error) {
+ 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
++	priv->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 	v4l2_ctrl_handler_init(&priv->hdl, 2);
+ 	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
+ 			V4L2_CID_VFLIP, 0, 1, 1, 0);
+@@ -1073,19 +1077,30 @@ static int ov2640_probe(struct i2c_client *client,
  		ret = priv->hdl.error;
--		goto err_clk;
-+		goto err_hdl;
+ 		goto err_hdl;
  	}
++#if defined(CONFIG_MEDIA_CONTROLLER)
++	priv->pad.flags = MEDIA_PAD_FL_SOURCE;
++	priv->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
++	ret = media_entity_pads_init(&priv->subdev.entity, 1, &priv->pad);
++	if (ret < 0)
++		goto err_hdl;
++#endif
  
  	ret = ov2640_video_probe(client);
  	if (ret < 0)
--		goto err_videoprobe;
-+		goto err_hdl;
+-		goto err_hdl;
++		goto err_videoprobe;
  
  	ret = v4l2_async_register_subdev(&priv->subdev);
  	if (ret < 0)
--		goto err_videoprobe;
-+		goto err_hdl;
+-		goto err_hdl;
++		goto err_videoprobe;
  
  	dev_info(&adapter->dev, "OV2640 Probed\n");
  
  	return 0;
  
--err_videoprobe:
-+err_hdl:
++err_videoprobe:
++#if defined(CONFIG_MEDIA_CONTROLLER)
++	media_entity_cleanup(&priv->subdev.entity);
++#endif
+ err_hdl:
  	v4l2_ctrl_handler_free(&priv->hdl);
  err_clk:
--	v4l2_clk_put(priv->clk);
-+	clk_disable_unprepare(priv->clk);
- 	return ret;
- }
- 
-@@ -1101,9 +1098,9 @@ static int ov2640_remove(struct i2c_client *client)
- 	struct ov2640_priv       *priv = to_ov2640(client);
+@@ -1099,6 +1114,9 @@ static int ov2640_remove(struct i2c_client *client)
  
  	v4l2_async_unregister_subdev(&priv->subdev);
--	v4l2_clk_put(priv->clk);
--	v4l2_device_unregister_subdev(&priv->subdev);
  	v4l2_ctrl_handler_free(&priv->hdl);
-+	v4l2_device_unregister_subdev(&priv->subdev);
-+	clk_disable_unprepare(priv->clk);
++#if defined(CONFIG_MEDIA_CONTROLLER)
++	media_entity_cleanup(&priv->subdev.entity);
++#endif
+ 	v4l2_device_unregister_subdev(&priv->subdev);
+ 	clk_disable_unprepare(priv->clk);
  	return 0;
- }
- 
 -- 
 2.11.0
