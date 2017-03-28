@@ -1,47 +1,72 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 0/2] drivers: serial: Aspeed VUART driver
-Date: Tue, 28 Mar 2017 16:14:56 +1030
-Message-ID: <20170328054458.29341-1-joel@jms.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH net-next v2 5/5] net-next: dsa: add dsa support for
+ Mediatek MT7530 switch
+Date: Tue, 28 Mar 2017 14:05:13 +0800
+Message-ID: <1490681113.14184.39.camel@mtkswgap22>
+References: <1490088910-19405-1-git-send-email-sean.wang@mediatek.com>
+         <1490088910-19405-6-git-send-email-sean.wang@mediatek.com>
+         <20170324140215.GG28518@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170324140215.GG28518@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, davem@davemloft.net, Landen.Chao@mediatek.com, keyhaede@gmail.com, objelf@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This is a driver for the Aspeed VUART. The VUART is a serial device on the BMC
-side of the LPC bus that connects a BMC to it's host processor.
 
-We add a flag to the serial core to allow the driver to skip probing of the
-THRE irq behaviour, which could hang due to the host not reading bytes out of
-the buffer.
+Hi Andrew,
 
-We've been using this on systems for over a year, so it has seen a good amount
-of testing.
-
-Cheers,
-
-Joel
+Add comment as below inline
 
 
-Jeremy Kerr (1):
-  drivers/serial: Add driver for Aspeed virtual UART
+On Fri, 2017-03-24 at 15:02 +0100, Andrew Lunn wrote:
+> Hi Sean
+> 
+> > +	regmap = devm_regmap_init(ds->dev, NULL, priv,
+> > +				  &mt7530_regmap_config);
+> > +	if (IS_ERR(regmap))
+> > +		dev_warn(priv->dev, "phy regmap initialization failed");
+> > +
+> 
+> Shouldn't this be a fatal error? If you keep going when there is an
+> error, what happens when you actually try to use the regmap?
+> 
 
-Joel Stanley (1):
-  serial: 8250: Add flag so drivers can avoid THRE probe
+Initial thought is that it is just for debugging purpose so if it fails,
+it should break any functionality of switch and only have implication as
+a warning message. 
 
- Documentation/devicetree/bindings/serial/8250.txt |   2 +
- drivers/tty/serial/8250/8250_port.c               |   2 +-
- drivers/tty/serial/Kconfig                        |  10 +
- drivers/tty/serial/Makefile                       |   1 +
- drivers/tty/serial/aspeed-vuart.c                 | 335 ++++++++++++++++++++++
- include/linux/serial_core.h                       |   1 +
- 6 files changed, 350 insertions(+), 1 deletion(-)
- create mode 100644 drivers/tty/serial/aspeed-vuart.c
+Anyway, i will remove it in the next one since it seems better being
+kept in private place as you suggested in the previous mail.  
 
--- 
-2.11.0
+> > +	phy_mode = of_get_phy_mode(ds->ports[ds->dst->cpu_port].dn);
+> > +	if (phy_mode < 0) {
+> > +		dev_err(priv->dev, "Can't find phy-mode for master device\n");
+> > +		return phy_mode;
+> > +	}
+> > +	dev_info(priv->dev, "phy-mode for master device = %x\n", phy_mode);
+> 
+> dev_dbg? 
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry. i forgot turned it into dev_dbg
+
+> > +
+> > +	id = mt7530_read(priv, MT7530_CREV);
+> > +	id >>= CHIP_NAME_SHIFT;
+> > +	if (id != MT7530_ID)
+> > +		return -ENODEV;
+> 
+> It might be helpful to say what ID has been found, if it is not the
+> supported ID.
+
+
+I will fix it up to make users know what was going on 
+
+thanks for taking your time on those reviewing again!
+
+
+> 	Andrew
