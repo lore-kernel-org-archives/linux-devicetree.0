@@ -1,43 +1,53 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
-Date: Tue, 28 Mar 2017 15:07:24 -0700
-Message-ID: <CAEG3pNCop22g0SbKfPma+iaHrSzv6sBXTJRsrjwtwUw+HGYV7Q@mail.gmail.com>
-References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
- <20170316100743.GA12137@gondor.apana.org.au> <m2mvcl6pwg.fsf@baylibre.com>
- <20170317083032.GA18512@gondor.apana.org.au> <m2lgrxnxlz.fsf@baylibre.com> <20170323075602.GA6054@gondor.apana.org.au>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC 3/8] cpufreq: imx6q: Set max suspend_freq to avoid changes during suspend
+Date: Wed, 29 Mar 2017 00:23:38 +0200
+Message-ID: <74548665.CVf2rD9Eyh@aspire.rjw.lan>
+References: <cover.1490199005.git.leonard.crestez@nxp.com> <1490731431.15830.9.camel@nxp.com> <45185440.SBt0mf6LXq@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170323075602.GA6054@gondor.apana.org.au>
-Sender: linux-clk-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Kevin Hilman <khilman@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <45185440.SBt0mf6LXq@aspire.rjw.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Robin Gong <yibin.gong@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Irina Tirdea <irina.tirdea@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Herbert,
+On Tuesday, March 28, 2017 10:50:50 PM Rafael J. Wysocki wrote:
+> On Tuesday, March 28, 2017 11:03:51 PM Leonard Crestez wrote:
+> > On Thu, 2017-03-23 at 10:04 +0530, Viresh Kumar wrote:
+> > > On 22-03-17, 18:53, Leonard Crestez wrote:
+> > > > If the cpufreq driver tries to modify voltage/freq during suspend/resume
+> > > > it might need to control an external PMIC via I2C or SPI but those
+> > > > devices might be already suspended.
+> > > > 
+> > > > To avoid this scenario we just increase cpufreq to highest setpoint
+> > > > before suspend. This issue can easily be triggered by ldo-bypass but in
+> > > > theory any regulator set_voltage call can end up having to modify
+> > > > external supply voltages.
+> > > > 
+> > > > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> > > > ---
+> > > >  drivers/cpufreq/imx6q-cpufreq.c | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > 
+> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > 
+> > The first couple of patches are obvious fixes despite being marked as
+> > RFC. It would be great if you could apply them to your tree separately
+> 
+> Why?
+> 
+> > from the rest of the series but I'm not sure what the process is here.
+> 
+> Well, you have to talk to me.
 
-On Thu, Mar 23, 2017 at 12:56 AM, Herbert Xu
-<herbert@gondor.apana.org.au> wrote:
-> On Wed, Mar 22, 2017 at 08:24:08AM -0700, Kevin Hilman wrote:
->>
->> Because this will be causing conflicts with both the platform (amlogic)
->> tree and the clk tree, could provide an immutable branch where these are
->> applied to help us handle these conflicts?
->
-> If you apply the same patches to your tree there should be no
-> conflicts at all.  git is able to resolve this automatically.
+OK, so if I understand this correctly, you would like the patches ACKed by
+Viresh to be applied regardless of what happens to the rest of the series,
+right?
 
-The commits will have different SHA1 hashes (commit id's). Having
-multiple "copies" of the same patch with separate id's is undesirable
-and completely avoidable. Immutable, shared branches resolve this
-issue.
+In that case please resend them separately without the [RFC] tag and with
+the ACKs from Viresh.
 
-Best regards,
-Mike
-
->
-> Cheers,
-> --
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks,
+Rafael
