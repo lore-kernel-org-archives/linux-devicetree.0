@@ -1,83 +1,44 @@
-From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 5/7] UDC: Use struct dma_pool instead of pci_pool
-Date: Tue, 28 Mar 2017 16:32:07 +0530
-Message-ID: <1490698929-10915-6-git-send-email-raviteja.garimella@broadcom.com>
+From: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Subject: [PATCH v3 4/7] UDC: Provide correct arguments for 'dma_pool_create'
+Date: Tue, 28 Mar 2017 16:32:06 +0530
+Message-ID: <1490698929-10915-5-git-send-email-raviteja.garimella@broadcom.com>
 References: <1490698929-10915-1-git-send-email-raviteja.garimella@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490698929-10915-1-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490698929-10915-1-git-send-email-raviteja.garimella@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Using dma_pool instead of pci_pool will make snps_udc_core driver
-to be compatible with non-pci platforms.
+Change the argument from NULL to a struct device for the
+dma_pool_create call during dma init.
 
-Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
 ---
- drivers/usb/gadget/udc/amd5536udc.h    | 4 ++--
- drivers/usb/gadget/udc/snps_udc_core.c | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/usb/gadget/udc/snps_udc_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/amd5536udc.h b/drivers/usb/gadget/udc/amd5536udc.h
-index c252457..91aae23 100644
---- a/drivers/usb/gadget/udc/amd5536udc.h
-+++ b/drivers/usb/gadget/udc/amd5536udc.h
-@@ -551,8 +551,8 @@ struct udc {
- 	u32 __iomem			*txfifo;
- 
- 	/* DMA desc pools */
--	struct pci_pool			*data_requests;
--	struct pci_pool			*stp_requests;
-+	struct dma_pool			*data_requests;
-+	struct dma_pool			*stp_requests;
- 
- 	/* device data */
- 	unsigned long			phys_addr;
 diff --git a/drivers/usb/gadget/udc/snps_udc_core.c b/drivers/usb/gadget/udc/snps_udc_core.c
-index 5f95a65..9d3861b 100644
+index c778d51..5f95a65 100644
 --- a/drivers/usb/gadget/udc/snps_udc_core.c
 +++ b/drivers/usb/gadget/udc/snps_udc_core.c
-@@ -543,7 +543,7 @@ udc_alloc_request(struct usb_ep *usbep, gfp_t gfp)
- 
- 	if (ep->dma) {
- 		/* ep0 in requests are allocated from data pool here */
--		dma_desc = pci_pool_alloc(ep->dev->data_requests, gfp,
-+		dma_desc = dma_pool_alloc(ep->dev->data_requests, gfp,
- 						&req->td_phys);
- 		if (!dma_desc) {
- 			kfree(req);
-@@ -582,7 +582,7 @@ static int udc_free_dma_chain(struct udc *dev, struct udc_request *req)
- 	td = phys_to_virt(td_last->next);
- 
- 	for (i = 1; i < req->chain_len; i++) {
--		pci_pool_free(dev->data_requests, td,
-+		dma_pool_free(dev->data_requests, td,
- 			      (dma_addr_t)td_last->next);
- 		td_last = td;
- 		td = phys_to_virt(td_last->next);
-@@ -612,7 +612,7 @@ udc_free_request(struct usb_ep *usbep, struct usb_request *usbreq)
- 		if (req->chain_len > 1)
- 			udc_free_dma_chain(ep->dev, req);
- 
--		pci_pool_free(ep->dev->data_requests, req->td_data,
-+		dma_pool_free(ep->dev->data_requests, req->td_data,
- 							req->td_phys);
+@@ -3101,7 +3101,7 @@ int init_dma_pools(struct udc *dev)
  	}
- 	kfree(req);
-@@ -807,7 +807,7 @@ static int udc_create_dma_chain(
- 	for (i = buf_len; i < bytes; i += buf_len) {
- 		/* create or determine next desc. */
- 		if (create_new_chain) {
--			td = pci_pool_alloc(ep->dev->data_requests,
-+			td = dma_pool_alloc(ep->dev->data_requests,
- 					    gfp_flags, &dma_addr);
- 			if (!td)
- 				return -ENOMEM;
+ 
+ 	/* DMA setup */
+-	dev->data_requests = dma_pool_create("data_requests", NULL,
++	dev->data_requests = dma_pool_create("data_requests", dev->dev,
+ 		sizeof(struct udc_data_dma), 0, 0);
+ 	if (!dev->data_requests) {
+ 		DBG(dev, "can't get request data pool\n");
+@@ -3112,7 +3112,7 @@ int init_dma_pools(struct udc *dev)
+ 	dev->ep[UDC_EP0IN_IX].dma = &dev->regs->ctl;
+ 
+ 	/* dma desc for setup data */
+-	dev->stp_requests = dma_pool_create("setup requests", NULL,
++	dev->stp_requests = dma_pool_create("setup requests", dev->dev,
+ 		sizeof(struct udc_stp_dma), 0, 0);
+ 	if (!dev->stp_requests) {
+ 		DBG(dev, "can't get stp request pool\n");
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
