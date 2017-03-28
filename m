@@ -1,139 +1,138 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v2 8/8] ASoC: arizona: Add support for new
-	micbias regulators
-Date: Tue, 28 Mar 2017 15:14:44 +0100
-Message-ID: <1490710484-25277-8-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1490710484-25277-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 5/7] pinctrl: aramda-37xx: Add irqchip support
+Date: Tue, 28 Mar 2017 16:19:06 +0200
+Message-ID: <87mvc5a3hh.fsf@free-electrons.com>
+References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
+ <0e60fccd7913b83ee53d2921ce8f297927e8b6f3.1490120798.git-series.gregory.clement@free-electrons.com>
+ <CACRpkdYv6WDWM60dRMaYfEt50M8N-yLYk2TRguNi78aQtt6X9A@mail.gmail.com>
+ <87vaqtadry.fsf@free-electrons.com>
+ <CACRpkdY0DzMGiRTWeS23iCY3Vja9dnXJVaMqOnhJRpBLowfYTA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1490710484-25277-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lee.jones@linaro.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdY0DzMGiRTWeS23iCY3Vja9dnXJVaMqOnhJRpBLowfYTA@mail.gmail.com>
+ (Linus Walleij's message of "Tue, 28 Mar 2017 15:04:39 +0200")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Victor Gu <xigu@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Change the widgets from the old SND_SOC_DAPM_SUPPLY widgets into
-SND_SOC_DAPM_REGULATOR_SUPPLY widgets now that we have proper regulator
-support for the micbiases.
+Hi Linus,
+ 
+ On mar., mars 28 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
+> On Tue, Mar 28, 2017 at 12:36 PM, Gregory CLEMENT
+> <gregory.clement@free-electrons.com> wrote:
+>>  On lun., mars 27 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+>>>> +                       u32 virq = irq_linear_revmap(d, hwirq +
+>>>> +                                                    i * GPIO_PER_REG);
+>>>
+>>> Use irq_find_mapping() instead please.
+>>
+>> As we are in the interrupt handler I chose to use this function because
+>> according to its documentation: "This is a fast path alternative to
+>> irq_find_mapping() that can be called directly by irq controller code to
+>> save a handful of instructions".
+>>
+>> The only restriction is "It is always safe to call, but won't find irqs
+>> mapped using the radix tree.". So I think that for this driver it is
+>> okay.
+>
+> So you are relying on the core code in gpiolib to select a linear
+> map. That is implicit semantics, and either all drivers using
+> GPIOLIB_IRQCHIP should be changed to irq_linear_revmap()
+> or all stay with irq_find_mapping().
+>
+> In this case, I doubt it that you are actually so timing critical that
+> it matters. Please use irq_find_mapping().
 
-No changes since v1.
+OK
 
- sound/soc/codecs/cs47l24.c | 6 ++----
- sound/soc/codecs/wm5102.c  | 9 +++------
- sound/soc/codecs/wm5110.c  | 9 +++------
- sound/soc/codecs/wm8997.c  | 9 +++------
- sound/soc/codecs/wm8998.c  | 9 +++------
- 5 files changed, 14 insertions(+), 28 deletions(-)
+>>>> +       ret = gpiochip_irqchip_add(gc, irqchip, 0,
+>>>> +                                  handle_level_irq, IRQ_TYPE_NONE);
+>>>
+>>> If you also set up the handler in .set_type() you can assign
+>>> handle_bad_irq() here and let .set_type set the right handler
+>>> as e.g. drivers/gpio/gpio-pl061.c.
+>>
+>> Well the hardware can only manage the edge trigger, so there is no
+>> benefit to modify it each time we want to change the kind of edge we
+>> want (raising or falling). But your comment make me realized that I used
+>> the wrong one, I will move to handle_edge_irq in the v4.
+>
+> Ooops, yeah handle_edge_irq() is what calls the ACK callback.
+>
+>>>> +       for (i = 0; i < nrirqs; i++) {
+>>>> +               struct irq_data *d = irq_get_irq_data(gc->irq_base + i);
+>>>> +
+>>>> +               d->mask = 1 << (i % GPIO_PER_REG);
+>>>> +       }
+>>>
+>>> What is this? It looks like a big hack. At least put in a fat
+>>> comment about what is going on and why.
+>>
+>> I can reuse a part of the commit log here: "The only unusual "feature"
+>> is that many interrupts are connected to the parent interrupt
+>> controller. But we do not take advantage of this and use the chained irq
+>> with all of them."
+>
+> What you're doing is mocking around with core irqchip semantics.
+> Is ->mask really supposed to be played around with from the outsid
+> like this?
 
-diff --git a/sound/soc/codecs/cs47l24.c b/sound/soc/codecs/cs47l24.c
-index 47e6fdd..c5dc322 100644
---- a/sound/soc/codecs/cs47l24.c
-+++ b/sound/soc/codecs/cs47l24.c
-@@ -386,10 +386,8 @@ SND_SOC_DAPM_PGA_E("IN2R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN2R_ENA_SHIFT,
- 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
- 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
- 
- SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
- 		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
-diff --git a/sound/soc/codecs/wm5102.c b/sound/soc/codecs/wm5102.c
-index 1fe358e..2a817f8 100644
---- a/sound/soc/codecs/wm5102.c
-+++ b/sound/soc/codecs/wm5102.c
-@@ -1137,12 +1137,9 @@ SND_SOC_DAPM_PGA_E("IN3R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN3R_ENA_SHIFT,
- 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
- 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
--		    ARIZONA_MICB2_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS3", ARIZONA_MIC_BIAS_CTRL_3,
--		    ARIZONA_MICB3_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS3", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
- 
- SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
- 		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
-diff --git a/sound/soc/codecs/wm5110.c b/sound/soc/codecs/wm5110.c
-index 1bc9421..57f3b41 100644
---- a/sound/soc/codecs/wm5110.c
-+++ b/sound/soc/codecs/wm5110.c
-@@ -1157,12 +1157,9 @@ SND_SOC_DAPM_PGA_E("IN4R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN4R_ENA_SHIFT,
- 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
- 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS3", ARIZONA_MIC_BIAS_CTRL_3,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS3", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
- 
- SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
- 		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
-diff --git a/sound/soc/codecs/wm8997.c b/sound/soc/codecs/wm8997.c
-index 49401a8..455d88a 100644
---- a/sound/soc/codecs/wm8997.c
-+++ b/sound/soc/codecs/wm8997.c
-@@ -452,12 +452,9 @@ SND_SOC_DAPM_PGA_E("IN2R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN2R_ENA_SHIFT,
- 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
- 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
--		    ARIZONA_MICB2_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS3", ARIZONA_MIC_BIAS_CTRL_3,
--		    ARIZONA_MICB3_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS3", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
- 
- SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
- 		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
-diff --git a/sound/soc/codecs/wm8998.c b/sound/soc/codecs/wm8998.c
-index 44f4471..a5e87ba 100644
---- a/sound/soc/codecs/wm8998.c
-+++ b/sound/soc/codecs/wm8998.c
-@@ -587,12 +587,9 @@ SND_SOC_DAPM_PGA_E("IN2 PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN2L_ENA_SHIFT,
- 		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
- 		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
--SND_SOC_DAPM_SUPPLY("MICBIAS3", ARIZONA_MIC_BIAS_CTRL_3,
--		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS1", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS2", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICBIAS3", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
- 
- SND_SOC_DAPM_PGA("Tone Generator 1", ARIZONA_TONE_GENERATOR_1,
- 		 ARIZONA_TONE1_ENA_SHIFT, 0, NULL, 0),
+According to the documentation mask is a "precomputed bitmask for
+accessing the chip registers" and it is exactly the way it is used in
+this driver.
+
+Moreover, currently ->mask is only used by the generic irqchip framework
+and not by the core of the irqchip subsystem. So the mask initialization
+is not done from the oustide but at the same level as the generic
+irqchip which is not used here.
+
+
+> Anyways: BIT(i % GPIO_PER_REG) is nicer.
+
+OK
+
+>
+>>>> +       for (i = 0; i < nr_irq_parent; i++) {
+>>>> +               int irq = irq_of_parse_and_map(np, i);
+>>>
+>>> I think gpiochip_irqchip_add() will do this for you already,
+>>> as it calls irq_create_mapping() for all offsets which will call
+>>> irq_of_parse_and_map() am I right?
+>>
+>> After reading the code, it doesn't seem it is the case. At least there
+>> is no irq_of_parse_and_map() call from gpiochip_irqchip_add(). And waht
+>> we need here is to associate each IRQ to the same GPIO handler.
+>>
+>> I can still try without this line to confirm it.
+>
+> It has irq_create_mapping(gpiochip->irqdomain, offset); that get
+> called for every IRQ, and that will eventually call irq_of_parse_and_map()
+> if the IRQs are defined in the device tree. (IIRC)
+
+When I followed the functions called I never find a call to
+irq_of_parse_and_map(), the closer things related to device tree I found
+was:
+"virq = irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node),
+NULL);"
+http://elixir.free-electrons.com/source/kernel/irq/irqdomain.c?v=4.11-rc4#L507
+
+Gregory
+
 -- 
-2.1.4
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
