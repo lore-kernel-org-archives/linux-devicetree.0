@@ -1,56 +1,113 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH V6 4/7] mfd: da9061: MFD core support
-Date: Tue, 28 Mar 2017 10:36:43 +0200
-Message-ID: <CAMuHMdX8WH959h50zGQCV7o4E249xBKDn_cVtRbFwYVsVebu9w@mail.gmail.com>
-References: <539b8756120ab3558c906f7457e65f94dbe37425.1490608293.git.stwiss.opensource@diasemi.com>
- <201703272258.hWlipe1g%fengguang.wu@intel.com> <20170328082141.u2rgnhei5yhhzxdn@dell>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
+Date: Tue, 28 Mar 2017 11:38:27 +0300
+Message-ID: <CAJKOXPeD4HKemKTrnC2JaON3JkuNGO9g+Hg8M7F6f2WusiYkhg@mail.gmail.com>
+References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
+ <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
+ <93e79e92-a102-e931-8d63-843031848888@samsung.com> <58DA1E38.50907@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170328082141.u2rgnhei5yhhzxdn@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <58DA1E38.50907@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>, jy0922.shim@samsung.com, Seung Woo Kim <sw0312.kim@samsung.com>, airlied@linux.ie, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, a.hajda@samsung.com, Andi Shyti <andi.shyti@samsung.com>, LW@karo-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+On Tue, Mar 28, 2017 at 11:26 AM, Inki Dae <inki.dae@samsung.com> wrote:
+> Merged.
 
-On Tue, Mar 28, 2017 at 10:21 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> [auto build test WARNING on ljones-mfd/for-mfd-next]
->> [also build test WARNING on v4.11-rc4 next-20170327]
->> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->>
->> url:    https://github.com/0day-ci/linux/commits/Steve-Twiss/Documentation-devicetree-watchdog-da9062-61-watchdog-timer-binding/20170327-215359
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
->> config: x86_64-randconfig-x009-201713 (attached as .config)
->> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
->> reproduce:
->>         # save the attached .config to linux build tree
->>         make ARCH=x86_64
->>
->> All warnings (new ones prefixed by >>):
->>
->>    drivers//mfd/da9062-core.c: In function 'da9062_i2c_probe':
->> >> drivers//mfd/da9062-core.c:845:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->>       chip->chip_type = (int)match->data;
->>                        ^
+Hi,
+
+I do not see the tag (with DT patches) merged by you which I provided
+to you before. These are essential for bisectability. Without them,
+kernel bisectability is broken. Did you merged the tag somewhere?
+
+Best regards,
+Krzysztof
+
+> Thanks,
+> Inki Dae
 >
-> Please use longs or enums.
-
-Enums would still give a warning on 64-bit.
-The simple fix is change the cast from (int) to (uintptr_t).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2017년 03월 22일 10:36에 Hoegeun Kwon 이(가) 쓴 글:
+>> Hi inki,
+>>
+>> Could you check the this patch?
+>> For reference, patch 1/5 and 2/5 have already been applied to Krzysztof tree.
+>>
+>> Best regards,
+>> Hoegeun
+>>
+>>
+>> On 03/08/2017 01:54 PM, Hoegeun Kwon wrote:
+>>> The dsi + panel is a parental relationship, so OF grpah is not needed.
+>>> Therefore, the current dsi_parse_dt function will throw an error,
+>>> because there is no linked OF graph for the case fimd + dsi + panel.
+>>>
+>>> Parse the Pll burst and esc clock frequency properties in dsi_parse_dt()
+>>> and create a bridge_node only if there is an OF graph associated with dsi.
+>>>
+>>> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+>>> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+>>> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+>>> ---
+>>>   drivers/gpu/drm/exynos/exynos_drm_dsi.c | 32 ++++++++------------------------
+>>>   1 file changed, 8 insertions(+), 24 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>> index f5c04d0..2d4e118 100644
+>>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>> @@ -1652,39 +1652,23 @@ static int exynos_dsi_parse_dt(struct exynos_dsi *dsi)
+>>>       if (ret < 0)
+>>>           return ret;
+>>>   -    ep = of_graph_get_endpoint_by_regs(node, DSI_PORT_OUT, 0);
+>>> -    if (!ep) {
+>>> -        dev_err(dev, "no output port with endpoint specified\n");
+>>> -        return -EINVAL;
+>>> -    }
+>>> -
+>>> -    ret = exynos_dsi_of_read_u32(ep, "samsung,burst-clock-frequency",
+>>> +    ret = exynos_dsi_of_read_u32(node, "samsung,burst-clock-frequency",
+>>>                        &dsi->burst_clk_rate);
+>>>       if (ret < 0)
+>>> -        goto end;
+>>> +        return ret;
+>>>   -    ret = exynos_dsi_of_read_u32(ep, "samsung,esc-clock-frequency",
+>>> +    ret = exynos_dsi_of_read_u32(node, "samsung,esc-clock-frequency",
+>>>                        &dsi->esc_clk_rate);
+>>>       if (ret < 0)
+>>> -        goto end;
+>>> -
+>>> -    of_node_put(ep);
+>>> +        return ret;
+>>>         ep = of_graph_get_next_endpoint(node, NULL);
+>>> -    if (!ep) {
+>>> -        ret = -EINVAL;
+>>> -        goto end;
+>>> -    }
+>>> -
+>>> -    dsi->bridge_node = of_graph_get_remote_port_parent(ep);
+>>> -    if (!dsi->bridge_node) {
+>>> -        ret = -EINVAL;
+>>> -        goto end;
+>>> +    if (ep) {
+>>> +        dsi->bridge_node = of_graph_get_remote_port_parent(ep);
+>>> +        of_node_put(ep);
+>>>       }
+>>> -end:
+>>> -    of_node_put(ep);
+>>>   -    return ret;
+>>> +    return 0;
+>>>   }
+>>>     static int exynos_dsi_bind(struct device *dev, struct device *master,
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>
+>>
