@@ -1,53 +1,56 @@
-From: Tobias Regnery <tobias.regnery@gmail.com>
-Subject: [PATCH v2] of: add stubs for of_n_{addr, size}_cells
-Date: Tue, 28 Mar 2017 11:37:42 +0200
-Message-ID: <20170328093742.21528-1-tobias.regnery@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: horms@verge.net.au, arnd@arndb.de, Tobias Regnery <tobias.regnery@gmail.com>
+From: Yannick Fertre <yannick.fertre@st.com>
+Subject: [PATCH v5 03/10] dt-bindings: display: Add STM32 LTDC driver
+Date: Tue, 28 Mar 2017 11:44:46 +0200
+Message-ID: <1490694293-18358-4-git-send-email-yannick.fertre@st.com>
+References: <1490694293-18358-1-git-send-email-yannick.fertre@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1490694293-18358-1-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-With CONFIG_OF=n and CONFIG_COMPILE_TEST=y the rcar pci-e driver fails to
-build on arm:
-
-drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
-drivers/pci/host/pcie-rcar.c:1035:16: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
-  parser->pna = of_n_addr_cells(node);
-                ^~~~~~~~~~~~~~~
-
-Fix this by adding an inline stub for of_n_addr_cells
-
-While at it also provide a stub for of_n_size_cells for consistency reasons.
-
-Signed-off-by: Tobias Regnery <tobias.regnery@gmail.com>
----
-Changes in v2:
-	- add a stub for of_n_size_cells as suggested by Arnd
-
- include/linux/of.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 21e6323de0f3..27727355e199 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -710,6 +710,16 @@ static inline struct device_node *of_get_cpu_node(int cpu,
- 	return NULL;
- }
- 
-+static inline int of_n_addr_cells(struct device_node *np)
-+{
-+	return 0;
-+}
-+
-+static inline int of_n_size_cells(struct device_node *np)
-+{
-+	return 0;
-+}
-+
- static inline int of_property_read_u64(const struct device_node *np,
- 				       const char *propname, u64 *out_value)
- {
--- 
-2.11.0
+VGhpcyBwYXRjaCBhZGRzIGRvY3VtZW50YXRpb24gb2YgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9y
+IHRoZSBTVE0zMiBMVERDCihMY2QtVGZ0IERpc3BsYXkgQ29udHJvbGxlcikuCgpBY2tlZC1ieTog
+Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0
+cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0ICB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysKIDEg
+ZmlsZSBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50eHQKCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxz
+dG0zMi1sdGRjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3N0LHN0bTMyLWx0ZGMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjhl
+MTQ3NjkKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dApAQCAtMCwwICsxLDM2IEBACisqIFNUTWljcm9l
+bGVjdHJvbmljcyBTVE0zMiBsY2QtdGZ0IGRpc3BsYXkgY29udHJvbGxlcgorCistIGx0ZGM6IGxj
+ZC10ZnQgZGlzcGxheSBjb250cm9sbGVyIGhvc3QKKyAgbXVzdCBiZSBhIHN1Yi1ub2RlIG9mIHN0
+LWRpc3BsYXktc3Vic3lzdGVtCisgIFJlcXVpcmVkIHByb3BlcnRpZXM6CisgIC0gY29tcGF0aWJs
+ZTogInN0LHN0bTMyLWx0ZGMiCisgIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhl
+IElQIHJlZ2lzdGVycyBhbmQgbGVuZ3RoIG9mIG1lbW9yeSBtYXBwZWQgcmVnaW9uLgorICAtIGNs
+b2NrczogQSBsaXN0IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3Ig
+ZWFjaAorICAgIGVudHJ5IGluICdjbG9jay1uYW1lcycuCisgIC0gY2xvY2stbmFtZXM6IEEgbGlz
+dCBvZiBjbG9jayBuYW1lcy4gRm9yIGx0ZGMgaXQgc2hvdWxkIGNvbnRhaW46CisgICAgICAtICJs
+Y2QiIGZvciB0aGUgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IHBpeGVsIGNsb2NrICYgSVAgY2xv
+Y2suCisgIC0gcmVzZXRzOiByZXNldCB0byBiZSB1c2VkIGJ5IHRoZSBkZXZpY2UgKGRlZmluZWQg
+YnkgdXNlIG9mIFJDQyBtYWNybykuCisgIFJlcXVpcmVkIG5vZGVzOgorICAgIC0gVmlkZW8gcG9y
+dCBmb3IgUkdCIG91dHB1dC4KKworRXhhbXBsZToKKworLyB7CisJLi4uCisJc29jIHsKKwkuLi4K
+KwkJbHRkYzogZGlzcGxheS1jb250cm9sbGVyQDQwMDE2ODAwIHsKKwkJCWNvbXBhdGlibGUgPSAi
+c3Qsc3RtMzItbHRkYyI7CisJCQlyZWcgPSA8MHg0MDAxNjgwMCAweDIwMD47CisJCQlpbnRlcnJ1
+cHRzID0gPDg4PiwgPDg5PjsKKwkJCXJlc2V0cyA9IDwmcmNjIFNUTTMyRjRfQVBCMl9SRVNFVChM
+VERDKT47CisJCQljbG9ja3MgPSA8JnJjYyAxIENMS19MQ0Q+OworCQkJY2xvY2stbmFtZXMgPSAi
+bGNkIjsKKworCQkJcG9ydCB7CisJCQkJbHRkY19vdXRfcmdiOiBlbmRwb2ludCB7CisJCQkJfTsK
+KwkJCX07CisJCX07CisJfTsKK307Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
