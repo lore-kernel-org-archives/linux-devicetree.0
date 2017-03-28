@@ -1,64 +1,75 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Tue, 28 Mar 2017 11:46:30 +0200
-Message-ID: <CACRpkdYmitsPvv_1bsb-EKkhcWqaKNsLBfxZgf8cjVvcqCpYXA@mail.gmail.com>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com> <20170323160204.GL30223@w540>
+From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 1/2] dt-bindings: i2c: Add Mediatek MT2701 i2c
+ binding
+Date: Tue, 28 Mar 2017 17:50:12 +0800
+Message-ID: <1490694612.18582.11.camel@mhfsdcap03>
+References: <1489029185-21447-1-git-send-email-jun.gao@mediatek.com>
+         <1489029185-21447-2-git-send-email-jun.gao@mediatek.com>
+         <20170322090543.sxacnddn2o7stjnq@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170323160204.GL30223@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jacopo <jacopo@jmondi.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170322090543.sxacnddn2o7stjnq@ninjato>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 5:02 PM, jacopo <jacopo@jmondi.org> wrote:
+On Wed, 2017-03-22 at 10:05 +0100, Wolfram Sang wrote:
+> On Thu, Mar 09, 2017 at 11:13:04AM +0800, Jun Gao wrote:
+> > From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add MT2701 i2c binding to i2c-mt6577.txt and there is no need to
+> > modify i2c driver.
+> > 
+> > Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> There is still the issue which Matthias Brugger pointed out on January,
+> 24th: you need to describe the fallback compatibles.
+> 
 
->> > +  Required properties:
->> > +    - renesas,pins
->>
->> Just "pins"?
->>
->
-> You know, I've been thinking about this, bu the "pins" property
-> definition in pinctrl-bidings is the following one:
->
-> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> ---
-> - pins takes a list of pin names or IDs as a required argument. The
->   specific binding for the hardware defines:
->       - Whether the entries are integers or strings, and their
->         meaning.
-> ---
->
-> And all examples there assume one "pin name" or "ID" per pin.
->
-> Now, we use 2 values per each pin (the pin ID and the alternate
-> function number), so to me this is different from what the generic
-> binding describes.
-> Also, pinctrl-single, and pinctrl-imx which have and ABI similar to
-> the one this driver define, use "pinctrl-single,pins" and "fsl,pins"
-> respectively as property names.
-> So either they have to be updated yet, or we should keep using
-> "renesas,pins" for our own defined ABI.
->
-> Maybe Linus or other pinctrl people can give some suggestion here.
+IMHO the value under compatible are just inputs which can be accepted.
+It's little strange to add fallback information in binding. Some other
+bindings do not describe so detailedly.
+Is it OK to make binding as minimum standard?
+If we describe it very detailedly, we will have to modify binding if
+there are some changes for mt2701.
 
-To me as subsystem maintainer any "necessarily different" bindings
-are just a big confusion for the head.
+Rob, could you give some suggestions?  Thanks!
 
-Since you're adding a new driver, try to stick to the generic bindings
-even if it deviates from what you are used to for Renesas, because
-even if it may be more work for you guys or make you annoyed that
-now a certain Renesas is different from all other Renesas platforms,
-for the community this makes things easier to maintain because
-we can look at the driver and its bindings and say "ah I know this".
+> > ---
+> >  .../devicetree/bindings/i2c/i2c-mt6577.txt         |   11 ++++++-----
+> >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+> > index 0ce6fa3..27dbbf9 100644
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+> > @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
+> >  
+> >  Required properties:
+> >    - compatible: value should be either of the following.
+> > -      (a) "mediatek,mt6577-i2c", for i2c compatible with mt6577 i2c.
+> > -      (b) "mediatek,mt6589-i2c", for i2c compatible with mt6589 i2c.
+> > -      (c) "mediatek,mt8127-i2c", for i2c compatible with mt8127 i2c.
+> > -      (d) "mediatek,mt8135-i2c", for i2c compatible with mt8135 i2c.
+> > -      (e) "mediatek,mt8173-i2c", for i2c compatible with mt8173 i2c.
+> > +	"mediatek,mt2701-i2c"
+> > +	"mediatek,mt6577-i2c"
+> > +	"mediatek,mt6589-i2c"
+> > +	"mediatek,mt8127-i2c"
+> > +	"mediatek,mt8135-i2c"
+> > +	"mediatek,mt8173-i2c"
+> >    - reg: physical base address of the controller and dma base, length of memory
+> >      mapped region.
+> >    - interrupts: interrupt number to the cpu.
+> > -- 
+> > 1.7.9.5
+> > 
 
-The fact that historically all the early adopters of pinctrl in device tree
-have these funky custom bindings is unfortunate but just something
-that we need to live with.
 
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
