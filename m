@@ -1,152 +1,78 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v6 15/39] [media] v4l2-mc: add a function to inherit controls
- from a pipeline
-Date: Mon, 27 Mar 2017 17:40:32 -0700
-Message-ID: <1490661656-10318-16-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v6 25/39] ARM: imx_v6_v7_defconfig: Enable staging video4linux drivers
+Date: Mon, 27 Mar 2017 17:40:42 -0700
+Message-ID: <1490661656-10318-26-git-send-email-steve_longerbeam@mentor.com>
 References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Sender: linux-media-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-v4l2_pipeline_inherit_controls() will add the v4l2 controls from
-all subdev entities in a pipeline to a given video device.
+Enable i.MX v4l2 media staging driver. For video capture on i.MX, the
+video multiplexer subdev is required. On the SabreAuto, the ADV7180
+video decoder is required along with i2c-mux-gpio. The Sabrelite
+and SabreSD require the OV5640 and the SabreLite requires PWM clocks
+for the OV5640.
+
+Increase max zoneorder to allow larger video buffer allocations.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- drivers/media/v4l2-core/v4l2-mc.c | 50 +++++++++++++++++++++++++++++++++++++++
- include/media/v4l2-mc.h           | 31 ++++++++++++++++++++++++
- 2 files changed, 81 insertions(+)
+ arch/arm/configs/imx_v6_v7_defconfig | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
-index 303980b..fda580e 100644
---- a/drivers/media/v4l2-core/v4l2-mc.c
-+++ b/drivers/media/v4l2-core/v4l2-mc.c
-@@ -22,6 +22,7 @@
- #include <linux/usb.h>
- #include <media/media-device.h>
- #include <media/media-entity.h>
-+#include <media/v4l2-ctrls.h>
- #include <media/v4l2-fh.h>
- #include <media/v4l2-mc.h>
- #include <media/v4l2-subdev.h>
-@@ -238,6 +239,55 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
- }
- EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
- 
-+int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-+				     struct media_entity *start_entity)
-+{
-+	struct media_device *mdev = start_entity->graph_obj.mdev;
-+	struct media_entity *entity;
-+	struct media_graph graph;
-+	struct v4l2_subdev *sd;
-+	int ret;
-+
-+	lockdep_assert_held(&mdev->graph_mutex);
-+
-+	ret = media_graph_walk_init(&graph, mdev);
-+	if (ret)
-+		return ret;
-+
-+	media_graph_walk_start(&graph, start_entity);
-+
-+	while ((entity = media_graph_walk_next(&graph))) {
-+		if (!is_media_entity_v4l2_subdev(entity))
-+			continue;
-+
-+		sd = media_entity_to_v4l2_subdev(entity);
-+
-+		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
-+					    sd->ctrl_handler,
-+					    NULL);
-+		if (ret)
-+			break;
-+	}
-+
-+	media_graph_walk_cleanup(&graph);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(__v4l2_pipeline_inherit_controls);
-+
-+int v4l2_pipeline_inherit_controls(struct video_device *vfd,
-+				   struct media_entity *start_entity)
-+{
-+	struct media_device *mdev = start_entity->graph_obj.mdev;
-+	int ret;
-+
-+	mutex_lock(&mdev->graph_mutex);
-+	ret = __v4l2_pipeline_inherit_controls(vfd, start_entity);
-+	mutex_unlock(&mdev->graph_mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_pipeline_inherit_controls);
-+
- /* -----------------------------------------------------------------------------
-  * Pipeline power management
-  *
-diff --git a/include/media/v4l2-mc.h b/include/media/v4l2-mc.h
-index 2634d9d..299d75d 100644
---- a/include/media/v4l2-mc.h
-+++ b/include/media/v4l2-mc.h
-@@ -171,6 +171,23 @@ void v4l_disable_media_source(struct video_device *vdev);
-  */
- int v4l_vb2q_enable_media_source(struct vb2_queue *q);
- 
-+/**
-+ * v4l2_pipeline_inherit_controls - Add the v4l2 controls from all
-+ *				    subdev entities in a pipeline to
-+ *				    the given video device.
-+ * @vfd: the video device
-+ * @start_entity: Starting entity
-+ *
-+ * This function is intended to be called from the link_notify callback,
-+ * which holds the media graph mutex lock. __v4l2_pipeline_inherit_controls
-+ * is provided (which does not acquire the lock) for this purpose.
-+ * v4l2_pipeline_inherit_controls is also provided for use in other
-+ * locations where the graph mutex is not held.
-+ */
-+int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-+				     struct media_entity *start_entity);
-+int v4l2_pipeline_inherit_controls(struct video_device *vfd,
-+				   struct media_entity *start_entity);
- 
- /**
-  * v4l2_pipeline_pm_use - Update the use count of an entity
-@@ -231,6 +248,20 @@ static inline int v4l_vb2q_enable_media_source(struct vb2_queue *q)
- 	return 0;
- }
- 
-+static inline int __v4l2_pipeline_inherit_controls(
-+	struct video_device *vfd,
-+	struct media_entity *start_entity)
-+{
-+	return 0;
-+}
-+
-+static inline int v4l2_pipeline_inherit_controls(
-+	struct video_device *vfd,
-+	struct media_entity *start_entity)
-+{
-+	return 0;
-+}
-+
- static inline int v4l2_pipeline_pm_use(struct media_entity *entity, int use)
- {
- 	return 0;
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index eaba3b1..5d8c94a 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -51,6 +51,7 @@ CONFIG_PREEMPT_VOLUNTARY=y
+ CONFIG_AEABI=y
+ CONFIG_HIGHMEM=y
+ CONFIG_CMA=y
++CONFIG_FORCE_MAX_ZONEORDER=14
+ CONFIG_CMDLINE="noinitrd console=ttymxc0,115200"
+ CONFIG_KEXEC=y
+ CONFIG_CPU_FREQ=y
+@@ -181,6 +182,7 @@ CONFIG_SERIAL_FSL_LPUART=y
+ CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
+ # CONFIG_I2C_COMPAT is not set
+ CONFIG_I2C_CHARDEV=y
++CONFIG_I2C_MUX=y
+ CONFIG_I2C_MUX_GPIO=y
+ # CONFIG_I2C_HELPER_AUTO is not set
+ CONFIG_I2C_ALGOPCF=m
+@@ -221,14 +223,20 @@ CONFIG_REGULATOR_PFUZE100=y
+ CONFIG_MEDIA_SUPPORT=y
+ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_RC_SUPPORT=y
++CONFIG_MEDIA_CONTROLLER=y
++CONFIG_VIDEO_V4L2_SUBDEV_API=y
+ CONFIG_RC_DEVICES=y
+ CONFIG_IR_GPIO_CIR=y
+ CONFIG_MEDIA_USB_SUPPORT=y
+ CONFIG_USB_VIDEO_CLASS=m
+ CONFIG_V4L_PLATFORM_DRIVERS=y
++CONFIG_VIDEO_MULTIPLEXER=y
+ CONFIG_SOC_CAMERA=y
+ CONFIG_V4L_MEM2MEM_DRIVERS=y
+ CONFIG_VIDEO_CODA=y
++# CONFIG_MEDIA_SUBDRV_AUTOSELECT is not set
++CONFIG_VIDEO_ADV7180=m
++CONFIG_VIDEO_OV5640=m
+ CONFIG_SOC_CAMERA_OV2640=y
+ CONFIG_IMX_IPUV3_CORE=y
+ CONFIG_DRM=y
+@@ -338,6 +346,9 @@ CONFIG_FSL_EDMA=y
+ CONFIG_IMX_SDMA=y
+ CONFIG_MXS_DMA=y
+ CONFIG_STAGING=y
++CONFIG_STAGING_MEDIA=y
++CONFIG_VIDEO_IMX_MEDIA=y
++CONFIG_COMMON_CLK_PWM=y
+ CONFIG_IIO=y
+ CONFIG_VF610_ADC=y
+ CONFIG_MPL3115=y
 -- 
 2.7.4
