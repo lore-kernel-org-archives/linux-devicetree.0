@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv6 09/14] ov2640: fix colorspace handling
-Date: Tue, 28 Mar 2017 10:23:42 +0200
-Message-ID: <20170328082347.11159-10-hverkuil@xs4all.nl>
+Subject: [PATCHv6 06/14] atmel-isi: update device tree bindings documentation
+Date: Tue, 28 Mar 2017 10:23:39 +0200
+Message-ID: <20170328082347.11159-7-hverkuil@xs4all.nl>
 References: <20170328082347.11159-1-hverkuil@xs4all.nl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170328082347.11159-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
@@ -12,73 +12,126 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-The colorspace is independent of whether YUV or RGB is sent to the SoC.
-Fix this.
+The original bindings documentation was incomplete (missing pinctrl-names,
+missing endpoint node properties) and the example was out of date.
+
+Add the missing information and tidy up the text.
 
 Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Acked-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 ---
- drivers/media/i2c/soc_camera/ov2640.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ .../devicetree/bindings/media/atmel-isi.txt        | 91 +++++++++++++---------
+ 1 file changed, 53 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/soc_camera/ov2640.c
-index 56de18263359..b9a0069f5b33 100644
---- a/drivers/media/i2c/soc_camera/ov2640.c
-+++ b/drivers/media/i2c/soc_camera/ov2640.c
-@@ -794,10 +794,11 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
- 		dev_dbg(&client->dev, "%s: Selected cfmt YUYV (YUV422)", __func__);
- 		selected_cfmt_regs = ov2640_yuyv_regs;
- 		break;
--	default:
- 	case MEDIA_BUS_FMT_UYVY8_2X8:
-+	default:
- 		dev_dbg(&client->dev, "%s: Selected cfmt UYVY", __func__);
- 		selected_cfmt_regs = ov2640_uyvy_regs;
-+		break;
- 	}
- 
- 	/* reset hardware */
-@@ -865,17 +866,7 @@ static int ov2640_get_fmt(struct v4l2_subdev *sd,
- 	mf->width	= priv->win->width;
- 	mf->height	= priv->win->height;
- 	mf->code	= priv->cfmt_code;
+diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+index 251f008f220c..332513a151cc 100644
+--- a/Documentation/devicetree/bindings/media/atmel-isi.txt
++++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+@@ -1,51 +1,66 @@
+-Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
+-----------------------------------------------
 -
--	switch (mf->code) {
--	case MEDIA_BUS_FMT_RGB565_2X8_BE:
--	case MEDIA_BUS_FMT_RGB565_2X8_LE:
--		mf->colorspace = V4L2_COLORSPACE_SRGB;
--		break;
--	default:
--	case MEDIA_BUS_FMT_YUYV8_2X8:
--	case MEDIA_BUS_FMT_UYVY8_2X8:
--		mf->colorspace = V4L2_COLORSPACE_JPEG;
--	}
-+	mf->colorspace	= V4L2_COLORSPACE_SRGB;
- 	mf->field	= V4L2_FIELD_NONE;
+-Required properties:
+-- compatible: must be "atmel,at91sam9g45-isi"
+-- reg: physical base address and length of the registers set for the device;
+-- interrupts: should contain IRQ line for the ISI;
+-- clocks: list of clock specifiers, corresponding to entries in
+-          the clock-names property;
+-- clock-names: must contain "isi_clk", which is the isi peripherial clock.
+-
+-ISI supports a single port node with parallel bus. It should contain one
++Atmel Image Sensor Interface (ISI)
++----------------------------------
++
++Required properties for ISI:
++- compatible: must be "atmel,at91sam9g45-isi".
++- reg: physical base address and length of the registers set for the device.
++- interrupts: should contain IRQ line for the ISI.
++- clocks: list of clock specifiers, corresponding to entries in the clock-names
++	property; please refer to clock-bindings.txt.
++- clock-names: required elements: "isi_clk".
++- pinctrl-names, pinctrl-0: please refer to pinctrl-bindings.txt.
++
++ISI supports a single port node with parallel bus. It shall contain one
+ 'port' child node with child 'endpoint' node. Please refer to the bindings
+ defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
  
- 	return 0;
-@@ -897,17 +888,17 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
- 	ov2640_select_win(&mf->width, &mf->height);
+-Example:
+-	isi: isi@f0034000 {
+-		compatible = "atmel,at91sam9g45-isi";
+-		reg = <0xf0034000 0x4000>;
+-		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+-
+-		clocks = <&isi_clk>;
+-		clock-names = "isi_clk";
++Endpoint node properties
++------------------------
  
- 	mf->field	= V4L2_FIELD_NONE;
-+	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_isi>;
++- bus-width: <8> or <10> (mandatory)
++- hsync-active (default: active high)
++- vsync-active (default: active high)
++- pclk-sample (default: sample on falling edge)
++- remote-endpoint: A phandle to the bus receiver's endpoint node (mandatory).
  
- 	switch (mf->code) {
- 	case MEDIA_BUS_FMT_RGB565_2X8_BE:
- 	case MEDIA_BUS_FMT_RGB565_2X8_LE:
--		mf->colorspace = V4L2_COLORSPACE_SRGB;
-+	case MEDIA_BUS_FMT_YUYV8_2X8:
-+	case MEDIA_BUS_FMT_UYVY8_2X8:
- 		break;
- 	default:
- 		mf->code = MEDIA_BUS_FMT_UYVY8_2X8;
--	case MEDIA_BUS_FMT_YUYV8_2X8:
--	case MEDIA_BUS_FMT_UYVY8_2X8:
--		mf->colorspace = V4L2_COLORSPACE_JPEG;
-+		break;
- 	}
+-		port {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
++Example:
  
- 	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+-			isi_0: endpoint {
+-				remote-endpoint = <&ov2640_0>;
+-				bus-width = <8>;
+-			};
++isi: isi@f0034000 {
++	compatible = "atmel,at91sam9g45-isi";
++	reg = <0xf0034000 0x4000>;
++	interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_isi_data_0_7>;
++	clocks = <&isi_clk>;
++	clock-names = "isi_clk";
++	port {
++		isi_0: endpoint {
++			remote-endpoint = <&ov2640_0>;
++			bus-width = <8>;
++			vsync-active = <1>;
++			hsync-active = <1>;
+ 		};
+ 	};
++};
+ 
+-	i2c1: i2c@f0018000 {
+-		ov2640: camera@0x30 {
+-			compatible = "ovti,ov2640";
+-			reg = <0x30>;
++i2c1: i2c@f0018000 {
++	ov2640: camera@30 {
++		compatible = "ovti,ov2640";
++		reg = <0x30>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
++		resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
++		pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
++		clocks = <&pck0>;
++		clock-names = "xvclk";
++		assigned-clocks = <&pck0>;
++		assigned-clock-rates = <25000000>;
+ 
+-			port {
+-				ov2640_0: endpoint {
+-					remote-endpoint = <&isi_0>;
+-					bus-width = <8>;
+-				};
++		port {
++			ov2640_0: endpoint {
++				remote-endpoint = <&isi_0>;
++				bus-width = <8>;
+ 			};
+ 		};
+ 	};
++};
 -- 
 2.11.0
 
