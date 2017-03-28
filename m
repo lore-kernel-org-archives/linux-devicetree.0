@@ -1,7 +1,7 @@
 From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH v2 8/8] bus: brcmstb_gisb: update to support new revision
-Date: Tue, 28 Mar 2017 14:34:31 -0700
-Message-ID: <20170328213431.10904-9-opendmb@gmail.com>
+Subject: [PATCH v2 6/8] bus: brcmstb_gisb: Add ARM64 support
+Date: Tue, 28 Mar 2017 14:34:29 -0700
+Message-ID: <20170328213431.10904-7-opendmb@gmail.com>
 References: <20170328213431.10904-1-opendmb@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170328213431.10904-1-opendmb@gmail.com>
@@ -10,56 +10,84 @@ To: mark.rutland@arm.com
 Cc: robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, opendmb@gmail.com, wangkefeng.wang@huawei.com, james.morse@arm.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The 7278 introduces a new version of this core.  This
-commit adds support for that revision.
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+Hook to the ARM64 data abort exception #16: synchronous external
+abort, which is how the GISB errors will be funneled back to the
+ARM64 CPU in case of problems
+
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt |  3 ++-
- drivers/bus/brcmstb_gisb.c                              | 10 ++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ drivers/bus/Kconfig        |  2 +-
+ drivers/bus/brcmstb_gisb.c | 15 ++++++++++++---
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-index 1eceefb20f01..8a6c3c2e58fe 100644
---- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-+++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-@@ -3,7 +3,8 @@ Broadcom GISB bus Arbiter controller
- Required properties:
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index 0a52da439abf..d2a5f1184022 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -57,7 +57,7 @@ config ARM_CCN
  
- - compatible:
--    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for 28nm chips
-+    "brcm,bcm7278-gisb-arb" for V7 28nm chips
-+    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for other 28nm chips
-     "brcm,bcm7435-gisb-arb" for newer 40nm chips
-     "brcm,bcm7400-gisb-arb" for older 40nm chips and all 65nm chips
-     "brcm,bcm7038-gisb-arb" for 130nm chips
+ config BRCMSTB_GISB_ARB
+ 	bool "Broadcom STB GISB bus arbiter"
+-	depends on ARM || MIPS
++	depends on ARM || ARM64 || MIPS
+ 	default ARCH_BRCMSTB || BMIPS_GENERIC
+ 	help
+ 	  Driver for the Broadcom Set Top Box System-on-a-chip internal bus
 diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index 774729002b8c..6c3b0dda75f2 100644
+index edf79432f899..500b6bb5c739 100644
 --- a/drivers/bus/brcmstb_gisb.c
 +++ b/drivers/bus/brcmstb_gisb.c
-@@ -65,6 +65,15 @@ static const int gisb_offsets_bcm7038[] = {
- 	[ARB_ERR_CAP_MASTER]	= -1,
- };
+@@ -30,6 +30,11 @@
+ #include <asm/signal.h>
+ #endif
  
-+static const int gisb_offsets_bcm7278[] = {
-+	[ARB_TIMER]		= 0x008,
-+	[ARB_ERR_CAP_CLR]	= 0x7f8,
-+	[ARB_ERR_CAP_HI_ADDR]	= -1,
-+	[ARB_ERR_CAP_ADDR]	= 0x7e0,
-+	[ARB_ERR_CAP_STATUS]	= 0x7f0,
-+	[ARB_ERR_CAP_MASTER]	= 0x7f4,
-+};
++#ifdef CONFIG_ARM64
++#include <asm/signal.h>
++#include <asm/system_misc.h>
++#endif
 +
- static const int gisb_offsets_bcm7400[] = {
- 	[ARB_TIMER]		= 0x00c,
- 	[ARB_ERR_CAP_CLR]	= 0x0c8,
-@@ -328,6 +337,7 @@ static const struct of_device_id brcmstb_gisb_arb_of_match[] = {
- 	{ .compatible = "brcm,bcm7445-gisb-arb", .data = gisb_offsets_bcm7445 },
- 	{ .compatible = "brcm,bcm7435-gisb-arb", .data = gisb_offsets_bcm7435 },
- 	{ .compatible = "brcm,bcm7400-gisb-arb", .data = gisb_offsets_bcm7400 },
-+	{ .compatible = "brcm,bcm7278-gisb-arb", .data = gisb_offsets_bcm7278 },
- 	{ .compatible = "brcm,bcm7038-gisb-arb", .data = gisb_offsets_bcm7038 },
- 	{ },
- };
+ #ifdef CONFIG_MIPS
+ #include <asm/traps.h>
+ #endif
+@@ -225,7 +230,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_ARM
++#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
+ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+ 				     struct pt_regs *regs)
+ {
+@@ -235,7 +240,7 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+ 	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
+ 		brcmstb_gisb_arb_decode_addr(gdev, "bus error");
+ 
+-#if !defined(CONFIG_ARM_LPAE)
++#if defined(CONFIG_ARM) && !defined(CONFIG_ARM_LPAE)
+ 	/*
+ 	 * If it was an imprecise abort, then we need to correct the
+ 	 * return address to be _after_ the instruction.
+@@ -247,7 +252,7 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+ 	/* Always report unhandled exception */
+ 	return 1;
+ }
+-#endif
++#endif /* CONFIG_ARM || CONFIG_ARM64 */
+ 
+ #ifdef CONFIG_MIPS
+ static int brcmstb_bus_error_handler(struct pt_regs *regs, int is_fixup)
+@@ -395,6 +400,10 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
+ 			"imprecise external abort");
+ #endif
+ #endif /* CONFIG_ARM */
++#ifdef CONFIG_ARM64
++	hook_fault_code(16, brcmstb_bus_error_handler, SIGBUS, 0,
++			"synchronous external abort");
++#endif
+ #ifdef CONFIG_MIPS
+ 	board_be_handler = brcmstb_bus_error_handler;
+ #endif
 -- 
 2.12.0
