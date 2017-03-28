@@ -1,197 +1,90 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
-Date: Tue, 28 Mar 2017 08:20:24 +0200
-Message-ID: <461b2321-c43c-6d88-c805-97a887cc431d@st.com>
-References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
- <20170324020630.vhffmeeb6wto53zx@rob-hp-laptop>
- <dce20025-9f42-e747-e325-e1667504e615@st.com>
- <CAL_Jsq++rdPqNZk54S7gQaeLBdzSptogp3dp9P1HmNTV67Sk9w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq++rdPqNZk54S7gQaeLBdzSptogp3dp9P1HmNTV67Sk9w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, =?UTF-8?Q?Rados=c5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Olivier Bideau <olivier.bideau@st.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Amelie Delaunay <amelie.delaunay@st.com>, Lee Jones <lee.jones@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v34 13/14] Documentation: dt: chosen properties for arm64 kdump
+Date: Tue, 28 Mar 2017 15:52:42 +0900
+Message-ID: <20170328065242.16108-1-takahiro.akashi@linaro.org>
+References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170328064831.15894-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, sgoel-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
 
+Add documentation for DT properties:
+	linux,usable-memory-range
+	linux,elfcorehdr
+used by arm64 kdump. Those are, respectively, a usable memory range
+allocated to crash dump kernel and the elfcorehdr's location within it.
 
-On 03/27/2017 09:04 PM, Rob Herring wrote:
-> On Fri, Mar 24, 2017 at 4:41 AM, Gabriel Fernandez
-> <gabriel.fernandez@st.com> wrote:
->> Hi Rob,
->>
->> Thanks for reviewing
->>
->>
->>
->> On 03/24/2017 03:06 AM, Rob Herring wrote:
->>> On Wed, Mar 15, 2017 at 10:23:30AM +0100, gabriel.fernandez@st.com wrote:
->>>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>>>
->>>> This patch enables clocks for STM32H743 boards.
->>>>
->>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->>>> ---
->>>>    .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |  152 ++
->>>>    drivers/clk/Makefile                               |    1 +
->>>>    drivers/clk/clk-stm32h7.c                          | 1586
->>>> ++++++++++++++++++++
->>>>    include/dt-bindings/clock/stm32h7-clks.h           |  165 ++
->>>>    include/dt-bindings/mfd/stm32h7-rcc.h              |  138 ++
->>>>    5 files changed, 2042 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>>    create mode 100644 drivers/clk/clk-stm32h7.c
->>>>    create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
->>>>    create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>> b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>> new file mode 100644
->>>> index 0000000..9d4b587
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>> @@ -0,0 +1,152 @@
->>>> +STMicroelectronics STM32H7 Reset and Clock Controller
->>>> +=====================================================
->>>> +
->>>> +The RCC IP is both a reset and a clock controller.
->>>> +
->>>> +Please refer to clock-bindings.txt for common clock controller binding
->>>> usage.
->>>> +Please also refer to reset.txt for common reset controller binding
->>>> usage.
->>>> +
->>>> +Required properties:
->>>> +- compatible: Should be:
->>>> +  "st,stm32h743-rcc"
->>>> +
->>>> +- reg: should be register base and length as documented in the
->>>> +  datasheet
->>>> +
->>>> +- #reset-cells: 1, see below
->>>> +
->>>> +- #clock-cells : from common clock binding; shall be set to 1
->>>> +
->>>> +- clocks: External oscillator clock phandle
->>>> +  - high speed external clock signal (HSE)
->>>> +  - low speed external clock signal (LSE)
->>>> +  - external I2S clock (I2S_CKIN)
->>>> +
->>>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup
->>>> domain
->>>> +  write protection (RTC clock).
->>>> +
->>>> +- pll x node: Allow to register a pll with specific parameters.
->>>> +  Please see PLL section below.
->>>> +
->>>> +Example:
->>>> +
->>>> +       rcc: rcc@58024400 {
->>>> +               #reset-cells = <1>;
->>>> +               #clock-cells = <2>
->>>> +               compatible = "st,stm32h743-rcc", "st,stm32-rcc";
->>>> +               reg = <0x58024400 0x400>;
->>>> +               clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
->>>> +
->>>> +               st,syscfg = <&pwrcfg>;
->>>> +
->>>> +               #address-cells = <1>;
->>>> +               #size-cells = <0>;
->>>> +
->>>> +               vco1@58024430 {
->>>> +                       #clock-cells = <0>;
->>>> +                       compatible = "stm32,pll";
->>>> +                       reg = <0>;
->>> The reg addr value and unit address don't match.
->> ok il will change into
->>
->>          vco1@0 {
->>                  reg = <0>;
->>
->>
->>>> +               };
->>>> +
->>>> +               vco2@58024438 {
->>>> +                       #clock-cells = <0>;
->>>> +                       compatible = "stm32,pll";
->>>> +                       reg = <1>;
->>>> +                       st,clock-div = <2>;
->>>> +                       st,clock-mult = <40>;
->>>> +                       st,frac-status = <0>;
->>>> +                       st,frac = <0>;
->>>> +                       st,vcosel = <1>;
->>>> +                       st,pllrge = <2>;
->>>> +               };
->>>> +       };
->>>> +
->>>> +
->>>> +STM32H7 PLL
->>>> +-----------
->>>> +
->>>> +The VCO of STM32 PLL could be reprensented like this:
->>>> +
->>>> +  Vref    ---------       --------
->>>> +    ---->| / DIVM  |---->| x DIVN | ------> VCO
->>>> +          ---------       --------
->>>> +                            ^
->>>> +                            |
->>>> +                         -------
->>>> +                        | FRACN |
->>>> +                         -------
->>>> +
->>>> +When the PLL is configured in integer mode:
->>>> +- VCO = ( Vref / DIVM ) * DIVN
->>>> +
->>>> +When the PLL is configured in fractional mode:
->>>> +- VCO = ( Vref / DIVM ) * ( DIVN + FRACN / 2^13)
->>>> +
->>>> +
->>>> +Required properties for pll node:
->>>> +- compatible: Should be:
->>>> +  "stm32,pll"
->>> Only 1 single PLL design for all STM32 chips ever?
->> no, i can change into "stm32h7,pll"
-> Actually, should be "st,stm32h7-pll".
-ok
+Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+[takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: update the text due to recent changes ]
+Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
->>>> +
->>>> +- #clock-cells: from common clock binding; shall be set to 0
->>>> +- reg: Should be the pll number.
->>>> +
->>>> +Optional properties:
->>>> +- st,clock-div:  DIVM division factor       : <1..63>
->>>> +- st,clock-mult: DIVN multiplication factor : <4..512>
->>>> +
->>>> +- st,frac-status:
->>>> +   - 0 Pll is configured in integer mode
->>>> +   - 1 Pll is configure in fractional mode
->>> Isn't this implied by the presence of the next property?
->> do you prefer this ?
->>
->> - st,frac :
->> 0 : pll is configured in integer mode
->> 1..8191 : Fractional part of the multiplication factor and pll is configured
->> in fractional mode
-> Why not no st,frac property means integer mode?
-No
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 6ae9d82d4c37..b5e39af4ddc0 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
+ book3e) by some versions of kexec-tools to tell the new kernel that it
+ is being booted by kexec, as the booting environment may differ (e.g.
+ a different secondary CPU release mechanism)
++
++linux,usable-memory-range
++-------------------------
++
++This property (arm64 only) holds a base address and size, describing a
++limited region in which memory may be considered available for use by
++the kernel. Memory outside of this range is not available for use.
++
++This property describes a limitation: memory within this range is only
++valid when also described through another mechanism that the kernel
++would otherwise use to determine available memory (e.g. memory nodes
++or the EFI memory map). Valid memory may be sparse within the range.
++e.g.
++
++/ {
++	chosen {
++		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
++	};
++};
++
++The main usage is for crash dump kernel to identify its own usable
++memory and exclude, at its boot time, any other memory areas that are
++part of the panicked kernel's memory.
++
++While this property does not represent a real hardware, the address
++and the size are expressed in #address-cells and #size-cells,
++respectively, of the root node.
++
++linux,elfcorehdr
++----------------
++
++This property (currently used only on arm64) holds the memory range,
++the address and the size, of the elf core header which mainly describes
++the panicked kernel's memory layout as PT_LOAD segments of elf format.
++e.g.
++
++/ {
++	chosen {
++		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
++	};
++};
++
++While this property does not represent a real hardware, the address
++and the size are expressed in #address-cells and #size-cells,
++respectively, of the root node.
+-- 
+2.11.1
 
-no st,frac property means no change (keep default values from bootloader)
-
-
-Best Regards
-
-Gabriel
-
-> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
