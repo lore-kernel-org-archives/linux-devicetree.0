@@ -1,85 +1,44 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 4/8] regulator: core: Check enabling bypass respects
- constraints
-Date: Tue, 28 Mar 2017 17:47:54 +0100
-Message-ID: <20170328164754.z2c2ttovs3sxbcos@sirena.org.uk>
-References: <cover.1490199005.git.leonard.crestez@nxp.com>
- <1edff9bc610969b0c53fa1080d5db021c8e00b2d.1490199005.git.leonard.crestez@nxp.com>
- <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
- <1490704781.3546.57.camel@nxp.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] arm64: tegra: Add CPU and PSCI nodes for NVIDIA Tegra210
+ platforms
+Date: Tue, 28 Mar 2017 17:49:41 +0100
+Message-ID: <f9c59c65-de48-108d-73df-c659cc3300e6@nvidia.com>
+References: <1490701718-16571-1-git-send-email-jonathanh@nvidia.com>
+ <9069e2fd-bf7b-b1df-3d1b-071ee21642ef@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wq5wqvcw3yjjd6ix"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1490704781.3546.57.camel-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <9069e2fd-bf7b-b1df-3d1b-071ee21642ef-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Gong <yibin.gong-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---wq5wqvcw3yjjd6ix
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 28/03/17 17:23, Stephen Warren wrote:
+> On 03/28/2017 05:48 AM, Jon Hunter wrote:
+>> Add the CPU and PSCI nodes for the NVIDIA Tegra210 platforms so that
+>> all CPUs can be enabled on boot. This assumes that the PSCI firmware
+>> has been loaded during the initial bootstrap on the device before the
+>> kernel starts (which is typically the case for these platforms). The
+>> PSCI firmware version is set to v0.2 which aligns with the current
+>> shipping version for Tegra.
+> 
+> This seems fine, although I'd expect PSCI to be used everywhere on
+> Tegra, so putting this in tegra210.dtsi would make more sense.
 
-On Tue, Mar 28, 2017 at 03:39:41PM +0300, Leonard Crestez wrote:
-> On Fri, 2017-03-24 at 12:52 +0000, Mark Brown wrote:
+It's fine with me. Although technically, tegra210-smaug ships with
+psci-v1.0 and tegra210-jetson-tx1 currently have psci-v0.2. However, I
+did test both with the psci version set to v1.0 and the jetson-tx1, did
+detect the version automatically and reverted to v0.2 (which is a
+feature of psci >= v0.2). For Tegra186 we also have the psci node in the
+tegra186-p3310.dtsi.
 
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
+Jon
 
-> > to the supply.=A0=A0Usually bypass is used for low power retention modes
-> > with different settings to those used in normal operation that wouldn't
-> > be desired in normal operation, if we were going to have constraints for
-> > this I'd expect a separate set used during bypass.
-
-> In this particular case it's not possible to set constraints on the parent
-> regulator so that both ldo-enable and ldo-bypass modes work. The maximum =
-allowed
-> voltage for ldo-bypass is lower than the minimum required to support the =
-chip at
-> max frequency wit ldo-enable.
-
-If things are really so sensitive that you can't bypass without lowering
-the voltage then it's hard to see how you can safely transition into and
-out of bypass mode. =20
-
-> I'm not sure I understand why you are against applying constraints to the=
- parent
-> when in bypass mode, it seems like the obvious thing to do if you want to
-> support flexible configuration. The check I introduced is probably not en=
-ough to
-> cover all cases, for example it would still be possible to explicitly cha=
-nge
-> parent voltage afterwards.
-
-To repeat what I said previously the whole point of bypassing is to not
-do regulation and generally the constraints in the unregulated idle case
-are substantially more relaxed.  This would break use cases relying on
-the existing behaviour which wouldn't expect to affect the parent
-voltage at all, either stopping things working or making them less
-efficient by needlessly regulating the voltage down which defeats the
-main point of bypassing.
-
---wq5wqvcw3yjjd6ix
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljak7kACgkQJNaLcl1U
-h9CqTwf/TSRcy61GFRGr0tnkhFhjr7ToIDfLW7vP3slRHtakPK63C0vsNK5sxcOW
-VO/aOQOvzWSFd6oW33hAvUv3DmHYOvUu9X0U2DXMhH0rwXhhjh2Ph2CkcdAkbZ13
-5J+Q5X3vUxOEdFnh05hMRA0nGQ+9aNHhvgI4GfZBtJmjG1tB00Bma4OeKvYnam6X
-JCSeRp8KquTbsOVt0qj41nABpPetd39VZYFnaHbPNFHSDt2KPhVGct4oOkcl74oX
-oB0T1XO2V2dGnUEauh2QW77Vk2ShrivTmnBfl7Oo4LEmkpFkB6PEZ+dfDlnDYqd3
-TiarJ7x4WoDdKuHjW7DXwe4AGZL5EQ==
-=E/La
------END PGP SIGNATURE-----
-
---wq5wqvcw3yjjd6ix--
+-- 
+nvpublic
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
