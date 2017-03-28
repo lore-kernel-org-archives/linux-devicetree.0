@@ -1,7 +1,7 @@
 From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: Re: [PATCH v6 4/5] i2c: aspeed: added driver for Aspeed I2C
-Date: Tue, 28 Mar 2017 19:57:50 +1100
-Message-ID: <1490691470.3177.114.camel@kernel.crashing.org>
+Date: Tue, 28 Mar 2017 20:09:28 +1100
+Message-ID: <1490692168.3177.117.camel@kernel.crashing.org>
 References: <20170328051226.21677-1-brendanhiggins@google.com>
          <20170328051226.21677-5-brendanhiggins@google.com>
 Mime-Version: 1.0
@@ -15,24 +15,63 @@ Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.ker
 List-Id: devicetree@vger.kernel.org
 
 On Mon, 2017-03-27 at 22:12 -0700, Brendan Higgins wrote:
-> +/* 0x04 : I2CD Clock and AC Timing Control Register #1 */
-> +#define ASPEED_I2CD_TIME_SCL_HIGH_SHIFT                        16
-> +#define ASPEED_I2CD_TIME_SCL_HIGH_MASK                 GENMASK(19, 16)
-> +#define ASPEED_I2CD_TIME_SCL_LOW_SHIFT                 12
-> +#define ASPEED_I2CD_TIME_SCL_LOW_MASK                  GENMASK(15, 12)
-> +#define ASPEED_I2CD_TIME_BASE_DIVISOR_MASK             GENMASK(3, 0)
-> +#define ASPEED_I2CD_TIME_SCL_REG_MAX                   GENMASK(3, 0)
-> +/* 0x08 : I2CD Clock and AC Timing Control Register #2 */
-> +#define ASPEED_NO_TIMEOUT_CTRL                         0
+> +       /* Set AC Timing */
+> +       if (clk_freq / 1000 > 1000) {
+> +               aspeed_i2c_write(bus, aspeed_i2c_read(bus,
+> +                                                     ASPEED_I2C_FUN_CTRL_REG) |
+> +                               ASPEED_I2CD_M_HIGH_SPEED_EN |
+> +                               ASPEED_I2CD_M_SDA_DRIVE_1T_EN |
 
-Those are slightly different between the 2400 and 2500, allowing
-slightly more fine grained settings (faster base clock and thus higher
-numbers in high/low counts).
+s/ASPEED_I2CD_M_SDA_DRIVE_1T_EN/ASPEED_I2CD_M_SCL_DRIVE_1T_EN/
 
-I *think* that using the 2400 values as-is might work ok, at least
-it does for 100kHz but I would double check.
+(and in the definition too)
 
-I'll review the rest tomorrow.
+> +                               ASPEED_I2CD_SDA_DRIVE_1T_EN,
+> +                               ASPEED_I2C_FUN_CTRL_REG);
+> +
+> +               aspeed_i2c_write(bus, 0x3, ASPEED_I2C_AC_TIMING_REG2);
+> +               aspeed_i2c_write(bus, aspeed_i2c_get_clk_reg_val(divisor),
+> +                                ASPEED_I2C_AC_TIMING_REG1);
+> +       } else {
+
+I don't think that's right. AFAIK ASPEED_I2CD_M_HIGH_SPEED_EN is about
+ignoring the timing register completely and going for full speed which
+is a few Mhz (I forgot how much). At least from my (possibly incorrect)
+reading of the spec and the SDK driver.
+
+Or maybe that's what you intend by the above ? Anything above 1Mhz ?
+
+I think there's a blurb somewhere that says that setting that bit makes
+it ignore the timing register completely. The definition is:
+
+<<
+Enable High Speed master mode
+0 : normal speed mode
+1 : high speed mode (3.4Mbps)
+High speed mode can only use buffer mode for transfer. And only master
+mode supports speed switching capability
+>>
+
+The spec of the base clock field of the timing register also says
+
+<<
+When switch to High Speed (HS) mode, the divisor will be switch to 0 by
+hardware automatically
+>>
+
+Note also that we aren't use buffer mode anyway so this can't work as-
+is, we're using byte mode.
+
+The other interesting question is what is the frequency threshold for
+setting ASPEED_I2CD_M_SCL_DRIVE_1T_EN (and the SDA one) ? 
+
+Those bits are somewhat orthogonal to ASPEED_I2CD_M_HIGH_SPEED_EN. They
+make the device drive the signals for a clock when they go up to "speed
+up" the rising edge more than a normal pull up would do.
+
+If you have some fast devices, it would be interesting to scope the
+signal see from what speed it becomes interesting to set the 1T enable
+bits to speed up rising edges.
 
 Cheers,
 Ben.
