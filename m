@@ -1,72 +1,52 @@
-From: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Subject: Re: [RESEND PATCH 1/3] dt: pwm: lpc32xx: add description of clocks
- and #pwm-cells properties
-Date: Tue, 28 Mar 2017 13:24:01 -0400
-Message-ID: <1490721841.24147.1.camel@gmail.com>
-References: <20170216202749.20653-1-slemieux.tyco@gmail.com>
- <20170216202749.20653-2-slemieux.tyco@gmail.com>
+From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] [kernel] ARM: lpc32xx: migrate CLCD config to
+ device tree
+Date: Tue, 28 Mar 2017 13:28:23 -0400
+Message-ID: <1490722103.24147.5.camel@gmail.com>
+References: <20170308174638.25578-1-slemieux.tyco@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170216202749.20653-2-slemieux.tyco@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: thierry.reding@gmail.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, vz@mleia.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170308174638.25578-1-slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ping
+Hi Vladimir,
 
-On Thu, 2017-02-16 at 15:27 -0500, slemieux.tyco@gmail.com wrote:
-> From: Vladimir Zapolskiy <vz@mleia.com>
+On Wed, 2017-03-08 at 12:46 -0500, Sylvain Lemieux wrote:
+> From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
 > 
-> NXP LPC32xx SoCs have two simple independent PWM controllers with a single
-> output each, in this case there is no need to specify PWM channel argument
-> on client side, one cell for setting PWM output frequency is sufficient.
+> Migrate the CLCD configurations to the device tree and
+> remove custom functions from board files.
 > 
-> Another added to the description property 'clocks' has a standard meaning
-> of a controller supply clock, in the LPC32xx User's Manual the clock is
-> denoted as PWM1_CLK or PWM2_CLK clock.
+> This change depends on the following change:
+> "video: ARM CLCD: fix dma allocation size"
+> https://www.spinics.net/lists/arm-kernel/msg567178.html
 > 
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-> Reviewed-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+> Note:
+> * We tested a similar change on a custom LPC32xx board with a 480x272 LCD.
+> * We did not test this change on hardware;
+>   we do not have access to a PHY3250 board with the 240x320 LCD.
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> index 74b5bc5dd19a..523d79662861 100644
-> --- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> @@ -3,15 +3,22 @@ LPC32XX PWM controller
->  Required properties:
->  - compatible: should be "nxp,lpc3220-pwm"
->  - reg: physical base address and length of the controller's registers
-> +- clocks: clock phandle and clock specifier pair
-> +- #pwm-cells: should be 1, the cell is used to specify the period in
-> +  nanoseconds.
->  
->  Examples:
->  
->  pwm@4005c000 {
->  	compatible = "nxp,lpc3220-pwm";
->  	reg = <0x4005c000 0x4>;
-> +	clocks = <&clk LPC32XX_CLK_PWM1>;
-> +	#pwm-cells = <1>;
->  };
->  
->  pwm@4005c004 {
->  	compatible = "nxp,lpc3220-pwm";
->  	reg = <0x4005c004 0x4>;
-> +	clocks = <&clk LPC32XX_CLK_PWM2>;
-> +	#pwm-cells = <1>;
->  };
+> Liam Beguin (2):
+>   ARM: dts: lpc32xx: phy3250: add clcd configuration
+>   ARM: lpc32xx: drop CLCD configuration
+> 
+>  arch/arm/boot/dts/lpc3250-phy3250.dts | 35 ++++++++++++++++++
+>  arch/arm/mach-lpc32xx/phy3250.c       | 70 -----------------------------------
+>  2 files changed, 35 insertions(+), 70 deletions(-)
+> 
+do you think you can look at this patchset?
+
+
+Regards,
+Sylvain
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
