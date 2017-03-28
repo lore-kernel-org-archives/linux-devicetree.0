@@ -1,113 +1,138 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
-Date: Tue, 28 Mar 2017 11:38:27 +0300
-Message-ID: <CAJKOXPeD4HKemKTrnC2JaON3JkuNGO9g+Hg8M7F6f2WusiYkhg@mail.gmail.com>
-References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
- <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
- <93e79e92-a102-e931-8d63-843031848888@samsung.com> <58DA1E38.50907@samsung.com>
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 1/7] Documentation: dt: net: Update the ath9k binding
+ for SoC devices
+Date: Tue, 28 Mar 2017 10:44:41 +0200
+Message-ID: <20170328104441.5feedcf4@avionic-0020>
+References: <1489439116-4233-1-git-send-email-albeu@free.fr>
+        <1897671.fKa4XTnU1K@debian64>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <58DA1E38.50907@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>, jy0922.shim@samsung.com, Seung Woo Kim <sw0312.kim@samsung.com>, airlied@linux.ie, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, a.hajda@samsung.com, Andi Shyti <andi.shyti@samsung.com>, LW@karo-electronics.de
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/6+FBF53a/FqDMVa4AZ+nouB"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1897671.fKa4XTnU1K@debian64>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, QCA ath9k Development <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m@kresin.me
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 11:26 AM, Inki Dae <inki.dae@samsung.com> wrote:
-> Merged.
+--Sig_/6+FBF53a/FqDMVa4AZ+nouB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, 27 Mar 2017 18:11:15 +0200
+Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
 
-I do not see the tag (with DT patches) merged by you which I provided
-to you before. These are essential for bisectability. Without them,
-kernel bisectability is broken. Did you merged the tag somewhere?
+> On Monday, March 13, 2017 10:05:09 PM CEST Alban wrote:
+> > The current binding only cover PCI devices so extend it for SoC devices.
+> >=20
+> > Most SoC platforms use an MTD partition for the calibration data
+> > instead of an EEPROM. The qca,no-eeprom property was added to allow
+> > loading the EEPROM content using firmware loading. This new binding
+> > replace this hack with NVMEM cells, so we also mark the qca,no-eeprom
+> > property as deprecated in case anyone ever used it. =20
+>=20
+> Please don't mark "qca,no-eeprom" as deprecated then.
+> If some devices geniously need to rely on userspace for extracting=20
+> and processing the calibration data, it should be stay a
+> optional properties.
 
-Best regards,
-Krzysztof
+Deprecated just mean that it shouldn't be used for new devices. But as
+it is not used by any board, misuse the firmware loading API and
+firmware loader user helper are deprecated in udev, I find we could also
+just drop it.
 
-> Thanks,
-> Inki Dae
->
-> 2017년 03월 22일 10:36에 Hoegeun Kwon 이(가) 쓴 글:
->> Hi inki,
->>
->> Could you check the this patch?
->> For reference, patch 1/5 and 2/5 have already been applied to Krzysztof tree.
->>
->> Best regards,
->> Hoegeun
->>
->>
->> On 03/08/2017 01:54 PM, Hoegeun Kwon wrote:
->>> The dsi + panel is a parental relationship, so OF grpah is not needed.
->>> Therefore, the current dsi_parse_dt function will throw an error,
->>> because there is no linked OF graph for the case fimd + dsi + panel.
->>>
->>> Parse the Pll burst and esc clock frequency properties in dsi_parse_dt()
->>> and create a bridge_node only if there is an OF graph associated with dsi.
->>>
->>> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
->>> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
->>> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
->>> ---
->>>   drivers/gpu/drm/exynos/exynos_drm_dsi.c | 32 ++++++++------------------------
->>>   1 file changed, 8 insertions(+), 24 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> index f5c04d0..2d4e118 100644
->>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> @@ -1652,39 +1652,23 @@ static int exynos_dsi_parse_dt(struct exynos_dsi *dsi)
->>>       if (ret < 0)
->>>           return ret;
->>>   -    ep = of_graph_get_endpoint_by_regs(node, DSI_PORT_OUT, 0);
->>> -    if (!ep) {
->>> -        dev_err(dev, "no output port with endpoint specified\n");
->>> -        return -EINVAL;
->>> -    }
->>> -
->>> -    ret = exynos_dsi_of_read_u32(ep, "samsung,burst-clock-frequency",
->>> +    ret = exynos_dsi_of_read_u32(node, "samsung,burst-clock-frequency",
->>>                        &dsi->burst_clk_rate);
->>>       if (ret < 0)
->>> -        goto end;
->>> +        return ret;
->>>   -    ret = exynos_dsi_of_read_u32(ep, "samsung,esc-clock-frequency",
->>> +    ret = exynos_dsi_of_read_u32(node, "samsung,esc-clock-frequency",
->>>                        &dsi->esc_clk_rate);
->>>       if (ret < 0)
->>> -        goto end;
->>> -
->>> -    of_node_put(ep);
->>> +        return ret;
->>>         ep = of_graph_get_next_endpoint(node, NULL);
->>> -    if (!ep) {
->>> -        ret = -EINVAL;
->>> -        goto end;
->>> -    }
->>> -
->>> -    dsi->bridge_node = of_graph_get_remote_port_parent(ep);
->>> -    if (!dsi->bridge_node) {
->>> -        ret = -EINVAL;
->>> -        goto end;
->>> +    if (ep) {
->>> +        dsi->bridge_node = of_graph_get_remote_port_parent(ep);
->>> +        of_node_put(ep);
->>>       }
->>> -end:
->>> -    of_node_put(ep);
->>>   -    return ret;
->>> +    return 0;
->>>   }
->>>     static int exynos_dsi_bind(struct device *dev, struct device *master,
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
->>
+> For example: A device that can't do easily without "qca,no-eeprom" is
+> the AVM FRITZ!WLAN Repeater 300E. For this device, the caldata=20
+> is stored in the flash, however for whatever reason the vendor
+> choose to "reverse" it. (like completely back to front, not byteswapped
+> or something). So an extra "unreversing step" is required. So, it would
+> require some sort of a special nvmem-provider-processor as an=20
+> alternative.
+
+Or just handle this special eeprom format in the ath9k driver. I doubt
+that this case is so common that it would justify adding a whole new
+layer to nvmem.
+
+> > Signed-off-by: Alban <albeu-GANU6spQydw@public.gmane.org>
+> > ---
+> > diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.t=
+xt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> > index b7396c8..61f5f6d 100644
+> > --- a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> > +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> > @@ -27,16 +27,34 @@ Required properties:
+> >  			- 0034 for AR9462
+> >  			- 0036 for AR9565
+> >  			- 0037 for AR9485
+> > +		For SoC devices the compatible should be "qca,<soctype>-wmac"
+> > +		and one of the following fallbacks:
+> > +			- "qca,ar9100-wmac"
+> > +			- "qca,ar9330-wmac"
+> > +			- "qca,ar9340-wmac"
+> > +			- "qca,qca9550-wmac"
+> > +			- "qca,qca9530-wmac"
+> >  - reg: Address and length of the register set for the device.
+> > =20
+> > +Required properties for SoC devices:
+> > +- interrupt-parent: phandle of the parent interrupt controller.
+> > +- interrupts: Interrupt specifier for the controllers interrupt.
+> > +
+> >  Optional properties:
+> > +- mac-address: See ethernet.txt in the parent directory
+> > +- local-mac-address: See ethernet.txt in the parent directory
+> > +- clock-names: has to be "ref"
+> > +- clocks: phandle of the reference clock
+> > +- resets: phandle of the reset line
+> > +- nvmem-cell-names: has to be "eeprom" and/or "address"
+> > +- nvmem-cells: phandle to the eeprom nvmem cell and/or to the mac addr=
+ess
+> > +		nvmem cell.
+> > +
+> > +Deprecated properties:
+> >  - qca,no-eeprom: Indicates that there is no physical EEPROM
+> > connected to the ath9k wireless chip (in this case the calibration /
+> >  			EEPROM data will be loaded from userspace
+> > using the kernel firmware loader).
+> > -- mac-address: See ethernet.txt in the parent directory
+> > -- local-mac-address: See ethernet.txt in the parent directory
+> > - =20
+> It sounds like you want to deprecate mac-address and
+> local-mac-address as well. If so you sould add this to the commit as
+> well. From my point of view, people mostly flat-out patched the
+> eeprom-image if they wanted to set the mac-address. However, this was
+> an extra step, if nvmem does away with it, I'm completely fine with
+> deprecating these properties.
+
+The produced diff is very misleading because the mac-address properties
+get lumped with the other new optional  properties. But if you look
+closely it just move qca,no-eeprom to the deprecated section.
+
+Alban
+
+--Sig_/6+FBF53a/FqDMVa4AZ+nouB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJY2iJ5AAoJEHSUmkuduC28HZUQAKay2wfn22z0Oe8XcWBhgiF+
+X+Ce/dFx5/ak0W+/wEG+/Sy/99BUO0FdN4I954c6gjz7ehNstBzAB+3h40SM+4Xy
+wee/HjN+I4gDqEpffzP5iYkHlu82VDRyF71uoHH3kqCUQr98/gWDb/a+YtlzdmmY
+sXTtq+pMnzGuFtXCTcqm59gsoeTKhYRC4q4vsImdydNtg8SIrOsu+AQZ9sl5Fdvy
+el4716q+sDI2+6FrSdnXTawRHSpUOOuWDAxo8eyzmk8QwA5qKDIrwsf7+D8axf+K
+U1fuCNzoZQ1omm/TRUFir9rrkcGA5o8/XdNL8XeWSd+MDqvaHOpLI64BHdV4XYTr
+hmRzy/DQ0F0Yv3FRPVCHy2K4ChpT/U7ASethPY6IN0rstPc3x8i/FzLkzhHPIHtZ
+p+3+fV+LbBnCdCjtPj0z8OeCtezJNrPuTn5w4ErcYNJdvs1SE7+XsQss5khnm9Eu
+LmIBz4Vdv1WwO9kFdOjsAAAnQMJjTTt6In0M7syTlOsMw96fpHp8n7+foKzJRkRp
+XVowDaygE0IL9TLG8n7Uk5kmHlGiJNiPs/m1bU+Dju/1qS10QsBCos9iPmqJVQ50
+vPnl3+ZliJ1hiQX7wyLgCRtnF2+8KeIT0q335+/DJ7oTcm7jCHIRDkOENCw/joAL
+G84R+UdvHci3+wHKv/yV
+=1tng
+-----END PGP SIGNATURE-----
+
+--Sig_/6+FBF53a/FqDMVa4AZ+nouB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
