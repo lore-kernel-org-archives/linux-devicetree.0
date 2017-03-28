@@ -1,77 +1,97 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2,1/3] meson_uart: expose CLKID_UARTx
-Date: Tue, 28 Mar 2017 23:24:15 +0200
-Message-ID: <CAFBinCDF29+kQpedsJPqRy6fztWrj91Qi6tCno_2S6UCkhW7XQ@mail.gmail.com>
-References: <20170328092545.4644-1-hgkr.klein@gmail.com>
- <20170328092545.4644-2-hgkr.klein@gmail.com>
- <1490716277.20764.6.camel@baylibre.com>
- <71489b62-78c8-7082-587e-8598dc43ca59@gmail.com>
- <1490728490.20764.8.camel@baylibre.com>
+From: Jan Glauber <jan.glauber-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: mtd: Add Cavium SOCs NAND bindings
+Date: Tue, 28 Mar 2017 23:30:13 +0200
+Message-ID: <20170328213013.GA2972@hardcore>
+References: <20170327160524.29019-1-jglauber@cavium.com>
+ <20170327160524.29019-2-jglauber@cavium.com>
+ <20170328222035.29f4ed31@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490728490.20764.8.camel@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Helmut Klein <hgkr.klein@gmail.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170328222035.29f4ed31@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
+On Tue, Mar 28, 2017 at 10:20:35PM +0200, Boris Brezillon wrote:
+> Hi Jan,
+> 
+> On Mon, 27 Mar 2017 18:05:23 +0200
+> Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+> 
+> > Add device tree binding description for Cavium SOC nand flash controller.
+> > 
+> > CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > 
+> > Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/mtd/cavium_nand.txt        | 32 ++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/cavium_nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/cavium_nand.txt b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
+> > new file mode 100644
+> > index 0000000..4698d1f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
+> > @@ -0,0 +1,32 @@
+> > +* Cavium NAND controller
+> > +
+> > +Required properties:
+> > +
+> > +- compatible:		should be "cavium,cn8xxx-nand"
+> > +- reg:			PCI devfn
+> > +- clocks:		must contain system clock
+> > +- #address-cells:	<1>
+> > +- #size-cells:		<0>
+> > +
+> > +The nand flash controller may contain up to 8 subnodes representing
+> > +NAND flash chips. Their properties are as follows.
+> > +
+> > +Required properties:
+> > +- compatible:		should be "cavium,nandcs"
+> 
+> Why do you need a compatible here? All sub-nodes should be representing
+> NAND devices connected to the NAND controller. If you need an extra
+> subnode to represent something that is not a NAND device, then it should
+> not have a reg property, so testing if reg is present to detect if the
+> subnode is reprensenting a NAND device should be enough.
+> 
+> Am I missing something?
 
-On Tue, Mar 28, 2017 at 9:14 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> On Tue, 2017-03-28 at 20:18 +0200, Helmut Klein wrote:
->> i know for sure that the bluetooth chip of my system is connected to
->> uart_A. so this clock must be exposed.
->>
->> i don't know if the other 2 uarts are used on other hardware. so i will
->> remove them from my patch.
->
-> What I meant is device trees "upstream".
-> I would expect such patch as part of a series to add support for your board in
-> device-tree, with its bluetooth chipset.
-are you sure about this? Helmut is configuring the core clock of the
-UART controller(s) here. we have the same thing for many other drivers
-as well (MMC, SAR ADC, I2C, SPI, ethernet, you name it...) - these
-clocks are not part of a device specific .dts but rather the SoC
-specific dts (for example meson-gxbb.dtsi - because these clocks are
-not board specific).
-I guess most boards are not affected because the bootloader simply
-enables the UART0 core/gate clock and keeps it enabled when booting
-the kernel. additionally our clock gates are marked with
-CLK_IGNORE_UNUSED so if the bootloader keeps the gates enabled then
-we're not disabling it either.
+Hi Boris,
 
-> I think it would better to drop this patch from the series.
-> You can either keep it for your personal work, or send it again when upstreaming
-> the support for your board and/or add the support for the bluetooth chip.
-if we decide to pass the core/gate clock directly in SoC.dtsi then we
-should think about doing it for all three non-AO UARTs (uart_a, uart_b
-and uart_c).
-we can test uart_b on GPIODV_24 and GPIODV_25 on the Khadas VIM board
-for example (pins 22 and 23 on the header, default mode of these pins
-is i2c_sck_a and i2c_sda_a, but we can re-configure it).
-uart_c unfortunately cannot be tested on the Khadas VIM board since
-it's only routed to GPIOX_8 and GPIOX_9 which are hard-wired to the
-bluetooth module's PCM pins (BTPCM_DOUT and BTPCM_DIN).
+You're right. We don't need or check this compatible. The chip type
+which would make more sense than what I used above is detected via ONFI,
+so I can just remove the compatible string.
 
-for Helmut this would mean that instead of dropping this patch (or
-dropping CLKID_UART1 and CLKID_UART2 from this patch) he would rather
-have to *add* another patch (for meson-gxbb.dtsi and meson-gxl.dtsi)
-which passes the core clocks to the corresponding UART controllers
-(similar to the CLKID_SD_EMMC_ clocks).
+> > +- reg:			a single integer representing the chip-select number
+> > +- nand-ecc-mode:	see nand.txt
+> > +
+> > +Example:
+> > +
+> > +nfc: nand@b,0 {
+> 
+>         ^ nand-controller@xxx
 
+OK.
 
-Regards,
-Martin
-
-
-[0] http://lxr.free-electrons.com/source/drivers/clk/meson/clkc.h?v=4.10#L110
+> > +	compatible = "cavium,cn8xxx-nand";
+> > +	reg = <0x5800 0 0 0 0>;
+> > +	clocks = <&sclk>;
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +
+> > +	nand@1 {
+> > +		compatible = "cavium,nandcs";
+> > +		reg = <1>;
+> > +		nand-ecc-mode = "on-die";
+> > +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
