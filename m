@@ -1,46 +1,52 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 0/8] pinctrl: meson: add audio output pins
-Date: Tue, 28 Mar 2017 12:33:53 -0700
-Message-ID: <m2inmt9owu.fsf@baylibre.com>
-References: <20170326171923.19269-1-jbrunet@baylibre.com>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD and LEDS due for the
+ v4.12 merge window
+Date: Tue, 28 Mar 2017 21:37:45 +0200
+Message-ID: <c1a3e212-a0e5-69dc-298f-fd86d4042311@gmail.com>
+References: <20170324084732.31255-1-sre@kernel.org>
+ <20170328081342.5iobnc55sq3zucgt@dell>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170326171923.19269-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Sun, 26 Mar 2017 19:19:15 +0200")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Carlo Caione <carlo@caione.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170328081342.5iobnc55sq3zucgt@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On 03/28/2017 10:13 AM, Lee Jones wrote:
+> Enjoy!
+> 
+> The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201:
+> 
+>   Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-leds-v4.12
+> 
+> for you to fetch changes up to 4f9ab0c1570800002e77515888600ca2e3dce4a9:
+> 
+>   mfd: cpcap: Add missing include dependencies (2017-03-28 09:09:50 +0100)
+> 
+> ----------------------------------------------------------------
+> Immutable branch between MFD and LEDS due for the v4.12 merge window
+> 
+> ----------------------------------------------------------------
+> Sebastian Reichel (1):
+>       mfd: cpcap: Add missing include dependencies
+> 
+>  include/linux/mfd/motorola-cpcap.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-> This patchset adds the pinctrl definition and the related device-tree
-> bindings of the i2s output and spdif output pins on the meson gxbb and
-> gxl SoCs.
->
-> This is part of the ongoing work to bring audio output support on the
-> meson family. It was tested on the gxbb p200 and gxl p230.
->
-> Changes since v1: [0]
-> * add a few comments in the changelog
-> * patched rebased on pinctrl/for-next + Neil patch on missing pins [1]
->
-> [0]: https://marc.info/?i=20170323165101.29262-1-jbrunet%40baylibre.com
-> [1]: https://marc.info/?i=20170323104112.16558-2-narmstrong%40baylibre.com
->
-> Jerome Brunet (8):
->   pinctrl: meson: gxbb: add i2s output pins
->   pinctrl: meson: gxbb: add spdif output pins
->   pinctrl: meson: gxl: add i2s output pins
->   pinctrl: meson: gxl: add spdif output pins
->   ARM64: dts: meson-gxbb: add i2s output pins
->   ARM64: dts: meson-gxbb: add spdif output pins
->   ARM64: dts: meson-gxl: add i2s output pins
->   ARM64: dts: meson-gxl: add spdif output pins
+Pulled, thanks.
 
-DT patches applied to amlogic v4.12/dt64 branch,
-
-Thanks for the respin,
-
-Kevin
+-- 
+Best regards,
+Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
