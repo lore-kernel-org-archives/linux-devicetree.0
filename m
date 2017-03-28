@@ -1,129 +1,84 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC v4 06/10] net: qualcomm: make qca_common a separate
- kernel module
-Date: Tue, 28 Mar 2017 18:24:16 +0200
-Message-ID: <d90f8e33-8b86-2cf7-145b-b15997e152a7@i2se.com>
-References: <1490621848-24828-1-git-send-email-stefan.wahren@i2se.com>
- <1490621848-24828-7-git-send-email-stefan.wahren@i2se.com>
- <1490629444.2719.3.camel@redhat.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document the STM32 MDMA bindings
+Date: Tue, 28 Mar 2017 11:26:27 -0500
+Message-ID: <CAL_JsqLMn7W=r+JRX51zOScs9N04PcTtX8EFy2eacwadCxwaRg@mail.gmail.com>
+References: <1489417599-31308-1-git-send-email-cedric.madianga@gmail.com>
+ <1489417599-31308-2-git-send-email-cedric.madianga@gmail.com>
+ <20170320215250.wwhq6lzwe45jmwks@rob-hp-laptop> <CAOAejn10dPjYTj8vBTDj5bc_RPTmkYC7uuBMPnP-R0BsQiRwhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490629444.2719.3.camel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sre@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOAejn10dPjYTj8vBTDj5bc_RPTmkYC7uuBMPnP-R0BsQiRwhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 27.03.2017 um 17:44 schrieb Dan Williams:
-> On Mon, 2017-03-27 at 15:37 +0200, Stefan Wahren wrote:
->> In order to share common functions between QCA7000 SPI and UART
->> protocol
->> driver the qca_common needs to be a separate kernel module.
-> Maybe "qca_eth_common"?  There are many things Qualcomm, slightly fewer
-> things Qualcomm Atheros, and "qca_common" isn't very descriptive.
-
-Since it is a Homeplug powerline chip which doesn't have any physical
-connection to Ethernet only on protocol level, i wouldn't use eth in the
-module name.
-
-The code is very specific to the QCA7000, so how about "qca_7k_common"?
-
+On Mon, Mar 27, 2017 at 5:06 AM, M'boumba Cedric Madianga
+<cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Rob,
 >
-> Dan
->
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> ---
->>  drivers/net/ethernet/qualcomm/Kconfig      |  8 +++++++-
->>  drivers/net/ethernet/qualcomm/Makefile     |  5 +++--
->>  drivers/net/ethernet/qualcomm/qca_common.c | 10 ++++++++++
->>  3 files changed, 20 insertions(+), 3 deletions(-)
+> 2017-03-20 22:52 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>> On Mon, Mar 13, 2017 at 04:06:38PM +0100, M'boumba Cedric Madianga wrote:
+>>> This patch adds documentation of device tree bindings for the STM32 MDMA
+>>> controller.
+>>>
+>>> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Reviewed-by: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/dma/stm32-mdma.txt         | 94 ++++++++++++++++++++++
+>>>  1 file changed, 94 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/stm32-mdma.txt b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>>> new file mode 100644
+>>> index 0000000..26a930c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>>> @@ -0,0 +1,94 @@
+>>> +* STMicroelectronics STM32 MDMA controller
+>>> +
+>>> +The STM32 MDMA is a general-purpose direct memory access controller capable of
+>>> +supporting 64 independent DMA channels with 256 HW requests.
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be "st,stm32-mdma"
 >>
->> diff --git a/drivers/net/ethernet/qualcomm/Kconfig
->> b/drivers/net/ethernet/qualcomm/Kconfig
->> index d7720bf..b4c369d 100644
->> --- a/drivers/net/ethernet/qualcomm/Kconfig
->> +++ b/drivers/net/ethernet/qualcomm/Kconfig
->> @@ -16,7 +16,13 @@ config NET_VENDOR_QUALCOMM
->>  if NET_VENDOR_QUALCOMM
->>  
->>  config QCA7000
->> -	tristate "Qualcomm Atheros QCA7000 support"
->> +	tristate
->> +	help
->> +	  This enables support for the Qualcomm Atheros QCA7000.
->> +
->> +config QCA7000_SPI
->> +	tristate "Qualcomm Atheros QCA7000 SPI support"
->> +	select QCA7000
->>  	depends on SPI_MASTER && OF
->>  	---help---
->>  	  This SPI protocol driver supports the Qualcomm Atheros
->> QCA7000.
->> diff --git a/drivers/net/ethernet/qualcomm/Makefile
->> b/drivers/net/ethernet/qualcomm/Makefile
->> index 8080570..00d8729 100644
->> --- a/drivers/net/ethernet/qualcomm/Makefile
->> +++ b/drivers/net/ethernet/qualcomm/Makefile
->> @@ -2,7 +2,8 @@
->>  # Makefile for the Qualcomm network device drivers.
->>  #
->>  
->> -obj-$(CONFIG_QCA7000) += qcaspi.o
->> -qcaspi-objs := qca_spi.o qca_common.o qca_7k.o qca_debug.o
->> +obj-$(CONFIG_QCA7000) += qca_common.o
->> +obj-$(CONFIG_QCA7000_SPI) += qcaspi.o
->> +qcaspi-objs := qca_7k.o qca_debug.o qca_spi.o
->>  
->>  obj-y += emac/
->> diff --git a/drivers/net/ethernet/qualcomm/qca_common.c
->> b/drivers/net/ethernet/qualcomm/qca_common.c
->> index d930524..f2c9e76 100644
->> --- a/drivers/net/ethernet/qualcomm/qca_common.c
->> +++ b/drivers/net/ethernet/qualcomm/qca_common.c
->> @@ -21,7 +21,9 @@
->>   *   by an atheros frame while transmitted over a serial channel;
->>   */
->>  
->> +#include <linux/init.h>
->>  #include <linux/kernel.h>
->> +#include <linux/module.h>
->>  
->>  #include "qca_common.h"
->>  
->> @@ -46,6 +48,7 @@ qcafrm_create_header(u8 *buf, u16 length)
->>  
->>  	return QCAFRM_HEADER_LEN;
->>  }
->> +EXPORT_SYMBOL_GPL(qcafrm_create_header);
->>  
->>  u16
->>  qcafrm_create_footer(u8 *buf)
->> @@ -57,6 +60,7 @@ qcafrm_create_footer(u8 *buf)
->>  	buf[1] = 0x55;
->>  	return QCAFRM_FOOTER_LEN;
->>  }
->> +EXPORT_SYMBOL_GPL(qcafrm_create_footer);
->>  
->>  /*   Gather received bytes and try to extract a full ethernet frame
->> by
->>   *   following a simple state machine.
->> @@ -154,3 +158,9 @@ qcafrm_fsm_decode(struct qcafrm_handle *handle,
->> u8 *buf, u16 buf_len, u8 recv_by
->>  
->>  	return ret;
->>  }
->> +EXPORT_SYMBOL_GPL(qcafrm_fsm_decode);
->> +
->> +MODULE_DESCRIPTION("Qualcomm Atheros Common");
->> +MODULE_AUTHOR("Qualcomm Atheros Communications");
->> +MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
->> +MODULE_LICENSE("Dual BSD/GPL");
+>> Should be more specific.
+>
+> The compatible string is not specific enough ? I don't see how to specific more.
 
+stm32 is not a specific SoC. Compatible strings should be specific to
+an SoC (with fallback strings to whatever they are compatible with) so
+you can handle SoC specific differences or errata.
 
-*** Diese E-Mail ist allein für den bezeichneten Adressaten bestimmt. Sie kann rechtlich vertrauliche Informationen enthalten. Wenn Sie diese E-Mail irrtümlich erhalten haben, informieren Sie bitte unverzüglich den Absender per E-Mail und löschen Sie diese E-Mail von Ihrem Computer, ohne Kopien anzufertigen.
-Vielen Dank. ***
+>>> +- reg: Should contain MDMA registers location and length. This should include
+>>> +  all of the per-channel registers.
+>>> +- interrupts: Should contain the MDMA interrupt.
+>>> +- clocks: Should contain the input clock of the DMA instance.
+>>> +- resets: Reference to a reset controller asserting the DMA controller.
+>>> +- #dma-cells : Must be <5>. See DMA client paragraph for more details.
+>>> +
+>>> +Optional properties:
+>>> +- dma-channels: Number of DMA channels supported by the controller.
+>>> +- dma-requests: Number of DMA request signals supported by the controller.
+>>> +- st,ahb-addr-masks: Array of u32 mask to list memory devices addressed via
+>>> +  AHB bus.
+>>
+>> I don't understand what this is.
+>
+> The MDMA is able to address memories and devices from AHB bus or AXI bus.
+> The MDMA has a little different way of working to address AHB
+> device/memory and AXI device/memory.
+> In STM32H7 platform, almost all devices are addressed by AXI bus.
+> But we have some memories adress by AHB bus.
+> So, we add these parameter to be able to handle this.
 
-*** This email is for the exclusive use of the addressee. It may contain legally privileged information. If you have received this message in error, please notify the sender by email immediately and delete the message from your computer without making any copies.
-Thank you. ***
+I still don't understand. Is the difference in DMA addresses vs. CPU
+addresses? If so, you should dma-ranges to translate these.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
