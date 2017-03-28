@@ -1,92 +1,48 @@
-From: Oza Oza via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] of: fix node traversing in of_dma_get_range
-Date: Tue, 28 Mar 2017 10:20:12 +0530
-Message-ID: <CAMSpPPfkm=vbbNFnatqEgtUJ8m-fn7OvNKk_PPCCywwoq0vFWg@mail.gmail.com>
-References: <1490419893-5073-1-git-send-email-oza.oza@broadcom.com>
-	<1490419893-5073-3-git-send-email-oza.oza@broadcom.com>
-	<CAL_Jsq+1f2pHEy7=2Q7xGYYJjuQk3rLHH4pPTKRVN4QTtSr4Kw@mail.gmail.com>
-	<3aec823d-d3c7-03d3-68f7-963d3649c184@arm.com>
-Reply-To: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <3aec823d-d3c7-03d3-68f7-963d3649c184-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 0/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Mon, 27 Mar 2017 22:12:21 -0700
+Message-ID: <20170328051226.21677-1-brendanhiggins@google.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, mouse-Pma6HLj0uuo@public.gmane.org, clg-Bxea+6Xhats@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-please find my comments inline.
+Sorry for the delay, I went on a long vacation prior to receiving feedback and
+got back in the middle of a hardware bring up that consumed all of my attention
+for an extended period of time. I will try to plan upstream submissions around
+my other responsibilities better in the future.
 
-On Mon, Mar 27, 2017 at 8:15 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Rob,
->
-> On 27/03/17 15:34, Rob Herring wrote:
->> On Sat, Mar 25, 2017 at 12:31 AM, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->>> it jumps to the parent node without examining the child node.
->>> also with that, it throws "no dma-ranges found for node"
->>> for pci dma-ranges.
->>>
->>> this patch fixes device node traversing for dma-ranges.
->>
->> What's the DT look like that doesn't work?
->
-> The problem is the bodge in pci_dma_configure() where we don't have an
-> OF node for the actual device itself, so pass in the host bridge's OF
-> node instead. This happens to work well enough for dma-coherent, but I
-> don't think dma-ranges was even considered at the time.
->
-> As it happens I'm currently halfway through writing an experiment
-> wherein pci_dma_configure() creates a temporary child node for the
-> of_dma_configure() call if no other suitable alternative (e.g. some
-> intermediate bridge node) exists. How hard are you likely to NAK that
-> approach? ;)
->
->> dma-ranges is supposed to be a bus property, not a device's property.
->> So looking at the parent is correct behavior generally.
->
-> Indeed, this patch as-is will break currently correct DTs (because we
-> won't find dma-ranges on the device, so will bail before even looking at
-> the parent as we should).
+Addressed comments from:
+  - Vladimir in: https://www.spinics.net/lists/linux-i2c/msg27387.html
+    and: https://www.spinics.net/lists/linux-i2c/msg27386.html
+  - Wolfram in: https://www.spinics.net/lists/linux-i2c/msg27476.html
+    and: https://www.spinics.net/lists/linux-i2c/msg27483.html
 
-current parsing of dma-ranges assume that dma-ranges always to be
-found in parent node.
+Changes since previous update:
+  - No longer arbitrarily restrict bus to be slave xor master.
+  - Pulled out "struct aspeed_i2c_controller" as a interrupt controller.
+  - Pulled out slave support into its own commit.
+  - Rewrote code that sets clock divider register because the original version
+    set it incorrectly.
+  - Discovered and fixed issue in implementation that caused certain slave
+    devices to misbehave; the cause was that the master IRQ handler would return
+    control to the requesting thread after the last RX or TX command was handled
+    such that the requesting thread would issue either a repeated start or stop.
+    This was incorrect because the time taken to complete the completion was too
+    great. I fixed this by rewriting the master IRQ handler so that it now
+    manages the entire transaction only returning control to the requesting
+    thread once the entire transaction is complete.
+  - Rewrote the aspeed_i2c_master_irq handler because the old method of
+    completing a completion in between restarts was too slow causing devices to
+    misbehave.
+  - Added support for I2C_M_RECV_LEN which I had incorrectly said was supported
+    before.
+  - Addressed other comments from Vladimir.
 
-based on that, my thinking is following:
-couple of options
-
-1)
-instead while(1)  some meaningful condition such as while(!node)
-the following bail out is not required.
-      if (!ranges)
-           break;
-
-2)
-have check based on dt-property to distinguish between pci and handle
-dma-ranges root bridge
-
-but again these changes do not solve the entire problem for choosing
-right dma_mask.
-neither it actually correctly address root bridge pci dma-ranges.
-
-and hence I have written
-https://lkml.org/lkml/2017/3/27/540
-
-my final take is: this function does not need to change, let it parse
-memory mapped dma-ranges as it is doing.
-
-I am more inclined to have generic pci dma-ranges and parsing.
-which following already addresses.
-https://lkml.org/lkml/2017/3/27/540
-
-Regards,
-Oza.
+Changes have been tested on the Aspeed 2500 evaluation board, as before, and now
+on a real platform with an Aspeed 2520.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
