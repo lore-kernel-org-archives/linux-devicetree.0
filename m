@@ -1,68 +1,210 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl
- header
-Date: Wed, 29 Mar 2017 15:39:23 +0000
-Message-ID: <SG2PR06MB1165F2CC98E510C9FEA12EC68A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com>
- <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdVx_fyGsw0p-s4ZAoe2k+r0RuwxjwNV_-8fXY7Yv8y3kQ@mail.gmail.com>
- <SG2PR06MB1165F5D4CFC50CADC609451C8A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
+Date: Wed, 29 Mar 2017 09:41:15 -0600
+Message-ID: <20170329154115.GA24889@linaro.org>
+References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
+ <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
+ <31be033f-514e-e48a-3ba2-a5c5cd477548@arm.com>
+ <20170329030735.GA23889@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1165F5D4CFC50CADC609451C8A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170329030735.GA23889@leoy-linaro>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, David Brown <david.brown@linaro.org>, linux-clk@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Wei Xu <xuwei5@hisilicon.com>, Andy Gross <andy.gross@linaro.org>, mike.leach@linaro.org, devicetree@vger.kernel.org, Suzuki K Poulose <Suzuki.Poulose@arm.com>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Guodong Xu <guodong.xu@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkbmVzZGF5LCBNYXJjaCAyOSwgMjAxNywgQ2hyaXMgQnJhbmR0IHdyb3RlOg0KPiBPbiBX
-ZWRuZXNkYXksIE1hcmNoIDI5LCAyMDE3LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4g
-PiBCdXQsIHdoYXQgZG8gd2UgZG8gZm9yIEV0aGVybmV0PyBBbGwgdGhlIHBpbnMgYXJlICJub3Jt
-YWwiIGV4Y2VwdA0KPiA+ID4ganVzdCB0aGUgTURJTyBwaW4gbmVlZHMgdG8gYmUgYmlkaXJlY3Rp
-b25hbC4NCj4gPiA+IFRoYXQncyB0aGUgcGFydCBJJ20gY29uZnVzZWQgYnkuDQo+ID4gPiBIb3cg
-ZG8gd2UgZmxhZyB0aGF0IGp1c3QgdGhlIEVUX01ESU8gbmVlZHMgImJpZGlyZWN0aW9uYWwiPw0K
-PiA+DQo+ID4gWW91IGFkZCBzdWJub2RlcywgY2ZyLiBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVz
-YXMvcjhhNzc5NS1zYWx2YXRvci0NCj4geC5kdHM6DQo+ID4NCj4gPiAgICAgICAgIGF2Yl9waW5z
-OiBhdmIgew0KPiA+ICAgICAgICAgICAgICAgICBtdXggew0KPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIGdyb3VwcyA9ICJhdmJfbGluayIsICJhdmJfcGh5X2ludCIsICJhdmJfbWRjIiwNCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYXZiX21paSI7DQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgZnVuY3Rpb24gPSAiYXZiIjsNCj4gPiAgICAgICAgICAgICAgICAg
-fTsNCj4gPg0KPiA+ICAgICAgICAgICAgICAgICBwaW5zX21kYyB7DQo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgZ3JvdXBzID0gImF2Yl9tZGMiOw0KPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgIGRyaXZlLXN0cmVuZ3RoID0gPDI0PjsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPg0K
-PiA+ICAgICAgICAgICAgICAgICBwaW5zX21paV90eCB7DQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgcGlucyA9ICJQSU5fQVZCX1RYX0NUTCIsICJQSU5fQVZCX1RYQyIsDQo+ID4gIlBJTl9B
-VkJfVEQwIiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIlBJTl9BVkJfVEQx
-IiwgIlBJTl9BVkJfVEQyIiwNCj4gPiAiUElOX0FWQl9URDMiOw0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgIGRyaXZlLXN0cmVuZ3RoID0gPDEyPjsNCj4gPiAgICAgICAgICAgICAgICAgfTsN
-Cj4gPiAgICAgICAgIH07DQo+IA0KPiBPaCwgc28gdGhlcmUgaXMgYSB3YXkhDQo+IA0KPiBUaGFu
-ayB5b3UuDQo+IA0KPiANCj4gU28sIGZvciBjbGFyaXR5Og0KDQoNCkFjdHVhbGx5LCBMaW51cydz
-IHJlcXVlc3Qgd2FzIHRvIHVzZSAicGlubXV4Iiwgbm90ICJwaW5zIi4NCg0KU28sIGl0IHNob3Vs
-ZCBiZToNCg0KCS8qIFAxXzYgPSBSSUlDM1NDTCAoYmkgZGlyKSAqLw0KCS8qIFAxXzcgPSBSSUlD
-M1NEQSAoYmkgZGlyKSAqLw0KCWkyYzNfcGluczogaTJjMyB7DQoJCXBpbm11eCA9IDxQSU4oMSwg
-NikgfCBGVU5DXzE+LA0KCQkgICAgICAgICA8UElOKDEsIDcpIHwgRlVOQ18xPjsNCgkJYmlkaXJl
-Y3Rpb25hbDsNCgl9Ow0KDQogDQoJLyogRXRoZXJuZXQgKi8NCglldGhlcl9waW5zOiBldGhlciB7
-DQoJCS8qIEV0aGVybmV0IG9uIFBvcnRzIDEsMiwzLDUgKi8NCgkJbXV4IHsNCgkJCXBpbm11eCA9
-IDxQSU4oMSwgMTQpIHwgRlVOQ180KT4sIC8qIFAxXzE0ID0gRVRfQ09MICovDQoJCQkJPFBJTig1
-LCA5KSB8IEZVTkNfMik+LAkvKiBQNV85ID0gRVRfTURDICovDQoJCQkJPFBJTigzLCA0KSB8IEZV
-TkNfMik+LAkvKiBQM180ID0gRVRfUlhDTEsgKi8NCgkJCQk8UElOKDMsIDUpIHwgRlVOQ18yKT4s
-CS8qIFAzXzUgPSBFVF9SWEVSICovDQoJCQkJPFBJTigzLCA2KSB8IEZVTkNfMik+LAkvKiBQM182
-ID0gRVRfUlhEViAqLw0KCQkJCTxQSU4oMiwgMCkgfCBGVU5DXzIpPiwJLyogUDJfMCA9IEVUX1RY
-Q0xLICovDQoJCQkJPFBJTigyLCAxKSB8IEZVTkNfMik+LAkvKiBQMl8xID0gRVRfVFhFUiAqLw0K
-CQkJCTxQSU4oMiwgMikgfCBGVU5DXzIpPiwJLyogUDJfMiA9IEVUX1RYRU4gKi8NCgkJCQk8UElO
-KDIsIDMpIHwgRlVOQ18yKT4sCS8qIFAyXzMgPSBFVF9DUlMgKi8NCgkJCQk8UElOKDIsIDQpIHwg
-RlVOQ18yKT4sCS8qIFAyXzQgPSBFVF9UWEQwICovDQoJCQkJPFBJTigyLCA1KSB8IEZVTkNfMik+
-LAkvKiBQMl81ID0gRVRfVFhEMSAqLw0KCQkJCTxQSU4oMiwgNikgfCBGVU5DXzIpPiwJLyogUDJf
-NiA9IEVUX1RYRDIgKi8NCgkJCQk8UElOKDIsIDcpIHwgRlVOQ18yKT4sCS8qIFAyXzcgPSBFVF9U
-WEQzICovDQoJCQkJPFBJTigyLCA4KSB8IEZVTkNfMik+LAkvKiBQMl84ID0gRVRfUlhEMCAqLw0K
-CQkJCTxQSU4oMiwgOSkgfCBGVU5DXzIpPiwJLyogUDJfOSA9IEVUX1JYRDEgKi8NCgkJCQk8UElO
-KDIsIDEwKSB8IEZVTkNfMik+LCAvKiBQMl8xMCA9IEVUX1JYRDIgKi8NCgkJCQk8UElOKDIsIDEx
-KSB8IEZVTkNfMik+OyAvKiBQMl8xMSA9IEVUX1JYRDMgKi8NCgkJfTsNCgkJcGluc19iaWRpciB7
-DQoJCQlwaW5tdXggPSA8UElOKDMsIDMpIHwgRlVOQ18yKT4sCS8qIFAzXzMgPSBFVF9NRElPICov
-DQoJCQliaWRpcmVjdGlvbmFsOw0KCQl9Ow0KCX07DQoNCg0KICBOT1RFOiAiRlVOQ18yIiBjYW4g
-anVzdCBiZSAiMiIgYXMgcGVyIEdlZXJ0J3MgcmVxdWVzdC4NCg0KDQoNCkNocmlzDQoNCg0K
+On Wed, Mar 29, 2017 at 11:07:35AM +0800, Leo Yan wrote:
+> Hi Suzuki,
+> 
+> On Mon, Mar 27, 2017 at 05:34:57PM +0100, Suzuki K Poulose wrote:
+> > On 25/03/17 18:23, Leo Yan wrote:
+> 
+> [...]
+> 
+> > Leo,
+> > 
+> > Thanks a lot for the quick rework. I don't fully understand (yet!) why we need the
+> > idle_constraint. I will leave it for Sudeep to comment on it, as he is the expert
+> > in that area. Some minor comments below.
+> 
+> Thanks a lot for quick reviewing :)
+> 
+> > >Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > >---
+> > > drivers/hwtracing/coresight/Kconfig               |  11 +
+> > > drivers/hwtracing/coresight/Makefile              |   1 +
+> > > drivers/hwtracing/coresight/coresight-cpu-debug.c | 704 ++++++++++++++++++++++
+> > > 3 files changed, 716 insertions(+)
+> > > create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
+> > >
+> > >diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> > >index 130cb21..18d7931 100644
+> > >--- a/drivers/hwtracing/coresight/Kconfig
+> > >+++ b/drivers/hwtracing/coresight/Kconfig
+> > >@@ -89,4 +89,15 @@ config CORESIGHT_STM
+> > > 	  logging useful software events or data coming from various entities
+> > > 	  in the system, possibly running different OSs
+> > >
+> > >+config CORESIGHT_CPU_DEBUG
+> > >+	tristate "CoreSight CPU Debug driver"
+> > >+	depends on ARM || ARM64
+> > >+	depends on DEBUG_FS
+> > >+	help
+> > >+	  This driver provides support for coresight debugging module. This
+> > >+	  is primarily used to dump sample-based profiling registers when
+> > >+	  system triggers panic, the driver will parse context registers so
+> > >+	  can quickly get to know program counter (PC), secure state,
+> > >+	  exception level, etc.
+> > 
+> > May be we should mention/warn the user about the possible caveats of using
+> > this feature to help him make a better decision ? And / Or we should add a documentation
+> > for it. We have collected some real good information over the discussions and
+> > it is a good idea to capture it somewhere.
+> 
+> Sure, I will add a documentation for this.
+> 
+> [...]
+> 
+> > >+static struct pm_qos_request debug_qos_req;
+> > >+static int idle_constraint = PM_QOS_DEFAULT_VALUE;
+> > >+module_param(idle_constraint, int, 0600);
+> > >+MODULE_PARM_DESC(idle_constraint, "Latency requirement in microseconds for CPU "
+> > >+		 "idle states (default is -1, which means have no limiation "
+> > >+		 "to CPU idle states; 0 means disabling all idle states; user "
+> > >+		 "can choose other platform dependent values so can disable "
+> > >+		 "specific idle states for the platform)");
+> > 
+> > Correct me if I am wrong,
+> > 
+> > All we want to do is disable the CPUIdle explicitly if the user knows that this
+> > could be a problem to use CPU debug on his platform. So, in effect, we should
+> > only be using idle_constraint = 0 or -1.
+> > 
+> > In which case, we could make it easier for the user to tell us, either
+> > 
+> >  0 - Don't do anything with CPUIdle (default)
+> >  1 - Disable CPUIdle for me as I know the platform has issues with CPU debug and CPUidle.
+> 
+> The reason for not using bool flag is: usually SoC may have many idle
+> states, so if user wants to partially enable some states then can set
+> the latency to constraint.
+> 
+> But of course, we can change this to binary value as you suggested,
+> this means turn on of turn off all states. The only one reason to use
+> latency value is it is more friendly for hardware design, e.g. some
+> platforms can enable partial states to save power and avoid overheat
+> after using this driver.
+> 
+> If you guys think this is a bit over design, I will follow up your
+> suggestion. I also have some replying in Mathieu's reviewing, please
+> help review as well.
+> 
+> > than explaining the miscrosecond latency etc and make the appropriate calls underneath.
+> > something like (not necessarily the same name) :
+> > 
+> > module_param(broken_with_cpuidle, bool, 0600);
+> > MODULE_PARAM_DESC(broken_with_cpuidle, "Specifies whether the CPU debug has issues with CPUIdle on"
+> > 				       " the platform. Non-zero value implies CPUIdle has to be"
+> > 				       " explicitly disabled.",);
+> 
+> [...]
+> 
+> > >+	/*
+> > >+	 * Unfortunately the CPU cannot be powered up, so return
+> > >+	 * back and later has no permission to access other
+> > >+	 * registers. For this case, should set 'idle_constraint'
+> > >+	 * to ensure CPU power domain is enabled!
+> > >+	 */
+> > >+	if (!(drvdata->edprsr & EDPRSR_PU)) {
+> > >+		pr_err("%s: power up request for CPU%d failed\n",
+> > >+			__func__, drvdata->cpu);
+> > >+		goto out;
+> > >+	}
+> > >+
+> > >+out_powered_up:
+> > >+	debug_os_unlock(drvdata);
+> > 
+> > Question: Do we need a matching debug_os_lock() once we are done ?
+> 
+> I have checked ARM ARMv8, but there have no detailed description for
+> this. I refered coresight-etmv4 code and Mike's pseudo code, ther have
+> no debug_os_lock() related operations.
+> 
+> Mike, Mathieu, could you also help confirm this?
+
+I'm not strongly opiniated on the usage of the OS lock, hence being a little
+nonchalent in the coresight-etmv4 driver.   
+
+> 
+> [...]
+> 
+> > >+static void debug_init_arch_data(void *info)
+> > >+{
+> > >+	struct debug_drvdata *drvdata = info;
+> > >+	u32 mode, pcsr_offset;
+> > >+
+> > >+	CS_UNLOCK(drvdata->base);
+> > >+
+> > >+	debug_os_unlock(drvdata);
+> > >+
+> > >+	/* Read device info */
+> > >+	drvdata->eddevid  = readl_relaxed(drvdata->base + EDDEVID);
+> > >+	drvdata->eddevid1 = readl_relaxed(drvdata->base + EDDEVID1);
+> > 
+> > As mentioned above, both of these registers are only need at init time to
+> > figure out the flags we set here. So we could remove them.
+> > 
+> > >+
+> > >+	CS_LOCK(drvdata->base);
+> > >+
+> > >+	/* Parse implementation feature */
+> > >+	mode = drvdata->eddevid & EDDEVID_PCSAMPLE_MODE;
+> > >+	pcsr_offset = drvdata->eddevid1 & EDDEVID1_PCSR_OFFSET_MASK;
+> > 
+> > 
+> > >+
+> > >+	if (mode == EDDEVID_IMPL_NONE) {
+> > >+		drvdata->edpcsr_present  = false;
+> > >+		drvdata->edcidsr_present = false;
+> > >+		drvdata->edvidsr_present = false;
+> > >+	} else if (mode == EDDEVID_IMPL_EDPCSR) {
+> > >+		drvdata->edpcsr_present  = true;
+> > >+		drvdata->edcidsr_present = false;
+> > >+		drvdata->edvidsr_present = false;
+> > >+	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
+> > >+		if (!IS_ENABLED(CONFIG_64BIT) &&
+> > >+			(pcsr_offset == EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32))
+> > >+			drvdata->edpcsr_present = false;
+> > >+		else
+> > >+			drvdata->edpcsr_present = true;
+> > 
+> > Sorry, I forgot why we do this check only in this mode. Shouldn't this be
+> > common to all modes (of course which implies PCSR is present) ?
+> 
+> No. PCSROffset is defined differently in ARMv7 and ARMv8; So finally we
+> simplize PCSROffset value :
+> 0000 - Sample offset applies based on the instruction state (indicated by PCSR[0])
+> 0001 - No offset applies.
+> 0010 - No offset applies, but do not use in AArch32 mode!
+> 
+> So we need handle the corner case is when CPU runs AArch32 mode and
+> PCSRoffset = 'b0010. Other cases the pcsr should be present.
+> 
+> [...]
+> 
+> Other suggestions are good for me, will take them in next version.
+> 
+> Thanks,
+> Leo Yan
