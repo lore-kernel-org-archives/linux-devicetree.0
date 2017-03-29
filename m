@@ -1,114 +1,46 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [REPOST PATCH] ARM: dts: imx6qp-nitrogen6_som2: add Quad Plus variant of the SOM
-Date: Wed, 29 Mar 2017 10:45:23 +0200
-Message-ID: <20170329084523.8065-1-gary.bisson@boundarydevices.com>
-References: <20170327160601.12871-1-gary.bisson@boundarydevices.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170327160601.12871-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3
+ ES2.0
+Date: Wed, 29 Mar 2017 10:45:29 +0200
+Message-ID: <20170329084529.GG6512@verge.net.au>
+References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
+ <1490362665-4422-2-git-send-email-geert+renesas@glider.be>
+ <1612430.SNEha5n02K@avalon>
+ <20170329081352.GF6512@verge.net.au>
+ <CAMuHMdWvR71V_JyR6273KmdtGfrrT_vaU2vcDTpNt2MAG0WdLg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWvR71V_JyR6273KmdtGfrrT_vaU2vcDTpNt2MAG0WdLg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-https://boundarydevices.com/product/nit6x-som-v2/
+On Wed, Mar 29, 2017 at 10:31:02AM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Wed, Mar 29, 2017 at 10:13 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Mon, Mar 27, 2017 at 11:48:12AM +0300, Laurent Pinchart wrote:
+> >> On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
+> >> > Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
+> >> >   - The following devices no longer exist on ES2.0, and are thus removed:
+> >> >     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
+> >> >   - The DU <-> VSPD topology is different on ES2.0, hence remove the
+> >> >     "vsps" property from the DU node until the driver can handle this.
+> >>
+> >> I think I'll need a different compatible string between ES1.x and ES2 for the
+> >> DU. It could make sense to move the whole DU node to *-es1.dtsi. We can decide
+> >> about that later when I'll have a DU driver prototype ready.
+> >
+> > That makes sense to me.
+> >
+> > Geert, will you respin this?
+> 
+> Sure. The DTS parts are definitely not v4.12 material.
+>   - For ES2.0, they depend on clk/pfc/rcar-sysc updates.
+>   - For ES1.x, I don't want to break people's setup (scripts copying
+>     r8a7795-salvator-x.dtb) prematurely.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
-Hi,
-
-This is just a re-post to LAKML as suggested by Shawn [1].
-
-Also include the Review tag from Fabio [2].
-
-Regards,
-Gary
-
-[1] http://www.spinics.net/lists/devicetree/msg170732.html
-[2] http://www.spinics.net/lists/devicetree/msg170354.html
----
- arch/arm/boot/dts/Makefile                  |  1 +
- arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts | 55 +++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 011808490fed..6190afe94371 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -426,6 +426,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-wandboard.dtb \
- 	imx6q-wandboard-revb1.dtb \
- 	imx6qp-nitrogen6_max.dtb \
-+	imx6qp-nitrogen6_som2.dtb \
- 	imx6qp-sabreauto.dtb \
- 	imx6qp-sabresd.dtb
- dtb-$(CONFIG_SOC_IMX6SL) += \
-diff --git a/arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts b/arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts
-new file mode 100644
-index 000000000000..011726c836cd
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qp-nitrogen6_som2.dts
-@@ -0,0 +1,55 @@
-+/*
-+ * Copyright 2017 Boundary Devices, Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6qp.dtsi"
-+#include "imx6qdl-nitrogen6_som2.dtsi"
-+
-+/ {
-+	model = "Boundary Devices i.MX6 Quad Plus Nitrogen6_SOM2 Board";
-+	compatible = "boundary,imx6qp-nitrogen6_som2", "fsl,imx6qp";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
