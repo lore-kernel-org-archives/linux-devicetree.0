@@ -1,75 +1,40 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 7/8] bus: brcmstb_gisb: add notifier handling
-Date: Wed, 29 Mar 2017 19:17:14 +0100
-Message-ID: <20170329181714.GD26135@leverpostej>
-References: <20170328213431.10904-1-opendmb@gmail.com>
- <20170328213431.10904-8-opendmb@gmail.com>
- <20170329101357.GB23442@leverpostej>
- <e6bb68fa-dd2f-7d18-6031-b709f8fd162e@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e6bb68fa-dd2f-7d18-6031-b709f8fd162e@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Berger <opendmb@gmail.com>
-Cc: robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH] Input: silead - list all supported compatible strings in binding document
+Date: Wed, 29 Mar 2017 14:25:31 -0400
+Message-ID: <20170329182531.17349-1-javier@osg.samsung.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Robert Dolca <robert.dolca@intel.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 10:39:11AM -0700, Doug Berger wrote:
-> On 03/29/2017 03:13 AM, Mark Rutland wrote:
+The driver contains compatible strings for different models, but the DT
+binding doc only lists one of them. Add the remaining to the document.
 
-> >> +static int dump_gisb_error(struct notifier_block *self, unsigned long v,
-> >> +			   void *p)
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
 
-> >> +	return 0;
-> > 
-> > I think this should be NOTIFY_OK.
-> > 
-> I used dump_mem_limit() as a template and didn't catch this (work to
-> do...).  Upon review I think I would prefer NOTIFY_DONE since this call
-> is opportunistic (i.e. it is taking the opportunity to check whether
-> additional diagnostic data is available to display) and has no interest
-> in affecting the overall handling of the event.
+ .../devicetree/bindings/input/touchscreen/silead_gsl1680.txt       | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-That's fine by me.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+index ce85ee508238..6aa625e0cb8d 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+@@ -1,7 +1,12 @@
+ * GSL 1680 touchscreen controller
+ 
+ Required properties:
+-- compatible		  : "silead,gsl1680"
++- compatible		  : Must be one of the following, depending on the model:
++			    "silead,gsl1680"
++			    "silead,gsl1688"
++			    "silead,gsl3670"
++			    "silead,gsl3675"
++			    "silead,gsl3692"
+ - reg			  : I2C slave address of the chip (0x40)
+ - interrupt-parent	  : a phandle pointing to the interrupt controller
+ 			    serving the interrupt for this chip
+-- 
+2.9.3
 
-Does the distinction matter here?
-
-Most notifer users treat NOTIFY_OK and NOTIFY_DONE as equivalent, and
-notifier_call_chain only terminates when it sees NOTIFY_STOP_MASK.
-
-[...]
-
-> >> +	if (list_is_singular(&brcmstb_gisb_arb_device_list)) {
-> >> +		register_die_notifier(&gisb_error_notifier);
-> >> +		atomic_notifier_chain_register(&panic_notifier_list,
-> >> +					       &gisb_error_notifier);
-> > 
-> > I don't think this is quite right. A notifier_block can only be
-> > registered to one notifier chain at a time, and this has the potential
-> > to corrupt both chains.
-> > 
-> A VERY good point thanks for pointing this out.
-> 
-> > I also think you only need to register the panic notifier. An SError
-> > should always result in a panic.
-> > 
-> That was my initial thought as well.  However, testing revealed that the
-> bad mode Oops actually exits the user space process and doesn't reach
-> the panic so there was no helpful diagnostic message.  This may be in
-> line with your comments about insufficient fatality of failures in PATCH
-> v2 6/8, but it actually is more in line with our desired behavior for
-> the aborted write.  Setting the notify on die gave us the result we are
-> looking for, but as noted above I should have created a separate notifier.
-> 
-> I had hoped that the same approach (i.e. die notifier) would remove the
-> need for PATCH v2 6/8 as well, but I found that the Unhandled fault
-> error didn't actually die from user mode.
-
-In my mind it's a bug that we don't treat those errors more fatally.
-
-I'll try to dig into that.
-
-Thanks,
-Mark.
