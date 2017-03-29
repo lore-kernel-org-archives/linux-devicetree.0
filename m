@@ -1,62 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: Document STM32 IWDG bindings
-Date: Tue, 28 Mar 2017 20:40:26 -0500
-Message-ID: <20170329014026.fxrv7hwoueh6tplm@rob-hp-laptop>
-References: <1490195083-25117-1-git-send-email-yannick.fertre@st.com>
- <1490195083-25117-2-git-send-email-yannick.fertre@st.com>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH v1 1/7] devicetree: power: battery: Add properties for
+ pre-charge and end-charge current
+Date: Tue, 28 Mar 2017 18:42:42 -0700
+Message-ID: <CAKvHMgRWP6HAYOPCDaLfHUeTfQTYTb5ORg9bt19MDYQ7ubniMg@mail.gmail.com>
+References: <20170321220921.5834-1-liam@networkimprov.net> <20170321220921.5834-2-liam@networkimprov.net>
+ <20170329003946.3eyqmsozj2sxrtiw@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1490195083-25117-2-git-send-email-yannick.fertre-qxv4g6HH51o@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329003946.3eyqmsozj2sxrtiw@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 22, 2017 at 04:04:39PM +0100, Yannick Fertre wrote:
-> From: Yannick Fertre <yfertre.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Rob,
 
-"dt-bindings: watchdog: ..." for subject.
-> 
-> This adds documentation of device tree bindings for the STM32 IWDG
-> (Independent WatchDoG).
-> 
-> Change-Id: Idadacc806d00205fe9af2e8606af229b4b760558
-> Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/watchdog/st,stm32-iwdg.txt        | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-> new file mode 100644
-> index 0000000..036b040
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-> @@ -0,0 +1,15 @@
-> +STM32 Independent WatchDoG (IWDG)
-> +---------------------------------
-> +
-> +Required properties:
-> +- compatible: "st,stm32-iwdg"
-> +- reg: physical base address and length of the registers set for the device
-> +- clocks: must contain a single entry describing the clock input
-> +
-> +Example:
-> +
-> +iwdg@40003000 {
+On Tue, Mar 28, 2017 at 5:39 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Mar 21, 2017 at 03:09:15PM -0700, Liam Breck wrote:
+>> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>>
+>> precharge-current-microamp and endcharge-current-microamp are used
+>> by battery chargers at the beginning and end of a charging cycle.
+>>
+>> Depends-on: https://patchwork.kernel.org/patch/9633605/
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> index 53a68c0..494374a 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> @@ -12,6 +12,8 @@ Optional Properties:
+>>   - voltage-min-design-microvolt: drained battery voltage
+>>   - energy-full-design-microwatt-hours: battery design energy
+>>   - charge-full-design-microamp-hours: battery design capacity
+>> + - precharge-current-microamp: current for pre-charge phase
+>> + - endcharge-current-microamp: current for charge termination phase
+>
+> current is implied by microamp, so perhaps just pre-charge-microamp and
+> end-charge-microamp.
 
-watchdog@...
+Ah, this is why I want to document the naming scheme for battery node
+properties in battery.txt, by referring to a linux header file :-)
 
-> +	compatible = "st,stm32-iwdg";
-> +	reg = <0x40003000 0x400>;
-> +	clocks = <&clk_lsi>;
-> +};
-> -- 
-> 1.9.1
-> 
+The names mirror enum power_supply_property elements wherever
+possible. Shortening them as you suggest makes dts code a little more
+terse, but obscures their relationship with power_supply sysfs
+attributes. I prefer brevity myself, but there is no strong case to
+reword the names for DT use.
+
+> I know little about batteries, but don't you also need to know when each
+> phase starts/ends?
+
+Meaning at what voltage levels? We don't need it for this
+battery/charger pair; no idea about others...
+
+> I mainly ask because we just added the previous properties and now we're
+> adding 2 more. While fine to add features to a driver one by one, we
+> really shouldn't for bindings. The h/w is not evolving (in a month).
+
+And a third patchset from Quentin Schulz adds another :-)
+
+I think you may need to accept piecemeal assembly in this case... No
+one has made a study of all properties that should be in the battery
+node. (precharge_current wasn't even in power_supply_property until
+this patchset.) Sebastian requested we create this binding in the
+process of adding DT support to a fuel gauge, so we coded what that
+called for.
+
+I hope that helps...
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
