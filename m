@@ -1,38 +1,93 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Add INNOLUX P079ZCA panel bindings
-Date: Wed, 29 Mar 2017 16:12:23 -0500
-Message-ID: <20170329211223.qaguke5lkrlongpq@rob-hp-laptop>
-References: <1490316692-20506-1-git-send-email-zyw@rock-chips.com>
+From: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
+Subject: [RFC PATCH 1/5] soc/fsl/qbman: Use shared-dma-pool for BMan private memory allocations
+Date: Wed, 29 Mar 2017 17:13:53 -0400
+Message-ID: <1490822037-6752-2-git-send-email-roy.pledge@nxp.com>
+References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com>
+Reply-To: <roy.pledge-3arQi8VN3Tc@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1490316692-20506-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490822037-6752-1-git-send-email-roy.pledge-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robin.murphy-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: madalin.bucur-3arQi8VN3Tc@public.gmane.org, Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXIgMjQsIDIwMTcgYXQgMDg6NTE6MzFBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gVGhlIElubm9sdXggUDA3OVpDQSBpcyBhIDcuODUiIHBhbmVsIHdpdGggYSA3NjhYMTAy
-NCByZXNvbHV0aW9uIGFuZAo+IGNvbm5lY3RlZCB0byBEU0kgdXNpbmcgZm91ciBsYW5lcy4KPiAK
-PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgo+IFJldmll
-d2VkLWJ5OiBCcmlhbiBOb3JyaXMgPGJyaWFubm9ycmlzQGNocm9taXVtLm9yZz4KPiAtLS0KPiAK
-PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4gQ2hhbmdlcyBpbiB2MzogTm9uZQo+IENoYW5nZXMgaW4g
-djI6IE5vbmUKPiAKPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxwMDc5emNh
-LnR4dCAgICAgfCAyMyArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
-MyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwNzl6Y2EudHh0CgpBY2tlZC1i
-eTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Use the shared-memory-pool mechanism for free buffer proxy record
+area allocation.
+
+Signed-off-by: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
+---
+ drivers/soc/fsl/qbman/bman_ccsr.c | 27 ++++++++++++++++++++++++++-
+ drivers/soc/fsl/qbman/bman_priv.h |  3 +++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
+index a8e8389..5485c3c 100644
+--- a/drivers/soc/fsl/qbman/bman_ccsr.c
++++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+@@ -170,10 +170,11 @@ static int fsl_bman_probe(struct platform_device *pdev)
+ {
+ 	int ret, err_irq;
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *node = dev->of_node;
++	struct device_node *mem_node, *node = dev->of_node;
+ 	struct resource *res;
+ 	u16 id, bm_pool_cnt;
+ 	u8 major, minor;
++	u64 size;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+@@ -201,6 +202,30 @@ static int fsl_bman_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
++	ret = of_reserved_mem_device_init(dev);
++	if (ret) {
++		dev_err(dev, "of_reserved_mem_device_init() failed 0x%x\n", ret);
++		return -ENODEV;
++	}
++	mem_node = of_parse_phandle(dev->of_node, "memory-region", 0);
++	if (mem_node) {
++		ret = of_property_read_u64(mem_node, "size", &size);
++		if (ret) {
++			dev_err(dev, "FBPR: of_address_to_resource fails 0x%x\n", ret);
++			return -ENODEV;
++		}
++		fbpr_sz = size;
++	} else {
++		dev_err(dev, "No memory-region found for FBPR\n");
++		return -ENODEV;
++	}
++	if (!dma_zalloc_coherent(dev, fbpr_sz, &fbpr_a, 0)) {
++		dev_err(dev, "Alloc FBPR memory failed\n");
++		return -ENODEV;
++	}
++
++	dev_info(dev, "Allocated FBPR 0x%llx 0x%zx\n", fbpr_a, fbpr_sz);
++
+ 	bm_set_memory(fbpr_a, fbpr_sz);
+ 
+ 	err_irq = platform_get_irq(pdev, 0);
+diff --git a/drivers/soc/fsl/qbman/bman_priv.h b/drivers/soc/fsl/qbman/bman_priv.h
+index f6896a2..765a4bf 100644
+--- a/drivers/soc/fsl/qbman/bman_priv.h
++++ b/drivers/soc/fsl/qbman/bman_priv.h
+@@ -33,6 +33,9 @@
+ #include "dpaa_sys.h"
+ 
+ #include <soc/fsl/bman.h>
++#include <linux/dma-contiguous.h>
++#include <linux/of_address.h>
++#include <linux/dma-mapping.h>
+ 
+ /* Portal processing (interrupt) sources */
+ #define BM_PIRQ_RCRI	0x00000002	/* RCR Ring (below threshold) */
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
