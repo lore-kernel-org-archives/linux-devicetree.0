@@ -1,103 +1,200 @@
-From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] iio/adc/ltc2497: Driver for Linear Technology LTC2497 ADC
-Date: Wed, 29 Mar 2017 10:51:57 +0200
-Message-ID: <025f8461-c823-1f07-5742-e488c3e34f9f@analog.com>
-References: <1490265310-6162-1-git-send-email-michael.hennerich@analog.com>
- <6774c073-7fe4-e259-306e-3cf4621f7c69@metafoo.de>
-Reply-To: <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
+Date: Wed, 29 Mar 2017 10:07:07 +0100
+Message-ID: <5584203e-cb19-a5d2-45b1-3e78d3482c55@arm.com>
+References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
+ <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
+ <31be033f-514e-e48a-3ba2-a5c5cd477548@arm.com>
+ <20170329030735.GA23889@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6774c073-7fe4-e259-306e-3cf4621f7c69-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329030735.GA23889@leoy-linaro>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.03.2017 12:05, Lars-Peter Clausen wrote:
-
-Sorry - I missed some of this review feedback ...
-
->> +
->> +static int ltc2497_wait_conv(struct ltc2497_st *st)
->> +{
->> +	s64 time_elapsed;
->> +
->> +	time_elapsed = ktime_ms_delta(ktime_get(), st->time_prev);
->> +
->> +	if (time_elapsed < LTC2497_CONVERSION_TIME_MS) {
->> +		/* delay if conversion time not passed
->> +		 * since last read or write
->> +		 */
->> +		msleep(LTC2497_CONVERSION_TIME_MS - time_elapsed);
+On 29/03/17 04:07, Leo Yan wrote:
+> Hi Suzuki,
 >
-> Considering how long this sleeps msleep_interruptible() might be the better
-> choice.
-
-Wondering what should be the outcome of this?
-We can't simply replace it. Actually I've seen cases here in drivers/iio 
-where the delay is essential, but the return value of 
-msleep_interruptible() is not being checked.
-Thus causing a malicious access, in case a signal is received.
-
-We must delay here. If we switch to msleep_interruptible() the only 
-reason for this would be to cancel the read and return -EINTR to the user.
-
-Also there is another msleep below which would also need this kind of 
-handling.
-
+> On Mon, Mar 27, 2017 at 05:34:57PM +0100, Suzuki K Poulose wrote:
+>> On 25/03/17 18:23, Leo Yan wrote:
 >
->> +		return 0;
->> +	}
->> +
->> +	if (time_elapsed - LTC2497_CONVERSION_TIME_MS <= 0) {
->> +		/* We're in automatic mode -
->> +		 * so the last reading is stil not outdated
->> +		 */
->> +		return 0;
->> +	}
->> +
->> +	return -ETIMEDOUT;
->> +}
->> +
->> +static int ltc2497_read(struct ltc2497_st *st, u8 address, int *val)
->> +{
->> +	struct i2c_client *client = st->client;
->> +	__be32 buf = 0;
->
-> transfer buffers must not be on the stack to avoid issues if the controller
-> should use DMA.
->
->> +	int ret;
->> +
->> +	ret = ltc2497_wait_conv(st);
->> +	if (ret < 0 || st->addr_prev != address) {
->> +		ret = i2c_smbus_write_byte(st->client, 0xA0 | address);
->> +		if (ret < 0)
->> +			return ret;
->> +		st->addr_prev = address;
->> +		msleep(LTC2497_CONVERSION_TIME_MS);
->> +	}
->> +	ret = i2c_master_recv(client, (char *)&buf, 3);
->> +	if (ret < 0)  {
->> +		dev_err(&client->dev, "i2c_master_recv failed\n");
->> +		return ret;
->> +	}
->> +	st->time_prev = ktime_get();
->> +	*val = (be32_to_cpu(buf) >> 14) - (1 << 17);
->> +
->> +	return ret;
->> +}
 > [...]
 >
+>> Leo,
+>>
+>> Thanks a lot for the quick rework. I don't fully understand (yet!) why we need the
+>> idle_constraint. I will leave it for Sudeep to comment on it, as he is the expert
+>> in that area. Some minor comments below.
+>
+> Thanks a lot for quick reviewing :)
+>
+>>> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>> drivers/hwtracing/coresight/Kconfig               |  11 +
+>>> drivers/hwtracing/coresight/Makefile              |   1 +
+>>> drivers/hwtracing/coresight/coresight-cpu-debug.c | 704 ++++++++++++++++++++++
+>>> 3 files changed, 716 insertions(+)
+>>> create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
+>>>
+>>> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+>>> index 130cb21..18d7931 100644
+>>> --- a/drivers/hwtracing/coresight/Kconfig
+>>> +++ b/drivers/hwtracing/coresight/Kconfig
+>>> @@ -89,4 +89,15 @@ config CORESIGHT_STM
+>>> 	  logging useful software events or data coming from various entities
+>>> 	  in the system, possibly running different OSs
+>>>
+>>> +config CORESIGHT_CPU_DEBUG
+>>> +	tristate "CoreSight CPU Debug driver"
+>>> +	depends on ARM || ARM64
+>>> +	depends on DEBUG_FS
+>>> +	help
+>>> +	  This driver provides support for coresight debugging module. This
+>>> +	  is primarily used to dump sample-based profiling registers when
+>>> +	  system triggers panic, the driver will parse context registers so
+>>> +	  can quickly get to know program counter (PC), secure state,
+>>> +	  exception level, etc.
+>>
+>> May be we should mention/warn the user about the possible caveats of using
+>> this feature to help him make a better decision ? And / Or we should add a documentation
+>> for it. We have collected some real good information over the discussions and
+>> it is a good idea to capture it somewhere.
+>
+> Sure, I will add a documentation for this.
+>
+> [...]
+>
+>>> +static struct pm_qos_request debug_qos_req;
+>>> +static int idle_constraint = PM_QOS_DEFAULT_VALUE;
+>>> +module_param(idle_constraint, int, 0600);
+>>> +MODULE_PARM_DESC(idle_constraint, "Latency requirement in microseconds for CPU "
+>>> +		 "idle states (default is -1, which means have no limiation "
+>>> +		 "to CPU idle states; 0 means disabling all idle states; user "
+>>> +		 "can choose other platform dependent values so can disable "
+>>> +		 "specific idle states for the platform)");
+>>
+>> Correct me if I am wrong,
+>>
+>> All we want to do is disable the CPUIdle explicitly if the user knows that this
+>> could be a problem to use CPU debug on his platform. So, in effect, we should
+>> only be using idle_constraint = 0 or -1.
+>>
+>> In which case, we could make it easier for the user to tell us, either
+>>
+>>  0 - Don't do anything with CPUIdle (default)
+>>  1 - Disable CPUIdle for me as I know the platform has issues with CPU debug and CPUidle.
+>
+> The reason for not using bool flag is: usually SoC may have many idle
+> states, so if user wants to partially enable some states then can set
+> the latency to constraint.
+>
+> But of course, we can change this to binary value as you suggested,
+> this means turn on of turn off all states. The only one reason to use
+> latency value is it is more friendly for hardware design, e.g. some
+> platforms can enable partial states to save power and avoid overheat
+> after using this driver.
+>
+> If you guys think this is a bit over design, I will follow up your
+> suggestion. I also have some replying in Mathieu's reviewing, please
+> help review as well.
+>
+>> than explaining the miscrosecond latency etc and make the appropriate calls underneath.
+>> something like (not necessarily the same name) :
+>>
+>> module_param(broken_with_cpuidle, bool, 0600);
+>> MODULE_PARAM_DESC(broken_with_cpuidle, "Specifies whether the CPU debug has issues with CPUIdle on"
+>> 				       " the platform. Non-zero value implies CPUIdle has to be"
+>> 				       " explicitly disabled.",);
+>
+> [...]
+>
+>>> +	/*
+>>> +	 * Unfortunately the CPU cannot be powered up, so return
+>>> +	 * back and later has no permission to access other
+>>> +	 * registers. For this case, should set 'idle_constraint'
+>>> +	 * to ensure CPU power domain is enabled!
+>>> +	 */
+>>> +	if (!(drvdata->edprsr & EDPRSR_PU)) {
+>>> +		pr_err("%s: power up request for CPU%d failed\n",
+>>> +			__func__, drvdata->cpu);
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +out_powered_up:
+>>> +	debug_os_unlock(drvdata);
+>>
+>> Question: Do we need a matching debug_os_lock() once we are done ?
+>
+> I have checked ARM ARMv8, but there have no detailed description for
+> this. I refered coresight-etmv4 code and Mike's pseudo code, ther have
+> no debug_os_lock() related operations.
+>
+> Mike, Mathieu, could you also help confirm this?
+>
+> [...]
+>
+>>> +static void debug_init_arch_data(void *info)
+>>> +{
+>>> +	struct debug_drvdata *drvdata = info;
+>>> +	u32 mode, pcsr_offset;
+>>> +
+>>> +	CS_UNLOCK(drvdata->base);
+>>> +
+>>> +	debug_os_unlock(drvdata);
+>>> +
+>>> +	/* Read device info */
+>>> +	drvdata->eddevid  = readl_relaxed(drvdata->base + EDDEVID);
+>>> +	drvdata->eddevid1 = readl_relaxed(drvdata->base + EDDEVID1);
+>>
+>> As mentioned above, both of these registers are only need at init time to
+>> figure out the flags we set here. So we could remove them.
+>>
+>>> +
+>>> +	CS_LOCK(drvdata->base);
+>>> +
+>>> +	/* Parse implementation feature */
+>>> +	mode = drvdata->eddevid & EDDEVID_PCSAMPLE_MODE;
+>>> +	pcsr_offset = drvdata->eddevid1 & EDDEVID1_PCSR_OFFSET_MASK;
+>>
+>>
+>>> +
+>>> +	if (mode == EDDEVID_IMPL_NONE) {
+>>> +		drvdata->edpcsr_present  = false;
+>>> +		drvdata->edcidsr_present = false;
+>>> +		drvdata->edvidsr_present = false;
+>>> +	} else if (mode == EDDEVID_IMPL_EDPCSR) {
+>>> +		drvdata->edpcsr_present  = true;
+>>> +		drvdata->edcidsr_present = false;
+>>> +		drvdata->edvidsr_present = false;
+>>> +	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
+>>> +		if (!IS_ENABLED(CONFIG_64BIT) &&
+>>> +			(pcsr_offset == EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32))
+>>> +			drvdata->edpcsr_present = false;
+>>> +		else
+>>> +			drvdata->edpcsr_present = true;
+>>
+>> Sorry, I forgot why we do this check only in this mode. Shouldn't this be
+>> common to all modes (of course which implies PCSR is present) ?
+>
+> No. PCSROffset is defined differently in ARMv7 and ARMv8; So finally we
+> simplize PCSROffset value :
+> 0000 - Sample offset applies based on the instruction state (indicated by PCSR[0])
+> 0001 - No offset applies.
+> 0010 - No offset applies, but do not use in AArch32 mode!
+>
+> So we need handle the corner case is when CPU runs AArch32 mode and
+> PCSRoffset = 'b0010. Other cases the pcsr should be present.
 
+I understand that reasoning. But my question is, why do we check for PCSROffset
+only when mode == EDDEVID_IMPL_EDPCSR_EDCIDSR and not for say mode == EDDEVID_IMPL_EDPCSR or
+any other mode where PCSR is present.
 
--- 
-Greetings,
-Michael
-
+Suzuki
 --
-Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
-Sitz der Gesellschaft München, Registergericht München HRB 40368,
-Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
