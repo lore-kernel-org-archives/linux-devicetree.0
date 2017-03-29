@@ -1,95 +1,82 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2,1/3] meson_uart: expose CLKID_UARTx
-Date: Wed, 29 Mar 2017 08:21:30 +0200
-Message-ID: <1490768490.2439.1.camel@baylibre.com>
-References: <20170328092545.4644-1-hgkr.klein@gmail.com>
-         <20170328092545.4644-2-hgkr.klein@gmail.com>
-         <1490716277.20764.6.camel@baylibre.com>
-         <71489b62-78c8-7082-587e-8598dc43ca59@gmail.com>
-         <1490728490.20764.8.camel@baylibre.com>
-         <CAFBinCDF29+kQpedsJPqRy6fztWrj91Qi6tCno_2S6UCkhW7XQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 2/7] rtc: Add rtc-sh
+Date: Wed, 29 Mar 2017 08:49:57 +0200
+Message-ID: <CAMuHMdVmwJYMzspVeDqToBrkfK+zGLMNhxGvEbqCA-vuCUXqoQ@mail.gmail.com>
+References: <20170322142754.30888-1-chris.brandt@renesas.com>
+ <20170322142754.30888-3-chris.brandt@renesas.com> <20170329012441.bxnkyqui24mymuvr@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDF29+kQpedsJPqRy6fztWrj91Qi6tCno_2S6UCkhW7XQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Helmut Klein <hgkr.klein@gmail.com>, mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329012441.bxnkyqui24mymuvr@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, RTCLINUX <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-03-28 at 23:24 +0200, Martin Blumenstingl wrote:
-> Hi Jerome,
-> 
-> On Tue, Mar 28, 2017 at 9:14 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > On Tue, 2017-03-28 at 20:18 +0200, Helmut Klein wrote:
-> > > i know for sure that the bluetooth chip of my system is connected to
-> > > uart_A. so this clock must be exposed.
-> > > 
-> > > i don't know if the other 2 uarts are used on other hardware. so i will
-> > > remove them from my patch.
-> > 
-> > What I meant is device trees "upstream".
-> > I would expect such patch as part of a series to add support for your board
-> > in
-> > device-tree, with its bluetooth chipset.
-> 
-> are you sure about this? 
+Hi Rob,
 
-Actually no ;) I started questioning this reply as soon as I sent it.
-the moto so far as been "we expose what's needed" but there is many ways to
-interpret that.
+On Wed, Mar 29, 2017 at 3:24 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Mar 22, 2017 at 10:27:49AM -0400, Chris Brandt wrote:
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/rtc-sh.txt
+>> @@ -0,0 +1,29 @@
+>> +* Real Time Clock for Renesas SH and ARM SoCs
+>> +
+>> +Required properties:
+>> +- compatible: Should be "renesas,r7s72100-rtc" and "renesas,sh-rtc" as a
+>> +  fallback.
+>> +- reg: physical base address and length of memory mapped region.
+>> +- interrupts: 3 interrupts for alarm, period, and carry.
+>> +- interrupt-names: The interrupts should be labeled as "alarm", "period", and
+>> +  "carry".
+>> +- clocks: The functional clock source for the RTC controller must be listed
+>> +  first (if exists). Additionally, potential clock counting sources are to be
+>> +  listed.
+>> +- clock-names: The functional clock must be labeled as "fck". Other clocks
+>> +  may be named in accordance to the SoC hardware manuals.
+>> +
+>> +
+>> +Example:
+>> +rtc: rtc@fcff1000 {
+>> +     compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
+>> +     reg = <0xfcff1000 0x2e>;
+>> +     interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
+>> +                   GIC_SPI 277 IRQ_TYPE_EDGE_RISING
+>> +                   GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
+>> +     interrupt-names = "alarm", "period", "carry";
+>> +     clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
+>> +              <&rtc_x3_clk>, <&extal_clk>;
+>> +     clock-names = "fck", "rtc_x1", "rtc_x3", "extal";
+>> +     power-domains = <&cpg_clocks>;
+>
+> Not documented.
 
-DT bindings is an ABI. Simply because we don't use part of that ABI upstream,
-doesn't mean we shouldn't provide it. My previous statement was clearly wrong
-about this, apologies.
+"power-domains" is a platform property.
 
-> Helmut is configuring the core clock of the
-> UART controller(s) here. we have the same thing for many other drivers
-> as well (MMC, SAR ADC, I2C, SPI, ethernet, you name it...) - these
-> clocks are not part of a device specific .dts but rather the SoC
-> specific dts (for example meson-gxbb.dtsi - because these clocks are
-> not board specific).
+All hardware components need power.
+All synchronous hardware components need a clock.
+Most hardware components have a reset signal.
 
-Agreed
-Since Helmut tested it, this clock should be added to the dtsi.
+Whether these are exposed and can be controlled depends on the platform/SoC.
+So documenting them in each and every device binding looks overkill to me.
+I think this is something to be addressed by devicetree-specification (which
+doesn't handle clocks, power-domains, resets yet).
 
-> I guess most boards are not affected because the bootloader simply
-> enables the UART0 core/gate clock and keeps it enabled when booting
-> the kernel. additionally our clock gates are marked with
-> CLK_IGNORE_UNUSED so if the bootloader keeps the gates enabled then
-> we're not disabling it either.
-> 
-> > I think it would better to drop this patch from the series.
-> > You can either keep it for your personal work, or send it again when
-> > upstreaming
-> > the support for your board and/or add the support for the bluetooth chip.
-> 
-> if we decide to pass the core/gate clock directly in SoC.dtsi then we
-> should think about doing it for all three non-AO UARTs (uart_a, uart_b
-> and uart_c).
-> we can test uart_b on GPIODV_24 and GPIODV_25 on the Khadas VIM board
-> for example (pins 22 and 23 on the header, default mode of these pins
-> is i2c_sck_a and i2c_sda_a, but we can re-configure it).
-> uart_c unfortunately cannot be tested on the Khadas VIM board since
-> it's only routed to GPIOX_8 and GPIOX_9 which are hard-wired to the
-> bluetooth module's PCM pins (BTPCM_DOUT and BTPCM_DIN).
-> 
-> for Helmut this would mean that instead of dropping this patch (or
-> dropping CLKID_UART1 and CLKID_UART2 from this patch) he would rather
-> have to *add* another patch (for meson-gxbb.dtsi and meson-gxl.dtsi)
-> which passes the core clocks to the corresponding UART controllers
-> (similar to the CLKID_SD_EMMC_ clocks).
+If you prefer, the property can be removed from the example, though.
 
-You are right. This could be part of another series.
-I guess this patch fine as it is.
+Thanks!
 
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+Gr{oetje,eeting}s,
 
-> 
-> 
-> Regards,
-> Martin
-> 
-> 
-> [0] http://lxr.free-electrons.com/source/drivers/clk/meson/clkc.h?v=4.10#L110
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
