@@ -1,159 +1,39 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 1/7] clocksource/drivers/clksrc-evt-probe: Describe
- with the DT both the clocksource and the clockevent
-Date: Wed, 29 Mar 2017 15:34:12 +0100
-Message-ID: <20170329143411.GL23442@leverpostej>
-References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
- <1490197714-25415-2-git-send-email-al.kochet@gmail.com>
- <20170329015146.ey5rlptzsnnynpnt@rob-hp-laptop>
- <20170329092210.GH2123@mai>
- <20170329104911.GC23442@leverpostej>
- <20170329123638.GI2123@mai>
- <20170329125713.GH23442@leverpostej>
- <20170329134134.GJ2123@mai>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH v3 2/2] PCI: Add tango PCIe host bridge support
+Date: Wed, 29 Mar 2017 14:38:28 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6DCFFC1507@AcuExch.aculab.com>
+References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
+ <65114e62-7458-b6f7-327c-f07a5096a452@sigmadesigns.com>
+ <01516ad9-e187-4bac-7c65-a7a90c576ce2@arm.com>
+ <96da696c-141a-3e8d-1fb7-2c024a295f58@free.fr>
+ <84a8b26d-7d24-df29-3959-45fce880916d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170329134134.GJ2123@mai>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <84a8b26d-7d24-df29-3959-45fce880916d@arm.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Robin Murphy' <robin.murphy@arm.com>, Mason <slash.tmp@free.fr>
+Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 03:41:34PM +0200, Daniel Lezcano wrote:
-> On Wed, Mar 29, 2017 at 01:57:14PM +0100, Mark Rutland wrote:
-> > On Wed, Mar 29, 2017 at 02:36:38PM +0200, Daniel Lezcano wrote:
-
-> > > arch/arc/boot/dts/abilis_tb10x.dtsi:
-> > > 
-> > >         /* TIMER0 with interrupt for clockevent */
-> > >         timer0 {
-> > >                 compatible = "snps,arc-timer";
-> > >                 interrupts = <3>;
-> > >                 interrupt-parent = <&intc>;
-> > >                 clocks = <&cpu_clk>;
-> > >         };
-> > > 
-> > >         /* TIMER1 for free running clocksource */
-> > >         timer1 {
-> > >                 compatible = "snps,arc-timer";
-> > >                 clocks = <&cpu_clk>;
-> > >         };
-> > > 
-> > > drivers/clocksource/arc_timer.c:
-> > > 
-> > > static int __init arc_of_timer_init(struct device_node *np)
-> > > {
-> > >         static int init_count = 0;
-> > >         int ret;
-> > > 
-> > >         if (!init_count) {
-> > >                 init_count = 1;
-> > >                 ret = arc_clockevent_setup(np);
-> > >         } else {
-> > >                 ret = arc_cs_setup_timer1(np);
-> > >         }
-> > > 
-> > >         return ret;
-> > > }
-> > > 
-> > > So the purpose of these changes is to provide a stronger timer declaration in
-> > > order to clearly split in the kernel a clocksource and a clockevent
-> > > initialization.
-> > 
-> > I agree that this pattern is not nice. However, I think that splitting
-> > devices as this level makes the problem *worse*.
-> > 
-> > Users care that they have a clocksource and a clockevent device. They
-> > do not care *which* particular device is used as either. The comments in
-> > the DT above are at best misleading.
+> > For my education, what is the API to send an IPI?
+> > And the API to handle an IPI?
 > 
-> Agree.
-> 
-> And the driver is assuming the first node is the clockevent and the second one
-> is the clocksource. If the DT invert these nodes, that breaks the driver.
+> There are a few ways you could implement some custom cross-call,
+> although in this case I think stop_machine() would probably be the most
+> appropriate candidate. However, you're right that in general it may not
+> actually help enough to be worthwhile - a DSB SY would ensure that
+> in-flight transactions have at least been observed by the CPUs and any
+> other coherent masters, but for any writes with a memory type allowing
+> early acknowledgement (i.e. a Normal or Device mapping of a BAR) that
+> doesn't necessarily correlate with them having reached their ultimate
+> destination. For a PCI destination in particular, I think the normal way
+> to ensure all posted writes have completed would be to read from config
+> space; ah...
 
-Sure, but that is something we can and should fix within Linux.
+He almost certainly doesn't need to wait for the cycle to complete,
+just long enough for the cycle to have been sent.
 
-> > What we need is for the kernel to understand that devices can be both
-> > clockevent and clocksource (perhaps mutually exclusively), such that the
-> > kernel can decide how to make use of devices.
-> > 
-> > That way, for the above the kernel can figure out that timer0 could be
-> > used as clocksource or clockevent, while timer1 can only be used as a
-> > clocksource due to the lack of an interrupt. Thus, it can choose to use
-> > timer0 as a clockevent, and timer1 and a clocksource.
-> 
-> Well, 'interrupt' gives an indication the timer can be used as a clockevent and
-> clocksource, not the clockevent only.
-
-Which is exactly what I said above, when I said:
-
-	the kernel can figure out that timer0 could be used as
-	clocksource or clockevent
-
-Considering both timer0 and timer1 is how we can figure out timer0 must
-be the clockevent, since timer1 cannot be.
-
-> If we take the case of the rockchip, the arm_arch_timer clocksource is stopped
-> when the CPU is clock gated. So specifically, we don't want to use this
-> clocksource but we want to use the arch clockevents because they are better.
-
-Sure. As I pointed out, we want to consider the holistic details to make
-the right decision. i.e. the infrastructure should make the choice, not
-the individual drivers.
-
-Consider that the kernel may need to make decisions that differ it a
-kernel is built wihout certain drivers. That cannot work if the use is
-allocated in the DT.
-
-[...]
-
-> > > 2. A node can have a clockevent and|or a clocksource attributes
-> > 
-> > As above, this should not be in the DT given it's describing a
-> > (Linux-specific) SW policy and not a HW detail.
-> > 
-> > So I must disagree with this.
-> 
-> IIUC my discussion with Rob, an attribute is acceptable (btw if
-> 'clocksource'|'clockevent' names are too Linux specific (+1), what
-> about a more generic name like 'tick' and 'time' ?).
-
-The *meaning* of these is Linux specific. The naming is irrelevant.
-
-> > > 3. The timer_probe pass a flag to the driver's init function, so this one knows
-> > >    if it should invoke the clockevent/clocksource init functions.
-> > >    No attribute defaults to clocksource|clockevent.
-> > > 
-> > > That would be backward compatible and will let to create drivers with clutch
-> > > activated device via DT. Also, it will give the opportunity to the existing
-> > > drivers to change consolidate their initialization routines.
-> > 
-> > I think that if anything, we need a combined clocksource+clockevent
-> > device that we register to the core code. That means all
-> > clocksource/clockevent drivers have a consolidated routine.
-> > 
-> > Subsequently, core code should determine how specifically to use the
-> > device (e.g. based on what other devices are registered, and their
-> > capabilities).
-> 
-> IMO, the core code is complex enough and that may imply more heuristics.
-
-Given that the majority of cases are going to be multiple instances of
-the same IP, I cannot imagine it is complex to get something that works.
-
-A generally optimal configuration may require some heuristics, but
-that's a different matter to a correct and functional configuration.
-
-I must disagree with trying to push that complexity into the DT by means
-of static SW policy, rather than solving the problem in SW where we have
-all the information to do so.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	David
