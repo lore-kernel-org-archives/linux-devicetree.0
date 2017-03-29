@@ -1,12 +1,13 @@
 From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 6/7] ARM: dts: rskrza1: set rtc_x1 clock value
-Date: Wed, 29 Mar 2017 10:30:34 -0700
-Message-ID: <20170329173035.67477-7-chris.brandt@renesas.com>
+Subject: [PATCH v3 3/7] ARM: dts: r7s72100: add rtc clock to
+ device tree
+Date: Wed, 29 Mar 2017 10:30:31 -0700
+Message-ID: <20170329173035.67477-4-chris.brandt@renesas.com>
 References: <20170329173035.67477-1-chris.brandt@renesas.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXOFUXT2UGBBZG657DAKGQEMEWIM2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBDXOFUXT2UGBBZW657DAKGQEJP6DYNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170329173035.67477-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,29 +20,53 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the 32.768 kHz RTC_X1 clock by setting the frequency value to
-non-zero.
+Add the realtime clock functional clock source.
 
 Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+v2:
+* changed "rtc0" to "rtc"
+* added Reviewed-by
+---
+ arch/arm/boot/dts/r7s72100.dtsi            | 9 +++++++++
+ include/dt-bindings/clock/r7s72100-clock.h | 3 +++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index 02b59c5b3c53..cab5857bfb41 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -43,6 +43,10 @@
- 	clock-frequency = <48000000>;
- };
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index 34994afa9d15..6a1448be4e10 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -117,6 +117,15 @@
+ 			clock-output-names = "ostm0", "ostm1";
+ 		};
  
-+&rtc_x1_clk {
-+	clock-frequency = <32768>;
-+};
++		mstp6_clks: mstp6_clks@fcfe042c {
++			#clock-cells = <1>;
++			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
++			reg = <0xfcfe042c 4>;
++			clocks = <&p0_clk>;
++			clock-indices = <R7S72100_CLK_RTC>;
++			clock-output-names = "rtc";
++		};
 +
- &mtu2 {
- 	status = "okay";
- };
+ 		mstp7_clks: mstp7_clks@fcfe0430 {
+ 			#clock-cells = <1>;
+ 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+index cd2ed5194255..bc256d31099a 100644
+--- a/include/dt-bindings/clock/r7s72100-clock.h
++++ b/include/dt-bindings/clock/r7s72100-clock.h
+@@ -29,6 +29,9 @@
+ #define R7S72100_CLK_OSTM0	1
+ #define R7S72100_CLK_OSTM1	0
+ 
++/* MSTP6 */
++#define R7S72100_CLK_RTC	0
++
+ /* MSTP7 */
+ #define R7S72100_CLK_ETHER	4
+ 
 -- 
 2.11.0
 
