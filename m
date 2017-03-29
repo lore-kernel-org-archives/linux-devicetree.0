@@ -1,222 +1,129 @@
 From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 16/23] drivers/fsi: Add tracepoints for low-level operations
-Date: Wed, 29 Mar 2017 12:43:33 -0500
-Message-ID: <20170329174340.89109-17-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v4 08/23] drivers/fsi: Set slave SMODE to init communication
+Date: Wed, 29 Mar 2017 12:43:25 -0500
+Message-ID: <20170329174340.89109-9-cbostic@linux.vnet.ibm.com>
 References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170329174340.89109-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+
+Set CFAM to appropriate ID so that the controlling master can manage
+link memory ranges.  Add slave engine register definitions.
+
+Includes changes from Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>.
 
 Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- drivers/fsi/fsi-core.c     |  27 +++++++---
- include/trace/events/fsi.h | 127 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 148 insertions(+), 6 deletions(-)
- create mode 100644 include/trace/events/fsi.h
+ drivers/fsi/fsi-core.c | 75 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index f7e55e7..09becec 100644
+index c705ca2..b7b138b 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -21,6 +21,9 @@
+@@ -21,6 +21,27 @@
  
  #include "fsi-master.h"
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/fsi.h>
++#define FSI_SLAVE_BASE			0x800
 +
- #define FSI_SLAVE_CONF_NEXT_MASK	0x80000000
- #define FSI_SLAVE_CONF_SLOTS_MASK	0x00ff0000
- #define FSI_SLAVE_CONF_SLOTS_SHIFT	16
-@@ -541,11 +544,16 @@ static int fsi_master_read(struct fsi_master *master, int link,
- {
- 	int rc;
++/*
++ * FSI slave engine control register offsets
++ */
++#define FSI_SMODE			0x0	/* R/W: Mode register */
++
++/*
++ * SMODE fields
++ */
++#define FSI_SMODE_WSC		0x80000000	/* Warm start done */
++#define FSI_SMODE_ECRC		0x20000000	/* Hw CRC check */
++#define FSI_SMODE_SID_SHIFT	24		/* ID shift */
++#define FSI_SMODE_SID_MASK	3		/* ID Mask */
++#define FSI_SMODE_ED_SHIFT	20		/* Echo delay shift */
++#define FSI_SMODE_ED_MASK	0xf		/* Echo delay mask */
++#define FSI_SMODE_SD_SHIFT	16		/* Send delay shift */
++#define FSI_SMODE_SD_MASK	0xf		/* Send delay mask */
++#define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
++#define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
++
+ #define FSI_SLAVE_SIZE_23b		0x800000
  
-+	trace_fsi_master_read(master, link, slave_id, addr, size);
-+
- 	rc = fsi_check_access(addr, size);
--	if (rc)
--		return rc;
-+	if (!rc)
-+		rc = master->read(master, link, slave_id, addr, val, size);
-+
-+	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
-+			false, val, rc);
- 
--	return master->read(master, link, slave_id, addr, val, size);
-+	return rc;
+ static DEFINE_IDA(master_ida);
+@@ -117,6 +138,52 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			addr, val, size);
  }
  
- static int fsi_master_write(struct fsi_master *master, int link,
-@@ -553,11 +561,16 @@ static int fsi_master_write(struct fsi_master *master, int link,
++/* Encode slave local bus echo delay */
++static inline uint32_t fsi_smode_echodly(int x)
++{
++	return (x & FSI_SMODE_ED_MASK) << FSI_SMODE_ED_SHIFT;
++}
++
++/* Encode slave local bus send delay */
++static inline uint32_t fsi_smode_senddly(int x)
++{
++	return (x & FSI_SMODE_SD_MASK) << FSI_SMODE_SD_SHIFT;
++}
++
++/* Encode slave local bus clock rate ratio */
++static inline uint32_t fsi_smode_lbcrr(int x)
++{
++	return (x & FSI_SMODE_LBCRR_MASK) << FSI_SMODE_LBCRR_SHIFT;
++}
++
++/* Encode slave ID */
++static inline uint32_t fsi_smode_sid(int x)
++{
++	return (x & FSI_SMODE_SID_MASK) << FSI_SMODE_SID_SHIFT;
++}
++
++static const uint32_t fsi_slave_smode(int id)
++{
++	return FSI_SMODE_WSC | FSI_SMODE_ECRC
++		| fsi_smode_sid(id)
++		| fsi_smode_echodly(0xf) | fsi_smode_senddly(0xf)
++		| fsi_smode_lbcrr(0x8);
++}
++
++static int fsi_slave_set_smode(struct fsi_master *master, int link, int id)
++{
++	uint32_t smode;
++
++	/* set our smode register with the slave ID field to 0; this enables
++	 * extended slave addressing
++	 */
++	smode = fsi_slave_smode(id);
++	smode = cpu_to_be32(smode);
++
++	return fsi_master_write(master, link, id, FSI_SLAVE_BASE + FSI_SMODE,
++			&smode, sizeof(smode));
++}
++
+ static void fsi_slave_release(struct device *dev)
  {
- 	int rc;
+ 	struct fsi_slave *slave = to_fsi_slave(dev);
+@@ -155,6 +222,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	dev_info(&master->dev, "fsi: found chip %08x at %02x:%02x:%02x\n",
+ 			chip_id, master->idx, link, id);
  
-+	trace_fsi_master_write(master, link, slave_id, addr, size, val);
++	rc = fsi_slave_set_smode(master, link, id);
++	if (rc) {
++		dev_warn(&master->dev,
++				"can't set smode on slave:%02x:%02x %d\n",
++				link, id, rc);
++		return -ENODEV;
++	}
 +
- 	rc = fsi_check_access(addr, size);
--	if (rc)
--		return rc;
-+	if (!rc)
-+		rc = master->write(master, link, slave_id, addr, val, size);
- 
--	return master->write(master, link, slave_id, addr, val, size);
-+	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
-+			true, val, rc);
-+
-+	return rc;
- }
- 
- static int fsi_master_link_enable(struct fsi_master *master, int link)
-@@ -573,6 +586,8 @@ static int fsi_master_link_enable(struct fsi_master *master, int link)
-  */
- static int fsi_master_break(struct fsi_master *master, int link)
- {
-+	trace_fsi_master_break(master, link);
-+
- 	if (master->send_break)
- 		return master->send_break(master, link);
- 
-diff --git a/include/trace/events/fsi.h b/include/trace/events/fsi.h
-new file mode 100644
-index 0000000..ac74a30
---- /dev/null
-+++ b/include/trace/events/fsi.h
-@@ -0,0 +1,127 @@
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM fsi
-+
-+#if !defined(_TRACE_FSI_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_FSI_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(fsi_master_read,
-+	TP_PROTO(const struct fsi_master *master, int link, int id,
-+			uint32_t addr, size_t size),
-+	TP_ARGS(master, link, id, addr, size),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+		__field(int,	id)
-+		__field(__u32,	addr)
-+		__field(size_t,	size)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+		__entry->id = id;
-+		__entry->addr = addr;
-+		__entry->size = size;
-+	),
-+	TP_printk("fsi%d:%02d:%02d %08x[%zd]",
-+		__entry->master_idx,
-+		__entry->link,
-+		__entry->id,
-+		__entry->addr,
-+		__entry->size
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_write,
-+	TP_PROTO(const struct fsi_master *master, int link, int id,
-+			uint32_t addr, size_t size, const void *data),
-+	TP_ARGS(master, link, id, addr, size, data),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+		__field(int,	id)
-+		__field(__u32,	addr)
-+		__field(size_t,	size)
-+		__field(__u32,	data)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+		__entry->id = id;
-+		__entry->addr = addr;
-+		__entry->size = size;
-+		__entry->data = 0;
-+		memcpy(&__entry->data, data, size);
-+	),
-+	TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
-+		__entry->master_idx,
-+		__entry->link,
-+		__entry->id,
-+		__entry->addr,
-+		__entry->size,
-+		__entry->size, &__entry->data
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_rw_result,
-+	TP_PROTO(const struct fsi_master *master, int link, int id,
-+			uint32_t addr, size_t size,
-+			bool write, const void *data, int ret),
-+	TP_ARGS(master, link, id, addr, size, write, data, ret),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+		__field(int,	id)
-+		__field(__u32,	addr)
-+		__field(size_t,	size)
-+		__field(bool,	write)
-+		__field(__u32,	data)
-+		__field(int,	ret)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+		__entry->id = id;
-+		__entry->addr = addr;
-+		__entry->size = size;
-+		__entry->write = write;
-+		__entry->data = 0;
-+		__entry->ret = ret;
-+		if (__entry->write || !__entry->ret)
-+			memcpy(&__entry->data, data, size);
-+	),
-+	TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
-+		__entry->master_idx,
-+		__entry->link,
-+		__entry->id,
-+		__entry->addr,
-+		__entry->size,
-+		__entry->write ? "<=" : "=>",
-+		__entry->size, &__entry->data,
-+		__entry->ret
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_break,
-+	TP_PROTO(const struct fsi_master *master, int link),
-+	TP_ARGS(master, link),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+	),
-+	TP_printk("fsi%d:%d",
-+		__entry->master_idx,
-+		__entry->link
-+	)
-+);
-+
-+
-+#endif /* _TRACE_FSI_H */
-+
-+#include <trace/define_trace.h>
+ 	/* We can communicate with a slave; create the slave device and
+ 	 * register.
+ 	 */
 -- 
 1.8.2.2
 
