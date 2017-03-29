@@ -1,102 +1,43 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v3 0/3] mtd: nand: Rework/cleanup the Atmel NAND driver
-Date: Wed, 29 Mar 2017 22:05:22 +0200
-Message-ID: <20170329220522.5398179a@bbrezillon>
-References: <1489651362-17077-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v6 2/5] irqchip/aspeed-i2c-ic: Add I2C IRQ controller for Aspeed
+Date: Wed, 29 Mar 2017 13:16:08 -0700
+Message-ID: <CAFd5g4435JY72nk7xHa4KohvaGqK2UYOB4XLD3EajGCbgEzPFQ@mail.gmail.com>
+References: <20170328051226.21677-1-brendanhiggins@google.com>
+ <20170328051226.21677-3-brendanhiggins@google.com> <CACPK8XdYNi2mna=aBbYvMroujLOPbVkPdU-DeYGrevjRBjHodQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489651362-17077-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>, Josh Wu <rainyfeeling@outlook.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Marek Vasut <marek.vasut@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACPK8XdYNi2mna=aBbYvMroujLOPbVkPdU-DeYGrevjRBjHodQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 16 Mar 2017 09:02:39 +0100
-Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> Nit: Make this aspeed-i2c-domain to make this consistent with the
+> other Aspeed drivers in the kernel tree.
+>
+> Could this irq code be embedded in the i2c driver? We took a similar
+> approach for the Aspeed GPIO driver, which has a similar IRQ structure
+> of one hardware IRQ that tells the driver to check status registers
+> for the precise irq source. The upside being all of the i2c code is in
+> the same place in the kernel tree.
 
-> This is a complete rewrite of the driver whose main purpose is to
-> support the new DT representation where the NAND controller node is now
-> really visible in the DT and appears under the EBI bus. With this new
-> representation, we can add other devices under the EBI bus without
-> risking pinmuxing conflicts (the NAND controller is under the EBI
-> bus logic and as such, share some of its pins with other devices
-> connected on this bus).
-> 
-> Even though the goal of this rework was not necessarily to add new
-> features, the new driver has been designed with this in mind. With a
-> clearer separation between the different blocks and different IP
-> revisions, adding new functionalities should be easier (we already
-> have plans to support SMC timing configuration so that we no longer
-> have to rely on the configuration done by the bootloader/bootstrap).
-> 
-> Also note that we no longer have a custom ->cmdfunc() implementation,
-> which means we can now benefit from new features added in the core
-> implementation for free (support for new NAND operations for example).
-> 
-> The last thing that we gain with this rework is support for multi-chips
-> and multi-dies chips, thanks to the clean NAND controller <-> NAND
-> devices representation.
-> 
-> This new driver has been tested on several platforms (at91sam9261,
-> at91sam9g45, at91sam9x5, sama5d3 and sama5d4) to make sure it did not
-> introduce regressions, and it's worth mentioning that old bindings are
-> still supported (which partly explain the positive diffstat).
+In the previous version of the patch, this code was embedded in the
+I2C driver as the "struct aspeed_i2c_controller;" I really did not
+change anything about it other than rename some stuff and change the
+init method to match what irqchip code wants. I pulled it out into a
+separate driver because I was asked to by Vladimir; nevertheless, it
+does turn the I2C driver into a normal platforms driver, which is
+nice. Another benefit: if we put our dummy irqchip code in with the
+other irqchips, it makes it easier for the irqchip people to recognize
+when we are reusing the same patterns; for example, I would not at all
+be surprised if there are other dummy irqchips which have the same
+exact map(...) operation (I looked and did not see anything), but it
+is quite possibly something that other people want to do. If we put
+this stuff in drivers/irqchip, it is more likely that the irqchip
+people would recognize this as a common use case. I do not think
+either of these reasons I provided are particularly compelling, but I
+do not think the reasons to move it out are particularly compelling
+either (unless we decide we do not want make our own irq_domain).
 
-Applied the whole series.
-
-> 
-> Regards,
-> 
-> Boris
-> 
-> Changes since v2:
-> - add error messages when the NFC reports an error
-> - drop AVR32 compat code
-> - add acks
-> - minor coding style fixes
-> 
-> Changes since v1:
-> - change function/structure prefixes (asked by Nicolas)
-> - drop applied patches
-> - use new GPIO helpers
-> - set ->chip_delay to 40 as done in the old driver (reported by Nicolas)
-> - rework read_page to improve perfs
-> - add a better commit message to patch 2
-> 
-> Boris Brezillon (3):
->   mtd: nand: Cleanup/rework the atmel_nand driver
->   mtd: nand: atmel: Document the new DT bindings
->   mtd: nand: Remove unused chip->write_page() hook
-> 
->  .../devicetree/bindings/mtd/atmel-nand.txt         |  107 +-
->  MAINTAINERS                                        |    2 +-
->  drivers/mtd/nand/Kconfig                           |    6 +-
->  drivers/mtd/nand/Makefile                          |    2 +-
->  drivers/mtd/nand/atmel/Makefile                    |    4 +
->  drivers/mtd/nand/atmel/nand-controller.c           | 2198 +++++++++++++++++
->  drivers/mtd/nand/atmel/pmecc.c                     | 1020 ++++++++
->  drivers/mtd/nand/atmel/pmecc.h                     |   73 +
->  drivers/mtd/nand/atmel_nand.c                      | 2479 --------------------
->  drivers/mtd/nand/atmel_nand_ecc.h                  |  163 --
->  drivers/mtd/nand/atmel_nand_nfc.h                  |  103 -
->  drivers/mtd/nand/nand_base.c                       |   12 +-
->  include/linux/mtd/nand.h                           |    4 -
->  13 files changed, 3411 insertions(+), 2762 deletions(-)
->  create mode 100644 drivers/mtd/nand/atmel/Makefile
->  create mode 100644 drivers/mtd/nand/atmel/nand-controller.c
->  create mode 100644 drivers/mtd/nand/atmel/pmecc.c
->  create mode 100644 drivers/mtd/nand/atmel/pmecc.h
->  delete mode 100644 drivers/mtd/nand/atmel_nand.c
->  delete mode 100644 drivers/mtd/nand/atmel_nand_ecc.h
->  delete mode 100644 drivers/mtd/nand/atmel_nand_nfc.h
-> 
+Cheers
