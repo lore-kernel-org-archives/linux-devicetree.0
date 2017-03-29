@@ -1,57 +1,68 @@
-From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Subject: Re: [PATCH 0/2] mtd: spi-nor: add stm32 qspi driver
-Date: Wed, 29 Mar 2017 18:51:05 +0200
-Message-ID: <5224f3cd-a128-9e72-c0c8-62a137ceeb79@wedev4u.fr>
-References: <1490619296-8168-1-git-send-email-ludovic.Barre@st.com>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 4/7] ARM: dts: r7s72100: add RTC_X clock inputs
+ to device tree
+Date: Wed, 29 Mar 2017 10:30:32 -0700
+Message-ID: <20170329173035.67477-5-chris.brandt@renesas.com>
+References: <20170329173035.67477-1-chris.brandt@renesas.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490619296-8168-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDXOFUXT2UGBBYW657DAKGQEKWE7BGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170329173035.67477-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ludovic,
+Add the RTC clocks to device tree. The frequencies must be fixed values
+according to the hardware manual.
 
-Le 27/03/2017 à 14:54, Ludovic Barre a écrit :
-> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-> 
-> This patch set adds a SPI-NOR driver for stm32 QSPI controller.
-> It is a specialized SPI interface for serial Flash devices.
-> It supports 1 or 2 Flash device with single, dual and quad SPI Flash memories.
-> 
-> It can operate in any of the following modes:
-> -indirect mode: all the operations are performed using the quadspi
->  registers
-> -read memory-mapped mode: the external Flash memory is mapped to the
->  microcontroller address space and is seen by the system as if it was
->  an internal memory
-> 
-> Ludovic Barre (2):
->   dt-bindings: Document the STM32 QSPI bindings
->   mtd: spi-nor: add driver for STM32 quad spi flash controller
-> 
->  .../devicetree/bindings/mtd/stm32-quadspi.txt      |  45 ++
->  drivers/mtd/spi-nor/Kconfig                        |   7 +
->  drivers/mtd/spi-nor/Makefile                       |   1 +
->  drivers/mtd/spi-nor/stm32-quadspi.c                | 679 +++++++++++++++++++++
->  4 files changed, 732 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
->  create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
-> 
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r7s72100.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Just a small word to warn you that I'm likely to ask you to rebase this
-series onto the patch "mtd: spi-nor: introduce more SPI protocols and
-the Dual Transfer Mode". Indeed, I need to synchronize with Marek first
-but I plan to merge this patch within few days.
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index 6a1448be4e10..632a6a481be8 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -51,6 +51,20 @@
+ 			clock-frequency = <0>;
+ 		};
+ 
++		rtc_x1_clk: rtc_x1 {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			/* If clk present, value must be set by board to 32678 */
++			clock-frequency = <0>;
++		};
++
++		rtc_x3_clk: rtc_x3 {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			/* If clk present, value must be set by board to 4000000 */
++			clock-frequency = <0>;
++		};
++
+ 		/* Fixed factor clocks */
+ 		b_clk: b {
+ 			#clock-cells = <0>;
+-- 
+2.11.0
 
 
-Best regards,
-
-Cyrille
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
