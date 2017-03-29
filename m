@@ -1,7 +1,7 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 4/5] ARM: dts: imx7-colibri: remove 1.8V fixed regulator
-Date: Wed, 29 Mar 2017 16:21:12 -0700
-Message-ID: <20170329232113.19078-4-stefan@agner.ch>
+Subject: [PATCH 2/5] ARM: dts: imx7-colibri: fix PMIC voltages
+Date: Wed, 29 Mar 2017 16:21:10 -0700
+Message-ID: <20170329232113.19078-2-stefan@agner.ch>
 References: <20170329232113.19078-1-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170329232113.19078-1-stefan@agner.ch>
@@ -10,45 +10,94 @@ To: shawnguo@kernel.org, kernel@pengutronix.de
 Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-The ADC is directly supplied by the PMIC 1.8V rail, remove the
-superfluous fixed regulator.
+Fix wrong voltage of PWR_EN_+V3.3 rail. The error had no noticeable
+effect since no consumer explicitly requested a specific voltage.
+Also use round voltages as it is common in other device trees.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index cbcab937b905..2d87489f9105 100644
+index a171545478be..47eab920666f 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -60,13 +60,6 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
+@@ -151,29 +151,29 @@
  
--	reg_vref_1v8: regulator-vref-1v8 {
--		compatible = "regulator-fixed";
--		regulator-name = "vref-1v8";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--	};
--
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "imx7-sgtl5000";
-@@ -85,11 +78,11 @@
- };
+ 		regulators {
+ 			reg_DCDC1: DCDC1 {  /* V1.0_SOC */
+-				regulator-min-microvolt =  <975000>;
+-				regulator-max-microvolt = <1125000>;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1100000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
  
- &adc1 {
--	vref-supply = <&reg_vref_1v8>;
-+	vref-supply = <&reg_DCDC3>;
- };
+ 			reg_DCDC2: DCDC2 { /* V1.1_ARM */
+-				regulator-min-microvolt =  <975000>;
+-				regulator-max-microvolt = <1125000>;
++				regulator-min-microvolt = <975000>;
++				regulator-max-microvolt = <1100000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
  
- &adc2 {
--	vref-supply = <&reg_vref_1v8>;
-+	vref-supply = <&reg_DCDC3>;
- };
+ 			reg_DCDC3: DCDC3 { /* V1.8 */
+-				regulator-min-microvolt = <1775000>;
+-				regulator-max-microvolt = <1825000>;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
  
- &cpu0 {
+ 			reg_DCDC4: DCDC4 { /* V1.35_DRAM */
+-				regulator-min-microvolt = <1325000>;
+-				regulator-max-microvolt = <1375000>;
++				regulator-min-microvolt = <1350000>;
++				regulator-max-microvolt = <1350000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+@@ -185,29 +185,29 @@
+ 			};
+ 
+ 			reg_LDO2: LDO2 { /* +V1.8_SD */
+-				regulator-min-microvolt = <1775000>;
+-				regulator-max-microvolt = <3325000>;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+ 			reg_LDO3: LDO3 { /* PWR_EN_+V3.3_LPSR */
+-				regulator-min-microvolt = <3275000>;
+-				regulator-max-microvolt = <3325000>;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+ 			reg_LDO4: LDO4 { /* V1.8_LPSR */
+-				regulator-min-microvolt = <1775000>;
+-				regulator-max-microvolt = <1825000>;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+ 			reg_LDO5: LDO5 { /* PWR_EN_+V3.3 */
+-				regulator-min-microvolt = <1775000>;
+-				regulator-max-microvolt = <1825000>;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
 -- 
 2.12.1
