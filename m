@@ -1,92 +1,63 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v3 11/11] [DO NOT MERGE] ARM: dts: sun8i: enable
- LCD panel of Lichee Pi Zero
-Date: Thu, 30 Mar 2017 03:46:13 +0800
-Message-ID: <20170329194613.55548-12-icenowy@aosc.io>
-References: <20170329194613.55548-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] mailbox: Add iProc mailbox controller driver
+Date: Wed, 29 Mar 2017 12:28:59 -0700
+Message-ID: <414f9d26-c62f-d1dd-69b4-717d42be38ba@broadcom.com>
+References: <1485463082-27067-1-git-send-email-jonathan.richardson@broadcom.com>
+ <1485463082-27067-3-git-send-email-jonathan.richardson@broadcom.com>
+ <CABb+yY0rmAFutskhVkQ926QfsvtJ-WnXrQc=+PQNg=7NZEXC+Q@mail.gmail.com>
+ <09177a6f-0612-1e17-a12e-0b1969f5b2e1@broadcom.com>
+ <CABb+yY1o7QTYLm3HGWNeFDPnfpL7AAJ6+R91Stn-gNvO7afxoA@mail.gmail.com>
+ <22d07bb1-9e93-4ae5-7215-923bde9ebfe5@broadcom.com>
+ <CABb+yY1kbFOKJPO95SRw995zt=fCoA+SkXgECOj774i_hJUCNg@mail.gmail.com>
+ <0e8ac72a-6b2f-171d-41e7-7a6cefc4c7c4@broadcom.com>
+ <CABb+yY31oW09-fq_t4V6vatMe50Ed2Mi00kT4bOJv2=qFBT+QA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBY476DDAKGQEYYC3KWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170329194613.55548-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY31oW09-fq_t4V6vatMe50Ed2Mi00kT4bOJv2=qFBT+QA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-A 480x272 QiaoDian QD43003C0-40-7LED panel is available from Lichee Pi.
 
-This commit connects this panel to Lichee Pi Zero.
+On 17-03-28 09:36 PM, Jassi Brar wrote:
+> On Tue, Mar 28, 2017 at 11:00 PM, Jonathan Richardson
+> <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> On 17-03-15 10:30 AM, Jassi Brar wrote:
+>>> The right way to do is have a 'server/owner' client that accepts
+>>> requests from various clients and serially queue them to mailbox. That
+>>> way you can keep the controller driver free from quirks (like max wait
+>>> time of 30us) of your present platform.
+>> Do you mean 1 mailbox client with one mailbox channel that all the mbox client drivers share?
+>> I thought this would work when I suggested it previously but the client callbacks are necessary
+>> in all txdone modes. Client drivers that send the messages need the callbacks
+>>
+> That's a legit requirement.
+>
+>> and this is only possible with multiple mbox clients.
+>>
+> That is incorrect.
+> It is trivial to support callbacks to end clients from your common
+> code... just ask for callback along with the message to be submitted
+> to mailbox api.
 
-Lichee Pi also provides a 800x480 panel without accurate model number,
-so do not merge this patch. It will finally come as device tree overlay.
+Ok, if we can provide our own callbacks in the message instead of the client then that's perfectly fine.
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 36 +++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+>
+>> And a channel can only have 1 mbox client. Clients in multiple drivers need the callbacks to either know when to start polling, or be notified when the transaction is complete. It would be nice if multiple clients could use the same channel.
+>>
+> We had to choose from shared vs exclusive access to channels... latter
+> was chosen because there are ways to still support former.
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-index 387fc2aa546d..7ae72bf63cd0 100644
---- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-@@ -75,6 +75,28 @@
- 			gpios = <&pio 6 2 GPIO_ACTIVE_LOW>; /* PG2 */
- 		};
- 	};
-+
-+	panel: panel {
-+		compatible = "qiaodian,qd43003c0-40", "simple-panel";
-+		enable-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* Should be backlight */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_lcd>;
-+			};
-+		};
-+	};
-+};
-+
-+&de {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -86,6 +108,20 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+	status = "okay";
-+
-+};
-+
-+&tcon0_out {
-+	tcon0_out_lcd: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-0 = <&uart0_pins_a>;
- 	pinctrl-names = "default";
--- 
-2.12.0
+This makes more sense now. Thanks for clarifying.
+
+Jon
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
