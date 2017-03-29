@@ -1,58 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v2 13/53] mtd: nand: denali_dt: enable
- HW_ECC_FIXUP for Altera SOCFPGA variant
-Date: Tue, 28 Mar 2017 21:00:58 -0500
-Message-ID: <20170329020058.twiqhpghloxh32pj@rob-hp-laptop>
-References: <1490213273-8571-1-git-send-email-yamada.masahiro@socionext.com>
- <1490213273-8571-14-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] input: matrix_keypad: add option to drive inactive
+ columns
+Date: Tue, 28 Mar 2017 21:02:29 -0500
+Message-ID: <20170329020229.dm3y57dlzjwilifm@rob-hp-laptop>
+References: <20170322201650.9072-1-drivshin@awxrd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1490213273-8571-14-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: laurent.monat@idquantique.com, Boris Brezillon <boris.brezillon@free-electrons.com>, thorsten.christiansson@idquantique.com, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Enrico Jorns <ejo@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Graham Moore <grmoore@opensource.altera.com>
+In-Reply-To: <20170322201650.9072-1-drivshin-WHIoityCHfoAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Rivshin <drivshin-WHIoityCHfoAvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 05:07:12AM +0900, Masahiro Yamada wrote:
-> There are various customizable parameters, so several variants for
-> this IP.  A generic compatible like "denali,denali-nand-dt" is
-> useless.  Moreover, there are multiple things wrong with this string.
-> (Refer to Rob's comment [1])
+On Wed, Mar 22, 2017 at 04:16:50PM -0400, David Rivshin wrote:
+> From: David Rivshin <DRivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
 > 
-> The denali_dt.c was split out and this compatible was added by Altera
-> for the SOCFPGA port.  So, replace it with a more specific string.
+> The gpio-matrix-keypad driver normally sets inactive columns as inputs
+> while scanning. This does not work for all hardware, which may require
+> the inactive columns to be actively driven in order to overcome any
+> pull-ups/downs on the columns.
 > 
-> The Denali IP on SOCFPGA incorporates the hardware ECC fixup feature.
-> So, this capability should be associated with the compatible string.
-> 
-> [1] https://lkml.org/lkml/2016/12/1/450
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
 > ---
-> 
-> Changes in v2:
->   - Add caps flag to of_device_id data, not hard-code in driver code
->   - Add Altera-specific compatible.
-> 
->  Documentation/devicetree/bindings/mtd/denali-nand.txt |  5 +++--
->  drivers/mtd/nand/denali_dt.c                          | 14 ++++++++++----
->  2 files changed, 13 insertions(+), 6 deletions(-)
+>  .../devicetree/bindings/input/gpio-matrix-keypad.txt        |  2 ++
+>  drivers/input/keyboard/matrix_keypad.c                      | 13 +++++++++----
+>  include/linux/input/matrix_keypad.h                         |  3 +++
+>  3 files changed, 14 insertions(+), 4 deletions(-)
 
-You should also mention there are no users (in-tree) of the old string.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
