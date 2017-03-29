@@ -1,88 +1,58 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
-Date: Wed, 29 Mar 2017 18:37:12 +0800
-Message-ID: <20170329103712.GA22480@leoy-linaro>
-References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
- <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
- <31be033f-514e-e48a-3ba2-a5c5cd477548@arm.com>
- <20170329030735.GA23889@leoy-linaro>
- <5584203e-cb19-a5d2-45b1-3e78d3482c55@arm.com>
- <20170329102740.GA20804@leoy-linaro>
- <89b6c6c7-0da0-6891-312a-c9221851c20a@arm.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v3 0/5] Add support for the R_CCU on Allwinner
+ H3/A64 SoCs
+Date: Wed, 29 Mar 2017 18:42:41 +0800
+Message-ID: <20170329104246.34204-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <89b6c6c7-0da0-6891-312a-c9221851c20a-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBTM753DAKGQEO6Q7ZZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 11:31:03AM +0100, Suzuki K Poulose wrote:
-> On 29/03/17 11:27, Leo Yan wrote:
-> >On Wed, Mar 29, 2017 at 10:07:07AM +0100, Suzuki K Poulose wrote:
-> >
-> >[...]
-> >
-> >>>>>+	if (mode == EDDEVID_IMPL_NONE) {
-> >>>>>+		drvdata->edpcsr_present  = false;
-> >>>>>+		drvdata->edcidsr_present = false;
-> >>>>>+		drvdata->edvidsr_present = false;
-> >>>>>+	} else if (mode == EDDEVID_IMPL_EDPCSR) {
-> >>>>>+		drvdata->edpcsr_present  = true;
-> >>>>>+		drvdata->edcidsr_present = false;
-> >>>>>+		drvdata->edvidsr_present = false;
-> >>>>>+	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
-> >>>>>+		if (!IS_ENABLED(CONFIG_64BIT) &&
-> >>>>>+			(pcsr_offset == EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32))
-> >>>>>+			drvdata->edpcsr_present = false;
-> >>>>>+		else
-> >>>>>+			drvdata->edpcsr_present = true;
-> >>>>
-> >>>>Sorry, I forgot why we do this check only in this mode. Shouldn't this be
-> >>>>common to all modes (of course which implies PCSR is present) ?
-> >>>
-> >>>No. PCSROffset is defined differently in ARMv7 and ARMv8; So finally we
-> >>>simplize PCSROffset value :
-> >>>0000 - Sample offset applies based on the instruction state (indicated by PCSR[0])
-> >>>0001 - No offset applies.
-> >>>0010 - No offset applies, but do not use in AArch32 mode!
-> >>>
-> >>>So we need handle the corner case is when CPU runs AArch32 mode and
-> >>>PCSRoffset = 'b0010. Other cases the pcsr should be present.
-> >>
-> >>I understand that reasoning. But my question is, why do we check for PCSROffset
-> >>only when mode == EDDEVID_IMPL_EDPCSR_EDCIDSR and not for say mode == EDDEVID_IMPL_EDPCSR or
-> >>any other mode where PCSR is present.
-> >
-> >Sorry I misunderstood your question.
-> >
-> >I made mistake when I analyzed the possbile combination for mode and
-> >PCSROffset so I thought it's the only case should handle:
-> >{ EDDEVID_IMPL_EDPCSR_EDCIDSR, EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
-> >
-> >Below three combinations are possible to exist; so you are right, I
-> >should move this out for the checking:
-> >{ EDDEVID_IMPL_NONE,           EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
-> 
-> That need not be covered, as IMPL_NONE says PCSR is not implemented hence you
-> don't worry about anything as the functionality is missing. This should rather be:
-> EDDEVID_IMPL_EDPCSR, where only PCSR is implemented.
+Allwinner SoCs after sun6i-a31 nearly all have a R_CCU in PRCM part.
+(V3s and R40 do not have it, as they have even no PRCM)
 
-I think below combination doesn't really exist:
-{ EDDEVID_IMPL_EDPCSR, EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 };
+This patch adds support for the ones on H3/A64.
 
-EDDEVID_IMPL_EDPCSR is only defined in ARMv7 ARM, and
-EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 is only defined in ARMv8 ARM.
+Some clock/reset values are reserved for easier extending the support to
+A31/A23, but for this I think some changes to the PRCM MFD should be made,
+see [1] (Although this is only a sketch).
 
-> My switch...case suggestion makes it easier to do all this checking.
+The r_pio device node is also added for A64, as the driver is already
+merged, and its depends (r_ccu) is now met.
 
-Agree. Will do this.
+[1] https://github.com/wens/linux/commits/sunxi-ng-prcm
 
-Thanks,
-Leo Yan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Icenowy Zheng (5):
+  dt-bindings: update device tree binding for Allwinner PRCM CCUs
+  clk: sunxi-ng: add support for PRCM CCUs
+  arm64: allwinner: a64: add r_ccu node
+  ARM: sunxi: h3/h5: switch apb0-related clocks to r_ccu
+  arm64: allwinner: a64: add R_PIO pinctrl node
+
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |  17 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  47 ++---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  31 +++
+ drivers/clk/sunxi-ng/Kconfig                       |   6 +
+ drivers/clk/sunxi-ng/Makefile                      |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c                 | 211 +++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-r.h                 |  27 +++
+ include/dt-bindings/clock/sun8i-r-ccu.h            |  59 ++++++
+ include/dt-bindings/reset/sun8i-r-ccu.h            |  53 ++++++
+ 9 files changed, 420 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.h
+ create mode 100644 include/dt-bindings/clock/sun8i-r-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun8i-r-ccu.h
+
+-- 
+2.12.0
