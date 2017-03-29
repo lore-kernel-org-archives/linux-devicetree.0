@@ -1,37 +1,65 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add IMR-L[S]X3 clocks
-Date: Wed, 29 Mar 2017 10:04:17 +0200
-Message-ID: <20170329080417.GD6512@verge.net.au>
-References: <20170321200443.078095898@cogentembedded.com>
- <34050114-752a-08b6-700e-697e78102af7@cogentembedded.com>
- <a802018c-9943-22e5-0f78-28b8ab9689d9@cogentembedded.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv4] mfd: cpcap: implement irq sense helper
+Date: Wed, 29 Mar 2017 09:04:23 +0100
+Message-ID: <20170329080423.ijbl4seczla2s4nm@dell>
+References: <20170323142337.4c4d6lnhqtugbb2r@dell>
+ <20170324084240.23251-1-sre@kernel.org>
+ <20170328102716.gz7agm7kx3gz56jt@dell>
+ <20170328145415.td4xeqxedem5yjen@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a802018c-9943-22e5-0f78-28b8ab9689d9@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170328145415.td4xeqxedem5yjen@earth>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 21, 2017 at 11:14:43PM +0300, Sergei Shtylyov wrote:
-> On 03/21/2017 11:08 PM, Sergei Shtylyov wrote:
-> 
-> >Still not cover letter but I think it's better now, so I won't retry...
-> >The patches are against Simon Horman's 'renesas.git' repo,
-> >'renesas-devel-20170321-v4.11-rc3' tag.
-> 
->    The patches depend on the IMR driver patches adding the IMR-L[S]X3
-> support for the "compatible" values.
+On Tue, 28 Mar 2017, Sebastian Reichel wrote:
 
-I have marked these patches as deferred accordingly.
+> Hi Lee,
+> 
+> On Tue, Mar 28, 2017 at 11:27:16AM +0100, Lee Jones wrote:
+> > > +int cpcap_sense_virq(struct regmap *regmap, int virq)
+> > > +{
+> > > +	struct regmap_irq_chip_data *d = irq_get_chip_data(virq);
+> > > +	int base = regmap_irq_chip_get_base(d);
+> > 
+> > What base is this?
+> 
+> This function takes an Linux irq number. That number is a virtual
+> irq number, which has nothing to do with the hardware. For example
+> a platform could look like this:
+> 
+> linux irq   device          base   device irq
+> ---------------------------------------------
+> 0-63        SoC             0      0-63
+> 64-127      SoC-GPIO        64     0-63
+> 128-191     CPCAP           128    0-63
+> 
+> For the above example the function would map 128-191 to 0-63 as
+> used by the device.
+
+In which case may I suggest that you rename the variable, since 'base'
+is commonly used in the kernel to mean base of a particular IP's
+memory block.
+
+> > Could it be used to avoid some calculations in cpcap_sense_irq()?
+> 
+> No.
+> 
+> > > +	return cpcap_sense_irq(regmap, virq - base);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(cpcap_sense_virq);
+> 
+> -- Sebastian
+
+
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
