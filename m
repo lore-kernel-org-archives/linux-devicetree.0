@@ -1,93 +1,60 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
-Date: Wed, 29 Mar 2017 16:50:43 +0100
-Message-ID: <c167e6d7-e02d-3dfb-7194-0754eeaf0863@arm.com>
-References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
- <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
- <31be033f-514e-e48a-3ba2-a5c5cd477548@arm.com>
- <20170329030735.GA23889@leoy-linaro>
- <5584203e-cb19-a5d2-45b1-3e78d3482c55@arm.com>
- <20170329102740.GA20804@leoy-linaro>
- <89b6c6c7-0da0-6891-312a-c9221851c20a@arm.com>
- <20170329103712.GA22480@leoy-linaro>
+From: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] PCI: Add tango MSI controller support
+Date: Wed, 29 Mar 2017 17:50:52 +0200
+Message-ID: <e8076081-545c-4c20-2d80-b66e9d3c8d9a@free.fr>
+References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
+ <f37d7b55-e065-72aa-e690-13dd4718a9ce@sigmadesigns.com>
+ <a12a79fd-94f9-5aa4-5aa0-5dccb6c5d615@arm.com>
+ <0541e62a-c87a-2e69-a7d1-28f886ad04c2@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170329103712.GA22480@leoy-linaro>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, David Brown <david.brown@linaro.org>, linux-clk@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Wei Xu <xuwei5@hisilicon.com>, Andy Gross <andy.gross@linaro.org>, mike.leach@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, sudeep.holla@arm.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0541e62a-c87a-2e69-a7d1-28f886ad04c2-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, David Laight <david.laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thibaud Cornic <thibaud_cornic-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Phuong Nguyen <phuong_nguyen-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/03/17 11:37, Leo Yan wrote:
-> On Wed, Mar 29, 2017 at 11:31:03AM +0100, Suzuki K Poulose wrote:
->> On 29/03/17 11:27, Leo Yan wrote:
->>> On Wed, Mar 29, 2017 at 10:07:07AM +0100, Suzuki K Poulose wrote:
->>>
->>> [...]
->>>
->>>>>>> +	if (mode == EDDEVID_IMPL_NONE) {
->>>>>>> +		drvdata->edpcsr_present  = false;
->>>>>>> +		drvdata->edcidsr_present = false;
->>>>>>> +		drvdata->edvidsr_present = false;
->>>>>>> +	} else if (mode == EDDEVID_IMPL_EDPCSR) {
->>>>>>> +		drvdata->edpcsr_present  = true;
->>>>>>> +		drvdata->edcidsr_present = false;
->>>>>>> +		drvdata->edvidsr_present = false;
->>>>>>> +	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
->>>>>>> +		if (!IS_ENABLED(CONFIG_64BIT) &&
->>>>>>> +			(pcsr_offset == EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32))
->>>>>>> +			drvdata->edpcsr_present = false;
->>>>>>> +		else
->>>>>>> +			drvdata->edpcsr_present = true;
->>>>>>
->>>>>> Sorry, I forgot why we do this check only in this mode. Shouldn't this be
->>>>>> common to all modes (of course which implies PCSR is present) ?
->>>>>
->>>>> No. PCSROffset is defined differently in ARMv7 and ARMv8; So finally we
->>>>> simplize PCSROffset value :
->>>>> 0000 - Sample offset applies based on the instruction state (indicated by PCSR[0])
->>>>> 0001 - No offset applies.
->>>>> 0010 - No offset applies, but do not use in AArch32 mode!
->>>>>
->>>>> So we need handle the corner case is when CPU runs AArch32 mode and
->>>>> PCSRoffset = 'b0010. Other cases the pcsr should be present.
->>>>
->>>> I understand that reasoning. But my question is, why do we check for PCSROffset
->>>> only when mode == EDDEVID_IMPL_EDPCSR_EDCIDSR and not for say mode == EDDEVID_IMPL_EDPCSR or
->>>> any other mode where PCSR is present.
->>>
->>> Sorry I misunderstood your question.
->>>
->>> I made mistake when I analyzed the possbile combination for mode and
->>> PCSROffset so I thought it's the only case should handle:
->>> { EDDEVID_IMPL_EDPCSR_EDCIDSR, EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
->>>
->>> Below three combinations are possible to exist; so you are right, I
->>> should move this out for the checking:
->>> { EDDEVID_IMPL_NONE,           EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
->>
->> That need not be covered, as IMPL_NONE says PCSR is not implemented hence you
->> don't worry about anything as the functionality is missing. This should rather be:
->> EDDEVID_IMPL_EDPCSR, where only PCSR is implemented.
->
-> I think below combination doesn't really exist:
-> { EDDEVID_IMPL_EDPCSR, EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 };
->
-> EDDEVID_IMPL_EDPCSR is only defined in ARMv7 ARM, and
-> EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 is only defined in ARMv8 ARM.
+On 29/03/2017 15:16, Mason wrote:
 
-It is not wrong to check the PCSROffset in all cases where PCSR is available, as if
-we hit PCSR on ARMv7 then PCSROffset shouldn't be DIS_AARCH32. And in fact that
-would make the code a bit more cleaner. Anyways, I am not particular about this.
+> But I don't understand how to get my pcie pointer back in irq_ack
+> or irq_unmask, or the relevant msi. Can you throw me a clue?
 
-Suzuki
+Let's see... the irq_chip call-backs receive an irq_data pointer.
+
+struct irq_data - per irq chip data passed down to chip functions
+struct irq_chip - hardware interrupt chip descriptor
+
+irq_data contains a void *chip_data member.
+Can I use chip_data to stash a struct tango_pcie pointer?
+
+/**
+ *	irq_set_chip_data - set irq chip data for an irq
+ *	@irq:	Interrupt number
+ *	@data:	Pointer to chip specific data
+ *
+ *	Set the hardware irq chip data for an irq
+ */
+int irq_set_chip_data(unsigned int irq, void *data)
+
+But where would I call it? And for which irq?
+
+
+Otherwise, I found by trial-and-error that I can reach pcie through
+
+data->domain->parent->host_data
+
+data->domain == msi_dom
+msi_dom->parent == irq_dom
+irq_dom->host_data == pcie
+
+But data->irq and data->hwirq don't hold the MSI index :-(
+
+I suppose I have to ask for some mapping?
+
+Regards.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
