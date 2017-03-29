@@ -1,47 +1,100 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 8/8] bus: brcmstb_gisb: update to support new revision
-Date: Wed, 29 Mar 2017 12:25:44 +0100
-Message-ID: <20170329112544.GF23442@leverpostej>
+Subject: Re: [PATCH v2 1/8] arm64: mm: Allow installation of memory abort
+ handlers
+Date: Wed, 29 Mar 2017 12:32:51 +0100
+Message-ID: <20170329113250.GG23442@leverpostej>
 References: <20170328213431.10904-1-opendmb@gmail.com>
- <20170328213431.10904-9-opendmb@gmail.com>
+ <20170328213431.10904-2-opendmb@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170328213431.10904-9-opendmb@gmail.com>
+In-Reply-To: <20170328213431.10904-2-opendmb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Berger <opendmb@gmail.com>
-Cc: robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Doug Berger <opendmb@gmail.com>, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: robh+dt@kernel.org, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 02:34:31PM -0700, Doug Berger wrote:
-> The 7278 introduces a new version of this core.  This
-> commit adds support for that revision.
-> 
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> ---
->  Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt |  3 ++-
->  drivers/bus/brcmstb_gisb.c                              | 10 ++++++++++
->  2 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-> index 1eceefb20f01..8a6c3c2e58fe 100644
-> --- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-> +++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-> @@ -3,7 +3,8 @@ Broadcom GISB bus Arbiter controller
->  Required properties:
->  
->  - compatible:
-> -    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for 28nm chips
-> +    "brcm,bcm7278-gisb-arb" for V7 28nm chips
-> +    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for other 28nm chips
->      "brcm,bcm7435-gisb-arb" for newer 40nm chips
->      "brcm,bcm7400-gisb-arb" for older 40nm chips and all 65nm chips
->      "brcm,bcm7038-gisb-arb" for 130nm chips
+Hi,
 
-For the binding:
+On Tue, Mar 28, 2017 at 02:34:24PM -0700, Doug Berger wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> Similarly to what the ARM/Linux kernel provides, add a hook_fault_code()
+> function which allows drivers or other parts of the kernel to install
+> custom memory abort handlers. This is useful when a given SoC's busing
+> does not propagate the exact faulting physical address, but there is a
+> way to read it through e.g: a special arbiter driver.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Personally, I do not think that it makes sense to allow arbitrary code
+to hook such low-level fault handling.
+
+IMO, if it is truly necessary to allow drivers to handle particular
+faults, that should be driven by data associated with the relevant
+mapping (e.g. the VMA), rather than allowing code to hook *all* faults.
+
+>From my PoV, NAK to this interface to take over low-level fault
+handling.
+
+Catalin and Will have the final say here, as the arm64 maintainers.
 
 Thanks,
 Mark.
+
+> ---
+>  arch/arm64/include/asm/system_misc.h |  3 +++
+>  arch/arm64/mm/fault.c                | 15 ++++++++++++++-
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/system_misc.h b/arch/arm64/include/asm/system_misc.h
+> index bc812435bc76..e05f5b8c7c1c 100644
+> --- a/arch/arm64/include/asm/system_misc.h
+> +++ b/arch/arm64/include/asm/system_misc.h
+> @@ -38,6 +38,9 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
+>  void hook_debug_fault_code(int nr, int (*fn)(unsigned long, unsigned int,
+>  					     struct pt_regs *),
+>  			   int sig, int code, const char *name);
+> +void hook_fault_code(int nr, int (*fn)(unsigned long, unsigned int,
+> +				       struct pt_regs *),
+> +		     int sig, int code, const char *name);
+>  
+>  struct mm_struct;
+>  extern void show_pte(struct mm_struct *mm, unsigned long addr);
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index 4bf899fb451b..cdf1260f1005 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -488,7 +488,7 @@ static int do_bad(unsigned long addr, unsigned int esr, struct pt_regs *regs)
+>  	return 1;
+>  }
+>  
+> -static const struct fault_info {
+> +static struct fault_info {
+>  	int	(*fn)(unsigned long addr, unsigned int esr, struct pt_regs *regs);
+>  	int	sig;
+>  	int	code;
+> @@ -560,6 +560,19 @@ static const struct fault_info {
+>  	{ do_bad,		SIGBUS,  0,		"unknown 63"			},
+>  };
+>  
+> +void __init hook_fault_code(int nr,
+> +			    int (*fn)(unsigned long, unsigned int, struct pt_regs *),
+> +			    int sig, int code, const char *name)
+> +{
+> +	BUG_ON(nr < 0 || nr >= ARRAY_SIZE(fault_info));
+> +
+> +	fault_info[nr].fn	= fn;
+> +	fault_info[nr].sig	= sig;
+> +	fault_info[nr].code	= code;
+> +	fault_info[nr].name	= name;
+> +}
+> +
+> +
+>  static const char *fault_name(unsigned int esr)
+>  {
+>  	const struct fault_info *inf = fault_info + (esr & 63);
+> -- 
+> 2.12.0
+> 
