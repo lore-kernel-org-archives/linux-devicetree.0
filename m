@@ -1,7 +1,7 @@
 From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v1 1/8] dt-bindings: Document STM32 DCMI bindings
-Date: Wed, 29 Mar 2017 15:25:19 +0200
-Message-ID: <1490793926-6477-2-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v1 5/8] ARM: dts: stm32: Enable stmpe1600 gpio expandor of STM32F429-EVAL board
+Date: Wed, 29 Mar 2017 15:25:23 +0200
+Message-ID: <1490793926-6477-6-git-send-email-hugues.fruchet@st.com>
 References: <1490793926-6477-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,97 +12,38 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxim
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation of device tree bindings for the STM32 DCMI
-(Digital Camera Memory Interface).
-
 Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- .../devicetree/bindings/media/st,stm32-dcmi.txt    | 77 ++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+ arch/arm/boot/dts/stm32429i-eval.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-new file mode 100644
-index 0000000..f0dc709
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-@@ -0,0 +1,77 @@
-+STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 87733d3..7ffcf07 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -154,6 +154,23 @@
+ 	pinctrl-0 = <&i2c1_pins>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
 +
-+Required properties:
-+- compatible: "st,stm32-dcmi"
-+- reg: physical base address and length of the registers set for the device;
-+- interrupts: should contain IRQ line for the DCMI;
-+- clocks: list of clock specifiers, corresponding to entries in
-+          the clock-names property;
-+- clock-names: must contain "mclk", which is the DCMI peripherial clock.
-+- resets: Reference to a reset controller
-+- reset-names: see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
++	stmpe1600: stmpe1600@42 {
++		compatible = "st,stmpe1600";
++		reg = <0x42>;
++		irq-gpio = <&gpioi 8 0>;
++		irq-trigger = <3>;
++		interrupts = <8 3>;
++		interrupt-parent = <&exti>;
++		interrupt-controller;
++		wakeup-source;
 +
-+DCMI supports a single port node with parallel bus. It should contain one
-+'port' child node with child 'endpoint' node. Please refer to the bindings
-+defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+Device node example
-+-------------------
-+	dcmi: dcmi@50050000 {
-+		compatible = "st,stm32-dcmi";
-+		reg = <0x50050000 0x400>;
-+		interrupts = <78>;
-+		resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
-+		clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
-+		clock-names = "mclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&dcmi_pins>;
-+		dmas = <&dma2 1 1 0x414 0x3>;
-+		dma-names = "tx";
-+		status = "disabled";
-+	};
-+
-+Board setup example
-+-------------------
-+
-+&dcmi {
-+	status = "okay";
-+
-+	port {
-+		dcmi_0: endpoint@0 {
-+			remote-endpoint = <&ov2640_0>;
-+			bus-width = <8>;
-+			hsync-active = <0>;
-+			vsync-active = <0>;
-+			pclk-sample = <1>;
++		stmpegpio: stmpe_gpio {
++			compatible = "st,stmpe-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
 +		};
 +	};
-+};
-+
-+{
-+	[...]
-+	i2c@0 {
-+		ov2640: camera@30 {
-+			compatible = "ovti,ov2640";
-+			reg = <0x30>;
-+			resetb-gpios = <&stmpegpio 2 GPIO_ACTIVE_HIGH>;
-+			pwdn-gpios = <&stmpegpio 0 GPIO_ACTIVE_LOW>;
-+			clocks = <&clk_ext_camera>;
-+			clock-names = "xvclk";
-+			status = "okay";
-+
-+			port {
-+				ov2640_0: endpoint {
-+					remote-endpoint = <&dcmi_0>;
-+				};
-+			};
-+		};
-+	};
-+
-+	clk_ext_camera: clk-ext-camera {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+	};
-+}
+ };
+ 
+ &mac {
 -- 
 1.9.1
