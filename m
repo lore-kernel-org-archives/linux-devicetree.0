@@ -1,90 +1,48 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 1/1] of: Move OF property and graph API from base.c to
- property.c
-Date: Wed, 29 Mar 2017 09:28:26 -0700
-Message-ID: <58DBE0AA.2080403@gmail.com>
-References: <1490353147-11917-1-git-send-email-sakari.ailus@linux.intel.com>
- <58DAF70E.9000305@gmail.com>
- <fb9cdd4e-e837-f925-da2b-9e4d25602e1e@linux.intel.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] Add hardware PTP support.
+Date: Wed, 29 Mar 2017 09:39:14 -0700 (PDT)
+Message-ID: <20170329.093914.152103359543418375.davem@davemloft.net>
+References: <1490796051-28527-1-git-send-email-rafalo@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <fb9cdd4e-e837-f925-da2b-9e4d25602e1e@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org
-Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, ahs3@redhat.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490796051-28527-1-git-send-email-rafalo-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rafalo-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrei.Pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/17 02:14, Sakari Ailus wrote:
-> Hi Frank,
-> 
-> Thank you for the review.
-> 
-> Frank Rowand wrote:
->> Hi Sakari,
->>
->> On 03/24/17 03:59, Sakari Ailus wrote:
->>> base.c contains both core OF functions and increasingly other
->>> functionality such as accessing properties and graphs, including
->>> convenience functions. In the near future this would also include OF
->>> specific implementation of the fwnode property and graph APIs. Prepare for
->>> this by moving the functionality to property.c.
->>
->> For future me, for when I look back and read this commit, please add something
->> to the effect of:
->>
->>   Create driver/of/property.c to contain procedures for accessing and
->>   interpreting device tree properties.  The procedures are moved from
->>   drivers/of/base.c, with no changes other than copying only the
->>   includes required by the moved procedures.
-> 
-> How about this as the commit message combining the two and dropping the last sentence from the original description:
-> 
-> base.c contains both core OF functions and increasingly other
-> functionality such as accessing properties and graphs, including
-> convenience functions. In the near future this would also include OF
-> specific implementation of the fwnode property and graph APIs.
-> 
-> Create driver/of/property.c to contain procedures for accessing and
-> interpreting device tree properties. The procedures are moved from
-> drivers/of/base.c, with no changes other than copying only the
-> includes required by the moved procedures.
+From: Rafal Ozieblo <rafalo-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Date: Wed, 29 Mar 2017 15:00:51 +0100
 
-Sounds good (and same for your below comments).
+> This patch is based on original Harini's patch and Andrei's patch,
+> implemented in aseparate file to ease the review/maintanance
+> and integration with other platforms.
+> 
+> In case that macb is compiled as a module, it has been renamed to
+> cadence-macb.ko to avoid naming confusion in Makefile.
+> 
+> This driver does support GEM-GXL:
+> - Enable HW time stamp
+> - Register ptp clock framework
+> - Initialize PTP related registers
+> - Updated dma buffer descriptor read/write mechanism
+> - HW time stamp on the PTP Ethernet packets are received using the
+>   SO_TIMESTAMPING API. Where timers are obtained from the dma buffer
+>   descriptors
+> - Added tsu_clk to device tree
+> 
+> Note: Patch on net-next, on March 15th.
+> 
+> Signed-off-by: Rafal Ozieblo <rafalo-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 
--Frank
+Your subject should provide a proper subsystem prefix such as
+"cadence: " after "[PATCH] ".
 
-> 
-> ...
-> 
->>> diff --git a/drivers/of/property.c b/drivers/of/property.c
->>> new file mode 100644
->>> index 0000000..afcf00a
->>> --- /dev/null
->>> +++ b/drivers/of/property.c
->>> @@ -0,0 +1,727 @@
->>> +/*
->>> + * drivers/of/property.c - Devicetree properties and graphs.
->>
->>     * drivers/of/property.c - Procedures for accessing and interpreting
->>     * Devicetree properties and graphs.
->>     *
->>     * Initially created by copying procedures from drivers/of/base.c
->>
->> The reference to base.c provides a documentation trail to all of the
->> earlier git commits that created and modified the procedures.
-> 
-> I'll add that.
-> 
->>
->> It would also be useful to say what procedures do and do not belong
->> in this file.  My understanding is that the intent is for
->> drivers/of/property.c and drivers/acpi/property.c to provide the
->> respective functionality that is used by drivers/base/property.c
->> and that drivers also may directly access the procedures in
->> drivers/of/property.c.
-> 
-> I'll add something along those lines. The fwnode op struct and the operations in that will be in this file as well.
-> 
-
+Also, March 15th is nearly half a month ago, you should generate
+patches against the current tree.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
