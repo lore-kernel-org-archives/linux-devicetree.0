@@ -1,72 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Wed, 29 Mar 2017 12:15:05 +0200
-Message-ID: <CACRpkdbT3091MzAQ_hO5Hc9=gQz-eDNCDtEnVG-3G+jJ+eO+Fw@mail.gmail.com>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com>
- <20170323160204.GL30223@w540> <CACRpkdYmitsPvv_1bsb-EKkhcWqaKNsLBfxZgf8cjVvcqCpYXA@mail.gmail.com>
- <b9eaac8a63dced229bb152ba412e8ec1@jmondi.org> <CACRpkdbZS72xkHaM5P-Zw==A_V_BxeszLPmc0_Zy0-RRjvAbNA@mail.gmail.com>
- <CAMuHMdXkN91uBTKhz_bveFxOgcyNe0dAbtDEVfHNKdDWNaY3jQ@mail.gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v6 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Wed, 29 Mar 2017 03:23:25 -0700
+Message-ID: <CAFd5g44LhP98nzVoKKN8J3rvBTnA-tXLFP+ActTBwn8UFqCgWA@mail.gmail.com>
+References: <20170328051226.21677-1-brendanhiggins@google.com>
+ <20170328051226.21677-5-brendanhiggins@google.com> <1490692168.3177.117.camel@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXkN91uBTKhz_bveFxOgcyNe0dAbtDEVfHNKdDWNaY3jQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: jacopo <jacopo@jmondi.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1490692168.3177.117.camel@kernel.crashing.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 9:35 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Me:
-
->> See for example:
->> include/dt-bindings/pinctrl/mt65xx.h
->>
->> And how that is used in:
->> arch/arm/boot/dts/mt2701-pinfunc.h
->> arch/arm/boot/dts/mt2701-evb.dts
->>
->> The docs are here:
->> Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+>> +                               ASPEED_I2CD_M_HIGH_SPEED_EN |
+>> +                               ASPEED_I2CD_M_SDA_DRIVE_1T_EN |
 >
-> All of the above pack the information for a pin into a single 32-bit integer.
-> Is that what you want us to use, too?
-> Currently we use two integers: 1) pin index, and 2) function/flags combo.
+> s/ASPEED_I2CD_M_SDA_DRIVE_1T_EN/ASPEED_I2CD_M_SCL_DRIVE_1T_EN/
+>
+> (and in the definition too)
 
-I don't really know what you need, sorry. But some kind of figure, yes.
-I would say whatever makes sense. 16+16 bits makes sense in most
-combinatorial spaces does it not? If you split 32 bits  in 16 bits for
-pin and 16 bits for function, do you have more than 2^16 pins or 2^16
-functions?
+Will fix.
 
-If you really do we may need to go for u64 but ... really? Is there
-a rational reason for that other than "we did it like this first"?
+>
+>> +                               ASPEED_I2CD_SDA_DRIVE_1T_EN,
+>> +                               ASPEED_I2C_FUN_CTRL_REG);
+>> +
+>> +               aspeed_i2c_write(bus, 0x3, ASPEED_I2C_AC_TIMING_REG2);
+>> +               aspeed_i2c_write(bus, aspeed_i2c_get_clk_reg_val(divisor),
+>> +                                ASPEED_I2C_AC_TIMING_REG1);
+>> +       } else {
+>
+> I don't think that's right. AFAIK ASPEED_I2CD_M_HIGH_SPEED_EN is about
+> ignoring the timing register completely and going for full speed which
+> is a few Mhz (I forgot how much). At least from my (possibly incorrect)
+> reading of the spec and the SDK driver.
+>
+> Or maybe that's what you intend by the above ? Anything above 1Mhz ?
+>
+> I think there's a blurb somewhere that says that setting that bit makes
+> it ignore the timing register completely. The definition is:
+>
+> <<
+> Enable High Speed master mode
+> 0 : normal speed mode
+> 1 : high speed mode (3.4Mbps)
+> High speed mode can only use buffer mode for transfer. And only master
+> mode supports speed switching capability
+>>>
 
-I do not understand the notion of "flags" here. I hope that is not referring
-to pin config, because I expect that to use the standard pin config
-bindings outside of the pinmux value which should just define the
-pin+function combo:
+Yeah, I was picking an arbitrary cutoff and 1MHz seemed reasonable in
+part because in order to get above 1MHz you would set the divisor to 0
+(1 << 0) anyway because you will only modify the SCL high and low time
+for anything less than that. Also because that was the cutoff for fast
+mode (as opposed to high speed).
 
-node {
-    pinmux = <PIN_NUMBER_PINMUX>;
-    GENERIC_PINCONFIG;
-};
+>
+> The spec of the base clock field of the timing register also says
+>
+> <<
+> When switch to High Speed (HS) mode, the divisor will be switch to 0 by
+> hardware automatically
+>>>
+>
+> Note also that we aren't use buffer mode anyway so this can't work as-
+> is, we're using byte mode.
+>
 
-Example from Mediatek:
+Good catch. Yeah, I did not realize it. I should probably remove this
+until that is supported then.
 
-i2c1_pins_a: i2c1@0 {
-    pins {
-        pinmux = <MT8135_PIN_195_SDA1__FUNC_SDA1>,
-                        <MT8135_PIN_196_SCL1__FUNC_SCL1>;
-        bias-pull-up = <55>;
-    };
-};
+> The other interesting question is what is the frequency threshold for
+> setting ASPEED_I2CD_M_SCL_DRIVE_1T_EN (and the SDA one) ?
 
-So this allows for a combine pin+function number but pull ups,
-bias etc are not baked into the thing, they have to be added on
-separately with the generic bindings, which is nice and very readable.
+I would guess that we should make them correspond to the cutoff for
+high speed mode, or fast mode plus. Not really sure though, the
+documentation is not clear on this (or a lot of other things :-P)
 
-Yours,
-Linus Walleij
+>
+> Those bits are somewhat orthogonal to ASPEED_I2CD_M_HIGH_SPEED_EN. They
+> make the device drive the signals for a clock when they go up to "speed
+> up" the rising edge more than a normal pull up would do.
+>
+> If you have some fast devices, it would be interesting to scope the
+> signal see from what speed it becomes interesting to set the 1T enable
+> bits to speed up rising edges.
+
+Agreed.
