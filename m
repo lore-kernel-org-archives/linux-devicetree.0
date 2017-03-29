@@ -1,177 +1,75 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 14/23] drivers/fsi: Add sysfs files for FSI master & slave accesses
-Date: Wed, 29 Mar 2017 12:49:53 -0500
-Message-ID: <20170329174953.89247-1-cbostic@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-9v/Yh3O1LlxrKZClcjn33gC/G2K4zDHf@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 7/8] bus: brcmstb_gisb: add notifier handling
+Date: Wed, 29 Mar 2017 19:17:14 +0100
+Message-ID: <20170329181714.GD26135@leverpostej>
+References: <20170328213431.10904-1-opendmb@gmail.com>
+ <20170328213431.10904-8-opendmb@gmail.com>
+ <20170329101357.GB23442@leverpostej>
+ <e6bb68fa-dd2f-7d18-6031-b709f8fd162e@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e6bb68fa-dd2f-7d18-6031-b709f8fd162e@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Berger <opendmb@gmail.com>
+Cc: robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+On Wed, Mar 29, 2017 at 10:39:11AM -0700, Doug Berger wrote:
+> On 03/29/2017 03:13 AM, Mark Rutland wrote:
 
-This change adds a 'raw' file for reads & writes, and a 'term' file for
-the TERM command, and a 'break' file for issuing a BREAK.
+> >> +static int dump_gisb_error(struct notifier_block *self, unsigned long v,
+> >> +			   void *p)
 
-Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Signed-off-by: Chris Bostic <cbostic-9v/Yh3O1LlxrKZClcjn33gC/G2K4zDHf@public.gmane.org>
----
- drivers/fsi/fsi-core.c | 116 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
+> >> +	return 0;
+> > 
+> > I think this should be NOTIFY_OK.
+> > 
+> I used dump_mem_limit() as a template and didn't catch this (work to
+> do...).  Upon review I think I would prefer NOTIFY_DONE since this call
+> is opportunistic (i.e. it is taking the opportunity to check whether
+> additional diagnostic data is available to display) and has no interest
+> in affecting the overall handling of the event.
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 4359e26..f0f0556 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -294,6 +294,95 @@ static int fsi_slave_scan(struct fsi_slave *slave)
- 	return 0;
- }
- 
-+static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
-+		struct kobject *kobj, struct bin_attribute *attr, char *buf,
-+		loff_t off, size_t count)
-+{
-+	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
-+	size_t total_len, read_len;
-+	int rc;
-+
-+	if (off < 0)
-+		return -EINVAL;
-+
-+	if (off > 0xffffffff || count > 0xffffffff || off + count > 0xffffffff)
-+		return -EINVAL;
-+
-+	for (total_len = 0; total_len < count; total_len += read_len) {
-+		read_len = min_t(size_t, count, 4);
-+		read_len -= off & 0x3;
-+
-+		rc = fsi_slave_read(slave, off, buf + total_len, read_len);
-+		if (rc)
-+			return rc;
-+
-+		off += read_len;
-+	}
-+
-+	return count;
-+}
-+
-+static ssize_t fsi_slave_sysfs_raw_write(struct file *file,
-+		struct kobject *kobj, struct bin_attribute *attr,
-+		char *buf, loff_t off, size_t count)
-+{
-+	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
-+	size_t total_len, write_len;
-+	int rc;
-+
-+	if (off < 0)
-+		return -EINVAL;
-+
-+	if (off > 0xffffffff || count > 0xffffffff || off + count > 0xffffffff)
-+		return -EINVAL;
-+
-+	for (total_len = 0; total_len < count; total_len += write_len) {
-+		write_len = min_t(size_t, count, 4);
-+		write_len -= off & 0x3;
-+
-+		rc = fsi_slave_write(slave, off, buf + total_len, write_len);
-+		if (rc)
-+			return rc;
-+
-+		off += write_len;
-+	}
-+
-+	return count;
-+}
-+
-+static struct bin_attribute fsi_slave_raw_attr = {
-+	.attr = {
-+		.name = "raw",
-+		.mode = 0600,
-+	},
-+	.size = 0,
-+	.read = fsi_slave_sysfs_raw_read,
-+	.write = fsi_slave_sysfs_raw_write,
-+};
-+
-+static ssize_t fsi_slave_sysfs_term_write(struct file *file,
-+		struct kobject *kobj, struct bin_attribute *attr,
-+		char *buf, loff_t off, size_t count)
-+{
-+	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
-+	struct fsi_master *master = slave->master;
-+
-+	if (!master->term)
-+		return -ENODEV;
-+
-+	master->term(master, slave->link, slave->id);
-+	return count;
-+}
-+
-+static struct bin_attribute fsi_slave_term_attr = {
-+	.attr = {
-+		.name = "term",
-+		.mode = 0200,
-+	},
-+	.size = 0,
-+	.write = fsi_slave_sysfs_term_write,
-+};
-+
- /* Encode slave local bus echo delay */
- static inline uint32_t fsi_smode_echodly(int x)
- {
-@@ -409,6 +498,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
- 		return rc;
- 	}
- 
-+	rc = device_create_bin_file(&slave->dev, &fsi_slave_raw_attr);
-+	if (rc)
-+		dev_warn(&slave->dev, "failed to create raw attr: %d\n", rc);
-+
-+	rc = device_create_bin_file(&slave->dev, &fsi_slave_term_attr);
-+	if (rc)
-+		dev_warn(&slave->dev, "failed to create term attr: %d\n", rc);
-+
- 	fsi_slave_scan(slave);
- 	return 0;
- }
-@@ -523,6 +620,18 @@ static ssize_t master_rescan_store(struct device *dev,
- 
- static DEVICE_ATTR(rescan, 0200, NULL, master_rescan_store);
- 
-+static ssize_t master_break_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct fsi_master *master = to_fsi_master(dev);
-+
-+	fsi_master_break(master, 0);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR(break, 0200, NULL, master_break_store);
-+
- int fsi_master_register(struct fsi_master *master)
- {
- 	int rc;
-@@ -546,6 +655,13 @@ int fsi_master_register(struct fsi_master *master)
- 		return rc;
- 	}
- 
-+	rc = device_create_file(&master->dev, &dev_attr_break);
-+	if (rc) {
-+		device_unregister(&master->dev);
-+		ida_simple_remove(&master_ida, master->idx);
-+		return rc;
-+	}
-+
- 	fsi_master_scan(master);
- 
- 	return 0;
--- 
-1.8.2.2
+That's fine by me.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Does the distinction matter here?
+
+Most notifer users treat NOTIFY_OK and NOTIFY_DONE as equivalent, and
+notifier_call_chain only terminates when it sees NOTIFY_STOP_MASK.
+
+[...]
+
+> >> +	if (list_is_singular(&brcmstb_gisb_arb_device_list)) {
+> >> +		register_die_notifier(&gisb_error_notifier);
+> >> +		atomic_notifier_chain_register(&panic_notifier_list,
+> >> +					       &gisb_error_notifier);
+> > 
+> > I don't think this is quite right. A notifier_block can only be
+> > registered to one notifier chain at a time, and this has the potential
+> > to corrupt both chains.
+> > 
+> A VERY good point thanks for pointing this out.
+> 
+> > I also think you only need to register the panic notifier. An SError
+> > should always result in a panic.
+> > 
+> That was my initial thought as well.  However, testing revealed that the
+> bad mode Oops actually exits the user space process and doesn't reach
+> the panic so there was no helpful diagnostic message.  This may be in
+> line with your comments about insufficient fatality of failures in PATCH
+> v2 6/8, but it actually is more in line with our desired behavior for
+> the aborted write.  Setting the notify on die gave us the result we are
+> looking for, but as noted above I should have created a separate notifier.
+> 
+> I had hoped that the same approach (i.e. die notifier) would remove the
+> need for PATCH v2 6/8 as well, but I found that the Unhandled fault
+> error didn't actually die from user mode.
+
+In my mind it's a bug that we don't treat those errors more fatally.
+
+I'll try to dig into that.
+
+Thanks,
+Mark.
