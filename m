@@ -1,13 +1,12 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v3 03/11] dt-bindings: add bindings for DE2 on
- V3s SoC
-Date: Thu, 30 Mar 2017 03:46:05 +0800
-Message-ID: <20170329194613.55548-4-icenowy@aosc.io>
+Subject: [PATCH v3 04/11] drm/sun4i: abstract the layer type
+Date: Thu, 30 Mar 2017 03:46:06 +0800
+Message-ID: <20170329194613.55548-5-icenowy@aosc.io>
 References: <20170329194613.55548-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBCE76DDAKGQEZMZUF5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBFU76DDAKGQE26ZWF3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170329194613.55548-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,100 +16,184 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+As we are going to add support for the Allwinner DE2 Mixer in sun4i-drm
+driver, we will finally have two types of layer.
 
-Allwinner V3s SoC have a display engine which have a different pipeline
-with older SoCs.
+Abstract the layer type to void * and a ops struct, which contains the
+only function used by crtc -- get the drm_plane struct of the layer.
 
-Add document for it (new compatibles and the new "mixer" part).
-
-The paragraph of TCON is also refactored, for furtherly add TCONs in
-A83T/H3/A64/H5 that have only a channel 1 (used for HDMI or TV Encoder).
-
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
-Changes in v3:
-- Remove the description of having a BE directly as allwinner,pipeline.
+Refactored patch in v3.
 
- .../bindings/display/sunxi/sun4i-drm.txt           | 37 +++++++++++++++++++---
- 1 file changed, 33 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_crtc.c  | 19 +++++++++++--------
+ drivers/gpu/drm/sun4i/sun4i_crtc.h  |  3 ++-
+ drivers/gpu/drm/sun4i/sun4i_layer.c | 19 ++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun4i_layer.h |  2 +-
+ drivers/gpu/drm/sun4i/sunxi_layer.h | 17 +++++++++++++++++
+ 5 files changed, 49 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sunxi_layer.h
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index b82c00449468..38de5e96f359 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -31,11 +31,11 @@ Required properties:
-    * allwinner,sun6i-a31-tcon
-    * allwinner,sun6i-a31s-tcon
-    * allwinner,sun8i-a33-tcon
-+   * allwinner,sun8i-v3s-tcon
-  - reg: base address and size of memory-mapped region
-  - interrupts: interrupt associated to this IP
-- - clocks: phandles to the clocks feeding the TCON. Three are needed:
-+ - clocks: phandles to the clocks feeding the TCON
-    - 'ahb': the interface clocks
--   - 'tcon-ch0': The clock driving the TCON channel 0
-  - resets: phandles to the reset controllers driving the encoder
-    - "lcd": the reset line for the TCON channel 0
+diff --git a/drivers/gpu/drm/sun4i/sun4i_crtc.c b/drivers/gpu/drm/sun4i/sun4i_crtc.c
+index 3c876c3a356a..33854ee7f636 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_crtc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_crtc.c
+@@ -29,6 +29,7 @@
+ #include "sun4i_crtc.h"
+ #include "sun4i_drv.h"
+ #include "sun4i_layer.h"
++#include "sunxi_layer.h"
+ #include "sun4i_tcon.h"
  
-@@ -52,7 +52,12 @@ Required properties:
-   second the block connected to the TCON channel 1 (usually the TV
-   encoder)
+ static void sun4i_crtc_atomic_begin(struct drm_crtc *crtc,
+@@ -149,7 +150,7 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
+ 	scrtc->tcon = tcon;
  
--On SoCs other than the A33, there is one more clock required:
-+On TCONs that have a channel 0 (currently all TCONs supported), there
-+is one more clock required:
-+   - 'tcon-ch0': The clock driving the TCON channel 0
+ 	/* Create our layers */
+-	scrtc->layers = sun4i_layers_init(drm, scrtc->backend);
++	scrtc->layers = (void **)sun4i_layers_init(drm, scrtc);
+ 	if (IS_ERR(scrtc->layers)) {
+ 		dev_err(drm->dev, "Couldn't create the planes\n");
+ 		return NULL;
+@@ -157,14 +158,15 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
+ 
+ 	/* find primary and cursor planes for drm_crtc_init_with_planes */
+ 	for (i = 0; scrtc->layers[i]; i++) {
+-		struct sun4i_layer *layer = scrtc->layers[i];
++		void *layer = scrtc->layers[i];
++		struct drm_plane *plane = scrtc->layer_ops->get_plane(layer);
+ 
+-		switch (layer->plane.type) {
++		switch (plane->type) {
+ 		case DRM_PLANE_TYPE_PRIMARY:
+-			primary = &layer->plane;
++			primary = plane;
+ 			break;
+ 		case DRM_PLANE_TYPE_CURSOR:
+-			cursor = &layer->plane;
++			cursor = plane;
+ 			break;
+ 		default:
+ 			break;
+@@ -190,10 +192,11 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
+ 	/* Set possible_crtcs to this crtc for overlay planes */
+ 	for (i = 0; scrtc->layers[i]; i++) {
+ 		uint32_t possible_crtcs = BIT(drm_crtc_index(&scrtc->crtc));
+-		struct sun4i_layer *layer = scrtc->layers[i];
++		void *layer = scrtc->layers[i];
++		struct drm_plane *plane = scrtc->layer_ops->get_plane(layer);
+ 
+-		if (layer->plane.type == DRM_PLANE_TYPE_OVERLAY)
+-			layer->plane.possible_crtcs = possible_crtcs;
++		if (plane->type == DRM_PLANE_TYPE_OVERLAY)
++			plane->possible_crtcs = possible_crtcs;
+ 	}
+ 
+ 	return scrtc;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_crtc.h b/drivers/gpu/drm/sun4i/sun4i_crtc.h
+index 230cb8f0d601..a4036ee44cf8 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_crtc.h
++++ b/drivers/gpu/drm/sun4i/sun4i_crtc.h
+@@ -19,7 +19,8 @@ struct sun4i_crtc {
+ 
+ 	struct sun4i_backend		*backend;
+ 	struct sun4i_tcon		*tcon;
+-	struct sun4i_layer		**layers;
++	void				**layers;
++	const struct sunxi_layer_ops	*layer_ops;
+ };
+ 
+ static inline struct sun4i_crtc *drm_crtc_to_sun4i_crtc(struct drm_crtc *crtc)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_layer.c b/drivers/gpu/drm/sun4i/sun4i_layer.c
+index f26bde5b9117..bc4a70d6968b 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_layer.c
++++ b/drivers/gpu/drm/sun4i/sun4i_layer.c
+@@ -16,7 +16,9 @@
+ #include <drm/drmP.h>
+ 
+ #include "sun4i_backend.h"
++#include "sun4i_crtc.h"
+ #include "sun4i_layer.h"
++#include "sunxi_layer.h"
+ 
+ struct sun4i_plane_desc {
+ 	       enum drm_plane_type     type;
+@@ -100,6 +102,17 @@ static const struct sun4i_plane_desc sun4i_backend_planes[] = {
+ 	},
+ };
+ 
++static struct drm_plane *sun4i_layer_get_plane(void *layer)
++{
++	struct sun4i_layer *sun4i_layer = layer;
 +
-+On TCONs that have a channel 1 (currently all TCONs except the ones in
-+A33 and V3s), there is one more clock required:
-    - 'tcon-ch1': The clock driving the TCON channel 1
- 
- DRC
-@@ -137,6 +142,26 @@ Required properties:
-   Documentation/devicetree/bindings/media/video-interfaces.txt. The
-   first port should be the input endpoints, the second one the outputs
- 
-+Display Engine 2.0 Mixer
-+------------------------
++	return &sun4i_layer->plane;
++}
 +
-+The DE2 mixer have many functionalities, currently only layer blending is
-+supported.
++static const struct sunxi_layer_ops layer_ops = {
++	.get_plane = sun4i_layer_get_plane,
++};
 +
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun8i-v3s-de2-mixer
-+  - reg: base address and size of the memory-mapped region.
-+  - clocks: phandles to the clocks feeding the frontend and backend
-+    * bus: the backend interface clock
-+    * ram: the backend DRAM clock
-+  - clock-names: the clock names mentioned above
-+  - resets: phandles to the reset controllers driving the backend
+ static struct sun4i_layer *sun4i_layer_init_one(struct drm_device *drm,
+ 						struct sun4i_backend *backend,
+ 						const struct sun4i_plane_desc *plane)
+@@ -129,9 +142,10 @@ static struct sun4i_layer *sun4i_layer_init_one(struct drm_device *drm,
+ }
+ 
+ struct sun4i_layer **sun4i_layers_init(struct drm_device *drm,
+-				       struct sun4i_backend *backend)
++				       struct sun4i_crtc *crtc)
+ {
+ 	struct sun4i_layer **layers;
++	struct sun4i_backend *backend = crtc->backend;
+ 	int i;
+ 
+ 	layers = devm_kcalloc(drm->dev, ARRAY_SIZE(sun4i_backend_planes) + 1,
+@@ -181,5 +195,8 @@ struct sun4i_layer **sun4i_layers_init(struct drm_device *drm,
+ 		layers[i] = layer;
+ 	};
+ 
++	/* Assign layer ops to the CRTC */
++	crtc->layer_ops = &layer_ops;
 +
-+- ports: A ports node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+  first port should be the input endpoints, the second one the output
+ 	return layers;
+ }
+diff --git a/drivers/gpu/drm/sun4i/sun4i_layer.h b/drivers/gpu/drm/sun4i/sun4i_layer.h
+index 4be1f0919df2..425eea7b9e3b 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_layer.h
++++ b/drivers/gpu/drm/sun4i/sun4i_layer.h
+@@ -27,6 +27,6 @@ plane_to_sun4i_layer(struct drm_plane *plane)
+ }
+ 
+ struct sun4i_layer **sun4i_layers_init(struct drm_device *drm,
+-				       struct sun4i_backend *backend);
++				       struct sun4i_crtc *crtc);
+ 
+ #endif /* _SUN4I_LAYER_H_ */
+diff --git a/drivers/gpu/drm/sun4i/sunxi_layer.h b/drivers/gpu/drm/sun4i/sunxi_layer.h
+new file mode 100644
+index 000000000000..d8838ec39299
+--- /dev/null
++++ b/drivers/gpu/drm/sun4i/sunxi_layer.h
+@@ -0,0 +1,17 @@
++/*
++ * Copyright (C) 2017 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
 +
- 
- Display Engine Pipeline
- -----------------------
-@@ -151,9 +176,13 @@ Required properties:
-     * allwinner,sun6i-a31-display-engine
-     * allwinner,sun6i-a31s-display-engine
-     * allwinner,sun8i-a33-display-engine
-+    * allwinner,sun8i-v3s-display-engine
- 
-   - allwinner,pipelines: list of phandle to the display engine
--    frontends available.
-+    pipeline entry point. For SoCs with original DE (currently
-+    all SoCs supported by display engine except V3s), this
-+    phandle should be a display frontend; for SoCs with DE2,
-+    this phandle should be a mixer.
- 
- Example:
- 
++#ifndef _SUNXI_LAYER_H_
++#define _SUNXI_LAYER_H_
++
++struct sunxi_layer_ops {
++	struct drm_plane *(*get_plane)(void *layer);
++};
++
++#endif /* _SUNXI_LAYER_H_ */
 -- 
 2.12.0
