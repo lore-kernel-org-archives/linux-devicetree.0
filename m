@@ -1,82 +1,272 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 2/3] iio: adc: sun4i-gpadc-iio: add support for H3
- thermal sensor
-Date: Wed, 29 Mar 2017 14:28:29 +0200
-Message-ID: <20170329122829.23bezwgdywigxshh@lukather>
-References: <20170329065717.D0AF37C1EFF@relay.mailchannels.net>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 1/2] PCI: Add tango MSI controller support
+Date: Wed, 29 Mar 2017 13:29:04 +0100
+Message-ID: <a12a79fd-94f9-5aa4-5aa0-5dccb6c5d615@arm.com>
+References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
+ <f37d7b55-e065-72aa-e690-13dd4718a9ce@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eqclnj4teheii7g7"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170329065717.D0AF37C1EFF-Y9/x5g2N/Tt0ykcd9G8QkxTxI0vvWBSX@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <f37d7b55-e065-72aa-e690-13dd4718a9ce@sigmadesigns.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>, Mason <slash.tmp@free.fr>
 List-Id: devicetree@vger.kernel.org
 
+On 29/03/17 12:29, Marc Gonzalez wrote:
+> The MSI controller in Tango supports 256 message-signaled interrupts,
+> and a single doorbell address.
+> 
+> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+> ---
+> Changes since v0.2
+> - Support 256 MSIs instead of only 32
+> - Use spinlock_t instead of struct mutex
+> - Add MSI_FLAG_PCI_MSIX flag
+> 
+> IRQs are acked in tango_msi_isr because handle_simple_irq leaves
+> ack, clear, mask and unmask up to the driver. For the same reason,
+> interrupt enable mask is updated from tango_irq_domain_alloc/free.
 
---eqclnj4teheii7g7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've asked you to move this to individual methods. You've decided not
+to, and that's your call. But I now wonder why I'm even bothering to
+review this, as you've so far just wasted my time.
 
-On Wed, Mar 29, 2017 at 02:57:02PM +0800, Icenowy Zheng wrote:
-> > > @@ -691,6 +777,12 @@ static int sun4i_gpadc_remove(struct platform_de=
-vice *pdev)=20
-> > >=A0 if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))=20
-> > >=A0 iio_map_array_unregister(indio_dev);=20
-> > >=A0=20
-> > > + if (info->data->gen2_ths) {=20
-> > > + clk_disable_unprepare(info->ths_clk);=20
-> > > + clk_disable_unprepare(info->ths_bus_clk);=20
-> > > + reset_control_deassert(info->reset);=20
-> > > + }=20
-> > > +=20
-> >
-> > I'm not really fond of using this boolean as I don't see it being=20
-> > possibly reused for any other SoCs that has a GPADC or THS.=20
->=20
-> Because you didn't care new SoCs :-)
->=20
-> All SoCs after H3 (A64, H5, R40) uses the same THS architecture with
-> H3.
+Anyway...
 
-That's not really Quentin's point. His point is that having things
-like flags and/or variables to identify various behaviours that might
-differ from one SoC to the other usually works better when you want to
-support several of them.
+> ---
+>  drivers/pci/host/pcie-tango.c | 194 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 194 insertions(+)
+> 
+> diff --git a/drivers/pci/host/pcie-tango.c b/drivers/pci/host/pcie-tango.c
+> new file mode 100644
+> index 000000000000..e88850983a1d
+> --- /dev/null
+> +++ b/drivers/pci/host/pcie-tango.c
+> @@ -0,0 +1,194 @@
+> +#include <linux/module.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/pci-ecam.h>
 
-For example, replacing the gen2_ths by one variable with the number of
-clocks, one with the number of channels, a bool to say it has a reset,
-etc. definitely works better for us when Allwinner does some mix and
-match between each SoC. And this happen most of the time.
+How is that include relevant to this patch?
 
-Maxime
+> +#include <linux/msi.h>
+> +
+> +#define MSI_MAX 256
+> +
+> +struct tango_pcie {
+> +	DECLARE_BITMAP(bitmap, MSI_MAX);
+> +	spinlock_t lock;
+> +	void __iomem *mux;
+> +	void __iomem *msi_status;
+> +	void __iomem *msi_mask;
+> +	phys_addr_t msi_doorbell;
+> +	struct irq_domain *irq_domain;
+> +	struct irq_domain *msi_domain;
+> +	int irq;
+> +};
+> +
+> +/*** MSI CONTROLLER SUPPORT ***/
+> +
+> +static void dispatch(struct tango_pcie *pcie, unsigned long status, int base)
+> +{
+> +	unsigned int pos, virq;
+> +
+> +	for_each_set_bit(pos, &status, 32) {
+> +		virq = irq_find_mapping(pcie->irq_domain, base + pos);
+> +		generic_handle_irq(virq);
+> +	}
+> +}
+> +
+> +static void tango_msi_isr(struct irq_desc *desc)
+> +{
+> +	u32 status;
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct tango_pcie *pcie = irq_desc_get_handler_data(desc);
+> +	unsigned int base, offset, pos = 0;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	while ((pos = find_next_bit(pcie->bitmap, MSI_MAX, pos)) < MSI_MAX) {
+> +		base = round_down(pos, 32);
+> +		offset = (pos / 32) * 4;
+> +		status = readl_relaxed(pcie->msi_status + offset);
+> +		writel_relaxed(status, pcie->msi_status + offset);
+> +		dispatch(pcie, status, base);
+> +		pos = base + 32;
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static struct irq_chip tango_msi_irq_chip = {
+> +	.name = "MSI",
+> +	.irq_mask = pci_msi_mask_irq,
+> +	.irq_unmask = pci_msi_unmask_irq,
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+How do you make that work if the PCI device doesn't support per-MSI masking?
 
---eqclnj4teheii7g7
-Content-Type: application/pgp-signature; name="signature.asc"
+> +};
+> +
+> +#define USE_DEF_OPS (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS)
 
------BEGIN PGP SIGNATURE-----
+How is that useful?
 
-iQIcBAEBCAAGBQJY26hpAAoJEBx+YmzsjxAg54QP/3RoDQzmzpPlWUvTR00t+vK3
-eIhkg+iWCr2gfqEKRQMx6KC7xQUh39vIpa6u16eOkIg06SWY032srY4lk7q7929K
-bv+Hvj7VztFV/gcH6TizW/TyWwXqXxWV2LFc/GvFIZsRqUd3vdxvtfDdN1Xu45TE
-w1nVGcz09LtZGdKy24iO8Q5E8cA9OHOy9SFidBURJZ7/U8bu7ApB+CKgXb685B3o
-6NTzPZiQN2OLkCIqWpyzOPQgn6uHTj7kg1n6bOJypMY/t5oIQwhn+0PRxu8Jyprg
-oQOj4N991ChuKi1LLMJDAqC4rcsupinMqFhsUlC6WM6bNjUMlDZl8vyhe/G1WTdY
-ZUtDHPtTh8AhBrLoaKgvVAslS5DAA3r/VvjSmt7Fvip55N7BAop2L7Zu0DI5G+gZ
-x6tg/gSazzdKvnhlef1Ipj5JITGot6xcUybUVprPMWVpzmvPvlbnB3n93DYxzKwJ
-7yqqn53qimyBWULWRoPumUrtSdYfj1SysDmrlZ46nxW7PeuSxL5CYsfC5jPZRlH5
-9QQG2Bl9vXdldn1yrGPKZWb9Pd7cuZxKiObq0yU5DyNYNufG/2BgENa9Vj8ITvUZ
-JFjTqvB7ersA9pyKAHCaPkt6ykYh+QrjvWd2brHjiOKQTCO55AXwatvxPTBN2WXQ
-ganghCIWcecj2qgDa6oR
-=mudX
------END PGP SIGNATURE-----
+> +
+> +static struct msi_domain_info msi_domain_info = {
+> +	.flags	= USE_DEF_OPS | MSI_FLAG_PCI_MSIX,
+> +	.chip	= &tango_msi_irq_chip,
+> +};
+> +
+> +static void tango_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> +{
+> +	struct tango_pcie *pcie = irq_data_get_irq_chip_data(data);
+> +
+> +	msg->address_lo = lower_32_bits(pcie->msi_doorbell);
+> +	msg->address_hi = upper_32_bits(pcie->msi_doorbell);
+> +	msg->data = data->hwirq;
+> +}
+> +
+> +static int tango_set_affinity(struct irq_data *irq_data,
+> +		const struct cpumask *mask, bool force)
+> +{
+> +	 return -EINVAL;
+> +}
+> +
+> +static struct irq_chip tango_msi_chip = {
+> +	.name			= "MSI",
+> +	.irq_compose_msi_msg	= tango_compose_msi_msg,
+> +	.irq_set_affinity	= tango_set_affinity,
+> +};
+> +
+> +static int find_free_msi(struct irq_domain *dom, unsigned int virq)
+> +{
+> +	u32 val;
+> +	struct tango_pcie *pcie = dom->host_data;
+> +	unsigned int offset, pos;
+> +
+> +	pos = find_first_zero_bit(pcie->bitmap, MSI_MAX);
+> +	if (pos >= MSI_MAX)
+> +		return -ENOSPC;
+> +
+> +	offset = (pos / 32) * 4;
+> +	val = readl_relaxed(pcie->msi_mask + offset);
+> +	writel_relaxed(val | BIT(pos % 32), pcie->msi_mask + offset);
 
---eqclnj4teheii7g7--
+Great. I'm now in a position where I can take an interrupt (because of
+the broken locking that doesn't disable interrupts), but the bitmap
+doesn't indicate it yet. With a bit of luck, I'll never make any forward
+progress.
+
+> +	__set_bit(pos, pcie->bitmap);
+> +
+> +	irq_domain_set_info(dom, virq, pos, &tango_msi_chip,
+> +			dom->host_data, handle_simple_irq, NULL, NULL);
+
+I've told you a number of times that PCI MSIs are edge triggered...
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int tango_irq_domain_alloc(struct irq_domain *dom,
+> +		unsigned int virq, unsigned int nr_irqs, void *args)
+> +{
+> +	int err;
+> +	struct tango_pcie *pcie = dom->host_data;
+> +
+> +	spin_lock(&pcie->lock);
+> +	err = find_free_msi(dom, virq);
+> +	spin_unlock(&pcie->lock);
+> +
+> +	return err;
+> +}
+> +
+> +static void tango_irq_domain_free(struct irq_domain *dom,
+> +		unsigned int virq, unsigned int nr_irqs)
+> +{
+> +	u32 val;
+> +	struct irq_data *d = irq_domain_get_irq_data(dom, virq);
+> +	struct tango_pcie *pcie = irq_data_get_irq_chip_data(d);
+> +	unsigned int offset, pos = d->hwirq;
+> +
+> +	spin_lock(&pcie->lock);
+> +
+> +	offset = (pos / 32) * 4;
+> +	val = readl_relaxed(pcie->msi_mask + offset);
+> +	writel_relaxed(val & ~BIT(pos % 32), pcie->msi_mask + offset);
+> +	__clear_bit(pos, pcie->bitmap);
+> +
+> +	spin_unlock(&pcie->lock);
+> +}
+> +
+> +static const struct irq_domain_ops msi_dom_ops = {
+> +	.alloc	= tango_irq_domain_alloc,
+> +	.free	= tango_irq_domain_free,
+> +};
+> +
+> +static int tango_msi_remove(struct platform_device *pdev)
+> +{
+> +	struct tango_pcie *msi = platform_get_drvdata(pdev);
+
+Be consistent in your naming. It's called pcie everywhere else.
+
+> +
+> +	irq_set_chained_handler_and_data(msi->irq, NULL, NULL);
+> +	irq_domain_remove(msi->msi_domain);
+> +	irq_domain_remove(msi->irq_domain);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tango_msi_probe(struct platform_device *pdev, struct tango_pcie *pcie)
+> +{
+> +	int i, virq;
+> +	struct fwnode_handle *fwnode = of_node_to_fwnode(pdev->dev.of_node);
+> +	struct irq_domain *msi_dom, *irq_dom;
+> +
+> +	spin_lock_init(&pcie->lock);
+> +
+> +	for (i = 0; i < MSI_MAX / 32; ++i)
+> +		writel_relaxed(0, pcie->msi_mask + i * 4);
+> +
+> +	irq_dom = irq_domain_create_linear(fwnode, MSI_MAX, &msi_dom_ops, pcie);
+> +	if (!irq_dom) {
+> +		pr_err("Failed to create IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	msi_dom = pci_msi_create_irq_domain(fwnode, &msi_domain_info, irq_dom);
+> +	if (!msi_dom) {
+> +		pr_err("Failed to create MSI domain\n");
+> +		irq_domain_remove(irq_dom);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	virq = platform_get_irq(pdev, 1);
+> +	if (virq <= 0) {
+> +		pr_err("Failed to map IRQ\n");
+> +		irq_domain_remove(msi_dom);
+> +		irq_domain_remove(irq_dom);
+> +		return -ENXIO;
+> +	}
+> +
+> +	pcie->irq_domain = irq_dom;
+> +	pcie->msi_domain = msi_dom;
+> +	pcie->irq = virq;
+> +	irq_set_chained_handler_and_data(virq, tango_msi_isr, pcie);
+> +
+> +	return 0;
+> +}
+> 
+
+So there is not much progress from the previous version. It is just
+broken in a different ways, and ignores most of the work that is already
+done in the irqchip core. I can only repeat what I've said in my
+previous review.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
