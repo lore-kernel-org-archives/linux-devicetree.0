@@ -1,36 +1,88 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v4 18/23] drivers/fsi: Document FSI master sysfs files in ABI
-Date: Wed, 29 Mar 2017 12:43:35 -0500
-Message-ID: <20170329174340.89109-19-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v4 06/23] drivers/fsi: Set up links for slave communication
+Date: Wed, 29 Mar 2017 12:43:23 -0500
+Message-ID: <20170329174340.89109-7-cbostic@linux.vnet.ibm.com>
 References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
+Cc: andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Chris Bostic <cbostic@linux.vnet.ibm.com>, benh@kernel.crashing.org, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
 From: Chris Bostic <cbostic@linux.vnet.ibm.com>
 
-Add info for sysfs scan file in Documentaiton ABI/testing
+Enable each link and send a break command, and try to detect a slave by
+reading from the SMODE register.
 
 Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- Documentation/ABI/testing/sysfs-bus-fsi | 6 ++++++
- 1 file changed, 6 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
+ drivers/fsi/fsi-core.c | 37 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-fsi b/Documentation/ABI/testing/sysfs-bus-fsi
-new file mode 100644
-index 0000000..dfcbc1b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-fsi
-@@ -0,0 +1,6 @@
-+What:           /sys/bus/platform/devices/fsi-master/scan
-+KernelVersion:  4.9
-+Contact:        cbostic@us.ibm.com
-+Description:
-+                Initiates a FSI master scan for all connected
-+                slave devices on its links.
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 32698ed..6e1cfdf 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -157,12 +157,45 @@ static int fsi_master_write(struct fsi_master *master, int link,
+ 	return master->write(master, link, slave_id, addr, val, size);
+ }
+ 
++static int fsi_master_link_enable(struct fsi_master *master, int link)
++{
++	if (master->link_enable)
++		return master->link_enable(master, link);
++
++	return 0;
++}
++
++/*
++ * Issue a break command on this link
++ */
++static int fsi_master_break(struct fsi_master *master, int link)
++{
++	if (master->send_break)
++		return master->send_break(master, link);
++
++	return 0;
++}
++
+ static int fsi_master_scan(struct fsi_master *master)
+ {
+-	int link;
++	int link, rc;
++
++	for (link = 0; link < master->n_links; link++) {
++		rc = fsi_master_link_enable(master, link);
++		if (rc) {
++			dev_dbg(&master->dev,
++				"enable link %d failed: %d\n", link, rc);
++			continue;
++		}
++		rc = fsi_master_break(master, link);
++		if (rc) {
++			dev_dbg(&master->dev,
++				"break to link %d failed: %d\n", link, rc);
++			continue;
++		}
+ 
+-	for (link = 0; link < master->n_links; link++)
+ 		fsi_slave_init(master, link, 0);
++	}
+ 
+ 	return 0;
+ }
 -- 
 1.8.2.2
