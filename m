@@ -1,56 +1,113 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v3 5/5] arm64: allwinner: a64: add R_PIO pinctrl node
-Date: Wed, 29 Mar 2017 18:42:46 +0800
-Message-ID: <20170329104246.34204-6-icenowy@aosc.io>
-References: <20170329104246.34204-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v7 1/7] clocksource/drivers/clksrc-evt-probe: Describe
+ with the DT both the clocksource and the clockevent
+Date: Wed, 29 Mar 2017 11:49:11 +0100
+Message-ID: <20170329104911.GC23442@leverpostej>
+References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
+ <1490197714-25415-2-git-send-email-al.kochet@gmail.com>
+ <20170329015146.ey5rlptzsnnynpnt@rob-hp-laptop>
+ <20170329092210.GH2123@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB6E753DAKGQEZ7NE4YA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170329104246.34204-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170329092210.GH2123@mai>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Alexander Kochetkov <al.kochet@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Hi,
 
-Allwinner A64 have a dedicated pin controller to manage the PL pin bank.
-As the driver and the required clock support are added, add the device
-node for it.
+On Wed, Mar 29, 2017 at 11:22:10AM +0200, Daniel Lezcano wrote:
+> On Tue, Mar 28, 2017 at 08:51:46PM -0500, Rob Herring wrote:
+> > On Wed, Mar 22, 2017 at 06:48:28PM +0300, Alexander Kochetkov wrote:
+> > > From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > 
+> > > The CLOCKSOURCE_OF_DECLARE() was introduced before the
+> > > CLOCKEVENT_OF_DECLARE() and that resulted in some abuse where the
+> > > clockevent and the clocksource are both initialized in the same init
+> > > routine.
+> > > 
+> > > With the introduction of the CLOCKEVENT_OF_DECLARE(), the driver can
+> > > now split the clocksource and the clockevent init code. However, the
+> > > device tree may specify a single node, so the same node will be passed
+> > > to the clockevent/clocksource's init function, with the same base
+> > > address.
+> > > 
+> > > with this patch it is possible to specify an attribute to the timer's node to
+> > > specify if it is a clocksource or a clockevent and define two timers node.
+> > 
+> > Daniel and I discussed and agreed against this a while back. What 
+> > changed?
+> 
+> Hi Rob,
+> 
+> > > For example:
+> > > 
+> > >         timer: timer@98400000 {
+> > >                 compatible = "moxa,moxart-timer";
+> > >                 reg = <0x98400000 0x42>;
+> > 
+> > This overlaps the next node. You can change this to 0x10, but are these 
+> > really 2 independent h/w blocks? Don't design the nodes around the 
+> > current needs of Linux.
+> 
+> Mmh, thanks for raising this. Conceptually speaking there are two (or more)
+> different entities, the clocksource and the clockevents but they share the same
+> IP block.
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+>From the DT's PoV, this is one entity, which is the IP block.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 0fe9865d4bd6..165dbc848aa6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -411,5 +411,17 @@
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 		};
-+
-+		r_pio: pinctrl@01f02c00 {
-+			compatible = "allwinner,sun50i-a64-r-pinctrl";
-+			reg = <0x01f02c00 0x400>;
-+			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&r_ccu CLK_APB0_PIO>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
-+			gpio-controller;
-+			#gpio-cells = <3>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
- 	};
- };
--- 
-2.12.0
+The clocksource/clockevent concept is a Linux implementation detail. The
+DT cannot and should not be aware of that.
+
+[...]
+
+> > >                 interrupts = <19 1>;
+> > >                 clocks = <&coreclk>;
+> > >                 clockevent;
+> > 
+> > This is not needed. The presence of "interrupts" is enough to say use 
+> > this timer for clockevent.
+> 
+> Yes, that is true if no drivers was already taking CLOCKSOURCE_OF and
+> initializing the clockevent. The driver will pass through the clocksource_probe
+> function, check the interrupt and bail out because there is an interrupt
+> declared and assume it is a clockevent, so no initialization for the driver.
+> IOW, it is not backward compatible.
+> 
+> We need this attribute somehow in order to separate clearly a clocksource or a
+> clockevent with a new implementation.
+
+Why? A single IP block can provide the functionality of both (though
+there are reasons that functionality may be mutually exclusive). What is
+the benefit of this split?
+
+> > > With this approach, we allow a mechanism to clearly define a clocksource or a
+> > > clockevent without aerobatics we can find around in some drivers:
+> > > 	timer-sp804.c, arc-timer.c, dw_apb_timer_of.c, mps2-timer.c,
+> > > 	renesas-ostm.c, time-efm32.c, time-lpc32xx.c.
+> > 
+> > These all already have bindings and work. What problem are you trying to 
+> > solve other than restructuring Linux?
+> 
+> Yes, there is already the bindings, but that force to do some hackish
+> initialization.
+
+Here, you are forcing hackish DT changes that do not truly describe HW.
+How is that better?
+
+> I would like to give the opportunity to declare separately a clocksource and a
+> clockevent, in order to have full control of how this is initialized.
+
+To me it sounds like what we need is Linux infrastructure that allows
+one to register a device as having both clockevent/clocksource
+functionality.
+
+That way, we can choose to do something sane at boot time, and if the
+user really wants specific devices used in specific ways, they can
+request that.
+
+Thanks,
+Mark.
