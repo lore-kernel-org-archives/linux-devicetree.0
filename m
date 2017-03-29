@@ -1,28 +1,157 @@
-From: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-Subject: Re: [PATCH v3] ASoC: Add support for Maxim Integrated MAX98927 Amplifier
-Date: Tue, 28 Mar 2017 17:49:48 -0700
-Message-ID: <CAN4-ojnt_k=P=1bVOZqU2rGWNQaG=CJGr3VdCvKCHrZ5Li+GCQ@mail.gmail.com>
-References: <20170324152613.qzvsviznhiz5f3sj@rob-hp-laptop>
- <1490715148-14827-1-git-send-email-ryans.lee@maximintegrated.com> <20170328163928.jtjnfzcd3turhhl7@sirena.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Add initial SX3000b platform related documentation to
+ document tree
+Date: Tue, 28 Mar 2017 19:55:09 -0500
+Message-ID: <20170329005509.z7pa6rp5kt5xftg4@rob-hp-laptop>
+References: <AM4PR0201MB21799759E18C64A7032A2C3EE43C0@AM4PR0201MB2179.eurprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170328163928.jtjnfzcd3turhhl7-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, nh6z-fFIq/eER6g8@public.gmane.org, KCHSU0-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <AM4PR0201MB21799759E18C64A7032A2C3EE43C0@AM4PR0201MB2179.eurprd02.prod.outlook.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Amit Kama IL <Amit.Kama@satixfy.com>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 9:39 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Mar 29, 2017 at 12:32:28AM +0900, Ryan Lee wrote:
->> Signed-off-by: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
->
-> Please stop sending patches in the middle of existing threads, it makes
-> it hard to see new versions and for multi-patch serieses makes it hard
-> to see what the current version of the series is.
+On Wed, Mar 22, 2017 at 05:59:49AM +0000, Amit Kama IL wrote:
+> Add initial SX3000b platform related documentation to document tree:
+>  - Vendor prefix
+>  - Platform binding documentation
+>  - Interrupt Controller Unit binding documentation.
 
-I'm sorry to make it get confused. I'll resend it on the top.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Probably should be 3 patches. Preferred subject prefix is "dt-bindings: 
+..."
+
+> 
+> Signed-off-by: Amit Kama <amit.kama@staixfy.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/satixfy-icu.txt b/Documentation/devicetree/bindings/interrupt-controller/satixfy-icu.txt
+> index 0000000..1893393
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/satixfy-icu.txt
+> @@ -0,0 +1,47 @@
+> +Satixfy SX3000B Interrupt Controller Unit (ICU)
+> +
+> +The ICU routes HW interrupts from the inter-module fabric to the
+> +processor. For the MIPS interaptive, all interrupts are then routed
+
+interaptive or interaptiv? I see both in the doc.
+
+
+> +to the GIC.
+> +
+> +Required properties:
+> +- compatible : Should be "satixfy,icu".
+
+icu is fairly generic sounding. Should be satixfy,sx3000b-icu.
+
+> +- reg - must be present and equal <0x1D4D0000 0x1C0>
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt specifier.  Should be 1 - the GIC interrupt number
+> +- interrupt-parent - Currently only the MIPS GIC is supported, so
+> +<&gic> must be specified as parent
+> +- interrupts : in interrupt parent form. For GIC it's
+> +<GIC_SHARED x IRQ_TYPE_EDGE_RISING> where x is the interrupt number
+> +allocated for ICU in GIC.
+> +
+> +
+> +
+> +
+> +
+> +Example:
+> +
+> +	icu: interrupt-controller@1d4d0000 {
+> +		compatible = "sx,icu";
+> +		reg = <0x1D4D0000 0x1C0>;
+
+lowercase
+
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SHARED 25 IRQ_TYPE_EDGE_RISING>;
+> +	};
+> +
+> +	uart0: uart@1D4D09C0 {
+
+serial@1d4d09c0
+
+> +		compatible = "ns16550a";
+> +		reg = <0x1D4D09C0 0x100>;
+
+lowercase
+
+> +
+> +		interrupt-parent = <&icu>;
+> +		interrupts = <3>;
+> +
+> +		clock-frequency = <270000000>;
+> +
+> +		reg-shift = <2>;
+> +		reg-io-width = <4>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/mips/satixfy/sx3000b.txt b/Documentation/devicetree/bindings/mips/satixfy/sx3000b.txt
+> index 0000000..7cae67b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/satixfy/sx3000b.txt
+> @@ -0,0 +1,37 @@
+> +Satixfy SX3000b SoC
+> +=========================
+> +
+> +Required properties:
+> +--------------------
+> + - compatible: Must include "satixfy,sx3000".
+
+The "b" in SX3000b is not significant?
+
+> +
+> +CPU nodes:
+> +----------
+> +A "cpus" node is required.  Required properties:
+> + - #address-cells: Must be 1.
+> + - #size-cells: Must be 0.
+> +A CPU sub-node is also required for at least CPU 0.  Since the topology may
+> +be probed via CPS, it is not necessary to specify secondary CPUs.  Required
+> +properties:
+> + - device_type: Must be "cpu".
+> + - compatible: Must be "mti,interaptiv".
+> + - reg: CPU number.
+> + - clocks: Must include the CPU clock.  See ../../clock/clock-bindings.txt for
+> +   details on clock bindings.
+> +Example:
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "mti,interaptiv";
+> +			clocks	= <&ext>;
+> +			reg = <0>;
+> +		};
+> +	};
+> +
+> +Interrupt controllers:
+> +----------------------
+> +Two nodes are required:
+> + - mips,gic - MIPS Global Interrupt Controller - see Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> + - satixfy,icu - SX3000b SoC Interrupt Controller Unit - see Documentation/devicetree/bindings/interrupt-controller/satixfy-icu.txt
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index ec0bfb9..76819dd
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -261,6 +261,7 @@ rockchip	Fuzhou Rockchip Electronics Co., Ltd
+>  samsung	Samsung Semiconductor
+>  samtec	Samtec/Softing company
+>  sandisk	Sandisk Corporation
+> +satixfy Satixfy Technologies Ltd
+>  sbs	Smart Battery System
+>  schindler	Schindler
+>  seagate	Seagate Technology PLC
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
