@@ -1,37 +1,34 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3
- ES2.0
-Date: Wed, 29 Mar 2017 10:13:52 +0200
-Message-ID: <20170329081352.GF6512@verge.net.au>
-References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
- <1490362665-4422-2-git-send-email-geert+renesas@glider.be>
- <1612430.SNEha5n02K@avalon>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] ARM: dts: imx6q-icore: Add touchscreen node
+Date: Wed, 29 Mar 2017 16:22:50 +0800
+Message-ID: <20170329082248.GA683@dragon>
+References: <1490209518-20790-1-git-send-email-jagan@openedev.com>
+ <1490209518-20790-3-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1612430.SNEha5n02K@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1490209518-20790-3-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Domenico Acri <domenico.acri-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 11:48:12AM +0300, Laurent Pinchart wrote:
-> Hi Geert,
+On Thu, Mar 23, 2017 at 12:35:18AM +0530, Jagan Teki wrote:
+> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > 
-> Thank you for the patch.
+> max11801 touchscreen on Engicam iCoreM6 Quad module is
+> connected via i2c1, so add max11801: touchscreen@48 on i2c1.
 > 
-> On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
-> > Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
-> >   - The following devices no longer exist on ES2.0, and are thus removed:
-> >     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
-> >   - The DU <-> VSPD topology is different on ES2.0, hence remove the
-> >     "vsps" property from the DU node until the driver can handle this.
-> 
-> I think I'll need a different compatible string between ES1.x and ES2 for the 
-> DU. It could make sense to move the whole DU node to *-es1.dtsi. We can decide 
-> about that later when I'll have a DU driver prototype ready.
+> Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Domenico Acri <domenico.acri-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-That makes sense to me.
-
-Geert, will you respin this?
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
