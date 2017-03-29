@@ -1,490 +1,68 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] clk: sunxi-ng: add support for PRCM CCUs
-Date: Wed, 29 Mar 2017 23:27:45 +0800
-Message-ID: <20170329232745.1546e332@x220i>
-References: <20170329104246.34204-1-icenowy@aosc.io>
-	<20170329104246.34204-3-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl
+ header
+Date: Wed, 29 Mar 2017 15:39:23 +0000
+Message-ID: <SG2PR06MB1165F2CC98E510C9FEA12EC68A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
+ <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com>
+ <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdVx_fyGsw0p-s4ZAoe2k+r0RuwxjwNV_-8fXY7Yv8y3kQ@mail.gmail.com>
+ <SG2PR06MB1165F5D4CFC50CADC609451C8A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB7VE57DAKGQEWBKWLFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170329104246.34204-3-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1165F5D4CFC50CADC609451C8A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Mar 2017 18:42:43 +0800
-Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-
-> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> 
-> SoCs after A31 has a clock controller module in the PRCM part.
-> 
-> Support the clock controller module on H3/5 and A64 now.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
-> Changes in v3:
-> - Change osc32000 mux to iosc, as its frequency varies between SoCs.
-> (And none of them is really 32000Hz)
-> Changes in v2:
-> - Replace all sun6i to sun8i, as this driver currently doesn't really
->   support sun6i(A31).
-> - Add osc32000 mux for ar100 clk. (Note: the frequency is proven to
-> be wrong during the development of PATCH v3).
-> - Rename some clocks.
-> - Add gate of TWD (Trusted Watchdog). There's no reset for TWD.
-> - Removed reset of PIO, which doesn't exist really.
-> 
->  drivers/clk/sunxi-ng/Kconfig            |   6 +
->  drivers/clk/sunxi-ng/Makefile           |   1 +
->  drivers/clk/sunxi-ng/ccu-sun8i-r.c      | 211
-> ++++++++++++++++++++++++++++++++
-> drivers/clk/sunxi-ng/ccu-sun8i-r.h      |  27 ++++
-> include/dt-bindings/clock/sun8i-r-ccu.h |  59 +++++++++
-> include/dt-bindings/reset/sun8i-r-ccu.h |  53 ++++++++ 6 files
-> changed, 357 insertions(+) create mode 100644
-> drivers/clk/sunxi-ng/ccu-sun8i-r.c create mode 100644
-> drivers/clk/sunxi-ng/ccu-sun8i-r.h create mode 100644
-> include/dt-bindings/clock/sun8i-r-ccu.h create mode 100644
-> include/dt-bindings/reset/sun8i-r-ccu.h
-> 
-> diff --git a/drivers/clk/sunxi-ng/Kconfig
-> b/drivers/clk/sunxi-ng/Kconfig index 8af8f4be8e3b..fbd3f8cd5c22 100644
-> --- a/drivers/clk/sunxi-ng/Kconfig
-> +++ b/drivers/clk/sunxi-ng/Kconfig
-> @@ -151,4 +151,10 @@ config SUN9I_A80_CCU
->  	default MACH_SUN9I
->  	depends on MACH_SUN9I || COMPILE_TEST
->  
-> +config SUN8I_R_CCU
-> +	bool "Support for Allwinner SoCs' PRCM CCUs"
-> +	select SUNXI_CCU_DIV
-> +	select SUNXI_CCU_GATE
-> +	default MACH_SUN8I || (ARCH_SUNXI && ARM64)
-> +
->  endif
-> diff --git a/drivers/clk/sunxi-ng/Makefile
-> b/drivers/clk/sunxi-ng/Makefile index 6feaac0c5600..0ec02fe14c50
-> 100644 --- a/drivers/clk/sunxi-ng/Makefile
-> +++ b/drivers/clk/sunxi-ng/Makefile
-> @@ -25,6 +25,7 @@ obj-$(CONFIG_SUN8I_A23_CCU)	+=
-> ccu-sun8i-a23.o obj-$(CONFIG_SUN8I_A33_CCU)	+= ccu-sun8i-a33.o
->  obj-$(CONFIG_SUN8I_H3_CCU)	+= ccu-sun8i-h3.o
->  obj-$(CONFIG_SUN8I_V3S_CCU)	+= ccu-sun8i-v3s.o
-> +obj-$(CONFIG_SUN8I_R_CCU)	+= ccu-sun8i-r.o
->  obj-$(CONFIG_SUN9I_A80_CCU)	+= ccu-sun9i-a80.o
->  obj-$(CONFIG_SUN9I_A80_CCU)	+= ccu-sun9i-a80-de.o
->  obj-$(CONFIG_SUN9I_A80_CCU)	+= ccu-sun9i-a80-usb.o
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-> b/drivers/clk/sunxi-ng/ccu-sun8i-r.c new file mode 100644
-> index 000000000000..ddbb34018086
-> --- /dev/null
-> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-> @@ -0,0 +1,211 @@
-> +/*
-> + * Copyright (c) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> + *
-> + * This software is licensed under the terms of the GNU General
-> Public
-> + * License version 2, as published by the Free Software Foundation,
-> and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "ccu_common.h"
-> +#include "ccu_reset.h"
-> +
-> +#include "ccu_div.h"
-> +#include "ccu_gate.h"
-> +#include "ccu_mp.h"
-> +#include "ccu_nm.h"
-> +
-> +#include "ccu-sun8i-r.h"
-> +
-> +static const char * const ar100_parents[] = { "osc32k", "osc24M",
-> +					     "pll-periph0", "iosc" };
-> +
-> +static struct ccu_div ar100_clk = {
-> +	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2,
-> CLK_DIVIDER_POWER_OF_TWO), +
-> +	.mux		= {
-> +		.shift	= 16,
-> +		.width	= 2,
-> +
-> +		.variable_prediv	= {
-> +			.index	= 2,
-> +			.shift	= 8,
-> +			.width	= 5,
-> +		},
-> +	},
-> +
-> +	.common		= {
-> +		.reg		= 0x00,
-> +		.features	= CCU_FEATURE_VARIABLE_PREDIV,
-> +		.hw.init	= CLK_HW_INIT_PARENTS("ar100",
-> +						      ar100_parents,
-> +						      &ccu_div_ops,
-> +						      0),
-> +	},
-> +};
-> +
-> +static CLK_FIXED_FACTOR(ahb0_clk, "ahb0", "ar100", 1, 1, 0);
-> +
-> +static struct ccu_div apb0_clk = {
-> +	.div		= _SUNXI_CCU_DIV_FLAGS(0, 2,
-> CLK_DIVIDER_POWER_OF_TWO), +
-> +	.common		= {
-> +		.reg		= 0x0c,
-> +		.hw.init	= CLK_HW_INIT("apb0",
-> +					      "ahb0",
-> +					      &ccu_div_ops,
-> +					      0),
-> +	},
-> +};
-> +
-> +static SUNXI_CCU_GATE(apb0_pio_clk,	"apb0-pio",	"apb0",
-> +		      0x28, BIT(0), 0);
-> +static SUNXI_CCU_GATE(apb0_ir_clk,	"apb0-ir",	"apb0",
-> +		      0x28, BIT(1), 0);
-> +static
-> SUNXI_CCU_GATE(apb0_timer_clk,	"apb0-timer",	"apb0",
-> +		      0x28, BIT(2), 0);
-> +static SUNXI_CCU_GATE(apb0_rsb_clk,	"apb0-rsb",	"apb0",
-> +		      0x28, BIT(3), 0);
-> +static
-> SUNXI_CCU_GATE(apb0_uart_clk,	"apb0-uart",	"apb0",
-> +		      0x28, BIT(4), 0);
-> +static SUNXI_CCU_GATE(apb0_i2c_clk,	"apb0-i2c",	"apb0",
-> +		      0x28, BIT(6), 0);
-> +static SUNXI_CCU_GATE(apb0_twd_clk,	"apb0-twd",	"apb0",
-> +		      0x28, BIT(7), 0);
-> +
-> +static const char * const r_mod0_default_parents[] = { "osc32K",
-> "osc24M" }; +static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
-> +				  r_mod0_default_parents, 0x54,
-> +				  0, 4,		/* M */
-> +				  16, 2,	/* P */
-> +				  24, 2,	/* mux */
-> +				  BIT(31),	/* gate */
-> +				  0);
-> +
-> +static struct ccu_common *sun8i_h3_r_ccu_clks[] = {
-> +	&ar100_clk.common,
-> +	&apb0_clk.common,
-> +	&apb0_pio_clk.common,
-> +	&apb0_ir_clk.common,
-> +	&apb0_timer_clk.common,
-> +	&apb0_uart_clk.common,
-> +	&apb0_i2c_clk.common,
-I'm sorry but I missed something here:
-
-+	&apb0_twd_clk.common,
-
-> +	&ir_clk.common,
-> +};
-> +
-> +static struct ccu_common *sun50i_a64_r_ccu_clks[] = {
-> +	&ar100_clk.common,
-> +	&apb0_clk.common,
-> +	&apb0_pio_clk.common,
-> +	&apb0_ir_clk.common,
-> +	&apb0_timer_clk.common,
-> +	&apb0_rsb_clk.common,
-> +	&apb0_uart_clk.common,
-> +	&apb0_i2c_clk.common,
-+	&apb0_twd_clk.common,
-> +	&ir_clk.common,
-> +};
-> +
-> +static struct clk_hw_onecell_data sun8i_h3_r_hw_clks = {
-> +	.hws	= {
-> +		[CLK_AR100]		= &ar100_clk.common.hw,
-> +		[CLK_AHB0]		= &ahb0_clk.hw,
-> +		[CLK_APB0]		= &apb0_clk.common.hw,
-> +		[CLK_APB0_PIO]		=
-> &apb0_pio_clk.common.hw,
-> +		[CLK_APB0_IR]		=
-> &apb0_ir_clk.common.hw,
-> +		[CLK_APB0_TIMER]	= &apb0_timer_clk.common.hw,
-> +		[CLK_APB0_UART]		=
-> &apb0_uart_clk.common.hw,
-> +		[CLK_APB0_I2C]		=
-> &apb0_i2c_clk.common.hw,
-> +		[CLK_APB0_TWD]		=
-> &apb0_twd_clk.common.hw,
-> +		[CLK_IR]		= &ir_clk.common.hw,
-> +	},
-> +	.num	= CLK_NUMBER,
-> +};
-> +
-> +static struct clk_hw_onecell_data sun50i_a64_r_hw_clks = {
-> +	.hws	= {
-> +		[CLK_AR100]		= &ar100_clk.common.hw,
-> +		[CLK_AHB0]		= &ahb0_clk.hw,
-> +		[CLK_APB0]		= &apb0_clk.common.hw,
-> +		[CLK_APB0_PIO]		=
-> &apb0_pio_clk.common.hw,
-> +		[CLK_APB0_IR]		=
-> &apb0_ir_clk.common.hw,
-> +		[CLK_APB0_TIMER]	= &apb0_timer_clk.common.hw,
-> +		[CLK_APB0_RSB]		=
-> &apb0_rsb_clk.common.hw,
-> +		[CLK_APB0_UART]		=
-> &apb0_uart_clk.common.hw,
-> +		[CLK_APB0_I2C]		=
-> &apb0_i2c_clk.common.hw,
-> +		[CLK_APB0_TWD]		=
-> &apb0_twd_clk.common.hw,
-> +		[CLK_IR]		= &ir_clk.common.hw,
-> +	},
-> +	.num	= CLK_NUMBER,
-> +};
-> +
-> +static struct ccu_reset_map sun8i_h3_r_ccu_resets[] = {
-> +	[RST_APB0_IR]		=  { 0xb0, BIT(1) },
-> +	[RST_APB0_TIMER]	=  { 0xb0, BIT(2) },
-> +	[RST_APB0_UART]		=  { 0xb0, BIT(4) },
-> +	[RST_APB0_I2C]		=  { 0xb0, BIT(6) },
-> +};
-> +
-> +static struct ccu_reset_map sun50i_a64_r_ccu_resets[] = {
-> +	[RST_APB0_IR]		=  { 0xb0, BIT(1) },
-> +	[RST_APB0_TIMER]	=  { 0xb0, BIT(2) },
-> +	[RST_APB0_RSB]		=  { 0xb0, BIT(3) },
-> +	[RST_APB0_UART]		=  { 0xb0, BIT(4) },
-> +	[RST_APB0_I2C]		=  { 0xb0, BIT(6) },
-> +};
-> +
-> +static const struct sunxi_ccu_desc sun8i_h3_r_ccu_desc = {
-> +	.ccu_clks	= sun8i_h3_r_ccu_clks,
-> +	.num_ccu_clks	= ARRAY_SIZE(sun8i_h3_r_ccu_clks),
-> +
-> +	.hw_clks	= &sun8i_h3_r_hw_clks,
-> +
-> +	.resets		= sun8i_h3_r_ccu_resets,
-> +	.num_resets	= ARRAY_SIZE(sun8i_h3_r_ccu_resets),
-> +};
-> +
-> +static const struct sunxi_ccu_desc sun50i_a64_r_ccu_desc = {
-> +	.ccu_clks	= sun50i_a64_r_ccu_clks,
-> +	.num_ccu_clks	= ARRAY_SIZE(sun50i_a64_r_ccu_clks),
-> +
-> +	.hw_clks	= &sun50i_a64_r_hw_clks,
-> +
-> +	.resets		= sun50i_a64_r_ccu_resets,
-> +	.num_resets	= ARRAY_SIZE(sun50i_a64_r_ccu_resets),
-> +};
-> +
-> +static void __init sunxi_r_ccu_init(struct device_node *node,
-> +				    const struct sunxi_ccu_desc
-> *desc) +{
-> +	void __iomem *reg;
-> +
-> +	reg = of_io_request_and_map(node, 0,
-> of_node_full_name(node));
-> +	if (IS_ERR(reg)) {
-> +		pr_err("%s: Could not map the clock registers\n",
-> +		       of_node_full_name(node));
-> +		return;
-> +	}
-> +
-> +	sunxi_ccu_probe(node, reg, desc);
-> +}
-> +
-> +static void __init sun8i_h3_r_ccu_setup(struct device_node *node)
-> +{
-> +	sunxi_r_ccu_init(node, &sun8i_h3_r_ccu_desc);
-> +}
-> +CLK_OF_DECLARE(sun8i_h3_r_ccu, "allwinner,sun8i-h3-r-ccu",
-> +	       sun8i_h3_r_ccu_setup);
-> +
-> +static void __init sun50i_a64_r_ccu_setup(struct device_node *node)
-> +{
-> +	sunxi_r_ccu_init(node, &sun50i_a64_r_ccu_desc);
-> +}
-> +CLK_OF_DECLARE(sun50i_a64_r_ccu, "allwinner,sun50i-a64-r-ccu",
-> +	       sun50i_a64_r_ccu_setup);
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.h
-> b/drivers/clk/sunxi-ng/ccu-sun8i-r.h new file mode 100644
-> index 000000000000..eaa431fd1d8f
-> --- /dev/null
-> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.h
-> @@ -0,0 +1,27 @@
-> +/*
-> + * Copyright 2016 Icenowy <icenowy-ymACFijhrKM@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> modify
-> + * it under the terms of the GNU General Public License as published
-> by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef _CCU_SUN8I_R_H
-> +#define _CCU_SUN8I_R_H_
-> +
-> +#include <dt-bindings/clock/sun8i-r-ccu.h>
-> +#include <dt-bindings/reset/sun8i-r-ccu.h>
-> +
-> +/* AHB/APB bus clocks are not exported */
-> +#define CLK_AHB0	1
-> +#define CLK_APB0	2
-> +
-> +#define CLK_NUMBER	(CLK_APB0_TWD + 1)
-> +
-> +#endif /* _CCU_SUN8I_R_H */
-> diff --git a/include/dt-bindings/clock/sun8i-r-ccu.h
-> b/include/dt-bindings/clock/sun8i-r-ccu.h new file mode 100644
-> index 000000000000..779d20aa0d05
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/sun8i-r-ccu.h
-> @@ -0,0 +1,59 @@
-> +/*
-> + * Copyright (c) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2
-> of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the
-> Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
-> KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-> WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_SUN8I_R_CCU_H_
-> +#define _DT_BINDINGS_CLK_SUN8I_R_CCU_H_
-> +
-> +#define CLK_AR100		0
-> +
-> +#define CLK_APB0_PIO		3
-> +#define CLK_APB0_IR		4
-> +#define CLK_APB0_TIMER		5
-> +#define CLK_APB0_RSB		6
-> +#define CLK_APB0_UART		7
-> +/* 8 is reserved for CLK_APB0_W1 on A31 */
-> +#define CLK_APB0_I2C		9
-> +#define CLK_APB0_TWD		10
-> +
-> +#define CLK_IR			11
-> +
-> +#endif /* _DT_BINDINGS_CLK_SUN8I_R_CCU_H_ */
-> diff --git a/include/dt-bindings/reset/sun8i-r-ccu.h
-> b/include/dt-bindings/reset/sun8i-r-ccu.h new file mode 100644
-> index 000000000000..4ba64f3d6fc9
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/sun8i-r-ccu.h
-> @@ -0,0 +1,53 @@
-> +/*
-> + * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2
-> of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the
-> Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
-> KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-> WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_RST_SUN8I_R_CCU_H_
-> +#define _DT_BINDINGS_RST_SUN8I_R_CCU_H_
-> +
-> +#define RST_APB0_IR		0
-> +#define RST_APB0_TIMER		1
-> +#define RST_APB0_RSB		2
-> +#define RST_APB0_UART		3
-> +/* 4 is reserved for RST_APB0_W1 on A31 */
-> +#define RST_APB0_I2C		5
-> +
-> +#endif /* _DT_BINDINGS_RST_SUN8I_R_CCU_H_ */
+T24gV2VkbmVzZGF5LCBNYXJjaCAyOSwgMjAxNywgQ2hyaXMgQnJhbmR0IHdyb3RlOg0KPiBPbiBX
+ZWRuZXNkYXksIE1hcmNoIDI5LCAyMDE3LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4g
+PiBCdXQsIHdoYXQgZG8gd2UgZG8gZm9yIEV0aGVybmV0PyBBbGwgdGhlIHBpbnMgYXJlICJub3Jt
+YWwiIGV4Y2VwdA0KPiA+ID4ganVzdCB0aGUgTURJTyBwaW4gbmVlZHMgdG8gYmUgYmlkaXJlY3Rp
+b25hbC4NCj4gPiA+IFRoYXQncyB0aGUgcGFydCBJJ20gY29uZnVzZWQgYnkuDQo+ID4gPiBIb3cg
+ZG8gd2UgZmxhZyB0aGF0IGp1c3QgdGhlIEVUX01ESU8gbmVlZHMgImJpZGlyZWN0aW9uYWwiPw0K
+PiA+DQo+ID4gWW91IGFkZCBzdWJub2RlcywgY2ZyLiBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVz
+YXMvcjhhNzc5NS1zYWx2YXRvci0NCj4geC5kdHM6DQo+ID4NCj4gPiAgICAgICAgIGF2Yl9waW5z
+OiBhdmIgew0KPiA+ICAgICAgICAgICAgICAgICBtdXggew0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIGdyb3VwcyA9ICJhdmJfbGluayIsICJhdmJfcGh5X2ludCIsICJhdmJfbWRjIiwNCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYXZiX21paSI7DQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgZnVuY3Rpb24gPSAiYXZiIjsNCj4gPiAgICAgICAgICAgICAgICAg
+fTsNCj4gPg0KPiA+ICAgICAgICAgICAgICAgICBwaW5zX21kYyB7DQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgZ3JvdXBzID0gImF2Yl9tZGMiOw0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgIGRyaXZlLXN0cmVuZ3RoID0gPDI0PjsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPg0K
+PiA+ICAgICAgICAgICAgICAgICBwaW5zX21paV90eCB7DQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgcGlucyA9ICJQSU5fQVZCX1RYX0NUTCIsICJQSU5fQVZCX1RYQyIsDQo+ID4gIlBJTl9B
+VkJfVEQwIiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIlBJTl9BVkJfVEQx
+IiwgIlBJTl9BVkJfVEQyIiwNCj4gPiAiUElOX0FWQl9URDMiOw0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIGRyaXZlLXN0cmVuZ3RoID0gPDEyPjsNCj4gPiAgICAgICAgICAgICAgICAgfTsN
+Cj4gPiAgICAgICAgIH07DQo+IA0KPiBPaCwgc28gdGhlcmUgaXMgYSB3YXkhDQo+IA0KPiBUaGFu
+ayB5b3UuDQo+IA0KPiANCj4gU28sIGZvciBjbGFyaXR5Og0KDQoNCkFjdHVhbGx5LCBMaW51cydz
+IHJlcXVlc3Qgd2FzIHRvIHVzZSAicGlubXV4Iiwgbm90ICJwaW5zIi4NCg0KU28sIGl0IHNob3Vs
+ZCBiZToNCg0KCS8qIFAxXzYgPSBSSUlDM1NDTCAoYmkgZGlyKSAqLw0KCS8qIFAxXzcgPSBSSUlD
+M1NEQSAoYmkgZGlyKSAqLw0KCWkyYzNfcGluczogaTJjMyB7DQoJCXBpbm11eCA9IDxQSU4oMSwg
+NikgfCBGVU5DXzE+LA0KCQkgICAgICAgICA8UElOKDEsIDcpIHwgRlVOQ18xPjsNCgkJYmlkaXJl
+Y3Rpb25hbDsNCgl9Ow0KDQogDQoJLyogRXRoZXJuZXQgKi8NCglldGhlcl9waW5zOiBldGhlciB7
+DQoJCS8qIEV0aGVybmV0IG9uIFBvcnRzIDEsMiwzLDUgKi8NCgkJbXV4IHsNCgkJCXBpbm11eCA9
+IDxQSU4oMSwgMTQpIHwgRlVOQ180KT4sIC8qIFAxXzE0ID0gRVRfQ09MICovDQoJCQkJPFBJTig1
+LCA5KSB8IEZVTkNfMik+LAkvKiBQNV85ID0gRVRfTURDICovDQoJCQkJPFBJTigzLCA0KSB8IEZV
+TkNfMik+LAkvKiBQM180ID0gRVRfUlhDTEsgKi8NCgkJCQk8UElOKDMsIDUpIHwgRlVOQ18yKT4s
+CS8qIFAzXzUgPSBFVF9SWEVSICovDQoJCQkJPFBJTigzLCA2KSB8IEZVTkNfMik+LAkvKiBQM182
+ID0gRVRfUlhEViAqLw0KCQkJCTxQSU4oMiwgMCkgfCBGVU5DXzIpPiwJLyogUDJfMCA9IEVUX1RY
+Q0xLICovDQoJCQkJPFBJTigyLCAxKSB8IEZVTkNfMik+LAkvKiBQMl8xID0gRVRfVFhFUiAqLw0K
+CQkJCTxQSU4oMiwgMikgfCBGVU5DXzIpPiwJLyogUDJfMiA9IEVUX1RYRU4gKi8NCgkJCQk8UElO
+KDIsIDMpIHwgRlVOQ18yKT4sCS8qIFAyXzMgPSBFVF9DUlMgKi8NCgkJCQk8UElOKDIsIDQpIHwg
+RlVOQ18yKT4sCS8qIFAyXzQgPSBFVF9UWEQwICovDQoJCQkJPFBJTigyLCA1KSB8IEZVTkNfMik+
+LAkvKiBQMl81ID0gRVRfVFhEMSAqLw0KCQkJCTxQSU4oMiwgNikgfCBGVU5DXzIpPiwJLyogUDJf
+NiA9IEVUX1RYRDIgKi8NCgkJCQk8UElOKDIsIDcpIHwgRlVOQ18yKT4sCS8qIFAyXzcgPSBFVF9U
+WEQzICovDQoJCQkJPFBJTigyLCA4KSB8IEZVTkNfMik+LAkvKiBQMl84ID0gRVRfUlhEMCAqLw0K
+CQkJCTxQSU4oMiwgOSkgfCBGVU5DXzIpPiwJLyogUDJfOSA9IEVUX1JYRDEgKi8NCgkJCQk8UElO
+KDIsIDEwKSB8IEZVTkNfMik+LCAvKiBQMl8xMCA9IEVUX1JYRDIgKi8NCgkJCQk8UElOKDIsIDEx
+KSB8IEZVTkNfMik+OyAvKiBQMl8xMSA9IEVUX1JYRDMgKi8NCgkJfTsNCgkJcGluc19iaWRpciB7
+DQoJCQlwaW5tdXggPSA8UElOKDMsIDMpIHwgRlVOQ18yKT4sCS8qIFAzXzMgPSBFVF9NRElPICov
+DQoJCQliaWRpcmVjdGlvbmFsOw0KCQl9Ow0KCX07DQoNCg0KICBOT1RFOiAiRlVOQ18yIiBjYW4g
+anVzdCBiZSAiMiIgYXMgcGVyIEdlZXJ0J3MgcmVxdWVzdC4NCg0KDQoNCkNocmlzDQoNCg0K
