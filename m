@@ -1,40 +1,74 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH] Input: silead - list all supported compatible strings in binding document
-Date: Wed, 29 Mar 2017 14:25:31 -0400
-Message-ID: <20170329182531.17349-1-javier@osg.samsung.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Robert Dolca <robert.dolca@intel.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Wed, 29 Mar 2017 12:07:25 -0700
+Message-ID: <20170329190725.GN20094@minitux>
+References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
+ <20170323203749.GB8563@amd>
+ <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The driver contains compatible strings for different models, but the DT
-binding doc only lists one of them. Add the remaining to the document.
+On Tue 28 Mar 19:17 PDT 2017, Rob Herring wrote:
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
----
+> On Thu, Mar 23, 2017 at 09:37:49PM +0100, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
+> > > PMICs from Qualcomm. It can operate on fixed parameters or based on a
+> > > lookup-table, altering the duty cycle over time - which provides the
+> > > means for e.g. hardware assisted transitions of LED brightness.
+> > 
+> > Ok, this is not first hardware that supports something like this. We
+> > have similar hardware that can do blinking on Nokia N900 -- please
+> > take a look at leds-lp55*.c
+> 
+> And perhaps some alignment on the bindings too if the N900 has bindings.
+> 
 
- .../devicetree/bindings/input/touchscreen/silead_gsl1680.txt       | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+There is a binding for ti,lp55xx, but there's nothing I can reuse from
+that binding...because it's completely different hardware.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-index ce85ee508238..6aa625e0cb8d 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-@@ -1,7 +1,12 @@
- * GSL 1680 touchscreen controller
- 
- Required properties:
--- compatible		  : "silead,gsl1680"
-+- compatible		  : Must be one of the following, depending on the model:
-+			    "silead,gsl1680"
-+			    "silead,gsl1688"
-+			    "silead,gsl3670"
-+			    "silead,gsl3675"
-+			    "silead,gsl3692"
- - reg			  : I2C slave address of the chip (0x40)
- - interrupt-parent	  : a phandle pointing to the interrupt controller
- 			    serving the interrupt for this chip
--- 
-2.9.3
+> > And it would be really good to provide hardware abstraction. We really
+> > don't want to have different userspace for LPG and for N900 and for
+> 
+> I'm interested in what this looks like as several AOSP platforms do 
+> tri-color LEDs with custom sysfs extensions.
+> 
 
+How to model RGB LEDs has been discussed many times before and I was
+hoping for that discussion to come to some conclusion during the last 2
+years, but now I couldn't wait more - we need this driver for db820c.
+
+With this driver, as with many existing, you will have 3 LEDs that you
+set independently.
+
+I did implement blinking by using the PWM straight off, so you can't set
+brightness or synchronize the multiple channels. Perhaps this should be
+changed to use the ramp generator.
+
+To synchronize patterns I suggest that we extend the LUT binding to
+describe groups and when any LPG trigger a restart of the pattern-walker
+we trigger all that are grouped.
+
+These two changes combined allows you to set brightness and blink with a
+RGB-LED.
+
+
+But I will have to dig up some hardware that uses the LPG for driving a
+RGB-LED to be able to test this (and I do prefer that to be done with
+some incremental patches at some later time, if acceptable).
+
+> Do any of the Dragonboards have tri-color LEDs?
+> 
+
+No.
+
+Regards,
+Bjorn
