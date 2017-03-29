@@ -1,42 +1,37 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r7s72100: add power-domains to sdhi
-Date: Wed, 29 Mar 2017 10:09:09 +0200
-Message-ID: <20170329080909.GE6512@verge.net.au>
-References: <20170209133803.21539-1-chris.brandt@renesas.com>
- <CAMuHMdXRD3o7KdaADvPYxzeuEVo44nRVWHfCverPc+9s=0owPA@mail.gmail.com>
- <20170324070228.GI1319@verge.net.au>
- <CAMuHMdUJMEjb8UhaHHK3aE2uEoUpKFtSFXLhYwgJHKu9YDeVHQ@mail.gmail.com>
- <SG2PR06MB116573C9325106B5ED4580578A3E0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3
+ ES2.0
+Date: Wed, 29 Mar 2017 10:13:52 +0200
+Message-ID: <20170329081352.GF6512@verge.net.au>
+References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
+ <1490362665-4422-2-git-send-email-geert+renesas@glider.be>
+ <1612430.SNEha5n02K@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <SG2PR06MB116573C9325106B5ED4580578A3E0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+In-Reply-To: <1612430.SNEha5n02K@avalon>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 11:17:25AM +0000, Chris Brandt wrote:
-> On Friday, March 24, 2017, Geert Uytterhoeven wrote:
-> > > The fixes tag above indicates this is a fix for v4.10, however, when I
-> > > tried to apply it on top of v4.11-rc1 there was a conflict.  So I
-> > > think a backport will be required if we want it to be considered for
-> > > v4.11 and be considered for and in turn v4.10-stable.
-> > 
-> > That's because of commit 3d2abda02ad2d06d
-> > ("ARM: dts: r7s72100: update sdhi clock bindings")
+On Mon, Mar 27, 2017 at 11:48:12AM +0300, Laurent Pinchart wrote:
+> Hi Geert,
 > 
+> Thank you for the patch.
 > 
-> Between the two, "update sdhi clock bindings" is more important this this patch ("add power-domains").
-> Without "update sdhi clock bindings", the SDHI /might/ not work.
+> On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
+> > Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
+> >   - The following devices no longer exist on ES2.0, and are thus removed:
+> >     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
+> >   - The DU <-> VSPD topology is different on ES2.0, hence remove the
+> >     "vsps" property from the DU node until the driver can handle this.
 > 
-> 
-> But, "update sdhi clock bindings", also relies on the driver update 34a1654706c6 ("mmc: sh_mobile_sdhi: add support for 2 clocks").
-> That one is in v4.11-rc1, but not in 4.10.5.
-> 
-> I just noticed now that 34a1654706c6 does not have "Fixes" in the commit log, so it is probably not marked to go into v4.10-stable, so in that case backporting the dtsi is pointless.
+> I think I'll need a different compatible string between ES1.x and ES2 for the 
+> DU. It could make sense to move the whole DU node to *-es1.dtsi. We can decide 
+> about that later when I'll have a DU driver prototype ready.
 
-We could try to coordinate getting 34a1654706c6 and the dtsi changes into
-v4.10-stable if you it is sufficiently important. What are your thoughts on
-that?
+That makes sense to me.
+
+Geert, will you respin this?
