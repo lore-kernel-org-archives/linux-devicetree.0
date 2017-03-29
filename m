@@ -1,355 +1,73 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: add driver for STM32 quad spi flash
- controller
-Date: Wed, 29 Mar 2017 15:09:30 +0200
-Message-ID: <28454969-0f56-7752-b087-5e02a1a20c23@gmail.com>
-References: <1490619296-8168-1-git-send-email-ludovic.Barre@st.com>
- <1490619296-8168-3-git-send-email-ludovic.Barre@st.com>
- <1be39452-83b0-5c32-39fe-d6dd5134d1ef@gmail.com>
- <2c364b99-512c-8eb6-7044-7989ba21d53b@st.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
+Date: Wed, 29 Mar 2017 15:10:17 +0200
+Message-ID: <CACRpkdb+k82OUbi1y1SNC09asHsNSqbtvCkYyT=1eqjpdMt_cg@mail.gmail.com>
+References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com>
+ <20170323160204.GL30223@w540> <CACRpkdYmitsPvv_1bsb-EKkhcWqaKNsLBfxZgf8cjVvcqCpYXA@mail.gmail.com>
+ <b9eaac8a63dced229bb152ba412e8ec1@jmondi.org> <CACRpkdbZS72xkHaM5P-Zw==A_V_BxeszLPmc0_Zy0-RRjvAbNA@mail.gmail.com>
+ <CAMuHMdXkN91uBTKhz_bveFxOgcyNe0dAbtDEVfHNKdDWNaY3jQ@mail.gmail.com>
+ <CACRpkdbT3091MzAQ_hO5Hc9=gQz-eDNCDtEnVG-3G+jJ+eO+Fw@mail.gmail.com>
+ <CAMuHMdX0OdZXYDOZvFutjfBFVd65C567_G+++kHygre4KK+jLg@mail.gmail.com>
+ <20170329120530.GB6247@w540> <SG2PR06MB1165276F957CE63DBE0A55268A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2c364b99-512c-8eb6-7044-7989ba21d53b-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <SG2PR06MB1165276F957CE63DBE0A55268A350-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2017 02:24 PM, Ludovic BARRE wrote:
-> hi Marek
+On Wed, Mar 29, 2017 at 2:38 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
 
-Hi!
-
-> thanks for review
-> comment below
-> 
-> On 03/29/2017 12:54 PM, Marek Vasut wrote:
->> On 03/27/2017 02:54 PM, Ludovic Barre wrote:
->>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->>>
->>> The quadspi is a specialized communication interface targeting single,
->>> dual or quad SPI Flash memories.
->>>
->>> It can operate in any of the following modes:
->>> -indirect mode: all the operations are performed using the quadspi
->>>   registers
->>> -read memory-mapped mode: the external Flash memory is mapped to the
->>>   microcontroller address space and is seen by the system as if it was
->>>   an internal memory
->>>
->>> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->> Hi! I presume this is not compatible with the Cadence QSPI or any other
->> QSPI controller, huh ?
-> it's not a cadence QSPI, it's specific for stm32 platform
-
-OK, got it. Didn't ST use Cadence IP somewhere too though ?
-That's probably what confused me, oh well ...
-
->> Mostly minor nits below ...
+>> I'm strongly in favour of something like
+>>     pinmux = <PIN(1, 4) | FUNC# | FLAGS>, .... ;
 >>
->>> ---
->>>   drivers/mtd/spi-nor/Kconfig         |   7 +
->>>   drivers/mtd/spi-nor/Makefile        |   1 +
->>>   drivers/mtd/spi-nor/stm32-quadspi.c | 679
->>> ++++++++++++++++++++++++++++++++++++
->>>   3 files changed, 687 insertions(+)
->>>   create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
->> [...]
->>
->>> +struct stm32_qspi_cmd {
->>> +    struct {
->>> +        u32 addr_width:8;
->>> +        u32 dummy:8;
->>> +        u32 data:1;
->>> +    } conf;
->> This could all be u8 ? Why this awful construct ?
-> yes I could replace each u32 by u8
+>> opposed to
+>>     pinmux = <PIN1_4_FUNC#_FLAGS>, ... ;
+>
+>
+> I agree. I like "<PIN(1, 4) | FUNC# | FLAGS>".
 
-Yeah, please do .
+I don't know if you have seen the Mediatek things really.
+include/dt-bindings/pinctrl/mt6397-pinfunc.h
 
->>> +    u8 opcode;
->>> +    u32 framemode;
->>> +    u32 qspimode;
->>> +    u32 addr;
->>> +    size_t len;
->>> +    void *buf;
->>> +};
->>> +
->>> +static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi)
->>> +{
->>> +    u32 cr;
->>> +    int err = 0;
->> Can readl_poll_timeout() or somesuch replace this function ?
-> in fact stm32_qspi_wait_cmd test if the transfer has been complete (TCF
-> flag)
-> else initialize an interrupt completion.
-> like the time may be long I prefer keep the interrupt wait, if you agree.
+Example:
+#define MT6397_PIN_2_SRCLKEN_PERI__FUNC_GPIO2 (MTK_PIN_NO(2) | 0)
 
-I don't really mind if it fits the hardware better and I agree with you
-it does here.
+If you prefer to use preprocessor macros or whatever to make the
+bitmasks or how you want to organize the constants in your
+include files is not my concern, do whatever you seem fit, just
+pack it into a 32bit thing somehow which makes sense from a
+maintenance point of view.
 
->>> +    if (readl_relaxed(qspi->io_base + QUADSPI_SR) & SR_TCF)
->>> +        return 0;
->>> +
->>> +    reinit_completion(&qspi->cmd_completion);
->>> +    cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
->>> +    writel_relaxed(cr | CR_TCIE, qspi->io_base + QUADSPI_CR);
->>> +
->>> +    if
->>> (!wait_for_completion_interruptible_timeout(&qspi->cmd_completion,
->>> +                               msecs_to_jiffies(1000)))
->>> +        err = -ETIMEDOUT;
->>> +
->>> +    writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
->>> +    return err;
->>> +}
->>> +
->>> +static int stm32_qspi_wait_nobusy(struct stm32_qspi *qspi)
->>> +{
->>> +    u32 sr;
->>> +
->>> +    return readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR, sr,
->>> +                      !(sr & SR_BUSY), 10, 100000);
->>> +}
->>> +
->>> +static void stm32_qspi_set_framemode(struct spi_nor *nor,
->>> +                     struct stm32_qspi_cmd *cmd, bool read)
->>> +{
->>> +    u32 dmode = CCR_DMODE_1;
->>> +
->>> +    cmd->framemode = CCR_IMODE_1;
->>> +
->>> +    if (read) {
->>> +        switch (nor->flash_read) {
->>> +        case SPI_NOR_NORMAL:
->>> +        case SPI_NOR_FAST:
->>> +            dmode = CCR_DMODE_1;
->>> +            break;
->>> +        case SPI_NOR_DUAL:
->>> +            dmode = CCR_DMODE_2;
->>> +            break;
->>> +        case SPI_NOR_QUAD:
->>> +            dmode = CCR_DMODE_4;
->>> +            break;
->>> +        }
->>> +    }
->>> +
->>> +    cmd->framemode |= cmd->conf.data ? dmode : 0;
->>> +    cmd->framemode |= cmd->conf.addr_width ? CCR_ADMODE_1 : 0;
->>> +}
->>> +
->>> +static void stm32_qspi_read_fifo(u8 *val, void __iomem *addr)
->>> +{
->>> +    *val = readb_relaxed(addr);
->>> +}
->>> +
->>> +static void stm32_qspi_write_fifo(u8 *val, void __iomem *addr)
->>> +{
->>> +    writeb_relaxed(*val, addr);
->>> +}
->>> +
->>> +static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
->>> +                  const struct stm32_qspi_cmd *cmd)
->>> +{
->>> +    void (*tx_fifo)(u8 *, void __iomem *);
->>> +    u32 len = cmd->len, sr;
->>> +    u8 *buf = cmd->buf;
->>> +    int ret;
->>> +
->>> +    if (cmd->qspimode == CCR_FMODE_INDW)
->>> +        tx_fifo = stm32_qspi_write_fifo;
->>> +    else
->>> +        tx_fifo = stm32_qspi_read_fifo;
->>> +
->>> +    while (len--) {
->>> +        ret = readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR,
->>> +                         sr, (sr & SR_FTF),
->>> +                         10, 30000);
->> Add macros for those ad-hoc timeouts.
-> I will add 2 defines (for stm32_qspi_wait_nobusy, stm32_qspi_tx_poll)
-> #define STM32_QSPI_FIFO_TIMEOUT_US 30000
-> #define STM32_QSPI_BUSY_TIMEOUT_US 100000
+>> Not only because it will save use from having a loong list(*) of macros
+>> that has to be kept up to date when/if new RZ hardware will arrive, but
+>> also because of readability and simplicity for down-stream and BSP users.
+>> Speaking of which, I would like to know what does Chris think of this.
+>
+> The list of macros would be very long, especially against the different
+> packaging version of the RZ/A1 series. 11 ports, 16-pins for each port, 8 different
+> function options for each pin....2 different package/pin variations.
+>
+> And at the end of the day....there is no benefit for the user over just using
+> a macro.
 
-Super
+I don't know who has this idea that you could not use macros, certainly
+not me. Some misunderstanding must be going on. For what I'm concerned
+you can write hex numbers in the pinmux = <0x12345678>;
 
->>> +        if (ret) {
->>> +            dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
->>> +            break;
->>> +        }
->>> +        tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
->>> +    }
->>> +
->>> +    return ret;
->>> +}
->>
->> [...]
->>
->>> +static int stm32_qspi_send(struct stm32_qspi_flash *flash,
->>> +               const struct stm32_qspi_cmd *cmd)
->>> +{
->>> +    struct stm32_qspi *qspi = flash->qspi;
->>> +    u32 ccr, dcr, cr;
->>> +    int err;
->>> +
->>> +    err = stm32_qspi_wait_nobusy(qspi);
->>> +    if (err)
->>> +        goto abort;
->>> +
->>> +    dcr = readl_relaxed(qspi->io_base + QUADSPI_DCR) & ~DCR_FSIZE_MASK;
->>> +    dcr |= DCR_FSIZE(flash->fsize);
->>> +    writel_relaxed(dcr, qspi->io_base + QUADSPI_DCR);
->>> +
->>> +    cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
->>> +    cr &= ~CR_PRESC_MASK & ~CR_FSEL;
->>> +    cr |= CR_PRESC(flash->presc);
->>> +    cr |= flash->cs ? CR_FSEL : 0;
->>> +    writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
->>> +
->>> +    if (cmd->conf.data)
->>> +        writel_relaxed(cmd->len - 1, qspi->io_base + QUADSPI_DLR);
->>> +
->>> +    ccr = cmd->framemode | cmd->qspimode;
->>> +
->>> +    if (cmd->conf.dummy)
->>> +        ccr |= CCR_DCYC(cmd->conf.dummy);
->>> +
->>> +    if (cmd->conf.addr_width)
->>> +        ccr |= CCR_ADSIZE(cmd->conf.addr_width - 1);
->>> +
->>> +    ccr |= CCR_INST(cmd->opcode);
->>> +    writel_relaxed(ccr, qspi->io_base + QUADSPI_CCR);
->>> +
->>> +    if (cmd->conf.addr_width && cmd->qspimode != CCR_FMODE_MM)
->>> +        writel_relaxed(cmd->addr, qspi->io_base + QUADSPI_AR);
->>> +
->>> +    err = stm32_qspi_tx(qspi, cmd);
->>> +    if (err)
->>> +        goto abort;
->>> +
->>> +    if (cmd->qspimode != CCR_FMODE_MM) {
->>> +        err = stm32_qspi_wait_cmd(qspi);
->>> +        if (err)
->>> +            goto abort;
->>> +        writel_relaxed(FCR_CTCF, qspi->io_base + QUADSPI_FCR);
->>> +    }
->>> +
->>> +    return err;
->>> +
->>> +abort:
->>> +    writel_relaxed(readl_relaxed(qspi->io_base + QUADSPI_CR)
->>> +               | CR_ABORT, qspi->io_base + QUADSPI_CR);
->> Use a helper variable here too.
-> ok
->>> +    dev_err(qspi->dev, "%s abort err:%d\n", __func__, err);
->>> +    return err;
->>> +}
->> [...]
->>
->>> +static int stm32_qspi_flash_setup(struct stm32_qspi *qspi,
->>> +                  struct device_node *np)
->>> +{
->>> +    u32 width, flash_read, presc, cs_num, max_rate = 0;
->>> +    struct stm32_qspi_flash *flash;
->>> +    struct mtd_info *mtd;
->>> +    int ret;
->>> +
->>> +    of_property_read_u32(np, "reg", &cs_num);
->>> +    if (cs_num >= STM32_MAX_NORCHIP)
->>> +        return -EINVAL;
->>> +
->>> +    of_property_read_u32(np, "spi-max-frequency", &max_rate);
->>> +    if (!max_rate)
->>> +        return -EINVAL;
->>> +
->>> +    presc = DIV_ROUND_UP(qspi->clk_rate, max_rate) - 1;
->>> +
->>> +    if (of_property_read_u32(np, "spi-rx-bus-width", &width))
->>> +        width = 1;
->>> +
->>> +    if (width == 4)
->>> +        flash_read = SPI_NOR_QUAD;
->>> +    else if (width == 2)
->>> +        flash_read = SPI_NOR_DUAL;
->>> +    else if (width == 1)
->>> +        flash_read = SPI_NOR_NORMAL;
->>> +    else
->>> +        return -EINVAL;
->>> +
->>> +    flash = &qspi->flash[cs_num];
->>> +    flash->qspi = qspi;
->>> +    flash->cs = cs_num;
->>> +    flash->presc = presc;
->>> +
->>> +    flash->nor.dev = qspi->dev;
->>> +    spi_nor_set_flash_node(&flash->nor, np);
->>> +    flash->nor.priv = flash;
->>> +    mtd = &flash->nor.mtd;
->>> +    mtd->priv = &flash->nor;
->>> +
->>> +    flash->nor.read = stm32_qspi_read;
->>> +    flash->nor.write = stm32_qspi_write;
->>> +    flash->nor.erase = stm32_qspi_erase;
->>> +    flash->nor.read_reg = stm32_qspi_read_reg;
->>> +    flash->nor.write_reg = stm32_qspi_write_reg;
->>> +    flash->nor.prepare = stm32_qspi_prep;
->>> +    flash->nor.unprepare = stm32_qspi_unprep;
->>> +
->>> +    writel_relaxed(LPTR_DFT_TIMEOUT, qspi->io_base + QUADSPI_LPTR);
->>> +
->>> +    writel_relaxed(CR_PRESC(presc) | CR_FTHRES(3) | CR_TCEN | CR_SSHIFT
->>> +               | CR_EN, qspi->io_base + QUADSPI_CR);
->>> +
->>> +    /* a minimum fsize must be set to sent the command id */
->>> +    flash->fsize = 25;
->> I don't understand why this is needed and the comment doesn't make
->> sense. Please fix.
-> fsize field defines the size of external memory.
+> The reason for the "FLAGS" is to work around a quirky hardware design (in my opinion).
 
-What external memory ? Unclear
+The flags I don't like at all, and think they should be converted to generic
+pin config because they have nothing to do with muxing.
 
-> Normaly, this field is used only for memory map mode,
-> but in fact is check in indirect mode.
-> So while flash scan "spi_nor_scan":
-> -I can't let 0.
-> -I not know yet the size of flash.
-> So I fix a temporary value
-> 
-> I will update my comment
+But I will point that out in the specific patch adding them.
 
-Please do, also please consider that I'm reading the comment and I
-barely have any clue about this hardware , so make sure I can understand it.
-
->>> +    ret = spi_nor_scan(&flash->nor, NULL, flash_read);
->>> +    if (ret) {
->>> +        dev_err(qspi->dev, "device scan failed\n");
->>> +        return ret;
->>> +    }
->>> +
->>> +    flash->fsize = __fls(mtd->size) - 1;
->>> +
->>> +    writel_relaxed(DCR_CSHT(1), qspi->io_base + QUADSPI_DCR);
->>> +
->>> +    ret = mtd_device_register(mtd, NULL, 0);
->>> +    if (ret) {
->>> +        dev_err(qspi->dev, "mtd device parse failed\n");
->>> +        return ret;
->>> +    }
->>> +
->>> +    dev_dbg(qspi->dev, "read mm:%s cs:%d bus:%d\n",
->>> +        qspi->read_mode == CCR_FMODE_MM ? "yes" : "no", cs_num, width);
->>> +
->>> +    return 0;
->>> +}
->> [...]
->>
-> 
-
-
--- 
-Best regards,
-Marek Vasut
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
