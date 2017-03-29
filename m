@@ -1,60 +1,47 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/8] arm64: mm: mark fault_info __ro_after_init
-Date: Wed, 29 Mar 2017 12:23:26 +0100
-Message-ID: <20170329112326.GE23442@leverpostej>
+Subject: Re: [PATCH v2 8/8] bus: brcmstb_gisb: update to support new revision
+Date: Wed, 29 Mar 2017 12:25:44 +0100
+Message-ID: <20170329112544.GF23442@leverpostej>
 References: <20170328213431.10904-1-opendmb@gmail.com>
- <20170328213431.10904-3-opendmb@gmail.com>
+ <20170328213431.10904-9-opendmb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170328213431.10904-3-opendmb@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <20170328213431.10904-9-opendmb@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Doug Berger <opendmb@gmail.com>
-Cc: wangkefeng.wang@huawei.com, catalin.marinas@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, mingo@kernel.org, f.fainelli@gmail.com, jonathanh@nvidia.com, bgolaszewski@baylibre.com, bcm-kernel-feedback-list@broadcom.com, shijie.huang@arm.com, treding@nvidia.com, devicetree@vger.kernel.org, suzuki.poulose@arm.com, robh+dt@kernel.org, gregory.0xf0@gmail.com, sandeepa.s.prabhu@gmail.com, linux-arm-kernel@lists.infradead.org, mirza.krak@gmail.com, linux-kernel@vger.kernel.org, james.morse@arm.com, olof@lixom.net, computersforpeace@gmail.com
+Cc: robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 02:34:25PM -0700, Doug Berger wrote:
-> The fault_info table must be made writeable to allow installation
-> of custom memory abort handlers, but it can be made read-only
-> after initialization to provide some protection.
+On Tue, Mar 28, 2017 at 02:34:31PM -0700, Doug Berger wrote:
+> The 7278 introduces a new version of this core.  This
+> commit adds support for that revision.
 > 
 > Signed-off-by: Doug Berger <opendmb@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt |  3 ++-
+>  drivers/bus/brcmstb_gisb.c                              | 10 ++++++++++
+>  2 files changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+> index 1eceefb20f01..8a6c3c2e58fe 100644
+> --- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+> +++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+> @@ -3,7 +3,8 @@ Broadcom GISB bus Arbiter controller
+>  Required properties:
+>  
+>  - compatible:
+> -    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for 28nm chips
+> +    "brcm,bcm7278-gisb-arb" for V7 28nm chips
+> +    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for other 28nm chips
+>      "brcm,bcm7435-gisb-arb" for newer 40nm chips
+>      "brcm,bcm7400-gisb-arb" for older 40nm chips and all 65nm chips
+>      "brcm,bcm7038-gisb-arb" for 130nm chips
 
-Thanks for putting this together. I agree that making this RO is good.
+For the binding:
 
-However, I also think that we should not allow arbitrary hooking of
-fault codes, and thus this can be const.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
 Thanks,
 Mark.
-
-> ---
->  arch/arm64/mm/fault.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index cdf1260f1005..43319ed58a47 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -493,7 +493,7 @@ static struct fault_info {
->  	int	sig;
->  	int	code;
->  	const char *name;
-> -} fault_info[] = {
-> +} fault_info[] __ro_after_init = {
->  	{ do_bad,		SIGBUS,  0,		"ttbr address size fault"	},
->  	{ do_bad,		SIGBUS,  0,		"level 1 address size fault"	},
->  	{ do_bad,		SIGBUS,  0,		"level 2 address size fault"	},
-> -- 
-> 2.12.0
-> 
