@@ -1,74 +1,353 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] drm/arcpgu: Get rid of "encoder-slave" property
-Date: Wed, 29 Mar 2017 13:34:00 +0000
-Message-ID: <1490794439.7754.88.camel@synopsys.com>
-References: <1488554364-25579-1-git-send-email-abrodkin@synopsys.com>
-         <20170303162837.GO917@e110455-lin.cambridge.arm.com>
-         <1488563298.2940.33.camel@synopsys.com>
-         <20170303182102.GP917@e110455-lin.cambridge.arm.com>
+From: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: add driver for STM32 quad spi flash
+ controller
+Date: Wed, 29 Mar 2017 15:35:48 +0200
+Message-ID: <2410fcde-1d1d-57b5-01ee-bd6bc3bc863b@st.com>
+References: <1490619296-8168-1-git-send-email-ludovic.Barre@st.com>
+ <1490619296-8168-3-git-send-email-ludovic.Barre@st.com>
+ <1be39452-83b0-5c32-39fe-d6dd5134d1ef@gmail.com>
+ <2c364b99-512c-8eb6-7044-7989ba21d53b@st.com>
+ <28454969-0f56-7752-b087-5e02a1a20c23@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170303182102.GP917-A/Nd4k6kWRHZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Content-Language: en-US
-Content-ID: <EE671EE04C9F2C4DBC47B671AE1B0720-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+In-Reply-To: <28454969-0f56-7752-b087-5e02a1a20c23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "daniel-/w4YWyX8dFk@public.gmane.org" <daniel-/w4YWyX8dFk@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "airlied-cv59FeDIM0c@public.gmane.org" <airlied-cv59FeDIM0c@public.gmane.org>
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGl2aXUsIFJvYiwNCg0KT24gRnJpLCAyMDE3LTAzLTAzIGF0IDE4OjIxICswMDAwLCBMaXZp
-dS5EdWRhdUBhcm0uY29tIHdyb3RlOg0KPiBPbiBGcmksIE1hciAwMywgMjAxNyBhdCAwNTo0ODox
-OVBNICswMDAwLCBBbGV4ZXkgQnJvZGtpbiB3cm90ZToNCj4gPiANCj4gPiBIaSBMaXZpdSwNCj4g
-PiANCj4gPiBPbiBGcmksIDIwMTctMDMtMDMgYXQgMTY6MjggKzAwMDAsIExpdml1IER1ZGF1IHdy
-b3RlOg0KPiA+ID4gDQo+ID4gPiBPbiBGcmksIE1hciAwMywgMjAxNyBhdCAwNjoxOToyNFBNICsw
-MzAwLCBBbGV4ZXkgQnJvZGtpbiB3cm90ZToNCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiAt
-CS8qIGZpbmQgdGhlIGVuY29kZXIgbm9kZSBhbmQgaW5pdGlhbGl6ZSBpdCAqLw0KPiA+ID4gPiAt
-CWVuY29kZXJfbm9kZSA9IG9mX3BhcnNlX3BoYW5kbGUoZHJtLT5kZXYtPm9mX25vZGUsICJlbmNv
-ZGVyLXNsYXZlIiwgMCk7DQo+ID4gPiA+IC0JaWYgKGVuY29kZXJfbm9kZSkgew0KPiA+ID4gPiAt
-CQlyZXQgPSBhcmNwZ3VfZHJtX2hkbWlfaW5pdChkcm0sIGVuY29kZXJfbm9kZSk7DQo+ID4gPiA+
-IC0JCW9mX25vZGVfcHV0KGVuY29kZXJfbm9kZSk7DQo+ID4gPiA+ICsJLyogVGhlcmUgaXMgb25s
-eSBvbmUgb3V0cHV0IHBvcnQgaW5zaWRlIGVhY2ggZGV2aWNlLCBmaW5kIGl0ICovDQo+ID4gPiA+
-ICsJcG9ydCA9IG9mX2dyYXBoX2dldF9uZXh0X2VuZHBvaW50KHBkZXYtPmRldi5vZl9ub2RlLCBO
-VUxMKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWlmIChwb3J0KSB7DQo+ID4gPiA+ICsJCWlmIChv
-Zl9kZXZpY2VfaXNfYXZhaWxhYmxlKHBvcnQpKQ0KPiA+ID4gPiArCQkJZW5jb2RlciA9IG9mX2dy
-YXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQocG9ydCk7DQo+ID4gPiA+ICsJCW9mX25vZGVfcHV0
-KHBvcnQpOw0KPiA+ID4gPiArCX0NCj4gPiA+IA0KPiA+ID4gWW91IG11c3QndmUgYmVlbiBsb29r
-aW5nIGF0IHNvbWUgb2xkIHZlcnNpb24uIEN1cnJlbnQgdmVyc2lvbiBpbiAtbmV4dCB1c2VzDQo+
-ID4gPiBvZl9ncmFwaF9nZXRfcmVtb3RlX25vZGUoKSB0byByZXBsYWNlIGFsbCB0aG9zZSBsaW5l
-cyB5b3UgaGF2ZSBhZGRlZCAoc2VlIFJvYg0KPiA+ID4gSGVycmluZydzIHNlcmllcyB0byBpbnRy
-b2R1Y2Ugb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9ub2RlKCkgZnVuY3Rpb24pDQo+ID4gDQo+ID4gSG0s
-IEknbSBub3Qgb24gTGludXMnIG1hc3RlciB0cmVlIFsxXSBhbmQgc28gSSB0aG91Z2h0IEkgd2Fz
-IHF1aXRlIHVwIHRvIGRhdGUgOikNCj4gPiBTdGlsbCBJIG1hZGUgYSBjaGVjayBvZiBsaW51eC1u
-ZXh0IGFuZCBkb24ndCBzZWUgYW55IGNoYW5nZXMgaW4NCj4gPiAiZHJpdmVycy9ncHUvZHJtL2Fy
-bSIgY29tcGFyZWQgdG8gTGludXMnIHRyZWUuDQo+ID4gDQo+ID4gWzFdwqBodHRwczovL3VybGRl
-ZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fZ2l0Lmtlcm5lbC5vcmdfY2dp
-dF9saW51eF9rZXJuZWxfZ2l0X3RvcnZhbGRzX2xpbnV4LmdpdF9jb21taXRfZHJpdmVyc19ncHVf
-ZHJtX2FybS0zRmlkLTNEDQo+ID4gZTQ1NjNmNmJhNzE3OTJjNzdhZWNjYjIwOTJjYzIzMTQ5YjQ0
-ZTY0MiZkPUR3SURhUSZjPURQTDZfWF82SmtYRng3QVhXcUIwdGcmcj1scWRlZVNTRWVzMEdGRERs
-NjU2ZVZpWE83YnJlUzU1eXRXa2hwazVSODFJJm09U0k2Nm5nbm5YeTMzbmNiOG01SDRMYTINCj4g
-PiBUMVN6U0VpaVA3aGNfWHNSYWhFYyZzPXVhc3dqVlhjallEclVvc09rT19VcFRNcUpNV1RULUxM
-UHJnNUpFNi10LTgmZT3CoA0KPiA+IFsyXcKgaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQu
-Y29tL3YyL3VybD91PWh0dHAtM0FfX2dpdC5rZXJuZWwub3JnX2NnaXRfbGludXhfa2VybmVsX2dp
-dF9uZXh0X2xpbnV4LTJEbmV4dC5naXRfY29tbWl0X2RyaXZlcnNfZ3B1X2RybV9hcm0tM0ZpZA0K
-PiA+IC0zRGU0NTYzZjZiYTcxNzkyYzc3YWVjY2IyMDkyY2MyMzE0OWI0NGU2NDImZD1Ed0lEYVEm
-Yz1EUEw2X1hfNkprWEZ4N0FYV3FCMHRnJnI9bHFkZWVTU0VlczBHRkREbDY1NmVWaVhPN2JyZVM1
-NXl0V2tocGs1UjgxSSZtPVNJNjZuZ25uWHkzM25jYjhtNUg0DQo+ID4gTGEyVDFTelNFaWlQN2hj
-X1hzUmFoRWMmcz1obDlZNnMzSzlMd0xMMU0yV25MM09EYXhfVi1aUmg4azFpVGl5Y3RJcVU0JmU9
-wqANCj4gPiANCj4gPiBDb3VsZCB5b3UgcGxlYXNlIGNsYXJpZnkgd2hpY2ggZXhhY3QgdHJlZSBk
-aWQgeW91IG1lYW4/DQo+IA0KPiBTb3JyeSwgSSB0aG91Z2h0IHRoZSBzZXJpZXMgZ290IHB1bGxl
-ZCBieSBvbmUgb2YgdGhlIERSTSB0cmVlcywgYnV0IGl0IGxvb2tzIGxpa2UNCj4gSSB3YXMgd3Jv
-bmcuIEkgd2FzIGNhcnJ5aW5nIGEgcHJpdmF0ZSBjb3B5IGluIG15IGludGVybmFsIHRyZWUsIHdh
-aXRpbmcgZm9yIHRoZQ0KPiBtb21lbnQgd2hlbiBpdCBnb3QgcHVsbGVkIGludG8gZHJtLW5leHQg
-b3IgZHJtLW1pc2MtbmV4dC4NCj4gDQo+IFJvYiwgZG8geW91IGhhdmUgYW4gdXBkYXRlIG9uIHlv
-dXIgc2VyaWVzIGludHJvZHVjaW5nIG9mX2dyYXBoX2dldF9yZW1vdGVfbm9kZSgpID8NCg0KRm9y
-IHNvbWUgcmVhc29uIEkgY2Fubm90IGZpbmQgYW55IHJlbGV2YW50IGNvbW1pdHMgaW4gbGludXgt
-bmV4dCB0cmVlIGV2ZW4gdG9kYXkuDQpDb3VsZCB5b3UgcGxlYXNlIHBvaW50IG1lIHRvIGVpdGhl
-ciBhbnkgcmFuZG9tIGdpdCB0cmVlIHdpdGggbWVudGlvbmVkIGFib3ZlIGNoYW5nZSBvcg0KbWF5
-YmUganVzdCBtYWlsaW5nIGxpc3Qgd2hlcmUgdGhpcyBwYXRjaCB3YXMgc2VudD8NCg0KSSdkIGxp
-a2UgdG8gaW1wbGVtZW50IHRoZSBzYW1lIGZpeCBpbiBBUkNQR1UgYW5kIGNhbGwgaXQgYSBkYXkg
-ZmluYWxseS4NCg0KLUFsZXhleQ==
+On 03/29/2017 03:09 PM, Marek Vasut wrote:
+> On 03/29/2017 02:24 PM, Ludovic BARRE wrote:
+>> hi Marek
+> Hi!
+>
+>> thanks for review
+>> comment below
+>>
+>> On 03/29/2017 12:54 PM, Marek Vasut wrote:
+>>> On 03/27/2017 02:54 PM, Ludovic Barre wrote:
+>>>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>>>
+>>>> The quadspi is a specialized communication interface targeting single,
+>>>> dual or quad SPI Flash memories.
+>>>>
+>>>> It can operate in any of the following modes:
+>>>> -indirect mode: all the operations are performed using the quadspi
+>>>>    registers
+>>>> -read memory-mapped mode: the external Flash memory is mapped to the
+>>>>    microcontroller address space and is seen by the system as if it was
+>>>>    an internal memory
+>>>>
+>>>> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>> Hi! I presume this is not compatible with the Cadence QSPI or any other
+>>> QSPI controller, huh ?
+>> it's not a cadence QSPI, it's specific for stm32 platform
+> OK, got it. Didn't ST use Cadence IP somewhere too though ?
+> That's probably what confused me, oh well ...
+>
+>>> Mostly minor nits below ...
+>>>
+>>>> ---
+>>>>    drivers/mtd/spi-nor/Kconfig         |   7 +
+>>>>    drivers/mtd/spi-nor/Makefile        |   1 +
+>>>>    drivers/mtd/spi-nor/stm32-quadspi.c | 679
+>>>> ++++++++++++++++++++++++++++++++++++
+>>>>    3 files changed, 687 insertions(+)
+>>>>    create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
+>>> [...]
+>>>
+>>>> +struct stm32_qspi_cmd {
+>>>> +    struct {
+>>>> +        u32 addr_width:8;
+>>>> +        u32 dummy:8;
+>>>> +        u32 data:1;
+>>>> +    } conf;
+>>> This could all be u8 ? Why this awful construct ?
+>> yes I could replace each u32 by u8
+> Yeah, please do .
+>
+>>>> +    u8 opcode;
+>>>> +    u32 framemode;
+>>>> +    u32 qspimode;
+>>>> +    u32 addr;
+>>>> +    size_t len;
+>>>> +    void *buf;
+>>>> +};
+>>>> +
+>>>> +static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi)
+>>>> +{
+>>>> +    u32 cr;
+>>>> +    int err = 0;
+>>> Can readl_poll_timeout() or somesuch replace this function ?
+>> in fact stm32_qspi_wait_cmd test if the transfer has been complete (TCF
+>> flag)
+>> else initialize an interrupt completion.
+>> like the time may be long I prefer keep the interrupt wait, if you agree.
+> I don't really mind if it fits the hardware better and I agree with you
+> it does here.
+>
+>>>> +    if (readl_relaxed(qspi->io_base + QUADSPI_SR) & SR_TCF)
+>>>> +        return 0;
+>>>> +
+>>>> +    reinit_completion(&qspi->cmd_completion);
+>>>> +    cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
+>>>> +    writel_relaxed(cr | CR_TCIE, qspi->io_base + QUADSPI_CR);
+>>>> +
+>>>> +    if
+>>>> (!wait_for_completion_interruptible_timeout(&qspi->cmd_completion,
+>>>> +                               msecs_to_jiffies(1000)))
+>>>> +        err = -ETIMEDOUT;
+>>>> +
+>>>> +    writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
+>>>> +    return err;
+>>>> +}
+>>>> +
+>>>> +static int stm32_qspi_wait_nobusy(struct stm32_qspi *qspi)
+>>>> +{
+>>>> +    u32 sr;
+>>>> +
+>>>> +    return readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR, sr,
+>>>> +                      !(sr & SR_BUSY), 10, 100000);
+>>>> +}
+>>>> +
+>>>> +static void stm32_qspi_set_framemode(struct spi_nor *nor,
+>>>> +                     struct stm32_qspi_cmd *cmd, bool read)
+>>>> +{
+>>>> +    u32 dmode = CCR_DMODE_1;
+>>>> +
+>>>> +    cmd->framemode = CCR_IMODE_1;
+>>>> +
+>>>> +    if (read) {
+>>>> +        switch (nor->flash_read) {
+>>>> +        case SPI_NOR_NORMAL:
+>>>> +        case SPI_NOR_FAST:
+>>>> +            dmode = CCR_DMODE_1;
+>>>> +            break;
+>>>> +        case SPI_NOR_DUAL:
+>>>> +            dmode = CCR_DMODE_2;
+>>>> +            break;
+>>>> +        case SPI_NOR_QUAD:
+>>>> +            dmode = CCR_DMODE_4;
+>>>> +            break;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>> +    cmd->framemode |= cmd->conf.data ? dmode : 0;
+>>>> +    cmd->framemode |= cmd->conf.addr_width ? CCR_ADMODE_1 : 0;
+>>>> +}
+>>>> +
+>>>> +static void stm32_qspi_read_fifo(u8 *val, void __iomem *addr)
+>>>> +{
+>>>> +    *val = readb_relaxed(addr);
+>>>> +}
+>>>> +
+>>>> +static void stm32_qspi_write_fifo(u8 *val, void __iomem *addr)
+>>>> +{
+>>>> +    writeb_relaxed(*val, addr);
+>>>> +}
+>>>> +
+>>>> +static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
+>>>> +                  const struct stm32_qspi_cmd *cmd)
+>>>> +{
+>>>> +    void (*tx_fifo)(u8 *, void __iomem *);
+>>>> +    u32 len = cmd->len, sr;
+>>>> +    u8 *buf = cmd->buf;
+>>>> +    int ret;
+>>>> +
+>>>> +    if (cmd->qspimode == CCR_FMODE_INDW)
+>>>> +        tx_fifo = stm32_qspi_write_fifo;
+>>>> +    else
+>>>> +        tx_fifo = stm32_qspi_read_fifo;
+>>>> +
+>>>> +    while (len--) {
+>>>> +        ret = readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR,
+>>>> +                         sr, (sr & SR_FTF),
+>>>> +                         10, 30000);
+>>> Add macros for those ad-hoc timeouts.
+>> I will add 2 defines (for stm32_qspi_wait_nobusy, stm32_qspi_tx_poll)
+>> #define STM32_QSPI_FIFO_TIMEOUT_US 30000
+>> #define STM32_QSPI_BUSY_TIMEOUT_US 100000
+> Super
+>
+>>>> +        if (ret) {
+>>>> +            dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
+>>>> +            break;
+>>>> +        }
+>>>> +        tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
+>>>> +    }
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>> [...]
+>>>
+>>>> +static int stm32_qspi_send(struct stm32_qspi_flash *flash,
+>>>> +               const struct stm32_qspi_cmd *cmd)
+>>>> +{
+>>>> +    struct stm32_qspi *qspi = flash->qspi;
+>>>> +    u32 ccr, dcr, cr;
+>>>> +    int err;
+>>>> +
+>>>> +    err = stm32_qspi_wait_nobusy(qspi);
+>>>> +    if (err)
+>>>> +        goto abort;
+>>>> +
+>>>> +    dcr = readl_relaxed(qspi->io_base + QUADSPI_DCR) & ~DCR_FSIZE_MASK;
+>>>> +    dcr |= DCR_FSIZE(flash->fsize);
+>>>> +    writel_relaxed(dcr, qspi->io_base + QUADSPI_DCR);
+>>>> +
+>>>> +    cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
+>>>> +    cr &= ~CR_PRESC_MASK & ~CR_FSEL;
+>>>> +    cr |= CR_PRESC(flash->presc);
+>>>> +    cr |= flash->cs ? CR_FSEL : 0;
+>>>> +    writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
+>>>> +
+>>>> +    if (cmd->conf.data)
+>>>> +        writel_relaxed(cmd->len - 1, qspi->io_base + QUADSPI_DLR);
+>>>> +
+>>>> +    ccr = cmd->framemode | cmd->qspimode;
+>>>> +
+>>>> +    if (cmd->conf.dummy)
+>>>> +        ccr |= CCR_DCYC(cmd->conf.dummy);
+>>>> +
+>>>> +    if (cmd->conf.addr_width)
+>>>> +        ccr |= CCR_ADSIZE(cmd->conf.addr_width - 1);
+>>>> +
+>>>> +    ccr |= CCR_INST(cmd->opcode);
+>>>> +    writel_relaxed(ccr, qspi->io_base + QUADSPI_CCR);
+>>>> +
+>>>> +    if (cmd->conf.addr_width && cmd->qspimode != CCR_FMODE_MM)
+>>>> +        writel_relaxed(cmd->addr, qspi->io_base + QUADSPI_AR);
+>>>> +
+>>>> +    err = stm32_qspi_tx(qspi, cmd);
+>>>> +    if (err)
+>>>> +        goto abort;
+>>>> +
+>>>> +    if (cmd->qspimode != CCR_FMODE_MM) {
+>>>> +        err = stm32_qspi_wait_cmd(qspi);
+>>>> +        if (err)
+>>>> +            goto abort;
+>>>> +        writel_relaxed(FCR_CTCF, qspi->io_base + QUADSPI_FCR);
+>>>> +    }
+>>>> +
+>>>> +    return err;
+>>>> +
+>>>> +abort:
+>>>> +    writel_relaxed(readl_relaxed(qspi->io_base + QUADSPI_CR)
+>>>> +               | CR_ABORT, qspi->io_base + QUADSPI_CR);
+>>> Use a helper variable here too.
+>> ok
+>>>> +    dev_err(qspi->dev, "%s abort err:%d\n", __func__, err);
+>>>> +    return err;
+>>>> +}
+>>> [...]
+>>>
+>>>> +static int stm32_qspi_flash_setup(struct stm32_qspi *qspi,
+>>>> +                  struct device_node *np)
+>>>> +{
+>>>> +    u32 width, flash_read, presc, cs_num, max_rate = 0;
+>>>> +    struct stm32_qspi_flash *flash;
+>>>> +    struct mtd_info *mtd;
+>>>> +    int ret;
+>>>> +
+>>>> +    of_property_read_u32(np, "reg", &cs_num);
+>>>> +    if (cs_num >= STM32_MAX_NORCHIP)
+>>>> +        return -EINVAL;
+>>>> +
+>>>> +    of_property_read_u32(np, "spi-max-frequency", &max_rate);
+>>>> +    if (!max_rate)
+>>>> +        return -EINVAL;
+>>>> +
+>>>> +    presc = DIV_ROUND_UP(qspi->clk_rate, max_rate) - 1;
+>>>> +
+>>>> +    if (of_property_read_u32(np, "spi-rx-bus-width", &width))
+>>>> +        width = 1;
+>>>> +
+>>>> +    if (width == 4)
+>>>> +        flash_read = SPI_NOR_QUAD;
+>>>> +    else if (width == 2)
+>>>> +        flash_read = SPI_NOR_DUAL;
+>>>> +    else if (width == 1)
+>>>> +        flash_read = SPI_NOR_NORMAL;
+>>>> +    else
+>>>> +        return -EINVAL;
+>>>> +
+>>>> +    flash = &qspi->flash[cs_num];
+>>>> +    flash->qspi = qspi;
+>>>> +    flash->cs = cs_num;
+>>>> +    flash->presc = presc;
+>>>> +
+>>>> +    flash->nor.dev = qspi->dev;
+>>>> +    spi_nor_set_flash_node(&flash->nor, np);
+>>>> +    flash->nor.priv = flash;
+>>>> +    mtd = &flash->nor.mtd;
+>>>> +    mtd->priv = &flash->nor;
+>>>> +
+>>>> +    flash->nor.read = stm32_qspi_read;
+>>>> +    flash->nor.write = stm32_qspi_write;
+>>>> +    flash->nor.erase = stm32_qspi_erase;
+>>>> +    flash->nor.read_reg = stm32_qspi_read_reg;
+>>>> +    flash->nor.write_reg = stm32_qspi_write_reg;
+>>>> +    flash->nor.prepare = stm32_qspi_prep;
+>>>> +    flash->nor.unprepare = stm32_qspi_unprep;
+>>>> +
+>>>> +    writel_relaxed(LPTR_DFT_TIMEOUT, qspi->io_base + QUADSPI_LPTR);
+>>>> +
+>>>> +    writel_relaxed(CR_PRESC(presc) | CR_FTHRES(3) | CR_TCEN | CR_SSHIFT
+>>>> +               | CR_EN, qspi->io_base + QUADSPI_CR);
+>>>> +
+>>>> +    /* a minimum fsize must be set to sent the command id */
+>>>> +    flash->fsize = 25;
+>>> I don't understand why this is needed and the comment doesn't make
+>>> sense. Please fix.
+>> fsize field defines the size of external memory.
+> What external memory ? Unclear
+oops, fsize field defined the size of "flash memory" in stm32 qspi 
+controller.
+Number of bytes in Flash memory = 2 ^[FSIZE+1].
+To sent a nor cmd this field must be set (hardware issue),
+but before "spi_nor_scan" the size of flash nor is not know.
+So I set a temporary value (workaround).
+
+After "spi_nor_scan" the fsize is overwritten by the right value
+flash->fsize = __fls(mtd->size) - 1;
+>> Normaly, this field is used only for memory map mode,
+>> but in fact is check in indirect mode.
+>> So while flash scan "spi_nor_scan":
+>> -I can't let 0.
+>> -I not know yet the size of flash.
+>> So I fix a temporary value
+>>
+>> I will update my comment
+> Please do, also please consider that I'm reading the comment and I
+> barely have any clue about this hardware , so make sure I can understand it.
+>
+>>>> +    ret = spi_nor_scan(&flash->nor, NULL, flash_read);
+>>>> +    if (ret) {
+>>>> +        dev_err(qspi->dev, "device scan failed\n");
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    flash->fsize = __fls(mtd->size) - 1;
+>>>> +
+>>>> +    writel_relaxed(DCR_CSHT(1), qspi->io_base + QUADSPI_DCR);
+>>>> +
+>>>> +    ret = mtd_device_register(mtd, NULL, 0);
+>>>> +    if (ret) {
+>>>> +        dev_err(qspi->dev, "mtd device parse failed\n");
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    dev_dbg(qspi->dev, "read mm:%s cs:%d bus:%d\n",
+>>>> +        qspi->read_mode == CCR_FMODE_MM ? "yes" : "no", cs_num, width);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>> [...]
+>>>
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
