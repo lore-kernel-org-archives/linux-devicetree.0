@@ -1,194 +1,296 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/7] clocksource/drivers/clksrc-evt-probe: Describe
- with the DT both the clocksource and the clockevent
-Date: Wed, 29 Mar 2017 15:41:34 +0200
-Message-ID: <20170329134134.GJ2123@mai>
-References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
- <1490197714-25415-2-git-send-email-al.kochet@gmail.com>
- <20170329015146.ey5rlptzsnnynpnt@rob-hp-laptop>
- <20170329092210.GH2123@mai>
- <20170329104911.GC23442@leverpostej>
- <20170329123638.GI2123@mai>
- <20170329125713.GH23442@leverpostej>
+From: Hugues FRUCHET <hugues.fruchet@st.com>
+Subject: Re: [PATCHv6 11/14] ov2640: convert from soc-camera to a standard
+ subdev sensor driver.
+Date: Wed, 29 Mar 2017 13:42:09 +0000
+Message-ID: <488e156b-2ceb-3895-6bcc-4785b16c93a5@st.com>
+References: <20170328082347.11159-1-hverkuil@xs4all.nl>
+ <20170328082347.11159-12-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170329125713.GH23442@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170328082347.11159-12-hverkuil@xs4all.nl>
+Content-Language: en-US
+Content-ID: <DBC8869B613A9F4BA2D43208007B8498@st.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 01:57:14PM +0100, Mark Rutland wrote:
-> On Wed, Mar 29, 2017 at 02:36:38PM +0200, Daniel Lezcano wrote:
-> > On Wed, Mar 29, 2017 at 11:49:11AM +0100, Mark Rutland wrote:
-> > > On Wed, Mar 29, 2017 at 11:22:10AM +0200, Daniel Lezcano wrote:
-> > > > On Tue, Mar 28, 2017 at 08:51:46PM -0500, Rob Herring wrote:
-> > > > > On Wed, Mar 22, 2017 at 06:48:28PM +0300, Alexander Kochetkov wrote:
-> > 
-> > You can have several timers on the system and may want to use the clockevents
-> > from one IP block and the clocksource from another IP block. For example, in
-> > the case of a bogus clocksource.
-> 
-> I understand this. However, what I was trying to say is that *how* we
-> use a particular device should be a software decision. I have a more
-> concrete suggestion on that below.
-> 
-> > Moreover there are some drivers with a node for a clocksource and
-> > another one for the clockevent, and the driver is assuming the clockevent is
-> > defined first and then the clocksource.
-> > 
-> > eg.
-> > 
-> > arch/arc/boot/dts/abilis_tb10x.dtsi:
-> > 
-> >         /* TIMER0 with interrupt for clockevent */
-> >         timer0 {
-> >                 compatible = "snps,arc-timer";
-> >                 interrupts = <3>;
-> >                 interrupt-parent = <&intc>;
-> >                 clocks = <&cpu_clk>;
-> >         };
-> > 
-> >         /* TIMER1 for free running clocksource */
-> >         timer1 {
-> >                 compatible = "snps,arc-timer";
-> >                 clocks = <&cpu_clk>;
-> >         };
-> > 
-> > drivers/clocksource/arc_timer.c:
-> > 
-> > static int __init arc_of_timer_init(struct device_node *np)
-> > {
-> >         static int init_count = 0;
-> >         int ret;
-> > 
-> >         if (!init_count) {
-> >                 init_count = 1;
-> >                 ret = arc_clockevent_setup(np);
-> >         } else {
-> >                 ret = arc_cs_setup_timer1(np);
-> >         }
-> > 
-> >         return ret;
-> > }
-> > 
-> > Even if that works, it is a fragile mechanism.
-> > 
-> > So the purpose of these changes is to provide a stronger timer declaration in
-> > order to clearly split in the kernel a clocksource and a clockevent
-> > initialization.
-> 
-> I agree that this pattern is not nice. However, I think that splitting
-> devices as this level makes the problem *worse*.
-> 
-> Users care that they have a clocksource and a clockevent device. They
-> do not care *which* particular device is used as either. The comments in
-> the DT above are at best misleading.
+Acked-by: Hugues Fruchet <hugues.fruchet@st.com>
 
-Agree.
+Tested successfully on STM324x9I-EVAL evaluation board embedding
+an OV2640 camera sensor.
 
-And the driver is assuming the first node is the clockevent and the second one
-is the clocksource. If the DT invert these nodes, that breaks the driver.
+I don't understand the comment around s_power op that has been dropped 
+(it is there in code), and no problem is observed doing several 
+open/close, tell me if I miss something.
 
-> What we need is for the kernel to understand that devices can be both
-> clockevent and clocksource (perhaps mutually exclusively), such that the
-> kernel can decide how to make use of devices.
-> 
-> That way, for the above the kernel can figure out that timer0 could be
-> used as clocksource or clockevent, while timer1 can only be used as a
-> clocksource due to the lack of an interrupt. Thus, it can choose to use
-> timer0 as a clockevent, and timer1 and a clocksource.
+BR,
+Hugues.
 
-Well, 'interrupt' gives an indication the timer can be used as a clockevent and
-clocksource, not the clockevent only.
-
-If we take the case of the rockchip, the arm_arch_timer clocksource is stopped
-when the CPU is clock gated. So specifically, we don't want to use this
-clocksource but we want to use the arch clockevents because they are better.
-
-> > > > > > With this approach, we allow a mechanism to clearly define a clocksource or a
-> > > > > > clockevent without aerobatics we can find around in some drivers:
-> > > > > > 	timer-sp804.c, arc-timer.c, dw_apb_timer_of.c, mps2-timer.c,
-> > > > > > 	renesas-ostm.c, time-efm32.c, time-lpc32xx.c.
-> > > > > 
-> > > > > These all already have bindings and work. What problem are you trying to 
-> > > > > solve other than restructuring Linux?
-> > > > 
-> > > > Yes, there is already the bindings, but that force to do some hackish
-> > > > initialization.
-> > > 
-> > > Here, you are forcing hackish DT changes that do not truly describe HW.
-> > > How is that better?
-> > 
-> > So if this is hackish DT changes, then the existing DTs should be fixed, no?
-> 
-> Yes.
-> 
-> For the above snippet, the only thing that needs to change is the
-> comment.
-> 
-> > > > I would like to give the opportunity to declare separately a clocksource and a
-> > > > clockevent, in order to have full control of how this is initialized.
-> > > 
-> > > To me it sounds like what we need is Linux infrastructure that allows
-> > > one to register a device as having both clockevent/clocksource
-> > > functionality.
-> > 
-> > That was the idea. Create a macro CLOCKEVENT_OF and CLOCKSOURCE_OF both of them
-> > calling their respective init routines. And in addition a TIMER_OF doing both
-> > CLOCKEVENT_OF and CLOCKSOURCE_OF.
-> > 
-> > It is the DT which does not allow to do this separation.
-> > 
-> > Would be the following approach more acceptable ?
-> > 
-> > 1. Replace all CLOCKSOURCE_OF by TIMER_OF (just renaming)
-> 
-> I am fine with this renaming.
-> 
-> > 2. A node can have a clockevent and|or a clocksource attributes
-> 
-> As above, this should not be in the DT given it's describing a
-> (Linux-specific) SW policy and not a HW detail.
-> 
-> So I must disagree with this.
-
-IIUC my discussion with Rob, an attribute is acceptable (btw if
-'clocksource'|'clockevent' names are too Linux specific (+1), what
-about a more generic name like 'tick' and 'time' ?).
-
-> > 3. The timer_probe pass a flag to the driver's init function, so this one knows
-> >    if it should invoke the clockevent/clocksource init functions.
-> >    No attribute defaults to clocksource|clockevent.
-> > 
-> > That would be backward compatible and will let to create drivers with clutch
-> > activated device via DT. Also, it will give the opportunity to the existing
-> > drivers to change consolidate their initialization routines.
-> 
-> I think that if anything, we need a combined clocksource+clockevent
-> device that we register to the core code. That means all
-> clocksource/clockevent drivers have a consolidated routine.
-> 
-> Subsequently, core code should determine how specifically to use the
-> device (e.g. based on what other devices are registered, and their
-> capabilities).
-
-IMO, the core code is complex enough and that may imply more heuristics.
-Regarding the number of timers, I do believe it is much better to simply tell
-which one we want to use via the DT (assuming the DT is a description of the
-desired hardware, not all the available hardware).
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 03/28/2017 10:23 AM, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil@cisco.com>
+>
+> Convert ov2640 to a standard subdev driver. The soc-camera driver no longer
+> uses this driver, so it can safely be converted.
+>
+> Note: the s_power op has been dropped: this never worked. When the last open()
+> is closed, then the power is turned off, and when it is opened again the power
+> is turned on again, but the old state isn't restored.
+>
+> Someone else can figure out in the future how to get this working correctly,
+> but I don't want to spend more time on this.
+>
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/media/i2c/Kconfig                   | 11 ++++
+>  drivers/media/i2c/Makefile                  |  1 +
+>  drivers/media/i2c/{soc_camera => }/ov2640.c | 89 +++++------------------------
+>  drivers/media/i2c/soc_camera/Kconfig        |  6 --
+>  drivers/media/i2c/soc_camera/Makefile       |  1 -
+>  5 files changed, 27 insertions(+), 81 deletions(-)
+>  rename drivers/media/i2c/{soc_camera => }/ov2640.c (94%)
+>
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index cee1dae6e014..db2c63f592c5 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -520,6 +520,17 @@ config VIDEO_APTINA_PLL
+>  config VIDEO_SMIAPP_PLL
+>  	tristate
+>
+> +config VIDEO_OV2640
+> +	tristate "OmniVision OV2640 sensor support"
+> +	depends on VIDEO_V4L2 && I2C && GPIOLIB
+> +	depends on MEDIA_CAMERA_SUPPORT
+> +	help
+> +	  This is a Video4Linux2 sensor-level driver for the OmniVision
+> +	  OV2640 camera.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ov2640.
+> +
+>  config VIDEO_OV2659
+>  	tristate "OmniVision OV2659 sensor support"
+>  	depends on VIDEO_V4L2 && I2C
+> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+> index 5bc7bbeb5499..50af1e11c85a 100644
+> --- a/drivers/media/i2c/Makefile
+> +++ b/drivers/media/i2c/Makefile
+> @@ -57,6 +57,7 @@ obj-$(CONFIG_VIDEO_VP27SMPX) += vp27smpx.o
+>  obj-$(CONFIG_VIDEO_SONY_BTF_MPX) += sony-btf-mpx.o
+>  obj-$(CONFIG_VIDEO_UPD64031A) += upd64031a.o
+>  obj-$(CONFIG_VIDEO_UPD64083) += upd64083.o
+> +obj-$(CONFIG_VIDEO_OV2640) += ov2640.o
+>  obj-$(CONFIG_VIDEO_OV7640) += ov7640.o
+>  obj-$(CONFIG_VIDEO_OV7670) += ov7670.o
+>  obj-$(CONFIG_VIDEO_OV9650) += ov9650.o
+> diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/ov2640.c
+> similarity index 94%
+> rename from drivers/media/i2c/soc_camera/ov2640.c
+> rename to drivers/media/i2c/ov2640.c
+> index b9a0069f5b33..83f88efbce69 100644
+> --- a/drivers/media/i2c/soc_camera/ov2640.c
+> +++ b/drivers/media/i2c/ov2640.c
+> @@ -24,8 +24,8 @@
+>  #include <linux/v4l2-mediabus.h>
+>  #include <linux/videodev2.h>
+>
+> -#include <media/soc_camera.h>
+>  #include <media/v4l2-clk.h>
+> +#include <media/v4l2-device.h>
+>  #include <media/v4l2-subdev.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-image-sizes.h>
+> @@ -287,7 +287,6 @@ struct ov2640_priv {
+>  	struct v4l2_clk			*clk;
+>  	const struct ov2640_win_size	*win;
+>
+> -	struct soc_camera_subdev_desc	ssdd_dt;
+>  	struct gpio_desc *resetb_gpio;
+>  	struct gpio_desc *pwdn_gpio;
+>  };
+> @@ -677,13 +676,8 @@ static int ov2640_reset(struct i2c_client *client)
+>  }
+>
+>  /*
+> - * soc_camera_ops functions
+> + * functions
+>   */
+> -static int ov2640_s_stream(struct v4l2_subdev *sd, int enable)
+> -{
+> -	return 0;
+> -}
+> -
+>  static int ov2640_s_ctrl(struct v4l2_ctrl *ctrl)
+>  {
+>  	struct v4l2_subdev *sd =
+> @@ -744,10 +738,16 @@ static int ov2640_s_register(struct v4l2_subdev *sd,
+>  static int ov2640_s_power(struct v4l2_subdev *sd, int on)
+>  {
+>  	struct i2c_client *client = v4l2_get_subdevdata(sd);
+> -	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+>  	struct ov2640_priv *priv = to_ov2640(client);
+>
+> -	return soc_camera_set_power(&client->dev, ssdd, priv->clk, on);
+> +	gpiod_direction_output(priv->pwdn_gpio, !on);
+> +	if (on && priv->resetb_gpio) {
+> +		/* Active the resetb pin to perform a reset pulse */
+> +		gpiod_direction_output(priv->resetb_gpio, 1);
+> +		usleep_range(3000, 5000);
+> +		gpiod_direction_output(priv->resetb_gpio, 0);
+> +	}
+> +	return 0;
+>  }
+>
+>  /* Select the nearest higher resolution for capture */
+> @@ -994,26 +994,6 @@ static struct v4l2_subdev_core_ops ov2640_subdev_core_ops = {
+>  	.s_power	= ov2640_s_power,
+>  };
+>
+> -static int ov2640_g_mbus_config(struct v4l2_subdev *sd,
+> -				struct v4l2_mbus_config *cfg)
+> -{
+> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
+> -	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+> -
+> -	cfg->flags = V4L2_MBUS_PCLK_SAMPLE_RISING | V4L2_MBUS_MASTER |
+> -		V4L2_MBUS_VSYNC_ACTIVE_HIGH | V4L2_MBUS_HSYNC_ACTIVE_HIGH |
+> -		V4L2_MBUS_DATA_ACTIVE_HIGH;
+> -	cfg->type = V4L2_MBUS_PARALLEL;
+> -	cfg->flags = soc_camera_apply_board_flags(ssdd, cfg);
+> -
+> -	return 0;
+> -}
+> -
+> -static struct v4l2_subdev_video_ops ov2640_subdev_video_ops = {
+> -	.s_stream	= ov2640_s_stream,
+> -	.g_mbus_config	= ov2640_g_mbus_config,
+> -};
+> -
+>  static const struct v4l2_subdev_pad_ops ov2640_subdev_pad_ops = {
+>  	.enum_mbus_code = ov2640_enum_mbus_code,
+>  	.get_selection	= ov2640_get_selection,
+> @@ -1023,40 +1003,9 @@ static const struct v4l2_subdev_pad_ops ov2640_subdev_pad_ops = {
+>
+>  static struct v4l2_subdev_ops ov2640_subdev_ops = {
+>  	.core	= &ov2640_subdev_core_ops,
+> -	.video	= &ov2640_subdev_video_ops,
+>  	.pad	= &ov2640_subdev_pad_ops,
+>  };
+>
+> -/* OF probe functions */
+> -static int ov2640_hw_power(struct device *dev, int on)
+> -{
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct ov2640_priv *priv = to_ov2640(client);
+> -
+> -	dev_dbg(&client->dev, "%s: %s the camera\n",
+> -			__func__, on ? "ENABLE" : "DISABLE");
+> -
+> -	if (priv->pwdn_gpio)
+> -		gpiod_direction_output(priv->pwdn_gpio, !on);
+> -
+> -	return 0;
+> -}
+> -
+> -static int ov2640_hw_reset(struct device *dev)
+> -{
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct ov2640_priv *priv = to_ov2640(client);
+> -
+> -	if (priv->resetb_gpio) {
+> -		/* Active the resetb pin to perform a reset pulse */
+> -		gpiod_direction_output(priv->resetb_gpio, 1);
+> -		usleep_range(3000, 5000);
+> -		gpiod_direction_output(priv->resetb_gpio, 0);
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int ov2640_probe_dt(struct i2c_client *client,
+>  		struct ov2640_priv *priv)
+>  {
+> @@ -1076,11 +1025,6 @@ static int ov2640_probe_dt(struct i2c_client *client,
+>  	else if (IS_ERR(priv->pwdn_gpio))
+>  		return PTR_ERR(priv->pwdn_gpio);
+>
+> -	/* Initialize the soc_camera_subdev_desc */
+> -	priv->ssdd_dt.power = ov2640_hw_power;
+> -	priv->ssdd_dt.reset = ov2640_hw_reset;
+> -	client->dev.platform_data = &priv->ssdd_dt;
+> -
+>  	return 0;
+>  }
+>
+> @@ -1091,7 +1035,6 @@ static int ov2640_probe(struct i2c_client *client,
+>  			const struct i2c_device_id *did)
+>  {
+>  	struct ov2640_priv	*priv;
+> -	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+>  	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
+>  	int			ret;
+>
+> @@ -1112,17 +1055,15 @@ static int ov2640_probe(struct i2c_client *client,
+>  	if (IS_ERR(priv->clk))
+>  		return -EPROBE_DEFER;
+>
+> -	if (!ssdd && !client->dev.of_node) {
+> +	if (!client->dev.of_node) {
+>  		dev_err(&client->dev, "Missing platform_data for driver\n");
+>  		ret = -EINVAL;
+>  		goto err_clk;
+>  	}
+>
+> -	if (!ssdd) {
+> -		ret = ov2640_probe_dt(client, priv);
+> -		if (ret)
+> -			goto err_clk;
+> -	}
+> +	ret = ov2640_probe_dt(client, priv);
+> +	if (ret)
+> +		goto err_clk;
+>
+>  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
+>  	v4l2_ctrl_handler_init(&priv->hdl, 2);
+> @@ -1190,6 +1131,6 @@ static struct i2c_driver ov2640_i2c_driver = {
+>
+>  module_i2c_driver(ov2640_i2c_driver);
+>
+> -MODULE_DESCRIPTION("SoC Camera driver for Omni Vision 2640 sensor");
+> +MODULE_DESCRIPTION("Driver for Omni Vision 2640 sensor");
+>  MODULE_AUTHOR("Alberto Panizzo");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/media/i2c/soc_camera/Kconfig b/drivers/media/i2c/soc_camera/Kconfig
+> index 7704bcf5cc25..96859f37cb1c 100644
+> --- a/drivers/media/i2c/soc_camera/Kconfig
+> +++ b/drivers/media/i2c/soc_camera/Kconfig
+> @@ -41,12 +41,6 @@ config SOC_CAMERA_MT9V022
+>  	help
+>  	  This driver supports MT9V022 cameras from Micron
+>
+> -config SOC_CAMERA_OV2640
+> -	tristate "ov2640 camera support"
+> -	depends on SOC_CAMERA && I2C
+> -	help
+> -	  This is a ov2640 camera driver
+> -
+>  config SOC_CAMERA_OV5642
+>  	tristate "ov5642 camera support"
+>  	depends on SOC_CAMERA && I2C
+> diff --git a/drivers/media/i2c/soc_camera/Makefile b/drivers/media/i2c/soc_camera/Makefile
+> index 6f994f9353a0..974bdb721dbe 100644
+> --- a/drivers/media/i2c/soc_camera/Makefile
+> +++ b/drivers/media/i2c/soc_camera/Makefile
+> @@ -3,7 +3,6 @@ obj-$(CONFIG_SOC_CAMERA_MT9M001)	+= mt9m001.o
+>  obj-$(CONFIG_SOC_CAMERA_MT9T031)	+= mt9t031.o
+>  obj-$(CONFIG_SOC_CAMERA_MT9T112)	+= mt9t112.o
+>  obj-$(CONFIG_SOC_CAMERA_MT9V022)	+= mt9v022.o
+> -obj-$(CONFIG_SOC_CAMERA_OV2640)		+= ov2640.o
+>  obj-$(CONFIG_SOC_CAMERA_OV5642)		+= ov5642.o
+>  obj-$(CONFIG_SOC_CAMERA_OV6650)		+= ov6650.o
+>  obj-$(CONFIG_SOC_CAMERA_OV772X)		+= ov772x.o
+>
