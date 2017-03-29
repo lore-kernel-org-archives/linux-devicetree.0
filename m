@@ -1,79 +1,39 @@
-From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Subject: Re: [PATCH v1 1/7] devicetree: power: battery: Add properties for
- pre-charge and end-charge current
-Date: Tue, 28 Mar 2017 18:42:42 -0700
-Message-ID: <CAKvHMgRWP6HAYOPCDaLfHUeTfQTYTb5ORg9bt19MDYQ7ubniMg@mail.gmail.com>
-References: <20170321220921.5834-1-liam@networkimprov.net> <20170321220921.5834-2-liam@networkimprov.net>
- <20170329003946.3eyqmsozj2sxrtiw@rob-hp-laptop>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] pinctrl: Renesas RZ/A1 pin and gpio controller
+Date: Wed, 29 Mar 2017 03:43:48 +0200
+Message-ID: <CACRpkdb48JqghacTsJfiPWHZdpfD1cg1Z7rVWQJO+BmVpVbKHg@mail.gmail.com>
+References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490368934-12494-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CACRpkdYjZJ7e0tJy6_jfpRT+UDFWqnu8ZX18-gaAHVZLgW-prA@mail.gmail.com> <20170324164559.GA15925@w540>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170329003946.3eyqmsozj2sxrtiw@rob-hp-laptop>
+In-Reply-To: <20170324164559.GA15925@w540>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Fri, Mar 24, 2017 at 5:45 PM, jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
 
-On Tue, Mar 28, 2017 at 5:39 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Mar 21, 2017 at 03:09:15PM -0700, Liam Breck wrote:
->> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->>
->> precharge-current-microamp and endcharge-current-microamp are used
->> by battery chargers at the beginning and end of a charging cycle.
->>
->> Depends-on: https://patchwork.kernel.org/patch/9633605/
->> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->> index 53a68c0..494374a 100644
->> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->> @@ -12,6 +12,8 @@ Optional Properties:
->>   - voltage-min-design-microvolt: drained battery voltage
->>   - energy-full-design-microwatt-hours: battery design energy
->>   - charge-full-design-microamp-hours: battery design capacity
->> + - precharge-current-microamp: current for pre-charge phase
->> + - endcharge-current-microamp: current for charge termination phase
+> I initially created a whole new sub-directory where all the Renesas
+> devices with this kind of pin controller would have gone
+> (drivers/pinctrl/rz-pfc) but since as of now the only available
+> hardware of that type is RZ/A1 and some of its variants, we decided to go
+> with a single driver supporting that platform only.
+> If more will come, we'll think about supporting them through this
+> driver if possible, or create a dedicated directory.
 >
-> current is implied by microamp, so perhaps just pre-charge-microamp and
-> end-charge-microamp.
+> Are you ok with this?
 
-Ah, this is why I want to document the naming scheme for battery node
-properties in battery.txt, by referring to a linux header file :-)
+Yep it's OK. It's no big deal to move it into a new subdir if many
+new drivers start popping in anyway.
 
-The names mirror enum power_supply_property elements wherever
-possible. Shortening them as you suggest makes dts code a little more
-terse, but obscures their relationship with power_supply sysfs
-attributes. I prefer brevity myself, but there is no strong case to
-reword the names for DT use.
+Right now I see the use of renesas,pins as the only big blocker,
+I would much like it to use just pins = <>;
 
-> I know little about batteries, but don't you also need to know when each
-> phase starts/ends?
-
-Meaning at what voltage levels? We don't need it for this
-battery/charger pair; no idea about others...
-
-> I mainly ask because we just added the previous properties and now we're
-> adding 2 more. While fine to add features to a driver one by one, we
-> really shouldn't for bindings. The h/w is not evolving (in a month).
-
-And a third patchset from Quentin Schulz adds another :-)
-
-I think you may need to accept piecemeal assembly in this case... No
-one has made a study of all properties that should be in the battery
-node. (precharge_current wasn't even in power_supply_property until
-this patchset.) Sebastian requested we create this binding in the
-process of adding DT support to a fuel gauge, so we coded what that
-called for.
-
-I hope that helps...
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
