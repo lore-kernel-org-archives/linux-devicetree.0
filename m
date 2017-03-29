@@ -1,206 +1,395 @@
-From: Liam Breck <liam@networkimprov.net>
-Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
- constant-charge-current property
-Date: Wed, 29 Mar 2017 00:39:59 -0700
-Message-ID: <CAKvHMgSFNBmr3fU-biHDo5tzCDV7QaCpFnbChgn4wgSN_1FBig@mail.gmail.com>
-References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
- <20170315105537.22349-2-quentin.schulz@free-electrons.com>
- <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com>
- <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com> <CAKvHMgR58sDnB-nn386Bd-H0Duevkeoc8eEfz=otLAumc8FD+w@mail.gmail.com>
- <765fc3be-23db-0997-85b1-b6c85b3aceef@free-electrons.com> <CAKvHMgRKroPFDdNMb=F=bA4bTwg9bYMAR-5Z4DKLzHJtCYz3_Q@mail.gmail.com>
- <CAKvHMgRtEnNbokYReu2vEs9UKH6qZnncdyQD=1JMDTZeN+aYCA@mail.gmail.com> <659fb6a3-d49d-5429-8770-88917e4fd0b3@free-electrons.com>
+From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] irqchip: mtk-cirq: Add mediatek mtk-cirq
+ implement
+Date: Wed, 29 Mar 2017 15:53:01 +0800
+Message-ID: <1490773981.12634.9.camel@mtkswgap22>
+References: <1487040961-18319-1-git-send-email-youlin.pei@mediatek.com>
+         <1487040961-18319-3-git-send-email-youlin.pei@mediatek.com>
+         <499f9186-82c1-cb5a-91de-754c89bcdd3d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <659fb6a3-d49d-5429-8770-88917e4fd0b3@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Sebastian Reichel <sre@kernel.org>, robh+dt@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <499f9186-82c1-cb5a-91de-754c89bcdd3d-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 12:09 AM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> Hi Liam,
->
-> On 29/03/2017 08:55, Liam Breck wrote:
->> Hi Quentin,
->>
->> On Thu, Mar 16, 2017 at 12:42 AM, Liam Breck <liam@networkimprov.net> wrote:
->>> On Thu, Mar 16, 2017 at 12:03 AM, Quentin Schulz
->>> <quentin.schulz@free-electrons.com> wrote:
->>>> Hi Liam,
->>>>
->>>> On 16/03/2017 07:27, Liam Breck wrote:
->>>>> Hi Rob,
->>>>>
->>>>> On Wed, Mar 15, 2017 at 6:10 AM, Quentin Schulz
->>>>> <quentin.schulz@free-electrons.com> wrote:
->>>>>> Hi Liam,
->>>>>>
->>>>>> On 15/03/2017 13:08, Liam Breck wrote:
->>>>>>> I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
->>>>>>> in patch description to direct a patch to interested parties and
->>>>>>> relevant lists. I don't want to see all 19 patches in this series.
->>>>>>>
->>>>>>> On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
->>>>>>> <quentin.schulz@free-electrons.com> wrote:
->>>>>>>> This adds the constant-charge-current property to the list of optional
->>>>>>>> properties of the battery.
->>>>>>>>
->>>>>>>> The constant charge current is critical for batteries as they can't
->>>>>>>> handle all charge currents.
->>>>>>>>
->>>>>>>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->>>>>>>> Acked-by: Rob Herring <robh@kernel.org>
->>>>>>>> ---
->>>>>>>>
->>>>>>>> v4:
->>>>>>>>  - switch from constant-charge-current-microamp to constant-charge-microamp,
->>>>>
->>>>> Sebastian is on record supporting name alignment between DT:battery
->>>>> properties and enum power_supply_property.
->>>>>
->>>>> Could you OK a change back to constant-charge-current-microamp in this patch?
->>>>>
->>>>> Note that the following could appear in DT:battery in future:
->>>>>
->>>>> constant-charge-current-microamp
->>>>> constant-charge-current-max-microamp
->>>>
->>>> OK. I am actually setting max constant charge current and constant
->>>> current charge with the same DT property so I might need to adapt my
->>>> patches.
->>>
->>> I suspect you should set battery:*-current-max with DT, as -current is
->>> "programmed by charger" so seems to be a stat, not a fixed
->>> characteristic.
->>
->> Did you resolve this issue?
->>
->
-> Sorry, completely missed your first mail.
->
-> Constant charge current is actually what I set in the PMIC. The maximum
-> constant charge current is completely PMIC-agnostic in my driver as it
-> is used to tell the user that (s)he shouldn't really have a constant
-> charge current over the maximum limit as the battery might not be able
-> to handle such high current.
->
-> What I suggest is to have both properties in DT. I'll set the maximum as
-> I do today and we can give the user the ability to set a "default"
-> constant charge current (below maximum constant charge current) in the
-> DT. Maybe we do not want to recharge your battery with the maximum value
-> by default?
+Hi Marc
 
-The scope here is just static battery characteristics. For the battery
-node, I think constant-charge-current-max-microamp is the relevant
-term. If we added both properties, one would be an alias for the
-other, which doesn't seem useful.
+comments inline
 
-The pmic can report both independently of the battery characteristic,
-and take a driver-specific DT property for
-constant-charge-current-microamp which it applies if less than the
-battery's -max setting. Or you could set that in userspace via
-/sys/class.../constant_charge_current. The charger's -max value would
-be a characteristic of its regulator.
+On Fri, 2017-03-24 at 16:22 +0000, Marc Zyngier wrote:
+> On 14/02/17 02:56, Youlin Pei wrote:
+> > In Mediatek SOCs, the CIRQ is a low power interrupt controller
+> > designed to works outside MCUSYS which comprises with Cortex-Ax
+> > cores,CCI and GIC.
+> > 
+> > The CIRQ controller is integrated in between MCUSYS( include
+> > Cortex-Ax, CCI and GIC ) and interrupt sources as the second
+> > level interrupt controller. The external interrupts which outside
+> > MCUSYS will feed through CIRQ then bypass to GIC. CIRQ can monitors
+> > all edge trigger interupts. When an edge interrupt is triggered,
+> > CIRQ can record the status and generate a pulse signal to GIC when
+> > flush command executed.
+> > 
+> > When system enters sleep mode, MCUSYS will be turned off to improve
+> > power consumption, also GIC is power down. The edge trigger interrupts
+> > will be lost in this scenario without CIRQ.
+> > 
+> > This commit provides the CIRQ irqchip implement.
+> > 
+> > Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/irqchip/Makefile       |    2 +-
+> >  drivers/irqchip/irq-mtk-cirq.c |  288 ++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 289 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/irqchip/irq-mtk-cirq.c
+> > 
+> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > index 0e55d94..db9acd1 100644
+> > --- a/drivers/irqchip/Makefile
+> > +++ b/drivers/irqchip/Makefile
+> > @@ -61,7 +61,7 @@ obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
+> >  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
+> >  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
+> >  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
+> > -obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
+> > +obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o irq-mtk-cirq.o
+> >  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
+> >  obj-$(CONFIG_RENESAS_H8300H_INTC)	+= irq-renesas-h8300h.o
+> >  obj-$(CONFIG_RENESAS_H8S_INTC)		+= irq-renesas-h8s.o
+> > diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
+> > new file mode 100644
+> > index 0000000..b5cf506
+> > --- /dev/null
+> > +++ b/drivers/irqchip/irq-mtk-cirq.c
+> > @@ -0,0 +1,288 @@
+> > +/*
+> > + * Copyright (c) 2016 MediaTek Inc.
+> > + * Author: Youlin.Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/irqchip.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/syscore_ops.h>
+> > +
+> > +#define CIRQ_ACK	0x40
+> > +#define CIRQ_MASK_SET	0xc0
+> > +#define CIRQ_MASK_CLR	0x100
+> > +#define CIRQ_SENS_SET	0x180
+> > +#define CIRQ_SENS_CLR	0x1c0
+> > +#define CIRQ_POL_SET	0x240
+> > +#define CIRQ_POL_CLR	0x280
+> > +#define CIRQ_CONTROL	0x300
+> > +
+> > +#define CIRQ_EN	0x1
+> > +#define CIRQ_EDGE	0x2
+> > +#define CIRQ_FLUSH	0x4
+> > +
+> > +struct mtk_cirq_chip_data {
+> > +	void __iomem *base;
+> > +	unsigned int ext_irq_start;
+> > +	unsigned int ext_irq_end;
+> > +	struct irq_domain *domain;
+> > +};
+> > +
+> > +static struct mtk_cirq_chip_data *cirq_data;
+> 
+> Question in relation to the sysirq patches that have been queued for
+> 4.12: Are we going to see something similar with this driver, where
+> you're going to have to support multiple non-contiguous register sets?
+> I'd rather have this kind of thing from day one, instead of adding that
+> at a later time...
+> 
+> Specially given that the platform that is using this driver does also
+> have a sysirq controller.
 
-Or am I missing something...?
+sysirq is kind of special design which mediatek's HW guys put the bases
+in a range with other misc usages. so sysirq might happen to have
+several bases.
 
->> Rob & Sebastian want me to merge all items for
->> bindings/power/supply/battery.txt. If I do that I'll also roll up
->> their counterparts in power_supply_core.c and submit a patchset for
->> those two files.
->>
->
-> I guess that adding the two properties make sense, don't you think?
->
-> Also, could you Cc me on your next version of your patches? So I know
-> when to rebase and slightly rework my patches once your patch series is
-> merged.
+cirq is like other normal controller which has its own base and range.
+We have all cirq design with single base.
 
-Surely.
+Also asked our HW guys to allocate sysirq with single base as possible
+in the future even they put it in misc address range.
 
+Thanks.
+> 
+> > +
+> > +static void mtk_cirq_write_mask(struct irq_data *data, unsigned int offset)
+> > +{
+> > +	struct mtk_cirq_chip_data *chip_data = data->chip_data;
+> > +	unsigned int cirq_num = data->hwirq;
+> > +	u32 mask = 1 << (cirq_num % 32);
+> > +
+> > +	writel_relaxed(mask, chip_data->base + offset + (cirq_num / 32) * 4);
+> > +}
+> > +
+> > +static void mtk_cirq_mask(struct irq_data *data)
+> > +{
+> > +	mtk_cirq_write_mask(data, CIRQ_MASK_SET);
+> > +	irq_chip_mask_parent(data);
+> > +}
+> > +
+> > +static void mtk_cirq_unmask(struct irq_data *data)
+> > +{
+> > +	mtk_cirq_write_mask(data, CIRQ_MASK_CLR);
+> > +	irq_chip_unmask_parent(data);
+> > +}
+> > +
+> > +static int mtk_cirq_set_type(struct irq_data *data, unsigned int type)
+> > +{
+> > +	int ret;
+> > +
+> > +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> > +	case IRQ_TYPE_EDGE_FALLING:
+> > +		mtk_cirq_write_mask(data, CIRQ_POL_CLR);
+> > +		mtk_cirq_write_mask(data, CIRQ_SENS_CLR);
+> > +		break;
+> > +	case IRQ_TYPE_EDGE_RISING:
+> > +		mtk_cirq_write_mask(data, CIRQ_POL_SET);
+> > +		mtk_cirq_write_mask(data, CIRQ_SENS_CLR);
+> > +		break;
+> > +	case IRQ_TYPE_LEVEL_LOW:
+> > +		mtk_cirq_write_mask(data, CIRQ_POL_CLR);
+> > +		mtk_cirq_write_mask(data, CIRQ_SENS_SET);
+> > +		break;
+> > +	case IRQ_TYPE_LEVEL_HIGH:
+> > +		mtk_cirq_write_mask(data, CIRQ_POL_SET);
+> > +		mtk_cirq_write_mask(data, CIRQ_SENS_SET);
+> > +		break;
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	data = data->parent_data;
+> > +	ret = data->chip->irq_set_type(data, type);
+> > +	return ret;
+> > +}
+> > +
+> > +static struct irq_chip mtk_cirq_chip = {
+> > +	.name			= "MT_CIRQ",
+> > +	.irq_mask		= mtk_cirq_mask,
+> > +	.irq_unmask		= mtk_cirq_unmask,
+> > +	.irq_eoi		= irq_chip_eoi_parent,
+> > +	.irq_set_type		= mtk_cirq_set_type,
+> > +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+> > +#ifdef CONFIG_SMP
+> > +	.irq_set_affinity	= irq_chip_set_affinity_parent,
+> > +#endif
+> > +};
+> > +
+> > +static int mtk_cirq_domain_translate(struct irq_domain *d,
+> > +				     struct irq_fwspec *fwspec,
+> > +				     unsigned long *hwirq,
+> > +				     unsigned int *type)
+> > +{
+> > +	if (is_of_node(fwspec->fwnode)) {
+> > +		if (fwspec->param_count != 3)
+> > +			return -EINVAL;
+> > +
+> > +		/* No PPI should point to this domain */
+> > +		if (fwspec->param[0] != 0)
+> > +			return -EINVAL;
+> > +
+> > +		/* cirq support irq number check */
+> > +		if (fwspec->param[1] < cirq_data->ext_irq_start ||
+> > +		    fwspec->param[1] > cirq_data->ext_irq_end)
+> > +			return -EINVAL;
+> > +
+> > +		*hwirq = fwspec->param[1] - cirq_data->ext_irq_start;
+> > +		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+> > +		return 0;
+> > +	}
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static int mtk_cirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> > +				 unsigned int nr_irqs, void *arg)
+> > +{
+> > +	int ret;
+> > +	irq_hw_number_t hwirq;
+> > +	unsigned int type;
+> > +	struct irq_fwspec *fwspec = arg;
+> > +	struct irq_fwspec parent_fwspec = *fwspec;
+> > +
+> > +	ret = mtk_cirq_domain_translate(domain, fwspec, &hwirq, &type);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (WARN_ON(nr_irqs != 1))
+> > +		return -EINVAL;
+> > +
+> > +	irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+> > +				      &mtk_cirq_chip,
+> > +				      domain->host_data);
+> > +
+> > +	parent_fwspec.fwnode = domain->parent->fwnode;
+> > +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
+> > +					    &parent_fwspec);
+> > +}
+> > +
+> > +static const struct irq_domain_ops cirq_domain_ops = {
+> > +	.translate	= mtk_cirq_domain_translate,
+> > +	.alloc		= mtk_cirq_domain_alloc,
+> > +	.free		= irq_domain_free_irqs_common,
+> > +};
+> > +
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int mtk_cirq_suspend(void)
+> > +{
+> > +	u32 value, mask;
+> > +	unsigned int irq, hwirq_num;
+> > +	bool pending, masked;
+> > +	int i, pendret, maskret;
+> > +
+> > +	hwirq_num = cirq_data->ext_irq_end - cirq_data->ext_irq_start + 1;
+> > +	for (i = 0; i < hwirq_num; i++) {
+> > +		irq = irq_find_mapping(cirq_data->domain, i);
+> > +		if (irq) {
+> > +			pendret = irq_get_irqchip_state(irq,
+> > +							IRQCHIP_STATE_PENDING,
+> > +							&pending);
+> > +
+> > +			maskret = irq_get_irqchip_state(irq,
+> > +							IRQCHIP_STATE_MASKED,
+> > +							&masked);
+> > +
+> > +			if (pendret == 0 && maskret == 0 &&
+> > +			    (pending && !masked))
+> > +				continue;
+> > +		}
+> > +
+> > +		mask = 1 << (i % 32);
+> > +		writel_relaxed(mask, cirq_data->base + CIRQ_ACK + (i / 32) * 4);
+> > +	}
+> 
+> It would be worth documenting exactly what this is for. I had to go back
+> to our previous discussion in November to remember it.
+> 
+> > +
+> > +	/* set edge_only mode, record edge-triggerd interrupts */
+> > +	/* enable cirq */
+> > +	value = readl_relaxed(cirq_data->base + CIRQ_CONTROL);
+> > +	value |= (CIRQ_EDGE | CIRQ_EN);
+> > +	writel_relaxed(value, cirq_data->base + CIRQ_CONTROL);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void mtk_cirq_resume(void)
+> > +{
+> > +	u32 value;
+> > +
+> > +	/* flush recored interrupts, will send signals to parent controller */
+> > +	value = readl_relaxed(cirq_data->base + CIRQ_CONTROL);
+> > +	writel_relaxed(value | CIRQ_FLUSH, cirq_data->base + CIRQ_CONTROL);
+> > +
+> > +	/* disable cirq */
+> > +	value = readl_relaxed(cirq_data->base + CIRQ_CONTROL);
+> > +	value &= ~(CIRQ_EDGE | CIRQ_EN);
+> > +	writel_relaxed(value, cirq_data->base + CIRQ_CONTROL);
+> > +}
+> > +
+> > +static struct syscore_ops mtk_cirq_syscore_ops = {
+> > +	.suspend	= mtk_cirq_suspend,
+> > +	.resume		= mtk_cirq_resume,
+> > +};
+> > +
+> > +static void mtk_cirq_syscore_init(void)
+> > +{
+> > +	register_syscore_ops(&mtk_cirq_syscore_ops);
+> > +}
+> > +#else
+> > +static inline void mtk_cirq_syscore_init(void) {}
+> > +#endif
+> > +
+> > +static int __init mtk_cirq_of_init(struct device_node *node,
+> > +				   struct device_node *parent)
+> > +{
+> > +	struct irq_domain *domain, *domain_parent;
+> > +	unsigned int irq_num;
+> > +	int ret;
+> > +
+> > +	domain_parent = irq_find_host(parent);
+> > +	if (!domain_parent) {
+> > +		pr_err("mtk_cirq: interrupt-parent not found\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	cirq_data = kzalloc(sizeof(*cirq_data), GFP_KERNEL);
+> > +	if (!cirq_data)
+> > +		return -ENOMEM;
+> > +
+> > +	cirq_data->base = of_iomap(node, 0);
+> > +	if (!cirq_data->base) {
+> > +		pr_err("mtk_cirq: unable to map cirq register\n");
+> > +		ret = -ENXIO;
+> > +		goto out_free;
+> > +	}
+> > +
+> > +	ret = of_property_read_u32_index(node, "mediatek,ext-irq-range", 0,
+> > +					 &cirq_data->ext_irq_start);
+> > +	if (ret)
+> > +		goto out_unmap;
+> > +
+> > +	ret = of_property_read_u32_index(node, "mediatek,ext-irq-range", 1,
+> > +					 &cirq_data->ext_irq_end);
+> > +	if (ret)
+> > +		goto out_unmap;
+> > +
+> > +	irq_num = cirq_data->ext_irq_end - cirq_data->ext_irq_start + 1;
+> > +	domain = irq_domain_add_hierarchy(domain_parent, 0,
+> > +					  irq_num, node,
+> > +					  &cirq_domain_ops, cirq_data);
+> > +	if (!domain) {
+> > +		ret = -ENOMEM;
+> > +		goto out_unmap;
+> > +	}
+> > +	cirq_data->domain = domain;
+> > +
+> > +	mtk_cirq_syscore_init();
+> > +
+> > +	return 0;
+> > +
+> > +out_unmap:
+> > +	iounmap(cirq_data->base);
+> > +out_free:
+> > +	kfree(cirq_data);
+> > +	return ret;
+> > +}
+> > +
+> > +IRQCHIP_DECLARE(mtk_cirq, "mediatek,mtk-cirq", mtk_cirq_of_init);
+> > 
+> 
+> It otherwise looks much better than the previous iteration.
+> 
 > Thanks,
-> Quentin
->
->>> You may program your charger's -current with the battery's
->>> -current-max, of course.
->>>
->>> Note that your charger also has a -current-max characteristic, likely
->>> different than your battery. You may not need that in DT tho.
->>>
->>>>> constant-charge-voltage-microvolt
->>>>> constant-charge-voltage-max-microvolt
->>>>>
->>>>> Thanks!
->>>>>
->>>>>>> Must be constant-charge-current-microamp for the reasons discussed in
->>>>>>> battery.txt - consistency with sysfs names.
->>>>>>>
->>>>>>
->>>>>> Hum. Just nitpicking, but I disagree with the use of 'must'. IIRC there
->>>>>> is nothing in the code that would require the property to be named after
->>>>>> a property from the enum power_supply_property.
->>>>>>
->>>>>> I would say that you _want_ it to be named like that because it
->>>>>> underlines the relation between the DT property and the actual impacted
->>>>>> property in the power supply subsystem. I'm fine with this reason but in
->>>>>> the end, the maintainer's opinion prevails (if (s)he does not want it,
->>>>>> (s)he will not take it). So, basically, I actually don't mind either
->>>>>> option and I see arguments on each side.
->>>>>>
->>>>>> So, just waiting for maintainer's opinion to make the final version of
->>>>>> this patch.
->>>>>>
->>>>>> Thanks,
->>>>>> Quentin
->>>>>>
->>>>>>> Also applies to power_supply_core.c patch.
->>>>>>>
->>>>>>> Rob: enum power_supply_property also lists constant-charge-voltage,
->>>>>>> hence the -current
->>>>>>>
->>>>>>>
->>>>>>>> added in v3
->>>>>>>>
->>>>>>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
->>>>>>>>  1 file changed, 2 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>> index 0278617..9594e1e 100644
->>>>>>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>> @@ -7,6 +7,7 @@ Optional Properties:
->>>>>>>>   - voltage-min-design-microvolt: drained battery voltage
->>>>>>>>   - energy-full-design-microwatt-hours: battery design energy
->>>>>>>>   - charge-full-design-microamp-hours: battery design capacity
->>>>>>>> + - constant-charge-microamp: battery constant charge current
->>>>>>>>
->>>>>>>>  Because drivers surface properties in sysfs using names derived
->>>>>>>>  from enum power_supply_property, e.g.
->>>>>>>> @@ -30,6 +31,7 @@ Example:
->>>>>>>>                 voltage-min-design-microvolt = <3200000>;
->>>>>>>>                 energy-full-design-microwatt-hours = <5290000>;
->>>>>>>>                 charge-full-design-microamp-hours = <1430000>;
->>>>>>>> +               constant-charge-microamp = <300000>;
->>>>>>>>         };
->>>>>>>>
->>>>>>>>         charger: charger@11 {
->>>>>>>> --
->>>>>>>> 2.9.3
->>>>>>>>
->>>>>>
->>>>>> --
->>>>>> Quentin Schulz, Free Electrons
->>>>>> Embedded Linux and Kernel engineering
->>>>>> http://free-electrons.com
->>>>
->>>> --
->>>> Quentin Schulz, Free Electrons
->>>> Embedded Linux and Kernel engineering
->>>> http://free-electrons.com
->
-> --
-> Quentin Schulz, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+> 
+> 	M.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
