@@ -1,39 +1,97 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] pinctrl: Renesas RZ/A1 pin and gpio controller
-Date: Wed, 29 Mar 2017 03:43:48 +0200
-Message-ID: <CACRpkdb48JqghacTsJfiPWHZdpfD1cg1Z7rVWQJO+BmVpVbKHg@mail.gmail.com>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490368934-12494-2-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdYjZJ7e0tJy6_jfpRT+UDFWqnu8ZX18-gaAHVZLgW-prA@mail.gmail.com> <20170324164559.GA15925@w540>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH v1 2/7] devicetree: power: Add docs for TI BQ24190 battery charger
+Date: Tue, 28 Mar 2017 18:48:14 -0700
+Message-ID: <CAKvHMgT8wntpXy1U7=w6XXFwrc91epqpgiaiDi+z5iBd+oOCew@mail.gmail.com>
+References: <20170321220921.5834-1-liam@networkimprov.net> <20170321220921.5834-3-liam@networkimprov.net>
+ <20170329004743.6mwpk3lzt5l666gw@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170324164559.GA15925@w540>
+In-Reply-To: <20170329004743.6mwpk3lzt5l666gw@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 5:45 PM, jacopo <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+Hi Rob,
 
-> I initially created a whole new sub-directory where all the Renesas
-> devices with this kind of pin controller would have gone
-> (drivers/pinctrl/rz-pfc) but since as of now the only available
-> hardware of that type is RZ/A1 and some of its variants, we decided to go
-> with a single driver supporting that platform only.
-> If more will come, we'll think about supporting them through this
-> driver if possible, or create a dedicated directory.
+On Tue, Mar 28, 2017 at 5:47 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Mar 21, 2017 at 03:09:16PM -0700, Liam Breck wrote:
+>> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>>
+>> Document monitored-battery and ti,system-minimum-microvolt properties.
+>>
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/power/supply/bq24190.txt   | 47 ++++++++++++++++++++++
+>>  1 file changed, 47 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq24190.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+>> new file mode 100644
+>> index 0000000..d252d10
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+>> @@ -0,0 +1,47 @@
+>> +Binding for TI BQ24190 Li-Ion Battery Charger
+>> +
+>> +Required properties:
+>> +- compatible: Should contain one of the following:
+>> +    * "ti,bq24190"
+>> +- reg: integer, I2C address of the device.
+>> +
+>> +Optional properties:
+>> +- monitored-battery: phandle of battery information devicetree node
+>> +    These battery properties are relevant:
+>> +    + precharge-current-microamp: maximum charge current during precharge
+>> +      phase (typically 20% of battery capacity).
+>> +    + endcharge-current-microamp: a charge cycle terminates when the
+>> +      battery voltage is above recharge threshold, and the current is below
+>> +      this setting (typically 10% of battery capacity).
+>> +    See Documentation/devicetree/bindings/power/supply/battery.txt
 >
-> Are you ok with this?
+> This isn't really relevant to the binding. The battery properties
+> shouldn't vary with the charger.
 
-Yep it's OK. It's no big deal to move it into a new subdir if many
-new drivers start popping in anyway.
+Different components need different properties from the battery node.
+This charger needs the above two, so we should document that, no?
 
-Right now I see the use of renesas,pins as the only big blocker,
-I would much like it to use just pins = <>;
-
-Yours,
-Linus Walleij
+>> +- ti,system-minimum-microvolt: when power is connected and the battery
+>> +    is below minimum system voltage, the system will be regulated above this
+>> +    setting.
+>> +
+>> +Other features:
+>> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current on USB SDP port.
+>> +
+>> +Example:
+>> +
+>> +bat: battery {
+>> +     compatible = "simple-battery";
+>> +     precharge-current-microamp = <256000>;
+>> +     endcharge-current-microamp = <128000>;
+>> +};
+>> +
+>> +bq24190 charger@6a {
+>> +     compatible = "ti,bq24190";
+>> +     reg = <0x6a>;
+>> +     // interrupt configuration here
+>> +     monitored-battery = <&bat>;
+>> +     ti,system-minimum-microvolt = <3200000>;
+>> +};
+>> +
+>> +&twl_gpio {
+>> +     otg {
+>> +             gpio-hog;
+>> +             gpios = <6 0>;
+>> +             output-high;
+>> +             line-name = "otg-gpio";
+>> +     };
+>> +};
+>> --
+>> 2.9.3
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
