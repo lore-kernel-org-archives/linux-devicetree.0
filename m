@@ -1,30 +1,68 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 3/5] i2c: aspeed: added documentation for Aspeed I2C driver
-Date: Wed, 29 Mar 2017 03:25:51 -0700
-Message-ID: <CAFd5g45gYTEtjAAaFoF3Jm6NBfbdyHtnjE6-vxDyhDfLX9nLNg@mail.gmail.com>
-References: <20170328051226.21677-1-brendanhiggins@google.com>
- <20170328051226.21677-4-brendanhiggins@google.com> <1490691283.3177.112.camel@kernel.crashing.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
+Date: Wed, 29 Mar 2017 18:27:40 +0800
+Message-ID: <20170329102740.GA20804@leoy-linaro>
+References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
+ <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
+ <31be033f-514e-e48a-3ba2-a5c5cd477548@arm.com>
+ <20170329030735.GA23889@leoy-linaro>
+ <5584203e-cb19-a5d2-45b1-3e78d3482c55@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490691283.3177.112.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Kachalov Anton <mouse-Pma6HLj0uuo@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5584203e-cb19-a5d2-45b1-3e78d3482c55@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
->> +             bus = <0>;
->> +             clocks = <&clk_apb>;
->> +             clock-frequency = <100000>;
->
-> For busses it's more traditional to make this "bus-frequency" but
-> that's a nit and Linux/fdt has not respected that tradition terribly
-> well. If you respin, it might be work changing.
->
-> The clock-frequency tends to be the frequency of the controller itself.
+On Wed, Mar 29, 2017 at 10:07:07AM +0100, Suzuki K Poulose wrote:
 
-Ah, okay. I will change this on the next revision.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> >>>+	if (mode == EDDEVID_IMPL_NONE) {
+> >>>+		drvdata->edpcsr_present  = false;
+> >>>+		drvdata->edcidsr_present = false;
+> >>>+		drvdata->edvidsr_present = false;
+> >>>+	} else if (mode == EDDEVID_IMPL_EDPCSR) {
+> >>>+		drvdata->edpcsr_present  = true;
+> >>>+		drvdata->edcidsr_present = false;
+> >>>+		drvdata->edvidsr_present = false;
+> >>>+	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
+> >>>+		if (!IS_ENABLED(CONFIG_64BIT) &&
+> >>>+			(pcsr_offset == EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32))
+> >>>+			drvdata->edpcsr_present = false;
+> >>>+		else
+> >>>+			drvdata->edpcsr_present = true;
+> >>
+> >>Sorry, I forgot why we do this check only in this mode. Shouldn't this be
+> >>common to all modes (of course which implies PCSR is present) ?
+> >
+> >No. PCSROffset is defined differently in ARMv7 and ARMv8; So finally we
+> >simplize PCSROffset value :
+> >0000 - Sample offset applies based on the instruction state (indicated by PCSR[0])
+> >0001 - No offset applies.
+> >0010 - No offset applies, but do not use in AArch32 mode!
+> >
+> >So we need handle the corner case is when CPU runs AArch32 mode and
+> >PCSRoffset = 'b0010. Other cases the pcsr should be present.
+> 
+> I understand that reasoning. But my question is, why do we check for PCSROffset
+> only when mode == EDDEVID_IMPL_EDPCSR_EDCIDSR and not for say mode == EDDEVID_IMPL_EDPCSR or
+> any other mode where PCSR is present.
+
+Sorry I misunderstood your question.
+
+I made mistake when I analyzed the possbile combination for mode and
+PCSROffset so I thought it's the only case should handle:
+{ EDDEVID_IMPL_EDPCSR_EDCIDSR, EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
+
+Below three combinations are possible to exist; so you are right, I
+should move this out for the checking:
+{ EDDEVID_IMPL_NONE,           EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
+{ EDDEVID_IMPL_EDPCSR_EDCIDSR, EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
+{ EDDEVID_IMPL_FULL,           EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
+
+Thanks,
+Leo Yan
