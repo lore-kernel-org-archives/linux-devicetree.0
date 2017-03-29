@@ -1,182 +1,122 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3] ASoC: Add support for Maxim Integrated
- MAX98927 Amplifier
-Date: Wed, 29 Mar 2017 15:23:04 +0100
-Message-ID: <20170329142304.qovnyqd6izackny2@sirena.org.uk>
-References: <1490748828-31701-1-git-send-email-ryans.lee@maximintegrated.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 2/2] PCI: Add tango PCIe host bridge support
+Date: Wed, 29 Mar 2017 15:33:44 +0100
+Message-ID: <84a8b26d-7d24-df29-3959-45fce880916d@arm.com>
+References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
+ <65114e62-7458-b6f7-327c-f07a5096a452@sigmadesigns.com>
+ <01516ad9-e187-4bac-7c65-a7a90c576ce2@arm.com>
+ <96da696c-141a-3e8d-1fb7-2c024a295f58@free.fr>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2985705725163388728=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1490748828-31701-1-git-send-email-ryans.lee@maximintegrated.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ryan Lee <ryans.lee@maximintegrated.com>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com, tiwai@suse.com, srinivas.kandagatla@linaro.org, romain.perier@collabora.com, bardliao@realtek.com, lars@metafoo.de, axel.lin@ingics.com, Paul.Handrigan@cirrus.com, devicetree@vger.kernel.org, arnd@arndb.de, nh6z@nh6z.net, robh+dt@kernel.org, ckeepax@opensource.wolfsonmicro.com, dgreid@google.com, oder_chiou@realtek.com, ryan.lee.maxim@gmail.com, KCHSU0@nuvoton.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <96da696c-141a-3e8d-1fb7-2c024a295f58@free.fr>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mason <slash.tmp@free.fr>
+Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 29/03/17 13:53, Mason wrote:
+> On 29/03/2017 14:19, Robin Murphy wrote:
+> 
+>> On 29/03/17 12:34, Marc Gonzalez wrote:
+>>
+>>> +	/*
+>>> +	 * QUIRK #3
+>>> +	 * Unfortunately, config and mem spaces are muxed.
+>>> +	 * Linux does not support such a setting, since drivers are free
+>>> +	 * to access mem space directly, at any time.
+>>> +	 * Therefore, we can only PRAY that config and mem space accesses
+>>> +	 * NEVER occur concurrently.
+>>> +	 */
+>>
+>> What about David's suggestion of using an IPI for safe mutual exclusion?
+> 
+> I was left with the impression that this wouldn't solve the problem.
+> If a mem space access is "in flight" on core0 when core1 starts a
+> config space access, an IPI will not prevent breakage.
+> 
+> Did I misunderstand?
+> 
+> For my education, what is the API to send an IPI?
+> And the API to handle an IPI?
 
---===============2985705725163388728==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uluqcjpydlhtmbyh"
-Content-Disposition: inline
+There are a few ways you could implement some custom cross-call,
+although in this case I think stop_machine() would probably be the most
+appropriate candidate. However, you're right that in general it may not
+actually help enough to be worthwhile - a DSB SY would ensure that
+in-flight transactions have at least been observed by the CPUs and any
+other coherent masters, but for any writes with a memory type allowing
+early acknowledgement (i.e. a Normal or Device mapping of a BAR) that
+doesn't necessarily correlate with them having reached their ultimate
+destination. For a PCI destination in particular, I think the normal way
+to ensure all posted writes have completed would be to read from config
+space; ah...
 
+>>> +	if (of_device_is_compatible(dev->of_node, "sigma,smp8759-pcie"))
+>>> +		smp8759_init(pcie, base);
+>>
+>> ...then retrieve it with of_device_get_match_data() here. No need to
+>> reinvent the wheel (or have to worry about the ordering of multiple
+>> compatibles once rev. n+1 comes around).
+> 
+> I actually asked about this on IRC. The consensus was "use what
+> best fits your use case". I need to do some processing based on
+> the revision, so I thought
+> 
+>   if (chip_x)
+> 	do_chip_x_init()
+> 
+> was a good way to express my intent. Did I misunderstand?
 
---uluqcjpydlhtmbyh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No, I'm in no way disputing that; what I'm pointing out is that you
+already have an explicitly provided way to associate a value of "chip_x"
+with a given compatible string - see other callers of
+of_device_get_match_data() for inspiration. I don't have much of an
+opinion as to whether it's an enum, a static structure of offsets and
+callbacks, or you embrace the nasal demons and just wedge the init
+function pointer in there directly (this'll never run on
+IA-64/M68k/etc., right? :P). The point is that not only is it cleaner
+and scales better as the driver grows, it stops you having to worry at
+all about setting this trap for yourself:
 
-On Wed, Mar 29, 2017 at 09:53:48AM +0900, Ryan Lee wrote:
+	compatible = "rev3-with-extra-fun", "rev3";
+	...
 
-> +	case SND_SOC_DAIFMT_CBS_CFM:
-> +		mode = MAX98927_PCM_MASTER_MODE_HYBRID;
-> +	default:
-> +		dev_err(codec->dev, "DAI clock mode unsupported");
+	if (of_device_is_compatible(dev, "rev3"))
+		boring_init_without_extra_fun();	/* :( */
 
-Either we don't support _CBS_CFM or there's a missing break there.
+because once you've made your code robust against that, you'll realise
+that what you've done is wasted your time open-coding a creaky
+approximation of of_match_device().
 
-> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-> +	case SND_SOC_DAIFMT_I2S:
-> +		max98927->iface |= SND_SOC_DAIFMT_I2S;
-> +
-> +	break;
+Robin.
 
-Please use the kernel coding style as you do in the rest of this
-function.
-
-> +	int reg = MAX98927_R0022_PCM_CLK_SETUP;
-> +	int mask = MAX98927_PCM_CLK_SETUP_BSEL_MASK;
-
-> +	regmap_update_bits(max98927->regmap, reg, mask, value);
-
-reg and mask have exactly one user (as you'd expect), just use the
-constants directly here to make things clearer.
-
-> +	switch (snd_pcm_format_width(params_format(params))) {
-> +	case 16:
-> +		chan_sz = MAX98927_PCM_MODE_CFG_CHANSZ_16;
-> +		max98927->ch_size = 16;
-
-You could just assign ch_size directly.
-
-> +	/* sampling rate configuration */
-> +	switch (params_rate(params)) {
-> +	case 8000:
-> +		sampling_rate |= MAX98927_PCM_SR_SET1_SR_8000;
-
-sampling_rate is only ever set to a real value in this switch statement,
-you're not oring with anything else so you can just use an assignment
-which would be a lot clearer (it's not obvious what else might go in
-there) and the initial assignment to 0 for this and chan_sz can only
-mask errors.
-
-> +	/* set sampling rate of IV */
-> +	if (max98927->interleave_mode &&
-> +		sampling_rate > MAX98927_PCM_SR_SET1_SR_16000)
-> +		regmap_update_bits(max98927->regmap,
-
-Please use the kernel coding style, indent the second line of the if
-with the ( so that it doesn't look like part of the conditional code.
-
-> +	switch (reg) {
-> +	case MAX98927_R0001_INT_RAW1 ... MAX98927_R0028_ICC_RX_EN_B:
-
-
-> +		return true;
-> +	}
-> +	return false;
-
-It'd be clearer to put the return false in the switch statement like the
-return true, and also consistent with the _volatile_reg() function.
-
-> +static const char * const max98927_speaker_source_text[] = {
-> +	"i2s", "reserved", "tone", "pdm"
-> +};
-
-This looks like it should be a DAPM control.
-
-> +static const char * const max98927_monomix_output_text[] = {
-> +	"ch_0", "ch_1", "ch_1_2_div"
-> +};
-
-Similarly here.
-
-> +	SOC_SINGLE_TLV("Digital Gain", MAX98927_R0036_AMP_VOL_CTRL,
-> +		0, (1<<MAX98927_AMP_VOL_WIDTH)-1, 0,
-> +		max98927_digital_tlv),
-
-All volume controls should end with Volume as per control-names.rst.
-
-> +	SOC_SINGLE("Amp DSP Enable", MAX98927_R0052_BROWNOUT_EN,
-> +		MAX98927_BROWNOUT_DSP_SHIFT, 1, 0),
-
-All on/off switches should end with Switch as per control-names.rst.
-
-> +static int max98927_probe(struct snd_soc_codec *codec)
-> +{
-
-> +       /* Check Revision ID */
-> +       ret = regmap_read(max98927->regmap,
-> +               MAX98927_R01FF_REV_ID, &reg);
-
-Basic device identification and setup should be done at the chip level
-probe not at the CODEC level so that if there are problems we fail as
-early as possible and so that diagnostic information is available to
-users as soon as possible, even if there's no sound card for the device
-in the system.
-
-> +	/* Set inital volume (+13dB) */
-
-As with all other CODEC drivers you should leave the hardware defaults
-alone, what makes sense for your system may not make sense for other
-systems and the hardware defaults are a fixed thing.
-
-> +	/* Boost Output Voltage & Current limit */
-> +	regmap_write(max98927->regmap,
-> +		MAX98927_R0040_BOOST_CTRL0,
-> +		0x1C);
-> +	regmap_write(max98927->regmap,
-> +		MAX98927_R0042_BOOST_CTRL1,
-> +		0x3E);
-
-This should be system specific, these values might be unsafe in some
-systems.
-
-> +err:
-> +	if (max98927)
-> +		devm_kfree(&i2c->dev, max98927);
-
-There is no need to explicitly free devm_ allocated memory, that's the
-point of devm.
-
---uluqcjpydlhtmbyh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljbw0cACgkQJNaLcl1U
-h9BLKQf9F+OMjAAsyQrholcyWs+MPxLuPasoQUC/kwFDZEGnG4AsxQIqJDlxm/LQ
-48eU2WaV4Xc/s7/ueUkCFBNlUINKuifT8myEFT9mwx+EHLIlO0BJxp8bYah1QNva
-VYAGZmzcf8AJX+dBFVNX2H0BUeOlbad1VXIzmsjNd2ZAMYNRwVl/hAyM3Kll4OcJ
-x95Dnc13wGloNSDYRJYY8cyYjRJ4RqpvysC1z2O45H8xGka+0jSa9NpbR3aq+S4U
-ZzL9NGs+kbs7yzS/CXbS3nE+zzA2Hp5VqAGpf2q3BegSDa2Tsl2C6u60i3o7uEJl
-x9XjDDjW1wMotNwBAKjZmp8bQEEL9A==
-=0dWR
------END PGP SIGNATURE-----
-
---uluqcjpydlhtmbyh--
-
---===============2985705725163388728==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2985705725163388728==--
+> For example, the init function for rev2 currently looks like this:
+> 
+> static void rev2_init(struct tango_pcie *pcie, void __iomem *base)
+> {
+> 	void __iomem *misc_irq	= base + 0x40;
+> 	void __iomem *doorbell	= base + 0x8c;
+> 
+> 	pcie->mux		= base + 0x2c;
+> 	pcie->msi_status	= base + 0x4c;
+> 	pcie->msi_mask		= base + 0x6c;
+> 	pcie->msi_doorbell	= 0x80000000;
+> 
+> 	writel(lower_32_bits(pcie->msi_doorbell), doorbell + 0);
+> 	writel(upper_32_bits(pcie->msi_doorbell), doorbell + 4);
+> 
+> 	/* Enable legacy PCI interrupts */
+> 	writel(BIT(15), misc_irq);
+> 	writel(0xf << 4, misc_irq + 4);
+> }
+> 
+>>> +#define VENDOR_SIGMA	0x1105
+>>
+>> Should this not be in include/linux/pci_ids.h?
+> 
+> Doh! Very likely. Thanks.
+> 
+> Regards.
+> 
