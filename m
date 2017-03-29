@@ -1,162 +1,193 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio playback
-Date: Wed, 29 Mar 2017 14:38:03 +0100
-Message-ID: <245dcd83-172b-0ea0-0e3b-b508c83f45fa@synopsys.com>
-References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
- <1488481038.2684.14.camel@synopsys.com>
- <8b441b9d-bc26-091a-ac48-8594952759e8@synopsys.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/7] clocksource/drivers/clksrc-evt-probe: Describe
+ with the DT both the clocksource and the clockevent
+Date: Wed, 29 Mar 2017 15:41:34 +0200
+Message-ID: <20170329134134.GJ2123@mai>
+References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
+ <1490197714-25415-2-git-send-email-al.kochet@gmail.com>
+ <20170329015146.ey5rlptzsnnynpnt@rob-hp-laptop>
+ <20170329092210.GH2123@mai>
+ <20170329104911.GC23442@leverpostej>
+ <20170329123638.GI2123@mai>
+ <20170329125713.GH23442@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8b441b9d-bc26-091a-ac48-8594952759e8-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170329125713.GH23442@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vineet, Rob,
+On Wed, Mar 29, 2017 at 01:57:14PM +0100, Mark Rutland wrote:
+> On Wed, Mar 29, 2017 at 02:36:38PM +0200, Daniel Lezcano wrote:
+> > On Wed, Mar 29, 2017 at 11:49:11AM +0100, Mark Rutland wrote:
+> > > On Wed, Mar 29, 2017 at 11:22:10AM +0200, Daniel Lezcano wrote:
+> > > > On Tue, Mar 28, 2017 at 08:51:46PM -0500, Rob Herring wrote:
+> > > > > On Wed, Mar 22, 2017 at 06:48:28PM +0300, Alexander Kochetkov wrote:
+> > 
+> > You can have several timers on the system and may want to use the clockevents
+> > from one IP block and the clocksource from another IP block. For example, in
+> > the case of a bogus clocksource.
+> 
+> I understand this. However, what I was trying to say is that *how* we
+> use a particular device should be a software decision. I have a more
+> concrete suggestion on that below.
+> 
+> > Moreover there are some drivers with a node for a clocksource and
+> > another one for the clockevent, and the driver is assuming the clockevent is
+> > defined first and then the clocksource.
+> > 
+> > eg.
+> > 
+> > arch/arc/boot/dts/abilis_tb10x.dtsi:
+> > 
+> >         /* TIMER0 with interrupt for clockevent */
+> >         timer0 {
+> >                 compatible = "snps,arc-timer";
+> >                 interrupts = <3>;
+> >                 interrupt-parent = <&intc>;
+> >                 clocks = <&cpu_clk>;
+> >         };
+> > 
+> >         /* TIMER1 for free running clocksource */
+> >         timer1 {
+> >                 compatible = "snps,arc-timer";
+> >                 clocks = <&cpu_clk>;
+> >         };
+> > 
+> > drivers/clocksource/arc_timer.c:
+> > 
+> > static int __init arc_of_timer_init(struct device_node *np)
+> > {
+> >         static int init_count = 0;
+> >         int ret;
+> > 
+> >         if (!init_count) {
+> >                 init_count = 1;
+> >                 ret = arc_clockevent_setup(np);
+> >         } else {
+> >                 ret = arc_cs_setup_timer1(np);
+> >         }
+> > 
+> >         return ret;
+> > }
+> > 
+> > Even if that works, it is a fragile mechanism.
+> > 
+> > So the purpose of these changes is to provide a stronger timer declaration in
+> > order to clearly split in the kernel a clocksource and a clockevent
+> > initialization.
+> 
+> I agree that this pattern is not nice. However, I think that splitting
+> devices as this level makes the problem *worse*.
+> 
+> Users care that they have a clocksource and a clockevent device. They
+> do not care *which* particular device is used as either. The comments in
+> the DT above are at best misleading.
 
+Agree.
 
-On 20-03-2017 14:02, Jose Abreu wrote:
-> Hi Vineet, Alexey, Rob,
->
->
-> On 02-03-2017 18:57, Alexey Brodkin wrote:
->> Hi Jose,
->>
->> On Wed, 2017-02-22 at 18:19 +0000, Jose Abreu wrote:
->>> This patch adds the necessary DT bindings to get HDMI audio
->>> output in ARC AXS10x SDP. The bindings for I2S controller were
->>> added as well as the bindings for simple audio card.
->>>
->>> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>> Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>> Cc: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
->>>  arch/arc/boot/dts/axs10x_mb.dtsi | 22 ++++++++++++++++++----
->>>  1 file changed, 18 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
->>> index d6c1bbc..9d882b1 100644
->>> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
->>> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
->>> @@ -149,12 +149,13 @@
->>>  			interrupts = <14>;
->>>  		};
->>>  
->>> -		i2c@0x1e000 {
->>> -			compatible = "snps,designware-i2c";
->>> +		i2s: i2s@1e000 {
->>> +			compatible = "snps,designware-i2s";
->>>  			reg = <0x1e000 0x100>;
->>> -			clock-frequency = <400000>;
->>> -			clocks = <&i2cclk>;
->>> +			clocks = <&i2sclk 0>;
->>> +			clock-names = "i2sclk";
->>>  			interrupts = <15>;
->>> +			#sound-dai-cells = <0>;
->>>  		};
->>>  
->>>  		i2c@0x1f000 {
->>> @@ -174,6 +175,7 @@
->>>  				adi,input-colorspace = "rgb";
->>>  				adi,input-clock = "1x";
->>>  				adi,clock-delay = <0x03>;
->>> +				#sound-dai-cells = <0>;
->>>  
->>>  				ports {
->>>  					#address-cells = <1>;
->>> @@ -295,5 +297,17 @@
->>>  				};
->>>  			};
->>>  		};
->>> +
->>> +		sound_playback {
->>> +			compatible = "simple-audio-card";
->>> +			simple-audio-card,name = "AXS10x HDMI Audio";
->>> +			simple-audio-card,format = "i2s";
->>> +			simple-audio-card,cpu {
->>> +				sound-dai = <&i2s>;
->>> +			};
->>> +			simple-audio-card,codec {
->>> +				sound-dai = <&adv7511>;
->>> +			};
->>> +		};
->>>  	};
->>>  };
->> Just for the sake of history that's my mods to defconfig that allowed me
->> to play .pcm via HDMI from axs103 board:
->> -------------------------------->8-------------------------------
->> diff --git a/arch/arc/configs/axs103_smp_defconfig b/arch/arc/configs/axs103_smp_defconfig
->> index 30a3d4cf53d2..b11362a32e4e 100644
->> --- a/arch/arc/configs/axs103_smp_defconfig
->> +++ b/arch/arc/configs/axs103_smp_defconfig
->> @@ -67,25 +67,29 @@ CONFIG_MOUSE_PS2_TOUCHKIT=y
->>  CONFIG_MOUSE_SERIAL=y
->>  CONFIG_MOUSE_SYNAPTICS_USB=y
->>  # CONFIG_LEGACY_PTYS is not set
->> -# CONFIG_DEVKMEM is not set
->>  CONFIG_SERIAL_8250=y
->>  CONFIG_SERIAL_8250_CONSOLE=y
->>  CONFIG_SERIAL_8250_DW=y
->>  CONFIG_SERIAL_OF_PLATFORM=y
->>  # CONFIG_HW_RANDOM is not set
->> -CONFIG_I2C=y
->>  CONFIG_I2C_CHARDEV=y
->>  CONFIG_I2C_DESIGNWARE_PLATFORM=y
->>  # CONFIG_HWMON is not set
->> -CONFIG_DRM=m
->> -CONFIG_DRM_I2C_ADV7511=m
->> -CONFIG_DRM_ARCPGU=m
->> -CONFIG_FB=y
->> +CONFIG_DRM=y
->> +CONFIG_DRM_I2C_ADV7511=y
->> +CONFIG_DRM_I2C_ADV7511_AUDIO=y
->> +CONFIG_DRM_ARCPGU=y
->>  CONFIG_FRAMEBUFFER_CONSOLE=y
->>  CONFIG_LOGO=y
->>  # CONFIG_LOGO_LINUX_MONO is not set
->>  # CONFIG_LOGO_LINUX_VGA16 is not set
->>  # CONFIG_LOGO_LINUX_CLUT224 is not set
->> +CONFIG_SOUND=y
->> +CONFIG_SND=y
->> +CONFIG_SND_SOC=y
->> +CONFIG_SND_DESIGNWARE_I2S=y
->> +CONFIG_SND_DESIGNWARE_PCM=y
->> +CONFIG_SND_SIMPLE_CARD=y
->>  CONFIG_USB_EHCI_HCD=y
->>  CONFIG_USB_EHCI_HCD_PLATFORM=y
->>  CONFIG_USB_OHCI_HCD=y
->> -------------------------------->8-------------------------------
->>
->> Anyways...
->>
->> Acked-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Rob, can you please take a look at this patch and at 2/2?
->
-> Alexey, do you still maintain your ack in these patches? (I'm
-> asking because I remember you were having no video after patch
-> 2/2 of this series). If so, Vineet, can you please pick this up
-> and patch 2/2 also?
->
-> Best regards,
-> Jose Miguel Abreu
->
-> _______________________________________________
-> linux-snps-arc mailing list
-> linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_mailman_listinfo_linux-2Dsnps-2Darc&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=yaVFU4TjGY0gVF8El1uKcisy6TPsyCl9uN7Wsis-qhY&m=05dGD6sUxxlAGDQnPi7nAbNEBEAQb-u7BnZFDdL6TwI&s=NSYlH7VAuvW7bJx6m50UgCpZmyvijw__WBWmn39sh6Y&e= 
+And the driver is assuming the first node is the clockevent and the second one
+is the clocksource. If the DT invert these nodes, that breaks the driver.
 
-Gentle ping :)
+> What we need is for the kernel to understand that devices can be both
+> clockevent and clocksource (perhaps mutually exclusively), such that the
+> kernel can decide how to make use of devices.
+> 
+> That way, for the above the kernel can figure out that timer0 could be
+> used as clocksource or clockevent, while timer1 can only be used as a
+> clocksource due to the lack of an interrupt. Thus, it can choose to use
+> timer0 as a clockevent, and timer1 and a clocksource.
 
-Best regards,
-Jose Miguel Abreu
+Well, 'interrupt' gives an indication the timer can be used as a clockevent and
+clocksource, not the clockevent only.
+
+If we take the case of the rockchip, the arm_arch_timer clocksource is stopped
+when the CPU is clock gated. So specifically, we don't want to use this
+clocksource but we want to use the arch clockevents because they are better.
+
+> > > > > > With this approach, we allow a mechanism to clearly define a clocksource or a
+> > > > > > clockevent without aerobatics we can find around in some drivers:
+> > > > > > 	timer-sp804.c, arc-timer.c, dw_apb_timer_of.c, mps2-timer.c,
+> > > > > > 	renesas-ostm.c, time-efm32.c, time-lpc32xx.c.
+> > > > > 
+> > > > > These all already have bindings and work. What problem are you trying to 
+> > > > > solve other than restructuring Linux?
+> > > > 
+> > > > Yes, there is already the bindings, but that force to do some hackish
+> > > > initialization.
+> > > 
+> > > Here, you are forcing hackish DT changes that do not truly describe HW.
+> > > How is that better?
+> > 
+> > So if this is hackish DT changes, then the existing DTs should be fixed, no?
+> 
+> Yes.
+> 
+> For the above snippet, the only thing that needs to change is the
+> comment.
+> 
+> > > > I would like to give the opportunity to declare separately a clocksource and a
+> > > > clockevent, in order to have full control of how this is initialized.
+> > > 
+> > > To me it sounds like what we need is Linux infrastructure that allows
+> > > one to register a device as having both clockevent/clocksource
+> > > functionality.
+> > 
+> > That was the idea. Create a macro CLOCKEVENT_OF and CLOCKSOURCE_OF both of them
+> > calling their respective init routines. And in addition a TIMER_OF doing both
+> > CLOCKEVENT_OF and CLOCKSOURCE_OF.
+> > 
+> > It is the DT which does not allow to do this separation.
+> > 
+> > Would be the following approach more acceptable ?
+> > 
+> > 1. Replace all CLOCKSOURCE_OF by TIMER_OF (just renaming)
+> 
+> I am fine with this renaming.
+> 
+> > 2. A node can have a clockevent and|or a clocksource attributes
+> 
+> As above, this should not be in the DT given it's describing a
+> (Linux-specific) SW policy and not a HW detail.
+> 
+> So I must disagree with this.
+
+IIUC my discussion with Rob, an attribute is acceptable (btw if
+'clocksource'|'clockevent' names are too Linux specific (+1), what
+about a more generic name like 'tick' and 'time' ?).
+
+> > 3. The timer_probe pass a flag to the driver's init function, so this one knows
+> >    if it should invoke the clockevent/clocksource init functions.
+> >    No attribute defaults to clocksource|clockevent.
+> > 
+> > That would be backward compatible and will let to create drivers with clutch
+> > activated device via DT. Also, it will give the opportunity to the existing
+> > drivers to change consolidate their initialization routines.
+> 
+> I think that if anything, we need a combined clocksource+clockevent
+> device that we register to the core code. That means all
+> clocksource/clockevent drivers have a consolidated routine.
+> 
+> Subsequently, core code should determine how specifically to use the
+> device (e.g. based on what other devices are registered, and their
+> capabilities).
+
+IMO, the core code is complex enough and that may imply more heuristics.
+Regarding the number of timers, I do believe it is much better to simply tell
+which one we want to use via the DT (assuming the DT is a description of the
+desired hardware, not all the available hardware).
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
