@@ -1,93 +1,140 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v4 2/2] power: supply: ltc2941-battery-gauge: Add OF device ID table
-Date: Wed, 29 Mar 2017 12:00:57 -0400
-Message-ID: <20170329160057.8298-2-javier@osg.samsung.com>
-References: <20170329160057.8298-1-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170329160057.8298-1-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+From: "A.S. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/2] soc/imx: add workaround for i.MX6QP to the GPC PD
+ driver
+Date: Wed, 29 Mar 2017 16:08:02 +0000
+Message-ID: <DB5PR04MB1431A7CC91F55ECFE5BE31FB80350@DB5PR04MB1431.eurprd04.prod.outlook.com>
+References: <20170323144418.30977-1-l.stach@pengutronix.de>
+ <20170323144418.30977-3-l.stach@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170323144418.30977-3-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver doesn't have a struct of_device_id table but supported devices
-are registered via Device Trees. This is working on the assumption that a
-I2C device registered via OF will always match a legacy I2C device ID and
-that the MODALIAS reported will always be of the form i2c:<device>.
+Hi Lucas,
 
-But this could change in the future so the correct approach is to have an
-OF device ID table if the devices are registered via OF.
+> -----Original Message-----
+> From: Lucas Stach [mailto:l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
+> Sent: Thursday, March 23, 2017 10:44 PM
+> To: Shawn Guo
+> Cc: Fabio Estevam; A.S. Dong; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; patchwork-
+> lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+> Subject: [PATCH 2/2] soc/imx: add workaround for i.MX6QP to the GPC PD
+> driver
+>=20
+> On i.MX6QP, due to hardware erratum ERR009619, the PRE clocks may be
+> stalled during the power up sequencing of the PU power domain. As this ma=
+y
+> lead to a complete loss of display output, the recommended workaround is
+> to keep the PU domain enabled during normal system operation.
+>=20
+> Implement this by rejecting the domain power down request on the affected
+> SoC.
+>=20
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/soc/imx/gpc.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>=20
+> diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c index
+> 4294287e5f6c..599e1e46f694 100644
+> --- a/drivers/soc/imx/gpc.c
+> +++ b/drivers/soc/imx/gpc.c
+> @@ -45,6 +45,7 @@ struct imx_pm_domain {
+>  	unsigned int reg_offs;
+>  	signed char cntr_pdn_bit;
+>  	unsigned int ipg_rate_mhz;
+> +	bool allow_dynamic_pd;
+>  };
+>=20
+>  static inline struct imx_pm_domain *
+> @@ -59,6 +60,9 @@ static int imx6_pm_domain_power_off(struct
+> generic_pm_domain *genpd)
+>  	int iso, iso2sw;
+>  	u32 val;
+>=20
+> +	if (!pd->allow_dynamic_pd)
+> +		return -EBUSY;
+> +
+>  	/* Read ISO and ISO2SW power down delays */
+>  	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
+>  	iso =3D val & 0x3f;
+> @@ -255,6 +259,7 @@ static struct imx_pm_domain imx_gpc_domains[] =3D {
+>  		},
+>  		.reg_offs =3D 0x260,
+>  		.cntr_pdn_bit =3D 0,
+> +		.allow_dynamic_pd =3D true,
+>  	}, {
+>  		.base =3D {
+>  			.name =3D "DISPLAY",
+> @@ -263,23 +268,33 @@ static struct imx_pm_domain imx_gpc_domains[] =3D {
+>  		},
+>  		.reg_offs =3D 0x240,
+>  		.cntr_pdn_bit =3D 4,
+> +		.allow_dynamic_pd =3D true,
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Just a Nitpick, besides shawn's comment in another mail,
+if we use a domain flag like IMX_PD_ALWAYS_ON set by SoC errata flag,
+then probably we can save all the default allow_dynamic_pd lines.
+This also release the life when adding new domains.
 
----
+Otherwise, the two patch seems good to me.
 
-Changes in v4:
-- Add a vendor prefix to OF device compatible strings (Sebastian Reichel).
+Regards
+Dong Aisheng
 
-Changes in v3:
-- Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
+>  	}
+>  };
+>=20
+>  struct imx_gpc_dt_data {
+>  	int num_domains;
+> +	bool err009619_present;
+>  };
+>=20
+>  static const struct imx_gpc_dt_data imx6q_dt_data =3D {
+>  	.num_domains =3D 2,
+> +	.err009619_present =3D false,
+> +};
+> +
+> +static const struct imx_gpc_dt_data imx6qp_dt_data =3D {
+> +	.num_domains =3D 2,
+> +	.err009619_present =3D true,
+>  };
+>=20
+>  static const struct imx_gpc_dt_data imx6sl_dt_data =3D {
+>  	.num_domains =3D 3,
+> +	.err009619_present =3D false,
+>  };
+>=20
+>  static const struct of_device_id imx_gpc_dt_ids[] =3D {
+>  	{ .compatible =3D "fsl,imx6q-gpc", .data =3D &imx6q_dt_data },
+> +	{ .compatible =3D "fsl,imx6qp-gpc", .data =3D &imx6qp_dt_data },
+>  	{ .compatible =3D "fsl,imx6sl-gpc", .data =3D &imx6sl_dt_data },
+>  	{ }
+>  };
+> @@ -377,6 +392,10 @@ static int imx_gpc_probe(struct platform_device *pde=
+v)
+>  		return ret;
+>  	}
+>=20
+> +	/* Disable PU power down in normal operation if ERR009619 is present
+> */
+> +	if (of_id_data->err009619_present)
+> +		imx_gpc_domains[1].allow_dynamic_pd =3D false;
+> +
+>  	if (!pgc_node) {
+>  		ret =3D imx_gpc_old_dt_init(&pdev->dev, regmap,
+>  					  of_id_data->num_domains);
+> --
+> 2.11.0
 
-Changes in v2:
-- Fix build warning reported by kbuild test robot.
-- Fix wrong compatible strings due a copy & paste error.
-
- drivers/power/supply/ltc2941-battery-gauge.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
-index 4adf2ba021ce..7efb908f4451 100644
---- a/drivers/power/supply/ltc2941-battery-gauge.c
-+++ b/drivers/power/supply/ltc2941-battery-gauge.c
-@@ -9,6 +9,7 @@
-  */
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/types.h>
- #include <linux/errno.h>
- #include <linux/swab.h>
-@@ -61,7 +62,7 @@ struct ltc294x_info {
- 	struct power_supply *supply;	/* Supply pointer */
- 	struct power_supply_desc supply_desc;	/* Supply description */
- 	struct delayed_work work;	/* Work scheduler */
--	int num_regs;	/* Number of registers (chip type) */
-+	unsigned long num_regs;	/* Number of registers (chip type) */
- 	int charge;	/* Last charge register content */
- 	int r_sense;	/* mOhm */
- 	int Qlsb;	/* nAh */
-@@ -387,7 +388,7 @@ static int ltc294x_i2c_probe(struct i2c_client *client,
- 
- 	np = of_node_get(client->dev.of_node);
- 
--	info->num_regs = id->driver_data;
-+	info->num_regs = (unsigned long)of_device_get_match_data(&client->dev);
- 	info->supply_desc.name = np->name;
- 
- 	/* r_sense can be negative, when sense+ is connected to the battery
-@@ -497,9 +498,23 @@ static const struct i2c_device_id ltc294x_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);
- 
-+static const struct of_device_id ltc294x_i2c_of_match[] = {
-+	{
-+		.compatible = "lltc,ltc2941",
-+		.data = (void *)LTC2941_NUM_REGS
-+	},
-+	{
-+		.compatible = "lltc,ltc2943",
-+		.data = (void *)LTC2943_NUM_REGS
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, ltc294x_i2c_of_match);
-+
- static struct i2c_driver ltc294x_driver = {
- 	.driver = {
- 		.name	= "LTC2941",
-+		.of_match_table = ltc294x_i2c_of_match,
- 		.pm	= LTC294X_PM_OPS,
- 	},
- 	.probe		= ltc294x_i2c_probe,
--- 
-2.9.3
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
