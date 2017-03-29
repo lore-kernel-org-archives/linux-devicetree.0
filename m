@@ -1,96 +1,64 @@
-From: Mason <slash.tmp@free.fr>
-Subject: Re: [PATCH v3 1/2] PCI: Add tango MSI controller support
-Date: Wed, 29 Mar 2017 15:16:59 +0200
-Message-ID: <0541e62a-c87a-2e69-a7d1-28f886ad04c2@free.fr>
-References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
- <f37d7b55-e065-72aa-e690-13dd4718a9ce@sigmadesigns.com>
- <a12a79fd-94f9-5aa4-5aa0-5dccb6c5d615@arm.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
+Date: Wed, 29 Mar 2017 15:22:23 +0200
+Message-ID: <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com>
+References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org> <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <a12a79fd-94f9-5aa4-5aa0-5dccb6c5d615@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490368934-12494-4-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/03/2017 14:29, Marc Zyngier wrote:
+On Fri, Mar 24, 2017 at 4:22 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
 
-> On 29/03/17 12:29, Marc Gonzalez wrote:
+> Add dt-bindings for Renesas r7s72100 pin controller header file.
 >
->> The MSI controller in Tango supports 256 message-signaled interrupts,
->> and a single doorbell address.
->>
->> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
->> ---
->> Changes since v0.2
->> - Support 256 MSIs instead of only 32
->> - Use spinlock_t instead of struct mutex
->> - Add MSI_FLAG_PCI_MSIX flag
->>
->> IRQs are acked in tango_msi_isr because handle_simple_irq leaves
->> ack, clear, mask and unmask up to the driver. For the same reason,
->> interrupt enable mask is updated from tango_irq_domain_alloc/free.
-> 
-> I've asked you to move this to individual methods. You've decided not
-> to, and that's your call. But I now wonder why I'm even bothering to
-> review this, as you've so far just wasted my time.
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 
-I misunderstood what you wrote. When you pointed out the comment at
-the top of handle_simple_irq (which I mentioned in my above blurb)
-I took that to mean that I had to follow those instructions.
+> +/*
+> + * Pin is bi-directional.
+> + * An alternate function that needs both input/output functionalities shall
+> + * be configured as bidirectional.
+> + * Eg. SDA/SCL pins of an I2c interface.
+> + */
+> +#define BI_DIR                 (1 << 3)
 
-Judging by what you wrote below, I must replace handle_simple_irq
-with handle_edge_irq, which will call the irq_chip callbacks.
+Any specific reason why this should not simply be added to
+include/linux/pinctrl/pinconf-generic.h
+as PIN_CONFIG_BIDIRECTIONAL and parsed in
+drivers/pinctrl/pinconf-generic.c
+from the (new) DT property "bidirectional" simply?
 
-But I don't understand how to get my pcie pointer back in irq_ack
-or irq_unmask, or the relevant msi. Can you throw me a clue?
+> +/*
+> + * Flags used to ask software to drive the pin I/O direction overriding the
+> + * alternate function configuration.
+> + * Some alternate functions require software to force I/O direction of a pin,
+> + * overriding the designated one.
+> + * Refer to the HW manual to know when this flag shall be used.
+> + */
+> +#define SWIO_IN                        (1 << 4)
+> +#define SWIO_OUT               (1 << 5)
 
->> +static struct irq_chip tango_msi_irq_chip = {
->> +	.name = "MSI",
->> +	.irq_mask = pci_msi_mask_irq,
->> +	.irq_unmask = pci_msi_unmask_irq,
-> 
-> How do you make that work if the PCI device doesn't support per-MSI masking?
+What is wrong in doing this with generic pin config using
+PIN_CONFIG_INPUT_ENABLE and PIN_CONFIG_OUTPUT
+(ignoring the argument)?
 
-It seems you're saying this code is broken. Is it functional
-in the Altera driver, and I did something to break it?
+In the device tree use input-enable and add a new output-enable
+(with unspecified value) with proper description and DT bindings?
 
->> +static int find_free_msi(struct irq_domain *dom, unsigned int virq)
->> +{
->> +	u32 val;
->> +	struct tango_pcie *pcie = dom->host_data;
->> +	unsigned int offset, pos;
->> +
->> +	pos = find_first_zero_bit(pcie->bitmap, MSI_MAX);
->> +	if (pos >= MSI_MAX)
->> +		return -ENOSPC;
->> +
->> +	offset = (pos / 32) * 4;
->> +	val = readl_relaxed(pcie->msi_mask + offset);
->> +	writel_relaxed(val | BIT(pos % 32), pcie->msi_mask + offset);
-> 
-> Great. I'm now in a position where I can take an interrupt (because of
-> the broken locking that doesn't disable interrupts), but the bitmap
-> doesn't indicate it yet. With a bit of luck, I'll never make any forward
-> progress.
+And if you think these have no general applicability, by the end
+of the day they are *still* pin config, not magic flags we can choose to
+toss in with the muxing, so you can do what the Qualcomm driver
+does and add custom pin configurations extending the generic
+pin config, see drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+qcom,pull-up-strength etc.
 
-Is this the Yoda way to say:
-"Hey moron, use spin_lock_irqsave instead of spin_lock"?
-
->> +	irq_domain_set_info(dom, virq, pos, &tango_msi_chip,
->> +			dom->host_data, handle_simple_irq, NULL, NULL);
-> 
-> I've told you a number of times that PCI MSIs are edge triggered...
-
-I will register handle_edge_irq.
-
-> So there is not much progress from the previous version. It is just
-> broken in a different ways, and ignores most of the work that is already
-> done in the irqchip core.
-
-I wish nothing more than to be able to use as much infrastructure
-as possible, in order to write as little code as possible.
-
-Regards.
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
