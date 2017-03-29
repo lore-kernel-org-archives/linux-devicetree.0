@@ -1,254 +1,105 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
- constant-charge-current property
-Date: Wed, 29 Mar 2017 09:54:21 +0200
-Message-ID: <8853ebb9-9c4f-d9bf-8c82-daad4650c4f8@free-electrons.com>
-References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
- <20170315105537.22349-2-quentin.schulz@free-electrons.com>
- <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com>
- <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com>
- <CAKvHMgR58sDnB-nn386Bd-H0Duevkeoc8eEfz=otLAumc8FD+w@mail.gmail.com>
- <765fc3be-23db-0997-85b1-b6c85b3aceef@free-electrons.com>
- <CAKvHMgRKroPFDdNMb=F=bA4bTwg9bYMAR-5Z4DKLzHJtCYz3_Q@mail.gmail.com>
- <CAKvHMgRtEnNbokYReu2vEs9UKH6qZnncdyQD=1JMDTZeN+aYCA@mail.gmail.com>
- <659fb6a3-d49d-5429-8770-88917e4fd0b3@free-electrons.com>
- <CAKvHMgSFNBmr3fU-biHDo5tzCDV7QaCpFnbChgn4wgSN_1FBig@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] Documentation: DT: bindings:
+ input: touschcreen: remove sun4i documentation
+Date: Wed, 29 Mar 2017 08:58:26 +0100
+Message-ID: <20170329075826.4curjodxgi34tgco@dell>
+References: <20170321153611.16228-1-quentin.schulz@free-electrons.com>
+ <20170321153611.16228-6-quentin.schulz@free-electrons.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKvHMgSFNBmr3fU-biHDo5tzCDV7QaCpFnbChgn4wgSN_1FBig@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: Sebastian Reichel <sre@kernel.org>, robh+dt@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBJOS5XDAKGQEI7AL37I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170321153611.16228-6-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 21 Mar 2017, Quentin Schulz wrote:
 
-On 29/03/2017 09:39, Liam Breck wrote:
-> On Wed, Mar 29, 2017 at 12:09 AM, Quentin Schulz
-> <quentin.schulz@free-electrons.com> wrote:
->> Hi Liam,
->>
->> On 29/03/2017 08:55, Liam Breck wrote:
->>> Hi Quentin,
->>>
->>> On Thu, Mar 16, 2017 at 12:42 AM, Liam Breck <liam@networkimprov.net> wrote:
->>>> On Thu, Mar 16, 2017 at 12:03 AM, Quentin Schulz
->>>> <quentin.schulz@free-electrons.com> wrote:
->>>>> Hi Liam,
->>>>>
->>>>> On 16/03/2017 07:27, Liam Breck wrote:
->>>>>> Hi Rob,
->>>>>>
->>>>>> On Wed, Mar 15, 2017 at 6:10 AM, Quentin Schulz
->>>>>> <quentin.schulz@free-electrons.com> wrote:
->>>>>>> Hi Liam,
->>>>>>>
->>>>>>> On 15/03/2017 13:08, Liam Breck wrote:
->>>>>>>> I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
->>>>>>>> in patch description to direct a patch to interested parties and
->>>>>>>> relevant lists. I don't want to see all 19 patches in this series.
->>>>>>>>
->>>>>>>> On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
->>>>>>>> <quentin.schulz@free-electrons.com> wrote:
->>>>>>>>> This adds the constant-charge-current property to the list of optional
->>>>>>>>> properties of the battery.
->>>>>>>>>
->>>>>>>>> The constant charge current is critical for batteries as they can't
->>>>>>>>> handle all charge currents.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->>>>>>>>> Acked-by: Rob Herring <robh@kernel.org>
->>>>>>>>> ---
->>>>>>>>>
->>>>>>>>> v4:
->>>>>>>>>  - switch from constant-charge-current-microamp to constant-charge-microamp,
->>>>>>
->>>>>> Sebastian is on record supporting name alignment between DT:battery
->>>>>> properties and enum power_supply_property.
->>>>>>
->>>>>> Could you OK a change back to constant-charge-current-microamp in this patch?
->>>>>>
->>>>>> Note that the following could appear in DT:battery in future:
->>>>>>
->>>>>> constant-charge-current-microamp
->>>>>> constant-charge-current-max-microamp
->>>>>
->>>>> OK. I am actually setting max constant charge current and constant
->>>>> current charge with the same DT property so I might need to adapt my
->>>>> patches.
->>>>
->>>> I suspect you should set battery:*-current-max with DT, as -current is
->>>> "programmed by charger" so seems to be a stat, not a fixed
->>>> characteristic.
->>>
->>> Did you resolve this issue?
->>>
->>
->> Sorry, completely missed your first mail.
->>
->> Constant charge current is actually what I set in the PMIC. The maximum
->> constant charge current is completely PMIC-agnostic in my driver as it
->> is used to tell the user that (s)he shouldn't really have a constant
->> charge current over the maximum limit as the battery might not be able
->> to handle such high current.
->>
->> What I suggest is to have both properties in DT. I'll set the maximum as
->> I do today and we can give the user the ability to set a "default"
->> constant charge current (below maximum constant charge current) in the
->> DT. Maybe we do not want to recharge your battery with the maximum value
->> by default?
-> 
-> The scope here is just static battery characteristics. For the battery
-> node, I think constant-charge-current-max-microamp is the relevant
-> term.
+> This patch removes the sun4i touchscreen controller binding
+> documentation since it has been merged with the sun4i GPADC binding
+> documentation.
+>=20
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>=20
+> added in v2
+>=20
+>  .../bindings/input/touchscreen/sun4i.txt           | 38 ----------------=
+------
 
-If it's only for static battery characteristics, I agree.
+Just an Input Ack missing here.
 
+>  1 file changed, 38 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/s=
+un4i.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/sun4i.tx=
+t b/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
+> deleted file mode 100644
+> index 89abecd..0000000
+> --- a/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
+> +++ /dev/null
+> @@ -1,38 +0,0 @@
+> -sun4i resistive touchscreen controller
+> ---------------------------------------
+> -
+> -Required properties:
+> - - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
+> -   "allwinner,sun6i-a31-ts"
+> - - reg: mmio address range of the chip
+> - - interrupts: interrupt to which the chip is connected
+> - - #thermal-sensor-cells: shall be 0
+> -
+> -Optional properties:
+> - - allwinner,ts-attached	 : boolean indicating that an actual touchscree=
+n
+> -				   is attached to the controller
+> - - allwinner,tp-sensitive-adjust : integer (4 bits)
+> -				   adjust sensitivity of pen down detection
+> -				   between 0 (least sensitive) and 15
+> -				   (defaults to 15)
+> - - allwinner,filter-type	 : integer (2 bits)
+> -				   select median and averaging filter
+> -				   samples used for median / averaging filter
+> -				   0: 4/2
+> -				   1: 5/3
+> -				   2: 8/4
+> -				   3: 16/8
+> -				   (defaults to 1)
+> -
+> -Example:
+> -
+> -	rtp: rtp@01c25000 {
+> -		compatible =3D "allwinner,sun4i-a10-ts";
+> -		reg =3D <0x01c25000 0x100>;
+> -		interrupts =3D <29>;
+> -		allwinner,ts-attached;
+> -		#thermal-sensor-cells =3D <0>;
+> -		/* sensitive/noisy touch panel */
+> -		allwinner,tp-sensitive-adjust =3D <0>;
+> -		allwinner,filter-type =3D <3>;
+> -	};
 
-> If we added both properties, one would be an alias for the
-> other, which doesn't seem useful.
-> 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
-Hum. Not really an alias. In my driver, I have a maximum which avoids to
-set a constant charge current higher than what the battery is supposed
-to be able to handle. The maximum can be increased via sysfs if ever the
-user decides to go wild (or if (s)he changes the battery for example).
-The maximum is never input in any of PMIC registers, it is not dealing
-with the PMIC at all.
-
-If I have only the max constant charge current in the DT, I'll set the
-max and constant charge current with the same DT entry. That's perfectly
-fine.
-
-However, what I was thinking is to have a "default" value taken from DT
-for constant charge current (which will be below maximum ccc) if ever
-someone wants to set a maximum but use a lower ccc value. Anyway, I
-guess it's more a "fancy" feature than a requirement (unlike max-ccc).
-
-> The pmic can report both independently of the battery characteristic,
-> and take a driver-specific DT property for
-> constant-charge-current-microamp which it applies if less than the
-> battery's -max setting.
-
-Indeed.
-
-> Or you could set that in userspace via
-> /sys/class.../constant_charge_current.
-
-The goal is to have both. The DT for default values (given by the
-vendor/upstream) and sysfs for custom values (interesting if you don't
-want to/can't recompile a DT.
-
-> The charger's -max value would
-> be a characteristic of its regulator.
-> 
-
-I don't really understand what you mean by that.
-
-> Or am I missing something...?
-> 
->>> Rob & Sebastian want me to merge all items for
->>> bindings/power/supply/battery.txt. If I do that I'll also roll up
->>> their counterparts in power_supply_core.c and submit a patchset for
->>> those two files.
->>>
->>
->> I guess that adding the two properties make sense, don't you think?
->>
->> Also, could you Cc me on your next version of your patches? So I know
->> when to rebase and slightly rework my patches once your patch series is
->> merged.
-> 
-> Surely.
-> 
->> Thanks,
->> Quentin
->>
->>>> You may program your charger's -current with the battery's
->>>> -current-max, of course.
->>>>
->>>> Note that your charger also has a -current-max characteristic, likely
->>>> different than your battery. You may not need that in DT tho.
->>>>
->>>>>> constant-charge-voltage-microvolt
->>>>>> constant-charge-voltage-max-microvolt
->>>>>>
->>>>>> Thanks!
->>>>>>
->>>>>>>> Must be constant-charge-current-microamp for the reasons discussed in
->>>>>>>> battery.txt - consistency with sysfs names.
->>>>>>>>
->>>>>>>
->>>>>>> Hum. Just nitpicking, but I disagree with the use of 'must'. IIRC there
->>>>>>> is nothing in the code that would require the property to be named after
->>>>>>> a property from the enum power_supply_property.
->>>>>>>
->>>>>>> I would say that you _want_ it to be named like that because it
->>>>>>> underlines the relation between the DT property and the actual impacted
->>>>>>> property in the power supply subsystem. I'm fine with this reason but in
->>>>>>> the end, the maintainer's opinion prevails (if (s)he does not want it,
->>>>>>> (s)he will not take it). So, basically, I actually don't mind either
->>>>>>> option and I see arguments on each side.
->>>>>>>
->>>>>>> So, just waiting for maintainer's opinion to make the final version of
->>>>>>> this patch.
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Quentin
->>>>>>>
->>>>>>>> Also applies to power_supply_core.c patch.
->>>>>>>>
->>>>>>>> Rob: enum power_supply_property also lists constant-charge-voltage,
->>>>>>>> hence the -current
->>>>>>>>
->>>>>>>>
->>>>>>>>> added in v3
->>>>>>>>>
->>>>>>>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
->>>>>>>>>  1 file changed, 2 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>>> index 0278617..9594e1e 100644
->>>>>>>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>>> @@ -7,6 +7,7 @@ Optional Properties:
->>>>>>>>>   - voltage-min-design-microvolt: drained battery voltage
->>>>>>>>>   - energy-full-design-microwatt-hours: battery design energy
->>>>>>>>>   - charge-full-design-microamp-hours: battery design capacity
->>>>>>>>> + - constant-charge-microamp: battery constant charge current
->>>>>>>>>
->>>>>>>>>  Because drivers surface properties in sysfs using names derived
->>>>>>>>>  from enum power_supply_property, e.g.
->>>>>>>>> @@ -30,6 +31,7 @@ Example:
->>>>>>>>>                 voltage-min-design-microvolt = <3200000>;
->>>>>>>>>                 energy-full-design-microwatt-hours = <5290000>;
->>>>>>>>>                 charge-full-design-microamp-hours = <1430000>;
->>>>>>>>> +               constant-charge-microamp = <300000>;
->>>>>>>>>         };
->>>>>>>>>
->>>>>>>>>         charger: charger@11 {
->>>>>>>>> --
->>>>>>>>> 2.9.3
->>>>>>>>>
->>>>>>>
->>>>>>> --
->>>>>>> Quentin Schulz, Free Electrons
->>>>>>> Embedded Linux and Kernel engineering
->>>>>>> http://free-electrons.com
->>>>>
->>>>> --
->>>>> Quentin Schulz, Free Electrons
->>>>> Embedded Linux and Kernel engineering
->>>>> http://free-electrons.com
->>
->> --
->> Quentin Schulz, Free Electrons
->> Embedded Linux and Kernel engineering
->> http://free-electrons.com
-
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
