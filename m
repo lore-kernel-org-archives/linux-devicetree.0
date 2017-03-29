@@ -1,142 +1,58 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v4 20/23] drivers/fsi/gpio: Add tracepoints for GPIO master
-Date: Wed, 29 Mar 2017 12:43:37 -0500
-Message-ID: <20170329174340.89109-21-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v4 02/23] drivers/fsi: Add slave definition
+Date: Wed, 29 Mar 2017 12:43:19 -0500
+Message-ID: <20170329174340.89109-3-cbostic@linux.vnet.ibm.com>
 References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@linux.vnet.ibm.com>
+Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-Add trace points for key GPIO operations of the GPIO based FSI
-master.
+Add the initial fsi slave device, which is private to the core code.
+This will be a child of the master, and parent to endpoint devices.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/fsi/fsi-master-gpio.c          |  9 +++++
- include/trace/events/fsi_master_gpio.h | 68 ++++++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
- create mode 100644 include/trace/events/fsi_master_gpio.h
+ drivers/fsi/fsi-core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-index 0bf5caa..84d5595 100644
---- a/drivers/fsi/fsi-master-gpio.c
-+++ b/drivers/fsi/fsi-master-gpio.c
-@@ -61,6 +61,9 @@ struct fsi_master_gpio {
- 	struct gpio_desc	*gpio_mux;	/* Mux control */
- };
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index ca02913..2f19509 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -22,6 +22,16 @@
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/fsi_master_gpio.h>
-+
- #define to_fsi_master_gpio(m) container_of(m, struct fsi_master_gpio, master)
+ static DEFINE_IDA(master_ida);
  
- struct fsi_gpio_msg {
-@@ -128,6 +131,8 @@ static void serial_in(struct fsi_master_gpio *master, struct fsi_gpio_msg *msg,
- 		msg->msg |= ~in_bit & 0x1;	/* Data is negative active */
- 	}
- 	msg->bits += num_bits;
++struct fsi_slave {
++	struct device		dev;
++	struct fsi_master	*master;
++	int			id;
++	int			link;
++	uint32_t		size;	/* size of slave address space */
++};
 +
-+	trace_fsi_master_gpio_in(master, num_bits, msg->msg);
- }
- 
- static void serial_out(struct fsi_master_gpio *master,
-@@ -139,6 +144,8 @@ static void serial_out(struct fsi_master_gpio *master,
- 	uint64_t last_bit = ~0;
- 	int next_bit;
- 
-+	trace_fsi_master_gpio_out(master, cmd->bits, cmd->msg);
++#define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
 +
- 	if (!cmd->bits) {
- 		dev_warn(master->dev, "trying to output 0 bits\n");
- 		return;
-@@ -464,6 +471,8 @@ static int fsi_master_gpio_break(struct fsi_master *_master, int link)
- 	if (link != 0)
- 		return -ENODEV;
- 
-+	trace_fsi_master_gpio_break(master);
-+
- 	set_sda_output(master, 1);
- 	sda_out(master, 1);
- 	clock_toggle(master, FSI_PRE_BREAK_CLOCKS);
-diff --git a/include/trace/events/fsi_master_gpio.h b/include/trace/events/fsi_master_gpio.h
-new file mode 100644
-index 0000000..11b36c1
---- /dev/null
-+++ b/include/trace/events/fsi_master_gpio.h
-@@ -0,0 +1,68 @@
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM fsi_master_gpio
-+
-+#if !defined(_TRACE_FSI_MASTER_GPIO_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_FSI_MASTER_GPIO_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(fsi_master_gpio_in,
-+	TP_PROTO(const struct fsi_master_gpio *master, int bits, uint64_t msg),
-+	TP_ARGS(master, bits, msg),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	bits)
-+		__field(uint64_t, msg)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+		__entry->bits = bits;
-+		__entry->msg  = msg & ((1ull<<bits) - 1);
-+	),
-+	TP_printk("fsi-gpio%d => %0*llx[%d]",
-+		__entry->master_idx,
-+		(__entry->bits + 3) / 4,
-+		__entry->msg,
-+		__entry->bits
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_gpio_out,
-+	TP_PROTO(const struct fsi_master_gpio *master, int bits, uint64_t msg),
-+	TP_ARGS(master, bits, msg),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	bits)
-+		__field(uint64_t, msg)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+		__entry->bits = bits;
-+		__entry->msg  = msg & ((1ull<<bits) - 1);
-+	),
-+	TP_printk("fsi-gpio%d <= %0*llx[%d]",
-+		__entry->master_idx,
-+		(__entry->bits + 3) / 4,
-+		__entry->msg,
-+		__entry->bits
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_gpio_break,
-+	TP_PROTO(const struct fsi_master_gpio *master),
-+	TP_ARGS(master),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+	),
-+	TP_printk("fsi-gpio%d ----break---",
-+		__entry->master_idx
-+	)
-+);
-+
-+#endif /* _TRACE_FSI_MASTER_GPIO_H */
-+
-+#include <trace/define_trace.h>
+ /* FSI master support */
+ int fsi_master_register(struct fsi_master *master)
+ {
 -- 
 1.8.2.2
