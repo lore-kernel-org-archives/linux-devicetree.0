@@ -1,72 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/7] rtc: Add rtc-sh
-Date: Tue, 28 Mar 2017 20:24:41 -0500
-Message-ID: <20170329012441.bxnkyqui24mymuvr@rob-hp-laptop>
-References: <20170322142754.30888-1-chris.brandt@renesas.com>
- <20170322142754.30888-3-chris.brandt@renesas.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] clk: qcom: Elaborate on "active" clocks in the RPM
+ clock bindings
+Date: Wed, 29 Mar 2017 03:33:11 +0200
+Message-ID: <CACRpkdYAT6Pw=9SjFgkQCaVN8EpSNdP61mkQSjV0FOfgQ0fZhw@mail.gmail.com>
+References: <20170322081842.20495-1-linus.walleij@linaro.org> <20170329005943.xqs6ouqbqwdzaayf@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170322142754.30888-3-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329005943.xqs6ouqbqwdzaayf@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 22, 2017 at 10:27:49AM -0400, Chris Brandt wrote:
-> rtc-sh is an RTC for SuperH and RZ/A SoCs.
+On Wed, Mar 29, 2017 at 2:59 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Mar 22, 2017 at 09:18:42AM +0100, Linus Walleij wrote:
+>> The concept of "active" clocks is just explained in a bried comment in the
+>> device driver, let's explain it a bit more in the device tree bindings
+>> so everyone understands this.
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+>> index d470a0187035..cf80a00b7ff2 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+>> @@ -18,6 +18,14 @@ Required properties :
+>>
+>>  - #clock-cells : shall contain 1
+>>
+>> +The clock enumerators are defined in <dt-bindings/clock/qcom,rpmcc.h>
+>> +and come in pairs: FOO_CLK followed by FOO_A_CLK. The latter clock
+>> +is an "active" clock, which means that the consumer only care that the
+>> +clock is available when the system is active, i.e. not suspended. If
+>> +it is important that the clock keeps running during system suspend,
+>> +you need to specify the non-active clock, the one not containing
+>> +*_A_* in the enumerator name.
+>> +
+>
+> Sounds like abuse as the clock id is encoding policy into it. The number
+> of clocks should be the number of inputs to a block. I wouldn't be
+> opposed to some flags for clocks, but that should be a separate cell.
 
-Please work on the subject. It's a bit brief. "dt-bindings: rtc: " is 
-the preferred prefix.
+I'm sorry about that, but I'm just documenting what is already a fact and
+was previously just implicit in the name.
 
-> 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
-> v2:
-> * added interrupt-names and clock-names
-> * clocks now include counting sources
-> * changed 'is a RTC' to 'is an RTC' in commit message
-> ---
->  Documentation/devicetree/bindings/rtc/rtc-sh.txt | 29 ++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-sh.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-sh.txt b/Documentation/devicetree/bindings/rtc/rtc-sh.txt
-> new file mode 100644
-> index 0000000..adbb8af
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-sh.txt
-> @@ -0,0 +1,29 @@
-> +* Real Time Clock for Renesas SH and ARM SoCs
-> +
-> +Required properties:
-> +- compatible: Should be "renesas,r7s72100-rtc" and "renesas,sh-rtc" as a
-> +  fallback.
-> +- reg: physical base address and length of memory mapped region.
-> +- interrupts: 3 interrupts for alarm, period, and carry.
-> +- interrupt-names: The interrupts should be labeled as "alarm", "period", and
-> +  "carry".
-> +- clocks: The functional clock source for the RTC controller must be listed
-> +  first (if exists). Additionally, potential clock counting sources are to be
-> +  listed.
-> +- clock-names: The functional clock must be labeled as "fck". Other clocks
-> +  may be named in accordance to the SoC hardware manuals.
-> +
-> +
-> +Example:
-> +rtc: rtc@fcff1000 {
-> +	compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
-> +	reg = <0xfcff1000 0x2e>;
-> +	interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
-> +		      GIC_SPI 277 IRQ_TYPE_EDGE_RISING
-> +		      GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
-> +	interrupt-names = "alarm", "period", "carry";
-> +	clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
-> +		 <&rtc_x3_clk>, <&extal_clk>;
-> +	clock-names = "fck", "rtc_x1", "rtc_x3", "extal";
-> +	power-domains = <&cpg_clocks>;
+I first had no idea what this *_A_* infix notation was about so after some
+reading I found a comment in the driver saying this.
 
-Not documented.
+I guess Stephen can confirm and/or elaborate on this.
 
-Rob
+Keeping them around is I guess the lesser evil (as compard to
+pulling up the deployed bindings with the roots) at this point.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
