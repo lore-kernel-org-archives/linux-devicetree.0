@@ -1,31 +1,26 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: qcom: clk-smd-rpm: add msm8996 rpmclks
-Date: Tue, 28 Mar 2017 20:21:55 -0500
-Message-ID: <20170329012155.cqm5xwzfxfbhgxx6@rob-hp-laptop>
-References: <1490175566-4084-1-git-send-email-rnayak@codeaurora.org>
- <1490175566-4084-2-git-send-email-rnayak@codeaurora.org>
+Subject: Re: [PATCH] ipmi: bt-bmc: Add ast2500 compatible string
+Date: Tue, 28 Mar 2017 20:22:24 -0500
+Message-ID: <20170329012224.jeil7uxvi2iefzvh@rob-hp-laptop>
+References: <20170322140112.2479-1-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1490175566-4084-2-git-send-email-rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20170322140112.2479-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 22, 2017 at 03:09:25PM +0530, Rajendra Nayak wrote:
-> Add all RPM controlled clocks on msm8996 platform
+On Thu, Mar 23, 2017 at 12:31:12AM +1030, Joel Stanley wrote:
+> The ast2500 SoCs contain the same IPMI BT device.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> [srini: Fixed various issues with offsets and made names specific to msm8996]
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 > ---
->  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
->  drivers/clk/qcom/clk-smd-rpm.c                     | 82 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,rpmcc.h             | 14 ++++
->  include/linux/soc/qcom/smd-rpm.h                   |  4 ++
->  4 files changed, 101 insertions(+)
+>  Documentation/devicetree/bindings/ipmi/aspeed,ast2400-ibt-bmc.txt | 4 +++-
+>  drivers/char/ipmi/bt-bmc.c                                        | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
