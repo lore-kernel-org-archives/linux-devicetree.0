@@ -1,48 +1,96 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: Re: [GIT PULL] PCI: Support for configurable PCI endpoint
-Date: Wed, 29 Mar 2017 15:13:36 +0200
-Message-ID: <c506cc2c-b877-5a12-33a9-4fafa307ff89@axis.com>
-References: <20170327094520.3129-1-kishon@ti.com>
- <0cfe5acf-332c-00c9-e5d5-1403c4e80ebe@axis.com>
- <99ae043b-35fd-0723-c8a7-e2625a862c6d@ti.com>
- <6868a887-a270-96d6-0600-af2a1af383a8@ti.com>
+From: Mason <slash.tmp@free.fr>
+Subject: Re: [PATCH v3 1/2] PCI: Add tango MSI controller support
+Date: Wed, 29 Mar 2017 15:16:59 +0200
+Message-ID: <0541e62a-c87a-2e69-a7d1-28f886ad04c2@free.fr>
+References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
+ <f37d7b55-e065-72aa-e690-13dd4718a9ce@sigmadesigns.com>
+ <a12a79fd-94f9-5aa4-5aa0-5dccb6c5d615@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <6868a887-a270-96d6-0600-af2a1af383a8@ti.com>
+In-Reply-To: <a12a79fd-94f9-5aa4-5aa0-5dccb6c5d615@arm.com>
 Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: hch@infradead.org, nsekhar@ti.com
+To: Marc Zyngier <marc.zyngier@arm.com>, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2017 02:36 PM, Kishon Vijay Abraham I wrote:
-(snip)
->>>
->>> FWIW:
->>> I've tested Kishon's tag pci-endpoint-for-4.12
->>> and PCIe on artpec6 SoC is still working fine.
+On 29/03/2017 14:29, Marc Zyngier wrote:
+
+> On 29/03/17 12:29, Marc Gonzalez wrote:
+>
+>> The MSI controller in Tango supports 256 message-signaled interrupts,
+>> and a single doorbell address.
 >>
->> Thanks for testing it.
->>>
->>> I also included the DRA7xx PCIe driver in my
->>> kernel so that pcie-designware-ep.c gets built.
->>>
->>> My only worry is that the code in pcie-designware-ep.c
->>> is not compile tested if DRA7xx is not selected
->>> (as it is the only driver using PCIE_DW_EP at
->>> the moment).
+>> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+>> ---
+>> Changes since v0.2
+>> - Support 256 MSIs instead of only 32
+>> - Use spinlock_t instead of struct mutex
+>> - Add MSI_FLAG_PCI_MSIX flag
 >>
->> yeah, we should plan to include COMPILE_TEST in all pci drivers but I guess
->> there is some problem with non-ARM builds [1]. As Bjorn mentioned in the
->> thread, we could add #ifdef ARM and then include COMPILE_TEST.
+>> IRQs are acked in tango_msi_isr because handle_simple_irq leaves
+>> ack, clear, mask and unmask up to the driver. For the same reason,
+>> interrupt enable mask is updated from tango_irq_domain_alloc/free.
 > 
-> I think I misunderstood your concern. yeah, there is no direct way to compile
-> pcie-designware-ep.c without selecting DRA7xx.
+> I've asked you to move this to individual methods. You've decided not
+> to, and that's your call. But I now wonder why I'm even bothering to
+> review this, as you've so far just wasted my time.
 
-There is no way to compile pcie-designware-host.c + pcie-designware.c
-without selecting a driver that selects PCIE_DW_HOST,
-so I guess the same "problem" applies there.
+I misunderstood what you wrote. When you pointed out the comment at
+the top of handle_simple_irq (which I mentioned in my above blurb)
+I took that to mean that I had to follow those instructions.
 
-As long as kbuild builds PCI_DRA7XX_EP (and any driver that selects
-PCIE_DW_HOST), we should be fine.
+Judging by what you wrote below, I must replace handle_simple_irq
+with handle_edge_irq, which will call the irq_chip callbacks.
+
+But I don't understand how to get my pcie pointer back in irq_ack
+or irq_unmask, or the relevant msi. Can you throw me a clue?
+
+>> +static struct irq_chip tango_msi_irq_chip = {
+>> +	.name = "MSI",
+>> +	.irq_mask = pci_msi_mask_irq,
+>> +	.irq_unmask = pci_msi_unmask_irq,
+> 
+> How do you make that work if the PCI device doesn't support per-MSI masking?
+
+It seems you're saying this code is broken. Is it functional
+in the Altera driver, and I did something to break it?
+
+>> +static int find_free_msi(struct irq_domain *dom, unsigned int virq)
+>> +{
+>> +	u32 val;
+>> +	struct tango_pcie *pcie = dom->host_data;
+>> +	unsigned int offset, pos;
+>> +
+>> +	pos = find_first_zero_bit(pcie->bitmap, MSI_MAX);
+>> +	if (pos >= MSI_MAX)
+>> +		return -ENOSPC;
+>> +
+>> +	offset = (pos / 32) * 4;
+>> +	val = readl_relaxed(pcie->msi_mask + offset);
+>> +	writel_relaxed(val | BIT(pos % 32), pcie->msi_mask + offset);
+> 
+> Great. I'm now in a position where I can take an interrupt (because of
+> the broken locking that doesn't disable interrupts), but the bitmap
+> doesn't indicate it yet. With a bit of luck, I'll never make any forward
+> progress.
+
+Is this the Yoda way to say:
+"Hey moron, use spin_lock_irqsave instead of spin_lock"?
+
+>> +	irq_domain_set_info(dom, virq, pos, &tango_msi_chip,
+>> +			dom->host_data, handle_simple_irq, NULL, NULL);
+> 
+> I've told you a number of times that PCI MSIs are edge triggered...
+
+I will register handle_edge_irq.
+
+> So there is not much progress from the previous version. It is just
+> broken in a different ways, and ignores most of the work that is already
+> done in the irqchip core.
+
+I wish nothing more than to be able to use as much infrastructure
+as possible, in order to write as little code as possible.
+
+Regards.
