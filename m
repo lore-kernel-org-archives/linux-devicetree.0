@@ -1,115 +1,146 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 10/23] drivers/fsi: Add device read/write/peek API
-Date: Wed, 29 Mar 2017 12:43:27 -0500
-Message-ID: <20170329174340.89109-11-cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v4 05/23] drivers/fsi: Add slave & master read/write APIs
+Date: Wed, 29 Mar 2017 12:43:22 -0500
+Message-ID: <20170329174340.89109-6-cbostic@linux.vnet.ibm.com>
 References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170329174340.89109-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-This change introduces the fsi device API: simple read, write and peek
-accessors for the devices' address spaces.
+Introduce functions to perform reads/writes on the slave address space;
+these simply pass the request on the slave's master with the correct
+link and slave ID.
 
-Includes contributions from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-and Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>.
+We implement these on top of similar helpers for the master.
 
-Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
 ---
- drivers/fsi/fsi-core.c | 33 +++++++++++++++++++++++++++++++++
- include/linux/fsi.h    |  7 ++++++-
- 2 files changed, 39 insertions(+), 1 deletion(-)
+ drivers/fsi/fsi-core.c | 92 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index a8faa89..4da0b030 100644
+index 4bbca95..32698ed 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -32,6 +32,8 @@
- #define FSI_SLAVE_CONF_CRC_MASK		0x0000000f
- #define FSI_SLAVE_CONF_DATA_BITS	28
+@@ -32,6 +32,11 @@ struct fsi_slave {
  
-+#define FSI_PEEK_BASE			0x410
+ #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
+ 
++static int fsi_master_read(struct fsi_master *master, int link,
++		uint8_t slave_id, uint32_t addr, void *val, size_t size);
++static int fsi_master_write(struct fsi_master *master, int link,
++		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
 +
- static const int engine_page_size = 0x400;
+ /* crc helpers */
+ static const uint8_t crc4_tab[] = {
+ 	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
+@@ -57,6 +62,58 @@ uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits)
+ EXPORT_SYMBOL_GPL(fsi_crc4);
  
- #define FSI_SLAVE_BASE			0x800
-@@ -73,9 +75,40 @@ static int fsi_master_read(struct fsi_master *master, int link,
- 		uint8_t slave_id, uint32_t addr, void *val, size_t size);
- static int fsi_master_write(struct fsi_master *master, int link,
- 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
+ /* FSI slave support */
++static int fsi_slave_calc_addr(struct fsi_slave *slave, uint32_t *addrp,
++		uint8_t *idp)
++{
++	uint32_t addr = *addrp;
++	uint8_t id = *idp;
++
++	if (addr > slave->size)
++		return -EINVAL;
++
++	/* For 23 bit addressing, we encode the extra two bits in the slave
++	 * id (and the slave's actual ID needs to be 0).
++	 */
++	if (addr > 0x1fffff) {
++		if (slave->id != 0)
++			return -EINVAL;
++		id = (addr >> 21) & 0x3;
++		addr &= 0x1fffff;
++	}
++
++	*addrp = addr;
++	*idp = id;
++	return 0;
++}
++
 +static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
-+		void *val, size_t size);
++			void *val, size_t size)
++{
++	uint8_t id = slave->id;
++	int rc;
++
++	rc = fsi_slave_calc_addr(slave, &addr, &id);
++	if (rc)
++		return rc;
++
++	return fsi_master_read(slave->master, slave->link, id,
++			addr, val, size);
++}
++
 +static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
-+		const void *val, size_t size);
- 
- /* FSI endpoint-device support */
- 
-+int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
-+		size_t size)
++			const void *val, size_t size)
 +{
-+	if (addr > dev->size || size > dev->size || addr > dev->size - size)
-+		return -EINVAL;
++	uint8_t id = slave->id;
++	int rc;
 +
-+	return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
-+}
-+EXPORT_SYMBOL_GPL(fsi_device_read);
++	rc = fsi_slave_calc_addr(slave, &addr, &id);
++	if (rc)
++		return rc;
 +
-+int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
-+		size_t size)
-+{
-+	if (addr > dev->size || size > dev->size || addr > dev->size - size)
-+		return -EINVAL;
-+
-+	return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
-+}
-+EXPORT_SYMBOL_GPL(fsi_device_write);
-+
-+int fsi_device_peek(struct fsi_device *dev, void *val)
-+{
-+	uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
-+
-+	return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
++	return fsi_master_write(slave->master, slave->link, id,
++			addr, val, size);
 +}
 +
- static void fsi_device_release(struct device *_device)
+ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
  {
- 	struct fsi_device *device = to_fsi_dev(_device);
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index efa55ba..66bce48 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -27,6 +27,12 @@ struct fsi_device {
- 	uint32_t		size;
- };
+ 	/* todo: initialise slave device, perform engine scan */
+@@ -65,6 +122,41 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ }
  
-+extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
-+		void *val, size_t size);
-+extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
-+		const void *val, size_t size);
-+extern int fsi_device_peek(struct fsi_device *dev, void *val);
+ /* FSI master support */
++static int fsi_check_access(uint32_t addr, size_t size)
++{
++	if (size != 1 && size != 2 && size != 4)
++		return -EINVAL;
 +
- struct fsi_device_id {
- 	u8	engine_type;
- 	u8	version;
-@@ -40,7 +46,6 @@ struct fsi_device_id {
- #define FSI_DEVICE_VERSIONED(t, v) \
- 	.engine_type = (t), .version = (v),
- 
--
- struct fsi_driver {
- 	struct device_driver		drv;
- 	const struct fsi_device_id	*id_table;
++	if ((addr & 0x3) != (size & 0x3))
++		return -EINVAL;
++
++	return 0;
++}
++
++static int fsi_master_read(struct fsi_master *master, int link,
++		uint8_t slave_id, uint32_t addr, void *val, size_t size)
++{
++	int rc;
++
++	rc = fsi_check_access(addr, size);
++	if (rc)
++		return rc;
++
++	return master->read(master, link, slave_id, addr, val, size);
++}
++
++static int fsi_master_write(struct fsi_master *master, int link,
++		uint8_t slave_id, uint32_t addr, const void *val, size_t size)
++{
++	int rc;
++
++	rc = fsi_check_access(addr, size);
++	if (rc)
++		return rc;
++
++	return master->write(master, link, slave_id, addr, val, size);
++}
++
+ static int fsi_master_scan(struct fsi_master *master)
+ {
+ 	int link;
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
