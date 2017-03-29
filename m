@@ -1,122 +1,159 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 2/2] PCI: Add tango PCIe host bridge support
-Date: Wed, 29 Mar 2017 15:33:44 +0100
-Message-ID: <84a8b26d-7d24-df29-3959-45fce880916d@arm.com>
-References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
- <65114e62-7458-b6f7-327c-f07a5096a452@sigmadesigns.com>
- <01516ad9-e187-4bac-7c65-a7a90c576ce2@arm.com>
- <96da696c-141a-3e8d-1fb7-2c024a295f58@free.fr>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 1/7] clocksource/drivers/clksrc-evt-probe: Describe
+ with the DT both the clocksource and the clockevent
+Date: Wed, 29 Mar 2017 15:34:12 +0100
+Message-ID: <20170329143411.GL23442@leverpostej>
+References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
+ <1490197714-25415-2-git-send-email-al.kochet@gmail.com>
+ <20170329015146.ey5rlptzsnnynpnt@rob-hp-laptop>
+ <20170329092210.GH2123@mai>
+ <20170329104911.GC23442@leverpostej>
+ <20170329123638.GI2123@mai>
+ <20170329125713.GH23442@leverpostej>
+ <20170329134134.GJ2123@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <96da696c-141a-3e8d-1fb7-2c024a295f58@free.fr>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mason <slash.tmp@free.fr>
-Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170329134134.GJ2123@mai>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/03/17 13:53, Mason wrote:
-> On 29/03/2017 14:19, Robin Murphy wrote:
-> 
->> On 29/03/17 12:34, Marc Gonzalez wrote:
->>
->>> +	/*
->>> +	 * QUIRK #3
->>> +	 * Unfortunately, config and mem spaces are muxed.
->>> +	 * Linux does not support such a setting, since drivers are free
->>> +	 * to access mem space directly, at any time.
->>> +	 * Therefore, we can only PRAY that config and mem space accesses
->>> +	 * NEVER occur concurrently.
->>> +	 */
->>
->> What about David's suggestion of using an IPI for safe mutual exclusion?
-> 
-> I was left with the impression that this wouldn't solve the problem.
-> If a mem space access is "in flight" on core0 when core1 starts a
-> config space access, an IPI will not prevent breakage.
-> 
-> Did I misunderstand?
-> 
-> For my education, what is the API to send an IPI?
-> And the API to handle an IPI?
+On Wed, Mar 29, 2017 at 03:41:34PM +0200, Daniel Lezcano wrote:
+> On Wed, Mar 29, 2017 at 01:57:14PM +0100, Mark Rutland wrote:
+> > On Wed, Mar 29, 2017 at 02:36:38PM +0200, Daniel Lezcano wrote:
 
-There are a few ways you could implement some custom cross-call,
-although in this case I think stop_machine() would probably be the most
-appropriate candidate. However, you're right that in general it may not
-actually help enough to be worthwhile - a DSB SY would ensure that
-in-flight transactions have at least been observed by the CPUs and any
-other coherent masters, but for any writes with a memory type allowing
-early acknowledgement (i.e. a Normal or Device mapping of a BAR) that
-doesn't necessarily correlate with them having reached their ultimate
-destination. For a PCI destination in particular, I think the normal way
-to ensure all posted writes have completed would be to read from config
-space; ah...
+> > > arch/arc/boot/dts/abilis_tb10x.dtsi:
+> > > 
+> > >         /* TIMER0 with interrupt for clockevent */
+> > >         timer0 {
+> > >                 compatible = "snps,arc-timer";
+> > >                 interrupts = <3>;
+> > >                 interrupt-parent = <&intc>;
+> > >                 clocks = <&cpu_clk>;
+> > >         };
+> > > 
+> > >         /* TIMER1 for free running clocksource */
+> > >         timer1 {
+> > >                 compatible = "snps,arc-timer";
+> > >                 clocks = <&cpu_clk>;
+> > >         };
+> > > 
+> > > drivers/clocksource/arc_timer.c:
+> > > 
+> > > static int __init arc_of_timer_init(struct device_node *np)
+> > > {
+> > >         static int init_count = 0;
+> > >         int ret;
+> > > 
+> > >         if (!init_count) {
+> > >                 init_count = 1;
+> > >                 ret = arc_clockevent_setup(np);
+> > >         } else {
+> > >                 ret = arc_cs_setup_timer1(np);
+> > >         }
+> > > 
+> > >         return ret;
+> > > }
+> > > 
+> > > So the purpose of these changes is to provide a stronger timer declaration in
+> > > order to clearly split in the kernel a clocksource and a clockevent
+> > > initialization.
+> > 
+> > I agree that this pattern is not nice. However, I think that splitting
+> > devices as this level makes the problem *worse*.
+> > 
+> > Users care that they have a clocksource and a clockevent device. They
+> > do not care *which* particular device is used as either. The comments in
+> > the DT above are at best misleading.
+> 
+> Agree.
+> 
+> And the driver is assuming the first node is the clockevent and the second one
+> is the clocksource. If the DT invert these nodes, that breaks the driver.
 
->>> +	if (of_device_is_compatible(dev->of_node, "sigma,smp8759-pcie"))
->>> +		smp8759_init(pcie, base);
->>
->> ...then retrieve it with of_device_get_match_data() here. No need to
->> reinvent the wheel (or have to worry about the ordering of multiple
->> compatibles once rev. n+1 comes around).
-> 
-> I actually asked about this on IRC. The consensus was "use what
-> best fits your use case". I need to do some processing based on
-> the revision, so I thought
-> 
->   if (chip_x)
-> 	do_chip_x_init()
-> 
-> was a good way to express my intent. Did I misunderstand?
+Sure, but that is something we can and should fix within Linux.
 
-No, I'm in no way disputing that; what I'm pointing out is that you
-already have an explicitly provided way to associate a value of "chip_x"
-with a given compatible string - see other callers of
-of_device_get_match_data() for inspiration. I don't have much of an
-opinion as to whether it's an enum, a static structure of offsets and
-callbacks, or you embrace the nasal demons and just wedge the init
-function pointer in there directly (this'll never run on
-IA-64/M68k/etc., right? :P). The point is that not only is it cleaner
-and scales better as the driver grows, it stops you having to worry at
-all about setting this trap for yourself:
+> > What we need is for the kernel to understand that devices can be both
+> > clockevent and clocksource (perhaps mutually exclusively), such that the
+> > kernel can decide how to make use of devices.
+> > 
+> > That way, for the above the kernel can figure out that timer0 could be
+> > used as clocksource or clockevent, while timer1 can only be used as a
+> > clocksource due to the lack of an interrupt. Thus, it can choose to use
+> > timer0 as a clockevent, and timer1 and a clocksource.
+> 
+> Well, 'interrupt' gives an indication the timer can be used as a clockevent and
+> clocksource, not the clockevent only.
 
-	compatible = "rev3-with-extra-fun", "rev3";
-	...
+Which is exactly what I said above, when I said:
 
-	if (of_device_is_compatible(dev, "rev3"))
-		boring_init_without_extra_fun();	/* :( */
+	the kernel can figure out that timer0 could be used as
+	clocksource or clockevent
 
-because once you've made your code robust against that, you'll realise
-that what you've done is wasted your time open-coding a creaky
-approximation of of_match_device().
+Considering both timer0 and timer1 is how we can figure out timer0 must
+be the clockevent, since timer1 cannot be.
 
-Robin.
+> If we take the case of the rockchip, the arm_arch_timer clocksource is stopped
+> when the CPU is clock gated. So specifically, we don't want to use this
+> clocksource but we want to use the arch clockevents because they are better.
 
-> For example, the init function for rev2 currently looks like this:
+Sure. As I pointed out, we want to consider the holistic details to make
+the right decision. i.e. the infrastructure should make the choice, not
+the individual drivers.
+
+Consider that the kernel may need to make decisions that differ it a
+kernel is built wihout certain drivers. That cannot work if the use is
+allocated in the DT.
+
+[...]
+
+> > > 2. A node can have a clockevent and|or a clocksource attributes
+> > 
+> > As above, this should not be in the DT given it's describing a
+> > (Linux-specific) SW policy and not a HW detail.
+> > 
+> > So I must disagree with this.
 > 
-> static void rev2_init(struct tango_pcie *pcie, void __iomem *base)
-> {
-> 	void __iomem *misc_irq	= base + 0x40;
-> 	void __iomem *doorbell	= base + 0x8c;
+> IIUC my discussion with Rob, an attribute is acceptable (btw if
+> 'clocksource'|'clockevent' names are too Linux specific (+1), what
+> about a more generic name like 'tick' and 'time' ?).
+
+The *meaning* of these is Linux specific. The naming is irrelevant.
+
+> > > 3. The timer_probe pass a flag to the driver's init function, so this one knows
+> > >    if it should invoke the clockevent/clocksource init functions.
+> > >    No attribute defaults to clocksource|clockevent.
+> > > 
+> > > That would be backward compatible and will let to create drivers with clutch
+> > > activated device via DT. Also, it will give the opportunity to the existing
+> > > drivers to change consolidate their initialization routines.
+> > 
+> > I think that if anything, we need a combined clocksource+clockevent
+> > device that we register to the core code. That means all
+> > clocksource/clockevent drivers have a consolidated routine.
+> > 
+> > Subsequently, core code should determine how specifically to use the
+> > device (e.g. based on what other devices are registered, and their
+> > capabilities).
 > 
-> 	pcie->mux		= base + 0x2c;
-> 	pcie->msi_status	= base + 0x4c;
-> 	pcie->msi_mask		= base + 0x6c;
-> 	pcie->msi_doorbell	= 0x80000000;
-> 
-> 	writel(lower_32_bits(pcie->msi_doorbell), doorbell + 0);
-> 	writel(upper_32_bits(pcie->msi_doorbell), doorbell + 4);
-> 
-> 	/* Enable legacy PCI interrupts */
-> 	writel(BIT(15), misc_irq);
-> 	writel(0xf << 4, misc_irq + 4);
-> }
-> 
->>> +#define VENDOR_SIGMA	0x1105
->>
->> Should this not be in include/linux/pci_ids.h?
-> 
-> Doh! Very likely. Thanks.
-> 
-> Regards.
-> 
+> IMO, the core code is complex enough and that may imply more heuristics.
+
+Given that the majority of cases are going to be multiple instances of
+the same IP, I cannot imagine it is complex to get something that works.
+
+A generally optimal configuration may require some heuristics, but
+that's a different matter to a correct and functional configuration.
+
+I must disagree with trying to push that complexity into the DT by means
+of static SW policy, rather than solving the problem in SW where we have
+all the information to do so.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
