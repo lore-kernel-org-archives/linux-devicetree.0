@@ -1,37 +1,42 @@
-From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
-Subject: Re: [PATCH] ipmi: bt-bmc: Add ast2500 compatible string
-Date: Tue, 28 Mar 2017 21:16:47 -0500
-Message-ID: <f40a2070-b6cc-75fb-a2dc-d497aa594229@acm.org>
-References: <20170322140112.2479-1-joel@jms.id.au>
- <20170329012224.jeil7uxvi2iefzvh@rob-hp-laptop>
-Reply-To: minyard-HInyCGIudOg@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Tue, 28 Mar 2017 21:17:34 -0500
+Message-ID: <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
+ <20170323203749.GB8563@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170329012224.jeil7uxvi2iefzvh@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20170323203749.GB8563@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/28/2017 08:22 PM, Rob Herring wrote:
-> On Thu, Mar 23, 2017 at 12:31:12AM +1030, Joel Stanley wrote:
->> The ast2500 SoCs contain the same IPMI BT device.
->>
->> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/ipmi/aspeed,ast2400-ibt-bmc.txt | 4 +++-
->>   drivers/char/ipmi/bt-bmc.c                                        | 1 +
->>   2 files changed, 4 insertions(+), 1 deletion(-)
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Thu, Mar 23, 2017 at 09:37:49PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
+> > PMICs from Qualcomm. It can operate on fixed parameters or based on a
+> > lookup-table, altering the duty cycle over time - which provides the
+> > means for e.g. hardware assisted transitions of LED brightness.
+> 
+> Ok, this is not first hardware that supports something like this. We
+> have similar hardware that can do blinking on Nokia N900 -- please
+> take a look at leds-lp55*.c
 
-This is in the IPMI tree for the next kernel.
+And perhaps some alignment on the bindings too if the N900 has bindings.
 
-Thanks all,
+> And it would be really good to provide hardware abstraction. We really
+> don't want to have different userspace for LPG and for N900 and for
 
--corey
+I'm interested in what this looks like as several AOSP platforms do 
+tri-color LEDs with custom sysfs extensions.
 
+Do any of the Dragonboards have tri-color LEDs?
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
