@@ -1,101 +1,231 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
-Date: Wed, 29 Mar 2017 16:59:24 +0200
-Message-ID: <CAMuHMdVx_fyGsw0p-s4ZAoe2k+r0RuwxjwNV_-8fXY7Yv8y3kQ@mail.gmail.com>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com> <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
+Date: Wed, 29 Mar 2017 16:17:19 +0100
+Message-ID: <CAJ9a7VgsnFYpOGVjD4m7+EjFXkBoRqVR2F2Pgtn-T0NB+YP6tg@mail.gmail.com>
+References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
+ <1490466197-29163-7-git-send-email-leo.yan@linaro.org> <31be033f-514e-e48a-3ba2-a5c5cd477548@arm.com>
+ <20170329030735.GA23889@leoy-linaro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170329030735.GA23889@leoy-linaro>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, Sudeep Holla <sudee>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
-
-On Wed, Mar 29, 2017 at 4:55 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Wednesday, March 29, 2017, Linus Walleij wrote:
->> On Fri, Mar 24, 2017 at 4:22 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
->> > +/*
->> > + * Flags used to ask software to drive the pin I/O direction
->> > +overriding the
->> > + * alternate function configuration.
->> > + * Some alternate functions require software to force I/O direction
->> > +of a pin,
->> > + * overriding the designated one.
->> > + * Refer to the HW manual to know when this flag shall be used.
->> > + */
->> > +#define SWIO_IN                        (1 << 4)
->> > +#define SWIO_OUT               (1 << 5)
+On 29 March 2017 at 04:07, Leo Yan <leo.yan@linaro.org> wrote:
+> Hi Suzuki,
+>
+> On Mon, Mar 27, 2017 at 05:34:57PM +0100, Suzuki K Poulose wrote:
+>> On 25/03/17 18:23, Leo Yan wrote:
+>
+> [...]
+>
+>> Leo,
 >>
->> What is wrong in doing this with generic pin config using
->> PIN_CONFIG_INPUT_ENABLE and PIN_CONFIG_OUTPUT (ignoring the argument)?
+>> Thanks a lot for the quick rework. I don't fully understand (yet!) why we need the
+>> idle_constraint. I will leave it for Sudeep to comment on it, as he is the expert
+>> in that area. Some minor comments below.
+>
+> Thanks a lot for quick reviewing :)
+>
+>> >Signed-off-by: Leo Yan <leo.yan@linaro.org>
+>> >---
+>> > drivers/hwtracing/coresight/Kconfig               |  11 +
+>> > drivers/hwtracing/coresight/Makefile              |   1 +
+>> > drivers/hwtracing/coresight/coresight-cpu-debug.c | 704 ++++++++++++++++++++++
+>> > 3 files changed, 716 insertions(+)
+>> > create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
+>> >
+>> >diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+>> >index 130cb21..18d7931 100644
+>> >--- a/drivers/hwtracing/coresight/Kconfig
+>> >+++ b/drivers/hwtracing/coresight/Kconfig
+>> >@@ -89,4 +89,15 @@ config CORESIGHT_STM
+>> >       logging useful software events or data coming from various entities
+>> >       in the system, possibly running different OSs
+>> >
+>> >+config CORESIGHT_CPU_DEBUG
+>> >+    tristate "CoreSight CPU Debug driver"
+>> >+    depends on ARM || ARM64
+>> >+    depends on DEBUG_FS
+>> >+    help
+>> >+      This driver provides support for coresight debugging module. This
+>> >+      is primarily used to dump sample-based profiling registers when
+>> >+      system triggers panic, the driver will parse context registers so
+>> >+      can quickly get to know program counter (PC), secure state,
+>> >+      exception level, etc.
 >>
->> In the device tree use input-enable and add a new output-enable (with
->> unspecified value) with proper description and DT bindings?
+>> May be we should mention/warn the user about the possible caveats of using
+>> this feature to help him make a better decision ? And / Or we should add a documentation
+>> for it. We have collected some real good information over the discussions and
+>> it is a good idea to capture it somewhere.
 >
-> Again, that's probably fine. It seems we are still doing the same thing
-> which is using the DT to pass extra config information to the driver.
-> And, we can do whatever we want with that info.
+> Sure, I will add a documentation for this.
 >
+> [...]
 >
->> And if you think these have no general applicability, by the end of the
->> day they are *still* pin config, not magic flags we can choose to toss in
->> with the muxing, so you can do what the Qualcomm driver does and add
->> custom pin configurations extending the generic pin config, see
->> drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
->> qcom,pull-up-strength etc.
+>> >+static struct pm_qos_request debug_qos_req;
+>> >+static int idle_constraint = PM_QOS_DEFAULT_VALUE;
+>> >+module_param(idle_constraint, int, 0600);
+>> >+MODULE_PARM_DESC(idle_constraint, "Latency requirement in microseconds for CPU "
+>> >+             "idle states (default is -1, which means have no limiation "
+>> >+             "to CPU idle states; 0 means disabling all idle states; user "
+>> >+             "can choose other platform dependent values so can disable "
+>> >+             "specific idle states for the platform)");
+>>
+>> Correct me if I am wrong,
+>>
+>> All we want to do is disable the CPUIdle explicitly if the user knows that this
+>> could be a problem to use CPU debug on his platform. So, in effect, we should
+>> only be using idle_constraint = 0 or -1.
+>>
+>> In which case, we could make it easier for the user to tell us, either
+>>
+>>  0 - Don't do anything with CPUIdle (default)
+>>  1 - Disable CPUIdle for me as I know the platform has issues with CPU debug and CPUidle.
 >
-> But, it seems that when you set a config option, it applies to everything
-> in "pins"?
+> The reason for not using bool flag is: usually SoC may have many idle
+> states, so if user wants to partially enable some states then can set
+> the latency to constraint.
 >
-> I2C Example: (seem OK)
->         /* P1_6 = RIIC3SCL (bi dir) */
->         /* P1_7 = RIIC3SDA (bi dir) */
->         i2c3_pins: i2c3 {
->                 pins = <PIN(1, 6) | FUNC_1>,
->                        <PIN(1, 7) | FUNC_1>;
->                 bidirectional;
->         };
+> But of course, we can change this to binary value as you suggested,
+> this means turn on of turn off all states. The only one reason to use
+> latency value is it is more friendly for hardware design, e.g. some
+> platforms can enable partial states to save power and avoid overheat
+> after using this driver.
+>
+> If you guys think this is a bit over design, I will follow up your
+> suggestion. I also have some replying in Mathieu's reviewing, please
+> help review as well.
+>
+>> than explaining the miscrosecond latency etc and make the appropriate calls underneath.
+>> something like (not necessarily the same name) :
+>>
+>> module_param(broken_with_cpuidle, bool, 0600);
+>> MODULE_PARAM_DESC(broken_with_cpuidle, "Specifies whether the CPU debug has issues with CPUIdle on"
+>>                                      " the platform. Non-zero value implies CPUIdle has to be"
+>>                                      " explicitly disabled.",);
+>
+> [...]
+>
+>> >+    /*
+>> >+     * Unfortunately the CPU cannot be powered up, so return
+>> >+     * back and later has no permission to access other
+>> >+     * registers. For this case, should set 'idle_constraint'
+>> >+     * to ensure CPU power domain is enabled!
+>> >+     */
+>> >+    if (!(drvdata->edprsr & EDPRSR_PU)) {
+>> >+            pr_err("%s: power up request for CPU%d failed\n",
+>> >+                    __func__, drvdata->cpu);
+>> >+            goto out;
+>> >+    }
+>> >+
+>> >+out_powered_up:
+>> >+    debug_os_unlock(drvdata);
+>>
+>> Question: Do we need a matching debug_os_lock() once we are done ?
+>
+> I have checked ARM ARMv8, but there have no detailed description for
+> this. I refered coresight-etmv4 code and Mike's pseudo code, ther have
+> no debug_os_lock() related operations.
+>
+> Mike, Mathieu, could you also help confirm this?
+>
 
-Correct.
+Debug OS lock / unlock allows the power management code running on the
+core to lock out the external debugger while the debug registers are
+saved/restored during a core power event.
 
-> But, what do we do for Ethernet? All the pins are "normal" except just
-> the MDIO pin needs to be bidirectional.
-> That's the part I'm confused by.
-> How do we flag that just the ET_MDIO needs "bidirectional"?
+e.g. A sequence such as this might occur in a correctly programmed system....
 
-You add subnodes, cfr. arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts:
+debug_os_lock()
+save_debug_regs() // visible from core power domain - incl breakpoints etc
+save_etm_regs()
+... // other stuff prior to core power down,
+<power_down_core>
 
-        avb_pins: avb {
-                mux {
-                        groups = "avb_link", "avb_phy_int", "avb_mdc",
-                                 "avb_mii";
-                        function = "avb";
-                };
+Followed by...
 
-                pins_mdc {
-                        groups = "avb_mdc";
-                        drive-strength = <24>;
-                };
+<power_up_core>
+restore_etm_regs()
+restore_debug_regs() // visible from core power domain - incl breakpoints etc
+debug_os_unlock()
 
-                pins_mii_tx {
-                        pins = "PIN_AVB_TX_CTL", "PIN_AVB_TXC", "PIN_AVB_TD0",
-                               "PIN_AVB_TD1", "PIN_AVB_TD2", "PIN_AVB_TD3";
-                        drive-strength = <12>;
-                };
-        };
+The value is 1 (locked) if cold resetting into AArch64 - it is
+expected that some system software will set this to 0 as part of the
+boot process.
+The lock prevents write access to the external debug registers so we
+need to clear it to set up the external debug registers we are using.
+This suggests that it should be restored as we found it when done.
 
-Gr{oetje,eeting}s,
+Mike
 
-                        Geert
+> [...]
+>
+>> >+static void debug_init_arch_data(void *info)
+>> >+{
+>> >+    struct debug_drvdata *drvdata = info;
+>> >+    u32 mode, pcsr_offset;
+>> >+
+>> >+    CS_UNLOCK(drvdata->base);
+>> >+
+>> >+    debug_os_unlock(drvdata);
+>> >+
+>> >+    /* Read device info */
+>> >+    drvdata->eddevid  = readl_relaxed(drvdata->base + EDDEVID);
+>> >+    drvdata->eddevid1 = readl_relaxed(drvdata->base + EDDEVID1);
+>>
+>> As mentioned above, both of these registers are only need at init time to
+>> figure out the flags we set here. So we could remove them.
+>>
+>> >+
+>> >+    CS_LOCK(drvdata->base);
+>> >+
+>> >+    /* Parse implementation feature */
+>> >+    mode = drvdata->eddevid & EDDEVID_PCSAMPLE_MODE;
+>> >+    pcsr_offset = drvdata->eddevid1 & EDDEVID1_PCSR_OFFSET_MASK;
+>>
+>>
+>> >+
+>> >+    if (mode == EDDEVID_IMPL_NONE) {
+>> >+            drvdata->edpcsr_present  = false;
+>> >+            drvdata->edcidsr_present = false;
+>> >+            drvdata->edvidsr_present = false;
+>> >+    } else if (mode == EDDEVID_IMPL_EDPCSR) {
+>> >+            drvdata->edpcsr_present  = true;
+>> >+            drvdata->edcidsr_present = false;
+>> >+            drvdata->edvidsr_present = false;
+>> >+    } else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
+>> >+            if (!IS_ENABLED(CONFIG_64BIT) &&
+>> >+                    (pcsr_offset == EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32))
+>> >+                    drvdata->edpcsr_present = false;
+>> >+            else
+>> >+                    drvdata->edpcsr_present = true;
+>>
+>> Sorry, I forgot why we do this check only in this mode. Shouldn't this be
+>> common to all modes (of course which implies PCSR is present) ?
+>
+> No. PCSROffset is defined differently in ARMv7 and ARMv8; So finally we
+> simplize PCSROffset value :
+> 0000 - Sample offset applies based on the instruction state (indicated by PCSR[0])
+> 0001 - No offset applies.
+> 0010 - No offset applies, but do not use in AArch32 mode!
+>
+> So we need handle the corner case is when CPU runs AArch32 mode and
+> PCSRoffset = 'b0010. Other cases the pcsr should be present.
+>
+> [...]
+>
+> Other suggestions are good for me, will take them in next version.
+>
+> Thanks,
+> Leo Yan
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Blackburn Design Centre. UK
