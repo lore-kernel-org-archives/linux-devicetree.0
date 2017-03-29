@@ -1,139 +1,45 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH v3 10/11] ASoC: add bindings for stm32
-	DFSDM filter
-Date: Wed, 29 Mar 2017 14:42:38 +0200
-Message-ID: <473f36db-0c0e-00d2-3610-c24bf3f1d541@st.com>
-References: <1489759704-30217-1-git-send-email-arnaud.pouliquen@st.com>
- <1489759704-30217-11-git-send-email-arnaud.pouliquen@st.com>
- <20170324145208.6tj5swol5du5lkyc@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170324145208.6tj5swol5du5lkyc@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier MOYSAN <olivier.moysan@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH 0/4] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
+Date: Wed, 29 Mar 2017 13:44:57 +0100
+Message-ID: <cover.1490789802.git.guillaume.tucker@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+The ARM Mali Midgard GPU kernel driver is only available
+out-of-tree and is not going to be merged in its current form.
+However, it would be useful to have its device tree bindings
+merged.  In particular, this would enable distributions to create
+working driver packages (dkms...) without having to patch the
+kernel.
 
-Sorry for this dirty/crappy patch...
-Please find answers below
+The bindings for the earlier Mali Utgard GPU family have already
+been merged, so this is essentially the same scenario but for
+newer GPUs (Mali-T604 ~ Mali-T880).
 
-Thanks
+This series of patches first imports the bindings from the latest
+driver release with some clean-up then adds a gpu node for the
+rk3288 SoC.  This was successfully tested on a Radxa Rock2 Square
+board using Mali kernel driver r16p0 and r12p0 user-space binary.
 
-Arnaud
+Guillaume Tucker (4):
+  dt-bindings: gpu: add bindings for the ARM Mali Midgard GPU
+  ARM: dts: rockchip: add ARM Mali GPU node for rk3288
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-rock2-som
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-firefly
 
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53 ++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi              |  5 ++
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi            |  5 ++
+ arch/arm/boot/dts/rk3288.dtsi                      | 23 ++++++++++
+ 4 files changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
 
-On 03/24/2017 03:52 PM, Rob Herring wrote:
-> On Fri, Mar 17, 2017 at 03:08:23PM +0100, Arnaud Pouliquen wrote:
->> Add bindings that describes audio settings to support
->> Digital Filter for pulse density modulation(PDM) microphone.
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->> V2->V3:
->>    Fixes based on V2 comments
->>
->>  .../devicetree/bindings/sound/st,stm32-adfsdm.txt  | 41 ++++++++++++++++++++++
->>  1 file changed, 41 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt b/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
->> new file mode 100644
->> index 0000000..ab610bc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
->> @@ -0,0 +1,40 @@
->> +STMicroelectronics audio DFSDM DT bindings
->> +
->> +This driver supports audio PDM microphone capture through Digital Filter format
->> +Sigma Delta modulators (DFSDM).
->> +
->> +Required properties:
->> +  - compatible: "st,stm32h7-adfsdm".
->> +
->> +  - #sound-dai-cells : Must be equal to 0
->> +
->> +  - io-channels : phandle to iio dfsdm instance node.
->> +
->> +
->> +Example of a simple sound card using audio DFSDM node.
->> +
->> +	dmic0: dmic_@0 {
-> 
-> Drop the '_' and unit address.
-> 
->> +		compatible = "dmic-codec";
->> +		#sound-dai-cells = <0>;
->> +	};
->> +
->> +	asoc-pdm@0 {
-> 
-> asoc is a Linux term. Drop the unit address.
-> 
->> +		compatible = "st,stm32h7-adfsdm";
-> 
-> Is this a separate block from the ADC? A drawing of the h/w blocks and 
-> connections would help.
-I don't know how to explain it...So don't hesitate is still not clear.
-On DFSDM we can connect 2 ADC types:
-- Generic Sigma delta(SD) ADC for analog to digital conversion
-- Digital microphones for audio capture.
-
-In both cases, an SPI or Manchester bus is used to transfer 1-bit stream
- to DFSDM.
-1) In case of SD ADC, The link is described in IIO declaration using
-"io-channels" property ( [04/11] IIO: add DT bindings for stm32 DFSDM
-filter)
-2) For audio purpose, the link is done by the simple or the graph card
-So this device exposes the Digital audio interface (DAI) associated to
-the DFSDM ADC.
-Link between the DFSDM DAI and the DFSDM IIO device is done through the
-"io-channels" property.
-
-> 
->> +		#sound-dai-cells = <0>;
->> +		io-channels = <&dfsdm_adc0 0>;
->> +	};
->> +
->> +	sound_dfsdm_pdm {
-> 
-> sound-card {
-> 
->> + 		compatible = "simple-audio-card";
->> + 		simple-audio-card,name = "dfsdm_pdm";
->> +
->> + 		dfsdm0_mic0: simple-audio-card,dai-link@0 {
-> 
-> I'd suggest moving to the graph card.
-yes should be in V4
-> 
->> + 			format = "pdm";
->> + 			cpu {
->> + 				sound-dai = <&asoc_pdm1>;
-> 
-> This phandle doesn't point to anything.
-> 
->> + 			};
->> + 			dmic0_codec: codec {
->> + 				sound-dai = <&dmic0>;
->> + 			};
->> + 		};
->> +	};
->> \ No newline at end of file
-> 
-> ^^^
-> 
->> -- 
->> 1.9.1
->>
+--
+2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
