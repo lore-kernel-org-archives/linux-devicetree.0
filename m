@@ -1,92 +1,124 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 2/2] DT: leds: Add Qualcomm Light Pulse Generator binding
-Date: Thu, 30 Mar 2017 00:13:27 +0200
-Message-ID: <20170329221327.GA7977@amd>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323055435.29197-2-bjorn.andersson@linaro.org>
+From: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+Subject: Re: [PATCH linux v5 1/2] Documentation: dt-bindings: Document
+ bindings for ASPEED AST2400/AST2500 PWM and Fan tach controller device driver
+Date: Wed, 29 Mar 2017 15:14:53 -0700
+Message-ID: <CANsWYUX-8TKGwsBDH_cWANbniJPOgxnUo6gcp2mq-Py1NELj1w@mail.gmail.com>
+References: <20170324181723.29379-1-jaghu@google.com> <20170324181723.29379-2-jaghu@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170323055435.29197-2-bjorn.andersson@linaro.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20170324181723.29379-2-jaghu@google.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>, jdelvare@suse.com, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
 List-Id: devicetree@vger.kernel.org
 
+Please provide review comments.
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> +- qcom,pattern:
-> +	Usage: optional
-> +	Value type: <u16-list>
-> +	Definition: list of 16 bit duty cycle values to make up the pattern to
-> +		    be programmed into the LUT. Values should be in the range
-> +		    [0,512).
+On Fri, Mar 24, 2017 at 11:17 AM, Jaghathiswari Rankappagounder
+Natarajan <jaghu@google.com> wrote:
+> This binding provides interface for adding values related to ASPEED
+> AST2400/2500 PWM and Fan tach controller support.
+> The PWM controller can support upto 8 PWM output ports.
+> The Fan tach controller can support upto 16 tachometer inputs.
+>
+> Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+> ---
+>  v5:
+> - Changed the naming scheme to aspeed,ast2400/2500-pwm-tacho
+> - Removed gpio pin muxing
+> - Added aspeed vendor prefix for fan-tach-ch
+> - Changed to fan@0/1
+> - Changed reg to 32 bits
+>
+>  v4:
+> - Used 'reg'
+>
+>  v3:
+> - Made the structure more common
+>
+>  v2:
+> - Removed '_' in node and property names
+> - Gave some explanation for the properties used
+>
+>  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+>
+> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> new file mode 100644
+> index 000000000000..f96d32bfcdfa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> @@ -0,0 +1,68 @@
+> +ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
 > +
-> +- qcom,pattern-length-ms:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: duration, in milliseconds, of the ramp generator running
-> +		    one pass over the defined pattern
+> +The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED Fan Tacho
+> +controller can support upto 16 Fan tachometer inputs.
 > +
-> +- qcom,pattern-pause-lo-ms:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: duration, in milliseconds, for the ramp generator to pause
-> +		    before iterating over the pattern
+> +There can be upto 8 fans supported. Each fan can have one PWM output and
+> +one/two Fan tach inputs.
 > +
-> +- qcom,pattern-pause-hi-ms:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: duration, in milliseconds, for the ramp generator to pause
-> +		    after iterating over the pattern
+> +Required properties for pwm-tacho node:
+> +- #address-cells : should be 1.
 > +
-> +- qcom,pattern-ping-pong:
-> +	Usage: optional
-> +	Value type: <boolean>
-> +	Definition: denotes that the ramp generator should reverse direction
-> +		    when reaching the end of the pattern, instead of wrapping
-> +		    to the beginning
+> +- #size-cells : should be 1.
 > +
-> +- qcom,pattern-oneshot:
-> +	Usage: optional
-> +	Value type: <boolean>
-> +	Definition: denotes that the ramp generator should stop after a single
-> +		    pass over the pattern
+> +- reg : address and length of the register set for the device.
 > +
-> +- qcom,pattern-reverse:
-> +	Usage: optional
-> +	Value type: <boolean>
-> +	Definition: denotes that the ramp generator should operate backwards
-> +		    over the pattern
-
-I'd not do this. While we _may_ want to specify default trigger and
-default blinking behaviour, we should do it in a way that is common
-for all the drivers.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljcMYcACgkQMOfwapXb+vIlvACfelqjrDDsbHb7an3NGXwK9B6k
-I5oAniaVToc03OcG9dmUSJ2lLKIsyy0Y
-=g6j4
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
+> +- pinctrl-names : a pinctrl state named "default" must be defined.
+> +
+> +- pinctrl-0 : phandle referencing pin configuration of the PWM ports.
+> +
+> +- compatible : should be "aspeed,ast2400-pwm-tacho" for AST2400 and
+> +              "aspeed,ast2500-pwm-tacho" for AST2500.
+> +
+> +- clocks : a fixed clock providing input clock frequency(PWM
+> +          and Fan Tach clock)
+> +
+> +fan subnode format:
+> +===================
+> +Under fan subnode there can upto 8 child nodes, with each child node
+> +representing a fan. If there are 8 fans each fan can have one PWM port and
+> +one/two Fan tach inputs.
+> +
+> +Required properties for each child node:
+> +- reg : should specify PWM source port.
+> +       integer value in the range 0 to 7 with 0 indicating PWM port A and
+> +       7 indicating PWM port H.
+> +
+> +- aspeed-fan-tach-ch : should specify the Fan tach input channel.
+> +                integer value in the range 0 through 15, with 0 indicating
+> +               Fan tach channel 0 and 15 indicating Fan tach channel 15.
+> +               Atleast one Fan tach input channel is required.
+> +
+> +Examples:
+> +
+> +pwm_tacho_fixed_clk: fixedclk {
+> +       compatible = "fixed-clock";
+> +       #clock-cells = <0>;
+> +       clock-frequency = <24000000>;
+> +}
+> +
+> +pwm_tacho: pwmtachocontroller@1e786000 {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +       reg = <0x1E786000 0x1000>;
+> +       compatible = "aspeed,ast2500-pwm-tacho";
+> +       clocks = <&pwm_tacho_fixed_clk>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+> +
+> +       fan@0 {
+> +               reg = <0x00>;
+> +               aspeed-fan-tach-ch = /bits/ 8 <0x00>;
+> +       };
+> +
+> +       fan@1 {
+> +               reg = <0x01>;
+> +               aspeed-fan-tach-ch = /bits/ 8 <0x01 0x02>;
+> +       };
+> +};
+> --
+> 2.12.1.578.ge9c3154ca4-goog
+>
