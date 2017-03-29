@@ -1,66 +1,226 @@
-From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v4 12/23] drivers/fsi: Add documentation for GPIO bindings
-Date: Wed, 29 Mar 2017 12:43:29 -0500
-Message-ID: <20170329174340.89109-13-cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 16/23] drivers/fsi: Add tracepoints for low-level operations
+Date: Wed, 29 Mar 2017 12:43:33 -0500
+Message-ID: <20170329174340.89109-17-cbostic@linux.vnet.ibm.com>
 References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Chris Bostic <cbostic@linux.vnet.ibm.com>, benh@kernel.crashing.org, joel@jms.id.au
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329174340.89109-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Bostic <cbostic@linux.vnet.ibm.com>
+From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-Add fsi master gpio device tree binding documentation
-
-Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- .../devicetree/bindings/fsi/fsi-master-gpio.txt    | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+ drivers/fsi/fsi-core.c     |  27 +++++++---
+ include/trace/events/fsi.h | 127 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 148 insertions(+), 6 deletions(-)
+ create mode 100644 include/trace/events/fsi.h
 
-diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index f7e55e7..09becec 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -21,6 +21,9 @@
+ 
+ #include "fsi-master.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/fsi.h>
++
+ #define FSI_SLAVE_CONF_NEXT_MASK	0x80000000
+ #define FSI_SLAVE_CONF_SLOTS_MASK	0x00ff0000
+ #define FSI_SLAVE_CONF_SLOTS_SHIFT	16
+@@ -541,11 +544,16 @@ static int fsi_master_read(struct fsi_master *master, int link,
+ {
+ 	int rc;
+ 
++	trace_fsi_master_read(master, link, slave_id, addr, size);
++
+ 	rc = fsi_check_access(addr, size);
+-	if (rc)
+-		return rc;
++	if (!rc)
++		rc = master->read(master, link, slave_id, addr, val, size);
++
++	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
++			false, val, rc);
+ 
+-	return master->read(master, link, slave_id, addr, val, size);
++	return rc;
+ }
+ 
+ static int fsi_master_write(struct fsi_master *master, int link,
+@@ -553,11 +561,16 @@ static int fsi_master_write(struct fsi_master *master, int link,
+ {
+ 	int rc;
+ 
++	trace_fsi_master_write(master, link, slave_id, addr, size, val);
++
+ 	rc = fsi_check_access(addr, size);
+-	if (rc)
+-		return rc;
++	if (!rc)
++		rc = master->write(master, link, slave_id, addr, val, size);
+ 
+-	return master->write(master, link, slave_id, addr, val, size);
++	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
++			true, val, rc);
++
++	return rc;
+ }
+ 
+ static int fsi_master_link_enable(struct fsi_master *master, int link)
+@@ -573,6 +586,8 @@ static int fsi_master_link_enable(struct fsi_master *master, int link)
+  */
+ static int fsi_master_break(struct fsi_master *master, int link)
+ {
++	trace_fsi_master_break(master, link);
++
+ 	if (master->send_break)
+ 		return master->send_break(master, link);
+ 
+diff --git a/include/trace/events/fsi.h b/include/trace/events/fsi.h
 new file mode 100644
-index 0000000..a767259
+index 0000000..ac74a30
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
-@@ -0,0 +1,24 @@
-+Device-tree bindings for gpio-based FSI master driver
-+-----------------------------------------------------
++++ b/include/trace/events/fsi.h
+@@ -0,0 +1,127 @@
 +
-+Required properties:
-+ - compatible = "fsi-master-gpio";
-+ - clock-gpios = <gpio-descriptor>;	: GPIO for FSI clock
-+ - data-gpios = <gpio-descriptor>;	: GPIO for FSI data signal
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM fsi
 +
-+Optional properties:
-+ - enable-gpios = <gpio-descriptor>;	: GPIO for enable signal
-+ - trans-gpios = <gpio-descriptor>;	: GPIO for voltage translator enable
-+ - mux-gpios = <gpio-descriptor>;	: GPIO for pin multiplexing with other
-+                                          functions (eg, external FSI masters)
++#if !defined(_TRACE_FSI_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_FSI_H
 +
-+Examples:
++#include <linux/tracepoint.h>
 +
-+    fsi-master {
-+        compatible = "fsi-master-gpio", "fsi-master";
-+        clock-gpios = <&gpio 0>;
-+        data-gpios = <&gpio 1>;
-+        enable-gpios = <&gpio 2>;
-+        trans-gpios = <&gpio 3>;
-+        mux-gpios = <&gpio 4>;
-+    }
++TRACE_EVENT(fsi_master_read,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size),
++	TP_ARGS(master, link, id, addr, size),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd]",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size
++	)
++);
++
++TRACE_EVENT(fsi_master_write,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size, const void *data),
++	TP_ARGS(master, link, id, addr, size, data),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++		__field(__u32,	data)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++		__entry->data = 0;
++		memcpy(&__entry->data, data, size);
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size,
++		__entry->size, &__entry->data
++	)
++);
++
++TRACE_EVENT(fsi_master_rw_result,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size,
++			bool write, const void *data, int ret),
++	TP_ARGS(master, link, id, addr, size, write, data, ret),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++		__field(bool,	write)
++		__field(__u32,	data)
++		__field(int,	ret)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++		__entry->write = write;
++		__entry->data = 0;
++		__entry->ret = ret;
++		if (__entry->write || !__entry->ret)
++			memcpy(&__entry->data, data, size);
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size,
++		__entry->write ? "<=" : "=>",
++		__entry->size, &__entry->data,
++		__entry->ret
++	)
++);
++
++TRACE_EVENT(fsi_master_break,
++	TP_PROTO(const struct fsi_master *master, int link),
++	TP_ARGS(master, link),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++	),
++	TP_printk("fsi%d:%d",
++		__entry->master_idx,
++		__entry->link
++	)
++);
++
++
++#endif /* _TRACE_FSI_H */
++
++#include <trace/define_trace.h>
 -- 
 1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
