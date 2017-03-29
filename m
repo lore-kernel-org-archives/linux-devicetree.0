@@ -1,100 +1,40 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/8] arm64: mm: Allow installation of memory abort
- handlers
-Date: Wed, 29 Mar 2017 12:32:51 +0100
-Message-ID: <20170329113250.GG23442@leverpostej>
-References: <20170328213431.10904-1-opendmb@gmail.com>
- <20170328213431.10904-2-opendmb@gmail.com>
+From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Subject: [PATCH v3 0/2] Tango PCIe controller support
+Date: Wed, 29 Mar 2017 13:11:57 +0200
+Message-ID: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170328213431.10904-2-opendmb@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Berger <opendmb@gmail.com>, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: robh+dt@kernel.org, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, wangkefeng.wang@huawei.com, james.morse@arm.com, mingo@kernel.org, sandeepa.s.prabhu@gmail.com, shijie.huang@arm.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: DT <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mason <slash.tmp@free.fr>, linux-pci <linux-pci@vger.kernel.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, David Laight <david.laight@aculab.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On Tue, Mar 28, 2017 at 02:34:24PM -0700, Doug Berger wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> Similarly to what the ARM/Linux kernel provides, add a hook_fault_code()
-> function which allows drivers or other parts of the kernel to install
-> custom memory abort handlers. This is useful when a given SoC's busing
-> does not propagate the exact faulting physical address, but there is a
-> way to read it through e.g: a special arbiter driver.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+The patch is split in two parts, to ease review of two orthogonal
+parts (MSI controller vs host bridge)
 
-Personally, I do not think that it makes sense to allow arbitrary code
-to hook such low-level fault handling.
+Marc Gonzalez (2):
+  PCI: Add tango MSI controller support
+  PCI: Add tango PCIe host bridge support
 
-IMO, if it is truly necessary to allow drivers to handle particular
-faults, that should be driven by data associated with the relevant
-mapping (e.g. the VMA), rather than allowing code to hook *all* faults.
+ Documentation/devicetree/bindings/pci/tango-pcie.txt |  34 ++++
+ drivers/pci/host/Kconfig                             |   7 +
+ drivers/pci/host/Makefile                            |   1 +
+ drivers/pci/host/pcie-tango.c                        | 344 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 386 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/tango-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-tango.c
 
->From my PoV, NAK to this interface to take over low-level fault
-handling.
-
-Catalin and Will have the final say here, as the arm64 maintainers.
-
-Thanks,
-Mark.
-
-> ---
->  arch/arm64/include/asm/system_misc.h |  3 +++
->  arch/arm64/mm/fault.c                | 15 ++++++++++++++-
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/system_misc.h b/arch/arm64/include/asm/system_misc.h
-> index bc812435bc76..e05f5b8c7c1c 100644
-> --- a/arch/arm64/include/asm/system_misc.h
-> +++ b/arch/arm64/include/asm/system_misc.h
-> @@ -38,6 +38,9 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
->  void hook_debug_fault_code(int nr, int (*fn)(unsigned long, unsigned int,
->  					     struct pt_regs *),
->  			   int sig, int code, const char *name);
-> +void hook_fault_code(int nr, int (*fn)(unsigned long, unsigned int,
-> +				       struct pt_regs *),
-> +		     int sig, int code, const char *name);
->  
->  struct mm_struct;
->  extern void show_pte(struct mm_struct *mm, unsigned long addr);
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index 4bf899fb451b..cdf1260f1005 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -488,7 +488,7 @@ static int do_bad(unsigned long addr, unsigned int esr, struct pt_regs *regs)
->  	return 1;
->  }
->  
-> -static const struct fault_info {
-> +static struct fault_info {
->  	int	(*fn)(unsigned long addr, unsigned int esr, struct pt_regs *regs);
->  	int	sig;
->  	int	code;
-> @@ -560,6 +560,19 @@ static const struct fault_info {
->  	{ do_bad,		SIGBUS,  0,		"unknown 63"			},
->  };
->  
-> +void __init hook_fault_code(int nr,
-> +			    int (*fn)(unsigned long, unsigned int, struct pt_regs *),
-> +			    int sig, int code, const char *name)
-> +{
-> +	BUG_ON(nr < 0 || nr >= ARRAY_SIZE(fault_info));
-> +
-> +	fault_info[nr].fn	= fn;
-> +	fault_info[nr].sig	= sig;
-> +	fault_info[nr].code	= code;
-> +	fault_info[nr].name	= name;
-> +}
-> +
-> +
->  static const char *fault_name(unsigned int esr)
->  {
->  	const struct fault_info *inf = fault_info + (esr & 63);
-> -- 
-> 2.12.0
-> 
+-- 
+2.11.0
