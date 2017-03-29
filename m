@@ -1,48 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] dt-bindings: input: touchscreen: Add max11801-ts
- binding
-Date: Tue, 28 Mar 2017 20:57:55 -0500
-Message-ID: <20170329015755.zi77exu7tpne3g3n@rob-hp-laptop>
-References: <1490209518-20790-1-git-send-email-jagan@openedev.com>
- <1490209518-20790-2-git-send-email-jagan@openedev.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v2 13/53] mtd: nand: denali_dt: enable
+ HW_ECC_FIXUP for Altera SOCFPGA variant
+Date: Tue, 28 Mar 2017 21:00:58 -0500
+Message-ID: <20170329020058.twiqhpghloxh32pj@rob-hp-laptop>
+References: <1490213273-8571-1-git-send-email-yamada.masahiro@socionext.com>
+ <1490213273-8571-14-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1490209518-20790-2-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1490213273-8571-14-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: laurent.monat@idquantique.com, Boris Brezillon <boris.brezillon@free-electrons.com>, thorsten.christiansson@idquantique.com, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Enrico Jorns <ejo@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Graham Moore <grmoore@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 12:35:17AM +0530, Jagan Teki wrote:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+On Thu, Mar 23, 2017 at 05:07:12AM +0900, Masahiro Yamada wrote:
+> There are various customizable parameters, so several variants for
+> this IP.  A generic compatible like "denali,denali-nand-dt" is
+> useless.  Moreover, there are multiple things wrong with this string.
+> (Refer to Rob's comment [1])
 > 
-> Add missing documentation of max11801-ts dt-binding details.
+> The denali_dt.c was split out and this compatible was added by Altera
+> for the SOCFPGA port.  So, replace it with a more specific string.
 > 
-> Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> The Denali IP on SOCFPGA incorporates the hardware ECC fixup feature.
+> So, this capability should be associated with the compatible string.
+> 
+> [1] https://lkml.org/lkml/2016/12/1/450
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
-> Changes for v8:
-> - Use IRQ_TYPE_EDGE_FALLING for interrupt trigger type. 
-> Changes for v7:
-> - add vendor prefix as maxim
-> Changes for v6:
-> - Replace the lable and name of the node
->    ts: max11801 => max11801: touchscreen@48
-> Changes for v5:
-> - Newly added patch
 > 
->  .../bindings/input/touchscreen/max11801-ts.txt         | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
+> Changes in v2:
+>   - Add caps flag to of_device_id data, not hard-code in driver code
+>   - Add Altera-specific compatible.
+> 
+>  Documentation/devicetree/bindings/mtd/denali-nand.txt |  5 +++--
+>  drivers/mtd/nand/denali_dt.c                          | 14 ++++++++++----
+>  2 files changed, 13 insertions(+), 6 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You should also mention there are no users (in-tree) of the old string.
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
