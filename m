@@ -1,42 +1,74 @@
-From: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
-Subject: Re: [RFC 8/8] ARM: dts: imx6qdl-sabresd: Enable fsl,ldo-bypass
-Date: Wed, 29 Mar 2017 16:32:23 +0300
-Message-ID: <1490794343.5481.33.camel@nxp.com>
-References: <cover.1490199005.git.leonard.crestez@nxp.com>
-         <8f4dca5609781f0362009dfa7f6d5c0990b5ea6d.1490199005.git.leonard.crestez@nxp.com>
-         <1490202830.29056.8.camel@pengutronix.de>
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] drm/arcpgu: Get rid of "encoder-slave" property
+Date: Wed, 29 Mar 2017 13:34:00 +0000
+Message-ID: <1490794439.7754.88.camel@synopsys.com>
+References: <1488554364-25579-1-git-send-email-abrodkin@synopsys.com>
+         <20170303162837.GO917@e110455-lin.cambridge.arm.com>
+         <1488563298.2940.33.camel@synopsys.com>
+         <20170303182102.GP917@e110455-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490202830.29056.8.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170303182102.GP917-A/Nd4k6kWRHZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Content-Language: en-US
+Content-ID: <EE671EE04C9F2C4DBC47B671AE1B0720-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Robin Gong <yibin.gong-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "daniel-/w4YWyX8dFk@public.gmane.org" <daniel-/w4YWyX8dFk@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "airlied-cv59FeDIM0c@public.gmane.org" <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-03-22 at 18:13 +0100, Lucas Stach wrote:
-> Am Mittwoch, den 22.03.2017, 18:53 +0200 schrieb Leonard Crestez:
-
-> > This enables LDO bypass by default on the imx6qdl-sabresd boards. New
-> > dts files with -ldo suffix are added for users who want to run with LDOs
-> > enabled on these boards anyway.
-
-> Given that using LDO bypass affects the device lifetime negatively (see
-> AN4724), I think the default should still be to use LDO enabled mode and
-> have new DTs for people that desire to shorten the lifetime of the SoC
-> for a minimal drop in power consumption.
-
-This was based on what the Freescale BSP does, I don't particularly
-object to upstream having a different default. It would be nice for
-testing if this ldo-bypass path was enabled by default for some boards
-but it's not a very good reason.
-
-I will switch the default.
-
--- 
-Regards,
-Leonard
+SGkgTGl2aXUsIFJvYiwNCg0KT24gRnJpLCAyMDE3LTAzLTAzIGF0IDE4OjIxICswMDAwLCBMaXZp
+dS5EdWRhdUBhcm0uY29tIHdyb3RlOg0KPiBPbiBGcmksIE1hciAwMywgMjAxNyBhdCAwNTo0ODox
+OVBNICswMDAwLCBBbGV4ZXkgQnJvZGtpbiB3cm90ZToNCj4gPiANCj4gPiBIaSBMaXZpdSwNCj4g
+PiANCj4gPiBPbiBGcmksIDIwMTctMDMtMDMgYXQgMTY6MjggKzAwMDAsIExpdml1IER1ZGF1IHdy
+b3RlOg0KPiA+ID4gDQo+ID4gPiBPbiBGcmksIE1hciAwMywgMjAxNyBhdCAwNjoxOToyNFBNICsw
+MzAwLCBBbGV4ZXkgQnJvZGtpbiB3cm90ZToNCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiAt
+CS8qIGZpbmQgdGhlIGVuY29kZXIgbm9kZSBhbmQgaW5pdGlhbGl6ZSBpdCAqLw0KPiA+ID4gPiAt
+CWVuY29kZXJfbm9kZSA9IG9mX3BhcnNlX3BoYW5kbGUoZHJtLT5kZXYtPm9mX25vZGUsICJlbmNv
+ZGVyLXNsYXZlIiwgMCk7DQo+ID4gPiA+IC0JaWYgKGVuY29kZXJfbm9kZSkgew0KPiA+ID4gPiAt
+CQlyZXQgPSBhcmNwZ3VfZHJtX2hkbWlfaW5pdChkcm0sIGVuY29kZXJfbm9kZSk7DQo+ID4gPiA+
+IC0JCW9mX25vZGVfcHV0KGVuY29kZXJfbm9kZSk7DQo+ID4gPiA+ICsJLyogVGhlcmUgaXMgb25s
+eSBvbmUgb3V0cHV0IHBvcnQgaW5zaWRlIGVhY2ggZGV2aWNlLCBmaW5kIGl0ICovDQo+ID4gPiA+
+ICsJcG9ydCA9IG9mX2dyYXBoX2dldF9uZXh0X2VuZHBvaW50KHBkZXYtPmRldi5vZl9ub2RlLCBO
+VUxMKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWlmIChwb3J0KSB7DQo+ID4gPiA+ICsJCWlmIChv
+Zl9kZXZpY2VfaXNfYXZhaWxhYmxlKHBvcnQpKQ0KPiA+ID4gPiArCQkJZW5jb2RlciA9IG9mX2dy
+YXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQocG9ydCk7DQo+ID4gPiA+ICsJCW9mX25vZGVfcHV0
+KHBvcnQpOw0KPiA+ID4gPiArCX0NCj4gPiA+IA0KPiA+ID4gWW91IG11c3QndmUgYmVlbiBsb29r
+aW5nIGF0IHNvbWUgb2xkIHZlcnNpb24uIEN1cnJlbnQgdmVyc2lvbiBpbiAtbmV4dCB1c2VzDQo+
+ID4gPiBvZl9ncmFwaF9nZXRfcmVtb3RlX25vZGUoKSB0byByZXBsYWNlIGFsbCB0aG9zZSBsaW5l
+cyB5b3UgaGF2ZSBhZGRlZCAoc2VlIFJvYg0KPiA+ID4gSGVycmluZydzIHNlcmllcyB0byBpbnRy
+b2R1Y2Ugb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9ub2RlKCkgZnVuY3Rpb24pDQo+ID4gDQo+ID4gSG0s
+IEknbSBub3Qgb24gTGludXMnIG1hc3RlciB0cmVlIFsxXSBhbmQgc28gSSB0aG91Z2h0IEkgd2Fz
+IHF1aXRlIHVwIHRvIGRhdGUgOikNCj4gPiBTdGlsbCBJIG1hZGUgYSBjaGVjayBvZiBsaW51eC1u
+ZXh0IGFuZCBkb24ndCBzZWUgYW55IGNoYW5nZXMgaW4NCj4gPiAiZHJpdmVycy9ncHUvZHJtL2Fy
+bSIgY29tcGFyZWQgdG8gTGludXMnIHRyZWUuDQo+ID4gDQo+ID4gWzFdwqBodHRwczovL3VybGRl
+ZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fZ2l0Lmtlcm5lbC5vcmdfY2dp
+dF9saW51eF9rZXJuZWxfZ2l0X3RvcnZhbGRzX2xpbnV4LmdpdF9jb21taXRfZHJpdmVyc19ncHVf
+ZHJtX2FybS0zRmlkLTNEDQo+ID4gZTQ1NjNmNmJhNzE3OTJjNzdhZWNjYjIwOTJjYzIzMTQ5YjQ0
+ZTY0MiZkPUR3SURhUSZjPURQTDZfWF82SmtYRng3QVhXcUIwdGcmcj1scWRlZVNTRWVzMEdGRERs
+NjU2ZVZpWE83YnJlUzU1eXRXa2hwazVSODFJJm09U0k2Nm5nbm5YeTMzbmNiOG01SDRMYTINCj4g
+PiBUMVN6U0VpaVA3aGNfWHNSYWhFYyZzPXVhc3dqVlhjallEclVvc09rT19VcFRNcUpNV1RULUxM
+UHJnNUpFNi10LTgmZT3CoA0KPiA+IFsyXcKgaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQu
+Y29tL3YyL3VybD91PWh0dHAtM0FfX2dpdC5rZXJuZWwub3JnX2NnaXRfbGludXhfa2VybmVsX2dp
+dF9uZXh0X2xpbnV4LTJEbmV4dC5naXRfY29tbWl0X2RyaXZlcnNfZ3B1X2RybV9hcm0tM0ZpZA0K
+PiA+IC0zRGU0NTYzZjZiYTcxNzkyYzc3YWVjY2IyMDkyY2MyMzE0OWI0NGU2NDImZD1Ed0lEYVEm
+Yz1EUEw2X1hfNkprWEZ4N0FYV3FCMHRnJnI9bHFkZWVTU0VlczBHRkREbDY1NmVWaVhPN2JyZVM1
+NXl0V2tocGs1UjgxSSZtPVNJNjZuZ25uWHkzM25jYjhtNUg0DQo+ID4gTGEyVDFTelNFaWlQN2hj
+X1hzUmFoRWMmcz1obDlZNnMzSzlMd0xMMU0yV25MM09EYXhfVi1aUmg4azFpVGl5Y3RJcVU0JmU9
+wqANCj4gPiANCj4gPiBDb3VsZCB5b3UgcGxlYXNlIGNsYXJpZnkgd2hpY2ggZXhhY3QgdHJlZSBk
+aWQgeW91IG1lYW4/DQo+IA0KPiBTb3JyeSwgSSB0aG91Z2h0IHRoZSBzZXJpZXMgZ290IHB1bGxl
+ZCBieSBvbmUgb2YgdGhlIERSTSB0cmVlcywgYnV0IGl0IGxvb2tzIGxpa2UNCj4gSSB3YXMgd3Jv
+bmcuIEkgd2FzIGNhcnJ5aW5nIGEgcHJpdmF0ZSBjb3B5IGluIG15IGludGVybmFsIHRyZWUsIHdh
+aXRpbmcgZm9yIHRoZQ0KPiBtb21lbnQgd2hlbiBpdCBnb3QgcHVsbGVkIGludG8gZHJtLW5leHQg
+b3IgZHJtLW1pc2MtbmV4dC4NCj4gDQo+IFJvYiwgZG8geW91IGhhdmUgYW4gdXBkYXRlIG9uIHlv
+dXIgc2VyaWVzIGludHJvZHVjaW5nIG9mX2dyYXBoX2dldF9yZW1vdGVfbm9kZSgpID8NCg0KRm9y
+IHNvbWUgcmVhc29uIEkgY2Fubm90IGZpbmQgYW55IHJlbGV2YW50IGNvbW1pdHMgaW4gbGludXgt
+bmV4dCB0cmVlIGV2ZW4gdG9kYXkuDQpDb3VsZCB5b3UgcGxlYXNlIHBvaW50IG1lIHRvIGVpdGhl
+ciBhbnkgcmFuZG9tIGdpdCB0cmVlIHdpdGggbWVudGlvbmVkIGFib3ZlIGNoYW5nZSBvcg0KbWF5
+YmUganVzdCBtYWlsaW5nIGxpc3Qgd2hlcmUgdGhpcyBwYXRjaCB3YXMgc2VudD8NCg0KSSdkIGxp
+a2UgdG8gaW1wbGVtZW50IHRoZSBzYW1lIGZpeCBpbiBBUkNQR1UgYW5kIGNhbGwgaXQgYSBkYXkg
+ZmluYWxseS4NCg0KLUFsZXhleQ==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
