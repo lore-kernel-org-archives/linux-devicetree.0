@@ -1,1502 +1,722 @@
-From: Rafal Ozieblo <rafalo@cadence.com>
-Subject: [PATCH] Add hardware PTP support.
-Date: Wed, 29 Mar 2017 15:00:51 +0100
-Message-ID: <1490796051-28527-1-git-send-email-rafalo@cadence.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] i2c: add sc18is600 driver
+Date: Wed, 29 Mar 2017 16:03:39 +0200
+Message-ID: <20170329140339.22501-1-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: nicolas.ferre@atmel.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, harinikatakamlinux@gmail.com, harini.katakam@xilinx.com, richardcochran@gmail.com, Andrei.Pistirica@microchip.com
-Cc: Rafal Ozieblo <rafalo@cadence.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch is based on original Harini's patch and Andrei's patch,
-implemented in aseparate file to ease the review/maintanance
-and integration with other platforms.
+This adds an I²C master driver for SPI -> I²C bus bridge chips.
+It currently supports NXP's SC18IS600 and SC18IS601, as well as
+Silicon Labs' CP2120. The driver was only tested on SC18IS600.
 
-In case that macb is compiled as a module, it has been renamed to
-cadence-macb.ko to avoid naming confusion in Makefile.
-
-This driver does support GEM-GXL:
-- Enable HW time stamp
-- Register ptp clock framework
-- Initialize PTP related registers
-- Updated dma buffer descriptor read/write mechanism
-- HW time stamp on the PTP Ethernet packets are received using the
-  SO_TIMESTAMPING API. Where timers are obtained from the dma buffer
-  descriptors
-- Added tsu_clk to device tree
-
-Note: Patch on net-next, on March 15th.
-
-Signed-off-by: Rafal Ozieblo <rafalo@cadence.com>
+Signed-off-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/net/macb.txt |   1 +
- drivers/net/ethernet/cadence/Kconfig           |  10 +-
- drivers/net/ethernet/cadence/Makefile          |   7 +-
- drivers/net/ethernet/cadence/macb.c            | 237 ++++++--
- drivers/net/ethernet/cadence/macb.h            | 176 +++++-
- drivers/net/ethernet/cadence/macb_ptp.c        | 724 +++++++++++++++++++++++++
- 6 files changed, 1109 insertions(+), 46 deletions(-)
- create mode 100755 drivers/net/ethernet/cadence/macb_ptp.c
+ .../devicetree/bindings/i2c/i2c-cp2120.txt         |   1 +
+ .../devicetree/bindings/i2c/i2c-sc18is600.txt      |  62 +++
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-sc18is600.c                 | 572 +++++++++++++++++++++
+ 5 files changed, 646 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cp2120.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sc18is600.txt
+ create mode 100644 drivers/i2c/busses/i2c-sc18is600.c
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 1506e94..27966ae 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -22,6 +22,7 @@ Required properties:
- 	Required elements: 'pclk', 'hclk'
- 	Optional elements: 'tx_clk'
- 	Optional elements: 'rx_clk' applies to cdns,zynqmp-gem
-+	Optional elements: 'tsu_clk'
- - clocks: Phandles to input clocks.
- 
- Optional properties for PHY child node:
-diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
-index 608bea1..427d65a 100644
---- a/drivers/net/ethernet/cadence/Kconfig
-+++ b/drivers/net/ethernet/cadence/Kconfig
-@@ -29,7 +29,15 @@ config MACB
- 	  support for the MACB/GEM chip.
- 
- 	  To compile this driver as a module, choose M here: the module
--	  will be called macb.
-+	  will be macb.
-+
-+config MACB_USE_HWSTAMP
-+	bool "Use IEEE 1588 hwstamp"
-+	depends on MACB
-+	default y
-+	imply PTP_1588_CLOCK
-+	---help---
-+	  Enable IEEE 1588 Precision Time Protocol (PTP) support for MACB.
- 
- config MACB_PCI
- 	tristate "Cadence PCI MACB/GEM support"
-diff --git a/drivers/net/ethernet/cadence/Makefile b/drivers/net/ethernet/cadence/Makefile
-index 4ba7559..a7f6e04 100644
---- a/drivers/net/ethernet/cadence/Makefile
-+++ b/drivers/net/ethernet/cadence/Makefile
-@@ -1,6 +1,11 @@
- #
- # Makefile for the Atmel network device drivers.
- #
-+cadence-macb-y	:= macb.o
- 
--obj-$(CONFIG_MACB) += macb.o
-+ifeq ($(CONFIG_MACB_USE_HWSTAMP),y)
-+cadence-macb-y	+= macb_ptp.o
-+endif
-+
-+obj-$(CONFIG_MACB) += cadence-macb.o
- obj-$(CONFIG_MACB_PCI) += macb_pci.o
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index 30606b1..32af94e 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -79,33 +79,84 @@
- #define MACB_HALT_TIMEOUT	1230
- 
- /* DMA buffer descriptor might be different size
-- * depends on hardware configuration.
-+ * depends on hardware configuration:
-+ *
-+ * 1. dma address width 32 bits:
-+ *    word 1: 32 bit address of Data Buffer
-+ *    word 2: control
-+ *
-+ * 2. dma address width 64 bits:
-+ *    word 1: 32 bit address of Data Buffer
-+ *    word 2: control
-+ *    word 3: upper 32 bit address of Data Buffer
-+ *    word 4: unused
-+ *
-+ * 3. dma address width 32 bits with hardware timestamping:
-+ *    word 1: 32 bit address of Data Buffer
-+ *    word 2: control
-+ *    word 3: timestamp word 1
-+ *    word 4: timestamp word 2
-+ *
-+ * 4. dma address width 64 bits with hardware timestamping:
-+ *    word 1: 32 bit address of Data Buffer
-+ *    word 2: control
-+ *    word 3: upper 32 bit address of Data Buffer
-+ *    word 4: unused
-+ *    word 5: timestamp word 1
-+ *    word 6: timestamp word 2
-  */
- static unsigned int macb_dma_desc_get_size(struct macb *bp)
- {
--#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--	if (bp->hw_dma_cap == HW_DMA_CAP_64B)
--		return sizeof(struct macb_dma_desc) + sizeof(struct macb_dma_desc_64);
-+#ifdef MACB_EXT_DESC
-+	unsigned int desc_size;
-+
-+	switch (bp->hw_dma_cap) {
-+	case HW_DMA_CAP_64B:
-+		desc_size = sizeof(struct macb_dma_desc)
-+			+ sizeof(struct macb_dma_desc_64);
-+		break;
-+	case HW_DMA_CAP_PTP:
-+		desc_size = sizeof(struct macb_dma_desc)
-+			+ sizeof(struct macb_dma_desc_ptp);
-+		break;
-+	case HW_DMA_CAP_64B_PTP:
-+		desc_size = sizeof(struct macb_dma_desc)
-+			+ sizeof(struct macb_dma_desc_64)
-+			+ sizeof(struct macb_dma_desc_ptp);
-+		break;
-+	default:
-+		desc_size = sizeof(struct macb_dma_desc);
-+	}
-+	return desc_size;
- #endif
- 	return sizeof(struct macb_dma_desc);
- }
- 
--static unsigned int macb_adj_dma_desc_idx(struct macb *bp, unsigned int idx)
-+static unsigned int macb_adj_dma_desc_idx(struct macb *bp, unsigned int desc_idx)
- {
--#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--	/* Dma buffer descriptor is 4 words length (instead of 2 words)
--	 * for 64b GEM.
--	 */
--	if (bp->hw_dma_cap == HW_DMA_CAP_64B)
--		idx <<= 1;
-+#ifdef MACB_EXT_DESC
-+	switch (bp->hw_dma_cap) {
-+	case HW_DMA_CAP_64B:
-+	case HW_DMA_CAP_PTP:
-+		desc_idx <<= 1;
-+		break;
-+	case HW_DMA_CAP_64B_PTP:
-+		desc_idx *= 3;
-+		break;
-+	default:
-+		break;
-+	}
-+	return desc_idx;
- #endif
--	return idx;
-+	return desc_idx;
- }
- 
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
- static struct macb_dma_desc_64 *macb_64b_desc(struct macb *bp, struct macb_dma_desc *desc)
- {
--	return (struct macb_dma_desc_64 *)((void *)desc + sizeof(struct macb_dma_desc));
-+	if (bp->hw_dma_cap & HW_DMA_CAP_64B)
-+		return (struct macb_dma_desc_64 *)((void *)desc + sizeof(struct macb_dma_desc));
-+	return NULL;
- }
- #endif
- 
-@@ -600,7 +651,7 @@ static void macb_set_addr(struct macb *bp, struct macb_dma_desc *desc, dma_addr_
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
- 	struct macb_dma_desc_64 *desc_64;
- 
--	if (bp->hw_dma_cap == HW_DMA_CAP_64B) {
-+	if (bp->hw_dma_cap & HW_DMA_CAP_64B) {
- 		desc_64 = macb_64b_desc(bp, desc);
- 		desc_64->addrh = upper_32_bits(addr);
- 	}
-@@ -614,7 +665,7 @@ static dma_addr_t macb_get_addr(struct macb *bp, struct macb_dma_desc *desc)
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
- 	struct macb_dma_desc_64 *desc_64;
- 
--	if (bp->hw_dma_cap == HW_DMA_CAP_64B) {
-+	if (bp->hw_dma_cap & HW_DMA_CAP_64B) {
- 		desc_64 = macb_64b_desc(bp, desc);
- 		addr = ((u64)(desc_64->addrh) << 32);
- 	}
-@@ -713,7 +764,7 @@ static void macb_tx_error_task(struct work_struct *work)
- 	/* Reinitialize the TX desc queue */
- 	queue_writel(queue, TBQP, lower_32_bits(queue->tx_ring_dma));
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--	if (bp->hw_dma_cap == HW_DMA_CAP_64B)
-+	if (bp->hw_dma_cap & HW_DMA_CAP_64B)
- 		queue_writel(queue, TBQPH, upper_32_bits(queue->tx_ring_dma));
- #endif
- 	/* Make TX ring reflect state of hardware */
-@@ -775,6 +826,16 @@ static void macb_tx_interrupt(struct macb_queue *queue)
- 
- 			/* First, update TX stats if needed */
- 			if (skb) {
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+				if (gem_ptp_do_txstamp(queue, skb, desc) == 0) {
-+					/* skb now belongs to timestamp buffer
-+					 * and will be removed later
-+					 */
-+					tx_skb->skb = NULL;
-+					schedule_work(&queue->tx_ts_task);
-+
-+				}
-+#endif
- 				netdev_vdbg(bp->dev, "skb %u (data %p) TX complete\n",
- 					    macb_tx_ring_wrap(bp, tail),
- 					    skb->data);
-@@ -941,6 +1002,10 @@ static int gem_rx(struct macb *bp, int budget)
- 		bp->stats.rx_packets++;
- 		bp->stats.rx_bytes += skb->len;
- 
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+		gem_ptp_do_rxstamp(bp, skb, desc);
-+#endif
-+
- #if defined(DEBUG) && defined(VERBOSE_DEBUG)
- 		netdev_vdbg(bp->dev, "received skb of length %u, csum: %08x\n",
- 			    skb->len, skb->csum);
-@@ -1263,6 +1328,11 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
- 				queue_writel(queue, ISR, MACB_BIT(HRESP));
- 		}
- 
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+		if (status & MACB_PTP_INT_MASK)
-+			macb_ptp_int(queue, status);
-+#endif
-+
- 		status = queue_readl(queue, ISR);
- 	}
- 
-@@ -1592,8 +1662,10 @@ static int macb_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- 	/* Make newly initialized descriptor visible to hardware */
- 	wmb();
--
--	skb_tx_timestamp(skb);
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+	if (!bp->ptp_hw_support)
-+#endif
-+		skb_tx_timestamp(skb);
- 
- 	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(TSTART));
- 
-@@ -1921,9 +1993,13 @@ static void macb_configure_dma(struct macb *bp)
- 			dmacfg &= ~GEM_BIT(TXCOEN);
- 
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--		if (bp->hw_dma_cap == HW_DMA_CAP_64B)
-+		if (bp->hw_dma_cap & HW_DMA_CAP_64B)
- 			dmacfg |= GEM_BIT(ADDR64);
- #endif
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+		if (bp->hw_dma_cap & HW_DMA_CAP_PTP)
-+			dmacfg |= GEM_BIT(RXEXT) | GEM_BIT(TXEXT);
-+#endif
- 		netdev_dbg(bp->dev, "Cadence configure DMA with 0x%08x\n",
- 			   dmacfg);
- 		gem_writel(bp, DMACFG, dmacfg);
-@@ -1971,21 +2047,22 @@ static void macb_init_hw(struct macb *bp)
- 	/* Initialize TX and RX buffers */
- 	macb_writel(bp, RBQP, lower_32_bits(bp->rx_ring_dma));
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--	if (bp->hw_dma_cap == HW_DMA_CAP_64B)
-+	if (bp->hw_dma_cap & HW_DMA_CAP_64B)
- 		macb_writel(bp, RBQPH, upper_32_bits(bp->rx_ring_dma));
- #endif
- 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
- 		queue_writel(queue, TBQP, lower_32_bits(queue->tx_ring_dma));
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--		if (bp->hw_dma_cap == HW_DMA_CAP_64B)
--			queue_writel(queue, TBQPH, upper_32_bits(queue->tx_ring_dma));
-+		if (bp->hw_dma_cap & HW_DMA_CAP_64B)
-+			queue_writel(queue, TBQPH,
-+					upper_32_bits(queue->tx_ring_dma));
- #endif
- 
- 		/* Enable interrupts */
- 		queue_writel(queue, IER,
--			     MACB_RX_INT_FLAGS |
--			     MACB_TX_INT_FLAGS |
--			     MACB_BIT(HRESP));
-+				MACB_RX_INT_FLAGS |
-+				MACB_TX_INT_FLAGS |
-+				MACB_BIT(HRESP));
- 	}
- 
- 	/* Enable TX and RX */
-@@ -2446,6 +2523,71 @@ static int macb_set_ringparam(struct net_device *netdev,
- 	return 0;
- }
- 
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+static unsigned int gem_get_tsu_rate(struct macb *bp)
-+{
-+	struct clk *tsu_clk;
-+	unsigned int tsu_rate;
-+
-+	tsu_clk = devm_clk_get(&bp->pdev->dev, "tsu_clk");
-+	if (!IS_ERR(tsu_clk))
-+		tsu_rate = clk_get_rate(tsu_clk);
-+	/* try pclk instead */
-+	else if (!IS_ERR(bp->pclk)) {
-+		tsu_clk = bp->pclk;
-+		tsu_rate = clk_get_rate(tsu_clk);
-+	} else
-+		return -ENOTSUPP;
-+	return tsu_rate;
-+}
-+
-+static s32 gem_get_ptp_max_adj(void)
-+{
-+	return 64E6;
-+}
-+
-+static int gem_get_ts_info(struct net_device *dev,
-+			   struct ethtool_ts_info *info)
-+{
-+	struct macb *bp = netdev_priv(dev);
-+
-+	ethtool_op_get_ts_info(dev, info);
-+	if (!bp->ptp_hw_support)
-+		return 0;
-+
-+	info->so_timestamping =
-+		SOF_TIMESTAMPING_TX_SOFTWARE |
-+		SOF_TIMESTAMPING_RX_SOFTWARE |
-+		SOF_TIMESTAMPING_SOFTWARE |
-+		SOF_TIMESTAMPING_TX_HARDWARE |
-+		SOF_TIMESTAMPING_RX_HARDWARE |
-+		SOF_TIMESTAMPING_RAW_HARDWARE;
-+	info->tx_types =
-+		(1 << HWTSTAMP_TX_ONESTEP_SYNC) |
-+		(1 << HWTSTAMP_TX_OFF) |
-+		(1 << HWTSTAMP_TX_ON);
-+	info->rx_filters =
-+		(1 << HWTSTAMP_FILTER_NONE) |
-+		(1 << HWTSTAMP_FILTER_ALL);
-+	info->phc_index = -1;
-+
-+	if (bp->ptp_clock)
-+		info->phc_index = ptp_clock_index(bp->ptp_clock);
-+
-+	return 0;
-+}
-+
-+static struct macb_ptp_info gem_ptp_info = {
-+	.ptp_init	 = gem_ptp_init,
-+	.ptp_remove	 = gem_ptp_remove,
-+	.get_ptp_max_adj = gem_get_ptp_max_adj,
-+	.get_tsu_rate	 = gem_get_tsu_rate,
-+	.get_ts_info	 = gem_get_ts_info,
-+	.get_hwtst	 = gem_get_hwtst,
-+	.set_hwtst	 = gem_set_hwtst,
-+};
-+#endif
-+
- static int macb_get_ts_info(struct net_device *netdev,
- 			    struct ethtool_ts_info *info)
- {
-@@ -2579,6 +2721,18 @@ static void macb_configure_caps(struct macb *bp,
- 		dcfg = gem_readl(bp, DCFG2);
- 		if ((dcfg & (GEM_BIT(RX_PKT_BUFF) | GEM_BIT(TX_PKT_BUFF))) == 0)
- 			bp->caps |= MACB_CAPS_FIFO_MODE;
-+		/* if HWSTAMP is configure and gem has the capability */
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+		bp->ptp_hw_support = false;
-+		if (gem_has_ptp(bp)) {
-+			if (!GEM_BFEXT(TSU, gem_readl(bp, DCFG5)))
-+				pr_err("GEM doesn't support hardware ptp.\n");
-+			else {
-+				bp->ptp_hw_support = true;
-+				bp->ptp_info = &gem_ptp_info;
-+			}
-+		}
-+#endif
- 	}
- 
- 	dev_dbg(&bp->pdev->dev, "Cadence caps 0x%08x\n", bp->caps);
-@@ -2716,7 +2870,7 @@ static int macb_init(struct platform_device *pdev)
- 			queue->IMR  = GEM_IMR(hw_q - 1);
- 			queue->TBQP = GEM_TBQP(hw_q - 1);
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--			if (bp->hw_dma_cap == HW_DMA_CAP_64B)
-+			if (bp->hw_dma_cap & HW_DMA_CAP_64B)
- 				queue->TBQPH = GEM_TBQPH(hw_q - 1);
- #endif
- 		} else {
-@@ -2727,7 +2881,7 @@ static int macb_init(struct platform_device *pdev)
- 			queue->IMR  = MACB_IMR;
- 			queue->TBQP = MACB_TBQP;
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--			if (bp->hw_dma_cap == HW_DMA_CAP_64B)
-+			if (bp->hw_dma_cap & HW_DMA_CAP_64B)
- 				queue->TBQPH = MACB_TBQPH;
- #endif
- 		}
-@@ -3184,7 +3338,9 @@ static const struct macb_config np4_config = {
- };
- 
- static const struct macb_config zynqmp_config = {
--	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_JUMBO,
-+	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE |
-+			MACB_CAPS_JUMBO |
-+			MACB_CAPS_GEM_HAS_PTP,
- 	.dma_burst_length = 16,
- 	.clk_init = macb_clk_init,
- 	.init = macb_init,
-@@ -3218,7 +3374,9 @@ MODULE_DEVICE_TABLE(of, macb_dt_ids);
- #endif /* CONFIG_OF */
- 
- static const struct macb_config default_gem_config = {
--	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_JUMBO,
-+	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE |
-+			MACB_CAPS_JUMBO |
-+			MACB_CAPS_GEM_HAS_PTP,
- 	.dma_burst_length = 16,
- 	.clk_init = macb_clk_init,
- 	.init = macb_init,
-@@ -3307,19 +3465,24 @@ static int macb_probe(struct platform_device *pdev)
- 		bp->wol |= MACB_WOL_HAS_MAGIC_PACKET;
- 	device_init_wakeup(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
- 
--#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--	if (GEM_BFEXT(DAW64, gem_readl(bp, DCFG6))) {
--		dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
--		bp->hw_dma_cap = HW_DMA_CAP_64B;
--	} else
--		bp->hw_dma_cap = HW_DMA_CAP_32B;
--#endif
--
- 	spin_lock_init(&bp->lock);
- 
- 	/* setup capabilities */
- 	macb_configure_caps(bp, macb_config);
- 
-+#ifdef MACB_EXT_DESC
-+	bp->hw_dma_cap = HW_DMA_CAP_32B;
-+#endif
-+#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-+	if (GEM_BFEXT(DAW64, gem_readl(bp, DCFG6))) {
-+		dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
-+		bp->hw_dma_cap |= HW_DMA_CAP_64B;
-+	}
-+#endif
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+	if (bp->ptp_hw_support)
-+		bp->hw_dma_cap |= HW_DMA_CAP_PTP;
-+#endif
- 	platform_set_drvdata(pdev, dev);
- 
- 	dev->irq = platform_get_irq(pdev, 0);
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 234a49e..07a1e8e 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -11,6 +11,13 @@
- #define _MACB_H
- 
- #include <linux/phy.h>
-+#include <linux/ptp_clock.h>
-+#include <linux/ptp_clock_kernel.h>
-+#include <linux/net_tstamp.h>
-+
-+#if defined(CONFIG_ARCH_DMA_ADDR_T_64BIT) || defined(CONFIG_MACB_USE_HWSTAMP)
-+#define MACB_EXT_DESC
-+#endif
- 
- #define MACB_GREGS_NBR 16
- #define MACB_GREGS_VERSION 2
-@@ -86,6 +93,10 @@
- #define GEM_SA3T		0x009C /* Specific3 Top */
- #define GEM_SA4B		0x00A0 /* Specific4 Bottom */
- #define GEM_SA4T		0x00A4 /* Specific4 Top */
-+#define GEM_EFTSH		0x00e8 /* PTP Event Frame Transmitted Seconds Register 47:32 */
-+#define GEM_EFRSH		0x00ec /* PTP Event Frame Received Seconds Register 47:32 */
-+#define GEM_PEFTSH		0x00f0 /* PTP Peer Event Frame Transmitted Seconds Register 47:32 */
-+#define GEM_PEFRSH		0x00f4 /* PTP Peer Event Frame Received Seconds Register 47:32 */
- #define GEM_OTX			0x0100 /* Octets transmitted */
- #define GEM_OCTTXL		0x0100 /* Octets transmitted [31:0] */
- #define GEM_OCTTXH		0x0104 /* Octets transmitted [47:32] */
-@@ -155,6 +166,9 @@
- #define GEM_DCFG6		0x0294 /* Design Config 6 */
- #define GEM_DCFG7		0x0298 /* Design Config 7 */
- 
-+#define GEM_TXBDCTRL	0x04cc /* TX Buffer Descriptor control register */
-+#define GEM_RXBDCTRL	0x04d0 /* RX Buffer Descriptor control register */
-+
- #define GEM_ISR(hw_q)		(0x0400 + ((hw_q) << 2))
- #define GEM_TBQP(hw_q)		(0x0440 + ((hw_q) << 2))
- #define GEM_TBQPH(hw_q)		(0x04C8)
-@@ -191,6 +205,8 @@
- #define MACB_TZQ_OFFSET		12 /* Transmit zero quantum pause frame */
- #define MACB_TZQ_SIZE		1
- #define MACB_SRTSM_OFFSET	15
-+#define MACB_OSSMODE_OFFSET 24 /* Enable One Step Synchro Mode */
-+#define MACB_OSSMODE_SIZE	1
- 
- /* Bitfields in NCFGR */
- #define MACB_SPD_OFFSET		0 /* Speed */
-@@ -269,6 +285,10 @@
- #define GEM_RXBS_SIZE		8
- #define GEM_DDRP_OFFSET		24 /* disc_when_no_ahb */
- #define GEM_DDRP_SIZE		1
-+#define GEM_RXEXT_OFFSET	28 /* RX extended Buffer Descriptor mode */
-+#define GEM_RXEXT_SIZE		1
-+#define GEM_TXEXT_OFFSET	29 /* TX extended Buffer Descriptor mode */
-+#define GEM_TXEXT_SIZE		1
- #define GEM_ADDR64_OFFSET	30 /* Address bus width - 64b or 32b */
- #define GEM_ADDR64_SIZE		1
- 
-@@ -354,6 +374,16 @@
- #define MACB_PDRSFT_SIZE	1
- #define MACB_SRI_OFFSET		26 /* TSU Seconds Register Increment */
- #define MACB_SRI_SIZE		1
-+#define MACB_TCI_OFFSET		29 /* TSU timer comparison interrupt */
-+#define MACB_TCI_SIZE		1
-+#define MACB_PTP_INT_MASK	(MACB_BIT(DRQFR) \
-+							| MACB_BIT(SFR) \
-+							| MACB_BIT(DRQFT) \
-+							| MACB_BIT(SFT) \
-+							| MACB_BIT(PDRQFR) \
-+							| MACB_BIT(PDRSFR) \
-+							| MACB_BIT(PDRQFT) \
-+							| MACB_BIT(PDRSFT))
- 
- /* Timer increment fields */
- #define MACB_TI_CNS_OFFSET	0
-@@ -425,6 +455,11 @@
- #define GEM_TX_PKT_BUFF_OFFSET			21
- #define GEM_TX_PKT_BUFF_SIZE			1
- 
-+
-+/* Bitfields in DCFG5. */
-+#define GEM_TSU_OFFSET				8
-+#define GEM_TSU_SIZE				1
-+
- /* Bitfields in DCFG6. */
- #define GEM_PBUF_LSO_OFFSET			27
- #define GEM_PBUF_LSO_SIZE			1
-@@ -439,6 +474,52 @@
- #define GEM_NSINCR_OFFSET			0
- #define GEM_NSINCR_SIZE				8
- 
-+/* Bitfields in TSH */
-+#define GEM_TSH_OFFSET				0 /* TSU timer value (s). MSB [47:32] of seconds timer count */
-+#define GEM_TSH_SIZE				16
-+
-+/* Bitfields in TSL */
-+#define GEM_TSL_OFFSET				0 /* TSU timer value (s). LSB [31:0] of seconds timer count */
-+#define GEM_TSL_SIZE				32
-+
-+/* Bitfields in TN */
-+#define GEM_TN_OFFSET				0 /* TSU timer value (ns) */
-+#define GEM_TN_SIZE					30
-+
-+/* Bitfields in TXBDCTRL */
-+#define GEM_TXTSMODE_OFFSET			4 /* TX Descriptor Timestamp Insertion mode */
-+#define GEM_TXTSMODE_SIZE			2
-+
-+/* Bitfields in RXBDCTRL */
-+#define GEM_RXTSMODE_OFFSET			4 /* RX Descriptor Timestamp Insertion mode */
-+#define GEM_RXTSMODE_SIZE			2
-+
-+/* Transmit DMA buffer descriptor Word 1 */
-+#define GEM_DMA_TXVALID_OFFSET		23 /* timestamp has been captured in the Buffer Descriptor */
-+#define GEM_DMA_TXVALID_SIZE		1
-+
-+/* Receive DMA buffer descriptor Word 0 */
-+#define GEM_DMA_RXVALID_OFFSET		2 /* indicates a valid timestamp in the Buffer Descriptor */
-+#define GEM_DMA_RXVALID_SIZE		1
-+
-+/* DMA buffer descriptor Word 2 (32 bit addressing) or Word 4 (64 bit addressing) */
-+#define GEM_DMA_SECL_OFFSET			30 /* Timestamp seconds[1:0]  */
-+#define GEM_DMA_SECL_SIZE			2
-+#define GEM_DMA_NSEC_OFFSET			0 /* Timestamp nanosecs [29:0] */
-+#define GEM_DMA_NSEC_SIZE			30
-+
-+/* DMA buffer descriptor Word 3 (32 bit addressing) or Word 5 (64 bit addressing) */
-+
-+/* New hardware supports 12 bit precision of timestamp in DMA buffer descriptor.
-+ * Old hardware supports only 6 bit precision but it is enough for PTP.
-+ * Less accuracy is used always instead of checking hardware version.
-+ */
-+#define GEM_DMA_SECH_OFFSET			0 /* Timestamp seconds[5:2] */
-+#define GEM_DMA_SECH_SIZE			4
-+#define GEM_DMA_SEC_WIDTH			(GEM_DMA_SECH_SIZE + GEM_DMA_SECL_SIZE)
-+#define GEM_DMA_SEC_TOP				(1 << GEM_DMA_SEC_WIDTH)
-+#define GEM_DMA_SEC_MASK			(GEM_DMA_SEC_TOP - 1)
-+
- /* Bitfields in ADJ */
- #define GEM_ADDSUB_OFFSET			31
- #define GEM_ADDSUB_SIZE				1
-@@ -514,6 +595,8 @@
- #define queue_readl(queue, reg)		(queue)->bp->macb_reg_readl((queue)->bp, (queue)->reg)
- #define queue_writel(queue, reg, value)	(queue)->bp->macb_reg_writel((queue)->bp, (queue)->reg, (value))
- 
-+#define PTP_TS_BUFFER_SIZE		128 /* must be power of 2 */
-+
- /* Conditional GEM/MACB macros.  These perform the operation to the correct
-  * register dependent on whether the device is a GEM or a MACB.  For registers
-  * and bitfields that are common across both devices, use macb_{read,write}l
-@@ -546,16 +629,21 @@ struct macb_dma_desc {
- 	u32	ctrl;
- };
- 
--#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--enum macb_hw_dma_cap {
--	HW_DMA_CAP_32B,
--	HW_DMA_CAP_64B,
--};
-+#ifdef MACB_EXT_DESC
-+#define HW_DMA_CAP_32B		0
-+#define HW_DMA_CAP_64B		(1 << 0)
-+#define HW_DMA_CAP_PTP		(1 << 1)
-+#define HW_DMA_CAP_64B_PTP	(HW_DMA_CAP_64B | HW_DMA_CAP_PTP)
- 
- struct macb_dma_desc_64 {
- 	u32 addrh;
- 	u32 resvd;
- };
-+
-+struct macb_dma_desc_ptp {
-+	u32	ts_1;
-+	u32	ts_2;
-+};
- #endif
- 
- /* DMA descriptor bitfields */
-@@ -871,6 +959,18 @@ struct macb_config {
- 	int	jumbo_max_len;
- };
- 
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+struct tsu_incr {
-+	u32 sub_ns;
-+	u32 ns;
-+};
-+
-+struct gem_tx_ts {
-+	struct sk_buff *skb;
-+	struct macb_dma_desc_ptp desc_ptp;
-+};
-+#endif
-+
- struct macb_queue {
- 	struct macb		*bp;
- 	int			irq;
-@@ -887,6 +987,12 @@ struct macb_queue {
- 	struct macb_tx_skb	*tx_skb;
- 	dma_addr_t		tx_ring_dma;
- 	struct work_struct	tx_error_task;
-+
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+	struct work_struct	tx_ts_task;
-+	unsigned int		tx_ts_head, tx_ts_tail;
-+	struct gem_tx_ts	tx_timestamps[PTP_TS_BUFFER_SIZE];
-+#endif
- };
- 
- struct macb {
-@@ -955,11 +1061,67 @@ struct macb {
- 	u32			wol;
- 
- 	struct macb_ptp_info	*ptp_info;	/* macb-ptp interface */
--#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
--	enum macb_hw_dma_cap hw_dma_cap;
-+#ifdef MACB_EXT_DESC
-+	uint8_t hw_dma_cap;
-+#endif
-+
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+	bool ptp_hw_support;
-+	spinlock_t tsu_clk_lock; /* gem tsu clock locking */
-+	unsigned int tsu_rate;
-+	struct ptp_clock *ptp_clock;
-+	struct ptp_clock_info ptp_clock_info;
-+	struct tsu_incr tsu_incr;
-+	struct hwtstamp_config tstamp_config;
- #endif
- };
- 
-+#ifdef CONFIG_MACB_USE_HWSTAMP
-+#define GEM_TSEC_SIZE  (GEM_TSH_SIZE + GEM_TSL_SIZE)
-+#define TSU_SEC_MAX_VAL (((u64)1 << GEM_TSEC_SIZE) - 1)
-+#define TSU_NSEC_MAX_VAL ((1 << GEM_TN_SIZE) - 1)
-+
-+enum macb_bd_control {
-+	TSTAMP_DISABLED,
-+	TSTAMP_FRAME_PTP_EVENT_ONLY,
-+	TSTAMP_ALL_PTP_FRAMES,
-+	TSTAMP_ALL_FRAMES,
-+};
-+
-+void gem_ptp_init(struct net_device *ndev);
-+void gem_ptp_remove(struct net_device *ndev);
-+int gem_ptp_txstamp(struct macb_queue *queue, struct sk_buff *skb, struct macb_dma_desc *des);
-+void gem_ptp_rxstamp(struct macb *bp, struct sk_buff *skb, struct macb_dma_desc *desc);
-+void macb_ptp_int(struct macb_queue *queue, u32 status);
-+static inline int gem_ptp_do_txstamp(struct macb_queue *queue, struct sk_buff *skb, struct macb_dma_desc *desc)
-+{
-+	if (queue->bp->tstamp_config.tx_type == TSTAMP_DISABLED)
-+		return -ENOTSUPP;
-+
-+	return gem_ptp_txstamp(queue, skb, desc);
-+}
-+
-+static inline void gem_ptp_do_rxstamp(struct macb *bp, struct sk_buff *skb, struct macb_dma_desc *desc)
-+{
-+	if (bp->tstamp_config.rx_filter == TSTAMP_DISABLED)
-+		return;
-+
-+	gem_ptp_rxstamp(bp, skb, desc);
-+}
-+int gem_get_hwtst(struct net_device *dev, struct ifreq *rq);
-+int gem_set_hwtst(struct net_device *dev, struct ifreq *ifr, int cmd);
-+#else
-+static inline void gem_ptp_init(struct net_device *ndev) { }
-+static inline void gem_ptp_remove(struct net_device *ndev) { }
-+
-+static inline int gem_ptp_do_txstamp(struct macb_queue *queue, struct sk_buff *skb, struct macb_dma_desc *desc)
-+{
-+	return 0;
-+}
-+
-+static inline void gem_ptp_do_rxstamp(struct macb *bp, struct sk_buff *skb, struct macb_dma_desc *desc) { }
-+#endif
-+
- static inline bool macb_is_gem(struct macb *bp)
- {
- 	return !!(bp->caps & MACB_CAPS_MACB_IS_GEM);
-diff --git a/drivers/net/ethernet/cadence/macb_ptp.c b/drivers/net/ethernet/cadence/macb_ptp.c
-new file mode 100755
-index 0000000..72a79c4
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-cp2120.txt b/Documentation/devicetree/bindings/i2c/i2c-cp2120.txt
+new file mode 100644
+index 000000000000..95e06e74f288
 --- /dev/null
-+++ b/drivers/net/ethernet/cadence/macb_ptp.c
-@@ -0,0 +1,724 @@
-+/**
-+ * 1588 PTP support for Cadence GEM device.
++++ b/Documentation/devicetree/bindings/i2c/i2c-cp2120.txt
+@@ -0,0 +1 @@
++Please see binding for i2c-sc18is600
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-sc18is600.txt b/Documentation/devicetree/bindings/i2c/i2c-sc18is600.txt
+new file mode 100644
+index 000000000000..d0d9e680a5d6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-sc18is600.txt
+@@ -0,0 +1,62 @@
++NXP SC18IS600 and Silabs CP2120 - SPI to I2C bus bridge
++
++NXP SC18IS600 is a SPI slave chip, which implements an I²C host,
++also known as SPI to I²C bus bridge. SC18IS601 is the same chip,
++but has an external clock input instead of using a builtin
++oscillator. CP2120 is a similar chip from Silabs, which implements
++the same interface as NXP's SC18IS600.
++
++Required properties:
++  - compatible: Should contain one of
++      * "nxp,sc18is600"
++      * "nxp,sc18is601"
++      * "silabs,cp2120"
++  - reg: address of the chip on SPI bus
++  - interrupts: Interrupt specifier. Refer to interrupt bindings.
++  - #address-cells: Should be 1.
++  - #size-cells: Should be 0.
++
++Required properties for sc18is601:
++  - clkin: Clock specifier for CLKIN pin
++
++Optional properties:
++  - clock-frequency:
++    Desired I2C bus frequency in Hz, otherwise defaults to 100 KHz
++  - reset-gpios
++    GPIO specifier for reset pin, which is active low.
++  - vdd-supply
++    Regulator specifier for VDD supply (3.3V).
++  - Child nodes conforming to i2c bus binding
++
++Example:
++
++&spi_controller {
++	sc18is600: i2c@0 {
++		compatible = "nxp,sc18is600";
++		spi-max-frequency = <700000>; /* 700KHz */
++		spi-cpol;
++		spi-cpha;
++		reg = <0>;
++
++		vdd-supply = <&regulator_v33>;
++
++		interrupt-parent = <&socgpio>;
++		interrupts = <25 0x2>;
++
++		reset-gpios = <&i2cgpio1 9 GPIO_ACTIVE_LOW>;
++
++		clock-frequency = <100000>; /* 100KHz */
++
++		#address-cells = <0x1>;
++		#size-cells = <0x0>;
++	};
++};
++
++&sc18is600 {
++	i2c_device@42 {
++		compatible = "some,i2c-device";
++		reg = <0x42>;
++	};
++
++	...
++};
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 8adc0f1d7ad0..3e6386ff8de3 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -210,6 +210,16 @@ config I2C_NFORCE2_S4985
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-nforce2-s4985.
+ 
++config I2C_SC18IS600
++	tristate "NXP SC18IS600"
++	depends on SPI && REGMAP
++	help
++	  If you say yes to this option, support will be included for the
++	  NXP SC18IS600 SPI to I2C-bus interface.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called i2c-sc18is600.
++
+ config I2C_SIS5595
+ 	tristate "SiS 5595"
+ 	depends on PCI
+diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+index 30b60855fbcd..29971aebd238 100644
+--- a/drivers/i2c/busses/Makefile
++++ b/drivers/i2c/busses/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_I2C_ISMT)		+= i2c-ismt.o
+ obj-$(CONFIG_I2C_NFORCE2)	+= i2c-nforce2.o
+ obj-$(CONFIG_I2C_NFORCE2_S4985)	+= i2c-nforce2-s4985.o
+ obj-$(CONFIG_I2C_PIIX4)		+= i2c-piix4.o
++obj-$(CONFIG_I2C_SC18IS600)	+= i2c-sc18is600.o
+ obj-$(CONFIG_I2C_SIS5595)	+= i2c-sis5595.o
+ obj-$(CONFIG_I2C_SIS630)	+= i2c-sis630.o
+ obj-$(CONFIG_I2C_SIS96X)	+= i2c-sis96x.o
+diff --git a/drivers/i2c/busses/i2c-sc18is600.c b/drivers/i2c/busses/i2c-sc18is600.c
+new file mode 100644
+index 000000000000..e4d4b3caf3a9
+--- /dev/null
++++ b/drivers/i2c/busses/i2c-sc18is600.c
+@@ -0,0 +1,572 @@
++/*
++ * NXP SC18IS600 SPI to I2C bus interface driver
 + *
-+ * Copyright (C) 2017 Cadence Design Systems - http://www.cadence.com
++ * Copyright (C) 2017 Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 + *
-+ * Authors: Rafal Ozieblo <rafalo@cadence.com>
-+ *          Bartosz Folta <bfolta@cadence.com>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2  of
-+ * the License as published by the Free Software Foundation.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 + * GNU General Public License for more details.
 + *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Datasheets:
++ *  - http://www.nxp.com/documents/data_sheet/SC18IS600.pdf
++ *  - https://www.silabs.com/documents/public/data-sheets/CP2120.pdf
 + */
-+#include <linux/kernel.h>
-+#include <linux/types.h>
++
 +#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/etherdevice.h>
-+#include <linux/platform_device.h>
-+#include <linux/time64.h>
-+#include <linux/ptp_classify.h>
-+#include <linux/if_ether.h>
-+#include <linux/if_vlan.h>
-+#include <linux/net_tstamp.h>
-+#include <linux/circ_buf.h>
-+#include <linux/spinlock.h>
++#include <linux/gpio/consumer.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <linux/spi/spi.h>
 +
-+#include "macb.h"
++#define SC18IS600_I2C_PM_TIMEOUT 1000 /* ms */
++#define SC18IS600_DEFAULT_FREQ 100000
 +
-+#define  GEM_PTP_TIMER_NAME "gem-ptp-timer"
++#define SC18IS600_CMD_WR	0x00 /* write */
++#define SC18IS600_CMD_RD	0x01 /* read */
++#define SC18IS600_CMD_WR_RD	0x02 /* read after write */
++#define SC18IS600_CMD_WR_WR	0x03 /* write after write */
++#define SC18IS600_CMD_RDBUF	0x06 /* read buffer */
++#define CP2120_CMD_WRMULTI	0x09 /* write to multiple slaves */
++#define SC18IS600_CMD_SPICON	0x18 /* spi endianess configuration */
++#define SC18IS600_CMD_REG_WR	0x20 /* write register */
++#define SC18IS600_CMD_REG_RD	0x21 /* read register */
++#define SC18IS600_CMD_PWRDWN	0x30 /* power down */
++#define CP2120_CMD_REVISION	0x40 /* read revision */
 +
-+static struct macb_dma_desc_ptp *macb_ptp_desc(struct macb *bp,
-+		struct macb_dma_desc *desc)
-+{
-+	if (bp->hw_dma_cap == HW_DMA_CAP_PTP)
-+		return (struct macb_dma_desc_ptp *)
-+				((u8 *)desc + sizeof(struct macb_dma_desc));
-+	if (bp->hw_dma_cap == HW_DMA_CAP_64B_PTP)
-+		return (struct macb_dma_desc_ptp *)
-+				((u8 *)desc + sizeof(struct macb_dma_desc)
-+				+ sizeof(struct macb_dma_desc_64));
-+	return NULL;
-+}
++#define SC18IS600_REG_IO_CONFIG		0x00
++#define SC18IS600_REG_IO_STATE		0x01
++#define SC18IS600_REG_I2C_CLOCK		0x02
++#define SC18IS600_REG_I2C_TIMEOUT	0x03
++#define SC18IS600_REG_I2C_STAT		0x04
++#define SC18IS600_REG_I2C_ADDR		0x05
++#define SC18IS600_REG_I2C_BUFFER	0x06 /* only cp2120 */
++#define SC18IS600_REG_IO_CONFIG2	0x07 /* only cp2120 */
++#define SC18IS600_REG_EDGEINT		0x08 /* only cp2120 */
++#define SC18IS600_REG_I2C_TIMEOUT2	0x09 /* only cp2120 */
 +
-+static int gem_tsu_get_time(struct macb *bp, struct timespec64 *ts)
-+{
-+	long first, second;
-+	u32 secl, sech;
-+	unsigned long flags;
++#define SC18IS600_STAT_OK		0xF0
++#define SC18IS600_STAT_NAK_ADDR		0xF1
++#define SC18IS600_STAT_NAK_DATA		0xF2
++#define SC18IS600_STAT_BUSY		0xF3
++#define SC18IS600_STAT_TIMEOUT		0xF8
++#define SC18IS600_STAT_SIZE		0xF9
++#define SC18IS600_STAT_TIMEOUT2		0xFA /* only cp2120 */
++#define SC18IS600_STAT_BLOCKED		0xFB /* only cp2120 */
 +
-+	if (!bp || !ts)
-+		return -EINVAL;
++#define CMD_BUFFER_SIZE 5
 +
-+	spin_lock_irqsave(&bp->tsu_clk_lock, flags);
-+	first = gem_readl(bp, TN);
-+	secl = gem_readl(bp, TSL);
-+	sech = gem_readl(bp, TSH);
-+	second = gem_readl(bp, TN);
-+
-+	/* test for nsec rollover */
-+	if (first > second) {
-+		/* if so, use later read & re-read seconds
-+		 * (assume all done within 1s)
-+		 */
-+		ts->tv_nsec = gem_readl(bp, TN);
-+		secl = gem_readl(bp, TSL);
-+		sech = gem_readl(bp, TSH);
-+	} else
-+		ts->tv_nsec = first;
-+
-+	ts->tv_sec = (((u64)sech << GEM_TSL_SIZE) | secl)
-+			& TSU_SEC_MAX_VAL;
-+
-+	spin_unlock_irqrestore(&bp->tsu_clk_lock, flags);
-+	return 0;
-+}
-+
-+static int gem_tsu_set_time(struct macb *bp, const struct timespec64 *ts)
-+{
-+	u32 ns, sech, secl;
-+	unsigned long flags;
-+
-+	if (!bp || !ts)
-+		return -EINVAL;
-+
-+	secl = (u32)ts->tv_sec;
-+	sech = (ts->tv_sec >> GEM_TSL_SIZE) & ((1 << GEM_TSH_SIZE) - 1);
-+	ns = ts->tv_nsec;
-+
-+	spin_lock_irqsave(&bp->tsu_clk_lock, flags);
-+
-+	/* TSH doesn't latch the time and no atomicity! */
-+	gem_writel(bp, TN, 0); /* clear to avoid overflow */
-+	gem_writel(bp, TSH, sech);
-+	/* write lower bits 2nd, for synchronized secs update */
-+	gem_writel(bp, TSL, secl);
-+	gem_writel(bp, TN, ns);
-+
-+	spin_unlock_irqrestore(&bp->tsu_clk_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int gem_tsu_incr_set(struct macb *bp, struct tsu_incr *incr_spec)
-+{
-+	unsigned long flags;
-+
-+	if (!bp || !incr_spec)
-+		return -EINVAL;
-+
-+	/* tsu_timer_incr register must be written after
-+	 * the tsu_timer_incr_sub_ns register and the write operation
-+	 * will cause the value written to the tsu_timer_incr_sub_ns register
-+	 * to take effect.
-+	 */
-+	spin_lock_irqsave(&bp->tsu_clk_lock, flags);
-+	gem_writel(bp, TISUBN, GEM_BF(SUBNSINCR, incr_spec->sub_ns));
-+	gem_writel(bp, TI, GEM_BF(NSINCR, incr_spec->ns));
-+	spin_unlock_irqrestore(&bp->tsu_clk_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int gem_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
-+{
-+	struct tsu_incr incr_spec;
-+	struct macb *bp = container_of(ptp, struct macb, ptp_clock_info);
-+	u64 adj;
-+	u32 word;
-+	bool neg_adj = false;
-+
-+	if (!ptp)
-+		return -EINVAL;
-+
-+	if (scaled_ppm < 0) {
-+		neg_adj = true;
-+		scaled_ppm = -scaled_ppm;
-+	}
-+
-+	/* Adjustment is relative to base frequency */
-+	incr_spec.sub_ns = bp->tsu_incr.sub_ns;
-+	incr_spec.ns = bp->tsu_incr.ns;
-+
-+	/* scaling: unused(8bit) | ns(8bit) | fractions(16bit) */
-+	word = ((u64)incr_spec.ns << GEM_SUBNSINCR_SIZE) + incr_spec.sub_ns;
-+	adj = (u64)scaled_ppm * word;
-+	/* Divide with rounding, equivalent to floating dividing:
-+	 * (temp / USEC_PER_SEC) + 0.5
-+	 */
-+	adj += (USEC_PER_SEC >> 1);
-+	adj >>= GEM_SUBNSINCR_SIZE; /* remove fractions */
-+	adj = div_u64(adj, USEC_PER_SEC);
-+	adj = neg_adj ? (word - adj) : (word + adj);
-+
-+	incr_spec.ns = (adj >> GEM_SUBNSINCR_SIZE)
-+			& ((1 << GEM_NSINCR_SIZE) - 1);
-+	incr_spec.sub_ns = adj & ((1 << GEM_SUBNSINCR_SIZE) - 1);
-+	gem_tsu_incr_set(bp, &incr_spec);
-+	return 0;
-+}
-+
-+static int gem_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
-+{
-+	struct timespec64 now, then = ns_to_timespec64(delta);
-+	struct macb *bp = container_of(ptp, struct macb, ptp_clock_info);
-+	u32 adj, sign = 0;
-+
-+	if (!ptp)
-+		return -EINVAL;
-+
-+	if (delta < 0) {
-+		sign = 1;
-+		delta = -delta;
-+	}
-+
-+	if (delta > TSU_NSEC_MAX_VAL) {
-+		gem_tsu_get_time(bp, &now);
-+		if (sign)
-+			now = timespec64_sub(now, then);
-+		else
-+			now = timespec64_add(now, then);
-+
-+		gem_tsu_set_time(bp, (const struct timespec64 *)&now);
-+	} else {
-+		adj = (sign << GEM_ADDSUB_OFFSET) | delta;
-+
-+		gem_writel(bp, TA, adj);
-+	}
-+
-+	return 0;
-+}
-+
-+static int gem_ptp_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
-+{
-+	struct macb *bp = container_of(ptp, struct macb, ptp_clock_info);
-+
-+	if (!ptp || !ts)
-+		return -EINVAL;
-+
-+	gem_tsu_get_time(bp, ts);
-+	return 0;
-+}
-+
-+static int gem_ptp_settime(struct ptp_clock_info *ptp,
-+		const struct timespec64 *ts)
-+{
-+	struct macb *bp = container_of(ptp, struct macb, ptp_clock_info);
-+
-+	if (!ptp || !ts)
-+		return -EINVAL;
-+
-+	gem_tsu_set_time(bp, ts);
-+	return 0;
-+}
-+
-+static int gem_ptp_enable(struct ptp_clock_info *ptp,
-+			  struct ptp_clock_request *rq, int on)
-+{
-+	struct macb *bp = container_of(ptp, struct macb, ptp_clock_info);
-+
-+	if (!ptp || !rq)
-+		return -EINVAL;
-+
-+	switch (rq->type) {
-+	case PTP_CLK_REQ_EXTTS:	/* Toggle TSU match interrupt */
-+		if (on)
-+			macb_writel(bp, IER, MACB_BIT(TCI));
-+		else
-+			macb_writel(bp, IDR, MACB_BIT(TCI));
-+		break;
-+	case PTP_CLK_REQ_PEROUT: /* Toggle Periodic output */
-+		return -EOPNOTSUPP;
-+		/* break; */
-+	case PTP_CLK_REQ_PPS:	/* Toggle TSU periodic (second) interrupt */
-+		if (on)
-+			macb_writel(bp, IER, MACB_BIT(SRI));
-+		else
-+			macb_writel(bp, IDR, MACB_BIT(SRI));
-+		break;
-+	default:
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static struct ptp_clock_info gem_ptp_caps_template = {
-+	.owner		= THIS_MODULE,
-+	.name		= GEM_PTP_TIMER_NAME,
-+	.max_adj	= 0,
-+	.n_alarm	= 1,
-+	.n_ext_ts	= 1,
-+	.n_per_out	= 0,
-+	.n_pins		= 0,
-+	.pps		= 1,
-+	.adjfine	= gem_ptp_adjfine,
-+	.adjtime	= gem_ptp_adjtime,
-+	.gettime64	= gem_ptp_gettime,
-+	.settime64	= gem_ptp_settime,
-+	.enable		= gem_ptp_enable,
++enum chiptype {
++	SPI2I2C_SC18IS600,
++	SPI2I2C_SC18IS601,
++	SPI2I2C_CP2120,
 +};
 +
-+static void gem_ptp_init_timer(struct macb *bp)
++struct chipdesc {
++	u8  type;
++	u32 max_spi_speed;
++	u32 buffer_size;
++	u32 clock_base;
++	u32 timeout_base;
++	const struct regmap_config *regmap_cfg;
++};
++
++static bool sc18is600_writeable_reg(struct device *dev, unsigned int reg)
 +{
-+	u32 rem = 0;
-+
-+	bp->tsu_incr.ns = div_u64_rem(NSEC_PER_SEC, bp->tsu_rate, &rem);
-+	if (rem) {
-+		u64 adj = rem;
-+
-+		adj <<= GEM_SUBNSINCR_SIZE;
-+		bp->tsu_incr.sub_ns = div_u64(adj, bp->tsu_rate);
-+	} else {
-+		bp->tsu_incr.sub_ns = 0;
++	switch (reg) {
++	case SC18IS600_REG_I2C_STAT:
++	case SC18IS600_REG_I2C_BUFFER:
++		return false;
++	default:
++		return true;
 +	}
 +}
 +
-+static void gem_ptp_init_tsu(struct macb *bp)
++static const struct regmap_config sc18is600_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.max_register = 0x05,
++	.writeable_reg = sc18is600_writeable_reg,
++};
++
++static const struct regmap_config cp2120_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.max_register = 0x09,
++	.writeable_reg = sc18is600_writeable_reg,
++};
++
++/*
++ * Note: The sc18is600's datasheet promises 1.2MHz SPI support, but my chip did
++ * not behave correctly at that speed. It received the bytes correctly, but
++ * just sent them back instead of interpreting them correctly. At 800 KHz I
++ * still got a few errors (about 1%) and at 700 KHz everything works smoothly.
++ */
++static const struct chipdesc chip_sc18is600 = {
++	.type = SPI2I2C_SC18IS600,
++	.max_spi_speed = 700000,
++	.buffer_size = 96,
++	.clock_base = 1843200,
++	.buffer_size = 96,
++	.clock_base = 1843200,
++	.timeout_base = 1125, /* 112.5 Hz */
++	.regmap_cfg = &sc18is600_regmap_config,
++};
++
++static const struct chipdesc chip_sc18is601 = {
++	.type = SPI2I2C_SC18IS601,
++	.max_spi_speed = 3000000,
++	.buffer_size = 96,
++	.clock_base = 0,
++	.timeout_base = 1125, /* 112.5 Hz */
++	.regmap_cfg = &sc18is600_regmap_config,
++};
++
++static const struct chipdesc chip_cp2120 = {
++	.type = SPI2I2C_CP2120,
++	.max_spi_speed = 1000000,
++	.buffer_size = 255,
++	.clock_base = 2000000,
++	.timeout_base = 1280, /* 128 Hz */
++	.regmap_cfg = &cp2120_regmap_config,
++};
++
++struct sc18is600dev {
++	struct i2c_adapter adapter;
++	struct completion completion;
++	struct spi_device *spi;
++	struct regmap *regmap;
++	const struct chipdesc *chip;
++	struct gpio_desc *reset;
++	struct regulator *vdd;
++	struct clk *clk;
++	u32 clock_base;
++	u32 i2c_clock_frequency;
++	int state;
++};
++
++static irqreturn_t sc18is600_irq_handler(int this_irq, void *data)
 +{
-+	struct timespec64 ts;
++	struct sc18is600dev *dev = data;
++	int err;
 +
-+	/* 1. get current system time */
-+	ts = ns_to_timespec64(ktime_to_ns(ktime_get_real()));
++	err = regmap_read(dev->regmap, SC18IS600_REG_I2C_STAT, &dev->state);
++	if (err)
++		return IRQ_NONE;
 +
-+	/* 2. set ptp timer */
-+	gem_tsu_set_time(bp, &ts);
++	dev_vdbg(&dev->spi->dev, "irq received, stat=%08x", dev->state);
 +
-+	/* 3. set PTP timer increment value to BASE_INCREMENT */
-+	gem_tsu_incr_set(bp, &bp->tsu_incr);
++	/* no irq is generated for busy state, so ignore this irq */
++	if (dev->state == SC18IS600_STAT_BUSY)
++		return IRQ_NONE;
 +
-+	gem_writel(bp, TA, 0);
++	complete(&dev->completion);
++	return IRQ_HANDLED;
 +}
 +
-+static void gem_ptp_clear_timer(struct macb *bp)
++static int reg_read(void *context, unsigned int reg, unsigned int *val)
 +{
-+	bp->tsu_incr.ns = 0;
-+	bp->tsu_incr.sub_ns = 0;
++	struct device *dev = context;
++	struct spi_device *spi = to_spi_device(dev);
++	u8 txbuffer[2] = { SC18IS600_CMD_REG_RD, reg & 0xff };
++	u8 rxbuffer[1];
++	int err;
 +
-+	gem_writel(bp, TISUBN, GEM_BF(SUBNSINCR, 0));
-+	gem_writel(bp, TI, GEM_BF(NSINCR, 0));
-+	gem_writel(bp, TA, 0);
-+}
++	err = spi_write_then_read(spi, txbuffer, sizeof(txbuffer),
++				       rxbuffer, sizeof(rxbuffer));
++	if (err)
++		return err;
 +
-+static int gem_hw_timestamp(struct macb *bp,
-+		u32 dma_desc_ts_1, u32 dma_desc_ts_2, struct timespec64 *ts)
-+{
-+	struct timespec64 tsu;
-+
-+	ts->tv_sec = (GEM_BFEXT(DMA_SECH, dma_desc_ts_2) << GEM_DMA_SECL_SIZE) |
-+			GEM_BFEXT(DMA_SECL, dma_desc_ts_1);
-+	ts->tv_nsec = GEM_BFEXT(DMA_NSEC, dma_desc_ts_1);
-+
-+	/* TSU overlaping workaround
-+	 * The timestamp only contains lower few bits of seconds,
-+	 * so add value from 1588 timer
-+	 */
-+	gem_tsu_get_time(bp, &tsu);
-+
-+	/* If the top bit is set in the timestamp,
-+	 * but not in 1588 timer, it has rolled over,
-+	 * so subtract max size
-+	 */
-+	if ((ts->tv_sec & (GEM_DMA_SEC_TOP >> 1)) &&
-+		!(tsu.tv_sec & (GEM_DMA_SEC_TOP >> 1)))
-+		ts->tv_sec -= GEM_DMA_SEC_TOP;
-+
-+	ts->tv_sec += ((~GEM_DMA_SEC_MASK) & (tsu.tv_sec));
++	*val = rxbuffer[0];
 +
 +	return 0;
 +}
 +
-+void gem_ptp_rxstamp(struct macb *bp, struct sk_buff *skb,
-+		struct macb_dma_desc *desc)
++static int reg_write(void *context, unsigned int reg, unsigned int val)
 +{
-+	struct timespec64 ts;
-+	struct skb_shared_hwtstamps *shhwtstamps = skb_hwtstamps(skb);
-+	struct macb_dma_desc_ptp *desc_ptp;
++	struct device *dev = context;
++	struct spi_device *spi = to_spi_device(dev);
++	u8 txbuffer[3] = { SC18IS600_CMD_REG_WR, reg & 0xff, val & 0xff };
 +
-+	if (GEM_BFEXT(DMA_RXVALID, desc->addr)) {
-+		desc_ptp = macb_ptp_desc(bp, desc);
-+		gem_hw_timestamp(bp, desc_ptp->ts_1, desc_ptp->ts_2, &ts);
-+		memset(shhwtstamps, 0, sizeof(struct skb_shared_hwtstamps));
-+		shhwtstamps->hwtstamp = ktime_set(ts.tv_sec, ts.tv_nsec);
++	return spi_write(spi, txbuffer, sizeof(txbuffer));
++}
++
++static struct regmap_bus regmap_sc18is600_bus = {
++	.reg_write = reg_write,
++	.reg_read = reg_read,
++	.reg_format_endian_default = REGMAP_ENDIAN_BIG,
++	.val_format_endian_default = REGMAP_ENDIAN_BIG,
++};
++
++static void sc18is600_setup_clock_frequency(struct sc18is600dev *dev)
++{
++	int reg = DIV_ROUND_UP(dev->clock_base, dev->i2c_clock_frequency);
++
++	if (reg < 5)
++		reg = 5;
++	if (reg > 255)
++		reg = 255;
++
++	dev_dbg(&dev->spi->dev, "i2c clock frequency: %08x", reg);
++	regmap_write(dev->regmap, SC18IS600_REG_I2C_CLOCK, reg);
++}
++
++static void sc18is600_setup_timeout(struct sc18is600dev *dev,
++				    bool enable, int timeout_ms)
++{
++	int timeout = DIV_ROUND_UP(timeout_ms * dev->chip->timeout_base, 10000);
++	u8 reg;
++
++	if (timeout <= 0)
++		timeout = 1;
++	if (timeout > 255)
++		timeout = 255;
++
++	reg = (timeout & 0x7F) << 1;
++	reg |= (!!enable);
++
++	dev_dbg(&dev->spi->dev, "i2c timeout: %08x", reg);
++	regmap_write(dev->regmap, SC18IS600_REG_I2C_TIMEOUT, reg);
++}
++
++static void sc18is600_reset(struct sc18is600dev *dev)
++{
++	if (dev->reset) {
++		gpiod_set_value_cansleep(dev->reset, 1);
++		usleep_range(50, 100);
++		gpiod_set_value_cansleep(dev->reset, 0);
++		usleep_range(50, 100);
 +	}
++
++	sc18is600_setup_clock_frequency(dev);
++	sc18is600_setup_timeout(dev, true, 500);
 +}
 +
-+static void gem_tstamp_tx(struct macb *bp, struct sk_buff *skb,
-+		struct macb_dma_desc_ptp *desc_ptp)
++static int sc18is600_read(struct sc18is600dev *dev, struct i2c_msg *msg)
 +{
-+	struct skb_shared_hwtstamps shhwtstamps;
-+	struct timespec64 ts;
++	u8 header[] = { SC18IS600_CMD_RD, msg->len, msg->addr << 1 };
++	struct spi_transfer xfer[1] = { 0 };
 +
-+	gem_hw_timestamp(bp, desc_ptp->ts_1, desc_ptp->ts_2, &ts);
-+	memset(&shhwtstamps, 0, sizeof(shhwtstamps));
-+	shhwtstamps.hwtstamp = ktime_set(ts.tv_sec, ts.tv_nsec);
-+	skb_tstamp_tx(skb, &shhwtstamps);
++	xfer[0].tx_buf = header;
++	xfer[0].len = sizeof(header);
++
++	dev_dbg(&dev->spi->dev, "r(addr=%x, len=%d)", msg->addr, msg->len);
++	return spi_sync_transfer(dev->spi, xfer, 1);
 +}
 +
-+int gem_ptp_txstamp(struct macb_queue *queue, struct sk_buff *skb,
-+		struct macb_dma_desc *desc)
++static int sc18is600_write(struct sc18is600dev *dev, struct i2c_msg *msg)
 +{
-+	struct gem_tx_ts *tx_timestamp;
-+	struct macb_dma_desc_ptp *desc_ptp;
-+	unsigned long head = queue->tx_ts_head;
-+	unsigned long tail = READ_ONCE(queue->tx_ts_tail);
++	u8 header[] = { SC18IS600_CMD_WR, msg->len, msg->addr << 1 };
++	struct spi_transfer xfer[2] = { 0 };
 +
-+	if (!GEM_BFEXT(DMA_TXVALID, desc->ctrl))
++	xfer[0].tx_buf = header;
++	xfer[0].len = sizeof(header);
++
++	xfer[1].tx_buf = msg->buf;
++	xfer[1].len = msg->len;
++
++	dev_dbg(&dev->spi->dev, "w(addr=%x, len=%d)", msg->addr, msg->len);
++	return spi_sync_transfer(dev->spi, xfer, 2);
++}
++
++static int sc18is600_read_after_write(struct sc18is600dev *dev,
++				      struct i2c_msg *msg1,
++				      struct i2c_msg *msg2)
++{
++	u8 header1[] =
++		{ SC18IS600_CMD_WR_RD, msg1->len, msg2->len, msg1->addr << 1 };
++	u8 header2[] = { msg2->addr << 1 };
++	struct spi_transfer xfer[3] = { 0 };
++
++	xfer[0].tx_buf = header1;
++	xfer[0].len = sizeof(header1);
++
++	xfer[1].tx_buf = msg1->buf;
++	xfer[1].len = msg1->len;
++
++	xfer[2].tx_buf = header2;
++	xfer[2].len = sizeof(header2);
++
++	dev_dbg(&dev->spi->dev, "w(addr=%x, len=%d) + r(addr=%x, len=%d)",
++		msg1->addr, msg1->len, msg2->addr, msg2->len);
++	return spi_sync_transfer(dev->spi, xfer, 3);
++}
++
++static int sc18is600_write_after_write(struct sc18is600dev *dev,
++				       struct i2c_msg *msg1,
++				       struct i2c_msg *msg2)
++{
++	u8 header1[] =
++		{ SC18IS600_CMD_WR_WR, msg1->len, msg2->len, msg1->addr << 1 };
++	u8 header2[] = { msg2->addr << 1 };
++	struct spi_transfer xfer[4] = { 0 };
++
++	xfer[0].tx_buf = header1;
++	xfer[0].len = sizeof(header1);
++
++	xfer[1].tx_buf = msg1->buf;
++	xfer[1].len = msg1->len;
++
++	xfer[2].tx_buf = header2;
++	xfer[2].len = sizeof(header2);
++
++	xfer[3].tx_buf = msg2->buf;
++	xfer[3].len = msg2->len;
++
++	dev_dbg(&dev->spi->dev, "w(addr=%x, len=%d) + w(addr=%x, len=%d)",
++		msg1->addr, msg1->len, msg2->addr, msg2->len);
++	return spi_sync_transfer(dev->spi, xfer, 4);
++}
++
++static int sc18is600_read_buffer(struct sc18is600dev *dev, struct i2c_msg *msg)
++{
++	static const u8 read_buffer_cmd = SC18IS600_REG_I2C_BUFFER;
++
++	return spi_write_then_read(dev->spi, &read_buffer_cmd, 1,
++				   msg->buf, msg->len);
++}
++
++static int sc18is600_xfer(struct i2c_adapter *adapter,
++			  struct i2c_msg *msgs, int num)
++{
++	struct sc18is600dev *dev = adapter->algo_data;
++	int read_operations = 0;
++	int i, err;
++
++	for (i = 0; i < num; i++) {
++		if (msgs[i].len > dev->chip->buffer_size)
++			return -EOPNOTSUPP;
++
++		/* chip only support standard read & write */
++		if (msgs[i].flags & ~I2C_M_RD)
++			return -EOPNOTSUPP;
++
++		if (msgs[i].flags & I2C_M_RD)
++			read_operations++;
++	}
++
++	reinit_completion(&dev->completion);
++
++	if (num == 1 && read_operations == 1)
++		err = sc18is600_read(dev, &msgs[0]);
++	else if (num == 1)
++		err = sc18is600_write(dev, &msgs[0]);
++	else if (num == 2 && read_operations == 1)
++		err = sc18is600_read_after_write(dev, &msgs[0], &msgs[1]);
++	else if (num == 2)
++		err = sc18is600_write_after_write(dev, &msgs[0], &msgs[1]);
++	else
++		return -EOPNOTSUPP;
++
++	if (err) {
++		dev_err(&dev->spi->dev, "spi transfer failed: %d", err);
++		return err;
++	}
++
++	err = wait_for_completion_timeout(&dev->completion, adapter->timeout);
++	if (!err) {
++		dev_warn(&dev->spi->dev,
++			 "timeout waiting for irq, poll status register");
++		dev->state = SC18IS600_STAT_BUSY;
++		regmap_read(dev->regmap, SC18IS600_REG_I2C_STAT, &dev->state);
++	}
++
++	switch (dev->state) {
++	case SC18IS600_STAT_OK:
++		break;
++	case SC18IS600_STAT_NAK_ADDR:
++		return -EIO;
++	case SC18IS600_STAT_NAK_DATA:
++		return -EREMOTEIO;
++	case SC18IS600_STAT_SIZE:
 +		return -EINVAL;
++	case SC18IS600_STAT_TIMEOUT:
++		return -ETIMEDOUT;
++	case SC18IS600_STAT_TIMEOUT2:
++		return -ETIMEDOUT;
++	case SC18IS600_STAT_BLOCKED:
++		return -ETIMEDOUT;
++	default:
++	case SC18IS600_STAT_BUSY:
++		dev_err(&dev->spi->dev, "device hangup detected, reset!");
++		sc18is600_reset(dev);
++		return -EAGAIN;
++	}
 +
-+	if (CIRC_SPACE(head, tail, PTP_TS_BUFFER_SIZE) == 0)
++	if (!read_operations)
++		return 0;
++
++	err = sc18is600_read_buffer(dev, &msgs[num-1]);
++	if (err)
++		return err;
++
++	return num;
++}
++
++static u32 sc18is600_func(struct i2c_adapter *adap)
++{
++	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
++}
++
++static const struct i2c_algorithm sc18is600_algorithm = {
++	.master_xfer	= sc18is600_xfer,
++	.functionality	= sc18is600_func,
++};
++
++#ifdef CONFIG_OF
++static const struct of_device_id sc18is600_of_match[] = {
++	{ .compatible = "nxp,sc18is600", .data = &chip_sc18is600 },
++	{ .compatible = "nxp,sc18is601", .data = &chip_sc18is601 },
++	{ .compatible = "silabs,cp2120", .data = &chip_cp2120 },
++	{},
++};
++MODULE_DEVICE_TABLE(of, sc18is600_of_match);
++#endif
++
++static int sc18is600_probe(struct spi_device *spi)
++{
++	const struct of_device_id *of_id;
++	struct sc18is600dev *dev;
++	int err;
++
++	of_id = of_match_device(sc18is600_of_match, &spi->dev);
++	if (!of_id)
++		return -ENODEV;
++
++	dev = devm_kzalloc(&spi->dev, sizeof(*dev), GFP_KERNEL);
++	if (dev == NULL)
 +		return -ENOMEM;
++	spi_set_drvdata(spi, dev);
 +
-+	desc_ptp = macb_ptp_desc(queue->bp, desc);
-+	tx_timestamp = &queue->tx_timestamps[head];
-+	tx_timestamp->skb = skb;
-+	tx_timestamp->desc_ptp.ts_1 = desc_ptp->ts_1;
-+	tx_timestamp->desc_ptp.ts_2 = desc_ptp->ts_2;
-+	/* move head */
-+	smp_store_release(&queue->tx_ts_head,
-+			(head + 1) & (PTP_TS_BUFFER_SIZE - 1));
++	init_completion(&dev->completion);
++
++	dev->spi = spi;
++	dev->adapter.owner = THIS_MODULE;
++	dev->adapter.class = I2C_CLASS_DEPRECATED;
++	dev->adapter.algo = &sc18is600_algorithm;
++	dev->adapter.algo_data = dev;
++	dev->adapter.dev.parent = &spi->dev;
++	dev->chip = of_id->data;
++
++	snprintf(dev->adapter.name, sizeof(dev->adapter.name),
++		 "SC18IS600 at SPI %02d device %02d",
++		 spi->master->bus_num, spi->chip_select);
++
++	spi->bits_per_word = 8;
++	spi->mode = SPI_MODE_3;
++	spi->max_speed_hz = dev->chip->max_spi_speed;
++
++	err = spi_setup(spi);
++	if (err)
++		return err;
++
++	dev->reset = devm_gpiod_get_optional(&spi->dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(dev->reset)) {
++		err = PTR_ERR(dev->reset);
++		dev_err(&spi->dev, "Failed to reset gpio, err: %d\n", err);
++		return err;
++	}
++
++	err = devm_request_threaded_irq(&spi->dev, spi->irq, NULL,
++					sc18is600_irq_handler,
++					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++					"sc18is600", dev);
++	if (err) {
++		dev_err(&spi->dev, "Failed to request irq, err: %d\n", err);
++		return err;
++	}
++
++	dev->regmap = devm_regmap_init(&dev->spi->dev,
++			       &regmap_sc18is600_bus, &dev->spi->dev,
++			       dev->chip->regmap_cfg);
++	if (IS_ERR(dev->regmap)) {
++		err = PTR_ERR(dev->regmap);
++		dev_err(&spi->dev, "Failed to init regmap, err: %d\n", err);
++		return err;
++	}
++
++	err = device_property_read_u32(&spi->dev, "clock-frequency",
++				       &dev->i2c_clock_frequency);
++	if (err) {
++		dev->i2c_clock_frequency = SC18IS600_DEFAULT_FREQ;
++		dev_dbg(&spi->dev, "using default frequency %u\n",
++			dev->i2c_clock_frequency);
++	}
++
++	dev->vdd = devm_regulator_get(&spi->dev, "vdd");
++	if (IS_ERR(dev->vdd)) {
++		err = PTR_ERR(dev->vdd);
++		dev_err(&spi->dev, "could not acquire vdd: %d\n", err);
++		return err;
++	}
++
++	if (!dev->chip->clock_base) {
++		dev->clk = devm_clk_get(&spi->dev, "clkin");
++		if (IS_ERR(dev->clk)) {
++			err = PTR_ERR(dev->clk);
++			dev_err(&spi->dev, "could not acquire vdd: %d\n", err);
++			return err;
++		}
++
++		clk_prepare_enable(dev->clk);
++
++		dev->clock_base = clk_get_rate(dev->clk) / 4;
++	} else {
++		dev->clock_base = dev->chip->clock_base;
++	}
++
++	err = regulator_enable(dev->vdd);
++	if (err) {
++		dev_err(&spi->dev, "could not enable vdd: %d\n", err);
++		return err;
++	}
++
++	sc18is600_reset(dev);
++
++	err = i2c_add_adapter(&dev->adapter);
++	if (err)
++		goto out_disable_regulator;
++
 +	return 0;
++
++out_disable_regulator:
++	regulator_disable(dev->vdd);
++	return err;
 +}
 +
-+static void gem_tx_timestamp_flush(struct work_struct *work)
++static int sc18is600_remove(struct spi_device *spi)
 +{
-+	struct macb_queue *queue =
-+			container_of(work, struct macb_queue, tx_ts_task);
-+	struct gem_tx_ts *tx_ts;
-+	unsigned long head, tail;
++	struct sc18is600dev *dev = spi_get_drvdata(spi);
 +
-+	/* take current head */
-+	head = smp_load_acquire(&queue->tx_ts_head);
-+	tail = queue->tx_ts_tail;
++	i2c_del_adapter(&dev->adapter);
 +
-+	while (CIRC_CNT(head, tail, PTP_TS_BUFFER_SIZE)) {
-+		tx_ts = &queue->tx_timestamps[tail];
-+		gem_tstamp_tx(queue->bp, tx_ts->skb, &tx_ts->desc_ptp);
-+		/* cleanup */
-+		dev_kfree_skb_any(tx_ts->skb);
-+		/* remove old tail */
-+		smp_store_release(&queue->tx_ts_tail,
-+				(tail + 1) & (PTP_TS_BUFFER_SIZE - 1));
-+		tail = queue->tx_ts_tail;
-+	}
-+}
-+
-+void gem_ptp_init(struct net_device *dev)
-+{
-+	struct macb *bp = netdev_priv(dev);
-+	unsigned int q;
-+	struct macb_queue *queue;
-+
-+	bp->ptp_clock_info = gem_ptp_caps_template;
-+
-+	/* nominal frequency and maximum adjustment in ppb */
-+	bp->tsu_rate = bp->ptp_info->get_tsu_rate(bp);
-+	bp->ptp_clock_info.max_adj = bp->ptp_info->get_ptp_max_adj();
-+	gem_ptp_init_timer(bp);
-+	bp->ptp_clock = ptp_clock_register(&bp->ptp_clock_info, &dev->dev);
-+	if (IS_ERR(&bp->ptp_clock)) {
-+		bp->ptp_clock = NULL;
-+		pr_err("ptp clock register failed\n");
-+		return;
-+	}
-+
-+	spin_lock_init(&bp->tsu_clk_lock);
-+	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
-+		queue->tx_ts_head = 0;
-+		queue->tx_ts_tail = 0;
-+		INIT_WORK(&queue->tx_ts_task, gem_tx_timestamp_flush);
-+		queue_writel(queue, IER, MACB_PTP_INT_MASK);
-+	}
-+
-+	gem_ptp_init_tsu(bp);
-+
-+	dev_info(&bp->pdev->dev, "%s ptp clock registered.\n",
-+		 GEM_PTP_TIMER_NAME);
-+}
-+
-+void gem_ptp_remove(struct net_device *ndev)
-+{
-+	struct macb *bp = netdev_priv(ndev);
-+
-+	if (bp->ptp_clock)
-+		ptp_clock_unregister(bp->ptp_clock);
-+
-+	gem_ptp_clear_timer(bp);
-+
-+	dev_info(&bp->pdev->dev, "%s ptp clock unregistered.\n",
-+		 GEM_PTP_TIMER_NAME);
-+}
-+
-+static int gem_ptp_set_ts_mode(struct macb *bp,
-+			     enum macb_bd_control tx_bd_control,
-+			     enum macb_bd_control rx_bd_control)
-+{
-+	if (!bp)
-+		return -EINVAL;
-+
-+	gem_writel(bp, TXBDCTRL, GEM_BF(TXTSMODE, tx_bd_control));
-+	gem_writel(bp, RXBDCTRL, GEM_BF(RXTSMODE, rx_bd_control));
-+
-+	return 0;
-+}
-+
-+int gem_get_hwtst(struct net_device *dev, struct ifreq *rq)
-+{
-+	struct macb *bp = netdev_priv(dev);
-+	struct hwtstamp_config *tstamp_config = &bp->tstamp_config;
-+
-+	if (!bp->ptp_hw_support)
-+		return -EFAULT;
-+
-+	if (copy_to_user(rq->ifr_data, tstamp_config, sizeof(*tstamp_config)))
-+		return -EFAULT;
-+	else
-+		return 0;
-+}
-+
-+static int gem_ptp_set_one_step_sync(struct macb *bp, u8 enable)
-+{
-+	u32 reg_val;
-+
-+	if (!bp || enable > 1)
-+		return -EINVAL;
-+
-+	reg_val = macb_readl(bp, NCR);
-+
-+	if (enable)
-+		macb_writel(bp, NCR, reg_val | MACB_BIT(OSSMODE));
-+	else
-+		macb_writel(bp, NCR, reg_val & ~MACB_BIT(OSSMODE));
++	regulator_disable(dev->vdd);
 +
 +	return 0;
 +}
 +
-+int gem_set_hwtst(struct net_device *dev, struct ifreq *ifr, int cmd)
-+{
-+	struct macb *bp = netdev_priv(dev);
-+	struct hwtstamp_config *tstamp_config = &bp->tstamp_config;
-+	enum macb_bd_control tx_bd_control = TSTAMP_DISABLED;
-+	enum macb_bd_control rx_bd_control = TSTAMP_DISABLED;
-+	u32 regval;
++static struct spi_driver sc18is600_driver = {
++	.probe		= sc18is600_probe,
++	.remove		= sc18is600_remove,
++	.driver		= {
++		.name	= "i2c-sc18is600",
++		.of_match_table = of_match_ptr(sc18is600_of_match),
++	},
++};
++module_spi_driver(sc18is600_driver);
 +
-+	if (!bp->ptp_hw_support)
-+		return -EFAULT;
-+
-+	if (copy_from_user(tstamp_config, ifr->ifr_data,
-+			sizeof(*tstamp_config)))
-+		return -EFAULT;
-+
-+	/* reserved for future extensions */
-+	if (tstamp_config->flags)
-+		return -EINVAL;
-+
-+	switch (tstamp_config->tx_type) {
-+	case HWTSTAMP_TX_OFF:
-+		break;
-+	case HWTSTAMP_TX_ONESTEP_SYNC:
-+		if (gem_ptp_set_one_step_sync(bp, 1) != 0)
-+			return -ERANGE;
-+	case HWTSTAMP_TX_ON:
-+		tx_bd_control = TSTAMP_ALL_FRAMES;
-+		break;
-+	default:
-+		return -ERANGE;
-+	}
-+
-+	switch (tstamp_config->rx_filter) {
-+	case HWTSTAMP_FILTER_NONE:
-+		break;
-+	case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
-+		break;
-+	case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
-+		break;
-+	case HWTSTAMP_FILTER_PTP_V2_EVENT:
-+	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
-+	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
-+	case HWTSTAMP_FILTER_PTP_V2_SYNC:
-+	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
-+	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
-+	case HWTSTAMP_FILTER_PTP_V2_DELAY_REQ:
-+	case HWTSTAMP_FILTER_PTP_V2_L2_DELAY_REQ:
-+	case HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ:
-+		rx_bd_control =  TSTAMP_ALL_PTP_FRAMES;
-+		tstamp_config->rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
-+		regval = macb_readl(bp, NCR);
-+		macb_writel(bp, NCR, (regval | MACB_BIT(SRTSM)));
-+		break;
-+	case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
-+	case HWTSTAMP_FILTER_ALL:
-+		rx_bd_control = TSTAMP_ALL_FRAMES;
-+		tstamp_config->rx_filter = HWTSTAMP_FILTER_ALL;
-+		break;
-+	default:
-+		tstamp_config->rx_filter = HWTSTAMP_FILTER_NONE;
-+		return -ERANGE;
-+	}
-+
-+	if (gem_ptp_set_ts_mode(bp, tx_bd_control, rx_bd_control) != 0)
-+		return -ERANGE;
-+
-+	if (copy_to_user(ifr->ifr_data, tstamp_config, sizeof(*tstamp_config)))
-+		return -EFAULT;
-+	else
-+		return 0;
-+}
-+
-+static int gem_ptp_time_peer_frame_tx_get(struct macb *bp,
-+		struct timespec64 *ts)
-+{
-+	if (!bp || !ts)
-+		return -EINVAL;
-+
-+	ts->tv_sec = (((u64)gem_readl(bp, PEFTSH) << 32) |
-+		gem_readl(bp, PEFTSL)) & TSU_SEC_MAX_VAL;
-+	ts->tv_nsec = gem_readl(bp, PEFTN);
-+
-+	return 0;
-+}
-+
-+static int gem_ptp_time_peer_frame_rx_get(struct macb *bp,
-+		struct timespec64 *ts)
-+{
-+	if (!bp || !ts)
-+		return -EINVAL;
-+
-+	ts->tv_sec = (((u64)gem_readl(bp, PEFRSH) << 32) |
-+		gem_readl(bp, PEFRSL)) & TSU_SEC_MAX_VAL;
-+	ts->tv_nsec = gem_readl(bp, PEFRN);
-+
-+	return 0;
-+}
-+
-+static int gem_ptp_time_frame_tx_get(struct macb *bp, struct timespec64 *ts)
-+{
-+	if (!bp || !ts)
-+		return -EINVAL;
-+
-+	ts->tv_sec = (((u64)gem_readl(bp, EFTSH) << 32) |
-+		gem_readl(bp, EFTSL)) & TSU_SEC_MAX_VAL;
-+	ts->tv_nsec = gem_readl(bp, EFTN);
-+
-+	return 0;
-+}
-+
-+static int gem_ptp_time_frame_rx_get(struct macb *bp, struct timespec64 *ts)
-+{
-+	if (!bp || !ts)
-+		return -EINVAL;
-+
-+	ts->tv_sec = (((u64)gem_readl(bp, EFRSH) << 32) |
-+		      gem_readl(bp, EFRSL)) & TSU_SEC_MAX_VAL;
-+	ts->tv_nsec = gem_readl(bp, EFRN);
-+
-+	return 0;
-+}
-+
-+static int gem_ptp_event(struct macb *bp, struct timespec64 *ts)
-+{
-+	struct ptp_clock_event event;
-+
-+	event.type = PTP_CLOCK_EXTTS;
-+	event.index = 0;
-+	event.timestamp = ts->tv_sec * NSEC_PER_SEC + ts->tv_nsec;
-+
-+	ptp_clock_event(bp->ptp_clock, &event);
-+
-+	return 0;
-+}
-+
-+void macb_ptp_int(struct macb_queue *queue, u32 status)
-+{
-+	struct macb *bp = queue->bp;
-+	struct timespec64 ts;
-+
-+	if (status & MACB_BIT(DRQFR)) {
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, MACB_BIT(DRQFR));
-+		if (gem_ptp_time_frame_rx_get(bp, &ts) != 0) {
-+			ts.tv_sec = 0;
-+			ts.tv_nsec = 0;
-+		}
-+		gem_ptp_event(bp, &ts);
-+	}
-+
-+	if (status & MACB_BIT(SFR)) {
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, MACB_BIT(SFR));
-+		if (gem_ptp_time_frame_rx_get(bp, &ts) != 0) {
-+			ts.tv_sec = 0;
-+			ts.tv_nsec = 0;
-+		}
-+		gem_ptp_event(bp, &ts);
-+	}
-+
-+	if (status & MACB_BIT(DRQFT)) {
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, MACB_BIT(DRQFT));
-+		if (gem_ptp_time_frame_tx_get(bp, &ts) != 0) {
-+			ts.tv_sec = 0;
-+			ts.tv_nsec = 0;
-+		}
-+		gem_ptp_event(bp, &ts);
-+	}
-+
-+	if (status & MACB_BIT(SFT)) {
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, MACB_BIT(SFT));
-+		if (gem_ptp_time_frame_tx_get(bp, &ts) != 0) {
-+			ts.tv_sec = 0;
-+			ts.tv_nsec = 0;
-+		}
-+		gem_ptp_event(bp, &ts);
-+	}
-+
-+	if (status & MACB_BIT(PDRQFR)) {
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, MACB_BIT(PDRQFR));
-+		if (gem_ptp_time_peer_frame_rx_get(bp, &ts) != 0) {
-+			ts.tv_sec = 0;
-+			ts.tv_nsec = 0;
-+		}
-+		gem_ptp_event(bp, &ts);
-+	}
-+
-+	if (status & MACB_BIT(PDRSFR)) {
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, MACB_BIT(PDRSFR));
-+		if (gem_ptp_time_peer_frame_rx_get(bp, &ts) != 0) {
-+			ts.tv_sec = 0;
-+			ts.tv_nsec = 0;
-+		}
-+		gem_ptp_event(bp, &ts);
-+	}
-+
-+	if (status & MACB_BIT(PDRQFT)) {
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR,
-+					MACB_BIT(PDRQFT));
-+		if (gem_ptp_time_peer_frame_tx_get(bp, &ts) != 0) {
-+			ts.tv_sec = 0;
-+			ts.tv_nsec = 0;
-+		}
-+		gem_ptp_event(bp, &ts);
-+	}
-+
-+	if (status & MACB_BIT(PDRSFT)) {
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR,
-+					MACB_BIT(PDRSFT));
-+		if (gem_ptp_time_peer_frame_tx_get(bp, &ts) != 0) {
-+			ts.tv_sec = 0;
-+			ts.tv_nsec = 0;
-+		}
-+		gem_ptp_event(bp, &ts);
-+	}
-+}
++MODULE_AUTHOR("Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
++MODULE_DESCRIPTION("NXP SC18IS600 I2C bus adapter");
++MODULE_LICENSE("GPL");
 -- 
-2.4.5
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
