@@ -1,184 +1,123 @@
-From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v4 00/23] FSI device driver implementation
-Date: Wed, 29 Mar 2017 12:43:17 -0500
-Message-ID: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 07/23] drivers/fsi: Implement slave initialisation
+Date: Wed, 29 Mar 2017 12:43:24 -0500
+Message-ID: <20170329174340.89109-8-cbostic@linux.vnet.ibm.com>
+References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329174340.89109-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implementation of the IBM 'Flexible Support Interface' (FSI) bus device
-driver. FSI is a high fan out serial bus consisting of a clock and a serial
-data line capable of running at speeds up to 166 MHz.
+From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-This set provides the basic framework to add FSI extensions to the
-Linux bus and device models. Master specific implementations are
-defined to utilize the core FSI function.
+Implement fsi_slave_init: if we can read a chip ID, create fsi_slave
+devices and register with the driver core.
 
-In Linux, we have a core FSI "bus type", along with drivers for FSI
-masters and engines.
+Includes changes from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>.
 
-The FSI master drivers expose a read/write interface to the bus address
-space. The master drivers are under drivers/fsi/fsi-master-*.c.
+Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+---
+ drivers/fsi/fsi-core.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 64 insertions(+), 2 deletions(-)
 
-The core handles probing and discovery of slaves and slave
-engines, using those read/write interfaces. It is responsible for
-creating the endpoint Linux devices corresponding to the discovered
-engines on each slave.
-
-Slave engines are identified by an 'engine' type, and an optional
-version. Engine, a.k.a. client, drivers are matched and bound to these
-engines during discovery.
-
-This patch set does not include extended FSI function such as:
-    *  Cascaded master support
-    *  Application layer hot plug notification
-    *  Application layer FSI bus status interface
-
-Common FSI terminology:
-
-* Master
-    Controller of the FSI bus.  Only the master is allowed to control the
-    clock line and is the initiator of all transactions on a bus.
-
-* Slave
-    The receiver or target of a master initiated transaction.  The slave
-    cannot initiate communications on a bus and must respond to any
-    master requests for data.
-
-* CFAM
-    Stands for Common Field replaceable unit Access Macro.  A CFAM is an
-    ASIC residing in any device requiring FSI communications. CFAMs
-    consist of an array of hardware 'engines' used for various purposes.
-    I2C masters, UARTs, General Purpose IO hardware are common types of
-    these engines.
-
-* Configuration Space / Table
-    A table contained at the beginning of each CFAM address space.
-    This table lists information such as the CFAM's ID, which engine types
-    and versions it has available, as well as its addressing range.
-
-* FSI Engine driver
-    A device driver that registers with the FSI core so that it can access
-    devices it owns on an FSI bus.
-
-* Hub
-    An FSI master that connects to an upstream 'primary' master allowing
-    high fanout of target devices.
-
-----
-Changes in v4:
-   - endianness: the _read() and _write() APIs are now all *bus endian*,
-     so will be the same on all platforms (the previous fsi patches
-     exposed as (BMC/FSP) CPU endian, which is variable).
-   - device tree: Remove the "ibm," prefix for the fsi core and GPIO
-     master compatibility strings, as they're not describing
-     IBM-specific
-   - device model: Create separate struct devices for each FSI
-     master, which fits better with the Linux device model, and allows
-     addition of sysfs attributes that are implemented by the fsi core
-   - sysfs: there are now sysfs facilities for break and term. Raw
-     file supports reads and writes of arbitrary sizes.
-   - GPIO master: split the xfer() logic out a little, so that the
-     response handling & DPOLL retry mechanism is more obvious
-   - GPIO master: simplifications for message construction
-   - GPIO master: fixes for some CRC calculations
-   - GPIO master: issue TERM in response to DPOLL busy-loops
-   - Error handling: rather than handle errors on (potentially) an entire
-     cascaded read or write, the error handling is now down on a per-slave
-     basis, where we try to reestablish communication in a more "gradual"
-     manner, rather than sending a break immediately. May need to add a
-     hook to percolate error recovery up to a slave's master but no need
-     seen for that at present.
-   - Hub master: this is now implemented as a fsi engine driver, as the
-     fsi_slave_{read,write}() functions are exported (and the port count
-     is available in the hMFSI configuration register)
-     This means we need fewer special-cases in the fsi core.
-   - Tracepoints: Add tracepoints for FSI core read & write, and another
-     set for low-level GPIO in/out operations.
-
-Changes in v3:
-    - Patch set contained an invalid 18/18 test patch not
-      meant for community review, corrected.
-
-Changes in v2:
-    - Change from atomic global for master number to ida simple
-      interface.
-    - Add valid pointer checks on register and unregister utils.
-    - Move CRC calculation utilities out of driver to lib path.
-    - Clean up white space issues.
-    - Remove added list management of master devices and use
-      instead the device_for_each_child method available in the
-      bus.
-    - Add new patch to document FSI bus functionality.
-    - Add new patch documenting FSI gpio master.
-    - Rearrage patch set to have documentation earlier than code
-      implementing it.
-    - Document all compatible strings used in device tree bindings.
-    - Elaborate documentation definition of FSI GPIO master.
-    - Describe in more detail what each GPIO FSI master pin is for.
-    - Re-order compatible strings in example binding so that most
-      specific device comes first.
-    - Indicate proper activation order of all FSI GPIO master pins.
-    - Fix an unmatched '>' bracket in the example for binding.
-    - Bracket each element of the example bindings individually.
-    - Add new patch documenting sysfs-bus-fsi attributes.
-    - Merge FSI GPIO master init into probe function.
-    - Set pin initial values at time of pin request.
-    - Assign value of master->master.dev at probe time.
-    - Use get_optional interface for all optional GPIO pins.
-
-Chris Bostic (9):
-  drivers/fsi: Set up links for slave communication
-  drivers/fsi: Set slave SMODE to init communication
-  drivers/fsi: Add master unscan
-  drivers/fsi: Add documentation for GPIO bindings
-  drivers/fsi: Add client driver register utilities
-  drivers/fsi: Document FSI master sysfs files in ABI
-  drivers/fsi: Add GPIO based FSI master
-  drivers/fsi: Add SCOM FSI client device driver
-  drivers/fsi: Add hub master support
-
-Jeremy Kerr (14):
-  drivers/fsi: Add fsi master definition
-  drivers/fsi: Add slave definition
-  drivers/fsi: Add empty master scan
-  drivers/fsi: Add crc4 helpers
-  drivers/fsi: Add slave & master read/write APIs
-  drivers/fsi: Implement slave initialisation
-  drivers/fsi: scan slaves & register devices
-  drivers/fsi: Add device read/write/peek API
-  drivers/fsi: Add sysfs files for FSI master & slave accesses
-  drivers/fsi: expose direct-access slave API
-  drivers/fsi: Add tracepoints for low-level operations
-  drivers/fsi: Add error handling for slave communication errors
-  drivers/fsi/gpio: Add tracepoints for GPIO master
-  drivers/fsi: Use asynchronous slave mode
-
- Documentation/ABI/testing/sysfs-bus-fsi            |   6 +
- .../devicetree/bindings/fsi/fsi-master-gpio.txt    |  24 +
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts      |  10 +
- arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts       |  12 +
- drivers/fsi/Kconfig                                |  26 +
- drivers/fsi/Makefile                               |   3 +
- drivers/fsi/fsi-core.c                             | 835 +++++++++++++++++++++
- drivers/fsi/fsi-master-gpio.c                      | 624 +++++++++++++++
- drivers/fsi/fsi-master-hub.c                       | 327 ++++++++
- drivers/fsi/fsi-master.h                           |  64 ++
- drivers/fsi/fsi-scom.c                             | 263 +++++++
- include/linux/fsi.h                                |  35 +-
- include/trace/events/fsi.h                         | 127 ++++
- include/trace/events/fsi_master_gpio.h             |  68 ++
- 14 files changed, 2423 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
- create mode 100644 drivers/fsi/fsi-master-gpio.c
- create mode 100644 drivers/fsi/fsi-master-hub.c
- create mode 100644 drivers/fsi/fsi-master.h
- create mode 100644 drivers/fsi/fsi-scom.c
- create mode 100644 include/trace/events/fsi.h
- create mode 100644 include/trace/events/fsi_master_gpio.h
-
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 6e1cfdf..c705ca2 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -17,9 +17,12 @@
+ #include <linux/fsi.h>
+ #include <linux/idr.h>
+ #include <linux/module.h>
++#include <linux/slab.h>
+ 
+ #include "fsi-master.h"
+ 
++#define FSI_SLAVE_SIZE_23b		0x800000
++
+ static DEFINE_IDA(master_ida);
+ 
+ struct fsi_slave {
+@@ -114,11 +117,70 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			addr, val, size);
+ }
+ 
++static void fsi_slave_release(struct device *dev)
++{
++	struct fsi_slave *slave = to_fsi_slave(dev);
++
++	kfree(slave);
++}
++
+ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ {
+-	/* todo: initialise slave device, perform engine scan */
++	struct fsi_slave *slave;
++	uint32_t chip_id;
++	uint8_t crc;
++	int rc;
++
++	/* Currently, we only support single slaves on a link, and use the
++	 * full 23-bit address range
++	 */
++	if (id != 0)
++		return -EINVAL;
++
++	rc = fsi_master_read(master, link, id, 0, &chip_id, sizeof(chip_id));
++	if (rc) {
++		dev_warn(&master->dev, "can't read slave %02x:%02x %d\n",
++				link, id, rc);
++		return -ENODEV;
++	}
++	chip_id = be32_to_cpu(chip_id);
++
++	crc = fsi_crc4(0, chip_id, 32);
++	if (crc) {
++		dev_warn(&master->dev, "slave %02x:%02x invalid chip id CRC!\n",
++				link, id);
++		return -EIO;
++	}
++
++	dev_info(&master->dev, "fsi: found chip %08x at %02x:%02x:%02x\n",
++			chip_id, master->idx, link, id);
++
++	/* We can communicate with a slave; create the slave device and
++	 * register.
++	 */
++	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
++	if (!slave)
++		return -ENOMEM;
++
++	slave->master = master;
++	slave->dev.parent = &master->dev;
++	slave->dev.release = fsi_slave_release;
++	slave->link = link;
++	slave->id = id;
++	slave->size = FSI_SLAVE_SIZE_23b;
++
++	dev_set_name(&slave->dev, "slave@%02x:%02x", link, id);
++	rc = device_register(&slave->dev);
++	if (rc < 0) {
++		dev_warn(&master->dev, "failed to create slave device: %d\n",
++				rc);
++		put_device(&slave->dev);
++		return rc;
++	}
++
++	/* todo: perform engine scan */
+ 
+-	return -ENODEV;
++	return rc;
+ }
+ 
+ /* FSI master support */
 -- 
 1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
