@@ -1,110 +1,276 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/7] clocksource/drivers/clksrc-evt-probe: Describe
- with the DT both the clocksource and the clockevent
-Date: Wed, 29 Mar 2017 11:22:10 +0200
-Message-ID: <20170329092210.GH2123@mai>
-References: <1490197714-25415-1-git-send-email-al.kochet@gmail.com>
- <1490197714-25415-2-git-send-email-al.kochet@gmail.com>
- <20170329015146.ey5rlptzsnnynpnt@rob-hp-laptop>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
+ constant-charge-current property
+Date: Wed, 29 Mar 2017 02:26:19 -0700
+Message-ID: <CAKvHMgQf=Zod-F9SMPDDj5Eq3v=JHGh7uns-T_=ynQM0dMtEvw@mail.gmail.com>
+References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
+ <20170315105537.22349-2-quentin.schulz@free-electrons.com>
+ <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com>
+ <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com> <CAKvHMgR58sDnB-nn386Bd-H0Duevkeoc8eEfz=otLAumc8FD+w@mail.gmail.com>
+ <765fc3be-23db-0997-85b1-b6c85b3aceef@free-electrons.com> <CAKvHMgRKroPFDdNMb=F=bA4bTwg9bYMAR-5Z4DKLzHJtCYz3_Q@mail.gmail.com>
+ <CAKvHMgRtEnNbokYReu2vEs9UKH6qZnncdyQD=1JMDTZeN+aYCA@mail.gmail.com>
+ <659fb6a3-d49d-5429-8770-88917e4fd0b3@free-electrons.com> <CAKvHMgSFNBmr3fU-biHDo5tzCDV7QaCpFnbChgn4wgSN_1FBig@mail.gmail.com>
+ <8853ebb9-9c4f-d9bf-8c82-daad4650c4f8@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170329015146.ey5rlptzsnnynpnt@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <8853ebb9-9c4f-d9bf-8c82-daad4650c4f8@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Sebastian Reichel <sre@kernel.org>, robh+dt@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 08:51:46PM -0500, Rob Herring wrote:
-> On Wed, Mar 22, 2017 at 06:48:28PM +0300, Alexander Kochetkov wrote:
-> > From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > 
-> > The CLOCKSOURCE_OF_DECLARE() was introduced before the
-> > CLOCKEVENT_OF_DECLARE() and that resulted in some abuse where the
-> > clockevent and the clocksource are both initialized in the same init
-> > routine.
-> > 
-> > With the introduction of the CLOCKEVENT_OF_DECLARE(), the driver can
-> > now split the clocksource and the clockevent init code. However, the
-> > device tree may specify a single node, so the same node will be passed
-> > to the clockevent/clocksource's init function, with the same base
-> > address.
-> > 
-> > with this patch it is possible to specify an attribute to the timer's node to
-> > specify if it is a clocksource or a clockevent and define two timers node.
-> 
-> Daniel and I discussed and agreed against this a while back. What 
-> changed?
+On Wed, Mar 29, 2017 at 12:54 AM, Quentin Schulz
+<quentin.schulz@free-electrons.com> wrote:
+> Hi,
+>
+> On 29/03/2017 09:39, Liam Breck wrote:
+>> On Wed, Mar 29, 2017 at 12:09 AM, Quentin Schulz
+>> <quentin.schulz@free-electrons.com> wrote:
+>>> Hi Liam,
+>>>
+>>> On 29/03/2017 08:55, Liam Breck wrote:
+>>>> Hi Quentin,
+>>>>
+>>>> On Thu, Mar 16, 2017 at 12:42 AM, Liam Breck <liam@networkimprov.net> wrote:
+>>>>> On Thu, Mar 16, 2017 at 12:03 AM, Quentin Schulz
+>>>>> <quentin.schulz@free-electrons.com> wrote:
+>>>>>> Hi Liam,
+>>>>>>
+>>>>>> On 16/03/2017 07:27, Liam Breck wrote:
+>>>>>>> Hi Rob,
+>>>>>>>
+>>>>>>> On Wed, Mar 15, 2017 at 6:10 AM, Quentin Schulz
+>>>>>>> <quentin.schulz@free-electrons.com> wrote:
+>>>>>>>> Hi Liam,
+>>>>>>>>
+>>>>>>>> On 15/03/2017 13:08, Liam Breck wrote:
+>>>>>>>>> I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
+>>>>>>>>> in patch description to direct a patch to interested parties and
+>>>>>>>>> relevant lists. I don't want to see all 19 patches in this series.
+>>>>>>>>>
+>>>>>>>>> On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
+>>>>>>>>> <quentin.schulz@free-electrons.com> wrote:
+>>>>>>>>>> This adds the constant-charge-current property to the list of optional
+>>>>>>>>>> properties of the battery.
+>>>>>>>>>>
+>>>>>>>>>> The constant charge current is critical for batteries as they can't
+>>>>>>>>>> handle all charge currents.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+>>>>>>>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>>>>>>>> ---
+>>>>>>>>>>
+>>>>>>>>>> v4:
+>>>>>>>>>>  - switch from constant-charge-current-microamp to constant-charge-microamp,
+>>>>>>>
+>>>>>>> Sebastian is on record supporting name alignment between DT:battery
+>>>>>>> properties and enum power_supply_property.
+>>>>>>>
+>>>>>>> Could you OK a change back to constant-charge-current-microamp in this patch?
+>>>>>>>
+>>>>>>> Note that the following could appear in DT:battery in future:
+>>>>>>>
+>>>>>>> constant-charge-current-microamp
+>>>>>>> constant-charge-current-max-microamp
+>>>>>>
+>>>>>> OK. I am actually setting max constant charge current and constant
+>>>>>> current charge with the same DT property so I might need to adapt my
+>>>>>> patches.
+>>>>>
+>>>>> I suspect you should set battery:*-current-max with DT, as -current is
+>>>>> "programmed by charger" so seems to be a stat, not a fixed
+>>>>> characteristic.
+>>>>
+>>>> Did you resolve this issue?
+>>>>
+>>>
+>>> Sorry, completely missed your first mail.
+>>>
+>>> Constant charge current is actually what I set in the PMIC. The maximum
+>>> constant charge current is completely PMIC-agnostic in my driver as it
+>>> is used to tell the user that (s)he shouldn't really have a constant
+>>> charge current over the maximum limit as the battery might not be able
+>>> to handle such high current.
+>>>
+>>> What I suggest is to have both properties in DT. I'll set the maximum as
+>>> I do today and we can give the user the ability to set a "default"
+>>> constant charge current (below maximum constant charge current) in the
+>>> DT. Maybe we do not want to recharge your battery with the maximum value
+>>> by default?
+>>
+>> The scope here is just static battery characteristics. For the battery
+>> node, I think constant-charge-current-max-microamp is the relevant
+>> term.
+>
+> If it's only for static battery characteristics, I agree.
+>
+>
+>> If we added both properties, one would be an alias for the
+>> other, which doesn't seem useful.
 
-Hi Rob,
+Meaning if both properties describe static characteristics of the
+battery, they wouldn't have different meaning.
 
-> > For example:
-> > 
-> >         timer: timer@98400000 {
-> >                 compatible = "moxa,moxart-timer";
-> >                 reg = <0x98400000 0x42>;
-> 
-> This overlaps the next node. You can change this to 0x10, but are these 
-> really 2 independent h/w blocks? Don't design the nodes around the 
-> current needs of Linux.
+> Hum. Not really an alias. In my driver, I have a maximum which avoids to
+> set a constant charge current higher than what the battery is supposed
+> to be able to handle. The maximum can be increased via sysfs if ever the
+> user decides to go wild (or if (s)he changes the battery for example).
+> The maximum is never input in any of PMIC registers, it is not dealing
+> with the PMIC at all.
 
-Mmh, thanks for raising this. Conceptually speaking there are two (or more)
-different entities, the clocksource and the clockevents but they share the same
-IP block.
+Using the battery's -max as the default for your user-adjustable max
+sounds sensible. However the user-adjustable max should perhaps appear
+in a custom sysfs attribute, not
+/sys/class.../constant_charge_current_max (see comment re regulator).
 
-In the driver timer-sp804.c there is a fragile mechanism with the timer
-counting assuming the timers are declared in a specific order in the DT
-(integratorcp.dts). There are multiple nodes, which are IIUC overlapping like
-what you are describing.
+If the battery changes, the DT battery node should also change, esp if
+its -max drops. I realize that's not nec trivial.
 
-I'm a bit puzzled with how this should be done.
+> If I have only the max constant charge current in the DT, I'll set the
+> max and constant charge current with the same DT entry. That's perfectly
+> fine.
 
-Do you have a suggestion ?
+I assume the pmic ccc setting is adjustable via
+/sys/class.../constant_charge_current?
 
-> >                 interrupts = <19 1>;
-> >                 clocks = <&coreclk>;
-> >                 clockevent;
-> 
-> This is not needed. The presence of "interrupts" is enough to say use 
-> this timer for clockevent.
+> However, what I was thinking is to have a "default" value taken from DT
+> for constant charge current (which will be below maximum ccc) if ever
+> someone wants to set a maximum but use a lower ccc value. Anyway, I
+> guess it's more a "fancy" feature than a requirement (unlike max-ccc).
 
-Yes, that is true if no drivers was already taking CLOCKSOURCE_OF and
-initializing the clockevent. The driver will pass through the clocksource_probe
-function, check the interrupt and bail out because there is an interrupt
-declared and assume it is a clockevent, so no initialization for the driver.
-IOW, it is not backward compatible.
+Maybe a lower default ccc than battery's -max could be provided via a
+% value in the pmic DT node? Then multiply battery -max by that to set
+ccc.
 
-We need this attribute somehow in order to separate clearly a clocksource or a
-clockevent with a new implementation.
- 
-> >         };
-> > 
-> >         timer: timer@98400010 {
-> >                 compatible = "moxa,moxart-timer";
-> >                 reg = <0x98400010 0x42>;
-> >                 clocks = <&coreclk>;
-> >                 clocksource;
-> 
-> Likewise.
-> 
-> >         };
-> > 
-> > With this approach, we allow a mechanism to clearly define a clocksource or a
-> > clockevent without aerobatics we can find around in some drivers:
-> > 	timer-sp804.c, arc-timer.c, dw_apb_timer_of.c, mps2-timer.c,
-> > 	renesas-ostm.c, time-efm32.c, time-lpc32xx.c.
-> 
-> These all already have bindings and work. What problem are you trying to 
-> solve other than restructuring Linux?
+>> The pmic can report both independently of the battery characteristic,
+>> and take a driver-specific DT property for
+>> constant-charge-current-microamp which it applies if less than the
+>> battery's -max setting.
+>
+> Indeed.
+>
+>> Or you could set that in userspace via
+>> /sys/class.../constant_charge_current.
+>
+> The goal is to have both. The DT for default values (given by the
+> vendor/upstream) and sysfs for custom values (interesting if you don't
+> want to/can't recompile a DT.
+>
+>> The charger's -max value would
+>> be a characteristic of its regulator.
+>>
+>
+> I don't really understand what you mean by that.
 
-Yes, there is already the bindings, but that force to do some hackish
-initialization.
+I believe the pmic's -max value is a characteristic of its electrical
+design, the max current it can deliver. The power_supply_class docs
+are not very clear - "maximum charge current supported by the power
+supply object".
 
-I would like to give the opportunity to declare separately a clocksource and a
-clockevent, in order to have full control of how this is initialized.
- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>> Or am I missing something...?
+>>
+>>>> Rob & Sebastian want me to merge all items for
+>>>> bindings/power/supply/battery.txt. If I do that I'll also roll up
+>>>> their counterparts in power_supply_core.c and submit a patchset for
+>>>> those two files.
+>>>>
+>>>
+>>> I guess that adding the two properties make sense, don't you think?
+>>>
+>>> Also, could you Cc me on your next version of your patches? So I know
+>>> when to rebase and slightly rework my patches once your patch series is
+>>> merged.
+>>
+>> Surely.
+>>
+>>> Thanks,
+>>> Quentin
+>>>
+>>>>> You may program your charger's -current with the battery's
+>>>>> -current-max, of course.
+>>>>>
+>>>>> Note that your charger also has a -current-max characteristic, likely
+>>>>> different than your battery. You may not need that in DT tho.
+>>>>>
+>>>>>>> constant-charge-voltage-microvolt
+>>>>>>> constant-charge-voltage-max-microvolt
+>>>>>>>
+>>>>>>> Thanks!
+>>>>>>>
+>>>>>>>>> Must be constant-charge-current-microamp for the reasons discussed in
+>>>>>>>>> battery.txt - consistency with sysfs names.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Hum. Just nitpicking, but I disagree with the use of 'must'. IIRC there
+>>>>>>>> is nothing in the code that would require the property to be named after
+>>>>>>>> a property from the enum power_supply_property.
+>>>>>>>>
+>>>>>>>> I would say that you _want_ it to be named like that because it
+>>>>>>>> underlines the relation between the DT property and the actual impacted
+>>>>>>>> property in the power supply subsystem. I'm fine with this reason but in
+>>>>>>>> the end, the maintainer's opinion prevails (if (s)he does not want it,
+>>>>>>>> (s)he will not take it). So, basically, I actually don't mind either
+>>>>>>>> option and I see arguments on each side.
+>>>>>>>>
+>>>>>>>> So, just waiting for maintainer's opinion to make the final version of
+>>>>>>>> this patch.
+>>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Quentin
+>>>>>>>>
+>>>>>>>>> Also applies to power_supply_core.c patch.
+>>>>>>>>>
+>>>>>>>>> Rob: enum power_supply_property also lists constant-charge-voltage,
+>>>>>>>>> hence the -current
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> added in v3
+>>>>>>>>>>
+>>>>>>>>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
+>>>>>>>>>>  1 file changed, 2 insertions(+)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>>>>>>> index 0278617..9594e1e 100644
+>>>>>>>>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>>>>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>>>>>>>> @@ -7,6 +7,7 @@ Optional Properties:
+>>>>>>>>>>   - voltage-min-design-microvolt: drained battery voltage
+>>>>>>>>>>   - energy-full-design-microwatt-hours: battery design energy
+>>>>>>>>>>   - charge-full-design-microamp-hours: battery design capacity
+>>>>>>>>>> + - constant-charge-microamp: battery constant charge current
+>>>>>>>>>>
+>>>>>>>>>>  Because drivers surface properties in sysfs using names derived
+>>>>>>>>>>  from enum power_supply_property, e.g.
+>>>>>>>>>> @@ -30,6 +31,7 @@ Example:
+>>>>>>>>>>                 voltage-min-design-microvolt = <3200000>;
+>>>>>>>>>>                 energy-full-design-microwatt-hours = <5290000>;
+>>>>>>>>>>                 charge-full-design-microamp-hours = <1430000>;
+>>>>>>>>>> +               constant-charge-microamp = <300000>;
+>>>>>>>>>>         };
+>>>>>>>>>>
+>>>>>>>>>>         charger: charger@11 {
+>>>>>>>>>> --
+>>>>>>>>>> 2.9.3
+>>>>>>>>>>
+>>>>>>>>
+>>>>>>>> --
+>>>>>>>> Quentin Schulz, Free Electrons
+>>>>>>>> Embedded Linux and Kernel engineering
+>>>>>>>> http://free-electrons.com
+>>>>>>
+>>>>>> --
+>>>>>> Quentin Schulz, Free Electrons
+>>>>>> Embedded Linux and Kernel engineering
+>>>>>> http://free-electrons.com
+>>>
+>>> --
+>>> Quentin Schulz, Free Electrons
+>>> Embedded Linux and Kernel engineering
+>>> http://free-electrons.com
+>
+> --
+> Quentin Schulz, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
