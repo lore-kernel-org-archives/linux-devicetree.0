@@ -1,39 +1,87 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH v3 2/2] PCI: Add tango PCIe host bridge support
-Date: Wed, 29 Mar 2017 14:38:28 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6DCFFC1507@AcuExch.aculab.com>
-References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
- <65114e62-7458-b6f7-327c-f07a5096a452@sigmadesigns.com>
- <01516ad9-e187-4bac-7c65-a7a90c576ce2@arm.com>
- <96da696c-141a-3e8d-1fb7-2c024a295f58@free.fr>
- <84a8b26d-7d24-df29-3959-45fce880916d@arm.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl
+ header
+Date: Wed, 29 Mar 2017 14:55:46 +0000
+Message-ID: <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
+ <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-15"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <84a8b26d-7d24-df29-3959-45fce880916d@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Robin Murphy' <robin.murphy@arm.com>, Mason <slash.tmp@free.fr>
-Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> > For my education, what is the API to send an IPI?
-> > And the API to handle an IPI?
-> 
-> There are a few ways you could implement some custom cross-call,
-> although in this case I think stop_machine() would probably be the most
-> appropriate candidate. However, you're right that in general it may not
-> actually help enough to be worthwhile - a DSB SY would ensure that
-> in-flight transactions have at least been observed by the CPUs and any
-> other coherent masters, but for any writes with a memory type allowing
-> early acknowledgement (i.e. a Normal or Device mapping of a BAR) that
-> doesn't necessarily correlate with them having reached their ultimate
-> destination. For a PCI destination in particular, I think the normal way
-> to ensure all posted writes have completed would be to read from config
-> space; ah...
-
-He almost certainly doesn't need to wait for the cycle to complete,
-just long enough for the cycle to have been sent.
-
-	David
+T24gV2VkbmVzZGF5LCBNYXJjaCAyOSwgMjAxNywgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gT24g
+RnJpLCBNYXIgMjQsIDIwMTcgYXQgNDoyMiBQTSwgSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNh
+c0BqbW9uZGkub3JnPg0KPiB3cm90ZToNCj4gDQo+ID4gQWRkIGR0LWJpbmRpbmdzIGZvciBSZW5l
+c2FzIHI3czcyMTAwIHBpbiBjb250cm9sbGVyIGhlYWRlciBmaWxlLg0KPiA+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPg0KPiANCj4g
+PiArLyoNCj4gPiArICogUGluIGlzIGJpLWRpcmVjdGlvbmFsLg0KPiA+ICsgKiBBbiBhbHRlcm5h
+dGUgZnVuY3Rpb24gdGhhdCBuZWVkcyBib3RoIGlucHV0L291dHB1dCBmdW5jdGlvbmFsaXRpZXMN
+Cj4gPiArc2hhbGwNCj4gPiArICogYmUgY29uZmlndXJlZCBhcyBiaWRpcmVjdGlvbmFsLg0KPiA+
+ICsgKiBFZy4gU0RBL1NDTCBwaW5zIG9mIGFuIEkyYyBpbnRlcmZhY2UuDQo+ID4gKyAqLw0KPiA+
+ICsjZGVmaW5lIEJJX0RJUiAgICAgICAgICAgICAgICAgKDEgPDwgMykNCj4gDQo+IEFueSBzcGVj
+aWZpYyByZWFzb24gd2h5IHRoaXMgc2hvdWxkIG5vdCBzaW1wbHkgYmUgYWRkZWQgdG8NCj4gaW5j
+bHVkZS9saW51eC9waW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5oDQo+IGFzIFBJTl9DT05GSUdfQklE
+SVJFQ1RJT05BTCBhbmQgcGFyc2VkIGluIGRyaXZlcnMvcGluY3RybC9waW5jb25mLQ0KPiBnZW5l
+cmljLmMgZnJvbSB0aGUgKG5ldykgRFQgcHJvcGVydHkgImJpZGlyZWN0aW9uYWwiIHNpbXBseT8N
+Cg0KSSBzZWUgeW91ciBwb2ludC4gSXQgd291bGQgY3V0IGRvd24gZnJvbSBldmVyeSBkcml2ZXIg
+b3V0IHRoZXJlDQppbnZlbnRpbmcgc29tZSBuZXcgcHJvcGVydHkgb3IgY29uZmlnIGluc3RlYWQg
+b2YgZXZlcnlvbmUganVzdCBzaGFyaW5nDQphIGZpeGVkIHNldC4NCk1heWJlIHNvbWVvbmUgZWxz
+ZSBvdXQgdGhlcmUgd2lsbCBlbmQgdXAgaGF2aW5nIGEgbmVlZCBmb3IgYQ0KImJpZGlyZWN0aW9u
+YWwiIG9wdGlvbi4NCg0KDQo+ID4gKy8qDQo+ID4gKyAqIEZsYWdzIHVzZWQgdG8gYXNrIHNvZnR3
+YXJlIHRvIGRyaXZlIHRoZSBwaW4gSS9PIGRpcmVjdGlvbg0KPiA+ICtvdmVycmlkaW5nIHRoZQ0K
+PiA+ICsgKiBhbHRlcm5hdGUgZnVuY3Rpb24gY29uZmlndXJhdGlvbi4NCj4gPiArICogU29tZSBh
+bHRlcm5hdGUgZnVuY3Rpb25zIHJlcXVpcmUgc29mdHdhcmUgdG8gZm9yY2UgSS9PIGRpcmVjdGlv
+bg0KPiA+ICtvZiBhIHBpbiwNCj4gPiArICogb3ZlcnJpZGluZyB0aGUgZGVzaWduYXRlZCBvbmUu
+DQo+ID4gKyAqIFJlZmVyIHRvIHRoZSBIVyBtYW51YWwgdG8ga25vdyB3aGVuIHRoaXMgZmxhZyBz
+aGFsbCBiZSB1c2VkLg0KPiA+ICsgKi8NCj4gPiArI2RlZmluZSBTV0lPX0lOICAgICAgICAgICAg
+ICAgICAgICAgICAgKDEgPDwgNCkNCj4gPiArI2RlZmluZSBTV0lPX09VVCAgICAgICAgICAgICAg
+ICgxIDw8IDUpDQo+IA0KPiBXaGF0IGlzIHdyb25nIGluIGRvaW5nIHRoaXMgd2l0aCBnZW5lcmlj
+IHBpbiBjb25maWcgdXNpbmcNCj4gUElOX0NPTkZJR19JTlBVVF9FTkFCTEUgYW5kIFBJTl9DT05G
+SUdfT1VUUFVUIChpZ25vcmluZyB0aGUgYXJndW1lbnQpPw0KPiANCj4gSW4gdGhlIGRldmljZSB0
+cmVlIHVzZSBpbnB1dC1lbmFibGUgYW5kIGFkZCBhIG5ldyBvdXRwdXQtZW5hYmxlICh3aXRoDQo+
+IHVuc3BlY2lmaWVkIHZhbHVlKSB3aXRoIHByb3BlciBkZXNjcmlwdGlvbiBhbmQgRFQgYmluZGlu
+Z3M/DQoNCkFnYWluLCB0aGF0J3MgcHJvYmFibHkgZmluZS4gSXQgc2VlbXMgd2UgYXJlIHN0aWxs
+IGRvaW5nIHRoZSBzYW1lIHRoaW5nDQp3aGljaCBpcyB1c2luZyB0aGUgRFQgdG8gcGFzcyBleHRy
+YSBjb25maWcgaW5mb3JtYXRpb24gdG8gdGhlIGRyaXZlci4NCkFuZCwgd2UgY2FuIGRvIHdoYXRl
+dmVyIHdlIHdhbnQgd2l0aCB0aGF0IGluZm8uDQoNCg0KPiBBbmQgaWYgeW91IHRoaW5rIHRoZXNl
+IGhhdmUgbm8gZ2VuZXJhbCBhcHBsaWNhYmlsaXR5LCBieSB0aGUgZW5kIG9mIHRoZQ0KPiBkYXkg
+dGhleSBhcmUgKnN0aWxsKiBwaW4gY29uZmlnLCBub3QgbWFnaWMgZmxhZ3Mgd2UgY2FuIGNob29z
+ZSB0byB0b3NzIGluDQo+IHdpdGggdGhlIG11eGluZywgc28geW91IGNhbiBkbyB3aGF0IHRoZSBR
+dWFsY29tbSBkcml2ZXIgZG9lcyBhbmQgYWRkDQo+IGN1c3RvbSBwaW4gY29uZmlndXJhdGlvbnMg
+ZXh0ZW5kaW5nIHRoZSBnZW5lcmljIHBpbiBjb25maWcsIHNlZQ0KPiBkcml2ZXJzL3BpbmN0cmwv
+cWNvbS9waW5jdHJsLXNwbWktZ3Bpby5jDQo+IHFjb20scHVsbC11cC1zdHJlbmd0aCBldGMuDQoN
+CkJ1dCwgaXQgc2VlbXMgdGhhdCB3aGVuIHlvdSBzZXQgYSBjb25maWcgb3B0aW9uLCBpdCBhcHBs
+aWVzIHRvIGV2ZXJ5dGhpbmcNCmluICJwaW5zIj8NCg0KSTJDIEV4YW1wbGU6IChzZWVtIE9LKQ0K
+CS8qIFAxXzYgPSBSSUlDM1NDTCAoYmkgZGlyKSAqLw0KCS8qIFAxXzcgPSBSSUlDM1NEQSAoYmkg
+ZGlyKSAqLw0KCWkyYzNfcGluczogaTJjMyB7DQoJCXBpbnMgPSA8UElOKDEsIDYpIHwgRlVOQ18x
+PiwNCgkJICAgICAgIDxQSU4oMSwgNykgfCBGVU5DXzE+Ow0KCQliaWRpcmVjdGlvbmFsOw0KCX07
+DQoNCg0KQnV0LCB3aGF0IGRvIHdlIGRvIGZvciBFdGhlcm5ldD8gQWxsIHRoZSBwaW5zIGFyZSAi
+bm9ybWFsIiBleGNlcHQganVzdA0KdGhlIE1ESU8gcGluIG5lZWRzIHRvIGJlIGJpZGlyZWN0aW9u
+YWwuDQpUaGF0J3MgdGhlIHBhcnQgSSdtIGNvbmZ1c2VkIGJ5Lg0KSG93IGRvIHdlIGZsYWcgdGhh
+dCBqdXN0IHRoZSBFVF9NRElPIG5lZWRzICJiaWRpcmVjdGlvbmFsIj8NCg0KCS8qIEV0aGVybmV0
+ICovDQoJZXRoZXJfcGluczogZXRoZXIgew0KCQkvKiBFdGhlcm5ldCBvbiBQb3J0cyAxLDIsMyw1
+ICovDQoJCXBpbnMgPSA8UElOKDEsIDE0KSB8IEZVTkNfNCk+LCAvKiBQMV8xNCA9IEVUX0NPTCAq
+Lw0KCQkJPFBJTig1LCA5KSB8IEZVTkNfMik+LAkvKiBQNV85ID0gRVRfTURDICovDQoJCQk8UElO
+KDMsIDMpIHwgRlVOQ18yKT4sCS8qIFAzXzMgPSBFVF9NRElPICEhISEgKGJpIGRpcikgISEhISEh
+ICovDQoJCQk8UElOKDMsIDQpIHwgRlVOQ18yKT4sCS8qIFAzXzQgPSBFVF9SWENMSyAqLw0KCQkJ
+PFBJTigzLCA1KSB8IEZVTkNfMik+LAkvKiBQM181ID0gRVRfUlhFUiAqLw0KCQkJPFBJTigzLCA2
+KSB8IEZVTkNfMik+LAkvKiBQM182ID0gRVRfUlhEViAqLw0KCQkJPFBJTigyLCAwKSB8IEZVTkNf
+Mik+LAkvKiBQMl8wID0gRVRfVFhDTEsgKi8NCgkJCTxQSU4oMiwgMSkgfCBGVU5DXzIpPiwJLyog
+UDJfMSA9IEVUX1RYRVIgKi8NCgkJCTxQSU4oMiwgMikgfCBGVU5DXzIpPiwJLyogUDJfMiA9IEVU
+X1RYRU4gKi8NCgkJCTxQSU4oMiwgMykgfCBGVU5DXzIpPiwJLyogUDJfMyA9IEVUX0NSUyAqLw0K
+CQkJPFBJTigyLCA0KSB8IEZVTkNfMik+LAkvKiBQMl80ID0gRVRfVFhEMCAqLw0KCQkJPFBJTigy
+LCA1KSB8IEZVTkNfMik+LAkvKiBQMl81ID0gRVRfVFhEMSAqLw0KCQkJPFBJTigyLCA2KSB8IEZV
+TkNfMik+LAkvKiBQMl82ID0gRVRfVFhEMiAqLw0KCQkJPFBJTigyLCA3KSB8IEZVTkNfMik+LAkv
+KiBQMl83ID0gRVRfVFhEMyAqLw0KCQkJPFBJTigyLCA4KSB8IEZVTkNfMik+LAkvKiBQMl84ID0g
+RVRfUlhEMCAqLw0KCQkJPFBJTigyLCA5KSB8IEZVTkNfMik+LAkvKiBQMl85ID0gRVRfUlhEMSAq
+Lw0KCQkJPFBJTigyLCAxMCkgfCBGVU5DXzIpPiwgLyogUDJfMTAgPSBFVF9SWEQyICovDQoJCQk8
+UElOKDIsIDExKSB8IEZVTkNfMik+OyAvKiBQMl8xMSA9IEVUX1JYRDMgKi8NCgl9Ow0KDQoNCkNo
+cmlzDQo=
