@@ -1,105 +1,37 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 05/11] Documentation: DT: bindings:
- input: touschcreen: remove sun4i documentation
-Date: Wed, 29 Mar 2017 08:58:26 +0100
-Message-ID: <20170329075826.4curjodxgi34tgco@dell>
-References: <20170321153611.16228-1-quentin.schulz@free-electrons.com>
- <20170321153611.16228-6-quentin.schulz@free-electrons.com>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add IMR-L[S]X3 clocks
+Date: Wed, 29 Mar 2017 10:04:17 +0200
+Message-ID: <20170329080417.GD6512@verge.net.au>
+References: <20170321200443.078095898@cogentembedded.com>
+ <34050114-752a-08b6-700e-697e78102af7@cogentembedded.com>
+ <a802018c-9943-22e5-0f78-28b8ab9689d9@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBJOS5XDAKGQEI7AL37I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170321153611.16228-6-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
+In-Reply-To: <a802018c-9943-22e5-0f78-28b8ab9689d9@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Mar 2017, Quentin Schulz wrote:
+On Tue, Mar 21, 2017 at 11:14:43PM +0300, Sergei Shtylyov wrote:
+> On 03/21/2017 11:08 PM, Sergei Shtylyov wrote:
+> 
+> >Still not cover letter but I think it's better now, so I won't retry...
+> >The patches are against Simon Horman's 'renesas.git' repo,
+> >'renesas-devel-20170321-v4.11-rc3' tag.
+> 
+>    The patches depend on the IMR driver patches adding the IMR-L[S]X3
+> support for the "compatible" values.
 
-> This patch removes the sun4i touchscreen controller binding
-> documentation since it has been merged with the sun4i GPADC binding
-> documentation.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->=20
-> added in v2
->=20
->  .../bindings/input/touchscreen/sun4i.txt           | 38 ----------------=
-------
-
-Just an Input Ack missing here.
-
->  1 file changed, 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/s=
-un4i.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/sun4i.tx=
-t b/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
-> deleted file mode 100644
-> index 89abecd..0000000
-> --- a/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
-> +++ /dev/null
-> @@ -1,38 +0,0 @@
-> -sun4i resistive touchscreen controller
-> ---------------------------------------
-> -
-> -Required properties:
-> - - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
-> -   "allwinner,sun6i-a31-ts"
-> - - reg: mmio address range of the chip
-> - - interrupts: interrupt to which the chip is connected
-> - - #thermal-sensor-cells: shall be 0
-> -
-> -Optional properties:
-> - - allwinner,ts-attached	 : boolean indicating that an actual touchscree=
-n
-> -				   is attached to the controller
-> - - allwinner,tp-sensitive-adjust : integer (4 bits)
-> -				   adjust sensitivity of pen down detection
-> -				   between 0 (least sensitive) and 15
-> -				   (defaults to 15)
-> - - allwinner,filter-type	 : integer (2 bits)
-> -				   select median and averaging filter
-> -				   samples used for median / averaging filter
-> -				   0: 4/2
-> -				   1: 5/3
-> -				   2: 8/4
-> -				   3: 16/8
-> -				   (defaults to 1)
-> -
-> -Example:
-> -
-> -	rtp: rtp@01c25000 {
-> -		compatible =3D "allwinner,sun4i-a10-ts";
-> -		reg =3D <0x01c25000 0x100>;
-> -		interrupts =3D <29>;
-> -		allwinner,ts-attached;
-> -		#thermal-sensor-cells =3D <0>;
-> -		/* sensitive/noisy touch panel */
-> -		allwinner,tp-sensitive-adjust =3D <0>;
-> -		allwinner,filter-type =3D <3>;
-> -	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+I have marked these patches as deferred accordingly.
