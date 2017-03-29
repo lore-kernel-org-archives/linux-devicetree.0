@@ -1,83 +1,139 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v2 2/7] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Wed, 29 Mar 2017 12:38:21 +0000
-Message-ID: <SG2PR06MB1165276F957CE63DBE0A55268A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1490026491-21742-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490026491-21742-3-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdWT6vJNmMhYzMEqYRbuT=W=ZuND-WfG812LfH0r0AzM_g@mail.gmail.com>
- <20170323160204.GL30223@w540>
- <CACRpkdYmitsPvv_1bsb-EKkhcWqaKNsLBfxZgf8cjVvcqCpYXA@mail.gmail.com>
- <b9eaac8a63dced229bb152ba412e8ec1@jmondi.org>
- <CACRpkdbZS72xkHaM5P-Zw==A_V_BxeszLPmc0_Zy0-RRjvAbNA@mail.gmail.com>
- <CAMuHMdXkN91uBTKhz_bveFxOgcyNe0dAbtDEVfHNKdDWNaY3jQ@mail.gmail.com>
- <CACRpkdbT3091MzAQ_hO5Hc9=gQz-eDNCDtEnVG-3G+jJ+eO+Fw@mail.gmail.com>
- <CAMuHMdX0OdZXYDOZvFutjfBFVd65C567_G+++kHygre4KK+jLg@mail.gmail.com>
- <20170329120530.GB6247@w540>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v3 10/11] ASoC: add bindings for stm32
+	DFSDM filter
+Date: Wed, 29 Mar 2017 14:42:38 +0200
+Message-ID: <473f36db-0c0e-00d2-3610-c24bf3f1d541@st.com>
+References: <1489759704-30217-1-git-send-email-arnaud.pouliquen@st.com>
+ <1489759704-30217-11-git-send-email-arnaud.pouliquen@st.com>
+ <20170324145208.6tj5swol5du5lkyc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170329120530.GB6247@w540>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo <jacopo@jmondi.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170324145208.6tj5swol5du5lkyc@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier MOYSAN <olivier.moysan@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkaW5nIG15IDIgY2VudHMgaGVyZToNCg0KT24gV2VkbmVzZGF5LCBNYXJjaCAyOSwgMjAxNywg
-amFjb3BvIHdyb3RlOg0KPiA+ID4gSWYgeW91IHJlYWxseSBkbyB3ZSBtYXkgbmVlZCB0byBnbyBm
-b3IgdTY0IGJ1dCAuLi4gcmVhbGx5PyBJcyB0aGVyZQ0KPiA+ID4gYSByYXRpb25hbCByZWFzb24g
-Zm9yIHRoYXQgb3RoZXIgdGhhbiAid2UgZGlkIGl0IGxpa2UgdGhpcyBmaXJzdCI/DQo+ID4gPg0K
-PiA+ID4gSSBkbyBub3QgdW5kZXJzdGFuZCB0aGUgbm90aW9uIG9mICJmbGFncyIgaGVyZS4gSSBo
-b3BlIHRoYXQgaXMgbm90DQo+ID4gPiByZWZlcnJpbmcNCj4gPg0KPiA+IEZsYWdzIHJlZmVycyB0
-byBCSV9ESVIsIFNXSU9fSU4sIGFuZCBTV0lPX09VVCwgZnJvbQ0KPiA+IGh0dHBzOi8vcGF0Y2h3
-b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTY0MzA0Ny8NCj4gPg0KPiA+IDMyLWJpdCBzaG91bGQgYmUg
-ZW5vdWdoIHRvIGNvdmVyIHBpbnMsIGZ1bmN0aW9uLCBhbmQgZmxhZ3MuDQo+ID4NCj4gDQo+IEdl
-ZXJ0IGFscmVhZHkgcmVwbGllZCwgYnV0IHRvIGF2b2lkIGFueSBjb25mdXNpb24gSSdsbCB0cnkg
-dG8gcmVtb3ZlIGZyb20NCj4gZHJpdmVyIHRoZSB1c2Ugb2YgInBpbiBjb25maWciIHdoZW4gcmVm
-ZXJyaW5nIHRvIHRoaXMgdGhyZWUgZmxhZ3MsIHdoaWNoDQo+IGFyZSBqdXN0IGFkZGl0aW9uYWwg
-aW5mb3JtYXRpb25zIHRoZSBwaW4gY29udHJvbGxlciBuZWVkcyB0byBwZXJmb3JtIHBpbg0KPiBt
-dXhpbmcgcHJvcGVybHkuIFRoZXkncmUgbm90IHJlbGF0ZWQgdGhlIHN0YW5kYXJkIHBpbiBjb25m
-aWcgcHJvcGVydGllcw0KPiAocHVsbC11cC9kb3duLCBiaWFzIGV0Yy4uIGFjdHVhbGx5IG91ciBo
-YXJkd2FyZSBkb2VzIG5vdCBldmVuIHN1cHBvcnQNCj4gdGhlc2UgbmF0aXZlbHkpDQo+IA0KPiA+
-ID4gdG8gcGluIGNvbmZpZywgYmVjYXVzZSBJIGV4cGVjdCB0aGF0IHRvIHVzZSB0aGUgc3RhbmRh
-cmQgcGluIGNvbmZpZw0KPiA+ID4gYmluZGluZ3Mgb3V0c2lkZSBvZiB0aGUgcGlubXV4IHZhbHVl
-IHdoaWNoIHNob3VsZCBqdXN0IGRlZmluZSB0aGUNCj4gPiA+IHBpbitmdW5jdGlvbiBjb21ibzoN
-Cj4gPiA+DQo+ID4gPiBub2RlIHsNCj4gPiA+ICAgICBwaW5tdXggPSA8UElOX05VTUJFUl9QSU5N
-VVg+Ow0KPiA+ID4gICAgIEdFTkVSSUNfUElOQ09ORklHOw0KPiA+ID4gfTsNCj4gPiA+DQo+ID4g
-PiBFeGFtcGxlIGZyb20gTWVkaWF0ZWs6DQo+ID4gPg0KPiA+ID4gaTJjMV9waW5zX2E6IGkyYzFA
-MCB7DQo+ID4gPiAgICAgcGlucyB7DQo+ID4gPiAgICAgICAgIHBpbm11eCA9IDxNVDgxMzVfUElO
-XzE5NV9TREExX19GVU5DX1NEQTE+LA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPE1U
-ODEzNV9QSU5fMTk2X1NDTDFfX0ZVTkNfU0NMMT47DQo+ID4NCj4gPiBJZiB3ZSBmb2xsb3cgdGhp
-cyBleGFtcGxlLCB0aGVuIHdlIGNhbiBsaXN0IGFsbCBjb21iaW5hdGlvbnMgaW4NCj4gPiBpbmNs
-dWRlL2R0LWJpbmRpbmdzL3BpbmN0cmwvcjdzNzIxMDAtcGluY3RybC5oLCBpbnN0ZWFkIG9mIGNy
-ZWF0aW5nDQo+ID4gdGhlIHZhbHVlIGJ5IGNvbWJpbmluZyB0aGUgYml0cyB1c2luZyBhIG1hY3Jv
-IHdoZXJlIHdlIG5lZWQgaXQgaW4gdGhlDQo+IERUUy4NCj4gPg0KPiA+IEl0J3MgZ29ubmEgYmUg
-YSBsb25nIGxpc3QsIHRob3VnaC4uLg0KPiA+DQo+IA0KPiBJJ20gc3Ryb25nbHkgaW4gZmF2b3Vy
-IG9mIHNvbWV0aGluZyBsaWtlDQo+ICAgICBwaW5tdXggPSA8UElOKDEsIDQpIHwgRlVOQyMgfCBG
-TEFHUz4sIC4uLi4gOw0KPiANCj4gb3Bwb3NlZCB0bw0KPiAgICAgcGlubXV4ID0gPFBJTjFfNF9G
-VU5DI19GTEFHUz4sIC4uLiA7DQoNCg0KSSBhZ3JlZS4gSSBsaWtlICI8UElOKDEsIDQpIHwgRlVO
-QyMgfCBGTEFHUz4iLg0KDQoNCg0KPiBOb3Qgb25seSBiZWNhdXNlIGl0IHdpbGwgc2F2ZSB1c2Ug
-ZnJvbSBoYXZpbmcgYSBsb29uZyBsaXN0KCopIG9mIG1hY3Jvcw0KPiB0aGF0IGhhcyB0byBiZSBr
-ZXB0IHVwIHRvIGRhdGUgd2hlbi9pZiBuZXcgUlogaGFyZHdhcmUgd2lsbCBhcnJpdmUsIGJ1dA0K
-PiBhbHNvIGJlY2F1c2Ugb2YgcmVhZGFiaWxpdHkgYW5kIHNpbXBsaWNpdHkgZm9yIGRvd24tc3Ry
-ZWFtIGFuZCBCU1AgdXNlcnMuDQo+IFNwZWFraW5nIG9mIHdoaWNoLCBJIHdvdWxkIGxpa2UgdG8g
-a25vdyB3aGF0IGRvZXMgQ2hyaXMgdGhpbmsgb2YgdGhpcy4NCg0KVGhlIGxpc3Qgb2YgbWFjcm9z
-IHdvdWxkIGJlIHZlcnkgbG9uZywgZXNwZWNpYWxseSBhZ2FpbnN0IHRoZSBkaWZmZXJlbnQNCnBh
-Y2thZ2luZyB2ZXJzaW9uIG9mIHRoZSBSWi9BMSBzZXJpZXMuIDExIHBvcnRzLCAxNi1waW5zIGZv
-ciBlYWNoIHBvcnQsIDggZGlmZmVyZW50DQpmdW5jdGlvbiBvcHRpb25zIGZvciBlYWNoIHBpbi4u
-Li4yIGRpZmZlcmVudCBwYWNrYWdlL3BpbiB2YXJpYXRpb25zLg0KDQpBbmQgYXQgdGhlIGVuZCBv
-ZiB0aGUgZGF5Li4uLnRoZXJlIGlzIG5vIGJlbmVmaXQgZm9yIHRoZSB1c2VyIG92ZXIganVzdCB1
-c2luZw0KYSBtYWNyby4NCg0KDQpBIGxpdHRsZSBhYm91dCAidGhpcyBjb250cm9sbGVyIiBmb3Ig
-dGhlIFJaL0ExOiBJbiBteSBvcGluaW9uIGl0J3MgYSBvbmUtc2hvdCB1c2FnZS4NCkkgZG9uJ3Qg
-Zm9yZXNlZSBmdXR1cmUgUlovQSBTb0NzIHVzaW5nIHRoaXMgZXhhY3QgcGluIGNvbnRyb2xsZXIu
-DQpUaGUgcmVhc29uIGZvciB0aGUgIkZMQUdTIiBpcyB0byB3b3JrIGFyb3VuZCBhIHF1aXJreSBo
-YXJkd2FyZSBkZXNpZ24gKGluIG15IG9waW5pb24pLg0KDQpIb3dldmVyLCBmdXR1cmUgUlovQSBT
-b0NzIHdpbGwgdXNlIGEgJ3NpbWlsYXInIHR5cGUgY29udHJvbGxlciB3aGVyZSBlYWNoIHBpbiBo
-YXMgOCBmdW5jdGlvbg0Kb3B0aW9ucyAoYnV0IHRoZSBGTEFHcyB3b24ndCBiZSBuZWVkZWQgYW55
-bW9yZS4uLmFzIGZhciBhcyBJIGNhbiBzZWUuLi4pLg0KDQpTbyBJIGZvcmVzZWUgdGhlIERUIGlu
-dGVyZmFjZSBzdGF5aW5nIG1vcmUgb3IgbGVzcyB0aGUgc2FtZSwgYnV0IHRoZSB1bmRlcmx5aW5n
-IHJlZ2lzdGVyDQpzZXR1cCBpbiB0aGUgZHJpdmVyIFdpbGwgY2hhbmdlIChiZWNvbWUgbW9yZSBz
-aW1wbGUpLg0KDQoNCk5vdy4uLmlmIHdlIGNhbiBvbmx5IGNvbnZpbmNlIHRoZSBSLUNhciBndXlz
-IHRvIG1vdmUgdG8gYSBtb3JlIHNpbXBsZSBwaW4tbXV4IGNvbnRyb2xsZXIuLi4NCg0KDQpDaHJp
-cw0KDQo=
+Hello Rob,
+
+Sorry for this dirty/crappy patch...
+Please find answers below
+
+Thanks
+
+Arnaud
+
+
+On 03/24/2017 03:52 PM, Rob Herring wrote:
+> On Fri, Mar 17, 2017 at 03:08:23PM +0100, Arnaud Pouliquen wrote:
+>> Add bindings that describes audio settings to support
+>> Digital Filter for pulse density modulation(PDM) microphone.
+>>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> ---
+>> V2->V3:
+>>    Fixes based on V2 comments
+>>
+>>  .../devicetree/bindings/sound/st,stm32-adfsdm.txt  | 41 ++++++++++++++++++++++
+>>  1 file changed, 41 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt b/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
+>> new file mode 100644
+>> index 0000000..ab610bc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
+>> @@ -0,0 +1,40 @@
+>> +STMicroelectronics audio DFSDM DT bindings
+>> +
+>> +This driver supports audio PDM microphone capture through Digital Filter format
+>> +Sigma Delta modulators (DFSDM).
+>> +
+>> +Required properties:
+>> +  - compatible: "st,stm32h7-adfsdm".
+>> +
+>> +  - #sound-dai-cells : Must be equal to 0
+>> +
+>> +  - io-channels : phandle to iio dfsdm instance node.
+>> +
+>> +
+>> +Example of a simple sound card using audio DFSDM node.
+>> +
+>> +	dmic0: dmic_@0 {
+> 
+> Drop the '_' and unit address.
+> 
+>> +		compatible = "dmic-codec";
+>> +		#sound-dai-cells = <0>;
+>> +	};
+>> +
+>> +	asoc-pdm@0 {
+> 
+> asoc is a Linux term. Drop the unit address.
+> 
+>> +		compatible = "st,stm32h7-adfsdm";
+> 
+> Is this a separate block from the ADC? A drawing of the h/w blocks and 
+> connections would help.
+I don't know how to explain it...So don't hesitate is still not clear.
+On DFSDM we can connect 2 ADC types:
+- Generic Sigma delta(SD) ADC for analog to digital conversion
+- Digital microphones for audio capture.
+
+In both cases, an SPI or Manchester bus is used to transfer 1-bit stream
+ to DFSDM.
+1) In case of SD ADC, The link is described in IIO declaration using
+"io-channels" property ( [04/11] IIO: add DT bindings for stm32 DFSDM
+filter)
+2) For audio purpose, the link is done by the simple or the graph card
+So this device exposes the Digital audio interface (DAI) associated to
+the DFSDM ADC.
+Link between the DFSDM DAI and the DFSDM IIO device is done through the
+"io-channels" property.
+
+> 
+>> +		#sound-dai-cells = <0>;
+>> +		io-channels = <&dfsdm_adc0 0>;
+>> +	};
+>> +
+>> +	sound_dfsdm_pdm {
+> 
+> sound-card {
+> 
+>> + 		compatible = "simple-audio-card";
+>> + 		simple-audio-card,name = "dfsdm_pdm";
+>> +
+>> + 		dfsdm0_mic0: simple-audio-card,dai-link@0 {
+> 
+> I'd suggest moving to the graph card.
+yes should be in V4
+> 
+>> + 			format = "pdm";
+>> + 			cpu {
+>> + 				sound-dai = <&asoc_pdm1>;
+> 
+> This phandle doesn't point to anything.
+> 
+>> + 			};
+>> + 			dmic0_codec: codec {
+>> + 				sound-dai = <&dmic0>;
+>> + 			};
+>> + 		};
+>> +	};
+>> \ No newline at end of file
+> 
+> ^^^
+> 
+>> -- 
+>> 1.9.1
+>>
