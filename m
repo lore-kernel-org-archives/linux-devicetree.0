@@ -1,97 +1,52 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v1 0/8] clk: meson: gxbb: more clock controller update for audio
- support
-Date: Wed, 29 Mar 2017 13:42:53 -0700
-Message-ID: <149082017390.31513.12254031076684821992@resonance>
-References: <20170328144605.25278-1-jbrunet@baylibre.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v6 1/5] irqchip/aspeed-i2c-ic: binding docs for Aspeed I2C
+ Interrupt Controller
+Date: Wed, 29 Mar 2017 13:51:57 -0700
+Message-ID: <CAFd5g460U4c3rMtKphxnu=OADTfD=oe8Z+JPn-H82zpHKJUqfw@mail.gmail.com>
+References: <20170328051226.21677-1-brendanhiggins@google.com>
+ <20170328051226.21677-2-brendanhiggins@google.com> <1490690980.3177.108.camel@kernel.crashing.org>
+ <CAFd5g47Pij6TxkmS6akWoAL0FZ2WLh+FWUrr099RiabWn+pneQ@mail.gmail.com> <1490789505.3177.184.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170328144605.25278-1-jbrunet@baylibre.com>
+In-Reply-To: <1490789505.3177.184.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, narmstrong@baylibre.com
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
+> Regarding the other comment about the "fast mode", my main worry here
+> is that somebody might come up with a 2Mhz capable device, we'll hit
+> your 1Mhz test, enable fast mode, and shoot it with 3.4Mhz which it
+> might not be happy at all about...
+>
+> I think the cut-off for switching to the "fast" mode should basically
+> be the fast speed mode frequency (which isn't clear from the spec but
+> seems to be 3.4Mhz). Otherwise people will end up with higher speeds
+> than what they asked for and that's bad.
 
-Adding Neil Armstong to Cc.
+Ah, but see the documentation only says that high speed mode sets the
+Base Clock divisor to zero; is does not say anything about tCKHigh or
+tCKLow (clk_high and clk_low in my code respectively), which are the
+only parameters which are manipulated for speeds greater than or equal
+to 1.5MHz since:
 
-Quoting Jerome Brunet (2017-03-28 07:45:57)
-> The patchset is the 2nd round of update to the meson gxbb clock controller
-> to add initial audio support. The patchset is based on clk-next.
-> =
+# I forgot the "APB_freq /" part in the comment on my
+aspeed_i2c_get_clk_reg_val(...)
+# My function still does the computation correctly, I just forgot this
+in the comment.
+SCL_freq = APB_freq / (1 << base_clk) * (clk_high + 1 + clk_low + 1)
 
-> There is not much out of the ordinary here (adding new clocks and exposing
-> them) except maybe for 2 patches:
-> Patch #2: Adds a safety check while registering clocks to protect against
->           holes in clk_hw_onecell_data, if it ever happens. Same thing is
->           done for the meson8b clock controller. =
+so if base_clk = 0, clk_high = 15, clk_low = 15, APB_freq = 50MHz
 
-> Patch #3: Adds a new clock divider driver to implement the necessary
->           policy for the i2s master clock (see patch changelog)
-> =
+SCL_freq = APB_freq / (1 << base_clk) * (clk_high + 1 + clk_low + 1)
+                = 50000000 / (1 << 0) * (15 + 1 + 15 + 1)
+                = 50000000 / 32
+                = 1562500Hz
+                = ~1.5MHz
 
-> This patchset has been test on the gxbb p200 and gxl p230.
+so maybe instead of setting a hard limit like I did, maybe the best
+thing is to just check and see what the base_clk gets set to and if it
+gets set to zero, we turn on high speed mode. What do you think?
 
-First off, this series looks fine to me. Please add,
-
-Acked-by: Michael Turquette <mturquette@baylibre.com>
-
-Secondly, it seems the AmLogic clock drivers have mostly calmed down and
-things are in the "add new clocks when we need them" phase, which is
-nice. Since you and Neil are doing a lot of this work, might I suggest
-that you both start collecting patches for the AmLogic/meson clock
-drivers begin submitting pull requests to Stephen and myself?
-
-As usual the rules are the same as always: all patches in the PR must
-first be posted for review on the list. PRs should correspond to signed
-tags. Stephen and I might ignore PRs sent after -rc4, and will
-definitely ignore PRs sent after -rc6 since we want some stabilization
-time before the merge window. Base your branch on -rc1, not on clk-next.
-
-Also feel free to submit a patch to MAINTAINERS with either one or both
-of you maintaining the meson clk stuff, assuming that you're OK to
-review all of those patches and collect them into a PR.
-
-Thoughts?
-
-If it sounds good to you then I suggest grabbing the clk-meson branch
-from the clk tree and using that as a baseline for your first PR. In the
-future you'll just Linus' -rc1, but I have already created a branch for
-this cycle. You can apply these 8 patches with my Ack and send a PR by
--rc6 (possibly with other stuff collected from Martin, etc).
-
-Thanks,
-Mike
-
-> =
-
-> Jerome Brunet (8):
->   dt-bindings: clock: gxbb: expose spdif clock gates
->   clk: meson: gxbb: protect against holes in the onecell_data array
->   clk: meson: add audio clock divider support
->   clk: meson: gxbb: add cts_amclk
->   clk: meson: gxbb: add cts_mclk_i958
->   clk: meson: gxbb: add cts_i958 clock
->   dt-bindings: clock: gxbb: expose i2s master clock
->   dt-bindings: clock: gxbb: expose spdif master clock
-> =
-
->  drivers/clk/meson/Makefile            |   2 +-
->  drivers/clk/meson/clk-audio-divider.c | 149 ++++++++++++++++++++++++++++=
-++++++
->  drivers/clk/meson/clkc.h              |  10 +++
->  drivers/clk/meson/gxbb.c              | 144 ++++++++++++++++++++++++++++=
-++++
->  drivers/clk/meson/gxbb.h              |  13 ++-
->  include/dt-bindings/clock/gxbb-clkc.h |   5 ++
->  6 files changed, 319 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/clk/meson/clk-audio-divider.c
-> =
-
-> -- =
-
-> 2.9.3
->=20
+Cheers
