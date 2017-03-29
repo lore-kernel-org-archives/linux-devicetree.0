@@ -1,315 +1,302 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: add driver for STM32 quad spi flash
- controller
-Date: Wed, 29 Mar 2017 12:54:16 +0200
-Message-ID: <1be39452-83b0-5c32-39fe-d6dd5134d1ef@gmail.com>
-References: <1490619296-8168-1-git-send-email-ludovic.Barre@st.com>
- <1490619296-8168-3-git-send-email-ludovic.Barre@st.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] phy: meson: add USB2 PHY support for Meson GXL and
+ GXM
+Date: Wed, 29 Mar 2017 16:26:06 +0530
+Message-ID: <82edc36e-80ae-3aa2-cd45-664b26a21e4a@ti.com>
+References: <20170304222231.14496-1-martin.blumenstingl@googlemail.com>
+ <20170318130013.20771-1-martin.blumenstingl@googlemail.com>
+ <20170318130013.20771-3-martin.blumenstingl@googlemail.com>
+ <CAFBinCCBkdADVX_9g54Lz2K3oPux2TnjPuotf1pz0mu6h6phTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490619296-8168-3-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <CAFBinCCBkdADVX_9g54Lz2K3oPux2TnjPuotf1pz0mu6h6phTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hendrik-MJglGmTD+GWCT0AhDRffsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2017 02:54 PM, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Hi,
+
+On Wednesday 29 March 2017 03:03 AM, Martin Blumenstingl wrote:
+> Hi Kishon,
 > 
-> The quadspi is a specialized communication interface targeting single,
-> dual or quad SPI Flash memories.
+> On Sat, Mar 18, 2017 at 2:00 PM, Martin Blumenstingl
+> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>> This adds a new driver for the USB2 PHYs found on Meson GXL and GXM SoCs
+>> (both SoCs are using the same USB PHY register layout).
+>>
+>> The USB2 PHY is a simple PHY which only has a few registers to configure
+>> the mode (host/device) and a reset register (to enable/disable the PHY).
+>>
+>> Unfortunately there are no datasheets available for this PHY. The driver
+>> was written by reading the code from Amlogic's GPL kernel sources and
+>> by analyzing the registers on an actual GXL and GXM device running the
+>> kernel that was shipped on the boards I have.
+> gentle ping - did you have time to review this patch in v2 yet?
+
+Have a few comments, see below..
 > 
-> It can operate in any of the following modes:
-> -indirect mode: all the operations are performed using the quadspi
->  registers
-> -read memory-mapped mode: the external Flash memory is mapped to the
->  microcontroller address space and is seen by the system as if it was
->  an internal memory
-> 
-> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> ---
+>>  drivers/phy/Kconfig              |  14 ++
+>>  drivers/phy/Makefile             |   1 +
+>>  drivers/phy/phy-meson-gxl-usb2.c | 273 +++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 288 insertions(+)
+>>  create mode 100644 drivers/phy/phy-meson-gxl-usb2.c
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index dc5277ad1b5a..2573e139fd17 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -510,6 +510,19 @@ config PHY_MESON8B_USB2
+>>           and GXBB SoCs.
+>>           If unsure, say N.
+>>
+>> +config PHY_MESON_GXL_USB
+>> +       tristate "Meson GXL and GXM USB2 PHY drivers"
+>> +       default ARCH_MESON
+>> +       depends on OF && (ARCH_MESON || COMPILE_TEST)
+>> +       depends on USB_SUPPORT
+>> +       select USB_COMMON
+>> +       select GENERIC_PHY
+>> +       select REGMAP_MMIO
+>> +       help
+>> +         Enable this to support the Meson USB2 PHYs found in Meson
+>> +         GXL and GXM SoCs.
+>> +         If unsure, say N.
+>> +
+>>  config PHY_NSP_USB3
+>>         tristate "Broadcom NorthStar plus USB3 PHY driver"
+>>         depends on OF && (ARCH_BCM_NSP || COMPILE_TEST)
+>> @@ -518,4 +531,5 @@ config PHY_NSP_USB3
+>>         help
+>>           Enable this to support the Broadcom Northstar plus USB3 PHY.
+>>           If unsure, say N.
+>> +
 
-Hi! I presume this is not compatible with the Cadence QSPI or any other
-QSPI controller, huh ?
+spurious space..
+>>  endmenu
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index e7b0feb1e125..e680b856e38e 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -62,4 +62,5 @@ obj-$(CONFIG_PHY_CYGNUS_PCIE)         += phy-bcm-cygnus-pcie.o
+>>  obj-$(CONFIG_ARCH_TEGRA) += tegra/
+>>  obj-$(CONFIG_PHY_NS2_PCIE)             += phy-bcm-ns2-pcie.o
+>>  obj-$(CONFIG_PHY_MESON8B_USB2)         += phy-meson8b-usb2.o
+>> +obj-$(CONFIG_PHY_MESON_GXL_USB)                += phy-meson-gxl-usb2.o
+>>  obj-$(CONFIG_PHY_NSP_USB3)             += phy-bcm-nsp-usb3.o
+>> diff --git a/drivers/phy/phy-meson-gxl-usb2.c b/drivers/phy/phy-meson-gxl-usb2.c
+>> new file mode 100644
+>> index 000000000000..4bf646a52c45
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-meson-gxl-usb2.c
+>> @@ -0,0 +1,273 @@
+>> +/*
+>> + * Meson GXL and GXM USB2 PHY driver
+>> + *
+>> + * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/usb/of.h>
+>> +
+>> +/* bits [31:27] are read-only */
+>> +#define U2P_R0                                                 0x0
+>> +       #define U2P_R0_BYPASS_SEL                               BIT(0)
+>> +       #define U2P_R0_BYPASS_DM_EN                             BIT(1)
+>> +       #define U2P_R0_BYPASS_DP_EN                             BIT(2)
+>> +       #define U2P_R0_TXBITSTUFF_ENH                           BIT(3)
+>> +       #define U2P_R0_TXBITSTUFF_EN                            BIT(4)
+>> +       #define U2P_R0_DM_PULLDOWN                              BIT(5)
+>> +       #define U2P_R0_DP_PULLDOWN                              BIT(6)
+>> +       #define U2P_R0_DP_VBUS_VLD_EXT_SEL                      BIT(7)
+>> +       #define U2P_R0_DP_VBUS_VLD_EXT                          BIT(8)
+>> +       #define U2P_R0_ADP_PRB_EN                               BIT(9)
+>> +       #define U2P_R0_ADP_DISCHARGE                            BIT(10)
+>> +       #define U2P_R0_ADP_CHARGE                               BIT(11)
+>> +       #define U2P_R0_DRV_VBUS                                 BIT(12)
+>> +       #define U2P_R0_ID_PULLUP                                BIT(13)
+>> +       #define U2P_R0_LOOPBACK_EN_B                            BIT(14)
+>> +       #define U2P_R0_OTG_DISABLE                              BIT(15)
+>> +       #define U2P_R0_COMMON_ONN                               BIT(16)
+>> +       #define U2P_R0_FSEL_MASK                                GENMASK(19, 17)
+>> +       #define U2P_R0_REF_CLK_SEL_MASK                         GENMASK(21, 20)
+>> +       #define U2P_R0_POWER_ON_RESET                           BIT(22)
+>> +       #define U2P_R0_V_ATE_TEST_EN_B_MASK                     GENMASK(24, 23)
+>> +       #define U2P_R0_ID_SET_ID_DQ                             BIT(25)
+>> +       #define U2P_R0_ATE_RESET                                BIT(26)
+>> +       #define U2P_R0_FSV_MINUS                                BIT(27)
+>> +       #define U2P_R0_FSV_PLUS                                 BIT(28)
+>> +       #define U2P_R0_BYPASS_DM_DATA                           BIT(29)
+>> +       #define U2P_R0_BYPASS_DP_DATA                           BIT(30)
+>> +
+>> +#define U2P_R1                                                 0x4
+>> +       #define U2P_R1_BURN_IN_TEST                             BIT(0)
+>> +       #define U2P_R1_ACA_ENABLE                               BIT(1)
+>> +       #define U2P_R1_DCD_ENABLE                               BIT(2)
+>> +       #define U2P_R1_VDAT_SRC_EN_B                            BIT(3)
+>> +       #define U2P_R1_VDAT_DET_EN_B                            BIT(4)
+>> +       #define U2P_R1_CHARGES_SEL                              BIT(5)
+>> +       #define U2P_R1_TX_PREEMP_PULSE_TUNE                     BIT(6)
+>> +       #define U2P_R1_TX_PREEMP_AMP_TUNE_MASK                  GENMASK(8, 7)
+>> +       #define U2P_R1_TX_RES_TUNE_MASK                         GENMASK(10, 9)
+>> +       #define U2P_R1_TX_RISE_TUNE_MASK                        GENMASK(12, 11)
+>> +       #define U2P_R1_TX_VREF_TUNE_MASK                        GENMASK(16, 13)
+>> +       #define U2P_R1_TX_FSLS_TUNE_MASK                        GENMASK(20, 17)
+>> +       #define U2P_R1_TX_HSXV_TUNE_MASK                        GENMASK(22, 21)
+>> +       #define U2P_R1_OTG_TUNE_MASK                            GENMASK(25, 23)
+>> +       #define U2P_R1_SQRX_TUNE_MASK                           GENMASK(28, 26)
+>> +       #define U2P_R1_COMP_DIS_TUNE_MASK                       GENMASK(31, 29)
+>> +
+>> +/* bits [31:14] are read-only */
+>> +#define U2P_R2                                                 0x8
+>> +       #define U2P_R2_DATA_IN_MASK                             GENMASK(3, 0)
+>> +       #define U2P_R2_DATA_IN_EN_MASK                          GENMASK(7, 4)
+>> +       #define U2P_R2_ADDR_MASK                                GENMASK(11, 8)
+>> +       #define U2P_R2_DATA_OUT_SEL                             BIT(12)
+>> +       #define U2P_R2_CLK                                      BIT(13)
+>> +       #define U2P_R2_DATA_OUT_MASK                            GENMASK(17, 14)
+>> +       #define U2P_R2_ACA_PIN_RANGE_C                          BIT(18)
+>> +       #define U2P_R2_ACA_PIN_RANGE_B                          BIT(19)
+>> +       #define U2P_R2_ACA_PIN_RANGE_A                          BIT(20)
+>> +       #define U2P_R2_ACA_PIN_GND                              BIT(21)
+>> +       #define U2P_R2_ACA_PIN_FLOAT                            BIT(22)
+>> +       #define U2P_R2_CHARGE_DETECT                            BIT(23)
+>> +       #define U2P_R2_DEVICE_SESSION_VALID                     BIT(24)
+>> +       #define U2P_R2_ADP_PROBE                                BIT(25)
+>> +       #define U2P_R2_ADP_SENSE                                BIT(26)
+>> +       #define U2P_R2_SESSION_END                              BIT(27)
+>> +       #define U2P_R2_VBUS_VALID                               BIT(28)
+>> +       #define U2P_R2_B_VALID                                  BIT(29)
+>> +       #define U2P_R2_A_VALID                                  BIT(30)
+>> +       #define U2P_R2_ID_DIG                                   BIT(31)
+>> +
+>> +#define U2P_R3                                                 0xc
+>> +
+>> +#define RESET_COMPLETE_TIME                            500
+>> +
+>> +struct phy_meson_gxl_usb2_priv {
+>> +       struct regmap           *regmap;
+>> +       enum phy_mode           mode;
+>> +       int                     is_enabled;
+>> +};
+>> +
+>> +static const struct regmap_config phy_meson_gxl_usb2_regmap_conf = {
+>> +       .reg_bits = 8,
+>> +       .val_bits = 32,
+>> +       .reg_stride = 4,
+>> +       .max_register = U2P_R3,
+>> +};
+>> +
+>> +static int phy_meson_gxl_usb2_reset(struct phy *phy)
+>> +{
+>> +       struct phy_meson_gxl_usb2_priv *priv = phy_get_drvdata(phy);
+>> +
+>> +       if (priv->is_enabled) {
+>> +               /* reset the PHY and wait until settings are stabilized */
+>> +               regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_POWER_ON_RESET,
+>> +                               U2P_R0_POWER_ON_RESET);
+>> +               udelay(RESET_COMPLETE_TIME);
+>> +               regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_POWER_ON_RESET,
+>> +                                  0);
+>> +               udelay(RESET_COMPLETE_TIME);
+>> +       }
 
-Mostly minor nits below ...
+Instead of having big if condition blocks, it could be
+	if (!priv->is_enabled)
+		return 0
 
-> ---
->  drivers/mtd/spi-nor/Kconfig         |   7 +
->  drivers/mtd/spi-nor/Makefile        |   1 +
->  drivers/mtd/spi-nor/stm32-quadspi.c | 679 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 687 insertions(+)
->  create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
+	the configuration when priv->is_enabled is true should go here.
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int phy_meson_gxl_usb2_set_mode(struct phy *phy, enum phy_mode mode)
+>> +{
+>> +       struct phy_meson_gxl_usb2_priv *priv = phy_get_drvdata(phy);
+>> +
+>> +       switch (mode) {
+>> +       case PHY_MODE_USB_HOST:
+>> +       case PHY_MODE_USB_OTG:
+>> +               regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_DM_PULLDOWN,
+>> +                                  U2P_R0_DM_PULLDOWN);
+>> +               regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_DP_PULLDOWN,
+>> +                                  U2P_R0_DP_PULLDOWN);
+>> +               regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_ID_PULLUP, 0);
+>> +               break;
+>> +
+>> +       case PHY_MODE_USB_DEVICE:
+>> +               regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_DM_PULLDOWN,
+>> +                                  0);
+>> +               regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_DP_PULLDOWN,
+>> +                                  0);
+>> +               regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_ID_PULLUP,
+>> +                                  U2P_R0_ID_PULLUP);
+>> +               break;
+>> +
+>> +       default:
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       phy_meson_gxl_usb2_reset(phy);
+>> +
+>> +       priv->mode = mode;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int phy_meson_gxl_usb2_power_off(struct phy *phy)
+>> +{
+>> +       struct phy_meson_gxl_usb2_priv *priv = phy_get_drvdata(phy);
+>> +
+>> +       priv->is_enabled = 0;
+>> +
+>> +       /* power off the PHY by putting it into reset mode */
+>> +       regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_POWER_ON_RESET,
+>> +                          U2P_R0_POWER_ON_RESET);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int phy_meson_gxl_usb2_power_on(struct phy *phy)
+>> +{
+>> +       struct phy_meson_gxl_usb2_priv *priv = phy_get_drvdata(phy);
+>> +       int ret;
+>> +
+>> +       priv->is_enabled = 1;
+>> +
+>> +       /* power on the PHY by taking it out of reset mode */
+>> +       regmap_update_bits(priv->regmap, U2P_R0, U2P_R0_POWER_ON_RESET, 0);
+>> +
+>> +       ret = phy_meson_gxl_usb2_set_mode(phy, priv->mode);
 
-[...]
+Since this is already part of phy_ops, the consumer of this phy will take care
+of setting the mode right?
 
-> +struct stm32_qspi_cmd {
-> +	struct {
-> +		u32 addr_width:8;
-> +		u32 dummy:8;
-> +		u32 data:1;
-> +	} conf;
+>> +       if (ret) {
+>> +               phy_meson_gxl_usb2_power_off(phy);
 
-This could all be u8 ? Why this awful construct ?
+This would mess up the reference count in phy_core, since this function is also
+part of the phy_ops. The consumer should be responsible for powering off the phy.
 
-> +	u8 opcode;
-> +	u32 framemode;
-> +	u32 qspimode;
-> +	u32 addr;
-> +	size_t len;
-> +	void *buf;
-> +};
-> +
-> +static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi)
-> +{
-> +	u32 cr;
-> +	int err = 0;
-
-Can readl_poll_timeout() or somesuch replace this function ?
-
-> +	if (readl_relaxed(qspi->io_base + QUADSPI_SR) & SR_TCF)
-> +		return 0;
-> +
-> +	reinit_completion(&qspi->cmd_completion);
-> +	cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
-> +	writel_relaxed(cr | CR_TCIE, qspi->io_base + QUADSPI_CR);
-> +
-> +	if (!wait_for_completion_interruptible_timeout(&qspi->cmd_completion,
-> +						       msecs_to_jiffies(1000)))
-> +		err = -ETIMEDOUT;
-> +
-> +	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
-> +	return err;
-> +}
-> +
-> +static int stm32_qspi_wait_nobusy(struct stm32_qspi *qspi)
-> +{
-> +	u32 sr;
-> +
-> +	return readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR, sr,
-> +					  !(sr & SR_BUSY), 10, 100000);
-> +}
-> +
-> +static void stm32_qspi_set_framemode(struct spi_nor *nor,
-> +				     struct stm32_qspi_cmd *cmd, bool read)
-> +{
-> +	u32 dmode = CCR_DMODE_1;
-> +
-> +	cmd->framemode = CCR_IMODE_1;
-> +
-> +	if (read) {
-> +		switch (nor->flash_read) {
-> +		case SPI_NOR_NORMAL:
-> +		case SPI_NOR_FAST:
-> +			dmode = CCR_DMODE_1;
-> +			break;
-> +		case SPI_NOR_DUAL:
-> +			dmode = CCR_DMODE_2;
-> +			break;
-> +		case SPI_NOR_QUAD:
-> +			dmode = CCR_DMODE_4;
-> +			break;
-> +		}
-> +	}
-> +
-> +	cmd->framemode |= cmd->conf.data ? dmode : 0;
-> +	cmd->framemode |= cmd->conf.addr_width ? CCR_ADMODE_1 : 0;
-> +}
-> +
-> +static void stm32_qspi_read_fifo(u8 *val, void __iomem *addr)
-> +{
-> +	*val = readb_relaxed(addr);
-> +}
-> +
-> +static void stm32_qspi_write_fifo(u8 *val, void __iomem *addr)
-> +{
-> +	writeb_relaxed(*val, addr);
-> +}
-> +
-> +static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
-> +			      const struct stm32_qspi_cmd *cmd)
-> +{
-> +	void (*tx_fifo)(u8 *, void __iomem *);
-> +	u32 len = cmd->len, sr;
-> +	u8 *buf = cmd->buf;
-> +	int ret;
-> +
-> +	if (cmd->qspimode == CCR_FMODE_INDW)
-> +		tx_fifo = stm32_qspi_write_fifo;
-> +	else
-> +		tx_fifo = stm32_qspi_read_fifo;
-> +
-> +	while (len--) {
-> +		ret = readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR,
-> +						 sr, (sr & SR_FTF),
-> +						 10, 30000);
-
-Add macros for those ad-hoc timeouts.
-
-> +		if (ret) {
-> +			dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
-> +			break;
-> +		}
-> +		tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
-> +	}
-> +
-> +	return ret;
-> +}
-
-
-[...]
-
-> +static int stm32_qspi_send(struct stm32_qspi_flash *flash,
-> +			   const struct stm32_qspi_cmd *cmd)
-> +{
-> +	struct stm32_qspi *qspi = flash->qspi;
-> +	u32 ccr, dcr, cr;
-> +	int err;
-> +
-> +	err = stm32_qspi_wait_nobusy(qspi);
-> +	if (err)
-> +		goto abort;
-> +
-> +	dcr = readl_relaxed(qspi->io_base + QUADSPI_DCR) & ~DCR_FSIZE_MASK;
-> +	dcr |= DCR_FSIZE(flash->fsize);
-> +	writel_relaxed(dcr, qspi->io_base + QUADSPI_DCR);
-> +
-> +	cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
-> +	cr &= ~CR_PRESC_MASK & ~CR_FSEL;
-> +	cr |= CR_PRESC(flash->presc);
-> +	cr |= flash->cs ? CR_FSEL : 0;
-> +	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
-> +
-> +	if (cmd->conf.data)
-> +		writel_relaxed(cmd->len - 1, qspi->io_base + QUADSPI_DLR);
-> +
-> +	ccr = cmd->framemode | cmd->qspimode;
-> +
-> +	if (cmd->conf.dummy)
-> +		ccr |= CCR_DCYC(cmd->conf.dummy);
-> +
-> +	if (cmd->conf.addr_width)
-> +		ccr |= CCR_ADSIZE(cmd->conf.addr_width - 1);
-> +
-> +	ccr |= CCR_INST(cmd->opcode);
-> +	writel_relaxed(ccr, qspi->io_base + QUADSPI_CCR);
-> +
-> +	if (cmd->conf.addr_width && cmd->qspimode != CCR_FMODE_MM)
-> +		writel_relaxed(cmd->addr, qspi->io_base + QUADSPI_AR);
-> +
-> +	err = stm32_qspi_tx(qspi, cmd);
-> +	if (err)
-> +		goto abort;
-> +
-> +	if (cmd->qspimode != CCR_FMODE_MM) {
-> +		err = stm32_qspi_wait_cmd(qspi);
-> +		if (err)
-> +			goto abort;
-> +		writel_relaxed(FCR_CTCF, qspi->io_base + QUADSPI_FCR);
-> +	}
-> +
-> +	return err;
-> +
-> +abort:
-> +	writel_relaxed(readl_relaxed(qspi->io_base + QUADSPI_CR)
-> +		       | CR_ABORT, qspi->io_base + QUADSPI_CR);
-
-Use a helper variable here too.
-
-> +	dev_err(qspi->dev, "%s abort err:%d\n", __func__, err);
-> +	return err;
-> +}
-
-[...]
-
-> +static int stm32_qspi_flash_setup(struct stm32_qspi *qspi,
-> +				  struct device_node *np)
-> +{
-> +	u32 width, flash_read, presc, cs_num, max_rate = 0;
-> +	struct stm32_qspi_flash *flash;
-> +	struct mtd_info *mtd;
-> +	int ret;
-> +
-> +	of_property_read_u32(np, "reg", &cs_num);
-> +	if (cs_num >= STM32_MAX_NORCHIP)
-> +		return -EINVAL;
-> +
-> +	of_property_read_u32(np, "spi-max-frequency", &max_rate);
-> +	if (!max_rate)
-> +		return -EINVAL;
-> +
-> +	presc = DIV_ROUND_UP(qspi->clk_rate, max_rate) - 1;
-> +
-> +	if (of_property_read_u32(np, "spi-rx-bus-width", &width))
-> +		width = 1;
-> +
-> +	if (width == 4)
-> +		flash_read = SPI_NOR_QUAD;
-> +	else if (width == 2)
-> +		flash_read = SPI_NOR_DUAL;
-> +	else if (width == 1)
-> +		flash_read = SPI_NOR_NORMAL;
-> +	else
-> +		return -EINVAL;
-> +
-> +	flash = &qspi->flash[cs_num];
-> +	flash->qspi = qspi;
-> +	flash->cs = cs_num;
-> +	flash->presc = presc;
-> +
-> +	flash->nor.dev = qspi->dev;
-> +	spi_nor_set_flash_node(&flash->nor, np);
-> +	flash->nor.priv = flash;
-> +	mtd = &flash->nor.mtd;
-> +	mtd->priv = &flash->nor;
-> +
-> +	flash->nor.read = stm32_qspi_read;
-> +	flash->nor.write = stm32_qspi_write;
-> +	flash->nor.erase = stm32_qspi_erase;
-> +	flash->nor.read_reg = stm32_qspi_read_reg;
-> +	flash->nor.write_reg = stm32_qspi_write_reg;
-> +	flash->nor.prepare = stm32_qspi_prep;
-> +	flash->nor.unprepare = stm32_qspi_unprep;
-> +
-> +	writel_relaxed(LPTR_DFT_TIMEOUT, qspi->io_base + QUADSPI_LPTR);
-> +
-> +	writel_relaxed(CR_PRESC(presc) | CR_FTHRES(3) | CR_TCEN | CR_SSHIFT
-> +		       | CR_EN, qspi->io_base + QUADSPI_CR);
-> +
-> +	/* a minimum fsize must be set to sent the command id */
-> +	flash->fsize = 25;
-
-I don't understand why this is needed and the comment doesn't make
-sense. Please fix.
-
-> +	ret = spi_nor_scan(&flash->nor, NULL, flash_read);
-> +	if (ret) {
-> +		dev_err(qspi->dev, "device scan failed\n");
-> +		return ret;
-> +	}
-> +
-> +	flash->fsize = __fls(mtd->size) - 1;
-> +
-> +	writel_relaxed(DCR_CSHT(1), qspi->io_base + QUADSPI_DCR);
-> +
-> +	ret = mtd_device_register(mtd, NULL, 0);
-> +	if (ret) {
-> +		dev_err(qspi->dev, "mtd device parse failed\n");
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(qspi->dev, "read mm:%s cs:%d bus:%d\n",
-> +		qspi->read_mode == CCR_FMODE_MM ? "yes" : "no", cs_num, width);
-> +
-> +	return 0;
-> +}
-
-[...]
-
--- 
-Best regards,
-Marek Vasut
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
