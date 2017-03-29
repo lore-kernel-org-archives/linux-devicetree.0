@@ -1,75 +1,91 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
-Date: Wed, 29 Mar 2017 11:31:03 +0100
-Message-ID: <89b6c6c7-0da0-6891-312a-c9221851c20a@arm.com>
-References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
- <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
- <31be033f-514e-e48a-3ba2-a5c5cd477548@arm.com>
- <20170329030735.GA23889@leoy-linaro>
- <5584203e-cb19-a5d2-45b1-3e78d3482c55@arm.com>
- <20170329102740.GA20804@leoy-linaro>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH] ARM: dts: keystone-k2l: fix broken Ethernet due to disabled
+ OSR
+Date: Wed, 29 Mar 2017 16:02:18 +0530
+Message-ID: <59ba5ef37f17ff1c10d9d52ca06ef341b2d476eb.1490782833.git.nsekhar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170329102740.GA20804@leoy-linaro>
-Sender: linux-clk-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, sudeep.holla@arm.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/03/17 11:27, Leo Yan wrote:
-> On Wed, Mar 29, 2017 at 10:07:07AM +0100, Suzuki K Poulose wrote:
->
-> [...]
->
->>>>> +	if (mode == EDDEVID_IMPL_NONE) {
->>>>> +		drvdata->edpcsr_present  = false;
->>>>> +		drvdata->edcidsr_present = false;
->>>>> +		drvdata->edvidsr_present = false;
->>>>> +	} else if (mode == EDDEVID_IMPL_EDPCSR) {
->>>>> +		drvdata->edpcsr_present  = true;
->>>>> +		drvdata->edcidsr_present = false;
->>>>> +		drvdata->edvidsr_present = false;
->>>>> +	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
->>>>> +		if (!IS_ENABLED(CONFIG_64BIT) &&
->>>>> +			(pcsr_offset == EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32))
->>>>> +			drvdata->edpcsr_present = false;
->>>>> +		else
->>>>> +			drvdata->edpcsr_present = true;
->>>>
->>>> Sorry, I forgot why we do this check only in this mode. Shouldn't this be
->>>> common to all modes (of course which implies PCSR is present) ?
->>>
->>> No. PCSROffset is defined differently in ARMv7 and ARMv8; So finally we
->>> simplize PCSROffset value :
->>> 0000 - Sample offset applies based on the instruction state (indicated by PCSR[0])
->>> 0001 - No offset applies.
->>> 0010 - No offset applies, but do not use in AArch32 mode!
->>>
->>> So we need handle the corner case is when CPU runs AArch32 mode and
->>> PCSRoffset = 'b0010. Other cases the pcsr should be present.
->>
->> I understand that reasoning. But my question is, why do we check for PCSROffset
->> only when mode == EDDEVID_IMPL_EDPCSR_EDCIDSR and not for say mode == EDDEVID_IMPL_EDPCSR or
->> any other mode where PCSR is present.
->
-> Sorry I misunderstood your question.
->
-> I made mistake when I analyzed the possbile combination for mode and
-> PCSROffset so I thought it's the only case should handle:
-> { EDDEVID_IMPL_EDPCSR_EDCIDSR, EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
->
-> Below three combinations are possible to exist; so you are right, I
-> should move this out for the checking:
-> { EDDEVID_IMPL_NONE,           EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32 }
+From: Murali Karicheri <m-karicheri2@ti.com>
 
-That need not be covered, as IMPL_NONE says PCSR is not implemented hence you
-don't worry about anything as the functionality is missing. This should rather be:
-EDDEVID_IMPL_EDPCSR, where only PCSR is implemented.
+Ethernet networking on K2L has been broken since v4.11-rc1. This was
+caused by commit 32a34441a9bd ("ARM: keystone: dts: fix netcp clocks
+and add names"). This commit inadvertently moves on-chip static RAM
+clock to the end of list of clocks provided for netcp. Since keystone
+PM domain support does not have a list of recognized con_ids, only the
+first clock in the list comes under runtime PM management. This means
+the OSR (On-chip Static RAM) clock remains disabled and that broke
+networking on K2L.
 
-My switch...case suggestion makes it easier to do all this checking.
+The OSR is used by QMSS on K2L as an external linking RAM. However this
+is a standalone RAM that can be used for non-QMSS usage (as well as from
+DSP side). So add a SRAM device node for the same and add the OSR clock
+to the node.
 
+Remove the now redundant OSR clock node from netcp.
 
-Thanks
-Suzuki
+To manage all clocks defined for netCP's use by runtime PM needs keystone
+generic power domain (genpd) driver support which is under works.
+Meanwhile, this patch restores K2L networking and is correct irrespective
+of any future genpd work since OSR is an independent module and not part
+of NetCP anyway.
+
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Acked-by: Tero Kristo <t-kristo@ti.com>
+[nsekhar@ti.com: commit message updates, port to latest mainline]
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ arch/arm/boot/dts/keystone-k2l-netcp.dtsi | 4 ++--
+ arch/arm/boot/dts/keystone-k2l.dtsi       | 8 ++++++++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+index b6f26824e83a..66f615a74118 100644
+--- a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+@@ -137,8 +137,8 @@ netcp: netcp@26000000 {
+ 	/* NetCP address range */
+ 	ranges = <0 0x26000000 0x1000000>;
+ 
+-	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>, <&clkosr>;
+-	clock-names = "pa_clk", "ethss_clk", "cpts", "osr_clk";
++	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
++	clock-names = "pa_clk", "ethss_clk", "cpts";
+ 	dma-coherent;
+ 
+ 	ti,navigator-dmas = <&dma_gbe 0>,
+diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
+index b58e7ebc0919..148650406cf7 100644
+--- a/arch/arm/boot/dts/keystone-k2l.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l.dtsi
+@@ -232,6 +232,14 @@
+ 			};
+ 		};
+ 
++		osr: sram@70000000 {
++			compatible = "mmio-sram";
++			reg = <0x70000000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			clocks = <&clkosr>;
++		};
++
+ 		dspgpio0: keystone_dsp_gpio@02620240 {
+ 			compatible = "ti,keystone-dsp-gpio";
+ 			gpio-controller;
+-- 
+2.9.0
