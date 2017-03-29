@@ -1,58 +1,113 @@
-From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v4 02/23] drivers/fsi: Add slave definition
-Date: Wed, 29 Mar 2017 12:43:19 -0500
-Message-ID: <20170329174340.89109-3-cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 23/23] drivers/fsi: Use asynchronous slave mode
+Date: Wed, 29 Mar 2017 12:43:40 -0500
+Message-ID: <20170329174340.89109-24-cbostic@linux.vnet.ibm.com>
 References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329174340.89109-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-Add the initial fsi slave device, which is private to the core code.
-This will be a child of the master, and parent to endpoint devices.
+For slaves that are behind a software-clocked master, we want FSI CFAMs
+to run asynchronously to the FSI clock, so set up our slaves to be in
+async mode.
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- drivers/fsi/fsi-core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/fsi/fsi-core.c        | 22 +++++++++++++++++++++-
+ drivers/fsi/fsi-master-gpio.c |  1 +
+ drivers/fsi/fsi-master.h      |  2 ++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index ca02913..2f19509 100644
+index 747d0e3..a6ed34f 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -22,6 +22,16 @@
+@@ -47,6 +47,7 @@
+ #define FSI_SMODE		0x0	/* R/W: Mode register */
+ #define FSI_SISC		0x8	/* R/W: Interrupt condition */
+ #define FSI_SSTAT		0x14	/* R  : Slave status */
++#define FSI_LLMODE		0x100	/* R/W: Link layer mode register */
+ 
+ /*
+  * SMODE fields
+@@ -62,6 +63,11 @@
+ #define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
+ #define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
+ 
++/*
++ * LLMODE fields
++ */
++#define FSI_LLMODE_ASYNC	0x1
++
+ #define FSI_SLAVE_SIZE_23b		0x800000
  
  static DEFINE_IDA(master_ida);
+@@ -560,8 +566,8 @@ static void fsi_slave_release(struct device *dev)
  
-+struct fsi_slave {
-+	struct device		dev;
-+	struct fsi_master	*master;
-+	int			id;
-+	int			link;
-+	uint32_t		size;	/* size of slave address space */
-+};
-+
-+#define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
-+
- /* FSI master support */
- int fsi_master_register(struct fsi_master *master)
+ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
  {
++	uint32_t chip_id, llmode;
+ 	struct fsi_slave *slave;
+-	uint32_t chip_id;
+ 	uint8_t crc;
+ 	int rc;
+ 
+@@ -597,6 +603,20 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 		return -ENODEV;
+ 	}
+ 
++	/* If we're behind a master that doesn't provide a self-running bus
++	 * clock, put the slave into async mode
++	 */
++	if (master->flags & FSI_MASTER_FLAG_SWCLOCK) {
++		llmode = cpu_to_be32(FSI_LLMODE_ASYNC);
++		rc = fsi_master_write(master, link, id,
++				FSI_SLAVE_BASE + FSI_LLMODE,
++				&llmode, sizeof(llmode));
++		if (rc)
++			dev_warn(&master->dev,
++				"can't set llmode on slave:%02x:%02x %d\n",
++				link, id, rc);
++	}
++
+ 	/* We can communicate with a slave; create the slave device and
+ 	 * register.
+ 	 */
+diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
+index 84d5595..f3fcede 100644
+--- a/drivers/fsi/fsi-master-gpio.c
++++ b/drivers/fsi/fsi-master-gpio.c
+@@ -573,6 +573,7 @@ static int fsi_master_gpio_probe(struct platform_device *pdev)
+ 	master->gpio_mux = gpio;
+ 
+ 	master->master.n_links = 1;
++	master->master.flags = FSI_MASTER_FLAG_SWCLOCK;
+ 	master->master.read = fsi_master_gpio_read;
+ 	master->master.write = fsi_master_gpio_write;
+ 	master->master.term = fsi_master_gpio_term;
+diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
+index d6a4885..fd39924 100644
+--- a/drivers/fsi/fsi-master.h
++++ b/drivers/fsi/fsi-master.h
+@@ -19,6 +19,8 @@
+ 
+ #include <linux/device.h>
+ 
++#define FSI_MASTER_FLAG_SWCLOCK	0x1
++
+ struct fsi_master {
+ 	struct device	dev;
+ 	int		idx;
 -- 
 1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
