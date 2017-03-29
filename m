@@ -1,50 +1,107 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3 ES2.0
-Date: Wed, 29 Mar 2017 10:31:02 +0200
-Message-ID: <CAMuHMdWvR71V_JyR6273KmdtGfrrT_vaU2vcDTpNt2MAG0WdLg@mail.gmail.com>
-References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
- <1490362665-4422-2-git-send-email-geert+renesas@glider.be>
- <1612430.SNEha5n02K@avalon> <20170329081352.GF6512@verge.net.au>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v6 02/39] [media] dt-bindings: Add bindings for i.MX
+ media driver
+Date: Wed, 29 Mar 2017 09:39:05 +0100
+Message-ID: <20170329083904.GZ7909@n2100.armlinux.org.uk>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-3-git-send-email-steve_longerbeam@mentor.com>
+ <CAL_JsqJm_JjuVPcOBERCqsnjTDdNoKr9xRE9MXMO4ivxGath2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170329081352.GF6512@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJm_JjuVPcOBERCqsnjTDdNoKr9xRE9MXMO4ivxGath2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Simon Horman <horms+renesas@>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Tue, Mar 28, 2017 at 07:21:34PM -0500, Rob Herring wrote:
+> On Mon, Mar 27, 2017 at 7:40 PM, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Add bindings documentation for the i.MX media driver.
+> >
+> > Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/media/imx.txt | 74 +++++++++++++++++++++++++
+> >  1 file changed, 74 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
+> > new file mode 100644
+> > index 0000000..3059c06
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/imx.txt
+> > @@ -0,0 +1,74 @@
+> > +Freescale i.MX Media Video Device
+> > +=================================
+> > +
+> > +Video Media Controller node
+> > +---------------------------
+> > +
+> > +This is the media controller node for video capture support. It is a
+> > +virtual device that lists the camera serial interface nodes that the
+> > +media device will control.
+> > +
+> > +Required properties:
+> > +- compatible : "fsl,imx-capture-subsystem";
+> > +- ports      : Should contain a list of phandles pointing to camera
+> > +               sensor interface ports of IPU devices
+> > +
+> > +example:
+> > +
+> > +capture-subsystem {
+> > +       compatible = "fsl,imx-capture-subsystem";
+> > +       ports = <&ipu1_csi0>, <&ipu1_csi1>;
+> > +};
+> > +
+> > +fim child node
+> > +--------------
+> > +
+> > +This is an optional child node of the ipu_csi port nodes. If present and
+> > +available, it enables the Frame Interval Monitor. Its properties can be
+> > +used to modify the method in which the FIM measures frame intervals.
+> > +Refer to Documentation/media/v4l-drivers/imx.rst for more info on the
+> > +Frame Interval Monitor.
+> > +
+> > +Optional properties:
+> > +- fsl,input-capture-channel: an input capture channel and channel flags,
+> > +                            specified as <chan flags>. The channel number
+> > +                            must be 0 or 1. The flags can be
+> > +                            IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, or
+> > +                            IRQ_TYPE_EDGE_BOTH, and specify which input
+> > +                            capture signal edge will trigger the input
+> > +                            capture event. If an input capture channel is
+> > +                            specified, the FIM will use this method to
+> > +                            measure frame intervals instead of via the EOF
+> > +                            interrupt. The input capture method is much
+> > +                            preferred over EOF as it is not subject to
+> > +                            interrupt latency errors. However it requires
+> > +                            routing the VSYNC or FIELD output signals of
+> > +                            the camera sensor to one of the i.MX input
+> > +                            capture pads (SD1_DAT0, SD1_DAT1), which also
+> > +                            gives up support for SD1.
+> > +
+> > +
+> > +mipi_csi2 node
+> > +--------------
+> > +
+> > +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
+> > +CSI-2 sensors.
+> > +
+> > +Required properties:
+> > +- compatible   : "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
+> 
+> As I mentioned in v5, there's a DW CSI2 binding in progress. This
+> needs to be based on that.
 
-On Wed, Mar 29, 2017 at 10:13 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Mon, Mar 27, 2017 at 11:48:12AM +0300, Laurent Pinchart wrote:
->> On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
->> > Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
->> >   - The following devices no longer exist on ES2.0, and are thus removed:
->> >     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
->> >   - The DU <-> VSPD topology is different on ES2.0, hence remove the
->> >     "vsps" property from the DU node until the driver can handle this.
->>
->> I think I'll need a different compatible string between ES1.x and ES2 for the
->> DU. It could make sense to move the whole DU node to *-es1.dtsi. We can decide
->> about that later when I'll have a DU driver prototype ready.
->
-> That makes sense to me.
->
-> Geert, will you respin this?
+Maybe someone can provide some kind of reference to it, and it's
+associated driver?
 
-Sure. The DTS parts are definitely not v4.12 material.
-  - For ES2.0, they depend on clk/pfc/rcar-sysc updates.
-  - For ES1.x, I don't want to break people's setup (scripts copying
-    r8a7795-salvator-x.dtb) prematurely.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
