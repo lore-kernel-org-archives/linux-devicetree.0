@@ -1,42 +1,84 @@
-From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: rockchip: enable ARM Mali GPU on rk3288-firefly
-Date: Wed, 29 Mar 2017 13:45:01 +0100
-Message-ID: <22d0e8ec1216e09aba803d2520f6bbe34b70171b.1490789802.git.guillaume.tucker@collabora.com>
-References: <cover.1490789802.git.guillaume.tucker@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1490789802.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-In-Reply-To: <cover.1490789802.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-References: <cover.1490789802.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+From: Mason <slash.tmp@free.fr>
+Subject: Re: [PATCH v3 2/2] PCI: Add tango PCIe host bridge support
+Date: Wed, 29 Mar 2017 14:53:47 +0200
+Message-ID: <96da696c-141a-3e8d-1fb7-2c024a295f58@free.fr>
+References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
+ <65114e62-7458-b6f7-327c-f07a5096a452@sigmadesigns.com>
+ <01516ad9-e187-4bac-7c65-a7a90c576ce2@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <01516ad9-e187-4bac-7c65-a7a90c576ce2@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add reference to the Mali GPU device tree node on rk3288-firefly.
-Tested on Firefly board.
+On 29/03/2017 14:19, Robin Murphy wrote:
 
-Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
- arch/arm/boot/dts/rk3288-firefly.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+> On 29/03/17 12:34, Marc Gonzalez wrote:
+> 
+>> +	/*
+>> +	 * QUIRK #3
+>> +	 * Unfortunately, config and mem spaces are muxed.
+>> +	 * Linux does not support such a setting, since drivers are free
+>> +	 * to access mem space directly, at any time.
+>> +	 * Therefore, we can only PRAY that config and mem space accesses
+>> +	 * NEVER occur concurrently.
+>> +	 */
+> 
+> What about David's suggestion of using an IPI for safe mutual exclusion?
 
-diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
-index 10793ac18599..f520589493b4 100644
---- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-+++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-@@ -594,3 +594,8 @@
- &wdt {
- 	status = "okay";
- };
-+
-+&gpu {
-+	mali-supply = <&vdd_gpu>;
-+	status = "okay";
-+};
--- 
-2.11.0
+I was left with the impression that this wouldn't solve the problem.
+If a mem space access is "in flight" on core0 when core1 starts a
+config space access, an IPI will not prevent breakage.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Did I misunderstand?
+
+For my education, what is the API to send an IPI?
+And the API to handle an IPI?
+
+>> +	if (of_device_is_compatible(dev->of_node, "sigma,smp8759-pcie"))
+>> +		smp8759_init(pcie, base);
+> 
+> ...then retrieve it with of_device_get_match_data() here. No need to
+> reinvent the wheel (or have to worry about the ordering of multiple
+> compatibles once rev. n+1 comes around).
+
+I actually asked about this on IRC. The consensus was "use what
+best fits your use case". I need to do some processing based on
+the revision, so I thought
+
+  if (chip_x)
+	do_chip_x_init()
+
+was a good way to express my intent. Did I misunderstand?
+
+For example, the init function for rev2 currently looks like this:
+
+static void rev2_init(struct tango_pcie *pcie, void __iomem *base)
+{
+	void __iomem *misc_irq	= base + 0x40;
+	void __iomem *doorbell	= base + 0x8c;
+
+	pcie->mux		= base + 0x2c;
+	pcie->msi_status	= base + 0x4c;
+	pcie->msi_mask		= base + 0x6c;
+	pcie->msi_doorbell	= 0x80000000;
+
+	writel(lower_32_bits(pcie->msi_doorbell), doorbell + 0);
+	writel(upper_32_bits(pcie->msi_doorbell), doorbell + 4);
+
+	/* Enable legacy PCI interrupts */
+	writel(BIT(15), misc_irq);
+	writel(0xf << 4, misc_irq + 4);
+}
+
+>> +#define VENDOR_SIGMA	0x1105
+> 
+> Should this not be in include/linux/pci_ids.h?
+
+Doh! Very likely. Thanks.
+
+Regards.
