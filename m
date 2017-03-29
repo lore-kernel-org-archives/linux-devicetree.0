@@ -1,45 +1,73 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v2 2/7] rtc: Add rtc-sh
-Date: Wed, 29 Mar 2017 14:14:20 +0000
-Message-ID: <SG2PR06MB11657A015A46C48CDD3858978A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170322142754.30888-1-chris.brandt@renesas.com>
- <20170322142754.30888-3-chris.brandt@renesas.com>
- <20170329012441.bxnkyqui24mymuvr@rob-hp-laptop>
- <CAMuHMdVmwJYMzspVeDqToBrkfK+zGLMNhxGvEbqCA-vuCUXqoQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVmwJYMzspVeDqToBrkfK+zGLMNhxGvEbqCA-vuCUXqoQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, RTCLINUX <rtc-linux@googlegroups.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv5 11/11] arm: sti: update sti-cec for CEC notifier support
+Date: Wed, 29 Mar 2017 16:15:43 +0200
+Message-ID: <20170329141543.32935-12-hverkuil@xs4all.nl>
+References: <20170329141543.32935-1-hverkuil@xs4all.nl>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170329141543.32935-1-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Daniel Vetter <daniel.vetter@intel.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Inki Dae <inki.dae@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkbmVzZGF5LCBNYXJjaCAyOSwgMjAxNywgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0K
-PiA+PiArRXhhbXBsZToNCj4gPj4gK3J0YzogcnRjQGZjZmYxMDAwIHsNCj4gPj4gKyAgICAgY29t
-cGF0aWJsZSA9ICJyZW5lc2FzLHI3czcyMTAwLXJ0YyIsICJyZW5lc2FzLHNoLXJ0YyI7DQo+ID4+
-ICsgICAgIHJlZyA9IDwweGZjZmYxMDAwIDB4MmU+Ow0KPiA+PiArICAgICBpbnRlcnJ1cHRzID0g
-PEdJQ19TUEkgMjc2IElSUV9UWVBFX0VER0VfUklTSU5HDQo+ID4+ICsgICAgICAgICAgICAgICAg
-ICAgR0lDX1NQSSAyNzcgSVJRX1RZUEVfRURHRV9SSVNJTkcNCj4gPj4gKyAgICAgICAgICAgICAg
-ICAgICBHSUNfU1BJIDI3OCBJUlFfVFlQRV9FREdFX1JJU0lORz47DQo+ID4+ICsgICAgIGludGVy
-cnVwdC1uYW1lcyA9ICJhbGFybSIsICJwZXJpb2QiLCAiY2FycnkiOw0KPiA+PiArICAgICBjbG9j
-a3MgPSA8Jm1zdHA2X2Nsa3MgUjdTNzIxMDBfQ0xLX1JUQz4sIDwmcnRjX3gxX2Nsaz4sDQo+ID4+
-ICsgICAgICAgICAgICAgIDwmcnRjX3gzX2Nsaz4sIDwmZXh0YWxfY2xrPjsNCj4gPj4gKyAgICAg
-Y2xvY2stbmFtZXMgPSAiZmNrIiwgInJ0Y194MSIsICJydGNfeDMiLCAiZXh0YWwiOw0KPiA+PiAr
-ICAgICBwb3dlci1kb21haW5zID0gPCZjcGdfY2xvY2tzPjsNCj4gPg0KPiA+IE5vdCBkb2N1bWVu
-dGVkLg0KPiANCj4gInBvd2VyLWRvbWFpbnMiIGlzIGEgcGxhdGZvcm0gcHJvcGVydHkuDQo+IA0K
-PiBBbGwgaGFyZHdhcmUgY29tcG9uZW50cyBuZWVkIHBvd2VyLg0KPiBBbGwgc3luY2hyb25vdXMg
-aGFyZHdhcmUgY29tcG9uZW50cyBuZWVkIGEgY2xvY2suDQo+IE1vc3QgaGFyZHdhcmUgY29tcG9u
-ZW50cyBoYXZlIGEgcmVzZXQgc2lnbmFsLg0KPiANCj4gV2hldGhlciB0aGVzZSBhcmUgZXhwb3Nl
-ZCBhbmQgY2FuIGJlIGNvbnRyb2xsZWQgZGVwZW5kcyBvbiB0aGUNCj4gcGxhdGZvcm0vU29DLg0K
-PiBTbyBkb2N1bWVudGluZyB0aGVtIGluIGVhY2ggYW5kIGV2ZXJ5IGRldmljZSBiaW5kaW5nIGxv
-b2tzIG92ZXJraWxsIHRvIG1lLg0KPiBJIHRoaW5rIHRoaXMgaXMgc29tZXRoaW5nIHRvIGJlIGFk
-ZHJlc3NlZCBieSBkZXZpY2V0cmVlLXNwZWNpZmljYXRpb24NCj4gKHdoaWNoIGRvZXNuJ3QgaGFu
-ZGxlIGNsb2NrcywgcG93ZXItZG9tYWlucywgcmVzZXRzIHlldCkuDQo+IA0KPiBJZiB5b3UgcHJl
-ZmVyLCB0aGUgcHJvcGVydHkgY2FuIGJlIHJlbW92ZWQgZnJvbSB0aGUgZXhhbXBsZSwgdGhvdWdo
-Lg0KDQpJJ2xsIGdvIGFoZWFkIGFuZCBwdWxsIGl0IG91dCAoc2luY2UgSSBoYXZlIHRvIHVwZGF0
-ZSB0aGUgY29tbWl0IHRpdGxlDQphbnl3YXkgYXMgcGVyIFJvYidzIHJlcXVlc3QpDQoNCkJlc2lk
-ZXMuLi5pdCdzIHByb2JhYmx5IHRoZSBtb3N0IGxlYXN0IGltcG9ydGFudCBwYXJ0IG9mIHRoZSBl
-eGFtcGxlIDspDQoNClRoYW5rcywNCkNocmlzDQo=
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+
+To use CEC notifier sti CEC driver needs to get phandle
+of the hdmi device.
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+CC: devicetree@vger.kernel.org
+---
+ arch/arm/boot/dts/stih407-family.dtsi | 12 ------------
+ arch/arm/boot/dts/stih410.dtsi        | 13 +++++++++++++
+ 2 files changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index d753ac36788f..044184580326 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -742,18 +742,6 @@
+ 				 <&clk_s_c0_flexgen CLK_ETH_PHY>;
+ 		};
+ 
+-		cec: sti-cec@094a087c {
+-			compatible = "st,stih-cec";
+-			reg = <0x94a087c 0x64>;
+-			clocks = <&clk_sysin>;
+-			clock-names = "cec-clk";
+-			interrupts = <GIC_SPI 140 IRQ_TYPE_NONE>;
+-			interrupt-names = "cec-irq";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_cec0_default>;
+-			resets = <&softreset STIH407_LPM_SOFTRESET>;
+-		};
+-
+ 		rng10: rng@08a89000 {
+ 			compatible      = "st,rng";
+ 			reg		= <0x08a89000 0x1000>;
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index 3c9672c5b09f..21fe72b183d8 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -281,5 +281,18 @@
+ 				 <&clk_s_c0_flexgen CLK_ST231_DMU>,
+ 				 <&clk_s_c0_flexgen CLK_FLASH_PROMIP>;
+ 		};
++
++		sti-cec@094a087c {
++			compatible = "st,stih-cec";
++			reg = <0x94a087c 0x64>;
++			clocks = <&clk_sysin>;
++			clock-names = "cec-clk";
++			interrupts = <GIC_SPI 140 IRQ_TYPE_NONE>;
++			interrupt-names = "cec-irq";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_cec0_default>;
++			resets = <&softreset STIH407_LPM_SOFTRESET>;
++			hdmi-phandle = <&sti_hdmi>;
++		};
+ 	};
+ };
+-- 
+2.11.0
