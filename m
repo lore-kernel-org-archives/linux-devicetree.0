@@ -1,276 +1,131 @@
-From: Liam Breck <liam@networkimprov.net>
-Subject: Re: [PATCH v4 01/18] dt-bindings: power: battery: add
- constant-charge-current property
-Date: Wed, 29 Mar 2017 02:26:19 -0700
-Message-ID: <CAKvHMgQf=Zod-F9SMPDDj5Eq3v=JHGh7uns-T_=ynQM0dMtEvw@mail.gmail.com>
-References: <20170315105537.22349-1-quentin.schulz@free-electrons.com>
- <20170315105537.22349-2-quentin.schulz@free-electrons.com>
- <CAKvHMgSnyPPMEZ1o70Ed2oBHGcMho=-jjFhfXGn4t+2bdALEew@mail.gmail.com>
- <ce6f2ddb-f875-0370-ca45-293397d97495@free-electrons.com> <CAKvHMgR58sDnB-nn386Bd-H0Duevkeoc8eEfz=otLAumc8FD+w@mail.gmail.com>
- <765fc3be-23db-0997-85b1-b6c85b3aceef@free-electrons.com> <CAKvHMgRKroPFDdNMb=F=bA4bTwg9bYMAR-5Z4DKLzHJtCYz3_Q@mail.gmail.com>
- <CAKvHMgRtEnNbokYReu2vEs9UKH6qZnncdyQD=1JMDTZeN+aYCA@mail.gmail.com>
- <659fb6a3-d49d-5429-8770-88917e4fd0b3@free-electrons.com> <CAKvHMgSFNBmr3fU-biHDo5tzCDV7QaCpFnbChgn4wgSN_1FBig@mail.gmail.com>
- <8853ebb9-9c4f-d9bf-8c82-daad4650c4f8@free-electrons.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH net-next v3 1/5] dt-bindings: net: dsa: add Mediatek MT7530 binding
+Date: Wed, 29 Mar 2017 17:28:41 +0800
+Message-ID: <1490779725-18304-2-git-send-email-sean.wang@mediatek.com>
+References: <1490779725-18304-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <8853ebb9-9c4f-d9bf-8c82-daad4650c4f8@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Sebastian Reichel <sre@kernel.org>, robh+dt@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490779725-18304-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 12:54 AM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> Hi,
->
-> On 29/03/2017 09:39, Liam Breck wrote:
->> On Wed, Mar 29, 2017 at 12:09 AM, Quentin Schulz
->> <quentin.schulz@free-electrons.com> wrote:
->>> Hi Liam,
->>>
->>> On 29/03/2017 08:55, Liam Breck wrote:
->>>> Hi Quentin,
->>>>
->>>> On Thu, Mar 16, 2017 at 12:42 AM, Liam Breck <liam@networkimprov.net> wrote:
->>>>> On Thu, Mar 16, 2017 at 12:03 AM, Quentin Schulz
->>>>> <quentin.schulz@free-electrons.com> wrote:
->>>>>> Hi Liam,
->>>>>>
->>>>>> On 16/03/2017 07:27, Liam Breck wrote:
->>>>>>> Hi Rob,
->>>>>>>
->>>>>>> On Wed, Mar 15, 2017 at 6:10 AM, Quentin Schulz
->>>>>>> <quentin.schulz@free-electrons.com> wrote:
->>>>>>>> Hi Liam,
->>>>>>>>
->>>>>>>> On 15/03/2017 13:08, Liam Breck wrote:
->>>>>>>>> I dropped most of the CCs, pls re-add anyone essential. Use Cc lines
->>>>>>>>> in patch description to direct a patch to interested parties and
->>>>>>>>> relevant lists. I don't want to see all 19 patches in this series.
->>>>>>>>>
->>>>>>>>> On Wed, Mar 15, 2017 at 3:55 AM, Quentin Schulz
->>>>>>>>> <quentin.schulz@free-electrons.com> wrote:
->>>>>>>>>> This adds the constant-charge-current property to the list of optional
->>>>>>>>>> properties of the battery.
->>>>>>>>>>
->>>>>>>>>> The constant charge current is critical for batteries as they can't
->>>>>>>>>> handle all charge currents.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->>>>>>>>>> Acked-by: Rob Herring <robh@kernel.org>
->>>>>>>>>> ---
->>>>>>>>>>
->>>>>>>>>> v4:
->>>>>>>>>>  - switch from constant-charge-current-microamp to constant-charge-microamp,
->>>>>>>
->>>>>>> Sebastian is on record supporting name alignment between DT:battery
->>>>>>> properties and enum power_supply_property.
->>>>>>>
->>>>>>> Could you OK a change back to constant-charge-current-microamp in this patch?
->>>>>>>
->>>>>>> Note that the following could appear in DT:battery in future:
->>>>>>>
->>>>>>> constant-charge-current-microamp
->>>>>>> constant-charge-current-max-microamp
->>>>>>
->>>>>> OK. I am actually setting max constant charge current and constant
->>>>>> current charge with the same DT property so I might need to adapt my
->>>>>> patches.
->>>>>
->>>>> I suspect you should set battery:*-current-max with DT, as -current is
->>>>> "programmed by charger" so seems to be a stat, not a fixed
->>>>> characteristic.
->>>>
->>>> Did you resolve this issue?
->>>>
->>>
->>> Sorry, completely missed your first mail.
->>>
->>> Constant charge current is actually what I set in the PMIC. The maximum
->>> constant charge current is completely PMIC-agnostic in my driver as it
->>> is used to tell the user that (s)he shouldn't really have a constant
->>> charge current over the maximum limit as the battery might not be able
->>> to handle such high current.
->>>
->>> What I suggest is to have both properties in DT. I'll set the maximum as
->>> I do today and we can give the user the ability to set a "default"
->>> constant charge current (below maximum constant charge current) in the
->>> DT. Maybe we do not want to recharge your battery with the maximum value
->>> by default?
->>
->> The scope here is just static battery characteristics. For the battery
->> node, I think constant-charge-current-max-microamp is the relevant
->> term.
->
-> If it's only for static battery characteristics, I agree.
->
->
->> If we added both properties, one would be an alias for the
->> other, which doesn't seem useful.
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Meaning if both properties describe static characteristics of the
-battery, they wouldn't have different meaning.
+Add device-tree binding for Mediatek MT7530 switch.
 
-> Hum. Not really an alias. In my driver, I have a maximum which avoids to
-> set a constant charge current higher than what the battery is supposed
-> to be able to handle. The maximum can be increased via sysfs if ever the
-> user decides to go wild (or if (s)he changes the battery for example).
-> The maximum is never input in any of PMIC registers, it is not dealing
-> with the PMIC at all.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/net/dsa/mt7530.txt         | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
 
-Using the battery's -max as the default for your user-adjustable max
-sounds sensible. However the user-adjustable max should perhaps appear
-in a custom sysfs attribute, not
-/sys/class.../constant_charge_current_max (see comment re regulator).
+diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
+new file mode 100644
+index 0000000..a9bc27b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
+@@ -0,0 +1,92 @@
++Mediatek MT7530 Ethernet switch
++================================
++
++Required properties:
++
++- compatible: Must be compatible = "mediatek,mt7530";
++- #address-cells: Must be 1.
++- #size-cells: Must be 0.
++- mediatek,mcm: Boolean; if defined, indicates that either MT7530 is the part
++	on multi-chip module belong to MT7623A has or the remotely standalone
++	chip as the function MT7623N reference board provided for.
++- core-supply: Phandle to the regulator node necessary for the core power.
++- io-supply: Phandle to the regulator node necessary for the I/O power.
++	See Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
++	for details for the regulator setup on these boards.
++
++If the property mediatek,mcm isn't defined, following property is required
++
++- reset-gpios: Should be a gpio specifier for a reset line.
++
++Else, following properties are required
++
++- resets : Phandle pointing to the system reset controller with
++	line index for the ethsys.
++- reset-names : Should be set to "mcm".
++
++Required properties for the child nodes within ports container:
++
++- reg: Port address described must be 6 for CPU port and from 0 to 5 for
++	user ports.
++- phy-mode: String, must be either "trgmii" or "rgmii" for port labeled
++	 "cpu".
++
++See Documentation/devicetree/bindings/dsa/dsa.txt for a list of additional
++required, optional properties and how the integrated switch subnodes must
++be specified.
++
++Example:
++
++	&mdio0 {
++		switch@0 {
++			compatible = "mediatek,mt7530";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			core-supply = <&mt6323_vpa_reg>;
++			io-supply = <&mt6323_vemc3v3_reg>;
++			reset-gpios = <&pio 33 0>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>;
++				port@0 {
++					reg = <0>;
++					label = "lan0";
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "lan1";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "lan2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "lan3";
++				};
++
++				port@4 {
++					reg = <4>;
++					label = "wan";
++				};
++
++				port@6 {
++					reg = <6>;
++					label = "cpu";
++					ethernet = <&gmac0>;
++					phy-mode = "trgmii";
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++			};
++		};
++	};
+-- 
+1.9.1
 
-If the battery changes, the DT battery node should also change, esp if
-its -max drops. I realize that's not nec trivial.
-
-> If I have only the max constant charge current in the DT, I'll set the
-> max and constant charge current with the same DT entry. That's perfectly
-> fine.
-
-I assume the pmic ccc setting is adjustable via
-/sys/class.../constant_charge_current?
-
-> However, what I was thinking is to have a "default" value taken from DT
-> for constant charge current (which will be below maximum ccc) if ever
-> someone wants to set a maximum but use a lower ccc value. Anyway, I
-> guess it's more a "fancy" feature than a requirement (unlike max-ccc).
-
-Maybe a lower default ccc than battery's -max could be provided via a
-% value in the pmic DT node? Then multiply battery -max by that to set
-ccc.
-
->> The pmic can report both independently of the battery characteristic,
->> and take a driver-specific DT property for
->> constant-charge-current-microamp which it applies if less than the
->> battery's -max setting.
->
-> Indeed.
->
->> Or you could set that in userspace via
->> /sys/class.../constant_charge_current.
->
-> The goal is to have both. The DT for default values (given by the
-> vendor/upstream) and sysfs for custom values (interesting if you don't
-> want to/can't recompile a DT.
->
->> The charger's -max value would
->> be a characteristic of its regulator.
->>
->
-> I don't really understand what you mean by that.
-
-I believe the pmic's -max value is a characteristic of its electrical
-design, the max current it can deliver. The power_supply_class docs
-are not very clear - "maximum charge current supported by the power
-supply object".
-
-
->> Or am I missing something...?
->>
->>>> Rob & Sebastian want me to merge all items for
->>>> bindings/power/supply/battery.txt. If I do that I'll also roll up
->>>> their counterparts in power_supply_core.c and submit a patchset for
->>>> those two files.
->>>>
->>>
->>> I guess that adding the two properties make sense, don't you think?
->>>
->>> Also, could you Cc me on your next version of your patches? So I know
->>> when to rebase and slightly rework my patches once your patch series is
->>> merged.
->>
->> Surely.
->>
->>> Thanks,
->>> Quentin
->>>
->>>>> You may program your charger's -current with the battery's
->>>>> -current-max, of course.
->>>>>
->>>>> Note that your charger also has a -current-max characteristic, likely
->>>>> different than your battery. You may not need that in DT tho.
->>>>>
->>>>>>> constant-charge-voltage-microvolt
->>>>>>> constant-charge-voltage-max-microvolt
->>>>>>>
->>>>>>> Thanks!
->>>>>>>
->>>>>>>>> Must be constant-charge-current-microamp for the reasons discussed in
->>>>>>>>> battery.txt - consistency with sysfs names.
->>>>>>>>>
->>>>>>>>
->>>>>>>> Hum. Just nitpicking, but I disagree with the use of 'must'. IIRC there
->>>>>>>> is nothing in the code that would require the property to be named after
->>>>>>>> a property from the enum power_supply_property.
->>>>>>>>
->>>>>>>> I would say that you _want_ it to be named like that because it
->>>>>>>> underlines the relation between the DT property and the actual impacted
->>>>>>>> property in the power supply subsystem. I'm fine with this reason but in
->>>>>>>> the end, the maintainer's opinion prevails (if (s)he does not want it,
->>>>>>>> (s)he will not take it). So, basically, I actually don't mind either
->>>>>>>> option and I see arguments on each side.
->>>>>>>>
->>>>>>>> So, just waiting for maintainer's opinion to make the final version of
->>>>>>>> this patch.
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Quentin
->>>>>>>>
->>>>>>>>> Also applies to power_supply_core.c patch.
->>>>>>>>>
->>>>>>>>> Rob: enum power_supply_property also lists constant-charge-voltage,
->>>>>>>>> hence the -current
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>> added in v3
->>>>>>>>>>
->>>>>>>>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
->>>>>>>>>>  1 file changed, 2 insertions(+)
->>>>>>>>>>
->>>>>>>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>>>> index 0278617..9594e1e 100644
->>>>>>>>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>>>>>> @@ -7,6 +7,7 @@ Optional Properties:
->>>>>>>>>>   - voltage-min-design-microvolt: drained battery voltage
->>>>>>>>>>   - energy-full-design-microwatt-hours: battery design energy
->>>>>>>>>>   - charge-full-design-microamp-hours: battery design capacity
->>>>>>>>>> + - constant-charge-microamp: battery constant charge current
->>>>>>>>>>
->>>>>>>>>>  Because drivers surface properties in sysfs using names derived
->>>>>>>>>>  from enum power_supply_property, e.g.
->>>>>>>>>> @@ -30,6 +31,7 @@ Example:
->>>>>>>>>>                 voltage-min-design-microvolt = <3200000>;
->>>>>>>>>>                 energy-full-design-microwatt-hours = <5290000>;
->>>>>>>>>>                 charge-full-design-microamp-hours = <1430000>;
->>>>>>>>>> +               constant-charge-microamp = <300000>;
->>>>>>>>>>         };
->>>>>>>>>>
->>>>>>>>>>         charger: charger@11 {
->>>>>>>>>> --
->>>>>>>>>> 2.9.3
->>>>>>>>>>
->>>>>>>>
->>>>>>>> --
->>>>>>>> Quentin Schulz, Free Electrons
->>>>>>>> Embedded Linux and Kernel engineering
->>>>>>>> http://free-electrons.com
->>>>>>
->>>>>> --
->>>>>> Quentin Schulz, Free Electrons
->>>>>> Embedded Linux and Kernel engineering
->>>>>> http://free-electrons.com
->>>
->>> --
->>> Quentin Schulz, Free Electrons
->>> Embedded Linux and Kernel engineering
->>> http://free-electrons.com
->
-> --
-> Quentin Schulz, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
