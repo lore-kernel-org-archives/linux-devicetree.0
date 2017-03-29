@@ -1,62 +1,57 @@
-From: Steve Longerbeam <steve_longerbeam@mentor.com>
-Subject: Re: [PATCH v6 02/39] [media] dt-bindings: Add bindings for i.MX media
- driver
-Date: Tue, 28 Mar 2017 17:35:52 -0700
-Message-ID: <70bacfb5-aef1-76d1-37d2-23a524903d45@mentor.com>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-3-git-send-email-steve_longerbeam@mentor.com>
- <CAL_JsqJm_JjuVPcOBERCqsnjTDdNoKr9xRE9MXMO4ivxGath2Q@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/7] devicetree: power: battery: Add properties for
+ pre-charge and end-charge current
+Date: Tue, 28 Mar 2017 19:39:46 -0500
+Message-ID: <20170329003946.3eyqmsozj2sxrtiw@rob-hp-laptop>
+References: <20170321220921.5834-1-liam@networkimprov.net>
+ <20170321220921.5834-2-liam@networkimprov.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAL_JsqJm_JjuVPcOBERCqsnjTDdNoKr9xRE9MXMO4ivxGath2Q@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh+dt@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= <andrew-ct.chen@mediatek.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Nick Dyer <nick@shmanahar.org>, Songjun Wu <songjun.wu@microchip.com>, Hans Verkuil <hverkuil@xs4all.nl>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, shuah@kernel.org, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, Benoit Parrot <bparrot@ti.com>, Simon
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170321220921.5834-2-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 21, 2017 at 03:09:15PM -0700, Liam Breck wrote:
+> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+> 
+> precharge-current-microamp and endcharge-current-microamp are used
+> by battery chargers at the beginning and end of a charging cycle.
+> 
+> Depends-on: https://patchwork.kernel.org/patch/9633605/
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 53a68c0..494374a 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -12,6 +12,8 @@ Optional Properties:
+>   - voltage-min-design-microvolt: drained battery voltage
+>   - energy-full-design-microwatt-hours: battery design energy
+>   - charge-full-design-microamp-hours: battery design capacity
+> + - precharge-current-microamp: current for pre-charge phase
+> + - endcharge-current-microamp: current for charge termination phase
 
+current is implied by microamp, so perhaps just pre-charge-microamp and 
+end-charge-microamp.
 
-On 03/28/2017 05:21 PM, Rob Herring wrote:
-> On Mon, Mar 27, 2017 at 7:40 PM, Steve Longerbeam <slongerbeam@gmail.com> wrote:
->> Add bindings documentation for the i.MX media driver.
->>
->> <snip>
->> +
->> +mipi_csi2 node
->> +--------------
->> +
->> +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
->> +CSI-2 sensors.
->> +
->> +Required properties:
->> +- compatible   : "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
->
-> As I mentioned in v5, there's a DW CSI2 binding in progress. This
-> needs to be based on that.
+I know little about batteries, but don't you also need to know when each 
+phase starts/ends? 
 
-Hi Rob, I'm not sure what you are asking me to do.
+I mainly ask because we just added the previous properties and now we're 
+adding 2 more. While fine to add features to a driver one by one, we 
+really shouldn't for bindings. The h/w is not evolving (in a month).
 
-I assume if there's another binding doc in progress, it means
-someone is working on another Synopsys DW CSI-2 subdevice driver.
-
-Unfortunately I don't have the time to contribute and switch to
-this other subdevice, and do test/debug.
-
-For now I would prefer if this patchset is merged as is, and
-then contribute/switch to another CSI-2 subdev later. It is
-also getting very difficult managing all these patches (39 as
-of this version), and I'd prefer not to spam the lists with
-such large patchsets for too much longer.
-
-
-Steve
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
