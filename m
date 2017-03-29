@@ -1,30 +1,57 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: imx-gpc: add i.MX6 QuadPlus compatible
-Date: Wed, 29 Mar 2017 10:59:28 -0500
-Message-ID: <20170329155928.5cjfhg5bl7xya3nn@rob-hp-laptop>
-References: <20170323144418.30977-1-l.stach@pengutronix.de>
- <20170323144418.30977-2-l.stach@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: [PATCH v4 1/2] power: supply: ltc2941-battery-gauge: Add vendor to compatibles in binding
+Date: Wed, 29 Mar 2017 12:00:56 -0400
+Message-ID: <20170329160057.8298-1-javier@osg.samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170323144418.30977-2-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 03:44:17PM +0100, Lucas Stach wrote:
-> While the GPC on i.MX6QP is mostly comptible to the i.MX6Q one,
-> the QuadPlus requires special workarounds for hardware erratum
-> ERR009619.
-> 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/power/fsl,imx-gpc.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+The DT binding document for LTC2941 and LTC2943 battery gauges did not use
+a vendor prefix in the listed compatible strings. The driver says that the
+manufacturer is Linear Technology which is "lltc" in vendor-prefixes.txt.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+There isn't an upstream Device Tree source file that has nodes defined for
+these devices, so there's no need to keep the old compatible strings.
+
+Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+---
+
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+
+ Documentation/devicetree/bindings/power/supply/ltc2941.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/ltc2941.txt b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
+index ea42ae12d924..a9d7aa60558b 100644
+--- a/Documentation/devicetree/bindings/power/supply/ltc2941.txt
++++ b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
+@@ -6,8 +6,8 @@ temperature monitoring, and uses a slightly different conversion
+ formula for the charge counter.
+ 
+ Required properties:
+-- compatible: Should contain "ltc2941" or "ltc2943" which also indicates the
+-    type of I2C chip attached.
++- compatible: Should contain "lltc,ltc2941" or "lltc,ltc2943" which also
++    indicates the type of I2C chip attached.
+ - reg: The 7-bit I2C address.
+ - lltc,resistor-sense: The sense resistor value in milli-ohms. Can be a 32-bit
+     negative value when the battery has been connected to the wrong end of the
+@@ -20,7 +20,7 @@ Required properties:
+ Example from the Topic Miami Florida board:
+ 
+ 	fuelgauge: ltc2943@64 {
+-		compatible = "ltc2943";
++		compatible = "lltc,ltc2943";
+ 		reg = <0x64>;
+ 		lltc,resistor-sense = <15>;
+ 		lltc,prescaler-exponent = <5>; /* 2^(2*5) = 1024 */
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
