@@ -1,46 +1,103 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3
- ES2.0
-Date: Wed, 29 Mar 2017 10:45:29 +0200
-Message-ID: <20170329084529.GG6512@verge.net.au>
-References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
- <1490362665-4422-2-git-send-email-geert+renesas@glider.be>
- <1612430.SNEha5n02K@avalon>
- <20170329081352.GF6512@verge.net.au>
- <CAMuHMdWvR71V_JyR6273KmdtGfrrT_vaU2vcDTpNt2MAG0WdLg@mail.gmail.com>
+From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] iio/adc/ltc2497: Driver for Linear Technology LTC2497 ADC
+Date: Wed, 29 Mar 2017 10:51:57 +0200
+Message-ID: <025f8461-c823-1f07-5742-e488c3e34f9f@analog.com>
+References: <1490265310-6162-1-git-send-email-michael.hennerich@analog.com>
+ <6774c073-7fe4-e259-306e-3cf4621f7c69@metafoo.de>
+Reply-To: <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWvR71V_JyR6273KmdtGfrrT_vaU2vcDTpNt2MAG0WdLg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6774c073-7fe4-e259-306e-3cf4621f7c69-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 10:31:02AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Wed, Mar 29, 2017 at 10:13 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Mon, Mar 27, 2017 at 11:48:12AM +0300, Laurent Pinchart wrote:
-> >> On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
-> >> > Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
-> >> >   - The following devices no longer exist on ES2.0, and are thus removed:
-> >> >     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
-> >> >   - The DU <-> VSPD topology is different on ES2.0, hence remove the
-> >> >     "vsps" property from the DU node until the driver can handle this.
-> >>
-> >> I think I'll need a different compatible string between ES1.x and ES2 for the
-> >> DU. It could make sense to move the whole DU node to *-es1.dtsi. We can decide
-> >> about that later when I'll have a DU driver prototype ready.
-> >
-> > That makes sense to me.
-> >
-> > Geert, will you respin this?
-> 
-> Sure. The DTS parts are definitely not v4.12 material.
->   - For ES2.0, they depend on clk/pfc/rcar-sysc updates.
->   - For ES1.x, I don't want to break people's setup (scripts copying
->     r8a7795-salvator-x.dtb) prematurely.
+On 23.03.2017 12:05, Lars-Peter Clausen wrote:
 
-Ok.
+Sorry - I missed some of this review feedback ...
+
+>> +
+>> +static int ltc2497_wait_conv(struct ltc2497_st *st)
+>> +{
+>> +	s64 time_elapsed;
+>> +
+>> +	time_elapsed = ktime_ms_delta(ktime_get(), st->time_prev);
+>> +
+>> +	if (time_elapsed < LTC2497_CONVERSION_TIME_MS) {
+>> +		/* delay if conversion time not passed
+>> +		 * since last read or write
+>> +		 */
+>> +		msleep(LTC2497_CONVERSION_TIME_MS - time_elapsed);
+>
+> Considering how long this sleeps msleep_interruptible() might be the better
+> choice.
+
+Wondering what should be the outcome of this?
+We can't simply replace it. Actually I've seen cases here in drivers/iio 
+where the delay is essential, but the return value of 
+msleep_interruptible() is not being checked.
+Thus causing a malicious access, in case a signal is received.
+
+We must delay here. If we switch to msleep_interruptible() the only 
+reason for this would be to cancel the read and return -EINTR to the user.
+
+Also there is another msleep below which would also need this kind of 
+handling.
+
+>
+>> +		return 0;
+>> +	}
+>> +
+>> +	if (time_elapsed - LTC2497_CONVERSION_TIME_MS <= 0) {
+>> +		/* We're in automatic mode -
+>> +		 * so the last reading is stil not outdated
+>> +		 */
+>> +		return 0;
+>> +	}
+>> +
+>> +	return -ETIMEDOUT;
+>> +}
+>> +
+>> +static int ltc2497_read(struct ltc2497_st *st, u8 address, int *val)
+>> +{
+>> +	struct i2c_client *client = st->client;
+>> +	__be32 buf = 0;
+>
+> transfer buffers must not be on the stack to avoid issues if the controller
+> should use DMA.
+>
+>> +	int ret;
+>> +
+>> +	ret = ltc2497_wait_conv(st);
+>> +	if (ret < 0 || st->addr_prev != address) {
+>> +		ret = i2c_smbus_write_byte(st->client, 0xA0 | address);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +		st->addr_prev = address;
+>> +		msleep(LTC2497_CONVERSION_TIME_MS);
+>> +	}
+>> +	ret = i2c_master_recv(client, (char *)&buf, 3);
+>> +	if (ret < 0)  {
+>> +		dev_err(&client->dev, "i2c_master_recv failed\n");
+>> +		return ret;
+>> +	}
+>> +	st->time_prev = ktime_get();
+>> +	*val = (be32_to_cpu(buf) >> 14) - (1 << 17);
+>> +
+>> +	return ret;
+>> +}
+> [...]
+>
+
+
+-- 
+Greetings,
+Michael
+
+--
+Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
+Sitz der Gesellschaft München, Registergericht München HRB 40368,
+Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
