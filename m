@@ -1,85 +1,91 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 2/7] dt-bindings: rtc: document the rtc-sh bindings
-Date: Wed, 29 Mar 2017 10:30:30 -0700
-Message-ID: <20170329173035.67477-3-chris.brandt@renesas.com>
-References: <20170329173035.67477-1-chris.brandt@renesas.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 7/8] bus: brcmstb_gisb: add notifier handling
+Date: Wed, 29 Mar 2017 10:39:11 -0700
+Message-ID: <e6bb68fa-dd2f-7d18-6031-b709f8fd162e@gmail.com>
+References: <20170328213431.10904-1-opendmb@gmail.com>
+ <20170328213431.10904-8-opendmb@gmail.com>
+ <20170329101357.GB23442@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXOFUXT2UGBBYO657DAKGQEAYYK2NI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170329173035.67477-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329101357.GB23442@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sandeepa.s.prabhu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shijie.huang-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the binding documentation for rtc-sh which is an RTC for
-SuperH and RZ/A SoCs.
+On 03/29/2017 03:13 AM, Mark Rutland wrote:
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
-v3:
-* remove 'power-domains' from example
-* update commit message subject and body
-v2:
-* added interrupt-names and clock-names
-* clocks now include counting sources
-* changed 'is a RTC' to 'is an RTC' in commit message
----
- Documentation/devicetree/bindings/rtc/rtc-sh.txt | 28 ++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-sh.txt
+snip
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-sh.txt b/Documentation/devicetree/bindings/rtc/rtc-sh.txt
-new file mode 100644
-index 000000000000..7676c7d28874
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-sh.txt
-@@ -0,0 +1,28 @@
-+* Real Time Clock for Renesas SH and ARM SoCs
-+
-+Required properties:
-+- compatible: Should be "renesas,r7s72100-rtc" and "renesas,sh-rtc" as a
-+  fallback.
-+- reg: physical base address and length of memory mapped region.
-+- interrupts: 3 interrupts for alarm, period, and carry.
-+- interrupt-names: The interrupts should be labeled as "alarm", "period", and
-+  "carry".
-+- clocks: The functional clock source for the RTC controller must be listed
-+  first (if exists). Additionally, potential clock counting sources are to be
-+  listed.
-+- clock-names: The functional clock must be labeled as "fck". Other clocks
-+  may be named in accordance to the SoC hardware manuals.
-+
-+
-+Example:
-+rtc: rtc@fcff1000 {
-+	compatible = "renesas,r7s72100-rtc", "renesas,sh-rtc";
-+	reg = <0xfcff1000 0x2e>;
-+	interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING
-+		      GIC_SPI 277 IRQ_TYPE_EDGE_RISING
-+		      GIC_SPI 278 IRQ_TYPE_EDGE_RISING>;
-+	interrupt-names = "alarm", "period", "carry";
-+	clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
-+		 <&rtc_x3_clk>, <&extal_clk>;
-+	clock-names = "fck", "rtc_x1", "rtc_x3", "extal";
-+};
--- 
-2.11.0
+>> +/*
+>> + * Dump out gisb errors on die or panic.
+>> + */
+>> +static int dump_gisb_error(struct notifier_block *self, unsigned long v,
+>> +			   void *p)
+>> +{
+>> +	struct brcmstb_gisb_arb_device *gdev;
+>> +
+>> +	/* iterate over each GISB arb registered handlers */
+>> +	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
+>> +		brcmstb_gisb_arb_decode_addr(gdev, "async abort");
+>> +
+>> +	return 0;
+> 
+> I think this should be NOTIFY_OK.
+> 
+I used dump_mem_limit() as a template and didn't catch this (work to
+do...).  Upon review I think I would prefer NOTIFY_DONE since this call
+is opportunistic (i.e. it is taking the opportunity to check whether
+additional diagnostic data is available to display) and has no interest
+in affecting the overall handling of the event.
 
+>> +}
+>> +
+>> +static struct notifier_block gisb_error_notifier = {
+>> +	.notifier_call = dump_gisb_error,
+>> +};
+>> +
+>>  static DEVICE_ATTR(gisb_arb_timeout, S_IWUSR | S_IRUGO,
+>>  		gisb_arb_get_timeout, gisb_arb_set_timeout);
+>>  
+>> @@ -408,6 +429,12 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
+>>  	board_be_handler = brcmstb_bus_error_handler;
+>>  #endif
+>>  
+>> +	if (list_is_singular(&brcmstb_gisb_arb_device_list)) {
+>> +		register_die_notifier(&gisb_error_notifier);
+>> +		atomic_notifier_chain_register(&panic_notifier_list,
+>> +					       &gisb_error_notifier);
+> 
+> I don't think this is quite right. A notifier_block can only be
+> registered to one notifier chain at a time, and this has the potential
+> to corrupt both chains.
+> 
+A VERY good point thanks for pointing this out.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> I also think you only need to register the panic notifier. An SError
+> should always result in a panic.
+> 
+That was my initial thought as well.  However, testing revealed that the
+bad mode Oops actually exits the user space process and doesn't reach
+the panic so there was no helpful diagnostic message.  This may be in
+line with your comments about insufficient fatality of failures in PATCH
+v2 6/8, but it actually is more in line with our desired behavior for
+the aborted write.  Setting the notify on die gave us the result we are
+looking for, but as noted above I should have created a separate notifier.
+
+I had hoped that the same approach (i.e. die notifier) would remove the
+need for PATCH v2 6/8 as well, but I found that the Unhandled fault
+error didn't actually die from user mode.
+
+> Thanks,
+> Mark.
+> 
+Thank you for your help with this,
+    Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
