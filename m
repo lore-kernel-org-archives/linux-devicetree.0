@@ -1,266 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/7] pinctrl: dt-bindings: Add documentation for
- Armada 37xx pin controllers
-Date: Wed, 29 Mar 2017 16:11:05 -0500
-Message-ID: <20170329211105.ype3os6jldsjyrqa@rob-hp-laptop>
-References: <cover.72ded2a212a37139db2a4193482b04a84a545a48.1490282185.git-series.gregory.clement@free-electrons.com>
- <941d03c9a3bdfd5e789aada29b35184ec9fed9fe.1490282185.git-series.gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: Add INNOLUX P079ZCA panel bindings
+Date: Wed, 29 Mar 2017 16:12:23 -0500
+Message-ID: <20170329211223.qaguke5lkrlongpq@rob-hp-laptop>
+References: <1490316692-20506-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <941d03c9a3bdfd5e789aada29b35184ec9fed9fe.1490282185.git-series.gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Victor Gu <xigu@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <1490316692-20506-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 04:19:01PM +0100, Gregory CLEMENT wrote:
-> Document the device tree binding for the pin controllers found on the
-> Armada 37xx SoCs.
-> 
-> Update the binding documention of the xtal clk which is a subnode of this
-> syscon node.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt         |   7 +--
->  Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt | 183 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 187 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt b/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
-> index a88f1f05fbd6..4c0807f28cfa 100644
-> --- a/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
-> @@ -5,6 +5,7 @@ reading the gpio latch register.
->  
->  This node must be a subnode of the node exposing the register address
->  of the GPIO block where the gpio latch is located.
-> +See Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
->  
->  Required properties:
->  - compatible : shall be one of the following:
-> @@ -16,9 +17,9 @@ Optional properties:
->  	output names ("xtal")
->  
->  Example:
-> -gpio1: gpio@13800 {
-> -	compatible = "marvell,armada-3700-gpio", "syscon", "simple-mfd";
-> -	reg = <0x13800 0x1000>;
-> +pinctrl_nb: pinctrl-nb@13800 {
-> +	compatible = "armada3710-nb-pinctrl", "syscon", "simple-mfd";
-> +	reg = <0x13800 0x100>, <0x13C00 0x20>;
->  
->  	xtalclk: xtal-clk {
->  		compatible = "marvell,armada-3700-xtal-clock";
-> diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
-> new file mode 100644
-> index 000000000000..2eda81e0bca1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
-> @@ -0,0 +1,183 @@
-> +* Marvell Armada 37xx SoC pin and gpio controller
-> +
-> +Each Armada 37xx SoC come with two pin and gpio controller one for the
-> +south bridge and the other for the north bridge.
-> +
-> +Inside this set of register the gpio latch allows exposing some
-> +configuration of the SoC and especially the clock frequency of the
-> +xtal. Hence, this node is a represent as syscon allowing sharing the
-> +register between multiple hardware block.
-> +
-> +GPIO and pin controller:
-> +------------------------
-> +
-> +Main node:
-> +
-> +Refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices, including the meaning
-> +of the phrase "pin configuration node".
-> +
-> +Required properties for pinctrl driver:
-> +
-> +- compatible:	"marvell,armada3710-sb-pinctrl", "syscon, "simple-mfd"
-> +		for the south bridge
-> +		"marvell,armada3710-nb-pinctrl", "syscon, "simple-mfd"
-> +		for the north bridge
-> +- reg: The first set of register are for pinctrl/gpio and the second
-> +  set for the interrupt controller
-> +- interrupts: list of the interrupt use by the gpio
-> +
-> +Available groups and functions for the North bridge:
-> +
-> +group: jtag
-> + - pins 20-24
-> + - functions jtag, gpio
-> +
-> +group sdio0
-> + - pins 8-10
-> + - functions sdio, gpio
-> +
-> +group emmc_nb
-> + - pins 27-35
-> + - functions emmc, gpio
-> +
-> +group pwm0
-> + - pin 11 (GPIO1-11)
-> + - functions pwm, gpio
-> +
-> +group pwm1
-> + - pin 12
-> + - functions pwm, gpio
-> +
-> +group pwm2
-> + - pin 13
-> + - functions pwm, gpio
-> +
-> +group pwm3
-> + - pin 14
-> + - functions pwm, gpio
-> +
-> +group pmic1
-> + - pin 17
-> + - functions pmic, gpio
-> +
-> +group pmic0
-> + - pin 16
-> + - functions pmic, gpio
-> +
-> +group i2c2
-> + - pins 2-3
-> + - functions i2c, gpio
-> +
-> +group i2c1
-> + - pins 0-1
-> + - functions i2c, gpio
-> +
-> +group spi_cs1
-> + - pin 17
-> + - functions spi, gpio
-> +
-> +group spi_cs2
-> + - pin 18
-> + - functions spi, gpio
-> +
-> +group spi_cs3
-> + - pin 19
-> + - functions spi, gpio
-> +
-> +group onewire
-> + - pin 4
-> + - functions onewire, gpio
-> +
-> +group uart1
-> + - pins 25-26
-> + - functions uart, gpio
-> +
-> +group spi_quad
-> + - pins 15-16
-> + - functions spi, gpio
-> +
-> +group uart_2
-> + - pins 9-10
-> + - functions uart, gpio
-> +
-> +Available groups and functions for the South bridge:
-> +
-> +group usb32_drvvbus0
-> + - pin 36
-> + - functions drvbus, gpio
-> +
-> +group usb2_drvvbus1
-> + - pin 37
-> + - functions drvbus, gpio
-> +
-> +group sdio_sb
-> + - pins 60-64
-> + - functions sdio, gpio
-> +
-> +group rgmii
-> + - pins 42-55
-> + - functions mii, gpio
-> +
-> +group pcie1
-> + - pins 39-40
-> + - functions pcie, gpio
-> +
-> +group ptp
-> + - pins 56-58
-> + - functions ptp, gpio
-> +
-> +group ptp_clk
-> + - pin 57
-> + - functions ptp, mii
-> +
-> +group ptp_trig
-> + - pin 58
-> + - functions ptp, mii
-> +
-> +group mii_col
-> + - pin 59
-> + - functions mii, mii_err
-> +
-> +GPIO subnode:
-> +
-> +Please refer to gpio.txt in this directory for details of gpio-ranges property
-> +and the common GPIO bindings used by client devices.
-> +
-> +Required properties for gpio driver under the gpio subnode:
-
-Why does this need to be a sub node? You should probably have a 
-compatible if it is.
-
-> +- interrupts: List of interrupt specifier for the controllers interrupt.
-> +- gpio-controller: Marks the device node as a gpio controller.
-> +- #gpio-cells: Should be 2. The first cell is the GPIO number and the
-> +   second cell specifies GPIO flags, as defined in
-> +   <dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH and
-> +   GPIO_ACTIVE_LOW flags are supported.
-> +- gpio-ranges: Range of pins managed by the GPIO controller.
-> +
-> +Xtal Clock bindings for Marvell Armada 37xx SoCs
-> +------------------------------------------------
-> +
-> +see Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
-> +
-> +
-> +Example:
-> +pinctrl_sb: pinctrl-sb@18800 {
-
-pinctrl@
-
-> +	compatible = "marvell,armada3710-sb-pinctrl", "syscon", "simple-mfd";
-> +	reg = <0x18800 0x100>, <0x18C00 0x20>;
-> +	gpiosb: gpiosb {
-
-gpio@
-
-> +		#gpio-cells = <2>;
-> +		gpio-ranges = <&pinctrl_sb 0 0 29>;
-> +		gpio-controller;
-> +		interrupts =
-> +		<GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-> +		<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	rgmii_pins: mii-pins {
-> +		groups = "rgmii";
-> +		function = "mii";
-> +	};
-> +
-> +};
-> -- 
-> git-series 0.9.1
+T24gRnJpLCBNYXIgMjQsIDIwMTcgYXQgMDg6NTE6MzFBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
+dGU6Cj4gVGhlIElubm9sdXggUDA3OVpDQSBpcyBhIDcuODUiIHBhbmVsIHdpdGggYSA3NjhYMTAy
+NCByZXNvbHV0aW9uIGFuZAo+IGNvbm5lY3RlZCB0byBEU0kgdXNpbmcgZm91ciBsYW5lcy4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgo+IFJldmll
+d2VkLWJ5OiBCcmlhbiBOb3JyaXMgPGJyaWFubm9ycmlzQGNocm9taXVtLm9yZz4KPiAtLS0KPiAK
+PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4gQ2hhbmdlcyBpbiB2MzogTm9uZQo+IENoYW5nZXMgaW4g
+djI6IE5vbmUKPiAKPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxwMDc5emNh
+LnR4dCAgICAgfCAyMyArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
+MyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwNzl6Y2EudHh0CgpBY2tlZC1i
+eTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
