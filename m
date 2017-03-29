@@ -1,7 +1,7 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v4 13/23] drivers/fsi: Add client driver register utilities
-Date: Wed, 29 Mar 2017 12:43:30 -0500
-Message-ID: <20170329174340.89109-14-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v4 18/23] drivers/fsi: Document FSI master sysfs files in ABI
+Date: Wed, 29 Mar 2017 12:43:35 -0500
+Message-ID: <20170329174340.89109-19-cbostic@linux.vnet.ibm.com>
 References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
@@ -12,65 +12,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Chris Bostic <cbostic@linux.vnet.ibm.com>
 
-Add driver_register and driver_unregister wrappers for FSI.
+Add info for sysfs scan file in Documentaiton ABI/testing
 
 Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/fsi/fsi-core.c | 17 +++++++++++++++++
- include/linux/fsi.h    | 12 ++++++++++++
- 2 files changed, 29 insertions(+)
+ Documentation/ABI/testing/sysfs-bus-fsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 75d2a88..4359e26 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -585,6 +585,23 @@ static int fsi_bus_match(struct device *dev, struct device_driver *drv)
- 	return 0;
- }
- 
-+int fsi_driver_register(struct fsi_driver *fsi_drv)
-+{
-+	if (!fsi_drv)
-+		return -EINVAL;
-+	if (!fsi_drv->id_table)
-+		return -EINVAL;
-+
-+	return driver_register(&fsi_drv->drv);
-+}
-+EXPORT_SYMBOL_GPL(fsi_driver_register);
-+
-+void fsi_driver_unregister(struct fsi_driver *fsi_drv)
-+{
-+	driver_unregister(&fsi_drv->drv);
-+}
-+EXPORT_SYMBOL_GPL(fsi_driver_unregister);
-+
- struct bus_type fsi_bus_type = {
- 	.name		= "fsi",
- 	.match		= fsi_bus_match,
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index 66bce48..34f1e9a 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -54,6 +54,18 @@ struct fsi_driver {
- #define to_fsi_dev(devp) container_of(devp, struct fsi_device, dev)
- #define to_fsi_drv(drvp) container_of(drvp, struct fsi_driver, drv)
- 
-+extern int fsi_driver_register(struct fsi_driver *fsi_drv);
-+extern void fsi_driver_unregister(struct fsi_driver *fsi_drv);
-+
-+/* module_fsi_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces module_init() and module_exit()
-+ */
-+#define module_fsi_driver(__fsi_driver) \
-+		module_driver(__fsi_driver, fsi_driver_register, \
-+				fsi_driver_unregister)
-+
- extern struct bus_type fsi_bus_type;
- 
- #endif /* LINUX_FSI_H */
+diff --git a/Documentation/ABI/testing/sysfs-bus-fsi b/Documentation/ABI/testing/sysfs-bus-fsi
+new file mode 100644
+index 0000000..dfcbc1b
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-fsi
+@@ -0,0 +1,6 @@
++What:           /sys/bus/platform/devices/fsi-master/scan
++KernelVersion:  4.9
++Contact:        cbostic@us.ibm.com
++Description:
++                Initiates a FSI master scan for all connected
++                slave devices on its links.
 -- 
 1.8.2.2
