@@ -1,53 +1,75 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v6 2/5] irqchip/aspeed-i2c-ic: Add I2C IRQ controller for Aspeed
-Date: Wed, 29 Mar 2017 21:28:44 +1030
-Message-ID: <CACPK8XdYNi2mna=aBbYvMroujLOPbVkPdU-DeYGrevjRBjHodQ@mail.gmail.com>
-References: <20170328051226.21677-1-brendanhiggins@google.com> <20170328051226.21677-3-brendanhiggins@google.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 0/4] ARM: exynos: Fix Odroid U3 USB/LAN when TFTP booting
+ (power sequence)
+Date: Wed, 29 Mar 2017 13:12:21 +0200
+Message-ID: <308964a5-84f0-d144-6358-bd334f9dc603@xs4all.nl>
+References: <20170107085203.4431-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170328051226.21677-3-brendanhiggins@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, vz@mleia.com, mouse@mayc.ru, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170107085203.4431-1-krzk@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Peter Chen <peter.chen@nxp.com>, ulf.hansson@linaro.org, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, robh+dt@kernel.org, Markus Reichl <m.reichl@fivetechno.de>, broonie@kernel.org, stern@rowland.harvard.edu, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 3:42 PM, Brendan Higgins
-<brendanhiggins@google.com> wrote:
-> +static int __init aspeed_i2c_ic_of_init(struct device_node *node,
-> +                                       struct device_node *parent)
-> +{
-> +       struct aspeed_i2c_ic *i2c_ic;
-> +
-> +       i2c_ic = kzalloc(sizeof(*i2c_ic), GFP_KERNEL);
-> +       if (!i2c_ic)
-> +               return -ENOMEM;
-> +
-> +       i2c_ic->base = of_iomap(node, 0);
-> +       if (IS_ERR(i2c_ic->base))
-> +               return PTR_ERR(i2c_ic->base);
-> +
-> +       i2c_ic->parent_irq = irq_of_parse_and_map(node, 0);
-> +       if (i2c_ic->parent_irq < 0)
-> +               return i2c_ic->parent_irq;
-> +
-> +       i2c_ic->irq_domain = irq_domain_add_linear(
-> +                       node, ASPEED_I2C_IC_NUM_BUS,
-> +                       &aspeed_i2c_ic_irq_domain_ops, NULL);
-> +       if (!i2c_ic->irq_domain)
-> +               return -ENOMEM;
-> +
-> +       i2c_ic->irq_domain->name = "ast-i2c-domain";
+Hi Krzysztof,
 
-Nit: Make this aspeed-i2c-domain to make this consistent with the
-other Aspeed drivers in the kernel tree.
+On 07/01/17 09:51, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> Thanks to Markus Reichl, I got an Odroid U3 to work with. Thanks to Peter
+> Chen, we got a power sequence generic library which solves my long
+> standing Odroid U3 problem - no LAN9730 if it was enabled by bootloader.
+> 
+> My previous attempts for this can be found here [0].
+> 
+> This patchset is based on Peter's v11 of power sequence [1].
+> Patchset is available also on my Github [2].
+> 
+> More detailed analysis is described in patch 2/4 ("ARM: dts: exynos: Fix
+> LAN9730 on Odroid U3 after tftpboot").
 
-Could this irq code be embedded in the i2c driver? We took a similar
-approach for the Aspeed GPIO driver, which has a similar IRQ structure
-of one hardware IRQ that tells the driver to check status registers
-for the precise irq source. The upside being all of the i2c code is in
-the same place in the kernel tree.
+It's rather late, but I finally had a chance to test this and it works.
 
-Cheers,
+So:
 
-Joel
+Tested-by: Hans Verkuil <hans.verkuil@cisco.com>
+
+This was with u-boot version v2016.09.01 and kernel 4.11.0-rc1.
+
+Regards,
+
+	Hans
+
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+> [0] http://www.spinics.net/lists/linux-mmc/msg37386.html
+> [1] https://lwn.net/Articles/710736/
+> [2] https://github.com/krzk/linux/commits/for-next/odroid-u3-usb3503-pwrseq
+> 
+> Krzysztof Kozlowski (4):
+>   ARM: dts: exynos: Fix indentation of EHCI and OHCI ports
+>   ARM: dts: exynos: Fix LAN9730 on Odroid U3 after tftpboot
+>   ARM: exynos_defconfig: Enable power sequence for Odroid U3
+>   ARM: multi_v7_defconfig: Enable power sequence for Odroid U3
+> 
+>  arch/arm/boot/dts/exynos4.dtsi            | 24 ++++++++++++------------
+>  arch/arm/boot/dts/exynos4412-odroidu3.dts | 21 +++++++++++++++++++++
+>  arch/arm/configs/exynos_defconfig         |  2 ++
+>  arch/arm/configs/multi_v7_defconfig       |  1 +
+>  4 files changed, 36 insertions(+), 12 deletions(-)
+> 
