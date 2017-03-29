@@ -1,204 +1,173 @@
 From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 09/23] drivers/fsi: scan slaves & register devices
-Date: Wed, 29 Mar 2017 12:43:26 -0500
-Message-ID: <20170329174340.89109-10-cbostic@linux.vnet.ibm.com>
-References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v4 14/23] drivers/fsi: Add sysfs files for FSI master & slave accesses
+Date: Wed, 29 Mar 2017 12:49:53 -0500
+Message-ID: <20170329174953.89247-1-cbostic@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170329174340.89109-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-9v/Yh3O1LlxrKZClcjn33gC/G2K4zDHf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-Now that we have fsi_slave devices, scan each for endpoints, and
-register them on the fsi bus.
-
-Includes contributions from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+This change adds a 'raw' file for reads & writes, and a 'term' file for
+the TERM command, and a 'break' file for issuing a BREAK.
 
 Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Chris Bostic <cbostic-9v/Yh3O1LlxrKZClcjn33gC/G2K4zDHf@public.gmane.org>
 ---
- drivers/fsi/fsi-core.c | 127 +++++++++++++++++++++++++++++++++++++++++++++++--
- include/linux/fsi.h    |   4 ++
- 2 files changed, 128 insertions(+), 3 deletions(-)
+ drivers/fsi/fsi-core.c | 116 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index b7b138b..a8faa89 100644
+index 4359e26..f0f0556 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -21,6 +21,19 @@
- 
- #include "fsi-master.h"
- 
-+#define FSI_SLAVE_CONF_NEXT_MASK	0x80000000
-+#define FSI_SLAVE_CONF_SLOTS_MASK	0x00ff0000
-+#define FSI_SLAVE_CONF_SLOTS_SHIFT	16
-+#define FSI_SLAVE_CONF_VERSION_MASK	0x0000f000
-+#define FSI_SLAVE_CONF_VERSION_SHIFT	12
-+#define FSI_SLAVE_CONF_TYPE_MASK	0x00000ff0
-+#define FSI_SLAVE_CONF_TYPE_SHIFT	4
-+#define FSI_SLAVE_CONF_CRC_SHIFT	4
-+#define FSI_SLAVE_CONF_CRC_MASK		0x0000000f
-+#define FSI_SLAVE_CONF_DATA_BITS	28
-+
-+static const int engine_page_size = 0x400;
-+
- #define FSI_SLAVE_BASE			0x800
- 
- /*
-@@ -61,6 +74,30 @@ static int fsi_master_read(struct fsi_master *master, int link,
- static int fsi_master_write(struct fsi_master *master, int link,
- 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
- 
-+/* FSI endpoint-device support */
-+
-+static void fsi_device_release(struct device *_device)
-+{
-+	struct fsi_device *device = to_fsi_dev(_device);
-+
-+	kfree(device);
-+}
-+
-+static struct fsi_device *fsi_create_device(struct fsi_slave *slave)
-+{
-+	struct fsi_device *dev;
-+
-+	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return NULL;
-+
-+	dev->dev.parent = &slave->dev;
-+	dev->dev.bus = &fsi_bus_type;
-+	dev->dev.release = fsi_device_release;
-+
-+	return dev;
-+}
-+
- /* crc helpers */
- static const uint8_t crc4_tab[] = {
- 	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
-@@ -138,6 +175,91 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
- 			addr, val, size);
+@@ -294,6 +294,95 @@ static int fsi_slave_scan(struct fsi_slave *slave)
+ 	return 0;
  }
  
-+static int fsi_slave_scan(struct fsi_slave *slave)
++static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
++		struct kobject *kobj, struct bin_attribute *attr, char *buf,
++		loff_t off, size_t count)
 +{
-+	uint32_t engine_addr;
-+	uint32_t conf;
-+	int rc, i;
++	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
++	size_t total_len, read_len;
++	int rc;
 +
-+	/*
-+	 * scan engines
-+	 *
-+	 * We keep the peek mode and slave engines for the core; so start
-+	 * at the third slot in the configuration table. We also need to
-+	 * skip the chip ID entry at the start of the address space.
-+	 */
-+	engine_addr = engine_page_size * 3;
-+	for (i = 2; i < engine_page_size / sizeof(uint32_t); i++) {
-+		uint8_t slots, version, type, crc;
-+		struct fsi_device *dev;
++	if (off < 0)
++		return -EINVAL;
 +
-+		rc = fsi_slave_read(slave, (i + 1) * sizeof(conf),
-+				&conf, sizeof(conf));
-+		if (rc) {
-+			dev_warn(&slave->dev,
-+				"error reading slave registers\n");
-+			return -1;
-+		}
-+		conf = be32_to_cpu(conf);
++	if (off > 0xffffffff || count > 0xffffffff || off + count > 0xffffffff)
++		return -EINVAL;
 +
-+		crc = fsi_crc4(0, conf, 32);
-+		if (crc) {
-+			dev_warn(&slave->dev,
-+				"crc error in slave register at 0x%04x\n",
-+				i);
-+			return -1;
-+		}
++	for (total_len = 0; total_len < count; total_len += read_len) {
++		read_len = min_t(size_t, count, 4);
++		read_len -= off & 0x3;
 +
-+		slots = (conf & FSI_SLAVE_CONF_SLOTS_MASK)
-+			>> FSI_SLAVE_CONF_SLOTS_SHIFT;
-+		version = (conf & FSI_SLAVE_CONF_VERSION_MASK)
-+			>> FSI_SLAVE_CONF_VERSION_SHIFT;
-+		type = (conf & FSI_SLAVE_CONF_TYPE_MASK)
-+			>> FSI_SLAVE_CONF_TYPE_SHIFT;
++		rc = fsi_slave_read(slave, off, buf + total_len, read_len);
++		if (rc)
++			return rc;
 +
-+		/*
-+		 * Unused address areas are marked by a zero type value; this
-+		 * skips the defined address areas
-+		 */
-+		if (type != 0 && slots != 0) {
-+
-+			/* create device */
-+			dev = fsi_create_device(slave);
-+			if (!dev)
-+				return -ENOMEM;
-+
-+			dev->slave = slave;
-+			dev->engine_type = type;
-+			dev->version = version;
-+			dev->unit = i;
-+			dev->addr = engine_addr;
-+			dev->size = slots * engine_page_size;
-+
-+			dev_info(&slave->dev,
-+			"engine[%i]: type %x, version %x, addr %x size %x\n",
-+					dev->unit, dev->engine_type, version,
-+					dev->addr, dev->size);
-+
-+			dev_set_name(&dev->dev, "%02x:%02x:%02x:%02x",
-+					slave->master->idx, slave->link,
-+					slave->id, i - 2);
-+
-+			rc = device_register(&dev->dev);
-+			if (rc) {
-+				dev_warn(&slave->dev, "add failed: %d\n", rc);
-+				put_device(&dev->dev);
-+			}
-+		}
-+
-+		engine_addr += slots * engine_page_size;
-+
-+		if (!(conf & FSI_SLAVE_CONF_NEXT_MASK))
-+			break;
++		off += read_len;
 +	}
 +
-+	return 0;
++	return count;
 +}
++
++static ssize_t fsi_slave_sysfs_raw_write(struct file *file,
++		struct kobject *kobj, struct bin_attribute *attr,
++		char *buf, loff_t off, size_t count)
++{
++	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
++	size_t total_len, write_len;
++	int rc;
++
++	if (off < 0)
++		return -EINVAL;
++
++	if (off > 0xffffffff || count > 0xffffffff || off + count > 0xffffffff)
++		return -EINVAL;
++
++	for (total_len = 0; total_len < count; total_len += write_len) {
++		write_len = min_t(size_t, count, 4);
++		write_len -= off & 0x3;
++
++		rc = fsi_slave_write(slave, off, buf + total_len, write_len);
++		if (rc)
++			return rc;
++
++		off += write_len;
++	}
++
++	return count;
++}
++
++static struct bin_attribute fsi_slave_raw_attr = {
++	.attr = {
++		.name = "raw",
++		.mode = 0600,
++	},
++	.size = 0,
++	.read = fsi_slave_sysfs_raw_read,
++	.write = fsi_slave_sysfs_raw_write,
++};
++
++static ssize_t fsi_slave_sysfs_term_write(struct file *file,
++		struct kobject *kobj, struct bin_attribute *attr,
++		char *buf, loff_t off, size_t count)
++{
++	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
++	struct fsi_master *master = slave->master;
++
++	if (!master->term)
++		return -ENODEV;
++
++	master->term(master, slave->link, slave->id);
++	return count;
++}
++
++static struct bin_attribute fsi_slave_term_attr = {
++	.attr = {
++		.name = "term",
++		.mode = 0200,
++	},
++	.size = 0,
++	.write = fsi_slave_sysfs_term_write,
++};
 +
  /* Encode slave local bus echo delay */
  static inline uint32_t fsi_smode_echodly(int x)
  {
-@@ -253,9 +375,8 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+@@ -409,6 +498,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
  		return rc;
  	}
  
--	/* todo: perform engine scan */
--
--	return rc;
-+	fsi_slave_scan(slave);
-+	return 0;
++	rc = device_create_bin_file(&slave->dev, &fsi_slave_raw_attr);
++	if (rc)
++		dev_warn(&slave->dev, "failed to create raw attr: %d\n", rc);
++
++	rc = device_create_bin_file(&slave->dev, &fsi_slave_term_attr);
++	if (rc)
++		dev_warn(&slave->dev, "failed to create term attr: %d\n", rc);
++
+ 	fsi_slave_scan(slave);
+ 	return 0;
  }
+@@ -523,6 +620,18 @@ static ssize_t master_rescan_store(struct device *dev,
  
- /* FSI master support */
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index 273cbf6..efa55ba 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -21,6 +21,10 @@ struct fsi_device {
- 	struct device		dev;
- 	u8			engine_type;
- 	u8			version;
-+	u8			unit;
-+	struct fsi_slave	*slave;
-+	uint32_t		addr;
-+	uint32_t		size;
- };
+ static DEVICE_ATTR(rescan, 0200, NULL, master_rescan_store);
  
- struct fsi_device_id {
++static ssize_t master_break_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct fsi_master *master = to_fsi_master(dev);
++
++	fsi_master_break(master, 0);
++
++	return count;
++}
++
++static DEVICE_ATTR(break, 0200, NULL, master_break_store);
++
+ int fsi_master_register(struct fsi_master *master)
+ {
+ 	int rc;
+@@ -546,6 +655,13 @@ int fsi_master_register(struct fsi_master *master)
+ 		return rc;
+ 	}
+ 
++	rc = device_create_file(&master->dev, &dev_attr_break);
++	if (rc) {
++		device_unregister(&master->dev);
++		ida_simple_remove(&master_ida, master->idx);
++		return rc;
++	}
++
+ 	fsi_master_scan(master);
+ 
+ 	return 0;
 -- 
 1.8.2.2
 
