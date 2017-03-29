@@ -1,42 +1,37 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] doc,dts - add XRA1403 DTS binding documentation
-Date: Wed, 29 Mar 2017 04:09:38 +0200
-Message-ID: <CACRpkdZkuPKnz=5qqfNyj-JJQV7i_8e2X3-Scd13eowBrVvDqw@mail.gmail.com>
-References: <cover.1490595641.git.nandor.han@ge.com> <39ba92bacf48da957f8f85d5cb11d3254fe3d68f.1490595641.git.nandor.han@ge.com>
+From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
+Subject: Re: [PATCH] ipmi: bt-bmc: Add ast2500 compatible string
+Date: Tue, 28 Mar 2017 21:16:47 -0500
+Message-ID: <f40a2070-b6cc-75fb-a2dc-d497aa594229@acm.org>
+References: <20170322140112.2479-1-joel@jms.id.au>
+ <20170329012224.jeil7uxvi2iefzvh@rob-hp-laptop>
+Reply-To: minyard-HInyCGIudOg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <39ba92bacf48da957f8f85d5cb11d3254fe3d68f.1490595641.git.nandor.han-JJi787mZWgc@public.gmane.org>
+In-Reply-To: <20170329012224.jeil7uxvi2iefzvh@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 8:23 AM, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org> wrote:
+On 03/28/2017 08:22 PM, Rob Herring wrote:
+> On Thu, Mar 23, 2017 at 12:31:12AM +1030, Joel Stanley wrote:
+>> The ast2500 SoCs contain the same IPMI BT device.
+>>
+>> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/ipmi/aspeed,ast2400-ibt-bmc.txt | 4 +++-
+>>   drivers/char/ipmi/bt-bmc.c                                        | 1 +
+>>   2 files changed, 4 insertions(+), 1 deletion(-)
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> Add the XRA1403 DTS binding documentation.
->
-> Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+This is in the IPMI tree for the next kernel.
 
-There is no big problem with this but:
+Thanks all,
 
-> +The XRA1403 is an 16-bit GPIO expander with an SPI interface. Features available:
-> +       - Individually programmable inputs:
-> +               - Internal pull-up resistors
-> +               - Polarity inversion
-> +               - Individual interrupt enable
-> +               - Rising edge and/or Falling edge interrupt
-> +               - Input filter
+-corey
 
-Since you mention that it has interrupts maybe you want to add bindings
-for the cascaded interrupt and the interrupt-controller; keyword etc
-already now.
-
-We just document what the hardware can do, we don't have to do all
-of it in the first Linux driver submission.
-
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
