@@ -1,61 +1,126 @@
-From: Vlad Zakharov <Vladislav.Zakharov@synopsys.com>
-Subject: Re: [PATCH v2] clk/axs10x: introduce AXS10X pll driver
-Date: Wed, 29 Mar 2017 11:20:46 +0000
-Message-ID: <1490786446.32756.4.camel@synopsys.com>
-References: <1487682670-4164-1-git-send-email-vzakhar@synopsys.com>
- <1488547113.2557.44.camel@synopsys.com>
- <20170303235005.GV25384@codeaurora.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 6/8] bus: brcmstb_gisb: Add ARM64 support
+Date: Wed, 29 Mar 2017 12:20:31 +0100
+Message-ID: <20170329112030.GD23442@leverpostej>
+References: <20170328213431.10904-1-opendmb@gmail.com>
+ <20170328213431.10904-7-opendmb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170303235005.GV25384@codeaurora.org>
-Content-Language: en-US
-Content-ID: <A3F6E98378575349A5106C14101F0F27@internal.synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "Vladislav.Zakharov@synopsys.com" <Vladislav.Zakharov@synopsys.com>
-Cc: "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "robh@kernel.org" <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170328213431.10904-7-opendmb@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Doug Berger <opendmb@gmail.com>
+Cc: wangkefeng.wang@huawei.com, catalin.marinas@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, mingo@kernel.org, f.fainelli@gmail.com, jonathanh@nvidia.com, bgolaszewski@baylibre.com, bcm-kernel-feedback-list@broadcom.com, shijie.huang@arm.com, treding@nvidia.com, devicetree@vger.kernel.org, suzuki.poulose@arm.com, robh+dt@kernel.org, gregory.0xf0@gmail.com, sandeepa.s.prabhu@gmail.com, linux-arm-kernel@lists.infradead.org, mirza.krak@gmail.com, linux-kernel@vger.kernel.org, james.morse@arm.com, olof@lixom.net, computersforpeace@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlcGhlbiwgTWljaGFlbCwNCg0KT24gRnJpLCAyMDE3LTAzLTAzIGF0IDE1OjUwIC0wODAw
-LCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+IE9uIDAzLzAzLCBWbGFkIFpha2hhcm92IHdyb3RlOg0K
-PiA+IA0KPiA+IEhpIE1pY2hhZWwsIFN0ZXBoZW4sDQo+ID4gDQo+ID4gT24gVHVlLCAyMDE3LTAy
-LTIxIGF0IDE2OjExICswMzAwLCBWbGFkIFpha2hhcm92IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiBB
-WFMxMFggYm9hcmRzIG1hbmFnZXMgaXQncyBjbG9ja3MgdXNpbmcgdmFyaW91cyBQTExzLiBUaGVz
-ZSBQTEwgaGFzIHNhbWUNCj4gPiA+IGRpdmlkZXJzIGFuZCBjb3JyZXNwb25kaW5nIGNvbnRyb2wg
-cmVnaXN0ZXJzIG1hcHBlZCB0byBkaWZmZXJlbnQgYWRkcmVzc2VzLg0KPiA+ID4gU28gd2UgYWRk
-IG9uZSBjb21tb24gZHJpdmVyIGZvciBzdWNoIFBMTHMuDQo+ID4gPiANCj4gPiA+IEVhY2ggUExM
-IG9uIEFYUzEwWCBib2FyZCBjb25zaXN0IG9mIHRocmVlIGRpdmlkZXJzOiBJRElWLCBGQkRJViBh
-bmQNCj4gPiA+IE9ESVYuIE91dHB1dCBjbG9jayB2YWx1ZSBpcyBtYW5hZ2VkIHVzaW5nIHRoZXNl
-IGRpdmlkZXJzLg0KPiA+ID4gDQo+ID4gPiBXZSBhZGQgcHJlLWRlZmluZWQgdGFibGVzIHdpdGgg
-c3VwcG9ydGVkIHJhdGUgdmFsdWVzIGFuZCBhcHByb3ByaWF0ZQ0KPiA+ID4gY29uZmlndXJhdGlv
-bnMgb2YgSURJViwgRkJESVYgYW5kIE9ESVYgZm9yIGVhY2ggdmFsdWUuDQo+ID4gPiANCj4gPiA+
-IEFzIG9mIHRvZGF5IHdlIGFkZCBzdXBwb3J0IGZvciBQTExzIHRoYXQgZ2VuZXJhdGUgY2xvY2sg
-Zm9yIHRoZQ0KPiA+ID4gZm9sbG93aW5nIGRldmljZXM6DQo+ID4gPiDCoCogQVJDIGNvcmUgb24g
-QVhDIENQVSB0aWxlcy4NCj4gPiA+IMKgKiBBUkMgUEdVIG9uIEFSQyBTRFAgTWFpbmJvYXJkLg0K
-PiA+ID4gYW5kIG1vcmUgdG8gY29tZSBsYXRlci4NCj4gPiA+IA0KPiA+ID4gQWNrZWQtYnk6IFJv
-YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBWbGFkIFph
-a2hhcm92IDx2emFraGFyQHN5bm9wc3lzLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEpvc2Ug
-QWJyZXUgPGpvYWJyZXVAc3lub3BzeXMuY29tPg0KPiA+ID4gQ2M6IE1pY2hhZWwgVHVycXVldHRl
-IDxtdHVycXVldHRlQGJheWxpYnJlLmNvbT4NCj4gPiA+IENjOiBTdGVwaGVuIEJveWQgPHNib3lk
-QGNvZGVhdXJvcmEub3JnPg0KPiA+ID4gQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFy
-bS5jb20+DQo+ID4gDQo+ID4gTWF5YmUgeW91IGhhdmUgYW55IGNvbW1lbnRzIG9yIHJlbWFya3Mg
-YWJvdXQgdGhpcyBwYXRjaD8gQW5kIGlmIHlvdSBkb24ndCBjb3VsZCB5b3UgcGxlYXNlIGFwcGx5
-IGl0Lg0KPiA+IA0KPiANCj4gSSBoYXZlbid0IHJldmlld2VkIGl0IHlldC4gVGhlIG1lcmdlIHdp
-bmRvdyBpcyB1cG9uIHVzIHJpZ2h0IG5vdw0KPiBzbyBJJ2xsIHByb2JhYmx5IGdldCB0byBnb2lu
-ZyB0aHJvdWdoIHRoZSBxdWV1ZSB0aGlzIHdlZWtlbmQvbmV4dA0KPiB3ZWVrLg0KPiANCg0KUGxl
-YXNlIHRyZWF0IHRoaXMgbWVzc2FnZSBhcyBhIHBvbGl0ZSByZW1pbmRlciB0byByZXZpZXcgbXkg
-cGF0Y2guDQpJdCBpcyByZXF1aXJlZCBmb3Igc29tZSBzdWJzeXN0ZW1zIG9uIG91ciBib2FyZHMs
-IGUuZy4gZm9yIEFSQyBQR1UuDQoNClRoYW5rcy4NCg0KLS0gDQpCZXN0IHJlZ2FyZHMsDQpWbGFk
-IFpha2hhcm92IDx2emFraGFyQHN5bm9wc3lzLmNvbT4KX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtc25wcy1hcmMgbWFpbGluZyBsaXN0CmxpbnV4
-LXNucHMtYXJjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1zbnBzLWFyYw==
+Hi,
+
+On Tue, Mar 28, 2017 at 02:34:29PM -0700, Doug Berger wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> Hook to the ARM64 data abort exception #16: synchronous external
+> abort, which is how the GISB errors will be funneled back to the
+> ARM64 CPU in case of problems
+
+I believe that you can use a die notifier for this, and that you don't
+need to hook the low-level architectural fault here.
+
+I note that the code doesn't even look at the faulting address, and
+likely doesn't have the information to do anything with it, so it make
+no sense to me for this code to hook the low-level fault.
+
+Further, as an aside, from digging into how we handle unexpected faults
+it appears that we don't always treat some faults (e.g. TLB conflict,
+faults on PTW) sufficiently fatally when they occur at EL0, so we likely
+need to do so rework there.
+
+Thanks,
+Mark.
+
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/bus/Kconfig        |  2 +-
+>  drivers/bus/brcmstb_gisb.c | 15 ++++++++++++---
+>  2 files changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index 0a52da439abf..d2a5f1184022 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -57,7 +57,7 @@ config ARM_CCN
+>  
+>  config BRCMSTB_GISB_ARB
+>  	bool "Broadcom STB GISB bus arbiter"
+> -	depends on ARM || MIPS
+> +	depends on ARM || ARM64 || MIPS
+>  	default ARCH_BRCMSTB || BMIPS_GENERIC
+>  	help
+>  	  Driver for the Broadcom Set Top Box System-on-a-chip internal bus
+> diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
+> index edf79432f899..500b6bb5c739 100644
+> --- a/drivers/bus/brcmstb_gisb.c
+> +++ b/drivers/bus/brcmstb_gisb.c
+> @@ -30,6 +30,11 @@
+>  #include <asm/signal.h>
+>  #endif
+>  
+> +#ifdef CONFIG_ARM64
+> +#include <asm/signal.h>
+> +#include <asm/system_misc.h>
+> +#endif
+> +
+>  #ifdef CONFIG_MIPS
+>  #include <asm/traps.h>
+>  #endif
+> @@ -225,7 +230,7 @@ static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_ARM
+> +#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
+>  static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+>  				     struct pt_regs *regs)
+>  {
+> @@ -235,7 +240,7 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+>  	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
+>  		brcmstb_gisb_arb_decode_addr(gdev, "bus error");
+>  
+> -#if !defined(CONFIG_ARM_LPAE)
+> +#if defined(CONFIG_ARM) && !defined(CONFIG_ARM_LPAE)
+>  	/*
+>  	 * If it was an imprecise abort, then we need to correct the
+>  	 * return address to be _after_ the instruction.
+> @@ -247,7 +252,7 @@ static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+>  	/* Always report unhandled exception */
+>  	return 1;
+>  }
+> -#endif
+> +#endif /* CONFIG_ARM || CONFIG_ARM64 */
+>  
+>  #ifdef CONFIG_MIPS
+>  static int brcmstb_bus_error_handler(struct pt_regs *regs, int is_fixup)
+> @@ -395,6 +400,10 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
+>  			"imprecise external abort");
+>  #endif
+>  #endif /* CONFIG_ARM */
+> +#ifdef CONFIG_ARM64
+> +	hook_fault_code(16, brcmstb_bus_error_handler, SIGBUS, 0,
+> +			"synchronous external abort");
+> +#endif
+>  #ifdef CONFIG_MIPS
+>  	board_be_handler = brcmstb_bus_error_handler;
+>  #endif
+> -- 
+> 2.12.0
+> 
