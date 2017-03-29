@@ -1,60 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3] iio: adc: cpcap: Add minimal support for CPCAP PMIC ADC
-Date: Wed, 29 Mar 2017 16:26:37 -0500
-Message-ID: <20170329212637.syluvxy5cp2qub3h@rob-hp-laptop>
-References: <20170324033842.12541-1-tony@atomide.com>
-Mime-Version: 1.0
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCHv3 00/10] Nokia H4+ support
+Date: Wed, 29 Mar 2017 23:33:26 +0200
+Message-ID: <C1A408F2-1DF8-4F49-B399-B936542DE6BC@holtmann.org>
+References: <20170328155939.31566-1-sre@kernel.org>
+ <CAL_JsqJcQ9ANtt71KRitOJ9spKD1SaeoL4RDftiCEPs8TjLJGA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170324033842.12541-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJcQ9ANtt71KRitOJ9spKD1SaeoL4RDftiCEPs8TjLJGA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 08:38:42PM -0700, Tony Lindgren wrote:
-> On Motorola phones like droid 4 there is a custom CPCAP PMIC. This PMIC
-> has ADCs that are used for battery charging and USB PHY VBUS and ID pin
-> detection.
-> 
-> Unfortunately the only documentation for this ADC seems to be the
-> Motorola mapphone Linux kernel tree. I have tested that reading raw and
-> scaled values works, but I have not used the timed sampling that the ADC
-> seems to support.
-> 
-> Let's add a minimal support for it so we can eventually provide IIO
-> channels for the related battery charging and USB PHY drivers.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
-> Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> ---
-> 
-> Changes since v2:
-> 
-> - Simplify things further by using channel based indexing and
->   remove more drivers specific enumerations
-> 
-> Changes since v1:
-> 
-> - Fix numerous issues pointed out by Peter Meerwald-Stadler
->   <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org> and Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> - Simplify things further by limiting read functions to a
->   single channel instead of a bank and got rid of the driver
->   specific cpcap_adc_conv_type in favor of IIO generic types
-> 
-> ---
->  .../devicetree/bindings/iio/adc/cpcap-adc.txt      |   18 +
+Hi Rob,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Here is PATCHv3 for the Nokia bluetooth patchset. I addressed all comments from
+>> Rob and Pavel regarding the serdev patches and dropped the *.dts patches, since
+>> they were queued by Tony. I also changed the patch order, so that the serdev
+>> patches come first. All of them have Acked-by from Rob, so I think it makes
+>> sense to merge them to serdev subsystem (now) and provide an immutable branch
+>> for the bluetooth subsystem.
+> 
+> Greg doesn't read cover letters generally and since the serdev patches
+> are Cc rather than To him, he's probably not planning to pick them up.
 
->  drivers/iio/adc/Kconfig                            |   11 +
->  drivers/iio/adc/Makefile                           |    1 +
->  drivers/iio/adc/cpcap-adc.c                        | 1007 ++++++++++++++++++++
->  4 files changed, 1037 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/cpcap-adc.txt
->  create mode 100644 drivers/iio/adc/cpcap-adc.c
+I wonder actually if we should merge all of these via bluetooth-next tree with proper Ack from Greg. However it would be good to also get buy in from Dave for merging this ultimately through net-next.
+
+Regards
+
+Marcel
