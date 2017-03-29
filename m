@@ -1,277 +1,97 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: leds: Add Qualcomm Light Pulse Generator binding
-Date: Wed, 29 Mar 2017 12:26:40 -0700
-Message-ID: <20170329192640.GO20094@minitux>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323055435.29197-2-bjorn.andersson@linaro.org>
- <20170329022649.wp5uvt2akufgihwh@rob-hp-laptop>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v3 00/11] Initial Allwinner Display Engine 2.0 Support
+Date: Thu, 30 Mar 2017 03:46:02 +0800
+Message-ID: <20170329194613.55548-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170329022649.wp5uvt2akufgihwh@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHU66DDAKGQEDINQZKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 28 Mar 19:26 PDT 2017, Rob Herring wrote:
+This patchset is the initial patchset for Allwinner DE2 support.
 
-> On Wed, Mar 22, 2017 at 10:54:35PM -0700, Bjorn Andersson wrote:
-> > This adds the binding document describing the three hardware blocks
-> > related to the Light Pulse Generator found in a wide range of Qualcomm
-> > PMICs.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/leds/leds-qcom-lpg.txt     | 194 +++++++++++++++++++++
-> >  1 file changed, 194 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
-> > new file mode 100644
-> > index 000000000000..fb9edd89119d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
-> > @@ -0,0 +1,194 @@
-> > +Binding for Qualcomm Light Pulse Generator
-> > +
-> > +The Qualcomm Light Pulse Generator consists of three different hardware blocks;
-> > +a ramp generator with lookup table, the light pulse generator and a three
-> > +channel current sink. These blocks are found in a wide range of Qualcomm PMICs.
-> > +Each of these are described individually below.
-> > +
-> > += Lookup Table (LUT)
-> > +
-> > +- compatible:
-> > +	Usage: required
-> > +	Value type: <stringlist>
-> > +	Definition: must be "qcom,spmi-lpg-lut"
-> > +
-> > +- reg:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: base address of the LUT block
-> > +
-> > +- qcom,lut-size:
-> > +	Usage: required
-> > +	Value type: <u32>
-> > +	Definition: number of elements available in the lookup table
-> > +
-> > += Light Pulse Generator (LPG)
-> > +The Light Pulse Generator can operate either as a standard PWM controller or in
-> > +a more advanced lookup-table based mode. These are described separately below.
-> > +
-> > +- compatible:
-> > +	Usage: required
-> > +	Value type: <stringlist>
-> > +	Definition: must be "qcom,spmi-lpg"
-> > +
-> > +- reg:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: base address of the LPG block
-> > +
-> > +== PWM mode
-> > +
-> > +- #pwm-cells:
-> > +	Usage: required
-> > +	Value type: <u32>
-> > +	Definition: must be 1
-> > +
-> > +== Lookup-table mode
-> > +
-> > +- cell-index:
-> 
-> This is a standard though not used property name. Perhaps "reg" or a 
-> vendor property instead.
-> 
+It contains the support of clocks in DE2 and the mixers in DE2.
 
-The node already has a "reg", this is the "natural" id of the
-LPG-channel, as used to reference a certain ramp-generator in the LUT.
+The SoC used to develop this patchset is V3s, as V3s is the simplest
+one of the SoCs that have DE2.
+(Allwinner V3s features only one mixer, although its clock control
+unit contains support for second mixer's clock; and its only video
+output is RGB LCD, which is already supported in our TCON driver)
 
-I did model this as an argument of the qcom,lut property below, but felt
-it's not a question of "which LUT" or any "configuration of the LUT" it
-is a property of the LPG.
+The last patch is only a testing patch, it shouldn't be merged; and
+for the patch to be really usable, the RFC fix of the TCON driver [1]
+is needed.
 
-I can convert this to a qcom,lpg-id or something like that if you
-prefer.
+No HDMI, TV encoder or other internal bridges' support is included
+in this patchset, which makes it currently not usable on H3.
 
-> > +	Usage: required, when referencing a LUT
-> > +	Value type: <u32>
-> > +	Definition: id of the LPG, used to associate the LPG with a particular
-> > +		    ramp generator in the LUT block
-> > +
-> > +- default-state:
-> > +	Usage: optional
-> > +	Value type: <string>
-> > +	Definition: default state, as defined in common.txt
-> > +
-> > +- label:
-> > +	Usage: optional
-> > +	Value type: <string>
-> > +	Definition: label of the LED, as defined in common.txt
-> > +
-> > +- linux,default-trigger:
-> > +	Usage: optional
-> > +	Value type: <string>
-> > +	Definition: default trigger, as defined in common.txt
-> > +
-> > +- qcom,tri-led:
-> > +	Usage: optional
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: a phandle of a TRILED node and a single u32 denoting which
-> > +		    output channel to control
-> > +
-> > +- qcom,lut:
-> > +	Usage: optional
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: phandle of a LUT node
-> > +
-> > +- qcom,dtest:
-> > +	Usage: optional
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: configures the output into an internal test line of the
-> > +		    pmic. A first u32 defines which test line to use and the
-> > +		    second cell configures how the value should be outputed
-> > +		    (available lines and configuration differs between PMICs)
-> > +
-> > +- qcom,pattern:
-> > +	Usage: optional
-> > +	Value type: <u16-list>
-> > +	Definition: list of 16 bit duty cycle values to make up the pattern to
-> > +		    be programmed into the LUT. Values should be in the range
-> > +		    [0,512).
-> > +
-> > +- qcom,pattern-length-ms:
-> > +	Usage: optional
-> > +	Value type: <u32>
-> > +	Definition: duration, in milliseconds, of the ramp generator running
-> > +		    one pass over the defined pattern
-> > +
-> > +- qcom,pattern-pause-lo-ms:
-> > +	Usage: optional
-> > +	Value type: <u32>
-> > +	Definition: duration, in milliseconds, for the ramp generator to pause
-> > +		    before iterating over the pattern
-> > +
-> > +- qcom,pattern-pause-hi-ms:
-> > +	Usage: optional
-> > +	Value type: <u32>
-> > +	Definition: duration, in milliseconds, for the ramp generator to pause
-> > +		    after iterating over the pattern
-> > +
-> > +- qcom,pattern-ping-pong:
-> > +	Usage: optional
-> > +	Value type: <boolean>
-> > +	Definition: denotes that the ramp generator should reverse direction
-> > +		    when reaching the end of the pattern, instead of wrapping
-> > +		    to the beginning
-> > +
-> > +- qcom,pattern-oneshot:
-> > +	Usage: optional
-> > +	Value type: <boolean>
-> > +	Definition: denotes that the ramp generator should stop after a single
-> > +		    pass over the pattern
-> > +
-> > +- qcom,pattern-reverse:
-> > +	Usage: optional
-> > +	Value type: <boolean>
-> > +	Definition: denotes that the ramp generator should operate backwards
-> > +		    over the pattern
-> 
-> The pattern related properties should be common if we put them in DT 
-> which I think is debatable.
-> 
+Thanks to Jean-Francois Moine and Jernej Skrabec for their efforts
+to discover the internal of DE2!
 
-A few years back I saw one other chip that had a similar pattern style,
-using these properties for the LP5xx - that is what's being requested -
-would have to be implemented by something reading the pattern and
-generating firmware to be run on the chip. This should be possible to
-do, but there are a lot functionality in the LP55xx chips that you would
-not be able to use with such an approach.
+[1] https://lists.freedesktop.org/archives/dri-devel/2016-December/126264.html
 
-> > +
-> > += LED Current Sink (TRILED)
-> > +
-> > +- compatible:
-> > +	Usage: required
-> > +	Value type: <stringlist>
-> > +	Definition: must be "qcom,spmi-tri-led"
-> > +
-> > +- reg:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: base address of the TRILED block
-> > +
-> > +- qcom,power-source:
-> > +	Usage: required
-> > +	Value type: <u32>
-> > +	Definition: power-source used to drive the output, as defined in the
-> > +		    datasheet
-> > +
-> > += EXAMPLE:
-> > +The following example defines a single output of the PMI8994, sinking current
-> > +into a LED in a natural pulsating pattern:
-> > +
-> > +&spmi_bus {
-> > +	pmic@3 {
-> > +		compatible = "qcom,pmi8994", "qcom,spmi-pmic";
-> 
-> typo.
-> 
+Icenowy Zheng (11):
+  dt-bindings: add binding for the Allwinner DE2 CCU
+  clk: sunxi-ng: add support for DE2 CCU
+  dt-bindings: add bindings for DE2 on V3s SoC
+  drm/sun4i: abstruct the layer type
+  drm/sun4i: abstract a mixer type
+  drm/sun4i: add support for Allwinner DE2 mixers
+  drm/sun4i: Add compatible string for V3s display engine
+  drm/sun4i: tcon: add support for V3s TCON
+  ARM: dts: sun8i: add DE2 nodes for V3s SoC
+  ARM: dts: sun8i: add pinmux for LCD pins of V3s SoC
+  [DO NOT MERGE] ARM: dts: sun8i: enable LCD panel of Lichee Pi Zero
 
-Sorry, I don't see the typo.
+ .../devicetree/bindings/clock/sun8i-de2.txt        |  31 ++
+ .../bindings/display/sunxi/sun4i-drm.txt           |  37 +-
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts      |  36 ++
+ arch/arm/boot/dts/sun8i-v3s.dtsi                   |  96 +++++
+ drivers/clk/sunxi-ng/Kconfig                       |   5 +
+ drivers/clk/sunxi-ng/Makefile                      |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 204 +++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.h               |  28 ++
+ drivers/gpu/drm/sun4i/Kconfig                      |  20 ++
+ drivers/gpu/drm/sun4i/Makefile                     |  10 +-
+ drivers/gpu/drm/sun4i/sun4i_backend.c              |  26 +-
+ drivers/gpu/drm/sun4i/sun4i_backend.h              |   5 -
+ drivers/gpu/drm/sun4i/sun4i_crtc.c                 |  31 +-
+ drivers/gpu/drm/sun4i/sun4i_crtc.h                 |  10 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.h                  |   3 +-
+ drivers/gpu/drm/sun4i/sun4i_layer.c                |  22 +-
+ drivers/gpu/drm/sun4i/sun4i_layer.h                |   6 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 |   7 +-
+ drivers/gpu/drm/sun4i/sun4i_tv.c                   |   8 +-
+ drivers/gpu/drm/sun4i/sun8i_layer.c                | 156 +++++++++
+ drivers/gpu/drm/sun4i/sun8i_layer.h                |  35 ++
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                | 386 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.h                | 131 +++++++
+ drivers/gpu/drm/sun4i/sunxi_layer.h                |  17 +
+ drivers/gpu/drm/sun4i/sunxi_mixer.h                |  22 ++
+ include/dt-bindings/clock/sun8i-de2.h              |  54 +++
+ include/dt-bindings/reset/sun8i-de2.h              |  50 +++
+ 28 files changed, 1391 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/sun8i-de2.txt
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-de2.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_layer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_layer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sunxi_layer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sunxi_mixer.h
+ create mode 100644 include/dt-bindings/clock/sun8i-de2.h
+ create mode 100644 include/dt-bindings/reset/sun8i-de2.h
 
-> > +		reg = <0x3 SPMI_USID>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		pmi8994_lpg_lut: lpg-lut@b000 {
-> > +			compatible = "qcom,spmi-lpg-lut";
-> > +			reg = <0xb000>;
-> > +
-> > +			qcom,lut-size = <24>;
-> > +		};
-> > +
-> > +		lpg@b200 {
-> > +			compatible = "qcom,spmi-lpg";
-> > +			reg = <0xb200>;
-> > +
-> > +			cell-index = <2>;
-> > +
-> > +			label = "lpg:green:user0";
-> > +
-> > +			qcom,tri-led = <&pmi8994_tri_led 1>;
-> > +			qcom,lut = <&pmi8994_lpg_lut>;
-> > +
-> > +			qcom,pattern = /bits/ 16 <9 20 42 86 158 256 353
-> > +						  425 469 491 502 507>;
-> > +			qcom,pattern-length-ms = <1337>;
-> > +			qcom,pattern-ping-pong;
-> > +
-> > +			default-state = "on";
-> > +		};
-> > +
-> > +		pmi8994_tri_led: tri-led@d000 {
-> 
-> It may make more sense to make the LED(s) and their properties a sub 
-> node of this. You could always use the PWM binding to link back to the 
-> LPG. The pattern/LUT is really just a queue of PWM settings. That's not 
-> all that different than a PWM based audio buzzer. There was a DMA based 
-> PWM binding the other day for audio.
-> 
-
-The TRILED is a separate hardware block from the LPG and for 3
-(predefined) LPG channel it serves as one of the options for routing the
-signal out of the PMIC. 
-
-As an example, on DB820c I drive the fourth user-LED by routing one of
-the LPG channels to a MPP configured as current-sink.
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.12.0
