@@ -1,47 +1,66 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sun5i: Add interrupt for
- display backend
-Date: Wed, 29 Mar 2017 15:26:05 +0800
-Message-ID: <CAGb2v66BsX=6906ubPcLD=ayGp4EmrbHyPmjDOVbZw9a_ZO_Dg@mail.gmail.com>
-References: <20170327143847.16259-1-wens@csie.org> <20170327143847.16259-3-wens@csie.org>
- <20170329071303.ft7oukmhczihy2xb@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v8 1/3] Input: max11801_ts: Add missing of_match_table
+Date: Wed, 29 Mar 2017 00:26:27 -0700
+Message-ID: <20170329072627.GE38261@dtor-ws>
+References: <1490209518-20790-1-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJWD5XDAKGQEOE22CNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170329071303.ft7oukmhczihy2xb@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1490209518-20790-1-git-send-email-jagan@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@openedev.com>
+Cc: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 3:13 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Mar 27, 2017 at 10:38:47PM +0800, Chen-Yu Tsai wrote:
->> The display backend on sun5i shares the same interrupt line as the
->> display frontend. Add it.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> And ideally, patches prefix shouldn't have dts here too. I've dropped
-> it and applied, thanks!
+On Thu, Mar 23, 2017 at 12:35:16AM +0530, Jagan Teki wrote:
+> From: Jagan Teki <jagan@amarulasolutions.com>
+> 
+> Added missing of_match_table for max11801_ts driver with
+> compatible as "maxim,max11801_ts"
+> 
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Matteo Lisi <matteo.lisi@engicam.com>
+> Cc: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
-Seems like this was a recent policy change? Or almost everyone was getting
-it wrong in the past.
+Applied, thank you.
 
->> This won't directly apply to old releases. We may want to backport
->> them though?
->
-> Yep, probably. Do you want to send it to stable?
+> ---
+> Changes for v8:
+> - use the compatible as maxim,max11801 with remove suffix _ts since
+>   i2c node follow the same.
+> Changes for v7:
+> - newly added patch
+> 
+>  drivers/input/touchscreen/max11801_ts.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/max11801_ts.c b/drivers/input/touchscreen/max11801_ts.c
+> index a595ae5..d3c7fc0 100644
+> --- a/drivers/input/touchscreen/max11801_ts.c
+> +++ b/drivers/input/touchscreen/max11801_ts.c
+> @@ -224,9 +224,16 @@ static int max11801_ts_probe(struct i2c_client *client,
+>  };
+>  MODULE_DEVICE_TABLE(i2c, max11801_ts_id);
+>  
+> +static const struct of_device_id max11801_ts_dt_ids[] = {
+> +	{ .compatible = "maxim,max11801" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, max11801_ts_dt_ids);
+> +
+>  static struct i2c_driver max11801_ts_driver = {
+>  	.driver = {
+>  		.name	= "max11801_ts",
+> +		.of_match_table	= max11801_ts_dt_ids,
+>  	},
+>  	.id_table	= max11801_ts_id,
+>  	.probe		= max11801_ts_probe,
+> -- 
+> 1.9.1
+> 
 
-It won't apply, due to the recent sun5i merger. We could wait until
-it lands in Linus' tree, then send a backport patch to stable, to
-keep the noise to a minimum.
-
-ChenYu
+-- 
+Dmitry
