@@ -1,101 +1,89 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH V6 4/7] mfd: da9061: MFD core support
-Date: Wed, 29 Mar 2017 11:12:26 +0200
-Message-ID: <CAMuHMdXyJYCgKok0C1EgNSq4gc8RUe+P=P1TRbZ=j0UQ5M12LA@mail.gmail.com>
-References: <539b8756120ab3558c906f7457e65f94dbe37425.1490608293.git.stwiss.opensource@diasemi.com>
- <201703272258.hWlipe1g%fengguang.wu@intel.com> <20170328082141.u2rgnhei5yhhzxdn@dell>
- <CAMuHMdX8WH959h50zGQCV7o4E249xBKDn_cVtRbFwYVsVebu9w@mail.gmail.com>
- <6ED8E3B22081A4459DAC7699F3695FB7018CD69ECA@SW-EX-MBX02.diasemi.com>
- <CAMuHMdU-kaAZ-Reji2v3jSypoDSiwYEWqD0vyYWwJpr6+rAPOA@mail.gmail.com> <20170329083058.6pcslbsq3qnifwjv@dell>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 1/1] of: Move OF property and graph API from base.c to
+ property.c
+Date: Wed, 29 Mar 2017 12:14:01 +0300
+Message-ID: <fb9cdd4e-e837-f925-da2b-9e4d25602e1e@linux.intel.com>
+References: <1490353147-11917-1-git-send-email-sakari.ailus@linux.intel.com>
+ <58DAF70E.9000305@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170329083058.6pcslbsq3qnifwjv@dell>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <58DAF70E.9000305@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Frank,
 
-On Wed, Mar 29, 2017 at 10:30 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 28 Mar 2017, Geert Uytterhoeven wrote:
->> On Tue, Mar 28, 2017 at 12:42 PM, Steve Twiss
->> <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org> wrote:
->> > On 28 March 2017 09:37, Geert Uytterhoeven wrote:
->> >> Subject: Re: [PATCH V6 4/7] mfd: da9061: MFD core support
->> >> On Tue, Mar 28, 2017 at 10:21 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> >> >> [auto build test WARNING on ljones-mfd/for-mfd-next]
->> >> >> [also build test WARNING on v4.11-rc4 next-20170327]
->> >> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
->> >> >> config: x86_64-randconfig-x009-201713 (attached as .config)
->> >> >> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
->> >> >> reproduce:
->> >> >>         # save the attached .config to linux build tree
->> >> >>         make ARCH=x86_64
->> >> >>
->> >> >> All warnings (new ones prefixed by >>):
->> >> >>
->> >> >>    drivers//mfd/da9062-core.c: In function 'da9062_i2c_probe':
->> >> >> >> drivers//mfd/da9062-core.c:845:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->> >> >>       chip->chip_type = (int)match->data;
->> >> >>                        ^
->> >> >
->> >> > Please use longs or enums.
->> >>
->> >> Enums would still give a warning on 64-bit.
->> >> The simple fix is change the cast from (int) to (uintptr_t).
->> >
->> > Hi Lee and Geert,
->> >
->> > How about this? Fix by redefining the enum chip_type to be an int.
->> > Then, just use substitution:
->> > #define COMPAT_TYPE_DA9061  1
->> > #define COMPAT_TYPE_DA9062  2
->> >
->> > That would be simple.
->> > Are there any reasons this would not be acceptable?
->>
->> I don't see how that can help.
->> The warning is caused by casting the "void *" (which is either 32-bit or
->> 64-bit) in of_device_if.data to an integer or enum (which is always 32-bit).
->>
->> The right fix is to cast it to uintptr_t intead of int, like other drivers do.
+Thank you for the review.
+
+Frank Rowand wrote:
+> Hi Sakari,
 >
-> That's a hack though, isn't it?  chip->chip_type is not of type
-> uintptr_t, so all you're doing here is making the compiler happy.
+> On 03/24/17 03:59, Sakari Ailus wrote:
+>> base.c contains both core OF functions and increasingly other
+>> functionality such as accessing properties and graphs, including
+>> convenience functions. In the near future this would also include OF
+>> specific implementation of the fwnode property and graph APIs. Prepare for
+>> this by moving the functionality to property.c.
+>
+> For future me, for when I look back and read this commit, please add something
+> to the effect of:
+>
+>   Create driver/of/property.c to contain procedures for accessing and
+>   interpreting device tree properties.  The procedures are moved from
+>   drivers/of/base.c, with no changes other than copying only the
+>   includes required by the moved procedures.
 
-It's a hack, in the sense that using casts is usually a hack :-)
-(I would love for C to have casts you can easily grep for, like C++ has)
+How about this as the commit message combining the two and dropping the 
+last sentence from the original description:
 
-In this case, it's not really a hack, as the void * is intended to store
-arbitrary data, both pointers and integers.
+base.c contains both core OF functions and increasingly other
+functionality such as accessing properties and graphs, including
+convenience functions. In the near future this would also include OF
+specific implementation of the fwnode property and graph APIs.
 
-> I see people using (int)(uintptr_t), which I guess keeps the
-> compiler happy in the first instance and actually culminates in a
-> correct cast to the right type.
+Create driver/of/property.c to contain procedures for accessing and
+interpreting device tree properties. The procedures are moved from
+drivers/of/base.c, with no changes other than copying only the
+includes required by the moved procedures.
 
-The cast to int isn't really needed.
+...
 
-> So how about something like (enum da9062_compatible_types)(long)?
+>> diff --git a/drivers/of/property.c b/drivers/of/property.c
+>> new file mode 100644
+>> index 0000000..afcf00a
+>> --- /dev/null
+>> +++ b/drivers/of/property.c
+>> @@ -0,0 +1,727 @@
+>> +/*
+>> + * drivers/of/property.c - Devicetree properties and graphs.
+>
+>     * drivers/of/property.c - Procedures for accessing and interpreting
+>     * Devicetree properties and graphs.
+>     *
+>     * Initially created by copying procedures from drivers/of/base.c
+>
+> The reference to base.c provides a documentation trail to all of the
+> earlier git commits that created and modified the procedures.
 
-"uintptr_t" is the proper C standard type for conversion between pointers and
-integers.  The cast to the enum isn't really needed, so I'd remove it (the
-less number of casts, the better!).
+I'll add that.
 
-Long is the hack that works on ILP32 and LP64 platforms only ;-)
+>
+> It would also be useful to say what procedures do and do not belong
+> in this file.  My understanding is that the intent is for
+> drivers/of/property.c and drivers/acpi/property.c to provide the
+> respective functionality that is used by drivers/base/property.c
+> and that drivers also may directly access the procedures in
+> drivers/of/property.c.
 
-Gr{oetje,eeting}s,
+I'll add something along those lines. The fwnode op struct and the 
+operations in that will be in this file as well.
 
-                        Geert
+-- 
+Kind regards,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+sakari.ailus@linux.intel.com
