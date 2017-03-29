@@ -1,13 +1,13 @@
-From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Subject: [PATCH v3 2/2] PCI: Add tango PCIe host bridge support
-Date: Wed, 29 Mar 2017 13:34:45 +0200
-Message-ID: <65114e62-7458-b6f7-327c-f07a5096a452@sigmadesigns.com>
-References: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: Re: [GIT PULL] PCI: Support for configurable PCI endpoint
+Date: Wed, 29 Mar 2017 13:42:18 +0200
+Message-ID: <0cfe5acf-332c-00c9-e5d5-1403c4e80ebe@axis.com>
+References: <20170327094520.3129-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5309e718-5813-5b79-db57-9d702b50d0f9@sigmadesigns.com>
+In-Reply-To: <20170327094520.3129-1-kishon@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,249 +17,84 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: DT <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mason <slash.tmp@free.fr>, linux-pci <linux-pci@vger.kernel.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, David Laight <david.laight@aculab.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: hch@infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This driver is used to work around HW bugs in the controller.
+On 03/27/2017 11:44 AM, Kishon Vijay Abraham I wrote:
+> Hi Bjorn,
+> 
+> Please find the pull request for PCI endpoint support below. I've
+> also included all the history here.
+> 
+> Changes from v4:
+> *) add #syscon-cells property and used of_parse_phandle_with_args
+>    to perform a configuration in syscon module (as suggested by
+>    Rob Herring)
+> *) Remove unnecessary white space.
+> 
+> Changes from v3:
+> *) fixed a typo and adapted to https://lkml.org/lkml/2017/3/13/562.
+> 
+> Changes from v2:
+> *) changed the configfs structure as suggested by Christoph Hellwig. With
+>    this change the framework creates configfs entry for EP function driver
+>    and EP controller. Previously these entries have to be created by the
+>    the user. (Haven't changed the epc core or epf core except for invoking
+>    configfs APIs to create entries for EP function driver and EP controller.
+>    That's mostly because the EP function device can still be created by
+>    directly invoking the epf core API without using configfs).
+> *) Now the user has to use configfs entry 'start' to start the link.
+>    This was previously done by the function driver. However in the case of
+>    multi function EP, the function driver shouldn't start the link.
+> 
+> Changes from v1:
+> *) The preparation patches for adding EP support is removed and is sent
+>    separately
+> *) Added device ID for DRA74x/DRA72x and used it instead of
+>    using "PCI_ANY_ID"
+> *) Added userguide for PCI endpoint test function
+> 
+> Major Improvements from RFC:
+>  *) support multi-function devices (hw supported not virtual)
+>  *) Access host side buffers
+>  *) Raise MSI interrupts
+>  *) Add user space program to use the host side PCI driver
+>  *) Adapt all other users of designware to use the new design (only
+>     compile tested. Since I have only dra7xx boards, the new design
+>     has only been tested in dra7xx. I'd require the help of others
+>     to test the platforms they have access to).
+> 
+> This series has been developed over 4.11-rc1 + [1]
+> [1] -> https://lkml.org/lkml/2017/3/13/562
+> 
+> Let me know if this has to be re-based to some of your branch.
+> 
+> Thanks
+> Kishon
+> 
+> The following changes since commit 623e87fec8ab7867fb51b3079196bd10718a60ce:
+> 
+>   PCI: dwc: dra7xx: Push request_irq call to the bottom of probe (2017-03-22 20:35:30 +0530)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/pci-endpoint.git tags/pci-endpoint-for-4.12
+> 
+> for you to fetch changes up to e98bf80074be4654faae42fe0f5a622a776b6fdd:
+> 
+>   ARM: DRA7: clockdomain: Change the CLKTRCTRL of CM_PCIE_CLKSTCTRL to SW_WKUP (2017-03-27 15:08:22 +0530)
+> 
+> ----------------------------------------------------------------
 
-Note: the controller does NOT support the following features.
+FWIW:
+I've tested Kishon's tag pci-endpoint-for-4.12
+and PCIe on artpec6 SoC is still working fine.
 
-  Legacy PCI interrupts
-  IO space
+I also included the DRA7xx PCIe driver in my
+kernel so that pcie-designware-ep.c gets built.
 
-Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
----
- Documentation/devicetree/bindings/pci/tango-pcie.txt |  33 +++++++++
- drivers/pci/host/Kconfig                             |   7 ++
- drivers/pci/host/Makefile                            |   1 +
- drivers/pci/host/pcie-tango.c                        | 150 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 191 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/tango-pcie.txt b/Documentation/devicetree/bindings/pci/tango-pcie.txt
-new file mode 100644
-index 000000000000..f8e150ec41d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/tango-pcie.txt
-@@ -0,0 +1,33 @@
-+Sigma Designs Tango PCIe controller
-+
-+Required properties:
-+
-+- compatible: "sigma,smp8759-pcie"
-+- reg: address/size of PCI configuration space, and pcie_reg
-+- bus-range: defined by size of PCI configuration space
-+- device_type: "pci"
-+- #size-cells: <2>
-+- #address-cells: <3>
-+- #interrupt-cells: <1>
-+- ranges: translation from system to bus addresses
-+- interrupts: spec for misc interrupts and MSI
-+- msi-controller
-+
-+Example:
-+
-+	pcie@2e000 {
-+		compatible = "sigma,smp8759-pcie";
-+		reg = <0x50000000 SZ_64M>, <0x2e000 0x100>;
-+		bus-range = <0 63>;
-+		device_type = "pci";
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		#interrupt-cells = <1>;
-+		/* http://elinux.org/Device_Tree_Usage#PCI_Address_Translation */
-+			/* BUS_ADDRESS(3)  CPU_PHYSICAL(1)  SIZE(2) */
-+		ranges = <0x02000000 0x0 0x04000000  0x54000000  0x0 SZ_192M>;
-+		interrupts =
-+			<54 IRQ_TYPE_LEVEL_HIGH>, /* misc interrupts */
-+			<55 IRQ_TYPE_LEVEL_HIGH>; /* MSI */
-+		msi-controller;
-+	};
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index d7e7c0a827c3..8a622578a760 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -285,6 +285,13 @@ config PCIE_ROCKCHIP
- 	  There is 1 internal PCIe port available to support GEN2 with
- 	  4 slots.
- 
-+config PCIE_TANGO
-+	tristate "Tango PCIe controller"
-+	depends on ARCH_TANGO && PCI_MSI && OF
-+	select PCI_HOST_COMMON
-+	help
-+	  Say Y here to enable PCIe controller support on Tango SoC.
-+
- config VMD
- 	depends on PCI_MSI && X86_64
- 	tristate "Intel Volume Management Device Driver"
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index 084cb4983645..fc7ea90196f3 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -32,4 +32,5 @@ obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
- obj-$(CONFIG_PCIE_ROCKCHIP) += pcie-rockchip.o
-+obj-$(CONFIG_PCIE_TANGO) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
-diff --git a/drivers/pci/host/pcie-tango.c b/drivers/pci/host/pcie-tango.c
-index e88850983a1d..dbc2663486b5 100644
---- a/drivers/pci/host/pcie-tango.c
-+++ b/drivers/pci/host/pcie-tango.c
-@@ -192,3 +192,153 @@ static int tango_msi_probe(struct platform_device *pdev, struct tango_pcie *pcie
- 
- 	return 0;
- }
-+
-+/*** HOST BRIDGE SUPPORT ***/
-+
-+static int smp8759_config_read(struct pci_bus *bus,
-+		unsigned int devfn, int where, int size, u32 *val)
-+{
-+	int ret;
-+	struct pci_config_window *cfg = bus->sysdata;
-+	struct tango_pcie *pcie = dev_get_drvdata(cfg->parent);
-+
-+	/*
-+	 * QUIRK #1
-+	 * Reads in configuration space outside devfn 0 return garbage.
-+	 */
-+	if (devfn != 0) {
-+		*val = ~0; /* Is this required even if we return an error? */
-+		return PCIBIOS_FUNC_NOT_SUPPORTED; /* Error seems appropriate */
-+	}
-+
-+	/*
-+	 * QUIRK #2
-+	 * The root complex advertizes a fake BAR, which is used to filter
-+	 * bus-to-system requests. Hide it from Linux.
-+	 */
-+	if (where == PCI_BASE_ADDRESS_0 && bus->number == 0) {
-+		*val = 0; /* 0 or ~0 to hide the BAR from Linux? */
-+		return PCIBIOS_SUCCESSFUL; /* Should we return error or success? */
-+	}
-+
-+	/*
-+	 * QUIRK #3
-+	 * Unfortunately, config and mem spaces are muxed.
-+	 * Linux does not support such a setting, since drivers are free
-+	 * to access mem space directly, at any time.
-+	 * Therefore, we can only PRAY that config and mem space accesses
-+	 * NEVER occur concurrently.
-+	 */
-+	writel_relaxed(1, pcie->mux);
-+	ret = pci_generic_config_read(bus, devfn, where, size, val);
-+	writel_relaxed(0, pcie->mux);
-+
-+	return ret;
-+}
-+
-+static int smp8759_config_write(struct pci_bus *bus,
-+		unsigned int devfn, int where, int size, u32 val)
-+{
-+	int ret;
-+	struct pci_config_window *cfg = bus->sysdata;
-+	struct tango_pcie *pcie = dev_get_drvdata(cfg->parent);
-+
-+	writel_relaxed(1, pcie->mux);
-+	ret = pci_generic_config_write(bus, devfn, where, size, val);
-+	writel_relaxed(0, pcie->mux);
-+
-+	return ret;
-+}
-+
-+static struct pci_ecam_ops smp8759_ecam_ops = {
-+	.bus_shift	= 20,
-+	.pci_ops	= {
-+		.map_bus	= pci_ecam_map_bus,
-+		.read		= smp8759_config_read,
-+		.write		= smp8759_config_write,
-+	}
-+};
-+
-+static const struct of_device_id tango_pcie_ids[] = {
-+	{ .compatible = "sigma,smp8759-pcie" },
-+	{ /* sentinel */ },
-+};
-+
-+static void smp8759_init(struct tango_pcie *pcie, void __iomem *base)
-+{
-+	pcie->mux		= base + 0x48;
-+	pcie->msi_status	= base + 0x80;
-+	pcie->msi_mask		= base + 0xa0;
-+	pcie->msi_doorbell	= 0xa0000000 + 0x2e07c;
-+}
-+
-+static int tango_pcie_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	void __iomem *base;
-+	struct resource *res;
-+	struct tango_pcie *pcie;
-+	struct device *dev = &pdev->dev;
-+
-+	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, pcie);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	if (of_device_is_compatible(dev->of_node, "sigma,smp8759-pcie"))
-+		smp8759_init(pcie, base);
-+
-+	ret = tango_msi_probe(pdev, pcie);
-+	if (ret)
-+		return ret;
-+
-+	return pci_host_common_probe(pdev, &smp8759_ecam_ops);
-+}
-+
-+static int tango_pcie_remove(struct platform_device *pdev)
-+{
-+	return tango_msi_remove(pdev);
-+}
-+
-+static struct platform_driver tango_pcie_driver = {
-+	.probe	= tango_pcie_probe,
-+	.remove	= tango_pcie_remove,
-+	.driver	= {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = tango_pcie_ids,
-+	},
-+};
-+
-+module_platform_driver(tango_pcie_driver);
-+
-+#define VENDOR_SIGMA	0x1105
-+
-+/*
-+ * QUIRK #4
-+ * The root complex advertizes the wrong device class.
-+ * Header Type 1 is for PCI-to-PCI bridges.
-+ */
-+static void tango_fixup_class(struct pci_dev *dev)
-+{
-+	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-+}
-+DECLARE_PCI_FIXUP_EARLY(VENDOR_SIGMA, PCI_ANY_ID, tango_fixup_class);
-+
-+/*
-+ * QUIRK #5
-+ * Only transfers within the root complex BAR are forwarded to the host.
-+ * By default, the DMA framework expects that
-+ * PCI address 0x8000_0000 maps to system address 0x8000_0000
-+ * which is where DRAM0 is mapped.
-+ */
-+static void tango_fixup_bar(struct pci_dev *dev)
-+{
-+        pci_write_config_dword(dev, PCI_BASE_ADDRESS_0, 0x80000000);
-+}
-+DECLARE_PCI_FIXUP_FINAL(VENDOR_SIGMA, PCI_ANY_ID, tango_fixup_bar);
--- 
-2.11.0
+My only worry is that the code in pcie-designware-ep.c
+is not compile tested if DRA7xx is not selected
+(as it is the only driver using PCIE_DW_EP at
+the moment).
