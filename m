@@ -1,111 +1,44 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [GIT PULL] PCI: Support for configurable PCI endpoint
-Date: Wed, 29 Mar 2017 17:40:37 +0530
-Message-ID: <99ae043b-35fd-0723-c8a7-e2625a862c6d@ti.com>
-References: <20170327094520.3129-1-kishon@ti.com>
- <0cfe5acf-332c-00c9-e5d5-1403c4e80ebe@axis.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v6 1/5] irqchip/aspeed-i2c-ic: binding docs for Aspeed
+ I2C Interrupt Controller
+Date: Wed, 29 Mar 2017 23:11:45 +1100
+Message-ID: <1490789505.3177.184.camel@kernel.crashing.org>
+References: <20170328051226.21677-1-brendanhiggins@google.com>
+         <20170328051226.21677-2-brendanhiggins@google.com>
+         <1490690980.3177.108.camel@kernel.crashing.org>
+         <CAFd5g47Pij6TxkmS6akWoAL0FZ2WLh+FWUrr099RiabWn+pneQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <0cfe5acf-332c-00c9-e5d5-1403c4e80ebe@axis.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: hch@infradead.org, nsekhar@ti.com
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAFd5g47Pij6TxkmS6akWoAL0FZ2WLh+FWUrr099RiabWn+pneQ@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+On Wed, 2017-03-29 at 03:34 -0700, Brendan Higgins wrote:
+> I think I addressed this on the other email with the actual driver.
+> Anyway, I thought that this is pretty much the dummy irqchip code is
+> for; I have seen some other drivers do the same thing. It is true
+> that
+> this is a really basic "interrupt controller;" it cannot mask on its
+> own, etc; nevertheless, I think you will pretty much end up with the
+> same code for an "I2C controller;" it just won't use an irq_domain.
 
-On Wednesday 29 March 2017 05:12 PM, Niklas Cassel wrote:
-> On 03/27/2017 11:44 AM, Kishon Vijay Abraham I wrote:
->> Hi Bjorn,
->>
->> Please find the pull request for PCI endpoint support below. I've
->> also included all the history here.
->>
->> Changes from v4:
->> *) add #syscon-cells property and used of_parse_phandle_with_args
->>    to perform a configuration in syscon module (as suggested by
->>    Rob Herring)
->> *) Remove unnecessary white space.
->>
->> Changes from v3:
->> *) fixed a typo and adapted to https://lkml.org/lkml/2017/3/13/562.
->>
->> Changes from v2:
->> *) changed the configfs structure as suggested by Christoph Hellwig. With
->>    this change the framework creates configfs entry for EP function driver
->>    and EP controller. Previously these entries have to be created by the
->>    the user. (Haven't changed the epc core or epf core except for invoking
->>    configfs APIs to create entries for EP function driver and EP controller.
->>    That's mostly because the EP function device can still be created by
->>    directly invoking the epf core API without using configfs).
->> *) Now the user has to use configfs entry 'start' to start the link.
->>    This was previously done by the function driver. However in the case of
->>    multi function EP, the function driver shouldn't start the link.
->>
->> Changes from v1:
->> *) The preparation patches for adding EP support is removed and is sent
->>    separately
->> *) Added device ID for DRA74x/DRA72x and used it instead of
->>    using "PCI_ANY_ID"
->> *) Added userguide for PCI endpoint test function
->>
->> Major Improvements from RFC:
->>  *) support multi-function devices (hw supported not virtual)
->>  *) Access host side buffers
->>  *) Raise MSI interrupts
->>  *) Add user space program to use the host side PCI driver
->>  *) Adapt all other users of designware to use the new design (only
->>     compile tested. Since I have only dra7xx boards, the new design
->>     has only been tested in dra7xx. I'd require the help of others
->>     to test the platforms they have access to).
->>
->> This series has been developed over 4.11-rc1 + [1]
->> [1] -> https://lkml.org/lkml/2017/3/13/562
->>
->> Let me know if this has to be re-based to some of your branch.
->>
->> Thanks
->> Kishon
->>
->> The following changes since commit 623e87fec8ab7867fb51b3079196bd10718a60ce:
->>
->>   PCI: dwc: dra7xx: Push request_irq call to the bottom of probe (2017-03-22 20:35:30 +0530)
->>
->> are available in the git repository at:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/pci-endpoint.git tags/pci-endpoint-for-4.12
->>
->> for you to fetch changes up to e98bf80074be4654faae42fe0f5a622a776b6fdd:
->>
->>   ARM: DRA7: clockdomain: Change the CLKTRCTRL of CM_PCIE_CLKSTCTRL to SW_WKUP (2017-03-27 15:08:22 +0530)
->>
->> ----------------------------------------------------------------
-> 
-> FWIW:
-> I've tested Kishon's tag pci-endpoint-for-4.12
-> and PCIe on artpec6 SoC is still working fine.
+Don't worry too much about this. As I think I mention it's not a huge
+deal at this stage, I just wanted to make sure you were aware of the
+compromise(s) involved.
 
-Thanks for testing it.
-> 
-> I also included the DRA7xx PCIe driver in my
-> kernel so that pcie-designware-ep.c gets built.
-> 
-> My only worry is that the code in pcie-designware-ep.c
-> is not compile tested if DRA7xx is not selected
-> (as it is the only driver using PCIE_DW_EP at
-> the moment).
+Regarding the other comment about the "fast mode", my main worry here
+is that somebody might come up with a 2Mhz capable device, we'll hit
+your 1Mhz test, enable fast mode, and shoot it with 3.4Mhz which it
+might not be happy at all about...
 
-yeah, we should plan to include COMPILE_TEST in all pci drivers but I guess
-there is some problem with non-ARM builds [1]. As Bjorn mentioned in the
-thread, we could add #ifdef ARM and then include COMPILE_TEST.
+I think the cut-off for switching to the "fast" mode should basically
+be the fast speed mode frequency (which isn't clear from the spec but
+seems to be 3.4Mhz). Otherwise people will end up with higher speeds
+than what they asked for and that's bad.
 
-Thanks
-Kishon
-
-[1] -> http://www.spinics.net/lists/linux-pci/msg58134.html
-
-Thanks
-Kishon
-> 
+Cheers,
+Ben.
