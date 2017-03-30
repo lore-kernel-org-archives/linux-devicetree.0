@@ -1,68 +1,60 @@
-From: Leo Yan <leo.yan@linaro.org>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
-Date: Thu, 30 Mar 2017 09:18:39 +0800
-Message-ID: <20170330011839.GA939@leoy-linaro>
+Date: Thu, 30 Mar 2017 09:59:41 +0800
+Message-ID: <20170330015941.GD3038@leoy-linaro>
 References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
  <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
- <31be033f-514e-e48a-3ba2-a5c5cd477548@arm.com>
- <20170329030735.GA23889@leoy-linaro>
- <CAJ9a7VgsnFYpOGVjD4m7+EjFXkBoRqVR2F2Pgtn-T0NB+YP6tg@mail.gmail.com>
+ <20170328165010.GA21937@linaro.org>
+ <20170329015423.GA5035@leoy-linaro>
+ <20170329165535.GB24889@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAJ9a7VgsnFYpOGVjD4m7+EjFXkBoRqVR2F2Pgtn-T0NB+YP6tg@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mike Leach <mike.leach@linaro.org>
-Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, Sudeep Holla <sudee>
+In-Reply-To: <20170329165535.GB24889-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 04:17:19PM +0100, Mike Leach wrote:
+On Wed, Mar 29, 2017 at 10:55:35AM -0600, Mathieu Poirier wrote:
 
 [...]
 
-> >> >+out_powered_up:
-> >> >+    debug_os_unlock(drvdata);
-> >>
-> >> Question: Do we need a matching debug_os_lock() once we are done ?
-> >
-> > I have checked ARM ARMv8, but there have no detailed description for
-> > this. I refered coresight-etmv4 code and Mike's pseudo code, ther have
-> > no debug_os_lock() related operations.
-> >
-> > Mike, Mathieu, could you also help confirm this?
-> >
+> > So this is why add "idle_constraint" as a central place to control
+> > power domain for CPU debug purpose and I also think this is more
+> > friendly for hardware design, e.g. some platforms can enable partial
+> > low power states to save power and avoid overheat after using this
+> > driver.
+> > 
+> > How about you think for this?
 > 
-> Debug OS lock / unlock allows the power management code running on the
-> core to lock out the external debugger while the debug registers are
-> saved/restored during a core power event.
-> 
-> e.g. A sequence such as this might occur in a correctly programmed system....
-> 
-> debug_os_lock()
-> save_debug_regs() // visible from core power domain - incl breakpoints etc
-> save_etm_regs()
-> ... // other stuff prior to core power down,
-> <power_down_core>
-> 
-> Followed by...
-> 
-> <power_up_core>
-> restore_etm_regs()
-> restore_debug_regs() // visible from core power domain - incl breakpoints etc
-> debug_os_unlock()
-> 
-> The value is 1 (locked) if cold resetting into AArch64 - it is
-> expected that some system software will set this to 0 as part of the
-> boot process.
-> The lock prevents write access to the external debug registers so we
-> need to clear it to set up the external debug registers we are using.
+> Like Sudeep pointed out we should concentrate on doing the right thing,
+> that is work with EDPRSR.PU, EDPRCR.COREPURQ and EDPRCR.CORENPDRQ.
 
-This description is conflict with upper restoring flows. During
-restore_debug_regs(), the os lock is locked so how it can write
-external debug register to restore context?
+Agree, and I think we have aligned for this.
 
-> This suggests that it should be restored as we found it when done.
+> Anything outside of that becomes platform specific and can't be handled in
+> this driver.
+
+Sorry I argue a bit for this just want to make things more clear and
+if can have better method.
+
+Though the issue is platform specific, but the code is to seek common
+method to handle them. So the driver has no any platform specific code.
+
+I read again for Suziki's suggestion: "4) Should document the fact that,
+on some platforms, the user may have to disable CPUidle explicitly to
+get the driver working. But let us not make it the default. The user
+with a not so ideal platform could add "nohlt" and get it working."
+
+So I'm not strong to resist and if this is alignment yet, I should
+document well for this but doesn't handle it in driver (keep driver
+simple).
 
 Thanks,
 Leo Yan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
