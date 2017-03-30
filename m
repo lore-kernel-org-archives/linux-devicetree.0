@@ -1,34 +1,41 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 1/2] ARM: keystone: Create new binding for K2G ICE evm
-Date: Thu, 30 Mar 2017 10:29:06 -0500
-Message-ID: <20170330152907.12595-2-fcooper@ti.com>
-References: <20170330152907.12595-1-fcooper@ti.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH v2 8/8] ARM: configs: stm32: DCMI + OV2640 camera support
+Date: Thu, 30 Mar 2017 17:27:47 +0200
+Message-ID: <1490887667-8880-9-git-send-email-hugues.fruchet@st.com>
+References: <1490887667-8880-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170330152907.12595-1-fcooper@ti.com>
+In-Reply-To: <1490887667-8880-1-git-send-email-hugues.fruchet@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, linux@armlinux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a new binding for the new K2G Industrial Communication Engine evm.
+Enable DCMI camera interface and OV2640 camera sensor drivers.
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- Documentation/devicetree/bindings/arm/keystone/keystone.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/configs/stm32_defconfig | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-index 48f6703..f310bad 100644
---- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-+++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-@@ -37,3 +37,6 @@ Boards:
- 
- -  K2G EVM
-    compatible = "ti,k2g-evm", "ti,k2g", "ti-keystone"
-+
-+-  K2G Industrial Communication Engine EVM
-+   compatible = "ti,k2g-ice", "ti,k2g", "ti-keystone"
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index 84adc88..3f2e4ce 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -53,6 +53,13 @@ CONFIG_GPIO_STMPE=y
+ CONFIG_MFD_STMPE=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ # CONFIG_USB_SUPPORT is not set
++CONFIG_VIDEO_V4L2=y
++CONFIG_MEDIA_SUBDRV_AUTOSELECT=n
++CONFIG_V4L_PLATFORM_DRIVERS=y
++CONFIG_MEDIA_SUPPORT=y
++CONFIG_MEDIA_CAMERA_SUPPORT=y
++CONFIG_VIDEO_STM32_DCMI=y
++CONFIG_VIDEO_OV2640=y
+ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_GPIO=y
 -- 
-2.10.0
+1.9.1
