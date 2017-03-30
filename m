@@ -1,452 +1,92 @@
-From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-Subject: [PATCH 2/2] arm64: dts: add pinctrl dtsi file for HiKey960 development board
-Date: Thu, 30 Mar 2017 14:48:03 +0800
-Message-ID: <20170330064803.18648-2-hw.wangxiaoyin@hisilicon.com>
-References: <20170330064803.18648-1-hw.wangxiaoyin@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v3 07/37] mtd: nand: denali_dt: enable HW_ECC_FIXUP for Altera SOCFPGA variant
+Date: Thu, 30 Mar 2017 15:45:53 +0900
+Message-ID: <1490856383-31560-8-git-send-email-yamada.masahiro@socionext.com>
+References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170330064803.18648-1-hw.wangxiaoyin@hisilicon.com>
+In-Reply-To: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: hw.wangxiaoyin@hisilicon.com, chenya99@hisilicon.com
+To: linux-mtd@lists.infradead.org
+Cc: Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl dtsi file for HiKey960 development board, enable
-5 pinmux devices and 1 pinconf device, also include some nodes
-of configurations for pins.
+There are various customizable parameters, so several variants for
+this IP.  A generic compatible like "denali,denali-nand-dt" is
+useless.  Moreover, there are multiple things wrong with this string.
+(Refer to Rob's comment [1])
 
-Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+The "denali,denali-nand-dt" was added by Altera for the SOCFPGA port.
+Replace it with a more specific string "altr,socfpga-denali-nand".
+There are no users (in upstream) of the old compatible string.
+
+The Denali IP on SOCFPGA incorporates the hardware ECC fixup engine.
+So, this capability should be associated with the compatible.
+
+[1] https://lkml.org/lkml/2016/12/1/450
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |   1 +
- .../arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi | 407 +++++++++++++++++++++
- 2 files changed, 408 insertions(+)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index ff37f0a0aa93..186251ffc6b2 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
+Changes in v3:
+  - Update git-log to mention there are no users of the old binding.
+
+Changes in v2:
+  - Add caps flag to of_device_id data, not hard-code in driver code
+  - Add Altera-specific compatible.
+
+ Documentation/devicetree/bindings/mtd/denali-nand.txt |  5 +++--
+ drivers/mtd/nand/denali_dt.c                          | 14 ++++++++++----
+ 2 files changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+index b04d03a..6f4ab4c 100644
+--- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+@@ -1,7 +1,8 @@
+ * Denali NAND controller
  
- #include "hi3660.dtsi"
-+#include "hikey960-pinctrl.dtsi"
+ Required properties:
+-  - compatible : should be "denali,denali-nand-dt"
++  - compatible : should be one of the following:
++      "altr,socfpga-denali-nand"            - for Altera SOCFPGA
+   - reg : should contain registers location and length for data and reg.
+   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
+   - interrupts : The interrupt number.
+@@ -15,7 +16,7 @@ Examples:
+ nand: nand@ff900000 {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+-	compatible = "denali,denali-nand-dt";
++	compatible = "altr,socfpga-denali-nand";
+ 	reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
+ 	reg-names = "nand_data", "denali_reg";
+ 	interrupts = <0 144 4>;
+diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
+index 293ddb8..9577bfd 100644
+--- a/drivers/mtd/nand/denali_dt.c
++++ b/drivers/mtd/nand/denali_dt.c
+@@ -33,11 +33,17 @@ struct denali_dt_data {
+ 	unsigned int caps;
+ };
  
- / {
- 	model = "HiKey960";
-diff --git a/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
-new file mode 100644
-index 000000000000..c2096c6f46c4
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
-@@ -0,0 +1,407 @@
-+/*
-+ * pinctrl dts fils for Hislicon HiKey960 development board
-+ *
-+ */
-+
-+#include <dt-bindings/pinctrl/hisi.h>
-+
-+/ {
-+	soc {
-+		/* [IOMG_000, IOMG_123] */
-+		range: gpio-range {
-+			#pinctrl-single,gpio-range-cells = <3>;
-+		};
-+		pmx0: pinmux@e896c000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xe896c000 0x0 0x1f0>;
-+			#pinctrl-cells = <1>;
-+			#gpio-range-cells = <0x3>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <
-+				&range 0 7 0
-+				&range 8 116 0>;
-+
-+			isp0_pmx_func: isp0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x058 MUX_M1 /* ISP_CLK0 */
-+					0x064 MUX_M1 /* ISP_SCL0 */
-+					0x068 MUX_M1 /* ISP_SDA0 */
-+				>;
-+			};
-+
-+			isp1_pmx_func: isp1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x05c MUX_M1 /* ISP_CLK1 */
-+					0x06c MUX_M1 /* ISP_SCL1 */
-+					0x070 MUX_M1 /* ISP_SDA1 */
-+				>;
-+			};
-+
-+			i2c3_pmx_func: i2c3_pmx_func {
-+				pinctrl-single,pins = <
-+					0x02c MUX_M1 /* I2C3_SCL */
-+					0x030 MUX_M1 /* I2C3_SDA */
-+				>;
-+			};
-+
-+			i2c4_pmx_func: i2c4_pmx_func {
-+				pinctrl-single,pins = <
-+					0x090 MUX_M1 /* I2C4_SCL */
-+					0x094 MUX_M1 /* I2C4_SDA */
-+				>;
-+			};
-+
-+			pcie_perstn_pmx_func: pcie_perstn_pmx_func {
-+				pinctrl-single,pins = <
-+					0x15c MUX_M1 /* PCIE_PERST_N */
-+				>;
-+			};
-+
-+			usbhub5734_pmx_func: usbhub5734_pmx_func {
-+				pinctrl-single,pins = <
-+					0x11c MUX_M0 /* GPIO_073 */
-+					0x120 MUX_M0 /* GPIO_074 */
-+				>;
-+			};
-+
-+			spi1_pmx_func: spi1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x034 MUX_M1 /* SPI1_CLK */
-+					0x038 MUX_M1 /* SPI1_DI */
-+					0x03c MUX_M1 /* SPI1_DO */
-+					0x040 MUX_M1 /* SPI1_CS_N */
-+				>;
-+			};
-+
-+			uart0_pmx_func: uart0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0cc MUX_M2 /* UART0_RXD */
-+					0x0d0 MUX_M2 /* UART0_TXD */
-+					0x0d4 MUX_M2 /* UART0_RXD_M */
-+					0x0d8 MUX_M2 /* UART0_TXD_M */
-+				>;
-+			};
-+
-+			uart1_pmx_func: uart1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0b0 MUX_M2 /* UART1_CTS_N */
-+					0x0b4 MUX_M2 /* UART1_RTS_N */
-+					0x0a8 MUX_M2 /* UART1_RXD */
-+					0x0ac MUX_M2 /* UART1_TXD */
-+				>;
-+			};
-+
-+			uart2_pmx_func: uart2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0bc MUX_M2 /* UART2_CTS_N */
-+					0x0c0 MUX_M2 /* UART2_RTS_N */
-+					0x0c8 MUX_M2 /* UART2_RXD */
-+					0x0c4 MUX_M2 /* UART2_TXD */
-+				>;
-+			};
-+
-+			uart3_pmx_func: uart3_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0dc MUX_M1 /* UART3_CTS_N */
-+					0x0e0 MUX_M1 /* UART3_RTS_N */
-+					0x0e4 MUX_M1 /* UART3_RXD */
-+					0x0e8 MUX_M1 /* UART3_TXD */
-+				>;
-+			};
-+
-+			uart4_pmx_func: uart4_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0ec MUX_M1 /* UART4_CTS_N */
-+					0x0f0 MUX_M1 /* UART4_RTS_N */
-+					0x0f4 MUX_M1 /* UART4_RXD */
-+					0x0f8 MUX_M1 /* UART4_TXD */
-+				>;
-+			};
-+
-+			uart5_pmx_func: uart5_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0c4 MUX_M3 /* UART5_CTS_N */
-+					0x0c8 MUX_M3 /* UART5_RTS_N */
-+					0x0bc MUX_M3 /* UART5_RXD */
-+					0x0c0 MUX_M3 /* UART5_TXD */
-+				>;
-+			};
-+
-+			uart6_pmx_func: uart6_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0cc MUX_M1 /* UART6_CTS_N */
-+					0x0d0 MUX_M1 /* UART6_RTS_N */
-+					0x0d4 MUX_M1 /* UART6_RXD */
-+					0x0d8 MUX_M1 /* UART6_TXD */
-+				>;
-+			};
-+		};
-+
-+		/* [IOMG_MMC0_000, IOMG_MMC0_005] */
-+		pmx1: pinmux@ff37e000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xff37e000 0x0 0x18>;
-+			#gpio-range-cells = <0x3>;
-+			#pinctrl-cells = <1>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 6 0>;
-+
-+			sd_pmx_func: sd_pmx_func {
-+				pinctrl-single,pins = <
-+					0x000 MUX_M1 /* SD_CLK */
-+					0x004 MUX_M1 /* SD_CMD */
-+					0x008 MUX_M1 /* SD_DATA0 */
-+					0x00c MUX_M1 /* SD_DATA1 */
-+					0x010 MUX_M1 /* SD_DATA2 */
-+					0x014 MUX_M1 /* SD_DATA3 */
-+				>;
-+			};
-+		};
-+
-+		/* [IOMG_FIX_000, IOMG_FIX_011] */
-+		pmx2: pinmux@ff3b6000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xff3b6000 0x0 0x30>;
-+			#pinctrl-cells = <1>;
-+			#gpio-range-cells = <0x3>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 12 0>;
-+
-+			spi3_pmx_func: spi3_pmx_func {
-+				pinctrl-single,pins = <
-+					0x008 MUX_M1 /* SPI3_CLK */
-+					0x00c MUX_M1 /* SPI3_DI */
-+					0x010 MUX_M1 /* SPI3_DO */
-+					0x014 MUX_M1 /* SPI3_CS0_N */
-+				>;
-+			};
-+		};
-+
-+		/* [IOMG_MMC1_000, IOMG_MMC1_005] */
-+		pmx3: pinmux@ff3fd000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xff3fd000 0x0 0x18>;
-+			#pinctrl-cells = <1>;
-+			#gpio-range-cells = <0x3>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 6 0>;
-+
-+			sdio_pmx_func: sdio_pmx_func {
-+				pinctrl-single,pins = <
-+					0x000 MUX_M1 /* SDIO_CLK */
-+					0x004 MUX_M1 /* SDIO_CMD */
-+					0x008 MUX_M1 /* SDIO_DATA0 */
-+					0x00c MUX_M1 /* SDIO_DATA1 */
-+					0x010 MUX_M1 /* SDIO_DATA2 */
-+					0x014 MUX_M1 /* SDIO_DATA3 */
-+				>;
-+			};
-+		};
-+
-+		/* [IOMG_AO_000, IOMG_AO_041] */
-+		pmx4: pinmux@fff11000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xfff11000 0x0 0xa8>;
-+			#pinctrl-cells = <1>;
-+			#gpio-range-cells = <0x3>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base in node, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 42 0>;
-+
-+			i2s2_pmx_func: i2s2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x044 MUX_M1 /* I2S2_DI */
-+					0x048 MUX_M1 /* I2S2_DO */
-+					0x04c MUX_M1 /* I2S2_XCLK */
-+					0x050 MUX_M1 /* I2S2_XFS */
-+				>;
-+			};
-+
-+			slimbus_pmx_func: slimbus_pmx_func {
-+				pinctrl-single,pins = <
-+					0x02c MUX_M1 /* SLIMBUS_CLK */
-+					0x030 MUX_M1 /* SLIMBUS_DATA */
-+				>;
-+			};
-+
-+			i2c0_pmx_func: i2c0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x014 MUX_M1 /* I2C0_SCL */
-+					0x018 MUX_M1 /* I2C0_SDA */
-+				>;
-+			};
-+
-+			i2c1_pmx_func: i2c1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x01c MUX_M1 /* I2C1_SCL */
-+					0x020 MUX_M1 /* I2C1_SDA */
-+				>;
-+			};
-+
-+			i2c2_pmx_func: i2c2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x024 MUX_M1 /* I2C2_SCL */
-+					0x028 MUX_M1 /* I2C2_SDA */
-+				>;
-+			};
-+
-+			i2c7_pmx_func: i2c7_pmx_func {
-+				pinctrl-single,pins = <
-+					0x024 MUX_M3 /* I2C7_SCL */
-+					0x028 MUX_M3 /* I2C7_SDA */
-+				>;
-+			};
-+
-+			spi2_pmx_func: spi2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x08c MUX_M1 /* SPI2_CLK */
-+					0x090 MUX_M1 /* SPI2_DI */
-+					0x094 MUX_M1 /* SPI2_DO */
-+					0x098 MUX_M1 /* SPI2_CS0_N */
-+				>;
-+			};
-+
-+			spi4_pmx_func: spi4_pmx_func {
-+				pinctrl-single,pins = <
-+					0x08c MUX_M4 /* SPI4_CLK */
-+					0x090 MUX_M4 /* SPI4_DI */
-+					0x094 MUX_M4 /* SPI4_DO */
-+					0x098 MUX_M4 /* SPI4_CS0_N */
-+				>;
-+			};
-+
-+			i2s0_pmx_func: i2s0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x034 MUX_M1 /* I2S0_DI */
-+					0x038 MUX_M1 /* I2S0_DO */
-+					0x03c MUX_M1 /* I2S0_XCLK */
-+					0x040 MUX_M1 /* I2S0_XFS */
-+				>;
-+			};
-+		};
-+
-+		pmx5: pinmux@ff3fd800 {
-+			compatible = "pinconf-single";
-+			reg = <0x0 0xff3fd800 0x0 0x18>;
-+			#pinctrl-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			pinctrl-single,register-width = <32>;
-+
-+			sdio_clk_cfg_func: sdio_clk_cfg_func {
-+				pinctrl-single,pins = <
-+					0x000 0x0 /* SDIO_CLK */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE6_32MA
-+					DRIVE6_MASK
-+				>;
-+			};
-+
-+			sdio_cfg_func: sdio_cfg_func {
-+				pinctrl-single,pins = <
-+					0x004 0x0 /* SDIO_CMD */
-+					0x008 0x0 /* SDIO_DATA0 */
-+					0x00c 0x0 /* SDIO_DATA1 */
-+					0x010 0x0 /* SDIO_DATA2 */
-+					0x014 0x0 /* SDIO_DATA3 */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_UP
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE6_19MA
-+					DRIVE6_MASK
-+				>;
-+			};
-+		};
-+
-+		pmx6: pinmux@ff37e800 {
-+			compatible = "pinconf-single";
-+			reg = <0x0 0xff37e800 0x0 0x18>;
-+			#pinctrl-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			pinctrl-single,register-width = <32>;
-+
-+			sd_clk_cfg_func: sd_clk_cfg_func {
-+				pinctrl-single,pins = <
-+					0x000 0x0 /* SD_CLK */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE6_32MA
-+					DRIVE6_MASK
-+				>;
-+			};
-+
-+			sd_cfg_func: sd_cfg_func {
-+				pinctrl-single,pins = <
-+					0x004 0x0 /* SD_CMD */
-+					0x008 0x0 /* SD_DATA0 */
-+					0x00c 0x0 /* SD_DATA1 */
-+					0x010 0x0 /* SD_DATA2 */
-+					0x014 0x0 /* SD_DATA3 */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_UP
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE6_19MA
-+					DRIVE6_MASK
-+				>;
-+			};
-+		};
-+
-+	};
+-static const struct of_device_id denali_nand_dt_ids[] = {
+-		{ .compatible = "denali,denali-nand-dt" },
+-		{ /* sentinel */ }
+-	};
++static const struct denali_dt_data denali_socfpga_data = {
++	.caps = DENALI_CAP_HW_ECC_FIXUP,
 +};
+ 
++static const struct of_device_id denali_nand_dt_ids[] = {
++	{
++		.compatible = "altr,socfpga-denali-nand",
++		.data = &denali_socfpga_data,
++	},
++	{ /* sentinel */ }
++};
+ MODULE_DEVICE_TABLE(of, denali_nand_dt_ids);
+ 
+ static u64 denali_dma_mask;
 -- 
-2.11.0-rc2
+2.7.4
