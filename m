@@ -1,102 +1,136 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl
- header
-Date: Thu, 30 Mar 2017 13:27:31 +0000
-Message-ID: <SG2PR06MB116501FDC518BB49630520588A340@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com>
- <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CACRpkda_Gw9vhLqpWw8oOZyZ59nj5j9Q-T5RXVsf0vsxWcjyHg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkda_Gw9vhLqpWw8oOZyZ59nj5j9Q-T5RXVsf0vsxWcjyHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Felix Brack <fb@ltec.ch>
+Subject: [PATCH v2] Extend pca9532 device tree support
+Date: Thu, 30 Mar 2017 15:33:53 +0200
+Message-ID: <1490880833-22199-1-git-send-email-fb@ltec.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jacek.anaszewski@gmail.com, rpurdie@rpsys.net, pavel@ucw.cz, mark.rutland@arm.com, riku.voipio@iki.fi, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, fb@ltec.ch
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1cnNkYXksIE1hcmNoIDMwLCAyMDE3LCBMaW51cyBXYWxsZWlqIHdyb3RlOg0KPiA+PiA+
-ICsvKg0KPiA+PiA+ICsgKiBQaW4gaXMgYmktZGlyZWN0aW9uYWwuDQo+ID4+ID4gKyAqIEFuIGFs
-dGVybmF0ZSBmdW5jdGlvbiB0aGF0IG5lZWRzIGJvdGggaW5wdXQvb3V0cHV0DQo+ID4+ID4gK2Z1
-bmN0aW9uYWxpdGllcyBzaGFsbA0KPiA+PiA+ICsgKiBiZSBjb25maWd1cmVkIGFzIGJpZGlyZWN0
-aW9uYWwuDQo+ID4+ID4gKyAqIEVnLiBTREEvU0NMIHBpbnMgb2YgYW4gSTJjIGludGVyZmFjZS4N
-Cj4gPj4gPiArICovDQo+ID4+ID4gKyNkZWZpbmUgQklfRElSICAgICAgICAgICAgICAgICAoMSA8
-PCAzKQ0KPiA+Pg0KPiA+PiBBbnkgc3BlY2lmaWMgcmVhc29uIHdoeSB0aGlzIHNob3VsZCBub3Qg
-c2ltcGx5IGJlIGFkZGVkIHRvDQo+ID4+IGluY2x1ZGUvbGludXgvcGluY3RybC9waW5jb25mLWdl
-bmVyaWMuaA0KPiA+PiBhcyBQSU5fQ09ORklHX0JJRElSRUNUSU9OQUwgYW5kIHBhcnNlZCBpbiBk
-cml2ZXJzL3BpbmN0cmwvcGluY29uZi0NCj4gPj4gZ2VuZXJpYy5jIGZyb20gdGhlIChuZXcpIERU
-IHByb3BlcnR5ICJiaWRpcmVjdGlvbmFsIiBzaW1wbHk/DQo+ID4NCj4gPiBJIHNlZSB5b3VyIHBv
-aW50LiBJdCB3b3VsZCBjdXQgZG93biBmcm9tIGV2ZXJ5IGRyaXZlciBvdXQgdGhlcmUNCj4gPiBp
-bnZlbnRpbmcgc29tZSBuZXcgcHJvcGVydHkgb3IgY29uZmlnIGluc3RlYWQgb2YgZXZlcnlvbmUg
-anVzdCBzaGFyaW5nDQo+ID4gYSBmaXhlZCBzZXQuDQo+ID4gTWF5YmUgc29tZW9uZSBlbHNlIG91
-dCB0aGVyZSB3aWxsIGVuZCB1cCBoYXZpbmcgYSBuZWVkIGZvciBhDQo+ID4gImJpZGlyZWN0aW9u
-YWwiIG9wdGlvbi4NCj4gDQo+IEkgd2FzIHRoaW5raW5nIGFib3V0IHRoYXQgb25lLiBJdCBpcyBh
-IGJpdCB3ZWlyZCBlbGVjdHJpY2FsbHksIGxpa2Ugd2hhdA0KPiBraW5kIG9mIGVsZWN0cm9uaWNz
-IGlzIHJlYWxseSBiaWRpcmVjdGlvbmFsPw0KPiANCj4gSXQgc2VlbXMgbGlrZSBhIGZhbmN5IG5h
-bWUgZm9yIG9wZW4gZHJhaW4vb3BlbiBzb3VyY2UsIHdoYXQgd2UgY2FsbA0KPiAic2luZ2xlIGVu
-ZGVkIiBjb25maWd1cmF0aW9uLiAoU2VlIGRvY3MgaW4NCj4gRG9jdW1lbnRhdGlvbi9ncGlvL2Ry
-aXZlci50eHQpDQo+IA0KPiBJdCB3b3VsZCBiZSBncmVhdCBpZiB5b3UgY291bGQgY2hlY2sgaWYg
-dGhhdCBpcyB3aGF0IHRoZXkgbWVhbiwgYWN0dWFsbHkuDQoNCkhlcmUgaXMgdGhlIGRlZmluaXRp
-b24gb2YgdGhlIHJlZ2lzdGVyIGluIHRoZSBoYXJkd2FyZSBtYW51YWw6DQoNCi0tLQ0KNTQuMy4x
-MyBQb3J0IEJpZGlyZWN0aW9uIENvbnRyb2wgUmVnaXN0ZXIgKFBCRENuKQ0KDQpUaGlzIHJlZ2lz
-dGVyIGVuYWJsZXMgb3IgZGlzYWJsZXMgdGhlIGlucHV0IGJ1ZmZlciB3aGlsZSB0aGUgb3V0cHV0
-IGJ1ZmZlciBpcyBlbmFibGVkLiBXaGVuIHRoZSBpbnB1dCBidWZmZXIgaXMgZW5hYmxlZA0Kd2hp
-bGUgdGhlIG91dHB1dCBidWZmZXIgaXMgZW5hYmxlZCwgdGhlIGJpZGlyZWN0aW9uYWwgbW9kZSBp
-cyBlbnRlcmVkLCBhbGxvd2luZyB0aGUgbGV2ZWwgb2YgdGhlIFBuX20gcGluIHRvIGFsd2F5cyBi
-ZSByZWFkDQp2aWEgdGhlIFBQUm4uUFBSbm0gYml0Lg0KLS0tDQoNCg0KQnV0Li4ud2hhdCB0aGV5
-IGRvbid0IHJlYWxseSB0ZWxsIHlvdSBpcyB0aGF0IGFueSBwZXJpcGhlcmFsIHRoYXQgbmVlZHMg
-dG8gVFggYW5kIFJYIGRhdGEgb3ZlciBhIHBpbiBuZWVkcyB0aGlzIHNldC4NCg0KDQpJbiB0aGUg
-aGFyZHdhcmUgbWFudWFsLCB0aGVyZSBpcyBhIHByZXR0eSBwaWN0dXJlIChGaWd1cmUgNTQuMSBM
-b2dpY2FsIERpYWdyYW0gb2YgUG9ydCBDb250cm9sKSB0aGF0IHNob3dzIGEgZGV0YWlsZWQgbG9n
-aWMgZGlhZ3JhbSBvZiB0aGUgaW50ZXJmYWNlIGJldHdlZW4gdGhlIHBlcmlwaGVyYWwgYnVzIGFu
-ZCB0aGUgcGluIHBhZC4NCkFzIGZhciBhcyBJIGNhbiB0ZWxsLCB0aGUgImZ1bmN0aW9uIG11eCIg
-cG9ydGlvbiBvZiB0aGlzIGNvbnRyb2xsZXIgb25seSBrbm93cyBob3cgdG8gc2V0IGEgcGluIGFz
-IGRpcmVjdGlvbj1pbiBvciBkaXJlY3Rpb249b3V0Lg0KU28sIGluIHRoZSBjYXNlIG9mIEkyQyB3
-aGVyZSBlYWNoIHRoZSBTQ0wgYW5kIFNEQSBwaW5zIG5lZWRzIHRvIGJlIGRyaXZlbiBhbmQgcmVh
-ZC4uLml0IGNhbid0IGRvIHRoYXQuDQpUaGVyZWZvcmUsIHRoZXJlIGlzIGFuIGFkZGl0aW9uYWwg
-cmVnaXN0ZXIgdG8gbWFudWFsbHkgZW5hYmxlIHRoZSBpbnB1dCBidWZmZXIgYW5kIGxldCB0aGUg
-bXV4IGVuYWJsZSB0aGUgb3V0cHV0IGJ1ZmZlci4NCg0KU28gd2hpbGUgeWVzLCBJMkMgaXMgb3Bl
-bi1kcmFpbiwgdGhpcyBpcyBhbHNvIHRoZSBjYXNlIGZvciB0aGUgZGF0YSBwaW5zIGZvciB0aGUg
-U0RISS4gQW5kIHRoZSBNRElPIHBpbiBmcm9tIEV0aGVybmV0LiBJdCByZWFsbHkgaGFzIHRvIGRv
-IHdpdGggdGhlIGZhY3QgdGhhdCB0aGlzIHBpbiBjb250cm9sbGVyIHdhc24ndCBkZXNpZ25lZCB0
-byBlbmFibGUgYm90aCB0aGUgaW5wdXQgYW5kIG91dHB1dCBidWZmZXJzIGF0IHRoZSBzYW1lIHRp
-bWUuDQoNClRoZSBzaXR1YXRpb24gaXMgc2ltaWxhciBmb3Igb3VyIFNXSU9fSU4gYW5kIFNXSU9f
-T1VUIGZsYWdzLiBGb3IgZXhhbXBsZSwgdG8gdXNlIHRoZSBTU0kgc291bmQgaW50ZXJmYWNlLCB5
-b3UgaGF2ZSB0byBzZXQgdGhlIFRYIHNpZ25hbHMgdG8gImlucHV0IiAoU1dJT19JTikuIE1ha2Vz
-IHNlbnNlLCByaWdodD8/DQoNCkkgY291bGQgYXJndWUgdGhhdCBhbGwgb2YgdGhlc2UgIkZMQUdT
-IiBzZXR0aW5ncyBzaG91bGQgaGF2ZSBiZWVuIGluY29ycG9yYXRlZCBpbiB0aGUgSFcgbG9naWMg
-b2YgdGhlIHBpbiBjb250cm9sbGVyLi4uYnV0IGZvciB3aGF0ZXZlciByZWFzb24sIHRoZSB0aGV5
-IGhhZCB0byBtYWtlIHRoZW0gc2VwYXJhdGUgcmVnaXN0ZXJzIGFuZCBtYWtlIFNXIGRvIGl0Lg0K
-U28sIEkgY291bGQgYXJndWUgdGhhdCB0aGVzZSByZWdpc3RlcnMgc2V0dGluZ3MgYXJlIHJlYWxs
-eSBwYXJ0IG9mIHBpbiBtdXhpbmcsIG5vdCByZWFsbHkgdXNlciBjb25maWcuLi4uYW5kIGhlbmNl
-IGJlbG9uZyBpbiB0aGUgInBpbm11eCIgcHJvcGVydHkuDQoNCg0KSG93IGFib3V0IHRoaXMgY29t
-cHJvbWlzZTogSW5zdGVhZCBvZiBCSV9ESVIsIHdlIHVzZSAiVFlQRV9JMkMiLCAiVFlQRV9TRERB
-VEEiLCAiVFlQRV9NRElPIiwgIlRZUEVfTFZEUyIsIGV0Yy4uLiB0byBkZXNjcmliZSB0aGUgJ3Nw
-ZWNpYWwnIG9uZXMuIFRoYXQgd2F5IGl0IGNhbiBnbyBiYWNrIHVuZGVyICJwaW5tdXgiLiBMaWtl
-IEphY29wbyBzYWlkLCB0aGVzZSByZWdpc3RlciBzZXR0aW5ncyBhcmUgcmVhbGx5IHN1cHBvc2Vk
-IHRvIGJlIHNldCB3aGVuIHlvdSBhcmUgc2VsZWN0aW5nIHRoZSBwaW4tbXV4IG9wdGlvbi4NCg0K
-DQpPZiBjb3Vyc2UgYmVoaW5kIHRoZSBzY2VuZXMsIGl0J3MgcmVhbGx5Og0KICAjZGVmaW5lIFRZ
-UEVfSTJDICAgIEJJX0RJUiANCiAgI2RlZmluZSBUWVBFX1NEREFUQSBCSV9ESVINCiAgI2RlZmlu
-ZSBUWVBFX1NEQ01EICBCSV9ESVINCiAgI2RlZmluZSBUWVBFX0xWRFMgICBTV0lPX09VVA0KDQpF
-eGFtcGxlczoNCg0KCWkyYzNfcGluczogaTJjMyB7DQoJCXBpbm11eCA9IDxQSU4oMSwgNikgfCBG
-VU5DXzEgfCBUWVBFX0kyQz4sDQoJCSAgICAgICAgIDxQSU4oMSwgNykgfCBGVU5DXzEgfCBUWVBF
-X0kyQz47DQoJfTsNCg0KCS8qIFNIREkgY2gxIG9uIENOMSAqLw0KCXNkaGkxX3BpbnM6IHNkaGkx
-IHsNCgkJLyogU0hESSBjaDEgb24gUG9ydCAzICovDQoJCXBpbm11eCA9IDxQSU4oMywgOCkgfCBG
-VU5DXzc+LAkJCS8qIFNESEkxIENEICovDQoJCQkJPFBJTigzLCA5KSBGVU5DXzcpPiwJCQkvKiBT
-REhJMSBXUCAqLw0KCQkJCTxQSU4oMywgMTApIEZVTkNfNyB8IFRZUEVfU0REQVRBKT4sCS8qIFNE
-SEkxIERBVDEgKi8NCgkJCQk8UElOKDMsIDExKSBGVU5DXzcgfCBUWVBFX1NEREFUQSk+LAkvKiBT
-REhJMSBEQVQwICovDQoJCQkJPFBJTigzLCAxMikgRlVOQ183KT4sCQkJLyogU0RISTEgQ0xLICov
-DQoJCQkJPFBJTigzLCAxMykgRlVOQ183IHwgVFlQRV9TRENNRCk+LAkvKiBTREhJMSBDTUQgKi8N
-CgkJCQk8UElOKDMsIDE0KSBGVU5DXzcgfCBUWVBFX1NEREFUQSk+LAkvKiBTREhJMSBEQVQzICov
-DQoJCQkJPFBJTigzLCAxNSkgRlVOQ183IHwgVFlQRV9TRERBVEEpPjsJLyogU0RISTEgREFUMiAq
-Lw0KCX07DQoNCg0KDQojIEhvbmVzdGx5LCBJIGhhdmUgbm8gaWRlYSB3aGVyZSB0aGlzIHBpbiBj
-b250cm9sbGVyIGNhbWUgZnJvbS4gSSBoYXZlIG5vdCBzZWVuIGl0IGluIGFueSBvdGhlciBSZW5l
-c2FzIHBhcnQgKE1pdHN1YmlzaGkvSGl0YWNoaS9ORUMpLg0KDQoNCkNocmlzDQoNCg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch extends the device tree support for the pca9532 by adding
+the leds 'default-state' property.
+
+Changes in v2:
+- remove prescaler and pwm configuration by none generic
+  DT properties
+
+Signed-off-by: Felix Brack <fb@ltec.ch>
+---
+ .../devicetree/bindings/leds/leds-pca9532.txt      | 10 +++++++
+ drivers/leds/leds-pca9532.c                        | 31 +++++++++++++++++++++-
+ include/linux/leds-pca9532.h                       |  4 +--
+ 3 files changed, 42 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+index 198f3ba..8374075 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+@@ -17,6 +17,8 @@ Optional sub-node properties:
+ 	- label: see Documentation/devicetree/bindings/leds/common.txt
+ 	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
+ 	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
++	- default-state: see Documentation/devicetree/bindings/leds/common.txt
++	  This property is only valid for sub-nodes of type <PCA9532_TYPE_LED>.
+ 
+ Example:
+   #include <dt-bindings/leds/leds-pca9532.h>
+@@ -33,6 +35,14 @@ Example:
+       label = "pca:green:power";
+       type = <PCA9532_TYPE_LED>;
+     };
++    kernel-booting {
++    	type = <PCA9532_TYPE_LED>;
++    	default-state = "on";
++    };
++    sys-stat {
++    	type = <PCA9532_TYPE_LED>;
++    	default-state = "keep"; // don't touch, was set by U-Boot
++    };
+   };
+ 
+ For more product information please see the link below:
+diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+index 06e6310..66ef280 100644
+--- a/drivers/leds/leds-pca9532.c
++++ b/drivers/leds/leds-pca9532.c
+@@ -254,6 +254,21 @@ static void pca9532_input_work(struct work_struct *work)
+ 	mutex_unlock(&data->update_lock);
+ }
+ 
++static enum pca9532_state pca9532_getled(struct pca9532_led *led)
++{
++	struct i2c_client *client = led->client;
++	struct pca9532_data *data = i2c_get_clientdata(client);
++	u8 maxleds = data->chip_info->num_leds;
++	char reg;
++	enum pca9532_state ret;
++
++	mutex_lock(&data->update_lock);
++	reg = i2c_smbus_read_byte_data(client, LED_REG(maxleds, led->id));
++	ret = reg >> LED_NUM(led->id)/2;
++	mutex_unlock(&data->update_lock);
++	return ret;
++}
++
+ #ifdef CONFIG_LEDS_PCA9532_GPIO
+ static int pca9532_gpio_request_pin(struct gpio_chip *gc, unsigned offset)
+ {
+@@ -366,7 +381,10 @@ static int pca9532_configure(struct i2c_client *client,
+ 			gpios++;
+ 			break;
+ 		case PCA9532_TYPE_LED:
+-			led->state = pled->state;
++			if (pled->state == PCA9532_KEEP)
++				led->state = pca9532_getled(led);
++			else
++				led->state = pled->state;
+ 			led->name = pled->name;
+ 			led->ldev.name = led->name;
+ 			led->ldev.default_trigger = pled->default_trigger;
+@@ -456,6 +474,7 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
+ 	const struct of_device_id *match;
+ 	int devid, maxleds;
+ 	int i = 0;
++	const char *state;
+ 
+ 	match = of_match_device(of_pca9532_leds_match, dev);
+ 	if (!match)
+@@ -475,6 +494,16 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
+ 		of_property_read_u32(child, "type", &pdata->leds[i].type);
+ 		of_property_read_string(child, "linux,default-trigger",
+ 					&pdata->leds[i].default_trigger);
++		if (!of_property_read_string(child, "default-state", &state)) {
++			if (!strcmp(state, "on"))
++				pdata->leds[i].state = PCA9532_ON;
++			else if (!strcmp(state, "keep"))
++				pdata->leds[i].state = PCA9532_KEEP;
++			else if (!strcmp(state, "pwm0"))
++				pdata->leds[i].state = PCA9532_PWM0;
++			else if (!strcmp(state, "pwm1"))
++				pdata->leds[i].state = PCA9532_PWM1;
++		}
+ 		if (++i >= maxleds) {
+ 			of_node_put(child);
+ 			break;
+diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
+index d215b45..a327b1aa 100644
+--- a/include/linux/leds-pca9532.h
++++ b/include/linux/leds-pca9532.h
+@@ -22,7 +22,8 @@ enum pca9532_state {
+ 	PCA9532_OFF  = 0x0,
+ 	PCA9532_ON   = 0x1,
+ 	PCA9532_PWM0 = 0x2,
+-	PCA9532_PWM1 = 0x3
++	PCA9532_PWM1 = 0x3,
++	PCA9532_KEEP = 0xff
+ };
+ 
+ struct pca9532_led {
+@@ -44,4 +45,3 @@ struct pca9532_platform_data {
+ };
+ 
+ #endif /* __LINUX_PCA9532_H */
+-
+-- 
+2.7.4
