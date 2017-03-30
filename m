@@ -1,79 +1,47 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v5 1/2] Documentation: dtb: lm87: Add hwmon binding documentation
-Date: Fri, 31 Mar 2017 12:00:59 +1300
-Message-ID: <20170330230100.989-2-chris.packham@alliedtelesis.co.nz>
-References: <20170330230100.989-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170330230100.989-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: linux-hwmon@vger.kernel.org, linux@roeck-us.net
-Cc: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>, Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio:imu:mpu6050 update i2c bindings to reflect
+ i2c-gate and supported parts
+Date: Thu, 30 Mar 2017 18:02:52 -0500
+Message-ID: <20170330230252.cxbdh3g744qwdtfh@rob-hp-laptop>
+References: <20170326111100.2571-1-jic23@kernel.org>
+ <20170326111100.2571-2-jic23@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170326111100.2571-2-jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
+On Sun, Mar 26, 2017 at 12:10:59PM +0100, Jonathan Cameron wrote:
+> These bindings are somewhat lagging the state of the driver.  The i2c-gate
+> bindings are documented elsewhere, but it seems sensible to at least have
+> an example and cross reference in here.  SPI bindings will need to be the
+> subject of a future patch.
+> 
+> Signed-off-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/imu/inv_mpu6050.txt    | 23 ++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+> index a9fc11e43b45..e18e04f3c6f4 100644
+> --- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+> +++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+> @@ -3,14 +3,17 @@ InvenSense MPU-6050 Six-Axis (Gyro + Accelerometer) MEMS MotionTracking Device
+>  http://www.invensense.com/mems/gyro/mpu6050.html
+>  
+>  Required properties:
+> - - compatible : should be "invensense,mpu6050"
+> + - compatible : should be "invensense,mpu6050", "invensense,mpu6500",
+> +   "invensense,mpu9150" or "invensense,icm20608"
 
-This patch adds lm87 hwmon device tree node documentation.
+One per line please. With that,
 
-Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Acked-by: Rob Herring <robh+dt@kernel.org>
----
-- Changes since v1:
-   As suggested include all the changes are moved in
-   to the same patch and the all the optional properties
-   are now defined instead of using a single variable to
-   indicate those properties.
-    
-- Changes since v2:
-   Changed has-vcc-5v to use regulator binding and fixed
-   a minor copy paste mistake.
-    
-- Changes since v3:
-   Update the vcc-supply description.
-
-- Changes since v4:
-   Collect Ack from Rob Herring
-
- Documentation/devicetree/bindings/hwmon/lm87.txt | 30 ++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/lm87.txt
-
-diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-new file mode 100644
-index 000000000000..e1b79903f204
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
-@@ -0,0 +1,30 @@
-+*LM87 hwmon sensor.
-+
-+Required properties:
-+- compatible: Should be
-+	"ti,lm87"
-+
-+- reg: I2C address
-+
-+optional properties:
-+- has-temp3: This configures pins 18 and 19 to be used as a second
-+             remote temperature sensing channel. By default the pins
-+             are configured as voltage input pins in0 and in5.
-+
-+- has-in6: When set, pin 5 is configured to be used as voltage input
-+           in6. Otherwise the pin is set as FAN1 input.
-+
-+- has-in7: When set, pin 6 is configured to be used as voltage input
-+           in7. Otherwise the pin is set as FAN2 input.
-+
-+- vcc-supply: a Phandle for the regulator supplying power, can be
-+              cofigured to measure 5.0V power supply. Default is 3.3V.
-+
-+Example:
-+
-+lm87@2e {
-+	compatible = "ti,lm87";
-+	reg = <0x2e>;
-+	has-temp3;
-+	vcc-supply = <&reg_5v0>;
-+};
--- 
-2.11.0.24.ge6920cf
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
