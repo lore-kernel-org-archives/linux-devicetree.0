@@ -1,52 +1,78 @@
-From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] arm64: tegra: Add GPU node for Tegra 186
-Date: Thu, 30 Mar 2017 18:28:28 +0900
-Message-ID: <20170330092828.13336-1-acourbot@nvidia.com>
-References: <20170330091831.18322-2-acourbot@nvidia.com>
+From: Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCHv5 11/11] arm: sti: update sti-cec for CEC notifier support
+Date: Thu, 30 Mar 2017 09:30:39 +0000
+Message-ID: <c29adefb-13e6-e723-eb96-3b0049b39ddd@st.com>
+References: <20170329141543.32935-1-hverkuil@xs4all.nl>
+ <20170329141543.32935-12-hverkuil@xs4all.nl>
+ <CA+M3ks442wftNR8+dctdSkKMCPSw9Rd2CH5UG-VEP7XySGjCjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170330091831.18322-2-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+M3ks442wftNR8+dctdSkKMCPSw9Rd2CH5UG-VEP7XySGjCjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Content-ID: <DC90FABD8B6EC54BBF89C4F78634A12E-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the DT node for the GP10B GPU on Tegra 186.
-
-Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index b4c71b519289..9ee6c439fb02 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -660,6 +660,24 @@
- 		};
- 	};
- 
-+	gpu@17000000 {
-+		compatible = "nvidia,gp10b";
-+		reg = <0x0 0x17000000 0x0 0x1000000>,
-+		      <0x0 0x18000000 0x0 0x1000000>;
-+		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH
-+			      GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "stall", "nonstall";
-+
-+		clocks = <&bpmp TEGRA186_CLK_GPCCLK>,
-+			 <&bpmp TEGRA186_CLK_GPU>;
-+		clock-names = "gpu", "pwr";
-+		resets = <&bpmp TEGRA186_RESET_GPU>;
-+		reset-names = "gpu";
-+		status = "disabled";
-+
-+		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_GPU>;
-+	};
-+
- 	sysram@30000000 {
- 		compatible = "nvidia,tegra186-sysram", "mmio-sram";
- 		reg = <0x0 0x30000000 0x0 0x50000>;
--- 
-2.12.0
+SGkgQmVuamFtaW4NCg0KT24gMDMvMzAvMjAxNyAwOTo0MSBBTSwgQmVuamFtaW4gR2FpZ25hcmQg
+d3JvdGU6DQo+ICsgUGF0cmljZSBmb3Igc3RpIERUDQoNCkluIG9yZGVyIHRvIGJlIGNvaGVyZW50
+IHdpdGggYWxsIHByZXZpb3VzIFNUaSBEVCBwYXRjaGVzLA0KDQpjYW4geW91IHVwZGF0ZSB0aGUg
+Y29tbWl0IG1lc3NhZ2Ugd2l0aCAiQVJNOiBkdHM6IFNUaUg0MTA6IHVwZGF0ZSANCnN0aS1jZWMg
+Zm9yIENFQyBub3RpZmllciBzdXBwb3J0Ig0KDQpUaGFua3MNCg0KUGF0cmljZQ0KDQo+DQo+IDIw
+MTctMDMtMjkgMTY6MTUgR01UKzAyOjAwIEhhbnMgVmVya3VpbCA8aHZlcmt1aWxAeHM0YWxsLm5s
+PjoNCj4+IEZyb206IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBsaW5hcm8u
+b3JnPg0KPj4NCj4+IFRvIHVzZSBDRUMgbm90aWZpZXIgc3RpIENFQyBkcml2ZXIgbmVlZHMgdG8g
+Z2V0IHBoYW5kbGUNCj4+IG9mIHRoZSBoZG1pIGRldmljZS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5
+OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAbGluYXJvLm9yZz4NCj4+IFNp
+Z25lZC1vZmYtYnk6IEhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4NCj4+IEND
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPj4gLS0tDQo+PiAgYXJjaC9hcm0vYm9vdC9k
+dHMvc3RpaDQwNy1mYW1pbHkuZHRzaSB8IDEyIC0tLS0tLS0tLS0tLQ0KPj4gIGFyY2gvYXJtL2Jv
+b3QvZHRzL3N0aWg0MTAuZHRzaSAgICAgICAgfCAxMyArKysrKysrKysrKysrDQo+PiAgMiBmaWxl
+cyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaSBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kNCj4+IGluZGV4IGQ3NTNhYzM2Nzg4Zi4uMDQ0
+MTg0NTgwMzI2IDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1p
+bHkuZHRzaQ0KPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaQ0K
+Pj4gQEAgLTc0MiwxOCArNzQyLDYgQEANCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDwmY2xrX3NfYzBfZmxleGdlbiBDTEtfRVRIX1BIWT47DQo+PiAgICAgICAgICAgICAgICAg
+fTsNCj4+DQo+PiAtICAgICAgICAgICAgICAgY2VjOiBzdGktY2VjQDA5NGEwODdjIHsNCj4+IC0g
+ICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic3Qsc3RpaC1jZWMiOw0KPj4gLSAg
+ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4OTRhMDg3YyAweDY0PjsNCj4+IC0gICAgICAg
+ICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xrX3N5c2luPjsNCj4+IC0gICAgICAgICAgICAg
+ICAgICAgICAgIGNsb2NrLW5hbWVzID0gImNlYy1jbGsiOw0KPj4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE0MCBJUlFfVFlQRV9OT05FPjsNCj4+IC0gICAg
+ICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJjZWMtaXJxIjsNCj4+IC0gICAg
+ICAgICAgICAgICAgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+PiAtICAgICAg
+ICAgICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfY2VjMF9kZWZhdWx0PjsNCj4+
+IC0gICAgICAgICAgICAgICAgICAgICAgIHJlc2V0cyA9IDwmc29mdHJlc2V0IFNUSUg0MDdfTFBN
+X1NPRlRSRVNFVD47DQo+PiAtICAgICAgICAgICAgICAgfTsNCj4+IC0NCj4+ICAgICAgICAgICAg
+ICAgICBybmcxMDogcm5nQDA4YTg5MDAwIHsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgIGNv
+bXBhdGlibGUgICAgICA9ICJzdCxybmciOw0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgcmVn
+ICAgICAgICAgICAgID0gPDB4MDhhODkwMDAgMHgxMDAwPjsNCj4+IGRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9zdGloNDEwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDEwLmR0
+c2kNCj4+IGluZGV4IDNjOTY3MmM1YjA5Zi4uMjFmZTcyYjE4M2Q4IDEwMDY0NA0KPj4gLS0tIGEv
+YXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC5kdHNpDQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0
+cy9zdGloNDEwLmR0c2kNCj4+IEBAIC0yODEsNSArMjgxLDE4IEBADQo+PiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX1NUMjMxX0RNVT4sDQo+
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xL
+X0ZMQVNIX1BST01JUD47DQo+PiAgICAgICAgICAgICAgICAgfTsNCj4+ICsNCj4+ICsgICAgICAg
+ICAgICAgICBzdGktY2VjQDA5NGEwODdjIHsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNv
+bXBhdGlibGUgPSAic3Qsc3RpaC1jZWMiOw0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVn
+ID0gPDB4OTRhMDg3YyAweDY0PjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9
+IDwmY2xrX3N5c2luPjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0g
+ImNlYy1jbGsiOw0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNf
+U1BJIDE0MCBJUlFfVFlQRV9OT05FPjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVy
+cnVwdC1uYW1lcyA9ICJjZWMtaXJxIjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBpbmN0
+cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBwaW5jdHJs
+LTAgPSA8JnBpbmN0cmxfY2VjMF9kZWZhdWx0PjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+IHJlc2V0cyA9IDwmc29mdHJlc2V0IFNUSUg0MDdfTFBNX1NPRlRSRVNFVD47DQo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICBoZG1pLXBoYW5kbGUgPSA8JnN0aV9oZG1pPjsNCj4+ICsgICAgICAg
+ICAgICAgICB9Ow0KPj4gICAgICAgICB9Ow0KPj4gIH07DQo+PiAtLQ0KPj4gMi4xMS4wDQo+Pg0K
+Pg0KPg0KPg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
