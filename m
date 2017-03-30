@@ -1,191 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/5 v3] iio: xoadc: augment DT bindings a bit
-Date: Thu, 30 Mar 2017 10:05:41 +0200
-Message-ID: <20170330080541.4065-1-linus.walleij@linaro.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v12 00/10] mux controller abstraction and iio/i2c muxes
+Date: Thu, 30 Mar 2017 10:09:26 +0200
+Message-ID: <20170330080926.GA21926@kroah.com>
+References: <1490624525-15865-1-git-send-email-peda@axentia.se>
+ <c321dad0-4c0e-b192-ee93-45359e29f61b@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c321dad0-4c0e-b192-ee93-45359e29f61b@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
 List-Id: devicetree@vger.kernel.org
 
-In order to accommodate in a logical manner for the premuxed channels
-in PM8921 and the similarly addressed channels in later PMICs, we
-need a twocell arrangement with premux and analog mux setting as
-a tuple to uniquely identify a hardware channel.
+On Thu, Mar 30, 2017 at 09:34:52AM +0200, Peter Rosin wrote:
+> On 2017-03-27 16:21, Peter Rosin wrote:
+> > Hi Greg!
+> > 
+> > Please apply.
+> >
+> 
+> *snip snip*
+> 
+> > v10 -> v11 changes
+> > - added a new patch (12) with a fix for messed up error path reported
+> >   by Paul Gortmaker.
+> 
+> Oops, should be Dan Carpenter. Sorry about that...
+> 
+> And, I forgot to high-light this:
+> 
+> > v4 -> v5 changes
+> > - driver for Analog Devices ADG792A/G, literally the first mux chip
+> >   I found on the Internet with an i2c interface (that was not a
+> >   dedicated i2c multiplexer like PCA9547) which I used to verify
+> >   that the abstractions in the mux core are up to the task. Untested,
+> >   just proof of concept that at least looks pretty and compiles...
+> 
+> Maybe the patches related to adg792 (last two patches in v12) should
+> not be applied? I don't care much either way, your call Greg...
 
-These bindings are not yet in use, so it should be fine to augment
-them before we actually start using it in drivers and device trees.
+Give me a chance to catch up on reviews, your patch series is behind
+400+ other emails...
 
-This scheme came out of lengthy discussions and reverse-engineering
-and reading of the few information sources we have.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v2->v3:
-- Drop leading zeroes on unit addresses.
-ChangeLog v1->v2:
-- Name nodes with <01 02> in a foo@0102 pattern.
-- Minor spelling nits.
-- Delete flimsy leftover docs from an interrim development path.
----
- .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 76 ++++++++++++----------
- 1 file changed, 42 insertions(+), 34 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-index 53cd146d8096..69c404112df1 100644
---- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-@@ -19,32 +19,42 @@ Required properties:
-   with PMIC variant but is typically something like 2.2 or 1.8V.
- 
- The following required properties are standard for IO channels, see
--iio-bindings.txt for more details:
-+iio-bindings.txt for more details, but noitice that this particular
-+ADC has a special adressing scheme that require two cells for
-+identifying each ADC channel:
- 
--- #address-cells: should be set to <1>
-+- #address-cells: should be set to <2>, the first cell is the
-+  prescaler (on PM8058) or premux (on PM8921) with two valid bits
-+  so legal values are 0x00, 0x01 or 0x02. The second cell
-+  is the main analog mux setting (0x00..0x0f). The combination
-+  of prescaler/premux and analog mux uniquely addresses a hardware
-+  channel on all systems.
- 
- - #size-cells: should be set to <0>
- 
--- #io-channel-cells: should be set to <1>
-+- #io-channel-cells: should be set to <2>, again the cells are
-+  precaler or premux followed by the analog muxing line.
- 
- - interrupts: should refer to the parent PMIC interrupt controller
-   and reference the proper ADC interrupt.
- 
- Required subnodes:
- 
--The ADC channels are configured as subnodes of the ADC. Since some of
--them are used for calibrating the ADC, these nodes are compulsory:
-+The ADC channels are configured as subnodes of the ADC.
-+
-+Since some of them are used for calibrating the ADC, these nodes are
-+compulsory:
- 
- adc-channel@c {
--	reg = <0x0c>;
-+	reg = <0x00 0x0c>;
- };
- 
- adc-channel@d {
--	reg = <0x0d>;
-+	reg = <0x00 0x0d>;
- };
- 
- adc-channel@f {
--	reg = <0x0f>;
-+	reg = <0x00 0x0f>;
- };
- 
- These three nodes are used for absolute and ratiometric calibration
-@@ -52,13 +62,13 @@ and only need to have these reg values: they are by hardware definition
- 1:1 ratio converters that sample 625, 1250 and 0 milliV and create
- an interpolation calibration for all other ADCs.
- 
--Optional subnodes: any channels other than channel 0x0c, 0x0d and
--0x0f are optional.
-+Optional subnodes: any channels other than channels [0x00 0x0c],
-+[0x00 0x0d] and [0x00 0x0f] are optional.
- 
- Required channel node properties:
- 
- - reg: should contain the hardware channel number in the range
--  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-+  0 .. 0xff (8 bits).
- 
- Optional channel node properties:
- 
-@@ -94,56 +104,54 @@ Example:
- xoadc: xoadc@197 {
- 	compatible = "qcom,pm8058-adc";
- 	reg = <0x197>;
--	interrupt-parent = <&pm8058>;
--	interrupts = <76 1>;
--	#address-cells = <1>;
-+	interrupts-extended = <&pm8058 76 IRQ_TYPE_EDGE_RISING>;
-+	#address-cells = <2>;
- 	#size-cells = <0>;
--	#io-channel-cells = <1>;
-+	#io-channel-cells = <2>;
- 
- 	vcoin: adc-channel@0 {
--		reg = <0x00>;
-+		reg = <0x00 0x00>;
- 	};
- 	vbat: adc-channel@1 {
--		reg = <0x01>;
-+		reg = <0x00 0x01>;
- 	};
- 	dcin: adc-channel@2 {
--		reg = <0x02>;
-+		reg = <0x00 0x02>;
- 	};
- 	ichg: adc-channel@3 {
--		reg = <0x03>;
-+		reg = <0x00 0x03>;
- 	};
- 	vph_pwr: adc-channel@4 {
--		reg = <0x04>;
-+		reg = <0x00 0x04>;
- 	};
- 	usb_vbus: adc-channel@a {
--		reg = <0x0a>;
-+		reg = <0x00 0x0a>;
- 	};
- 	die_temp: adc-channel@b {
--		reg = <0x0b>;
-+		reg = <0x00 0x0b>;
- 	};
- 	ref_625mv: adc-channel@c {
--		reg = <0x0c>;
-+		reg = <0x00 0x0c>;
- 	};
- 	ref_1250mv: adc-channel@d {
--		reg = <0x0d>;
-+		reg = <0x00 0x0d>;
- 	};
- 	ref_325mv: adc-channel@e {
--		reg = <0x0e>;
-+		reg = <0x00 0x0e>;
- 	};
- 	ref_muxoff: adc-channel@f {
--		reg = <0x0f>;
-+		reg = <0x00 0x0f>;
- 	};
- };
- 
--
- /* IIO client node */
- iio-hwmon {
- 	compatible = "iio-hwmon";
--	io-channels = <&xoadc 0x01>, /* Battery */
--		    <&xoadc 0x02>, /* DC in (charger) */
--		    <&xoadc 0x04>, /* VPH the main system voltage */
--		    <&xoadc 0x0b>, /* Die temperature */
--		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
--		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
--		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
-+	io-channels = <&xoadc 0x00 0x01>, /* Battery */
-+		    <&xoadc 0x00 0x02>, /* DC in (charger) */
-+		    <&xoadc 0x00 0x04>, /* VPH the main system voltage */
-+		    <&xoadc 0x00 0x0b>, /* Die temperature */
-+		    <&xoadc 0x00 0x0c>, /* Reference voltage 1.25V */
-+		    <&xoadc 0x00 0x0d>, /* Reference voltage 0.625V */
-+		    <&xoadc 0x00 0x0e>; /* Reference voltage 0.325V */
- };
--- 
-2.9.3
+greg k-h
