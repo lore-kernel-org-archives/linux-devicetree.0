@@ -1,54 +1,85 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities output
- video on pad 1
-Date: Thu, 30 Mar 2017 19:25:49 +0200
-Message-ID: <1490894749.2404.33.camel@pengutronix.de>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-         <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
+From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Subject: Re: [PATCH V1 1/1] mtd: mtk-nor: set controller to 4B mode with large
+ capacity flash
+Date: Thu, 30 Mar 2017 19:40:09 +0200
+Message-ID: <24d60072-4124-7ec4-6cd3-fd70f4f6b10a@wedev4u.fr>
+References: <1490862222-723-1-git-send-email-guochun.mao@mediatek.com>
+ <1490862222-723-2-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490862222-723-2-git-send-email-guochun.mao@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guochun Mao <guochun.mao@mediatek.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The TVP5150 DT bindings specify a single output port (port 0) that
-corresponds to the video output pad (pad 1, DEMOD_PAD_VID_OUT).
+Hi Guochun,
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-I'm trying to get this to work with a TVP5150 analog TV decoder, and the
-first problem is that this device doesn't have pad 0 as its single
-output pad. Instead, as a MEDIA_ENT_F_ATV_DECODER entity, it has for
-pads (input, video out, vbi out, audio out), and video out is pad 1,
-whereas the device tree only defines a single port (0).
----
+Le 30/03/2017 =E0 10:23, Guochun Mao a =E9crit :
+> when nor's size larger than 16MByte, nor and controller should
+> enter 4Byte mode simultaneously.
+> =
 
- drivers/staging/media/imx/imx-media-dev.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+> ---
+>  drivers/mtd/spi-nor/mtk-quadspi.c |    7 +++++++
+>  1 file changed, 7 insertions(+)
+> =
 
-diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-index 17e2386a3ca3a..c52d6ca797965 100644
---- a/drivers/staging/media/imx/imx-media-dev.c
-+++ b/drivers/staging/media/imx/imx-media-dev.c
-@@ -267,6 +267,15 @@ static int imx_media_create_link(struct imx_media_dev *imxmd,
- 	source_pad = link->local_pad;
- 	sink_pad = link->remote_pad;
- 
-+	/*
-+	 * If the source subdev is an analog video decoder with a single source
-+	 * port, assume that this port 0 corresponds to the DEMOD_PAD_VID_OUT
-+	 * entity pad.
-+	 */
-+	if (source->entity.function == MEDIA_ENT_F_ATV_DECODER &&
-+	    local_sd->num_sink_pads == 0 && local_sd->num_src_pads == 1)
-+		source_pad = DEMOD_PAD_VID_OUT;
-+
- 	v4l2_info(&imxmd->v4l2_dev, "%s: %s:%d -> %s:%d\n", __func__,
- 		  source->name, source_pad, sink->name, sink_pad);
- 
--- 
-2.11.0
+> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-=
+quadspi.c
+> index e661877..05cd8a8 100644
+> --- a/drivers/mtd/spi-nor/mtk-quadspi.c
+> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
+> @@ -369,6 +369,13 @@ static int mt8173_nor_write_reg(struct spi_nor *nor,=
+ u8 opcode, u8 *buf,
+>  		/* We only handle 1 byte */
+>  		ret =3D mt8173_nor_wr_sr(mt8173_nor, *buf);
+>  		break;
+> +	case SPINOR_OP_EN4B:
+> +		/* Set nor controller to 4-byte address mode,
+> +		 * and simultaneously set nor flash.
+> +		 * This case should cooperate with default operation.
+> +		 */
+> +		writeb(readb(mt8173_nor->base + MTK_NOR_DUAL_REG) | 0x10,
+> +				mt8173_nor->base + MTK_NOR_DUAL_REG);
+
+This is not good: you should check in both mt8173_nor_read() and
+mt8173_nor_write() whether nor->addr_width is either 3 or 4.
+
+from include/linux/mtd/spi-nor.h:
+ * @addr_width:		number of address bytes
+
+Besides SPI commands using an op code from 4-byte address instruction
+set always carry a 4-byte address. They can be used directly, without
+sending the SPINOR_OP_EN4B before. So you cannot assume that addresses
+will be 4-byte long only if your SPI controller driver has seen a
+SPINOR_OP_EN4B command before. This assumption is wrong.
+
+SPI controller driver should never check SPINOR_OP_* op codes like this.
+
+Then, testing SPINOR_OP_RDSR from mt8173_nor_read_reg() or
+SPINOR_OP_WRSR from mt8173_nor_write_reg() is not a good practice too:
+op codes may change depending on the memory manufacturer. So testing op
+code values like you do can work with some memories but maybe not all.
+
+Finally, don't use 0x10, please define a macro instead.
+
+Best regards,
+
+Cyrille
+
+>  	default:
+>  		ret =3D mt8173_nor_do_tx_rx(mt8173_nor, opcode, buf, len, NULL, 0);
+>  		if (ret)
+> =
