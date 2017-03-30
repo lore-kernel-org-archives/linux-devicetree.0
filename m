@@ -1,65 +1,53 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: armada-385-linksys: disk-activity trigger for all
-Date: Thu, 30 Mar 2017 18:54:04 +0200
-Message-ID: <20170330165405.14540-1-ralph.sennhauser@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 5/7] pinctrl: aramda-37xx: Add irqchip support
+Date: Thu, 30 Mar 2017 18:57:30 +0200
+Message-ID: <874lya8zyd.fsf@free-electrons.com>
+References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
+        <0e60fccd7913b83ee53d2921ce8f297927e8b6f3.1490120798.git-series.gregory.clement@free-electrons.com>
+        <CACRpkdYv6WDWM60dRMaYfEt50M8N-yLYk2TRguNi78aQtt6X9A@mail.gmail.com>
+        <87vaqtadry.fsf@free-electrons.com>
+        <CACRpkdY0DzMGiRTWeS23iCY3Vja9dnXJVaMqOnhJRpBLowfYTA@mail.gmail.com>
+        <87mvc5a3hh.fsf@free-electrons.com>
+        <CACRpkdYA9xq3TmW-=0+cxdeBcq6v3HAFf3f5E-FAvUpGZqns3g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYA9xq3TmW-=0+cxdeBcq6v3HAFf3f5E-FAvUpGZqns3g@mail.gmail.com>
+        (Linus Walleij's message of "Wed, 29 Mar 2017 04:18:19 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit a4ee7e18d808 ("ARM: dts: armada: Add default trigger for sata
-led") adds the default trigger to individual boards, move it to
-armada-385-linksys.dtsi which effectively enables the definition for
-the WRT1900ACS (Shelby) as well as for future boards.
+Hi Linus,
+ 
+ On mer., mars 29 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
 
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/armada-385-linksys-caiman.dts | 1 -
- arch/arm/boot/dts/armada-385-linksys-cobra.dts  | 1 -
- arch/arm/boot/dts/armada-385-linksys.dtsi       | 1 +
- 3 files changed, 1 insertion(+), 2 deletions(-)
+>>> It has irq_create_mapping(gpiochip->irqdomain, offset); that get
+>>> called for every IRQ, and that will eventually call irq_of_parse_and_map()
+>>> if the IRQs are defined in the device tree. (IIRC)
+>>
+>> When I followed the functions called I never find a call to
+>> irq_of_parse_and_map(), the closer things related to device tree I found
+>> was:
+>> "virq = irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node),
+>> NULL);"
+>> http://elixir.free-electrons.com/source/kernel/irq/irqdomain.c?v=4.11-rc4#L507
+>
+> I don't know if I'm rambling or what. I'm pretty sure it gets called, maybe
+> even earlier, like when the DT is parsed for the platform. We have so many
+> drivers not seemingly needing this, but if your driver needs it, all others
+> may need to be fixed too.
+>
+> Can you put a print in irq_of_parse_and_map() and see what happens?
 
-diff --git a/arch/arm/boot/dts/armada-385-linksys-caiman.dts b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-index a1b6e68..f3cee91 100644
---- a/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-+++ b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-@@ -109,7 +109,6 @@
- 
- 		sata {
- 			label = "caiman:white:sata";
--			linux,default-trigger = "disk-activity";
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/armada-385-linksys-cobra.dts b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-index a1a75af..1110718 100644
---- a/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-+++ b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-@@ -109,7 +109,6 @@
- 
- 		sata {
- 			label = "cobra:white:sata";
--			linux,default-trigger = "disk-activity";
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
-index aa0d225..2306c45 100644
---- a/arch/arm/boot/dts/armada-385-linksys.dtsi
-+++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
-@@ -320,6 +320,7 @@
- 		sata {
- 			gpios = <&gpio1 22 GPIO_ACTIVE_LOW>;
- 			default-state = "off";
-+			linux,default-trigger = "disk-activity";
- 		};
- 	};
- 
+So if I don't call it explicitly in my driver, then  this function is
+never called for the gpio.
+
+Gregory
+
 -- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
