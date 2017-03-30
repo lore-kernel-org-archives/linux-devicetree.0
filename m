@@ -1,74 +1,83 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3] iio: adc: cpcap: Add minimal support for CPCAP PMIC ADC
-Date: Thu, 30 Mar 2017 19:26:50 +0100
-Message-ID: <3837adac-5dec-c645-1aeb-9425c0e73076@kernel.org>
-References: <20170324033842.12541-1-tony@atomide.com>
- <20170329212637.syluvxy5cp2qub3h@rob-hp-laptop>
+From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Subject: Re: [PATCH 2/3] usb: add DT bindings for farady fotg2 host
+ controller
+Date: Thu, 30 Mar 2017 20:31:26 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1703302023250.17971@T420s>
+References: <20170208200010.21522-1-ulli.kroll@googlemail.com> <20170208200010.21522-3-ulli.kroll@googlemail.com> <20170215230042.4m3niqf5wizbrgb4@rob-hp-laptop> <alpine.LNX.2.00.1702171054320.9178@T420s> <CAL_JsqK7VDomXqMz3YJqL5QjnSb-anwXtG+exz4g_BjPLOaiXQ@mail.gmail.com>
+ <CACRpkdbjNS+ADawDCub5OP1iguNk+4Ked+mh_T_-bJ=6-9-3Nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170329212637.syluvxy5cp2qub3h@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbjNS+ADawDCub5OP1iguNk+4Ked+mh_T_-bJ=6-9-3Nw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29/03/17 22:26, Rob Herring wrote:
-> On Thu, Mar 23, 2017 at 08:38:42PM -0700, Tony Lindgren wrote:
->> On Motorola phones like droid 4 there is a custom CPCAP PMIC. This PMIC
->> has ADCs that are used for battery charging and USB PHY VBUS and ID pin
->> detection.
->>
->> Unfortunately the only documentation for this ADC seems to be the
->> Motorola mapphone Linux kernel tree. I have tested that reading raw and
->> scaled values works, but I have not used the timed sampling that the ADC
->> seems to support.
->>
->> Let's add a minimal support for it so we can eventually provide IIO
->> channels for the related battery charging and USB PHY drivers.
->>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
->> Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->> ---
->>
->> Changes since v2:
->>
->> - Simplify things further by using channel based indexing and
->>   remove more drivers specific enumerations
->>
->> Changes since v1:
->>
->> - Fix numerous issues pointed out by Peter Meerwald-Stadler
->>   <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org> and Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> - Simplify things further by limiting read functions to a
->>   single channel instead of a bank and got rid of the driver
->>   specific cpcap_adc_conv_type in favor of IIO generic types
->>
->> ---
->>  .../devicetree/bindings/iio/adc/cpcap-adc.txt      |   18 +
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Been long enough now that I'm happy to take this.
-Thanks for looking at the bindings Rob!
+Hi Linus,
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+On Thu, 30 Mar 2017, Linus Walleij wrote:
 
-Jonathan
+> On Tue, Feb 21, 2017 at 3:43 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Feb 17, 2017 at 4:07 AM, Hans Ulli Kroll
+> > <ulli.kroll@googlemail.com> wrote:
+> >> Hi Rob,
+> >>
+> >> On Wed, 15 Feb 2017, Rob Herring wrote:
+> >>
+> >>> On Wed, Feb 08, 2017 at 09:00:09PM +0100, Hans Ulli Kroll wrote:
+> >>> > This adds DT bindings for the Faraday FOTG2 host controller.
+> >>> >
+> >>> > Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+> >>> > ---
+> >>> >  Documentation/devicetree/bindings/usb/fotg2-host.txt | 15 +++++++++++++++
+> >>> >  1 file changed, 15 insertions(+)
+> >>> >  create mode 100644 Documentation/devicetree/bindings/usb/fotg2-host.txt
+> >>> >
+> >>> > diff --git a/Documentation/devicetree/bindings/usb/fotg2-host.txt b/Documentation/devicetree/bindings/usb/fotg2-host.txt
+> >>> > new file mode 100644
+> >>> > index 000000000000..4c07566a4bf5
+> >>> > --- /dev/null
+> >>> > +++ b/Documentation/devicetree/bindings/usb/fotg2-host.txt
+> >>> > @@ -0,0 +1,15 @@
+> >>> > +Faraday FOTG Host controller
+> >>> > +
+> >>> > +Required properties:
+> >>> > +
+> >>> > +- compatible: should be "faraday,fotg210-hcd"
+> >>>
+> >>> hcd as in "host controller driver"? Bindings describe h/w not drivers.
+> >>>
+> >>> It's an OTG controller or host controller?
+> >>>
+> >>
+> >> here only the host controller part used.
+> >>
+> >> faraday fotg2 is a dual role hcd/otg device and here is only the
+> >> host part used.
+> >
+> > Because you don't care about device mode or restricted by the IP
+> > configuration or SoC integration? The former is a user choice and
+> > shouldn't be part of DT. The latter should be implied by an SoC
+> > specific compatible string. Using only a compatible string for a
+> > licensed IP is not specific enough as vendors use differing versions
+> > and integrate them in different ways.
 > 
->>  drivers/iio/adc/Kconfig                            |   11 +
->>  drivers/iio/adc/Makefile                           |    1 +
->>  drivers/iio/adc/cpcap-adc.c                        | 1007 ++++++++++++++++++++
->>  4 files changed, 1037 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/cpcap-adc.txt
->>  create mode 100644 drivers/iio/adc/cpcap-adc.c
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Hans can you add:
 > 
+> compatible = "cortina,gemini-fotg", "faraday,fotg210-hcd" or something
+> as composite compatible for our controller?
+> 
+
+I prefer 
+"faraday,fotg210-usb2"
+
+I've got rejected by Rob due the fact this is an dual role controller, 
+which supports both host and device mode. And DT must reflect this desgn 
+pattern.
+
+Currently I'm wrappingt my head around the design of the fsl-mph-dr-of.c 
+driver to use this as a blueprint for the Faraday driver.
+
+Greetings
+Hans Ulli Kroll
