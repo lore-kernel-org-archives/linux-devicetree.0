@@ -1,63 +1,48 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V11 6/6] thermal: bcm2835: add thermal driver for
- bcm2835 SoC
-Date: Thu, 30 Mar 2017 21:11:41 +0200 (CEST)
-Message-ID: <1620097357.332334.1490901102005@email.1und1.de>
-References: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com>
- <1489356665-3175-7-git-send-email-stefan.wahren@i2se.com>
- <20170329045807.GC2582@localhost.localdomain>
- <20170330045725.GA12995@localhost.localdomain>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 0/6] bus: brcmstb_gisb: add support for GISBv7 arbiter
+Date: Thu, 30 Mar 2017 12:29:50 -0700
+Message-ID: <baaf46b4-cd91-3c19-70a8-f5923e31aac9@gmail.com>
+References: <20170330002914.7371-1-opendmb@gmail.com>
+ <c3182c24-2245-cf2e-32e4-248b8046a30f@gmail.com>
+ <20170330181932.GB8062@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170330045725.GA12995@localhost.localdomain>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, kernel@martin.sperl.org, Eric Anholt <eric@anholt.net>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170330181932.GB8062@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Doug Berger <opendmb@gmail.com>, robh+dt@kernel.org, computersforpeace@gmail.com, gregory.0xf0@gmail.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+On 03/30/2017 11:19 AM, Mark Rutland wrote:
+> On Thu, Mar 30, 2017 at 09:33:32AM -0700, Florian Fainelli wrote:
+>> On 03/29/2017 05:29 PM, Doug Berger wrote:
+>>> This patch set contains changes to enable the GISB arbiter driver
+>>> on the latest ARM64 architecture Set-Top Box chips from Broadcom.
+>>>
+>>> Since the ARM64 architecture does not support the hooking of low
+>>> level fault handlers the driver has been adjusted to depend solely
+>>> on GISB interrupts and notify events to provide diagnostic
+>>> messaging.  The GISB hardware still triggers bus faults for the
+>>> processor so the default low-level aborts will occur and will be
+>>> handled based on the architecture specific kernel implementation.
+>>>
+>>> While this tends to obsure the GISB error messaging it is still
+>>> reasonable so the same approach is applied to the ARM architecture
+>>> for consistency.
+>>>
+>>> The patches also correct some issues with the existing driver
+>>> and add the new register map for the GISBv7 hardware first
+>>> appearing in the BCM7278 device.
+>>
+>> This all looks great to me, and since there are no more ARM64
+>> dependencies I can take this via the Broadcom ARM/ARM64 SoC pull requests.
+>>
+>> Mark, are you also happy with this v3?
+> 
+> It looks fine by me.
 
-> Eduardo Valentin <edubezval@gmail.com> hat am 30. März 2017 um 06:57 geschrieben:
-> 
-> 
-> On Tue, Mar 28, 2017 at 09:58:09PM -0700, Eduardo Valentin wrote:
-> > On Sun, Mar 12, 2017 at 10:11:05PM +0000, Stefan Wahren wrote:
-> > > Add basic thermal driver for bcm2835 SoC.
-> > > 
-> > > This driver currently make sure that tsense HW block is set up
-> > > correctly.
-> > > 
-> > > Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> > > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> > > Acked-by: Eric Anholt <eric@anholt.net>
-> > 
-> > I see no issue with this driver at this point.
-> > 
-> > As I mentioned, the full series needs to go together. You either get an
-> > Ack from OF maintainers, and I take the series, or you can add my
-> > 
-> > Acked-by: Eduardo Valentin <edubezval@gmail.com>
-> > 
-> > after fixing the small comment from Nobuhiro.
-> > 
-> 
-> Based on other drivers that require negative values, I assume patches 1
-> and 2 of these series are needed, but more for enforcing the API, given
-> that the current of-thermal driver still retrieves the negative values
-> from DTB [1].
-> 
-> A third option on top of what I suggested above is to split the series.
-> Given that you could still get the proper coefficients
-> with current of-thermal, I would suggest you to split this series into
-> two (patches 1-2, 3-6) in your next version, so we avoid futher delays
-> on the driver, while patches 1-2 waits for acks from OF side.
-
-i revert patches #1, #2 and the slope value was still correct. So i will choose the third option and split the series.
-
-Thanks
-Stefan
-
-> 
-> [1] - https://patchwork.kernel.org/patch/9612613/
+Series applied to drivers/next, thanks everyone!
+-- 
+Florian
