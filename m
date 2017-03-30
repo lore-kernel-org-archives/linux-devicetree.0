@@ -1,59 +1,53 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 1/2] clk: imx7d: fix USDHC NAND clock
-Date: Wed, 29 Mar 2017 17:50:28 -0700
-Message-ID: <20170330005029.6472-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: aisheng.dong-3arQi8VN3Tc@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 2/2] ARM: dts: imx7: add USDHC NAND clock to SDHC instances
+Date: Wed, 29 Mar 2017 17:50:29 -0700
+Message-ID: <20170330005029.6472-2-stefan@agner.ch>
+References: <20170330005029.6472-1-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170330005029.6472-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, sboyd@codeaurora.org
+Cc: aisheng.dong@nxp.com, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-The USDHC NAND root clock is not gated by any CCM clock gate. Remove
-the bogus gate definition.
+The USDHC instances need the USDHC NAND clock in order to operate.
+Add the clock as ahb bus clock.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
-The IMX7D_NAND_USDHC_BUS_ROOT_CLK clock is also in clks_init_on.
-In a quick test I removed IMX7D_NAND_USDHC_BUS_ROOT_CLK from
-clks_init_on, and the system including SD-cards seemed to work
-fine... So I guess we could remove the clock from clks_init_on
-after the two both changes got applied, any thoughts?
+ arch/arm/boot/dts/imx7s.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The gate 0x4130 was actually the DRAM gate, hence disabling that
-clock lead to disabling this gate, and hence a crash before this
-fixes... Maybe that was the reason it landed in clks_init_on...?
-
---
-Stefan
-
- drivers/clk/imx/clk-imx7d.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index ae1d31be906e..4466acaacb71 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -724,7 +724,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clks[IMX7D_MAIN_AXI_ROOT_DIV] = imx_clk_divider2("axi_post_div", "axi_pre_div", base + 0x8800, 0, 6);
- 	clks[IMX7D_DISP_AXI_ROOT_DIV] = imx_clk_divider2("disp_axi_post_div", "disp_axi_pre_div", base + 0x8880, 0, 6);
- 	clks[IMX7D_ENET_AXI_ROOT_DIV] = imx_clk_divider2("enet_axi_post_div", "enet_axi_pre_div", base + 0x8900, 0, 6);
--	clks[IMX7D_NAND_USDHC_BUS_ROOT_DIV] = imx_clk_divider2("nand_usdhc_post_div", "nand_usdhc_pre_div", base + 0x8980, 0, 6);
-+	clks[IMX7D_NAND_USDHC_BUS_ROOT_CLK] = imx_clk_divider2("nand_usdhc_root_clk", "nand_usdhc_pre_div", base + 0x8980, 0, 6);
- 	clks[IMX7D_AHB_CHANNEL_ROOT_DIV] = imx_clk_divider2("ahb_post_div", "ahb_pre_div", base + 0x9000, 0, 6);
- 	clks[IMX7D_DRAM_ROOT_DIV] = imx_clk_divider2("dram_post_div", "dram_cg", base + 0x9880, 0, 3);
- 	clks[IMX7D_DRAM_PHYM_ALT_ROOT_DIV] = imx_clk_divider2("dram_phym_alt_post_div", "dram_phym_alt_pre_div", base + 0xa000, 0, 3);
-@@ -797,7 +797,6 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clks[IMX7D_ENET_AXI_ROOT_CLK] = imx_clk_gate4("enet_axi_root_clk", "enet_axi_post_div", base + 0x4060, 0);
- 	clks[IMX7D_OCRAM_CLK] = imx_clk_gate4("ocram_clk", "axi_post_div", base + 0x4110, 0);
- 	clks[IMX7D_OCRAM_S_CLK] = imx_clk_gate4("ocram_s_clk", "ahb_post_div", base + 0x4120, 0);
--	clks[IMX7D_NAND_USDHC_BUS_ROOT_CLK] = imx_clk_gate4("nand_usdhc_root_clk", "nand_usdhc_post_div", base + 0x4130, 0);
- 	clks[IMX7D_AHB_CHANNEL_ROOT_CLK] = imx_clk_gate4("ahb_root_clk", "ahb_post_div", base + 0x4200, 0);
- 	clks[IMX7D_DRAM_ROOT_CLK] = imx_clk_gate4("dram_root_clk", "dram_post_div", base + 0x4130, 0);
- 	clks[IMX7D_DRAM_PHYM_ROOT_CLK] = imx_clk_gate4("dram_phym_root_clk", "dram_phym_cg", base + 0x4130, 0);
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 5d3a43b8de20..5794febb19a4 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -936,7 +936,7 @@
+ 				reg = <0x30b40000 0x10000>;
+ 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_CLK_DUMMY>,
+-					<&clks IMX7D_CLK_DUMMY>,
++					<&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>,
+ 					<&clks IMX7D_USDHC1_ROOT_CLK>;
+ 				clock-names = "ipg", "ahb", "per";
+ 				bus-width = <4>;
+@@ -948,7 +948,7 @@
+ 				reg = <0x30b50000 0x10000>;
+ 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_CLK_DUMMY>,
+-					<&clks IMX7D_CLK_DUMMY>,
++					<&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>,
+ 					<&clks IMX7D_USDHC2_ROOT_CLK>;
+ 				clock-names = "ipg", "ahb", "per";
+ 				bus-width = <4>;
+@@ -960,7 +960,7 @@
+ 				reg = <0x30b60000 0x10000>;
+ 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_CLK_DUMMY>,
+-					<&clks IMX7D_CLK_DUMMY>,
++					<&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>,
+ 					<&clks IMX7D_USDHC3_ROOT_CLK>;
+ 				clock-names = "ipg", "ahb", "per";
+ 				bus-width = <4>;
 -- 
 2.12.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
