@@ -1,99 +1,131 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] doc: Add bindings document for Xilinx LogiCore PR
- Decoupler
-Date: Thu, 30 Mar 2017 17:44:29 -0500
-Message-ID: <20170330224429.yo42hgnr7nhm2ljv@rob-hp-laptop>
-References: <20170324153321.4168-1-atull@kernel.org>
- <20170324153321.4168-2-atull@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH linux v5 1/2] Documentation: dt-bindings: Document
+ bindings for ASPEED AST2400/AST2500 PWM and Fan tach controller device
+ driver
+Date: Thu, 30 Mar 2017 17:46:15 -0500
+Message-ID: <20170330224615.a3pxgigtk6v6ceyd@rob-hp-laptop>
+References: <20170324181723.29379-1-jaghu@google.com>
+ <20170324181723.29379-2-jaghu@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170324153321.4168-2-atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170324181723.29379-2-jaghu@google.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+Cc: joel@jms.id.au, jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 24, 2017 at 10:33:20AM -0500, Alan Tull wrote:
-> From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Please use "dt-bindings: fpga: ..." for the subject.
-
-
+On Fri, Mar 24, 2017 at 11:17:22AM -0700, Jaghathiswari Rankappagounder Natarajan wrote:
+> This binding provides interface for adding values related to ASPEED
+> AST2400/2500 PWM and Fan tach controller support.
+> The PWM controller can support upto 8 PWM output ports.
+> The Fan tach controller can support upto 16 tachometer inputs.
 > 
-> This adds the binding documentation for the Xilinx LogiCORE PR
-> Decoupler soft core.
-> 
-> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-I'm confused why you are sending these instead of Moritz? If it goes 
-through you, then it should have your S-o-B too.
-
-> Cc: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
 > ---
->  .../bindings/fpga/xilinx-pr-decoupler.txt          | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+>  v5:
+> - Changed the naming scheme to aspeed,ast2400/2500-pwm-tacho
+> - Removed gpio pin muxing
+> - Added aspeed vendor prefix for fan-tach-ch
+> - Changed to fan@0/1
+> - Changed reg to 32 bits
 > 
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+>  v4:
+> - Used 'reg'
+> 
+>  v3:
+> - Made the structure more common
+> 
+>  v2:
+> - Removed '_' in node and property names
+> - Gave some explanation for the properties used
+> 
+>  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
 > new file mode 100644
-> index 000000000000..2c527ac30398
+> index 000000000000..f96d32bfcdfa
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-> @@ -0,0 +1,35 @@
-> +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
+> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> @@ -0,0 +1,68 @@
+> +ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
 > +
-> +The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
-> +decouplers / fpga bridges.
-> +The controller can decouple/disable the bridges which prevents signal
-> +changes from passing through the bridge.  The controller can also
-> +couple / enable the bridges which allows traffic to pass through the
-> +bridge normally.
+> +The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED Fan Tacho
+> +controller can support upto 16 Fan tachometer inputs.
 > +
-> +The Driver supports only MMIO handling. A PR region can have multiple
-> +PR Decouplers which can be handled independently or chained via decouple/
-> +decouple_status signals.
+> +There can be upto 8 fans supported. Each fan can have one PWM output and
+> +one/two Fan tach inputs.
 > +
-> +Required properties:
-> +- compatible		: Should contain "xlnx,pr-decoupler-1.00" or "xlnx,pr-decoupler"
+> +Required properties for pwm-tacho node:
+> +- #address-cells : should be 1.
+> +
+> +- #size-cells : should be 1.
+> +
+> +- reg : address and length of the register set for the device.
+> +
+> +- pinctrl-names : a pinctrl state named "default" must be defined.
+> +
+> +- pinctrl-0 : phandle referencing pin configuration of the PWM ports.
+> +
+> +- compatible : should be "aspeed,ast2400-pwm-tacho" for AST2400 and
+> +	       "aspeed,ast2500-pwm-tacho" for AST2500.
+> +
+> +- clocks : a fixed clock providing input clock frequency(PWM
+> +	   and Fan Tach clock)
+> +
+> +fan subnode format:
+> +===================
+> +Under fan subnode there can upto 8 child nodes, with each child node
+> +representing a fan. If there are 8 fans each fan can have one PWM port and
+> +one/two Fan tach inputs.
+> +
+> +Required properties for each child node:
+> +- reg : should specify PWM source port.
+> +	integer value in the range 0 to 7 with 0 indicating PWM port A and
+> +	7 indicating PWM port H.
+> +
+> +- aspeed-fan-tach-ch : should specify the Fan tach input channel.
 
-I'd drop xlnx,pr-decoupler, but in any case, it should not be OR rather 
-"followed by". Plus the example has both.
+aspeed,fan-tach-ch
 
-> +- regs			: base address and size for decoupler module
-> +- clocks		: input clock to IP
-> +- clock-names		: should contain "aclk"
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> +                integer value in the range 0 through 15, with 0 indicating
+> +		Fan tach channel 0 and 15 indicating Fan tach channel 15.
+> +		Atleast one Fan tach input channel is required.
 > +
-> +Optional properties:
-> +- bridge-enable		: 0 if driver should disable bridge at startup
-> +			  1 if driver should enable bridge at startup
-> +			  Default is to leave bridge in current state.
+> +Examples:
 > +
-> +See Documentation/devicetree/bindings/fpga/fpga-region.txt for generic bindings.
+> +pwm_tacho_fixed_clk: fixedclk {
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <0>;
+> +	clock-frequency = <24000000>;
+> +}
 > +
-> +Example:
-> +	fpga-bridge@100000450 {
-> +		compatible = "xlnx,pr-decoupler-1.00",
-> +			     "xlnx-pr-decoupler";
-> +		regs = <0x10000045 0x10>;
-> +		clocks = <&clkc 15>;
-> +		clock-names = "aclk";
-> +		bridge-enable = <0>;
+> +pwm_tacho: pwmtachocontroller@1e786000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	reg = <0x1E786000 0x1000>;
+> +	compatible = "aspeed,ast2500-pwm-tacho";
+> +	clocks = <&pwm_tacho_fixed_clk>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+> +
+> +	fan@0 {
+> +		reg = <0x00>;
+> +		aspeed-fan-tach-ch = /bits/ 8 <0x00>;
 > +	};
-> -- 
-> 2.11.0
-> 
+> +
+> +	fan@1 {
+> +		reg = <0x01>;
+> +		aspeed-fan-tach-ch = /bits/ 8 <0x01 0x02>;
+> +	};
+> +};
 > --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.12.1.578.ge9c3154ca4-goog
+> 
