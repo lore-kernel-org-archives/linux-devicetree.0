@@ -1,56 +1,63 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v7 00/13] mmc: Add support to Marvell Xenon SD Host
- Controller
-Date: Thu, 30 Mar 2017 19:56:39 +0100
-Message-ID: <20170330185639.GI7909@n2100.armlinux.org.uk>
-References: <cover.51071caa64e5df81264a91b9a81ed1e94f47d2c4.1490886907.git-series.gregory.clement@free-electrons.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V11 6/6] thermal: bcm2835: add thermal driver for
+ bcm2835 SoC
+Date: Thu, 30 Mar 2017 21:11:41 +0200 (CEST)
+Message-ID: <1620097357.332334.1490901102005@email.1und1.de>
+References: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com>
+ <1489356665-3175-7-git-send-email-stefan.wahren@i2se.com>
+ <20170329045807.GC2582@localhost.localdomain>
+ <20170330045725.GA12995@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.51071caa64e5df81264a91b9a81ed1e94f47d2c4.1490886907.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ryan Gao <ygao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170330045725.GA12995@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, kernel@martin.sperl.org, Eric Anholt <eric@anholt.net>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 05:22:52PM +0200, Gregory CLEMENT wrote:
-> - Remove parse of child node mmc-card. Wait for a better solution.
+Hi Eduardo,
 
-So for mcbin, I have:
+> Eduardo Valentin <edubezval@gmail.com> hat am 30. März 2017 um 06:57 geschrieben:
+> 
+> 
+> On Tue, Mar 28, 2017 at 09:58:09PM -0700, Eduardo Valentin wrote:
+> > On Sun, Mar 12, 2017 at 10:11:05PM +0000, Stefan Wahren wrote:
+> > > Add basic thermal driver for bcm2835 SoC.
+> > > 
+> > > This driver currently make sure that tsense HW block is set up
+> > > correctly.
+> > > 
+> > > Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> > > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > > Acked-by: Eric Anholt <eric@anholt.net>
+> > 
+> > I see no issue with this driver at this point.
+> > 
+> > As I mentioned, the full series needs to go together. You either get an
+> > Ack from OF maintainers, and I take the series, or you can add my
+> > 
+> > Acked-by: Eduardo Valentin <edubezval@gmail.com>
+> > 
+> > after fixing the small comment from Nobuhiro.
+> > 
+> 
+> Based on other drivers that require negative values, I assume patches 1
+> and 2 of these series are needed, but more for enforcing the API, given
+> that the current of-thermal driver still retrieves the negative values
+> from DTB [1].
+> 
+> A third option on top of what I suggested above is to split the series.
+> Given that you could still get the proper coefficients
+> with current of-thermal, I would suggest you to split this series into
+> two (patches 1-2, 3-6) in your next version, so we avoid futher delays
+> on the driver, while patches 1-2 waits for acks from OF side.
 
-&ap_sdhci0 {
-        bus-width = <8>;
-        marvell,xenon-emmc;
-        marvell,xenon-phy-type = "emmc 5.1 phy";
-        /*
-         * Not stable in HS modes - phy needs "more calibration", so add
-         * the "slow-mode" and disable SDR104, SDR50 and DDR50 modes.
-         */
-        marvell,xenon-phy-slow-mode;
-        no-1-8-v;
-        non-removable;
-        status = "okay";
-        vqmmc-supply = <&v_vddo_h>;
+i revert patches #1, #2 and the slope value was still correct. So i will choose the third option and split the series.
 
-        #address-cells = <1>;
-        #size-cells = <0>;
-        mmccard: mmccard@0 {
-                compatible = "mmc-card";
-                reg = <0>;
-        };
-};
+Thanks
+Stefan
 
-Does this mean the "mmccard" bit is no longer required - or is it required
-for the eMMC to be detected but is no longer supported by the driver?
-
-Thanks.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> [1] - https://patchwork.kernel.org/patch/9612613/
