@@ -1,62 +1,98 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
-Date: Thu, 30 Mar 2017 10:15:05 +0200
-Message-ID: <CACRpkda_Gw9vhLqpWw8oOZyZ59nj5j9Q-T5RXVsf0vsxWcjyHg@mail.gmail.com>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com> <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v1 0/8] clk: meson: gxbb: more clock controller update for
+ audio support
+Date: Thu, 30 Mar 2017 10:15:06 +0200
+Message-ID: <6474a845-f325-ccae-24d8-81dba2185c84@baylibre.com>
+References: <20170328144605.25278-1-jbrunet@baylibre.com>
+ <149082017390.31513.12254031076684821992@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
+In-Reply-To: <149082017390.31513.12254031076684821992@resonance>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 4:55 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Wednesday, March 29, 2017, Linus Walleij wrote:
->> On Fri, Mar 24, 2017 at 4:22 PM, Jacopo Mondi <jacopo+renesas@jmondi.org>
->> wrote:
+On 03/29/2017 10:42 PM, Michael Turquette wrote:
+> Hi Jerome,
+> 
+> Adding Neil Armstong to Cc.
+> 
+> Quoting Jerome Brunet (2017-03-28 07:45:57)
+>> The patchset is the 2nd round of update to the meson gxbb clock controller
+>> to add initial audio support. The patchset is based on clk-next.
 >>
->> > Add dt-bindings for Renesas r7s72100 pin controller header file.
->> >
->> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> There is not much out of the ordinary here (adding new clocks and exposing
+>> them) except maybe for 2 patches:
+>> Patch #2: Adds a safety check while registering clocks to protect against
+>>           holes in clk_hw_onecell_data, if it ever happens. Same thing is
+>>           done for the meson8b clock controller. 
+>> Patch #3: Adds a new clock divider driver to implement the necessary
+>>           policy for the i2s master clock (see patch changelog)
 >>
->> > +/*
->> > + * Pin is bi-directional.
->> > + * An alternate function that needs both input/output functionalities
->> > +shall
->> > + * be configured as bidirectional.
->> > + * Eg. SDA/SCL pins of an I2c interface.
->> > + */
->> > +#define BI_DIR                 (1 << 3)
+>> This patchset has been test on the gxbb p200 and gxl p230.
+> 
+> First off, this series looks fine to me. Please add,
+> 
+> Acked-by: Michael Turquette <mturquette@baylibre.com>
+> 
+> Secondly, it seems the AmLogic clock drivers have mostly calmed down and
+> things are in the "add new clocks when we need them" phase, which is
+> nice. Since you and Neil are doing a lot of this work, might I suggest
+> that you both start collecting patches for the AmLogic/meson clock
+> drivers begin submitting pull requests to Stephen and myself?
+> 
+> As usual the rules are the same as always: all patches in the PR must
+> first be posted for review on the list. PRs should correspond to signed
+> tags. Stephen and I might ignore PRs sent after -rc4, and will
+> definitely ignore PRs sent after -rc6 since we want some stabilization
+> time before the merge window. Base your branch on -rc1, not on clk-next.
+> 
+> Also feel free to submit a patch to MAINTAINERS with either one or both
+> of you maintaining the meson clk stuff, assuming that you're OK to
+> review all of those patches and collect them into a PR.
+> 
+> Thoughts?
+
+Thanks Mike, I'll be glad to co-maintain this with jerome !
+
+Neil
+
+> 
+> If it sounds good to you then I suggest grabbing the clk-meson branch
+> from the clk tree and using that as a baseline for your first PR. In the
+> future you'll just Linus' -rc1, but I have already created a branch for
+> this cycle. You can apply these 8 patches with my Ack and send a PR by
+> -rc6 (possibly with other stuff collected from Martin, etc).
+
+Acked !
+
+> 
+> Thanks,
+> Mike
+> 
 >>
->> Any specific reason why this should not simply be added to
->> include/linux/pinctrl/pinconf-generic.h
->> as PIN_CONFIG_BIDIRECTIONAL and parsed in drivers/pinctrl/pinconf-
->> generic.c from the (new) DT property "bidirectional" simply?
->
-> I see your point. It would cut down from every driver out there
-> inventing some new property or config instead of everyone just sharing
-> a fixed set.
-> Maybe someone else out there will end up having a need for a
-> "bidirectional" option.
-
-I was thinking about that one. It is a bit weird electrically, like what
-kind of electronics is really bidirectional?
-
-It seems like a fancy name for open drain/open source, what we
-call "single ended" configuration. (See docs in
-Documentation/gpio/driver.txt)
-
-It would be great if you could check if that is what they mean,
-actually.
-
-> But, what do we do for Ethernet? All the pins are "normal" except just
-> the MDIO pin needs to be bidirectional.
-
-I see Geert clarified what we could do here.
-
-Yours,
-Linus Walleij
+>> Jerome Brunet (8):
+>>   dt-bindings: clock: gxbb: expose spdif clock gates
+>>   clk: meson: gxbb: protect against holes in the onecell_data array
+>>   clk: meson: add audio clock divider support
+>>   clk: meson: gxbb: add cts_amclk
+>>   clk: meson: gxbb: add cts_mclk_i958
+>>   clk: meson: gxbb: add cts_i958 clock
+>>   dt-bindings: clock: gxbb: expose i2s master clock
+>>   dt-bindings: clock: gxbb: expose spdif master clock
+>>
+>>  drivers/clk/meson/Makefile            |   2 +-
+>>  drivers/clk/meson/clk-audio-divider.c | 149 ++++++++++++++++++++++++++++++++++
+>>  drivers/clk/meson/clkc.h              |  10 +++
+>>  drivers/clk/meson/gxbb.c              | 144 ++++++++++++++++++++++++++++++++
+>>  drivers/clk/meson/gxbb.h              |  13 ++-
+>>  include/dt-bindings/clock/gxbb-clkc.h |   5 ++
+>>  6 files changed, 319 insertions(+), 4 deletions(-)
+>>  create mode 100644 drivers/clk/meson/clk-audio-divider.c
+>>
+>> -- 
+>> 2.9.3
+>>
