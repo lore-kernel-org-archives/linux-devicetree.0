@@ -1,14 +1,14 @@
 From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] ARM: dts: rskrza1: set rtc_x1 clock value
-Date: Thu, 30 Mar 2017 10:47:26 +0200
-Message-ID: <CAMuHMdVvEAH82vC8WPx6ZmimVxD-_t4JpDa8OLXs_f_UEtHtPg@mail.gmail.com>
-References: <20170329173035.67477-1-chris.brandt@renesas.com> <20170329173035.67477-7-chris.brandt@renesas.com>
+Subject: Re: [PATCH v3 7/7] ARM: dts: rskrza1: add rtc DT support
+Date: Thu, 30 Mar 2017 10:47:42 +0200
+Message-ID: <CAMuHMdUs5MgL0tJWbB5mbhbFdp8nwEop2Xwt=HR-7vrNrZUkNA@mail.gmail.com>
+References: <20170329173035.67477-1-chris.brandt@renesas.com> <20170329173035.67477-8-chris.brandt@renesas.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCQJP74GSUDRBH4M6PDAKGQE26AAD7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCQJP74GSUDRBL4M6PDAKGQEPLR2TPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-In-Reply-To: <20170329173035.67477-7-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170329173035.67477-8-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
@@ -20,8 +20,7 @@ Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Mar 29, 2017 at 7:30 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> Enable the 32.768 kHz RTC_X1 clock by setting the frequency value to
-> non-zero.
+> Enable the realtime clock.
 >
 > Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
