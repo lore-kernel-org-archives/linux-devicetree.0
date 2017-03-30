@@ -1,38 +1,85 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH V8 5/6] ACPI: Support the probing on the devices which apply  indirect-IO
-Date: Thu, 30 Mar 2017 22:31:10 +0200
-Message-ID: <1908501.jAQQKvjW4f@aspire.rjw.lan>
-References: <1490887619-61732-1-git-send-email-yuanzhichang@hisilicon.com> <1490887619-61732-6-git-send-email-yuanzhichang@hisilicon.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master
+Date: Fri, 31 Mar 2017 07:50:14 +1100
+Message-ID: <1490907014.3177.207.camel@kernel.crashing.org>
+References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
+ <20170329174340.89109-20-cbostic@linux.vnet.ibm.com>
+ <CACPK8XfOSYPidHF6=psC4mP-tkRyWTu0psdcK6EwA2E6FF53Uw@mail.gmail.com>
+ <0e1bcf3a-e8d7-9f50-bdf7-2a1e7466665b@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490887619-61732-6-git-send-email-yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, brian.starkey-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0e1bcf3a-e8d7-9f50-bdf7-2a1e7466665b@linux.vnet.ibm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christopher Bostic <cbostic@linux.vnet.ibm.com>, Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, rostedt@goodmis.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, "Edward A .
+ James" <eajames@us.ibm.com>, Alistair Popple <alistair@popple.id.au>, mingo@redhat.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, March 30, 2017 11:26:58 PM zhichang.yuan wrote:
-> On some platforms(such as Hip06/Hip07), the legacy ISA/LPC devices access I/O
-> with some special host-local I/O ports known on x86. To access the I/O
-> peripherals, an indirect-IO mechanism is introduced to mapped the host-local
-> I/O to system logical/fake PIO similar the PCI MMIO on architectures where no
-> separate I/O space exists. Just as PCI MMIO, the host I/O range should be
-> registered before probing the downstream devices and set up the I/O mapping.
-> But current ACPI bus probing doesn't support these indirect-IO hosts/devices.
-> 
-> This patch introdueces a new ACPI handler for this device category. Through the
-> handler attach callback, the indirect-IO hosts I/O registration is done and
-> all peripherals' I/O resources are translated into logic/fake PIO before
-> starting the enumeration.
-
-Can you explain to me briefly what exactly this code is expected to be doing?
-
-Thanks,
-Rafael
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCAyMDE3LTAzLTMwIGF0IDEzOjE1IC0wNTAwLCBDaHJpc3RvcGhlciBCb3N0aWMgd3Jv
+dGU6Cj4gPiA+ICtzdGF0aWMgdm9pZCBzZXJpYWxfaW4oc3RydWN0IGZzaV9tYXN0ZXJfZ3BpbyAq
+bWFzdGVyLCBzdHJ1Y3QgZnNpX2dwaW9fbXNnICptc2csCj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1aW50OF90IG51bV9iaXRzKQo+ID4gPiArewo+
+ID4gPiArwqDCoMKgwqDCoMKgIHVpbnQ4X3QgYml0LCBpbl9iaXQ7Cj4gPiA+ICsKPiA+ID4gK8Kg
+wqDCoMKgwqDCoCBzZXRfc2RhX2lucHV0KG1hc3Rlcik7Cj4gPiA+ICsKPiA+ID4gK8KgwqDCoMKg
+wqDCoCBmb3IgKGJpdCA9IDA7IGJpdCA8IG51bV9iaXRzOyBiaXQrKykgewo+ID4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9ja190b2dnbGUobWFzdGVyLCAxKTsKPiA+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaW5fYml0ID0gc2RhX2luKG1hc3Rlcik7Cj4gPiA+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG1zZy0+bXNnIDw8PSAxOwo+ID4gPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtc2ctPm1zZyB8PSB+aW5fYml0ICYgMHgxO8KgwqDC
+oMKgwqAgLyogRGF0YSBpcyBuZWdhdGl2ZSBhY3RpdmUgKi8KPiA+ID4gK8KgwqDCoMKgwqDCoCB9
+Cj4gPiA+ICvCoMKgwqDCoMKgwqAgbXNnLT5iaXRzICs9IG51bV9iaQl0czsKPiA+ID4gK30KPiA+
+ID4gKwo+ID4gPiArc3RhdGljIHZvaWQgc2VyaWFsX291dChzdHJ1Y3QgZnNpX21hc3Rlcl9ncGlv
+ICptYXN0ZXIsCj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBjb25zdCBzdHJ1Y3QgZnNpX2dwaW9fbXNnICpjbWQpCj4gPiA+ICt7Cj4gPiA+ICvCoMKg
+wqDCoMKgwqAgdWludDhfdCBiaXQ7Cj4gPiA+ICvCoMKgwqDCoMKgwqAgdWludDY0X3QgbXNnID0g
+fmNtZC0+bXNnO8KgwqDCoMKgwqDCoCAvKiBEYXRhIGlzIG5lZ2F0aXZlIGFjdGl2ZSAqLwo+ID4g
+PiArwqDCoMKgwqDCoMKgIHVpbnQ2NF90IHNkYV9tYXNrID0gMHgxVUxMIDw8IChjbWQtPmJpdHMg
+LSAxKTsKPiA+ID4gK8KgwqDCoMKgwqDCoCB1aW50NjRfdCBsYXN0X2JpdCA9IH4wOwo+ID4gPiAr
+wqDCoMKgwqDCoMKgIGludCBuZXh0X2JpdDsKPiA+ID4gKwo+ID4gPiArwqDCoMKgwqDCoMKgIGlm
+ICghY21kLT5iaXRzKSB7Cj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRldl93
+YXJuKG1hc3Rlci0+ZGV2LCAidHJ5aW5nIHRvIG91dHB1dCAwIGJpdHNcbiIpOwo+ID4gPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm47Cj4gPiA+ICvCoMKgwqDCoMKgwqAgfQo+
+ID4gPiArwqDCoMKgwqDCoMKgIHNldF9zZGFfb3V0cHV0KG1hc3RlciwgMCk7Cj4gPiA+ICsKPiA+
+ID4gK8KgwqDCoMKgwqDCoCAvKiBTZW5kIHRoZSBzdGFydCBiaXQgKi8KPiA+ID4gK8KgwqDCoMKg
+wqDCoCBzZGFfb3V0KG1hc3RlciwgMCk7Cj4gPiA+ICvCoMKgwqDCoMKgwqAgY2xvY2tfdG9nZ2xl
+KG1hc3RlciwgMSk7Cj4gPiA+ICsKPiA+ID4gK8KgwqDCoMKgwqDCoCAvKiBTZW5kIHRoZSBtZXNz
+YWdlICovCj4gPiA+ICvCoMKgwqDCoMKgwqAgZm9yIChiaXQgPSAwOyBiaXQgPCBjbWQtPmJpdHM7
+IGJpdCsrKSB7Cj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG5leHRfYml0ID0g
+KG1zZyAmIHNkYV9tYXNrKSA+PiAoY21kLT5iaXRzIC0gMSk7Cj4gPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIGlmIChsYXN0X2JpdCBeIG5leHRfYml0KSB7Cj4gPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZGFfb3V0KG1hc3RlciwgbmV4
+dF9iaXQpOwo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgbGFzdF9iaXQgPSBuZXh0X2JpdDsKPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgfQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9ja190b2dnbGUobWFz
+dGVyLCAxKTsKPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbXNnIDw8PSAxOwo+
+ID4gPiArwqDCoMKgwqDCoMKgIH0KPiA+ID4gK30KCkFzIEkgbWVudGlvbmVkIHByaXZhdGVseSwg
+SSBkb24ndCB0aGluayB0aGlzIGlzIHJpZ2h0LCB1bmxlc3MgeW91cgpjbG9jayBzaWduYWwgaXMg
+aW52ZXJ0ZWQgb3IgbXkgcHJvdG9jb2wgc3BlYyBpcyB3cm9uZy4uLgoKWW91ciBjbG9jayB0b2dn
+bGUgaXMgd3JpdHRlbiBzbyB5b3UgY2FsbCBpdCByaWdodCBhZnRlciB0aGUgcmlzaW5nCmVkZ2Uu
+IEl0IGRvZXMgZGVsYXksIDAsIGRlbGF5LCAxLgoKQnV0IGFjY29yZGluZyB0byB0aGUgRlNJIHRp
+bWluZyBkaWFncmFtIEkgaGF2ZSwgeW91IG5lZWQgdG8gZXN0YWJsaXNoCnRoZSBkYXRhIGFyb3Vu
+ZCB0aGUgZmFsbGluZyBlZGdlLCBpdCBnZXRzIHNhbXBsZWQgYnkgdGhlIHNsYXZlIG9uIHRoZQpy
+aXNpbmcgZWRnZS4gU28gYXMgaXQgaXMsIHlvdXIgY29kZSByaXNrcyB2aW9sYXRpbmcgdGhlIHNs
+YXZlIGhvbGQKdGltZS4KCk9uIGlucHV0LCB5b3UgbmVlZCB0byBzYW1wbGUgb24gdGhlIGZhbGxp
+bmcgZWRnZSwgcmlnaHQgYmVmb3JlIGl0LiBZb3UKYXJlIHNhbXBsaW5nIGFmdGVyIHRoZSByaXNp
+bmcgZWRnZSwgc28geW91IGFyZW4ndCBsZWF2aW5nIGVub3VnaCB0aW1lCmZvciB0aGUgc2xhdmUg
+dG8gZXN0YWJsaXNoIHRoZSBkYXRhLgoKWW91IGNvdWxkIHByb2JhYmx5IGp1c3QgZmxpcCBjbG9j
+a190b2dnbGUoKSBhcm91bmQuIE1ha2UgaXQ6IDAsIGRlbGF5LAoxLCBkZWxheS4KClRoYXQgd2F5
+IHlvdSBjYW4gZG8gZm9yIHNlbmRzOiBzZGFfb3V0ICsgdG9nZ2xlLCBhbmQgZm9yIHJlY2VpdmUK
+dG9nZ2xlICsgc2RhX2luLiBUaGF0IHdpbGwgbWFrZSB5b3UgZXN0YWJsaXNoIHlvdXIgb3V0cHV0
+IGRhdGEgYW5kCnNhbXBsZSByaWdodCBiZWZvcmUgdGhlIGZhbGxpbmcgZWRnZSwgd2hpY2ggc2hv
+dWxkIGJlIG9rIHByb3ZpZGVkIHRoZQpkaWFncmFtIEkgaGF2ZSBpcyByaWdodC4KCkNoZWVycywK
+QmVuLgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
