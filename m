@@ -1,77 +1,123 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCHv5 11/11] arm: sti: update sti-cec for CEC notifier support
-Date: Thu, 30 Mar 2017 09:41:30 +0200
-Message-ID: <CA+M3ks442wftNR8+dctdSkKMCPSw9Rd2CH5UG-VEP7XySGjCjw@mail.gmail.com>
-References: <20170329141543.32935-1-hverkuil@xs4all.nl>
- <20170329141543.32935-12-hverkuil@xs4all.nl>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Thu, 30 Mar 2017 09:43:09 +0200
+Message-ID: <20170330074309.GA28533@amd>
+References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
+ <20170323203749.GB8563@amd>
+ <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+ <20170329190725.GN20094@minitux>
+ <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170329141543.32935-12-hverkuil@xs4all.nl>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Patrice.chotard@st.com, Javier Martinez Canillas <javier@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel.vetter@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170330000955.GP20094@minitux>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-KyBQYXRyaWNlIGZvciBzdGkgRFQKCjIwMTctMDMtMjkgMTY6MTUgR01UKzAyOjAwIEhhbnMgVmVy
-a3VpbCA8aHZlcmt1aWxAeHM0YWxsLm5sPjoKPiBGcm9tOiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVu
-amFtaW4uZ2FpZ25hcmRAbGluYXJvLm9yZz4KPgo+IFRvIHVzZSBDRUMgbm90aWZpZXIgc3RpIENF
-QyBkcml2ZXIgbmVlZHMgdG8gZ2V0IHBoYW5kbGUKPiBvZiB0aGUgaGRtaSBkZXZpY2UuCj4KPiBT
-aWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAbGluYXJv
-Lm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5j
-b20+Cj4gQ0M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gLS0tCj4gIGFyY2gvYXJtL2Jv
-b3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kgfCAxMiAtLS0tLS0tLS0tLS0KPiAgYXJjaC9hcm0v
-Ym9vdC9kdHMvc3RpaDQxMC5kdHNpICAgICAgICB8IDEzICsrKysrKysrKysrKysKPiAgMiBmaWxl
-cyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaQo+IGluZGV4IGQ3NTNhYzM2Nzg4Zi4uMDQ0MTg0NTgw
-MzI2IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kK
-PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpCj4gQEAgLTc0Miwx
-OCArNzQyLDYgQEAKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNsa19zX2Mw
-X2ZsZXhnZW4gQ0xLX0VUSF9QSFk+Owo+ICAgICAgICAgICAgICAgICB9Owo+Cj4gLSAgICAgICAg
-ICAgICAgIGNlYzogc3RpLWNlY0AwOTRhMDg3YyB7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJzdCxzdGloLWNlYyI7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgcmVn
-ID0gPDB4OTRhMDg3YyAweDY0PjsKPiAtICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8
-JmNsa19zeXNpbj47Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiY2Vj
-LWNsayI7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE0
-MCBJUlFfVFlQRV9OT05FPjsKPiAtICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFt
-ZXMgPSAiY2VjLWlycSI7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9
-ICJkZWZhdWx0IjsKPiAtICAgICAgICAgICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0
-cmxfY2VjMF9kZWZhdWx0PjsKPiAtICAgICAgICAgICAgICAgICAgICAgICByZXNldHMgPSA8JnNv
-ZnRyZXNldCBTVElINDA3X0xQTV9TT0ZUUkVTRVQ+Owo+IC0gICAgICAgICAgICAgICB9Owo+IC0K
-PiAgICAgICAgICAgICAgICAgcm5nMTA6IHJuZ0AwOGE4OTAwMCB7Cj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSAgICAgID0gInN0LHJuZyI7Cj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgcmVnICAgICAgICAgICAgID0gPDB4MDhhODkwMDAgMHgxMDAwPjsKPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3Rp
-aDQxMC5kdHNpCj4gaW5kZXggM2M5NjcyYzViMDlmLi4yMWZlNzJiMTgzZDggMTAwNjQ0Cj4gLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvc3RpaDQxMC5kdHNpCj4gQEAgLTI4MSw1ICsyODEsMTggQEAKPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX1NUMjMxX0RNVT4sCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjbGtfc19jMF9mbGV4Z2VuIENMS19GTEFT
-SF9QUk9NSVA+Owo+ICAgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAgICAgICAgc3Rp
-LWNlY0AwOTRhMDg3YyB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJz
-dCxzdGloLWNlYyI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4OTRhMDg3YyAw
-eDY0PjsKPiArICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNsa19zeXNpbj47Cj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiY2VjLWNsayI7Cj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE0MCBJUlFfVFlQRV9OT05F
-PjsKPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAiY2VjLWlycSI7
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfY2VjMF9kZWZhdWx0
-PjsKPiArICAgICAgICAgICAgICAgICAgICAgICByZXNldHMgPSA8JnNvZnRyZXNldCBTVElINDA3
-X0xQTV9TT0ZUUkVTRVQ+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIGhkbWktcGhhbmRsZSA9
-IDwmc3RpX2hkbWk+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgfTsKPiAgfTsKPiAt
-LQo+IDIuMTEuMAo+CgoKCi0tIApCZW5qYW1pbiBHYWlnbmFyZAoKR3JhcGhpYyBTdHVkeSBHcm91
-cAoKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCgpGb2xs
-b3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > > There is a binding for ti,lp55xx, but there's nothing I can reuse from
+> > > that binding...because it's completely different hardware.
+> >=20
+> > Agreed, if you drop the pattern stuff from the binding, at least for no=
+w.=20
+>=20
+> I do not have a strong preference to expose these knobs in devicetree
+> and I do fear that finding some common "pattern" bindings that suits
+> everyone will be very difficult.
+>=20
+> So I'll drop them from the binding for now.
+
+Ok.
+
+> > If you want driver merged quickly, I believe the best way would be to
+> > leave out pattern support for now. We can merge the basic driver
+> > easily to 4.12.
+> >=20
+>=20
+> I'm not that much in a hurry and would rather see that we resolve any
+> outstanding issues with the implementation of the pattern handling.
+
+Ok, good.
+
+> But regardless of this we still have the problem that the typical
+> Qualcomm PMIC has 8 LPG-blocks and any triple could be driving a
+> RGB-LED. So we would have to create some sort of in-driver-wrapper
+> around any three instances exposing them as a single LED to the user.
+
+Yes, I believe we should do the wrapping. In N900 case,=20
+
+> I rather expose the individual channels and make sure that when we
+> trigger a blink operation or enable a pattern (i.e. the two operations
+> that do require synchronization) we will perform that synchronization
+> under the hood.
+
+First, we need a way to tell userspace which LEDs are synchronized,
+because otherwise it will be confusing.
+
+Second, there are more issues than just patterns with the RGB
+LED. Most important is ability to set particular colors. You want to
+set the RGB LED to "white", but that does not mean you can set
+red=3Dgreen=3Dblue=3D1.0. You want color to look the same on LCD and on the
+LED, which means coefficients for white and some kind of function for
+brightness-to-PWM conversion.
+
+> > Incremental patches sound like a good idea, yes.
+> >=20
+> > I'd say that testing with actual RGB LED is not a requirement... as
+> > long as we design reasonable interface where the synchronizaction will
+> > be easy.
+> >=20
+>=20
+> As this relates to the board layout (which LPG-channels are hooked to a
+> RGB) I think it makes sense to expose a mechanism in devicetree to
+> indicate which channels should have their pattern/blink synchronized.
+>=20
+> We should be able to extend the LUT (the hardware that actually
+> implements the pattern-walker logic) with a DT-property like:
+>=20
+>   qcom,synchronize-group-0 =3D <1, 2, 3>;
+>   qcom,synchronize-group-1 =3D <5, 6, 7>;
+>=20
+> And whenever we configure a pattern involving one of the affected LEDs
+> from a group we start all of them.
+
+Yes we need some kind of grouping.
+
+Additional complexity in the N900 case... groups can actually be
+configured at run time. Original Maemo used that ability to group 6
+keyboard backlight leds, and then run pattern on them. OTOH... I don't
+think we _need_ to support that functionality.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljctw0ACgkQMOfwapXb+vIrMQCeIZt9fkw52hT1PppKaJg9P4+E
+Eo0An1YKTHTIz7iFlaF1yVJckmImnIUA
+=lvJ+
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
