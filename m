@@ -1,88 +1,43 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 2/2] ARM: dts: keystone: Add minimum support for K2G ICE evm
-Date: Thu, 30 Mar 2017 10:29:07 -0500
-Message-ID: <20170330152907.12595-3-fcooper@ti.com>
-References: <20170330152907.12595-1-fcooper@ti.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH v2 4/8] ARM: dts: stm32: Enable DCMI camera interface on STM32F429-EVAL board
+Date: Thu, 30 Mar 2017 17:27:43 +0200
+Message-ID: <1490887667-8880-5-git-send-email-hugues.fruchet@st.com>
+References: <1490887667-8880-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170330152907.12595-1-fcooper@ti.com>
+In-Reply-To: <1490887667-8880-1-git-send-email-hugues.fruchet@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, linux@armlinux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add barebones dts support for TI's K2G Industrial Communication Engine evm.
-This dts allows the board to boot using a ram based filesystem.
+Enable DCMI camera interface on STM32F429-EVAL board.
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- arch/arm/boot/dts/Makefile             |  3 ++-
- arch/arm/boot/dts/keystone-k2g-ice.dts | 42 ++++++++++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/keystone-k2g-ice.dts
+ arch/arm/boot/dts/stm32429i-eval.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0118084..01a98f1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -193,7 +193,8 @@ dtb-$(CONFIG_ARCH_KEYSTONE) += \
- 	keystone-k2hk-evm.dtb \
- 	keystone-k2l-evm.dtb \
- 	keystone-k2e-evm.dtb \
--	keystone-k2g-evm.dtb
-+	keystone-k2g-evm.dtb \
-+	keystone-k2g-ice.dtb
- dtb-$(CONFIG_MACH_KIRKWOOD) += \
- 	kirkwood-b3.dtb \
- 	kirkwood-blackarmor-nas220.dtb \
-diff --git a/arch/arm/boot/dts/keystone-k2g-ice.dts b/arch/arm/boot/dts/keystone-k2g-ice.dts
-new file mode 100644
-index 0000000..9ab5f42
---- /dev/null
-+++ b/arch/arm/boot/dts/keystone-k2g-ice.dts
-@@ -0,0 +1,42 @@
-+/*
-+ * Device Tree Source for K2G Industrial Communication Engine EVM
-+ *
-+ * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+/dts-v1/;
-+
-+#include "keystone-k2g.dtsi"
-+
-+/ {
-+	compatible = "ti,k2g-ice", "ti,k2g", "ti,keystone";
-+	model = "Texas Instruments K2G Industrial Communication EVM";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000008 0x00000000 0x00000000 0x20000000>;
-+	};
-+};
-+
-+&k2g_pinctrl {
-+	uart0_pins: pinmux_uart0_pins {
-+		pinctrl-single,pins = <
-+			K2G_CORE_IOPAD(0x11cc) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
-+			K2G_CORE_IOPAD(0x11d0) (BUFFER_CLASS_B | PIN_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
-+		>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 3c99466..87733d3 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -141,6 +141,15 @@
+ 	clock-frequency = <25000000>;
+ };
+ 
++&dcmi {
 +	status = "okay";
++
++	port {
++		dcmi_0: endpoint@0 {
++		};
++	};
 +};
++
+ &i2c1 {
+ 	pinctrl-0 = <&i2c1_pins>;
+ 	pinctrl-names = "default";
 -- 
-2.10.0
+1.9.1
