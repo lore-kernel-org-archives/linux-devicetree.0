@@ -1,76 +1,76 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] mtd: physmap_of: use OF helpers for reading strings
-Date: Thu, 30 Mar 2017 17:58:53 +0200
-Message-ID: <20170330155853.30349-1-zajec5@gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] mvebu: wrt1900ac: Use pwm-fan rather than gpio-fan
+Date: Thu, 30 Mar 2017 18:01:53 +0200
+Message-ID: <87shlu92j2.fsf@free-electrons.com>
+References: <20170327194301.1104-1-ralph.sennhauser@gmail.com>
+        <20170327194301.1104-5-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170327194301.1104-5-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Ralph
+        Sennhauser's message of "Mon, 27 Mar 2017 21:43:00 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Hi Ralph,
+ 
+ On lun., mars 27 2017, Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-OF core code provides helpers for counting strings and reading them so
-use them instead of doing this manually. This simplifies the code a bit.
+Here again the title should start with ARM: dts: armada-xp.
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
- drivers/mtd/maps/physmap_of.c | 30 ++++++++++--------------------
- 1 file changed, 10 insertions(+), 20 deletions(-)
+As for the other patch if there is no need for a v5 I will fix it while
+appliig it.
 
-diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
-index 14e8909c9955..62fa6836f218 100644
---- a/drivers/mtd/maps/physmap_of.c
-+++ b/drivers/mtd/maps/physmap_of.c
-@@ -116,32 +116,22 @@ static const char * const part_probe_types_def[] = {
- 
- static const char * const *of_get_probes(struct device_node *dp)
- {
--	const char *cp;
--	int cplen;
--	unsigned int l;
--	unsigned int count;
- 	const char **res;
-+	int count;
- 
--	cp = of_get_property(dp, "linux,part-probe", &cplen);
--	if (cp == NULL)
-+	count = of_property_count_strings(dp, "linux,part-probe");
-+	if (count < 0)
- 		return part_probe_types_def;
- 
--	count = 0;
--	for (l = 0; l != cplen; l++)
--		if (cp[l] == 0)
--			count++;
--
--	res = kzalloc((count + 1)*sizeof(*res), GFP_KERNEL);
-+	res = kzalloc((count + 1) * sizeof(*res), GFP_KERNEL);
- 	if (!res)
- 		return NULL;
--	count = 0;
--	while (cplen > 0) {
--		res[count] = cp;
--		l = strlen(cp) + 1;
--		cp += l;
--		cplen -= l;
--		count++;
--	}
-+
-+	count = of_property_read_string_array(dp, "linux,part-probe", res,
-+					      count);
-+	if (count < 0)
-+		return NULL;
-+
- 	return res;
- }
- 
+Thanks,
+
+Gregory
+
+> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>
+> The mvebu GPIO driver can also perform PWM on some pins. Use the pwm-fan
+> driver to control the fan of the WRT1900AC, giving us finer grained control
+> over its speed and hence noise.
+>
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> URL: https://patchwork.ozlabs.org/patch/427291/
+> [Ralph Sennhauser: drop flags paramter from pwms, no longer used]
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+> index 9efcf59..6d705f5 100644
+> --- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+> +++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+> @@ -308,13 +308,11 @@
+>  		};
+>  	};
+>  
+> -	gpio_fan {
+> +	pwm_fan {
+>  		/* SUNON HA4010V4-0000-C99 */
+> -		compatible = "gpio-fan";
+> -		gpios = <&gpio0 24 0>;
+>  
+> -		gpio-fan,speed-map = <0    0
+> -				      4500 1>;
+> +		compatible = "pwm-fan";
+> +		pwms = <&gpio0 24 4000>;
+>  	};
+>  
+>  	dsa {
+> -- 
+> 2.10.2
+>
+
 -- 
-2.11.0
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
