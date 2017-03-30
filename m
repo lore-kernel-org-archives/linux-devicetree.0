@@ -1,53 +1,54 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 5/7] pinctrl: aramda-37xx: Add irqchip support
-Date: Thu, 30 Mar 2017 18:57:30 +0200
-Message-ID: <874lya8zyd.fsf@free-electrons.com>
-References: <cover.26288667a039bc9f8e62dec2fd6342ded4014d12.1490120798.git-series.gregory.clement@free-electrons.com>
-        <0e60fccd7913b83ee53d2921ce8f297927e8b6f3.1490120798.git-series.gregory.clement@free-electrons.com>
-        <CACRpkdYv6WDWM60dRMaYfEt50M8N-yLYk2TRguNi78aQtt6X9A@mail.gmail.com>
-        <87vaqtadry.fsf@free-electrons.com>
-        <CACRpkdY0DzMGiRTWeS23iCY3Vja9dnXJVaMqOnhJRpBLowfYTA@mail.gmail.com>
-        <87mvc5a3hh.fsf@free-electrons.com>
-        <CACRpkdYA9xq3TmW-=0+cxdeBcq6v3HAFf3f5E-FAvUpGZqns3g@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities output
+ video on pad 1
+Date: Thu, 30 Mar 2017 19:25:49 +0200
+Message-ID: <1490894749.2404.33.camel@pengutronix.de>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+         <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYA9xq3TmW-=0+cxdeBcq6v3HAFf3f5E-FAvUpGZqns3g@mail.gmail.com>
-        (Linus Walleij's message of "Wed, 29 Mar 2017 04:18:19 +0200")
+In-Reply-To: <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+The TVP5150 DT bindings specify a single output port (port 0) that
+corresponds to the video output pad (pad 1, DEMOD_PAD_VID_OUT).
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+I'm trying to get this to work with a TVP5150 analog TV decoder, and the
+first problem is that this device doesn't have pad 0 as its single
+output pad. Instead, as a MEDIA_ENT_F_ATV_DECODER entity, it has for
+pads (input, video out, vbi out, audio out), and video out is pad 1,
+whereas the device tree only defines a single port (0).
+---
+
+ drivers/staging/media/imx/imx-media-dev.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+index 17e2386a3ca3a..c52d6ca797965 100644
+--- a/drivers/staging/media/imx/imx-media-dev.c
++++ b/drivers/staging/media/imx/imx-media-dev.c
+@@ -267,6 +267,15 @@ static int imx_media_create_link(struct imx_media_dev *imxmd,
+ 	source_pad = link->local_pad;
+ 	sink_pad = link->remote_pad;
  
- On mer., mars 29 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
-
->>> It has irq_create_mapping(gpiochip->irqdomain, offset); that get
->>> called for every IRQ, and that will eventually call irq_of_parse_and_map()
->>> if the IRQs are defined in the device tree. (IIRC)
->>
->> When I followed the functions called I never find a call to
->> irq_of_parse_and_map(), the closer things related to device tree I found
->> was:
->> "virq = irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node),
->> NULL);"
->> http://elixir.free-electrons.com/source/kernel/irq/irqdomain.c?v=4.11-rc4#L507
->
-> I don't know if I'm rambling or what. I'm pretty sure it gets called, maybe
-> even earlier, like when the DT is parsed for the platform. We have so many
-> drivers not seemingly needing this, but if your driver needs it, all others
-> may need to be fixed too.
->
-> Can you put a print in irq_of_parse_and_map() and see what happens?
-
-So if I don't call it explicitly in my driver, then  this function is
-never called for the gpio.
-
-Gregory
-
++	/*
++	 * If the source subdev is an analog video decoder with a single source
++	 * port, assume that this port 0 corresponds to the DEMOD_PAD_VID_OUT
++	 * entity pad.
++	 */
++	if (source->entity.function == MEDIA_ENT_F_ATV_DECODER &&
++	    local_sd->num_sink_pads == 0 && local_sd->num_src_pads == 1)
++		source_pad = DEMOD_PAD_VID_OUT;
++
+ 	v4l2_info(&imxmd->v4l2_dev, "%s: %s:%d -> %s:%d\n", __func__,
+ 		  source->name, source_pad, sink->name, sink_pad);
+ 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.11.0
