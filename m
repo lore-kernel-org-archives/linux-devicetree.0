@@ -1,163 +1,135 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: [PATCHv4 25/29] drm/omap: displays: panel-dpi: Support for handling backlight devices
-Date: Thu, 30 Mar 2017 14:15:25 +0300
-Message-ID: <1490872529-23084-26-git-send-email-tomi.valkeinen@ti.com>
-References: <1490872529-23084-1-git-send-email-tomi.valkeinen@ti.com>
+From: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>
+Subject: [PATCH 1/3] pinctrl: Add bindings for ARTPEC-6 pinmux
+Date: Thu, 30 Mar 2017 13:27:44 +0200
+Message-ID: <20170330112744.GE29118@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490872529-23084-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Add the bindings for the pinmux functions in the
+ARTPEC-6 SoC, including bias and drive strength.
 
-The associated backlight device can be configured via DT by providing the
-phandle to the device.
-
-If the backlight device is configured, the driver can manage the backligt
-along with the panel's power state, iow it can turn on the backlight when
-the panel is enabled and turn it off when the panel is disabled.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>
 ---
- .../bindings/display/panel/panel-dpi.txt           |  3 ++
- drivers/gpu/drm/omapdrm/displays/panel-dpi.c       | 37 ++++++++++++++++++++--
- 2 files changed, 38 insertions(+), 2 deletions(-)
+ .../bindings/pinctrl/axis,artpec6-pinctrl.txt      | 85 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-index d4add13e592d..6b203bc4d932 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-+++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-@@ -9,6 +9,7 @@ Optional properties:
- - enable-gpios: panel enable gpio
- - reset-gpios: GPIO to control the RESET pin
- - vcc-supply: phandle of regulator that will be used to enable power to the display
-+- backlight: phandle of the backlight device
- 
- Required nodes:
- - "panel-timing" containing video timings
-@@ -22,6 +23,8 @@ lcd0: display@0 {
-         compatible = "samsung,lte430wq-f0c", "panel-dpi";
-         label = "lcd";
- 
-+        backlight = <&backlight>;
+diff --git a/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
+new file mode 100644
+index 0000000..47284f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
+@@ -0,0 +1,85 @@
++Axis ARTPEC-6 Pin Controller
 +
-         port {
-             lcd_in: endpoint {
-                     remote-endpoint = <&dpi_out>;
-diff --git a/drivers/gpu/drm/omapdrm/displays/panel-dpi.c b/drivers/gpu/drm/omapdrm/displays/panel-dpi.c
-index 38003208d9ca..04ce8c5f2954 100644
---- a/drivers/gpu/drm/omapdrm/displays/panel-dpi.c
-+++ b/drivers/gpu/drm/omapdrm/displays/panel-dpi.c
-@@ -16,6 +16,7 @@
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/backlight.h>
- 
- #include <video/omap-panel-data.h>
- #include <video/of_display_timing.h>
-@@ -30,6 +31,8 @@ struct panel_drv_data {
- 
- 	struct videomode vm;
- 
-+	struct backlight_device *backlight;
++Required properties:
++- compatible: "axis,artpec6-pinctrl".
++- reg: Should contain the register physical address and length for the pin
++       controller.
 +
- 	/* used for non-DT boot, to be removed */
- 	int backlight_gpio;
- 
-@@ -97,6 +100,11 @@ static int panel_dpi_enable(struct omap_dss_device *dssdev)
- 	if (gpio_is_valid(ddata->backlight_gpio))
- 		gpio_set_value_cansleep(ddata->backlight_gpio, 1);
- 
-+	if (ddata->backlight) {
-+		ddata->backlight->props.power = FB_BLANK_UNBLANK;
-+		backlight_update_status(ddata->backlight);
-+	}
++A pinctrl node should contain at least one subnode representing the pinctrl
++groups available on the machine. Each subnode will list the mux function
++required and what pin group it will use. Each subnode will also configure the
++drive strength and bias pullup of the pin group. If either of these options is
++not set, its actual value will be unspecified.
 +
- 	dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
- 
- 	return 0;
-@@ -113,6 +121,11 @@ static void panel_dpi_disable(struct omap_dss_device *dssdev)
- 	if (gpio_is_valid(ddata->backlight_gpio))
- 		gpio_set_value_cansleep(ddata->backlight_gpio, 0);
- 
-+	if (ddata->backlight) {
-+		ddata->backlight->props.power = FB_BLANK_POWERDOWN;
-+		backlight_update_status(ddata->backlight);
-+	}
 +
- 	gpiod_set_value_cansleep(ddata->enable_gpio, 0);
- 	regulator_disable(ddata->vcc_supply);
- 
-@@ -209,6 +222,7 @@ static int panel_dpi_probe_of(struct platform_device *pdev)
- {
- 	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
- 	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *bl_node;
- 	struct omap_dss_device *in;
- 	int r;
- 	struct display_timing timing;
-@@ -236,10 +250,19 @@ static int panel_dpi_probe_of(struct platform_device *pdev)
- 
- 	ddata->backlight_gpio = -ENOENT;
- 
-+	bl_node = of_parse_phandle(node, "backlight", 0);
-+	if (bl_node) {
-+		ddata->backlight = of_find_backlight_by_node(bl_node);
-+		of_node_put(bl_node);
++Required subnode-properties:
++- function: Function to mux.
++- groups: Name of the pin group to use for the function above.
 +
-+		if (!ddata->backlight)
-+			return -EPROBE_DEFER;
-+	}
++	Available functions and groups (function: group0, group1...):
++		gpio: cpuclkoutgrp0, udlclkoutgrp0, i2c1grp0, i2c2grp0,
++		      i2c3grp0, i2s0grp0, i2s1grp0, i2srefclkgrp0, spi0grp0,
++		      spi1grp0, pciedebuggrp0, uart0grp0, uart0grp1, uart1grp0,
++		      uart2grp0, uart2grp1, uart3grp0, uart4grp0, uart5grp0
++		cpuclkout: cpuclkoutgrp0
++		udlclkout: udlclkoutgrp0
++		i2c1: i2c1grp0
++		i2c2: i2c2grp0
++		i2c3: i2c3grp0
++		i2s0: i2s0grp0
++		i2s1: i2s1grp0
++		i2srefclk: i2srefclkgrp0
++		spi0: spi0grp0
++		spi1: spi1grp0
++		pciedebug: pciedebuggrp0
++		uart0: uart0grp0, uart0grp1
++		uart1: uart1grp0
++		uart2: uart2grp0, uart2grp1
++		uart3: uart3grp0
++		uart4: uart4grp0
++		uart5: uart5grp0
++		nand: nandgrp0
++		sdio0: sdio0grp0
++		sdio1: sdio1grp0
++		ethernet: ethernetgrp0
 +
- 	r = of_get_display_timing(node, "panel-timing", &timing);
- 	if (r) {
- 		dev_err(&pdev->dev, "failed to get video timing\n");
--		return r;
-+		goto error_free_backlight;
- 	}
- 
- 	videomode_from_timing(&timing, &ddata->vm);
-@@ -247,12 +270,19 @@ static int panel_dpi_probe_of(struct platform_device *pdev)
- 	in = omapdss_of_find_source_for_first_ep(node);
- 	if (IS_ERR(in)) {
- 		dev_err(&pdev->dev, "failed to find video source\n");
--		return PTR_ERR(in);
-+		r = PTR_ERR(in);
-+		goto error_free_backlight;
- 	}
- 
- 	ddata->in = in;
- 
- 	return 0;
 +
-+error_free_backlight:
-+	if (ddata->backlight)
-+		put_device(&ddata->backlight->dev);
++Optional subnode-properties (see pinctrl-bindings.txt):
++- drive-strength: 4, 6, 8, 9 mA.  For SD and NAND pins, this is for 3.3V VCCQ3.
++- bias-pull-up
++- bias-disable
 +
-+	return r;
- }
- 
- static int panel_dpi_probe(struct platform_device *pdev)
-@@ -321,6 +351,9 @@ static int __exit panel_dpi_remove(struct platform_device *pdev)
- 
- 	omap_dss_put_device(in);
- 
-+	if (ddata->backlight)
-+		put_device(&ddata->backlight->dev);
++Examples:
++pinctrl@f801d000 {
++	compatible = "axis,artpec6-pinctrl";
++	reg = <0xf801d000 0x400>;
 +
- 	return 0;
- }
++	pinctrl_uart0: uart0grp {
++		function = "uart0";
++		groups = "uart0grp0";
++		drive-strength = <4>;
++		bias-pull-up;
++	};
++	pinctrl_uart3: uart3grp {
++		function = "uart3";
++		groups = "uart3grp0";
++	};
++};
++uart0: uart@f8036000 {
++	compatible = "arm,pl011", "arm,primecell";
++	reg = <0xf8036000 0x1000>;
++	interrupts = <0 104 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&pll2div24>, <&apb_pclk>;
++	clock-names = "uart_clk", "apb_pclk";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart0>;
++};
++uart3: uart@f8039000 {
++	compatible = "arm,pl011", "arm,primecell";
++	reg = <0xf8039000 0x1000>;
++	interrupts = <0 128 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&pll2div24>, <&apb_pclk>;
++	clock-names = "uart_clk", "apb_pclk";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1b0a87f..7563bd6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1088,6 +1088,7 @@ L:	linux-arm-kernel-VrBV9hrLPhE@public.gmane.org
+ F:	arch/arm/mach-artpec
+ F:	arch/arm/boot/dts/artpec6*
+ F:	drivers/clk/axis
++F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
  
+ ARM/ASPEED MACHINE SUPPORT
+ M:	Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 -- 
-2.7.4
+2.1.4
 
+
+/^JN - Jesper Nilsson
+-- 
+               Jesper Nilsson -- jesper.nilsson-VrBV9hrLPhE@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
