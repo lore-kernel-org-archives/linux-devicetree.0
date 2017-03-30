@@ -1,107 +1,80 @@
-From: Sam Povilus <kernel.development@povil.us>
-Subject: [PATCH v6] hwmon: ads7828 optional parameters from the device tree
-Date: Wed, 29 Mar 2017 21:46:37 -0600
-Message-ID: <20170330034637.29708-1-kernel.development@povil.us>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: wsa@the-dreams.de, jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Sam Povilus <kernel.development@povil.us>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
+Date: Thu, 30 Mar 2017 10:19:40 +0530
+Message-ID: <20170330044940.GU9308@localhost>
+References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
+ <20170321083052.GY2843@localhost>
+ <CAALAos-k_DBYAz49278wBr_GoceOKYVH_UuzTLn1h7QCiUd8pg@mail.gmail.com>
+ <20170321091829.GZ2843@localhost>
+ <CAALAos-P6CDdWTJxg8YQfT1V+iCxUcbYHiQ35EdZzz9PnN3cuA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAALAos-P6CDdWTJxg8YQfT1V+iCxUcbYHiQ35EdZzz9PnN3cuA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding the ability for the ads7828 and ads7830 to use the device tree to
-get their optional parameters, instead of using platform devices. This
-allows people using custom boards to also use the ads7828 in a non-default
-manner.
+On Wed, Mar 29, 2017 at 11:35:43AM +0530, Anup Patel wrote:
+> On Tue, Mar 21, 2017 at 2:48 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> > On Tue, Mar 21, 2017 at 02:17:21PM +0530, Anup Patel wrote:
+> >> On Tue, Mar 21, 2017 at 2:00 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> >> > On Mon, Mar 06, 2017 at 03:13:24PM +0530, Anup Patel wrote:
+> >> >> The Broadcom SBA RAID is a stream-based device which provides
+> >> >> RAID5/6 offload.
+> >> >>
+> >> >> It requires a SoC specific ring manager (such as Broadcom FlexRM
+> >> >> ring manager) to provide ring-based programming interface. Due to
+> >> >> this, the Broadcom SBA RAID driver (mailbox client) implements
+> >> >> DMA device having one DMA channel using a set of mailbox channels
+> >> >> provided by Broadcom SoC specific ring manager driver (mailbox
+> >> >> controller).
+> >> >>
+> >> >> The Broadcom SBA RAID hardware requires PQ disk position instead
+> >> >> of PQ disk coefficient. To address this, we have added raid_gflog
+> >> >> table which will help driver to convert PQ disk coefficient to PQ
+> >> >> disk position.
+> >> >>
+> >> >> This patchset is based on Linux-4.11-rc1 and depends on patchset
+> >> >> "[PATCH v5 0/2] Broadcom FlexRM ring manager support"
+> >> >
+> >> > Okay I applied and was about to push when I noticed this :(
+> >> >
+> >> > So what is the status of this..?
+> >>
+> >> PATCH2 is Acked but PATCH1 is under-review. Currently, its
+> >> v6 of that patchset.
+> >>
+> >> The only dependency on that patchset is the changes in
+> >> brcm-message.h which are required by this BCM-SBA-RAID
+> >> driver.
+> >>
+> >> @Jassi,
+> >> Can you please have a look at PATCH v6?
+> >
+> > And I would need an immutable branch/tag once merged. I am going to keep
+> > this series pending till then.
+> 
+> The Broadcom FlexRM patchset is pickedup by Jassi and
+> can be found in mailbox-for-next branch of
+> git://git.linaro.org/landing-teams/working/fujitsu/integration
+> 
+> Both patchset (Broadcom FlexRM patchset and this one) are
+> also available in sba-raid-v7 branch of
+> https://github.com/Broadcom/arm64-linux.git
 
-v2: conforming to coding style
-v3: changing from "_" to "-" for device tree entries
-v4: using regulator subsystem for voltage source, renaming differential
-    input property
-v5: checking for invalid vref values sooner and returning error if they are
-    bad, not warning user.
-v6: optimization per Guenter Roeck
+Jassi,
 
-Signed-off-by: Sam Povilus <kernel.development@povil.us>
----
- .../devicetree/bindings/hwmon/ads7828.txt          | 26 ++++++++++++++++++++++
- drivers/hwmon/ads7828.c                            | 15 +++++++++++++
- 2 files changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
+Can you provide an immutable branch/tag please for this, latter is
+preferred.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-new file mode 100644
-index 000000000000..a1251b19079d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-@@ -0,0 +1,26 @@
-+ads7828 properties
-+
-+Required properties:
-+- compatible: Should be one of
-+	       ti,ads7828
-+	       ti,ads7830
-+- reg: I2C address
-+
-+Optional properties:
-+
-+- ti,differential-input
-+  Set to use the device in differential mode.
-+- vref
-+  The external reference on the device is set to this regulators output. If it
-+  does not exists the internal reference will be used and output by the ads78xx
-+  on the "external vref" pin.
-+
-+  Example ADS7828 node:
-+
-+  ads7828: ads@48 {
-+  	   comatible = "ti,ads7828";
-+	   reg = <0x48>;
-+	   vref-supply = <&vref>;
-+	   ti,differential-input;
-+  };
-+
-diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
-index ee396ff167d9..88330a233b1d 100644
---- a/drivers/hwmon/ads7828.c
-+++ b/drivers/hwmon/ads7828.c
-@@ -34,6 +34,7 @@
- #include <linux/platform_data/ads7828.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-+#include <linux/regulator/consumer.h>
- 
- /* The ADS7828 registers */
- #define ADS7828_CMD_SD_SE	0x80	/* Single ended inputs */
-@@ -118,9 +119,11 @@ static int ads7828_probe(struct i2c_client *client,
- 	struct ads7828_data *data;
- 	struct device *hwmon_dev;
- 	unsigned int vref_mv = ADS7828_INT_VREF_MV;
-+	unsigned int vref_uv;
- 	bool diff_input = false;
- 	bool ext_vref = false;
- 	unsigned int regval;
-+	struct regulator *reg;
- 
- 	data = devm_kzalloc(dev, sizeof(struct ads7828_data), GFP_KERNEL);
- 	if (!data)
-@@ -131,6 +134,18 @@ static int ads7828_probe(struct i2c_client *client,
- 		ext_vref = pdata->ext_vref;
- 		if (ext_vref && pdata->vref_mv)
- 			vref_mv = pdata->vref_mv;
-+	} else if (dev->of_node) {
-+		diff_input = of_property_read_bool(dev->of_node,
-+						   "ti,differential-input");
-+		reg = devm_regulator_get_optional(dev, "vref");
-+		if (!IS_ERR(reg)) {
-+			vref_uv = regulator_get_voltage(reg);
-+			vref_mv = DIV_ROUND_CLOSEST(vref_uv, 1000);
-+			if (vref_mv < ADS7828_EXT_VREF_MV_MIN ||
-+			    vref_mv > ADS7828_EXT_VREF_MV_MAX)
-+				return -EINVAL;
-+			ext_vref = true;
-+		}
- 	}
- 
- 	/* Bound Vref with min/max values */
+Btw didn't find your tree in MAINTAINERS..
+
+> 
+> Regards,
+> Anup
+
 -- 
-2.11.0
+~Vinod
