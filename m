@@ -1,102 +1,26 @@
-From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Subject: Re: [PATCH/RFC v2 0/2] arm64: dts: r8a7795: Add support for R-Car
- H3 ES2.0
-Date: Thu, 30 Mar 2017 13:50:25 +0200
-Message-ID: <1490874625.3471.6.camel@collabora.co.uk>
-References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
-         <1490870898.3471.3.camel@collabora.co.uk>
-         <CAMuHMdV+=pNpFO7H3J0=JM1BnXtm4t=Q+1bx=R+f9=JxvJZT_Q@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] pinctrl: Add bindings for ARTPEC-6 pinmux
+Date: Thu, 30 Mar 2017 13:53:14 +0200
+Message-ID: <CACRpkdaVFV1tNs9ZtEibfLBtxM-JuykKGN-Kj-7_CwCsRiOTNA@mail.gmail.com>
+References: <20170330112744.GE29118@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV+=pNpFO7H3J0=JM1BnXtm4t=Q+1bx=R+f9=JxvJZT_Q@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Stone <daniels@collabora.com>, Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170330112744.GE29118@axis.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jesper Nilsson <jesper.nilsson@axis.com>
+Cc: Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@axis.com, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-03-30 at 13:13 +0200, Geert Uytterhoeven wrote:
-> Hi Sjoerd,
-> 
-> On Thu, Mar 30, 2017 at 12:48 PM, Sjoerd Simons
-> <sjoerd.simons@collabora.co.uk> wrote:
-> > On Fri, 2017-03-24 at 14:37 +0100, Geert Uytterhoeven wrote:
-> > > This patch series adds preliminary support for Renesas Salvator-X
-> > > development boards equipped with revision ES2.0 of the R-Car H3
-> > > Soc.
-> > > 
-> > >   - Patch 1 adds support for the R-Car H3 ES2.0 Soc,
-> > >     While this patch is safe as-is, as it doesn't affect any
-> > > existing
-> > >     setups, it's probably a bit premature to apply it.
-> > >   - Patch 2 adds support for Salvator-X boards with R-Car H3
-> > > ES2.0.
-> > >     This patch does affect existing development setups, as it
-> > > changes
-> > > the
-> > >     name of the DTB for Salvator-X boards equipped with ES1.x
-> > > SoCs.
-> > >     Given most developers have access to ES1.x only, this patch
-> > > must
-> > > not be
-> > >     applied yet.
-> > 
-> > Would it make more sense to add a new r8a7795-es2.dtsi and keep the
-> > current dtsi for es1? Having to load different device-trees based
-> > on
-> > which kernel is used would be rather nasty.
-> 
-> We definitely considered that option.
-> However, we concluded that in the end, we want to mainly support
-> production
-> SoCs.  Hence the default files should represent the production
-> version.
-> Using a preproduction SoC can be considered a special case, and thus
-> needs
-> a file with a special esX ID in its name.
+On Thu, Mar 30, 2017 at 1:27 PM, Jesper Nilsson <jesper.nilsson@axis.com> wrote:
 
-The problem is that even though they are pre-production, these are out
-there and in active use, e.g. kernelci is at least doing automated
-testing on one of those in Kevins lab and should be an additional
-soonish in the Collabora lab. 
+> Add the bindings for the pinmux functions in the
+> ARTPEC-6 SoC, including bias and drive strength.
+>
+> Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
 
-And for developers it'll be extra fun if halfway through a bisect the
-dts name changes..
+Pretty much ideal bindings. Just giving some slack for the DT
+maintainers to look at it first.
 
-Having a es2 in your dtb name might be a bit quirky, but it's really
-just a name without other meaning :). 
-
-> We do realize this can cause some inconveniences during the
-> transition period,
-> when most developers don't have access to ES2.0 SoCs yet, or have
-> mixed
-> environments of ES1.x and ES2.0.
-
-Heh yeah, i'd expect we'd have a mixed environment for quite a while
-given these boards are a bit too expensive to just throw in the trash..
-
-> Of course you can keep on using the current DTB (binary) on your H3
-> ES1.x
-> boards, as long as you don't need to use devices not yet described in
-> that DTB.
-> 
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu
-> x-m68k.org
-> 
-> In personal conversations with technical people, I call myself a
-> hacker. But
-> when I'm talking to journalists I just say "programmer" or something
-> like that.
->                                 -- Linus Torvalds
-
--- 
-Sjoerd Simons
-Collabora Ltd.
+Yours,
+Linus Walleij
