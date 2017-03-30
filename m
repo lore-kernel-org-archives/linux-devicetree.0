@@ -1,47 +1,62 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v12 00/10] mux controller abstraction and iio/i2c muxes
-Date: Thu, 30 Mar 2017 10:09:26 +0200
-Message-ID: <20170330080926.GA21926@kroah.com>
-References: <1490624525-15865-1-git-send-email-peda@axentia.se>
- <c321dad0-4c0e-b192-ee93-45359e29f61b@axentia.se>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
+Date: Thu, 30 Mar 2017 10:15:05 +0200
+Message-ID: <CACRpkda_Gw9vhLqpWw8oOZyZ59nj5j9Q-T5RXVsf0vsxWcjyHg@mail.gmail.com>
+References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
+ <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com> <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c321dad0-4c0e-b192-ee93-45359e29f61b@axentia.se>
+In-Reply-To: <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 09:34:52AM +0200, Peter Rosin wrote:
-> On 2017-03-27 16:21, Peter Rosin wrote:
-> > Hi Greg!
-> > 
-> > Please apply.
-> >
-> 
-> *snip snip*
-> 
-> > v10 -> v11 changes
-> > - added a new patch (12) with a fix for messed up error path reported
-> >   by Paul Gortmaker.
-> 
-> Oops, should be Dan Carpenter. Sorry about that...
-> 
-> And, I forgot to high-light this:
-> 
-> > v4 -> v5 changes
-> > - driver for Analog Devices ADG792A/G, literally the first mux chip
-> >   I found on the Internet with an i2c interface (that was not a
-> >   dedicated i2c multiplexer like PCA9547) which I used to verify
-> >   that the abstractions in the mux core are up to the task. Untested,
-> >   just proof of concept that at least looks pretty and compiles...
-> 
-> Maybe the patches related to adg792 (last two patches in v12) should
-> not be applied? I don't care much either way, your call Greg...
+On Wed, Mar 29, 2017 at 4:55 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Wednesday, March 29, 2017, Linus Walleij wrote:
+>> On Fri, Mar 24, 2017 at 4:22 PM, Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> wrote:
+>>
+>> > Add dt-bindings for Renesas r7s72100 pin controller header file.
+>> >
+>> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>
+>> > +/*
+>> > + * Pin is bi-directional.
+>> > + * An alternate function that needs both input/output functionalities
+>> > +shall
+>> > + * be configured as bidirectional.
+>> > + * Eg. SDA/SCL pins of an I2c interface.
+>> > + */
+>> > +#define BI_DIR                 (1 << 3)
+>>
+>> Any specific reason why this should not simply be added to
+>> include/linux/pinctrl/pinconf-generic.h
+>> as PIN_CONFIG_BIDIRECTIONAL and parsed in drivers/pinctrl/pinconf-
+>> generic.c from the (new) DT property "bidirectional" simply?
+>
+> I see your point. It would cut down from every driver out there
+> inventing some new property or config instead of everyone just sharing
+> a fixed set.
+> Maybe someone else out there will end up having a need for a
+> "bidirectional" option.
 
-Give me a chance to catch up on reviews, your patch series is behind
-400+ other emails...
+I was thinking about that one. It is a bit weird electrically, like what
+kind of electronics is really bidirectional?
 
-greg k-h
+It seems like a fancy name for open drain/open source, what we
+call "single ended" configuration. (See docs in
+Documentation/gpio/driver.txt)
+
+It would be great if you could check if that is what they mean,
+actually.
+
+> But, what do we do for Ethernet? All the pins are "normal" except just
+> the MDIO pin needs to be bidirectional.
+
+I see Geert clarified what we could do here.
+
+Yours,
+Linus Walleij
