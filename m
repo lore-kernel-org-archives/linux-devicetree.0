@@ -1,18 +1,12 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/2] soc/imx: add workaround for i.MX6QP to the GPC PD
- driver
-Date: Thu, 30 Mar 2017 10:22:17 +0200
-Message-ID: <1490862137.29083.30.camel@pengutronix.de>
-References: <20170323144418.30977-1-l.stach@pengutronix.de>
- <20170323144418.30977-3-l.stach@pengutronix.de>
- <DB5PR04MB1431A7CC91F55ECFE5BE31FB80350@DB5PR04MB1431.eurprd04.prod.outlook.com>
- <1490804026.29083.29.camel@pengutronix.de>
- <20170330090833.09ac3c33@ipc1.ka-ro>
+From: Guochun Mao <guochun.mao@mediatek.com>
+Subject: [PATCH V1] mtd: mtk-nor: set controller to 4B mode with large
+ capacity flash
+Date: Thu, 30 Mar 2017 16:23:41 +0800
+Message-ID: <1490862222-723-1-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170330090833.09ac3c33@ipc1.ka-ro>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,68 +16,15 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: "A.S. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgZGVuIDMwLjAzLjIwMTcsIDA5OjA4ICswMjAwIHNjaHJpZWIgTG90aGFy
-IFdhw59tYW5uOgo+IEhpLAo+IAo+IE9uIFdlZCwgMjkgTWFyIDIwMTcgMTg6MTM6NDYgKzAyMDAg
-THVjYXMgU3RhY2ggd3JvdGU6Cj4gPiBBbSBNaXR0d29jaCwgZGVuIDI5LjAzLjIwMTcsIDE2OjA4
-ICswMDAwIHNjaHJpZWIgQS5TLiBEb25nOgo+ID4gPiBIaSBMdWNhcywKPiA+ID4gCj4gPiA+ID4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+ID4gPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFp
-bHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdCj4gPiA+ID4gU2VudDogVGh1cnNkYXksIE1hcmNo
-IDIzLCAyMDE3IDEwOjQ0IFBNCj4gPiA+ID4gVG86IFNoYXduIEd1bwo+ID4gPiA+IENjOiBGYWJp
-byBFc3RldmFtOyBBLlMuIERvbmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
-cm0tCj4gPiA+ID4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGtlcm5lbEBwZW5ndXRyb25p
-eC5kZTsgcGF0Y2h3b3JrLQo+ID4gPiA+IGxzdEBwZW5ndXRyb25peC5kZQo+ID4gPiA+IFN1Ympl
-Y3Q6IFtQQVRDSCAyLzJdIHNvYy9pbXg6IGFkZCB3b3JrYXJvdW5kIGZvciBpLk1YNlFQIHRvIHRo
-ZSBHUEMgUEQKPiA+ID4gPiBkcml2ZXIKPiA+ID4gPiAKPiA+ID4gPiBPbiBpLk1YNlFQLCBkdWUg
-dG8gaGFyZHdhcmUgZXJyYXR1bSBFUlIwMDk2MTksIHRoZSBQUkUgY2xvY2tzIG1heSBiZQo+ID4g
-PiA+IHN0YWxsZWQgZHVyaW5nIHRoZSBwb3dlciB1cCBzZXF1ZW5jaW5nIG9mIHRoZSBQVSBwb3dl
-ciBkb21haW4uIEFzIHRoaXMgbWF5Cj4gPiA+ID4gbGVhZCB0byBhIGNvbXBsZXRlIGxvc3Mgb2Yg
-ZGlzcGxheSBvdXRwdXQsIHRoZSByZWNvbW1lbmRlZCB3b3JrYXJvdW5kIGlzCj4gPiA+ID4gdG8g
-a2VlcCB0aGUgUFUgZG9tYWluIGVuYWJsZWQgZHVyaW5nIG5vcm1hbCBzeXN0ZW0gb3BlcmF0aW9u
-Lgo+ID4gPiA+IAo+ID4gPiA+IEltcGxlbWVudCB0aGlzIGJ5IHJlamVjdGluZyB0aGUgZG9tYWlu
-IHBvd2VyIGRvd24gcmVxdWVzdCBvbiB0aGUgYWZmZWN0ZWQKPiA+ID4gPiBTb0MuCj4gPiA+ID4g
-Cj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXgu
-ZGU+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGRyaXZlcnMvc29jL2lteC9ncGMuYyB8IDE5ICsrKysr
-KysrKysrKysrKysrKysKPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykK
-PiA+ID4gPiAKPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvaW14L2dwYy5jIGIvZHJp
-dmVycy9zb2MvaW14L2dwYy5jIGluZGV4Cj4gPiA+ID4gNDI5NDI4N2U1ZjZjLi41OTllMWU0NmY2
-OTQgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvZHJpdmVycy9zb2MvaW14L2dwYy5jCj4gPiA+ID4gKysr
-IGIvZHJpdmVycy9zb2MvaW14L2dwYy5jCj4gPiA+ID4gQEAgLTQ1LDYgKzQ1LDcgQEAgc3RydWN0
-IGlteF9wbV9kb21haW4gewo+ID4gPiA+ICAJdW5zaWduZWQgaW50IHJlZ19vZmZzOwo+ID4gPiA+
-ICAJc2lnbmVkIGNoYXIgY250cl9wZG5fYml0Owo+ID4gPiA+ICAJdW5zaWduZWQgaW50IGlwZ19y
-YXRlX21oejsKPiA+ID4gPiArCWJvb2wgYWxsb3dfZHluYW1pY19wZDsKPiA+ID4gPiAgfTsKPiA+
-ID4gPiAKPiA+ID4gPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgaW14X3BtX2RvbWFpbiAqCj4gPiA+
-ID4gQEAgLTU5LDYgKzYwLDkgQEAgc3RhdGljIGludCBpbXg2X3BtX2RvbWFpbl9wb3dlcl9vZmYo
-c3RydWN0Cj4gPiA+ID4gZ2VuZXJpY19wbV9kb21haW4gKmdlbnBkKQo+ID4gPiA+ICAJaW50IGlz
-bywgaXNvMnN3Owo+ID4gPiA+ICAJdTMyIHZhbDsKPiA+ID4gPiAKPiA+ID4gPiArCWlmICghcGQt
-PmFsbG93X2R5bmFtaWNfcGQpCj4gPiA+ID4gKwkJcmV0dXJuIC1FQlVTWTsKPiA+ID4gPiArCj4g
-PiA+ID4gIAkvKiBSZWFkIElTTyBhbmQgSVNPMlNXIHBvd2VyIGRvd24gZGVsYXlzICovCj4gPiA+
-ID4gIAlyZWdtYXBfcmVhZChwZC0+cmVnbWFwLCBwZC0+cmVnX29mZnMgKyBHUENfUEdDX1BVUFND
-Ul9PRkZTLCAmdmFsKTsKPiA+ID4gPiAgCWlzbyA9IHZhbCAmIDB4M2Y7Cj4gPiA+ID4gQEAgLTI1
-NSw2ICsyNTksNyBAQCBzdGF0aWMgc3RydWN0IGlteF9wbV9kb21haW4gaW14X2dwY19kb21haW5z
-W10gPSB7Cj4gPiA+ID4gIAkJfSwKPiA+ID4gPiAgCQkucmVnX29mZnMgPSAweDI2MCwKPiA+ID4g
-PiAgCQkuY250cl9wZG5fYml0ID0gMCwKPiA+ID4gPiArCQkuYWxsb3dfZHluYW1pY19wZCA9IHRy
-dWUsCj4gPiA+ID4gIAl9LCB7Cj4gPiA+ID4gIAkJLmJhc2UgPSB7Cj4gPiA+ID4gIAkJCS5uYW1l
-ID0gIkRJU1BMQVkiLAo+ID4gPiA+IEBAIC0yNjMsMjMgKzI2OCwzMyBAQCBzdGF0aWMgc3RydWN0
-IGlteF9wbV9kb21haW4gaW14X2dwY19kb21haW5zW10gPSB7Cj4gPiA+ID4gIAkJfSwKPiA+ID4g
-PiAgCQkucmVnX29mZnMgPSAweDI0MCwKPiA+ID4gPiAgCQkuY250cl9wZG5fYml0ID0gNCwKPiA+
-ID4gPiArCQkuYWxsb3dfZHluYW1pY19wZCA9IHRydWUsCj4gPiA+IAo+ID4gPiBKdXN0IGEgTml0
-cGljaywgYmVzaWRlcyBzaGF3bidzIGNvbW1lbnQgaW4gYW5vdGhlciBtYWlsLAo+ID4gPiBpZiB3
-ZSB1c2UgYSBkb21haW4gZmxhZyBsaWtlIElNWF9QRF9BTFdBWVNfT04gc2V0IGJ5IFNvQyBlcnJh
-dGEgZmxhZywKPiA+ID4gdGhlbiBwcm9iYWJseSB3ZSBjYW4gc2F2ZSBhbGwgdGhlIGRlZmF1bHQg
-YWxsb3dfZHluYW1pY19wZCBsaW5lcy4KPiA+ID4gVGhpcyBhbHNvIHJlbGVhc2UgdGhlIGxpZmUg
-d2hlbiBhZGRpbmcgbmV3IGRvbWFpbnMuCj4gPiAKPiA+IElmIG90aGVyIHRoaW5ncyBsaWtlIHRo
-YXQgc2hvdyB1cCB3ZSBjYW4gY2VydGFpbmx5IHN3aXRjaCB0byBhIGZsYWdzCj4gPiBmaWVsZC4g
-SW4gdGhlIG1lYW50aW1lIEkgbGlrZSB0aGF0IHRoZSBjdXJyZW50IHN0eWxlIGlzIG1vcmUgZXhw
-bGljaXQKPiA+IGFib3V0IGl0Lgo+ID4gCj4gU2luY2UgdGhlIHB1cnBvc2Ugb2YgdGhlIGRyaXZl
-ciBpcyBhbGwgYWJvdXQgZHluYW1pYyBwb3dlciBtYW5hZ2VtZW50LAo+IEkgd291bGQgcmF0aGVy
-IGFkZCBhICdkaXNhYmxlX2R5bmFtaWNfcGQnIGZvciB0aGUgY2FzZShzKSB3aGVyZSBpdCdzCj4g
-bm90IGFsbG93ZWQsIHJhdGhlciB0aGFuIGhhdmluZyB0byBzdGF0ZSB0aGUgb2J2aW91cyBvdmVy
-IGFuZCBvdmVyCj4gYWdhaW4uCgpDb252aW5jaW5nIGFyZ3VtZW50LiBJJ2xsIGNoYW5nZSB0aGF0
-IGluIHYyLgoKUmVnYXJkcywKTHVjYXMKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Guochun Mao (1):
+  mtd: mtk-nor: set controller to 4B mode with large capacity flash
+
+ drivers/mtd/spi-nor/mtk-quadspi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+-- 
+1.9.1 
