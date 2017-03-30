@@ -1,80 +1,51 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
-Date: Thu, 30 Mar 2017 10:19:40 +0530
-Message-ID: <20170330044940.GU9308@localhost>
-References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
- <20170321083052.GY2843@localhost>
- <CAALAos-k_DBYAz49278wBr_GoceOKYVH_UuzTLn1h7QCiUd8pg@mail.gmail.com>
- <20170321091829.GZ2843@localhost>
- <CAALAos-P6CDdWTJxg8YQfT1V+iCxUcbYHiQ35EdZzz9PnN3cuA@mail.gmail.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH V11 6/6] thermal: bcm2835: add thermal driver for bcm2835
+ SoC
+Date: Wed, 29 Mar 2017 21:57:27 -0700
+Message-ID: <20170330045725.GA12995@localhost.localdomain>
+References: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com>
+ <1489356665-3175-7-git-send-email-stefan.wahren@i2se.com>
+ <20170329045807.GC2582@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAALAos-P6CDdWTJxg8YQfT1V+iCxUcbYHiQ35EdZzz9PnN3cuA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+In-Reply-To: <20170329045807.GC2582@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, kernel@martin.sperl.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 11:35:43AM +0530, Anup Patel wrote:
-> On Tue, Mar 21, 2017 at 2:48 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> > On Tue, Mar 21, 2017 at 02:17:21PM +0530, Anup Patel wrote:
-> >> On Tue, Mar 21, 2017 at 2:00 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> >> > On Mon, Mar 06, 2017 at 03:13:24PM +0530, Anup Patel wrote:
-> >> >> The Broadcom SBA RAID is a stream-based device which provides
-> >> >> RAID5/6 offload.
-> >> >>
-> >> >> It requires a SoC specific ring manager (such as Broadcom FlexRM
-> >> >> ring manager) to provide ring-based programming interface. Due to
-> >> >> this, the Broadcom SBA RAID driver (mailbox client) implements
-> >> >> DMA device having one DMA channel using a set of mailbox channels
-> >> >> provided by Broadcom SoC specific ring manager driver (mailbox
-> >> >> controller).
-> >> >>
-> >> >> The Broadcom SBA RAID hardware requires PQ disk position instead
-> >> >> of PQ disk coefficient. To address this, we have added raid_gflog
-> >> >> table which will help driver to convert PQ disk coefficient to PQ
-> >> >> disk position.
-> >> >>
-> >> >> This patchset is based on Linux-4.11-rc1 and depends on patchset
-> >> >> "[PATCH v5 0/2] Broadcom FlexRM ring manager support"
-> >> >
-> >> > Okay I applied and was about to push when I noticed this :(
-> >> >
-> >> > So what is the status of this..?
-> >>
-> >> PATCH2 is Acked but PATCH1 is under-review. Currently, its
-> >> v6 of that patchset.
-> >>
-> >> The only dependency on that patchset is the changes in
-> >> brcm-message.h which are required by this BCM-SBA-RAID
-> >> driver.
-> >>
-> >> @Jassi,
-> >> Can you please have a look at PATCH v6?
-> >
-> > And I would need an immutable branch/tag once merged. I am going to keep
-> > this series pending till then.
+On Tue, Mar 28, 2017 at 09:58:09PM -0700, Eduardo Valentin wrote:
+> On Sun, Mar 12, 2017 at 10:11:05PM +0000, Stefan Wahren wrote:
+> > Add basic thermal driver for bcm2835 SoC.
+> > 
+> > This driver currently make sure that tsense HW block is set up
+> > correctly.
+> > 
+> > Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > Acked-by: Eric Anholt <eric@anholt.net>
 > 
-> The Broadcom FlexRM patchset is pickedup by Jassi and
-> can be found in mailbox-for-next branch of
-> git://git.linaro.org/landing-teams/working/fujitsu/integration
+> I see no issue with this driver at this point.
 > 
-> Both patchset (Broadcom FlexRM patchset and this one) are
-> also available in sba-raid-v7 branch of
-> https://github.com/Broadcom/arm64-linux.git
-
-Jassi,
-
-Can you provide an immutable branch/tag please for this, latter is
-preferred.
-
-Btw didn't find your tree in MAINTAINERS..
-
+> As I mentioned, the full series needs to go together. You either get an
+> Ack from OF maintainers, and I take the series, or you can add my
 > 
-> Regards,
-> Anup
+> Acked-by: Eduardo Valentin <edubezval@gmail.com>
+> 
+> after fixing the small comment from Nobuhiro.
+> 
 
--- 
-~Vinod
+Based on other drivers that require negative values, I assume patches 1
+and 2 of these series are needed, but more for enforcing the API, given
+that the current of-thermal driver still retrieves the negative values
+from DTB [1].
+
+A third option on top of what I suggested above is to split the series.
+Given that you could still get the proper coefficients
+with current of-thermal, I would suggest you to split this series into
+two (patches 1-2, 3-6) in your next version, so we avoid futher delays
+on the driver, while patches 1-2 waits for acks from OF side.
+
+[1] - https://patchwork.kernel.org/patch/9612613/
