@@ -1,35 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] dt-bindings: List devicetree binding
- for the CCU of Allwinner A10
-Date: Thu, 30 Mar 2017 18:19:16 -0500
-Message-ID: <20170330231916.lwzpql4hx74devgr@rob-hp-laptop>
-References: <cover.a58841efb571d44013658505f3fa140536a89d1c.1490545262.git-series.plaes@plaes.org>
- <28a3c670575f368a2bd9a67b451f0f45c474dc7b.1490545262.git-series.plaes@plaes.org>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv3] power: supply: cpcap-charger: Add minimal CPCAP PMIC
+ battery charger
+Date: Thu, 30 Mar 2017 18:24:02 -0500
+Message-ID: <20170330232402.o4jslzlw3kgfnjqz@rob-hp-laptop>
+References: <20170327032513.22890-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERB5VE63DAKGQE6WGXOZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <28a3c670575f368a2bd9a67b451f0f45c474dc7b.1490545262.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170327032513.22890-1-tony@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 26, 2017 at 08:20:20PM +0300, Priit Laes wrote:
-> Allwinner A10 is now driven by sunxi-ng CCU driver.
+On Sun, Mar 26, 2017 at 08:25:13PM -0700, Tony Lindgren wrote:
+> The custom CPCAP PMIC used on Motorola phones such as Droid 4 has a
+> USB battery charger. It can optionally also have a companion chip that
+> is used for wireless charging.
 > 
-> Add devicetree binding for it.
+> The charger on CPCAP also can feed VBUS for the USB host mode. This
+> can be handled by the existing kernel phy_companion interface.
 > 
-> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Marcel Partap <mpartap@gmx.net>
+> Cc: Michael Scott <michael.scott@linaro.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
->  Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 1 +
->  1 file changed, 1 insertion(+)
+> 
+> Changes since v2:
+> 
+> - Update binding based on comments by Sebastian Reichel <sre@kernel.org>
+> 
+> - Drop "motorola,cpcap-charger" compatible for now as this seems specific
+>   to the motorola-mapphone
+> 
+> - Update Kconfig for "depends on IIO" and "default MFD_CPCAP"
+> 
+> Changes since v1:
+> 
+> - Fix scaling of IIO values as pointed out by Sebastian Reichel
+>   <sre@kernel.org>
+> 
+> - Use iio_read_channel_processed() instead of iio_read_channel_scaled()
+>   as changed in the v2 of the ADC driver
+> 
+> - Add GPL v2 license header
+> 
+> ---
+>  .../bindings/power/supply/cpcap-charger.txt        |  38 ++
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/power/supply/Kconfig                       |   8 +
+>  drivers/power/supply/Makefile                      |   1 +
+>  drivers/power/supply/cpcap-charger.c               | 681 +++++++++++++++++++++
+>  4 files changed, 728 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/cpcap-charger.txt
+>  create mode 100644 drivers/power/supply/cpcap-charger.c
