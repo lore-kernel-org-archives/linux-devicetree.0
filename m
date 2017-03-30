@@ -1,65 +1,99 @@
 From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH v3 6/6] bus: brcmstb_gisb: update to support new revision
-Date: Wed, 29 Mar 2017 17:29:14 -0700
-Message-ID: <20170330002914.7371-7-opendmb@gmail.com>
+Subject: [PATCH v3 3/6] bus: brcmstb_gisb: add notifier handling
+Date: Wed, 29 Mar 2017 17:29:11 -0700
+Message-ID: <20170330002914.7371-4-opendmb@gmail.com>
 References: <20170330002914.7371-1-opendmb@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170330002914.7371-1-opendmb@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: mark.rutland@arm.com
-Cc: robh+dt@kernel.org, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, Doug Berger <opendmb@gmail.com>
+Cc: treding@nvidia.com, f.fainelli@gmail.com, mirza.krak@gmail.com, catalin.marinas@arm.com, linus.walleij@linaro.org, suzuki.poulose@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, jonathanh@nvidia.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, gregory.0xf0@gmail.com, olof@lixom.net, Doug Berger <opendmb@gmail.com>, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The 7278 introduces a new version of this core.  This
-commit adds support for that revision.
+Check for GISB arbitration errors through a chained notifier
+when a process dies or a kernel panic occurs.  This allows a
+meaningful GISB diagnostic message to occur along with other
+diagnostic information from the event.
 
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt |  3 ++-
- drivers/bus/brcmstb_gisb.c                              | 10 ++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ drivers/bus/brcmstb_gisb.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-index 1eceefb20f01..8a6c3c2e58fe 100644
---- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-+++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
-@@ -3,7 +3,8 @@ Broadcom GISB bus Arbiter controller
- Required properties:
- 
- - compatible:
--    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for 28nm chips
-+    "brcm,bcm7278-gisb-arb" for V7 28nm chips
-+    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for other 28nm chips
-     "brcm,bcm7435-gisb-arb" for newer 40nm chips
-     "brcm,bcm7400-gisb-arb" for older 40nm chips and all 65nm chips
-     "brcm,bcm7038-gisb-arb" for 130nm chips
 diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index 3fbc116e6b95..68ac3e93b600 100644
+index 017c37b9c7c1..a2e1c5c25a3a 100644
 --- a/drivers/bus/brcmstb_gisb.c
 +++ b/drivers/bus/brcmstb_gisb.c
-@@ -56,6 +56,15 @@ static const int gisb_offsets_bcm7038[] = {
- 	[ARB_ERR_CAP_MASTER]	= -1,
- };
+@@ -24,6 +24,9 @@
+ #include <linux/of.h>
+ #include <linux/bitops.h>
+ #include <linux/pm.h>
++#include <linux/kernel.h>
++#include <linux/kdebug.h>
++#include <linux/notifier.h>
  
-+static const int gisb_offsets_bcm7278[] = {
-+	[ARB_TIMER]		= 0x008,
-+	[ARB_ERR_CAP_CLR]	= 0x7f8,
-+	[ARB_ERR_CAP_HI_ADDR]	= -1,
-+	[ARB_ERR_CAP_ADDR]	= 0x7e0,
-+	[ARB_ERR_CAP_STATUS]	= 0x7f0,
-+	[ARB_ERR_CAP_MASTER]	= 0x7f4,
+ #ifdef CONFIG_ARM
+ #include <asm/bug.h>
+@@ -283,6 +286,36 @@ static irqreturn_t brcmstb_gisb_tea_handler(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
++/*
++ * Dump out gisb errors on die or panic.
++ */
++static int dump_gisb_error(struct notifier_block *self, unsigned long v,
++			   void *p);
++
++static struct notifier_block gisb_die_notifier = {
++	.notifier_call = dump_gisb_error,
 +};
 +
- static const int gisb_offsets_bcm7400[] = {
- 	[ARB_TIMER]		= 0x00c,
- 	[ARB_ERR_CAP_CLR]	= 0x0c8,
-@@ -307,6 +316,7 @@ static const struct of_device_id brcmstb_gisb_arb_of_match[] = {
- 	{ .compatible = "brcm,bcm7445-gisb-arb", .data = gisb_offsets_bcm7445 },
- 	{ .compatible = "brcm,bcm7435-gisb-arb", .data = gisb_offsets_bcm7435 },
- 	{ .compatible = "brcm,bcm7400-gisb-arb", .data = gisb_offsets_bcm7400 },
-+	{ .compatible = "brcm,bcm7278-gisb-arb", .data = gisb_offsets_bcm7278 },
- 	{ .compatible = "brcm,bcm7038-gisb-arb", .data = gisb_offsets_bcm7038 },
- 	{ },
- };
++static struct notifier_block gisb_panic_notifier = {
++	.notifier_call = dump_gisb_error,
++};
++
++static int dump_gisb_error(struct notifier_block *self, unsigned long v,
++			   void *p)
++{
++	struct brcmstb_gisb_arb_device *gdev;
++	const char *reason = "panic";
++
++	if (self == &gisb_die_notifier)
++		reason = "die";
++
++	/* iterate over each GISB arb registered handlers */
++	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
++		brcmstb_gisb_arb_decode_addr(gdev, reason);
++
++	return NOTIFY_DONE;
++}
++
+ static DEVICE_ATTR(gisb_arb_timeout, S_IWUSR | S_IRUGO,
+ 		gisb_arb_get_timeout, gisb_arb_set_timeout);
+ 
+@@ -390,6 +423,12 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
+ 	board_be_handler = brcmstb_bus_error_handler;
+ #endif
+ 
++	if (list_is_singular(&brcmstb_gisb_arb_device_list)) {
++		register_die_notifier(&gisb_die_notifier);
++		atomic_notifier_chain_register(&panic_notifier_list,
++					       &gisb_panic_notifier);
++	}
++
+ 	dev_info(&pdev->dev, "registered mem: %p, irqs: %d, %d\n",
+ 			gdev->base, timeout_irq, tea_irq);
+ 
 -- 
 2.12.0
