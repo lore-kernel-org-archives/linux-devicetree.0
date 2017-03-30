@@ -1,94 +1,102 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2] phy: cpcap-usb: Add CPCAP PMIC USB support
-Date: Thu, 30 Mar 2017 17:19:00 +0530
-Message-ID: <3661b0cc-bf79-0347-ae4c-db6bdfdf6293@ti.com>
-References: <20170322234602.5888-1-tony@atomide.com>
- <d47b0f99-1ef8-3bff-0fbe-edb95ed41e23@ti.com>
- <20170327150518.GH10760@atomide.com>
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: Re: [PATCH/RFC v2 0/2] arm64: dts: r8a7795: Add support for R-Car
+ H3 ES2.0
+Date: Thu, 30 Mar 2017 13:50:25 +0200
+Message-ID: <1490874625.3471.6.camel@collabora.co.uk>
+References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
+         <1490870898.3471.3.camel@collabora.co.uk>
+         <CAMuHMdV+=pNpFO7H3J0=JM1BnXtm4t=Q+1bx=R+f9=JxvJZT_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170327150518.GH10760-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV+=pNpFO7H3J0=JM1BnXtm4t=Q+1bx=R+f9=JxvJZT_Q@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Stone <daniels@collabora.com>, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Thu, 2017-03-30 at 13:13 +0200, Geert Uytterhoeven wrote:
+> Hi Sjoerd,
+> 
+> On Thu, Mar 30, 2017 at 12:48 PM, Sjoerd Simons
+> <sjoerd.simons@collabora.co.uk> wrote:
+> > On Fri, 2017-03-24 at 14:37 +0100, Geert Uytterhoeven wrote:
+> > > This patch series adds preliminary support for Renesas Salvator-X
+> > > development boards equipped with revision ES2.0 of the R-Car H3
+> > > Soc.
+> > > 
+> > >   - Patch 1 adds support for the R-Car H3 ES2.0 Soc,
+> > >     While this patch is safe as-is, as it doesn't affect any
+> > > existing
+> > >     setups, it's probably a bit premature to apply it.
+> > >   - Patch 2 adds support for Salvator-X boards with R-Car H3
+> > > ES2.0.
+> > >     This patch does affect existing development setups, as it
+> > > changes
+> > > the
+> > >     name of the DTB for Salvator-X boards equipped with ES1.x
+> > > SoCs.
+> > >     Given most developers have access to ES1.x only, this patch
+> > > must
+> > > not be
+> > >     applied yet.
+> > 
+> > Would it make more sense to add a new r8a7795-es2.dtsi and keep the
+> > current dtsi for es1? Having to load different device-trees based
+> > on
+> > which kernel is used would be rather nasty.
+> 
+> We definitely considered that option.
+> However, we concluded that in the end, we want to mainly support
+> production
+> SoCs.  Hence the default files should represent the production
+> version.
+> Using a preproduction SoC can be considered a special case, and thus
+> needs
+> a file with a special esX ID in its name.
 
-On Monday 27 March 2017 08:35 PM, Tony Lindgren wrote:
-> * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170326 23:27]:
->> On Thursday 23 March 2017 05:16 AM, Tony Lindgren wrote:
->>> +static const struct phy_ops ops = {
->>> +	.owner		= THIS_MODULE,
->>> +};
->>
->> Given that this phy doesn't have any phy_ops, Is there a reason for registering
->> this phy with the phy framework? Is it because this driver uses the phy_core's
->> pm_runtime feature?
-> 
-> Well there's also an ULPI PHY on CPCAP, but it's not used in the
-> motorola-mapphone configuration. I think some other configurations
-> use it though, so probably best to keep it.
-> 
-> And yeah, for PM runtime, I was thinking that we can have the
-> UART mode be the idle state.
-> 
->>> +static void cpcap_usb_detect(struct work_struct *work)
->>> +{
->>> +	struct cpcap_phy_ddata *ddata;
->>> +	struct cpcap_usb_ints_state s;
->>> +	bool vbus = false;
->>> +	int error;
->>> +
->>> +	ddata = container_of(work, struct cpcap_phy_ddata, detect_work.work);
->>> +
->>> +	error = cpcap_phy_get_ints_state(ddata, &s);
->>> +	if (error)
->>> +		return;
->>> +
->>> +	/* See also cpcap-charger.c phy_companion for VBUS handling */
->>
->> I think this companion should have ideally used extcon framework. Then we could
->> have used extcon_get_state() here.
-> 
-> OK I'll take a look at that. I'd like to do that as a follow-up
-> patches if that's OK with you.
-> 
-> FYI in case you're wondering, there are ADCs on the PMIC available
-> via IIO, and the charger is also using IIO framework for VBUS and
-> battery voltage. And the VBUS is set up as reverse mode in the
-> charger registers and the charging needs to be disabled for VBUS.
-> 
-> I guess Ideally the VBUS would be just a regulator from Linux point
-> of view that also allows negative current :)
-> 
->>> +	ddata->vusb = devm_regulator_get(&pdev->dev, "vusb");
->>> +	if (IS_ERR(ddata->vusb))
->>> +		return PTR_ERR(ddata->vusb);
->>> +
->>> +	error = regulator_enable(ddata->vusb);
->>> +	if (error)
->>> +		return error;
->>
->> Maybe we should create power_on ops and do regulator enable there?
-> 
-> This regulator is also needed for the UART mode, so it would have
-> to be disabled conditionally based on maybe a module parameter.
-> But yeah thanks for the pointer I did not even realize you have
-> power_on ops :)
-> 
-> Seems this can be also done when implementing PM runtime handling.
-> If you want some of these changes done for the initial patch,
-> please let me know.
+The problem is that even though they are pre-production, these are out
+there and in active use, e.g. kernelci is at least doing automated
+testing on one of those in Kevins lab and should be an additional
+soonish in the Collabora lab. 
 
-I think it's better we get extcon stuff in the initial patch so that we don't
-have to maintain some piece of code for legacy dt. Others can be added later.
+And for developers it'll be extra fun if halfway through a bisect the
+dts name changes..
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Having a es2 in your dtb name might be a bit quirky, but it's really
+just a name without other meaning :). 
+
+> We do realize this can cause some inconveniences during the
+> transition period,
+> when most developers don't have access to ES2.0 SoCs yet, or have
+> mixed
+> environments of ES1.x and ES2.0.
+
+Heh yeah, i'd expect we'd have a mixed environment for quite a while
+given these boards are a bit too expensive to just throw in the trash..
+
+> Of course you can keep on using the current DTB (binary) on your H3
+> ES1.x
+> boards, as long as you don't need to use devices not yet described in
+> that DTB.
+> 
+> Thanks!
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu
+> x-m68k.org
+> 
+> In personal conversations with technical people, I call myself a
+> hacker. But
+> when I'm talking to journalists I just say "programmer" or something
+> like that.
+>                                 -- Linus Torvalds
+
+-- 
+Sjoerd Simons
+Collabora Ltd.
