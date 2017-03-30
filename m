@@ -1,83 +1,56 @@
-From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-Subject: Re: [PATCH 2/3] usb: add DT bindings for farady fotg2 host
- controller
-Date: Thu, 30 Mar 2017 20:31:26 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1703302023250.17971@T420s>
-References: <20170208200010.21522-1-ulli.kroll@googlemail.com> <20170208200010.21522-3-ulli.kroll@googlemail.com> <20170215230042.4m3niqf5wizbrgb4@rob-hp-laptop> <alpine.LNX.2.00.1702171054320.9178@T420s> <CAL_JsqK7VDomXqMz3YJqL5QjnSb-anwXtG+exz4g_BjPLOaiXQ@mail.gmail.com>
- <CACRpkdbjNS+ADawDCub5OP1iguNk+4Ked+mh_T_-bJ=6-9-3Nw@mail.gmail.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v7 00/13] mmc: Add support to Marvell Xenon SD Host
+ Controller
+Date: Thu, 30 Mar 2017 19:56:39 +0100
+Message-ID: <20170330185639.GI7909@n2100.armlinux.org.uk>
+References: <cover.51071caa64e5df81264a91b9a81ed1e94f47d2c4.1490886907.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbjNS+ADawDCub5OP1iguNk+4Ked+mh_T_-bJ=6-9-3Nw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.51071caa64e5df81264a91b9a81ed1e94f47d2c4.1490886907.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ryan Gao <ygao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Thu, Mar 30, 2017 at 05:22:52PM +0200, Gregory CLEMENT wrote:
+> - Remove parse of child node mmc-card. Wait for a better solution.
 
-On Thu, 30 Mar 2017, Linus Walleij wrote:
+So for mcbin, I have:
 
-> On Tue, Feb 21, 2017 at 3:43 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Feb 17, 2017 at 4:07 AM, Hans Ulli Kroll
-> > <ulli.kroll@googlemail.com> wrote:
-> >> Hi Rob,
-> >>
-> >> On Wed, 15 Feb 2017, Rob Herring wrote:
-> >>
-> >>> On Wed, Feb 08, 2017 at 09:00:09PM +0100, Hans Ulli Kroll wrote:
-> >>> > This adds DT bindings for the Faraday FOTG2 host controller.
-> >>> >
-> >>> > Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-> >>> > ---
-> >>> >  Documentation/devicetree/bindings/usb/fotg2-host.txt | 15 +++++++++++++++
-> >>> >  1 file changed, 15 insertions(+)
-> >>> >  create mode 100644 Documentation/devicetree/bindings/usb/fotg2-host.txt
-> >>> >
-> >>> > diff --git a/Documentation/devicetree/bindings/usb/fotg2-host.txt b/Documentation/devicetree/bindings/usb/fotg2-host.txt
-> >>> > new file mode 100644
-> >>> > index 000000000000..4c07566a4bf5
-> >>> > --- /dev/null
-> >>> > +++ b/Documentation/devicetree/bindings/usb/fotg2-host.txt
-> >>> > @@ -0,0 +1,15 @@
-> >>> > +Faraday FOTG Host controller
-> >>> > +
-> >>> > +Required properties:
-> >>> > +
-> >>> > +- compatible: should be "faraday,fotg210-hcd"
-> >>>
-> >>> hcd as in "host controller driver"? Bindings describe h/w not drivers.
-> >>>
-> >>> It's an OTG controller or host controller?
-> >>>
-> >>
-> >> here only the host controller part used.
-> >>
-> >> faraday fotg2 is a dual role hcd/otg device and here is only the
-> >> host part used.
-> >
-> > Because you don't care about device mode or restricted by the IP
-> > configuration or SoC integration? The former is a user choice and
-> > shouldn't be part of DT. The latter should be implied by an SoC
-> > specific compatible string. Using only a compatible string for a
-> > licensed IP is not specific enough as vendors use differing versions
-> > and integrate them in different ways.
-> 
-> Hans can you add:
-> 
-> compatible = "cortina,gemini-fotg", "faraday,fotg210-hcd" or something
-> as composite compatible for our controller?
-> 
+&ap_sdhci0 {
+        bus-width = <8>;
+        marvell,xenon-emmc;
+        marvell,xenon-phy-type = "emmc 5.1 phy";
+        /*
+         * Not stable in HS modes - phy needs "more calibration", so add
+         * the "slow-mode" and disable SDR104, SDR50 and DDR50 modes.
+         */
+        marvell,xenon-phy-slow-mode;
+        no-1-8-v;
+        non-removable;
+        status = "okay";
+        vqmmc-supply = <&v_vddo_h>;
 
-I prefer 
-"faraday,fotg210-usb2"
+        #address-cells = <1>;
+        #size-cells = <0>;
+        mmccard: mmccard@0 {
+                compatible = "mmc-card";
+                reg = <0>;
+        };
+};
 
-I've got rejected by Rob due the fact this is an dual role controller, 
-which supports both host and device mode. And DT must reflect this desgn 
-pattern.
+Does this mean the "mmccard" bit is no longer required - or is it required
+for the eMMC to be detected but is no longer supported by the driver?
 
-Currently I'm wrappingt my head around the design of the fsl-mph-dr-of.c 
-driver to use this as a blueprint for the Faraday driver.
+Thanks.
 
-Greetings
-Hans Ulli Kroll
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
