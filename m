@@ -1,99 +1,59 @@
-From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH v3 3/6] bus: brcmstb_gisb: add notifier handling
-Date: Wed, 29 Mar 2017 17:29:11 -0700
-Message-ID: <20170330002914.7371-4-opendmb@gmail.com>
-References: <20170330002914.7371-1-opendmb@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170330002914.7371-1-opendmb@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mark.rutland@arm.com
-Cc: treding@nvidia.com, f.fainelli@gmail.com, mirza.krak@gmail.com, catalin.marinas@arm.com, linus.walleij@linaro.org, suzuki.poulose@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, jonathanh@nvidia.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, gregory.0xf0@gmail.com, olof@lixom.net, Doug Berger <opendmb@gmail.com>, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH 1/2] clk: imx7d: fix USDHC NAND clock
+Date: Wed, 29 Mar 2017 17:50:28 -0700
+Message-ID: <20170330005029.6472-1-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: aisheng.dong-3arQi8VN3Tc@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Check for GISB arbitration errors through a chained notifier
-when a process dies or a kernel panic occurs.  This allows a
-meaningful GISB diagnostic message to occur along with other
-diagnostic information from the event.
+The USDHC NAND root clock is not gated by any CCM clock gate. Remove
+the bogus gate definition.
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- drivers/bus/brcmstb_gisb.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+The IMX7D_NAND_USDHC_BUS_ROOT_CLK clock is also in clks_init_on.
+In a quick test I removed IMX7D_NAND_USDHC_BUS_ROOT_CLK from
+clks_init_on, and the system including SD-cards seemed to work
+fine... So I guess we could remove the clock from clks_init_on
+after the two both changes got applied, any thoughts?
 
-diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index 017c37b9c7c1..a2e1c5c25a3a 100644
---- a/drivers/bus/brcmstb_gisb.c
-+++ b/drivers/bus/brcmstb_gisb.c
-@@ -24,6 +24,9 @@
- #include <linux/of.h>
- #include <linux/bitops.h>
- #include <linux/pm.h>
-+#include <linux/kernel.h>
-+#include <linux/kdebug.h>
-+#include <linux/notifier.h>
- 
- #ifdef CONFIG_ARM
- #include <asm/bug.h>
-@@ -283,6 +286,36 @@ static irqreturn_t brcmstb_gisb_tea_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+/*
-+ * Dump out gisb errors on die or panic.
-+ */
-+static int dump_gisb_error(struct notifier_block *self, unsigned long v,
-+			   void *p);
-+
-+static struct notifier_block gisb_die_notifier = {
-+	.notifier_call = dump_gisb_error,
-+};
-+
-+static struct notifier_block gisb_panic_notifier = {
-+	.notifier_call = dump_gisb_error,
-+};
-+
-+static int dump_gisb_error(struct notifier_block *self, unsigned long v,
-+			   void *p)
-+{
-+	struct brcmstb_gisb_arb_device *gdev;
-+	const char *reason = "panic";
-+
-+	if (self == &gisb_die_notifier)
-+		reason = "die";
-+
-+	/* iterate over each GISB arb registered handlers */
-+	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
-+		brcmstb_gisb_arb_decode_addr(gdev, reason);
-+
-+	return NOTIFY_DONE;
-+}
-+
- static DEVICE_ATTR(gisb_arb_timeout, S_IWUSR | S_IRUGO,
- 		gisb_arb_get_timeout, gisb_arb_set_timeout);
- 
-@@ -390,6 +423,12 @@ static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
- 	board_be_handler = brcmstb_bus_error_handler;
- #endif
- 
-+	if (list_is_singular(&brcmstb_gisb_arb_device_list)) {
-+		register_die_notifier(&gisb_die_notifier);
-+		atomic_notifier_chain_register(&panic_notifier_list,
-+					       &gisb_panic_notifier);
-+	}
-+
- 	dev_info(&pdev->dev, "registered mem: %p, irqs: %d, %d\n",
- 			gdev->base, timeout_irq, tea_irq);
- 
+The gate 0x4130 was actually the DRAM gate, hence disabling that
+clock lead to disabling this gate, and hence a crash before this
+fixes... Maybe that was the reason it landed in clks_init_on...?
+
+--
+Stefan
+
+ drivers/clk/imx/clk-imx7d.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
+index ae1d31be906e..4466acaacb71 100644
+--- a/drivers/clk/imx/clk-imx7d.c
++++ b/drivers/clk/imx/clk-imx7d.c
+@@ -724,7 +724,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX7D_MAIN_AXI_ROOT_DIV] = imx_clk_divider2("axi_post_div", "axi_pre_div", base + 0x8800, 0, 6);
+ 	clks[IMX7D_DISP_AXI_ROOT_DIV] = imx_clk_divider2("disp_axi_post_div", "disp_axi_pre_div", base + 0x8880, 0, 6);
+ 	clks[IMX7D_ENET_AXI_ROOT_DIV] = imx_clk_divider2("enet_axi_post_div", "enet_axi_pre_div", base + 0x8900, 0, 6);
+-	clks[IMX7D_NAND_USDHC_BUS_ROOT_DIV] = imx_clk_divider2("nand_usdhc_post_div", "nand_usdhc_pre_div", base + 0x8980, 0, 6);
++	clks[IMX7D_NAND_USDHC_BUS_ROOT_CLK] = imx_clk_divider2("nand_usdhc_root_clk", "nand_usdhc_pre_div", base + 0x8980, 0, 6);
+ 	clks[IMX7D_AHB_CHANNEL_ROOT_DIV] = imx_clk_divider2("ahb_post_div", "ahb_pre_div", base + 0x9000, 0, 6);
+ 	clks[IMX7D_DRAM_ROOT_DIV] = imx_clk_divider2("dram_post_div", "dram_cg", base + 0x9880, 0, 3);
+ 	clks[IMX7D_DRAM_PHYM_ALT_ROOT_DIV] = imx_clk_divider2("dram_phym_alt_post_div", "dram_phym_alt_pre_div", base + 0xa000, 0, 3);
+@@ -797,7 +797,6 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX7D_ENET_AXI_ROOT_CLK] = imx_clk_gate4("enet_axi_root_clk", "enet_axi_post_div", base + 0x4060, 0);
+ 	clks[IMX7D_OCRAM_CLK] = imx_clk_gate4("ocram_clk", "axi_post_div", base + 0x4110, 0);
+ 	clks[IMX7D_OCRAM_S_CLK] = imx_clk_gate4("ocram_s_clk", "ahb_post_div", base + 0x4120, 0);
+-	clks[IMX7D_NAND_USDHC_BUS_ROOT_CLK] = imx_clk_gate4("nand_usdhc_root_clk", "nand_usdhc_post_div", base + 0x4130, 0);
+ 	clks[IMX7D_AHB_CHANNEL_ROOT_CLK] = imx_clk_gate4("ahb_root_clk", "ahb_post_div", base + 0x4200, 0);
+ 	clks[IMX7D_DRAM_ROOT_CLK] = imx_clk_gate4("dram_root_clk", "dram_post_div", base + 0x4130, 0);
+ 	clks[IMX7D_DRAM_PHYM_ROOT_CLK] = imx_clk_gate4("dram_phym_root_clk", "dram_phym_cg", base + 0x4130, 0);
 -- 
-2.12.0
+2.12.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
