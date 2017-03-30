@@ -1,159 +1,93 @@
-From: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: ARTPEC-6: Add pinctrl configuration
-Date: Thu, 30 Mar 2017 13:33:49 +0200
-Message-ID: <20170330113349.GG29118@axis.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2] phy: cpcap-usb: Add CPCAP PMIC USB support
+Date: Thu, 30 Mar 2017 17:19:00 +0530
+Message-ID: <3661b0cc-bf79-0347-ae4c-db6bdfdf6293@ti.com>
+References: <20170322234602.5888-1-tony@atomide.com>
+ <d47b0f99-1ef8-3bff-0fbe-edb95ed41e23@ti.com>
+ <20170327150518.GH10760@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <20170327150518.GH10760-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the pinctrl driver for ARTPEC-6 in the artpec6.dtsi
-with all main pinmux functions.
-Add pinctrl information to the relevant (uart) nodes.
+Hi Tony,
 
-Signed-off-by: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>
----
- arch/arm/boot/dts/artpec6.dtsi | 87 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+On Monday 27 March 2017 08:35 PM, Tony Lindgren wrote:
+> * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170326 23:27]:
+>> On Thursday 23 March 2017 05:16 AM, Tony Lindgren wrote:
+>>> +static const struct phy_ops ops = {
+>>> +	.owner		= THIS_MODULE,
+>>> +};
+>>
+>> Given that this phy doesn't have any phy_ops, Is there a reason for registering
+>> this phy with the phy framework? Is it because this driver uses the phy_core's
+>> pm_runtime feature?
+> 
+> Well there's also an ULPI PHY on CPCAP, but it's not used in the
+> motorola-mapphone configuration. I think some other configurations
+> use it though, so probably best to keep it.
+> 
+> And yeah, for PM runtime, I was thinking that we can have the
+> UART mode be the idle state.
+> 
+>>> +static void cpcap_usb_detect(struct work_struct *work)
+>>> +{
+>>> +	struct cpcap_phy_ddata *ddata;
+>>> +	struct cpcap_usb_ints_state s;
+>>> +	bool vbus = false;
+>>> +	int error;
+>>> +
+>>> +	ddata = container_of(work, struct cpcap_phy_ddata, detect_work.work);
+>>> +
+>>> +	error = cpcap_phy_get_ints_state(ddata, &s);
+>>> +	if (error)
+>>> +		return;
+>>> +
+>>> +	/* See also cpcap-charger.c phy_companion for VBUS handling */
+>>
+>> I think this companion should have ideally used extcon framework. Then we could
+>> have used extcon_get_state() here.
+> 
+> OK I'll take a look at that. I'd like to do that as a follow-up
+> patches if that's OK with you.
+> 
+> FYI in case you're wondering, there are ADCs on the PMIC available
+> via IIO, and the charger is also using IIO framework for VBUS and
+> battery voltage. And the VBUS is set up as reverse mode in the
+> charger registers and the charging needs to be disabled for VBUS.
+> 
+> I guess Ideally the VBUS would be just a regulator from Linux point
+> of view that also allows negative current :)
+> 
+>>> +	ddata->vusb = devm_regulator_get(&pdev->dev, "vusb");
+>>> +	if (IS_ERR(ddata->vusb))
+>>> +		return PTR_ERR(ddata->vusb);
+>>> +
+>>> +	error = regulator_enable(ddata->vusb);
+>>> +	if (error)
+>>> +		return error;
+>>
+>> Maybe we should create power_on ops and do regulator enable there?
+> 
+> This regulator is also needed for the UART mode, so it would have
+> to be disabled conditionally based on maybe a module parameter.
+> But yeah thanks for the pointer I did not even realize you have
+> power_on ops :)
+> 
+> Seems this can be also done when implementing PM runtime handling.
+> If you want some of these changes done for the initial patch,
+> please let me know.
 
-diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
-index 767cbe8..471eaee 100644
---- a/arch/arm/boot/dts/artpec6.dtsi
-+++ b/arch/arm/boot/dts/artpec6.dtsi
-@@ -181,6 +181,85 @@
- 		status = "disabled";
- 	};
- 
-+	pinctrl: pinctrl@f801d000 {
-+		compatible = "axis,artpec6-pinctrl";
-+		reg = <0xf801d000 0x400>;
-+
-+		pinctrl_uart0: uart0grp {
-+			function = "uart0";
-+			groups = "uart0grp1";
-+			bias-pull-up;
-+		};
-+		pinctrl_uart1: uart1grp {
-+			function = "uart1";
-+			groups = "uart1grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_uart2: uart2grp {
-+			function = "uart2";
-+			groups = "uart2grp1";
-+			bias-pull-up;
-+		};
-+		pinctrl_uart3: uart3grp {
-+			function = "uart3";
-+			groups = "uart3grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_uart4: uart4grp {
-+			function = "uart4";
-+			groups = "uart4grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_uart5: uart5grp {
-+			function = "uart5";
-+			groups = "uart5grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_i2c1: i2c1grp {
-+			function = "i2c1";
-+			groups = "i2c1grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_i2c2: i2c2grp {
-+			function = "i2c2";
-+			groups = "i2c2grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_i2c3: i2c3grp {
-+			function = "i2c3";
-+			groups = "i2c3grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_i2s0: i2s0grp {
-+			function = "i2s0";
-+			groups = "i2s0grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_i2s1: i2s1grp {
-+			function = "i2s1";
-+			groups = "i2s1grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_spi0: spi0grp {
-+			function = "spi0";
-+			groups = "spi0grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_spi1: spi1grp {
-+			function = "spi1";
-+			groups = "spi1grp0";
-+			bias-pull-up;
-+		};
-+		pinctrl_sdio0: sdio0grp {
-+			function = "sdio0";
-+			groups = "sdio0grp0";
-+		};
-+		pinctrl_sdio1: sdio1grp {
-+			function = "sdio1";
-+			groups = "sdio1grp0";
-+		};
-+	};
-+
- 	amba@0 {
- 		compatible = "simple-bus";
- 		#address-cells = <0x1>;
-@@ -214,6 +293,8 @@
- 			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
- 				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
- 			clock-names = "uart_clk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart0>;
- 			status = "disabled";
- 		};
- 		uart1: serial@f8037000 {
-@@ -223,6 +304,8 @@
- 			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
- 				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
- 			clock-names = "uart_clk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart1>;
- 			status = "disabled";
- 		};
- 		uart2: serial@f8038000 {
-@@ -232,6 +315,8 @@
- 			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
- 				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
- 			clock-names = "uart_clk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart2>;
- 			status = "disabled";
- 		};
- 		uart3: serial@f8039000 {
-@@ -241,6 +326,8 @@
- 			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
- 				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
- 			clock-names = "uart_clk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart3>;
- 			status = "disabled";
- 		};
- 	};
--- 
-2.1.4
+I think it's better we get extcon stuff in the initial patch so that we don't
+have to maintain some piece of code for legacy dt. Others can be added later.
 
-Reply-To: 
-
-
-/^JN - Jesper Nilsson
--- 
-               Jesper Nilsson -- jesper.nilsson-VrBV9hrLPhE@public.gmane.org
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
