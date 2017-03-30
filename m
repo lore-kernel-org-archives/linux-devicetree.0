@@ -1,60 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv3] power: supply: cpcap-charger: Add minimal CPCAP PMIC
- battery charger
-Date: Thu, 30 Mar 2017 18:24:02 -0500
-Message-ID: <20170330232402.o4jslzlw3kgfnjqz@rob-hp-laptop>
-References: <20170327032513.22890-1-tony@atomide.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: mtd: document linux,part-probe property
+Date: Fri, 31 Mar 2017 01:26:45 +0200
+Message-ID: <74e3a663-2431-9b86-9d90-7f2fe6ce900f@gmail.com>
+References: <20170330215332.32699-1-zajec5@gmail.com>
+ <20170330215332.32699-2-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170327032513.22890-1-tony@atomide.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20170330215332.32699-2-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 26, 2017 at 08:25:13PM -0700, Tony Lindgren wrote:
-> The custom CPCAP PMIC used on Motorola phones such as Droid 4 has a
-> USB battery charger. It can optionally also have a companion chip that
-> is used for wireless charging.
-> 
-> The charger on CPCAP also can feed VBUS for the USB host mode. This
-> can be handled by the existing kernel phy_companion interface.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Marcel Partap <mpartap@gmx.net>
-> Cc: Michael Scott <michael.scott@linaro.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> Changes since v2:
-> 
-> - Update binding based on comments by Sebastian Reichel <sre@kernel.org>
-> 
-> - Drop "motorola,cpcap-charger" compatible for now as this seems specific
->   to the motorola-mapphone
-> 
-> - Update Kconfig for "depends on IIO" and "default MFD_CPCAP"
-> 
-> Changes since v1:
-> 
-> - Fix scaling of IIO values as pointed out by Sebastian Reichel
->   <sre@kernel.org>
-> 
-> - Use iio_read_channel_processed() instead of iio_read_channel_scaled()
->   as changed in the v2 of the ADC driver
-> 
-> - Add GPL v2 license header
-> 
-> ---
->  .../bindings/power/supply/cpcap-charger.txt        |  38 ++
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/power/supply/Kconfig                       |   8 +
->  drivers/power/supply/Makefile                      |   1 +
->  drivers/power/supply/cpcap-charger.c               | 681 +++++++++++++++++++++
->  4 files changed, 728 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/cpcap-charger.txt
->  create mode 100644 drivers/power/supply/cpcap-charger.c
+T24gMDMvMzAvMjAxNyAxMTo1MyBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IEZyb206IFJh
+ZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBTdXBwb3J0IGZvciB0aGlzIHBy
+b3BlcnR5IGhhcyBiZWVuIGludHJvZHVjZWQgaW4gMjAxMCB3aXRoIGNvbW1pdAo+IDlkNWRhM2E5
+Yjg0OSAoIm10ZDogZXh0ZW5kIHBoeXNtYXBfb2YgdG8gbGV0IHRoZSBkZXZpY2UgdHJlZSBzcGVj
+aWZ5IHRoZQo+IHBhcml0aW9uIHByb2JlIikgYnV0IGl0IHdhcyBuZXZlciBkb2N1bWVudGVkLiBG
+aXggdGhpcyBieSBhZGRpbmcgYQo+IHByb3BlciBkZXNjcmlwdGlvbiBhbmQgZXhhbXBsZS4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gLS0t
+Cj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvY29tbW9uLnR4dCB8IDcg
+KysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvY29tbW9uLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvY29tbW9uLnR4dAo+IGluZGV4IGZj
+MDY4YjkyM2Q3YS4uMWFkYTcwZTcxOGIyIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tdGQvY29tbW9uLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tdGQvY29tbW9uLnR4dAo+IEBAIC02LDEwICs2LDE3IEBAIE9wdGlv
+bmFsIHByb3BlcnRpZXM6Cj4gICAgY29udHJvbGxlciBiYXNlZCBuYW1lKSBpbiBvcmRlciB0byBl
+YXNlIGZsYXNoIGRldmljZSBpZGVudGlmaWNhdGlvbgo+ICAgIGFuZC9vciBkZXNjcmliZSB3aGF0
+IHRoZXkgYXJlIHVzZWQgZm9yLgo+ICAKPiArLSBsaW51eCxwYXJ0LXByb2JlOiBpZiBwcmVzZW50
+LCB0aGlzIHByb3BlcnR5IHNob3VsZCBjb250YWluIGEgbGlzdCBvZiBzdHJpbmdzCj4gKyAgd2l0
+aCBwYXJ0aXRpb24gcHJvYmVzIHRvIGJlIHVzZWQgZm9yIHRoZSBmbGFzaCBkZXZpY2UuIEEgcm9s
+ZSBvZiBwYXJ0aXRpb24KPiArICBwcm9iZSAocGFyc2VyKSBpcyB0byByZWFkL2NvbnN0cnVjdCBw
+YXJ0aXRpb24gdGFibGUgYW5kIHJlZ2lzdGVyIGZvdW5kCj4gKyAgcGFydGl0aW9ucy4gR2V0dGlu
+ZyBwYXJ0aXRpb24gdGFibGUgbWF5IGJlIHBsYXRmb3JtIG9yIGRldmljZSBzcGVjaWZpYyBzbwo+
+ICsgIHZhcmlvdXMgZGV2aWNlcyBtYXkgdXNlIHZhcmlvdXMgTGludXggZHJpdmVycyBmb3IgdGhp
+cyBwdXJwb3NlLgoKV2h5IGRvbid0IHlvdSBqdXN0IGhhdmUgcGFydGl0aW9uIG5vdCB3aXRoaW4g
+cGFydGl0aW9uIG5vZGUgPyBUaGVuIHlvdQp3b24ndCBuZWVkIHRoaXMgbm9uc2Vuc2UgLi4uCgo+
+ICBFeGFtcGxlOgo+ICAKPiAgCWZsYXNoQDAgewo+ICAJCWxhYmVsID0gIlN5c3RlbS1maXJtd2Fy
+ZSI7Cj4gKwkJbGludXgscGFydC1wcm9iZSA9ICJjbWRsaW5lcGFydCIsICJvZnBhcnQiOwo+ICAK
+PiAgCQkvKiBmbGFzaCB0eXBlIHNwZWNpZmljIHByb3BlcnRpZXMgKi8KPiAgCX07Cj4gCgoKLS0g
+CkJlc3QgcmVnYXJkcywKTWFyZWsgVmFzdXQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxp
+c3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQv
+Cg==
