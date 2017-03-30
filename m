@@ -1,77 +1,191 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: rockchip: add ARM Mali GPU node for rk3288
-Date: Thu, 30 Mar 2017 10:03:24 +0200
-Message-ID: <7f16f2ec-8e94-aa86-a8da-84ff8fd60c60@collabora.com>
-References: <cover.1490789802.git.guillaume.tucker@collabora.com>
- <46d14d3c969a35e800b1c06da0ddb652986e6827.1490789802.git.guillaume.tucker@collabora.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/5 v3] iio: xoadc: augment DT bindings a bit
+Date: Thu, 30 Mar 2017 10:05:41 +0200
+Message-ID: <20170330080541.4065-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <46d14d3c969a35e800b1c06da0ddb652986e6827.1490789802.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+In order to accommodate in a logical manner for the premuxed channels
+in PM8921 and the similarly addressed channels in later PMICs, we
+need a twocell arrangement with premux and analog mux setting as
+a tuple to uniquely identify a hardware channel.
 
+These bindings are not yet in use, so it should be fine to augment
+them before we actually start using it in drivers and device trees.
 
-On 29/03/17 14:44, Guillaume Tucker wrote:
-> Add Mali GPU device tree node for the rk3288 SoC, with devfreq
-> opp table.
-> 
-> Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index df8a0dbe9d91..213224ea309e 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -43,6 +43,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/pinctrl/rockchip.h>
->  #include <dt-bindings/clock/rk3288-cru.h>
-> +#include <dt-bindings/power/rk3288-power.h>
->  #include <dt-bindings/thermal/thermal.h>
->  #include <dt-bindings/power/rk3288-power.h>
->  #include <dt-bindings/soc/rockchip,boot-mode.h>
-> @@ -227,6 +228,28 @@
->  		ports = <&vopl_out>, <&vopb_out>;
->  	};
->  
-> +	gpu: mali@ffa30000 {
-> +		compatible = "arm,mali-midgard";
-> +		reg = <0xffa30000 0x10000>;
-> +		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "JOB", "MMU", "GPU";
-> +		clocks = <&cru ACLK_GPU>;
-> +		clock-names = "clk_mali";
-> +		operating-points = <
-> +			/* KHz uV */
-> +			100000 950000
-> +			200000 950000
-> +			300000 1000000
-> +			400000 1100000
-> +			500000 1200000
-> +			600000 1250000
-> +		>;
-> +		power-domains = <&power RK3288_PD_GPU>;
-> +		status = "disabled";
-> +	};
-> +
->  	sdmmc: dwmmc@ff0c0000 {
->  		compatible = "rockchip,rk3288-dw-mshc";
->  		max-frequency = <150000000>;
-> 
+This scheme came out of lengthy discussions and reverse-engineering
+and reading of the few information sources we have.
 
-This works on a veyron-minnie and a veyron-jerry, so
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v2->v3:
+- Drop leading zeroes on unit addresses.
+ChangeLog v1->v2:
+- Name nodes with <01 02> in a foo@0102 pattern.
+- Minor spelling nits.
+- Delete flimsy leftover docs from an interrim development path.
+---
+ .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 76 ++++++++++++----------
+ 1 file changed, 42 insertions(+), 34 deletions(-)
 
-Tested-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+index 53cd146d8096..69c404112df1 100644
+--- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+@@ -19,32 +19,42 @@ Required properties:
+   with PMIC variant but is typically something like 2.2 or 1.8V.
+ 
+ The following required properties are standard for IO channels, see
+-iio-bindings.txt for more details:
++iio-bindings.txt for more details, but noitice that this particular
++ADC has a special adressing scheme that require two cells for
++identifying each ADC channel:
+ 
+-- #address-cells: should be set to <1>
++- #address-cells: should be set to <2>, the first cell is the
++  prescaler (on PM8058) or premux (on PM8921) with two valid bits
++  so legal values are 0x00, 0x01 or 0x02. The second cell
++  is the main analog mux setting (0x00..0x0f). The combination
++  of prescaler/premux and analog mux uniquely addresses a hardware
++  channel on all systems.
+ 
+ - #size-cells: should be set to <0>
+ 
+-- #io-channel-cells: should be set to <1>
++- #io-channel-cells: should be set to <2>, again the cells are
++  precaler or premux followed by the analog muxing line.
+ 
+ - interrupts: should refer to the parent PMIC interrupt controller
+   and reference the proper ADC interrupt.
+ 
+ Required subnodes:
+ 
+-The ADC channels are configured as subnodes of the ADC. Since some of
+-them are used for calibrating the ADC, these nodes are compulsory:
++The ADC channels are configured as subnodes of the ADC.
++
++Since some of them are used for calibrating the ADC, these nodes are
++compulsory:
+ 
+ adc-channel@c {
+-	reg = <0x0c>;
++	reg = <0x00 0x0c>;
+ };
+ 
+ adc-channel@d {
+-	reg = <0x0d>;
++	reg = <0x00 0x0d>;
+ };
+ 
+ adc-channel@f {
+-	reg = <0x0f>;
++	reg = <0x00 0x0f>;
+ };
+ 
+ These three nodes are used for absolute and ratiometric calibration
+@@ -52,13 +62,13 @@ and only need to have these reg values: they are by hardware definition
+ 1:1 ratio converters that sample 625, 1250 and 0 milliV and create
+ an interpolation calibration for all other ADCs.
+ 
+-Optional subnodes: any channels other than channel 0x0c, 0x0d and
+-0x0f are optional.
++Optional subnodes: any channels other than channels [0x00 0x0c],
++[0x00 0x0d] and [0x00 0x0f] are optional.
+ 
+ Required channel node properties:
+ 
+ - reg: should contain the hardware channel number in the range
+-  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
++  0 .. 0xff (8 bits).
+ 
+ Optional channel node properties:
+ 
+@@ -94,56 +104,54 @@ Example:
+ xoadc: xoadc@197 {
+ 	compatible = "qcom,pm8058-adc";
+ 	reg = <0x197>;
+-	interrupt-parent = <&pm8058>;
+-	interrupts = <76 1>;
+-	#address-cells = <1>;
++	interrupts-extended = <&pm8058 76 IRQ_TYPE_EDGE_RISING>;
++	#address-cells = <2>;
+ 	#size-cells = <0>;
+-	#io-channel-cells = <1>;
++	#io-channel-cells = <2>;
+ 
+ 	vcoin: adc-channel@0 {
+-		reg = <0x00>;
++		reg = <0x00 0x00>;
+ 	};
+ 	vbat: adc-channel@1 {
+-		reg = <0x01>;
++		reg = <0x00 0x01>;
+ 	};
+ 	dcin: adc-channel@2 {
+-		reg = <0x02>;
++		reg = <0x00 0x02>;
+ 	};
+ 	ichg: adc-channel@3 {
+-		reg = <0x03>;
++		reg = <0x00 0x03>;
+ 	};
+ 	vph_pwr: adc-channel@4 {
+-		reg = <0x04>;
++		reg = <0x00 0x04>;
+ 	};
+ 	usb_vbus: adc-channel@a {
+-		reg = <0x0a>;
++		reg = <0x00 0x0a>;
+ 	};
+ 	die_temp: adc-channel@b {
+-		reg = <0x0b>;
++		reg = <0x00 0x0b>;
+ 	};
+ 	ref_625mv: adc-channel@c {
+-		reg = <0x0c>;
++		reg = <0x00 0x0c>;
+ 	};
+ 	ref_1250mv: adc-channel@d {
+-		reg = <0x0d>;
++		reg = <0x00 0x0d>;
+ 	};
+ 	ref_325mv: adc-channel@e {
+-		reg = <0x0e>;
++		reg = <0x00 0x0e>;
+ 	};
+ 	ref_muxoff: adc-channel@f {
+-		reg = <0x0f>;
++		reg = <0x00 0x0f>;
+ 	};
+ };
+ 
+-
+ /* IIO client node */
+ iio-hwmon {
+ 	compatible = "iio-hwmon";
+-	io-channels = <&xoadc 0x01>, /* Battery */
+-		    <&xoadc 0x02>, /* DC in (charger) */
+-		    <&xoadc 0x04>, /* VPH the main system voltage */
+-		    <&xoadc 0x0b>, /* Die temperature */
+-		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
+-		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
+-		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
++	io-channels = <&xoadc 0x00 0x01>, /* Battery */
++		    <&xoadc 0x00 0x02>, /* DC in (charger) */
++		    <&xoadc 0x00 0x04>, /* VPH the main system voltage */
++		    <&xoadc 0x00 0x0b>, /* Die temperature */
++		    <&xoadc 0x00 0x0c>, /* Reference voltage 1.25V */
++		    <&xoadc 0x00 0x0d>, /* Reference voltage 0.625V */
++		    <&xoadc 0x00 0x0e>; /* Reference voltage 0.325V */
+ };
+-- 
+2.9.3
