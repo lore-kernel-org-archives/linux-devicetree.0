@@ -1,34 +1,74 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCHv5 06/11] s5p-cec.txt: document the HDMI controller phandle
-Date: Fri, 31 Mar 2017 00:37:54 +0300
-Message-ID: <20170330213754.nmfq44sohl3amxcw@kozik-lap>
-References: <20170329141543.32935-1-hverkuil@xs4all.nl>
- <20170329141543.32935-7-hverkuil@xs4all.nl>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master (fwd)
+Date: Thu, 30 Mar 2017 23:39:26 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1703302337590.2105@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170329141543.32935-7-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Daniel Vetter <daniel.vetter@intel.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 04:15:38PM +0200, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> Update the bindings documenting the new hdmi phandle.
-> 
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> CC: linux-samsung-soc@vger.kernel.org
-> CC: devicetree@vger.kernel.org
-> CC: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/media/s5p-cec.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Is master on line 514 allocated with kmalloc, or the devm call on line
+522?
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+julia
 
-Best regards,
-Krzysztof
+---------- Forwarded message ----------
+Date: Fri, 31 Mar 2017 00:15:09 +0800
+From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: kbuild-JC7UmRfGjtg@public.gmane.org
+Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master
+
+Hi Chris,
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v4.11-rc4 next-20170330]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Christopher-Bostic/FSI-device-driver-implementation/20170330-184914
+:::::: branch date: 5 hours ago
+:::::: commit date: 5 hours ago
+
+>> drivers/fsi/fsi-master-gpio.c:514:1-6: WARNING: invalid free of devm_ allocated data
+
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout f4bd3b6a41c7a59e9ce2e65947a4d3dfc2ee4a29
+vim +514 drivers/fsi/fsi-master-gpio.c
+
+f4bd3b6a Chris Bostic 2017-03-29  498  {
+f4bd3b6a Chris Bostic 2017-03-29  499  	struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
+f4bd3b6a Chris Bostic 2017-03-29  500
+f4bd3b6a Chris Bostic 2017-03-29  501  	if (link != 0)
+f4bd3b6a Chris Bostic 2017-03-29  502  		return -ENODEV;
+f4bd3b6a Chris Bostic 2017-03-29  503  	if (master->gpio_enable)
+f4bd3b6a Chris Bostic 2017-03-29  504  		gpiod_set_value(master->gpio_enable, 1);
+f4bd3b6a Chris Bostic 2017-03-29  505
+f4bd3b6a Chris Bostic 2017-03-29  506  	return 0;
+f4bd3b6a Chris Bostic 2017-03-29  507  }
+f4bd3b6a Chris Bostic 2017-03-29  508
+f4bd3b6a Chris Bostic 2017-03-29  509  static void fsi_master_gpio_release(struct device *dev)
+f4bd3b6a Chris Bostic 2017-03-29  510  {
+f4bd3b6a Chris Bostic 2017-03-29  511  	struct fsi_master_gpio *master = to_fsi_master_gpio(
+f4bd3b6a Chris Bostic 2017-03-29  512  						dev_to_fsi_master(dev));
+f4bd3b6a Chris Bostic 2017-03-29  513
+f4bd3b6a Chris Bostic 2017-03-29 @514  	kfree(master);
+f4bd3b6a Chris Bostic 2017-03-29  515  }
+f4bd3b6a Chris Bostic 2017-03-29  516
+f4bd3b6a Chris Bostic 2017-03-29  517  static int fsi_master_gpio_probe(struct platform_device *pdev)
+f4bd3b6a Chris Bostic 2017-03-29  518  {
+f4bd3b6a Chris Bostic 2017-03-29  519  	struct fsi_master_gpio *master;
+f4bd3b6a Chris Bostic 2017-03-29  520  	struct gpio_desc *gpio;
+f4bd3b6a Chris Bostic 2017-03-29  521
+f4bd3b6a Chris Bostic 2017-03-29  522  	master = devm_kzalloc(&pdev->dev, sizeof(*master), GFP_KERNEL);
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
