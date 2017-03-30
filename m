@@ -1,44 +1,34 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: Add binding for
- /secure-chosen/stdout-path
-Date: Thu, 30 Mar 2017 17:28:46 -0500
-Message-ID: <20170330222845.ewddsnmkxwrsposl@rob-hp-laptop>
-References: <e3e007ef9ee6a622ae4ccc74fd0fca32b3c5dfb5.1488531370.git.jerome.forissier@linaro.org>
+Subject: Re: [PATCH 1/2] clk: qcom: Update DT bindings for MSM8660 LCC
+Date: Thu, 30 Mar 2017 17:31:13 -0500
+Message-ID: <20170330223113.adnvw62boi5xtpu2@rob-hp-laptop>
+References: <20170324082424.6143-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <e3e007ef9ee6a622ae4ccc74fd0fca32b3c5dfb5.1488531370.git.jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170324082424.6143-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 10:24:33AM +0100, Jerome Forissier wrote:
-> Some platforms may use a single device tree to describe two address
-> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
-> for Secure-only devices"). For these platforms it makes sense to define
-> a secure counterpart of /chosen, namely: /secure-chosen. This new node
-> is meant to be used by the secure firmware to pass data to the secure
-> OS. Only the stdout-path property is supported for now.
+On Fri, Mar 24, 2017 at 09:24:24AM +0100, Linus Walleij wrote:
+> This adds the right compatible string and header for the
+> MSM8660 LCC and some new defines to the dt-bindings header.
 > 
-> Signed-off-by: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Take this opportunity to spell out the acronym LPASS for
+> Low-power Audio Subsystem.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/secure.txt | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> v2
-> 
-> - Clarify the expected behavior when /secure-chosen/stdout-path is not
-> present (either the property or the node itself), as proposed by Peter
-> and Robin. Note that I have made the fallback to /chosen optional.
+>  .../devicetree/bindings/clock/qcom,lcc.txt         |  5 +--
+>  include/dt-bindings/clock/qcom,lcc-msm8660.h       | 40 ++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 2 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/qcom,lcc-msm8660.h
 
-I'm okay with this, but would like to hold off merging it until your are 
-really using it. You did say you were "experimenting" and it doesn't 
-sound like the DT usage in secure world is that far along. I just want 
-to see if there are other issues that come up.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
