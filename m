@@ -1,213 +1,89 @@
-From: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 1/5 v3] iio: xoadc: augment DT bindings a bit
-Date: Thu, 30 Mar 2017 10:18:13 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1703301016220.14237@vps.pmeerw.net>
-References: <20170330080541.4065-1-linus.walleij@linaro.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 2/2] soc/imx: add workaround for i.MX6QP to the GPC PD
+ driver
+Date: Thu, 30 Mar 2017 10:22:17 +0200
+Message-ID: <1490862137.29083.30.camel@pengutronix.de>
+References: <20170323144418.30977-1-l.stach@pengutronix.de>
+ <20170323144418.30977-3-l.stach@pengutronix.de>
+ <DB5PR04MB1431A7CC91F55ECFE5BE31FB80350@DB5PR04MB1431.eurprd04.prod.outlook.com>
+ <1490804026.29083.29.camel@pengutronix.de>
+ <20170330090833.09ac3c33@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="324302256-1120555799-1490861893=:14237"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170330080541.4065-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170330090833.09ac3c33@ipc1.ka-ro>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: "A.S. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---324302256-1120555799-1490861893=:14237
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-
-> In order to accommodate in a logical manner for the premuxed channels
-> in PM8921 and the similarly addressed channels in later PMICs, we
-> need a twocell arrangement with premux and analog mux setting as
-> a tuple to uniquely identify a hardware channel.
-> 
-> These bindings are not yet in use, so it should be fine to augment
-> them before we actually start using it in drivers and device trees.
-
-nitpicking below
- 
-> This scheme came out of lengthy discussions and reverse-engineering
-> and reading of the few information sources we have.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v2->v3:
-> - Drop leading zeroes on unit addresses.
-> ChangeLog v1->v2:
-> - Name nodes with <01 02> in a foo@0102 pattern.
-> - Minor spelling nits.
-> - Delete flimsy leftover docs from an interrim development path.
-> ---
->  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 76 ++++++++++++----------
->  1 file changed, 42 insertions(+), 34 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> index 53cd146d8096..69c404112df1 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> @@ -19,32 +19,42 @@ Required properties:
->    with PMIC variant but is typically something like 2.2 or 1.8V.
->  
->  The following required properties are standard for IO channels, see
-> -iio-bindings.txt for more details:
-> +iio-bindings.txt for more details, but noitice that this particular
-
-notice
-
-> +ADC has a special adressing scheme that require two cells for
-
-addressing
-
-> +identifying each ADC channel:
->  
-> -- #address-cells: should be set to <1>
-> +- #address-cells: should be set to <2>, the first cell is the
-> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
-> +  so legal values are 0x00, 0x01 or 0x02. The second cell
-> +  is the main analog mux setting (0x00..0x0f). The combination
-> +  of prescaler/premux and analog mux uniquely addresses a hardware
-> +  channel on all systems.
->  
->  - #size-cells: should be set to <0>
->  
-> -- #io-channel-cells: should be set to <1>
-> +- #io-channel-cells: should be set to <2>, again the cells are
-> +  precaler or premux followed by the analog muxing line.
->  
->  - interrupts: should refer to the parent PMIC interrupt controller
->    and reference the proper ADC interrupt.
->  
->  Required subnodes:
->  
-> -The ADC channels are configured as subnodes of the ADC. Since some of
-> -them are used for calibrating the ADC, these nodes are compulsory:
-> +The ADC channels are configured as subnodes of the ADC.
-> +
-> +Since some of them are used for calibrating the ADC, these nodes are
-> +compulsory:
->  
->  adc-channel@c {
-> -	reg = <0x0c>;
-> +	reg = <0x00 0x0c>;
->  };
->  
->  adc-channel@d {
-> -	reg = <0x0d>;
-> +	reg = <0x00 0x0d>;
->  };
->  
->  adc-channel@f {
-> -	reg = <0x0f>;
-> +	reg = <0x00 0x0f>;
->  };
->  
->  These three nodes are used for absolute and ratiometric calibration
-> @@ -52,13 +62,13 @@ and only need to have these reg values: they are by hardware definition
->  1:1 ratio converters that sample 625, 1250 and 0 milliV and create
->  an interpolation calibration for all other ADCs.
->  
-> -Optional subnodes: any channels other than channel 0x0c, 0x0d and
-> -0x0f are optional.
-> +Optional subnodes: any channels other than channels [0x00 0x0c],
-> +[0x00 0x0d] and [0x00 0x0f] are optional.
->  
->  Required channel node properties:
->  
->  - reg: should contain the hardware channel number in the range
-> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-> +  0 .. 0xff (8 bits).
->  
->  Optional channel node properties:
->  
-> @@ -94,56 +104,54 @@ Example:
->  xoadc: xoadc@197 {
->  	compatible = "qcom,pm8058-adc";
->  	reg = <0x197>;
-> -	interrupt-parent = <&pm8058>;
-> -	interrupts = <76 1>;
-> -	#address-cells = <1>;
-> +	interrupts-extended = <&pm8058 76 IRQ_TYPE_EDGE_RISING>;
-> +	#address-cells = <2>;
->  	#size-cells = <0>;
-> -	#io-channel-cells = <1>;
-> +	#io-channel-cells = <2>;
->  
->  	vcoin: adc-channel@0 {
-> -		reg = <0x00>;
-> +		reg = <0x00 0x00>;
->  	};
->  	vbat: adc-channel@1 {
-> -		reg = <0x01>;
-> +		reg = <0x00 0x01>;
->  	};
->  	dcin: adc-channel@2 {
-> -		reg = <0x02>;
-> +		reg = <0x00 0x02>;
->  	};
->  	ichg: adc-channel@3 {
-> -		reg = <0x03>;
-> +		reg = <0x00 0x03>;
->  	};
->  	vph_pwr: adc-channel@4 {
-> -		reg = <0x04>;
-> +		reg = <0x00 0x04>;
->  	};
->  	usb_vbus: adc-channel@a {
-> -		reg = <0x0a>;
-> +		reg = <0x00 0x0a>;
->  	};
->  	die_temp: adc-channel@b {
-> -		reg = <0x0b>;
-> +		reg = <0x00 0x0b>;
->  	};
->  	ref_625mv: adc-channel@c {
-> -		reg = <0x0c>;
-> +		reg = <0x00 0x0c>;
->  	};
->  	ref_1250mv: adc-channel@d {
-> -		reg = <0x0d>;
-> +		reg = <0x00 0x0d>;
->  	};
->  	ref_325mv: adc-channel@e {
-> -		reg = <0x0e>;
-> +		reg = <0x00 0x0e>;
->  	};
->  	ref_muxoff: adc-channel@f {
-> -		reg = <0x0f>;
-> +		reg = <0x00 0x0f>;
->  	};
->  };
->  
-> -
->  /* IIO client node */
->  iio-hwmon {
->  	compatible = "iio-hwmon";
-> -	io-channels = <&xoadc 0x01>, /* Battery */
-> -		    <&xoadc 0x02>, /* DC in (charger) */
-> -		    <&xoadc 0x04>, /* VPH the main system voltage */
-> -		    <&xoadc 0x0b>, /* Die temperature */
-> -		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
-> -		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
-> -		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
-> +	io-channels = <&xoadc 0x00 0x01>, /* Battery */
-> +		    <&xoadc 0x00 0x02>, /* DC in (charger) */
-> +		    <&xoadc 0x00 0x04>, /* VPH the main system voltage */
-> +		    <&xoadc 0x00 0x0b>, /* Die temperature */
-> +		    <&xoadc 0x00 0x0c>, /* Reference voltage 1.25V */
-> +		    <&xoadc 0x00 0x0d>, /* Reference voltage 0.625V */
-> +		    <&xoadc 0x00 0x0e>; /* Reference voltage 0.325V */
->  };
-> 
-
--- 
-
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
---324302256-1120555799-1490861893=:14237--
+QW0gRG9ubmVyc3RhZywgZGVuIDMwLjAzLjIwMTcsIDA5OjA4ICswMjAwIHNjaHJpZWIgTG90aGFy
+IFdhw59tYW5uOgo+IEhpLAo+IAo+IE9uIFdlZCwgMjkgTWFyIDIwMTcgMTg6MTM6NDYgKzAyMDAg
+THVjYXMgU3RhY2ggd3JvdGU6Cj4gPiBBbSBNaXR0d29jaCwgZGVuIDI5LjAzLjIwMTcsIDE2OjA4
+ICswMDAwIHNjaHJpZWIgQS5TLiBEb25nOgo+ID4gPiBIaSBMdWNhcywKPiA+ID4gCj4gPiA+ID4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+ID4gPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFp
+bHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdCj4gPiA+ID4gU2VudDogVGh1cnNkYXksIE1hcmNo
+IDIzLCAyMDE3IDEwOjQ0IFBNCj4gPiA+ID4gVG86IFNoYXduIEd1bwo+ID4gPiA+IENjOiBGYWJp
+byBFc3RldmFtOyBBLlMuIERvbmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+cm0tCj4gPiA+ID4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGtlcm5lbEBwZW5ndXRyb25p
+eC5kZTsgcGF0Y2h3b3JrLQo+ID4gPiA+IGxzdEBwZW5ndXRyb25peC5kZQo+ID4gPiA+IFN1Ympl
+Y3Q6IFtQQVRDSCAyLzJdIHNvYy9pbXg6IGFkZCB3b3JrYXJvdW5kIGZvciBpLk1YNlFQIHRvIHRo
+ZSBHUEMgUEQKPiA+ID4gPiBkcml2ZXIKPiA+ID4gPiAKPiA+ID4gPiBPbiBpLk1YNlFQLCBkdWUg
+dG8gaGFyZHdhcmUgZXJyYXR1bSBFUlIwMDk2MTksIHRoZSBQUkUgY2xvY2tzIG1heSBiZQo+ID4g
+PiA+IHN0YWxsZWQgZHVyaW5nIHRoZSBwb3dlciB1cCBzZXF1ZW5jaW5nIG9mIHRoZSBQVSBwb3dl
+ciBkb21haW4uIEFzIHRoaXMgbWF5Cj4gPiA+ID4gbGVhZCB0byBhIGNvbXBsZXRlIGxvc3Mgb2Yg
+ZGlzcGxheSBvdXRwdXQsIHRoZSByZWNvbW1lbmRlZCB3b3JrYXJvdW5kIGlzCj4gPiA+ID4gdG8g
+a2VlcCB0aGUgUFUgZG9tYWluIGVuYWJsZWQgZHVyaW5nIG5vcm1hbCBzeXN0ZW0gb3BlcmF0aW9u
+Lgo+ID4gPiA+IAo+ID4gPiA+IEltcGxlbWVudCB0aGlzIGJ5IHJlamVjdGluZyB0aGUgZG9tYWlu
+IHBvd2VyIGRvd24gcmVxdWVzdCBvbiB0aGUgYWZmZWN0ZWQKPiA+ID4gPiBTb0MuCj4gPiA+ID4g
+Cj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXgu
+ZGU+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGRyaXZlcnMvc29jL2lteC9ncGMuYyB8IDE5ICsrKysr
+KysrKysrKysrKysrKysKPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykK
+PiA+ID4gPiAKPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvaW14L2dwYy5jIGIvZHJp
+dmVycy9zb2MvaW14L2dwYy5jIGluZGV4Cj4gPiA+ID4gNDI5NDI4N2U1ZjZjLi41OTllMWU0NmY2
+OTQgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvZHJpdmVycy9zb2MvaW14L2dwYy5jCj4gPiA+ID4gKysr
+IGIvZHJpdmVycy9zb2MvaW14L2dwYy5jCj4gPiA+ID4gQEAgLTQ1LDYgKzQ1LDcgQEAgc3RydWN0
+IGlteF9wbV9kb21haW4gewo+ID4gPiA+ICAJdW5zaWduZWQgaW50IHJlZ19vZmZzOwo+ID4gPiA+
+ICAJc2lnbmVkIGNoYXIgY250cl9wZG5fYml0Owo+ID4gPiA+ICAJdW5zaWduZWQgaW50IGlwZ19y
+YXRlX21oejsKPiA+ID4gPiArCWJvb2wgYWxsb3dfZHluYW1pY19wZDsKPiA+ID4gPiAgfTsKPiA+
+ID4gPiAKPiA+ID4gPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgaW14X3BtX2RvbWFpbiAqCj4gPiA+
+ID4gQEAgLTU5LDYgKzYwLDkgQEAgc3RhdGljIGludCBpbXg2X3BtX2RvbWFpbl9wb3dlcl9vZmYo
+c3RydWN0Cj4gPiA+ID4gZ2VuZXJpY19wbV9kb21haW4gKmdlbnBkKQo+ID4gPiA+ICAJaW50IGlz
+bywgaXNvMnN3Owo+ID4gPiA+ICAJdTMyIHZhbDsKPiA+ID4gPiAKPiA+ID4gPiArCWlmICghcGQt
+PmFsbG93X2R5bmFtaWNfcGQpCj4gPiA+ID4gKwkJcmV0dXJuIC1FQlVTWTsKPiA+ID4gPiArCj4g
+PiA+ID4gIAkvKiBSZWFkIElTTyBhbmQgSVNPMlNXIHBvd2VyIGRvd24gZGVsYXlzICovCj4gPiA+
+ID4gIAlyZWdtYXBfcmVhZChwZC0+cmVnbWFwLCBwZC0+cmVnX29mZnMgKyBHUENfUEdDX1BVUFND
+Ul9PRkZTLCAmdmFsKTsKPiA+ID4gPiAgCWlzbyA9IHZhbCAmIDB4M2Y7Cj4gPiA+ID4gQEAgLTI1
+NSw2ICsyNTksNyBAQCBzdGF0aWMgc3RydWN0IGlteF9wbV9kb21haW4gaW14X2dwY19kb21haW5z
+W10gPSB7Cj4gPiA+ID4gIAkJfSwKPiA+ID4gPiAgCQkucmVnX29mZnMgPSAweDI2MCwKPiA+ID4g
+PiAgCQkuY250cl9wZG5fYml0ID0gMCwKPiA+ID4gPiArCQkuYWxsb3dfZHluYW1pY19wZCA9IHRy
+dWUsCj4gPiA+ID4gIAl9LCB7Cj4gPiA+ID4gIAkJLmJhc2UgPSB7Cj4gPiA+ID4gIAkJCS5uYW1l
+ID0gIkRJU1BMQVkiLAo+ID4gPiA+IEBAIC0yNjMsMjMgKzI2OCwzMyBAQCBzdGF0aWMgc3RydWN0
+IGlteF9wbV9kb21haW4gaW14X2dwY19kb21haW5zW10gPSB7Cj4gPiA+ID4gIAkJfSwKPiA+ID4g
+PiAgCQkucmVnX29mZnMgPSAweDI0MCwKPiA+ID4gPiAgCQkuY250cl9wZG5fYml0ID0gNCwKPiA+
+ID4gPiArCQkuYWxsb3dfZHluYW1pY19wZCA9IHRydWUsCj4gPiA+IAo+ID4gPiBKdXN0IGEgTml0
+cGljaywgYmVzaWRlcyBzaGF3bidzIGNvbW1lbnQgaW4gYW5vdGhlciBtYWlsLAo+ID4gPiBpZiB3
+ZSB1c2UgYSBkb21haW4gZmxhZyBsaWtlIElNWF9QRF9BTFdBWVNfT04gc2V0IGJ5IFNvQyBlcnJh
+dGEgZmxhZywKPiA+ID4gdGhlbiBwcm9iYWJseSB3ZSBjYW4gc2F2ZSBhbGwgdGhlIGRlZmF1bHQg
+YWxsb3dfZHluYW1pY19wZCBsaW5lcy4KPiA+ID4gVGhpcyBhbHNvIHJlbGVhc2UgdGhlIGxpZmUg
+d2hlbiBhZGRpbmcgbmV3IGRvbWFpbnMuCj4gPiAKPiA+IElmIG90aGVyIHRoaW5ncyBsaWtlIHRo
+YXQgc2hvdyB1cCB3ZSBjYW4gY2VydGFpbmx5IHN3aXRjaCB0byBhIGZsYWdzCj4gPiBmaWVsZC4g
+SW4gdGhlIG1lYW50aW1lIEkgbGlrZSB0aGF0IHRoZSBjdXJyZW50IHN0eWxlIGlzIG1vcmUgZXhw
+bGljaXQKPiA+IGFib3V0IGl0Lgo+ID4gCj4gU2luY2UgdGhlIHB1cnBvc2Ugb2YgdGhlIGRyaXZl
+ciBpcyBhbGwgYWJvdXQgZHluYW1pYyBwb3dlciBtYW5hZ2VtZW50LAo+IEkgd291bGQgcmF0aGVy
+IGFkZCBhICdkaXNhYmxlX2R5bmFtaWNfcGQnIGZvciB0aGUgY2FzZShzKSB3aGVyZSBpdCdzCj4g
+bm90IGFsbG93ZWQsIHJhdGhlciB0aGFuIGhhdmluZyB0byBzdGF0ZSB0aGUgb2J2aW91cyBvdmVy
+IGFuZCBvdmVyCj4gYWdhaW4uCgpDb252aW5jaW5nIGFyZ3VtZW50LiBJJ2xsIGNoYW5nZSB0aGF0
+IGluIHYyLgoKUmVnYXJkcywKTHVjYXMKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
