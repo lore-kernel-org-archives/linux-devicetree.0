@@ -1,75 +1,100 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3 09/37] mtd: nand: denali_dt: remove dma-mask DT property
-Date: Thu, 30 Mar 2017 15:45:55 +0900
-Message-ID: <1490856383-31560-10-git-send-email-yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength" DT property
+Date: Thu, 30 Mar 2017 15:46:00 +0900
+Message-ID: <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com>
 References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490856383-31560-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver sets appropriate DMA mask.  Delete the "dma-mask" DT
-property.  See [1] for negative comments for this binding.
+Historically, this driver tried to choose as big ECC strength as
+possible, but it would be reasonable to allow DT to set a particular
+ECC strength with "nand-ecc-strength" property.  This is useful
+when a particular ECC setting is hard-coded by firmware (or hard-
+wired by boot ROM).
 
-[1] https://lkml.org/lkml/2016/2/8/57
+If no ECC strength is specified in DT, "nand-ecc-maximize" is implied
+since this was the original behavior.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
 
 Changes in v3: None
-Changes in v2: None
+Changes in v2:
+  - Add available values in the binding document
 
- Documentation/devicetree/bindings/mtd/denali-nand.txt | 2 --
- drivers/mtd/nand/denali_dt.c                          | 9 ---------
- 2 files changed, 11 deletions(-)
+ Documentation/devicetree/bindings/mtd/denali-nand.txt |  6 ++++++
+ drivers/mtd/nand/denali.c                             | 18 ++++++++++++++++--
+ drivers/mtd/nand/denali_pci.c                         |  1 +
+ 3 files changed, 23 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index 6f4ab4c..e593bbe 100644
+index 25313c7..647618e 100644
 --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
 +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -6,7 +6,6 @@ Required properties:
-   - reg : should contain registers location and length for data and reg.
-   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
-   - interrupts : The interrupt number.
--  - dm-mask : DMA bit mask
+@@ -11,6 +11,12 @@ Optional properties:
+   - nand-ecc-step-size: must be 512 or 1024.  If not specified, default to:
+       512   for "altr,socfpga-denali-nand"
+     see nand.txt for details.
++  - nand-ecc-strength: see nand.txt for details.  Available values are:
++      8, 15      for "altr,socfpga-denali-nand"
++  - nand-ecc-maximize: see nand.txt for details
++
++Note:
++Either nand-ecc-strength or nand-ecc-maximize should be specified.
  
  The device tree may optionally contain sub-nodes describing partitions of the
  address space. See partition.txt for more detail.
-@@ -20,5 +19,4 @@ nand: nand@ff900000 {
- 	reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
- 	reg-names = "nand_data", "denali_reg";
- 	interrupts = <0 144 4>;
--	dma-mask = <0xffffffff>;
- };
-diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
-index 9577bfd..b8a8284 100644
---- a/drivers/mtd/nand/denali_dt.c
-+++ b/drivers/mtd/nand/denali_dt.c
-@@ -46,8 +46,6 @@ static const struct of_device_id denali_nand_dt_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, denali_nand_dt_ids);
+diff --git a/drivers/mtd/nand/denali.c b/drivers/mtd/nand/denali.c
+index ce87b95..2f796e3 100644
+--- a/drivers/mtd/nand/denali.c
++++ b/drivers/mtd/nand/denali.c
+@@ -1641,9 +1641,23 @@ int denali_init(struct denali_nand_info *denali)
+ 		goto failed_req_irq;
+ 	}
  
--static u64 denali_dma_mask;
--
- static int denali_dt_probe(struct platform_device *ofdev)
- {
- 	struct resource *denali_reg, *nand_data;
-@@ -83,13 +81,6 @@ static int denali_dt_probe(struct platform_device *ofdev)
- 	if (IS_ERR(denali->flash_mem))
- 		return PTR_ERR(denali->flash_mem);
+-	ret = denali_set_max_ecc_strength(denali);
+-	if (ret)
++	if (!chip->ecc.strength && !(chip->ecc.options & NAND_ECC_MAXIMIZE)) {
++		dev_info(denali->dev,
++			 "No ECC strength strategy is specified. Maximizing ECC strength\n");
++		chip->ecc.options |= NAND_ECC_MAXIMIZE;
++	}
++
++	if (chip->ecc.options & NAND_ECC_MAXIMIZE) {
++		ret = denali_set_max_ecc_strength(denali);
++		if (ret)
++			goto failed_req_irq;
++	} else if (!(denali->ecc_strength_avail & BIT(chip->ecc.strength))) {
++		dev_err(denali->dev,
++			"ECC strength %d is not supported on this controller.\n",
++			chip->ecc.strength);
++		ret = -EINVAL;
+ 		goto failed_req_irq;
++	}
  
--	if (!of_property_read_u32(ofdev->dev.of_node,
--		"dma-mask", (u32 *)&denali_dma_mask)) {
--		denali->dev->dma_mask = &denali_dma_mask;
--	} else {
--		denali->dev->dma_mask = NULL;
--	}
--
- 	dt->clk = devm_clk_get(&ofdev->dev, NULL);
- 	if (IS_ERR(dt->clk)) {
- 		dev_err(&ofdev->dev, "no clk available\n");
+ 	chip->ecc.bytes = denali_calc_ecc_bytes(chip->ecc.size,
+ 						chip->ecc.strength);
+diff --git a/drivers/mtd/nand/denali_pci.c b/drivers/mtd/nand/denali_pci.c
+index a1ee9f8..a39682a5 100644
+--- a/drivers/mtd/nand/denali_pci.c
++++ b/drivers/mtd/nand/denali_pci.c
+@@ -87,6 +87,7 @@ static int denali_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 
+ 	denali->ecc_strength_avail = BIT(15) | BIT(8);
+ 	denali->caps |= DENALI_CAP_ECC_SIZE_512;
++	denali->nand.ecc.options |= NAND_ECC_MAXIMIZE;
+ 
+ 	ret = denali_init(denali);
+ 	if (ret)
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
