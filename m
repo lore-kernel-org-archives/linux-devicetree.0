@@ -1,123 +1,119 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
-Date: Thu, 30 Mar 2017 09:43:09 +0200
-Message-ID: <20170330074309.GA28533@amd>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323203749.GB8563@amd>
- <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
- <20170329190725.GN20094@minitux>
- <20170329222301.GB7977@amd>
- <20170330000955.GP20094@minitux>
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt-bindings: gpu: add bindings for the ARM Mali
+ Midgard GPU
+Date: Thu, 30 Mar 2017 10:00:42 +0200
+Message-ID: <6ce37fbf-3c46-c079-b934-8c8195e3d9fb@collabora.com>
+References: <cover.1490789802.git.guillaume.tucker@collabora.com>
+ <db45d0d68957d699f13a0d92f4f84d8ebfd0270e.1490789802.git.guillaume.tucker@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170330000955.GP20094@minitux>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <db45d0d68957d699f13a0d92f4f84d8ebfd0270e.1490789802.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On 29/03/17 14:44, Guillaume Tucker wrote:
+> The ARM Mali Midgard GPU family is present in a number of SoCs
+> from many different vendors such as Samsung Exynos and Rockchip.
+> 
+> Import the device tree bindings documentation from the r16p0
+> release of the Mali Midgard GPU kernel driver:
+> 
+>   https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-midgard-gpu/TX011-SW-99002-r16p0-00rel0.tgz
+> 
+> The following optional bindings have been omitted in this initial
+> version as they are only used in very specific cases:
+> 
+>   * snoop_enable_smc
+>   * snoop_disable_smc
+>   * jm_config
+>   * power_model
+>   * system-coherency
+>   * ipa-model
+> 
+> The example has been simplified accordingly.
+> 
+> The compatible string definition has been limited to
+> "arm,mali-midgard" to avoid checkpatch.pl warnings and to match
+> what the driver actually expects (as of r16p0 out-of-tree).
+> 
+> CC: John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> new file mode 100644
+> index 000000000000..da8fc6d21bbf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> @@ -0,0 +1,53 @@
+> +#
+> +# (C) COPYRIGHT 2013-2016 ARM Limited.
+> +# Copyright (C) 2017 Collabora Ltd
+> +#
+> +# This program is free software and is provided to you under the terms of the
+> +# GNU General Public License version 2 as published by the Free Software
+> +# Foundation, and any use by you of this program is subject to the terms
+> +# of such GNU licence.
+> +#
+> +
+> +
+> +ARM Mali Midgard GPU
+> +====================
+> +
+> +Required properties:
+> +
+> +- compatible : Should be "arm,mali-midgard".
+> +- reg : Physical base address of the device and length of the register area.
+> +- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
+> +- interrupt-names : Contains the names of IRQ resources in the order they were
+> +  provided in the interrupts property. Must contain: "JOB, "MMU", "GPU".
+> +
+> +Optional:
+> +
+> +- clocks : Phandle to clock for the Mali Midgard device.
+> +- clock-names : Shall be "clk_mali".
+> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+> +- operating-points : Refer to Documentation/devicetree/bindings/power/opp.txt
+> +  for details.
+> +
+> +Example for a Mali-T602:
+> +
+> +gpu@0xfc010000 {
+> +	compatible = "arm,mali-midgard";
+> +	reg = <0xfc010000 0x4000>;
+> +	interrupts = <0 36 4>, <0 37 4>, <0 38 4>;
+> +	interrupt-names = "JOB", "MMU", "GPU";
+> +
+> +	clocks = <&pclk_mali>;
+> +	clock-names = "clk_mali";
+> +	mali-supply = <&vdd_mali>;
+> +	operating-points = <
+> +		/* KHz   uV */
+> +		533000 1250000,
+> +		450000 1150000,
+> +		400000 1125000,
+> +		350000 1075000,
+> +		266000 1025000,
+> +		160000  925000,
+> +		100000  912500,
+> +	>;
+> +};
+> 
 
-> > > There is a binding for ti,lp55xx, but there's nothing I can reuse from
-> > > that binding...because it's completely different hardware.
-> >=20
-> > Agreed, if you drop the pattern stuff from the binding, at least for no=
-w.=20
->=20
-> I do not have a strong preference to expose these knobs in devicetree
-> and I do fear that finding some common "pattern" bindings that suits
-> everyone will be very difficult.
->=20
-> So I'll drop them from the binding for now.
+This works with veyron-minnie and veyron-jerry too, so
 
-Ok.
-
-> > If you want driver merged quickly, I believe the best way would be to
-> > leave out pattern support for now. We can merge the basic driver
-> > easily to 4.12.
-> >=20
->=20
-> I'm not that much in a hurry and would rather see that we resolve any
-> outstanding issues with the implementation of the pattern handling.
-
-Ok, good.
-
-> But regardless of this we still have the problem that the typical
-> Qualcomm PMIC has 8 LPG-blocks and any triple could be driving a
-> RGB-LED. So we would have to create some sort of in-driver-wrapper
-> around any three instances exposing them as a single LED to the user.
-
-Yes, I believe we should do the wrapping. In N900 case,=20
-
-> I rather expose the individual channels and make sure that when we
-> trigger a blink operation or enable a pattern (i.e. the two operations
-> that do require synchronization) we will perform that synchronization
-> under the hood.
-
-First, we need a way to tell userspace which LEDs are synchronized,
-because otherwise it will be confusing.
-
-Second, there are more issues than just patterns with the RGB
-LED. Most important is ability to set particular colors. You want to
-set the RGB LED to "white", but that does not mean you can set
-red=3Dgreen=3Dblue=3D1.0. You want color to look the same on LCD and on the
-LED, which means coefficients for white and some kind of function for
-brightness-to-PWM conversion.
-
-> > Incremental patches sound like a good idea, yes.
-> >=20
-> > I'd say that testing with actual RGB LED is not a requirement... as
-> > long as we design reasonable interface where the synchronizaction will
-> > be easy.
-> >=20
->=20
-> As this relates to the board layout (which LPG-channels are hooked to a
-> RGB) I think it makes sense to expose a mechanism in devicetree to
-> indicate which channels should have their pattern/blink synchronized.
->=20
-> We should be able to extend the LUT (the hardware that actually
-> implements the pattern-walker logic) with a DT-property like:
->=20
->   qcom,synchronize-group-0 =3D <1, 2, 3>;
->   qcom,synchronize-group-1 =3D <5, 6, 7>;
->=20
-> And whenever we configure a pattern involving one of the affected LEDs
-> from a group we start all of them.
-
-Yes we need some kind of grouping.
-
-Additional complexity in the N900 case... groups can actually be
-configured at run time. Original Maemo used that ability to group 6
-keyboard backlight leds, and then run pattern on them. OTOH... I don't
-think we _need_ to support that functionality.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9jxsPFA5p3P2qPhR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljctw0ACgkQMOfwapXb+vIrMQCeIZt9fkw52hT1PppKaJg9P4+E
-Eo0An1YKTHTIz7iFlaF1yVJckmImnIUA
-=lvJ+
------END PGP SIGNATURE-----
-
---9jxsPFA5p3P2qPhR--
+Tested-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
