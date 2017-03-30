@@ -1,104 +1,125 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: clearfog: keep dts alphabetically ordered
-Date: Thu, 30 Mar 2017 17:34:21 +0200
-Message-ID: <871steaide.fsf@free-electrons.com>
-References: <E1crlBu-0002Gp-V4@rmk-PC.armlinux.org.uk>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH v2 1/8] dt-bindings: Document STM32 DCMI bindings
+Date: Thu, 30 Mar 2017 17:27:40 +0200
+Message-ID: <1490887667-8880-2-git-send-email-hugues.fruchet@st.com>
+References: <1490887667-8880-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1crlBu-0002Gp-V4-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org> (Russell King's
-        message of "Sat, 25 Mar 2017 12:53:10 +0000")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490887667-8880-1-git-send-email-hugues.fruchet@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
- 
- On sam., mars 25 2017, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+This adds documentation of device tree bindings for the STM32 DCMI
+(Digital Camera Memory Interface).
 
-> Keep the clearfog DTS file ordered alphabetically - Florian placed the
-> MDIO entry after pinctrl, which mis-orders the file.
->
-> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+---
+ .../devicetree/bindings/media/st,stm32-dcmi.txt    | 85 ++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
 
-Applied on mvebu/dt with Reviewed-by flag from Andrew Lunn
-
-Thanks,
-
-Gregory
-
-
-> ---
->  arch/arm/boot/dts/armada-388-clearfog.dts | 38 +++++++++++++++----------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
-> index b9ad1641bcf3..e74904bcd0a0 100644
-> --- a/arch/arm/boot/dts/armada-388-clearfog.dts
-> +++ b/arch/arm/boot/dts/armada-388-clearfog.dts
-> @@ -183,25 +183,6 @@
->  	};
->  };
->  
-> -&pinctrl {
-> -	clearfog_dsa0_clk_pins: clearfog-dsa0-clk-pins {
-> -		marvell,pins = "mpp46";
-> -		marvell,function = "ref";
-> -	};
-> -	clearfog_dsa0_pins: clearfog-dsa0-pins {
-> -		marvell,pins = "mpp23", "mpp41";
-> -		marvell,function = "gpio";
-> -	};
-> -	clearfog_spi1_cs_pins: spi1-cs-pins {
-> -		marvell,pins = "mpp55";
-> -		marvell,function = "spi1";
-> -	};
-> -	rear_button_pins: rear-button-pins {
-> -		marvell,pins = "mpp34";
-> -		marvell,function = "gpio";
-> -	};
-> -};
-> -
->  &mdio {
->  	status = "okay";
->  
-> @@ -261,6 +242,25 @@
->  	};
->  };
->  
-> +&pinctrl {
-> +	clearfog_dsa0_clk_pins: clearfog-dsa0-clk-pins {
-> +		marvell,pins = "mpp46";
-> +		marvell,function = "ref";
-> +	};
-> +	clearfog_dsa0_pins: clearfog-dsa0-pins {
-> +		marvell,pins = "mpp23", "mpp41";
-> +		marvell,function = "gpio";
-> +	};
-> +	clearfog_spi1_cs_pins: spi1-cs-pins {
-> +		marvell,pins = "mpp55";
-> +		marvell,function = "spi1";
-> +	};
-> +	rear_button_pins: rear-button-pins {
-> +		marvell,pins = "mpp34";
-> +		marvell,function = "gpio";
-> +	};
-> +};
-> +
->  &spi1 {
->  	/*
->  	 * Add SPI CS pins for clearfog:
-> -- 
-> 2.7.4
->
-
+diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+new file mode 100644
+index 0000000..8180f63
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+@@ -0,0 +1,85 @@
++STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
++
++Required properties:
++- compatible: "st,stm32-dcmi"
++- reg: physical base address and length of the registers set for the device
++- interrupts: should contain IRQ line for the DCMI
++- clocks: list of clock specifiers, corresponding to entries in
++          the clock-names property
++- clock-names: must contain "mclk", which is the DCMI peripherial clock
++- resets: reference to a reset controller
++- reset-names: see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
++
++DCMI supports a single port node with parallel bus. It should contain one
++'port' child node with child 'endpoint' node. Please refer to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++Device node example
++-------------------
++	dcmi: dcmi@50050000 {
++		compatible = "st,stm32-dcmi";
++		reg = <0x50050000 0x400>;
++		interrupts = <78>;
++		resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
++		clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
++		clock-names = "mclk";
++		pinctrl-names = "default";
++		pinctrl-0 = <&dcmi_pins>;
++		dmas = <&dma2 1 1 0x414 0x3>;
++		dma-names = "tx";
++		status = "disabled";
++	};
++
++Board setup example
++-------------------
++This example is extracted from STM32F429-EVAL board devicetree.
++Please note that on this board, the camera sensor reset & power-down
++line level are inverted (so reset is active high and power-down is
++active low).
++
++/ {
++	[...]
++	clocks {
++		clk_ext_camera: clk-ext-camera {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++		};
++	};
++	[...]
++};
++
++&dcmi {
++	status = "okay";
++
++	port {
++		dcmi_0: endpoint@0 {
++			remote-endpoint = <&ov2640_0>;
++			bus-width = <8>;
++			hsync-active = <0>;
++			vsync-active = <0>;
++			pclk-sample = <1>;
++		};
++	};
++};
++
++&i2c@1 {
++	[...]
++	ov2640: camera@30 {
++		compatible = "ovti,ov2640";
++		reg = <0x30>;
++		resetb-gpios = <&stmpegpio 2 GPIO_ACTIVE_HIGH>;
++		pwdn-gpios = <&stmpegpio 0 GPIO_ACTIVE_LOW>;
++		clocks = <&clk_ext_camera>;
++		clock-names = "xvclk";
++		status = "okay";
++
++		port {
++			ov2640_0: endpoint {
++				remote-endpoint = <&dcmi_0>;
++			};
++		};
++	};
++};
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
