@@ -1,59 +1,38 @@
 From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v4 3/5] ARM: dts: stm32: Add watchdog support for STM32F429 SoC
-Date: Thu, 30 Mar 2017 17:15:24 +0200
-Message-ID: <1490886926-20585-4-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v4 4/5] ARM: dts: stm32: Add watchdog support for STM32F429 eval board
+Date: Thu, 30 Mar 2017 17:15:25 +0200
+Message-ID: <1490886926-20585-5-git-send-email-yannick.fertre@st.com>
 References: <1490886926-20585-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1490886926-20585-1-git-send-email-yannick.fertre@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add watchdog into DT for stm32f429 family.
+This patch adds watchdog support for STM32x9I-Eval board.
 
-Signed-off-by: Yannick FERTRE <yannick.fertre@st.com>
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32429i-eval.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 89327d6..d84dd44 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -64,7 +64,7 @@
- 			clock-frequency = <32768>;
- 		};
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 6e4b42a..6eaa382 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -144,6 +144,10 @@
+ 	};
+ };
  
--		clk-lsi {
-+		clk_lsi: clk-lsi {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <32000>;
-@@ -306,6 +306,13 @@
- 			status = "disabled";
- 		};
- 
-+		iwdg: watchdog@40003000 {
-+			compatible = "st,stm32-iwdg";
-+			reg = <0x40003000 0x400>;
-+			clocks = <&clk_lsi>;
-+			status = "disabled";
-+		};
++&iwdg {
++	status = "okay";
++};
 +
- 		usart2: serial@40004400 {
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004400 0x400>;
+ &adc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&adc3_in8_pin>;
 -- 
 1.9.1
