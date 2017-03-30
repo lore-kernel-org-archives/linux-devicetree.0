@@ -1,36 +1,36 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v2 7/8] ARM: configs: stm32: STMPE1600 GPIO expander
-Date: Thu, 30 Mar 2017 17:27:46 +0200
-Message-ID: <1490887667-8880-8-git-send-email-hugues.fruchet@st.com>
-References: <1490887667-8880-1-git-send-email-hugues.fruchet@st.com>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2] ARM: dts: keystone: Add support for new K2G evm
+Date: Thu, 30 Mar 2017 10:29:05 -0500
+Message-ID: <20170330152907.12595-1-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490887667-8880-1-git-send-email-hugues.fruchet@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable STMPE1600 GPIO expander.
+This patchset adds support for new K2G Industrial Communication Engine
+evm. For now only a bare minimal dts which will allow ram boot. Additional
+peripherals will be added when base K2G SoC patches are upstreamed allowing
+peripherals to be enabled.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- arch/arm/configs/stm32_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Bootlog: https://pastebin.ubuntu.com/24281838/
 
-diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-index a9d8e3c..84adc88 100644
---- a/arch/arm/configs/stm32_defconfig
-+++ b/arch/arm/configs/stm32_defconfig
-@@ -49,6 +49,8 @@ CONFIG_SERIAL_STM32_CONSOLE=y
- # CONFIG_HW_RANDOM is not set
- # CONFIG_HWMON is not set
- CONFIG_REGULATOR=y
-+CONFIG_GPIO_STMPE=y
-+CONFIG_MFD_STMPE=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- # CONFIG_USB_SUPPORT is not set
- CONFIG_NEW_LEDS=y
+Franklin S Cooper Jr (2):
+  ARM: keystone: Create new binding for K2G ICE evm
+  ARM: dts: keystone: Add minimum support for K2G ICE evm
+
+ .../devicetree/bindings/arm/keystone/keystone.txt  |  3 ++
+ arch/arm/boot/dts/Makefile                         |  3 +-
+ arch/arm/boot/dts/keystone-k2g-ice.dts             | 42 ++++++++++++++++++++++
+ 3 files changed, 47 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/keystone-k2g-ice.dts
+
 -- 
-1.9.1
+2.10.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
