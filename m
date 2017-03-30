@@ -1,98 +1,213 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v1 0/8] clk: meson: gxbb: more clock controller update for
- audio support
-Date: Thu, 30 Mar 2017 10:15:06 +0200
-Message-ID: <6474a845-f325-ccae-24d8-81dba2185c84@baylibre.com>
-References: <20170328144605.25278-1-jbrunet@baylibre.com>
- <149082017390.31513.12254031076684821992@resonance>
+From: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 1/5 v3] iio: xoadc: augment DT bindings a bit
+Date: Thu, 30 Mar 2017 10:18:13 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1703301016220.14237@vps.pmeerw.net>
+References: <20170330080541.4065-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <149082017390.31513.12254031076684821992@resonance>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; BOUNDARY="324302256-1120555799-1490861893=:14237"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170330080541.4065-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2017 10:42 PM, Michael Turquette wrote:
-> Hi Jerome,
-> 
-> Adding Neil Armstong to Cc.
-> 
-> Quoting Jerome Brunet (2017-03-28 07:45:57)
->> The patchset is the 2nd round of update to the meson gxbb clock controller
->> to add initial audio support. The patchset is based on clk-next.
->>
->> There is not much out of the ordinary here (adding new clocks and exposing
->> them) except maybe for 2 patches:
->> Patch #2: Adds a safety check while registering clocks to protect against
->>           holes in clk_hw_onecell_data, if it ever happens. Same thing is
->>           done for the meson8b clock controller. 
->> Patch #3: Adds a new clock divider driver to implement the necessary
->>           policy for the i2s master clock (see patch changelog)
->>
->> This patchset has been test on the gxbb p200 and gxl p230.
-> 
-> First off, this series looks fine to me. Please add,
-> 
-> Acked-by: Michael Turquette <mturquette@baylibre.com>
-> 
-> Secondly, it seems the AmLogic clock drivers have mostly calmed down and
-> things are in the "add new clocks when we need them" phase, which is
-> nice. Since you and Neil are doing a lot of this work, might I suggest
-> that you both start collecting patches for the AmLogic/meson clock
-> drivers begin submitting pull requests to Stephen and myself?
-> 
-> As usual the rules are the same as always: all patches in the PR must
-> first be posted for review on the list. PRs should correspond to signed
-> tags. Stephen and I might ignore PRs sent after -rc4, and will
-> definitely ignore PRs sent after -rc6 since we want some stabilization
-> time before the merge window. Base your branch on -rc1, not on clk-next.
-> 
-> Also feel free to submit a patch to MAINTAINERS with either one or both
-> of you maintaining the meson clk stuff, assuming that you're OK to
-> review all of those patches and collect them into a PR.
-> 
-> Thoughts?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks Mike, I'll be glad to co-maintain this with jerome !
+--324302256-1120555799-1490861893=:14237
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Neil
 
+> In order to accommodate in a logical manner for the premuxed channels
+> in PM8921 and the similarly addressed channels in later PMICs, we
+> need a twocell arrangement with premux and analog mux setting as
+> a tuple to uniquely identify a hardware channel.
 > 
-> If it sounds good to you then I suggest grabbing the clk-meson branch
-> from the clk tree and using that as a baseline for your first PR. In the
-> future you'll just Linus' -rc1, but I have already created a branch for
-> this cycle. You can apply these 8 patches with my Ack and send a PR by
-> -rc6 (possibly with other stuff collected from Martin, etc).
+> These bindings are not yet in use, so it should be fine to augment
+> them before we actually start using it in drivers and device trees.
 
-Acked !
+nitpicking below
+ 
+> This scheme came out of lengthy discussions and reverse-engineering
+> and reading of the few information sources we have.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v2->v3:
+> - Drop leading zeroes on unit addresses.
+> ChangeLog v1->v2:
+> - Name nodes with <01 02> in a foo@0102 pattern.
+> - Minor spelling nits.
+> - Delete flimsy leftover docs from an interrim development path.
+> ---
+>  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 76 ++++++++++++----------
+>  1 file changed, 42 insertions(+), 34 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> index 53cd146d8096..69c404112df1 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> @@ -19,32 +19,42 @@ Required properties:
+>    with PMIC variant but is typically something like 2.2 or 1.8V.
+>  
+>  The following required properties are standard for IO channels, see
+> -iio-bindings.txt for more details:
+> +iio-bindings.txt for more details, but noitice that this particular
 
+notice
+
+> +ADC has a special adressing scheme that require two cells for
+
+addressing
+
+> +identifying each ADC channel:
+>  
+> -- #address-cells: should be set to <1>
+> +- #address-cells: should be set to <2>, the first cell is the
+> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
+> +  so legal values are 0x00, 0x01 or 0x02. The second cell
+> +  is the main analog mux setting (0x00..0x0f). The combination
+> +  of prescaler/premux and analog mux uniquely addresses a hardware
+> +  channel on all systems.
+>  
+>  - #size-cells: should be set to <0>
+>  
+> -- #io-channel-cells: should be set to <1>
+> +- #io-channel-cells: should be set to <2>, again the cells are
+> +  precaler or premux followed by the analog muxing line.
+>  
+>  - interrupts: should refer to the parent PMIC interrupt controller
+>    and reference the proper ADC interrupt.
+>  
+>  Required subnodes:
+>  
+> -The ADC channels are configured as subnodes of the ADC. Since some of
+> -them are used for calibrating the ADC, these nodes are compulsory:
+> +The ADC channels are configured as subnodes of the ADC.
+> +
+> +Since some of them are used for calibrating the ADC, these nodes are
+> +compulsory:
+>  
+>  adc-channel@c {
+> -	reg = <0x0c>;
+> +	reg = <0x00 0x0c>;
+>  };
+>  
+>  adc-channel@d {
+> -	reg = <0x0d>;
+> +	reg = <0x00 0x0d>;
+>  };
+>  
+>  adc-channel@f {
+> -	reg = <0x0f>;
+> +	reg = <0x00 0x0f>;
+>  };
+>  
+>  These three nodes are used for absolute and ratiometric calibration
+> @@ -52,13 +62,13 @@ and only need to have these reg values: they are by hardware definition
+>  1:1 ratio converters that sample 625, 1250 and 0 milliV and create
+>  an interpolation calibration for all other ADCs.
+>  
+> -Optional subnodes: any channels other than channel 0x0c, 0x0d and
+> -0x0f are optional.
+> +Optional subnodes: any channels other than channels [0x00 0x0c],
+> +[0x00 0x0d] and [0x00 0x0f] are optional.
+>  
+>  Required channel node properties:
+>  
+>  - reg: should contain the hardware channel number in the range
+> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
+> +  0 .. 0xff (8 bits).
+>  
+>  Optional channel node properties:
+>  
+> @@ -94,56 +104,54 @@ Example:
+>  xoadc: xoadc@197 {
+>  	compatible = "qcom,pm8058-adc";
+>  	reg = <0x197>;
+> -	interrupt-parent = <&pm8058>;
+> -	interrupts = <76 1>;
+> -	#address-cells = <1>;
+> +	interrupts-extended = <&pm8058 76 IRQ_TYPE_EDGE_RISING>;
+> +	#address-cells = <2>;
+>  	#size-cells = <0>;
+> -	#io-channel-cells = <1>;
+> +	#io-channel-cells = <2>;
+>  
+>  	vcoin: adc-channel@0 {
+> -		reg = <0x00>;
+> +		reg = <0x00 0x00>;
+>  	};
+>  	vbat: adc-channel@1 {
+> -		reg = <0x01>;
+> +		reg = <0x00 0x01>;
+>  	};
+>  	dcin: adc-channel@2 {
+> -		reg = <0x02>;
+> +		reg = <0x00 0x02>;
+>  	};
+>  	ichg: adc-channel@3 {
+> -		reg = <0x03>;
+> +		reg = <0x00 0x03>;
+>  	};
+>  	vph_pwr: adc-channel@4 {
+> -		reg = <0x04>;
+> +		reg = <0x00 0x04>;
+>  	};
+>  	usb_vbus: adc-channel@a {
+> -		reg = <0x0a>;
+> +		reg = <0x00 0x0a>;
+>  	};
+>  	die_temp: adc-channel@b {
+> -		reg = <0x0b>;
+> +		reg = <0x00 0x0b>;
+>  	};
+>  	ref_625mv: adc-channel@c {
+> -		reg = <0x0c>;
+> +		reg = <0x00 0x0c>;
+>  	};
+>  	ref_1250mv: adc-channel@d {
+> -		reg = <0x0d>;
+> +		reg = <0x00 0x0d>;
+>  	};
+>  	ref_325mv: adc-channel@e {
+> -		reg = <0x0e>;
+> +		reg = <0x00 0x0e>;
+>  	};
+>  	ref_muxoff: adc-channel@f {
+> -		reg = <0x0f>;
+> +		reg = <0x00 0x0f>;
+>  	};
+>  };
+>  
+> -
+>  /* IIO client node */
+>  iio-hwmon {
+>  	compatible = "iio-hwmon";
+> -	io-channels = <&xoadc 0x01>, /* Battery */
+> -		    <&xoadc 0x02>, /* DC in (charger) */
+> -		    <&xoadc 0x04>, /* VPH the main system voltage */
+> -		    <&xoadc 0x0b>, /* Die temperature */
+> -		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
+> -		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
+> -		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
+> +	io-channels = <&xoadc 0x00 0x01>, /* Battery */
+> +		    <&xoadc 0x00 0x02>, /* DC in (charger) */
+> +		    <&xoadc 0x00 0x04>, /* VPH the main system voltage */
+> +		    <&xoadc 0x00 0x0b>, /* Die temperature */
+> +		    <&xoadc 0x00 0x0c>, /* Reference voltage 1.25V */
+> +		    <&xoadc 0x00 0x0d>, /* Reference voltage 0.625V */
+> +		    <&xoadc 0x00 0x0e>; /* Reference voltage 0.325V */
+>  };
 > 
-> Thanks,
-> Mike
-> 
->>
->> Jerome Brunet (8):
->>   dt-bindings: clock: gxbb: expose spdif clock gates
->>   clk: meson: gxbb: protect against holes in the onecell_data array
->>   clk: meson: add audio clock divider support
->>   clk: meson: gxbb: add cts_amclk
->>   clk: meson: gxbb: add cts_mclk_i958
->>   clk: meson: gxbb: add cts_i958 clock
->>   dt-bindings: clock: gxbb: expose i2s master clock
->>   dt-bindings: clock: gxbb: expose spdif master clock
->>
->>  drivers/clk/meson/Makefile            |   2 +-
->>  drivers/clk/meson/clk-audio-divider.c | 149 ++++++++++++++++++++++++++++++++++
->>  drivers/clk/meson/clkc.h              |  10 +++
->>  drivers/clk/meson/gxbb.c              | 144 ++++++++++++++++++++++++++++++++
->>  drivers/clk/meson/gxbb.h              |  13 ++-
->>  include/dt-bindings/clock/gxbb-clkc.h |   5 ++
->>  6 files changed, 319 insertions(+), 4 deletions(-)
->>  create mode 100644 drivers/clk/meson/clk-audio-divider.c
->>
->> -- 
->> 2.9.3
->>
+
+-- 
+
+Peter Meerwald-Stadler
+Mobile: +43 664 24 44 418
+--324302256-1120555799-1490861893=:14237--
