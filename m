@@ -1,90 +1,44 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: add driver for STM32 quad spi flash
- controller
-Date: Thu, 30 Mar 2017 12:17:03 +0200
-Message-ID: <14d69f70-ffa1-c65c-f8e4-c120a827e102@gmail.com>
-References: <1490619296-8168-1-git-send-email-ludovic.Barre@st.com>
- <1490619296-8168-3-git-send-email-ludovic.Barre@st.com>
- <1be39452-83b0-5c32-39fe-d6dd5134d1ef@gmail.com>
- <2c364b99-512c-8eb6-7044-7989ba21d53b@st.com>
- <28454969-0f56-7752-b087-5e02a1a20c23@gmail.com>
- <2410fcde-1d1d-57b5-01ee-bd6bc3bc863b@st.com>
- <0e7da44f-c41b-de15-62c3-7509e556f623@gmail.com>
- <d785a279-362c-3693-d318-08ef43af7ad4@st.com>
+From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH/RFC v2 0/2] arm64: dts: r8a7795: Add support for R-Car
+ H3 ES2.0
+Date: Thu, 30 Mar 2017 12:48:18 +0200
+Message-ID: <1490870898.3471.3.camel@collabora.co.uk>
+References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <d785a279-362c-3693-d318-08ef43af7ad4@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Ludovic BARRE <ludovic.barre@st.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490362665-4422-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Wolfram Sang <wsa-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2017 06:38 PM, Ludovic BARRE wrote:
+On Fri, 2017-03-24 at 14:37 +0100, Geert Uytterhoeven wrote:
+> 	Hi all,
 > 
+> This patch series adds preliminary support for Renesas Salvator-X
+> development boards equipped with revision ES2.0 of the R-Car H3 Soc.
 > 
-> On 03/29/2017 03:57 PM, Marek Vasut wrote:
->> On 03/29/2017 03:35 PM, Ludovic BARRE wrote:
->>
->> [...]
->>
->>>>>>> +    writel_relaxed(CR_PRESC(presc) | CR_FTHRES(3) | CR_TCEN |
->>>>>>> CR_SSHIFT
->>>>>>> +               | CR_EN, qspi->io_base + QUADSPI_CR);
->>>>>>> +
->>>>>>> +    /* a minimum fsize must be set to sent the command id */
->>>>>>> +    flash->fsize = 25;
->>>>>> I don't understand why this is needed and the comment doesn't make
->>>>>> sense. Please fix.
->>>>> fsize field defines the size of external memory.
->>>> What external memory ? Unclear
->>> oops, fsize field defined the size of "flash memory" in stm32 qspi
->>> controller.
->> Errr, now I am totally lost :) Is that some internal SPI NOR ? Shouldn't
->> the size be coming from DT or something ?
->>
->>> Number of bytes in Flash memory = 2 ^[FSIZE+1].
->>> To sent a nor cmd this field must be set (hardware issue),
->>> but before "spi_nor_scan" the size of flash nor is not know.
->>> So I set a temporary value (workaround).
->> Is it needed before the scan ?
-> yes it's needed before scan (fix a "stm32 qspi controller" issue)
-> 
-> sorry, I try to reformulate:
-> 
-> The nor flash (external component like micron n25q128a13
-> or spansion s25fl512s ...) is connected to stm32 by classic
-> spi-nor interface cs, clock and 1/2/4 IO lines.
-> 
-> the stm32 microprocessor has a dedicated controller to
-> manage spi-nor interface, it's stm32 qspi.
-> 
-> In stm32 qspi controller there is a register with fsize field
-> which define the size of nor flash (n25q128a13 or s25fl512s...).
-> 
-> fsize can't be null, else the stm32 qspi controller doesn't send
-> spi-nor command. it's "stm32 qspi controller" issue.
-> 
-> Before the "spi_nor_scan" the size of nor flash (n25q128a13
-> or s25fl512s...) is not know. So we set a temporary value just
-> to discover the nor flash with "spi_nor_scan". After we can
-> set the right value (mtd->size) in fsize.
+>   - Patch 1 adds support for the R-Car H3 ES2.0 Soc,
+>     While this patch is safe as-is, as it doesn't affect any existing
+>     setups, it's probably a bit premature to apply it.
+>   - Patch 2 adds support for Salvator-X boards with R-Car H3 ES2.0.
+>     This patch does affect existing development setups, as it changes
+> the
+>     name of the DTB for Salvator-X boards equipped with ES1.x SoCs.
+>     Given most developers have access to ES1.x only, this patch must
+> not be
+>     applied yet.
 
-I see, now it makes sense. Such a beefy comment would be nice :)
+Would it make more sense to add a new r8a7795-es2.dtsi and keep the
+current dtsi for es1? Having to load different device-trees based on
+which kernel is used would be rather nasty.
 
 -- 
-Best regards,
-Marek Vasut
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Sjoerd Simons
+Collabora Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
