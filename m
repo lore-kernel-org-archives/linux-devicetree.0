@@ -1,136 +1,44 @@
-From: Felix Brack <fb@ltec.ch>
-Subject: [PATCH v2] Extend pca9532 device tree support
-Date: Thu, 30 Mar 2017 15:33:53 +0200
-Message-ID: <1490880833-22199-1-git-send-email-fb@ltec.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com, rpurdie@rpsys.net, pavel@ucw.cz, mark.rutland@arm.com, riku.voipio@iki.fi, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, fb@ltec.ch
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
+Date: Thu, 30 Mar 2017 21:51:45 +0800
+Message-ID: <20170330135145.GA26911@leoy-linaro>
+References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
+ <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
+ <20170328165010.GA21937@linaro.org>
+ <20170329015423.GA5035@leoy-linaro>
+ <CAJ9a7VhQRuVOCJkjPc9RANGo=fgA8wjtB65dC5f19ZX22a5FHQ@mail.gmail.com>
+ <20170330010343.GA31843@leoy-linaro>
+ <a9078a4e-152e-01ae-8750-1396da2bc623@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a9078a4e-152e-01ae-8750-1396da2bc623@arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, Sudeep Holla <sudeep.holla>
 List-Id: devicetree@vger.kernel.org
 
-This patch extends the device tree support for the pca9532 by adding
-the leds 'default-state' property.
+On Thu, Mar 30, 2017 at 10:00:30AM +0100, Suzuki K Poulose wrote:
 
-Changes in v2:
-- remove prescaler and pwm configuration by none generic
-  DT properties
+[...]
 
-Signed-off-by: Felix Brack <fb@ltec.ch>
----
- .../devicetree/bindings/leds/leds-pca9532.txt      | 10 +++++++
- drivers/leds/leds-pca9532.c                        | 31 +++++++++++++++++++++-
- include/linux/leds-pca9532.h                       |  4 +--
- 3 files changed, 42 insertions(+), 3 deletions(-)
+> Leo,
+> 
+> Also, it would be good to restore the PRCR register back to the original state
+> after we read the registers (if we changed them). I am exploring ways to make
+> use of this feature on demand (e.g, tie it to sysrq-t or sysrq-l) and not just
+> at panic time. So it would be good to have the state restored to not affect the
+> normal functioning even after dumping the registers.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-index 198f3ba..8374075 100644
---- a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-@@ -17,6 +17,8 @@ Optional sub-node properties:
- 	- label: see Documentation/devicetree/bindings/leds/common.txt
- 	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
- 	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-+	- default-state: see Documentation/devicetree/bindings/leds/common.txt
-+	  This property is only valid for sub-nodes of type <PCA9532_TYPE_LED>.
- 
- Example:
-   #include <dt-bindings/leds/leds-pca9532.h>
-@@ -33,6 +35,14 @@ Example:
-       label = "pca:green:power";
-       type = <PCA9532_TYPE_LED>;
-     };
-+    kernel-booting {
-+    	type = <PCA9532_TYPE_LED>;
-+    	default-state = "on";
-+    };
-+    sys-stat {
-+    	type = <PCA9532_TYPE_LED>;
-+    	default-state = "keep"; // don't touch, was set by U-Boot
-+    };
-   };
- 
- For more product information please see the link below:
-diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-index 06e6310..66ef280 100644
---- a/drivers/leds/leds-pca9532.c
-+++ b/drivers/leds/leds-pca9532.c
-@@ -254,6 +254,21 @@ static void pca9532_input_work(struct work_struct *work)
- 	mutex_unlock(&data->update_lock);
- }
- 
-+static enum pca9532_state pca9532_getled(struct pca9532_led *led)
-+{
-+	struct i2c_client *client = led->client;
-+	struct pca9532_data *data = i2c_get_clientdata(client);
-+	u8 maxleds = data->chip_info->num_leds;
-+	char reg;
-+	enum pca9532_state ret;
-+
-+	mutex_lock(&data->update_lock);
-+	reg = i2c_smbus_read_byte_data(client, LED_REG(maxleds, led->id));
-+	ret = reg >> LED_NUM(led->id)/2;
-+	mutex_unlock(&data->update_lock);
-+	return ret;
-+}
-+
- #ifdef CONFIG_LEDS_PCA9532_GPIO
- static int pca9532_gpio_request_pin(struct gpio_chip *gc, unsigned offset)
- {
-@@ -366,7 +381,10 @@ static int pca9532_configure(struct i2c_client *client,
- 			gpios++;
- 			break;
- 		case PCA9532_TYPE_LED:
--			led->state = pled->state;
-+			if (pled->state == PCA9532_KEEP)
-+				led->state = pca9532_getled(led);
-+			else
-+				led->state = pled->state;
- 			led->name = pled->name;
- 			led->ldev.name = led->name;
- 			led->ldev.default_trigger = pled->default_trigger;
-@@ -456,6 +474,7 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
- 	const struct of_device_id *match;
- 	int devid, maxleds;
- 	int i = 0;
-+	const char *state;
- 
- 	match = of_match_device(of_pca9532_leds_match, dev);
- 	if (!match)
-@@ -475,6 +494,16 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
- 		of_property_read_u32(child, "type", &pdata->leds[i].type);
- 		of_property_read_string(child, "linux,default-trigger",
- 					&pdata->leds[i].default_trigger);
-+		if (!of_property_read_string(child, "default-state", &state)) {
-+			if (!strcmp(state, "on"))
-+				pdata->leds[i].state = PCA9532_ON;
-+			else if (!strcmp(state, "keep"))
-+				pdata->leds[i].state = PCA9532_KEEP;
-+			else if (!strcmp(state, "pwm0"))
-+				pdata->leds[i].state = PCA9532_PWM0;
-+			else if (!strcmp(state, "pwm1"))
-+				pdata->leds[i].state = PCA9532_PWM1;
-+		}
- 		if (++i >= maxleds) {
- 			of_node_put(child);
- 			break;
-diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
-index d215b45..a327b1aa 100644
---- a/include/linux/leds-pca9532.h
-+++ b/include/linux/leds-pca9532.h
-@@ -22,7 +22,8 @@ enum pca9532_state {
- 	PCA9532_OFF  = 0x0,
- 	PCA9532_ON   = 0x1,
- 	PCA9532_PWM0 = 0x2,
--	PCA9532_PWM1 = 0x3
-+	PCA9532_PWM1 = 0x3,
-+	PCA9532_KEEP = 0xff
- };
- 
- struct pca9532_led {
-@@ -44,4 +45,3 @@ struct pca9532_platform_data {
- };
- 
- #endif /* __LINUX_PCA9532_H */
--
--- 
-2.7.4
+Got it. Will take care for this.
+
+Thanks,
+Leo Yan
+
+> PS: I have a small hack to hook this into a sysrq-x at runtime, but on a second thought
+> it is better not to consume the key and rather tie it to something which already exist,
+> as mentioned above.
+> 
+> Thanks
+> Suzuki
