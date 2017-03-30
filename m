@@ -1,49 +1,74 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] bus: brcmstb_gisb: add support for GISBv7 arbiter
-Date: Thu, 30 Mar 2017 19:19:32 +0100
-Message-ID: <20170330181932.GB8062@leverpostej>
-References: <20170330002914.7371-1-opendmb@gmail.com>
- <c3182c24-2245-cf2e-32e4-248b8046a30f@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3] iio: adc: cpcap: Add minimal support for CPCAP PMIC ADC
+Date: Thu, 30 Mar 2017 19:26:50 +0100
+Message-ID: <3837adac-5dec-c645-1aeb-9425c0e73076@kernel.org>
+References: <20170324033842.12541-1-tony@atomide.com>
+ <20170329212637.syluvxy5cp2qub3h@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c3182c24-2245-cf2e-32e4-248b8046a30f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170329212637.syluvxy5cp2qub3h@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 09:33:32AM -0700, Florian Fainelli wrote:
-> On 03/29/2017 05:29 PM, Doug Berger wrote:
-> > This patch set contains changes to enable the GISB arbiter driver
-> > on the latest ARM64 architecture Set-Top Box chips from Broadcom.
-> > 
-> > Since the ARM64 architecture does not support the hooking of low
-> > level fault handlers the driver has been adjusted to depend solely
-> > on GISB interrupts and notify events to provide diagnostic
-> > messaging.  The GISB hardware still triggers bus faults for the
-> > processor so the default low-level aborts will occur and will be
-> > handled based on the architecture specific kernel implementation.
-> > 
-> > While this tends to obsure the GISB error messaging it is still
-> > reasonable so the same approach is applied to the ARM architecture
-> > for consistency.
-> > 
-> > The patches also correct some issues with the existing driver
-> > and add the new register map for the GISBv7 hardware first
-> > appearing in the BCM7278 device.
+On 29/03/17 22:26, Rob Herring wrote:
+> On Thu, Mar 23, 2017 at 08:38:42PM -0700, Tony Lindgren wrote:
+>> On Motorola phones like droid 4 there is a custom CPCAP PMIC. This PMIC
+>> has ADCs that are used for battery charging and USB PHY VBUS and ID pin
+>> detection.
+>>
+>> Unfortunately the only documentation for this ADC seems to be the
+>> Motorola mapphone Linux kernel tree. I have tested that reading raw and
+>> scaled values works, but I have not used the timed sampling that the ADC
+>> seems to support.
+>>
+>> Let's add a minimal support for it so we can eventually provide IIO
+>> channels for the related battery charging and USB PHY drivers.
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
+>> Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>
+>> Changes since v2:
+>>
+>> - Simplify things further by using channel based indexing and
+>>   remove more drivers specific enumerations
+>>
+>> Changes since v1:
+>>
+>> - Fix numerous issues pointed out by Peter Meerwald-Stadler
+>>   <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org> and Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> - Simplify things further by limiting read functions to a
+>>   single channel instead of a bank and got rid of the driver
+>>   specific cpcap_adc_conv_type in favor of IIO generic types
+>>
+>> ---
+>>  .../devicetree/bindings/iio/adc/cpcap-adc.txt      |   18 +
 > 
-> This all looks great to me, and since there are no more ARM64
-> dependencies I can take this via the Broadcom ARM/ARM64 SoC pull requests.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Been long enough now that I'm happy to take this.
+Thanks for looking at the bindings Rob!
+
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Jonathan
 > 
-> Mark, are you also happy with this v3?
-
-It looks fine by me.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>  drivers/iio/adc/Kconfig                            |   11 +
+>>  drivers/iio/adc/Makefile                           |    1 +
+>>  drivers/iio/adc/cpcap-adc.c                        | 1007 ++++++++++++++++++++
+>>  4 files changed, 1037 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/cpcap-adc.txt
+>>  create mode 100644 drivers/iio/adc/cpcap-adc.c
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
