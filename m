@@ -1,76 +1,68 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
-Date: Thu, 30 Mar 2017 17:04:42 +0100
-Message-ID: <5a4c5112-4934-c827-2a07-387e4555dc4b@arm.com>
-References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
- <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
- <20170328165010.GA21937@linaro.org> <20170329015423.GA5035@leoy-linaro>
- <20170329165535.GB24889@linaro.org> <20170330015941.GD3038@leoy-linaro>
- <CANLsYkwPYSvy2xjf8uuvx1WGWpGdMFy7kF=30VbvgW+jDvnFuw@mail.gmail.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v6 00/39] i.MX Media Driver
+Date: Thu, 30 Mar 2017 09:12:29 -0700
+Message-ID: <d715bcdf-b2df-8080-6ab4-854aeace31a8@gmail.com>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170330110249.GF7909@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANLsYkwPYSvy2xjf8uuvx1WGWpGdMFy7kF=30VbvgW+jDvnFuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XcXa4x6EXUF0@public.gmane.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170330110249.GF7909@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 30/03/17 16:46, Mathieu Poirier wrote:
-> On 29 March 2017 at 19:59, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Mar 29, 2017 at 10:55:35AM -0600, Mathieu Poirier wrote:
->>
->> [...]
->>
->>>> So this is why add "idle_constraint" as a central place to control
->>>> power domain for CPU debug purpose and I also think this is more
->>>> friendly for hardware design, e.g. some platforms can enable partial
->>>> low power states to save power and avoid overheat after using this
->>>> driver.
->>>>
->>>> How about you think for this?
->>>
->>> Like Sudeep pointed out we should concentrate on doing the right thing,
->>> that is work with EDPRSR.PU, EDPRCR.COREPURQ and EDPRCR.CORENPDRQ.
->>
->> Agree, and I think we have aligned for this.
->>
->>> Anything outside of that becomes platform specific and can't be handled in
->>> this driver.
->>
->> Sorry I argue a bit for this just want to make things more clear and
->> if can have better method.
->>
->> Though the issue is platform specific, but the code is to seek common
->> method to handle them. So the driver has no any platform specific code.
-> 
-> Seeking a common way to handle platform specific problems doesn't
-> scale and will never be encompassing.  There will always be a quirk
-> somewhere to deal with, hence the idea of keeping things separate.
-> 
+On 03/30/2017 04:02 AM, Russell King - ARM Linux wrote:
+> This fails at step 1.  The removal of the frame interval support now
+> means my setup script fails when trying to set the frame interval on
+> the camera:
+>
+> Enumerating pads and links
+> Setting up format SRGGB8_1X8 816x616 on pad imx219 0-0010/0
+> Format set: SRGGB8_1X8 816x616
+> Setting up frame interval 1/25 on pad imx219 0-0010/0
+> Frame interval set: 1/25
+> Setting up format SRGGB8_1X8 816x616 on pad imx6-mipi-csi2/0
+> Format set: SRGGB8_1X8 816x616
+> Setting up frame interval 1/25 on pad imx6-mipi-csi2/0
+> Unable to set frame interval: Inappropriate ioctl for device (-25)Unable to setup formats: Inappropriate ioctl for device (25)
+>
+> This is because media-ctl tries to propagate it from the imx219 source
+> pad to the csi2 sink pad, and the csi2 now fails that ioctl.
 
-I completely agree and just responded to the original patch.
+I assume you're using Philipp's frame interval patches to media-ctl.
+Can you make the frame interval propagation optional in those patches?
+I.e. don't error-out with a failure code if the ioctl returns ENOTTY.
 
->>
->> I read again for Suziki's suggestion: "4) Should document the fact that,
->> on some platforms, the user may have to disable CPUidle explicitly to
->> get the driver working. But let us not make it the default. The user
->> with a not so ideal platform could add "nohlt" and get it working."
-> 
-> Suzuki and I are expressing the same view using different words.
-> 
+Steve
 
-+1, as I just mentioned on the patch, we can warn user to take action
-when this feature gets enabled to get desired result and *nothing more*
-than that. Please drop all these pm_qos stuff.
-
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> This makes media-ctl return a failure code, which means that it's not
+> possible for a script to determine whether the failure was due to the
+> camera setup or something else.  So, we have to assume that the
+> whole command failed.
+>
+> This is completely broken, and I'm even more convinced that those
+> arguing for this behaviour really have not thought it through well
+> enough before demanding that this code was removed.
+>
+> As far as I'm concerned, the end result is completely broken and
+> unusable.  I'm going to be merging the frame interval support back
+> into my test tree, because that's the only sane thing to do.
+>
+> If v4l2 people want to object to having frame interval support present
+> for all subdevs, then _they_ need to make sure that the rest of their
+> software conforms to what they're telling people to do.
+>
