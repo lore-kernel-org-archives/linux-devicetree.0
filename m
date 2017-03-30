@@ -1,43 +1,77 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v12 00/10] mux controller abstraction and iio/i2c muxes
-Date: Thu, 30 Mar 2017 09:34:52 +0200
-Message-ID: <c321dad0-4c0e-b192-ee93-45359e29f61b@axentia.se>
-References: <1490624525-15865-1-git-send-email-peda@axentia.se>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCHv5 11/11] arm: sti: update sti-cec for CEC notifier support
+Date: Thu, 30 Mar 2017 09:41:30 +0200
+Message-ID: <CA+M3ks442wftNR8+dctdSkKMCPSw9Rd2CH5UG-VEP7XySGjCjw@mail.gmail.com>
+References: <20170329141543.32935-1-hverkuil@xs4all.nl>
+ <20170329141543.32935-12-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490624525-15865-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170329141543.32935-12-hverkuil@xs4all.nl>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Patrice.chotard@st.com, Javier Martinez Canillas <javier@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel.vetter@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-03-27 16:21, Peter Rosin wrote:
-> Hi Greg!
-> 
-> Please apply.
->
-
-*snip snip*
-
-> v10 -> v11 changes
-> - added a new patch (12) with a fix for messed up error path reported
->   by Paul Gortmaker.
-
-Oops, should be Dan Carpenter. Sorry about that...
-
-And, I forgot to high-light this:
-
-> v4 -> v5 changes
-> - driver for Analog Devices ADG792A/G, literally the first mux chip
->   I found on the Internet with an i2c interface (that was not a
->   dedicated i2c multiplexer like PCA9547) which I used to verify
->   that the abstractions in the mux core are up to the task. Untested,
->   just proof of concept that at least looks pretty and compiles...
-
-Maybe the patches related to adg792 (last two patches in v12) should
-not be applied? I don't care much either way, your call Greg...
-
-Cheers,
-peda
+KyBQYXRyaWNlIGZvciBzdGkgRFQKCjIwMTctMDMtMjkgMTY6MTUgR01UKzAyOjAwIEhhbnMgVmVy
+a3VpbCA8aHZlcmt1aWxAeHM0YWxsLm5sPjoKPiBGcm9tOiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVu
+amFtaW4uZ2FpZ25hcmRAbGluYXJvLm9yZz4KPgo+IFRvIHVzZSBDRUMgbm90aWZpZXIgc3RpIENF
+QyBkcml2ZXIgbmVlZHMgdG8gZ2V0IHBoYW5kbGUKPiBvZiB0aGUgaGRtaSBkZXZpY2UuCj4KPiBT
+aWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAbGluYXJv
+Lm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5j
+b20+Cj4gQ0M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gLS0tCj4gIGFyY2gvYXJtL2Jv
+b3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kgfCAxMiAtLS0tLS0tLS0tLS0KPiAgYXJjaC9hcm0v
+Ym9vdC9kdHMvc3RpaDQxMC5kdHNpICAgICAgICB8IDEzICsrKysrKysrKysrKysKPiAgMiBmaWxl
+cyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaQo+IGluZGV4IGQ3NTNhYzM2Nzg4Zi4uMDQ0MTg0NTgw
+MzI2IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kK
+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpCj4gQEAgLTc0Miwx
+OCArNzQyLDYgQEAKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNsa19zX2Mw
+X2ZsZXhnZW4gQ0xLX0VUSF9QSFk+Owo+ICAgICAgICAgICAgICAgICB9Owo+Cj4gLSAgICAgICAg
+ICAgICAgIGNlYzogc3RpLWNlY0AwOTRhMDg3YyB7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAg
+Y29tcGF0aWJsZSA9ICJzdCxzdGloLWNlYyI7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgcmVn
+ID0gPDB4OTRhMDg3YyAweDY0PjsKPiAtICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8
+JmNsa19zeXNpbj47Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiY2Vj
+LWNsayI7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE0
+MCBJUlFfVFlQRV9OT05FPjsKPiAtICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFt
+ZXMgPSAiY2VjLWlycSI7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9
+ICJkZWZhdWx0IjsKPiAtICAgICAgICAgICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0
+cmxfY2VjMF9kZWZhdWx0PjsKPiAtICAgICAgICAgICAgICAgICAgICAgICByZXNldHMgPSA8JnNv
+ZnRyZXNldCBTVElINDA3X0xQTV9TT0ZUUkVTRVQ+Owo+IC0gICAgICAgICAgICAgICB9Owo+IC0K
+PiAgICAgICAgICAgICAgICAgcm5nMTA6IHJuZ0AwOGE4OTAwMCB7Cj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSAgICAgID0gInN0LHJuZyI7Cj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgcmVnICAgICAgICAgICAgID0gPDB4MDhhODkwMDAgMHgxMDAwPjsKPiBkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3Rp
+aDQxMC5kdHNpCj4gaW5kZXggM2M5NjcyYzViMDlmLi4yMWZlNzJiMTgzZDggMTAwNjQ0Cj4gLS0t
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvc3RpaDQxMC5kdHNpCj4gQEAgLTI4MSw1ICsyODEsMTggQEAKPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICA8JmNsa19zX2MwX2ZsZXhnZW4gQ0xLX1NUMjMxX0RNVT4sCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjbGtfc19jMF9mbGV4Z2VuIENMS19GTEFT
+SF9QUk9NSVA+Owo+ICAgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAgICAgICAgc3Rp
+LWNlY0AwOTRhMDg3YyB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJz
+dCxzdGloLWNlYyI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4OTRhMDg3YyAw
+eDY0PjsKPiArICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNsa19zeXNpbj47Cj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiY2VjLWNsayI7Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE0MCBJUlFfVFlQRV9OT05F
+PjsKPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAiY2VjLWlycSI7
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfY2VjMF9kZWZhdWx0
+PjsKPiArICAgICAgICAgICAgICAgICAgICAgICByZXNldHMgPSA8JnNvZnRyZXNldCBTVElINDA3
+X0xQTV9TT0ZUUkVTRVQ+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIGhkbWktcGhhbmRsZSA9
+IDwmc3RpX2hkbWk+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgfTsKPiAgfTsKPiAt
+LQo+IDIuMTEuMAo+CgoKCi0tIApCZW5qYW1pbiBHYWlnbmFyZAoKR3JhcGhpYyBTdHVkeSBHcm91
+cAoKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCgpGb2xs
+b3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
