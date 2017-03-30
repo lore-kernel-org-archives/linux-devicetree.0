@@ -1,92 +1,111 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3 07/37] mtd: nand: denali_dt: enable HW_ECC_FIXUP for Altera SOCFPGA variant
-Date: Thu, 30 Mar 2017 15:45:53 +0900
-Message-ID: <1490856383-31560-8-git-send-email-yamada.masahiro@socionext.com>
-References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v3 00/37] mtd: nand: denali: 2nd round of Denali NAND IP patch
+ bomb
+Date: Thu, 30 Mar 2017 15:45:46 +0900
+Message-ID: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
 To: linux-mtd@lists.infradead.org
-Cc: Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Dinh Nguyen <dinguyen@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Enrico Jorns <ejo@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Graham Moore <grmoore@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-There are various customizable parameters, so several variants for
-this IP.  A generic compatible like "denali,denali-nand-dt" is
-useless.  Moreover, there are multiple things wrong with this string.
-(Refer to Rob's comment [1])
 
-The "denali,denali-nand-dt" was added by Altera for the SOCFPGA port.
-Replace it with a more specific string "altr,socfpga-denali-nand".
-There are no users (in upstream) of the old compatible string.
+This driver includes many problems.
 
-The Denali IP on SOCFPGA incorporates the hardware ECC fixup engine.
-So, this capability should be associated with the compatible.
+One of the biggest one is a bunch of hard-coded parameters.  This IP
+has many parameters that can be customized when a delivery RTL is
+generated.  However, this driver was upstreamed by Intel, with
+Intel parameters hard-coded.  Later, Altera added denali_dt.c to use
+this driver for embedded boards, but they did not fix the code in
+denali.c  So, this driver has never worked.  Even some DT bindings
+actually turned out wrong.
 
-[1] https://lkml.org/lkml/2016/12/1/450
+There are more problems: [1] The driver just retrieves the OOB area as-is
+whereas the controller uses syndrome page layout. [2] Many NAND chip
+specific parameters are hard-coded in the driver. [3] ONFi devices are
+not working  [4] It can not read Bad Block Marker
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+This patch series intends to solve those problems.
 
-Changes in v3:
-  - Update git-log to mention there are no users of the old binding.
+Outstanding changes are:
+- Fix raw/oob callbacks for syndrome page layout
+- Implement setup_data_interface() callback
+- Fix/implement more commands for ONFi devices
+- Allow to skip the driver internal bounce buffer
+- Support PIO in case DMA is not supported
+- Switch from ->cmdfunc over to ->cmd_ctrl
 
-Changes in v2:
-  - Add caps flag to of_device_id data, not hard-code in driver code
-  - Add Altera-specific compatible.
+18 patches were merged at v2.
+Here is the rest of the series.
 
- Documentation/devicetree/bindings/mtd/denali-nand.txt |  5 +++--
- drivers/mtd/nand/denali_dt.c                          | 14 ++++++++++----
- 2 files changed, 13 insertions(+), 6 deletions(-)
+v1: https://lkml.org/lkml/2016/11/26/144
+v2: https://lkml.org/lkml/2017/3/22/804
 
-diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index b04d03a..6f4ab4c 100644
---- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -1,7 +1,8 @@
- * Denali NAND controller
- 
- Required properties:
--  - compatible : should be "denali,denali-nand-dt"
-+  - compatible : should be one of the following:
-+      "altr,socfpga-denali-nand"            - for Altera SOCFPGA
-   - reg : should contain registers location and length for data and reg.
-   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
-   - interrupts : The interrupt number.
-@@ -15,7 +16,7 @@ Examples:
- nand: nand@ff900000 {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
--	compatible = "denali,denali-nand-dt";
-+	compatible = "altr,socfpga-denali-nand";
- 	reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
- 	reg-names = "nand_data", "denali_reg";
- 	interrupts = <0 144 4>;
-diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
-index 293ddb8..9577bfd 100644
---- a/drivers/mtd/nand/denali_dt.c
-+++ b/drivers/mtd/nand/denali_dt.c
-@@ -33,11 +33,17 @@ struct denali_dt_data {
- 	unsigned int caps;
- };
- 
--static const struct of_device_id denali_nand_dt_ids[] = {
--		{ .compatible = "denali,denali-nand-dt" },
--		{ /* sentinel */ }
--	};
-+static const struct denali_dt_data denali_socfpga_data = {
-+	.caps = DENALI_CAP_HW_ECC_FIXUP,
-+};
- 
-+static const struct of_device_id denali_nand_dt_ids[] = {
-+	{
-+		.compatible = "altr,socfpga-denali-nand",
-+		.data = &denali_socfpga_data,
-+	},
-+	{ /* sentinel */ }
-+};
- MODULE_DEVICE_TABLE(of, denali_nand_dt_ids);
- 
- static u64 denali_dma_mask;
+
+Masahiro Yamada (37):
+  mtd: nand: relax ecc.read_page() return value for uncorrectable ECC
+  mtd: nand: denali: allow to override mtd->name from label DT property
+  mtd: nand: denali: remove meaningless pipeline read-ahead operation
+  mtd: nand: denali: fix bitflips calculation in handle_ecc()
+  mtd: nand: denali: fix erased page checking
+  mtd: nand: denali: support HW_ECC_FIXUP capability
+  mtd: nand: denali_dt: enable HW_ECC_FIXUP for Altera SOCFPGA variant
+  mtd: nand: denali: support 64bit capable DMA engine
+  mtd: nand: denali_dt: remove dma-mask DT property
+  mtd: nand: denali_dt: use pdev instead of ofdev for platform_device
+  mtd: nand: denali: allow to override revision number
+  mtd: nand: denali: support 1024 byte ECC step size
+  mtd: nand: denali: avoid hard-coding ecc.strength and ecc.bytes
+  mtd: nand: denali: support "nand-ecc-strength" DT property
+  mtd: nand: denali: remove Toshiba and Hynix specific fixup code
+  mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
+  mtd: nand: denali: set NAND_ECC_CUSTOM_PAGE_ACCESS
+  mtd: nand: denali: do not propagate NAND_STATUS_FAIL to waitfunc()
+  mtd: nand: denali: use BIT() and GENMASK() for register macros
+  mtd: nand: denali: remove unneeded find_valid_banks()
+  mtd: nand: denali: handle timing parameters by setup_data_interface()
+  mtd: nand: denali: rework interrupt handling
+  mtd: nand: denali: fix NAND_CMD_STATUS handling
+  mtd: nand: denali: fix NAND_CMD_PARAM handling
+  mtd: nand: denali: switch over to cmd_ctrl instead of cmdfunc
+  mtd: nand: denali: fix bank reset function
+  mtd: nand: denali: use interrupt instead of polling for bank reset
+  mtd: nand: denali: propagate page to helpers via function argument
+  mtd: nand: denali: merge struct nand_buf into struct denali_nand_info
+  mtd: nand: denali: use flag instead of register macro for direction
+  mtd: nand: denali: fix raw and oob accessors for syndrome page layout
+  mtd: nand: denali: support hardware-assisted erased page detection
+  mtd: nand: allocate aligned buffers if NAND_OWN_BUFFERS is unset
+  mtd: nand: allow drivers to request minimum alignment for passed
+    buffer
+  mtd: nand: denali: skip driver internal bounce buffer when possible
+  mtd: nand: denali: use non-managed kmalloc() for DMA buffer
+  mtd: nand: denali: enable bad block table scan
+
+ .../devicetree/bindings/mtd/denali-nand.txt        |   24 +-
+ drivers/mtd/nand/denali.c                          | 1971 ++++++++++----------
+ drivers/mtd/nand/denali.h                          |  308 +--
+ drivers/mtd/nand/denali_dt.c                       |   90 +-
+ drivers/mtd/nand/denali_pci.c                      |   10 +-
+ drivers/mtd/nand/nand_base.c                       |   49 +-
+ include/linux/mtd/nand.h                           |    4 +-
+ 7 files changed, 1234 insertions(+), 1222 deletions(-)
+
 -- 
 2.7.4
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
