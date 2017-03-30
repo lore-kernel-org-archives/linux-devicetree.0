@@ -1,94 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: arizona-ldo1: Avoid potential memory leak reading init_data" to the regulator tree
-Date: Thu, 30 Mar 2017 22:23:17 +0100
-Message-ID: <E1cthXJ-0008Fy-NA@debutante>
-References: <1490710484-25277-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490710484-25277-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, lgirdwood@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.comlinux-kernel@vger.kernel.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCHv5 05/11] ARM: dts: exynos: add HDMI controller phandle to
+ exynos4.dtsi
+Date: Fri, 31 Mar 2017 00:34:23 +0300
+Message-ID: <20170330213423.eklb2zgmud6sigig@kozik-lap>
+References: <20170329141543.32935-1-hverkuil@xs4all.nl>
+ <20170329141543.32935-6-hverkuil@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170329141543.32935-6-hverkuil@xs4all.nl>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, Daniel Vetter <daniel.vetter@intel.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Wed, Mar 29, 2017 at 04:15:37PM +0200, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil@cisco.com>
+> 
+> Add the new hdmi phandle to exynos4.dtsi. This phandle is needed by the
+> s5p-cec driver to initialize the CEC notifier framework.
+> 
+> Tested with my Odroid U3.
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> CC: linux-samsung-soc@vger.kernel.org
+> CC: devicetree@vger.kernel.org
+> CC: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
 
-   regulator: arizona-ldo1: Avoid potential memory leak reading init_data
+Thanks, applied. Now I noticed that you need it for maintaining the
+bisectability for this driver (although it is a staging driver). In that
+case, if anyone needs this as well then:
 
-has been applied to the regulator tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+  Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+are available in the git repository at:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+  git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-hdmi-cec-4.12
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+for you to fetch changes up to 192c1df4a75499a6ab70aca38c6a7e5e40013d77:
 
-Thanks,
-Mark
+  ARM: dts: exynos: add HDMI controller phandle to exynos4.dtsi (2017-03-31 00:21:18 +0300)
 
->From 0feb837a42c95fee901e03f76a1266db85ceb6ec Mon Sep 17 00:00:00 2001
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Date: Tue, 28 Mar 2017 15:14:38 +0100
-Subject: [PATCH] regulator: arizona-ldo1: Avoid potential memory leak reading
- init_data
+----------------------------------------------------------------
+Add to hdmi-cec node a phandle to hdmi node for new hdmi-cec notifier.
 
-The device argument passed to of_get_regulator_init_data is used to
-do some devres memory allocation. Currently the driver passes the MFD
-device pointer to this function, this could result in the init_data
-allocation being leaked if the regulator is unbound but the MFD isn't.
+----------------------------------------------------------------
+Hans Verkuil (1):
+      ARM: dts: exynos: add HDMI controller phandle to exynos4.dtsi
 
-Correct this issue by correctly passing the local platform device.
+ arch/arm/boot/dts/exynos4.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/arizona-ldo1.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/arizona-ldo1.c b/drivers/regulator/arizona-ldo1.c
-index 302b57cb89c6..cf558168664d 100644
---- a/drivers/regulator/arizona-ldo1.c
-+++ b/drivers/regulator/arizona-ldo1.c
-@@ -186,7 +186,8 @@ static const struct regulator_init_data arizona_ldo1_wm5110 = {
- 	.num_consumer_supplies = 1,
- };
- 
--static int arizona_ldo1_of_get_pdata(struct arizona *arizona,
-+static int arizona_ldo1_of_get_pdata(struct device *dev,
-+				     struct arizona *arizona,
- 				     struct regulator_config *config,
- 				     const struct regulator_desc *desc)
- {
-@@ -212,8 +213,7 @@ static int arizona_ldo1_of_get_pdata(struct arizona *arizona,
- 	if (init_node) {
- 		config->of_node = init_node;
- 
--		init_data = of_get_regulator_init_data(arizona->dev, init_node,
--						       desc);
-+		init_data = of_get_regulator_init_data(dev, init_node, desc);
- 
- 		if (init_data) {
- 			init_data->consumer_supplies = &ldo1->supply;
-@@ -283,7 +283,8 @@ static int arizona_ldo1_probe(struct platform_device *pdev)
- 
- 	if (IS_ENABLED(CONFIG_OF)) {
- 		if (!dev_get_platdata(arizona->dev)) {
--			ret = arizona_ldo1_of_get_pdata(arizona, &config, desc);
-+			ret = arizona_ldo1_of_get_pdata(&pdev->dev, arizona,
-+							&config, desc);
- 			if (ret < 0)
- 				return ret;
- 		}
--- 
-2.11.0
+Best regards,
+Krzysztof
