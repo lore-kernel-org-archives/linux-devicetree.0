@@ -1,42 +1,65 @@
-From: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 5/6] bus: brcmstb_gisb: enable driver for ARM64 architecture
-Date: Wed, 29 Mar 2017 17:29:13 -0700
-Message-ID: <20170330002914.7371-6-opendmb@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
+Subject: [PATCH v3 6/6] bus: brcmstb_gisb: update to support new revision
+Date: Wed, 29 Mar 2017 17:29:14 -0700
+Message-ID: <20170330002914.7371-7-opendmb@gmail.com>
 References: <20170330002914.7371-1-opendmb@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170330002914.7371-1-opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170330002914.7371-1-opendmb@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mark.rutland@arm.com
+Cc: robh+dt@kernel.org, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, Doug Berger <opendmb@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The ARM64 architecture can provide meaningful diagnostic
-output from the GISB arbiter solely from interrupts and
-notifiers without the need to hook the low level fault
-handlers.
+The 7278 introduces a new version of this core.  This
+commit adds support for that revision.
 
-Signed-off-by: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/bus/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt |  3 ++-
+ drivers/bus/brcmstb_gisb.c                              | 10 ++++++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 0a52da439abf..d2a5f1184022 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -57,7 +57,7 @@ config ARM_CCN
+diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+index 1eceefb20f01..8a6c3c2e58fe 100644
+--- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
++++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+@@ -3,7 +3,8 @@ Broadcom GISB bus Arbiter controller
+ Required properties:
  
- config BRCMSTB_GISB_ARB
- 	bool "Broadcom STB GISB bus arbiter"
--	depends on ARM || MIPS
-+	depends on ARM || ARM64 || MIPS
- 	default ARCH_BRCMSTB || BMIPS_GENERIC
- 	help
- 	  Driver for the Broadcom Set Top Box System-on-a-chip internal bus
+ - compatible:
+-    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for 28nm chips
++    "brcm,bcm7278-gisb-arb" for V7 28nm chips
++    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for other 28nm chips
+     "brcm,bcm7435-gisb-arb" for newer 40nm chips
+     "brcm,bcm7400-gisb-arb" for older 40nm chips and all 65nm chips
+     "brcm,bcm7038-gisb-arb" for 130nm chips
+diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
+index 3fbc116e6b95..68ac3e93b600 100644
+--- a/drivers/bus/brcmstb_gisb.c
++++ b/drivers/bus/brcmstb_gisb.c
+@@ -56,6 +56,15 @@ static const int gisb_offsets_bcm7038[] = {
+ 	[ARB_ERR_CAP_MASTER]	= -1,
+ };
+ 
++static const int gisb_offsets_bcm7278[] = {
++	[ARB_TIMER]		= 0x008,
++	[ARB_ERR_CAP_CLR]	= 0x7f8,
++	[ARB_ERR_CAP_HI_ADDR]	= -1,
++	[ARB_ERR_CAP_ADDR]	= 0x7e0,
++	[ARB_ERR_CAP_STATUS]	= 0x7f0,
++	[ARB_ERR_CAP_MASTER]	= 0x7f4,
++};
++
+ static const int gisb_offsets_bcm7400[] = {
+ 	[ARB_TIMER]		= 0x00c,
+ 	[ARB_ERR_CAP_CLR]	= 0x0c8,
+@@ -307,6 +316,7 @@ static const struct of_device_id brcmstb_gisb_arb_of_match[] = {
+ 	{ .compatible = "brcm,bcm7445-gisb-arb", .data = gisb_offsets_bcm7445 },
+ 	{ .compatible = "brcm,bcm7435-gisb-arb", .data = gisb_offsets_bcm7435 },
+ 	{ .compatible = "brcm,bcm7400-gisb-arb", .data = gisb_offsets_bcm7400 },
++	{ .compatible = "brcm,bcm7278-gisb-arb", .data = gisb_offsets_bcm7278 },
+ 	{ .compatible = "brcm,bcm7038-gisb-arb", .data = gisb_offsets_bcm7038 },
+ 	{ },
+ };
 -- 
 2.12.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
