@@ -1,49 +1,62 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH] ARM: dts: Add devicetree for the Raspberry Pi 3, for arm32 (v4)
-Date: Wed, 29 Mar 2017 17:26:05 -0700
-Message-ID: <20170330002605.15213-1-eric@anholt.net>
+From: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/6] bus: brcmstb_gisb: add support for GISBv7 arbiter
+Date: Wed, 29 Mar 2017 17:29:08 -0700
+Message-ID: <20170330002914.7371-1-opendmb@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+To: mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Raspbian and Fedora have decided to support the Pi3 in 32-bit mode for
-now, so it's useful to be able to test that mode on an upstream
-kernel.  It's also been useful for me to use the same board for 32-bit
-and 64-bit development.
+This patch set contains changes to enable the GISB arbiter driver
+on the latest ARM64 architecture Set-Top Box chips from Broadcom.
 
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
----
+Since the ARM64 architecture does not support the hooking of low
+level fault handlers the driver has been adjusted to depend solely
+on GISB interrupts and notify events to provide diagnostic
+messaging.  The GISB hardware still triggers bus faults for the
+processor so the default low-level aborts will occur and will be
+handled based on the architecture specific kernel implementation.
 
-v1: Gerd's patch that put the ../../../arm64/... link in the Makefile
-v2: Michael's patch that #included from ../../../arm64/... in a new
-    bcm2837-rpi-3-b.dts.
-v3: Mine, using symlinks to make sure that we don't break the split DT
-    tree.
-v4: Rely on the new include/arm64 symlink.
+While this tends to obsure the GISB error messaging it is still
+reasonable so the same approach is applied to the ARM architecture
+for consistency.
 
-Assuming positive review feedback, I assume it would be acceptable to
-merge the shared/dt-symlinks branch in a PR of my own for the 32-bit
-DT branch?
+The patches also correct some issues with the existing driver
+and add the new register map for the GISBv7 hardware first
+appearing in the BCM7278 device.
 
- arch/arm/boot/dts/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v2 at [2]:
+ - Removed code associated with enabling the hooking of ARM64
+   memory faults as well as the code that hooks them for both
+   ARM and ARM64 architectures within the GISB arbiter driver.
+ - Created separate notifiers for die and panic events to
+   prevent list corruption, and substituted the notifier return
+   name for the previous magic number (Thanks Mark!)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 011808490fed..27d258cb50f2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-b-plus.dtb \
- 	bcm2835-rpi-a-plus.dtb \
- 	bcm2836-rpi-2-b.dtb \
-+	include/arm64/broadcom/bcm2837-rpi-3-b.dtb \
- 	bcm2835-rpi-zero.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
+Changes since v1 at [1]:
+ - Removed code associated with hooking SError handling in favor
+   of a registered notifier (Thanks Mark!)
+ - Removed an unnecessary explicit cast (Thanks Gregory!)
+
+[1] https://lkml.org/lkml/2017/3/24/413
+[2] https://lkml.org/lkml/2017/3/28/1125
+
+Doug Berger (6):
+  bus: brcmstb_gisb: Use register offsets with writes too
+  bus: brcmstb_gisb: correct support for 64-bit address output
+  bus: brcmstb_gisb: add notifier handling
+  bus: brcmstb_gisb: remove low-level ARM hooks
+  bus: brcmstb_gisb: enable driver for ARM64 architecture
+  bus: brcmstb_gisb: update to support new revision
+
+ .../devicetree/bindings/bus/brcm,gisb-arb.txt      |   3 +-
+ drivers/bus/Kconfig                                |   2 +-
+ drivers/bus/brcmstb_gisb.c                         | 121 ++++++++++++---------
+ 3 files changed, 75 insertions(+), 51 deletions(-)
+
 -- 
-2.11.0
+2.12.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
