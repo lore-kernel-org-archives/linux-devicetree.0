@@ -1,103 +1,82 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
-Date: Thu, 30 Mar 2017 10:00:30 +0100
-Message-ID: <a9078a4e-152e-01ae-8750-1396da2bc623@arm.com>
-References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
- <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
- <20170328165010.GA21937@linaro.org> <20170329015423.GA5035@leoy-linaro>
- <CAJ9a7VhQRuVOCJkjPc9RANGo=fgA8wjtB65dC5f19ZX22a5FHQ@mail.gmail.com>
- <20170330010343.GA31843@leoy-linaro>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: Add documentation for GP10B GPU
+Date: Thu, 30 Mar 2017 18:18:30 +0900
+Message-ID: <20170330091831.18322-1-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170330010343.GA31843@leoy-linaro>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Yan <leo.yan@linaro.org>, Mike Leach <mike.leach@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Guodong Xu <guodong.xu@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-doc@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/03/17 02:03, Leo Yan wrote:
-> On Wed, Mar 29, 2017 at 03:56:23PM +0100, Mike Leach wrote:
->
-> [...]
->
->>>>> +   /*
->>>>> +    * Unfortunately the CPU cannot be powered up, so return
->>>>> +    * back and later has no permission to access other
->>>>> +    * registers. For this case, should set 'idle_constraint'
->>>>> +    * to ensure CPU power domain is enabled!
->>>>> +    */
->>>>> +   if (!(drvdata->edprsr & EDPRSR_PU)) {
->>>>> +           pr_err("%s: power up request for CPU%d failed\n",
->>>>> +                   __func__, drvdata->cpu);
->>>>> +           goto out;
->>>>> +   }
->>>>> +
->>>>> +out_powered_up:
->>>>> +   debug_os_unlock(drvdata);
->>>>> +
->>>>> +   /*
->>>>> +    * At this point the CPU is powered up, so set the no powerdown
->>>>> +    * request bit so we don't lose power and emulate power down.
->>>>> +    */
->>>>> +   drvdata->edprsr = readl(drvdata->base + EDPRCR);
->>>>> +   drvdata->edprsr |= EDPRCR_COREPURQ | EDPRCR_CORENPDRQ;
->>>>
->>>> If we are here the core is already up.  Shouldn't we need to set
->>>> EDPRCR_CORENPDRQ only?
->>>
->>> Yeah. Will fix.
->>
->> No - EDPRCR_COREPURQ and EDPRCR_CORENPDRQ have different semantics and purposes
->>
->> EDPRCR_COREPURQ is in the debug power domain an is tied to an external
->> debug request that should be an input to the external (to the PE)
->> system power controller.
->> The requirement is that the system power controller powers up the core
->> domain and does not power it down while it remains asserted.
->>
->> EDPRCR_CORENPDRQ is in the core power domain and thus to the specific
->> core only. This ensures that any power control software running on
->> that core should emulate a power down if this is set to one.
->
-> I'm curious the exact meaning for "power control software".
->
-> Does it mean EDPRCR_CORENPDRQ should be checked by kernel or PSCI
-> liked code in ARM trusted firmware to avoid to run CPU power off flow?
->
-> Or will EDPRCR_CORENPDRQ assert CPU external signal to notify power
-> controller so power controller emulate a power down?
->
->> We cannot know the power control design of the system, so the safe
->> solution is to set both bits.
->
-> Thanks a lot for the suggestion. Will set both bits.
+GP10B's definition is mostly similar to GK20A's and GM20B's. The only
+noticeable difference is the use of power domains instead of a regulator
+for power supply.
 
-Leo,
+Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/gpu/nvidia,gk20a.txt       | 25 +++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-Also, it would be good to restore the PRCR register back to the original state
-after we read the registers (if we changed them). I am exploring ways to make
-use of this feature on demand (e.g, tie it to sysrq-t or sysrq-l) and not just
-at panic time. So it would be good to have the state restored to not affect the
-normal functioning even after dumping the registers.
+diff --git a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+index ff3db65e50de..b7e4c7444510 100644
+--- a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
++++ b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+@@ -5,6 +5,7 @@ Required properties:
+   Currently recognized values:
+   - nvidia,gk20a
+   - nvidia,gm20b
++  - nvidia,gp10b
+ - reg: Physical base address and length of the controller's registers.
+   Must contain two entries:
+   - first entry for bar0
+@@ -14,7 +15,8 @@ Required properties:
+ - interrupt-names: Must include the following entries:
+   - stall
+   - nonstall
+-- vdd-supply: regulator for supply voltage.
++- vdd-supply: regulator for supply voltage. Only required for GPUs not using
++  power domains.
+ - clocks: Must contain an entry for each entry in clock-names.
+   See ../clocks/clock-bindings.txt for details.
+ - clock-names: Must include the following entries:
+@@ -27,6 +29,8 @@ is also required:
+   See ../reset/reset.txt for details.
+ - reset-names: Must include the following entries:
+   - gpu
++- power-domains: GPUs that make use of power domains can define this property
++  instead of vdd-supply. Currently "nvidia,gp10b" makes use of this.
+ 
+ Optional properties:
+ - iommus: A reference to the IOMMU. See ../iommu/iommu.txt for details.
+@@ -68,3 +72,22 @@ Example for GM20B:
+ 		iommus = <&mc TEGRA_SWGROUP_GPU>;
+ 		status = "disabled";
+ 	};
++
++Example for GP10B:
++
++	gpu@17000000 {
++		compatible = "nvidia,gp10b";
++		reg = <0x0 0x17000000 0x0 0x1000000>,
++		      <0x0 0x18000000 0x0 0x1000000>;
++		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH
++			      GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "stall", "nonstall";
++		clocks = <&bpmp TEGRA186_CLK_GPCCLK>,
++			 <&bpmp TEGRA186_CLK_GPU>;
++		clock-names = "gpu", "pwr";
++		resets = <&bpmp TEGRA186_RESET_GPU>;
++		reset-names = "gpu";
++		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_GPU>;
++		iommus = <&smmu TEGRA186_SID_GPU>;
++		status = "disabled";
++	};
+-- 
+2.12.0
 
-PS: I have a small hack to hook this into a sysrq-x at runtime, but on a second thought
-it is better not to consume the key and rather tie it to something which already exist,
-as mentioned above.
-
-Thanks
-Suzuki
-
->
-> Thanks,
-> Leo Yan
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
