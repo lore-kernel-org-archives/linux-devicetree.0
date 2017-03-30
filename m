@@ -1,60 +1,176 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl
- header
-Date: Wed, 29 Mar 2017 15:18:21 +0000
-Message-ID: <SG2PR06MB1165F5D4CFC50CADC609451C8A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1490368934-12494-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490368934-12494-4-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdZ4Z6c2YDu-e6kZ8-K7Dv_tRGxZj0vAqgPBx7rWwmHU-g@mail.gmail.com>
- <SG2PR06MB11659AB956F83E8DCE2C9AA18A350@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdVx_fyGsw0p-s4ZAoe2k+r0RuwxjwNV_-8fXY7Yv8y3kQ@mail.gmail.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: Add GPCv2 power gating driver
+Date: Thu, 30 Mar 2017 15:15:48 +0800
+Message-ID: <20170330071548.GB29432@b29396-OptiPlex-7040>
+References: <20170321145004.21265-1-andrew.smirnov@gmail.com>
+ <20170321145004.21265-2-andrew.smirnov@gmail.com>
+ <20170324063216.GC12604@b29396-OptiPlex-7040>
+ <CAHQ1cqH4HnVsiAT6wxVJ=b-AJKWCK6L7kTxLZ7JFrZ4B-t2PQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVx_fyGsw0p-s4ZAoe2k+r0RuwxjwNV_-8fXY7Yv8y3kQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHQ1cqH4HnVsiAT6wxVJ=b-AJKWCK6L7kTxLZ7JFrZ4B-t2PQg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Andrey Yurovsky <yurovsky@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgTWFyY2ggMjksIDIwMTcsIEdlZXJ0IFV5dHRlcmhv
-ZXZlbiB3cm90ZToNCj4gPiBCdXQsIHdoYXQgZG8gd2UgZG8gZm9yIEV0aGVybmV0PyBBbGwgdGhl
-IHBpbnMgYXJlICJub3JtYWwiIGV4Y2VwdCBqdXN0DQo+ID4gdGhlIE1ESU8gcGluIG5lZWRzIHRv
-IGJlIGJpZGlyZWN0aW9uYWwuDQo+ID4gVGhhdCdzIHRoZSBwYXJ0IEknbSBjb25mdXNlZCBieS4N
-Cj4gPiBIb3cgZG8gd2UgZmxhZyB0aGF0IGp1c3QgdGhlIEVUX01ESU8gbmVlZHMgImJpZGlyZWN0
-aW9uYWwiPw0KPiANCj4gWW91IGFkZCBzdWJub2RlcywgY2ZyLiBhcmNoL2FybTY0L2Jvb3QvZHRz
-L3JlbmVzYXMvcjhhNzc5NS1zYWx2YXRvci14LmR0czoNCj4gDQo+ICAgICAgICAgYXZiX3BpbnM6
-IGF2YiB7DQo+ICAgICAgICAgICAgICAgICBtdXggew0KPiAgICAgICAgICAgICAgICAgICAgICAg
-ICBncm91cHMgPSAiYXZiX2xpbmsiLCAiYXZiX3BoeV9pbnQiLCAiYXZiX21kYyIsDQo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICJhdmJfbWlpIjsNCj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgZnVuY3Rpb24gPSAiYXZiIjsNCj4gICAgICAgICAgICAgICAgIH07DQo+IA0KPiAg
-ICAgICAgICAgICAgICAgcGluc19tZGMgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICBncm91
-cHMgPSAiYXZiX21kYyI7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGRyaXZlLXN0cmVuZ3Ro
-ID0gPDI0PjsNCj4gICAgICAgICAgICAgICAgIH07DQo+IA0KPiAgICAgICAgICAgICAgICAgcGlu
-c19taWlfdHggew0KPiAgICAgICAgICAgICAgICAgICAgICAgICBwaW5zID0gIlBJTl9BVkJfVFhf
-Q1RMIiwgIlBJTl9BVkJfVFhDIiwNCj4gIlBJTl9BVkJfVEQwIiwNCj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICJQSU5fQVZCX1REMSIsICJQSU5fQVZCX1REMiIsDQo+ICJQSU5fQVZC
-X1REMyI7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGRyaXZlLXN0cmVuZ3RoID0gPDEyPjsN
-Cj4gICAgICAgICAgICAgICAgIH07DQo+ICAgICAgICAgfTsNCg0KT2gsIHNvIHRoZXJlIGlzIGEg
-d2F5IQ0KDQpUaGFuayB5b3UuDQoNCg0KU28sIGZvciBjbGFyaXR5Og0KDQoJLyogRXRoZXJuZXQg
-Ki8NCglldGhlcl9waW5zOiBldGhlciB7DQoJCS8qIEV0aGVybmV0IG9uIFBvcnRzIDEsMiwzLDUg
-Ki8NCgkJbXV4IHsNCgkJCXBpbnMgPSA8UElOKDEsIDE0KSB8IEZVTkNfNCk+LCAvKiBQMV8xNCA9
-IEVUX0NPTCAqLw0KCQkJCTxQSU4oNSwgOSkgfCBGVU5DXzIpPiwJLyogUDVfOSA9IEVUX01EQyAq
-Lw0KCQkJCTxQSU4oMywgNCkgfCBGVU5DXzIpPiwJLyogUDNfNCA9IEVUX1JYQ0xLICovDQoJCQkJ
-PFBJTigzLCA1KSB8IEZVTkNfMik+LAkvKiBQM181ID0gRVRfUlhFUiAqLw0KCQkJCTxQSU4oMywg
-NikgfCBGVU5DXzIpPiwJLyogUDNfNiA9IEVUX1JYRFYgKi8NCgkJCQk8UElOKDIsIDApIHwgRlVO
-Q18yKT4sCS8qIFAyXzAgPSBFVF9UWENMSyAqLw0KCQkJCTxQSU4oMiwgMSkgfCBGVU5DXzIpPiwJ
-LyogUDJfMSA9IEVUX1RYRVIgKi8NCgkJCQk8UElOKDIsIDIpIHwgRlVOQ18yKT4sCS8qIFAyXzIg
-PSBFVF9UWEVOICovDQoJCQkJPFBJTigyLCAzKSB8IEZVTkNfMik+LAkvKiBQMl8zID0gRVRfQ1JT
-ICovDQoJCQkJPFBJTigyLCA0KSB8IEZVTkNfMik+LAkvKiBQMl80ID0gRVRfVFhEMCAqLw0KCQkJ
-CTxQSU4oMiwgNSkgfCBGVU5DXzIpPiwJLyogUDJfNSA9IEVUX1RYRDEgKi8NCgkJCQk8UElOKDIs
-IDYpIHwgRlVOQ18yKT4sCS8qIFAyXzYgPSBFVF9UWEQyICovDQoJCQkJPFBJTigyLCA3KSB8IEZV
-TkNfMik+LAkvKiBQMl83ID0gRVRfVFhEMyAqLw0KCQkJCTxQSU4oMiwgOCkgfCBGVU5DXzIpPiwJ
-LyogUDJfOCA9IEVUX1JYRDAgKi8NCgkJCQk8UElOKDIsIDkpIHwgRlVOQ18yKT4sCS8qIFAyXzkg
-PSBFVF9SWEQxICovDQoJCQkJPFBJTigyLCAxMCkgfCBGVU5DXzIpPiwgLyogUDJfMTAgPSBFVF9S
-WEQyICovDQoJCQkJPFBJTigyLCAxMSkgfCBGVU5DXzIpPjsgLyogUDJfMTEgPSBFVF9SWEQzICov
-DQoJCX07DQoJCXBpbnNfYmlkaXIgew0KCQkJcGlucyA9IDxQSU4oMywgMykgfCBGVU5DXzIpPiwJ
-LyogUDNfMyA9IEVUX01ESU8gKi8NCgkJCWJpZGlyZWN0aW9uYWw7DQoJCX07DQoJfTsNCg0KDQoN
-CkNocmlzDQoNCg==
+On Mon, Mar 27, 2017 at 11:42:51AM -0700, Andrey Smirnov wrote:
+> On Thu, Mar 23, 2017 at 11:32 PM, Dong Aisheng <dongas86@gmail.com> wrote:
+> > On Tue, Mar 21, 2017 at 07:50:03AM -0700, Andrey Smirnov wrote:
+> >> Add DT bindings for power domain driver for GPCv2 IP block found in
+> >> i.MX7 SoCs.
+> >>
+> >> Cc: yurovsky@gmail.com
+> >> Cc: Lucas Stach <l.stach@pengutronix.de>
+> >> Cc: Rob Herring <robh+dt@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> >> Cc: Dong Aisheng <dongas86@gmail.com>
+> >> Cc: devicetree@vger.kernel.org
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Acked-by: Rob Herring <robh@kernel.org>
+> >> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> >> ---
+> >>  .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
+> >>  include/dt-bindings/power/imx7-power.h             | 18 ++++++
+> >>  2 files changed, 89 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+> >>  create mode 100644 include/dt-bindings/power/imx7-power.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+> >> new file mode 100644
+> >> index 0000000..02f45c6
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+> >> @@ -0,0 +1,71 @@
+> >> +Freescale i.MX General Power Controller v2
+> >> +==========================================
+> >> +
+> >> +The i.MX7S/D General Power Control (GPC) block contains Power Gating
+> >> +Control (PGC) for various power domains.
+> >> +
+> >> +Required properties:
+> >> +
+> >> +- compatible: Should be "fsl,imx7d-gpc"
+> >> +
+> >> +- reg: should be register base and length as documented in the
+> >> +  datasheet
+> >> +
+> >> +- interrupts: Should contain GPC interrupt request 1
+> >> +
+> >> +Power domains contained within GPC node are generic power domain
+> >> +providers, documented in
+> >> +Documentation/devicetree/bindings/power/power_domain.txt, which are
+> >> +described as subnodes of the power gating controller 'pgc' node,
+> >> +which, in turn, is expected to contain the following:
+> >> +
+> >> +Required properties:
+> >> +
+> >> +- reg: Power domain index. Valid values are defined in
+> >> +  include/dt-bindings/power/imx7-power.h
+> >> +
+> >> +- #power-domain-cells: Should be 0
+> >> +
+> >> +Optional properties:
+> >> +
+> >> +- power-supply: Power supply used to power the domain
+> >> +
+> >> +Example:
+> >> +
+> >> +     gpc: gpc@303a0000 {
+> >> +             compatible = "fsl,imx7d-gpc";
+> >> +             reg = <0x303a0000 0x1000>;
+> >> +             interrupt-controller;
+> >> +             interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+> >> +             #interrupt-cells = <3>;
+> >> +             interrupt-parent = <&intc>;
+> >> +
+> >> +             pgc {
+> >> +                     #address-cells = <1>;
+> >> +                     #size-cells = <0>;
+> >> +
+> >> +                     pgc_pcie_phy: power-domain@3 {
+> >> +                             #power-domain-cells = <0>;
+> >> +
+> >> +                             reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
+> >> +                             power-supply = <&reg_1p0d>;
+> >> +                     };
+> >> +             };
+> >> +     };
+> >> +
+> >> +
+> >> +Specifying power domain for IP modules
+> >> +======================================
+> >> +
+> >> +IP cores belonging to a power domain should contain a 'power-domains'
+> >> +property that is a phandle for PGC node representing the domain.
+> >> +
+> >> +Example of a device that is part of the PCIE_PHY power domain:
+> >> +
+> >> +     pcie: pcie@33800000 {
+> >> +           reg = <0x33800000 0x4000>,
+> >> +                 <0x4ff00000 0x80000>;
+> >> +             /* ... */
+> >> +             power-domains = <&pgc_pcie_phy>;
+> >> +             /* ... */
+> >> +     };
+> >> diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
+> >> new file mode 100644
+> >> index 0000000..eb70023
+> >> --- /dev/null
+> >> +++ b/include/dt-bindings/power/imx7-power.h
+> >> @@ -0,0 +1,18 @@
+> >> +/*
+> >> + *  Copyright (C) 2017 Impinj
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify
+> >> + * it under the terms of the GNU General Public License version 2 as
+> >> + * published by the Free Software Foundation.
+> >> + */
+> >> +
+> >> +#ifndef __DT_BINDINGS_IMX7_POWER_H__
+> >> +#define __DT_BINDINGS_IMX7_POWER_H__
+> >> +
+> >> +#define IMX7_POWER_DOMAIN_USB_HSIC_PHY       0
+> >> +#define IMX7_POWER_DOMAIN_USB_OTG2_PHY       1
+> >> +#define IMX7_POWER_DOMAIN_USB_OTG1_PHY       2
+> >> +#define IMX7_POWER_DOMAIN_PCIE_PHY   3
+> >> +#define IMX7_POWER_DOMAIN_MIPI_PHY   4
+> >
+> > Nitpick: Probably better to define according to the reference manual
+> > defined order.
+> >
+> > 0x800 ~ 0x83F : PGC for A7 core0
+> > 0x840 ~ 0x87F: PGC for A7 core1
+> > 0x880 ~ 0x8BF: PGC for A7 SCU
+> > 0xA00 ~ 0xA3F: PGC for fastmix/megamix
+> > 0xC00 ~ 0xC3F: PGC for MIPI PHY
+> > 0xC40 ~ 0xC7F: PGC for PCIE_PHY
+> > 0xC80 ~ 0xCBF: Reserved
+> > 0xCC0 ~ 0xCFF: Reserved
+> > 0xD00 ~ 0xD3F: PGC for USB HSIC PHY
+> >
+> > You can drop A7 core/scu/fastmix/megamix as well.
+> >
+> 
+> Sure, will do.
+> 
+
+BTW, i read some other SoC power domain implementations,
+they keep the CPU domains although not used in kernel.
+e.g.
+include/dt-bindings/power/rk3288-power.h
+include/soc/tegra/pmc.h
+
+That probably is a good reference in case we may need them in the future.
+And device tree actually is describe HW.
+I wonder we may be better to keep them as well.
+
+Regards
+Dong Aisheng
+
+> Thanks,
+> Andrey Smirnov
