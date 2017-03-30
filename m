@@ -1,94 +1,62 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] mvebu: xp: Add PWM properties to .dtsi files
-Date: Thu, 30 Mar 2017 17:45:08 +0200
-Message-ID: <87wpb693az.fsf@free-electrons.com>
-References: <20170327194301.1104-1-ralph.sennhauser@gmail.com>
-        <20170327194301.1104-3-ralph.sennhauser@gmail.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
+Date: Thu, 30 Mar 2017 09:46:21 -0600
+Message-ID: <CANLsYkwPYSvy2xjf8uuvx1WGWpGdMFy7kF=30VbvgW+jDvnFuw@mail.gmail.com>
+References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
+ <1490466197-29163-7-git-send-email-leo.yan@linaro.org> <20170328165010.GA21937@linaro.org>
+ <20170329015423.GA5035@leoy-linaro> <20170329165535.GB24889@linaro.org> <20170330015941.GD3038@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170327194301.1104-3-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Ralph
-        Sennhauser's message of "Mon, 27 Mar 2017 21:42:58 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170330015941.GD3038@leoy-linaro>
+Sender: linux-clk-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.orgMi
 List-Id: devicetree@vger.kernel.org
 
-Hi Ralph,
- 
- On lun., mars 27 2017, Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-The title should start by ARM: dts: mvebu:
-
-If there is no need to have a v5 then I wil take care of modifying the
-title while applying it.
-
-
-> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+On 29 March 2017 at 19:59, Leo Yan <leo.yan@linaro.org> wrote:
+> On Wed, Mar 29, 2017 at 10:55:35AM -0600, Mathieu Poirier wrote:
 >
-> Add properties to the GPIO nodes to allow them to be also used as PWM
-> lines.
+> [...]
 >
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> URL: https://patchwork.ozlabs.org/patch/427294/
-> [Ralph Sennhauser:
->   * Use new compatible string marvell,armada-370-xp-gpio
->   * Add missing reg-names / #pwm-cell properties to armada-xp-mv78260.dtsi
->     'gpio1' node]
-> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-370.dtsi        | 16 +++++++++++-----
->  arch/arm/boot/dts/armada-xp-mv78230.dtsi | 14 ++++++++++----
->  arch/arm/boot/dts/armada-xp-mv78260.dtsi | 16 +++++++++++-----
->  arch/arm/boot/dts/armada-xp-mv78460.dtsi | 16 +++++++++++-----
->  4 files changed, 43 insertions(+), 19 deletions(-)
+>> > So this is why add "idle_constraint" as a central place to control
+>> > power domain for CPU debug purpose and I also think this is more
+>> > friendly for hardware design, e.g. some platforms can enable partial
+>> > low power states to save power and avoid overheat after using this
+>> > driver.
+>> >
+>> > How about you think for this?
+>>
+>> Like Sudeep pointed out we should concentrate on doing the right thing,
+>> that is work with EDPRSR.PU, EDPRCR.COREPURQ and EDPRCR.CORENPDRQ.
 >
-> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-> index cc011c8..e30b076 100644
-> --- a/arch/arm/boot/dts/armada-370.dtsi
-> +++ b/arch/arm/boot/dts/armada-370.dtsi
-> @@ -137,29 +137,35 @@
->  			};
->  
->  			gpio0: gpio@18100 {
-> -				compatible = "marvell,orion-gpio";
-> -				reg = <0x18100 0x40>;
-> +				compatible = "marvell,armada-370-xp-gpio";
+> Agree, and I think we have aligned for this.
+>
+>> Anything outside of that becomes platform specific and can't be handled in
+>> this driver.
+>
+> Sorry I argue a bit for this just want to make things more clear and
+> if can have better method.
+>
+> Though the issue is platform specific, but the code is to seek common
+> method to handle them. So the driver has no any platform specific code.
 
-I think we should keep the "marvell,orion-gpio" too because the hardware
-is still compatible with it. Morever it will allow to use a recent dtb
-with an old kernel.
+Seeking a common way to handle platform specific problems doesn't
+scale and will never be encompassing.  There will always be a quirk
+somewhere to deal with, hence the idea of keeping things separate.
 
+>
+> I read again for Suziki's suggestion: "4) Should document the fact that,
+> on some platforms, the user may have to disable CPUidle explicitly to
+> get the driver working. But let us not make it the default. The user
+> with a not so ideal platform could add "nohlt" and get it working."
 
-> +				reg = <0x18100 0x40>, <0x181c0 0x08>;
-> +				reg-names = "gpio", "pwm";
->  				ngpios = <32>;
->  				gpio-controller;
->  				#gpio-cells = <2>;
-> +				#pwm-cells = <2>;
->  				interrupt-controller;
->  				#interrupt-cells = <2>;
->  				interrupts = <82>, <83>, <84>, <85>;
-> +				clocks = <&coreclk 0>;
->  			};
->  
->  			gpio1: gpio@18140 {
-> -				compatible = "marvell,orion-gpio";
-> -				reg = <0x18140 0x40>;
-> +				compatible = "marvell,armada-370-xp-gpio";
+Suzuki and I are expressing the same view using different words.
 
-Same here and for all the others...
-
-Thanks,
-
-Gregory
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> So I'm not strong to resist and if this is alignment yet, I should
+> document well for this but doesn't handle it in driver (keep driver
+> simple).
+>
+> Thanks,
+> Leo Yan
