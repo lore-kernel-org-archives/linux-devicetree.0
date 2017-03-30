@@ -1,65 +1,163 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH/RFC v2 0/2] arm64: dts: r8a7795: Add support for R-Car H3 ES2.0
-Date: Thu, 30 Mar 2017 13:13:03 +0200
-Message-ID: <CAMuHMdV+=pNpFO7H3J0=JM1BnXtm4t=Q+1bx=R+f9=JxvJZT_Q@mail.gmail.com>
-References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be> <1490870898.3471.3.camel@collabora.co.uk>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv4 25/29] drm/omap: displays: panel-dpi: Support for handling backlight devices
+Date: Thu, 30 Mar 2017 14:15:25 +0300
+Message-ID: <1490872529-23084-26-git-send-email-tomi.valkeinen@ti.com>
+References: <1490872529-23084-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490870898.3471.3.camel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+In-Reply-To: <1490872529-23084-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Wolfram Sang <wsa-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sjoerd,
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 
-On Thu, Mar 30, 2017 at 12:48 PM, Sjoerd Simons
-<sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
-> On Fri, 2017-03-24 at 14:37 +0100, Geert Uytterhoeven wrote:
->> This patch series adds preliminary support for Renesas Salvator-X
->> development boards equipped with revision ES2.0 of the R-Car H3 Soc.
->>
->>   - Patch 1 adds support for the R-Car H3 ES2.0 Soc,
->>     While this patch is safe as-is, as it doesn't affect any existing
->>     setups, it's probably a bit premature to apply it.
->>   - Patch 2 adds support for Salvator-X boards with R-Car H3 ES2.0.
->>     This patch does affect existing development setups, as it changes
->> the
->>     name of the DTB for Salvator-X boards equipped with ES1.x SoCs.
->>     Given most developers have access to ES1.x only, this patch must
->> not be
->>     applied yet.
->
-> Would it make more sense to add a new r8a7795-es2.dtsi and keep the
-> current dtsi for es1? Having to load different device-trees based on
-> which kernel is used would be rather nasty.
+The associated backlight device can be configured via DT by providing the
+phandle to the device.
 
-We definitely considered that option.
-However, we concluded that in the end, we want to mainly support production
-SoCs.  Hence the default files should represent the production version.
-Using a preproduction SoC can be considered a special case, and thus needs
-a file with a special esX ID in its name.
+If the backlight device is configured, the driver can manage the backligt
+along with the panel's power state, iow it can turn on the backlight when
+the panel is enabled and turn it off when the panel is disabled.
 
-We do realize this can cause some inconveniences during the transition period,
-when most developers don't have access to ES2.0 SoCs yet, or have mixed
-environments of ES1.x and ES2.0.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../bindings/display/panel/panel-dpi.txt           |  3 ++
+ drivers/gpu/drm/omapdrm/displays/panel-dpi.c       | 37 ++++++++++++++++++++--
+ 2 files changed, 38 insertions(+), 2 deletions(-)
 
-Of course you can keep on using the current DTB (binary) on your H3 ES1.x
-boards, as long as you don't need to use devices not yet described in that DTB.
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+index d4add13e592d..6b203bc4d932 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
++++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+@@ -9,6 +9,7 @@ Optional properties:
+ - enable-gpios: panel enable gpio
+ - reset-gpios: GPIO to control the RESET pin
+ - vcc-supply: phandle of regulator that will be used to enable power to the display
++- backlight: phandle of the backlight device
+ 
+ Required nodes:
+ - "panel-timing" containing video timings
+@@ -22,6 +23,8 @@ lcd0: display@0 {
+         compatible = "samsung,lte430wq-f0c", "panel-dpi";
+         label = "lcd";
+ 
++        backlight = <&backlight>;
++
+         port {
+             lcd_in: endpoint {
+                     remote-endpoint = <&dpi_out>;
+diff --git a/drivers/gpu/drm/omapdrm/displays/panel-dpi.c b/drivers/gpu/drm/omapdrm/displays/panel-dpi.c
+index 38003208d9ca..04ce8c5f2954 100644
+--- a/drivers/gpu/drm/omapdrm/displays/panel-dpi.c
++++ b/drivers/gpu/drm/omapdrm/displays/panel-dpi.c
+@@ -16,6 +16,7 @@
+ #include <linux/of.h>
+ #include <linux/of_gpio.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/backlight.h>
+ 
+ #include <video/omap-panel-data.h>
+ #include <video/of_display_timing.h>
+@@ -30,6 +31,8 @@ struct panel_drv_data {
+ 
+ 	struct videomode vm;
+ 
++	struct backlight_device *backlight;
++
+ 	/* used for non-DT boot, to be removed */
+ 	int backlight_gpio;
+ 
+@@ -97,6 +100,11 @@ static int panel_dpi_enable(struct omap_dss_device *dssdev)
+ 	if (gpio_is_valid(ddata->backlight_gpio))
+ 		gpio_set_value_cansleep(ddata->backlight_gpio, 1);
+ 
++	if (ddata->backlight) {
++		ddata->backlight->props.power = FB_BLANK_UNBLANK;
++		backlight_update_status(ddata->backlight);
++	}
++
+ 	dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
+ 
+ 	return 0;
+@@ -113,6 +121,11 @@ static void panel_dpi_disable(struct omap_dss_device *dssdev)
+ 	if (gpio_is_valid(ddata->backlight_gpio))
+ 		gpio_set_value_cansleep(ddata->backlight_gpio, 0);
+ 
++	if (ddata->backlight) {
++		ddata->backlight->props.power = FB_BLANK_POWERDOWN;
++		backlight_update_status(ddata->backlight);
++	}
++
+ 	gpiod_set_value_cansleep(ddata->enable_gpio, 0);
+ 	regulator_disable(ddata->vcc_supply);
+ 
+@@ -209,6 +222,7 @@ static int panel_dpi_probe_of(struct platform_device *pdev)
+ {
+ 	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+ 	struct device_node *node = pdev->dev.of_node;
++	struct device_node *bl_node;
+ 	struct omap_dss_device *in;
+ 	int r;
+ 	struct display_timing timing;
+@@ -236,10 +250,19 @@ static int panel_dpi_probe_of(struct platform_device *pdev)
+ 
+ 	ddata->backlight_gpio = -ENOENT;
+ 
++	bl_node = of_parse_phandle(node, "backlight", 0);
++	if (bl_node) {
++		ddata->backlight = of_find_backlight_by_node(bl_node);
++		of_node_put(bl_node);
++
++		if (!ddata->backlight)
++			return -EPROBE_DEFER;
++	}
++
+ 	r = of_get_display_timing(node, "panel-timing", &timing);
+ 	if (r) {
+ 		dev_err(&pdev->dev, "failed to get video timing\n");
+-		return r;
++		goto error_free_backlight;
+ 	}
+ 
+ 	videomode_from_timing(&timing, &ddata->vm);
+@@ -247,12 +270,19 @@ static int panel_dpi_probe_of(struct platform_device *pdev)
+ 	in = omapdss_of_find_source_for_first_ep(node);
+ 	if (IS_ERR(in)) {
+ 		dev_err(&pdev->dev, "failed to find video source\n");
+-		return PTR_ERR(in);
++		r = PTR_ERR(in);
++		goto error_free_backlight;
+ 	}
+ 
+ 	ddata->in = in;
+ 
+ 	return 0;
++
++error_free_backlight:
++	if (ddata->backlight)
++		put_device(&ddata->backlight->dev);
++
++	return r;
+ }
+ 
+ static int panel_dpi_probe(struct platform_device *pdev)
+@@ -321,6 +351,9 @@ static int __exit panel_dpi_remove(struct platform_device *pdev)
+ 
+ 	omap_dss_put_device(in);
+ 
++	if (ddata->backlight)
++		put_device(&ddata->backlight->dev);
++
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
