@@ -1,47 +1,37 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio:imu:mpu6050 update i2c bindings to reflect
- i2c-gate and supported parts
-Date: Thu, 30 Mar 2017 18:02:52 -0500
-Message-ID: <20170330230252.cxbdh3g744qwdtfh@rob-hp-laptop>
+Subject: Re: [PATCH 2/2] iio:imu:mpu6050 add explicit mpu9250 support
+Date: Thu, 30 Mar 2017 18:18:46 -0500
+Message-ID: <20170330231846.j45psrzast3pjc5b@rob-hp-laptop>
 References: <20170326111100.2571-1-jic23@kernel.org>
- <20170326111100.2571-2-jic23@kernel.org>
+ <20170326111100.2571-3-jic23@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170326111100.2571-2-jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170326111100.2571-3-jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 26, 2017 at 12:10:59PM +0100, Jonathan Cameron wrote:
-> These bindings are somewhat lagging the state of the driver.  The i2c-gate
-> bindings are documented elsewhere, but it seems sensible to at least have
-> an example and cross reference in here.  SPI bindings will need to be the
-> subject of a future patch.
+On Sun, Mar 26, 2017 at 12:11:00PM +0100, Jonathan Cameron wrote:
+> The mpu9250 is a SIP containing an mpu6500 and an ak8975.  If this was all
+> there was too it there would be no need for explicit handling in the driver.
+> Arguably the bindings would also only reflect the presence of an mpu6500 with
+> the ak8975 hanging off it, as the kernel doesn't care that they are in one
+> package.
+> 
+> However, the WHOAMI value changes as well so best to add explicit support.
 > 
 > Signed-off-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  .../devicetree/bindings/iio/imu/inv_mpu6050.txt    | 23 ++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> index a9fc11e43b45..e18e04f3c6f4 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> +++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> @@ -3,14 +3,17 @@ InvenSense MPU-6050 Six-Axis (Gyro + Accelerometer) MEMS MotionTracking Device
->  http://www.invensense.com/mems/gyro/mpu6050.html
->  
->  Required properties:
-> - - compatible : should be "invensense,mpu6050"
-> + - compatible : should be "invensense,mpu6050", "invensense,mpu6500",
-> +   "invensense,mpu9150" or "invensense,icm20608"
+>  Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 2 +-
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c                | 6 ++++++
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c                 | 5 +++++
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h                 | 2 ++
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c                 | 1 +
+>  5 files changed, 15 insertions(+), 1 deletion(-)
 
-One per line please. With that,
+Same one per line comment, but
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
