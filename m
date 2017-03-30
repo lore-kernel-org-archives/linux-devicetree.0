@@ -1,58 +1,75 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v6 00/39] i.MX Media Driver
-Date: Thu, 30 Mar 2017 17:27:30 +0100
-Message-ID: <20170330162730.GH7909@n2100.armlinux.org.uk>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <20170330110249.GF7909@n2100.armlinux.org.uk>
- <d715bcdf-b2df-8080-6ab4-854aeace31a8@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 0/6] bus: brcmstb_gisb: add support for GISBv7 arbiter
+Date: Thu, 30 Mar 2017 09:33:32 -0700
+Message-ID: <c3182c24-2245-cf2e-32e4-248b8046a30f@gmail.com>
+References: <20170330002914.7371-1-opendmb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <d715bcdf-b2df-8080-6ab4-854aeace31a8@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, geert@linux-m68k.org, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, mchehab@kernel.org, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170330002914.7371-1-opendmb@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Berger <opendmb@gmail.com>, mark.rutland@arm.com
+Cc: robh+dt@kernel.org, computersforpeace@gmail.com, gregory.0xf0@gmail.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, treding@nvidia.com, jonathanh@nvidia.com, olof@lixom.net, mirza.krak@gmail.com, suzuki.poulose@arm.com, bgolaszewski@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 09:12:29AM -0700, Steve Longerbeam wrote:
+On 03/29/2017 05:29 PM, Doug Berger wrote:
+> This patch set contains changes to enable the GISB arbiter driver
+> on the latest ARM64 architecture Set-Top Box chips from Broadcom.
 > 
+> Since the ARM64 architecture does not support the hooking of low
+> level fault handlers the driver has been adjusted to depend solely
+> on GISB interrupts and notify events to provide diagnostic
+> messaging.  The GISB hardware still triggers bus faults for the
+> processor so the default low-level aborts will occur and will be
+> handled based on the architecture specific kernel implementation.
 > 
-> On 03/30/2017 04:02 AM, Russell King - ARM Linux wrote:
-> >This fails at step 1.  The removal of the frame interval support now
-> >means my setup script fails when trying to set the frame interval on
-> >the camera:
-> >
-> >Enumerating pads and links
-> >Setting up format SRGGB8_1X8 816x616 on pad imx219 0-0010/0
-> >Format set: SRGGB8_1X8 816x616
-> >Setting up frame interval 1/25 on pad imx219 0-0010/0
-> >Frame interval set: 1/25
-> >Setting up format SRGGB8_1X8 816x616 on pad imx6-mipi-csi2/0
-> >Format set: SRGGB8_1X8 816x616
-> >Setting up frame interval 1/25 on pad imx6-mipi-csi2/0
-> >Unable to set frame interval: Inappropriate ioctl for device (-25)Unable to setup formats: Inappropriate ioctl for device (25)
-> >
-> >This is because media-ctl tries to propagate it from the imx219 source
-> >pad to the csi2 sink pad, and the csi2 now fails that ioctl.
+> While this tends to obsure the GISB error messaging it is still
+> reasonable so the same approach is applied to the ARM architecture
+> for consistency.
 > 
-> I assume you're using Philipp's frame interval patches to media-ctl.
-> Can you make the frame interval propagation optional in those patches?
-> I.e. don't error-out with a failure code if the ioctl returns ENOTTY.
+> The patches also correct some issues with the existing driver
+> and add the new register map for the GISBv7 hardware first
+> appearing in the BCM7278 device.
 
-Damn, you're right.  There's way too much stuff to try and keep track
-of with this stuff.
+This all looks great to me, and since there are no more ARM64
+dependencies I can take this via the Broadcom ARM/ARM64 SoC pull requests.
+
+Mark, are you also happy with this v3?
+
+Thanks Doug!
+
+> 
+> Changes since v2 at [2]:
+>  - Removed code associated with enabling the hooking of ARM64
+>    memory faults as well as the code that hooks them for both
+>    ARM and ARM64 architectures within the GISB arbiter driver.
+>  - Created separate notifiers for die and panic events to
+>    prevent list corruption, and substituted the notifier return
+>    name for the previous magic number (Thanks Mark!)
+> 
+> Changes since v1 at [1]:
+>  - Removed code associated with hooking SError handling in favor
+>    of a registered notifier (Thanks Mark!)
+>  - Removed an unnecessary explicit cast (Thanks Gregory!)
+> 
+> [1] https://lkml.org/lkml/2017/3/24/413
+> [2] https://lkml.org/lkml/2017/3/28/1125
+> 
+> Doug Berger (6):
+>   bus: brcmstb_gisb: Use register offsets with writes too
+>   bus: brcmstb_gisb: correct support for 64-bit address output
+>   bus: brcmstb_gisb: add notifier handling
+>   bus: brcmstb_gisb: remove low-level ARM hooks
+>   bus: brcmstb_gisb: enable driver for ARM64 architecture
+>   bus: brcmstb_gisb: update to support new revision
+> 
+>  .../devicetree/bindings/bus/brcm,gisb-arb.txt      |   3 +-
+>  drivers/bus/Kconfig                                |   2 +-
+>  drivers/bus/brcmstb_gisb.c                         | 121 ++++++++++++---------
+>  3 files changed, 75 insertions(+), 51 deletions(-)
+> 
+
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Florian
