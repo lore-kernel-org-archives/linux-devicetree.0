@@ -1,57 +1,35 @@
 From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v4 1/5] dt-bindings: watchdog: Document STM32 IWDG bindings
-Date: Thu, 30 Mar 2017 17:15:22 +0200
-Message-ID: <1490886926-20585-2-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v4 5/5] ARM: configs: stm32: Add watchdog support in STM32 defconfig
+Date: Thu, 30 Mar 2017 17:15:26 +0200
+Message-ID: <1490886926-20585-6-git-send-email-yannick.fertre@st.com>
 References: <1490886926-20585-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1490886926-20585-1-git-send-email-yannick.fertre@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation of device tree bindings for the STM32 IWDG
-(Independent WatchDoG).
+This patch adds STM32 watchdog support in stm32_defconfig file
 
 Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
-
-Author:    Yannick Fertre <yannick.fertre@st.com>
 ---
- .../devicetree/bindings/watchdog/st,stm32-iwdg.txt        | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+ arch/arm/configs/stm32_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-new file mode 100644
-index 0000000..15fef87
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-@@ -0,0 +1,15 @@
-+STM32 Independent WatchDoG (IWDG)
-+---------------------------------
-+
-+Required properties:
-+- compatible: "st,stm32-iwdg"
-+- reg: physical base address and length of the registers set for the device
-+- clocks: must contain a single entry describing the clock input
-+
-+Example:
-+
-+iwdg: watchdog@40003000 {
-+	compatible = "st,stm32-iwdg";
-+	reg = <0x40003000 0x400>;
-+	clocks = <&clk_lsi>;
-+};
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index 29ac5a4..1fb901c 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -51,6 +51,7 @@ CONFIG_I2C=y
+ CONFIG_I2C_CHARDEV=y
+ CONFIG_I2C_STM32F4=y
+ # CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ # CONFIG_USB_SUPPORT is not set
 -- 
 1.9.1
