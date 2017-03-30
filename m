@@ -1,65 +1,34 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCHv5 05/11] ARM: dts: exynos: add HDMI controller phandle to
- exynos4.dtsi
-Date: Fri, 31 Mar 2017 00:34:23 +0300
-Message-ID: <20170330213423.eklb2zgmud6sigig@kozik-lap>
+Subject: Re: [PATCHv5 06/11] s5p-cec.txt: document the HDMI controller phandle
+Date: Fri, 31 Mar 2017 00:37:54 +0300
+Message-ID: <20170330213754.nmfq44sohl3amxcw@kozik-lap>
 References: <20170329141543.32935-1-hverkuil@xs4all.nl>
- <20170329141543.32935-6-hverkuil@xs4all.nl>
+ <20170329141543.32935-7-hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170329141543.32935-6-hverkuil@xs4all.nl>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+In-Reply-To: <20170329141543.32935-7-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: linux-media@vger.kernel.org, Daniel Vetter <daniel.vetter@intel.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 04:15:37PM +0200, Hans Verkuil wrote:
+On Wed, Mar 29, 2017 at 04:15:38PM +0200, Hans Verkuil wrote:
 > From: Hans Verkuil <hans.verkuil@cisco.com>
 > 
-> Add the new hdmi phandle to exynos4.dtsi. This phandle is needed by the
-> s5p-cec driver to initialize the CEC notifier framework.
-> 
-> Tested with my Odroid U3.
+> Update the bindings documenting the new hdmi phandle.
 > 
 > Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > CC: linux-samsung-soc@vger.kernel.org
 > CC: devicetree@vger.kernel.org
 > CC: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  arch/arm/boot/dts/exynos4.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
+>  Documentation/devicetree/bindings/media/s5p-cec.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Thanks, applied. Now I noticed that you need it for maintaining the
-bisectability for this driver (although it is a staging driver). In that
-case, if anyone needs this as well then:
-
-
-The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201:
-
-  Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-hdmi-cec-4.12
-
-for you to fetch changes up to 192c1df4a75499a6ab70aca38c6a7e5e40013d77:
-
-  ARM: dts: exynos: add HDMI controller phandle to exynos4.dtsi (2017-03-31 00:21:18 +0300)
-
-----------------------------------------------------------------
-Add to hdmi-cec node a phandle to hdmi node for new hdmi-cec notifier.
-
-----------------------------------------------------------------
-Hans Verkuil (1):
-      ARM: dts: exynos: add HDMI controller phandle to exynos4.dtsi
-
- arch/arm/boot/dts/exynos4.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 Best regards,
 Krzysztof
