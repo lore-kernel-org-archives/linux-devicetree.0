@@ -1,71 +1,43 @@
-From: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 0/2] mtd: spi-nor: add stm32 qspi driver
-Date: Thu, 30 Mar 2017 09:31:15 +0200
-Message-ID: <d1c2f0a9-302d-ea7c-5d1b-ad32b9950ed4@st.com>
-References: <1490619296-8168-1-git-send-email-ludovic.Barre@st.com>
- <5224f3cd-a128-9e72-c0c8-62a137ceeb79@wedev4u.fr>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v12 00/10] mux controller abstraction and iio/i2c muxes
+Date: Thu, 30 Mar 2017 09:34:52 +0200
+Message-ID: <c321dad0-4c0e-b192-ee93-45359e29f61b@axentia.se>
+References: <1490624525-15865-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5224f3cd-a128-9e72-c0c8-62a137ceeb79-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490624525-15865-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-hi Cyrille
-
-I see your patch series
-
-[PATCH v5 0/6] mtd: spi-nor: parse SFDP tables to setup (Q)SPI memories
-
-No problem, I rebase my V2 onto your patch
-
-
-BR
-Ludo
-
-On 03/29/2017 06:51 PM, Cyrille Pitchen wrote:
-> Hi Ludovic,
+On 2017-03-27 16:21, Peter Rosin wrote:
+> Hi Greg!
+> 
+> Please apply.
 >
-> Le 27/03/2017 à 14:54, Ludovic Barre a écrit :
->> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->>
->> This patch set adds a SPI-NOR driver for stm32 QSPI controller.
->> It is a specialized SPI interface for serial Flash devices.
->> It supports 1 or 2 Flash device with single, dual and quad SPI Flash memories.
->>
->> It can operate in any of the following modes:
->> -indirect mode: all the operations are performed using the quadspi
->>   registers
->> -read memory-mapped mode: the external Flash memory is mapped to the
->>   microcontroller address space and is seen by the system as if it was
->>   an internal memory
->>
->> Ludovic Barre (2):
->>    dt-bindings: Document the STM32 QSPI bindings
->>    mtd: spi-nor: add driver for STM32 quad spi flash controller
->>
->>   .../devicetree/bindings/mtd/stm32-quadspi.txt      |  45 ++
->>   drivers/mtd/spi-nor/Kconfig                        |   7 +
->>   drivers/mtd/spi-nor/Makefile                       |   1 +
->>   drivers/mtd/spi-nor/stm32-quadspi.c                | 679 +++++++++++++++++++++
->>   4 files changed, 732 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
->>   create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
->>
-> Just a small word to warn you that I'm likely to ask you to rebase this
-> series onto the patch "mtd: spi-nor: introduce more SPI protocols and
-> the Dual Transfer Mode". Indeed, I need to synchronize with Marek first
-> but I plan to merge this patch within few days.
->
->
-> Best regards,
->
-> Cyrille
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+*snip snip*
+
+> v10 -> v11 changes
+> - added a new patch (12) with a fix for messed up error path reported
+>   by Paul Gortmaker.
+
+Oops, should be Dan Carpenter. Sorry about that...
+
+And, I forgot to high-light this:
+
+> v4 -> v5 changes
+> - driver for Analog Devices ADG792A/G, literally the first mux chip
+>   I found on the Internet with an i2c interface (that was not a
+>   dedicated i2c multiplexer like PCA9547) which I used to verify
+>   that the abstractions in the mux core are up to the task. Untested,
+>   just proof of concept that at least looks pretty and compiles...
+
+Maybe the patches related to adg792 (last two patches in v12) should
+not be applied? I don't care much either way, your call Greg...
+
+Cheers,
+peda
