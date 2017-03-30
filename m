@@ -1,26 +1,31 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] pinctrl: Add bindings for ARTPEC-6 pinmux
-Date: Thu, 30 Mar 2017 13:53:14 +0200
-Message-ID: <CACRpkdaVFV1tNs9ZtEibfLBtxM-JuykKGN-Kj-7_CwCsRiOTNA@mail.gmail.com>
-References: <20170330112744.GE29118@axis.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: move spi0_cs3_pin pinconf node
+Date: Thu, 30 Mar 2017 17:22:41 +0530
+Message-ID: <7416fb5e-d949-fdb6-1ce0-2c3033d3bc76@ti.com>
+References: <1490663566-23062-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170330112744.GE29118@axis.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@axis.com, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490663566-23062-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 1:27 PM, Jesper Nilsson <jesper.nilsson@axis.com> wrote:
+On Tuesday 28 March 2017 06:42 AM, David Lechner wrote:
+> This moves the spi0_cs3_pin pinconf node from the LEGO EV3 file to the
+> common DA850 include file. This node is applicable to any board, and
+> therefore belongs in the common file.
+> 
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 
-> Add the bindings for the pinmux functions in the
-> ARTPEC-6 SoC, including bias and drive strength.
->
-> Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
+Applied for v4.12
 
-Pretty much ideal bindings. Just giving some slack for the DT
-maintainers to look at it first.
+Thanks,
+Sekhar
 
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
