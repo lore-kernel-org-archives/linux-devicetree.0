@@ -1,100 +1,101 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength" DT property
-Date: Thu, 30 Mar 2017 15:46:00 +0900
-Message-ID: <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v3 16/37] mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
+Date: Thu, 30 Mar 2017 15:46:02 +0900
+Message-ID: <1490856383-31560-17-git-send-email-yamada.masahiro@socionext.com>
 References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490856383-31560-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Historically, this driver tried to choose as big ECC strength as
-possible, but it would be reasonable to allow DT to set a particular
-ECC strength with "nand-ecc-strength" property.  This is useful
-when a particular ECC setting is hard-coded by firmware (or hard-
-wired by boot ROM).
+Add two compatible strings for UniPhier SoCs.
 
-If no ECC strength is specified in DT, "nand-ecc-maximize" is implied
-since this was the original behavior.
+"socionext,uniphier-denali-nand-v5a" is used on UniPhier sLD3, LD4,
+Pro4, sLD8 SoCs.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+"socionext,uniphier-denali-nand-v5b" is used on UniPhier Pro5, PXs2,
+LD6b, LD11, LD20 SoCs.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
 Changes in v3: None
 Changes in v2:
-  - Add available values in the binding document
+  - Change the compatible strings
+  - Fix the ecc_strength_capability
+  - Override revision number for the newer one
 
- Documentation/devicetree/bindings/mtd/denali-nand.txt |  6 ++++++
- drivers/mtd/nand/denali.c                             | 18 ++++++++++++++++--
- drivers/mtd/nand/denali_pci.c                         |  1 +
- 3 files changed, 23 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/mtd/denali-nand.txt        |  6 ++++++
+ drivers/mtd/nand/denali_dt.c                       | 23 ++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index 25313c7..647618e 100644
+index 647618e..0b08ea5 100644
 --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
 +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -11,6 +11,12 @@ Optional properties:
+@@ -3,6 +3,8 @@
+ Required properties:
+   - compatible : should be one of the following:
+       "altr,socfpga-denali-nand"            - for Altera SOCFPGA
++      "socionext,uniphier-denali-nand-v5a"  - for Socionext UniPhier (v5a)
++      "socionext,uniphier-denali-nand-v5b"  - for Socionext UniPhier (v5b)
+   - reg : should contain registers location and length for data and reg.
+   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
+   - interrupts : The interrupt number.
+@@ -10,9 +12,13 @@ Required properties:
+ Optional properties:
    - nand-ecc-step-size: must be 512 or 1024.  If not specified, default to:
        512   for "altr,socfpga-denali-nand"
++      1024  for "socionext,uniphier-denali-nand-v5a"
++      1024  for "socionext,uniphier-denali-nand-v5b"
      see nand.txt for details.
-+  - nand-ecc-strength: see nand.txt for details.  Available values are:
-+      8, 15      for "altr,socfpga-denali-nand"
-+  - nand-ecc-maximize: see nand.txt for details
+   - nand-ecc-strength: see nand.txt for details.  Available values are:
+       8, 15      for "altr,socfpga-denali-nand"
++      8, 16, 24  for "socionext,uniphier-denali-nand-v5a"
++      8, 16      for "socionext,uniphier-denali-nand-v5b"
+   - nand-ecc-maximize: see nand.txt for details
+ 
+ Note:
+diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
+index c3bc333..1f2f68a 100644
+--- a/drivers/mtd/nand/denali_dt.c
++++ b/drivers/mtd/nand/denali_dt.c
+@@ -41,11 +41,34 @@ static const struct denali_dt_data denali_socfpga_data = {
+ 		DENALI_CAP_ECC_SIZE_512,
+ };
+ 
++static const struct denali_dt_data denali_uniphier_v5a_data = {
++	.ecc_strength_avail = BIT(24) | BIT(16) | BIT(8),
++	.caps = DENALI_CAP_HW_ECC_FIXUP |
++		DENALI_CAP_DMA_64BIT |
++		DENALI_CAP_ECC_SIZE_1024,
++};
 +
-+Note:
-+Either nand-ecc-strength or nand-ecc-maximize should be specified.
- 
- The device tree may optionally contain sub-nodes describing partitions of the
- address space. See partition.txt for more detail.
-diff --git a/drivers/mtd/nand/denali.c b/drivers/mtd/nand/denali.c
-index ce87b95..2f796e3 100644
---- a/drivers/mtd/nand/denali.c
-+++ b/drivers/mtd/nand/denali.c
-@@ -1641,9 +1641,23 @@ int denali_init(struct denali_nand_info *denali)
- 		goto failed_req_irq;
- 	}
- 
--	ret = denali_set_max_ecc_strength(denali);
--	if (ret)
-+	if (!chip->ecc.strength && !(chip->ecc.options & NAND_ECC_MAXIMIZE)) {
-+		dev_info(denali->dev,
-+			 "No ECC strength strategy is specified. Maximizing ECC strength\n");
-+		chip->ecc.options |= NAND_ECC_MAXIMIZE;
-+	}
++static const struct denali_dt_data denali_uniphier_v5b_data = {
++	.revision = 0x0501,
++	.ecc_strength_avail = BIT(16) | BIT(8),
++	.caps = DENALI_CAP_HW_ECC_FIXUP |
++		DENALI_CAP_DMA_64BIT |
++		DENALI_CAP_ECC_SIZE_1024,
++};
 +
-+	if (chip->ecc.options & NAND_ECC_MAXIMIZE) {
-+		ret = denali_set_max_ecc_strength(denali);
-+		if (ret)
-+			goto failed_req_irq;
-+	} else if (!(denali->ecc_strength_avail & BIT(chip->ecc.strength))) {
-+		dev_err(denali->dev,
-+			"ECC strength %d is not supported on this controller.\n",
-+			chip->ecc.strength);
-+		ret = -EINVAL;
- 		goto failed_req_irq;
-+	}
- 
- 	chip->ecc.bytes = denali_calc_ecc_bytes(chip->ecc.size,
- 						chip->ecc.strength);
-diff --git a/drivers/mtd/nand/denali_pci.c b/drivers/mtd/nand/denali_pci.c
-index a1ee9f8..a39682a5 100644
---- a/drivers/mtd/nand/denali_pci.c
-+++ b/drivers/mtd/nand/denali_pci.c
-@@ -87,6 +87,7 @@ static int denali_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 
- 	denali->ecc_strength_avail = BIT(15) | BIT(8);
- 	denali->caps |= DENALI_CAP_ECC_SIZE_512;
-+	denali->nand.ecc.options |= NAND_ECC_MAXIMIZE;
- 
- 	ret = denali_init(denali);
- 	if (ret)
+ static const struct of_device_id denali_nand_dt_ids[] = {
+ 	{
+ 		.compatible = "altr,socfpga-denali-nand",
+ 		.data = &denali_socfpga_data,
+ 	},
++	{
++		.compatible = "socionext,uniphier-denali-nand-v5a",
++		.data = &denali_uniphier_v5a_data,
++	},
++	{
++		.compatible = "socionext,uniphier-denali-nand-v5b",
++		.data = &denali_uniphier_v5b_data,
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, denali_nand_dt_ids);
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
