@@ -1,64 +1,100 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 1/9] phy: phy-mt65xx-usb3: improve RX detection stable time
-Date: Fri, 31 Mar 2017 15:35:27 +0800
-Message-ID: <1490945735-9531-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v5 4/9] phy: phy-mt65xx-usb3: move clock from phy node into port nodes
+Date: Fri, 31 Mar 2017 15:35:30 +0800
+Message-ID: <1490945735-9531-4-git-send-email-chunfeng.yun@mediatek.com>
+References: <1490945735-9531-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490945735-9531-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The default value of RX detection stable time is 10us, and this
-margin is too big for some critical cases which cause U3 link fail
-and link to U2(probability is about 1%). So change it to 5us.
+each port has its own reference clock, the HighSpeed port is 48M,
+and the SuperSpeed port is usually 26M, put them into port node for
+flexibility, this can close clock if the port is not used.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/phy/phy-mt65xx-usb3.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/phy/phy-mt65xx-usb3.c |   27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-index d972067..fe2392a 100644
+index 7fff482..3403572 100644
 --- a/drivers/phy/phy-mt65xx-usb3.c
 +++ b/drivers/phy/phy-mt65xx-usb3.c
-@@ -112,6 +112,14 @@
- #define P3D_RG_CDR_BIR_LTD0		GENMASK(12, 8)
- #define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
+@@ -153,6 +153,7 @@ struct mt65xx_phy_pdata {
+ struct mt65xx_phy_instance {
+ 	struct phy *phy;
+ 	void __iomem *port_base;
++	struct clk *ref_clk;	/* reference clock of anolog phy */
+ 	u32 index;
+ 	u8 type;
+ };
+@@ -160,6 +161,7 @@ struct mt65xx_phy_instance {
+ struct mt65xx_u3phy {
+ 	struct device *dev;
+ 	void __iomem *sif_base;	/* only shared sif */
++	/* deprecated, use @ref_clk instead in phy instance */
+ 	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
+ 	const struct mt65xx_phy_pdata *pdata;
+ 	struct mt65xx_phy_instance **phys;
+@@ -455,6 +457,12 @@ static int mt65xx_phy_init(struct phy *phy)
+ 		return ret;
+ 	}
  
-+#define U3P_U3_PHYD_RXDET1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x128)
-+#define P3D_RG_RXDET_STB2_SET		GENMASK(17, 9)
-+#define P3D_RG_RXDET_STB2_SET_VAL(x)	((0x1ff & (x)) << 9)
++	ret = clk_prepare_enable(instance->ref_clk);
++	if (ret) {
++		dev_err(u3phy->dev, "failed to enable ref_clk\n");
++		return ret;
++	}
 +
-+#define U3P_U3_PHYD_RXDET2		(SSUSB_SIFSLV_U3PHYD_BASE + 0x12c)
-+#define P3D_RG_RXDET_STB2_SET_P3	GENMASK(8, 0)
-+#define P3D_RG_RXDET_STB2_SET_P3_VAL(x)	(0x1ff & (x))
-+
- #define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x0018)
- #define XC3_RG_U3_XTAL_RX_PWD		BIT(9)
- #define XC3_RG_U3_FRC_XTAL_RX_PWD	BIT(8)
-@@ -295,6 +303,16 @@ static void phy_instance_init(struct mt65xx_u3phy *u3phy,
- 	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
- 	writel(tmp, port_base + U3P_PHYD_CDR1);
+ 	if (instance->type == PHY_TYPE_USB2)
+ 		phy_instance_init(u3phy, instance);
+ 	else
+@@ -494,6 +502,7 @@ static int mt65xx_phy_exit(struct phy *phy)
+ 	if (instance->type == PHY_TYPE_USB2)
+ 		phy_instance_exit(u3phy, instance);
  
-+	tmp = readl(port_base + U3P_U3_PHYD_RXDET1);
-+	tmp &= ~P3D_RG_RXDET_STB2_SET;
-+	tmp |= P3D_RG_RXDET_STB2_SET_VAL(0x10);
-+	writel(tmp, port_base + U3P_U3_PHYD_RXDET1);
-+
-+	tmp = readl(port_base + U3P_U3_PHYD_RXDET2);
-+	tmp &= ~P3D_RG_RXDET_STB2_SET_P3;
-+	tmp |= P3D_RG_RXDET_STB2_SET_P3_VAL(0x10);
-+	writel(tmp, port_base + U3P_U3_PHYD_RXDET2);
-+
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
++	clk_disable_unprepare(instance->ref_clk);
+ 	clk_disable_unprepare(u3phy->u3phya_ref);
+ 	return 0;
  }
+@@ -594,10 +603,13 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
+ 		return PTR_ERR(u3phy->sif_base);
+ 	}
  
++	/* it's deprecated, make it optional for backward compatibility */
+ 	u3phy->u3phya_ref = devm_clk_get(dev, "u3phya_ref");
+ 	if (IS_ERR(u3phy->u3phya_ref)) {
+-		dev_err(dev, "error to get u3phya_ref\n");
+-		return PTR_ERR(u3phy->u3phya_ref);
++		if (PTR_ERR(u3phy->u3phya_ref) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		u3phy->u3phya_ref = NULL;
+ 	}
+ 
+ 	port = 0;
+@@ -638,6 +650,17 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
+ 		instance->index = port;
+ 		phy_set_drvdata(phy, instance);
+ 		port++;
++
++		/* if deprecated clock is provided, ignore instance's one */
++		if (u3phy->u3phya_ref)
++			continue;
++
++		instance->ref_clk = devm_clk_get(&phy->dev, "ref");
++		if (IS_ERR(instance->ref_clk)) {
++			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
++			retval = PTR_ERR(instance->ref_clk);
++			goto put_child;
++		}
+ 	}
+ 
+ 	provider = devm_of_phy_provider_register(dev, mt65xx_phy_xlate);
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
