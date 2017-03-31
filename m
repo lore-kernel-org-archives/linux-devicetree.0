@@ -1,39 +1,34 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] soc/fsl/qbman: Use shared-dma-pool for QMan private memory allocations
-Date: Fri, 31 Mar 2017 14:27:51 +1100
-Message-ID: <871ste5dmw.fsf@concordia.ellerman.id.au>
-References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com> <1490822037-6752-3-git-send-email-roy.pledge@nxp.com> <b1cd8d44-8c74-ab50-5dc9-1f978cae5bdf@arm.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 00/37] mtd: nand: denali: 2nd round of Denali NAND IP
+ patch bomb
+Date: Fri, 31 Mar 2017 13:05:20 +0900
+Message-ID: <CAK7LNATUyc821uQTECkkQj2SDKkbrioFfHVsttnsnc8QuT1P-A@mail.gmail.com>
+References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com> <20170330183805.1c29504f@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b1cd8d44-8c74-ab50-5dc9-1f978cae5bdf-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, roy.pledge-3arQi8VN3Tc@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: madalin.bucur-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170330183805.1c29504f@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: linux-mtd@lists.infradead.org, Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> writes:
+Hi Boris,
 
-> Hi Roy,
->
-> On 29/03/17 22:13, Roy Pledge wrote:
->> Use the shared-memory-pool mechanism for frame queue descriptor and
->> packed frame descriptor record area allocations.
->
-> Thanks for persevering with this - in my opinion it's now looking like
-> it was worth the effort :)
->
-> AFAICS the ioremap_wc() that this leads to does appear to give back
-> something non-cacheable on PPC (assuming "pgprot_noncached_wc" isn't
-> horrendously misnamed), and "no-map" should rule out any cacheable
-> linear map alias existing, so it would seem that this approach should
-> avert Scott's concerns about attribute mismatches.
 
-How does 'no-map' translate into something being excluded from the
-linear mapping?
+2017-03-31 1:38 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
 
-cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The rest looks almost good, except for a few comments I had on patch
+> 14, 18, 25, 26 and 32.
+>
+> I'll probably apply 33 and 34 soon.
+>
+
+Thank you!
+Please note I left a minor comment on 34.
+(Accidental addition of braces.)
+
+
+-- 
+Best Regards
+Masahiro Yamada
