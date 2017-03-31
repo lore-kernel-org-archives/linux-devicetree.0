@@ -1,54 +1,90 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] soc/fsl/qbman: Use shared-dma-pool for QMan
- private memory allocations
-Date: Fri, 31 Mar 2017 18:55:57 +0100
-Message-ID: <dfaa1a28-66d8-15fb-7d2d-75e206161770@arm.com>
-References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com>
- <1490822037-6752-3-git-send-email-roy.pledge@nxp.com>
- <b1cd8d44-8c74-ab50-5dc9-1f978cae5bdf@arm.com>
- <871ste5dmw.fsf@concordia.ellerman.id.au>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: armada-38x: label USB and SATA nodes
+Date: Fri, 31 Mar 2017 20:21:11 +0200
+Message-ID: <20170331182111.GJ22609@lunn.ch>
+References: <20170331074115.8111-1-ralph.sennhauser@gmail.com>
+ <20170331165015.GJ12814@lunn.ch>
+ <20170331193920.030d9ca8@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <871ste5dmw.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170331193920.030d9ca8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, roy.pledge-3arQi8VN3Tc@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: madalin.bucur-3arQi8VN3Tc@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 31/03/17 04:27, Michael Ellerman wrote:
-> Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> writes:
+On Fri, Mar 31, 2017 at 07:39:20PM +0200, Ralph Sennhauser wrote:
+> On Fri, 31 Mar 2017 18:50:15 +0200
+> Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
 > 
->> Hi Roy,
->>
->> On 29/03/17 22:13, Roy Pledge wrote:
->>> Use the shared-memory-pool mechanism for frame queue descriptor and
->>> packed frame descriptor record area allocations.
->>
->> Thanks for persevering with this - in my opinion it's now looking like
->> it was worth the effort :)
->>
->> AFAICS the ioremap_wc() that this leads to does appear to give back
->> something non-cacheable on PPC (assuming "pgprot_noncached_wc" isn't
->> horrendously misnamed), and "no-map" should rule out any cacheable
->> linear map alias existing, so it would seem that this approach should
->> avert Scott's concerns about attribute mismatches.
+> > > -			sata@a8000 {
+> > > +			satac0: sata@a8000 {  
+> > 
+> > Hi Ralph
+> > 
+> > Why the c in satac0?
 > 
-> How does 'no-map' translate into something being excluded from the
-> linear mapping?
+> For controller and to not conflict with a use case of sata0 for a port,
+> similarly to pciec and pcie1. See armada-385-synology-ds116.dts.
 
-Reserved regions marked with "no-map" get memblock_remove()d by
-early_init_dt_alloc_reserved_memory_arch(). As I understand things, the
-linear map should only cover memblock areas, and it would be explicitly
-violating the semantics of "no-map" to still cover such a region.
+:~/linux/arch/arm/boot/dts$ ls *ds116*
+ls: cannot access '*ds116*': No such file or directory
 
-Robin.
+But anyway, a few boards seem to solve this by calling the controller
+node ahci0: and the port sata0:
 
+> > > -			usb3@f0000 {
+> > > +			usb3_0: usb3@f0000 {
+> > >  				compatible =
+> > > "marvell,armada-380-xhci"; reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
+> > >  				interrupts = <GIC_SPI 16
+> > > IRQ_TYPE_LEVEL_HIGH>; @@ -598,7 +598,7 @@
+> > >  				status = "disabled";
+> > >  			};
+> > >  
+> > > -			usb3@f8000 {
+> > > +			usb3_1: usb3@f8000 {
+> > >  				compatible =
+> > > "marvell,armada-380-xhci"; reg = <0xf8000 0x4000>,<0xfc000 0x4000>;
+> > >  				interrupts = <GIC_SPI 17
+> > > IRQ_TYPE_LEVEL_HIGH>;  
+> > 
+> > I can understand what you are saying. But does anybody else care? Are
+> > there other .dtsi files differentiating between USB 1.1, 2 and 3?
 > 
-> cheers
-> 
+> It's handled differently where ever I looked, some do some don't. A
+> case for distinguishing USB 2.0 and USB 3.0 like this is
+> armada-388-gp.dts.
 
+Humm...
+
+                        /* CON4 */
+                        usb@58000 {
+                                vcc-supply = <&reg_usb2_0_vbus>;
+                                status = "okay";
+                        };
+
+
+			/* CON5 */
+                        usb3@f0000 {
+                                usb-phy = <&usb2_1_phy>;
+                                status = "okay";
+                        };
+
+                        /* CON7 */
+                        usb3@f8000 {
+                                usb-phy = <&usb3_phy>;
+                                status = "okay";
+                        };
+
+Is this clear? Is CON5 a USB 3 host, but has a USB 2 PHY connected to
+it? CON7 is the only true USB 3 port? I think some comments written in
+schwiizerdütsch would be clearre.:-)
+
+		 Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
