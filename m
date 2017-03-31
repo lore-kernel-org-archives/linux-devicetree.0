@@ -1,42 +1,59 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] mtd: use dev_of_node helper in mtd_get_of_node
-Date: Fri, 31 Mar 2017 11:11:48 +0200
-Message-ID: <20170331091148.19816-1-zajec5@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] drm: rcar-du: Document the vsps property in the DT bindings
+Date: Fri, 31 Mar 2017 12:19:12 +0300
+Message-ID: <8105647.ANSr0hWnZy@avalon>
+References: <20170327095652.5755-1-laurent.pinchart+renesas@ideasonboard.com> <CAMuHMdUiDzGt6bz96D-5yRLF-HiZfpQTTxKP5Y4+j-9HiF1LLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUiDzGt6bz96D-5yRLF-HiZfpQTTxKP5Y4+j-9HiF1LLQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Hi Geert,
 
-This allows better compile-time optimizations with CONFIG_OF disabled.
+On Monday 27 Mar 2017 13:05:48 Geert Uytterhoeven wrote:
+> On Mon, Mar 27, 2017 at 11:56 AM, Laurent Pinchart wrote:
+> > The property is used by the driver but is missing from the DT bindings.
+> > Document it.
+> > 
+> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > b/Documentation/devicetree/bindings/display/renesas,du.txt index
+> > 1a02f099a0ff..cf34893a1b53 100644
+> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > 
+> > @@ -36,6 +36,11 @@ Required Properties:
+> >        When supplied they must be named "dclkin.x" with "x" being the
+> >        input
+> >        clock numerical index.
+> > 
+> > +Optional Properties:
+> > +
+> > +  - vsps: A list of phandles to the VSP nodes that handle the memory
+> > +    interfaces for the DU channels (Gen3 only).
+> 
+> ", one per channel"?
+> 
+> Required for Gen3, optional for Gen2? (cfr. Sergei's patches).
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
- include/linux/mtd/mtd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+How about making it mandatory on Gen2 as well ? The VSPs are there, even if 
+the driver doesn't use them, it makes sense to describe the connection. Of 
+course the driver will treat the property as optional for backward 
+compatibility.
 
-diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-index eebdc63cf6af..f8db5b2e4028 100644
---- a/include/linux/mtd/mtd.h
-+++ b/include/linux/mtd/mtd.h
-@@ -393,7 +393,7 @@ static inline void mtd_set_of_node(struct mtd_info *mtd,
- 
- static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
- {
--	return mtd->dev.of_node;
-+	return dev_of_node(&mtd->dev);
- }
- 
- static inline int mtd_oobavail(struct mtd_info *mtd, struct mtd_oob_ops *ops)
 -- 
-2.11.0
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
