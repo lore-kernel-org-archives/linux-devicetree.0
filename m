@@ -1,91 +1,80 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: armada-38x: label USB and SATA nodes
-Date: Fri, 31 Mar 2017 20:21:11 +0200
-Message-ID: <20170331182111.GJ22609@lunn.ch>
-References: <20170331074115.8111-1-ralph.sennhauser@gmail.com>
- <20170331165015.GJ12814@lunn.ch>
- <20170331193920.030d9ca8@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] doc,dts - add XRA1403 DTS binding documentation
+Date: Fri, 31 Mar 2017 13:49:57 -0500
+Message-ID: <20170331184957.bpnsgzevvfypq5ls@rob-hp-laptop>
+References: <cover.1490595641.git.nandor.han@ge.com>
+ <39ba92bacf48da957f8f85d5cb11d3254fe3d68f.1490595641.git.nandor.han@ge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170331193920.030d9ca8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <39ba92bacf48da957f8f85d5cb11d3254fe3d68f.1490595641.git.nandor.han@ge.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nandor Han <nandor.han@ge.com>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 07:39:20PM +0200, Ralph Sennhauser wrote:
-> On Fri, 31 Mar 2017 18:50:15 +0200
-> Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+On Mon, Mar 27, 2017 at 09:23:01AM +0300, Nandor Han wrote:
+> Add the XRA1403 DTS binding documentation.
+
+"dt-bindings: gpio: ..." for the subject prefix please.
+
 > 
-> > > -			sata@a8000 {
-> > > +			satac0: sata@a8000 {  
-> > 
-> > Hi Ralph
-> > 
-> > Why the c in satac0?
+> Signed-off-by: Nandor Han <nandor.han@ge.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-xra1403.txt      | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
 > 
-> For controller and to not conflict with a use case of sata0 for a port,
-> similarly to pciec and pcie1. See armada-385-synology-ds116.dts.
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xra1403.txt b/Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
+> new file mode 100644
+> index 0000000..ccf5337
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
+> @@ -0,0 +1,37 @@
+> +GPIO Driver for XRA1403 16-BIT GPIO Expander With Reset Input from EXAR
+> +
+> +The XRA1403 is an 16-bit GPIO expander with an SPI interface. Features available:
+> +	- Individually programmable inputs:
+> +		- Internal pull-up resistors
+> +		- Polarity inversion
+> +		- Individual interrupt enable
+> +		- Rising edge and/or Falling edge interrupt
+> +		- Input filter
+> +	- Individually programmable outputs
+> +		- Output Level Control
+> +		- Output Three-State Control
+> +
+> +Properties
+> +----------
+> +Check documentation for SPI and GPIO controllers regarding properties needed to configure the node.
+> +
+> +	- compatible = "exar,xra1403".
+> +	- reg = SPI id of the device.
+> +	- gpio-controller: mark the node as gpio.
 
-:~/linux/arch/arm/boot/dts$ ls *ds116*
-ls: cannot access '*ds116*': No such file or directory
+#gpio-cells?
 
-But anyway, a few boards seem to solve this by calling the controller
-node ahci0: and the port sata0:
+> +
+> +Optional properties:
+> +-------------------
+> +	- reset-gpios: in case available used to control the device reset line.
+> +
+> +Example
+> +--------
+> +
+> +	gpioxra0: gpio@2 {
+> +		compatible = "exar,xra1403";
+> +		reg = <2>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		reset-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
+> +		spi-max-frequency = <1000000>;
+> +		status = "okay";
 
-> > > -			usb3@f0000 {
-> > > +			usb3_0: usb3@f0000 {
-> > >  				compatible =
-> > > "marvell,armada-380-xhci"; reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
-> > >  				interrupts = <GIC_SPI 16
-> > > IRQ_TYPE_LEVEL_HIGH>; @@ -598,7 +598,7 @@
-> > >  				status = "disabled";
-> > >  			};
-> > >  
-> > > -			usb3@f8000 {
-> > > +			usb3_1: usb3@f8000 {
-> > >  				compatible =
-> > > "marvell,armada-380-xhci"; reg = <0xf8000 0x4000>,<0xfc000 0x4000>;
-> > >  				interrupts = <GIC_SPI 17
-> > > IRQ_TYPE_LEVEL_HIGH>;  
-> > 
-> > I can understand what you are saying. But does anybody else care? Are
-> > there other .dtsi files differentiating between USB 1.1, 2 and 3?
+Don't show status in examples.
+
+> +	};
+> -- 
+> 2.10.1
 > 
-> It's handled differently where ever I looked, some do some don't. A
-> case for distinguishing USB 2.0 and USB 3.0 like this is
-> armada-388-gp.dts.
-
-Humm...
-
-                        /* CON4 */
-                        usb@58000 {
-                                vcc-supply = <&reg_usb2_0_vbus>;
-                                status = "okay";
-                        };
-
-
-			/* CON5 */
-                        usb3@f0000 {
-                                usb-phy = <&usb2_1_phy>;
-                                status = "okay";
-                        };
-
-                        /* CON7 */
-                        usb3@f8000 {
-                                usb-phy = <&usb3_phy>;
-                                status = "okay";
-                        };
-
-Is this clear? Is CON5 a USB 3 host, but has a USB 2 PHY connected to
-it? CON7 is the only true USB 3 port? I think some comments written in
-schwiizerdütsch would be clearre.:-)
-
-		 Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
