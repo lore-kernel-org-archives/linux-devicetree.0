@@ -1,130 +1,138 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] iommu/arm-smmu: Add global SMR masking property
-Date: Fri, 31 Mar 2017 13:43:55 +0100
-Message-ID: <20170331124355.GA6488@leverpostej>
-References: <7472f6f57d04431bca5b2dba2a53918225eaf432.1490958040.git.robin.murphy@arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: Add documentation for GP10B GPU
+Date: Fri, 31 Mar 2017 14:56:07 +0200
+Message-ID: <20170331125607.GA29779@ulmo.ba.sec>
+References: <20170330091831.18322-2-acourbot@nvidia.com>
+ <20170330092644.11890-1-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7472f6f57d04431bca5b2dba2a53918225eaf432.1490958040.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2542564277828628828=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170330092644.11890-1-acourbot@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, gnurou@gmail.com, linux-kernel@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 12:03:33PM +0100, Robin Murphy wrote:
-> The current SMR masking support using a 2-cell iommu-specifier is
-> primarily intended to handle individual masters with large and/or
-> complex Stream ID assignments; it quickly gets a bit clunky in other SMR
-> use-cases where we just want to consistently mask out the same part of
-> every Stream ID (e.g. for MMU-500 configurations where the appended TBU
-> number gets in the way unnecessarily). Let's add a new property to allow
-> a single global mask value to better fit the latter situation.
-> 
-> Tested-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+
+--===============2542564277828628828==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Disposition: inline
+
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 30, 2017 at 06:26:44PM +0900, Alexandre Courbot wrote:
+> GP10B's definition is mostly similar to GK20A's and GM20B's. The only
+> noticeable difference is the use of power domains instead of a regulator
+> for power supply.
+>=20
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 > ---
-> 
-> v2: Rewrite the documentation to actually make sense, and add an
->     explicit example per Mark's suggestion.
-> 
->  .../devicetree/bindings/iommu/arm,smmu.txt         | 27 ++++++++++++++++++++++
->  drivers/iommu/arm-smmu.c                           |  4 +++-
->  2 files changed, 30 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index 6cdf32d037fc..b744b231766f 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -60,6 +60,16 @@ conditions.
->                    aliases of secure registers have to be used during
->                    SMMU configuration.
->  
-> +- stream-match-mask : For SMMUs supporting stream matching and using
-> +                  #iommu-cells = <1>, specifies a fixed value to set in
-> +                  the SMRn.MASK field of every stream match register
-> +                  used, for cases where it is desirable to ignore some
-> +                  portion of every Stream ID (e.g. for certain MMU-500
-> +                  configurations given globally unique input IDs). This
-> +                  property is not valid for SMMUs using stream indexing,
-> +                  or using stream matching with #iommu-cells = <2>, and
-> +                  may be ignored if present in such cases.
-
-This generally sounds fine, but I'd like it to be a little more explicit
-about what this means for matching. Can we change the first sentence to:
-
-	For SMMUs supporting stream matching and using
-	#iommu-cells = <1>, specifies a mask of bits to
-	ignore when matching stream IDs (e.g. this may be
-	programmed into the SMRn.MASK field of every
-	stream match register used). 
-
-
-Otherwise, this looks good to me; thanks for respinning this.
-
-If you're happy to make the above change:
-
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Thanks,
-Mark.
-
+> Changes since v1:
+> - It's much better when it compiles.
+>=20
+>  .../devicetree/bindings/gpu/nvidia,gk20a.txt       | 25 ++++++++++++++++=
++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt b/Doc=
+umentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+> index ff3db65e50de..b7e4c7444510 100644
+> --- a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+> +++ b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>    Currently recognized values:
+>    - nvidia,gk20a
+>    - nvidia,gm20b
+> +  - nvidia,gp10b
+>  - reg: Physical base address and length of the controller's registers.
+>    Must contain two entries:
+>    - first entry for bar0
+> @@ -14,7 +15,8 @@ Required properties:
+>  - interrupt-names: Must include the following entries:
+>    - stall
+>    - nonstall
+> -- vdd-supply: regulator for supply voltage.
+> +- vdd-supply: regulator for supply voltage. Only required for GPUs not u=
+sing
+> +  power domains.
+>  - clocks: Must contain an entry for each entry in clock-names.
+>    See ../clocks/clock-bindings.txt for details.
+>  - clock-names: Must include the following entries:
+> @@ -27,6 +29,8 @@ is also required:
+>    See ../reset/reset.txt for details.
+>  - reset-names: Must include the following entries:
+>    - gpu
+> +- power-domains: GPUs that make use of power domains can define this pro=
+perty
+> +  instead of vdd-supply. Currently "nvidia,gp10b" makes use of this.
+> =20
+>  Optional properties:
+>  - iommus: A reference to the IOMMU. See ../iommu/iommu.txt for details.
+> @@ -68,3 +72,22 @@ Example for GM20B:
+>  		iommus =3D <&mc TEGRA_SWGROUP_GPU>;
+>  		status =3D "disabled";
+>  	};
 > +
->  ** Deprecated properties:
->  
->  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
-> @@ -109,3 +119,20 @@ conditions.
->          master3 {
->                  iommus = <&smmu2 1 0x30>;
->          };
+> +Example for GP10B:
 > +
-> +
-> +        /* ARM MMU-500 with 10-bit stream ID input configuration */
-> +        smmu3: iommu {
-> +                compatible = "arm,mmu-500", "arm,smmu-v2";
-> +                ...
-> +                #iommu-cells = <1>;
-> +                /* always ignore appended 5-bit TBU number */
-> +                stream-match-mask = 0x7c00;
-> +        };
-> +
-> +        bus {
-> +                /* bus whose child devices emit one unique 10-bit stream
-> +                   ID each, but may master through multiple SMMU TBUs */
-> +                iommu-map = <0 &smmu3 0 0x400>;
-> +                ...
-> +        };
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index abf6496843a6..e394d55146a6 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -1590,13 +1590,15 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
->  
->  static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
->  {
-> -	u32 fwid = 0;
-> +	u32 mask, fwid = 0;
->  
->  	if (args->args_count > 0)
->  		fwid |= (u16)args->args[0];
->  
->  	if (args->args_count > 1)
->  		fwid |= (u16)args->args[1] << SMR_MASK_SHIFT;
-> +	else if (!of_property_read_u32(args->np, "stream-match-mask", &mask))
-> +		fwid |= (u16)mask << SMR_MASK_SHIFT;
->  
->  	return iommu_fwspec_add_ids(dev, &fwid, 1);
->  }
-> -- 
-> 2.11.0.dirty
-> 
+> +	gpu@17000000 {
+> +		compatible =3D "nvidia,gp10b";
+> +		reg =3D <0x0 0x17000000 0x0 0x1000000>,
+> +		      <0x0 0x18000000 0x0 0x1000000>;
+
+Would it make sense to add a reg-names property to give these meaning? I
+know that the binding describes what each entry is, but having the names
+specified in a property would make it more immediately obvious.
+
+Just a thought, otherwise looks good to me.
+
+Thierry
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljeUeQACgkQ3SOs138+
+s6Ga/A/+NAAYoM6EcNR0ENu5+cpcxGpXJ3pW8KhNnkL4VtHFr7xKNCbqlS4tU65e
+wmWc/ks/gufcJUM5sR4UzMrVBD8wPoc4EZtsTwDueOZtjMKi26tvVNquj7ZNR/Fo
+WiFJntTXupHtjbSL5iLKX/RFo+7fXb+j+Z/fVGxqt0V9u7qi20/Wx9xuaKaUW1G8
+mE6/8kGGA/fgPMNOp6qIyQndwK1W/8ghatvQRoQQ79jYi6mQfsLZmUQYUSu37+f8
+KXiSHdU6NqugMh0wxmVWEcfgvFWQgZXx04Ox2BqnrP2aA/UEA5zfx8IIOXsprEwx
+7Xe14AlxGVwXDPOEq9/m2gMX1cSFqTWEkT14wgeqqyYOGiyKqPaLHo6eZHu1ypB3
+Cr784TiLfBCAjovmQgO/PgPP+psp9+d3j8+N8KGWk53K3Vng8NlwH9t5IXyPTAp2
+p5kMO0R8JlGOOyZroA47Oy2FEHgY2FhXOZFNgxAAarrYVXyBRPNqY2RyP3t1GqY8
+BWCL2nDGJH1Zeame3AAH5B/9nGHig1vhX6lDeGgLPx1D8DvQvUKiizpYqEZafneT
+rauEJeQdibFJC8ZL+vftmTTsYAAMbch9Uphk/8SAmXbmvWgYiWwKmd8vo4mAaoN+
+2lg9F9qDduAeWLWAJFo+TIiIwFvL/V78i6R1Ze54q9zibCFXfuc=
+=OXep
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
+
+
+--===============2542564277828628828==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2542564277828628828==--
