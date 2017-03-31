@@ -1,41 +1,63 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCHv3 00/10] Nokia H4+ support
-Date: Fri, 31 Mar 2017 15:33:53 +0200
-Message-ID: <20170331133353.GA32267@kroah.com>
-References: <20170328155939.31566-1-sre@kernel.org>
- <CAL_JsqJcQ9ANtt71KRitOJ9spKD1SaeoL4RDftiCEPs8TjLJGA@mail.gmail.com>
- <C1A408F2-1DF8-4F49-B399-B936542DE6BC@holtmann.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: arm: amlogic: Add SoC information bindings
+Date: Fri, 31 Mar 2017 15:44:51 +0200
+Message-ID: <CAK8P3a199j=7mb=CMgROvaOCVU8=kYda9wkvG3O4rtqweSyC0g@mail.gmail.com>
+References: <1490950079-10145-1-git-send-email-narmstrong@baylibre.com> <1490950079-10145-3-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <C1A408F2-1DF8-4F49-B399-B936542DE6BC@holtmann.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490950079-10145-3-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 11:33:26PM +0200, Marcel Holtmann wrote:
-> Hi Rob,
-> 
-> >> Here is PATCHv3 for the Nokia bluetooth patchset. I addressed all comments from
-> >> Rob and Pavel regarding the serdev patches and dropped the *.dts patches, since
-> >> they were queued by Tony. I also changed the patch order, so that the serdev
-> >> patches come first. All of them have Acked-by from Rob, so I think it makes
-> >> sense to merge them to serdev subsystem (now) and provide an immutable branch
-> >> for the bluetooth subsystem.
-> > 
-> > Greg doesn't read cover letters generally and since the serdev patches
-> > are Cc rather than To him, he's probably not planning to pick them up.
-> 
-> I wonder actually if we should merge all of these via bluetooth-next
-> tree with proper Ack from Greg. However it would be good to also get
-> buy in from Dave for merging this ultimately through net-next.
+On Fri, Mar 31, 2017 at 10:47 AM, Neil Armstrong
+<narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Add bindings for the SoC information register of the Amlogic SoCs.
+>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.txt | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index bfd5b55..b850985 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -52,3 +52,23 @@ Board compatible values:
+>    - "amlogic,q201" (Meson gxm s912)
+>    - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+>    - "nexbox,a1" (Meson gxm s912)
+> +
+> +Amlogic Meson GX SoCs Information
+> +----------------------------------
+> +
+> +The Meson SoCs have a Product Register that allows to retrieve SoC type,
+> +package and revision information. If present, a device node for this register
+> +should be added.
+> +
+> +Required properties:
+> +  - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-socinfo".
+> +  - reg: Base address and length of the register block.
+> +
+> +Examples
+> +--------
+> +
+> +       chipid@220 {
+> +               compatible = "amlogic,meson-gx-socinfo";
+> +               reg = <0x0 0x00220 0x0 0x4>;
+> +       };
+> +
 
-I don't really care where it goes.  I can take the whole thing in my
-tty/serial tree now if no one objects and I get an ack from the relevant
-maintainers {hint...}
+The register location would hint that this is in the middle of some block of
+random registers, i.e. a syscon or some unrelated device.
 
-thanks,
+Are you sure that "socinfo" is the actual name of the IP block and that
+it only has a single 32-bit register?
 
-greg k-h
+     Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
