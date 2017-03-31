@@ -1,77 +1,142 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] drm: rcar-du: Document the vsps property in the DT bindings
-Date: Fri, 31 Mar 2017 11:21:56 +0200
-Message-ID: <CAMuHMdWSuz79mdHLuT4jDQsNvecFck21aBNLOrs5JHmMXnyTCQ@mail.gmail.com>
-References: <20170327095652.5755-1-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdUiDzGt6bz96D-5yRLF-HiZfpQTTxKP5Y4+j-9HiF1LLQ@mail.gmail.com> <8105647.ANSr0hWnZy@avalon>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Fri, 31 Mar 2017 11:28:54 +0200
+Message-ID: <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
+References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
+ <20170323203749.GB8563@amd> <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+ <20170329190725.GN20094@minitux> <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux> <20170330074309.GA28533@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8105647.ANSr0hWnZy@avalon>
+In-Reply-To: <20170330074309.GA28533@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DRI Development <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Bjorn and Pavel,
 
-On Fri, Mar 31, 2017 at 11:19 AM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> On Monday 27 Mar 2017 13:05:48 Geert Uytterhoeven wrote:
->> On Mon, Mar 27, 2017 at 11:56 AM, Laurent Pinchart wrote:
->> > The property is used by the driver but is missing from the DT bindings.
->> > Document it.
->> >
->> > Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->> > Signed-off-by: Laurent Pinchart
->> > <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->> > ---
->> >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
->> >  1 file changed, 5 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt
->> > b/Documentation/devicetree/bindings/display/renesas,du.txt index
->> > 1a02f099a0ff..cf34893a1b53 100644
->> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
->> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
->> >
->> > @@ -36,6 +36,11 @@ Required Properties:
->> >        When supplied they must be named "dclkin.x" with "x" being the
->> >        input
->> >        clock numerical index.
->> >
->> > +Optional Properties:
->> > +
->> > +  - vsps: A list of phandles to the VSP nodes that handle the memory
->> > +    interfaces for the DU channels (Gen3 only).
+On 03/30/2017 09:43 AM, Pavel Machek wrote:
+> Hi!
+> 
+>>>> There is a binding for ti,lp55xx, but there's nothing I can reuse from
+>>>> that binding...because it's completely different hardware.
+>>>
+>>> Agreed, if you drop the pattern stuff from the binding, at least for now. 
 >>
->> ", one per channel"?
+>> I do not have a strong preference to expose these knobs in devicetree
+>> and I do fear that finding some common "pattern" bindings that suits
+>> everyone will be very difficult.
 >>
->> Required for Gen3, optional for Gen2? (cfr. Sergei's patches).
->
-> How about making it mandatory on Gen2 as well ? The VSPs are there, even if
-> the driver doesn't use them, it makes sense to describe the connection. Of
+>> So I'll drop them from the binding for now.
+> 
+> Ok.
+> 
+>>> If you want driver merged quickly, I believe the best way would be to
+>>> leave out pattern support for now. We can merge the basic driver
+>>> easily to 4.12.
+>>>
+>>
+>> I'm not that much in a hurry and would rather see that we resolve any
+>> outstanding issues with the implementation of the pattern handling.
+> 
+> Ok, good.
+> 
+>> But regardless of this we still have the problem that the typical
+>> Qualcomm PMIC has 8 LPG-blocks and any triple could be driving a
+>> RGB-LED. So we would have to create some sort of in-driver-wrapper
+>> around any three instances exposing them as a single LED to the user.
+> 
+> Yes, I believe we should do the wrapping. In N900 case, 
+> 
+>> I rather expose the individual channels and make sure that when we
+>> trigger a blink operation or enable a pattern (i.e. the two operations
+>> that do require synchronization) we will perform that synchronization
+>> under the hood.
+> 
+> First, we need a way to tell userspace which LEDs are synchronized,
+> because otherwise it will be confusing.
 
-Fine for me, as this is hardware description.
+There is one year old discussion [0] about the possible approaches
+to RGB sub-LEDs synchronization problem and patterns in general.
+My last message with API design proposal has been left unanswered.
 
-> course the driver will treat the property as optional for backward
-> compatibility.
+Probably we continue that discussion here.
 
-OK.
+Generally Bjorn's drivers touch two yet to be addressed issues:
+- RGB LED support
+- Generic support for patterns
 
-Disclaimer: I didn't follow the discussion about using or not using the vsps
-on Gen2 that closely, and don't remember the outcome.
+It is likely that both issues can be solved by utilizing trigger
+mechanism. The possible solution to the problem Bjorn tried to
+address with /sys/class/leds/<led>/pattern comma separated list
+could be a trigger with adjustable number of pattern intervals.
 
-Gr{oetje,eeting}s,
+The trigger once activated would create a directory with the
+number of files corresponding to the number of requested intervals,
+and then user could write an interval value by writing it to the
+corresponding file. Somehow related approach has been implemented
+for USB port LED trigger:
 
-                        Geert
+0f247626cbbf ('usb: core: Introduce a USB port LED trigger")
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+In both RGB and pattern approaches we should assess
+if it is acceptable to provide a pattern for trigger name,
+e.g. blink-pattern-{num_intervals}.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+If so, then "echo transition-pattern-15" would create a directory
+e.g. transition_intervals with files interval_0 to interval_14,
+that could be adjusted by userspace.
+
+> Second, there are more issues than just patterns with the RGB
+> LED. Most important is ability to set particular colors. You want to
+> set the RGB LED to "white", but that does not mean you can set
+> red=green=blue=1.0. You want color to look the same on LCD and on the
+> LED, which means coefficients for white and some kind of function for
+> brightness-to-PWM conversion.
+
+Shouldn't we leave that entirely to the userspace? Can we come up
+with coefficients that will guarantee the same result on all existing
+LCD devices?
+
+>>> Incremental patches sound like a good idea, yes.
+>>>
+>>> I'd say that testing with actual RGB LED is not a requirement... as
+>>> long as we design reasonable interface where the synchronizaction will
+>>> be easy.
+>>>
+>>
+>> As this relates to the board layout (which LPG-channels are hooked to a
+>> RGB) I think it makes sense to expose a mechanism in devicetree to
+>> indicate which channels should have their pattern/blink synchronized.
+>>
+>> We should be able to extend the LUT (the hardware that actually
+>> implements the pattern-walker logic) with a DT-property like:
+>>
+>>   qcom,synchronize-group-0 = <1, 2, 3>;
+>>   qcom,synchronize-group-1 = <5, 6, 7>;
+>>
+>> And whenever we configure a pattern involving one of the affected LEDs
+>> from a group we start all of them.
+> 
+> Yes we need some kind of grouping.
+> 
+> Additional complexity in the N900 case... groups can actually be
+> configured at run time. Original Maemo used that ability to group 6
+> keyboard backlight leds, and then run pattern on them. OTOH... I don't
+> think we _need_ to support that functionality.
+> 
+> Best regards,
+> 									Pavel
+> 
+
+[0] https://lkml.org/lkml/2016/4/18/179
+
+-- 
+Best regards,
+Jacek Anaszewski
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
