@@ -1,49 +1,80 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/3] dt-bindings: arm: amlogic: Add SoC information bindings
-Date: Fri, 31 Mar 2017 10:47:58 +0200
-Message-ID: <1490950079-10145-3-git-send-email-narmstrong@baylibre.com>
-References: <1490950079-10145-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490950079-10145-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, carlo@caione.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Device Tree Binding for Intel FPGA Video and Image Processing Suite
+Date: Fri, 31 Mar 2017 08:50:28 +0000
+Message-ID: <1490949905.21575.8.camel@intel.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+        boundary="_002_1490949905215758camelintelcom_"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for the SoC information register of the Amlogic SoCs.
+--_002_1490949905215758camelintelcom_
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D92BAD1C27B2C542B8083AFF11A1C1E2-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/arm/amlogic.txt | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+SGkgUm9iLA0KDQpJIHdvdWxkIGxpa2UgdG8gdXBzdHJlYW0gdGhlIGF0dGFjaGVkIGRldmljZSB0
+cmVlIGJpbmRpbmcgcGF0Y2ggdG8gdGhlDQpjb21tdW5pdHkuIFRoaXMgaXMgcmVxdWlyZWQgZm9y
+IHRoZSBzdXBwb3J0IG9mIGZyYW1lYnVmZmVyIGRyaXZlcnMgb2YNCnRoZcKgSW50ZWwgRlBHQSBW
+aWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2luZyBTdWl0ZSBpbnRlbmRlZCBmb3IgdGhlDQpBcnJpYTEw
+IGRldmtpdC4NCg0KVGhlIGRldmljZSB0cmVlIGluZm9ybWF0aW9uIGluY2x1ZGVzIHRoZSBtYXhp
+bXVtIHdpZHRoIGFuZCBoZWlnaHQNCnN1cHBvcnRlZCBieSB0aGUgZnJhbWVidWZmZXIgZGlzcGxh
+eS4gVGhlc2UgYXJlIGZpeGVkIHBhcmFtZXRlcnMNCmRldGVybWluZWQgYnkgdGhlIHVzZSB3aG8g
+dGhlIFF1YXJ0dXMgZGVzaWduIHN5c3RlbSB0byBwcm9ncmFtIHRoZQ0KRlBHQSBpbiB0aGUgQXJy
+aWExMCBkZXZraXQgYW5kIGl0cyB2YXJpYW50cy4NCg0KQlINCg0KSGVhbiBMb29uZw==
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index bfd5b55..b850985 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -52,3 +52,23 @@ Board compatible values:
-   - "amlogic,q201" (Meson gxm s912)
-   - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
-   - "nexbox,a1" (Meson gxm s912)
-+
-+Amlogic Meson GX SoCs Information
-+----------------------------------
-+
-+The Meson SoCs have a Product Register that allows to retrieve SoC type,
-+package and revision information. If present, a device node for this register
-+should be added.
-+
-+Required properties:
-+  - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-socinfo".
-+  - reg: Base address and length of the register block.
-+
-+Examples
-+--------
-+
-+	chipid@220 {
-+		compatible = "amlogic,meson-gx-socinfo";
-+		reg = <0x0 0x00220 0x0 0x4>;
-+	};
-+
--- 
-1.9.1
+--_002_1490949905215758camelintelcom_
+Content-Type: text/x-patch;
+	name="0001-Intel-FPGA-Video-and-Image-Processing-Suite-device-t.patch"
+Content-Description: 0001-Intel-FPGA-Video-and-Image-Processing-Suite-device-t.patch
+Content-Disposition: attachment;
+	filename="0001-Intel-FPGA-Video-and-Image-Processing-Suite-device-t.patch";
+	size=1918; creation-date="Fri, 31 Mar 2017 08:50:28 GMT";
+	modification-date="Fri, 31 Mar 2017 08:50:28 GMT"
+Content-ID: <4DAFDF07289012498E7B88620460112E-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: base64
+
+RnJvbSAyM2E5ZTI3NGJiNTE3YjhlMjMyYzVhYTRjZjk3MzdkZTE2NDRiNzA4IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBPbmcsIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVs
+LmNvbT4KRGF0ZTogVGh1LCAzMCBNYXIgMjAxNyAxNzo1OTozNyArMDgwMApTdWJqZWN0OiBbUEFU
+Q0h2MF0gSW50ZWwgRlBHQSBWaWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2luZyBTdWl0ZSBkZXZpY2Ug
+dHJlZSBiaW5kaW5nCgoJRGV2aWNlIHRyZWUgYmluZGluZyBmb3IgSW50ZWwgRlBHQSBWaWRlbyBh
+bmQgSW1hZ2UKCVByb2Nlc3NpbmcgU3VpdGUuIFRoZSBiaW5kaW5nIGludm9sdmVkIHdvdWxkIGJl
+IGdlbmVyYXRlZAoJZnJvbSB0aGUgQWx0ZXJhIChJbnRlbCkgUXN5cyBzeXN0ZW0uIFRoZSBiaW5k
+aW5ncyB3b3VsZAoJc2V0IHRoZSBtYXggd2lkdGgsIG1heCBoZWlnaHQsIGJ1dHMgcGVyIHBpeGVs
+IGFuZCBtZW1vcnkKCXBvcnQgd2lkdGguIFRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIG9ubHkgc3Vw
+cG9ydHMgdGhlIEludGVsCglBcnJpYTEwIGRldmtpdCBhbmQgaXRzIHZhcmlhbnRzLiBWZW5kb3Ig
+bmFtZSByZXRhaW5lZCBhcwoJYWx0ci4KClNpZ25lZC1vZmYtYnk6IE9uZywgSGVhbiBMb29uZyA8
+aGVhbi5sb29uZy5vbmdAaW50ZWwuY29tPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dw
+dS9hbHRyLHZpcC1mYjIudHh0ICAgICAgIHwgICAyNCArKysrKysrKysrKysrKysrKysrKwogMSBm
+aWxlcyBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYWx0cix2aXAt
+ZmIyLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
+cHUvYWx0cix2aXAtZmIyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
+cHUvYWx0cix2aXAtZmIyLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi45
+YmEzMjA5Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2dwdS9hbHRyLHZpcC1mYjIudHh0CkBAIC0wLDAgKzEsMjQgQEAKK0ludGVsIFZpZGVvIGFu
+ZCBJbWFnZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVmZmVyIElJIGJpbmRpbmdzCisKK1N1cHBv
+cnRlZCBoYXJkd2FyZTogIEFycmlhIDEwIGFuZCBhYm92ZSB3aXRoIGRpc3BsYXkgcG9ydCBJUAor
+CitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiAiYWx0cix2aXAtZnJhbWUtYnVm
+ZmVyLTIuMCIKKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUg
+ZnJhbWVidWZmZXIgY29udHJvbGxlcidzCisgIHJlZ2lzdGVycy4KKy0gbWF4LXdpZHRoOiBUaGUg
+d2lkdGggb2YgdGhlIGZyYW1lYnVmZmVyIGluIHBpeGVscy4KKy0gbWF4LWhlaWdodDogVGhlIGhl
+aWdodCBvZiB0aGUgZnJhbWVidWZmZXIgaW4gcGl4ZWxzLgorLSBiaXRzLXBlci1zeW1ib2w6IG9u
+bHkgIjgiIGlzIGN1cnJlbnRseSBzdXBwb3J0ZWQKKy0gbWVtLXBvcnQtd2lkdGggPSB0aGUgYnVz
+IHdpZHRoIG9mIHRoZSBhdmFsb24gbWFzdGVyIHBvcnQgb24gdGhlIGZyYW1lIHJlYWRlcgorCitF
+eGFtcGxlOgorCitkcF8wX2ZyYW1lX2J1ZjogdmlwQDB4MTAwMDAwMjgwIHsKKwljb21wYXRpYmxl
+ID0gImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0yLjAiOworCXJlZyA9IDwweDAwMDAwMDAxIDB4MDAw
+MDAyODAgMHgwMDAwMDA0MD47CisJYWx0cixtYXgtd2lkdGggPSA8MTI4MD47CisJYWx0cixtYXgt
+aGVpZ2h0ID0gPDcyMD47CisJYWx0cixiaXRzLXBlci1zeW1ib2wgPSA8OD47CisJYWx0cixtZW0t
+cG9ydC13aWR0aCA9IDwxMjg+OworfTsKKwotLSAKMS43LjEKCg==
+
+--_002_1490949905215758camelintelcom_--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
