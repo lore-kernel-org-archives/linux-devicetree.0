@@ -1,46 +1,159 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: move from ARCH_VULCAN to ARCH_THUNDER2
-Date: Fri, 31 Mar 2017 11:44:13 +0200
-Message-ID: <CAK8P3a1db5vs9MtbN2ZcKFF2=9AH+omVaGi0ndBcSEW2t0H7Hg@mail.gmail.com>
-References: <1489313015-4783-1-git-send-email-jnair@caviumnetworks.com>
- <1489495634-2920-1-git-send-email-jnair@caviumnetworks.com> <1489495634-2920-3-git-send-email-jnair@caviumnetworks.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength"
+ DT property
+Date: Fri, 31 Mar 2017 11:46:59 +0200
+Message-ID: <20170331114659.4964be35@bbrezillon>
+References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
+        <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com>
+        <20170330160238.59e5a2c1@bbrezillon>
+        <CAK7LNARUKwMHd79ALDx_SDY9XKcHPY96xTAOMQx6XarFgwb-AA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489495634-2920-3-git-send-email-jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNARUKwMHd79ALDx_SDY9XKcHPY96xTAOMQx6XarFgwb-AA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mtd@lists.infradead.org, Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 1:47 PM, Jayachandran C
-<jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> Move and update device tree files as part of transition from Broadcom
-> Vulcan to Cavium ThunderX2.
->
-> The changes are to:
->  * rename dts/broadcom/vulcan.dtsi to cavium/thunder2-99xx.dtsi,
->    update cpu cores to be "cavium,thunder2", and update SoC to be
->    "cavium,thunderx2-cn9900"
->  * move SoC dts/broadcom/vulcan-eval.dtsi to cavium/thunder2-99xx.dtsi
->    and update board name string
->  * Update dts/broadcom/Makefile not to build vulcan dtbs
->  * Update dts/cavium/Makefile to build thunder2 dtbs
->
-> No changes to the dts contents except the updated "compatible" and
-> "model" properties.
->
-> Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Fri, 31 Mar 2017 14:06:32 +0900
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-Applied to next/dt64.
+> Hi Boris,
+> 
+> 
+> 2017-03-30 23:02 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
+> > On Thu, 30 Mar 2017 15:46:00 +0900
+> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> >  
+> >> Historically, this driver tried to choose as big ECC strength as
+> >> possible, but it would be reasonable to allow DT to set a particular
+> >> ECC strength with "nand-ecc-strength" property.  This is useful
+> >> when a particular ECC setting is hard-coded by firmware (or hard-
+> >> wired by boot ROM).
+> >>
+> >> If no ECC strength is specified in DT, "nand-ecc-maximize" is implied
+> >> since this was the original behavior.  
+> >
+> > You said there is currently no DT users,  
+> 
+> Right.  No DT users ever in upstream.
+> 
+> 
+> > so how about changing the
+> > "fallback to ECC maximization" behavior for DT users, and instead of
+> > maximizing the ECC strength take the NAND requirements into account
+> > (chip->ecc_strength_ds).  
+> 
+> This is difficult to judge in some cases.
+> 
+> As I said before, 4/512 and 8/1024 are not equivalent.
+> 
+> If chip's requirement  chip->ecc_step_ds matches
+> to the ecc->size supported by the controller,
+> this is easy.
+> 
+> 
+> If a chip requests 1024B, then the controller can only support 512B chunk
+> (or vice versa), it is difficult to simply compare
+> ecc strength.
 
-The contents are fine, but I'd recommend using 'git format-patch -M'
-when creating a submission for easier review, in case you do another
-patch with a rename in the future.
+You can try something like that when no explicit ecc.strength and
+ecc.size has been set in the DT and when ECC_MAXIMIZE was not passed.
 
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+static int
+denali_get_closest_ecc_strength(struct denali_nand_info *denali,
+				int strength)
+{
+	/*
+	 * Whatever you need to select a strength that is greater than
+	 * or equal to strength.
+	 */
+
+	return X;
+}
+
+static int denali_try_to_match_ecc_req(struct denali_nand_info *denali)
+{
+	struct nand_chip *chip = &denali->nand;
+	struct mtd_info *mtd = nand_to_mtd(chip);
+	int max_ecc_bytes = mtd->oobsize - denali->bbtskipbytes;
+	int ecc_steps, ecc_strength, ecc_bytes;
+	int ecc_size = chip->ecc_step_ds;
+	int ecc_strength = chip->ecc_strength_ds;
+
+	/*
+	 * No information provided by the NAND chip, let the core
+	 * maximize the strength.
+	 */
+	if (!ecc_size || !ecc_strength)
+		return -ENOTSUPP;
+
+	if (ecc_size > 512)
+		ecc_size = 1024;
+	else
+		ecc_size = 512;
+
+	/* Adjust ECC step size based on hardware support. */
+	if (ecc_size == 1024 &&
+	    !(denali->caps & DENALI_CAP_ECC_SIZE_1024))
+		ecc_size = 512;
+	else if(ecc_size == 512 &&
+		!(denali->caps & DENALI_CAP_ECC_SIZE_512))
+		ecc_size = 1024;
+
+	if (ecc_size < chip->ecc_size_ds) {
+		/*
+		 * When the selected size if smaller than the expected
+		 * one we try to use the same strength but on 512 blocks
+		 * so that we can still fix the same number of errors
+		 * even if they are concentrated in the first 512bytes
+		 * of a 1024bytes portion.
+		 */
+		ecc_strength = chip->ecc_strength_ds;
+		ecc_strength = denali_get_closest_ecc_strength(denali,
+							       ecc_strength);
+	} else {
+		/* Always prefer 1024bytes ECC blocks when possible. */
+		if (ecc_size != 1024 &&
+		    (denali->caps & DENALI_CAP_ECC_SIZE_1024) &&
+		    mtd->writesize > 1024)
+			ecc_size = 1024;
+
+		/*
+		 * Adjust the strength based on the selected ECC step
+		 * size.
+		 */
+		ecc_strength = DIV_ROUND_UP(ecc_size,
+					    chip->ecc_step_ds) *
+			       chip->ecc_strength_ds;
+	}
+
+	ecc_bytes = denali_calc_ecc_bytes(ecc_size,
+					  ecc_strength);
+	ecc_bytes *= mtd->writesize / ecc_size;
+
+	/*
+	 * If we don't have enough space, let the core maximize
+	 * the strength.
+	 */
+	if (ecc_bytes > max_ecc_bytes)
+		return -ENOTSUPP;
+
+	chip->ecc.strength = ecc_strength;
+	chip->ecc.size = ecc_size;
+	
+	return 0;
+}
+
+> 
+> Is it a bad thing if we use too strong ECC strength?
+> 
+> The disadvantage I see is we will have less OOB-free bytes,
+> but this will not be fatal, I guess.
+
+Not a bad thing in general, but I'd prefer to leave the choice to the
+user. If one doesn't need the extra-safety brought by ECC strength
+maximization and wants to have more OOB bytes it's better to follow
+NAND requirements.
