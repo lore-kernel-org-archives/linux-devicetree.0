@@ -1,83 +1,42 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] mtd: physmap_of: use OF helpers for reading strings
-Date: Fri, 31 Mar 2017 10:02:39 +0200
-Message-ID: <20170331100239.37a14f37@bbrezillon>
-References: <20170330155853.30349-1-zajec5@gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 00/37] mtd: nand: denali: 2nd round of Denali NAND IP
+ patch bomb
+Date: Fri, 31 Mar 2017 10:27:03 +0200
+Message-ID: <20170331102703.00d8ca83@bbrezillon>
+References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
+        <20170330183805.1c29504f@bbrezillon>
+        <CAK7LNATUyc821uQTECkkQj2SDKkbrioFfHVsttnsnc8QuT1P-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170330155853.30349-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATUyc821uQTECkkQj2SDKkbrioFfHVsttnsnc8QuT1P-A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mtd@lists.infradead.org, Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Mar 2017 17:58:53 +0200
-Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Fri, 31 Mar 2017 13:05:20 +0900
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> Hi Boris,
 > 
-> OF core code provides helpers for counting strings and reading them so
-> use them instead of doing this manually. This simplifies the code a bit.
 > 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-
-Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-> ---
->  drivers/mtd/maps/physmap_of.c | 30 ++++++++++--------------------
->  1 file changed, 10 insertions(+), 20 deletions(-)
+> 2017-03-31 1:38 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
 > 
-> diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
-> index 14e8909c9955..62fa6836f218 100644
-> --- a/drivers/mtd/maps/physmap_of.c
-> +++ b/drivers/mtd/maps/physmap_of.c
-> @@ -116,32 +116,22 @@ static const char * const part_probe_types_def[] = {
->  
->  static const char * const *of_get_probes(struct device_node *dp)
->  {
-> -	const char *cp;
-> -	int cplen;
-> -	unsigned int l;
-> -	unsigned int count;
->  	const char **res;
-> +	int count;
->  
-> -	cp = of_get_property(dp, "linux,part-probe", &cplen);
-> -	if (cp == NULL)
-> +	count = of_property_count_strings(dp, "linux,part-probe");
-> +	if (count < 0)
->  		return part_probe_types_def;
->  
-> -	count = 0;
-> -	for (l = 0; l != cplen; l++)
-> -		if (cp[l] == 0)
-> -			count++;
-> -
-> -	res = kzalloc((count + 1)*sizeof(*res), GFP_KERNEL);
-> +	res = kzalloc((count + 1) * sizeof(*res), GFP_KERNEL);
->  	if (!res)
->  		return NULL;
-> -	count = 0;
-> -	while (cplen > 0) {
-> -		res[count] = cp;
-> -		l = strlen(cp) + 1;
-> -		cp += l;
-> -		cplen -= l;
-> -		count++;
-> -	}
-> +
-> +	count = of_property_read_string_array(dp, "linux,part-probe", res,
-> +					      count);
-> +	if (count < 0)
-> +		return NULL;
-> +
->  	return res;
->  }
->  
+> > The rest looks almost good, except for a few comments I had on patch
+> > 14, 18, 25, 26 and 32.
+> >
+> > I'll probably apply 33 and 34 soon.
+> >  
+> 
+> Thank you!
+> Please note I left a minor comment on 34.
+> (Accidental addition of braces.)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yep, I noticed. Applied both after fixing the alignment and removing
+unneeded braces in patch 34.
+
+Thanks,
+
+Boris
