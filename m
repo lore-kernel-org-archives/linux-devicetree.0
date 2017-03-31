@@ -1,30 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND v5 7/7] mfd: dt-bindings: Add RK805 device tree
- bindings document
-Date: Fri, 31 Mar 2017 13:53:36 -0500
-Message-ID: <20170331185336.ei35dsfcoj6im7k2@rob-hp-laptop>
-References: <1490595705-28844-1-git-send-email-zhangqing@rock-chips.com>
- <1490597615-852-1-git-send-email-zhangqing@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 14/24] dt-bindings: mfd: syscon: Add documentation for
+ #syscon-cells property
+Date: Fri, 31 Mar 2017 13:58:52 -0500
+Message-ID: <20170331185852.mxa4gvjxbuxl65dq@rob-hp-laptop>
+References: <20170327094520.3129-1-kishon@ti.com>
+ <20170327094520.3129-15-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1490597615-852-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
+In-Reply-To: <20170327094520.3129-15-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hch@infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 02:53:35PM +0800, Elaine Zhang wrote:
-> Add device tree bindings documentation for Rockchip's RK805 PMIC.
+On Mon, Mar 27, 2017 at 03:15:10PM +0530, Kishon Vijay Abraham I wrote:
+> Add documentation for the optional #syscon-cells property to determine
+> the number of cells that should be given in the phandle while
+> referencing the syscon-node.
 > 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/rk808.txt | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
+> Suggested-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I did? When?
+
+I'm not remembering why we need this. Generally, phandles to a syscon 
+are for a single defined purpose. When do we need a list of them?
+
+Rob
+
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index 408f768686f1..446b47e8fb71 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -16,6 +16,8 @@ Required properties:
+>  Optional property:
+>  - reg-io-width: the size (in bytes) of the IO accesses that should be
+>    performed on the device.
+> +- #syscon-cells: determine the number of cells that should be given in the
+> +  phandle while referencing this syscon-node.
+>  
+>  Examples:
+>  gpr: iomuxc-gpr@020e0000 {
+> -- 
+> 2.11.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
