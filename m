@@ -1,84 +1,41 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH V2 2/2] thermal: broadcom: add Northstar thermal driver
-Date: Fri, 31 Mar 2017 16:49:19 +0200
-Message-ID: <cfbb429d-5dd9-88b4-eeae-a288def7b56f@milecki.pl>
-References: <20170318155632.18099-1-zajec5@gmail.com>
- <20170323223045.15786-1-zajec5@gmail.com>
- <20170323223045.15786-2-zajec5@gmail.com>
- <20170324143535.GA31953@broadcom.com>
- <d678d252-a95a-58c0-8098-4401c67040a1@gmail.com>
- <CAC3K-4q=npvHBjb2YeWmyCv89r14=vXdUzRW74mcrETs+NRh1Q@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: [PATCH 3/4] MAINTAINERS: add Atmel PTC entries
+Date: Fri, 31 Mar 2017 17:22:49 +0200
+Message-ID: <20170331152250.12758-4-ludovic.desroches@microchip.com>
+References: <20170331152250.12758-1-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAC3K-4q=npvHBjb2YeWmyCv89r14=vXdUzRW74mcrETs+NRh1Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jon.mason@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-rpi-kernel@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170331152250.12758-1-ludovic.desroches@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: dmitry.torokhov@gmail.com, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMzEvMjAxNyAwNDoyMyBQTSwgSm9uIE1hc29uIHdyb3RlOgo+IE9uIEZyaSwgTWFyIDMx
-LCAyMDE3IGF0IDM6MDMgQU0sIFJhZmHFgiBNacWCZWNraSA8emFqZWM1QGdtYWlsLmNvbT4gd3Jv
-dGU6Cj4+IE9uIDAzLzI0LzIwMTcgMDM6MzUgUE0sIEpvbiBNYXNvbiB3cm90ZToKPj4+Cj4+PiBP
-biBUaHUsIE1hciAyMywgMjAxNyBhdCAxMTozMDo0NVBNICswMTAwLCBSYWZhxYIgTWnFgmVja2kg
-d3JvdGU6Cj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy90aGVybWFsL2Jyb2FkY29tL25z
-LXRoZXJtYWwuYwo+Pj4+IGIvZHJpdmVycy90aGVybWFsL2Jyb2FkY29tL25zLXRoZXJtYWwuYwo+
-Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi5hY2YzYTRk
-ZTYyYTQKPj4+PiAtLS0gL2Rldi9udWxsCj4+Pj4gKysrIGIvZHJpdmVycy90aGVybWFsL2Jyb2Fk
-Y29tL25zLXRoZXJtYWwuYwo+Pj4+IEBAIC0wLDAgKzEsOTggQEAKPj4+PiArLyoKPj4+PiArICog
-Q29weXJpZ2h0IChDKSAyMDE3IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPj4+
-PiArICoKPj4+PiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVk
-aXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKPj4+PiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9m
-IHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMKPj4+PiArICogcHVi
-bGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uCj4+Pj4gKyAqLwo+Pj4+ICsK
-Pj4+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvb2Zf
-YWRkcmVzcy5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4+Pj4g
-KyNpbmNsdWRlIDxsaW51eC90aGVybWFsLmg+Cj4+Pj4gKwo+Pj4+ICsjZGVmaW5lIFBWVE1PTl9D
-T05UUk9MMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwCj4+Pj4g
-KyNkZWZpbmUgUFZUTU9OX0NPTlRST0wwX1NFTF9NQVNLICAgICAgICAgICAgICAgICAgICAgICAw
-eDAwMDAwMDBlCj4+Pj4gKyNkZWZpbmUgUFZUTU9OX0NPTlRST0wwX1NFTF9URU1QX01PTklUT1Ig
-ICAgICAgICAgICAgICAweDAwMDAwMDAwCj4+Pj4gKyNkZWZpbmUgUFZUTU9OX0NPTlRST0wwX1NF
-TF9URVNUX01PREUgICAgICAgICAgICAgICAgICAweDAwMDAwMDBlCj4+Pj4gKyNkZWZpbmUgUFZU
-TU9OX1NUQVRVUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDA4Cj4+Pj4gKwo+
-Pj4+ICtzdHJ1Y3QgbnNfdGhlcm1hbCB7Cj4+Pj4gKyAgICAgICB2b2lkIF9faW9tZW0gKnB2dG1v
-bjsKPj4+PiArfTsKPj4+PiArCj4+Pj4gK3N0YXRpYyBpbnQgbnNfdGhlcm1hbF9nZXRfdGVtcCh2
-b2lkICpkYXRhLCBpbnQgKnRlbXApCj4+Pj4gK3sKPj4+PiArICAgICAgIHN0cnVjdCBuc190aGVy
-bWFsICpuc190aGVybWFsID0gZGF0YTsKPj4+PiArICAgICAgIHUzMiB2YWw7Cj4+Pj4gKwo+Pj4+
-ICsgICAgICAgdmFsID0gcmVhZGwobnNfdGhlcm1hbC0+cHZ0bW9uICsgUFZUTU9OX0NPTlRST0ww
-KTsKPj4+PiArICAgICAgIGlmICgodmFsICYgUFZUTU9OX0NPTlRST0wwX1NFTF9NQVNLKSAhPQo+
-Pj4+IFBWVE1PTl9DT05UUk9MMF9TRUxfVEVNUF9NT05JVE9SKSB7Cj4+Pj4gKyAgICAgICAgICAg
-ICAgIHZhbCAmPSB+UFZUTU9OX0NPTlRST0wwX1NFTF9NQVNLOwo+Pj4+ICsgICAgICAgICAgICAg
-ICB2YWwgfD0gUFZUTU9OX0NPTlRST0wwX1NFTF9URU1QX01PTklUT1I7Cj4+Pgo+Pj4KPj4+IEkg
-dGhpbmsgdGhpcyBpcyBzbGlnaHRseSBjb25mdXNpbmcgaGVyZS4gIElmIHRoaXMgd2FzIG9mZiwg
-T1JpbmcgaW4gMAo+Pj4gd2lsbCBub3QgZW5hYmxlIGl0LiAgSSB0aGluayB3ZSBuZWVkIHRvIGZs
-aXAgdGhlICNkZWZpbmUgdG8gbWFrZSBpdAo+Pj4gUFZUTU9OX0NPTlRST0wwX1NFTF9URU1QX01P
-TklUT1JfRElTQUJMRSAob3IgYSBsZXNzIGNyYXBweSBuYW1lKS4KPj4+IHRoZW4gdXNlIHRoaXMg
-bGluZSBoZXJlIHRvIHRvZ2dsZSBpdC4gIFNvbWV0aGluZyBsaWtlCj4+Pgo+Pj4gICAgICAgICAg
-ICAgICAgIHZhbCAmPSB+UFZUTU9OX0NPTlRST0wwX1NFTF9URU1QX01PTklUT1JfRElTQUJMRTsK
-Pj4KPj4KPj4gSSBkb24ndCB1bmRlcnN0YW5kIHRoaXMsIGNhbiB5b3UgaGVscCBtZSBmdXJ0aGVy
-Pwo+Pgo+PiBPUi1pbmcgd2l0aCAwIGlzIG9ubHkgYSBjb3NtZXRpYyB0aGluZyBvYnZpb3VzbHkg
-LSBqdXN0IHRvIG1ha2UgaXQgY2xlYXIKPj4gd2hpY2gKPj4gdmFsdWUgd2UgZXhwZWN0IHRvIGJl
-IHNldCBpbiBiaXRzIDE6My4gVGhlIGltcG9ydGFudCBwYXJ0IGlzOgo+PiB2YWwgJj0gflBWVE1P
-Tl9DT05UUk9MMF9TRUxfTUFTSzsKPgo+IFlvdSBhcmUgdXNpbmcgYSBzaWRlIGVmZmVjdCBvZiB0
-aGUgbWFza2luZyB0byBjbGVhci9lbmFibGUgdGhlIGJsb2NrLgo+IEknbSBzaW1wbHkgc2F5aW5n
-IHRoYXQgd2Ugc2hvdWxkIGJlIGV4cGxpY2l0IGFib3V0IGVuYWJsaW5nIGl0LiAgTXkKPiBjb25j
-ZXJuIGlzIHRoYXQgdXNpbmcgdGhlIHNpZGUgZWZmZWN0IGhpZGVzIHdoYXQgaXMgYmVpbmcgZG9u
-ZSBhbmQKPiBjb3VsZCByZXN1bHQgaW4gYSBidWcgc29tZXdoZXJlIGRvd24gdGhlIGxpbmUuICBJ
-IHRoaW5rIHRoaXMgaXMKPiBpbXByb2JhYmxlIGJhc2VkIG9uIHRoZSBjb2RlLCBidXQgd2FudGVk
-IHRvIGVyciBvbiB0aGUgc2lkZSBvZgo+IGNhdXRpb24uCgpXZWxsLCBJJ20gY2xlYXJpbmcgY3Vy
-cmVudCBtb2RlIHNlbGVjdGlvbiBhbmQgInNlbGVjdGluZyIgdGhlIG1vZGUgSSB3YW50LiBCeQpP
-Ui1pbmcgUFZUTU9OX0NPTlRST0wwX1NFTF9URU1QX01PTklUT1IgSSdtIGNsZWFybHkgaW5kaWNh
-dGluZyBJIHdhbnQgdGVtcAptb25pdG9yIG1vcmUuCgpIb3cgZWxzZSBJIGNvdWxkIG1ha2UgaXQg
-bW9yZSBvYnZpb3VzPyBTaG91bGQgSSBhZGQgc29tZSBjb21tZW50IG1heWJlPwoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Add entries for the Atmel PTC Subsystem.
+
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 57634d0..afb2645 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2292,6 +2292,13 @@ F:	Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+ F:	drivers/input/touchscreen/atmel_mxt_ts.c
+ F:	include/linux/platform_data/atmel_mxt_ts.h
+ 
++ATMEL PTC SUBSYSTEM DRIVER
++M:	Ludovic Desroches <ludovic.desroches@microchip.com>
++L:	linux-input@vger.kernel.org
++S:	Supported
++F:	drivers/input/misc/atmel_ptc.c
++F:	include/uapi/linux/atmel_ptc.h
++
+ ATTO EXPRESSSAS SAS/SATA RAID SCSI DRIVER
+ M:	Bradley Grove <linuxdrivers@attotech.com>
+ L:	linux-scsi@vger.kernel.org
+-- 
+2.9.0
