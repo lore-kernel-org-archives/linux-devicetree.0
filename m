@@ -1,56 +1,32 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 2/2] dt-bindings: mtd: document linux,part-probe property
-Date: Fri, 31 Mar 2017 11:30:13 +0200
-Message-ID: <20170331093013.29123-2-zajec5@gmail.com>
-References: <20170330215332.32699-1-zajec5@gmail.com>
- <20170331093013.29123-1-zajec5@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: Add arm64 ARCH_THUNDER2 platform documentation
+Date: Fri, 31 Mar 2017 11:40:44 +0200
+Message-ID: <CAK8P3a1PFf_h8FXANw9Tp8_9BYpzEosj-uNYhfPnoo2K5wMjiQ@mail.gmail.com>
+References: <1489495634-2920-1-git-send-email-jnair@caviumnetworks.com>
+ <1489608662-4434-1-git-send-email-jnair@caviumnetworks.com> <1489608662-4434-2-git-send-email-jnair@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170331093013.29123-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1489608662-4434-2-git-send-email-jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On Wed, Mar 15, 2017 at 9:11 PM, Jayachandran C
+<jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> Add documentation for Cavium's ThunderX2 CN99XX ARM64 processor. This
+> SoC will use "cavium,thunderx2-cn9900" as the compatible property.
+>
+> Also add a documentation entry for the "cavium,thunder2" cpu core
+> present in these SoCs.
+>
+> Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Support for this property has been introduced in 2010 with commit
-9d5da3a9b849 ("mtd: extend physmap_of to let the device tree specify the
-parition probe") but it was never documented. Fix this by adding a
-proper description and example.
+Applied on next/dt64, thanks!
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
- Documentation/devicetree/bindings/mtd/common.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/common.txt b/Documentation/devicetree/bindings/mtd/common.txt
-index fc068b923d7a..1ada70e718b2 100644
---- a/Documentation/devicetree/bindings/mtd/common.txt
-+++ b/Documentation/devicetree/bindings/mtd/common.txt
-@@ -6,10 +6,17 @@ Optional properties:
-   controller based name) in order to ease flash device identification
-   and/or describe what they are used for.
- 
-+- linux,part-probe: if present, this property should contain a list of strings
-+  with partition probes to be used for the flash device. A role of partition
-+  probe (parser) is to read/construct partition table and register found
-+  partitions. Getting partition table may be platform or device specific so
-+  various devices may use various Linux drivers for this purpose.
-+
- Example:
- 
- 	flash@0 {
- 		label = "System-firmware";
-+		linux,part-probe = "cmdlinepart", "ofpart";
- 
- 		/* flash type specific properties */
- 	};
--- 
-2.11.0
-
+     Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
