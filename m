@@ -1,76 +1,105 @@
-From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: imx7d: fix USDHC NAND clock
-Date: Sat, 1 Apr 2017 11:00:22 +0800
-Message-ID: <20170401030022.GA24882@b29396-OptiPlex-7040>
-References: <20170330005029.6472-1-stefan@agner.ch>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2] iommu/arm-smmu: Add global SMR masking property
+Date: Fri, 31 Mar 2017 12:03:33 +0100
+Message-ID: <7472f6f57d04431bca5b2dba2a53918225eaf432.1490958040.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170330005029.6472-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 05:50:28PM -0700, Stefan Agner wrote:
-> The USDHC NAND root clock is not gated by any CCM clock gate. Remove
-> the bogus gate definition.
-> 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
-> The IMX7D_NAND_USDHC_BUS_ROOT_CLK clock is also in clks_init_on.
-> In a quick test I removed IMX7D_NAND_USDHC_BUS_ROOT_CLK from
-> clks_init_on, and the system including SD-cards seemed to work
-> fine... So I guess we could remove the clock from clks_init_on
-> after the two both changes got applied, any thoughts?
-> 
+The current SMR masking support using a 2-cell iommu-specifier is
+primarily intended to handle individual masters with large and/or
+complex Stream ID assignments; it quickly gets a bit clunky in other SMR
+use-cases where we just want to consistently mask out the same part of
+every Stream ID (e.g. for MMU-500 configurations where the appended TBU
+number gets in the way unnecessarily). Let's add a new property to allow
+a single global mask value to better fit the latter situation.
 
-Yes, it can be removed after apply.
+Tested-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+---
 
-> The gate 0x4130 was actually the DRAM gate, hence disabling that
-> clock lead to disabling this gate, and hence a crash before this
-> fixes... Maybe that was the reason it landed in clks_init_on...?
-> 
+v2: Rewrite the documentation to actually make sense, and add an
+    explicit example per Mark's suggestion.
 
-Probably a history reason or mistake. :-)
+ .../devicetree/bindings/iommu/arm,smmu.txt         | 27 ++++++++++++++++++++++
+ drivers/iommu/arm-smmu.c                           |  4 +++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-Acked-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-
-Regards
-Dong Aisheng
-
-> --
-> Stefan
-> 
->  drivers/clk/imx/clk-imx7d.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-> index ae1d31be906e..4466acaacb71 100644
-> --- a/drivers/clk/imx/clk-imx7d.c
-> +++ b/drivers/clk/imx/clk-imx7d.c
-> @@ -724,7 +724,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
->  	clks[IMX7D_MAIN_AXI_ROOT_DIV] = imx_clk_divider2("axi_post_div", "axi_pre_div", base + 0x8800, 0, 6);
->  	clks[IMX7D_DISP_AXI_ROOT_DIV] = imx_clk_divider2("disp_axi_post_div", "disp_axi_pre_div", base + 0x8880, 0, 6);
->  	clks[IMX7D_ENET_AXI_ROOT_DIV] = imx_clk_divider2("enet_axi_post_div", "enet_axi_pre_div", base + 0x8900, 0, 6);
-> -	clks[IMX7D_NAND_USDHC_BUS_ROOT_DIV] = imx_clk_divider2("nand_usdhc_post_div", "nand_usdhc_pre_div", base + 0x8980, 0, 6);
-> +	clks[IMX7D_NAND_USDHC_BUS_ROOT_CLK] = imx_clk_divider2("nand_usdhc_root_clk", "nand_usdhc_pre_div", base + 0x8980, 0, 6);
->  	clks[IMX7D_AHB_CHANNEL_ROOT_DIV] = imx_clk_divider2("ahb_post_div", "ahb_pre_div", base + 0x9000, 0, 6);
->  	clks[IMX7D_DRAM_ROOT_DIV] = imx_clk_divider2("dram_post_div", "dram_cg", base + 0x9880, 0, 3);
->  	clks[IMX7D_DRAM_PHYM_ALT_ROOT_DIV] = imx_clk_divider2("dram_phym_alt_post_div", "dram_phym_alt_pre_div", base + 0xa000, 0, 3);
-> @@ -797,7 +797,6 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
->  	clks[IMX7D_ENET_AXI_ROOT_CLK] = imx_clk_gate4("enet_axi_root_clk", "enet_axi_post_div", base + 0x4060, 0);
->  	clks[IMX7D_OCRAM_CLK] = imx_clk_gate4("ocram_clk", "axi_post_div", base + 0x4110, 0);
->  	clks[IMX7D_OCRAM_S_CLK] = imx_clk_gate4("ocram_s_clk", "ahb_post_div", base + 0x4120, 0);
-> -	clks[IMX7D_NAND_USDHC_BUS_ROOT_CLK] = imx_clk_gate4("nand_usdhc_root_clk", "nand_usdhc_post_div", base + 0x4130, 0);
->  	clks[IMX7D_AHB_CHANNEL_ROOT_CLK] = imx_clk_gate4("ahb_root_clk", "ahb_post_div", base + 0x4200, 0);
->  	clks[IMX7D_DRAM_ROOT_CLK] = imx_clk_gate4("dram_root_clk", "dram_post_div", base + 0x4130, 0);
->  	clks[IMX7D_DRAM_PHYM_ROOT_CLK] = imx_clk_gate4("dram_phym_root_clk", "dram_phym_cg", base + 0x4130, 0);
-> -- 
-> 2.12.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+index 6cdf32d037fc..b744b231766f 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+@@ -60,6 +60,16 @@ conditions.
+                   aliases of secure registers have to be used during
+                   SMMU configuration.
+ 
++- stream-match-mask : For SMMUs supporting stream matching and using
++                  #iommu-cells = <1>, specifies a fixed value to set in
++                  the SMRn.MASK field of every stream match register
++                  used, for cases where it is desirable to ignore some
++                  portion of every Stream ID (e.g. for certain MMU-500
++                  configurations given globally unique input IDs). This
++                  property is not valid for SMMUs using stream indexing,
++                  or using stream matching with #iommu-cells = <2>, and
++                  may be ignored if present in such cases.
++
+ ** Deprecated properties:
+ 
+ - mmu-masters (deprecated in favour of the generic "iommus" binding) :
+@@ -109,3 +119,20 @@ conditions.
+         master3 {
+                 iommus = <&smmu2 1 0x30>;
+         };
++
++
++        /* ARM MMU-500 with 10-bit stream ID input configuration */
++        smmu3: iommu {
++                compatible = "arm,mmu-500", "arm,smmu-v2";
++                ...
++                #iommu-cells = <1>;
++                /* always ignore appended 5-bit TBU number */
++                stream-match-mask = 0x7c00;
++        };
++
++        bus {
++                /* bus whose child devices emit one unique 10-bit stream
++                   ID each, but may master through multiple SMMU TBUs */
++                iommu-map = <0 &smmu3 0 0x400>;
++                ...
++        };
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index abf6496843a6..e394d55146a6 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1590,13 +1590,15 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+ 
+ static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
+ {
+-	u32 fwid = 0;
++	u32 mask, fwid = 0;
+ 
+ 	if (args->args_count > 0)
+ 		fwid |= (u16)args->args[0];
+ 
+ 	if (args->args_count > 1)
+ 		fwid |= (u16)args->args[1] << SMR_MASK_SHIFT;
++	else if (!of_property_read_u32(args->np, "stream-match-mask", &mask))
++		fwid |= (u16)mask << SMR_MASK_SHIFT;
+ 
+ 	return iommu_fwspec_add_ids(dev, &fwid, 1);
+ }
+-- 
+2.11.0.dirty
