@@ -1,91 +1,95 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] mtd: move code reading DT specified part probes
- to the core
-Date: Fri, 31 Mar 2017 13:41:51 +0200
-Message-ID: <20170331134151.1f08376f@bbrezillon>
-References: <20170330215332.32699-1-zajec5@gmail.com>
-        <20170331093013.29123-1-zajec5@gmail.com>
-        <20170331115654.41592eba@bbrezillon>
-        <40a0f980-c849-30de-c906-a708e4d90be5@gmail.com>
-        <20170331123153.038e3ada@bbrezillon>
-        <99d4944c-3eb9-5bbd-efd0-2ac6862ab1fb@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 1/4] dt-bindings: iio: stm32-dac: Add support for STM32 DAC
+Date: Fri, 31 Mar 2017 13:45:04 +0200
+Message-ID: <1490960707-22422-2-git-send-email-fabrice.gasnier@st.com>
+References: <1490960707-22422-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <99d4944c-3eb9-5bbd-efd0-2ac6862ab1fb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1490960707-22422-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, amelie.delaunay@st.com, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linus.walleij@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Rafal,
+Document STMicroelectronics STM32 DAC (digital-to-analog converter).
 
-On Fri, 31 Mar 2017 12:46:38 +0200
-Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ .../devicetree/bindings/iio/dac/st,stm32-dac.txt   | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
 
-> >>> BTW, not sure the intermediate "mtd: physmap_of: use OF helpers
-> >>> for reading strings" patch is really useful, since you move to the
-> >>> common infrastructure here.
-> >>> By following my suggestion you get rid of the dependency you have
-> >>> between this series and patch "mtd: physmap_of: use OF helpers for
-> >>> reading strings".  
-> >>
-> >> I learned (the very hard way) MTD people can be really nitpicking so I'm
-> >> sending as simple patches as I can. I see it as the only way for someone from
-> >> OpenWrt/LEDE project to get patch through your review.  
-> >
-> > And I learned the hard way that OpenWRT/LEDE developers tend to not
-> > listen to our advices and keep arguing on things that have been proven
-> > to be existing because of bad decision they made at some point in the
-> > project life. So I think we're even :-P.  
-> 
-> I wish you could sometimes forget what you've learned and review/discuss things
-> without all that negative approach I keep seeing.
-
-I try to stay objective, and if you look back at my review, you'll see
-that I actually agree with most of your changes. So if one person is
-taking it personally it's you, not me.
-
-Now, regarding other contributions, like support for the TRX format, I
-keep thinking that it's badly designed and should not be supported in
-mainline. I clearly expressed my opinion, and I also said I wouldn't
-block the patches if other MTD maintainers were okay to take them (which
-is already a good thing, don't you think?). But don't expect me to say
-"Youhou, let's merge this awesome feature!".
-
-More generally, if you look back at all the contributions OpenWRT/LEDE
-devs made, all uncontroversial features were merged rather quickly. For
-the other ones, each time we tried to come up with alternative
-solutions, but if you don't want to follow these suggestions (or at
-least try them before saying it's impossible), then I think there's
-nothing we can do on our side.
-
-> 
-> 
-> >> It's like with this patch: even a simple code move can be questioned. Please
-> >> drop this patchset, I'll resend it after/if I manage to get
-> >> [PATCH] mtd: physmap_of: use OF helpers for reading strings
-> >> accepted.  
-> >
-> > But really, what's the point of this patch? It's just a cleanup. You're
-> > not fixing a bug or changing the behavior, and your real objective is
-> > to get support for the linux,part-probe in the core, which will then
-> > allow us to drop the open-coded version you have in physmap_of.c.
-> >
-> > I don't think it deserves an intermediate patch, unless your real
-> > objective is patchcount.  
-> 
-> OK, I'm going to trust that and see how easily I get can patch your way. I'll
-> resend combined version soon.
-
-Let's wait for a DT review, since this is probably the main blocking
-aspect.
-
-Regards,
-
-Boris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+new file mode 100644
+index 0000000..1981983
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+@@ -0,0 +1,56 @@
++STMicroelectronics STM32 DAC
++
++The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
++can be configured in 8- or 12-bit mode. In 12-bit mode, the data could be
++left- or right-aligned. It has two output channels, each with its own converter.
++It has built-in noise and triangle waveform generator and supports external
++triggers for conversions. The DAC's output buffer allows a high drive output
++current.
++
++Contents of a stm32 dac root node:
++-----------------------------------
++Required properties:
++- compatible: Must be "st,stm32h7-dac-core".
++- reg: Offset and length of the device's register set.
++- clocks: Must contain an entry for pclk (which feeds the peripheral bus
++  interface)
++- clock-names: Must be "pclk".
++- vref-supply: Phandle to the vref+ input analog reference supply.
++
++Optional properties:
++- resets: Must contain the phandle to the reset controller.
++- A pinctrl state named "default" for each DAC channel may be defined to set
++  DAC_OUTx pin in mode of operation for analog output on external pin.
++
++Contents of a stm32 dac child node:
++-----------------------------------
++DAC core node should contain at least one subnode, representing a
++DAC instance/channel available on the machine.
++
++Required properties:
++- compatible: Must be "st,stm32-dac".
++- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
++  Documentation/devicetree/bindings/iio/iio-bindings.txt
++- st,dac-channel: Must be either 1 or 2, to define channel in use (e.g.
++  single channels: 1 or 2)
++
++Example:
++	dac: dac@40007400 {
++		compatible = "st,stm32h7-dac-core";
++		reg = <0x40007400 0x400>;
++		clocks = <&clk>;
++		clock-names = "pclk";
++		vref-supply = <&reg_vref>;
++
++		dac1: dac@1 {
++			compatible = "st,stm32-dac";
++			#io-channels-cells = <1>;
++			st,dac-channel = <1>;
++		};
++
++		dac2: dac@2 {
++			compatible = "st,stm32-dac";
++			#io-channels-cells = <1>;
++			st,dac-channel = <2>;
++		};
++	};
+-- 
+1.9.1
