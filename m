@@ -1,216 +1,96 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv6 09/10] stih-cec: add CEC notifier support
-Date: Fri, 31 Mar 2017 14:20:35 +0200
-Message-ID: <20170331122036.55706-10-hverkuil@xs4all.nl>
-References: <20170331122036.55706-1-hverkuil@xs4all.nl>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20170331122036.55706-1-hverkuil@xs4all.nl>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Daniel Vetter <daniel.vetter@intel.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Inki Dae <inki.dae@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Patrice.chotard@st.com, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] mtd: move code reading DT specified part probes to
+ the core
+Date: Fri, 31 Mar 2017 14:23:11 +0200
+Message-ID: <8d0b5b57-db3e-290e-4fa0-7ff28644ae86@gmail.com>
+References: <20170330215332.32699-1-zajec5@gmail.com>
+ <20170331093013.29123-1-zajec5@gmail.com>
+ <20170331115654.41592eba@bbrezillon>
+ <40a0f980-c849-30de-c906-a708e4d90be5@gmail.com>
+ <20170331123153.038e3ada@bbrezillon>
+ <99d4944c-3eb9-5bbd-efd0-2ac6862ab1fb@gmail.com>
+ <20170331134151.1f08376f@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170331134151.1f08376f@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+On 03/31/2017 01:41 PM, Boris Brezillon wrote:
+> Rafal,
+>
+> On Fri, 31 Mar 2017 12:46:38 +0200
+> Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>>>>> BTW, not sure the intermediate "mtd: physmap_of: use OF helpers
+>>>>> for reading strings" patch is really useful, since you move to the
+>>>>> common infrastructure here.
+>>>>> By following my suggestion you get rid of the dependency you have
+>>>>> between this series and patch "mtd: physmap_of: use OF helpers for
+>>>>> reading strings".
+>>>>
+>>>> I learned (the very hard way) MTD people can be really nitpicking so I'm
+>>>> sending as simple patches as I can. I see it as the only way for someone from
+>>>> OpenWrt/LEDE project to get patch through your review.
+>>>
+>>> And I learned the hard way that OpenWRT/LEDE developers tend to not
+>>> listen to our advices and keep arguing on things that have been proven
+>>> to be existing because of bad decision they made at some point in the
+>>> project life. So I think we're even :-P.
+>>
+>> I wish you could sometimes forget what you've learned and review/discuss things
+>> without all that negative approach I keep seeing.
+>
+> I try to stay objective, and if you look back at my review, you'll see
+> that I actually agree with most of your changes. So if one person is
+> taking it personally it's you, not me.
+>
+> Now, regarding other contributions, like support for the TRX format, I
+> keep thinking that it's badly designed and should not be supported in
+> mainline. I clearly expressed my opinion, and I also said I wouldn't
+> block the patches if other MTD maintainers were okay to take them (which
+> is already a good thing, don't you think?). But don't expect me to say
+> "Youhou, let's merge this awesome feature!".
+>
+> More generally, if you look back at all the contributions OpenWRT/LEDE
+> devs made, all uncontroversial features were merged rather quickly. For
+> the other ones, each time we tried to come up with alternative
+> solutions, but if you don't want to follow these suggestions (or at
+> least try them before saying it's impossible), then I think there's
+> nothing we can do on our side.
 
-By using the CEC notifier framework there is no longer any reason
-to manually set the physical address. This was the one blocking
-issue that prevented this driver from going out of staging, so do
-this move as well.
+Sounds fair from you, thanks. Please note I'm actually following your
+suggestions, just recently I sent RFC init for initramfs which should handle
+some of OpenWrt/LEDE hacks in user space as you told us to do this.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-CC: devicetree@vger.kernel.org
----
- drivers/media/platform/Kconfig                     | 10 +++++++
- drivers/media/platform/Makefile                    |  1 +
- .../st-cec => media/platform/sti/cec}/Makefile     |  0
- .../st-cec => media/platform/sti/cec}/stih-cec.c   | 31 +++++++++++++++++++---
- drivers/staging/media/Kconfig                      |  2 --
- drivers/staging/media/Makefile                     |  1 -
- drivers/staging/media/st-cec/Kconfig               |  8 ------
- drivers/staging/media/st-cec/TODO                  |  7 -----
- 8 files changed, 39 insertions(+), 21 deletions(-)
- rename drivers/{staging/media/st-cec => media/platform/sti/cec}/Makefile (100%)
- rename drivers/{staging/media/st-cec => media/platform/sti/cec}/stih-cec.c (93%)
- delete mode 100644 drivers/staging/media/st-cec/Kconfig
- delete mode 100644 drivers/staging/media/st-cec/TODO
+https://patchwork.ozlabs.org/patch/744093/
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 2c449b88fc94..7321f6123659 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -476,6 +476,16 @@ config VIDEO_SAMSUNG_S5P_CEC
-          CEC bus is present in the HDMI connector and enables communication
-          between compatible devices.
- 
-+config VIDEO_STI_HDMI_CEC
-+       tristate "STMicroelectronics STiH4xx HDMI CEC driver"
-+       depends on VIDEO_DEV && MEDIA_CEC_SUPPORT && (ARCH_STI || COMPILE_TEST)
-+       select MEDIA_CEC_NOTIFIER
-+       ---help---
-+         This is a driver for STIH4xx HDMI CEC interface. It uses the
-+         generic CEC framework interface.
-+         CEC bus is present in the HDMI connector and enables communication
-+         between compatible devices.
-+
- endif #V4L_CEC_DRIVERS
- 
- menuconfig V4L_TEST_DRIVERS
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 2f94d82afa4c..940724ab9b70 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC)	+= exynos-gsc/
- obj-$(CONFIG_VIDEO_STI_BDISP)		+= sti/bdisp/
- obj-$(CONFIG_VIDEO_STI_HVA)		+= sti/hva/
- obj-$(CONFIG_DVB_C8SECTPFE)		+= sti/c8sectpfe/
-+obj-$(CONFIG_VIDEO_STI_HDMI_CEC) 	+= sti/cec/
- 
- obj-$(CONFIG_VIDEO_STI_DELTA)		+= sti/delta/
- 
-diff --git a/drivers/staging/media/st-cec/Makefile b/drivers/media/platform/sti/cec/Makefile
-similarity index 100%
-rename from drivers/staging/media/st-cec/Makefile
-rename to drivers/media/platform/sti/cec/Makefile
-diff --git a/drivers/staging/media/st-cec/stih-cec.c b/drivers/media/platform/sti/cec/stih-cec.c
-similarity index 93%
-rename from drivers/staging/media/st-cec/stih-cec.c
-rename to drivers/media/platform/sti/cec/stih-cec.c
-index 3c25638a9610..636281c64c04 100644
---- a/drivers/staging/media/st-cec/stih-cec.c
-+++ b/drivers/media/platform/sti/cec/stih-cec.c
-@@ -1,6 +1,4 @@
- /*
-- * drivers/staging/media/st-cec/stih-cec.c
-- *
-  * STIH4xx CEC driver
-  * Copyright (C) STMicroelectronic SA 2016
-  *
-@@ -15,9 +13,11 @@
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- 
- #include <media/cec.h>
-+#include <media/cec-notifier.h>
- 
- #define CEC_NAME	"stih-cec"
- 
-@@ -129,6 +129,7 @@ struct stih_cec {
- 	void __iomem		*regs;
- 	int			irq;
- 	u32			irq_status;
-+	struct cec_notifier	*notifier;
- };
- 
- static int stih_cec_adap_enable(struct cec_adapter *adap, bool enable)
-@@ -303,12 +304,29 @@ static int stih_cec_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct resource *res;
- 	struct stih_cec *cec;
-+	struct device_node *np;
-+	struct platform_device *hdmi_dev;
- 	int ret;
- 
- 	cec = devm_kzalloc(dev, sizeof(*cec), GFP_KERNEL);
- 	if (!cec)
- 		return -ENOMEM;
- 
-+	np = of_parse_phandle(pdev->dev.of_node, "hdmi-phandle", 0);
-+
-+	if (!np) {
-+		dev_err(&pdev->dev, "Failed to find hdmi node in device tree\n");
-+		return -ENODEV;
-+	}
-+
-+	hdmi_dev = of_find_device_by_node(np);
-+	if (!hdmi_dev)
-+		return -EPROBE_DEFER;
-+
-+	cec->notifier = cec_notifier_get(&hdmi_dev->dev);
-+	if (!cec->notifier)
-+		return -ENOMEM;
-+
- 	cec->dev = dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -335,7 +353,7 @@ static int stih_cec_probe(struct platform_device *pdev)
- 	cec->adap = cec_allocate_adapter(&sti_cec_adap_ops, cec,
- 			CEC_NAME,
- 			CEC_CAP_LOG_ADDRS | CEC_CAP_PASSTHROUGH |
--			CEC_CAP_PHYS_ADDR | CEC_CAP_TRANSMIT, 1);
-+			CEC_CAP_TRANSMIT, 1);
- 	ret = PTR_ERR_OR_ZERO(cec->adap);
- 	if (ret)
- 		return ret;
-@@ -346,12 +364,19 @@ static int stih_cec_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	cec_register_cec_notifier(cec->adap, cec->notifier);
-+
- 	platform_set_drvdata(pdev, cec);
- 	return 0;
- }
- 
- static int stih_cec_remove(struct platform_device *pdev)
- {
-+	struct stih_cec *cec = platform_get_drvdata(pdev);
-+
-+	cec_unregister_adapter(cec->adap);
-+	cec_notifier_put(cec->notifier);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/staging/media/Kconfig b/drivers/staging/media/Kconfig
-index c0d83cecf528..8ed8202da57a 100644
---- a/drivers/staging/media/Kconfig
-+++ b/drivers/staging/media/Kconfig
-@@ -32,6 +32,4 @@ source "drivers/staging/media/platform/bcm2835/Kconfig"
- # Keep LIRC at the end, as it has sub-menus
- source "drivers/staging/media/lirc/Kconfig"
- 
--source "drivers/staging/media/st-cec/Kconfig"
--
- endif
-diff --git a/drivers/staging/media/Makefile b/drivers/staging/media/Makefile
-index 97b29ece9a2c..3a6adeabede1 100644
---- a/drivers/staging/media/Makefile
-+++ b/drivers/staging/media/Makefile
-@@ -4,4 +4,3 @@ obj-$(CONFIG_LIRC_STAGING)	+= lirc/
- obj-$(CONFIG_VIDEO_BCM2835)	+= platform/bcm2835/
- obj-$(CONFIG_VIDEO_DM365_VPFE)	+= davinci_vpfe/
- obj-$(CONFIG_VIDEO_OMAP4)	+= omap4iss/
--obj-$(CONFIG_VIDEO_STI_HDMI_CEC) += st-cec/
-diff --git a/drivers/staging/media/st-cec/Kconfig b/drivers/staging/media/st-cec/Kconfig
-deleted file mode 100644
-index c04283db58d6..000000000000
---- a/drivers/staging/media/st-cec/Kconfig
-+++ /dev/null
-@@ -1,8 +0,0 @@
--config VIDEO_STI_HDMI_CEC
--       tristate "STMicroelectronics STiH4xx HDMI CEC driver"
--       depends on VIDEO_DEV && MEDIA_CEC_SUPPORT && (ARCH_STI || COMPILE_TEST)
--       ---help---
--         This is a driver for STIH4xx HDMI CEC interface. It uses the
--         generic CEC framework interface.
--         CEC bus is present in the HDMI connector and enables communication
--         between compatible devices.
-diff --git a/drivers/staging/media/st-cec/TODO b/drivers/staging/media/st-cec/TODO
-deleted file mode 100644
-index c61289742c5c..000000000000
---- a/drivers/staging/media/st-cec/TODO
-+++ /dev/null
-@@ -1,7 +0,0 @@
--This driver requires that userspace sets the physical address.
--However, this should be passed on from the corresponding
--ST HDMI driver.
--
--We have to wait until the HDMI notifier framework has been merged
--in order to handle this gracefully, until that time this driver
--has to remain in staging.
--- 
-2.11.0
+
+>>>> It's like with this patch: even a simple code move can be questioned. Please
+>>>> drop this patchset, I'll resend it after/if I manage to get
+>>>> [PATCH] mtd: physmap_of: use OF helpers for reading strings
+>>>> accepted.
+>>>
+>>> But really, what's the point of this patch? It's just a cleanup. You're
+>>> not fixing a bug or changing the behavior, and your real objective is
+>>> to get support for the linux,part-probe in the core, which will then
+>>> allow us to drop the open-coded version you have in physmap_of.c.
+>>>
+>>> I don't think it deserves an intermediate patch, unless your real
+>>> objective is patchcount.
+>>
+>> OK, I'm going to trust that and see how easily I get can patch your way. I'll
+>> resend combined version soon.
+>
+> Let's wait for a DT review, since this is probably the main blocking
+> aspect.
+
+OK.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
