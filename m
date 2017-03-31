@@ -1,211 +1,693 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V4 2/2] thermal: broadcom: add Northstar thermal driver
-Date: Fri, 31 Mar 2017 22:11:24 +0200
-Message-ID: <20170331201124.656-2-zajec5@gmail.com>
-References: <20170331073132.21457-2-zajec5@gmail.com>
- <20170331201124.656-1-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3] regulator: Add driver for voltage controlled regulators
+Date: Fri, 31 Mar 2017 13:50:35 -0700
+Message-ID: <20170331205035.126001-1-mka@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170331201124.656-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+The output voltage of a voltage controlled regulator can be controlled
+through the voltage of another regulator. The current version of this
+driver assumes that the output voltage is a linear function of the control
+voltage.
 
-Northstar is a SoC family commonly used in home routers. This commit
-adds a driver for checking CPU temperature. As Northstar Plus seems to
-also have this IP block this new symbol gets ARCH_BCM_IPROC dependency.
-
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-V2: Make it iProc specific as NSP can also use this driver
-    Select proper symbols in config ARCH_BCM_IPROC
-    Define PVTMON register bits
-    Update code selecting temperature monitor mode
-    Thank you Jon!
-V3: More details in help message for BCM_NS_THERMAL
-    Use slope & offset
-    Drop arch code change (I'll be submitted using a proper tree)
-    Thank you Eduardo!
-V4: Comment operations on PVTMON_CONTROL0 register
----
- drivers/thermal/Kconfig               |   5 ++
- drivers/thermal/Makefile              |   1 +
- drivers/thermal/broadcom/Kconfig      |   8 +++
- drivers/thermal/broadcom/Makefile     |   1 +
- drivers/thermal/broadcom/ns-thermal.c | 105 ++++++++++++++++++++++++++++++++++
- 5 files changed, 120 insertions(+)
- create mode 100644 drivers/thermal/broadcom/Kconfig
- create mode 100644 drivers/thermal/broadcom/Makefile
- create mode 100644 drivers/thermal/broadcom/ns-thermal.c
+Changes in v3:
+- Pre-calculate limits for OVP-safe downward transitions with a discrete
+  control regulator
+- Use regulator_get_linear_step() and regulator_count_voltages() to
+  determine if the control regulator is continuous or discrete
+- Changed some log messages to start with lowercase character for
+  consistency
+- Misc formatting fixes
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 776b34396144..008e173ec825 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -392,6 +392,11 @@ config MTK_THERMAL
- 	  Enable this option if you want to have support for thermal management
- 	  controller present in Mediatek SoCs
- 
-+menu "Broadcom thermal drivers"
-+depends on ARCH_BCM || COMPILE_TEST
-+source "drivers/thermal/broadcom/Kconfig"
-+endmenu
+Changes in v2:
+- Don't configure control regulator as supply
+- Added enable/disable ops to turn control regulator on/off
+- Use regulator_has_continuous_voltage_range() to determine if control
+  regulator is continuous or discrete
+- Use regulator-min/max-microvolt as output voltage range
+- Updated and fixed example in DT bindings
+- Updated commit message
+
+ .../devicetree/bindings/regulator/vctrl.txt        |  50 ++
+ drivers/regulator/Kconfig                          |   7 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/vctrl-regulator.c                | 553 +++++++++++++++++++++
+ 4 files changed, 611 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/vctrl.txt
+ create mode 100644 drivers/regulator/vctrl-regulator.c
+
+diff --git a/Documentation/devicetree/bindings/regulator/vctrl.txt b/Documentation/devicetree/bindings/regulator/vctrl.txt
+new file mode 100644
+index 000000000000..c7ee9956d62d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/vctrl.txt
+@@ -0,0 +1,50 @@
++Bindings for Voltage controlled regulators
++==========================================
 +
- menu "Texas Instruments thermal drivers"
- depends on ARCH_HAS_BANDGAP || COMPILE_TEST
- depends on HAS_IOMEM
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 7adae2029355..549d81b6363c 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -27,6 +27,7 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
- thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
++Required properties:
++--------------------
++- compatible		  : must be "vctrl-regulator".
++- regulator-min-microvolt : smallest voltage consumers may set
++- regulator-max-microvolt : largest voltage consumers may set
++- ctrl-regulator:	  : the name of the regulator supplying the control
++			    voltage.
++- ctrl-voltage-range	  : an array of two integer values describing the range
++			    (min/max) of the control voltage. The values specify
++			    the control voltage needed to generate the corresponding
++			    regulator-min/max-microvolt output voltage.
++
++Optional properties:
++--------------------
++- ovp-threshold-percent	: overvoltage protection (OVP) threshold of the
++			  regulator in percent. Some regulators have an OVP
++			  circuitry which shuts down the regulator when the
++			  actual output voltage deviates beyond a certain
++			  margin from the expected value for a given control
++			  voltage. On larger voltage decreases this can occur
++			  undesiredly since the output voltage does not adjust
++			  inmediately to changes in the control voltage. To
++			  avoid this situation the vctrl driver breaks down
++			  larger voltage decreases into multiple steps, where
++			  each step is within the OVP threshold.
++- min-slew-down-rate	: Describes how slowly the regulator voltage will decay
++			  down in the worst case (lightest expected load).
++			  Specified in uV / us (like main regulator ramp rate).
++			  This value is required when ovp-threshold-percent is
++			  specified.
++
++Example:
++
++	vctrl-reg {
++		compatible = "vctrl-regulator";
++		regulator-name = "vctrl_reg";
++
++		ctrl-regulator = "ctrl_reg";
++
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1500000>;
++
++		ctrl-voltage-range = <200000 500000>;
++
++		min-slew-down-rate = <225>;
++		ovp-threshold-percent = <16>;
++	};
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index be06eb29c681..9a090e338a19 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -850,6 +850,13 @@ config REGULATOR_TWL4030
+ 	  This driver supports the voltage regulators provided by
+ 	  this family of companion chips.
  
- # platform thermal drivers
-+obj-y				+= broadcom/
- obj-$(CONFIG_QCOM_SPMI_TEMP_ALARM)	+= qcom-spmi-temp-alarm.o
- obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
- obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
-diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
-new file mode 100644
-index 000000000000..f0dea8a8e002
---- /dev/null
-+++ b/drivers/thermal/broadcom/Kconfig
-@@ -0,0 +1,8 @@
-+config BCM_NS_THERMAL
-+	tristate "Northstar thermal driver"
-+	depends on ARCH_BCM_IPROC || COMPILE_TEST
++config REGULATOR_VCTRL
++	tristate "Voltage controlled regulators"
++	depends on OF
 +	help
-+	  Northstar is a family of SoCs that includes e.g. BCM4708, BCM47081,
-+	  BCM4709 and BCM47094. It contains DMU (Device Management Unit) block
-+	  with a thermal sensor that allows checking CPU temperature. This
-+	  driver provides support for it.
-diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
++	  This driver provides support for voltage regulators whose output
++	  voltage is controlled by the voltage of another regulator.
++
+ config REGULATOR_VEXPRESS
+ 	tristate "Versatile Express regulators"
+ 	depends on VEXPRESS_CONFIG
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index ef7725e2592a..891dd287f26b 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -106,6 +106,7 @@ obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65912) += tps65912-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS80031) += tps80031-regulator.o
+ obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o twl6030-regulator.o
++obj-$(CONFIG_REGULATOR_VCTRL) += vctrl-regulator.o
+ obj-$(CONFIG_REGULATOR_VEXPRESS) += vexpress-regulator.o
+ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-dcdc.o
+ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-isink.o
+diff --git a/drivers/regulator/vctrl-regulator.c b/drivers/regulator/vctrl-regulator.c
 new file mode 100644
-index 000000000000..059df9a0ed69
+index 000000000000..d327ed65bb65
 --- /dev/null
-+++ b/drivers/thermal/broadcom/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_BCM_NS_THERMAL)		+= ns-thermal.o
-diff --git a/drivers/thermal/broadcom/ns-thermal.c b/drivers/thermal/broadcom/ns-thermal.c
-new file mode 100644
-index 000000000000..eab96b3572b9
---- /dev/null
-+++ b/drivers/thermal/broadcom/ns-thermal.c
-@@ -0,0 +1,105 @@
++++ b/drivers/regulator/vctrl-regulator.c
+@@ -0,0 +1,553 @@
 +/*
-+ * Copyright (C) 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
++ * Driver for voltage controller regulators
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * Copyright (C) 2017 Google, Inc.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/init.h>
 +#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/sort.h>
 +
-+#define PVTMON_CONTROL0					0x00
-+#define PVTMON_CONTROL0_SEL_MASK			0x0000000e
-+#define PVTMON_CONTROL0_SEL_TEMP_MONITOR		0x00000000
-+#define PVTMON_CONTROL0_SEL_TEST_MODE			0x0000000e
-+#define PVTMON_STATUS					0x08
-+
-+struct ns_thermal {
-+	struct thermal_zone_device *tz;
-+	void __iomem *pvtmon;
++struct vctrl_voltage_range {
++	int min_uV;
++	int max_uV;
 +};
 +
-+static int ns_thermal_get_temp(void *data, int *temp)
++struct vctrl_voltage_ranges {
++	struct vctrl_voltage_range ctrl;
++	struct vctrl_voltage_range out;
++};
++
++struct vctrl_voltage_table {
++	int ctrl;
++	int out;
++	int ovp_min_sel;
++};
++
++struct vctrl_data {
++	struct regulator_dev *rdev;
++	struct regulator_desc desc;
++	struct regulator *ctrl_reg;
++	bool enabled;
++	unsigned int min_slew_down_rate;
++	unsigned int ovp_threshold;
++	struct vctrl_voltage_ranges vrange;
++	struct vctrl_voltage_table *vtable;
++	unsigned int sel;
++};
++
++static int vctrl_calc_ctrl_voltage(struct vctrl_data *vctrl, int out_uV)
 +{
-+	struct ns_thermal *ns_thermal = data;
-+	int offset = thermal_zone_get_offset(ns_thermal->tz);
-+	int slope = thermal_zone_get_slope(ns_thermal->tz);
-+	u32 val;
++	struct vctrl_voltage_range *ctrl = &vctrl->vrange.ctrl;
++	struct vctrl_voltage_range *out = &vctrl->vrange.out;
 +
-+	val = readl(ns_thermal->pvtmon + PVTMON_CONTROL0);
-+	if ((val & PVTMON_CONTROL0_SEL_MASK) != PVTMON_CONTROL0_SEL_TEMP_MONITOR) {
-+		/* Clear current mode selection */
-+		val &= ~PVTMON_CONTROL0_SEL_MASK;
++	return ctrl->min_uV +
++		DIV_ROUND_CLOSEST_ULL((s64)(out_uV - out->min_uV) *
++				      (ctrl->max_uV - ctrl->min_uV),
++				      out->max_uV - out->min_uV);
++}
 +
-+		/* Set temp monitor mode (it's the default actually) */
-+		val |= PVTMON_CONTROL0_SEL_TEMP_MONITOR;
++static int vctrl_calc_output_voltage(struct vctrl_data *vctrl, int ctrl_uV)
++{
++	struct vctrl_voltage_range *ctrl = &vctrl->vrange.ctrl;
++	struct vctrl_voltage_range *out = &vctrl->vrange.out;
 +
-+		writel(val, ns_thermal->pvtmon + PVTMON_CONTROL0);
++	if (ctrl_uV < 0) {
++		pr_err("vctrl: failed to get control voltage\n");
++		return ctrl_uV;
 +	}
 +
-+	val = readl(ns_thermal->pvtmon + PVTMON_STATUS);
-+	*temp = slope * val + offset;
++	if (ctrl_uV < ctrl->min_uV)
++		return out->min_uV;
++
++	if (ctrl_uV > ctrl->max_uV)
++		return out->max_uV;
++
++	return out->min_uV +
++		DIV_ROUND_CLOSEST_ULL((s64)(ctrl_uV - ctrl->min_uV) *
++				      (out->max_uV - out->min_uV),
++				      ctrl->max_uV - ctrl->min_uV);
++}
++
++static int vctrl_get_voltage(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	int ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
++
++	return vctrl_calc_output_voltage(vctrl, ctrl_uV);
++}
++
++static int vctrl_set_voltage(struct regulator_dev *rdev,
++			     int req_min_uV, int req_max_uV,
++			     unsigned int *selector)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	struct regulator *ctrl_reg = vctrl->ctrl_reg;
++	int orig_ctrl_uV = regulator_get_voltage(ctrl_reg);
++	int uV = vctrl_calc_output_voltage(vctrl, orig_ctrl_uV);
++	int ret;
++
++	if (req_min_uV >= uV || !vctrl->ovp_threshold)
++		/* voltage rising or no OVP */
++		return regulator_set_voltage(
++			ctrl_reg,
++			vctrl_calc_ctrl_voltage(vctrl, req_min_uV),
++			vctrl_calc_ctrl_voltage(vctrl, req_max_uV));
++
++	while (uV > req_min_uV) {
++		int max_drop_uV = (uV * vctrl->ovp_threshold) / 100;
++		int next_uV;
++		int next_ctrl_uV;
++		int delay;
++
++		/* Make sure no infinite loop even in crazy cases */
++		if (max_drop_uV == 0)
++			max_drop_uV = 1;
++
++		next_uV = max_t(int, req_min_uV, uV - max_drop_uV);
++		next_ctrl_uV = vctrl_calc_ctrl_voltage(vctrl, next_uV);
++
++		ret = regulator_set_voltage(ctrl_reg,
++					    next_ctrl_uV,
++					    next_ctrl_uV);
++		if (ret)
++			goto err;
++
++		delay = DIV_ROUND_UP(uV - next_uV, vctrl->min_slew_down_rate);
++		usleep_range(delay, delay + DIV_ROUND_UP(delay, 10));
++
++		uV = next_uV;
++	}
++
++	return 0;
++
++err:
++	/* Try to go back to original voltage */
++	regulator_set_voltage(ctrl_reg, orig_ctrl_uV, orig_ctrl_uV);
++
++	return ret;
++}
++
++static int vctrl_get_voltage_sel(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++
++	return vctrl->sel;
++}
++
++static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
++				 unsigned int selector)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	struct regulator *ctrl_reg = vctrl->ctrl_reg;
++	unsigned int orig_sel = vctrl->sel;
++	int ret;
++
++	if (selector >= rdev->desc->n_voltages)
++		return -EINVAL;
++
++	if (selector >= vctrl->sel || !vctrl->ovp_threshold) {
++		/* voltage rising or no OVP */
++		ret = regulator_set_voltage(ctrl_reg,
++					    vctrl->vtable[selector].ctrl,
++					    vctrl->vtable[selector].ctrl);
++		if (!ret)
++			vctrl->sel = selector;
++
++		return ret;
++	}
++
++	while (vctrl->sel != selector) {
++		unsigned int next_sel;
++		int delay;
++
++		if (selector >= vctrl->vtable[vctrl->sel].ovp_min_sel)
++			next_sel = selector;
++		else
++			next_sel = vctrl->vtable[vctrl->sel].ovp_min_sel;
++
++		ret = regulator_set_voltage(ctrl_reg,
++					    vctrl->vtable[next_sel].ctrl,
++					    vctrl->vtable[next_sel].ctrl);
++		if (ret) {
++			dev_err(&rdev->dev,
++				"failed to set control voltage to %duV\n",
++				vctrl->vtable[next_sel].ctrl);
++			goto err;
++		}
++		vctrl->sel = next_sel;
++
++		delay = DIV_ROUND_UP(vctrl->vtable[vctrl->sel].out -
++				     vctrl->vtable[next_sel].out,
++				     vctrl->min_slew_down_rate);
++		usleep_range(delay, delay + DIV_ROUND_UP(delay, 10));
++	}
++
++	return 0;
++
++err:
++	if (vctrl->sel != orig_sel) {
++		/* Try to go back to original voltage */
++		if (!regulator_set_voltage(ctrl_reg,
++					   vctrl->vtable[orig_sel].ctrl,
++					   vctrl->vtable[orig_sel].ctrl))
++			vctrl->sel = orig_sel;
++		else
++			dev_warn(&rdev->dev,
++				 "failed to restore original voltage\n");
++	}
++
++	return ret;
++}
++
++static int vctrl_list_voltage(struct regulator_dev *rdev,
++			      unsigned int selector)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++
++	if (selector >= rdev->desc->n_voltages)
++		return -EINVAL;
++
++	return vctrl->vtable[selector].out;
++}
++
++static int vctrl_parse_dt(struct platform_device *pdev,
++			  struct vctrl_data *vctrl)
++{
++	int ret;
++	struct device_node *np = pdev->dev.of_node;
++	const char *ctrl_reg;
++	u32 pval;
++	u32 vrange_ctrl[2];
++
++	ret = of_property_read_string(np, "ctrl-regulator", &ctrl_reg);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to read ctrl-regulator: %d\n", ret);
++		return ret;
++	}
++
++	vctrl->ctrl_reg = devm_regulator_get(&pdev->dev, ctrl_reg);
++	if (IS_ERR(vctrl->ctrl_reg))
++		return PTR_ERR(vctrl->ctrl_reg);
++
++	ret = of_property_read_u32(np, "ovp-threshold-percent", &pval);
++	if (!ret) {
++		vctrl->ovp_threshold = pval;
++		if (vctrl->ovp_threshold > 100) {
++			dev_err(&pdev->dev,
++				"ovp-threshold-percent (%u) > 100\n",
++				vctrl->ovp_threshold);
++			return -EINVAL;
++		}
++	}
++
++	ret = of_property_read_u32(np, "min-slew-down-rate", &pval);
++	if (!ret) {
++		vctrl->min_slew_down_rate = pval;
++
++		/* We use the value as int and as divider; sanity check */
++		if (vctrl->min_slew_down_rate == 0) {
++			dev_err(&pdev->dev,
++				"min-slew-down-rate must not be 0\n");
++			return -EINVAL;
++		} else if (vctrl->min_slew_down_rate > INT_MAX) {
++			dev_err(&pdev->dev, "min-slew-down-rate (%u) too big\n",
++				vctrl->min_slew_down_rate);
++			return -EINVAL;
++		}
++	}
++
++	if (vctrl->ovp_threshold && !vctrl->min_slew_down_rate) {
++		dev_err(&pdev->dev,
++			"ovp-threshold-percent requires min-slew-down-rate\n");
++		return -EINVAL;
++	}
++
++	ret = of_property_read_u32(np, "regulator-min-microvolt", &pval);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to read regulator-min-microvolt: %d\n", ret);
++		return ret;
++	}
++	vctrl->vrange.out.min_uV = pval;
++
++	ret = of_property_read_u32(np, "regulator-max-microvolt", &pval);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to read regulator-max-microvolt: %d\n", ret);
++		return ret;
++	}
++	vctrl->vrange.out.max_uV = pval;
++
++	ret = of_property_read_u32_array(np, "ctrl-voltage-range", vrange_ctrl,
++					 2);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to read ctrl-voltage-range: %d\n",
++			ret);
++		return ret;
++	}
++
++	if (vrange_ctrl[0] >= vrange_ctrl[1]) {
++		dev_err(&pdev->dev, "ctrl-voltage-range is invalid: %d-%d\n",
++			vrange_ctrl[0], vrange_ctrl[1]);
++		return -EINVAL;
++	}
++
++	vctrl->vrange.ctrl.min_uV = vrange_ctrl[0];
++	vctrl->vrange.ctrl.max_uV = vrange_ctrl[1];
 +
 +	return 0;
 +}
 +
-+const struct thermal_zone_of_device_ops ns_thermal_ops = {
-+	.get_temp = ns_thermal_get_temp,
-+};
-+
-+static int ns_thermal_probe(struct platform_device *pdev)
++static int vctrl_cmp_ctrl_uV(const void *a, const void *b)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct ns_thermal *ns_thermal;
++	const struct vctrl_voltage_table *at = a;
++	const struct vctrl_voltage_table *bt = b;
 +
-+	ns_thermal = devm_kzalloc(dev, sizeof(*ns_thermal), GFP_KERNEL);
-+	if (!ns_thermal)
++	return at->ctrl - bt->ctrl;
++}
++
++static int vctrl_init_vtable(struct platform_device *pdev)
++{
++	struct vctrl_data *vctrl = platform_get_drvdata(pdev);
++	struct regulator_desc *rdesc = &vctrl->desc;
++	struct regulator *ctrl_reg = vctrl->ctrl_reg;
++	struct vctrl_voltage_range *vrange_ctrl = &vctrl->vrange.ctrl;
++	int n_voltages;
++	int ctrl_uV;
++	int i, idx_vt;
++
++	n_voltages = regulator_count_voltages(ctrl_reg);
++
++	rdesc->n_voltages = n_voltages;
++
++	/* determine number of steps within the range of the vctrl regulator */
++	for (i = 0; i < n_voltages; i++) {
++		ctrl_uV = regulator_list_voltage(ctrl_reg, i);
++
++		if (ctrl_uV < vrange_ctrl->min_uV ||
++		    ctrl_uV > vrange_ctrl->max_uV) {
++			rdesc->n_voltages--;
++			continue;
++		}
++	}
++
++	if (rdesc->n_voltages == 0) {
++		dev_err(&pdev->dev, "invalid configuration\n");
++		return -EINVAL;
++	}
++
++	vctrl->vtable = devm_kmalloc_array(
++		&pdev->dev, sizeof(struct vctrl_voltage_table),
++		rdesc->n_voltages, GFP_KERNEL | __GFP_ZERO);
++	if (!vctrl->vtable)
 +		return -ENOMEM;
 +
-+	ns_thermal->pvtmon = of_iomap(dev_of_node(dev), 0);
-+	if (WARN_ON(!ns_thermal->pvtmon))
-+		return -ENOENT;
++	/* create mapping control <=> output voltage */
++	for (i = 0, idx_vt = 0; i < n_voltages; i++) {
++		ctrl_uV = regulator_list_voltage(ctrl_reg, i);
 +
-+	ns_thermal->tz = devm_thermal_zone_of_sensor_register(dev, 0,
-+							      ns_thermal,
-+							      &ns_thermal_ops);
-+	if (IS_ERR(ns_thermal->tz)) {
-+		iounmap(ns_thermal->pvtmon);
-+		return PTR_ERR(ns_thermal->tz);
++		if (ctrl_uV < vrange_ctrl->min_uV ||
++		    ctrl_uV > vrange_ctrl->max_uV)
++			continue;
++
++		vctrl->vtable[idx_vt].ctrl = ctrl_uV;
++		vctrl->vtable[idx_vt].out =
++			vctrl_calc_output_voltage(vctrl, ctrl_uV);
++		idx_vt++;
 +	}
 +
-+	platform_set_drvdata(pdev, ns_thermal);
++	/* we rely on the table to be ordered by ascending voltage */
++	sort(vctrl->vtable, rdesc->n_voltages,
++	     sizeof(struct vctrl_voltage_table), vctrl_cmp_ctrl_uV,
++	     NULL);
++
++	/* pre-calculate OVP-safe downward transitions */
++	for (i = n_voltages - 1; i > 0; i--) {
++		int j;
++		int ovp_min_uV = (vctrl->vtable[i].out *
++				  (100 - vctrl->ovp_threshold)) / 100;
++
++		for (j = 0; j < i; j++) {
++			if (vctrl->vtable[j].out >= ovp_min_uV) {
++				vctrl->vtable[i].ovp_min_sel = j;
++				break;
++			}
++		}
++
++		if (j == i) {
++			dev_warn(&pdev->dev, "switching down from %duV may cause OVP shutdown\n",
++				vctrl->vtable[i].out);
++			/* use next lowest voltage */
++			vctrl->vtable[i].ovp_min_sel = i - 1;
++		}
++	}
 +
 +	return 0;
 +}
 +
-+static int ns_thermal_remove(struct platform_device *pdev)
++static int vctrl_enable(struct regulator_dev *rdev)
 +{
-+	struct ns_thermal *ns_thermal = platform_get_drvdata(pdev);
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	int ret = regulator_enable(vctrl->ctrl_reg);
 +
-+	iounmap(ns_thermal->pvtmon);
++	if (!ret)
++		vctrl->enabled = true;
++
++	return ret;
++}
++
++static int vctrl_disable(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	int ret = regulator_disable(vctrl->ctrl_reg);
++
++	if (!ret)
++		vctrl->enabled = false;
++
++	return ret;
++}
++
++static int vctrl_is_enabled(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++
++	return vctrl->enabled;
++}
++
++static const struct regulator_ops vctrl_ops_cont = {
++	.enable		  = vctrl_enable,
++	.disable	  = vctrl_disable,
++	.is_enabled	  = vctrl_is_enabled,
++	.get_voltage	  = vctrl_get_voltage,
++	.set_voltage	  = vctrl_set_voltage,
++};
++
++static const struct regulator_ops vctrl_ops_non_cont = {
++	.enable		  = vctrl_enable,
++	.disable	  = vctrl_disable,
++	.is_enabled	  = vctrl_is_enabled,
++	.set_voltage_sel = vctrl_set_voltage_sel,
++	.get_voltage_sel = vctrl_get_voltage_sel,
++	.list_voltage    = vctrl_list_voltage,
++	.map_voltage     = regulator_map_voltage_iterate,
++};
++
++static int vctrl_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct vctrl_data *vctrl;
++	const struct regulator_init_data *init_data;
++	struct regulator_desc *rdesc;
++	struct regulator_config cfg = { };
++	struct vctrl_voltage_range *vrange_ctrl;
++	int ctrl_uV;
++	int ret;
++
++	vctrl = devm_kzalloc(&pdev->dev, sizeof(struct vctrl_data),
++			     GFP_KERNEL);
++	if (!vctrl)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, vctrl);
++
++	ret = vctrl_parse_dt(pdev, vctrl);
++	if (ret)
++		return ret;
++
++	vrange_ctrl = &vctrl->vrange.ctrl;
++
++	rdesc = &vctrl->desc;
++	rdesc->name = "vctrl";
++	rdesc->type = REGULATOR_VOLTAGE;
++	rdesc->owner = THIS_MODULE;
++
++	if ((regulator_get_linear_step(vctrl->ctrl_reg) == 1) ||
++	    (regulator_count_voltages(vctrl->ctrl_reg) == -EINVAL)) {
++		rdesc->continuous_voltage_range = true;
++		rdesc->ops = &vctrl_ops_cont;
++	} else {
++		rdesc->ops = &vctrl_ops_non_cont;
++	}
++
++	init_data = of_get_regulator_init_data(&pdev->dev, np, rdesc);
++	if (!init_data)
++		return -ENOMEM;
++
++	cfg.of_node = np;
++	cfg.dev = &pdev->dev;
++	cfg.driver_data = vctrl;
++	cfg.init_data = init_data;
++
++	if (!rdesc->continuous_voltage_range) {
++		ret = vctrl_init_vtable(pdev);
++		if (ret)
++			return ret;
++
++		ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
++		if (ctrl_uV < 0) {
++			dev_err(&pdev->dev, "failed to get control voltage\n");
++			return ctrl_uV;
++		}
++
++		/* determine current voltage selector from control voltage */
++		if (ctrl_uV < vrange_ctrl->min_uV) {
++			vctrl->sel = 0;
++		} else if (ctrl_uV > vrange_ctrl->max_uV) {
++			vctrl->sel = rdesc->n_voltages - 1;
++		} else {
++			int i;
++
++			for (i = 0; i < rdesc->n_voltages; i++) {
++				if (ctrl_uV == vctrl->vtable[i].ctrl) {
++					vctrl->sel = i;
++					break;
++				}
++			}
++		}
++	}
++
++	vctrl->rdev = devm_regulator_register(&pdev->dev, rdesc, &cfg);
++	if (IS_ERR(vctrl->rdev)) {
++		ret = PTR_ERR(vctrl->rdev);
++		dev_err(&pdev->dev, "failed to register regulator: %d\n", ret);
++		return ret;
++	}
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id ns_thermal_of_match[] = {
-+	{ .compatible = "brcm,ns-thermal", },
++static const struct of_device_id vctrl_of_match[] = {
++	{ .compatible = "vctrl-regulator", },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(of, ns_thermal_of_match);
++MODULE_DEVICE_TABLE(of, vctrl_of_match);
 +
-+static struct platform_driver ns_thermal_driver = {
-+	.probe		= ns_thermal_probe,
-+	.remove		= ns_thermal_remove,
-+	.driver = {
-+		.name = "ns-thermal",
-+		.of_match_table = ns_thermal_of_match,
++static struct platform_driver vctrl_driver = {
++	.probe		= vctrl_probe,
++	.driver		= {
++		.name		= "vctrl-regulator",
++		.of_match_table = of_match_ptr(vctrl_of_match),
 +	},
 +};
-+module_platform_driver(ns_thermal_driver);
 +
-+MODULE_DESCRIPTION("Northstar thermal driver");
++module_platform_driver(vctrl_driver);
++
++MODULE_DESCRIPTION("Voltage Controlled Regulator Driver");
++MODULE_AUTHOR("Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>");
 +MODULE_LICENSE("GPL v2");
 -- 
-2.11.0
+2.12.2.564.g063fe858b8-goog
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
