@@ -1,34 +1,67 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v3 00/37] mtd: nand: denali: 2nd round of Denali NAND IP
- patch bomb
-Date: Fri, 31 Mar 2017 13:05:20 +0900
-Message-ID: <CAK7LNATUyc821uQTECkkQj2SDKkbrioFfHVsttnsnc8QuT1P-A@mail.gmail.com>
-References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com> <20170330183805.1c29504f@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170330183805.1c29504f@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-mtd@lists.infradead.org, Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH] arm64: dts: uniphier: add input-delay properties to Cadence eMMC node
+Date: Fri, 31 Mar 2017 13:20:45 +0900
+Message-ID: <1490934045-18874-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Piotr Sroka <piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Since commit a04e2b383401 ("mmc: sdhci-cadence: Update PHY delay
+configuration"), PHY parameters must be specified by DT.
 
+The hard-coded settings have been converted as follows:
+- SDHCI_CDNS_PHY_DLY_SD_DEFAULT -> cdns,phy-input-delay-legacy
+- SDHCI_CDNS_PHY_DLY_EMMC_SDR   -> cdns,phy-input-delay-mmc-highspeed
+- SDHCI_CDNS_PHY_DLY_EMMC_DDR   -> cdns,phy-input-delay-mmc-ddr
 
-2017-03-31 1:38 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
+The following have not been moved:
+- SDHCI_CDNS_PHY_DLY_SD_HS
+   this is unneeded in the eMMC configuration
+- SDHCI_CDNS_PHY_DLY_EMMC_LEGACY
+   this is never enabled by the driver as it is covered by
+   SDHCI_CDNS_PHY_DLY_SD_DEFAULT
 
-> The rest looks almost good, except for a few comments I had on patch
-> 14, 18, 25, 26 and 32.
->
-> I'll probably apply 33 and 34 soon.
->
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
 
-Thank you!
-Please note I left a minor comment on 34.
-(Accidental addition of braces.)
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 3 +++
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 3 +++
+ 2 files changed, 6 insertions(+)
 
-
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index 5dc5124..b6ebdc9 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -310,6 +310,9 @@
+ 			bus-width = <8>;
+ 			mmc-ddr-1_8v;
+ 			mmc-hs200-1_8v;
++			cdns,phy-input-delay-legacy = <4>;
++			cdns,phy-input-delay-mmc-highspeed = <2>;
++			cdns,phy-input-delay-mmc-ddr = <3>;
+ 		};
+ 
+ 		usb0: usb@5a800100 {
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index 6c9a72d..0ab6c2e 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -394,6 +394,9 @@
+ 			bus-width = <8>;
+ 			mmc-ddr-1_8v;
+ 			mmc-hs200-1_8v;
++			cdns,phy-input-delay-legacy = <4>;
++			cdns,phy-input-delay-mmc-highspeed = <2>;
++			cdns,phy-input-delay-mmc-ddr = <3>;
+ 		};
+ 
+ 		sd: sdhc@5a400000 {
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
