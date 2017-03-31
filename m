@@ -1,79 +1,56 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] OF: mark released devices as no longer populated
-Date: Fri, 31 Mar 2017 11:59:50 -0500
-Message-ID: <CAL_JsqLHEycZLaxLZcAnDS4gp6D8xQDpgZXV1g3dokzF_EeQtQ@mail.gmail.com>
-References: <E1bX3Pw-00088i-KU@rmk-PC.armlinux.org.uk> <CAL_Jsq+pDeL1_=p06ynrV4CK+h8-Yx_KDbH-W=d-aSdARe3ZHw@mail.gmail.com>
- <20170331103950.GA18376@n2100.armlinux.org.uk> <VI1PR0401MB2591E5FD962023914F042C9B98370@VI1PR0401MB2591.eurprd04.prod.outlook.com>
+From: Helmut Klein <hgkr.klein@gmail.com>
+Subject: Re: [PATCH v2,1/3] meson_uart: expose CLKID_UARTx
+Date: Fri, 31 Mar 2017 19:03:12 +0200
+Message-ID: <26dd484d-f6fd-048d-7467-0fe9a1e6645b@gmail.com>
+References: <20170328092545.4644-1-hgkr.klein@gmail.com>
+ <20170328092545.4644-2-hgkr.klein@gmail.com>
+ <1490716277.20764.6.camel@baylibre.com>
+ <71489b62-78c8-7082-587e-8598dc43ca59@gmail.com>
+ <1490728490.20764.8.camel@baylibre.com>
+ <CAFBinCDF29+kQpedsJPqRy6fztWrj91Qi6tCno_2S6UCkhW7XQ@mail.gmail.com>
+ <m2y3vn6dhk.fsf@baylibre.com> <1490974657.12951.5.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <VI1PR0401MB2591E5FD962023914F042C9B98370-9IDQY6o3qQhGNIhRVge97I3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dan Douglass <dan.douglass-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1490974657.12951.5.camel@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 10:23 AM, Horia Geantă <horia.geanta-3arQi8VN3Tc@public.gmane.org> wrote:
-> On 3/31/2017 1:40 PM, Russell King - ARM Linux wrote:
->> Ping, this issue still exists with 4.11-rc4 - and there's been no
->> reaction from the alleged CAAM maintainers.
+On 31.03.2017 17:37, Jerome Brunet wrote:
+> On Wed, 2017-03-29 at 13:21 -0700, Kevin Hilman wrote:
+>> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 >>
-> Sorry, this somehow slipped through (Cc vs. To, no linux-crypto).
+>> [...]
+>>
+>>> for Helmut this would mean that instead of dropping this patch (or
+>>> dropping CLKID_UART1 and CLKID_UART2 from this patch) he would rather
+>>> have to *add* another patch (for meson-gxbb.dtsi and meson-gxl.dtsi)
+>>> which passes the core clocks to the corresponding UART controllers
+>>> (similar to the CLKID_SD_EMMC_ clocks).
+>>
+>> Yes, this is what I would like to see.
+>>
+>> If a new CLKID is exposed, I want to see the users of it at the same
+>> time.
 >
->> On Tue, Aug 09, 2016 at 11:48:38AM -0500, Rob Herring wrote:
->>> On Tue, Aug 9, 2016 at 4:33 AM, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
->>>> When a Linux device is released and cleaned up, we left the OF device
->>>> node marked as populated.  This causes the Freescale CAAM driver
->>>> (drivers/crypto/caam) problems when the module is removed and re-
->>>> inserted:
->>>>
->>>> JR0 Platform device creation error
->>>> JR0 Platform device creation error
->>>> caam 2100000.caam: no queues configured, terminating
->>>> caam: probe of 2100000.caam failed with error -12
->>>>
->>>> The reason is that CAAM creates platform devices for each job ring:
->>>>
->>>>         for_each_available_child_of_node(nprop, np)
->>>>                 if (of_device_is_compatible(np, "fsl,sec-v4.0-job-ring") ||
->>>>                     of_device_is_compatible(np, "fsl,sec4.0-job-ring")) {
->>>>                         ctrlpriv->jrpdev[ring] =
->>>>                                 of_platform_device_create(np, NULL, dev);
->>>>
->>>> which sets OF_POPULATED on the device node, but then it cleans these
->>>> up:
->>>>
->>>>         /* Remove platform devices for JobRs */
->>>>         for (ring = 0; ring < ctrlpriv->total_jobrs; ring++) {
->>>>                 if (ctrlpriv->jrpdev[ring])
->>>>                         of_device_unregister(ctrlpriv->jrpdev[ring]);
->>>
->>> This looks a bit asymmetrical to me with a of_platform_device_* call
->>> and a of_device_* call.
->>>
->>> I think you could use of_platform_{de}populate here instead. That
->>> would simplify things in the driver a bit too as you wouldn't need to
->>> store jrpdev. It wouldn't work if there are other child nodes with
-> Indeed, this would clean-up the driver a bit. However, the driver needs
-> to know how many of the devices probed successfully - to print the
-> number and more importantly to exit in case total_jobrs = 0.
+> Helmut,
+>
+> If you send another version of these patches, considering the feedback of Kevin
+> and Martin, could you please change the subject of this patch to:
+>
+> dt-bindings: clock: gxbb: expose UART clocks
+>
+> Thx
+> Jerome
+>
+i've just sent v3 of my patchset.
+(i changed the subjects of most patches in the set)
 
-The only thing you are guaranteed is the OF code created some platform
-devices. That's it. Whether any driver probed successfully is separate
-and a lot more things can go wrong there. The only thing you are
-checking is that your dtb is not crap.
+Helmut
 
-> Thus, I would keep the one-by-one probing of the devices.
-> What options are there in this case?
-> Should a function symmetric to of_platform_device_create() be added - to
-> replace of_device_unregister() - or rely on an open-coded solution?
-
-Certainly not the latter. We don't want drivers mucking with flags
-internal to the DT code.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> Kevin
+>
