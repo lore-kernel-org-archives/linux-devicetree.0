@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 7/8] dt-bindings: clock: gxbb: expose i2s master clock
-Date: Fri, 31 Mar 2017 15:04:10 +0200
-Message-ID: <20170331130411.4781-8-jbrunet@baylibre.com>
+Subject: [PATCH v2 8/8] dt-bindings: clock: gxbb: expose spdif master clock
+Date: Fri, 31 Mar 2017 15:04:11 +0200
+Message-ID: <20170331130411.4781-9-jbrunet@baylibre.com>
 References: <20170331130411.4781-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170331130411.4781-1-jbrunet@baylibre.com>
@@ -10,37 +10,43 @@ To: Neil Armstrong <narmstrong@baylibre.com>, Michael Turquette <mturquette@bayl
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Expose cts_amclk in the device tree bindings
+Expose the spdif master clock and the mux to select the appropriate spdif
+clock parent depending on the data source.
 
 Acked-by: Michael Turquette <mturquette@baylibre.com>
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/clk/meson/gxbb.h              | 2 +-
- include/dt-bindings/clock/gxbb-clkc.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/meson/gxbb.h              | 4 ++--
+ include/dt-bindings/clock/gxbb-clkc.h | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
-index 3b0665099a1e..742bc3b42565 100644
+index 742bc3b42565..17c6aef033ff 100644
 --- a/drivers/clk/meson/gxbb.h
 +++ b/drivers/clk/meson/gxbb.h
-@@ -277,7 +277,7 @@
- #define CLKID_MALI_1_DIV	 104
- /* CLKID_MALI_1	*/
- /* CLKID_MALI	*/
--#define CLKID_CTS_AMCLK		  107
-+/* CLKID_CTS_AMCLK */
+@@ -280,10 +280,10 @@
+ /* CLKID_CTS_AMCLK */
  #define CLKID_CTS_AMCLK_SEL	  108
  #define CLKID_CTS_AMCLK_DIV	  109
- #define CLKID_CTS_MCLK_I958	  110
+-#define CLKID_CTS_MCLK_I958	  110
++/* CLKID_CTS_MCLK_I958 */
+ #define CLKID_CTS_MCLK_I958_SEL	  111
+ #define CLKID_CTS_MCLK_I958_DIV	  112
+-#define CLKID_CTS_I958		  113
++/* CLKID_CTS_I958 */
+ 
+ #define NR_CLKS			  114
+ 
 diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
-index 1d4614bc8154..0d231bef92e0 100644
+index 0d231bef92e0..4516bc4253b5 100644
 --- a/include/dt-bindings/clock/gxbb-clkc.h
 +++ b/include/dt-bindings/clock/gxbb-clkc.h
-@@ -43,5 +43,6 @@
- #define CLKID_MALI_1_SEL	103
+@@ -44,5 +44,7 @@
  #define CLKID_MALI_1		105
  #define CLKID_MALI		106
-+#define CLKID_CTS_AMCLK		107
+ #define CLKID_CTS_AMCLK		107
++#define CLKID_CTS_MCLK_I958	110
++#define CLKID_CTS_I958		113
  
  #endif /* __GXBB_CLKC_H */
 -- 
