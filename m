@@ -1,65 +1,76 @@
-From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Subject: Re: [PATCH V8 5/6] ACPI: Support the probing on the devices which
- apply indirect-IO
-Date: Fri, 31 Mar 2017 14:52:46 +0800
-Message-ID: <58DDFCBE.1030705@hisilicon.com>
-References: <1490887619-61732-1-git-send-email-yuanzhichang@hisilicon.com>
- <1490887619-61732-6-git-send-email-yuanzhichang@hisilicon.com>
- <1908501.jAQQKvjW4f@aspire.rjw.lan>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH V2 2/2] thermal: broadcom: add Northstar thermal driver
+Date: Fri, 31 Mar 2017 09:03:34 +0200
+Message-ID: <d678d252-a95a-58c0-8098-4401c67040a1@gmail.com>
+References: <20170318155632.18099-1-zajec5@gmail.com>
+ <20170323223045.15786-1-zajec5@gmail.com>
+ <20170323223045.15786-2-zajec5@gmail.com>
+ <20170324143535.GA31953@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1908501.jAQQKvjW4f@aspire.rjw.lan>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: mark.rutland@arm.com, benh@kernel.crashing.org, gabriele.paoloni@huawei.com, rafael@kernel.org, linux-pci@vger.kernel.org, will.deacon@arm.com, linuxarm@huawei.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, xuwei5@hisilicon.com, linux-acpi@vger.kernel.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, minyard@acm.org, john.garry@huawei.com, zourongrong@gmail.com, robh+dt@kernel.org, bhelgaas@google.com, kantyzc@163.com, zhichang.yuan02@gmail.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net, brian.starkey@arm.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170324143535.GA31953@broadcom.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Mason <jon.mason@broadcom.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Rafael,
+On 03/24/2017 03:35 PM, Jon Mason wrote:
+> On Thu, Mar 23, 2017 at 11:30:45PM +0100, Rafał Miłecki wrote:
+>> diff --git a/drivers/thermal/broadcom/ns-thermal.c b/drivers/thermal/broadcom/ns-thermal.c
+>> new file mode 100644
+>> index 000000000000..acf3a4de62a4
+>> --- /dev/null
+>> +++ b/drivers/thermal/broadcom/ns-thermal.c
+>> @@ -0,0 +1,98 @@
+>> +/*
+>> + * Copyright (C) 2017 Rafał Miłecki <rafal@milecki.pl>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/thermal.h>
+>> +
+>> +#define PVTMON_CONTROL0					0x00
+>> +#define PVTMON_CONTROL0_SEL_MASK			0x0000000e
+>> +#define PVTMON_CONTROL0_SEL_TEMP_MONITOR		0x00000000
+>> +#define PVTMON_CONTROL0_SEL_TEST_MODE			0x0000000e
+>> +#define PVTMON_STATUS					0x08
+>> +
+>> +struct ns_thermal {
+>> +	void __iomem *pvtmon;
+>> +};
+>> +
+>> +static int ns_thermal_get_temp(void *data, int *temp)
+>> +{
+>> +	struct ns_thermal *ns_thermal = data;
+>> +	u32 val;
+>> +
+>> +	val = readl(ns_thermal->pvtmon + PVTMON_CONTROL0);
+>> +	if ((val & PVTMON_CONTROL0_SEL_MASK) != PVTMON_CONTROL0_SEL_TEMP_MONITOR) {
+>> +		val &= ~PVTMON_CONTROL0_SEL_MASK;
+>> +		val |= PVTMON_CONTROL0_SEL_TEMP_MONITOR;
+>
+> I think this is slightly confusing here.  If this was off, ORing in 0
+> will not enable it.  I think we need to flip the #define to make it
+> PVTMON_CONTROL0_SEL_TEMP_MONITOR_DISABLE (or a less crappy name).
+> then use this line here to toggle it.  Something like
+>
+>                 val &= ~PVTMON_CONTROL0_SEL_TEMP_MONITOR_DISABLE;
 
-Thanks for reviewing this!
+I don't understand this, can you help me further?
 
-On 2017/3/31 4:31, Rafael J. Wysocki wrote:
-> On Thursday, March 30, 2017 11:26:58 PM zhichang.yuan wrote:
->> On some platforms(such as Hip06/Hip07), the legacy ISA/LPC devices access I/O
->> with some special host-local I/O ports known on x86. To access the I/O
->> peripherals, an indirect-IO mechanism is introduced to mapped the host-local
->> I/O to system logical/fake PIO similar the PCI MMIO on architectures where no
->> separate I/O space exists. Just as PCI MMIO, the host I/O range should be
->> registered before probing the downstream devices and set up the I/O mapping.
->> But current ACPI bus probing doesn't support these indirect-IO hosts/devices.
->>
->> This patch introdueces a new ACPI handler for this device category. Through the
->> handler attach callback, the indirect-IO hosts I/O registration is done and
->> all peripherals' I/O resources are translated into logic/fake PIO before
->> starting the enumeration.
-> 
-> Can you explain to me briefly what exactly this code is expected to be doing?
+OR-ing with 0 is only a cosmetic thing obviously - just to make it clear which
+value we expect to be set in bits 1:3. The important part is:
+val &= ~PVTMON_CONTROL0_SEL_MASK;
 
-As you know currently for ARM architecture IO space is memory mapped and
-is only used by pci devices. The port number is dynamically allocated
-converting the device IO address into a PIO token: i.e.
-http://lxr.free-electrons.com/source/drivers/acpi/pci_root.c#L745
-This patch is meant to support a new class of IO host controller
-that are not PCI based and that still require to have the IO addresses
-be translated in the same PIO token space as the PCI controller
-
-Thanks,
-Zhichang
-
-> 
-> Thanks,
-> Rafael
-> 
-> 
-> .
-> 
+AFAIU selecting any mode other than TEMP_MONITOR will disable monitor access.
+AFAIU even switchint to TEST_MODE will prevent access to temp, so I don't see
+how we could use PVTMON_CONTROL0_SEL_TEMP_MONITOR_DISABLE. It could be any
+value other than 0.
