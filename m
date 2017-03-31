@@ -1,142 +1,165 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
-Date: Fri, 31 Mar 2017 11:28:54 +0200
-Message-ID: <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323203749.GB8563@amd> <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
- <20170329190725.GN20094@minitux> <20170329222301.GB7977@amd>
- <20170330000955.GP20094@minitux> <20170330074309.GA28533@amd>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2 1/2] mtd: move code reading DT specified part probes to the core
+Date: Fri, 31 Mar 2017 11:30:12 +0200
+Message-ID: <20170331093013.29123-1-zajec5@gmail.com>
+References: <20170330215332.32699-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170330074309.GA28533@amd>
+In-Reply-To: <20170330215332.32699-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn and Pavel,
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-On 03/30/2017 09:43 AM, Pavel Machek wrote:
-> Hi!
-> 
->>>> There is a binding for ti,lp55xx, but there's nothing I can reuse from
->>>> that binding...because it's completely different hardware.
->>>
->>> Agreed, if you drop the pattern stuff from the binding, at least for now. 
->>
->> I do not have a strong preference to expose these knobs in devicetree
->> and I do fear that finding some common "pattern" bindings that suits
->> everyone will be very difficult.
->>
->> So I'll drop them from the binding for now.
-> 
-> Ok.
-> 
->>> If you want driver merged quickly, I believe the best way would be to
->>> leave out pattern support for now. We can merge the basic driver
->>> easily to 4.12.
->>>
->>
->> I'm not that much in a hurry and would rather see that we resolve any
->> outstanding issues with the implementation of the pattern handling.
-> 
-> Ok, good.
-> 
->> But regardless of this we still have the problem that the typical
->> Qualcomm PMIC has 8 LPG-blocks and any triple could be driving a
->> RGB-LED. So we would have to create some sort of in-driver-wrapper
->> around any three instances exposing them as a single LED to the user.
-> 
-> Yes, I believe we should do the wrapping. In N900 case, 
-> 
->> I rather expose the individual channels and make sure that when we
->> trigger a blink operation or enable a pattern (i.e. the two operations
->> that do require synchronization) we will perform that synchronization
->> under the hood.
-> 
-> First, we need a way to tell userspace which LEDs are synchronized,
-> because otherwise it will be confusing.
+Handling (creating) partitions for flash devices requires using a proper
+driver that will read partition table (out of somewhere). We can't
+simply try all existing drivers one by one, so MTD subsystem allows
+drivers to specify a list of applicable part probes.
 
-There is one year old discussion [0] about the possible approaches
-to RGB sub-LEDs synchronization problem and patterns in general.
-My last message with API design proposal has been left unanswered.
+So far physmap_of was the only driver with support for linux,part-probe
+DT property. Other ones had list or probes hardcoded which wasn't making
+them really flexible. It prevented using common flash drivers on
+platforms that required some specific partition table access.
 
-Probably we continue that discussion here.
+This commit moves support for mentioned DT property to the MTD core
+file. Thanks to calling it on device parse registration (as suggested by
+Boris) all drivers gain support for it for free.
 
-Generally Bjorn's drivers touch two yet to be addressed issues:
-- RGB LED support
-- Generic support for patterns
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+ drivers/mtd/maps/physmap_of.c | 36 +-----------------------------------
+ drivers/mtd/mtdcore.c         | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 35 deletions(-)
 
-It is likely that both issues can be solved by utilizing trigger
-mechanism. The possible solution to the problem Bjorn tried to
-address with /sys/class/leds/<led>/pattern comma separated list
-could be a trigger with adjustable number of pattern intervals.
-
-The trigger once activated would create a directory with the
-number of files corresponding to the number of requested intervals,
-and then user could write an interval value by writing it to the
-corresponding file. Somehow related approach has been implemented
-for USB port LED trigger:
-
-0f247626cbbf ('usb: core: Introduce a USB port LED trigger")
-
-In both RGB and pattern approaches we should assess
-if it is acceptable to provide a pattern for trigger name,
-e.g. blink-pattern-{num_intervals}.
-
-If so, then "echo transition-pattern-15" would create a directory
-e.g. transition_intervals with files interval_0 to interval_14,
-that could be adjusted by userspace.
-
-> Second, there are more issues than just patterns with the RGB
-> LED. Most important is ability to set particular colors. You want to
-> set the RGB LED to "white", but that does not mean you can set
-> red=green=blue=1.0. You want color to look the same on LCD and on the
-> LED, which means coefficients for white and some kind of function for
-> brightness-to-PWM conversion.
-
-Shouldn't we leave that entirely to the userspace? Can we come up
-with coefficients that will guarantee the same result on all existing
-LCD devices?
-
->>> Incremental patches sound like a good idea, yes.
->>>
->>> I'd say that testing with actual RGB LED is not a requirement... as
->>> long as we design reasonable interface where the synchronizaction will
->>> be easy.
->>>
->>
->> As this relates to the board layout (which LPG-channels are hooked to a
->> RGB) I think it makes sense to expose a mechanism in devicetree to
->> indicate which channels should have their pattern/blink synchronized.
->>
->> We should be able to extend the LUT (the hardware that actually
->> implements the pattern-walker logic) with a DT-property like:
->>
->>   qcom,synchronize-group-0 = <1, 2, 3>;
->>   qcom,synchronize-group-1 = <5, 6, 7>;
->>
->> And whenever we configure a pattern involving one of the affected LEDs
->> from a group we start all of them.
-> 
-> Yes we need some kind of grouping.
-> 
-> Additional complexity in the N900 case... groups can actually be
-> configured at run time. Original Maemo used that ability to group 6
-> keyboard backlight leds, and then run pattern on them. OTOH... I don't
-> think we _need_ to support that functionality.
-> 
-> Best regards,
-> 									Pavel
-> 
-
-[0] https://lkml.org/lkml/2016/4/18/179
-
+diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+index 62fa6836f218..49dbb7235848 100644
+--- a/drivers/mtd/maps/physmap_of.c
++++ b/drivers/mtd/maps/physmap_of.c
+@@ -114,37 +114,9 @@ static struct mtd_info *obsolete_probe(struct platform_device *dev,
+ static const char * const part_probe_types_def[] = {
+ 	"cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
+ 
+-static const char * const *of_get_probes(struct device_node *dp)
+-{
+-	const char **res;
+-	int count;
+-
+-	count = of_property_count_strings(dp, "linux,part-probe");
+-	if (count < 0)
+-		return part_probe_types_def;
+-
+-	res = kzalloc((count + 1) * sizeof(*res), GFP_KERNEL);
+-	if (!res)
+-		return NULL;
+-
+-	count = of_property_read_string_array(dp, "linux,part-probe", res,
+-					      count);
+-	if (count < 0)
+-		return NULL;
+-
+-	return res;
+-}
+-
+-static void of_free_probes(const char * const *probes)
+-{
+-	if (probes != part_probe_types_def)
+-		kfree(probes);
+-}
+-
+ static const struct of_device_id of_flash_match[];
+ static int of_flash_probe(struct platform_device *dev)
+ {
+-	const char * const *part_probe_types;
+ 	const struct of_device_id *match;
+ 	struct device_node *dp = dev->dev.of_node;
+ 	struct resource res;
+@@ -310,14 +282,8 @@ static int of_flash_probe(struct platform_device *dev)
+ 
+ 	info->cmtd->dev.parent = &dev->dev;
+ 	mtd_set_of_node(info->cmtd, dp);
+-	part_probe_types = of_get_probes(dp);
+-	if (!part_probe_types) {
+-		err = -ENOMEM;
+-		goto err_out;
+-	}
+-	mtd_device_parse_register(info->cmtd, part_probe_types, NULL,
++	mtd_device_parse_register(info->cmtd, part_probe_types_def, NULL,
+ 			NULL, 0);
+-	of_free_probes(part_probe_types);
+ 
+ 	kfree(mtd_list);
+ 
+diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+index 66a9dedd1062..a7ab0a24ba1e 100644
+--- a/drivers/mtd/mtdcore.c
++++ b/drivers/mtd/mtdcore.c
+@@ -664,6 +664,32 @@ static void mtd_set_dev_defaults(struct mtd_info *mtd)
+ 	}
+ }
+ 
++static const char * const *mtd_of_get_probes(struct device_node *np)
++{
++	const char **res;
++	int count;
++
++	count = of_property_count_strings(np, "linux,part-probe");
++	if (count < 0)
++		return NULL;
++
++	res = kzalloc((count + 1) * sizeof(*res), GFP_KERNEL);
++	if (!res)
++		return NULL;
++
++	count = of_property_read_string_array(np, "linux,part-probe", res,
++					      count);
++	if (count < 0)
++		return NULL;
++
++	return res;
++}
++
++static inline void mtd_of_free_probes(const char * const *probes)
++{
++	kfree(probes);
++}
++
+ /**
+  * mtd_device_parse_register - parse partitions and register an MTD device.
+  *
+@@ -698,11 +724,16 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
+ 			      const struct mtd_partition *parts,
+ 			      int nr_parts)
+ {
++	const char * const *part_probe_types;
+ 	struct mtd_partitions parsed;
+ 	int ret;
+ 
+ 	mtd_set_dev_defaults(mtd);
+ 
++	part_probe_types = mtd_of_get_probes(mtd_get_of_node(mtd));
++	if (!part_probe_types)
++		part_probe_types = types;
++
+ 	memset(&parsed, 0, sizeof(parsed));
+ 
+ 	ret = parse_mtd_partitions(mtd, types, &parsed, parser_data);
+@@ -720,6 +751,9 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
+ 		memset(&parsed, 0, sizeof(parsed));
+ 	}
+ 
++	if (part_probe_types != types)
++		mtd_of_free_probes(part_probe_types);
++
+ 	ret = mtd_add_device_partitions(mtd, &parsed);
+ 	if (ret)
+ 		goto out;
 -- 
-Best regards,
-Jacek Anaszewski
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
