@@ -1,66 +1,85 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: armada-38x: label USB and SATA nodes
-Date: Fri, 31 Mar 2017 19:39:20 +0200
-Message-ID: <20170331193920.030d9ca8@gmail.com>
-References: <20170331074115.8111-1-ralph.sennhauser@gmail.com>
- <20170331165015.GJ12814@lunn.ch>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V3 0/5] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Fri, 31 Mar 2017 18:54:57 +0100
+Message-ID: <20170331175457.GD4897@arm.com>
+References: <1489073748-3659-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170331165015.GJ12814-g2DYL2Zd6BY@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489073748-3659-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: robin.murphy-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 31 Mar 2017 18:50:15 +0200
-Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+On Thu, Mar 09, 2017 at 09:05:43PM +0530, Sricharan R wrote:
+> This series provides the support for turning on the arm-smmu's
+> clocks/power domains using runtime pm. This is done using the
+> recently introduced device links patches, which lets the symmu's
+> runtime to follow the master's runtime pm, so the smmu remains
+> powered only when the masters use it.
 
-> > -			sata@a8000 {
-> > +			satac0: sata@a8000 {  
-> 
-> Hi Ralph
-> 
-> Why the c in satac0?
+Do you have any numbers for the power savings you achieve with this?
+How often do we actually manage to stop the SMMU clocks on an SoC with
+a handful of masters?
 
-For controller and to not conflict with a use case of sata0 for a port,
-similarly to pciec and pcie1. See armada-385-synology-ds116.dts.
+In other words, is this too coarse-grained to be useful, or is it common
+that all the devices upstream of the SMMU are suspended?
 
-> 
-> >  
-> > -			usb3@f0000 {
-> > +			usb3_0: usb3@f0000 {
-> >  				compatible =
-> > "marvell,armada-380-xhci"; reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
-> >  				interrupts = <GIC_SPI 16
-> > IRQ_TYPE_LEVEL_HIGH>; @@ -598,7 +598,7 @@
-> >  				status = "disabled";
-> >  			};
-> >  
-> > -			usb3@f8000 {
-> > +			usb3_1: usb3@f8000 {
-> >  				compatible =
-> > "marvell,armada-380-xhci"; reg = <0xf8000 0x4000>,<0xfc000 0x4000>;
-> >  				interrupts = <GIC_SPI 17
-> > IRQ_TYPE_LEVEL_HIGH>;  
-> 
-> I can understand what you are saying. But does anybody else care? Are
-> there other .dtsi files differentiating between USB 1.1, 2 and 3?
+Thanks,
 
-It's handled differently where ever I looked, some do some don't. A
-case for distinguishing USB 2.0 and USB 3.0 like this is
-armada-388-gp.dts.
-
-Personally I'm only interested in there being a label, making it
-"natural" is a bonus though.
-
-Thanks
-Ralph
+Will
 
 > 
->       Andrew
-
+> Took some reference from the exynos runtime patches [2].
+> Tested this with MDP, GPU, VENUS devices on apq8096-db820c board.
+> 
+> Previous version of the patchset [1].
+> 
+> [V3]
+>    * Reworked the patches to keep the clocks init/enabling function
+>      seperately for each compatible.
+> 
+>    * Added clocks bindings for MMU40x/500.
+> 
+>    * Added a new compatible for qcom,smmu-v2 implementation and
+>      the clock bindings for the same.
+> 
+>    * Rebased on top of 4.11-rc1
+> 
+> [V2]
+>    * Split the patches little differently.
+> 
+>    * Addressed comments.
+> 
+>    * Removed the patch #4 [3] from previous post
+>      for arm-smmu context save restore. Planning to
+>      post this separately after reworking/addressing Robin's
+>      feedback.
+> 
+>    * Reversed the sequence to disable clocks than enabling.
+>      This was required for those cases where the
+>      clocks are populated in a dependent order from DT.
+> 
+> [1] https://www.spinics.net/lists/linux-arm-msm/msg23870.html
+> [2] https://lkml.org/lkml/2016/10/20/70
+> [3] https://patchwork.kernel.org/patch/9389717/
+> 
+> Sricharan R (5):
+>   iommu/arm-smmu: Add pm_runtime/sleep ops
+>   iommu/arm-smmu: Add support for MMU40x/500 clocks
+>   drivers: arm-smmu: Add clock support for QCOM_SMMUV2
+>   iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
+>   iommu/arm-smmu: Add the device_link between masters and smmu
+> 
+>  .../devicetree/bindings/iommu/arm,smmu.txt         |  35 +++
+>  drivers/iommu/arm-smmu.c                           | 349 ++++++++++++++++++++-
+>  2 files changed, 373 insertions(+), 11 deletions(-)
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
