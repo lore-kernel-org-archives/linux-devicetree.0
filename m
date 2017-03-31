@@ -1,66 +1,54 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength"
- DT property
-Date: Fri, 31 Mar 2017 14:06:32 +0900
-Message-ID: <CAK7LNARUKwMHd79ALDx_SDY9XKcHPY96xTAOMQx6XarFgwb-AA@mail.gmail.com>
-References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
- <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com> <20170330160238.59e5a2c1@bbrezillon>
+From: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt: Add binding for
+ /secure-chosen/stdout-path
+Date: Fri, 31 Mar 2017 08:34:20 +0200
+Message-ID: <4099128e-16fd-6513-591e-ba59d98b8542@linaro.org>
+References: <e3e007ef9ee6a622ae4ccc74fd0fca32b3c5dfb5.1488531370.git.jerome.forissier@linaro.org>
+ <20170330222845.ewddsnmkxwrsposl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170330160238.59e5a2c1@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-mtd@lists.infradead.org, Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170330222845.ewddsnmkxwrsposl@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
 
 
-2017-03-30 23:02 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
-> On Thu, 30 Mar 2017 15:46:00 +0900
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->
->> Historically, this driver tried to choose as big ECC strength as
->> possible, but it would be reasonable to allow DT to set a particular
->> ECC strength with "nand-ecc-strength" property.  This is useful
->> when a particular ECC setting is hard-coded by firmware (or hard-
->> wired by boot ROM).
+On 03/31/2017 12:28 AM, Rob Herring wrote:
+> On Fri, Mar 03, 2017 at 10:24:33AM +0100, Jerome Forissier wrote:
+>> Some platforms may use a single device tree to describe two address
+>> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+>> for Secure-only devices"). For these platforms it makes sense to define
+>> a secure counterpart of /chosen, namely: /secure-chosen. This new node
+>> is meant to be used by the secure firmware to pass data to the secure
+>> OS. Only the stdout-path property is supported for now.
 >>
->> If no ECC strength is specified in DT, "nand-ecc-maximize" is implied
->> since this was the original behavior.
->
-> You said there is currently no DT users,
+>> Signed-off-by: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/secure.txt | 19 ++++++++++++++++++-
+>>  1 file changed, 18 insertions(+), 1 deletion(-)
+>>
+>> v2
+>>
+>> - Clarify the expected behavior when /secure-chosen/stdout-path is not
+>> present (either the property or the node itself), as proposed by Peter
+>> and Robin. Note that I have made the fallback to /chosen optional.
+> 
+> I'm okay with this, but would like to hold off merging it until your are 
+> really using it. You did say you were "experimenting" and it doesn't 
+> sound like the DT usage in secure world is that far along. I just want 
+> to see if there are other issues that come up.
 
-Right.  No DT users ever in upstream.
+Fair enough.
 
-
-> so how about changing the
-> "fallback to ECC maximization" behavior for DT users, and instead of
-> maximizing the ECC strength take the NAND requirements into account
-> (chip->ecc_strength_ds).
-
-This is difficult to judge in some cases.
-
-As I said before, 4/512 and 8/1024 are not equivalent.
-
-If chip's requirement  chip->ecc_step_ds matches
-to the ecc->size supported by the controller,
-this is easy.
-
-
-If a chip requests 1024B, then the controller can only support 512B chunk
-(or vice versa), it is difficult to simply compare
-ecc strength.
-
-Is it a bad thing if we use too strong ECC strength?
-
-The disadvantage I see is we will have less OOB-free bytes,
-but this will not be fatal, I guess.
-
-
-
-
+Thanks,
 -- 
-Best Regards
-Masahiro Yamada
+Jerome
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
