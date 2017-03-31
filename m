@@ -1,80 +1,129 @@
-From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Device Tree Binding for Intel FPGA Video and Image Processing Suite
-Date: Fri, 31 Mar 2017 08:50:28 +0000
-Message-ID: <1490949905.21575.8.camel@intel.com>
+From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Subject: Re: [PATCH V1 1/1] mtd: mtk-nor: set controller to 4B mode with large
+ capacity flash
+Date: Fri, 31 Mar 2017 10:56:03 +0200
+Message-ID: <873a3dac-7d3a-0723-4c7d-c786d3398278@wedev4u.fr>
+References: <1490862222-723-1-git-send-email-guochun.mao@mediatek.com>
+ <1490862222-723-2-git-send-email-guochun.mao@mediatek.com>
+ <24d60072-4124-7ec4-6cd3-fd70f4f6b10a@wedev4u.fr>
+ <1490927207.7262.7.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-        boundary="_002_1490949905215758camelintelcom_"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490927207.7262.7.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guochun Mao <guochun.mao@mediatek.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---_002_1490949905215758camelintelcom_
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D92BAD1C27B2C542B8083AFF11A1C1E2-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Content-Transfer-Encoding: base64
+Le 31/03/2017 à 04:26, Guochun Mao a écrit :
+> Hi Cyrille, Marek,
+> 
+> Thanks for your suggestions.
+> 
+> On Thu, 2017-03-30 at 19:40 +0200, Cyrille Pitchen wrote:
+>> Hi Guochun,
+>>
+>> Le 30/03/2017 à 10:23, Guochun Mao a écrit :
+>>> when nor's size larger than 16MByte, nor and controller should
+>>> enter 4Byte mode simultaneously.
+>>>
+>>> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+>>> ---
+>>>  drivers/mtd/spi-nor/mtk-quadspi.c |    7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
+>>> index e661877..05cd8a8 100644
+>>> --- a/drivers/mtd/spi-nor/mtk-quadspi.c
+>>> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
+>>> @@ -369,6 +369,13 @@ static int mt8173_nor_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
+>>>  		/* We only handle 1 byte */
+>>>  		ret = mt8173_nor_wr_sr(mt8173_nor, *buf);
+>>>  		break;
+>>> +	case SPINOR_OP_EN4B:
+>>> +		/* Set nor controller to 4-byte address mode,
+>>> +		 * and simultaneously set nor flash.
+>>> +		 * This case should cooperate with default operation.
+>>> +		 */
+>>> +		writeb(readb(mt8173_nor->base + MTK_NOR_DUAL_REG) | 0x10,
+>>> +				mt8173_nor->base + MTK_NOR_DUAL_REG);
+>>
+>> This is not good: you should check in both mt8173_nor_read() and
+>> mt8173_nor_write() whether nor->addr_width is either 3 or 4.
+>>
+>> from include/linux/mtd/spi-nor.h:
+>>  * @addr_width:		number of address bytes
+>>
+>> Besides SPI commands using an op code from 4-byte address instruction
+>> set always carry a 4-byte address. They can be used directly, without
+>> sending the SPINOR_OP_EN4B before. So you cannot assume that addresses
+>> will be 4-byte long only if your SPI controller driver has seen a
+>> SPINOR_OP_EN4B command before. This assumption is wrong.
+> Nor->addr_width is assigned in spi_nor_scan in spi-nor.c, and it's not
+> modified in later process.
+> Does it means that we will not switch nor between 3Byte address and
+> 4Byte?
+> So, is it better to check nor->addr_width when do nor initialization?
+>
 
-SGkgUm9iLA0KDQpJIHdvdWxkIGxpa2UgdG8gdXBzdHJlYW0gdGhlIGF0dGFjaGVkIGRldmljZSB0
-cmVlIGJpbmRpbmcgcGF0Y2ggdG8gdGhlDQpjb21tdW5pdHkuIFRoaXMgaXMgcmVxdWlyZWQgZm9y
-IHRoZSBzdXBwb3J0IG9mIGZyYW1lYnVmZmVyIGRyaXZlcnMgb2YNCnRoZcKgSW50ZWwgRlBHQSBW
-aWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2luZyBTdWl0ZSBpbnRlbmRlZCBmb3IgdGhlDQpBcnJpYTEw
-IGRldmtpdC4NCg0KVGhlIGRldmljZSB0cmVlIGluZm9ybWF0aW9uIGluY2x1ZGVzIHRoZSBtYXhp
-bXVtIHdpZHRoIGFuZCBoZWlnaHQNCnN1cHBvcnRlZCBieSB0aGUgZnJhbWVidWZmZXIgZGlzcGxh
-eS4gVGhlc2UgYXJlIGZpeGVkIHBhcmFtZXRlcnMNCmRldGVybWluZWQgYnkgdGhlIHVzZSB3aG8g
-dGhlIFF1YXJ0dXMgZGVzaWduIHN5c3RlbSB0byBwcm9ncmFtIHRoZQ0KRlBHQSBpbiB0aGUgQXJy
-aWExMCBkZXZraXQgYW5kIGl0cyB2YXJpYW50cy4NCg0KQlINCg0KSGVhbiBMb29uZw==
+Currently yes, nor->addr_width, nor->read_opcode, nor->read_dummy, and
+nor->program_opcode are set once for all in spi_nor_scan().
 
---_002_1490949905215758camelintelcom_
-Content-Type: text/x-patch;
-	name="0001-Intel-FPGA-Video-and-Image-Processing-Suite-device-t.patch"
-Content-Description: 0001-Intel-FPGA-Video-and-Image-Processing-Suite-device-t.patch
-Content-Disposition: attachment;
-	filename="0001-Intel-FPGA-Video-and-Image-Processing-Suite-device-t.patch";
-	size=1918; creation-date="Fri, 31 Mar 2017 08:50:28 GMT";
-	modification-date="Fri, 31 Mar 2017 08:50:28 GMT"
-Content-ID: <4DAFDF07289012498E7B88620460112E-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Content-Transfer-Encoding: base64
+However, nor->read() is likely to be called soon from spi_nor_scan()
+with values of nor->addr_width, nor->read_opcode and nor->read_dummy
+different from those selected when exiting spi_nor_scan().
 
-RnJvbSAyM2E5ZTI3NGJiNTE3YjhlMjMyYzVhYTRjZjk3MzdkZTE2NDRiNzA4IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBPbmcsIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVs
-LmNvbT4KRGF0ZTogVGh1LCAzMCBNYXIgMjAxNyAxNzo1OTozNyArMDgwMApTdWJqZWN0OiBbUEFU
-Q0h2MF0gSW50ZWwgRlBHQSBWaWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2luZyBTdWl0ZSBkZXZpY2Ug
-dHJlZSBiaW5kaW5nCgoJRGV2aWNlIHRyZWUgYmluZGluZyBmb3IgSW50ZWwgRlBHQSBWaWRlbyBh
-bmQgSW1hZ2UKCVByb2Nlc3NpbmcgU3VpdGUuIFRoZSBiaW5kaW5nIGludm9sdmVkIHdvdWxkIGJl
-IGdlbmVyYXRlZAoJZnJvbSB0aGUgQWx0ZXJhIChJbnRlbCkgUXN5cyBzeXN0ZW0uIFRoZSBiaW5k
-aW5ncyB3b3VsZAoJc2V0IHRoZSBtYXggd2lkdGgsIG1heCBoZWlnaHQsIGJ1dHMgcGVyIHBpeGVs
-IGFuZCBtZW1vcnkKCXBvcnQgd2lkdGguIFRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIG9ubHkgc3Vw
-cG9ydHMgdGhlIEludGVsCglBcnJpYTEwIGRldmtpdCBhbmQgaXRzIHZhcmlhbnRzLiBWZW5kb3Ig
-bmFtZSByZXRhaW5lZCBhcwoJYWx0ci4KClNpZ25lZC1vZmYtYnk6IE9uZywgSGVhbiBMb29uZyA8
-aGVhbi5sb29uZy5vbmdAaW50ZWwuY29tPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dw
-dS9hbHRyLHZpcC1mYjIudHh0ICAgICAgIHwgICAyNCArKysrKysrKysrKysrKysrKysrKwogMSBm
-aWxlcyBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYWx0cix2aXAt
-ZmIyLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
-cHUvYWx0cix2aXAtZmIyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
-cHUvYWx0cix2aXAtZmIyLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi45
-YmEzMjA5Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2dwdS9hbHRyLHZpcC1mYjIudHh0CkBAIC0wLDAgKzEsMjQgQEAKK0ludGVsIFZpZGVvIGFu
-ZCBJbWFnZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVmZmVyIElJIGJpbmRpbmdzCisKK1N1cHBv
-cnRlZCBoYXJkd2FyZTogIEFycmlhIDEwIGFuZCBhYm92ZSB3aXRoIGRpc3BsYXkgcG9ydCBJUAor
-CitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiAiYWx0cix2aXAtZnJhbWUtYnVm
-ZmVyLTIuMCIKKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUg
-ZnJhbWVidWZmZXIgY29udHJvbGxlcidzCisgIHJlZ2lzdGVycy4KKy0gbWF4LXdpZHRoOiBUaGUg
-d2lkdGggb2YgdGhlIGZyYW1lYnVmZmVyIGluIHBpeGVscy4KKy0gbWF4LWhlaWdodDogVGhlIGhl
-aWdodCBvZiB0aGUgZnJhbWVidWZmZXIgaW4gcGl4ZWxzLgorLSBiaXRzLXBlci1zeW1ib2w6IG9u
-bHkgIjgiIGlzIGN1cnJlbnRseSBzdXBwb3J0ZWQKKy0gbWVtLXBvcnQtd2lkdGggPSB0aGUgYnVz
-IHdpZHRoIG9mIHRoZSBhdmFsb24gbWFzdGVyIHBvcnQgb24gdGhlIGZyYW1lIHJlYWRlcgorCitF
-eGFtcGxlOgorCitkcF8wX2ZyYW1lX2J1ZjogdmlwQDB4MTAwMDAwMjgwIHsKKwljb21wYXRpYmxl
-ID0gImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0yLjAiOworCXJlZyA9IDwweDAwMDAwMDAxIDB4MDAw
-MDAyODAgMHgwMDAwMDA0MD47CisJYWx0cixtYXgtd2lkdGggPSA8MTI4MD47CisJYWx0cixtYXgt
-aGVpZ2h0ID0gPDcyMD47CisJYWx0cixiaXRzLXBlci1zeW1ib2wgPSA8OD47CisJYWx0cixtZW0t
-cG9ydC13aWR0aCA9IDwxMjg+OworfTsKKwotLSAKMS43LjEKCg==
+So nor->read() / mt8173_nor_read should check nor->addr_width,
+nor->read_opcode and nor->read_dummy at each call.
 
---_002_1490949905215758camelintelcom_--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+More precisely, I plan to use nor->read() from spi_nor_scan() to read
+SFDP (Serial Flash Discoverable Parameters) data.
+
+Whatever op code, numbers of address bytes and dummy cycles used for
+(Fast) Read commands, the Read SFDP command uses fixed settings
+standardized for all manufacturers and all memory parts:
+- op code: 5Ah
+- number of bytes for the address: 3 (even for memory > 128Mbits)
+- number of dummy clock cycles: 8 clocks
+
+https://patchwork.ozlabs.org/patch/742380/
+
+Please have a look at the spi_nor_read_sfdp().
+
+spi_nor_read_sfdp() is likely to be called from and only from
+spi_nor_scan().
+
+Best regards,
+
+Cyrille
+
+>>
+>> SPI controller driver should never check SPINOR_OP_* op codes like this.
+> I agree that SPI controller driver should not check SPINOR_OP_* op codes
+> like what I do.
+> I will correct it next version.
+> 
+> Best Regards,
+> Guochun
+>>
+>> Then, testing SPINOR_OP_RDSR from mt8173_nor_read_reg() or
+>> SPINOR_OP_WRSR from mt8173_nor_write_reg() is not a good practice too:
+>> op codes may change depending on the memory manufacturer. So testing op
+>> code values like you do can work with some memories but maybe not all.
+>>
+>> Finally, don't use 0x10, please define a macro instead.
+>>
+>> Best regards,
+>>
+>> Cyrille
+>>
+>>>  	default:
+>>>  		ret = mt8173_nor_do_tx_rx(mt8173_nor, opcode, buf, len, NULL, 0);
+>>>  		if (ret)
+>>>
+>>
+> 
+> 
+> 
