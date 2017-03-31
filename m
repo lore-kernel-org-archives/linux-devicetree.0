@@ -1,47 +1,51 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v5 6/9] coresight: add support for CPU debug module
-Date: Fri, 31 Mar 2017 08:54:20 +0800
-Message-ID: <20170331005420.GA6149@leoy-linaro>
-References: <1490466197-29163-1-git-send-email-leo.yan@linaro.org>
- <1490466197-29163-7-git-send-email-leo.yan@linaro.org>
- <f0c460e2-4e49-4f34-5288-f20a519dc182@arm.com>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V11 6/6] thermal: bcm2835: add thermal driver for bcm2835
+ SoC
+Date: Thu, 30 Mar 2017 18:06:45 -0700
+Message-ID: <20170331010643.GA1923@localhost.localdomain>
+References: <1489356665-3175-1-git-send-email-stefan.wahren@i2se.com>
+ <1489356665-3175-7-git-send-email-stefan.wahren@i2se.com>
+ <20170329045807.GC2582@localhost.localdomain>
+ <20170330045725.GA12995@localhost.localdomain>
+ <1620097357.332334.1490901102005@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <f0c460e2-4e49-4f34-5288-f20a519dc182@arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Suzuki.Poulose@arm.com
+In-Reply-To: <1620097357.332334.1490901102005-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 04:56:52PM +0100, Sudeep Holla wrote:
-
-[...]
-
-> > +static struct pm_qos_request debug_qos_req;
-> > +static int idle_constraint = PM_QOS_DEFAULT_VALUE;
-> > +module_param(idle_constraint, int, 0600);
-> > +MODULE_PARM_DESC(idle_constraint, "Latency requirement in microseconds for CPU "
-> > +		 "idle states (default is -1, which means have no limiation "
-> > +		 "to CPU idle states; 0 means disabling all idle states; user "
-> > +		 "can choose other platform dependent values so can disable "
-> > +		 "specific idle states for the platform)");
-> > +
+Hello,
+On Thu, Mar 30, 2017 at 09:11:41PM +0200, Stefan Wahren wrote:
+> Hi Eduardo,
 > 
-> NACK for this. Why you want the policy inside the driver. You can always
-> do that from the user-space. I have mentioned it several times now.
-> What can't you do these ?
-> 
-> 1. echo "what_ever_latency_you_need_in_uS" > /dev/cpu_dma_latency
-> 2. echo 1 > /sys/devices/system/cpu/cpu$cpu/cpuidle/state$state/disable
->    (for all cpus and their states) (1) is definitely simpler way to
->     disable deeper idle if latency = 0uS
-> 
-> You can always warn user about that when it's enabled via debugfs/sysfs
+> > Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 30. März 2017 um 06:57 geschrieben:
+> > 
+> > 
 
-Thanks for suggestion, now it's clear for me.
+<cut>
 
-> -- 
-> Regards,
-> Sudeep
+> > A third option on top of what I suggested above is to split the series.
+> > Given that you could still get the proper coefficients
+> > with current of-thermal, I would suggest you to split this series into
+> > two (patches 1-2, 3-6) in your next version, so we avoid futher delays
+> > on the driver, while patches 1-2 waits for acks from OF side.
+> 
+> i revert patches #1, #2 and the slope value was still correct. So i will choose the third option and split the series.
+
+Sounds good to me.
+
+> 
+> Thanks
+> Stefan
+> 
+> > 
+> > [1] - https://patchwork.kernel.org/patch/9612613/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
