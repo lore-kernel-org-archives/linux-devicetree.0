@@ -1,111 +1,103 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH] OF: mark released devices as no longer populated
-Date: Fri, 31 Mar 2017 11:39:50 +0100
-Message-ID: <20170331103950.GA18376@n2100.armlinux.org.uk>
-References: <E1bX3Pw-00088i-KU@rmk-PC.armlinux.org.uk>
- <CAL_Jsq+pDeL1_=p06ynrV4CK+h8-Yx_KDbH-W=d-aSdARe3ZHw@mail.gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] mtd: move code reading DT specified part probes to
+ the core
+Date: Fri, 31 Mar 2017 12:46:38 +0200
+Message-ID: <99d4944c-3eb9-5bbd-efd0-2ac6862ab1fb@gmail.com>
+References: <20170330215332.32699-1-zajec5@gmail.com>
+ <20170331093013.29123-1-zajec5@gmail.com>
+ <20170331115654.41592eba@bbrezillon>
+ <40a0f980-c849-30de-c906-a708e4d90be5@gmail.com>
+ <20170331123153.038e3ada@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+pDeL1_=p06ynrV4CK+h8-Yx_KDbH-W=d-aSdARe3ZHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170331123153.038e3ada@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, horia.geanta-3arQi8VN3Tc@public.gmane.org
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ping, this issue still exists with 4.11-rc4 - and there's been no
-reaction from the alleged CAAM maintainers.
+On 03/31/2017 12:31 PM, Boris Brezillon wrote:
+> On Fri, 31 Mar 2017 12:12:56 +0200
+> Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> On 03/31/2017 11:56 AM, Boris Brezillon wrote:
+>>> On Fri, 31 Mar 2017 11:30:12 +0200
+>>> Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>
+>>>> Handling (creating) partitions for flash devices requires using a proper
+>>>> driver that will read partition table (out of somewhere). We can't
+>>>> simply try all existing drivers one by one, so MTD subsystem allows
+>>>> drivers to specify a list of applicable part probes.
+>>>>
+>>>> So far physmap_of was the only driver with support for linux,part-probe
+>>>> DT property. Other ones had list or probes hardcoded which wasn't making
+>>>> them really flexible. It prevented using common flash drivers on
+>>>> platforms that required some specific partition table access.
+>>>>
+>>>> This commit moves support for mentioned DT property to the MTD core
+>>>> file. Thanks to calling it on device parse registration (as suggested by
+>>>> Boris) all drivers gain support for it for free.
+>>>>
+>>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>> ---
+>>>>  drivers/mtd/maps/physmap_of.c | 36 +-----------------------------------
+>>>>  drivers/mtd/mtdcore.c         | 34 ++++++++++++++++++++++++++++++++++
+>>>
+>>> Maybe you should split the patch:
+>>> 1/ add core infrastructure
+>>> 2/ remove open-coded version in drivers/mtd/maps/physmap_of.c
+>>
+>> What's the gain of that? Is this patch too complex to review properly? Will that
+>> be useful for anyone to have it split? For me it only adds an intermediate code
+>> duplication.
+>
+> The gain is that we get rid of the dependency we have on patch "mtd:
+> physmap_of: use OF helpers for reading strings" which is not even
+> mentioned in your mails.
 
-On Tue, Aug 09, 2016 at 11:48:38AM -0500, Rob Herring wrote:
-> On Tue, Aug 9, 2016 at 4:33 AM, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-> > When a Linux device is released and cleaned up, we left the OF device
-> > node marked as populated.  This causes the Freescale CAAM driver
-> > (drivers/crypto/caam) problems when the module is removed and re-
-> > inserted:
-> >
-> > JR0 Platform device creation error
-> > JR0 Platform device creation error
-> > caam 2100000.caam: no queues configured, terminating
-> > caam: probe of 2100000.caam failed with error -12
-> >
-> > The reason is that CAAM creates platform devices for each job ring:
-> >
-> >         for_each_available_child_of_node(nprop, np)
-> >                 if (of_device_is_compatible(np, "fsl,sec-v4.0-job-ring") ||
-> >                     of_device_is_compatible(np, "fsl,sec4.0-job-ring")) {
-> >                         ctrlpriv->jrpdev[ring] =
-> >                                 of_platform_device_create(np, NULL, dev);
-> >
-> > which sets OF_POPULATED on the device node, but then it cleans these
-> > up:
-> >
-> >         /* Remove platform devices for JobRs */
-> >         for (ring = 0; ring < ctrlpriv->total_jobrs; ring++) {
-> >                 if (ctrlpriv->jrpdev[ring])
-> >                         of_device_unregister(ctrlpriv->jrpdev[ring]);
-> 
-> This looks a bit asymmetrical to me with a of_platform_device_* call
-> and a of_device_* call.
-> 
-> I think you could use of_platform_{de}populate here instead. That
-> would simplify things in the driver a bit too as you wouldn't need to
-> store jrpdev. It wouldn't work if there are other child nodes with
-> compatible strings which you don't want devices created.
-> 
-> >         }
-> >
-> > which leaves OF_POPULATED set.
-> >
-> > Arrange for platform devices with a device node to clear the
-> > OF_POPULATED bit when they are released.
-> >
-> > Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> > ---
-> > Please check this carefully - it may have issues where an of_node
-> > pointer is copied from one platform device to another, but IMHO
-> > doing that is itself buggy behaviour.
-> 
-> Agreed, that is wrong.
-> 
-> >
-> > Resending due to wrong list address, sorry.
-> >
-> >  include/linux/of_device.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> > index cc7dd687a89d..7a8362d0c6d2 100644
-> > --- a/include/linux/of_device.h
-> > +++ b/include/linux/of_device.h
-> > @@ -43,6 +43,7 @@ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env
-> >
-> >  static inline void of_device_node_put(struct device *dev)
-> >  {
-> > +       of_node_clear_flag(dev->of_node, OF_POPULATED);
-> 
-> This would result in clearing the flag twice in the
-> of_platform_populate/of_platform_depopulate case. It would do the same
-> for other bus types like i2c as well. That doesn't really hurt
-> anything that I can think of, but just not the best implementation. I
-> think adding a of_platform_device_unregister() call that wraps
-> of_platform_device_destroy would be more balanced.
-> 
-> I looked thru all the callers of of_platform_device_create. The only
-> other ones affected by this are:
-> 
-> drivers/macintosh/ams/ams-core.c
-> drivers/macintosh/therm_adt746x.c
-> drivers/macintosh/therm_windtunnel.c
-> 
-> The others either have no remove path or a buggy remove path.
-> 
-> Rob
+This is definitely my mistake, initially I pushed a proper comment below tear
+line but have overwritten it later. Sorry!
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+
+>>> BTW, not sure the intermediate "mtd: physmap_of: use OF helpers
+>>> for reading strings" patch is really useful, since you move to the
+>>> common infrastructure here.
+>>> By following my suggestion you get rid of the dependency you have
+>>> between this series and patch "mtd: physmap_of: use OF helpers for
+>>> reading strings".
+>>
+>> I learned (the very hard way) MTD people can be really nitpicking so I'm
+>> sending as simple patches as I can. I see it as the only way for someone from
+>> OpenWrt/LEDE project to get patch through your review.
+>
+> And I learned the hard way that OpenWRT/LEDE developers tend to not
+> listen to our advices and keep arguing on things that have been proven
+> to be existing because of bad decision they made at some point in the
+> project life. So I think we're even :-P.
+
+I wish you could sometimes forget what you've learned and review/discuss things
+without all that negative approach I keep seeing.
+
+
+>> It's like with this patch: even a simple code move can be questioned. Please
+>> drop this patchset, I'll resend it after/if I manage to get
+>> [PATCH] mtd: physmap_of: use OF helpers for reading strings
+>> accepted.
+>
+> But really, what's the point of this patch? It's just a cleanup. You're
+> not fixing a bug or changing the behavior, and your real objective is
+> to get support for the linux,part-probe in the core, which will then
+> allow us to drop the open-coded version you have in physmap_of.c.
+>
+> I don't think it deserves an intermediate patch, unless your real
+> objective is patchcount.
+
+OK, I'm going to trust that and see how easily I get can patch your way. I'll
+resend combined version soon.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
