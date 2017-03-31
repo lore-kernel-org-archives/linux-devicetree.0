@@ -1,56 +1,78 @@
-From: Helmut Klein <hgkr.klein@gmail.com>
-Subject: Re: [PATCH v2,1/3] meson_uart: expose CLKID_UARTx
-Date: Fri, 31 Mar 2017 19:03:12 +0200
-Message-ID: <26dd484d-f6fd-048d-7467-0fe9a1e6645b@gmail.com>
-References: <20170328092545.4644-1-hgkr.klein@gmail.com>
- <20170328092545.4644-2-hgkr.klein@gmail.com>
- <1490716277.20764.6.camel@baylibre.com>
- <71489b62-78c8-7082-587e-8598dc43ca59@gmail.com>
- <1490728490.20764.8.camel@baylibre.com>
- <CAFBinCDF29+kQpedsJPqRy6fztWrj91Qi6tCno_2S6UCkhW7XQ@mail.gmail.com>
- <m2y3vn6dhk.fsf@baylibre.com> <1490974657.12951.5.camel@baylibre.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH v2 1/2] dt-bindings: Document the STM32 QSPI bindings
+Date: Fri, 31 Mar 2017 19:02:03 +0200
+Message-ID: <1490979724-10905-2-git-send-email-ludovic.Barre@st.com>
+References: <1490979724-10905-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1490974657.12951.5.camel@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490979724-10905-1-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 31.03.2017 17:37, Jerome Brunet wrote:
-> On Wed, 2017-03-29 at 13:21 -0700, Kevin Hilman wrote:
->> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
->>
->> [...]
->>
->>> for Helmut this would mean that instead of dropping this patch (or
->>> dropping CLKID_UART1 and CLKID_UART2 from this patch) he would rather
->>> have to *add* another patch (for meson-gxbb.dtsi and meson-gxl.dtsi)
->>> which passes the core clocks to the corresponding UART controllers
->>> (similar to the CLKID_SD_EMMC_ clocks).
->>
->> Yes, this is what I would like to see.
->>
->> If a new CLKID is exposed, I want to see the users of it at the same
->> time.
->
-> Helmut,
->
-> If you send another version of these patches, considering the feedback of Kevin
-> and Martin, could you please change the subject of this patch to:
->
-> dt-bindings: clock: gxbb: expose UART clocks
->
-> Thx
-> Jerome
->
-i've just sent v3 of my patchset.
-(i changed the subjects of most patches in the set)
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Helmut
+This patch adds documentation of device tree bindings for the STM32
+QSPI controller.
 
->>
->> Kevin
->
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ .../devicetree/bindings/mtd/stm32-quadspi.txt      | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
+
+diff --git a/Documentation/devicetree/bindings/mtd/stm32-quadspi.txt b/Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
+new file mode 100644
+index 0000000..95a8ebd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
+@@ -0,0 +1,45 @@
++* STMicroelectronics Quad Serial Peripheral Interface(QuadSPI)
++
++Required properties:
++- compatible: should be "st,stm32f469-qspi"
++- reg: contains the register location and length.
++  (optional) the memory mapping address and length
++- reg-names: list of the names corresponding to the previous register
++  Should contain "qspi" to register location
++  (optional) "qspi_mm" if read in memory map mode (improve read throughput)
++- interrupts: should contain the interrupt for the device
++- clocks: the phandle of the clock needed by the QSPI controller
++- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
++
++Optional properties:
++- resets: must contain the phandle to the reset controller.
++
++A spi flash must be a child of the nor_flash node and could have some
++properties. Also see jedec,spi-nor.txt.
++
++Required properties:
++- reg: chip-Select number (QSPI controller may connect 2 nor flashes)
++- spi-max-frequency: max frequency of spi bus
++
++Optional property:
++- spi-rx-bus-width: the bus width (number of data wires)
++
++Example:
++
++qspi: qspi@a0001000 {
++	compatible = "st,stm32f469-qspi";
++	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
++	reg-names = "qspi", "qspi_mm";
++	interrupts = <91>;
++	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
++	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi0>;
++
++	flash@0 {
++		reg = <0>;
++		spi-rx-bus-width = <4>;
++		spi-max-frequency = <108000000>;
++		...
++	};
++};
+-- 
+2.7.4
