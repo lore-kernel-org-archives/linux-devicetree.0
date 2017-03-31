@@ -1,7 +1,7 @@
 From: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Subject: [RESEND PATCH v3 5/7] UDC: Use struct dma_pool instead of pci_pool
-Date: Fri, 31 Mar 2017 18:39:11 +0530
-Message-ID: <1490965753-3511-5-git-send-email-raviteja.garimella@broadcom.com>
+Subject: [RESEND PATCH v3 6/7] DT bindings documentation for Broadcom IPROC USB Device controller.
+Date: Fri, 31 Mar 2017 18:39:12 +0530
+Message-ID: <1490965753-3511-6-git-send-email-raviteja.garimella@broadcom.com>
 References: <1490965753-3511-1-git-send-email-raviteja.garimella@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1490965753-3511-1-git-send-email-raviteja.garimella@broadcom.com>
@@ -10,53 +10,42 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg 
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Using dma_pool instead of pci_pool will make snps_udc_core driver
-to be compatible with non-pci platforms.
+The device node is used for UDCs integrated into Broadcom's
+iProc family of SoCs'. The UDC is based on Synopsys Designware
+Cores AHB Subsystem USB Device Controller IP.
 
 Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
 ---
- drivers/usb/gadget/udc/snps_udc_core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/usb/iproc-udc.txt | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/iproc-udc.txt
 
-diff --git a/drivers/usb/gadget/udc/snps_udc_core.c b/drivers/usb/gadget/udc/snps_udc_core.c
-index 5ca8b7b..d592f77 100644
---- a/drivers/usb/gadget/udc/snps_udc_core.c
-+++ b/drivers/usb/gadget/udc/snps_udc_core.c
-@@ -543,7 +543,7 @@ udc_alloc_request(struct usb_ep *usbep, gfp_t gfp)
- 
- 	if (ep->dma) {
- 		/* ep0 in requests are allocated from data pool here */
--		dma_desc = pci_pool_alloc(ep->dev->data_requests, gfp,
-+		dma_desc = dma_pool_alloc(ep->dev->data_requests, gfp,
- 						&req->td_phys);
- 		if (!dma_desc) {
- 			kfree(req);
-@@ -582,7 +582,7 @@ static void udc_free_dma_chain(struct udc *dev, struct udc_request *req)
- 	for (i = 1; i < req->chain_len; i++) {
- 		td = phys_to_virt(addr);
- 		addr_next = (dma_addr_t)td->next;
--		pci_pool_free(dev->data_requests, td, addr);
-+		dma_pool_free(dev->data_requests, td, addr);
- 		addr = addr_next;
- 	}
- }
-@@ -608,7 +608,7 @@ udc_free_request(struct usb_ep *usbep, struct usb_request *usbreq)
- 		if (req->chain_len > 1)
- 			udc_free_dma_chain(ep->dev, req);
- 
--		pci_pool_free(ep->dev->data_requests, req->td_data,
-+		dma_pool_free(ep->dev->data_requests, req->td_data,
- 							req->td_phys);
- 	}
- 	kfree(req);
-@@ -803,7 +803,7 @@ static int udc_create_dma_chain(
- 	for (i = buf_len; i < bytes; i += buf_len) {
- 		/* create or determine next desc. */
- 		if (create_new_chain) {
--			td = pci_pool_alloc(ep->dev->data_requests,
-+			td = dma_pool_alloc(ep->dev->data_requests,
- 					    gfp_flags, &dma_addr);
- 			if (!td)
- 				return -ENOMEM;
+diff --git a/Documentation/devicetree/bindings/usb/iproc-udc.txt b/Documentation/devicetree/bindings/usb/iproc-udc.txt
+new file mode 100644
+index 0000000..272d7fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/iproc-udc.txt
+@@ -0,0 +1,21 @@
++Broadcom IPROC USB Device controller.
++
++The device node is used for UDCs integrated into Broadcom's
++iProc family (Northstar2, Cygnus) of SoCs'. The UDC is based
++on Synopsys Designware Cores AHB Subsystem Device Controller
++IP.
++
++Required properties:
++ - compatible: Add the compatibility strings for supported platforms.
++   For Broadcom NS2 platform, add "brcm,ns2-udc","brcm,iproc-udc".
++   For Broadcom Cygnus platform, add "brcm,cygnus-udc", "brcm,iproc-udc".
++ - reg: Offset and length of UDC register set
++ - interrupts: description of interrupt line
++ - phys: phandle to phy node.
++
++Example:
++	udc_dwc: usb@664e0000 {
++		compatible = "brcm,ns2-udc", "brcm,iproc-udc";
++		reg = <0x664e0000 0x2000>;
++		interrupts = <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>;
++		phys = <&usbdrd_phy>;
 -- 
 2.1.0
