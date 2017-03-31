@@ -1,34 +1,94 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: keystone-k2l: fix broken Ethernet due to
- disabled OSR
-Date: Fri, 31 Mar 2017 12:13:58 +0200
-Message-ID: <CAK8P3a2yYK3zO=K__W4jCFYYpFCZLYkm97ADZHunttdUmO_ZOw@mail.gmail.com>
-References: <59ba5ef37f17ff1c10d9d52ca06ef341b2d476eb.1490782833.git.nsekhar@ti.com>
- <5adb4f5d-78c4-453d-898d-60c588eb1d14@oracle.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] mtd: move code reading DT specified part probes
+ to the core
+Date: Fri, 31 Mar 2017 12:31:53 +0200
+Message-ID: <20170331123153.038e3ada@bbrezillon>
+References: <20170330215332.32699-1-zajec5@gmail.com>
+        <20170331093013.29123-1-zajec5@gmail.com>
+        <20170331115654.41592eba@bbrezillon>
+        <40a0f980-c849-30de-c906-a708e4d90be5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5adb4f5d-78c4-453d-898d-60c588eb1d14-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <40a0f980-c849-30de-c906-a708e4d90be5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 6:13 PM, santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org
-<santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
->> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
->> Acked-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->> [nsekhar-l0cyMroinI0@public.gmane.org: commit message updates, port to latest mainline]
->> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
->> ---
->
-> Acked-by: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Can you please pick this up for rcx fixes ?
+On Fri, 31 Mar 2017 12:12:56 +0200
+Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Applied, thanks!
+> On 03/31/2017 11:56 AM, Boris Brezillon wrote:
+> > On Fri, 31 Mar 2017 11:30:12 +0200
+> > Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >  
+> >> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> >>
+> >> Handling (creating) partitions for flash devices requires using a proper
+> >> driver that will read partition table (out of somewhere). We can't
+> >> simply try all existing drivers one by one, so MTD subsystem allows
+> >> drivers to specify a list of applicable part probes.
+> >>
+> >> So far physmap_of was the only driver with support for linux,part-probe
+> >> DT property. Other ones had list or probes hardcoded which wasn't making
+> >> them really flexible. It prevented using common flash drivers on
+> >> platforms that required some specific partition table access.
+> >>
+> >> This commit moves support for mentioned DT property to the MTD core
+> >> file. Thanks to calling it on device parse registration (as suggested by
+> >> Boris) all drivers gain support for it for free.
+> >>
+> >> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> >> ---
+> >>  drivers/mtd/maps/physmap_of.c | 36 +-----------------------------------
+> >>  drivers/mtd/mtdcore.c         | 34 ++++++++++++++++++++++++++++++++++  
+> >
+> > Maybe you should split the patch:
+> > 1/ add core infrastructure
+> > 2/ remove open-coded version in drivers/mtd/maps/physmap_of.c  
+> 
+> What's the gain of that? Is this patch too complex to review properly? Will that
+> be useful for anyone to have it split? For me it only adds an intermediate code
+> duplication.
 
-       Arnd
+The gain is that we get rid of the dependency we have on patch "mtd:
+physmap_of: use OF helpers for reading strings" which is not even
+mentioned in your mails.
+
+> 
+> 
+> > BTW, not sure the intermediate "mtd: physmap_of: use OF helpers
+> > for reading strings" patch is really useful, since you move to the
+> > common infrastructure here.
+> > By following my suggestion you get rid of the dependency you have
+> > between this series and patch "mtd: physmap_of: use OF helpers for
+> > reading strings".  
+> 
+> I learned (the very hard way) MTD people can be really nitpicking so I'm
+> sending as simple patches as I can. I see it as the only way for someone from
+> OpenWrt/LEDE project to get patch through your review.
+
+And I learned the hard way that OpenWRT/LEDE developers tend to not
+listen to our advices and keep arguing on things that have been proven
+to be existing because of bad decision they made at some point in the
+project life. So I think we're even :-P.
+
+> 
+> It's like with this patch: even a simple code move can be questioned. Please
+> drop this patchset, I'll resend it after/if I manage to get
+> [PATCH] mtd: physmap_of: use OF helpers for reading strings
+> accepted.
+
+But really, what's the point of this patch? It's just a cleanup. You're
+not fixing a bug or changing the behavior, and your real objective is
+to get support for the linux,part-probe in the core, which will then
+allow us to drop the open-coded version you have in physmap_of.c.
+
+I don't think it deserves an intermediate patch, unless your real
+objective is patchcount.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
