@@ -1,423 +1,162 @@
-From: Sergio Prado <sergio.prado@e-labworks.com>
-Subject: [PATCH v6 2/2] mmc: host: s3cmci: allow probing from device tree
-Date: Fri, 31 Mar 2017 20:50:56 -0300
-Message-ID: <1491004256-13969-3-git-send-email-sergio.prado@e-labworks.com>
-References: <1491004256-13969-1-git-send-email-sergio.prado@e-labworks.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491004256-13969-1-git-send-email-sergio.prado@e-labworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
-Cc: Sergio Prado <sergio.prado@e-labworks.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/6] genirq: Add handle_fasteoi_{level,edge}_irq flow
+ handlers.
+Date: Fri, 31 Mar 2017 16:57:15 -0700
+Message-ID: <95ea6d46-be8b-1d7b-5cfc-27f604d34ea7@gmail.com>
+References: <1488332932-2691-1-git-send-email-david.daney@cavium.com>
+ <1488332932-2691-3-git-send-email-david.daney@cavium.com>
+ <254c0505-6890-2e9f-cf04-3c8efbcfeb2d@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <254c0505-6890-2e9f-cf04-3c8efbcfeb2d-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allows configuring Samsung S3C24XX MMC/SD/SDIO controller using a device
-tree.
+I am finally getting back to this, sorry for the delay ...
 
-Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
----
- drivers/mmc/host/s3cmci.c | 257 +++++++++++++++++++++++-----------------------
- 1 file changed, 126 insertions(+), 131 deletions(-)
+On 03/14/2017 09:54 AM, Marc Zyngier wrote:
+> On 01/03/17 01:48, David Daney wrote:
+>> Follow-on patch for gpio-thunderx uses a irqdomain hierarchy which
+>> requires slightly different flow handlers, add them to chip.c which
+>> contains most of the other flow handlers.
+>>
+>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  include/linux/irq.h |   2 ++
+>>  kernel/irq/chip.c   | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 104 insertions(+)
+>>
+>> diff --git a/include/linux/irq.h b/include/linux/irq.h
+>> index f887351..3db0eb8 100644
+>> --- a/include/linux/irq.h
+>> +++ b/include/linux/irq.h
+>> @@ -518,6 +518,8 @@ static inline int irq_set_parent(int irq, int parent_irq)
+>>  extern int irq_chip_pm_get(struct irq_data *data);
+>>  extern int irq_chip_pm_put(struct irq_data *data);
+>>  #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+>> +extern void handle_fasteoi_edge_irq(struct irq_desc *desc);
+>> +extern void handle_fasteoi_level_irq(struct irq_desc *desc);
+>>  extern void irq_chip_enable_parent(struct irq_data *data);
+>>  extern void irq_chip_disable_parent(struct irq_data *data);
+>>  extern void irq_chip_ack_parent(struct irq_data *data);
+>> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+>> index 73ea90b..213105d 100644
+>> --- a/kernel/irq/chip.c
+>> +++ b/kernel/irq/chip.c
+>> @@ -981,6 +981,108 @@ void irq_cpu_offline(void)
+>>
+>>  #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+>>  /**
+>> + *	handle_fasteoi_edge_irq - irq handler for edge hierarchy
+>> + *	stacked on transparent controllers
+>> + *
+>> + *	@desc:	the interrupt description structure for this irq
+>> + *
+>> + *	Like handle_fasteoi_irq(), but for use with hierarchy where
+>> + *	the irq_chip also needs to have its ->irq_ack() function
+>> + *	called.
+>> + */
+>> +void handle_fasteoi_edge_irq(struct irq_desc *desc)
+>> +{
+>> +	struct irq_chip *chip = desc->irq_data.chip;
+>> +
+>> +	raw_spin_lock(&desc->lock);
+>> +
+>> +	if (!irq_may_run(desc))
+>> +		goto out;
+>> +
+>> +	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
+>> +
+>> +	/*
+>> +	 * If its disabled or no action available
+>> +	 * then mask it and get out of here:
+>> +	 */
+>> +	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
+>> +		desc->istate |= IRQS_PENDING;
+>> +		mask_irq(desc);
+>> +		goto out;
+>> +	}
+>> +
+>> +	kstat_incr_irqs_this_cpu(desc);
+>> +	if (desc->istate & IRQS_ONESHOT)
+>> +		mask_irq(desc);
+>> +
+>> +	/* Start handling the irq */
+>> +	desc->irq_data.chip->irq_ack(&desc->irq_data);
+>> +
+>> +	preflow_handler(desc);
+>> +	handle_irq_event(desc);
+>> +
+>> +	cond_unmask_eoi_irq(desc, chip);
+>> +
+>> +	raw_spin_unlock(&desc->lock);
+>> +	return;
+>> +out:
+>> +	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
+>> +		chip->irq_eoi(&desc->irq_data);
+>> +	raw_spin_unlock(&desc->lock);
+>> +}
+>> +EXPORT_SYMBOL_GPL(handle_fasteoi_edge_irq);
+>
+> So this is handle_fasteoi_irq with an irq_ack() added in the middle. In
+> the spirit of making this a bit more maintainable, how about making the
+> handle_fasteoi_irq code reusable (if necessary by forcing the compiler
+> to inline stuff)?
 
-diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
-index 7a173f8c455b..c101f7e178f7 100644
---- a/drivers/mmc/host/s3cmci.c
-+++ b/drivers/mmc/host/s3cmci.c
-@@ -24,6 +24,10 @@
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/mmc/slot-gpio.h>
- 
- #include <plat/gpio-cfg.h>
- #include <mach/dma.h>
-@@ -807,21 +811,6 @@ static irqreturn_t s3cmci_irq(int irq, void *dev_id)
- 
- }
- 
--/*
-- * ISR for the CardDetect Pin
--*/
--
--static irqreturn_t s3cmci_irq_cd(int irq, void *dev_id)
--{
--	struct s3cmci_host *host = (struct s3cmci_host *)dev_id;
--
--	dbg(host, dbg_irq, "card detect\n");
--
--	mmc_detect_change(host->mmc, msecs_to_jiffies(500));
--
--	return IRQ_HANDLED;
--}
--
- static void s3cmci_dma_done_callback(void *arg)
- {
- 	struct s3cmci_host *host = arg;
-@@ -1177,19 +1166,6 @@ static void s3cmci_send_request(struct mmc_host *mmc)
- 	s3cmci_enable_irq(host, true);
- }
- 
--static int s3cmci_card_present(struct mmc_host *mmc)
--{
--	struct s3cmci_host *host = mmc_priv(mmc);
--	struct s3c24xx_mci_pdata *pdata = host->pdata;
--	int ret;
--
--	if (pdata->no_detect)
--		return -ENOSYS;
--
--	ret = gpio_get_value(pdata->gpio_detect) ? 0 : 1;
--	return ret ^ pdata->detect_invert;
--}
--
- static void s3cmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
- {
- 	struct s3cmci_host *host = mmc_priv(mmc);
-@@ -1198,7 +1174,7 @@ static void s3cmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
- 	host->cmd_is_stop = 0;
- 	host->mrq = mrq;
- 
--	if (s3cmci_card_present(mmc) == 0) {
-+	if (mmc_gpio_get_cd(mmc) == 0) {
- 		dbg(host, dbg_err, "%s: no medium present\n", __func__);
- 		host->mrq->cmd->error = -ENOMEDIUM;
- 		mmc_request_done(mmc, mrq);
-@@ -1242,8 +1218,9 @@ static void s3cmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 	case MMC_POWER_ON:
- 	case MMC_POWER_UP:
- 		/* Configure GPE5...GPE10 pins in SD mode */
--		s3c_gpio_cfgall_range(S3C2410_GPE(5), 6, S3C_GPIO_SFN(2),
--				      S3C_GPIO_PULL_NONE);
-+		if (!host->pdev->dev.of_node)
-+			s3c_gpio_cfgall_range(S3C2410_GPE(5), 6, S3C_GPIO_SFN(2),
-+					      S3C_GPIO_PULL_NONE);
- 
- 		if (host->pdata->set_power)
- 			host->pdata->set_power(ios->power_mode, ios->vdd);
-@@ -1255,7 +1232,8 @@ static void s3cmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 
- 	case MMC_POWER_OFF:
- 	default:
--		gpio_direction_output(S3C2410_GPE(5), 0);
-+		if (!host->pdev->dev.of_node)
-+			gpio_direction_output(S3C2410_GPE(5), 0);
- 
- 		if (host->is2440)
- 			mci_con |= S3C2440_SDICON_SDRESET;
-@@ -1295,21 +1273,6 @@ static void s3cmci_reset(struct s3cmci_host *host)
- 	writel(con, host->base + S3C2410_SDICON);
- }
- 
--static int s3cmci_get_ro(struct mmc_host *mmc)
--{
--	struct s3cmci_host *host = mmc_priv(mmc);
--	struct s3c24xx_mci_pdata *pdata = host->pdata;
--	int ret;
--
--	if (pdata->no_wprotect)
--		return 0;
--
--	ret = gpio_get_value(pdata->gpio_wprotect) ? 1 : 0;
--	ret ^= pdata->wprotect_invert;
--
--	return ret;
--}
--
- static void s3cmci_enable_sdio_irq(struct mmc_host *mmc, int enable)
- {
- 	struct s3cmci_host *host = mmc_priv(mmc);
-@@ -1353,8 +1316,8 @@ static void s3cmci_enable_sdio_irq(struct mmc_host *mmc, int enable)
- static struct mmc_host_ops s3cmci_ops = {
- 	.request	= s3cmci_request,
- 	.set_ios	= s3cmci_set_ios,
--	.get_ro		= s3cmci_get_ro,
--	.get_cd		= s3cmci_card_present,
-+	.get_ro		= mmc_gpio_get_ro,
-+	.get_cd		= mmc_gpio_get_cd,
- 	.enable_sdio_irq = s3cmci_enable_sdio_irq,
- };
- 
-@@ -1545,21 +1508,14 @@ static inline void s3cmci_debugfs_remove(struct s3cmci_host *host) { }
- 
- #endif /* CONFIG_DEBUG_FS */
- 
--static int s3cmci_probe(struct platform_device *pdev)
-+static int s3cmci_probe_pdata(struct s3cmci_host *host)
- {
--	struct s3cmci_host *host;
--	struct mmc_host	*mmc;
--	int ret;
--	int is2440;
--	int i;
-+	struct platform_device *pdev = host->pdev;
-+	struct mmc_host *mmc = host->mmc;
-+	struct s3c24xx_mci_pdata *pdata;
-+	int i, ret;
- 
--	is2440 = platform_get_device_id(pdev)->driver_data;
--
--	mmc = mmc_alloc_host(sizeof(struct s3cmci_host), &pdev->dev);
--	if (!mmc) {
--		ret = -ENOMEM;
--		goto probe_out;
--	}
-+	host->is2440 = platform_get_device_id(pdev)->driver_data;
- 
- 	for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++) {
- 		ret = gpio_request(i, dev_name(&pdev->dev));
-@@ -1569,25 +1525,101 @@ static int s3cmci_probe(struct platform_device *pdev)
- 			for (i--; i >= S3C2410_GPE(5); i--)
- 				gpio_free(i);
- 
--			goto probe_free_host;
-+			return ret;
-+		}
-+	}
-+
-+	if (!pdev->dev.platform_data)
-+		pdev->dev.platform_data = &s3cmci_def_pdata;
-+
-+	pdata = pdev->dev.platform_data;
-+
-+	if (pdata->no_wprotect)
-+		mmc->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
-+
-+	if (pdata->no_detect)
-+		mmc->caps |= MMC_CAP_NEEDS_POLL;
-+
-+	if (pdata->wprotect_invert);
-+		mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
-+	if (pdata->detect_invert)
-+		 mmc->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
-+
-+	if (gpio_is_valid(pdata->gpio_detect)) {
-+		ret = mmc_gpio_request_cd(mmc, pdata->gpio_detect, 0);
-+		if (ret) {
-+			dev_err(&pdev->dev, "error requesting GPIO for CD %d\n",
-+				ret);
-+			return ret;
- 		}
- 	}
- 
-+	if (gpio_is_valid(pdata->gpio_wprotect)) {
-+		ret = mmc_gpio_request_ro(mmc, pdata->gpio_wprotect);
-+		if (ret) {
-+			dev_err(&pdev->dev, "error requesting GPIO for WP %d\n",
-+				ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int s3cmci_probe_dt(struct s3cmci_host *host)
-+{
-+	struct platform_device *pdev = host->pdev;
-+	struct s3c24xx_mci_pdata *pdata;
-+	struct mmc_host *mmc = host->mmc;
-+	int ret;
-+
-+	host->is2440 = (int) of_device_get_match_data(&pdev->dev);
-+
-+	ret = mmc_of_parse(mmc);
-+	if (ret)
-+		return ret;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	pdev->dev.platform_data = pdata;
-+
-+	return 0;
-+}
-+
-+static int s3cmci_probe(struct platform_device *pdev)
-+{
-+	struct s3cmci_host *host;
-+	struct mmc_host	*mmc;
-+	int ret;
-+	int i;
-+
-+	mmc = mmc_alloc_host(sizeof(struct s3cmci_host), &pdev->dev);
-+	if (!mmc) {
-+		ret = -ENOMEM;
-+		goto probe_out;
-+	}
-+
- 	host = mmc_priv(mmc);
- 	host->mmc 	= mmc;
- 	host->pdev	= pdev;
--	host->is2440	= is2440;
-+
-+	if (pdev->dev.of_node)
-+		ret = s3cmci_probe_dt(host);
-+	else
-+		ret = s3cmci_probe_pdata(host);
-+
-+	if (ret)
-+		goto probe_free_host;
- 
- 	host->pdata = pdev->dev.platform_data;
--	if (!host->pdata) {
--		pdev->dev.platform_data = &s3cmci_def_pdata;
--		host->pdata = &s3cmci_def_pdata;
--	}
- 
- 	spin_lock_init(&host->complete_lock);
- 	tasklet_init(&host->pio_tasklet, pio_tasklet, (unsigned long) host);
- 
--	if (is2440) {
-+	if (host->is2440) {
- 		host->sdiimsk	= S3C2440_SDIIMSK;
- 		host->sdidata	= S3C2440_SDIDATA;
- 		host->clk_div	= 1;
-@@ -1645,43 +1677,6 @@ static int s3cmci_probe(struct platform_device *pdev)
- 	disable_irq(host->irq);
- 	host->irq_state = false;
- 
--	if (!host->pdata->no_detect) {
--		ret = gpio_request(host->pdata->gpio_detect, "s3cmci detect");
--		if (ret) {
--			dev_err(&pdev->dev, "failed to get detect gpio\n");
--			goto probe_free_irq;
--		}
--
--		host->irq_cd = gpio_to_irq(host->pdata->gpio_detect);
--
--		if (host->irq_cd >= 0) {
--			if (request_irq(host->irq_cd, s3cmci_irq_cd,
--					IRQF_TRIGGER_RISING |
--					IRQF_TRIGGER_FALLING,
--					DRIVER_NAME, host)) {
--				dev_err(&pdev->dev,
--					"can't get card detect irq.\n");
--				ret = -ENOENT;
--				goto probe_free_gpio_cd;
--			}
--		} else {
--			dev_warn(&pdev->dev,
--				 "host detect has no irq available\n");
--			gpio_direction_input(host->pdata->gpio_detect);
--		}
--	} else
--		host->irq_cd = -1;
--
--	if (!host->pdata->no_wprotect) {
--		ret = gpio_request(host->pdata->gpio_wprotect, "s3cmci wp");
--		if (ret) {
--			dev_err(&pdev->dev, "failed to get writeprotect\n");
--			goto probe_free_irq_cd;
--		}
--
--		gpio_direction_input(host->pdata->gpio_wprotect);
--	}
--
- 	/* Depending on the dma state, get a DMA channel to use. */
- 
- 	if (s3cmci_host_usedma(host)) {
-@@ -1689,7 +1684,7 @@ static int s3cmci_probe(struct platform_device *pdev)
- 		ret = PTR_ERR_OR_ZERO(host->dma);
- 		if (ret) {
- 			dev_err(&pdev->dev, "cannot get DMA channel.\n");
--			goto probe_free_gpio_wp;
-+			goto probe_free_irq;
- 		}
- 	}
- 
-@@ -1768,18 +1763,6 @@ static int s3cmci_probe(struct platform_device *pdev)
- 	if (s3cmci_host_usedma(host))
- 		dma_release_channel(host->dma);
- 
-- probe_free_gpio_wp:
--	if (!host->pdata->no_wprotect)
--		gpio_free(host->pdata->gpio_wprotect);
--
-- probe_free_gpio_cd:
--	if (!host->pdata->no_detect)
--		gpio_free(host->pdata->gpio_detect);
--
-- probe_free_irq_cd:
--	if (host->irq_cd >= 0)
--		free_irq(host->irq_cd, host);
--
-  probe_free_irq:
- 	free_irq(host->irq, host);
- 
-@@ -1790,8 +1773,9 @@ static int s3cmci_probe(struct platform_device *pdev)
- 	release_mem_region(host->mem->start, resource_size(host->mem));
- 
-  probe_free_gpio:
--	for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
--		gpio_free(i);
-+	if (!pdev->dev.of_node)
-+		for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
-+			gpio_free(i);
- 
-  probe_free_host:
- 	mmc_free_host(mmc);
-@@ -1818,7 +1802,6 @@ static int s3cmci_remove(struct platform_device *pdev)
- {
- 	struct mmc_host		*mmc  = platform_get_drvdata(pdev);
- 	struct s3cmci_host	*host = mmc_priv(mmc);
--	struct s3c24xx_mci_pdata *pd = host->pdata;
- 	int i;
- 
- 	s3cmci_shutdown(pdev);
-@@ -1832,15 +1815,9 @@ static int s3cmci_remove(struct platform_device *pdev)
- 
- 	free_irq(host->irq, host);
- 
--	if (!pd->no_wprotect)
--		gpio_free(pd->gpio_wprotect);
--
--	if (!pd->no_detect)
--		gpio_free(pd->gpio_detect);
--
--	for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
--		gpio_free(i);
--
-+	if (!pdev->dev.of_node)
-+		for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
-+			gpio_free(i);
- 
- 	iounmap(host->base);
- 	release_mem_region(host->mem->start, resource_size(host->mem));
-@@ -1849,6 +1826,23 @@ static int s3cmci_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id s3cmci_dt_match[] = {
-+	{
-+		.compatible = "samsung,s3c2410-sdi",
-+		.data = (void *)0,
-+	},
-+	{
-+		.compatible = "samsung,s3c2412-sdi",
-+		.data = (void *)1,
-+	},
-+	{
-+		.compatible = "samsung,s3c2440-sdi",
-+		.data = (void *)1,
-+	},
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, s3cmci_dt_match);
-+
- static const struct platform_device_id s3cmci_driver_ids[] = {
- 	{
- 		.name	= "s3c2410-sdi",
-@@ -1868,6 +1862,7 @@ static int s3cmci_remove(struct platform_device *pdev)
- static struct platform_driver s3cmci_driver = {
- 	.driver	= {
- 		.name	= "s3c-sdi",
-+		.of_match_table = s3cmci_dt_match,
- 	},
- 	.id_table	= s3cmci_driver_ids,
- 	.probe		= s3cmci_probe,
--- 
-1.9.1
+You, yourself, said in response to an earlier version of the patch set:
+
+
+     So you want to generalize CONFIG_IRQ_PREFLOW_FASTEOI so that it is
+     on each level of a domain stack? Humm. I personally think that
+     this is a massive bloat that is going to impact all the hot paths
+     for no gain whatsoever, but I'll let tglx speak his mind on that.
+
+Your current suggestion is, from the point of view of the "impact", 
+almost identical to what I was proposing back then.
+
+>
+> But the one thing that makes me uncomfortable here is that we're seem to
+> have this irq_ack() propagated all along the irqdata chain, which is not
+> what's happening. Only the EOI gets propagated.
+
+That is intentional.  The parent domain is handle_fasteoi_irq(), so we 
+know that it has no irq_ack().
+
+
+>
+> Why can't you just put the irq_ack call in your top level irq_eoi
+> callback? That'd make it similar to what is happening on the mbigen side
+> (not exactly surprising, since they are doing very similar things).
+
+irq_ack() must be called before handle_irq_event(), otherwise there is a 
+race condition where edge interrupts could be lost.
+
+
+>
+> Same remark about handle_fasteoi_level_irq.
+>
+> Thoughts?
+
+Several:
+
+1) Adding the additional mask_ack_irq()/irq_ack() to 
+handle_fasteoi_irq() is probably the cleanest solution, however ...
+
+2) There is a risk of breaking systems that inadvertently supply the new 
+chip methods, but the methods don't currently get called by 
+handle_fasteoi_irq().
+
+3) Checking for the presence of mask_ack_irq()/irq_ack() methods may 
+introduce additional branch mispredictions and cache misses on all 
+non-ThunderGPIO systems.
+
+
+David Daney
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
