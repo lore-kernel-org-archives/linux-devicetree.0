@@ -1,57 +1,65 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/9] phy: phy-mt65xx-usb3: increase LFPS filter threshold
-Date: Fri, 31 Mar 2017 15:35:28 +0800
-Message-ID: <1490945735-9531-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v5 7/9] arm64: dts: mt8173: split usb SuperSpeed port into two ports
+Date: Fri, 31 Mar 2017 15:35:33 +0800
+Message-ID: <1490945735-9531-7-git-send-email-chunfeng.yun@mediatek.com>
 References: <1490945735-9531-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490945735-9531-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490945735-9531-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Increase LFPS filter threshold to avoid some fake remote wakeup
-signal which cause U3 link fail and link to U2 only at about
-0.01% probability.
+split the old SuperSpeed port node into a HighSpeed one and a new
+SuperSpeed one.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/phy/phy-mt65xx-usb3.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-index fe2392a..4fd47d0 100644
---- a/drivers/phy/phy-mt65xx-usb3.c
-+++ b/drivers/phy/phy-mt65xx-usb3.c
-@@ -106,6 +106,10 @@
- #define P3A_RG_XTAL_EXT_EN_U3		GENMASK(11, 10)
- #define P3A_RG_XTAL_EXT_EN_U3_VAL(x)	((0x3 & (x)) << 10)
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 6922252..1dc4629 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -731,8 +731,9 @@
+ 			      <0 0x11280700 0 0x0100>;
+ 			reg-names = "mac", "ippc";
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
+-			phys = <&phy_port0 PHY_TYPE_USB3>,
+-			       <&phy_port1 PHY_TYPE_USB2>;
++			phys = <&u2port0 PHY_TYPE_USB2>,
++			       <&u3port0 PHY_TYPE_USB3>,
++			       <&u2port1 PHY_TYPE_USB2>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+ 			clocks = <&topckgen CLK_TOP_USB30_SEL>,
+ 				 <&clk26m>,
+@@ -770,14 +771,20 @@
+ 			ranges;
+ 			status = "okay";
  
-+#define U3P_U3_PHYD_LFPS1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x000c)
-+#define P3D_RG_FWAKE_TH		GENMASK(21, 16)
-+#define P3D_RG_FWAKE_TH_VAL(x)	((0x3f & (x)) << 16)
-+
- #define U3P_PHYD_CDR1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x005c)
- #define P3D_RG_CDR_BIR_LTD1		GENMASK(28, 24)
- #define P3D_RG_CDR_BIR_LTD1_VAL(x)	((0x1f & (x)) << 24)
-@@ -303,6 +307,11 @@ static void phy_instance_init(struct mt65xx_u3phy *u3phy,
- 	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
- 	writel(tmp, port_base + U3P_PHYD_CDR1);
+-			phy_port0: port@11290800 {
+-				reg = <0 0x11290800 0 0x800>;
++			u2port0: usb-phy@11290800 {
++				reg = <0 0x11290800 0 0x100>;
+ 				#phy-cells = <1>;
+ 				status = "okay";
+ 			};
  
-+	tmp = readl(port_base + U3P_U3_PHYD_LFPS1);
-+	tmp &= ~P3D_RG_FWAKE_TH;
-+	tmp |= P3D_RG_FWAKE_TH_VAL(0x34);
-+	writel(tmp, port_base + U3P_U3_PHYD_LFPS1);
+-			phy_port1: port@11291000 {
+-				reg = <0 0x11291000 0 0x800>;
++			u3port0: usb-phy@11290900 {
++				reg = <0 0x11290900 0 0x700>;
++				#phy-cells = <1>;
++				status = "okay";
++			};
 +
- 	tmp = readl(port_base + U3P_U3_PHYD_RXDET1);
- 	tmp &= ~P3D_RG_RXDET_STB2_SET;
- 	tmp |= P3D_RG_RXDET_STB2_SET_VAL(0x10);
++			u2port1: usb-phy@11291000 {
++				reg = <0 0x11291000 0 0x100>;
+ 				#phy-cells = <1>;
+ 				status = "okay";
+ 			};
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
