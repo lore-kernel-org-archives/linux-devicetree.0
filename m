@@ -1,49 +1,46 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2,1/3] meson_uart: expose CLKID_UARTx
-Date: Fri, 31 Mar 2017 17:37:37 +0200
-Message-ID: <1490974657.12951.5.camel@baylibre.com>
-References: <20170328092545.4644-1-hgkr.klein@gmail.com>
-         <20170328092545.4644-2-hgkr.klein@gmail.com>
-         <1490716277.20764.6.camel@baylibre.com>
-         <71489b62-78c8-7082-587e-8598dc43ca59@gmail.com>
-         <1490728490.20764.8.camel@baylibre.com>
-         <CAFBinCDF29+kQpedsJPqRy6fztWrj91Qi6tCno_2S6UCkhW7XQ@mail.gmail.com>
-         <m2y3vn6dhk.fsf@baylibre.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: armada-38x: label USB and SATA nodes
+Date: Fri, 31 Mar 2017 18:50:15 +0200
+Message-ID: <20170331165015.GJ12814@lunn.ch>
+References: <20170331074115.8111-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <m2y3vn6dhk.fsf@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Helmut Klein <hgkr.klein@gmail.com>, mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170331074115.8111-1-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-03-29 at 13:21 -0700, Kevin Hilman wrote:
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-> 
-> [...]
-> 
-> > for Helmut this would mean that instead of dropping this patch (or
-> > dropping CLKID_UART1 and CLKID_UART2 from this patch) he would rather
-> > have to *add* another patch (for meson-gxbb.dtsi and meson-gxl.dtsi)
-> > which passes the core clocks to the corresponding UART controllers
-> > (similar to the CLKID_SD_EMMC_ clocks).
-> 
-> Yes, this is what I would like to see.
-> 
-> If a new CLKID is exposed, I want to see the users of it at the same
-> time.
+> -			sata@a8000 {
+> +			satac0: sata@a8000 {
 
-Helmut,
+Hi Ralph
 
-If you send another version of these patches, considering the feedback of Kevin
-and Martin, could you please change the subject of this patch to:
+Why the c in satac0?
 
-dt-bindings: clock: gxbb: expose UART clocks
+>  
+> -			usb3@f0000 {
+> +			usb3_0: usb3@f0000 {
+>  				compatible = "marvell,armada-380-xhci";
+>  				reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
+>  				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -598,7 +598,7 @@
+>  				status = "disabled";
+>  			};
+>  
+> -			usb3@f8000 {
+> +			usb3_1: usb3@f8000 {
+>  				compatible = "marvell,armada-380-xhci";
+>  				reg = <0xf8000 0x4000>,<0xfc000 0x4000>;
+>  				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
 
-Thx
-Jerome
+I can understand what you are saying. But does anybody else care? Are
+there other .dtsi files differentiating between USB 1.1, 2 and 3?
 
-> 
-> Kevin
+      Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
