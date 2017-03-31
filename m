@@ -1,223 +1,91 @@
-Return-Path: <SRS0=7UnC=3B=gmail.com=ralph.sennhauser@kernel.org>
-Date: Fri, 24 Mar 2017 09:11:28 +0100
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: Re: [PATCH v2 2/4] mvebu: xp: Add pwm properties to .dtsi files
-Message-ID: <20170324091128.329364eb@gmail.com>
-In-Reply-To: <871stodjze.fsf@free-electrons.com>
-References: <20170318154305.28348-1-ralph.sennhauser@gmail.com>
-	<20170318154305.28348-3-ralph.sennhauser@gmail.com>
-	<871stodjze.fsf@free-electrons.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Imre Kaloz <kaloz@openwrt.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "moderated list:ARM/Marvell Kirkwood" <linux-arm-kernel@lists.infradead.org>and, "open list:OPEN FIRMWARE AND" <devicetree@vger.kernel.org>, FLATTENED, open list <linux-kernel@vger.kernel.org>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>
-List-ID: <devicetree@vger.kernel.org>
+From: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] mmc: host: s3cmci: allow probing from device tree
+Date: Fri, 31 Mar 2017 19:46:22 -0300
+Message-ID: <20170331224622.GA11126@sprado-desktop>
+References: <1489799633-29278-1-git-send-email-sergio.prado@e-labworks.com>
+ <1489799633-29278-3-git-send-email-sergio.prado@e-labworks.com>
+ <CAK8P3a2emCf=KtpCJMOaJnr89Gi+rCi0eun_vjb1wiYB=JR6jg@mail.gmail.com>
+ <CAPDyKFquGSgK7tkYDpkJM7C7JChZMqvmHoJyiLE9_ZG4CGBOSw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFquGSgK7tkYDpkJM7C7JChZMqvmHoJyiLE9_ZG4CGBOSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Mar 2017 17:40:53 +0100
-Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
-
-> Hi Ralph,
->  
->  On sam., mars 18 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com>
-> wrote:
-> 
-> It seems that I don't receive the 1st patch of the series.
-
-Hi Gregory,
-
-it makes no sense to only send part of a series to a recipient. Will
-have to improve my use of --cc-cmd it seems. Will pay attention to this
-for v3.
-
-Sorry
-Ralph
-
-> 
-> Also could you refresh my mind to expose why these patchse were not
-> apply the first time and why we should apply them now?
-> 
-> Thanks,
-> 
-> Gregory
-> 
-> 
-> > From: Andrew Lunn <andrew@lunn.ch>
+On Fri, Mar 31, 2017 at 01:11:59PM +0200, Ulf Hansson wrote:
+> On 31 March 2017 at 09:25, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Sat, Mar 18, 2017 at 2:13 AM, Sergio Prado
+> > <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org> wrote:
 > >
-> > Add properties to the gpio nodes to allow them to be also used as
-> > pwm lines.
+> >>
+> >> +static const struct of_device_id s3cmci_dt_match[] = {
+> >> +       {
+> >> +               .compatible = "samsung,s3c2410-sdi",
+> >> +               .data = (void *)0,
+> >> +       },
+> >> +       {
+> >> +               .compatible = "samsung,s3c2412-sdi",
+> >> +               .data = (void *)1,
+> >> +       },
+> >> +       {
+> >> +               .compatible = "samsung,s3c2440-sdi",
+> >> +               .data = (void *)1,
+> >> +       },
+> >> +       { /* sentinel */ },
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
+> >> +
 > >
-> > Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> > URL: https://patchwork.ozlabs.org/patch/427294/
-> > Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/armada-370.dtsi        | 10 ++++++++--
-> >  arch/arm/boot/dts/armada-xp-mv78230.dtsi | 10 ++++++++--
-> >  arch/arm/boot/dts/armada-xp-mv78260.dtsi |  8 ++++++--
-> >  arch/arm/boot/dts/armada-xp-mv78460.dtsi | 10 ++++++++--
-> >  4 files changed, 30 insertions(+), 8 deletions(-)
+> > The names don't match:
 > >
-> > diff --git a/arch/arm/boot/dts/armada-370.dtsi
-> > b/arch/arm/boot/dts/armada-370.dtsi index cc011c8..aa9fe72 100644
-> > --- a/arch/arm/boot/dts/armada-370.dtsi
-> > +++ b/arch/arm/boot/dts/armada-370.dtsi
-> > @@ -138,24 +138,30 @@
-> >  
-> >  			gpio0: gpio@18100 {
-> >  				compatible = "marvell,orion-gpio";
-> > -				reg = <0x18100 0x40>;
-> > +				reg = <0x18100 0x40>, <0x181c0
-> > 0x08>;
-> > +				reg-names = "gpio", "pwm";
-> >  				ngpios = <32>;
-> >  				gpio-controller;
-> >  				#gpio-cells = <2>;
-> > +				#pwm-cells = <2>;
-> >  				interrupt-controller;
-> >  				#interrupt-cells = <2>;
-> >  				interrupts = <82>, <83>, <84>,
-> > <85>;
-> > +				clocks = <&coreclk 0>;
-> >  			};
-> >  
-> >  			gpio1: gpio@18140 {
-> >  				compatible = "marvell,orion-gpio";
-> > -				reg = <0x18140 0x40>;
-> > +				reg = <0x18140 0x40>, <0x181c8
-> > 0x08>;
-> > +				reg-names = "gpio", "pwm";
-> >  				ngpios = <32>;
-> >  				gpio-controller;
-> >  				#gpio-cells = <2>;
-> > +				#pwm-cells = <2>;
-> >  				interrupt-controller;
-> >  				#interrupt-cells = <2>;
-> >  				interrupts = <87>, <88>, <89>,
-> > <90>;
-> > +				clocks = <&coreclk 0>;
-> >  			};
-> >  
-> >  			gpio2: gpio@18180 {
-> > diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-> > b/arch/arm/boot/dts/armada-xp-mv78230.dtsi index 07c5090..fc3934f
-> > 100644 --- a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-> > +++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-> > @@ -203,24 +203,30 @@
-> >  		internal-regs {
-> >  			gpio0: gpio@18100 {
-> >  				compatible = "marvell,orion-gpio";
-> > -				reg = <0x18100 0x40>;
-> > +				reg = <0x18100 0x40>, <0x181c0
-> > 0x08>;
-> > +				reg-names = "gpio", "pwm";
-> >  				ngpios = <32>;
-> >  				gpio-controller;
-> >  				#gpio-cells = <2>;
-> > +				#pwm-cells = <2>;
-> >  				interrupt-controller;
-> >  				#interrupt-cells = <2>;
-> >  				interrupts = <82>, <83>, <84>,
-> > <85>;
-> > +				clocks = <&coreclk 0>;
-> >  			};
-> >  
-> >  			gpio1: gpio@18140 {
-> >  				compatible = "marvell,orion-gpio";
-> > -				reg = <0x18140 0x40>;
-> > +				reg = <0x18140 0x40>, <0x181c8
-> > 0x08>;
-> > +				reg-names = "gpio", "pwm";
-> >  				ngpios = <17>;
-> >  				gpio-controller;
-> >  				#gpio-cells = <2>;
-> > +				#pwm-cells = <2>;
-> >  				interrupt-controller;
-> >  				#interrupt-cells = <2>;
-> >  				interrupts = <87>, <88>, <89>;
-> > +				clocks = <&coreclk 0>;
-> >  			};
-> >  		};
-> >  	};
-> > diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-> > b/arch/arm/boot/dts/armada-xp-mv78260.dtsi index 64e936a..04dda6a
-> > 100644 --- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-> > +++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-> > @@ -286,24 +286,28 @@
-> >  		internal-regs {
-> >  			gpio0: gpio@18100 {
-> >  				compatible = "marvell,orion-gpio";
-> > -				reg = <0x18100 0x40>;
-> > +				reg = <0x18100 0x40>, <0x181c0
-> > 0x08>;
-> > +				reg-names = "gpio", "pwm";
-> >  				ngpios = <32>;
-> >  				gpio-controller;
-> >  				#gpio-cells = <2>;
-> > +				#pwm-cells = <2>;
-> >  				interrupt-controller;
-> >  				#interrupt-cells = <2>;
-> >  				interrupts = <82>, <83>, <84>,
-> > <85>;
-> > +				clocks = <&coreclk 0>;
-> >  			};
-> >  
-> >  			gpio1: gpio@18140 {
-> >  				compatible = "marvell,orion-gpio";
-> > -				reg = <0x18140 0x40>;
-> > +				reg = <0x18140 0x40>, <0x181c8
-> > 0x08>; ngpios = <32>;
-> >  				gpio-controller;
-> >  				#gpio-cells = <2>;
-> >  				interrupt-controller;
-> >  				#interrupt-cells = <2>;
-> >  				interrupts = <87>, <88>, <89>,
-> > <90>;
-> > +				clocks = <&coreclk 0>;
-> >  			};
-> >  
-> >  			gpio2: gpio@18180 {
-> > diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-> > b/arch/arm/boot/dts/armada-xp-mv78460.dtsi index d1383dd..fb6d28a
-> > 100644 --- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-> > +++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-> > @@ -324,24 +324,30 @@
-> >  		internal-regs {
-> >  			gpio0: gpio@18100 {
-> >  				compatible = "marvell,orion-gpio";
-> > -				reg = <0x18100 0x40>;
-> > +				reg = <0x18100 0x40>, <0x181c0
-> > 0x08>;
-> > +				reg-names = "gpio", "pwm";
-> >  				ngpios = <32>;
-> >  				gpio-controller;
-> >  				#gpio-cells = <2>;
-> > +				#pwm-cells = <2>;
-> >  				interrupt-controller;
-> >  				#interrupt-cells = <2>;
-> >  				interrupts = <82>, <83>, <84>,
-> > <85>;
-> > +				clocks = <&coreclk 0>;
-> >  			};
-> >  
-> >  			gpio1: gpio@18140 {
-> >  				compatible = "marvell,orion-gpio";
-> > -				reg = <0x18140 0x40>;
-> > +				reg = <0x18140 0x40>, <0x181c8
-> > 0x08>;
-> > +				reg-names = "gpio", "pwm";
-> >  				ngpios = <32>;
-> >  				gpio-controller;
-> >  				#gpio-cells = <2>;
-> > +				#pwm-cells = <2>;
-> >  				interrupt-controller;
-> >  				#interrupt-cells = <2>;
-> >  				interrupts = <87>, <88>, <89>,
-> > <90>;
-> > +				clocks = <&coreclk 0>;
-> >  			};
-> >  
-> >  			gpio2: gpio@18180 {
-> > -- 
-> > 2.10.2
-> >  
+> > In file included from /git/arm-soc/drivers/mmc/host/s3cmci.c:14:0:
+> > /git/arm-soc/drivers/mmc/host/s3cmci.c:1844:25: error:
+> > 'sdhci_s3c_dt_match' undeclared here (not in a function); did you mean
+> > 's3cmci_dt_match'?
+> >  MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
+> >                          ^
+> > /git/arm-soc/include/linux/module.h:212:21: note: in definition of
+> > macro 'MODULE_DEVICE_TABLE'
+> >  extern const typeof(name) __mod_##type##__##name##_device_table  \
+> >                      ^~~~
+> > /git/arm-soc/include/linux/module.h:212:27: error:
+> > '__mod_of__sdhci_s3c_dt_match_device_table' aliased to undefined
+> > symbol 'sdhci_s3c_dt_match'
+> >  extern const typeof(name) __mod_##type##__##name##_device_table  \
+> >                            ^
+> > /git/arm-soc/drivers/mmc/host/s3cmci.c:1844:1: note: in expansion of
+> > macro 'MODULE_DEVICE_TABLE'
+> >  MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
+> >  ^~~~~~~~~~~~~~~~~~~
+> > /git/arm-soc/scripts/Makefile.build:314: recipe for target
+> > 'drivers/mmc/host/s3cmci.o' failed
+> >
+> > Can you send a fix?
 > 
+> Never mind, I am dropping the patches from my next branch as those
+> clearly haven't been built/tested by Sergio properly. It's better that
+> he re-spins them.
+> 
+> Arnd, thanks for reporting and even fixing some of the problems!
+> 
+> Kind regards
+> Uffe
+
+Arnd, thanks for reporting the error.
+
+I have built/tested the patches, but only as a built-in feature, and
+this error occurs when enabled as a module.
+
+I will re-spins them and send v6.
+
+Best regards,
+
+Sergio Prado
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
