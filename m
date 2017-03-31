@@ -1,75 +1,150 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] mmc: host: s3cmci: allow probing from device tree
-Date: Fri, 31 Mar 2017 13:11:59 +0200
-Message-ID: <CAPDyKFquGSgK7tkYDpkJM7C7JChZMqvmHoJyiLE9_ZG4CGBOSw@mail.gmail.com>
-References: <1489799633-29278-1-git-send-email-sergio.prado@e-labworks.com>
- <1489799633-29278-3-git-send-email-sergio.prado@e-labworks.com> <CAK8P3a2emCf=KtpCJMOaJnr89Gi+rCi0eun_vjb1wiYB=JR6jg@mail.gmail.com>
+From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v13 00/12] MT2701 DRM support
+Date: Fri, 31 Mar 2017 19:30:27 +0800
+Message-ID: <1490959839-39816-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a2emCf=KtpCJMOaJnr89Gi+rCi0eun_vjb1wiYB=JR6jg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31 March 2017 at 09:25, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Sat, Mar 18, 2017 at 2:13 AM, Sergio Prado
-> <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org> wrote:
->
->>
->> +static const struct of_device_id s3cmci_dt_match[] = {
->> +       {
->> +               .compatible = "samsung,s3c2410-sdi",
->> +               .data = (void *)0,
->> +       },
->> +       {
->> +               .compatible = "samsung,s3c2412-sdi",
->> +               .data = (void *)1,
->> +       },
->> +       {
->> +               .compatible = "samsung,s3c2440-sdi",
->> +               .data = (void *)1,
->> +       },
->> +       { /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
->> +
->
-> The names don't match:
->
-> In file included from /git/arm-soc/drivers/mmc/host/s3cmci.c:14:0:
-> /git/arm-soc/drivers/mmc/host/s3cmci.c:1844:25: error:
-> 'sdhci_s3c_dt_match' undeclared here (not in a function); did you mean
-> 's3cmci_dt_match'?
->  MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
->                          ^
-> /git/arm-soc/include/linux/module.h:212:21: note: in definition of
-> macro 'MODULE_DEVICE_TABLE'
->  extern const typeof(name) __mod_##type##__##name##_device_table  \
->                      ^~~~
-> /git/arm-soc/include/linux/module.h:212:27: error:
-> '__mod_of__sdhci_s3c_dt_match_device_table' aliased to undefined
-> symbol 'sdhci_s3c_dt_match'
->  extern const typeof(name) __mod_##type##__##name##_device_table  \
->                            ^
-> /git/arm-soc/drivers/mmc/host/s3cmci.c:1844:1: note: in expansion of
-> macro 'MODULE_DEVICE_TABLE'
->  MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
->  ^~~~~~~~~~~~~~~~~~~
-> /git/arm-soc/scripts/Makefile.build:314: recipe for target
-> 'drivers/mmc/host/s3cmci.o' failed
->
-> Can you send a fix?
+This is MT2701 DRM support PATCH v13, based on 4.11-rc1.
+We add DSI interrupt control, transfer function for MIPI DSI panel support.
+Most codes are the same, except some register changed.
 
-Never mind, I am dropping the patches from my next branch as those
-clearly haven't been built/tested by Sergio properly. It's better that
-he re-spins them.
+For example:
+ - DISP_OVL address offset changed, color format definition changed.
+ - DISP_RDMA fifo size changed.
+ - DISP_COLOR offset changed.
+ - MIPI_TX setting changed.
 
-Arnd, thanks for reporting and even fixing some of the problems!
+We add a new component DDP_COMPONENT_BLS, and the connections are updated.
+OVL -> RDMA -> COLOR -> BLS -> DSI
+RDMA -> DPI
+And we have shadow register support in MT2701.
 
-Kind regards
-Uffe
+Changes since v12:
+- Fix DSI enable flow we changed at v12
+
+Changes since v11:
+- Update mtk_dsi_poweron() and mtk_output_dsi_enable() to symmetric flow
+
+Changes since v10:
+- Add binding descriptions for newly added bindings
+- Remove color data pointer from generic mtk_ddp_comp
+- Remove "drm/mediatek: add mipi_tx data rate check" from the patch series
+- Remove "drm/mediatek: add dsi ulp mode control" from the patch series
+- Update descriptions for "drm/mediatek: add non-continuous clock mode and EOT packet control"
+- Fix DSI disable flow
+
+Changes since v9:
+- Split DSI patches into smaller parts
+- Use a real linux errno for return value
+- Add error handling in mtk_output_dsi_enable()
+- Remove unused changes and redundant delays
+- Add helpers and macros for configuration
+- Combine "drm/mediatek: rename macros, add chip prefix" and "drm/mediatek: add *driver_data for different hardware setting"
+
+Changes since v8:
+- enable 3 DSI interrupts only
+- move mtk_dsi_wait_for_irq_done() to the patch of irq control
+- use the name BLS in DRM driver part
+- move BLS declaration to a separate patch
+- update mtk_dsi_switch_to_cmd_mode()
+- update mtk_output_dsi_enable() and mtk_output_dsi_disable()
+
+Changes since v7:
+- Remove redundant codes
+- Move the definition of DDP_COMPONENT_BLS to patch of "drm/mediatek: update display module connections"
+- Move _dsi_irq_wait_queue into platform driver data
+- Move mtk_dsi_irq_data_clear() to patch of "drm/mediatek: add dsi interrupt control"
+- Add more descriptions in the commit messages
+
+Changes since v6:
+- Change data type of irq_data to u32
+- Rewrite mtk_dsi_host_transfer() for simplify
+- Move some MIPI_TX config to patch of "drm/mediatek: add *driver_data for different hardware settings".
+- Remove device tree from this patch series
+
+Changes since v5:
+- Remove DPI device tree and compatible string
+- Use one wait queue to handle interrupt status
+- Update the interrupt check flow and DSI_INT_ALL_BITS
+- Use same function for host read/write command
+- various fixes
+
+Changes since v4:
+- Add messages when timeout in mtk_disp_mutex_acquire()
+- Add descriptions for DISP_REG_MUTEX registers
+- Move connection settings for display modules to a separate patch
+- Remove 'mt2701-disp-wdma' because it is unused
+- Move cleaning up and renaming to a separate patch
+- Use wait_event_interruptible_timeout() to replace polling
+- Remove irq_num from mtk_dsi structure
+- Remove redundant and debug codes
+
+Changes since v3:
+- Add DSI support for MIPI DSI panels
+- Update BLS binding to PWM nodes
+- Remove ufoe device nodes
+- Remove redundant parentheses
+- Remove global variable initialization
+
+Changes since v2:
+- Rename mtk_ddp_mux_sel to mtk_ddp_sout_sel
+- Update mt2701_mtk_ddp_ext components
+- Changed to prefix naming
+- Reorder the patch series
+- Use of_device_get_match_data() to get driver private data
+- Use iopoll macros to implement mtk_disp_mutex_acquire()
+- Removed empty device tree nodes
+
+Changes since v1:
+- Removed BLS bindings and codes, which belong to pwm driver
+- Moved mtk_disp_mutex_acquire() just before mtk_crtc_ddp_config()
+- Split patch into smaller parts
+- Added const keyword to constant structure
+- Removed codes for special memory align
+
+Thanks,
+yt.shen
+
+YT Shen (10):
+  dt-bindings: display: mediatek: update supported chips
+  drm/mediatek: add helpers for coverting from the generic components
+  drm/mediatek: add *driver_data for different hardware settings
+  drm/mediatek: add shadow register support
+  drm/mediatek: add BLS component
+  drm/mediatek: update display module connections
+  drm/mediatek: cleaning up and refine
+  drm/mediatek: add non-continuous clock mode and EOT packet control
+  drm/mediatek: update DSI sub driver flow for sending commands to panel
+  drm/mediatek: add support for Mediatek SoC MT2701
+
+shaoming chen (2):
+  drm/mediatek: add dsi interrupt control
+  drm/mediatek: add dsi transfer function
+
+ .../bindings/display/mediatek/mediatek,disp.txt    |   2 +
+ .../bindings/display/mediatek/mediatek,dsi.txt     |   2 +
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  64 ++-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  39 +-
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  75 +--
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 138 +++--
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |   2 +
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |  69 ++-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |   2 +
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  54 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   9 +
+ drivers/gpu/drm/mediatek/mtk_dsi.c                 | 572 ++++++++++++++++-----
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.c             |  38 +-
+ 13 files changed, 828 insertions(+), 238 deletions(-)
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
