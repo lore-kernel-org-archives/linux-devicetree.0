@@ -1,52 +1,54 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH V8 5/6] ACPI: Support the probing on the devices which
- apply indirect-IO
-Date: Sat, 1 Apr 2017 01:02:32 +0200
-Message-ID: <CAJZ5v0gZdghH7jjd-zMmqXNkuvVVVSPDHfBrJXx5OXR2NE0KgA@mail.gmail.com>
-References: <1490887619-61732-1-git-send-email-yuanzhichang@hisilicon.com>
- <1490887619-61732-6-git-send-email-yuanzhichang@hisilicon.com>
- <1908501.jAQQKvjW4f@aspire.rjw.lan> <58DDFCBE.1030705@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <58DDFCBE.1030705@hisilicon.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Brian Starkey <brian.starkey@arm.com>, Olof Johansson <olof@lixom.net>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linuxarm@huawei.com"devicetree@vger.kernel.org" <de>
+From: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+Subject: [PATCH v6 0/2] mmc: host: s3cmci: add device tree support
+Date: Fri, 31 Mar 2017 20:50:54 -0300
+Message-ID: <1491004256-13969-1-git-send-email-sergio.prado@e-labworks.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 8:52 AM, zhichang.yuan
-<yuanzhichang@hisilicon.com> wrote:
-> Hi, Rafael,
->
-> Thanks for reviewing this!
->
-> On 2017/3/31 4:31, Rafael J. Wysocki wrote:
->> On Thursday, March 30, 2017 11:26:58 PM zhichang.yuan wrote:
->>> On some platforms(such as Hip06/Hip07), the legacy ISA/LPC devices access I/O
->>> with some special host-local I/O ports known on x86. To access the I/O
->>> peripherals, an indirect-IO mechanism is introduced to mapped the host-local
->>> I/O to system logical/fake PIO similar the PCI MMIO on architectures where no
->>> separate I/O space exists. Just as PCI MMIO, the host I/O range should be
->>> registered before probing the downstream devices and set up the I/O mapping.
->>> But current ACPI bus probing doesn't support these indirect-IO hosts/devices.
->>>
->>> This patch introdueces a new ACPI handler for this device category. Through the
->>> handler attach callback, the indirect-IO hosts I/O registration is done and
->>> all peripherals' I/O resources are translated into logic/fake PIO before
->>> starting the enumeration.
->>
->> Can you explain to me briefly what exactly this code is expected to be doing?
->
-> As you know currently for ARM architecture IO space is memory mapped and
-> is only used by pci devices. The port number is dynamically allocated
-> converting the device IO address into a PIO token: i.e.
-> http://lxr.free-electrons.com/source/drivers/acpi/pci_root.c#L745
-> This patch is meant to support a new class of IO host controller
-> that are not PCI based and that still require to have the IO addresses
-> be translated in the same PIO token space as the PCI controller
+This series adds support for configuring Samsung's S3C24XX MMC/SD/SDIO
+controller via device tree.
 
-IOW, this is ARM-specific, right?
+Tested on FriendlyARM mini2440, based on s3c2440 SoC.
 
-Thanks,
-Rafael
+Changes since v5 (as reported by Arnd Bergmann)
+- fix module device table name that was causing an error when building
+  the driver as a module
+
+Changes since v4 (as suggested by Jaehoon Chung):
+- using just a flag as a data structure for the driver to check for
+  s3c2400 compatibility
+
+Changes since v3 (as suggested by Rob Herring):
+- describing properties that wasn't documented and removing unnecessary
+  comment in the device tree binding
+
+Changes since v2:
+- struct "s3cmci_drv_data" and flag "is2440" renamed
+- copying the whole driver data struct instead of only its member so
+  it will be easier to extend the information in the future
+- using mmc_of_parse() to read "cd-gpios" and "wp-gpios" properties
+  from device tree
+
+Changes since v1:
+- pinctrl description removed from DT binding
+- unit and label on DT binding renamed to mmc
+
+Sergio Prado (2):
+  dt-bindings: mmc: add DT binding for S3C24XX MMC/SD/SDIO controller
+  mmc: host: s3cmci: allow probing from device tree
+
+ .../devicetree/bindings/mmc/samsung,s3cmci.txt     |  42 ++++
+ drivers/mmc/host/s3cmci.c                          | 257 ++++++++++-----------
+ 2 files changed, 168 insertions(+), 131 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
