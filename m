@@ -1,80 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] doc,dts - add XRA1403 DTS binding documentation
-Date: Fri, 31 Mar 2017 13:49:57 -0500
-Message-ID: <20170331184957.bpnsgzevvfypq5ls@rob-hp-laptop>
-References: <cover.1490595641.git.nandor.han@ge.com>
- <39ba92bacf48da957f8f85d5cb11d3254fe3d68f.1490595641.git.nandor.han@ge.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v5 7/7] mfd: dt-bindings: Add RK805 device tree
+ bindings document
+Date: Fri, 31 Mar 2017 13:53:36 -0500
+Message-ID: <20170331185336.ei35dsfcoj6im7k2@rob-hp-laptop>
+References: <1490595705-28844-1-git-send-email-zhangqing@rock-chips.com>
+ <1490597615-852-1-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <39ba92bacf48da957f8f85d5cb11d3254fe3d68f.1490595641.git.nandor.han@ge.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nandor Han <nandor.han@ge.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1490597615-852-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 09:23:01AM +0300, Nandor Han wrote:
-> Add the XRA1403 DTS binding documentation.
-
-"dt-bindings: gpio: ..." for the subject prefix please.
-
+On Mon, Mar 27, 2017 at 02:53:35PM +0800, Elaine Zhang wrote:
+> Add device tree bindings documentation for Rockchip's RK805 PMIC.
 > 
-> Signed-off-by: Nandor Han <nandor.han@ge.com>
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  .../devicetree/bindings/gpio/gpio-xra1403.txt      | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xra1403.txt b/Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
-> new file mode 100644
-> index 0000000..ccf5337
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
-> @@ -0,0 +1,37 @@
-> +GPIO Driver for XRA1403 16-BIT GPIO Expander With Reset Input from EXAR
-> +
-> +The XRA1403 is an 16-bit GPIO expander with an SPI interface. Features available:
-> +	- Individually programmable inputs:
-> +		- Internal pull-up resistors
-> +		- Polarity inversion
-> +		- Individual interrupt enable
-> +		- Rising edge and/or Falling edge interrupt
-> +		- Input filter
-> +	- Individually programmable outputs
-> +		- Output Level Control
-> +		- Output Three-State Control
-> +
-> +Properties
-> +----------
-> +Check documentation for SPI and GPIO controllers regarding properties needed to configure the node.
-> +
-> +	- compatible = "exar,xra1403".
-> +	- reg = SPI id of the device.
-> +	- gpio-controller: mark the node as gpio.
+>  Documentation/devicetree/bindings/mfd/rk808.txt | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
 
-#gpio-cells?
-
-> +
-> +Optional properties:
-> +-------------------
-> +	- reset-gpios: in case available used to control the device reset line.
-> +
-> +Example
-> +--------
-> +
-> +	gpioxra0: gpio@2 {
-> +		compatible = "exar,xra1403";
-> +		reg = <2>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		reset-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
-> +		spi-max-frequency = <1000000>;
-> +		status = "okay";
-
-Don't show status in examples.
-
-> +	};
-> -- 
-> 2.10.1
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
