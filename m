@@ -1,178 +1,224 @@
 From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v13 08/12] drm/mediatek: add dsi interrupt control
-Date: Fri, 31 Mar 2017 19:30:35 +0800
-Message-ID: <1490959839-39816-9-git-send-email-yt.shen@mediatek.com>
+Subject: [PATCH v13 04/12] drm/mediatek: add shadow register support
+Date: Fri, 31 Mar 2017 19:30:31 +0800
+Message-ID: <1490959839-39816-5-git-send-email-yt.shen@mediatek.com>
 References: <1490959839-39816-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1490959839-39816-1-git-send-email-yt.shen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com, emil.l.velikov@gmail.com, thierry.reding@gmail.com, Daniel Kurtz <djkurtz@chromium.org>, shaoming chen <shaoming.chen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, thierry.reding@gmail.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: shaoming chen <shaoming.chen@mediatek.com>
+We need to acquire mutex before using the resources,
+and need to release it after finished.
+So we don't need to write registers in the blanking period.
 
-add dsi interrupt control
-
-Signed-off-by: shaoming chen <shaoming.chen@mediatek.com>
+Signed-off-by: YT Shen <yt.shen@mediatek.com>
 Acked-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 92 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 75 ++++++++++++++++++++-------------
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 25 +++++++++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |  2 +
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  1 +
+ 4 files changed, 74 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 5d66b98..57955636 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -18,6 +18,7 @@
- #include <drm/drm_panel.h>
- #include <linux/clk.h>
- #include <linux/component.h>
-+#include <linux/irq.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/of_graph.h>
-@@ -29,6 +30,16 @@
- 
- #define DSI_START		0x00
- 
-+#define DSI_INTEN		0x08
-+
-+#define DSI_INTSTA		0x0c
-+#define LPRX_RD_RDY_INT_FLAG		BIT(0)
-+#define CMD_DONE_INT_FLAG		BIT(1)
-+#define TE_RDY_INT_FLAG			BIT(2)
-+#define VM_DONE_INT_FLAG		BIT(3)
-+#define EXT_TE_RDY_INT_FLAG		BIT(4)
-+#define DSI_BUSY			BIT(31)
-+
- #define DSI_CON_CTRL		0x10
- #define DSI_RESET			BIT(0)
- #define DSI_EN				BIT(1)
-@@ -71,6 +82,9 @@
- 
- #define DSI_HSTX_CKL_WC		0x64
- 
-+#define DSI_RACK		0x84
-+#define RACK				BIT(0)
-+
- #define DSI_PHY_LCCON		0x104
- #define LC_HS_TX_EN			BIT(0)
- #define LC_ULPM_EN			BIT(1)
-@@ -137,6 +151,8 @@ struct mtk_dsi {
- 	struct videomode vm;
- 	int refcount;
- 	bool enabled;
-+	u32 irq_data;
-+	wait_queue_head_t irq_wait_queue;
- };
- 
- static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
-@@ -469,6 +485,64 @@ static void mtk_dsi_start(struct mtk_dsi *dsi)
- 	writel(1, dsi->regs + DSI_START);
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index a73de1e..4988e50 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -329,6 +329,42 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ 	pm_runtime_put(drm->dev);
  }
  
-+static void mtk_dsi_set_interrupt_enable(struct mtk_dsi *dsi)
++static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
 +{
-+	u32 inten = LPRX_RD_RDY_INT_FLAG | CMD_DONE_INT_FLAG | VM_DONE_INT_FLAG;
++	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
++	struct mtk_ddp_comp *ovl = mtk_crtc->ddp_comp[0];
++	unsigned int i;
 +
-+	writel(inten, dsi->regs + DSI_INTEN);
-+}
++	/*
++	 * TODO: instead of updating the registers here, we should prepare
++	 * working registers in atomic_commit and let the hardware command
++	 * queue update module registers on vblank.
++	 */
++	if (state->pending_config) {
++		mtk_ddp_comp_config(ovl, state->pending_width,
++				    state->pending_height,
++				    state->pending_vrefresh, 0);
 +
-+static void mtk_dsi_irq_data_set(struct mtk_dsi *dsi, u32 irq_bit)
-+{
-+	dsi->irq_data |= irq_bit;
-+}
-+
-+static __maybe_unused void mtk_dsi_irq_data_clear(struct mtk_dsi *dsi, u32 irq_bit)
-+{
-+	dsi->irq_data &= ~irq_bit;
-+}
-+
-+static __maybe_unused s32 mtk_dsi_wait_for_irq_done(struct mtk_dsi *dsi, u32 irq_flag,
-+				     unsigned int timeout)
-+{
-+	s32 ret = 0;
-+	unsigned long jiffies = msecs_to_jiffies(timeout);
-+
-+	ret = wait_event_interruptible_timeout(dsi->irq_wait_queue,
-+					       dsi->irq_data & irq_flag,
-+					       jiffies);
-+	if (ret == 0) {
-+		DRM_WARN("Wait DSI IRQ(0x%08x) Timeout\n", irq_flag);
-+
-+		mtk_dsi_enable(dsi);
-+		mtk_dsi_reset_engine(dsi);
++		state->pending_config = false;
 +	}
 +
-+	return ret;
-+}
++	if (mtk_crtc->pending_planes) {
++		for (i = 0; i < OVL_LAYER_NR; i++) {
++			struct drm_plane *plane = &mtk_crtc->planes[i];
++			struct mtk_plane_state *plane_state;
 +
-+static irqreturn_t mtk_dsi_irq(int irq, void *dev_id)
-+{
-+	struct mtk_dsi *dsi = dev_id;
-+	u32 status, tmp;
-+	u32 flag = LPRX_RD_RDY_INT_FLAG | CMD_DONE_INT_FLAG | VM_DONE_INT_FLAG;
++			plane_state = to_mtk_plane_state(plane->state);
 +
-+	status = readl(dsi->regs + DSI_INTSTA) & flag;
-+
-+	if (status) {
-+		do {
-+			mtk_dsi_mask(dsi, DSI_RACK, RACK, RACK);
-+			tmp = readl(dsi->regs + DSI_INTSTA);
-+		} while (tmp & DSI_BUSY);
-+
-+		mtk_dsi_mask(dsi, DSI_INTSTA, status, 0);
-+		mtk_dsi_irq_data_set(dsi, status);
-+		wake_up_interruptible(&dsi->irq_wait_queue);
++			if (plane_state->pending.config) {
++				mtk_ddp_comp_layer_config(ovl, i, plane_state);
++				plane_state->pending.config = false;
++			}
++		}
++		mtk_crtc->pending_planes = false;
 +	}
-+
-+	return IRQ_HANDLED;
 +}
 +
- static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+ static void mtk_drm_crtc_enable(struct drm_crtc *crtc)
  {
- 	if (WARN_ON(dsi->refcount == 0))
-@@ -517,6 +591,7 @@ static void mtk_output_dsi_enable(struct mtk_dsi *dsi)
+ 	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
+@@ -405,6 +441,7 @@ static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+ 				      struct drm_crtc_state *old_crtc_state)
+ {
+ 	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_drm_private *priv = crtc->dev->dev_private;
+ 	unsigned int pending_planes = 0;
+ 	int i;
  
- 	mtk_dsi_ps_control_vact(dsi);
- 	mtk_dsi_config_vdo_timing(dsi);
-+	mtk_dsi_set_interrupt_enable(dsi);
+@@ -426,6 +463,12 @@ static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+ 	if (crtc->state->color_mgmt_changed)
+ 		for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
+ 			mtk_ddp_gamma_set(mtk_crtc->ddp_comp[i], crtc->state);
++
++	if (priv->data->shadow_register) {
++		mtk_disp_mutex_acquire(mtk_crtc->mutex);
++		mtk_crtc_ddp_config(crtc);
++		mtk_disp_mutex_release(mtk_crtc->mutex);
++	}
+ }
  
- 	mtk_dsi_set_mode(dsi);
- 	mtk_dsi_clk_hs_mode(dsi, 1);
-@@ -800,6 +875,7 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+ static const struct drm_crtc_funcs mtk_crtc_funcs = {
+@@ -471,36 +514,10 @@ static int mtk_drm_crtc_init(struct drm_device *drm,
+ void mtk_crtc_ddp_irq(struct drm_crtc *crtc, struct mtk_ddp_comp *ovl)
+ {
+ 	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
+-	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+-	unsigned int i;
++	struct mtk_drm_private *priv = crtc->dev->dev_private;
+ 
+-	/*
+-	 * TODO: instead of updating the registers here, we should prepare
+-	 * working registers in atomic_commit and let the hardware command
+-	 * queue update module registers on vblank.
+-	 */
+-	if (state->pending_config) {
+-		mtk_ddp_comp_config(ovl, state->pending_width,
+-				    state->pending_height,
+-				    state->pending_vrefresh, 0);
+-
+-		state->pending_config = false;
+-	}
+-
+-	if (mtk_crtc->pending_planes) {
+-		for (i = 0; i < OVL_LAYER_NR; i++) {
+-			struct drm_plane *plane = &mtk_crtc->planes[i];
+-			struct mtk_plane_state *plane_state;
+-
+-			plane_state = to_mtk_plane_state(plane->state);
+-
+-			if (plane_state->pending.config) {
+-				mtk_ddp_comp_layer_config(ovl, i, plane_state);
+-				plane_state->pending.config = false;
+-			}
+-		}
+-		mtk_crtc->pending_planes = false;
+-	}
++	if (!priv->data->shadow_register)
++		mtk_crtc_ddp_config(crtc);
+ 
+ 	mtk_drm_finish_page_flip(mtk_crtc);
+ }
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 8030769..b77d456 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -12,6 +12,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+@@ -32,10 +33,13 @@
+ #define DISP_REG_CONFIG_MMSYS_CG_CON0		0x100
+ 
+ #define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
++#define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
+ #define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
+ #define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
+ #define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+ 
++#define INT_MUTEX				BIT(1)
++
+ #define MT8173_MUTEX_MOD_DISP_OVL0		BIT(11)
+ #define MT8173_MUTEX_MOD_DISP_OVL1		BIT(12)
+ #define MT8173_MUTEX_MOD_DISP_RDMA0		BIT(13)
+@@ -300,6 +304,27 @@ void mtk_disp_mutex_disable(struct mtk_disp_mutex *mutex)
+ 	writel(0, ddp->regs + DISP_REG_MUTEX_EN(mutex->id));
+ }
+ 
++void mtk_disp_mutex_acquire(struct mtk_disp_mutex *mutex)
++{
++	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
++					   mutex[mutex->id]);
++	u32 tmp;
++
++	writel(1, ddp->regs + DISP_REG_MUTEX_EN(mutex->id));
++	writel(1, ddp->regs + DISP_REG_MUTEX(mutex->id));
++	if (readl_poll_timeout_atomic(ddp->regs + DISP_REG_MUTEX(mutex->id),
++				      tmp, tmp & INT_MUTEX, 1, 10000))
++		pr_err("could not acquire mutex %d\n", mutex->id);
++}
++
++void mtk_disp_mutex_release(struct mtk_disp_mutex *mutex)
++{
++	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
++					   mutex[mutex->id]);
++
++	writel(0, ddp->regs + DISP_REG_MUTEX(mutex->id));
++}
++
+ static int mtk_ddp_probe(struct platform_device *pdev)
+ {
  	struct device *dev = &pdev->dev;
- 	struct device_node *remote_node, *endpoint;
- 	struct resource *regs;
-+	int irq_num;
- 	int comp_id;
- 	int ret;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+index 92c1175..f9a7991 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+@@ -37,5 +37,7 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+ 				enum mtk_ddp_comp_id id);
+ void mtk_disp_mutex_unprepare(struct mtk_disp_mutex *mutex);
+ void mtk_disp_mutex_put(struct mtk_disp_mutex *mutex);
++void mtk_disp_mutex_acquire(struct mtk_disp_mutex *mutex);
++void mtk_disp_mutex_release(struct mtk_disp_mutex *mutex);
  
-@@ -876,6 +952,22 @@ static int mtk_dsi_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+ #endif /* MTK_DRM_DDP_H */
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+index 21a4339..aef8747 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+@@ -33,6 +33,7 @@ struct mtk_mmsys_driver_data {
+ 	unsigned int main_len;
+ 	const enum mtk_ddp_comp_id *ext_path;
+ 	unsigned int ext_len;
++	bool shadow_register;
+ };
  
-+	irq_num = platform_get_irq(pdev, 0);
-+	if (irq_num < 0) {
-+		dev_err(&pdev->dev, "failed to request dsi irq resource\n");
-+		return -EPROBE_DEFER;
-+	}
-+
-+	irq_set_status_flags(irq_num, IRQ_TYPE_LEVEL_LOW);
-+	ret = devm_request_irq(&pdev->dev, irq_num, mtk_dsi_irq,
-+			       IRQF_TRIGGER_LOW, dev_name(&pdev->dev), dsi);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to request mediatek dsi irq\n");
-+		return -EPROBE_DEFER;
-+	}
-+
-+	init_waitqueue_head(&dsi->irq_wait_queue);
-+
- 	platform_set_drvdata(pdev, dsi);
- 
- 	return component_add(&pdev->dev, &mtk_dsi_component_ops);
+ struct mtk_drm_private {
 -- 
 1.9.1
