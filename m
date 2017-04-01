@@ -1,103 +1,75 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] mtd: move code reading DT specified part probes to
- the core
-Date: Fri, 31 Mar 2017 12:46:38 +0200
-Message-ID: <99d4944c-3eb9-5bbd-efd0-2ac6862ab1fb@gmail.com>
-References: <20170330215332.32699-1-zajec5@gmail.com>
- <20170331093013.29123-1-zajec5@gmail.com>
- <20170331115654.41592eba@bbrezillon>
- <40a0f980-c849-30de-c906-a708e4d90be5@gmail.com>
- <20170331123153.038e3ada@bbrezillon>
+From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: imx7d: fix USDHC NAND clock
+Date: Sat, 1 Apr 2017 11:00:22 +0800
+Message-ID: <20170401030022.GA24882@b29396-OptiPlex-7040>
+References: <20170330005029.6472-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170331123153.038e3ada@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <20170330005029.6472-1-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/31/2017 12:31 PM, Boris Brezillon wrote:
-> On Fri, 31 Mar 2017 12:12:56 +0200
-> Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> On 03/31/2017 11:56 AM, Boris Brezillon wrote:
->>> On Fri, 31 Mar 2017 11:30:12 +0200
->>> Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>>
->>>> Handling (creating) partitions for flash devices requires using a proper
->>>> driver that will read partition table (out of somewhere). We can't
->>>> simply try all existing drivers one by one, so MTD subsystem allows
->>>> drivers to specify a list of applicable part probes.
->>>>
->>>> So far physmap_of was the only driver with support for linux,part-probe
->>>> DT property. Other ones had list or probes hardcoded which wasn't making
->>>> them really flexible. It prevented using common flash drivers on
->>>> platforms that required some specific partition table access.
->>>>
->>>> This commit moves support for mentioned DT property to the MTD core
->>>> file. Thanks to calling it on device parse registration (as suggested by
->>>> Boris) all drivers gain support for it for free.
->>>>
->>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>> ---
->>>>  drivers/mtd/maps/physmap_of.c | 36 +-----------------------------------
->>>>  drivers/mtd/mtdcore.c         | 34 ++++++++++++++++++++++++++++++++++
->>>
->>> Maybe you should split the patch:
->>> 1/ add core infrastructure
->>> 2/ remove open-coded version in drivers/mtd/maps/physmap_of.c
->>
->> What's the gain of that? Is this patch too complex to review properly? Will that
->> be useful for anyone to have it split? For me it only adds an intermediate code
->> duplication.
->
-> The gain is that we get rid of the dependency we have on patch "mtd:
-> physmap_of: use OF helpers for reading strings" which is not even
-> mentioned in your mails.
+On Wed, Mar 29, 2017 at 05:50:28PM -0700, Stefan Agner wrote:
+> The USDHC NAND root clock is not gated by any CCM clock gate. Remove
+> the bogus gate definition.
+> 
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+> The IMX7D_NAND_USDHC_BUS_ROOT_CLK clock is also in clks_init_on.
+> In a quick test I removed IMX7D_NAND_USDHC_BUS_ROOT_CLK from
+> clks_init_on, and the system including SD-cards seemed to work
+> fine... So I guess we could remove the clock from clks_init_on
+> after the two both changes got applied, any thoughts?
+> 
 
-This is definitely my mistake, initially I pushed a proper comment below tear
-line but have overwritten it later. Sorry!
+Yes, it can be removed after apply.
 
+> The gate 0x4130 was actually the DRAM gate, hence disabling that
+> clock lead to disabling this gate, and hence a crash before this
+> fixes... Maybe that was the reason it landed in clks_init_on...?
+> 
 
->>> BTW, not sure the intermediate "mtd: physmap_of: use OF helpers
->>> for reading strings" patch is really useful, since you move to the
->>> common infrastructure here.
->>> By following my suggestion you get rid of the dependency you have
->>> between this series and patch "mtd: physmap_of: use OF helpers for
->>> reading strings".
->>
->> I learned (the very hard way) MTD people can be really nitpicking so I'm
->> sending as simple patches as I can. I see it as the only way for someone from
->> OpenWrt/LEDE project to get patch through your review.
->
-> And I learned the hard way that OpenWRT/LEDE developers tend to not
-> listen to our advices and keep arguing on things that have been proven
-> to be existing because of bad decision they made at some point in the
-> project life. So I think we're even :-P.
+Probably a history reason or mistake. :-)
 
-I wish you could sometimes forget what you've learned and review/discuss things
-without all that negative approach I keep seeing.
+Acked-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 
+Regards
+Dong Aisheng
 
->> It's like with this patch: even a simple code move can be questioned. Please
->> drop this patchset, I'll resend it after/if I manage to get
->> [PATCH] mtd: physmap_of: use OF helpers for reading strings
->> accepted.
->
-> But really, what's the point of this patch? It's just a cleanup. You're
-> not fixing a bug or changing the behavior, and your real objective is
-> to get support for the linux,part-probe in the core, which will then
-> allow us to drop the open-coded version you have in physmap_of.c.
->
-> I don't think it deserves an intermediate patch, unless your real
-> objective is patchcount.
-
-OK, I'm going to trust that and see how easily I get can patch your way. I'll
-resend combined version soon.
+> --
+> Stefan
+> 
+>  drivers/clk/imx/clk-imx7d.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
+> index ae1d31be906e..4466acaacb71 100644
+> --- a/drivers/clk/imx/clk-imx7d.c
+> +++ b/drivers/clk/imx/clk-imx7d.c
+> @@ -724,7 +724,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
+>  	clks[IMX7D_MAIN_AXI_ROOT_DIV] = imx_clk_divider2("axi_post_div", "axi_pre_div", base + 0x8800, 0, 6);
+>  	clks[IMX7D_DISP_AXI_ROOT_DIV] = imx_clk_divider2("disp_axi_post_div", "disp_axi_pre_div", base + 0x8880, 0, 6);
+>  	clks[IMX7D_ENET_AXI_ROOT_DIV] = imx_clk_divider2("enet_axi_post_div", "enet_axi_pre_div", base + 0x8900, 0, 6);
+> -	clks[IMX7D_NAND_USDHC_BUS_ROOT_DIV] = imx_clk_divider2("nand_usdhc_post_div", "nand_usdhc_pre_div", base + 0x8980, 0, 6);
+> +	clks[IMX7D_NAND_USDHC_BUS_ROOT_CLK] = imx_clk_divider2("nand_usdhc_root_clk", "nand_usdhc_pre_div", base + 0x8980, 0, 6);
+>  	clks[IMX7D_AHB_CHANNEL_ROOT_DIV] = imx_clk_divider2("ahb_post_div", "ahb_pre_div", base + 0x9000, 0, 6);
+>  	clks[IMX7D_DRAM_ROOT_DIV] = imx_clk_divider2("dram_post_div", "dram_cg", base + 0x9880, 0, 3);
+>  	clks[IMX7D_DRAM_PHYM_ALT_ROOT_DIV] = imx_clk_divider2("dram_phym_alt_post_div", "dram_phym_alt_pre_div", base + 0xa000, 0, 3);
+> @@ -797,7 +797,6 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
+>  	clks[IMX7D_ENET_AXI_ROOT_CLK] = imx_clk_gate4("enet_axi_root_clk", "enet_axi_post_div", base + 0x4060, 0);
+>  	clks[IMX7D_OCRAM_CLK] = imx_clk_gate4("ocram_clk", "axi_post_div", base + 0x4110, 0);
+>  	clks[IMX7D_OCRAM_S_CLK] = imx_clk_gate4("ocram_s_clk", "ahb_post_div", base + 0x4120, 0);
+> -	clks[IMX7D_NAND_USDHC_BUS_ROOT_CLK] = imx_clk_gate4("nand_usdhc_root_clk", "nand_usdhc_post_div", base + 0x4130, 0);
+>  	clks[IMX7D_AHB_CHANNEL_ROOT_CLK] = imx_clk_gate4("ahb_root_clk", "ahb_post_div", base + 0x4200, 0);
+>  	clks[IMX7D_DRAM_ROOT_CLK] = imx_clk_gate4("dram_root_clk", "dram_post_div", base + 0x4130, 0);
+>  	clks[IMX7D_DRAM_PHYM_ROOT_CLK] = imx_clk_gate4("dram_phym_root_clk", "dram_phym_cg", base + 0x4130, 0);
+> -- 
+> 2.12.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
