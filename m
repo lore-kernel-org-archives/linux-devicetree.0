@@ -1,69 +1,82 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH V8 5/6] ACPI: Support the probing on the devices which
- apply indirect-IO
-Date: Sat, 1 Apr 2017 11:52:04 +0200
-Message-ID: <CAJZ5v0iYD=2HVP9D-2fBBDUzkOJLrzzH7Rwg1ALQ-kBx-iSeTg@mail.gmail.com>
-References: <1490887619-61732-1-git-send-email-yuanzhichang@hisilicon.com>
- <1490887619-61732-6-git-send-email-yuanzhichang@hisilicon.com>
- <1908501.jAQQKvjW4f@aspire.rjw.lan> <58DDFCBE.1030705@hisilicon.com>
- <CAJZ5v0gZdghH7jjd-zMmqXNkuvVVVSPDHfBrJXx5OXR2NE0KgA@mail.gmail.com> <bfdf2de0-c309-0139-4075-dfcd678b6d51@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] Documentation: dt-bindings: Document bindings for
+ Aspeed ADC
+Date: Sat, 1 Apr 2017 11:51:37 +0100
+Message-ID: <968a3a78-49d3-138b-ef6e-7cee3c133471@kernel.org>
+References: <20170328215259.31622-1-raltherr@google.com>
+ <CACPK8Xcf2A8RMy7cthJrdi2CA0L_Hfi+2Hy3JBCzLTsofjhEuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <bfdf2de0-c309-0139-4075-dfcd678b6d51@gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "zhichang.yuan" <zhichang.yuan02@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "zhichang.yuan" <yuanzhichang@hisilicon.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Brian Starkey <brian.starkey@arm.com>, Olof Johansson <olof@lixom.net>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linuxar
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACPK8Xcf2A8RMy7cthJrdi2CA0L_Hfi+2Hy3JBCzLTsofjhEuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 1, 2017 at 4:16 AM, zhichang.yuan <zhichang.yuan02@gmail.com> wrote:
->
->
-> On 04/01/2017 07:02 AM, Rafael J. Wysocki wrote:
->> On Fri, Mar 31, 2017 at 8:52 AM, zhichang.yuan
->> <yuanzhichang@hisilicon.com> wrote:
->>> Hi, Rafael,
->>>
->>> Thanks for reviewing this!
->>>
->>> On 2017/3/31 4:31, Rafael J. Wysocki wrote:
->>>> On Thursday, March 30, 2017 11:26:58 PM zhichang.yuan wrote:
->>>>> On some platforms(such as Hip06/Hip07), the legacy ISA/LPC devices access I/O
->>>>> with some special host-local I/O ports known on x86. To access the I/O
->>>>> peripherals, an indirect-IO mechanism is introduced to mapped the host-local
->>>>> I/O to system logical/fake PIO similar the PCI MMIO on architectures where no
->>>>> separate I/O space exists. Just as PCI MMIO, the host I/O range should be
->>>>> registered before probing the downstream devices and set up the I/O mapping.
->>>>> But current ACPI bus probing doesn't support these indirect-IO hosts/devices.
->>>>>
->>>>> This patch introdueces a new ACPI handler for this device category. Through the
->>>>> handler attach callback, the indirect-IO hosts I/O registration is done and
->>>>> all peripherals' I/O resources are translated into logic/fake PIO before
->>>>> starting the enumeration.
->>>>
->>>> Can you explain to me briefly what exactly this code is expected to be doing?
->>>
->>> As you know currently for ARM architecture IO space is memory mapped and
->>> is only used by pci devices. The port number is dynamically allocated
->>> converting the device IO address into a PIO token: i.e.
->>> http://lxr.free-electrons.com/source/drivers/acpi/pci_root.c#L745
->>> This patch is meant to support a new class of IO host controller
->>> that are not PCI based and that still require to have the IO addresses
->>> be translated in the same PIO token space as the PCI controller
->>
->> IOW, this is ARM-specific, right?
->
-> Yes. The current host added in this patch with _HID "HISI0191" is on ARM64.
+On 29/03/17 03:33, Joel Stanley wrote:
+> On Wed, Mar 29, 2017 at 8:22 AM, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+>> Signed-off-by: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> ---
+> 
+> Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+I can't see why Rob would mind any of the changes made since he
+Acked this (and having acked it I doubt he is looking at newer versions!)
+so I'm going to take the view his Ack still applies.
 
-But the underlying mechanism is ARM-specific as well AFAICS.
-
-> But, I think the handler driver is architecture dependent.
-
-I guess you mean "independent"?  That doesn't matter.
-
-If ARM64 is the only architecture to use it in foreseeable future
-(which is the case for all I can say), it should go into acpi/arm64/
-and please ask the maintainers thereof to review it.
+Applied to the togreg branch of iio.git which will get pushed out first
+as testing for the autobuilders to have a chance to play with it.
 
 Thanks,
-Rafael
+
+Jonathan
+> 
+>>
+>> Changes in v5: None
+>> Changes in v4: None
+>> Changes in v3:
+>> - Consistently write hex contstants with lowercase letters
+>> - Drop model numbers from description as same IP is used in every generation
+>>
+>> Changes in v2:
+>> - Rewritten as an IIO ADC device
+>>
+>>  .../devicetree/bindings/iio/adc/aspeed_adc.txt       | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+>> new file mode 100644
+>> index 000000000000..674e133b7cd7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+>> @@ -0,0 +1,20 @@
+>> +Aspeed ADC
+>> +
+>> +This device is a 10-bit converter for 16 voltage channels.  All inputs are
+>> +single ended.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "aspeed,ast2400-adc" or "aspeed,ast2500-adc"
+>> +- reg: memory window mapping address and length
+>> +- clocks: Input clock used to derive the sample clock. Expected to be the
+>> +          SoC's APB clock.
+>> +- #io-channel-cells: Must be set to <1> to indicate channels are selected
+>> +                     by index.
+>> +
+>> +Example:
+>> +       adc@1e6e9000 {
+>> +               compatible = "aspeed,ast2400-adc";
+>> +               reg = <0x1e6e9000 0xb0>;
+>> +               clocks = <&clk_apb>;
+>> +               #io-channel-cells = <1>;
+>> +       };
+>> --
+>> 2.12.2.564.g063fe858b8-goog
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
