@@ -1,65 +1,105 @@
-From: "zhichang.yuan" <zhichang.yuan02@gmail.com>
-Subject: Re: [PATCH V8 5/6] ACPI: Support the probing on the devices which
- apply indirect-IO
-Date: Sat, 1 Apr 2017 10:16:53 +0800
-Message-ID: <bfdf2de0-c309-0139-4075-dfcd678b6d51@gmail.com>
-References: <1490887619-61732-1-git-send-email-yuanzhichang@hisilicon.com>
- <1490887619-61732-6-git-send-email-yuanzhichang@hisilicon.com>
- <1908501.jAQQKvjW4f@aspire.rjw.lan> <58DDFCBE.1030705@hisilicon.com>
- <CAJZ5v0gZdghH7jjd-zMmqXNkuvVVVSPDHfBrJXx5OXR2NE0KgA@mail.gmail.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 0/5] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Fri, 31 Mar 2017 22:58:16 -0400
+Message-ID: <CAF6AEGv_1pNvhCc-mVP5S28Yt5kTJmTRfe8tKSJpEmxfOKM7Jg@mail.gmail.com>
+References: <1489073748-3659-1-git-send-email-sricharan@codeaurora.org>
+	<20170331175457.GD4897@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0gZdghH7jjd-zMmqXNkuvVVVSPDHfBrJXx5OXR2NE0KgA@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Brian Starkey <brian.starkey@arm.com>, Olof Johansson <olof@lixom.net>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linuxarm@huawei.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>Linux PCI <lin>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170331175457.GD4897-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 31, 2017 at 1:54 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Thu, Mar 09, 2017 at 09:05:43PM +0530, Sricharan R wrote:
+>> This series provides the support for turning on the arm-smmu's
+>> clocks/power domains using runtime pm. This is done using the
+>> recently introduced device links patches, which lets the symmu's
+>> runtime to follow the master's runtime pm, so the smmu remains
+>> powered only when the masters use it.
+>
+> Do you have any numbers for the power savings you achieve with this?
+> How often do we actually manage to stop the SMMU clocks on an SoC with
+> a handful of masters?
+>
+> In other words, is this too coarse-grained to be useful, or is it common
+> that all the devices upstream of the SMMU are suspended?
 
+well, if you think about a phone/tablet with a command mode panel,
+pretty much all devices will be suspended most of the time ;-)
 
-On 04/01/2017 07:02 AM, Rafael J. Wysocki wrote:
-> On Fri, Mar 31, 2017 at 8:52 AM, zhichang.yuan
-> <yuanzhichang@hisilicon.com> wrote:
->> Hi, Rafael,
->>
->> Thanks for reviewing this!
->>
->> On 2017/3/31 4:31, Rafael J. Wysocki wrote:
->>> On Thursday, March 30, 2017 11:26:58 PM zhichang.yuan wrote:
->>>> On some platforms(such as Hip06/Hip07), the legacy ISA/LPC devices access I/O
->>>> with some special host-local I/O ports known on x86. To access the I/O
->>>> peripherals, an indirect-IO mechanism is introduced to mapped the host-local
->>>> I/O to system logical/fake PIO similar the PCI MMIO on architectures where no
->>>> separate I/O space exists. Just as PCI MMIO, the host I/O range should be
->>>> registered before probing the downstream devices and set up the I/O mapping.
->>>> But current ACPI bus probing doesn't support these indirect-IO hosts/devices.
->>>>
->>>> This patch introdueces a new ACPI handler for this device category. Through the
->>>> handler attach callback, the indirect-IO hosts I/O registration is done and
->>>> all peripherals' I/O resources are translated into logic/fake PIO before
->>>> starting the enumeration.
->>>
->>> Can you explain to me briefly what exactly this code is expected to be doing?
->>
->> As you know currently for ARM architecture IO space is memory mapped and
->> is only used by pci devices. The port number is dynamically allocated
->> converting the device IO address into a PIO token: i.e.
->> http://lxr.free-electrons.com/source/drivers/acpi/pci_root.c#L745
->> This patch is meant to support a new class of IO host controller
->> that are not PCI based and that still require to have the IO addresses
->> be translated in the same PIO token space as the PCI controller
-> 
-> IOW, this is ARM-specific, right?
+maybe it's a different case with servers.. unfortunately we have to
+share the same driver across both..
 
-Yes. The current host added in this patch with _HID "HISI0191" is on ARM64.
-But, I think the handler driver is architecture dependent.
+BR,
+-R
 
-Thanks,
-Zhichang
-
-> 
 > Thanks,
-> Rafael
-> 
+>
+> Will
+>
+>>
+>> Took some reference from the exynos runtime patches [2].
+>> Tested this with MDP, GPU, VENUS devices on apq8096-db820c board.
+>>
+>> Previous version of the patchset [1].
+>>
+>> [V3]
+>>    * Reworked the patches to keep the clocks init/enabling function
+>>      seperately for each compatible.
+>>
+>>    * Added clocks bindings for MMU40x/500.
+>>
+>>    * Added a new compatible for qcom,smmu-v2 implementation and
+>>      the clock bindings for the same.
+>>
+>>    * Rebased on top of 4.11-rc1
+>>
+>> [V2]
+>>    * Split the patches little differently.
+>>
+>>    * Addressed comments.
+>>
+>>    * Removed the patch #4 [3] from previous post
+>>      for arm-smmu context save restore. Planning to
+>>      post this separately after reworking/addressing Robin's
+>>      feedback.
+>>
+>>    * Reversed the sequence to disable clocks than enabling.
+>>      This was required for those cases where the
+>>      clocks are populated in a dependent order from DT.
+>>
+>> [1] https://www.spinics.net/lists/linux-arm-msm/msg23870.html
+>> [2] https://lkml.org/lkml/2016/10/20/70
+>> [3] https://patchwork.kernel.org/patch/9389717/
+>>
+>> Sricharan R (5):
+>>   iommu/arm-smmu: Add pm_runtime/sleep ops
+>>   iommu/arm-smmu: Add support for MMU40x/500 clocks
+>>   drivers: arm-smmu: Add clock support for QCOM_SMMUV2
+>>   iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
+>>   iommu/arm-smmu: Add the device_link between masters and smmu
+>>
+>>  .../devicetree/bindings/iommu/arm,smmu.txt         |  35 +++
+>>  drivers/iommu/arm-smmu.c                           | 349 ++++++++++++++++++++-
+>>  2 files changed, 373 insertions(+), 11 deletions(-)
+>>
+>> --
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>>
+> _______________________________________________
+> iommu mailing list
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
