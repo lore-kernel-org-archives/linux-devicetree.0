@@ -1,40 +1,57 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v3 7/7] ARM: ux500: Add vendor prefix to tps61052 node
-Date: Sat,  1 Apr 2017 03:18:54 -0400
-Message-ID: <20170401071854.23198-8-javier@osg.samsung.com>
+Subject: [PATCH v3 2/7] mfd: retu: Add OF device ID table
+Date: Sat,  1 Apr 2017 03:18:49 -0400
+Message-ID: <20170401071854.23198-3-javier@osg.samsung.com>
 References: <20170401071854.23198-1-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170401071854.23198-1-javier@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The tps61052 device node doesn't have a vendor prefix
-in its compatible string, fix it by adding one.
+The driver doesn't have a struct of_device_id table but supported devices
+are registered via Device Trees. This is working on the assumption that a
+I2C device registered via OF will always match a legacy I2C device ID and
+that the MODALIAS reported will always be of the form i2c:<device>.
+
+But this could change in the future so the correct approach is to have a
+OF device ID table if the devices are registered via OF.
 
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
 ---
 
-Changes in v3: None
-Changes in v2: None
+Changes in v3:
+- Add a vendor prefix to the compatible string (Rob Herring).
 
- arch/arm/boot/dts/ste-hrefprev60.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+- Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
 
-diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-index 5882a2606ac3..3f14b4df69b4 100644
---- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
-+++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-@@ -30,7 +30,7 @@
+ drivers/mfd/retu-mfd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/mfd/retu-mfd.c b/drivers/mfd/retu-mfd.c
+index d4c114abeb75..937a1c21eec4 100644
+--- a/drivers/mfd/retu-mfd.c
++++ b/drivers/mfd/retu-mfd.c
+@@ -308,9 +308,17 @@ static const struct i2c_device_id retu_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, retu_id);
  
- 		i2c@80004000 {
- 			tps61052@33 {
--				compatible = "tps61052";
-+				compatible = "ti,tps61052";
- 				reg = <0x33>;
- 			};
- 
++static const struct of_device_id retu_of_match[] = {
++	{ .compatible = "nokia,retu-mfd" },
++	{ .compatible = "nokia,tahvo-mfd" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, retu_of_match);
++
+ static struct i2c_driver retu_driver = {
+ 	.driver		= {
+ 		.name = "retu-mfd",
++		.of_match_table = retu_of_match,
+ 	},
+ 	.probe		= retu_probe,
+ 	.remove		= retu_remove,
 -- 
 2.9.3
