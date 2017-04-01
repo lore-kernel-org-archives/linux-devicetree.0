@@ -1,57 +1,60 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v3 2/7] mfd: retu: Add OF device ID table
-Date: Sat,  1 Apr 2017 03:18:49 -0400
-Message-ID: <20170401071854.23198-3-javier@osg.samsung.com>
-References: <20170401071854.23198-1-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170401071854.23198-1-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>
+From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [RFC PATCH 2/5] soc/fsl/qbman: Use shared-dma-pool for QMan
+ private memory allocations
+Date: Sat, 01 Apr 2017 02:25:18 -0500
+Message-ID: <1491031518.2944.62.camel@buserror.net>
+References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com>
+         <1490822037-6752-3-git-send-email-roy.pledge@nxp.com>
+         <b1cd8d44-8c74-ab50-5dc9-1f978cae5bdf@arm.com>
+         <871ste5dmw.fsf@concordia.ellerman.id.au>
+         <dfaa1a28-66d8-15fb-7d2d-75e206161770@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <dfaa1a28-66d8-15fb-7d2d-75e206161770-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, roy.pledge-3arQi8VN3Tc@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, madalin.bucur-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The driver doesn't have a struct of_device_id table but supported devices
-are registered via Device Trees. This is working on the assumption that a
-I2C device registered via OF will always match a legacy I2C device ID and
-that the MODALIAS reported will always be of the form i2c:<device>.
+On Fri, 2017-03-31 at 18:55 +0100, Robin Murphy wrote:
+> On 31/03/17 04:27, Michael Ellerman wrote:
+> > 
+> > Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> writes:
+> > 
+> > > 
+> > > Hi Roy,
+> > > 
+> > > On 29/03/17 22:13, Roy Pledge wrote:
+> > > > 
+> > > > Use the shared-memory-pool mechanism for frame queue descriptor and
+> > > > packed frame descriptor record area allocations.
+> > > Thanks for persevering with this - in my opinion it's now looking like
+> > > it was worth the effort :)
+> > > 
+> > > AFAICS the ioremap_wc() that this leads to does appear to give back
+> > > something non-cacheable on PPC (assuming "pgprot_noncached_wc" isn't
+> > > horrendously misnamed), and "no-map" should rule out any cacheable
+> > > linear map alias existing, so it would seem that this approach should
+> > > avert Scott's concerns about attribute mismatches.
+> > How does 'no-map' translate into something being excluded from the
+> > linear mapping?
+> Reserved regions marked with "no-map" get memblock_remove()d by
+> early_init_dt_alloc_reserved_memory_arch(). As I understand things, the
+> linear map should only cover memblock areas, and it would be explicitly
+> violating the semantics of "no-map" to still cover such a region.
 
-But this could change in the future so the correct approach is to have a
-OF device ID table if the devices are registered via OF.
+Discontiguous memory isn't supported on these PPC chips.  Everything up to
+memblock_end_of_DRAM() gets mapped -- and if that were to change, the
+fragmentation would waste TLB1 entries.
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+This also breaks compatibility with existing device trees.  I suggest putting
+an ifdef in the qbman driver to add the new scheme for non-PPC arches only.
 
----
+-Scott
 
-Changes in v3:
-- Add a vendor prefix to the compatible string (Rob Herring).
-
-Changes in v2:
-- Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
-
- drivers/mfd/retu-mfd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/mfd/retu-mfd.c b/drivers/mfd/retu-mfd.c
-index d4c114abeb75..937a1c21eec4 100644
---- a/drivers/mfd/retu-mfd.c
-+++ b/drivers/mfd/retu-mfd.c
-@@ -308,9 +308,17 @@ static const struct i2c_device_id retu_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, retu_id);
- 
-+static const struct of_device_id retu_of_match[] = {
-+	{ .compatible = "nokia,retu-mfd" },
-+	{ .compatible = "nokia,tahvo-mfd" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, retu_of_match);
-+
- static struct i2c_driver retu_driver = {
- 	.driver		= {
- 		.name = "retu-mfd",
-+		.of_match_table = retu_of_match,
- 	},
- 	.probe		= retu_probe,
- 	.remove		= retu_remove,
--- 
-2.9.3
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
