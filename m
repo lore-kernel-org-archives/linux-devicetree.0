@@ -1,166 +1,92 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2] Extend pca9532 device tree support
-Date: Sun, 2 Apr 2017 16:41:55 +0200
-Message-ID: <b54c77d5-b4f7-9517-8c5b-9200c766204a@gmail.com>
-References: <1490880833-22199-1-git-send-email-fb@ltec.ch>
+From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH V8 5/6] ACPI: Support the probing on the devices which
+ apply indirect-IO
+Date: Sun, 2 Apr 2017 14:58:17 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E204E0BF7@FRAEML521-MBX.china.huawei.com>
+References: <1490887619-61732-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1490887619-61732-6-git-send-email-yuanzhichang@hisilicon.com>
+ <1908501.jAQQKvjW4f@aspire.rjw.lan> <58DDFCBE.1030705@hisilicon.com>
+ <CAJZ5v0gZdghH7jjd-zMmqXNkuvVVVSPDHfBrJXx5OXR2NE0KgA@mail.gmail.com>
+ <bfdf2de0-c309-0139-4075-dfcd678b6d51@gmail.com>
+ <CAJZ5v0iYD=2HVP9D-2fBBDUzkOJLrzzH7Rwg1ALQ-kBx-iSeTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1490880833-22199-1-git-send-email-fb@ltec.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Felix Brack <fb@ltec.ch>, rpurdie@rpsys.net, pavel@ucw.cz, mark.rutland@arm.com, riku.voipio@iki.fi, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJZ5v0iYD=2HVP9D-2fBBDUzkOJLrzzH7Rwg1ALQ-kBx-iSeTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "zhichang.yuan" <zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-fy+rA21nqHI@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Felix,
-
-Thanks for the patch.
-
-I made a few cosmetic amendments to it, please refer below.
-
-On 03/30/2017 03:33 PM, Felix Brack wrote:
-> This patch extends the device tree support for the pca9532 by adding
-> the leds 'default-state' property.
-> 
-
-Added leds: pca9532: prefix to the patch title.
-
-Removed below change history from the commit message.
-
-> Changes in v2:
-> - remove prescaler and pwm configuration by none generic
->   DT properties
-> 
-> Signed-off-by: Felix Brack <fb@ltec.ch>
-> ---
->  .../devicetree/bindings/leds/leds-pca9532.txt      | 10 +++++++
->  drivers/leds/leds-pca9532.c                        | 31 +++++++++++++++++++++-
->  include/linux/leds-pca9532.h                       |  4 +--
->  3 files changed, 42 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> index 198f3ba..8374075 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> @@ -17,6 +17,8 @@ Optional sub-node properties:
->  	- label: see Documentation/devicetree/bindings/leds/common.txt
->  	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
->  	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-> +	- default-state: see Documentation/devicetree/bindings/leds/common.txt
-> +	  This property is only valid for sub-nodes of type <PCA9532_TYPE_LED>.
->  
->  Example:
->    #include <dt-bindings/leds/leds-pca9532.h>
-> @@ -33,6 +35,14 @@ Example:
->        label = "pca:green:power";
->        type = <PCA9532_TYPE_LED>;
->      };
-> +    kernel-booting {
-> +    	type = <PCA9532_TYPE_LED>;
-> +    	default-state = "on";
-> +    };
-> +    sys-stat {
-> +    	type = <PCA9532_TYPE_LED>;
-> +    	default-state = "keep"; // don't touch, was set by U-Boot
-> +    };
-
-Adjusted above indentation to match the preceding lines.
-
->    };
->  
->  For more product information please see the link below:
-> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-> index 06e6310..66ef280 100644
-> --- a/drivers/leds/leds-pca9532.c
-> +++ b/drivers/leds/leds-pca9532.c
-> @@ -254,6 +254,21 @@ static void pca9532_input_work(struct work_struct *work)
->  	mutex_unlock(&data->update_lock);
->  }
->  
-> +static enum pca9532_state pca9532_getled(struct pca9532_led *led)
-> +{
-> +	struct i2c_client *client = led->client;
-> +	struct pca9532_data *data = i2c_get_clientdata(client);
-> +	u8 maxleds = data->chip_info->num_leds;
-> +	char reg;
-> +	enum pca9532_state ret;
-> +
-> +	mutex_lock(&data->update_lock);
-> +	reg = i2c_smbus_read_byte_data(client, LED_REG(maxleds, led->id));
-> +	ret = reg >> LED_NUM(led->id)/2;
-> +	mutex_unlock(&data->update_lock);
-> +	return ret;
-> +}
-> +
->  #ifdef CONFIG_LEDS_PCA9532_GPIO
->  static int pca9532_gpio_request_pin(struct gpio_chip *gc, unsigned offset)
->  {
-> @@ -366,7 +381,10 @@ static int pca9532_configure(struct i2c_client *client,
->  			gpios++;
->  			break;
->  		case PCA9532_TYPE_LED:
-> -			led->state = pled->state;
-> +			if (pled->state == PCA9532_KEEP)
-> +				led->state = pca9532_getled(led);
-> +			else
-> +				led->state = pled->state;
->  			led->name = pled->name;
->  			led->ldev.name = led->name;
->  			led->ldev.default_trigger = pled->default_trigger;
-> @@ -456,6 +474,7 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
->  	const struct of_device_id *match;
->  	int devid, maxleds;
->  	int i = 0;
-> +	const char *state;
->  
->  	match = of_match_device(of_pca9532_leds_match, dev);
->  	if (!match)
-> @@ -475,6 +494,16 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
->  		of_property_read_u32(child, "type", &pdata->leds[i].type);
->  		of_property_read_string(child, "linux,default-trigger",
->  					&pdata->leds[i].default_trigger);
-> +		if (!of_property_read_string(child, "default-state", &state)) {
-> +			if (!strcmp(state, "on"))
-> +				pdata->leds[i].state = PCA9532_ON;
-> +			else if (!strcmp(state, "keep"))
-> +				pdata->leds[i].state = PCA9532_KEEP;
-> +			else if (!strcmp(state, "pwm0"))
-> +				pdata->leds[i].state = PCA9532_PWM0;
-> +			else if (!strcmp(state, "pwm1"))
-> +				pdata->leds[i].state = PCA9532_PWM1;
-> +		}
->  		if (++i >= maxleds) {
->  			of_node_put(child);
->  			break;
-> diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
-> index d215b45..a327b1aa 100644
-> --- a/include/linux/leds-pca9532.h
-> +++ b/include/linux/leds-pca9532.h
-> @@ -22,7 +22,8 @@ enum pca9532_state {
->  	PCA9532_OFF  = 0x0,
->  	PCA9532_ON   = 0x1,
->  	PCA9532_PWM0 = 0x2,
-> -	PCA9532_PWM1 = 0x3
-> +	PCA9532_PWM1 = 0x3,
-> +	PCA9532_KEEP = 0xff
-
-Added a comma at the end of the above line to avoid the need for
-changing two lines on addition of a new enum value, like in this case.
-
->  };
->  
->  struct pca9532_led {
-> @@ -44,4 +45,3 @@ struct pca9532_platform_data {
->  };
->  
->  #endif /* __LINUX_PCA9532_H */
-> -
-> 
-
-The patch, with the aforementioned amendments, has been applied to
-the for-next branch of linux-leds.git.
-
--- 
-Best regards,
-Jacek Anaszewski
+SGkgUmFmYWVsIA0KTWFueSB0aGFua3MgZm9yIHlvdXIgcmVwbHkNCg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiByand5c29ja2lAZ21haWwuY29tIFttYWlsdG86cmp3eXNv
+Y2tpQGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mDQo+IFJhZmFlbCBKLiBXeXNvY2tpDQo+IFNlbnQ6
+IDAxIEFwcmlsIDIwMTcgMTA6NTINCj4gVG86IHpoaWNoYW5nLnl1YW4NCj4gQ2M6IFJhZmFlbCBK
+LiBXeXNvY2tpOyBZdWFuemhpY2hhbmc7IFJhZmFlbCBKLiBXeXNvY2tpOyBDYXRhbGluDQo+IE1h
+cmluYXM7IFdpbGwgRGVhY29uOyBSb2IgSGVycmluZzsgRnJhbmsgUm93YW5kOyBCam9ybiBIZWxn
+YWFzOyBBcm5kDQo+IEJlcmdtYW5uOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmc7IE1hcmsgUnV0bGFuZDsgQnJpYW4NCj4gU3RhcmtleTsgT2xvZiBKb2hhbnNzb247IExvcmVu
+em8gUGllcmFsaXNpOyBCZW5qYW1pbiBIZXJyZW5zY2htaWR0Ow0KPiBMaW51eCBLZXJuZWwgTWFp
+bGluZyBMaXN0OyBBQ1BJIERldmVsIE1hbGluZyBMaXN0OyBMaW51eGFybTsNCj4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IExpbnV4IFBDSTsgQ29yZXkgTWlueWFyZDsgWm91IFJvbmdyb25n
+Ow0KPiBKb2huIEdhcnJ5OyBHYWJyaWVsZSBQYW9sb25pOyBrYW50eXpjQDE2My5jb207IHh1d2Vp
+IChPKQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFY4IDUvNl0gQUNQSTogU3VwcG9ydCB0aGUgcHJv
+YmluZyBvbiB0aGUgZGV2aWNlcw0KPiB3aGljaCBhcHBseSBpbmRpcmVjdC1JTw0KPiANCj4gT24g
+U2F0LCBBcHIgMSwgMjAxNyBhdCA0OjE2IEFNLCB6aGljaGFuZy55dWFuDQo+IDx6aGljaGFuZy55
+dWFuMDJAZ21haWwuY29tPiB3cm90ZToNCj4gPg0KPiA+DQo+ID4gT24gMDQvMDEvMjAxNyAwNzow
+MiBBTSwgUmFmYWVsIEouIFd5c29ja2kgd3JvdGU6DQo+ID4+IE9uIEZyaSwgTWFyIDMxLCAyMDE3
+IGF0IDg6NTIgQU0sIHpoaWNoYW5nLnl1YW4NCj4gPj4gPHl1YW56aGljaGFuZ0BoaXNpbGljb24u
+Y29tPiB3cm90ZToNCj4gPj4+IEhpLCBSYWZhZWwsDQo+ID4+Pg0KPiA+Pj4gVGhhbmtzIGZvciBy
+ZXZpZXdpbmcgdGhpcyENCj4gPj4+DQo+ID4+PiBPbiAyMDE3LzMvMzEgNDozMSwgUmFmYWVsIEou
+IFd5c29ja2kgd3JvdGU6DQo+ID4+Pj4gT24gVGh1cnNkYXksIE1hcmNoIDMwLCAyMDE3IDExOjI2
+OjU4IFBNIHpoaWNoYW5nLnl1YW4gd3JvdGU6DQo+ID4+Pj4+IE9uIHNvbWUgcGxhdGZvcm1zKHN1
+Y2ggYXMgSGlwMDYvSGlwMDcpLCB0aGUgbGVnYWN5IElTQS9MUEMNCj4gZGV2aWNlcyBhY2Nlc3Mg
+SS9PDQo+ID4+Pj4+IHdpdGggc29tZSBzcGVjaWFsIGhvc3QtbG9jYWwgSS9PIHBvcnRzIGtub3du
+IG9uIHg4Ni4gVG8gYWNjZXNzDQo+IHRoZSBJL08NCj4gPj4+Pj4gcGVyaXBoZXJhbHMsIGFuIGlu
+ZGlyZWN0LUlPIG1lY2hhbmlzbSBpcyBpbnRyb2R1Y2VkIHRvIG1hcHBlZCB0aGUNCj4gaG9zdC1s
+b2NhbA0KPiA+Pj4+PiBJL08gdG8gc3lzdGVtIGxvZ2ljYWwvZmFrZSBQSU8gc2ltaWxhciB0aGUg
+UENJIE1NSU8gb24NCj4gYXJjaGl0ZWN0dXJlcyB3aGVyZSBubw0KPiA+Pj4+PiBzZXBhcmF0ZSBJ
+L08gc3BhY2UgZXhpc3RzLiBKdXN0IGFzIFBDSSBNTUlPLCB0aGUgaG9zdCBJL08gcmFuZ2UNCj4g
+c2hvdWxkIGJlDQo+ID4+Pj4+IHJlZ2lzdGVyZWQgYmVmb3JlIHByb2JpbmcgdGhlIGRvd25zdHJl
+YW0gZGV2aWNlcyBhbmQgc2V0IHVwIHRoZQ0KPiBJL08gbWFwcGluZy4NCj4gPj4+Pj4gQnV0IGN1
+cnJlbnQgQUNQSSBidXMgcHJvYmluZyBkb2Vzbid0IHN1cHBvcnQgdGhlc2UgaW5kaXJlY3QtSU8N
+Cj4gaG9zdHMvZGV2aWNlcy4NCj4gPj4+Pj4NCj4gPj4+Pj4gVGhpcyBwYXRjaCBpbnRyb2R1ZWNl
+cyBhIG5ldyBBQ1BJIGhhbmRsZXIgZm9yIHRoaXMgZGV2aWNlDQo+IGNhdGVnb3J5LiBUaHJvdWdo
+IHRoZQ0KPiA+Pj4+PiBoYW5kbGVyIGF0dGFjaCBjYWxsYmFjaywgdGhlIGluZGlyZWN0LUlPIGhv
+c3RzIEkvTyByZWdpc3RyYXRpb24NCj4gaXMgZG9uZSBhbmQNCj4gPj4+Pj4gYWxsIHBlcmlwaGVy
+YWxzJyBJL08gcmVzb3VyY2VzIGFyZSB0cmFuc2xhdGVkIGludG8gbG9naWMvZmFrZSBQSU8NCj4g
+YmVmb3JlDQo+ID4+Pj4+IHN0YXJ0aW5nIHRoZSBlbnVtZXJhdGlvbi4NCj4gPj4+Pg0KPiA+Pj4+
+IENhbiB5b3UgZXhwbGFpbiB0byBtZSBicmllZmx5IHdoYXQgZXhhY3RseSB0aGlzIGNvZGUgaXMg
+ZXhwZWN0ZWQNCj4gdG8gYmUgZG9pbmc/DQo+ID4+Pg0KPiA+Pj4gQXMgeW91IGtub3cgY3VycmVu
+dGx5IGZvciBBUk0gYXJjaGl0ZWN0dXJlIElPIHNwYWNlIGlzIG1lbW9yeQ0KPiBtYXBwZWQgYW5k
+DQo+ID4+PiBpcyBvbmx5IHVzZWQgYnkgcGNpIGRldmljZXMuIFRoZSBwb3J0IG51bWJlciBpcyBk
+eW5hbWljYWxseQ0KPiBhbGxvY2F0ZWQNCj4gPj4+IGNvbnZlcnRpbmcgdGhlIGRldmljZSBJTyBh
+ZGRyZXNzIGludG8gYSBQSU8gdG9rZW46IGkuZS4NCj4gPj4+IGh0dHA6Ly9seHIuZnJlZS1lbGVj
+dHJvbnMuY29tL3NvdXJjZS9kcml2ZXJzL2FjcGkvcGNpX3Jvb3QuYyNMNzQ1DQo+ID4+PiBUaGlz
+IHBhdGNoIGlzIG1lYW50IHRvIHN1cHBvcnQgYSBuZXcgY2xhc3Mgb2YgSU8gaG9zdCBjb250cm9s
+bGVyDQo+ID4+PiB0aGF0IGFyZSBub3QgUENJIGJhc2VkIGFuZCB0aGF0IHN0aWxsIHJlcXVpcmUg
+dG8gaGF2ZSB0aGUgSU8NCj4gYWRkcmVzc2VzDQo+ID4+PiBiZSB0cmFuc2xhdGVkIGluIHRoZSBz
+YW1lIFBJTyB0b2tlbiBzcGFjZSBhcyB0aGUgUENJIGNvbnRyb2xsZXINCj4gPj4NCj4gPj4gSU9X
+LCB0aGlzIGlzIEFSTS1zcGVjaWZpYywgcmlnaHQ/DQo+ID4NCj4gPiBZZXMuIFRoZSBjdXJyZW50
+IGhvc3QgYWRkZWQgaW4gdGhpcyBwYXRjaCB3aXRoIF9ISUQgIkhJU0kwMTkxIiBpcyBvbg0KPiBB
+Uk02NC4NCj4gDQo+IEJ1dCB0aGUgdW5kZXJseWluZyBtZWNoYW5pc20gaXMgQVJNLXNwZWNpZmlj
+IGFzIHdlbGwgQUZBSUNTLg0KPiANCj4gPiBCdXQsIEkgdGhpbmsgdGhlIGhhbmRsZXIgZHJpdmVy
+IGlzIGFyY2hpdGVjdHVyZSBkZXBlbmRlbnQuDQo+IA0KPiBJIGd1ZXNzIHlvdSBtZWFuICJpbmRl
+cGVuZGVudCI/ICBUaGF0IGRvZXNuJ3QgbWF0dGVyLg0KPiANCj4gSWYgQVJNNjQgaXMgdGhlIG9u
+bHkgYXJjaGl0ZWN0dXJlIHRvIHVzZSBpdCBpbiBmb3Jlc2VlYWJsZSBmdXR1cmUNCj4gKHdoaWNo
+IGlzIHRoZSBjYXNlIGZvciBhbGwgSSBjYW4gc2F5KSwgaXQgc2hvdWxkIGdvIGludG8gYWNwaS9h
+cm02NC8NCj4gYW5kIHBsZWFzZSBhc2sgdGhlIG1haW50YWluZXJzIHRoZXJlb2YgdG8gcmV2aWV3
+IGl0Lg0KDQpJIGd1ZXNzIHRoaXMgaXMgdGhlIGNhc2UgZm9yIHRoZSBmb3Jlc2VlYWJsZSBmdXR1
+cmUuDQoNClNvIGlmIG15IHVuZGVyc3RhbmRpbmcgaXMgY29ycmVjdCB3ZSBzaG91bGQgbGVhdmUg
+YWNwaV9pbmRpcmVjdGlvX3NjYW5faW5pdCgpDQpjYWxsIGluIGFjcGlfc2Nhbl9pbml0KCkgYW5k
+IG1vdmUgaXRzIGRlZmluaXRpb24gdW5kZXIgYWNwaS9hcm02NC8gcmlnaHQ/DQoNCklmIGluIGZ1
+dHVyZSBvdGhlciBhcmNoaXRlY3R1cmVzIG5lZWRzIG5vbi1wY2kgSU8gY29udHJvbGxlcnMgd2Ug
+bWF5IGNvbnNpZGVyDQp0byBtb3ZlIHRoaXMgdG8gYWNwaS8uLi4NCg0KTG9yZW56byB3aGF0IGRv
+IHlvdSB0aGluaz8gQ291bGQgeW91IGhhdmUgYSBsb29rIGF0IHRoZSBwYXRjaHNldD8NCg0KTWFu
+eSB0aGFua3MNCg0KR2FiDQoNCj4gDQo+IFRoYW5rcywNCj4gUmFmYWVsDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
