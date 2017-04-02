@@ -1,124 +1,52 @@
-From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 1/2] dt-bindings: thermal: add support for Broadcom's
- Northstar thermal
-Date: Sat, 1 Apr 2017 21:13:40 -0700
-Message-ID: <20170402041338.GA31441@localhost.localdomain>
-References: <20170331073132.21457-2-zajec5@gmail.com>
- <20170331201124.656-1-zajec5@gmail.com>
- <20170401195136.GD28514@localhost.localdomain>
- <6dd907e4-c213-3174-8613-99427e6ea0e9@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v2 0/5] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
+Date: Sun,  2 Apr 2017 08:59:43 +0100
+Message-ID: <cover.1491118230.git.guillaume.tucker@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6dd907e4-c213-3174-8613-99427e6ea0e9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey,
+The ARM Mali Midgard GPU kernel driver is only available
+out-of-tree and is not going to be merged in its current form.
+However, it would be useful to have its device tree bindings
+merged.  In particular, this would enable distributions to create
+working driver packages (dkms...) without having to patch the
+kernel.
 
-On Sat, Apr 01, 2017 at 11:50:26PM +0200, Rafał Miłecki wrote:
-> On 04/01/2017 09:51 PM, Eduardo Valentin wrote:
-> >On Fri, Mar 31, 2017 at 10:11:23PM +0200, Rafał Miłecki wrote:
-> >>From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> >>
-> >>This commit documents binding for thermal used in Northstar family SoCs.
-> >>
-> >>Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> >>---
-> >>V3: Add thermal-zones to the example
-> >>    Rob: Because of this update, I didn't include Acked-by I got for V2
-> >>---
-> >> .../devicetree/bindings/thermal/brcm,ns-thermal    | 26 ++++++++++++++++++++++
-> >> 1 file changed, 26 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/thermal/brcm,ns-thermal
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/thermal/brcm,ns-thermal b/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
-> >>new file mode 100644
-> >>index 000000000000..c561c7349f17
-> >>--- /dev/null
-> >>+++ b/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
-> >>@@ -0,0 +1,26 @@
-> >>+* Broadcom Northstar Thermal
-> >>+
-> >>+This binding describes thermal sensor that is part of Northstar's DMU (Device
-> >>+Management Unit).
-> >>+
-> >>+Required properties:
-> >>+- compatible : Must be "brcm,ns-thermal"
-> >>+- reg : iomem address range of PVTMON registers
-> >>+- #thermal-sensor-cells : Should be <0>
-> >>+
-> >>+Example:
-> >>+
-> >>+thermal: thermal@1800c2c0 {
-> >>+	compatible = "brcm,ns-thermal";
-> >>+	reg = <0x1800c2c0 0x10>;
-> >>+	#thermal-sensor-cells = <0>;
-> >>+};
-> >>+
-> >>+thermal-zones {
-> >>+	cpu_thermal: cpu-thermal {
-> >>+		polling-delay-passive = <0>;
-> >>+		polling-delay = <1000>;
-> >>+		coefficients = <(-556) 418000>;
-> >>+		thermal-sensors = <&thermal>;
-> >
-> >You need to define trips and cooling devices here. Otherwise, makes
-> >little sense to have this device in thermal subsystem. Here is an
-> >example of minimal set:
-> >https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git/commit/?h=linus&id=1e2ac9821de6a85d3e8358f238436708d1d46869
-> >
-> >The above has no passive action. It is just gonna shutdown the system if
-> >temperature crosses a threshold.
-> >
-> >But, a typical cooling device would be CPU frequency throttling. Do you have
-> >that up and running in your routers?
-> 
-> I don't have CPU freq throttling, so shutdown will be the only solution for
-> critical temp right now.
+The bindings for the earlier Mali Utgard GPU family have already
+been merged, so this is essentially the same scenario but for
+newer GPUs (Mali-T604 ~ Mali-T880).
 
-OK. Is there any plans to get cpu cooling / DVFS working on your boards?
+This series of patches first imports the bindings from the latest
+driver release with some clean-up then adds a gpu node for the
+rk3288 SoC.  This was successfully tested on Radxa Rock2 Square,
+Firefly, Veyron Minnie and Jerry boards board using Mali kernel
+driver r16p0 and r12p0 user-space binary.
 
-> 
-> I know I should have at least a trip for critical temperature, but the problem
-> is I don't know what value to use. There isn't any info about this in public
+Changes since v1:
+- enabled gpu on rk3288-veyron boards
 
-And that is enough justification to block this to go upstream. We need
-the correct shutdown threshold value to put as example. If we don't,
-users of this drivers will be pretty much guessing.
+Enric Balletbo i Serra (1):
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-veyron
 
-> datasheets. Broadcom's SDK doesn't mention it. Vendors share only the max
-> environment temp, not the max CPU temp.
+Guillaume Tucker (4):
+  dt-bindings: gpu: add bindings for the ARM Mali Midgard GPU
+  ARM: dts: rockchip: add ARM Mali GPU node for rk3288
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-rock2-som
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-firefly
 
-Silicon goes bad typically at 125C. But that also typically requires a
-good extrapolation of hotspot(s). Some drivers prefer to play safer and
-use lower numbers (100C).
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53 ++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi              |  5 ++
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi            |  5 ++
+ arch/arm/boot/dts/rk3288-veyron.dtsi               |  5 ++
+ arch/arm/boot/dts/rk3288.dtsi                      | 23 ++++++++++
+ 5 files changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
 
-> 
-> So for now I only meant to provide user space access to reading current CPU
-> temperature. I could do some stress tests and ask other users to do it as well.
-> 
-
-I see..
-
-
-> Or maybe I could just put in Documentation some round value that makes more or
-> less sense and then work on a proper content of real DTS files?
-> 
-
-The problem with the above is that I see very commonly examples being
-copied into DTS. So, better to have a good binding
-example/documentation. That is what they are for anyway.
-
-> Unless we can get some hint from Broadcom people. Jon? Florian? Anyone?
-> 
-
-Yeah, that would be probably best.
-
+--
+2.11.0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
