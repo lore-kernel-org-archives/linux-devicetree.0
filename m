@@ -1,77 +1,166 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [RFC PATCH v2 4/4] ARM: sun8i: h3: add support for the thermal
- sensor in H3
-Date: Sun, 2 Apr 2017 16:34:55 +0200
-Message-ID: <3f13c07d-be6a-0350-6d86-de1a4d4e33a8@free-electrons.com>
-References: <20170402133304.56824-1-icenowy@aosc.io>
- <20170402133304.56824-5-icenowy@aosc.io>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2] Extend pca9532 device tree support
+Date: Sun, 2 Apr 2017 16:41:55 +0200
+Message-ID: <b54c77d5-b4f7-9517-8c5b-9200c766204a@gmail.com>
+References: <1490880833-22199-1-git-send-email-fb@ltec.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170402133304.56824-5-icenowy@aosc.io>
-Sender: linux-pm-owner@vger.kernel.org
-To: icenowy@aosc.io, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Jonathan Cameron <jic23@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1490880833-22199-1-git-send-email-fb@ltec.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: Felix Brack <fb@ltec.ch>, rpurdie@rpsys.net, pavel@ucw.cz, mark.rutland@arm.com, riku.voipio@iki.fi, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
+Hi Felix,
 
-On 02/04/2017 15:33, Icenowy Zheng wrote:
-> As we have gained the support for the thermal sensor in H3, we can now
-> add its device nodes to the device tree.
+Thanks for the patch.
+
+I made a few cosmetic amendments to it, please refer below.
+
+On 03/30/2017 03:33 PM, Felix Brack wrote:
+> This patch extends the device tree support for the pca9532 by adding
+> the leds 'default-state' property.
 > 
-> Add them to the H3 device tree.
+
+Added leds: pca9532: prefix to the patch title.
+
+Removed below change history from the commit message.
+
+> Changes in v2:
+> - remove prescaler and pwm configuration by none generic
+>   DT properties
 > 
-> The H5 thermal sensor has some differences, and will be added furtherly.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Felix Brack <fb@ltec.ch>
 > ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>  .../devicetree/bindings/leds/leds-pca9532.txt      | 10 +++++++
+>  drivers/leds/leds-pca9532.c                        | 31 +++++++++++++++++++++-
+>  include/linux/leds-pca9532.h                       |  4 +--
+>  3 files changed, 42 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index b36f9f423c39..552217bb9266 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -72,6 +72,32 @@
->  		};
->  	};
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+> index 198f3ba..8374075 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+> @@ -17,6 +17,8 @@ Optional sub-node properties:
+>  	- label: see Documentation/devicetree/bindings/leds/common.txt
+>  	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
+>  	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
+> +	- default-state: see Documentation/devicetree/bindings/leds/common.txt
+> +	  This property is only valid for sub-nodes of type <PCA9532_TYPE_LED>.
 >  
-> +	iio-hwmon {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&ths>;
-> +	};
+>  Example:
+>    #include <dt-bindings/leds/leds-pca9532.h>
+> @@ -33,6 +35,14 @@ Example:
+>        label = "pca:green:power";
+>        type = <PCA9532_TYPE_LED>;
+>      };
+> +    kernel-booting {
+> +    	type = <PCA9532_TYPE_LED>;
+> +    	default-state = "on";
+> +    };
+> +    sys-stat {
+> +    	type = <PCA9532_TYPE_LED>;
+> +    	default-state = "keep"; // don't touch, was set by U-Boot
+> +    };
+
+Adjusted above indentation to match the preceding lines.
+
+>    };
+>  
+>  For more product information please see the link below:
+> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+> index 06e6310..66ef280 100644
+> --- a/drivers/leds/leds-pca9532.c
+> +++ b/drivers/leds/leds-pca9532.c
+> @@ -254,6 +254,21 @@ static void pca9532_input_work(struct work_struct *work)
+>  	mutex_unlock(&data->update_lock);
+>  }
+>  
+> +static enum pca9532_state pca9532_getled(struct pca9532_led *led)
+> +{
+> +	struct i2c_client *client = led->client;
+> +	struct pca9532_data *data = i2c_get_clientdata(client);
+> +	u8 maxleds = data->chip_info->num_leds;
+> +	char reg;
+> +	enum pca9532_state ret;
 > +
-> +	soc {
-> +		ths: ths@01c25000 {
-> +			compatible = "allwinner,sun8i-h3-ths";
-> +			reg = <0x01c25000 0x100>;
-> +			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
-> +			clock-names = "bus", "ths";
-> +			resets = <&ccu RST_BUS_THS>;
-> +			#thermal-sensor-cells = <0>;
-> +			#io-channel-cells = <0>;
-> +		};
-> +	};
+> +	mutex_lock(&data->update_lock);
+> +	reg = i2c_smbus_read_byte_data(client, LED_REG(maxleds, led->id));
+> +	ret = reg >> LED_NUM(led->id)/2;
+> +	mutex_unlock(&data->update_lock);
+> +	return ret;
+> +}
 > +
-> +	thermal-zones {
-> +		cpu_thermal {
-> +			/* milliseconds */
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +			thermal-sensors = <&ths>;
-> +		};
+>  #ifdef CONFIG_LEDS_PCA9532_GPIO
+>  static int pca9532_gpio_request_pin(struct gpio_chip *gc, unsigned offset)
+>  {
+> @@ -366,7 +381,10 @@ static int pca9532_configure(struct i2c_client *client,
+>  			gpios++;
+>  			break;
+>  		case PCA9532_TYPE_LED:
+> -			led->state = pled->state;
+> +			if (pled->state == PCA9532_KEEP)
+> +				led->state = pca9532_getled(led);
+> +			else
+> +				led->state = pled->state;
+>  			led->name = pled->name;
+>  			led->ldev.name = led->name;
+>  			led->ldev.default_trigger = pled->default_trigger;
+> @@ -456,6 +474,7 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
+>  	const struct of_device_id *match;
+>  	int devid, maxleds;
+>  	int i = 0;
+> +	const char *state;
+>  
+>  	match = of_match_device(of_pca9532_leds_match, dev);
+>  	if (!match)
+> @@ -475,6 +494,16 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
+>  		of_property_read_u32(child, "type", &pdata->leds[i].type);
+>  		of_property_read_string(child, "linux,default-trigger",
+>  					&pdata->leds[i].default_trigger);
+> +		if (!of_property_read_string(child, "default-state", &state)) {
+> +			if (!strcmp(state, "on"))
+> +				pdata->leds[i].state = PCA9532_ON;
+> +			else if (!strcmp(state, "keep"))
+> +				pdata->leds[i].state = PCA9532_KEEP;
+> +			else if (!strcmp(state, "pwm0"))
+> +				pdata->leds[i].state = PCA9532_PWM0;
+> +			else if (!strcmp(state, "pwm1"))
+> +				pdata->leds[i].state = PCA9532_PWM1;
+> +		}
+>  		if (++i >= maxleds) {
+>  			of_node_put(child);
+>  			break;
+> diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
+> index d215b45..a327b1aa 100644
+> --- a/include/linux/leds-pca9532.h
+> +++ b/include/linux/leds-pca9532.h
+> @@ -22,7 +22,8 @@ enum pca9532_state {
+>  	PCA9532_OFF  = 0x0,
+>  	PCA9532_ON   = 0x1,
+>  	PCA9532_PWM0 = 0x2,
+> -	PCA9532_PWM1 = 0x3
+> +	PCA9532_PWM1 = 0x3,
+> +	PCA9532_KEEP = 0xff
 
-Would it make sense to add the CPU temp trip points in this patch? Or do
-we wait to have CPU OPPs and thermal throttling to add them?
+Added a comma at the end of the above line to avoid the need for
+changing two lines on addition of a new enum value, like in this case.
 
-I guess you can find them either in the datasheet or in vendor tree.
+>  };
+>  
+>  struct pca9532_led {
+> @@ -44,4 +45,3 @@ struct pca9532_platform_data {
+>  };
+>  
+>  #endif /* __LINUX_PCA9532_H */
+> -
+> 
 
-Thanks,
-Quentin
+The patch, with the aforementioned amendments, has been applied to
+the for-next branch of linux-leds.git.
 
 -- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Best regards,
+Jacek Anaszewski
