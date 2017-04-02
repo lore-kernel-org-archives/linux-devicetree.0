@@ -1,74 +1,228 @@
-From: <ndigo123_08-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
-Subject: 14505 devicetree
-Date: Sun, 02 Apr 2017 15:02:23 -0000
-Message-ID: <149114534383.6121.4664582735210140355@mytrinity.com.ua>
-Reply-To: <ndigo123_08-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/1] clk: meson: gxbb: remove the "cpu_clk" from the
+ GXBB and GXL driver
+Date: Sun, 02 Apr 2017 17:57:45 +0200
+Message-ID: <1491148665.3480.8.camel@baylibre.com>
+References: <20170401125519.7339-1-martin.blumenstingl@googlemail.com>
+         <20170401125519.7339-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="9130600684.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
+In-Reply-To: <20170401125519.7339-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-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
-AAAAUEsFBgAAAAABAAEATwAAACwMAAAAAA==
+On Sat, 2017-04-01 at 14:55 +0200, Martin Blumenstingl wrote:
+> It seems that the "cpu_clk" was carried over from the meson8b clock
+> controller driver. On Meson GX (GXBB/GXL/GXM) the registers which are
+> used by the cpu_clk have a different purpose (in other words: they don't
+> control the CPU clock anymore). HHI_SYS_CPU_CLK_CNTL1 bits 31:24 are
+> reserved according to the public S905 datasheet, while bit 23 is the
+> "A53_trace_clk_DIS" gate (which according to the datasheet should only
+> be used in case a silicon bug is discovered) and bits 22:20 are a
+> divider (A53_trace_clk). The meson clk-cpu code however expects that
+> bits 28:20 are reserved for a divider (according to the public S805
+> datasheet this "SCALE_DIV: This value represents an N+1 divider of the
+> input clock.").
+> 
+> The CPU clock on Meson GX SoCs is provided by the SCPI DVFS clock
+> driver instead. Two examples from a Meson GXL S905X SoC:
+> - vcpu (SCPI DVFS clock 0) rate: 1000000000 / cpu_clk rate: 708000000
+> - vcpu (SCPI DVFS clock 0) rate: 1512000000 / cpu_clk rate: 708000000
+> 
+> Unfortunately the CLKID_CPUCLK was already exported (but is currently
+> not used) to DT. Due to the removal of this clock definition there is
+> now a hole in the clk_hw_onecell_data (which is not a problem because
+> this case is already handled in gxbb_clkc_probe).
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+
+Looks good to me.
+I'll wait for the Ack of one of the DT maintainers to apply it.
+Thx Martin
+
+Cheers
+
+> ---
+>  drivers/clk/meson/gxbb.c              | 64 ++------------------------------
+> ---
+>  drivers/clk/meson/gxbb.h              |  2 +-
+>  include/dt-bindings/clock/gxbb-clkc.h |  1 -
+>  3 files changed, 4 insertions(+), 63 deletions(-)
+> 
+> diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+> index ad5f027af1a2..7cf88ca9bdce 100644
+> --- a/drivers/clk/meson/gxbb.c
+> +++ b/drivers/clk/meson/gxbb.c
+> @@ -278,20 +278,6 @@ static const struct pll_rate_table
+> gxl_gp0_pll_rate_table[] = {
+>  	{ /* sentinel */ },
+>  };
+>  
+> -static const struct clk_div_table cpu_div_table[] = {
+> -	{ .val = 1, .div = 1 },
+> -	{ .val = 2, .div = 2 },
+> -	{ .val = 3, .div = 3 },
+> -	{ .val = 2, .div = 4 },
+> -	{ .val = 3, .div = 6 },
+> -	{ .val = 4, .div = 8 },
+> -	{ .val = 5, .div = 10 },
+> -	{ .val = 6, .div = 12 },
+> -	{ .val = 7, .div = 14 },
+> -	{ .val = 8, .div = 16 },
+> -	{ /* sentinel */ },
+> -};
+> -
+>  static struct meson_clk_pll gxbb_fixed_pll = {
+>  	.m = {
+>  		.reg_off = HHI_MPLL_CNTL,
+> @@ -612,21 +598,10 @@ static struct meson_clk_mpll gxbb_mpll2 = {
+>  };
+>  
+>  /*
+> - * FIXME cpu clocks and the legacy composite clocks (e.g. clk81) are both PLL
+> - * post-dividers and should be modeled with their respective PLLs via the
+> - * forthcoming coordinated clock rates feature
+> + * FIXME The legacy composite clocks (e.g. clk81) are both PLL post-dividers
+> + * and should be modeled with their respective PLLs via the forthcoming
+> + * coordinated clock rates feature
+>   */
+> -static struct meson_clk_cpu gxbb_cpu_clk = {
+> -	.reg_off = HHI_SYS_CPU_CLK_CNTL1,
+> -	.div_table = cpu_div_table,
+> -	.clk_nb.notifier_call = meson_clk_cpu_notifier_cb,
+> -	.hw.init = &(struct clk_init_data){
+> -		.name = "cpu_clk",
+> -		.ops = &meson_clk_cpu_ops,
+> -		.parent_names = (const char *[]){ "sys_pll" },
+> -		.num_parents = 1,
+> -	},
+> -};
+>  
+>  static u32 mux_table_clk81[]	= { 6, 5, 7 };
+>  
+> @@ -1045,7 +1020,6 @@ static MESON_GATE(gxbb_ao_i2c, HHI_GCLK_AO, 4);
+>  static struct clk_hw_onecell_data gxbb_hw_onecell_data = {
+>  	.hws = {
+>  		[CLKID_SYS_PLL]		    = &gxbb_sys_pll.hw,
+> -		[CLKID_CPUCLK]		    = &gxbb_cpu_clk.hw,
+>  		[CLKID_HDMI_PLL]	    = &gxbb_hdmi_pll.hw,
+>  		[CLKID_FIXED_PLL]	    = &gxbb_fixed_pll.hw,
+>  		[CLKID_FCLK_DIV2]	    = &gxbb_fclk_div2.hw,
+> @@ -1165,7 +1139,6 @@ static struct clk_hw_onecell_data gxbb_hw_onecell_data =
+> {
+>  static struct clk_hw_onecell_data gxl_hw_onecell_data = {
+>  	.hws = {
+>  		[CLKID_SYS_PLL]		    = &gxbb_sys_pll.hw,
+> -		[CLKID_CPUCLK]		    = &gxbb_cpu_clk.hw,
+>  		[CLKID_HDMI_PLL]	    = &gxbb_hdmi_pll.hw,
+>  		[CLKID_FIXED_PLL]	    = &gxbb_fixed_pll.hw,
+>  		[CLKID_FCLK_DIV2]	    = &gxbb_fclk_div2.hw,
+> @@ -1430,7 +1403,6 @@ struct clkc_data {
+>  	unsigned int clk_dividers_count;
+>  	struct meson_clk_audio_divider *const *clk_audio_dividers;
+>  	unsigned int clk_audio_dividers_count;
+> -	struct meson_clk_cpu *cpu_clk;
+>  	struct clk_hw_onecell_data *hw_onecell_data;
+>  };
+>  
+> @@ -1447,7 +1419,6 @@ static const struct clkc_data gxbb_clkc_data = {
+>  	.clk_dividers_count = ARRAY_SIZE(gxbb_clk_dividers),
+>  	.clk_audio_dividers = gxbb_audio_dividers,
+>  	.clk_audio_dividers_count = ARRAY_SIZE(gxbb_audio_dividers),
+> -	.cpu_clk = &gxbb_cpu_clk,
+>  	.hw_onecell_data = &gxbb_hw_onecell_data,
+>  };
+>  
+> @@ -1464,7 +1435,6 @@ static const struct clkc_data gxl_clkc_data = {
+>  	.clk_dividers_count = ARRAY_SIZE(gxbb_clk_dividers),
+>  	.clk_audio_dividers = gxbb_audio_dividers,
+>  	.clk_audio_dividers_count = ARRAY_SIZE(gxbb_audio_dividers),
+> -	.cpu_clk = &gxbb_cpu_clk,
+>  	.hw_onecell_data = &gxl_hw_onecell_data,
+>  };
+>  
+> @@ -1479,8 +1449,6 @@ static int gxbb_clkc_probe(struct platform_device *pdev)
+>  	const struct clkc_data *clkc_data;
+>  	void __iomem *clk_base;
+>  	int ret, clkid, i;
+> -	struct clk_hw *parent_hw;
+> -	struct clk *parent_clk;
+>  	struct device *dev = &pdev->dev;
+>  
+>  	clkc_data = of_device_get_match_data(&pdev->dev);
+> @@ -1502,9 +1470,6 @@ static int gxbb_clkc_probe(struct platform_device *pdev)
+>  	for (i = 0; i < clkc_data->clk_mplls_count; i++)
+>  		clkc_data->clk_mplls[i]->base = clk_base;
+>  
+> -	/* Populate the base address for CPU clk */
+> -	clkc_data->cpu_clk->base = clk_base;
+> -
+>  	/* Populate base address for gates */
+>  	for (i = 0; i < clkc_data->clk_gates_count; i++)
+>  		clkc_data->clk_gates[i]->reg = clk_base +
+> @@ -1538,29 +1503,6 @@ static int gxbb_clkc_probe(struct platform_device
+> *pdev)
+>  			goto iounmap;
+>  	}
+>  
+> -	/*
+> -	 * Register CPU clk notifier
+> -	 *
+> -	 * FIXME this is wrong for a lot of reasons. First, the muxes should
+> be
+> -	 * struct clk_hw objects. Second, we shouldn't program the muxes in
+> -	 * notifier handlers. The tricky programming sequence will be handled
+> -	 * by the forthcoming coordinated clock rates mechanism once that
+> -	 * feature is released.
+> -	 *
+> -	 * Furthermore, looking up the parent this way is terrible. At some
+> -	 * point we will stop allocating a default struct clk when
+> registering
+> -	 * a new clk_hw, and this hack will no longer work. Releasing the ccr
+> -	 * feature before that time solves the problem :-)
+> -	 */
+> -	parent_hw = clk_hw_get_parent(&clkc_data->cpu_clk->hw);
+> -	parent_clk = parent_hw->clk;
+> -	ret = clk_notifier_register(parent_clk, &clkc_data->cpu_clk->clk_nb);
+> -	if (ret) {
+> -		pr_err("%s: failed to register clock notifier for cpu_clk\n",
+> -				__func__);
+> -		goto iounmap;
+> -	}
+> -
+>  	return of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
+>  			clkc_data->hw_onecell_data);
+>  
+> diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+> index 17c6aef033ff..36330c2d4433 100644
+> --- a/drivers/clk/meson/gxbb.h
+> +++ b/drivers/clk/meson/gxbb.h
+> @@ -171,7 +171,7 @@
+>   * to be exposed to client nodes in DT: include/dt-bindings/clock/gxbb-clkc.h
+>   */
+>  #define CLKID_SYS_PLL		  0
+> -/* CLKID_CPUCLK */
+> +/* ID 1 is unused (it was used by the non-existing CLKID_CPUCLK before) */
+>  /* CLKID_HDMI_PLL */
+>  #define CLKID_FIXED_PLL		  3
+>  /* CLKID_FCLK_DIV2 */
+> diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-
+> bindings/clock/gxbb-clkc.h
+> index 4516bc4253b5..54faf83a4851 100644
+> --- a/include/dt-bindings/clock/gxbb-clkc.h
+> +++ b/include/dt-bindings/clock/gxbb-clkc.h
+> @@ -5,7 +5,6 @@
+>  #ifndef __GXBB_CLKC_H
+>  #define __GXBB_CLKC_H
+>  
+> -#define CLKID_CPUCLK		1
+>  #define CLKID_HDMI_PLL		2
+>  #define CLKID_FCLK_DIV2		4
+>  #define CLKID_FCLK_DIV3		5
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
