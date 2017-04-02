@@ -1,73 +1,36 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 2/4] iio: Documentation: Add max9611 sysfs
- documentation
-Date: Sun, 2 Apr 2017 10:53:45 +0100
-Message-ID: <afc46629-683b-1d28-4e76-ce10f372cb90@kernel.org>
-References: <1490627578-15938-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490627578-15938-3-git-send-email-jacopo+renesas@jmondi.org>
- <6b249f47-2a79-e9a0-0599-284301319a9d@kernel.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] iio:adc: Driver for Linear Technology LTC2497 ADC
+Date: Sun, 2 Apr 2017 10:54:24 +0100
+Message-ID: <892d8b1d-7673-e240-1f42-fbc0ee94f7a2@kernel.org>
+References: <1490599433-6103-1-git-send-email-michael.hennerich@analog.com>
+ <3d54516e-cbd1-8a61-0d83-a91d7055f44c@kernel.org>
+ <f0229cde-15b6-d45b-6d85-3c90082d0226@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <6b249f47-2a79-e9a0-0599-284301319a9d@kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org, wsa+renesas@sang-engineering.com, magnus.damm@gmail.com, laurent.pinchart@ideasonboard.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f0229cde-15b6-d45b-6d85-3c90082d0226-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/17 10:36, Jonathan Cameron wrote:
-> On 27/03/17 16:12, Jacopo Mondi wrote:
->> Add documentation for max9611 driver.
->> Document attributes describing value of shunt resistor installed between
->> RS+ and RS- voltage sense inputs.
+On 02/04/17 10:52, Lars-Peter Clausen wrote:
+> On 04/02/2017 11:30 AM, Jonathan Cameron wrote:
+>> On 27/03/17 08:23, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org wrote:
+>>> From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> This patch adds support for the Analog Devices / Linear Technology
+>>> LTC2497 ADCs. The LTC2497 is a 16-channel (eight differential),
+>>> 16-bit, high precision, delta-sigma ADC with an automatic, differential,
+>>> input current cancellation front end and a 2-wire, I2C interface.
+>>>
+>>> Signed-off-by: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+>> Looks good to me.
 >>
->> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Good.  Will pick up once the binding is sorted.
+>> Applied to the togreg branch of iio.git and pushed out as testing for
+>> the autobuilders to play with it.
 > 
-> Kick me if I don't!
-Oops. Missed the units being micro ohms.  They want to be ohms to be consistent
-within the ABI.
-
-We let various odd units go in right back at the beginning to try and remain
-compatible with hwmon.  Turned out to be a bad idea.  Also the ina2xx uses
-ohms and you should stay consistent with that.
-
-Thanks,
-
-Jonathan
->> ---
->>  Documentation/ABI/testing/sysfs-bus-iio-adc-max9611 | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611 b/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
->> new file mode 100644
->> index 0000000..5020d00
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
->> @@ -0,0 +1,17 @@
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_power_shunt_resistor
->> +Date:		March 2017
->> +KernelVersion:	4.12
->> +Contact:	linux-iio@vger.kernel.org
->> +Description: 	The value of the shunt resistor used to compute power drain on
->> +                common input voltage pin (RS+). In micro Ohms.
->> +
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_current_shunt_resistor
->> +Date:		March 2017
->> +KernelVersion:	4.12
->> +Contact:	linux-iio@vger.kernel.org
->> +Description: 	The value of the shunt resistor used to compute current flowing
->> +                between RS+ and RS- voltage sense inputs. In micro Ohms.
->> +
->> +These attributes describe a single physical component, exposed as two distinct
->> +attributes as it is used to calculate two different values: power load and
->> +current flowing between RS+ and RS- inputs.
->>
+> There is a v3 of this patch.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+unapplied.  Thanks Lars!
