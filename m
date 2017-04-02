@@ -1,106 +1,76 @@
 From: Guillaume Tucker <guillaume.tucker@collabora.com>
-Subject: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali Midgard GPU
-Date: Sun,  2 Apr 2017 08:59:44 +0100
-Message-ID: <db45d0d68957d699f13a0d92f4f84d8ebfd0270e.1491118230.git.guillaume.tucker@collabora.com>
+Subject: [PATCH v2 2/5] ARM: dts: rockchip: add ARM Mali GPU node for rk3288
+Date: Sun,  2 Apr 2017 08:59:45 +0100
+Message-ID: <46d14d3c969a35e800b1c06da0ddb652986e6827.1491118230.git.guillaume.tucker@collabora.com>
 References: <cover.1491118230.git.guillaume.tucker@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1491118230.git.guillaume.tucker@collabora.com>
 In-Reply-To: <cover.1491118230.git.guillaume.tucker@collabora.com>
 References: <cover.1491118230.git.guillaume.tucker@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Sjoerd Simons <sjoerd.simons@collabora.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, John Reitan <john.reitan@arm.com>, Wookey <wookey@wookware.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc: devicetree@vger.kernel.org, Guillaume Tucker <guillaume.tucker@collabora.com>, Sjoerd Simons <sjoerd.simons@collabora.com>, Wookey <wookey@wookware.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, John Reitan <john.reitan@arm.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The ARM Mali Midgard GPU family is present in a number of SoCs
-from many different vendors such as Samsung Exynos and Rockchip.
+Add Mali GPU device tree node for the rk3288 SoC, with devfreq
+opp table.
 
-Import the device tree bindings documentation from the r16p0
-release of the Mali Midgard GPU kernel driver:
-
-  https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-midgard-gpu/TX011-SW-99002-r16p0-00rel0.tgz
-
-The following optional bindings have been omitted in this initial
-version as they are only used in very specific cases:
-
-  * snoop_enable_smc
-  * snoop_disable_smc
-  * jm_config
-  * power_model
-  * system-coherency
-  * ipa-model
-
-The example has been simplified accordingly.
-
-The compatible string definition has been limited to
-"arm,mali-midgard" to avoid checkpatch.pl warnings and to match
-what the driver actually expects (as of r16p0 out-of-tree).
-
-CC: John Reitan <john.reitan@arm.com>
 Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
 ---
- .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53 ++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+ arch/arm/boot/dts/rk3288.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-new file mode 100644
-index 000000000000..da8fc6d21bbf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -0,0 +1,53 @@
-+#
-+# (C) COPYRIGHT 2013-2016 ARM Limited.
-+# Copyright (C) 2017 Collabora Ltd
-+#
-+# This program is free software and is provided to you under the terms of the
-+# GNU General Public License version 2 as published by the Free Software
-+# Foundation, and any use by you of this program is subject to the terms
-+# of such GNU licence.
-+#
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index df8a0dbe9d91..213224ea309e 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -43,6 +43,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3288-cru.h>
++#include <dt-bindings/power/rk3288-power.h>
+ #include <dt-bindings/thermal/thermal.h>
+ #include <dt-bindings/power/rk3288-power.h>
+ #include <dt-bindings/soc/rockchip,boot-mode.h>
+@@ -227,6 +228,28 @@
+ 		ports = <&vopl_out>, <&vopb_out>;
+ 	};
+ 
++	gpu: mali@ffa30000 {
++		compatible = "arm,mali-midgard";
++		reg = <0xffa30000 0x10000>;
++		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "JOB", "MMU", "GPU";
++		clocks = <&cru ACLK_GPU>;
++		clock-names = "clk_mali";
++		operating-points = <
++			/* KHz uV */
++			100000 950000
++			200000 950000
++			300000 1000000
++			400000 1100000
++			500000 1200000
++			600000 1250000
++		>;
++		power-domains = <&power RK3288_PD_GPU>;
++		status = "disabled";
++	};
 +
-+
-+ARM Mali Midgard GPU
-+====================
-+
-+Required properties:
-+
-+- compatible : Should be "arm,mali-midgard".
-+- reg : Physical base address of the device and length of the register area.
-+- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
-+- interrupt-names : Contains the names of IRQ resources in the order they were
-+  provided in the interrupts property. Must contain: "JOB, "MMU", "GPU".
-+
-+Optional:
-+
-+- clocks : Phandle to clock for the Mali Midgard device.
-+- clock-names : Shall be "clk_mali".
-+- mali-supply : Phandle to regulator for the Mali device. Refer to
-+  Documentation/devicetree/bindings/regulator/regulator.txt for details.
-+- operating-points : Refer to Documentation/devicetree/bindings/power/opp.txt
-+  for details.
-+
-+Example for a Mali-T602:
-+
-+gpu@0xfc010000 {
-+	compatible = "arm,mali-midgard";
-+	reg = <0xfc010000 0x4000>;
-+	interrupts = <0 36 4>, <0 37 4>, <0 38 4>;
-+	interrupt-names = "JOB", "MMU", "GPU";
-+
-+	clocks = <&pclk_mali>;
-+	clock-names = "clk_mali";
-+	mali-supply = <&vdd_mali>;
-+	operating-points = <
-+		/* KHz   uV */
-+		533000 1250000,
-+		450000 1150000,
-+		400000 1125000,
-+		350000 1075000,
-+		266000 1025000,
-+		160000  925000,
-+		100000  912500,
-+	>;
-+};
+ 	sdmmc: dwmmc@ff0c0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
+ 		max-frequency = <150000000>;
 -- 
 2.11.0
