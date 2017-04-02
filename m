@@ -1,298 +1,159 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] iio: dac: stm32: add support for trigger events
-Date: Sun, 2 Apr 2017 13:21:12 +0100
-Message-ID: <7dba5b17-5f82-e68d-3c06-afe4a4e478e7@kernel.org>
-References: <1490960707-22422-1-git-send-email-fabrice.gasnier@st.com>
- <1490960707-22422-4-git-send-email-fabrice.gasnier@st.com>
- <eb4d6292-5ae6-c52d-eeb7-2f14c3a4abef@kernel.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Sun, 2 Apr 2017 14:54:57 +0200
+Message-ID: <1192806d-13bf-3b5c-4179-b7795737ed40@gmail.com>
+References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
+ <20170323203749.GB8563@amd> <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+ <20170329190725.GN20094@minitux> <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux> <20170330074309.GA28533@amd>
+ <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <eb4d6292-5ae6-c52d-eeb7-2f14c3a4abef-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/17 12:45, Jonathan Cameron wrote:
-> On 31/03/17 12:45, Fabrice Gasnier wrote:
->> STM32 DAC supports triggers to synchronize conversions. When trigger
->> occurs, data is transferred from DHR (data holding register) to DOR
->> (data output register) so output voltage is updated.
->> Both hardware and software triggers are supported.
+On 03/31/2017 11:28 AM, Jacek Anaszewski wrote:
+> Hi Bjorn and Pavel,
+> 
+> On 03/30/2017 09:43 AM, Pavel Machek wrote:
+>> Hi!
 >>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> Hmm. This is a somewhat different use of triggered event from normal...
+>>>>> There is a binding for ti,lp55xx, but there's nothing I can reuse from
+>>>>> that binding...because it's completely different hardware.
+>>>>
+>>>> Agreed, if you drop the pattern stuff from the binding, at least for now. 
+>>>
+>>> I do not have a strong preference to expose these knobs in devicetree
+>>> and I do fear that finding some common "pattern" bindings that suits
+>>> everyone will be very difficult.
+>>>
+>>> So I'll drop them from the binding for now.
+>>
+>> Ok.
+>>
+>>>> If you want driver merged quickly, I believe the best way would be to
+>>>> leave out pattern support for now. We can merge the basic driver
+>>>> easily to 4.12.
+>>>>
+>>>
+>>> I'm not that much in a hurry and would rather see that we resolve any
+>>> outstanding issues with the implementation of the pattern handling.
+>>
+>> Ok, good.
+>>
+>>> But regardless of this we still have the problem that the typical
+>>> Qualcomm PMIC has 8 LPG-blocks and any triple could be driving a
+>>> RGB-LED. So we would have to create some sort of in-driver-wrapper
+>>> around any three instances exposing them as a single LED to the user.
+>>
+>> Yes, I believe we should do the wrapping. In N900 case, 
+>>
+>>> I rather expose the individual channels and make sure that when we
+>>> trigger a blink operation or enable a pattern (i.e. the two operations
+>>> that do require synchronization) we will perform that synchronization
+>>> under the hood.
+>>
+>> First, we need a way to tell userspace which LEDs are synchronized,
+>> because otherwise it will be confusing.
 > 
-> What you have here is rather closer to the output buffers stuff that Analog
-> have in their tree which hasn't made it upstream yet.
-> To that end I'll want Lars to have a look at this...  I've completely
-> lost track of where they are with this.
-> Perhaps Lars can give us a quick update?
+> There is one year old discussion [0] about the possible approaches
+> to RGB sub-LEDs synchronization problem and patterns in general.
+> My last message with API design proposal has been left unanswered.
 > 
-> If that was in place (or what I have in my head was true anyway),
-> it would look like the reverse of the triggered buffer input devices.
-> You'd be able to write to a software buffer and it would clock them
-> out as the trigger fires (here I think it would have to keep updating
-> the DHR whenever the trigger occurs).
+> Probably we continue that discussion here.
 > 
-> Even if it's not there, we aren't necessarily looking at terribly big job
-> to implement it in the core and that would make this handling a lot more
-> 'standard' and consistent.
+> Generally Bjorn's drivers touch two yet to be addressed issues:
+> - RGB LED support
+> - Generic support for patterns
+> 
+> It is likely that both issues can be solved by utilizing trigger
+> mechanism. The possible solution to the problem Bjorn tried to
+> address with /sys/class/leds/<led>/pattern comma separated list
+> could be a trigger with adjustable number of pattern intervals.
+> 
+> The trigger once activated would create a directory with the
+> number of files corresponding to the number of requested intervals,
+> and then user could write an interval value by writing it to the
+> corresponding file. Somehow related approach has been implemented
+> for USB port LED trigger:
+> 
+> 0f247626cbbf ('usb: core: Introduce a USB port LED trigger")
+> 
+> In both RGB and pattern approaches we should assess
+> if it is acceptable to provide a pattern for trigger name,
+> e.g. blink-pattern-{num_intervals}.
 
-Having tracked down some limited docs (AN3126 - Audio and waveform
-generation using the DAC in STM32 microcontrollers) the fact this
-can also be driven by DMA definitely argues in favour of working with
-Analog on getting the output buffers support upstream.
+Actually we could achieve the goal by listing all available pattern
+configurations for given LED class device, so in case of Qualcomm LPG
+driver we could have transition-pattern-1 to transition-pattern-15
+listed after executing "cat trigger".
 
-*crosses fingers people have the time!*
+In case of RGB trigger we would have qcom-rgb among other triggers
+listed in a result of executing "cat trigger". Then qcom-rgb-1 LED class
+device could appear in /sys/class/leds, which would expose files
+red-led-name, green-led-name and blue-led-name. Once all files are
+initialized with appropriate LED class device names the RGB brightness
+could be updated synchronously in all involved LEDs by executing
+e.g. "echo 1 > update_color". Of course all LEDs that set qcom-rgb
+trigger would have to avoid changing device state on write to
+their brightness file.
+
+I wonder if I'm not missing some vital constraints here that could
+make this design unfeasible.
+
+Best regards,
+Jacek Anaszewski
+
+> If so, then "echo transition-pattern-15" would create a directory
+> e.g. transition_intervals with files interval_0 to interval_14,
+> that could be adjusted by userspace.
 > 
-> Jonathan
+>> Second, there are more issues than just patterns with the RGB
+>> LED. Most important is ability to set particular colors. You want to
+>> set the RGB LED to "white", but that does not mean you can set
+>> red=green=blue=1.0. You want color to look the same on LCD and on the
+>> LED, which means coefficients for white and some kind of function for
+>> brightness-to-PWM conversion.
 > 
->> ---
->>  drivers/iio/dac/Kconfig          |   3 +
->>  drivers/iio/dac/stm32-dac-core.h |  12 ++++
->>  drivers/iio/dac/stm32-dac.c      | 124 ++++++++++++++++++++++++++++++++++++++-
->>  3 files changed, 136 insertions(+), 3 deletions(-)
+> Shouldn't we leave that entirely to the userspace? Can we come up
+> with coefficients that will guarantee the same result on all existing
+> LCD devices?
+> 
+>>>> Incremental patches sound like a good idea, yes.
+>>>>
+>>>> I'd say that testing with actual RGB LED is not a requirement... as
+>>>> long as we design reasonable interface where the synchronizaction will
+>>>> be easy.
+>>>>
+>>>
+>>> As this relates to the board layout (which LPG-channels are hooked to a
+>>> RGB) I think it makes sense to expose a mechanism in devicetree to
+>>> indicate which channels should have their pattern/blink synchronized.
+>>>
+>>> We should be able to extend the LUT (the hardware that actually
+>>> implements the pattern-walker logic) with a DT-property like:
+>>>
+>>>   qcom,synchronize-group-0 = <1, 2, 3>;
+>>>   qcom,synchronize-group-1 = <5, 6, 7>;
+>>>
+>>> And whenever we configure a pattern involving one of the affected LEDs
+>>> from a group we start all of them.
 >>
->> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
->> index 7198648..786c38b 100644
->> --- a/drivers/iio/dac/Kconfig
->> +++ b/drivers/iio/dac/Kconfig
->> @@ -278,6 +278,9 @@ config STM32_DAC
->>  	tristate "STMicroelectronics STM32 DAC"
->>  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
->>  	depends on REGULATOR
->> +	select IIO_TRIGGERED_EVENT
->> +	select IIO_STM32_TIMER_TRIGGER
->> +	select MFD_STM32_TIMERS
->>  	select STM32_DAC_CORE
->>  	help
->>  	  Say yes here to build support for STMicroelectronics STM32 Digital
->> diff --git a/drivers/iio/dac/stm32-dac-core.h b/drivers/iio/dac/stm32-dac-core.h
->> index d3099f7..3bf211c 100644
->> --- a/drivers/iio/dac/stm32-dac-core.h
->> +++ b/drivers/iio/dac/stm32-dac-core.h
->> @@ -26,6 +26,7 @@
->>  
->>  /* STM32 DAC registers */
->>  #define STM32_DAC_CR		0x00
->> +#define STM32_DAC_SWTRIGR	0x04
->>  #define STM32_DAC_DHR12R1	0x08
->>  #define STM32_DAC_DHR12R2	0x14
->>  #define STM32_DAC_DOR1		0x2C
->> @@ -33,8 +34,19 @@
->>  
->>  /* STM32_DAC_CR bit fields */
->>  #define STM32_DAC_CR_EN1		BIT(0)
->> +#define STM32H7_DAC_CR_TEN1		BIT(1)
->> +#define STM32H7_DAC_CR_TSEL1_SHIFT	2
->> +#define STM32H7_DAC_CR_TSEL1		GENMASK(5, 2)
->> +#define STM32_DAC_CR_WAVE1		GENMASK(7, 6)
->> +#define STM32_DAC_CR_MAMP1		GENMASK(11, 8)
->>  #define STM32H7_DAC_CR_HFSEL		BIT(15)
->>  #define STM32_DAC_CR_EN2		BIT(16)
->> +#define STM32_DAC_CR_WAVE2		GENMASK(23, 22)
->> +#define STM32_DAC_CR_MAMP2		GENMASK(27, 24)
->> +
->> +/* STM32_DAC_SWTRIGR bit fields */
->> +#define STM32_DAC_SWTRIGR_SWTRIG1	BIT(0)
->> +#define STM32_DAC_SWTRIGR_SWTRIG2	BIT(1)
->>  
->>  /**
->>   * struct stm32_dac_common - stm32 DAC driver common data (for all instances)
->> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
->> index ee9711d..62e43e9 100644
->> --- a/drivers/iio/dac/stm32-dac.c
->> +++ b/drivers/iio/dac/stm32-dac.c
->> @@ -23,6 +23,10 @@
->>  #include <linux/bitfield.h>
->>  #include <linux/delay.h>
->>  #include <linux/iio/iio.h>
->> +#include <linux/iio/timer/stm32-timer-trigger.h>
->> +#include <linux/iio/trigger.h>
->> +#include <linux/iio/trigger_consumer.h>
->> +#include <linux/iio/triggered_event.h>
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/platform_device.h>
->> @@ -31,15 +35,112 @@
->>  
->>  #define STM32_DAC_CHANNEL_1		1
->>  #define STM32_DAC_CHANNEL_2		2
->> +/* channel2 shift */
->> +#define STM32_DAC_CHAN2_SHIFT		16
->>  
->>  /**
->>   * struct stm32_dac - private data of DAC driver
->>   * @common:		reference to DAC common data
->> + * @swtrig:		Using software trigger
->>   */
->>  struct stm32_dac {
->>  	struct stm32_dac_common *common;
->> +	bool swtrig;
->>  };
->>  
->> +/**
->> + * struct stm32_dac_trig_info - DAC trigger info
->> + * @name: name of the trigger, corresponding to its source
->> + * @tsel: trigger selection, value to be configured in DAC_CR.TSELx
->> + */
->> +struct stm32_dac_trig_info {
->> +	const char *name;
->> +	u32 tsel;
->> +};
->> +
->> +static const struct stm32_dac_trig_info stm32h7_dac_trinfo[] = {
->> +	{ "swtrig", 0 },
->> +	{ TIM1_TRGO, 1 },
->> +	{ TIM2_TRGO, 2 },
->> +	{ TIM4_TRGO, 3 },
->> +	{ TIM5_TRGO, 4 },
->> +	{ TIM6_TRGO, 5 },
->> +	{ TIM7_TRGO, 6 },
->> +	{ TIM8_TRGO, 7 },
->> +	{},
->> +};
->> +
->> +static irqreturn_t stm32_dac_trigger_handler(int irq, void *p)
->> +{
->> +	struct iio_poll_func *pf = p;
->> +	struct iio_dev *indio_dev = pf->indio_dev;
->> +	struct stm32_dac *dac = iio_priv(indio_dev);
->> +	int channel = indio_dev->channels[0].channel;
->> +
->> +	/* Using software trigger? Then, trigger it now */
->> +	if (dac->swtrig) {
->> +		u32 swtrig;
->> +
->> +		if (channel == STM32_DAC_CHANNEL_1)
->> +			swtrig = STM32_DAC_SWTRIGR_SWTRIG1;
->> +		else
->> +			swtrig = STM32_DAC_SWTRIGR_SWTRIG2;
->> +		regmap_update_bits(dac->common->regmap, STM32_DAC_SWTRIGR,
->> +				   swtrig, swtrig);
->> +	}
->> +
->> +	iio_trigger_notify_done(indio_dev->trig);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static unsigned int stm32_dac_get_trig_tsel(struct stm32_dac *dac,
->> +					    struct iio_trigger *trig)
->> +{
->> +	unsigned int i;
->> +
->> +	/* skip 1st trigger that should be swtrig */
->> +	for (i = 1; stm32h7_dac_trinfo[i].name; i++) {
->> +		/*
->> +		 * Checking both stm32 timer trigger type and trig name
->> +		 * should be safe against arbitrary trigger names.
->> +		 */
->> +		if (is_stm32_timer_trigger(trig) &&
->> +		    !strcmp(stm32h7_dac_trinfo[i].name, trig->name)) {
->> +			return stm32h7_dac_trinfo[i].tsel;
->> +		}
->> +	}
->> +
->> +	/* When no trigger has been found, default to software trigger */
->> +	dac->swtrig = true;
->> +
->> +	return stm32h7_dac_trinfo[0].tsel;
->> +}
->> +
->> +static int stm32_dac_set_trig(struct stm32_dac *dac, struct iio_trigger *trig,
->> +			      int channel)
->> +{
->> +	struct iio_dev *indio_dev = iio_priv_to_dev(dac);
->> +	u32 shift = channel == STM32_DAC_CHANNEL_1 ? 0 : STM32_DAC_CHAN2_SHIFT;
->> +	u32 val = 0, tsel;
->> +	u32 msk = (STM32H7_DAC_CR_TEN1 | STM32H7_DAC_CR_TSEL1) << shift;
->> +
->> +	dac->swtrig = false;
->> +	if (trig) {
->> +		/* select & enable trigger (tsel / ten) */
->> +		tsel = stm32_dac_get_trig_tsel(dac, trig);
->> +		val = tsel << STM32H7_DAC_CR_TSEL1_SHIFT;
->> +		val = (val | STM32H7_DAC_CR_TEN1) << shift;
->> +	}
->> +
->> +	if (trig)
->> +		dev_dbg(&indio_dev->dev, "enable trigger: %s\n", trig->name);
->> +	else
->> +		dev_dbg(&indio_dev->dev, "disable trigger\n");
->> +
->> +	return regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, val);
->> +}
->> +
->>  static int stm32_dac_is_enabled(struct stm32_dac *dac, int channel)
->>  {
->>  	u32 en, val;
->> @@ -63,9 +164,16 @@ static int stm32_dac_enable(struct iio_dev *indio_dev, int channel)
->>  		STM32_DAC_CR_EN1 : STM32_DAC_CR_EN2;
->>  	int ret;
->>  
->> +	ret = stm32_dac_set_trig(dac, indio_dev->trig, channel);
->> +	if (ret < 0) {
->> +		dev_err(&indio_dev->dev, "Trigger setup failed\n");
->> +		return ret;
->> +	}
->> +
->>  	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, en, en);
->>  	if (ret < 0) {
->>  		dev_err(&indio_dev->dev, "Enable failed\n");
->> +		stm32_dac_set_trig(dac, NULL, channel);
->>  		return ret;
->>  	}
->>  
->> @@ -88,10 +196,12 @@ static int stm32_dac_disable(struct iio_dev *indio_dev, int channel)
->>  	int ret;
->>  
->>  	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, en, 0);
->> -	if (ret)
->> +	if (ret) {
->>  		dev_err(&indio_dev->dev, "Disable failed\n");
->> +		return ret;
->> +	}
->>  
->> -	return ret;
->> +	return stm32_dac_set_trig(dac, NULL, channel);
->>  }
->>  
->>  static int stm32_dac_get_value(struct stm32_dac *dac, int channel, int *val)
->> @@ -258,10 +368,17 @@ static int stm32_dac_probe(struct platform_device *pdev)
->>  	if (ret < 0)
->>  		return ret;
->>  
->> -	ret = iio_device_register(indio_dev);
->> +	ret = iio_triggered_event_setup(indio_dev, NULL,
->> +					stm32_dac_trigger_handler);
->>  	if (ret)
->>  		return ret;
->>  
->> +	ret = iio_device_register(indio_dev);
->> +	if (ret) {
->> +		iio_triggered_event_cleanup(indio_dev);
->> +		return ret;
->> +	}
->> +
->>  	return 0;
->>  }
->>  
->> @@ -269,6 +386,7 @@ static int stm32_dac_remove(struct platform_device *pdev)
->>  {
->>  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
->>  
->> +	iio_triggered_event_cleanup(indio_dev);
->>  	iio_device_unregister(indio_dev);
->>  
->>  	return 0;
+>> Yes we need some kind of grouping.
+>>
+>> Additional complexity in the N900 case... groups can actually be
+>> configured at run time. Original Maemo used that ability to group 6
+>> keyboard backlight leds, and then run pattern on them. OTOH... I don't
+>> think we _need_ to support that functionality.
+>>
+>> Best regards,
+>> 									Pavel
 >>
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> [0] https://lkml.org/lkml/2016/4/18/179
 > 
