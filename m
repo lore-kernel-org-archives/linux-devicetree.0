@@ -1,153 +1,51 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] iio: adc: stm32: add dt option to set resolution
-Date: Sun, 2 Apr 2017 09:54:48 +0100
-Message-ID: <8d440abd-3548-6aab-bba9-3f62fe27e72d@kernel.org>
-References: <1490963559-32159-1-git-send-email-fabrice.gasnier@st.com>
- <1490963559-32159-3-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: iio: rockchip-saradc: add support for
+ rk3328
+Date: Sun, 2 Apr 2017 09:58:17 +0100
+Message-ID: <3b0bb12e-3f9e-84b8-3d4e-976ace90fe74@kernel.org>
+References: <1490607650-18650-1-git-send-email-cl@rock-chips.com>
+ <1490607650-18650-2-git-send-email-cl@rock-chips.com>
+ <1940747.DLKBel529v@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490963559-32159-3-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1940747.DLKBel529v@phil>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie@rock-chi
 List-Id: devicetree@vger.kernel.org
 
-On 31/03/17 13:32, Fabrice Gasnier wrote:
-> stm32 adc supports several resolution. Add 'assigned-resolution-bits'
-> dt optional property to set it. Default to maximum resolution in case
-> it isn't set.
+On 27/03/17 14:25, Heiko Stuebner wrote:
+> Hi Jonathan,
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-The code is fine.  Just waiting on review of the binding.
+> Am Montag, 27. März 2017, 17:40:46 CEST schrieb cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org:
+>> From: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> The rk3328 saradc is the same as rk3399.
+>>
+>> Signed-off-by: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> just for planning purposes, do you plan on picking this up or do you
+> want me to queue it with the rest of the changes (Ack needed).
 
-Give me a poke if I seem to have dropped this in a week or two.
+Applied to the togreg branch of iio.git.  Makes more sense that
+way as we might get some other changes around that file and it
+doesn't make any difference to the rest of the series.
+
+Will probably start it's way upstream this afternoon if I get
+through the rest of my backlog.
 
 Thanks,
 
 Jonathan
-> ---
-> Changes in v2:
-> - rename property from 'st,adc-res' to 'assigned-resolution-bits', so it
->   is more common.
-> ---
->  drivers/iio/adc/stm32-adc.c | 50 ++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 49 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index 9b49a6ad..c28e7ff 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -60,6 +60,8 @@
->  #define STM32F4_EOC			BIT(1)
->  
->  /* STM32F4_ADC_CR1 - bit fields */
-> +#define STM32F4_RES_SHIFT		24
-> +#define STM32F4_RES_MASK		GENMASK(25, 24)
->  #define STM32F4_SCAN			BIT(8)
->  #define STM32F4_EOCIE			BIT(5)
->  
-> @@ -141,6 +143,7 @@ struct stm32_adc_regs {
->   * @lock:		spinlock
->   * @bufi:		data buffer index
->   * @num_conv:		expected number of scan conversions
-> + * @res:		data resolution (e.g. RES bitfield value)
->   * @trigger_polarity:	external trigger polarity (e.g. exten)
->   * @dma_chan:		dma channel
->   * @rx_buf:		dma rx buffer cpu address
-> @@ -157,6 +160,7 @@ struct stm32_adc {
->  	spinlock_t		lock;		/* interrupt lock */
->  	unsigned int		bufi;
->  	unsigned int		num_conv;
-> +	u32			res;
->  	u32			trigger_polarity;
->  	struct dma_chan		*dma_chan;
->  	u8			*rx_buf;
-> @@ -196,6 +200,11 @@ struct stm32_adc_chan_spec {
->  	{ IIO_VOLTAGE, 15, "in15" },
->  };
->  
-> +static const unsigned int stm32f4_adc_resolutions[] = {
-> +	/* sorted values so the index matches RES[1:0] in STM32F4_ADC_CR1 */
-> +	12, 10, 8, 6,
-> +};
-> +
->  /**
->   * stm32f4_sq - describe regular sequence registers
->   * - L: sequence len (register & bit field)
-> @@ -302,6 +311,14 @@ static void stm32_adc_conv_irq_disable(struct stm32_adc *adc)
->  	stm32_adc_clr_bits(adc, STM32F4_ADC_CR1, STM32F4_EOCIE);
->  }
->  
-> +static void stm32_adc_set_res(struct stm32_adc *adc)
-> +{
-> +	u32 val = stm32_adc_readl(adc, STM32F4_ADC_CR1);
-> +
-> +	val = (val & ~STM32F4_RES_MASK) | (adc->res << STM32F4_RES_SHIFT);
-> +	stm32_adc_writel(adc, STM32F4_ADC_CR1, val);
-> +}
-> +
->  /**
->   * stm32_adc_start_conv() - Start conversions for regular channels.
->   * @adc: stm32 adc instance
-> @@ -870,11 +887,37 @@ static irqreturn_t stm32_adc_trigger_handler(int irq, void *p)
->  	{},
->  };
->  
-> +static int stm32_adc_of_get_resolution(struct iio_dev *indio_dev)
-> +{
-> +	struct device_node *node = indio_dev->dev.of_node;
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +	unsigned int i;
-> +	u32 res;
-> +
-> +	if (of_property_read_u32(node, "assigned-resolution-bits", &res))
-> +		res = stm32f4_adc_resolutions[0];
-> +
-> +	for (i = 0; i < ARRAY_SIZE(stm32f4_adc_resolutions); i++)
-> +		if (res == stm32f4_adc_resolutions[i])
-> +			break;
-> +	if (i >= ARRAY_SIZE(stm32f4_adc_resolutions)) {
-> +		dev_err(&indio_dev->dev, "Bad resolution: %u bits\n", res);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_dbg(&indio_dev->dev, "Using %u bits resolution\n", res);
-> +	adc->res = i;
-> +
-> +	return 0;
-> +}
-> +
->  static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
->  				    struct iio_chan_spec *chan,
->  				    const struct stm32_adc_chan_spec *channel,
->  				    int scan_index)
->  {
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +
->  	chan->type = channel->type;
->  	chan->channel = channel->channel;
->  	chan->datasheet_name = channel->name;
-> @@ -883,7 +926,7 @@ static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
->  	chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
->  	chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
->  	chan->scan_type.sign = 'u';
-> -	chan->scan_type.realbits = 12;
-> +	chan->scan_type.realbits = stm32f4_adc_resolutions[adc->res];
->  	chan->scan_type.storagebits = 16;
->  	chan->ext_info = stm32_adc_ext_info;
->  }
-> @@ -1022,6 +1065,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	ret = stm32_adc_of_get_resolution(indio_dev);
-> +	if (ret < 0)
-> +		goto err_clk_disable;
-> +	stm32_adc_set_res(adc);
-> +
->  	ret = stm32_adc_chan_of_init(indio_dev);
->  	if (ret < 0)
->  		goto err_clk_disable;
+> Heiko
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
