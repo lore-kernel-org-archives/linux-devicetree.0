@@ -1,120 +1,288 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v6] hwmon: ads7828 optional parameters from the device
- tree
-Date: Sun, 2 Apr 2017 04:35:30 -0700
-Message-ID: <8a1bca54-04fd-c066-6c62-e1c0ad037794@roeck-us.net>
-References: <20170330034637.29708-1-kernel.development@povil.us>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] iio: dac: stm32: add support for trigger events
+Date: Sun, 2 Apr 2017 12:45:24 +0100
+Message-ID: <eb4d6292-5ae6-c52d-eeb7-2f14c3a4abef@kernel.org>
+References: <1490960707-22422-1-git-send-email-fabrice.gasnier@st.com>
+ <1490960707-22422-4-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170330034637.29708-1-kernel.development@povil.us>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sam Povilus <kernel.development@povil.us>, wsa@the-dreams.de, jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490960707-22422-4-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2017 08:46 PM, Sam Povilus wrote:
-> Adding the ability for the ads7828 and ads7830 to use the device tree to
-> get their optional parameters, instead of using platform devices. This
-> allows people using custom boards to also use the ads7828 in a non-default
-> manner.
->
-> v2: conforming to coding style
-> v3: changing from "_" to "-" for device tree entries
-> v4: using regulator subsystem for voltage source, renaming differential
->     input property
-> v5: checking for invalid vref values sooner and returning error if they are
->     bad, not warning user.
-> v6: optimization per Guenter Roeck
->
-> Signed-off-by: Sam Povilus <kernel.development@povil.us>
+On 31/03/17 12:45, Fabrice Gasnier wrote:
+> STM32 DAC supports triggers to synchronize conversions. When trigger
+> occurs, data is transferred from DHR (data holding register) to DOR
+> (data output register) so output voltage is updated.
+> Both hardware and software triggers are supported.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Hmm. This is a somewhat different use of triggered event from normal...
 
-Applied, after fixing up some whitespace errors in ads7828.txt.
+What you have here is rather closer to the output buffers stuff that Analog
+have in their tree which hasn't made it upstream yet.
+To that end I'll want Lars to have a look at this...  I've completely
+lost track of where they are with this.
+Perhaps Lars can give us a quick update?
 
-Guenter
+If that was in place (or what I have in my head was true anyway),
+it would look like the reverse of the triggered buffer input devices.
+You'd be able to write to a software buffer and it would clock them
+out as the trigger fires (here I think it would have to keep updating
+the DHR whenever the trigger occurs).
+
+Even if it's not there, we aren't necessarily looking at terribly big job
+to implement it in the core and that would make this handling a lot more
+'standard' and consistent.
+
+Jonathan
 
 > ---
->  .../devicetree/bindings/hwmon/ads7828.txt          | 26 ++++++++++++++++++++++
->  drivers/hwmon/ads7828.c                            | 15 +++++++++++++
->  2 files changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-> new file mode 100644
-> index 000000000000..a1251b19079d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-> @@ -0,0 +1,26 @@
-> +ads7828 properties
+>  drivers/iio/dac/Kconfig          |   3 +
+>  drivers/iio/dac/stm32-dac-core.h |  12 ++++
+>  drivers/iio/dac/stm32-dac.c      | 124 ++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 136 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index 7198648..786c38b 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -278,6 +278,9 @@ config STM32_DAC
+>  	tristate "STMicroelectronics STM32 DAC"
+>  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+>  	depends on REGULATOR
+> +	select IIO_TRIGGERED_EVENT
+> +	select IIO_STM32_TIMER_TRIGGER
+> +	select MFD_STM32_TIMERS
+>  	select STM32_DAC_CORE
+>  	help
+>  	  Say yes here to build support for STMicroelectronics STM32 Digital
+> diff --git a/drivers/iio/dac/stm32-dac-core.h b/drivers/iio/dac/stm32-dac-core.h
+> index d3099f7..3bf211c 100644
+> --- a/drivers/iio/dac/stm32-dac-core.h
+> +++ b/drivers/iio/dac/stm32-dac-core.h
+> @@ -26,6 +26,7 @@
+>  
+>  /* STM32 DAC registers */
+>  #define STM32_DAC_CR		0x00
+> +#define STM32_DAC_SWTRIGR	0x04
+>  #define STM32_DAC_DHR12R1	0x08
+>  #define STM32_DAC_DHR12R2	0x14
+>  #define STM32_DAC_DOR1		0x2C
+> @@ -33,8 +34,19 @@
+>  
+>  /* STM32_DAC_CR bit fields */
+>  #define STM32_DAC_CR_EN1		BIT(0)
+> +#define STM32H7_DAC_CR_TEN1		BIT(1)
+> +#define STM32H7_DAC_CR_TSEL1_SHIFT	2
+> +#define STM32H7_DAC_CR_TSEL1		GENMASK(5, 2)
+> +#define STM32_DAC_CR_WAVE1		GENMASK(7, 6)
+> +#define STM32_DAC_CR_MAMP1		GENMASK(11, 8)
+>  #define STM32H7_DAC_CR_HFSEL		BIT(15)
+>  #define STM32_DAC_CR_EN2		BIT(16)
+> +#define STM32_DAC_CR_WAVE2		GENMASK(23, 22)
+> +#define STM32_DAC_CR_MAMP2		GENMASK(27, 24)
 > +
-> +Required properties:
-> +- compatible: Should be one of
-> +	       ti,ads7828
-> +	       ti,ads7830
-> +- reg: I2C address
+> +/* STM32_DAC_SWTRIGR bit fields */
+> +#define STM32_DAC_SWTRIGR_SWTRIG1	BIT(0)
+> +#define STM32_DAC_SWTRIGR_SWTRIG2	BIT(1)
+>  
+>  /**
+>   * struct stm32_dac_common - stm32 DAC driver common data (for all instances)
+> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+> index ee9711d..62e43e9 100644
+> --- a/drivers/iio/dac/stm32-dac.c
+> +++ b/drivers/iio/dac/stm32-dac.c
+> @@ -23,6 +23,10 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/delay.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/iio/timer/stm32-timer-trigger.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_event.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> @@ -31,15 +35,112 @@
+>  
+>  #define STM32_DAC_CHANNEL_1		1
+>  #define STM32_DAC_CHANNEL_2		2
+> +/* channel2 shift */
+> +#define STM32_DAC_CHAN2_SHIFT		16
+>  
+>  /**
+>   * struct stm32_dac - private data of DAC driver
+>   * @common:		reference to DAC common data
+> + * @swtrig:		Using software trigger
+>   */
+>  struct stm32_dac {
+>  	struct stm32_dac_common *common;
+> +	bool swtrig;
+>  };
+>  
+> +/**
+> + * struct stm32_dac_trig_info - DAC trigger info
+> + * @name: name of the trigger, corresponding to its source
+> + * @tsel: trigger selection, value to be configured in DAC_CR.TSELx
+> + */
+> +struct stm32_dac_trig_info {
+> +	const char *name;
+> +	u32 tsel;
+> +};
 > +
-> +Optional properties:
+> +static const struct stm32_dac_trig_info stm32h7_dac_trinfo[] = {
+> +	{ "swtrig", 0 },
+> +	{ TIM1_TRGO, 1 },
+> +	{ TIM2_TRGO, 2 },
+> +	{ TIM4_TRGO, 3 },
+> +	{ TIM5_TRGO, 4 },
+> +	{ TIM6_TRGO, 5 },
+> +	{ TIM7_TRGO, 6 },
+> +	{ TIM8_TRGO, 7 },
+> +	{},
+> +};
 > +
-> +- ti,differential-input
-> +  Set to use the device in differential mode.
-> +- vref
-
-changed to vref-supply
-
-> +  The external reference on the device is set to this regulators output. If it
-> +  does not exists the internal reference will be used and output by the ads78xx
-> +  on the "external vref" pin.
+> +static irqreturn_t stm32_dac_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct stm32_dac *dac = iio_priv(indio_dev);
+> +	int channel = indio_dev->channels[0].channel;
 > +
-> +  Example ADS7828 node:
+> +	/* Using software trigger? Then, trigger it now */
+> +	if (dac->swtrig) {
+> +		u32 swtrig;
 > +
-> +  ads7828: ads@48 {
-> +  	   comatible = "ti,ads7828";
-> +	   reg = <0x48>;
-> +	   vref-supply = <&vref>;
-> +	   ti,differential-input;
-> +  };
+> +		if (channel == STM32_DAC_CHANNEL_1)
+> +			swtrig = STM32_DAC_SWTRIGR_SWTRIG1;
+> +		else
+> +			swtrig = STM32_DAC_SWTRIGR_SWTRIG2;
+> +		regmap_update_bits(dac->common->regmap, STM32_DAC_SWTRIGR,
+> +				   swtrig, swtrig);
+> +	}
 > +
-> diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
-> index ee396ff167d9..88330a233b1d 100644
-> --- a/drivers/hwmon/ads7828.c
-> +++ b/drivers/hwmon/ads7828.c
-> @@ -34,6 +34,7 @@
->  #include <linux/platform_data/ads7828.h>
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
-> +#include <linux/regulator/consumer.h>
->
->  /* The ADS7828 registers */
->  #define ADS7828_CMD_SD_SE	0x80	/* Single ended inputs */
-> @@ -118,9 +119,11 @@ static int ads7828_probe(struct i2c_client *client,
->  	struct ads7828_data *data;
->  	struct device *hwmon_dev;
->  	unsigned int vref_mv = ADS7828_INT_VREF_MV;
-> +	unsigned int vref_uv;
->  	bool diff_input = false;
->  	bool ext_vref = false;
->  	unsigned int regval;
-> +	struct regulator *reg;
->
->  	data = devm_kzalloc(dev, sizeof(struct ads7828_data), GFP_KERNEL);
->  	if (!data)
-> @@ -131,6 +134,18 @@ static int ads7828_probe(struct i2c_client *client,
->  		ext_vref = pdata->ext_vref;
->  		if (ext_vref && pdata->vref_mv)
->  			vref_mv = pdata->vref_mv;
-> +	} else if (dev->of_node) {
-> +		diff_input = of_property_read_bool(dev->of_node,
-> +						   "ti,differential-input");
-> +		reg = devm_regulator_get_optional(dev, "vref");
-> +		if (!IS_ERR(reg)) {
-> +			vref_uv = regulator_get_voltage(reg);
-> +			vref_mv = DIV_ROUND_CLOSEST(vref_uv, 1000);
-> +			if (vref_mv < ADS7828_EXT_VREF_MV_MIN ||
-> +			    vref_mv > ADS7828_EXT_VREF_MV_MAX)
-> +				return -EINVAL;
-> +			ext_vref = true;
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static unsigned int stm32_dac_get_trig_tsel(struct stm32_dac *dac,
+> +					    struct iio_trigger *trig)
+> +{
+> +	unsigned int i;
+> +
+> +	/* skip 1st trigger that should be swtrig */
+> +	for (i = 1; stm32h7_dac_trinfo[i].name; i++) {
+> +		/*
+> +		 * Checking both stm32 timer trigger type and trig name
+> +		 * should be safe against arbitrary trigger names.
+> +		 */
+> +		if (is_stm32_timer_trigger(trig) &&
+> +		    !strcmp(stm32h7_dac_trinfo[i].name, trig->name)) {
+> +			return stm32h7_dac_trinfo[i].tsel;
 > +		}
+> +	}
+> +
+> +	/* When no trigger has been found, default to software trigger */
+> +	dac->swtrig = true;
+> +
+> +	return stm32h7_dac_trinfo[0].tsel;
+> +}
+> +
+> +static int stm32_dac_set_trig(struct stm32_dac *dac, struct iio_trigger *trig,
+> +			      int channel)
+> +{
+> +	struct iio_dev *indio_dev = iio_priv_to_dev(dac);
+> +	u32 shift = channel == STM32_DAC_CHANNEL_1 ? 0 : STM32_DAC_CHAN2_SHIFT;
+> +	u32 val = 0, tsel;
+> +	u32 msk = (STM32H7_DAC_CR_TEN1 | STM32H7_DAC_CR_TSEL1) << shift;
+> +
+> +	dac->swtrig = false;
+> +	if (trig) {
+> +		/* select & enable trigger (tsel / ten) */
+> +		tsel = stm32_dac_get_trig_tsel(dac, trig);
+> +		val = tsel << STM32H7_DAC_CR_TSEL1_SHIFT;
+> +		val = (val | STM32H7_DAC_CR_TEN1) << shift;
+> +	}
+> +
+> +	if (trig)
+> +		dev_dbg(&indio_dev->dev, "enable trigger: %s\n", trig->name);
+> +	else
+> +		dev_dbg(&indio_dev->dev, "disable trigger\n");
+> +
+> +	return regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, val);
+> +}
+> +
+>  static int stm32_dac_is_enabled(struct stm32_dac *dac, int channel)
+>  {
+>  	u32 en, val;
+> @@ -63,9 +164,16 @@ static int stm32_dac_enable(struct iio_dev *indio_dev, int channel)
+>  		STM32_DAC_CR_EN1 : STM32_DAC_CR_EN2;
+>  	int ret;
+>  
+> +	ret = stm32_dac_set_trig(dac, indio_dev->trig, channel);
+> +	if (ret < 0) {
+> +		dev_err(&indio_dev->dev, "Trigger setup failed\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, en, en);
+>  	if (ret < 0) {
+>  		dev_err(&indio_dev->dev, "Enable failed\n");
+> +		stm32_dac_set_trig(dac, NULL, channel);
+>  		return ret;
 >  	}
->
->  	/* Bound Vref with min/max values */
->
+>  
+> @@ -88,10 +196,12 @@ static int stm32_dac_disable(struct iio_dev *indio_dev, int channel)
+>  	int ret;
+>  
+>  	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, en, 0);
+> -	if (ret)
+> +	if (ret) {
+>  		dev_err(&indio_dev->dev, "Disable failed\n");
+> +		return ret;
+> +	}
+>  
+> -	return ret;
+> +	return stm32_dac_set_trig(dac, NULL, channel);
+>  }
+>  
+>  static int stm32_dac_get_value(struct stm32_dac *dac, int channel, int *val)
+> @@ -258,10 +368,17 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = iio_device_register(indio_dev);
+> +	ret = iio_triggered_event_setup(indio_dev, NULL,
+> +					stm32_dac_trigger_handler);
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret) {
+> +		iio_triggered_event_cleanup(indio_dev);
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -269,6 +386,7 @@ static int stm32_dac_remove(struct platform_device *pdev)
+>  {
+>  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>  
+> +	iio_triggered_event_cleanup(indio_dev);
+>  	iio_device_unregister(indio_dev);
+>  
+>  	return 0;
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
