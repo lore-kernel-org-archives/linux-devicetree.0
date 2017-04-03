@@ -1,38 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] clk: stm32h7: Add stm32h743 clock driver
-Date: Mon, 3 Apr 2017 11:04:49 -0500
-Message-ID: <CAL_JsqJYu+4puvB-WhaLVtjHASVOdY0acM2OxxMpZOvG9MAziQ@mail.gmail.com>
-References: <1490778502-23651-1-git-send-email-gabriel.fernandez@st.com> <20170403143958.gi7vyhianzetnxz2@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] dt-bindings: watchdog: Document STM32 IWDG
+ bindings
+Date: Mon, 3 Apr 2017 11:10:09 -0500
+Message-ID: <20170403161009.zkddbn4elfakbqnq@rob-hp-laptop>
+References: <1490886926-20585-1-git-send-email-yannick.fertre@st.com>
+ <1490886926-20585-2-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170403143958.gi7vyhianzetnxz2@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Thompson <daniel.thompson@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, =?UTF-8?Q?Rados=C5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Ludovic Barre <ludovic.barre>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1490886926-20585-2-git-send-email-yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 3, 2017 at 9:39 AM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Mar 29, 2017 at 11:08:22AM +0200, gabriel.fernandez@st.com wrote:
->> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>
->> This patch enables clocks for STM32H743 boards.
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->>
->> Just for the MFD changes:
->> Acked-by: Lee Jones <lee.jones@linaro.org>
->>
+On Thu, Mar 30, 2017 at 05:15:22PM +0200, Yannick Fertre wrote:
+> This adds documentation of device tree bindings for the STM32 IWDG
+> (Independent WatchDoG).
+> 
+> Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+> 
+> Author:    Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 
->> +Required properties for pll node:
->> +- compatible: Should be:
->> +  "stm32h7-pll"
->
-> stm,stm32h7-pll
+This shouldn't be here.
 
-Err, I meant st,stm32h7-pll.
+> ---
+>  .../devicetree/bindings/watchdog/st,stm32-iwdg.txt        | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
 
->
-> With that,
->
-> Acked-by: Rob Herring <robh@kernel.org>
+Otherwise,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
