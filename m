@@ -1,204 +1,71 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V7 3/7] Documentation: devicetree: mfd: da9062/61 MFD
- binding
-Date: Mon, 3 Apr 2017 14:39:22 +0100
-Message-ID: <20170403133922.iikcgoboisn7qg2e@dell>
-References: <cover.1490712213.git.stwiss.opensource@diasemi.com>
- <1c12168d005cec5be6cab78f99c4dce95caa128b.1490712213.git.stwiss.opensource@diasemi.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 02/39] [media] dt-bindings: Add bindings for i.MX
+ media driver
+Date: Mon, 3 Apr 2017 09:07:43 -0500
+Message-ID: <20170403140743.trxep36s4z4piyl3@rob-hp-laptop>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-3-git-send-email-steve_longerbeam@mentor.com>
+ <CAL_JsqJm_JjuVPcOBERCqsnjTDdNoKr9xRE9MXMO4ivxGath2Q@mail.gmail.com>
+ <70bacfb5-aef1-76d1-37d2-23a524903d45@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1c12168d005cec5be6cab78f99c4dce95caa128b.1490712213.git.stwiss.opensource@diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+In-Reply-To: <70bacfb5-aef1-76d1-37d2-23a524903d45-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Mar 2017, Steve Twiss wrote:
+On Tue, Mar 28, 2017 at 05:35:52PM -0700, Steve Longerbeam wrote:
+> 
+> 
+> On 03/28/2017 05:21 PM, Rob Herring wrote:
+> > On Mon, Mar 27, 2017 at 7:40 PM, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > Add bindings documentation for the i.MX media driver.
+> > > 
+> > > <snip>
+> > > +
+> > > +mipi_csi2 node
+> > > +--------------
+> > > +
+> > > +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
+> > > +CSI-2 sensors.
+> > > +
+> > > +Required properties:
+> > > +- compatible   : "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
+> > 
+> > As I mentioned in v5, there's a DW CSI2 binding in progress. This
+> > needs to be based on that.
+> 
+> Hi Rob, I'm not sure what you are asking me to do.
+> 
+> I assume if there's another binding doc in progress, it means
+> someone is working on another Synopsys DW CSI-2 subdevice driver.
 
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> Extend existing DA9062 binding information to include the DA9061 PMIC for
-> MFD core and regulators.
-> 
-> Add a da9062-onkey link to the existing onkey binding file.
-> 
-> Add a da9062-thermal link to the new temperature monitoring binding file.
-> 
-> Delete the da9062-watchdog section and replace it with a link to the new
-> DA9061/62 binding information file.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> ---
-> This patch applies against linux-next and v4.11-rc3
-> 
-> v6 -> v7
->  - NO CODE CHANGE
-> 
-> v5 -> v6
->  - NO CODE CHANGE
->  - Rebased from v4.9 to v4.11-rc3
-> 
-> v4 -> v5
->  - NO CODE CHANGE
->  - Rebased from v4.8 to v4.9
-> 
-> v3 -> v4
->  - Patch renamed from [PATCH V3 4/9] to [PATCH V4 3/8]
->  - Remove double newline spacing in text file
->  - Added Acked-by Rob Herring
-> 
-> v2 -> v3
->  - Patch renamed from [PATCH V2 04/10] to [PATCH V3 4/9]
->  - Ensure binding description concentrates on the device not the
->    device driver
->  - Separate the DA9061 and DA9062 sub-device tables to distinguish
->    the difference between the two devices
->  - Update the commit message to describe this change
->  - Add e-mail information about associated patches from this set
->    without describing them as being explicitly dependent on this
->    binding
-> 
-> v1 -> v2
->  - Patch renamed from [PATCH V1 09/10] to [PATCH V2 04/10] -- these
->    changes were made to fix checkpatch warnings caused by the patch
->    set dependency order
-> 
-> Hi,
-> 
-> Added an Ack from Rob Herring for the PATCH V3 version.
-> 
-> As previously:
-> Other information:
-> The device driver from this patch set (associated with this binding) is
-> 
-> - [PATCH V5 4/8] mfd: da9061: MFD core support
-> 
-> and also the following binding file changes:
-> 
-> - Binding for onkey (already applied by Dmitry Torokhov)
-> - [PATCH V5 1/8] Binding for watchdog
-> - [PATCH V5 2/8] Binding for thermal
-> 
-> Regards,
-> Steve Twiss, Dialog Semiconductor
-> 
-> 
->  Documentation/devicetree/bindings/mfd/da9062.txt | 49 +++++++++++++++++-------
->  1 file changed, 36 insertions(+), 13 deletions(-)
+Yes. see http://patchwork.ozlabs.org/patch/736177/
 
-Applied, thanks.
+> Unfortunately I don't have the time to contribute and switch to
+> this other subdevice, and do test/debug.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
-> index 38802b5..c0a418c 100644
-> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> @@ -1,22 +1,39 @@
->  * Dialog DA9062 Power Management Integrated Circuit (PMIC)
->  
-> -DA9062 consists of a large and varied group of sub-devices:
-> +Product information for the DA9062 and DA9061 devices can be found here:
-> +- http://www.dialog-semiconductor.com/products/da9062
-> +- http://www.dialog-semiconductor.com/products/da9061
-> +
-> +The DA9062 PMIC consists of:
->  
->  Device                   Supply Names    Description
->  ------                   ------------    -----------
->  da9062-regulator        :               : LDOs & BUCKs
->  da9062-rtc              :               : Real-Time Clock
-> +da9062-onkey            :               : On Key
-> +da9062-watchdog         :               : Watchdog Timer
-> +da9062-thermal          :               : Thermal
-> +
-> +The DA9061 PMIC consists of:
-> +
-> +Device                   Supply Names    Description
-> +------                   ------------    -----------
-> +da9062-regulator        :               : LDOs & BUCKs
-> +da9062-onkey            :               : On Key
->  da9062-watchdog         :               : Watchdog Timer
-> +da9062-thermal          :               : Thermal
->  
->  ======
->  
->  Required properties:
->  
-> -- compatible : Should be "dlg,da9062".
-> +- compatible : Should be
-> +    "dlg,da9062" for DA9062
-> +    "dlg,da9061" for DA9061
->  - reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
->    modified to match the chip's OTP settings).
->  - interrupt-parent : Specifies the reference to the interrupt controller for
-> -  the DA9062.
-> +  the DA9062 or DA9061.
->  - interrupts : IRQ line information.
->  - interrupt-controller
->  
-> @@ -25,8 +42,8 @@ further information on IRQ bindings.
->  
->  Sub-nodes:
->  
-> -- regulators : This node defines the settings for the LDOs and BUCKs. The
-> -  DA9062 regulators are bound using their names listed below:
-> +- regulators : This node defines the settings for the LDOs and BUCKs.
-> +  The DA9062 regulators are bound using their names listed below:
->  
->      buck1    : BUCK_1
->      buck2    : BUCK_2
-> @@ -37,19 +54,29 @@ Sub-nodes:
->      ldo3     : LDO_3
->      ldo4     : LDO_4
->  
-> +  The DA9061 regulators are bound using their names listed below:
-> +
-> +    buck1    : BUCK_1
-> +    buck2    : BUCK_2
-> +    buck3    : BUCK_3
-> +    ldo1     : LDO_1
-> +    ldo2     : LDO_2
-> +    ldo3     : LDO_3
-> +    ldo4     : LDO_4
-> +
->    The component follows the standard regulator framework and the bindings
->    details of individual regulator device can be found in:
->    Documentation/devicetree/bindings/regulator/regulator.txt
->  
-> -
->  - rtc : This node defines settings required for the Real-Time Clock associated
->    with the DA9062. There are currently no entries in this binding, however
->    compatible = "dlg,da9062-rtc" should be added if a node is created.
->  
-> -- watchdog: This node defines the settings for the watchdog driver associated
-> -  with the DA9062 PMIC. The compatible = "dlg,da9062-watchdog" should be added
-> -  if a node is created.
-> +- onkey : See ../input/da9062-onkey.txt
-> +
-> +- watchdog: See ../watchdog/da9062-watchdog.txt
->  
-> +- thermal : See ../thermal/da9062-thermal.txt
->  
->  Example:
->  
-> @@ -64,10 +91,6 @@ Example:
->  			compatible = "dlg,da9062-rtc";
->  		};
->  
-> -		watchdog {
-> -			compatible = "dlg,da9062-watchdog";
-> -		};
-> -
->  		regulators {
->  			DA9062_BUCK1: buck1 {
->  				regulator-name = "BUCK1";
+>From a DT perspective, I'm not asking that you share the subdevice 
+driver, only the binding. Simply put, there's 1 h/w block here, so there 
+should only be 1 binding. The binding is an ABI, so you can't just merge 
+it and change it later.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+The driver side is a decision for the V4L2 maintainers.
+
+> For now I would prefer if this patchset is merged as is, and
+> then contribute/switch to another CSI-2 subdev later. It is
+> also getting very difficult managing all these patches (39 as
+> of this version), and I'd prefer not to spam the lists with
+> such large patchsets for too much longer.
+
+Then maybe you should figure out how to split up the series. I've not 
+looked at it to provide suggestions.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
