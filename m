@@ -1,83 +1,62 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [RFC PATCH 2/5] soc/fsl/qbman: Use shared-dma-pool for QMan
- private memory allocations
-Date: Mon, 3 Apr 2017 15:52:46 +0100
-Message-ID: <df00c0ab-22b8-1086-def1-69baf648df72@arm.com>
-References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com>
- <1490822037-6752-3-git-send-email-roy.pledge@nxp.com>
- <b1cd8d44-8c74-ab50-5dc9-1f978cae5bdf@arm.com>
- <871ste5dmw.fsf@concordia.ellerman.id.au>
- <dfaa1a28-66d8-15fb-7d2d-75e206161770@arm.com>
- <1491031518.2944.62.camel@buserror.net>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v2 0/7] Add support for triggered buffer mode to STM32 ADC
+Date: Mon, 3 Apr 2017 16:53:37 +0200
+Message-ID: <63602dad-7640-1112-42aa-c4219d490041@st.com>
+References: <1485440915-30119-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1491031518.2944.62.camel@buserror.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <oss@buserror.net>, Michael Ellerman <mpe@ellerman.id.au>, roy.pledge@nxp.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, madalin.bucur@nxp.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485440915-30119-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/17 08:25, Scott Wood wrote:
-> On Fri, 2017-03-31 at 18:55 +0100, Robin Murphy wrote:
->> On 31/03/17 04:27, Michael Ellerman wrote:
->>>
->>> Robin Murphy <robin.murphy@arm.com> writes:
->>>
->>>>
->>>> Hi Roy,
->>>>
->>>> On 29/03/17 22:13, Roy Pledge wrote:
->>>>>
->>>>> Use the shared-memory-pool mechanism for frame queue descriptor and
->>>>> packed frame descriptor record area allocations.
->>>> Thanks for persevering with this - in my opinion it's now looking like
->>>> it was worth the effort :)
->>>>
->>>> AFAICS the ioremap_wc() that this leads to does appear to give back
->>>> something non-cacheable on PPC (assuming "pgprot_noncached_wc" isn't
->>>> horrendously misnamed), and "no-map" should rule out any cacheable
->>>> linear map alias existing, so it would seem that this approach should
->>>> avert Scott's concerns about attribute mismatches.
->>> How does 'no-map' translate into something being excluded from the
->>> linear mapping?
->> Reserved regions marked with "no-map" get memblock_remove()d by
->> early_init_dt_alloc_reserved_memory_arch(). As I understand things, the
->> linear map should only cover memblock areas, and it would be explicitly
->> violating the semantics of "no-map" to still cover such a region.
-> 
-> Discontiguous memory isn't supported on these PPC chips.  Everything up to
-> memblock_end_of_DRAM() gets mapped -- and if that were to change, the
-> fragmentation would waste TLB1 entries.
+Hi
 
-Ah, so the "PPC-specific angles I'm not aware of" category is indeed
-non-empty - I guess the lack of HAVE_GENERIC_DMA_COHERENT might be
-related, then.
+On 01/26/2017 03:28 PM, Fabrice Gasnier wrote:
+> The following patches add support for triggered buffer mode.
+> These are based on top of "Add PWM and IIO timer drivers for STM32"
+> series. Reference:
+> https://lkml.org/lkml/2017/1/20/116
+>
+> STM32 ADC, can use either interrupts or DMA to collect data.
+> Either timer trigger output (TRGO) or PWM can be used as trigger source.
+> This patchset has been tested on STM32F429 eval board.
+>
+...
+> Fabrice Gasnier (7):
+>   iio: adc: stm32: add support for triggered buffer mode
+>   iio: adc: stm32: Enable use of stm32 timer triggers
+>   iio: adc: stm32: add trigger polarity extended attribute
+>   Documentation: dt: iio: stm32-adc: optional dma support
+>   iio: adc: stm32: add optional dma support
+>   ARM: dts: stm32: Enable dma by default on stm32f4 adc
+>   ARM: dts: stm32: Enable pwm1 and pwm3 on stm32f429i-eval
 
-That said, though, AFAICS only certain x86 and s390 configurations ever
-call memblock_set_bottom_up(true), so we should be able to assume that
-the reserved region allocations always fall through to
-__memblock_find_range_top_down(). Thus if your DRAM is contiguous, then
-"no-map"-ing the reserved regions will simply end up pushing
-memblock_end_of_DRAM() down in a manner that would appear to still avoid
-overlaps. I can only see that going wrong if the end of DRAM wasn't at
-least 32MB aligned to begin with - is that ever likely to happen in
-practice?
+Patches 6 & 7 (DT) applied on stm32-dt-for-v4.12
 
-Robin.
+Regards
+Alex
 
-> This also breaks compatibility with existing device trees.  I suggest putting
-> an ifdef in the qbman driver to add the new scheme for non-PPC arches only.
-> 
-> -Scott
-> 
+>
+>  Documentation/ABI/testing/sysfs-bus-iio-adc-stm32  |  18 +
+>  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   7 +
+>  arch/arm/boot/dts/stm32429i-eval.dts               |  28 +
+>  arch/arm/boot/dts/stm32f429.dtsi                   |   6 +
+>  drivers/iio/adc/Kconfig                            |   5 +
+>  drivers/iio/adc/stm32-adc-core.c                   |   1 +
+>  drivers/iio/adc/stm32-adc-core.h                   |   2 +
+>  drivers/iio/adc/stm32-adc.c                        | 633 ++++++++++++++++++++-
+>  8 files changed, 676 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-stm32
+>
