@@ -1,61 +1,50 @@
-From: Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH v2] i2c/muxes/i2c-mux-ltc4306: LTC4306 and LTC4305 I2C
- multiplexer/switch
-Date: Mon, 3 Apr 2017 15:36:32 +0200
-Message-ID: <f871f082-3acd-7a28-25c7-dd77d8286ae6@analog.com>
-References: <1490782541-7832-1-git-send-email-michael.hennerich@analog.com>
- <0d4c068f-d909-64be-421d-4500da7ebd4c@axentia.se>
- <3c61461e-493c-4562-90c9-f30766591de2@axentia.se>
-Reply-To: <michael.hennerich@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3c61461e-493c-4562-90c9-f30766591de2@axentia.se>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 0/2] drm/panel: Add support for the Sitronix ST7789V
+Date: Mon,  3 Apr 2017 15:38:30 +0200
+Message-ID: <cover.74614dd427b0214d0ba7ccfe75bdd7506b42e61d.1491226701.git-series.maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03.04.2017 14:03, Peter Rosin wrote:
-> On 2017-03-31 17:29, Peter Rosin wrote:
->> Hi!
->>
->> Sorry for my incremental reviewing...
->>
->
-> Another incremental...
->
->> On 2017-03-29 12:15, michael.hennerich@analog.com wrote:
->>> +
->>> +	/* Now create an adapter for each channel */
->>> +	for (num = 0; num < data->chip->nchans; num++) {
->>> +		ret = i2c_mux_add_adapter(muxc, 0, num, 0);
->>> +		if (ret) {
->>> +			dev_err(&client->dev,
->>> +				"failed to register multiplexed adapter %d\n",
->>> +				num);
->
-> Just a heads up, I submitted a series to remove a bunch of dev_err calls
-> when i2c_mux_add_adapter fails. See https://lkml.org/lkml/2017/4/3/115
->
-> You can remove this one as well.
->
-> And please use a subject of the form:
-> i2c: mux: ltc4306: <message>
->
-> Cheers,
-> peda
+Hi,
 
-ok - no problem.
-I sent out a new patch. Per Rob's request, I split out the dt-bindings 
-into a separate patch.
+Here is an attempt at supporting the ST7789V LCD controller from Sitronix.
 
+It is controlled through an SPI bus, with a twist, since each byte sent
+must be prefixed by a bit, which needs an 9-bits-per-word SPI controller,
+which is quite rare. Else, you would need to bitbang it.
+
+Let me know what you think,
+Maxime
+
+Changes from v2:
+  - Added Rob's Acked-by
+
+Changes from v1:
+  - Added regulator support
+  - Removed variadic arguments from the functions
+  - Added test on the success of the SPI transfers
+  - Used the MIPI DCS defines
+  - Expanded the Kconfig help, and fixed the option label
+
+Maxime Ripard (2):
+  dt-bindings: display: panel: Add bindings for the Sitronix ST7789V panel
+  drm/panel: Add driver for sitronix ST7789V LCD controller
+
+ Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt |  37 ++++++-
+ drivers/gpu/drm/panel/Kconfig                                        |   7 +-
+ drivers/gpu/drm/panel/Makefile                                       |   1 +-
+ drivers/gpu/drm/panel/panel-sitronix-st7789v.c                       | 449 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 494 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+
+base-commit: 62e499ad00e32736b2dd223f442e19d3df5eeed3
 -- 
-Greetings,
-Michael
-
+git-series 0.8.11
 --
-Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
-Sitz der Gesellschaft München, Registergericht München HRB 40368,
-Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
