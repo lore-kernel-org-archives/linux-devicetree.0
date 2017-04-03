@@ -1,67 +1,68 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] mfd: Add Device Tree bindings document for
- retu/tahvo ASIC chips
-Date: Mon, 3 Apr 2017 12:13:01 +0100
-Message-ID: <20170403111301.52hm4wsplimviqso@dell>
+Subject: Re: [PATCH v3 2/7] mfd: retu: Add OF device ID table
+Date: Mon, 3 Apr 2017 12:15:02 +0100
+Message-ID: <20170403111502.lotjpd746vkhekkg@dell>
 References: <20170401071854.23198-1-javier@osg.samsung.com>
- <20170401071854.23198-2-javier@osg.samsung.com>
+ <20170401071854.23198-3-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170401071854.23198-2-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+In-Reply-To: <20170401071854.23198-3-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Sat, 01 Apr 2017, Javier Martinez Canillas wrote:
 
-> There are Device Tree source files defining a device node for the
-> retu/tahvo I2C chip, but there isn't a DT binding document for it.
+> The driver doesn't have a struct of_device_id table but supported devices
+> are registered via Device Trees. This is working on the assumption that a
+> I2C device registered via OF will always match a legacy I2C device ID and
+> that the MODALIAS reported will always be of the form i2c:<device>.
+> 
+> But this could change in the future so the correct approach is to have a
+> OF device ID table if the devices are registered via OF.
 > 
 > Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> 
 > ---
 > 
-> Changes in v3: None
-> Changes in v2: None
+> Changes in v3:
+> - Add a vendor prefix to the compatible string (Rob Herring).
 > 
->  Documentation/devicetree/bindings/mfd/retu.txt | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/retu.txt
+> Changes in v2:
+> - Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/retu.txt b/Documentation/devicetree/bindings/mfd/retu.txt
-> new file mode 100644
-> index 000000000000..2309e599a731
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/retu.txt
-> @@ -0,0 +1,19 @@
-> +* Device tree bindings for Nokia Retu and Tahvo multi-function device
-> +
-> +Retu and Tahvo are a multi-function devices found on Nokia Internet
-> +Tablets (770, N800 and N810).
+>  drivers/mfd/retu-mfd.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/mfd/retu-mfd.c b/drivers/mfd/retu-mfd.c
+> index d4c114abeb75..937a1c21eec4 100644
+> --- a/drivers/mfd/retu-mfd.c
+> +++ b/drivers/mfd/retu-mfd.c
+> @@ -308,9 +308,17 @@ static const struct i2c_device_id retu_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, retu_id);
+>  
+> +static const struct of_device_id retu_of_match[] = {
+> +	{ .compatible = "nokia,retu-mfd" },
+> +	{ .compatible = "nokia,tahvo-mfd" },
 
-More information please.  What functions to they serve?
+Please drop the "-mfd".
 
-> +Required properties:
-> +- compatible:		"nokia,retu-mfd" or "nokia,tahvo-mfd"
-> +- reg:			Specifies the I2C slave address of the ASIC chip
-> +
-> +Example:
-> +
-> +i2c0 {
-> +	retu_mfd: retu@1 {
-
-Please avoid the term MFD at all times when using Device Tree.  DT is
-meant to be OS agnostic and MFD is a Linuxisum.
-
-> +		compatible = "nokia,retu-mfd";
-> +		interrupt-parent = <&gpio4>;
-> +		interrupts = <12 IRQ_TYPE_EDGE_RISING>;
-> +		reg = <0x1>;
-> +	};
+> +	{ }
 > +};
+> +MODULE_DEVICE_TABLE(of, retu_of_match);
+> +
+>  static struct i2c_driver retu_driver = {
+>  	.driver		= {
+>  		.name = "retu-mfd",
+> +		.of_match_table = retu_of_match,
+>  	},
+>  	.probe		= retu_probe,
+>  	.remove		= retu_remove,
 
 -- 
 Lee Jones
