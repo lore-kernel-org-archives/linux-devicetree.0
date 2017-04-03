@@ -1,38 +1,32 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 16/20] ARM: dts: sun50i-a64: enable dwmac-sun8i on
- pine64
-Date: Mon, 3 Apr 2017 13:38:47 +0200
-Message-ID: <20170403113847.dca2tetjit7xoxyn@lukather>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 20/20] ARM: sunxi: Enable dwmac-sun8i driver on
+ multi_v7_defconfig
+Date: Mon, 3 Apr 2017 13:39:23 +0200
+Message-ID: <20170403113923.ztyk4vy3dqyq7jdj@lukather>
 References: <20170403091444.29876-1-clabbe.montjoie@gmail.com>
- <20170403091444.29876-17-clabbe.montjoie@gmail.com>
+ <20170403091444.29876-21-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rszyeo3fyvj6idb5"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="jzjwih5zkeobo7ug"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170403091444.29876-17-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170403091444.29876-21-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---rszyeo3fyvj6idb5
+--jzjwih5zkeobo7ug
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 03, 2017 at 11:14:40AM +0200, Corentin Labbe wrote:
-> The dwmac-sun8i hardware is present on the pine64
-> It uses an external PHY via RMII.
->=20
-> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, Apr 03, 2017 at 11:14:44AM +0200, Corentin Labbe wrote:
+> Enable the dwmac-sun8i driver in the multi_v7 default configuration
 
-Looks fine, but please use "arm64: allwinner: pine64: " as your title
-prefix. It applies to all your other patches (and the arm ones should
-be "arm: <family>: <soc-or-board>:".
+Your prefix should be arm: multi_v7:
 
-Thanks!
 Maxime
 
 --=20
@@ -40,28 +34,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---rszyeo3fyvj6idb5
+--jzjwih5zkeobo7ug
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJY4jRHAAoJEBx+YmzsjxAgSGcP/2dih+9STf4PFi4/dxayxv0k
-Q07yqdVOImUZEdXENbX/kXK5ptvN+va1KWMpwFOdrhYzRSsn/4QjaqYZ0J8qYvA6
-RxYKCvSmXGydlrtBZRL7Lf5piY+yBWPVKBFAIxc1QPjrVzPl2hA174gx7AAst/zU
-J3Nc4cD6Epg+CLC+9ombPbtBI8Gc8PJehPx/FgaalGPSYHIgHsczRaZw3eY0cdgc
-/0zTaTKlRo1kQaXaV6/QC/sT2L2WASbgk1CrpiuVYj0T7xFStBTrMw2Cff6T79CV
-iAglY4gcGfWWbGB6UYz/G5vxfdZxOjG7Jm/zGgiPpfHw7YhqiF3P93z6RyGtI83w
-zMhgPpJfyDOBWTH6Oktg/Ju3AK9QRyZvoL9144DWl/dg5jm/lg8ibtmcj9OsfnwO
-rxUN2NB5VVdldNdM0qgmP6pX6yqFagW6642e88YPmd2v6dUr08tfKsCyXFHftHEC
-8kzJtyThiGBH2b9Cf2AmkMX2quw+x1ngOnS9K3OqEQylHRgM7n8o9rPED23WjYxA
-VJJ+PjF7EKms9GAUeDGme91KWrgsmyU3p5e8wxwxCwpd6O2mEtHOGAjV2SKzbfvv
-ac41G7iriQx43juvHfwKVAFh9Tlv8wPgDMi29c4VJZ13QLt/C6XGY1EFKBbU3KOJ
-cEySvH9CLJonOlV+INCV
-=kh/H
+iQIcBAEBCAAGBQJY4jRrAAoJEBx+YmzsjxAgEVgQAKMKuY6KHUuugMTo2bqxAHVW
+OSg1UQb5qA8OGSNRGKBMlrJu1nhZ10NR93km7Kgo9MQ0/42BCbpAjSuHXznbGcz5
+TtIFb8RFwjbPlztcZ/vcJNNzOoB1izfj+HX+VjttWstfCZIL79CTYMznxriQU+a8
+crVMYor2xElXRO3e5pwVJLsz4bAuIOMDhcJUNDYTUpLYKw58ufGSe36iXWNc1Uib
+fNjIjqCWrxrDOxPAlMhrILpWuGlHT8hDuR94H1l8e3oz6mhQOoxPsARaT17CcpEz
+N1ISFw85qr+3sK00Pyot2wjP77+D9sxMcor0Y03+vPIxIN7BcnW1Zz56RskrwDBa
+xKreaoZmv8sRJRkrf3lY+HuXAh3yrfFug2yU5ln7XHCA3+IPsh887qRAyeVyDy3t
+RbcMhjRK73ZdXv+WVPo+yTfrwOwkgHW0kTSL16M8hlazNvST8gQKepusakqGXJhL
+XmsFynezLiiFzttvI1lHUyi2upN8ounDqS9piAU1Uon7a0cAHLA4T3KPn54AxwtE
+5lwo/GP46cPi/R4ZCNpeWNrszfOfQUrPA3mmF0lU+w0zs0huwB6cwJPccnehny9h
+tXEy1wFuBM01WTa01DBWFABpEscajgkm8/QYaNDE8GsZ56wvdHDoW2Ck1pwUAtRx
+ymvbXfFbUtc7xLNglnBk
+=u1Mh
 -----END PGP SIGNATURE-----
 
---rszyeo3fyvj6idb5--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--jzjwih5zkeobo7ug--
