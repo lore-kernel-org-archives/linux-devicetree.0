@@ -1,50 +1,46 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] Input: silead - list all supported compatible strings in
- binding document
-Date: Mon, 3 Apr 2017 11:51:55 -0400
-Message-ID: <6574d158-7fe8-7a2f-dab6-1c155780c785@osg.samsung.com>
-References: <20170329182531.17349-1-javier@osg.samsung.com>
- <20170403152543.im7tbkhfc3lj7lyt@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5 v3] iio: xoadc: augment DT bindings a bit
+Date: Mon, 3 Apr 2017 10:54:25 -0500
+Message-ID: <20170403155425.fmmstdwfacmnsn7w@rob-hp-laptop>
+References: <20170330080541.4065-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170403152543.im7tbkhfc3lj7lyt@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Dolca <robert.dolca@intel.com>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170330080541.4065-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
-
-On 04/03/2017 11:25 AM, Rob Herring wrote:
-> On Wed, Mar 29, 2017 at 02:25:31PM -0400, Javier Martinez Canillas wrote:
->> The driver contains compatible strings for different models, but the DT
->> binding doc only lists one of them. Add the remaining to the document.
->>
->> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> ---
->>
->>  .../devicetree/bindings/input/touchscreen/silead_gsl1680.txt       | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
+On Thu, Mar 30, 2017 at 10:05:41AM +0200, Linus Walleij wrote:
+> In order to accommodate in a logical manner for the premuxed channels
+> in PM8921 and the similarly addressed channels in later PMICs, we
+> need a twocell arrangement with premux and analog mux setting as
+> a tuple to uniquely identify a hardware channel.
 > 
-> "dt-bindings: input: ..." is preferred for the subject, but no need to 
-> respin just for that.
->
-
-Can we document it in Documentation/devicetree/bindings/submitting-patches.txt?
-
-I'm asking because is true that at the beginning we used "dt-bindings: foo" for
-all DT bindings patches but then many (most?) maintainers started asking for the
-subsystem subject line to be used for both drivers and DT bindings docs since
-they would be merging both and also they could miss the DT bindings patches if
-their subsystem prefix was not used.
-
-> Acked-by: Rob Herring <robh@kernel.org> 
+> These bindings are not yet in use, so it should be fine to augment
+> them before we actually start using it in drivers and device trees.
 > 
+> This scheme came out of lengthy discussions and reverse-engineering
+> and reading of the few information sources we have.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v2->v3:
+> - Drop leading zeroes on unit addresses.
+> ChangeLog v1->v2:
+> - Name nodes with <01 02> in a foo@0102 pattern.
+> - Minor spelling nits.
+> - Delete flimsy leftover docs from an interrim development path.
+> ---
+>  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 76 ++++++++++++----------
+>  1 file changed, 42 insertions(+), 34 deletions(-)
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Other than the few typos mentioned,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
