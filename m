@@ -1,92 +1,96 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: uniphier: add input-delay properties to
- Cadence eMMC node
-Date: Mon, 3 Apr 2017 15:28:43 +0900
-Message-ID: <CAK7LNARtKO-a7tX5U2NGAw707uSLcfxABo1yt44QQfE2go7EmQ@mail.gmail.com>
-References: <1490934045-18874-1-git-send-email-yamada.masahiro@socionext.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH v2 4/4] ARM: sun8i: h3: add support for
+ the thermal sensor in H3
+Date: Mon, 3 Apr 2017 08:42:08 +0200
+Message-ID: <20170403064208.llk6usgtkbg5ejzw@lukather>
+References: <20170402133304.56824-1-icenowy@aosc.io>
+ <20170402133304.56824-5-icenowy@aosc.io>
+ <3f13c07d-be6a-0350-6d86-de1a4d4e33a8@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490934045-18874-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Piotr Sroka <piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="j5sdxdc32svkkqg5"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQO5Q7DQKGQE2SOA54Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <3f13c07d-be6a-0350-6d86-de1a4d4e33a8-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: icenowy-h8G6r0blFSE@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MTD developers,
-Please ignore this patch.
 
-I accidentally sent this patch to a wrong ML.
-Sorry for the noise.
+--j5sdxdc32svkkqg5
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
+On Sun, Apr 02, 2017 at 04:34:55PM +0200, Quentin Schulz wrote:
+> Hi Icenowy,
+> 
+> On 02/04/2017 15:33, Icenowy Zheng wrote:
+> > As we have gained the support for the thermal sensor in H3, we can now
+> > add its device nodes to the device tree.
+> > 
+> > Add them to the H3 device tree.
+> > 
+> > The H5 thermal sensor has some differences, and will be added furtherly.
+> > 
+> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-h3.dtsi | 26 ++++++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> > index b36f9f423c39..552217bb9266 100644
+> > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> > @@ -72,6 +72,32 @@
+> >  		};
+> >  	};
+> >  
+> > +	iio-hwmon {
+> > +		compatible = "iio-hwmon";
+> > +		io-channels = <&ths>;
+> > +	};
+> > +
+> > +	soc {
+> > +		ths: ths@01c25000 {
+> > +			compatible = "allwinner,sun8i-h3-ths";
+> > +			reg = <0x01c25000 0x100>;
+> > +			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
+> > +			clock-names = "bus", "ths";
+> > +			resets = <&ccu RST_BUS_THS>;
+> > +			#thermal-sensor-cells = <0>;
+> > +			#io-channel-cells = <0>;
+> > +		};
+> > +	};
+> > +
+> > +	thermal-zones {
+> > +		cpu_thermal {
+> > +			/* milliseconds */
+> > +			polling-delay-passive = <250>;
+> > +			polling-delay = <1000>;
+> > +			thermal-sensors = <&ths>;
+> > +		};
+> 
+> Would it make sense to add the CPU temp trip points in this patch?
 
+No.
 
+This is a separate, unrelated, change that has nothing to do with what
+is described either in the commit title or the commit log.
 
-2017-03-31 13:20 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> Since commit a04e2b383401 ("mmc: sdhci-cadence: Update PHY delay
-> configuration"), PHY parameters must be specified by DT.
->
-> The hard-coded settings have been converted as follows:
-> - SDHCI_CDNS_PHY_DLY_SD_DEFAULT -> cdns,phy-input-delay-legacy
-> - SDHCI_CDNS_PHY_DLY_EMMC_SDR   -> cdns,phy-input-delay-mmc-highspeed
-> - SDHCI_CDNS_PHY_DLY_EMMC_DDR   -> cdns,phy-input-delay-mmc-ddr
->
-> The following have not been moved:
-> - SDHCI_CDNS_PHY_DLY_SD_HS
->    this is unneeded in the eMMC configuration
-> - SDHCI_CDNS_PHY_DLY_EMMC_LEGACY
->    this is never enabled by the driver as it is covered by
->    SDHCI_CDNS_PHY_DLY_SD_DEFAULT
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> ---
->
->  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 3 +++
->  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 3 +++
->  2 files changed, 6 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> index 5dc5124..b6ebdc9 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> @@ -310,6 +310,9 @@
->                         bus-width = <8>;
->                         mmc-ddr-1_8v;
->                         mmc-hs200-1_8v;
-> +                       cdns,phy-input-delay-legacy = <4>;
-> +                       cdns,phy-input-delay-mmc-highspeed = <2>;
-> +                       cdns,phy-input-delay-mmc-ddr = <3>;
->                 };
->
->                 usb0: usb@5a800100 {
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> index 6c9a72d..0ab6c2e 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> @@ -394,6 +394,9 @@
->                         bus-width = <8>;
->                         mmc-ddr-1_8v;
->                         mmc-hs200-1_8v;
-> +                       cdns,phy-input-delay-legacy = <4>;
-> +                       cdns,phy-input-delay-mmc-highspeed = <2>;
-> +                       cdns,phy-input-delay-mmc-ddr = <3>;
->                 };
->
->                 sd: sdhc@5a400000 {
-> --
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The thermal zone itself shouldn't even be in this patch.
 
-
+Maxime
 
 -- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--j5sdxdc32svkkqg5--
