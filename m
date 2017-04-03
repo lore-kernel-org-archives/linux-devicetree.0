@@ -1,60 +1,57 @@
-From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Subject: [PATCH v2 2/3] powerpc/powernv: Add sanity checks to pnv_pci_get_{gpu|npu}_dev
-Date: Mon,  3 Apr 2017 19:51:43 +1000
-Message-ID: <1491213104-24450-2-git-send-email-alistair@popple.id.au>
-References: <1491213104-24450-1-git-send-email-alistair@popple.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491213104-24450-1-git-send-email-alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mhairgrove-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shailendras-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4 06/14] MIPS: jz4740: DTS: Add nodes for ingenic pinctrl
+ and gpio drivers
+Date: Mon, 3 Apr 2017 12:57:25 +0300
+Message-ID: <48f7f4ee-b8e3-0096-ddea-2fbe0b399b40@cogentembedded.com>
+References: <20170125185207.23902-2-paul@crapouillou.net>
+ <20170402204244.14216-1-paul@crapouillou.net>
+ <20170402204244.14216-7-paul@crapouillou.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170402204244.14216-7-paul@crapouillou.net>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, james.hogan@imgtec.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The pnv_pci_get_{gpu|npu}_dev functions are used to find associations
-between nvlink PCIe devices and standard PCIe devices. However they
-lacked basic sanity checking which results in NULL pointer
-dereferencing if they are incorrect called can be harder to spot than
-an explicit WARN_ON.
+Hello!
 
-Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
----
- arch/powerpc/platforms/powernv/npu-dma.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On 4/2/2017 11:42 PM, Paul Cercueil wrote:
 
-diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
-index 1c383f3..050bd5d 100644
---- a/arch/powerpc/platforms/powernv/npu-dma.c
-+++ b/arch/powerpc/platforms/powernv/npu-dma.c
-@@ -37,6 +37,12 @@ struct pci_dev *pnv_pci_get_gpu_dev(struct pci_dev *npdev)
- 	struct device_node *dn;
- 	struct pci_dev *gpdev;
- 
-+	if (WARN_ON(!npdev))
-+		return NULL;
-+
-+	if (WARN_ON(!npdev->dev.of_node))
-+		return NULL;
-+
- 	/* Get assoicated PCI device */
- 	dn = of_parse_phandle(npdev->dev.of_node, "ibm,gpu", 0);
- 	if (!dn)
-@@ -55,6 +61,12 @@ struct pci_dev *pnv_pci_get_npu_dev(struct pci_dev *gpdev, int index)
- 	struct device_node *dn;
- 	struct pci_dev *npdev;
- 
-+	if (WARN_ON(!gpdev))
-+		return NULL;
-+
-+	if (WARN_ON(!gpdev->dev.of_node))
-+		return NULL;
-+
- 	/* Get assoicated PCI device */
- 	dn = of_parse_phandle(gpdev->dev.of_node, "ibm,npu", index);
- 	if (!dn)
--- 
-2.1.4
+> For a description of the pinctrl devicetree node, please read
+> Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+>
+> For a description of the gpio devicetree nodes, please read
+> Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+[...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> index 3e1587f1f77a..9c23c877fc34 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> @@ -55,6 +55,67 @@
+>  		clock-names = "rtc";
+>  	};
+>
+> +	pinctrl: ingenic-pinctrl@10010000 {
+
+    The node name should be generic, so please rename it to something like 
+"pin-controller@..."
+
+> +		compatible = "ingenic,jz4740-pinctrl";
+> +		reg = <0x10010000 0x400>;
+> +
+> +		gpa: gpio-controller@0 {
+
+    The name should be just "gpio@0", according to ePAPR and its successor 
+spec. Although, using the <unit-address> without the "reg" prop isn't allowed 
+either...
+
+[...]
+
+MBR, Sergei
+
