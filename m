@@ -1,52 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/7] dt-bindings: rtc: document the rtc-sh bindings
-Date: Mon, 3 Apr 2017 10:16:06 -0500
-Message-ID: <20170403151606.lnayy6p5lp4rmvrj@rob-hp-laptop>
-References: <20170329173035.67477-1-chris.brandt@renesas.com>
- <20170329173035.67477-3-chris.brandt@renesas.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v6 02/39] [media] dt-bindings: Add bindings for i.MX
+ media driver
+Date: Mon, 3 Apr 2017 16:15:11 +0100
+Message-ID: <20170403151511.GA7909@n2100.armlinux.org.uk>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-3-git-send-email-steve_longerbeam@mentor.com>
+ <CAL_JsqJm_JjuVPcOBERCqsnjTDdNoKr9xRE9MXMO4ivxGath2Q@mail.gmail.com>
+ <70bacfb5-aef1-76d1-37d2-23a524903d45@mentor.com>
+ <20170403140743.trxep36s4z4piyl3@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDJIP47K7MERBOGORHDQKGQE6IG747Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170329173035.67477-3-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170403140743.trxep36s4z4piyl3@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Steve Longerbeam <steve_longerbeam@mentor.com>, Steve Longerbeam <slongerbeam@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Nick Dyer <nick@shmanahar.org>, markus.heiser@darmarit.de, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Benoit Parrot <bparrot@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, tiffany lin <tiffany.lin@mediatek.com>, Jean-Christophe Trotin <jean-christo>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 10:30:30AM -0700, Chris Brandt wrote:
-> Add the binding documentation for rtc-sh which is an RTC for
-> SuperH and RZ/A SoCs.
+On Mon, Apr 03, 2017 at 09:07:43AM -0500, Rob Herring wrote:
+> On Tue, Mar 28, 2017 at 05:35:52PM -0700, Steve Longerbeam wrote:
+> > I assume if there's another binding doc in progress, it means
+> > someone is working on another Synopsys DW CSI-2 subdevice driver.
 > 
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v3:
-> * remove 'power-domains' from example
-> * update commit message subject and body
-> v2:
-> * added interrupt-names and clock-names
-> * clocks now include counting sources
-> * changed 'is a RTC' to 'is an RTC' in commit message
-> ---
->  Documentation/devicetree/bindings/rtc/rtc-sh.txt | 28 ++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-sh.txt
+> Yes. see http://patchwork.ozlabs.org/patch/736177/
+> 
+> > Unfortunately I don't have the time to contribute and switch to
+> > this other subdevice, and do test/debug.
+> 
+> >From a DT perspective, I'm not asking that you share the subdevice 
+> driver, only the binding. Simply put, there's 1 h/w block here, so there 
+> should only be 1 binding. The binding is an ABI, so you can't just merge 
+> it and change it later.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+I think it would be nice to have some kind of standard base binding
+for CSI2 interfaces, but beyond the standard compatible/reg/interrupts
+and graph properties, I'm not sure what it would look like.
+
+As far as those properties go, the iMX6 version does better than the
+DW version, because we specify the full graph, whereas the DW version
+only specifies the downstream link.  Once that's done, there's some
+properties (like those specifying the output configuration) which
+probably ought to be moved to the graph links instead, once they exist.
+
+So, if anything, I think it's the DW version needs to be augmented with
+fuller information, and some of the properties moved.
+
+Also, as I've mentioned in my other reply, while they may both appear
+to be called "Synopsys DW CSI-2" devices, they appear to be quite
+different from the hardware perspective.
+
+The rest 
 
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
