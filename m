@@ -1,27 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 4/6] dt-bindings: tegra: Update compatible strings for
- Tegra flowctrl
-Date: Mon, 3 Apr 2017 09:29:31 -0500
-Message-ID: <20170403142931.7qxl5kew4wibmkbp@rob-hp-laptop>
-References: <1490704978-22906-1-git-send-email-jonathanh@nvidia.com>
- <1490704978-22906-5-git-send-email-jonathanh@nvidia.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V7 4/7] mfd: da9061: MFD core support
+Date: Mon, 3 Apr 2017 15:30:49 +0100
+Message-ID: <20170403143049.qyi4dagwi4cdenok@dell>
+References: <cover.1490712213.git.stwiss.opensource@diasemi.com>
+ <8987877cc54940358c5b7a65ca003cedc5586f0d.1490712213.git.stwiss.opensource@diasemi.com>
+ <20170403141214.q6ndii6c47pqfqx6@dell>
+ <6ED8E3B22081A4459DAC7699F3695FB7018CD6B183@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1490704978-22906-5-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7018CD6B183@SW-EX-MBX02.diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 01:42:56PM +0100, Jon Hunter wrote:
-> Update the compatible strings for Tegra Flow Control driver to match
-> the device-tree source files for Tegra.
-> 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt     | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+On Mon, 03 Apr 2017, Steve Twiss wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> On 03 April 2017 15:12, Lee Jones wrote:
+> 
+> > > @@ -475,7 +855,25 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
+> > >  		return -EINVAL;
+> > >  	}
+> > >
+> > > -	chip->regmap = devm_regmap_init_i2c(i2c, &da9062_regmap_config);
+> > > +	switch (chip->chip_type) {
+> > > +	case(COMPAT_TYPE_DA9061):
+> > 
+> > Brackets around the case value?
+> > 
+> > That's a new one on me.
+> 
+> Hm. Do you want me to resend it without braces?
+
+Yes please.  And a space after the 'case'.
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
