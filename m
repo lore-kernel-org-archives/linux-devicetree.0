@@ -1,46 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] drivers/serial: Add driver for Aspeed virtual UART
-Date: Mon, 3 Apr 2017 09:25:16 -0500
-Message-ID: <20170403142516.5rqv7yznkapryteu@rob-hp-laptop>
-References: <20170328054458.29341-1-joel@jms.id.au>
- <20170328054458.29341-3-joel@jms.id.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv6 06/14] atmel-isi: update device tree bindings
+ documentation
+Date: Mon, 3 Apr 2017 09:28:05 -0500
+Message-ID: <20170403142805.tybemhb2xe5jvhwx@rob-hp-laptop>
+References: <20170328082347.11159-1-hverkuil@xs4all.nl>
+ <20170328082347.11159-7-hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170328054458.29341-3-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, Jeremy Kerr <jk@ozlabs.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+In-Reply-To: <20170328082347.11159-7-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 04:14:58PM +1030, Joel Stanley wrote:
-> From: Jeremy Kerr <jk@ozlabs.org>
+On Tue, Mar 28, 2017 at 10:23:39AM +0200, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > 
-> This change adds a driver for the 16550-based Aspeed virtual UART
-> device. We use a similar process to the of_serial driver for device
-> probe, but expose some VUART-specific functions through sysfs too.
+> The original bindings documentation was incomplete (missing pinctrl-names,
+> missing endpoint node properties) and the example was out of date.
 > 
-> OpenPOWER host firmware doesn't like it when the host-side of the
-> VUART's FIFO is not drained. This driver only disables host TX discard
-> mode when the port is in use. We set the VUART enabled bit when we bind
-> to the device, and clear it on unbind.
+> Add the missing information and tidy up the text.
 > 
-> We don't want to do this on open/release, as the host may be using this
-> bit to configure serial output modes, which is independent of whether
-> the devices has been opened by BMC userspace.
-> 
-> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/serial/8250.txt |   2 +
+>  .../devicetree/bindings/media/atmel-isi.txt        | 91 +++++++++++++---------
+>  1 file changed, 53 insertions(+), 38 deletions(-)
 
-For the binding:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/tty/serial/Kconfig                        |  10 +
->  drivers/tty/serial/Makefile                       |   1 +
->  drivers/tty/serial/aspeed-vuart.c                 | 335 ++++++++++++++++++++++
->  4 files changed, 348 insertions(+)
->  create mode 100644 drivers/tty/serial/aspeed-vuart.c
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
