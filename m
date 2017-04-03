@@ -1,48 +1,77 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2] i2c/muxes/i2c-mux-ltc4306: LTC4306 and LTC4305 I2C
- multiplexer/switch
-Date: Mon, 3 Apr 2017 14:03:35 +0200
-Message-ID: <3c61461e-493c-4562-90c9-f30766591de2@axentia.se>
-References: <1490782541-7832-1-git-send-email-michael.hennerich@analog.com>
- <0d4c068f-d909-64be-421d-4500da7ebd4c@axentia.se>
+From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 02/20] net: stmmac: add optional setup function
+Date: Mon, 3 Apr 2017 14:32:33 +0200
+Message-ID: <262f763b-d158-dd77-3dba-1d7b90a1eef9@st.com>
+References: <20170403091444.29876-1-clabbe.montjoie@gmail.com>
+ <20170403091444.29876-3-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <0d4c068f-d909-64be-421d-4500da7ebd4c@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: michael.hennerich@analog.com, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170403091444.29876-3-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-03-31 17:29, Peter Rosin wrote:
-> Hi!
-> 
-> Sorry for my incremental reviewing...
-> 
+Hello Corentin
 
-Another incremental...
+On 4/3/2017 11:14 AM, Corentin Labbe wrote:
+> Instead of adding more ifthen logic for adding a new mac_device_info
+> setup function, it is easier to add a function pointer to the function
+> needed.
+>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 +++-
+>   include/linux/stmmac.h                            | 3 +++
+>   2 files changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 43361f3..3beca41 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -3508,7 +3508,9 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
+>   	struct mac_device_info *mac;
+>   
+>   	/* Identify the MAC HW device */
+> -	if (priv->plat->has_gmac) {
+> +	if (priv->plat->setup) {
+> +		mac = priv->plat->setup(priv);
+> +	} else if (priv->plat->has_gmac) {
+>   		priv->dev->priv_flags |= IFF_UNICAST_FLT;
+>   		mac = dwmac1000_setup(priv->ioaddr,
+>   				      priv->plat->multicast_filter_bins,
+> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+> index 3921cb9..dadd74b 100644
+> --- a/include/linux/stmmac.h
+> +++ b/include/linux/stmmac.h
+> @@ -144,6 +144,8 @@ struct stmmac_txq_cfg {
+>   	u32 prio;
+>   };
+>   
+> +struct stmmac_priv;
+> +
+>   struct plat_stmmacenet_data {
+>   	int bus_id;
+>   	int phy_addr;
+> @@ -177,6 +179,7 @@ struct plat_stmmacenet_data {
+>   	void (*fix_mac_speed)(void *priv, unsigned int speed);
+>   	int (*init)(struct platform_device *pdev, void *priv);
+>   	void (*exit)(struct platform_device *pdev, void *priv);
+> +	struct mac_device_info *(*setup)(struct stmmac_priv *priv);
 
-> On 2017-03-29 12:15, michael.hennerich@analog.com wrote:
->> +
->> +	/* Now create an adapter for each channel */
->> +	for (num = 0; num < data->chip->nchans; num++) {
->> +		ret = i2c_mux_add_adapter(muxc, 0, num, 0);
->> +		if (ret) {
->> +			dev_err(&client->dev,
->> +				"failed to register multiplexed adapter %d\n",
->> +				num);
+In that case  I prefer to have void *priv as done for the other callbacks.
+I mean, keep the priv struct inside the driver part.
 
-Just a heads up, I submitted a series to remove a bunch of dev_err calls
-when i2c_mux_add_adapter fails. See https://lkml.org/lkml/2017/4/3/115
+peppe
 
-You can remove this one as well.
+>   	void *bsp_priv;
+>   	struct clk *stmmac_clk;
+>   	struct clk *pclk;
 
-And please use a subject of the form:
-i2c: mux: ltc4306: <message>
 
-Cheers,
-peda
-
->> +			goto add_adapter_failed;
->> +		}
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
