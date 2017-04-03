@@ -1,34 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: stm32-adc: add option to set
- resolution
-Date: Mon, 3 Apr 2017 11:46:00 -0500
-Message-ID: <20170403164600.siab6ghtoeuxokg5@rob-hp-laptop>
-References: <1490963559-32159-1-git-send-email-fabrice.gasnier@st.com>
- <1490963559-32159-2-git-send-email-fabrice.gasnier@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v3 6/7] DT bindings documentation for Broadcom
+ IPROC USB Device controller.
+Date: Mon, 3 Apr 2017 11:47:56 -0500
+Message-ID: <20170403164756.t5u4chllkuuuntb6@rob-hp-laptop>
+References: <1490965753-3511-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1490965753-3511-6-git-send-email-raviteja.garimella@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1490963559-32159-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <1490965753-3511-6-git-send-email-raviteja.garimella@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 02:32:37PM +0200, Fabrice Gasnier wrote:
-> Add documentation for 'assigned-resolution-bits' dt optional property.
+On Fri, Mar 31, 2017 at 06:39:12PM +0530, Raviteja Garimella wrote:
+> The device node is used for UDCs integrated into Broadcom's
+> iProc family of SoCs'. The UDC is based on Synopsys Designware
+> Cores AHB Subsystem USB Device Controller IP.
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
 > ---
-> Changes in v2:
-> - rename property from 'st,adc-res' to 'assigned-resolution-bits' so it
->   is more common.
-> ---
->  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/usb/iproc-udc.txt | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/iproc-udc.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org> 
