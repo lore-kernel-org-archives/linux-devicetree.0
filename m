@@ -1,42 +1,83 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/3] Add RTC support on STM32F746
-Date: Mon, 3 Apr 2017 16:51:14 +0200
-Message-ID: <9deef7aa-e060-61bb-1680-c9b728f85a81@st.com>
-References: <1484833519-9298-1-git-send-email-amelie.delaunay@st.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH 2/5] soc/fsl/qbman: Use shared-dma-pool for QMan
+ private memory allocations
+Date: Mon, 3 Apr 2017 15:52:46 +0100
+Message-ID: <df00c0ab-22b8-1086-def1-69baf648df72@arm.com>
+References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com>
+ <1490822037-6752-3-git-send-email-roy.pledge@nxp.com>
+ <b1cd8d44-8c74-ab50-5dc9-1f978cae5bdf@arm.com>
+ <871ste5dmw.fsf@concordia.ellerman.id.au>
+ <dfaa1a28-66d8-15fb-7d2d-75e206161770@arm.com>
+ <1491031518.2944.62.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484833519-9298-1-git-send-email-amelie.delaunay@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1491031518.2944.62.camel@buserror.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <oss@buserror.net>, Michael Ellerman <mpe@ellerman.id.au>, roy.pledge@nxp.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, madalin.bucur@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On 01/04/17 08:25, Scott Wood wrote:
+> On Fri, 2017-03-31 at 18:55 +0100, Robin Murphy wrote:
+>> On 31/03/17 04:27, Michael Ellerman wrote:
+>>>
+>>> Robin Murphy <robin.murphy@arm.com> writes:
+>>>
+>>>>
+>>>> Hi Roy,
+>>>>
+>>>> On 29/03/17 22:13, Roy Pledge wrote:
+>>>>>
+>>>>> Use the shared-memory-pool mechanism for frame queue descriptor and
+>>>>> packed frame descriptor record area allocations.
+>>>> Thanks for persevering with this - in my opinion it's now looking like
+>>>> it was worth the effort :)
+>>>>
+>>>> AFAICS the ioremap_wc() that this leads to does appear to give back
+>>>> something non-cacheable on PPC (assuming "pgprot_noncached_wc" isn't
+>>>> horrendously misnamed), and "no-map" should rule out any cacheable
+>>>> linear map alias existing, so it would seem that this approach should
+>>>> avert Scott's concerns about attribute mismatches.
+>>> How does 'no-map' translate into something being excluded from the
+>>> linear mapping?
+>> Reserved regions marked with "no-map" get memblock_remove()d by
+>> early_init_dt_alloc_reserved_memory_arch(). As I understand things, the
+>> linear map should only cover memblock areas, and it would be explicitly
+>> violating the semantics of "no-map" to still cover such a region.
+> 
+> Discontiguous memory isn't supported on these PPC chips.  Everything up to
+> memblock_end_of_DRAM() gets mapped -- and if that were to change, the
+> fragmentation would waste TLB1 entries.
 
-On 01/19/2017 02:45 PM, Amelie Delaunay wrote:
-> This patchset enables STM32 RTC on STM32F746 MCU.
->
-> Amelie Delaunay (3):
->   ARM: dts: stm32: set HSE_RTC clock frequency to 1 MHz on stm32f746
->   ARM: dts: stm32: Add RTC support for STM32F746 MCU
->   ARM: dts: stm32: enable RTC on stm32746g-eval
->
->  arch/arm/boot/dts/stm32746g-eval.dts |  4 ++++
->  arch/arm/boot/dts/stm32f746.dtsi     | 16 ++++++++++++++++
->  2 files changed, 20 insertions(+)
->
+Ah, so the "PPC-specific angles I'm not aware of" category is indeed
+non-empty - I guess the lack of HAVE_GENERIC_DMA_COHERENT might be
+related, then.
 
-Series applied on stm32-dt-for-v4.12
+That said, though, AFAICS only certain x86 and s390 configurations ever
+call memblock_set_bottom_up(true), so we should be able to assume that
+the reserved region allocations always fall through to
+__memblock_find_range_top_down(). Thus if your DRAM is contiguous, then
+"no-map"-ing the reserved regions will simply end up pushing
+memblock_end_of_DRAM() down in a manner that would appear to still avoid
+overlaps. I can only see that going wrong if the end of DRAM wasn't at
+least 32MB aligned to begin with - is that ever likely to happen in
+practice?
 
-regards
-Alex
+Robin.
+
+> This also breaks compatibility with existing device trees.  I suggest putting
+> an ifdef in the qbman driver to add the new scheme for non-PPC arches only.
+> 
+> -Scott
+> 
