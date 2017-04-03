@@ -1,84 +1,61 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: arm,nvic: Binding for ARM NVIC interrupt
- controller on Cortex-M
-Date: Mon, 3 Apr 2017 08:32:19 -0500
-Message-ID: <20170403133219.hgnyxw4kwf4medhn@rob-hp-laptop>
-References: <20170327180905.32498-1-kumar.gala@linaro.org>
+From: Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH v2] i2c/muxes/i2c-mux-ltc4306: LTC4306 and LTC4305 I2C
+ multiplexer/switch
+Date: Mon, 3 Apr 2017 15:36:32 +0200
+Message-ID: <f871f082-3acd-7a28-25c7-dd77d8286ae6@analog.com>
+References: <1490782541-7832-1-git-send-email-michael.hennerich@analog.com>
+ <0d4c068f-d909-64be-421d-4500da7ebd4c@axentia.se>
+ <3c61461e-493c-4562-90c9-f30766591de2@axentia.se>
+Reply-To: <michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170327180905.32498-1-kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <3c61461e-493c-4562-90c9-f30766591de2@axentia.se>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 01:09:05PM -0500, Kumar Gala wrote:
-> Signed-off-by: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Note: This is a new binding and not used by the linux kernel code right now for
-> the nvic.  The intent would be to support both the current 'arm,armv7m-nvic'
-> compatible and this binding in the code in the future.  The 'arm,armv7m-nvic'
-> doesnt have any binding spec covering it today.
-> 
->  .../bindings/interrupt-controller/arm,nvic.txt     | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/arm,nvic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,nvic.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,nvic.txt
-> new file mode 100644
-> index 0000000..60ee89c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,nvic.txt
-> @@ -0,0 +1,37 @@
-> +* ARM Nested Vector Interrupt Controller (NVIC)
-> +
-> +The NVIC provides an interrupt controller that is tightly coupled to
-> +Cortex-M based processor cores.  The NVIC implemented on different SoCs
-> +vary in the number of interrupts and priority bits per interrupt.
-> +
-> +Main node required properties:
-> +
-> +- compatible : should be one of:
-> +	"arm,v6m-nvic"
-> +	"arm,v7m-nvic"
-> +	"arm,v8m-nvic"
-> +	"arm,nvic"
+On 03.04.2017 14:03, Peter Rosin wrote:
+> On 2017-03-31 17:29, Peter Rosin wrote:
+>> Hi!
+>>
+>> Sorry for my incremental reviewing...
+>>
+>
+> Another incremental...
+>
+>> On 2017-03-29 12:15, michael.hennerich@analog.com wrote:
+>>> +
+>>> +	/* Now create an adapter for each channel */
+>>> +	for (num = 0; num < data->chip->nchans; num++) {
+>>> +		ret = i2c_mux_add_adapter(muxc, 0, num, 0);
+>>> +		if (ret) {
+>>> +			dev_err(&client->dev,
+>>> +				"failed to register multiplexed adapter %d\n",
+>>> +				num);
+>
+> Just a heads up, I submitted a series to remove a bunch of dev_err calls
+> when i2c_mux_add_adapter fails. See https://lkml.org/lkml/2017/4/3/115
+>
+> You can remove this one as well.
+>
+> And please use a subject of the form:
+> i2c: mux: ltc4306: <message>
+>
+> Cheers,
+> peda
 
-I'd drop this last one.
+ok - no problem.
+I sent out a new patch. Per Rob's request, I split out the dt-bindings 
+into a separate patch.
 
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source.  The type shall be a <u32> and the value shall be 2.
-> +
-> +  The 1st cell contains the interrupt number for the interrupt type.
-> +
-> +  The 2nd cell is the priority of the interrupt.
+-- 
+Greetings,
+Michael
 
-No level/edge flags needed?
-
-> +
-> +- reg : Specifies base physical address(s) and size of the NVIC registers.
-> +  This is at a fixed address (0xe000e100) and size (0xc00).
-> +
-> +- arm,num-irq-priority-bits: The number of priority bits implemented by the
-> +  given SoC
-> +
-> +Example:
-> +
-> +	intc: interrupt-controller@e000e100 {
-> +		compatible = "arm,nvic";
-> +		#interrupt-cells = <2>;
-> +		#address-cells = <1>;
-> +		interrupt-controller;
-> +		reg = <0xe000e100 0xc00>;
-> +		arm,num-irq-priority-bits = <4>;
-> +	};
-> -- 
-> 2.9.3
-> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
+Sitz der Gesellschaft München, Registergericht München HRB 40368,
+Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
