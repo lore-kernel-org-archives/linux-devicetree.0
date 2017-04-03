@@ -1,61 +1,204 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 1/2] dt-bindings: display: panel: Add bindings for the
- Sitronix ST7789V panel
-Date: Mon,  3 Apr 2017 15:38:31 +0200
-Message-ID: <85ff9c2013ed43f3ad4c566d3430fab380d9a80a.1491226701.git-series.maxime.ripard@free-electrons.com>
-References: <cover.74614dd427b0214d0ba7ccfe75bdd7506b42e61d.1491226701.git-series.maxime.ripard@free-electrons.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V7 3/7] Documentation: devicetree: mfd: da9062/61 MFD
+ binding
+Date: Mon, 3 Apr 2017 14:39:22 +0100
+Message-ID: <20170403133922.iikcgoboisn7qg2e@dell>
+References: <cover.1490712213.git.stwiss.opensource@diasemi.com>
+ <1c12168d005cec5be6cab78f99c4dce95caa128b.1490712213.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.74614dd427b0214d0ba7ccfe75bdd7506b42e61d.1491226701.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.74614dd427b0214d0ba7ccfe75bdd7506b42e61d.1491226701.git-series.maxime.ripard@free-electrons.com>
-References: <cover.74614dd427b0214d0ba7ccfe75bdd7506b42e61d.1491226701.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1c12168d005cec5be6cab78f99c4dce95caa128b.1490712213.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFNpdHJvbml4IFNUNzc4OVYgaXMgYW4gTENEIHBhbmVsIGNvbnRyb2xsZXIsIGNvbnRyb2xs
-ZWQgb3ZlciBTUEksIHRoYXQKY2FuIGRyaXZlIDE4LWJpdHMgMjQweDMyMCBMQ0QgZGlzcGxheXMu
-CgpTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ry
-b25zLmNvbT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2l0cm9uaXgsc3Q3
-Nzg5di50eHQgfCAzNyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZp
-bGUgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9z
-aXRyb25peCxzdDc3ODl2LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpdHJvbml4LHN0Nzc4OXYudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2l0cm9uaXgsc3Q3Nzg5di50
-eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5jNjk5NWRkZTY0MWIK
-LS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9zaXRyb25peCxzdDc3ODl2LnR4dApAQCAtMCwwICsxLDM3IEBACitTaXRyb25p
-eCBTVDc3ODlWIFJHQiBwYW5lbCB3aXRoIFNQSSBjb250cm9sIGJ1cworCitSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgorICAtIGNvbXBhdGlibGU6ICJzaXRyb25peCxzdDc3ODl2IgorICAtIHJlZzogQ2hp
-cCBzZWxlY3Qgb2YgdGhlIHBhbmVsIG9uIHRoZSBTUEkgYnVzCisgIC0gcmVzZXQtZ3Bpb3M6IGEg
-R1BJTyBwaGFuZGxlIGZvciB0aGUgcmVzZXQgcGluCisgIC0gcG93ZXItc3VwcGx5OiBwaGFuZGxl
-IG9mIHRoZSByZWd1bGF0b3IgdGhhdCBwcm92aWRlcyB0aGUgc3VwcGx5IHZvbHRhZ2UKKworT3B0
-aW9uYWwgcHJvcGVydGllczoKKyAgLSBiYWNrbGlnaHQ6IHBoYW5kbGUgdG8gdGhlIGJhY2tsaWdo
-dCB1c2VkCisKK1RoZSBnZW5lcmljIGJpbmRpbmdzIGZvciB0aGUgU1BJIHNsYXZlcyBkb2N1bWVu
-dGVkIGluIFsxXSBhbHNvIGFwcGxpZXMKKworVGhlIGRldmljZSBub2RlIGNhbiBjb250YWluIG9u
-ZSAncG9ydCcgY2hpbGQgbm9kZSB3aXRoIG9uZSBjaGlsZAorJ2VuZHBvaW50JyBub2RlLCBhY2Nv
-cmRpbmcgdG8gdGhlIGJpbmRpbmdzIGRlZmluZWQgaW4gWzJdLiBUaGlzCitub2RlIHNob3VsZCBk
-ZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4KKworWzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvc3BpL3NwaS1idXMudHh0CitbMl06IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncmFwaC50eHQKKworRXhhbXBsZToKKworcGFuZWxAMCB7CisJY29tcGF0aWJs
-ZSA9ICJzaXRyb25peCxzdDc3ODl2IjsKKwlyZWcgPSA8MD47CisJcmVzZXQtZ3Bpb3MgPSA8JnBp
-byA2IDExIEdQSU9fQUNUSVZFX0xPVz47CisJYmFja2xpZ2h0ID0gPCZwd21fYmw+OworCXNwaS1t
-YXgtZnJlcXVlbmN5ID0gPDEwMDAwMD47CisJc3BpLWNwb2w7CisJc3BpLWNwaGE7CisKKwlwb3J0
-IHsKKwkJcGFuZWxfaW5wdXQ6IGVuZHBvaW50IHsKKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdGNv
-bjBfb3V0X3BhbmVsPjsKKwkJfTsKKwl9OworfTsKLS0gCmdpdC1zZXJpZXMgMC44LjExCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, 28 Mar 2017, Steve Twiss wrote:
+
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
+> Extend existing DA9062 binding information to include the DA9061 PMIC for
+> MFD core and regulators.
+> 
+> Add a da9062-onkey link to the existing onkey binding file.
+> 
+> Add a da9062-thermal link to the new temperature monitoring binding file.
+> 
+> Delete the da9062-watchdog section and replace it with a link to the new
+> DA9061/62 binding information file.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
+> ---
+> This patch applies against linux-next and v4.11-rc3
+> 
+> v6 -> v7
+>  - NO CODE CHANGE
+> 
+> v5 -> v6
+>  - NO CODE CHANGE
+>  - Rebased from v4.9 to v4.11-rc3
+> 
+> v4 -> v5
+>  - NO CODE CHANGE
+>  - Rebased from v4.8 to v4.9
+> 
+> v3 -> v4
+>  - Patch renamed from [PATCH V3 4/9] to [PATCH V4 3/8]
+>  - Remove double newline spacing in text file
+>  - Added Acked-by Rob Herring
+> 
+> v2 -> v3
+>  - Patch renamed from [PATCH V2 04/10] to [PATCH V3 4/9]
+>  - Ensure binding description concentrates on the device not the
+>    device driver
+>  - Separate the DA9061 and DA9062 sub-device tables to distinguish
+>    the difference between the two devices
+>  - Update the commit message to describe this change
+>  - Add e-mail information about associated patches from this set
+>    without describing them as being explicitly dependent on this
+>    binding
+> 
+> v1 -> v2
+>  - Patch renamed from [PATCH V1 09/10] to [PATCH V2 04/10] -- these
+>    changes were made to fix checkpatch warnings caused by the patch
+>    set dependency order
+> 
+> Hi,
+> 
+> Added an Ack from Rob Herring for the PATCH V3 version.
+> 
+> As previously:
+> Other information:
+> The device driver from this patch set (associated with this binding) is
+> 
+> - [PATCH V5 4/8] mfd: da9061: MFD core support
+> 
+> and also the following binding file changes:
+> 
+> - Binding for onkey (already applied by Dmitry Torokhov)
+> - [PATCH V5 1/8] Binding for watchdog
+> - [PATCH V5 2/8] Binding for thermal
+> 
+> Regards,
+> Steve Twiss, Dialog Semiconductor
+> 
+> 
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 49 +++++++++++++++++-------
+>  1 file changed, 36 insertions(+), 13 deletions(-)
+
+Applied, thanks.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
+> index 38802b5..c0a418c 100644
+> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> @@ -1,22 +1,39 @@
+>  * Dialog DA9062 Power Management Integrated Circuit (PMIC)
+>  
+> -DA9062 consists of a large and varied group of sub-devices:
+> +Product information for the DA9062 and DA9061 devices can be found here:
+> +- http://www.dialog-semiconductor.com/products/da9062
+> +- http://www.dialog-semiconductor.com/products/da9061
+> +
+> +The DA9062 PMIC consists of:
+>  
+>  Device                   Supply Names    Description
+>  ------                   ------------    -----------
+>  da9062-regulator        :               : LDOs & BUCKs
+>  da9062-rtc              :               : Real-Time Clock
+> +da9062-onkey            :               : On Key
+> +da9062-watchdog         :               : Watchdog Timer
+> +da9062-thermal          :               : Thermal
+> +
+> +The DA9061 PMIC consists of:
+> +
+> +Device                   Supply Names    Description
+> +------                   ------------    -----------
+> +da9062-regulator        :               : LDOs & BUCKs
+> +da9062-onkey            :               : On Key
+>  da9062-watchdog         :               : Watchdog Timer
+> +da9062-thermal          :               : Thermal
+>  
+>  ======
+>  
+>  Required properties:
+>  
+> -- compatible : Should be "dlg,da9062".
+> +- compatible : Should be
+> +    "dlg,da9062" for DA9062
+> +    "dlg,da9061" for DA9061
+>  - reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
+>    modified to match the chip's OTP settings).
+>  - interrupt-parent : Specifies the reference to the interrupt controller for
+> -  the DA9062.
+> +  the DA9062 or DA9061.
+>  - interrupts : IRQ line information.
+>  - interrupt-controller
+>  
+> @@ -25,8 +42,8 @@ further information on IRQ bindings.
+>  
+>  Sub-nodes:
+>  
+> -- regulators : This node defines the settings for the LDOs and BUCKs. The
+> -  DA9062 regulators are bound using their names listed below:
+> +- regulators : This node defines the settings for the LDOs and BUCKs.
+> +  The DA9062 regulators are bound using their names listed below:
+>  
+>      buck1    : BUCK_1
+>      buck2    : BUCK_2
+> @@ -37,19 +54,29 @@ Sub-nodes:
+>      ldo3     : LDO_3
+>      ldo4     : LDO_4
+>  
+> +  The DA9061 regulators are bound using their names listed below:
+> +
+> +    buck1    : BUCK_1
+> +    buck2    : BUCK_2
+> +    buck3    : BUCK_3
+> +    ldo1     : LDO_1
+> +    ldo2     : LDO_2
+> +    ldo3     : LDO_3
+> +    ldo4     : LDO_4
+> +
+>    The component follows the standard regulator framework and the bindings
+>    details of individual regulator device can be found in:
+>    Documentation/devicetree/bindings/regulator/regulator.txt
+>  
+> -
+>  - rtc : This node defines settings required for the Real-Time Clock associated
+>    with the DA9062. There are currently no entries in this binding, however
+>    compatible = "dlg,da9062-rtc" should be added if a node is created.
+>  
+> -- watchdog: This node defines the settings for the watchdog driver associated
+> -  with the DA9062 PMIC. The compatible = "dlg,da9062-watchdog" should be added
+> -  if a node is created.
+> +- onkey : See ../input/da9062-onkey.txt
+> +
+> +- watchdog: See ../watchdog/da9062-watchdog.txt
+>  
+> +- thermal : See ../thermal/da9062-thermal.txt
+>  
+>  Example:
+>  
+> @@ -64,10 +91,6 @@ Example:
+>  			compatible = "dlg,da9062-rtc";
+>  		};
+>  
+> -		watchdog {
+> -			compatible = "dlg,da9062-watchdog";
+> -		};
+> -
+>  		regulators {
+>  			DA9062_BUCK1: buck1 {
+>  				regulator-name = "BUCK1";
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
