@@ -1,59 +1,69 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: sun7i: Add CAN node and can0_pins_a
- pinctrl settings
-Date: Mon, 3 Apr 2017 10:59:42 +0200
-Message-ID: <20170403085942.ereuwdqfrv5npxjn@lukather>
-References: <1490392339-23565-1-git-send-email-menschel.p@posteo.de>
- <1490392339-23565-3-git-send-email-menschel.p@posteo.de>
- <20170327064625.we7ydn2oapwizncb@lukather>
- <91bc06e3-3173-43a1-32f2-a35d94855d46@posteo.de>
+From: Alexander Syring <alex@asyring.de>
+Subject: [PATCH] ARM: sun7i: Cubietruck: enable ACIN und USB power supply
+ subnode
+Date: Mon,  3 Apr 2017 11:12:45 +0200
+Message-ID: <20170403091245.9766-1-alex@asyring.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <91bc06e3-3173-43a1-32f2-a35d94855d46@posteo.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Patrick Menschel <menschel.p@posteo.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: alex@asyring.de
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 06:51:38PM +0200, Patrick Menschel wrote:
-> Hello Maxime,
-> 
-> Am 27.03.2017 um 08:46 schrieb Maxime Ripard:
-> >> @@ -1582,6 +1587,14 @@
-> >>  			#size-cells = <0>;
-> >>  		};
-> >>  
-> >> +		can0: can@01c2bc00 {
-> >> +			compatible = "allwinner,sun4i-a10-can";
-> > 
-> > Sorry for not spotting this earlier, but this would need an A20
-> > compatible too, to deal with the case where it turns out not to be
-> > compatible.
-> > 
-> > you can do something like this:
-> > compatible = "allwinner,sun7i-a20-can", "allwinner,sun4i-a10-can";
-> 
-> Adding "sun7i-a20-can" to the compatible list results in a checkpatch
-> warning, that the "driver" is not documented.
-> 
->  WARNING: DT compatible string "allwinner,sun7i-a20-can" appears
-> un-documented -- check ./Documentation/devicetree/bindings/
-> #27: FILE: arch/arm/boot/dts/sun7i-a20.dtsi:1586:
-> +			compatible = "allwinner,sun7i-a20-can",
-> 
-> Is it really OK to add a driver that doesn't exist yet?
+The Cubietruck has an AXP209 PMIC and can be power-supplied by ACIN via
+ the CHG-IN pin or by USB.
 
-It's not what you are doing, what you're doing is adding an extra
-compatible that is not there yet.
+This enables the ACIN and the USB power supply subnode in the DT.
 
-Since it doesn't exist, it will fallback on the second one, which does
-exist. So yes, it's ok to do so.
+Signed-off-by: Alexander Syring <alex@asyring.de>
+---
 
-Maxime
+Send again to all relevant people
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+---
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index feb995d29799..98431ef15bc9 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -267,6 +267,10 @@
+
+ #include "axp209.dtsi"
+
++&ac_power_supply {
++	status = "okay";
++};
++
+ &reg_dcdc2 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <1000000>;
+@@ -323,6 +327,10 @@
+ 	status = "okay";
+ };
+
++&usb_power_supply {
++	status = "okay";
++};
++
+ &usbphy {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
+@@ -333,3 +341,4 @@
+ 	usb2_vbus-supply = <&reg_usb2_vbus>;
+ 	status = "okay";
+ };
++
+--
+2.11.0
