@@ -1,105 +1,73 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH RFC] serial: imx: support an enable-gpio
-Date: Mon, 3 Apr 2017 22:54:01 +0200
-Message-ID: <20170403205401.jiahqjemq7lymlil@pengutronix.de>
-References: <1468400495-10471-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CAOMZO5A4e7H-6feNN-cTABOKv+CUCU9Em_yFMhorZwXfeA-h0w@mail.gmail.com>
- <CAL_JsqL8EQWoqyeyVb5Uj9ZaoB3Uz3yzbo114OR-FRrMEu8s=A@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/15] dt-bindings: display: sun4i: Add HDMI
+ display bindings
+Date: Mon, 3 Apr 2017 22:59:53 +0200
+Message-ID: <20170403205953.vdf5ynyvktpiheax@lukather>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <f1d46b79f933df724a6750d557ebe9517b6339b5.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <20170315172622.lb6vy7cmbwaf7crn@rob-hp-laptop>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vy7wvwz2minz7rwk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSXPRLDQKGQEZGHUC2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL8EQWoqyeyVb5Uj9ZaoB3Uz3yzbo114OR-FRrMEu8s=A@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170315172622.lb6vy7cmbwaf7crn@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Mon, Apr 03, 2017 at 03:25:23PM -0500, Rob Herring wrote:
-> On Mon, Apr 3, 2017 at 10:01 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi Uwe,
-> >
-> > On Wed, Jul 13, 2016 at 6:01 AM, Uwe Kleine-König
-> > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> >> A part of my machine looks as follows (simplified):
-> >>
-> >> ,------------------------.
-> >> | ,---------.            |
-> >> | |  imx25  o--RX----◁---o---
-> >> | |         o--GPIO--'   |
-> >> | `---------'            |
-> >> `------------------------'
-> >>
-> >> that is, there is a driver on the RX line that must be enabled before
-> >> the UART can be used. (That is necessary because the default mux of the
-> >> RX pad after reset is an output.)
-> >>
-> >> To represent this in the device tree I do:
-> >>
-> >>         pinctrl_uart5: uart5 {
-> >>                 fsl,pins = <
-> >>                         ...
-> >>                         MX25_PAD_LBA__UART5_RXD         0x00000000
-> >>                         MX25_PAD_CS5__GPIO_3_21         0x00002001
-> >>                         ...
-> >>         };
-> >>
-> >>         &uart5 {
-> >>                 pinctrl-names = "default";
-> >>                 pinctrl-0 = <&pinctrl_uart5>;
-> >>
-> >>                 enable-gpio = <&gpio3 21 GPIO_ACTIVE_LOW>;
+--vy7wvwz2minz7rwk
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi Rob,
+
+On Wed, Mar 15, 2017 at 12:26:22PM -0500, Rob Herring wrote:
+> > +HDMI Encoder
+> > +------------
+> > +
+> > +The HDMI Encoder supports the HDMI video and audio outputs, and does
+> > +CEC. It is one end of the pipeline.
+> > +
+> > +Required properties:
+> > +  - compatible: value must be one of:
+> > +    * allwinner,sun5i-a10s-hdmi
+> > +  - reg: base address and size of memory-mapped region
+> > +  - clocks: phandles to the clocks feeding the HDMI encoder
+> > +    * ahb: the HDMI interface clock
+> > +    * mod: the HDMI module clock
+> > +    * pll-0: the first video PLL
+> > +    * pll-1: the second video PLL
+> > +  - clock-names: the clock names mentioned above
+> > +
+> > +  - ports: A ports node with endpoint definitions as defined in
+> > +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> > +    first port should be the input endpoint.
 > 
-> enable-gpios
+> You need an output port to an HDMI connector node and an audio port.
 
-ack.
+I started to look at the audio, and I can't find a use for an audio
+port in the OF graph. As far as I understand, we will be using the
+hdmi-codec, that still requires an ASoC card to create the link
+between our i2s controller and the HDMI controller.
 
-> I imagine you already know this needs documentation. Make it common please.
+This work perfectly for us, but as far as I know, the simple-card
+stuff only requires a phandle, and not an OF graph endpoint, right?
 
-Sure, I first wanted to collect some feedback to get an idea if this
-would be accepted at all.
-
-The only candidate for common code to add this functionality would be
-uart_add_one_port. I wonder if this is early enough in every case.
-
-> >>                 ...
-> >>         };
-> >>
-> >> This way it's ensured that the gpio is only enabled when the LBA pad is
-> >> muxed as RX (together with the bootloader that sets the GPIO high).
-> >>
-> >> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >
-> > Since this is not imx serial specific it could be made more generic.
-> >
-> > What about extending
-> > Documentation/devicetree/bindings/serial/slave-device.txt to handle
-> > this GPIO, or maybe a regulator?
-
-I could add a regulator that would do the right thing, that would not
-match the hardware though.
-
-> This is more like a phy than a device you talk to. It could also be
-> something like an RS-232 xcvr enable (no one has done that already?).
-> I think it belongs in the uart's node. You could additionally have an
-> enable-gpios for a slave device.
-
-Yes, I agree here, it is better defined in the uart's node, not in the
-slave node.
-
-Is xcvr-enable-gpios or xceiver-enable-gpios a better name?
-
-Best regards
-Uwe
+Thanks!
+Maxime
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--vy7wvwz2minz7rwk--
