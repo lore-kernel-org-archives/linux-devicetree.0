@@ -1,54 +1,50 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v3 0/4] tty/serial: meson_uart: add support for core clock
- handling
-Date: Mon, 03 Apr 2017 08:44:16 -0700
-Message-ID: <m2lgrha433.fsf@baylibre.com>
-References: <20170331165437.26227-1-hgkr.klein@gmail.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v3 2/7] mfd: retu: Add OF device ID table
+Date: Mon, 3 Apr 2017 11:45:14 -0400
+Message-ID: <2147b8c9-02ee-1b9c-a74e-119b0b73d1d7@osg.samsung.com>
+References: <20170401071854.23198-1-javier@osg.samsung.com>
+ <20170401071854.23198-3-javier@osg.samsung.com>
+ <20170403111502.lotjpd746vkhekkg@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170331165437.26227-1-hgkr.klein@gmail.com> (Helmut Klein's
- message of "Fri, 31 Mar 2017 18:54:33 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Helmut Klein <hgkr.klein@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170403111502.lotjpd746vkhekkg@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Helmut Klein <hgkr.klein@gmail.com> writes:
+Hello Lee,
 
-> To be able to use the three none AO uarts of the meson gx SoCs (uart_A,
+On 04/03/2017 07:15 AM, Lee Jones wrote:
 
-s/none/non/
+[snip]
 
-> uart_B & uart_C), the core clock has to be enabled (see chapter 22.3 of
-> the public s905 data sheet).
-> At least the u-boot of my s905 based media player (netxeon minimx-g)
-> doesn't do this. so the driver must enable the clock.
+>>  
+>> +static const struct of_device_id retu_of_match[] = {
+>> +	{ .compatible = "nokia,retu-mfd" },
+>> +	{ .compatible = "nokia,tahvo-mfd" },
+> 
+> Please drop the "-mfd".
+> 
 
-FYI: even if a booloader enablesq clocks, it's important that the kernel
-enable clocks that it uses so the kernel can be independent of any
-bootloader.
+Yes, I also didn't like it but I didn't want to change it since that would
+mean that backward compatiblity and bisect-ability will be broken by this
+change.
 
-> This patch set does:
-> - exposes the UART clock ids to the dtb
-> - adds documentation for the dt-bindings of meson_uart
-> - adds the core clock handling to the driver
-> - adds the core clock handling to meson-gxbb.dtsi and meson-gxl.dtsi
->
-> The patchset is based on the branch "master" of the repository in [1]
+In other words, just adding a vendor prefix won't cause an issue if patches
+are merged independently since if DTS patches are merged before, the driver
+will still lookup using the I2C device ID table. And if the drivers patches
+are picked before, the DTS will match using the OF device ID table.
 
-The master branch in my tree just tracks mainline master branch.
+But changing to "nokia,retu" and "nokia,tahvo" means that you will need to
+pick all patches and also that the DTS and drivers changes will have to be
+done in the same patch. If you are OK with that, then I can change in the
+next version.
 
-To avoid conflicts with other on-going DT changes, the DT patches should
-probably be based on top of my v4.12/dt64 branch.
-
-Kevin
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
