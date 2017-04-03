@@ -1,132 +1,43 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
-Date: Mon, 3 Apr 2017 12:00:32 -0700
-Message-ID: <20170403190032.GX20094@minitux>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323203749.GB8563@amd>
- <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
- <20170329190725.GN20094@minitux>
- <20170329222301.GB7977@amd>
- <20170330000955.GP20094@minitux>
- <20170330074309.GA28533@amd>
- <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: stm32-adc: add option to set
+ resolution
+Date: Mon, 3 Apr 2017 20:45:49 +0100
+Message-ID: <4251bdd9-48d6-9b44-ed3d-f7ec8bfee875@kernel.org>
+References: <1490963559-32159-1-git-send-email-fabrice.gasnier@st.com>
+ <1490963559-32159-2-git-send-email-fabrice.gasnier@st.com>
+ <20170403164600.siab6ghtoeuxokg5@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170403164600.siab6ghtoeuxokg5@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 31 Mar 02:28 PDT 2017, Jacek Anaszewski wrote:
+On 03/04/17 17:46, Rob Herring wrote:
+> On Fri, Mar 31, 2017 at 02:32:37PM +0200, Fabrice Gasnier wrote:
+>> Add documentation for 'assigned-resolution-bits' dt optional property.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> - rename property from 'st,adc-res' to 'assigned-resolution-bits' so it
+>>   is more common.
+>> ---
+>>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+Thanks.
 
-> Hi Bjorn and Pavel,
-> 
-> On 03/30/2017 09:43 AM, Pavel Machek wrote:
-> > Hi!
-> > 
-> >>>> There is a binding for ti,lp55xx, but there's nothing I can reuse from
-> >>>> that binding...because it's completely different hardware.
-> >>>
-> >>> Agreed, if you drop the pattern stuff from the binding, at least for now. 
-> >>
-> >> I do not have a strong preference to expose these knobs in devicetree
-> >> and I do fear that finding some common "pattern" bindings that suits
-> >> everyone will be very difficult.
-> >>
-> >> So I'll drop them from the binding for now.
-> > 
-> > Ok.
-> > 
-> >>> If you want driver merged quickly, I believe the best way would be to
-> >>> leave out pattern support for now. We can merge the basic driver
-> >>> easily to 4.12.
-> >>>
-> >>
-> >> I'm not that much in a hurry and would rather see that we resolve any
-> >> outstanding issues with the implementation of the pattern handling.
-> > 
-> > Ok, good.
-> > 
-> >> But regardless of this we still have the problem that the typical
-> >> Qualcomm PMIC has 8 LPG-blocks and any triple could be driving a
-> >> RGB-LED. So we would have to create some sort of in-driver-wrapper
-> >> around any three instances exposing them as a single LED to the user.
-> > 
-> > Yes, I believe we should do the wrapping. In N900 case, 
-> > 
-> >> I rather expose the individual channels and make sure that when we
-> >> trigger a blink operation or enable a pattern (i.e. the two operations
-> >> that do require synchronization) we will perform that synchronization
-> >> under the hood.
-> > 
-> > First, we need a way to tell userspace which LEDs are synchronized,
-> > because otherwise it will be confusing.
-> 
-> There is one year old discussion [0] about the possible approaches
-> to RGB sub-LEDs synchronization problem and patterns in general.
-> My last message with API design proposal has been left unanswered.
-> 
-> Probably we continue that discussion here.
-> 
-> Generally Bjorn's drivers touch two yet to be addressed issues:
-> - RGB LED support
-> - Generic support for patterns
-> 
-> It is likely that both issues can be solved by utilizing trigger
-> mechanism. The possible solution to the problem Bjorn tried to
-> address with /sys/class/leds/<led>/pattern comma separated list
-> could be a trigger with adjustable number of pattern intervals.
-> 
-> The trigger once activated would create a directory with the
-> number of files corresponding to the number of requested intervals,
-> and then user could write an interval value by writing it to the
-> corresponding file. Somehow related approach has been implemented
-> for USB port LED trigger:
-> 
-> 0f247626cbbf ('usb: core: Introduce a USB port LED trigger")
-> 
-> In both RGB and pattern approaches we should assess
-> if it is acceptable to provide a pattern for trigger name,
-> e.g. blink-pattern-{num_intervals}.
-> 
-> If so, then "echo transition-pattern-15" would create a directory
-> e.g. transition_intervals with files interval_0 to interval_14,
-> that could be adjusted by userspace.
-> 
+Applied to the togreg branch of iio.git.  Will push out as testing for
+the autobuilders to have a chance to play with it.
 
-Having a RGB-trigger that proxy a accepts a userspace request of a
-brightness-tripple and sets the brightness on the individual associated
-LEDs sounds reasonable - but should probably be generalized to any
-number of LEDs.
-
-A slightly related matter is the question on how to use a single LED for
-multiple trigger sources, e.g. how do I get a single LED to show
-activity of two MMCs?.
-
-
-For the patterns I don't know how a trigger for this would look like,
-how would setting the pattern of a trigger be propagated down to the
-hardware?
-
-> > Second, there are more issues than just patterns with the RGB
-> > LED. Most important is ability to set particular colors. You want to
-> > set the RGB LED to "white", but that does not mean you can set
-> > red=green=blue=1.0. You want color to look the same on LCD and on the
-> > LED, which means coefficients for white and some kind of function for
-> > brightness-to-PWM conversion.
+Jonathan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-> Shouldn't we leave that entirely to the userspace? Can we come up
-> with coefficients that will guarantee the same result on all existing
-> LCD devices?
-> 
-
-How about we just force user space perform the 3 writes and save us the
-cost of another trigger in that case? Configuring the brightness of 3
-LEDs is not board specific - and even with a RGB-interface we still need
-to specify which RGB-LED should be controlled.
-
-Regards,
-Bjorn
