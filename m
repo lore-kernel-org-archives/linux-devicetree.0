@@ -1,63 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv4 25/29] drm/omap: displays: panel-dpi: Support for
- handling backlight devices
-Date: Mon, 3 Apr 2017 10:58:40 -0500
-Message-ID: <20170403155840.m62fwyptmbwlsfnq@rob-hp-laptop>
-References: <1490872529-23084-1-git-send-email-tomi.valkeinen@ti.com>
- <1490872529-23084-26-git-send-email-tomi.valkeinen@ti.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] input: misc: introduce Atmel PTC driver
+Date: Mon, 3 Apr 2017 17:58:40 +0200
+Message-ID: <20170403155840.vln4wg56iunrmdcw@piout.net>
+References: <20170331152250.12758-1-ludovic.desroches@microchip.com>
+ <20170331152250.12758-2-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1490872529-23084-26-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170331152250.12758-2-ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 02:15:25PM +0300, Tomi Valkeinen wrote:
-> From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> 
-> The associated backlight device can be configured via DT by providing the
-> phandle to the device.
-> 
-> If the backlight device is configured, the driver can manage the backligt
-> along with the panel's power state, iow it can turn on the backlight when
-> the panel is enabled and turn it off when the panel is disabled.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  .../bindings/display/panel/panel-dpi.txt           |  3 ++
->  drivers/gpu/drm/omapdrm/displays/panel-dpi.c       | 37 ++++++++++++++++++++--
->  2 files changed, 38 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-> index d4add13e592d..6b203bc4d932 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-> @@ -9,6 +9,7 @@ Optional properties:
->  - enable-gpios: panel enable gpio
->  - reset-gpios: GPIO to control the RESET pin
->  - vcc-supply: phandle of regulator that will be used to enable power to the display
-> +- backlight: phandle of the backlight device
+On 31/03/2017 at 17:22:47 +0200, Ludovic Desroches wrote:
+> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Any panel can have a backlight, so please add to panel/panel.txt 
-instead.
+I think you probably want to switch to your microchip email.
 
->  
->  Required nodes:
->  - "panel-timing" containing video timings
-> @@ -22,6 +23,8 @@ lcd0: display@0 {
->          compatible = "samsung,lte430wq-f0c", "panel-dpi";
->          label = "lcd";
->  
-> +        backlight = <&backlight>;
-> +
->          port {
->              lcd_in: endpoint {
->                      remote-endpoint = <&dpi_out>;
+Also, this requires a proper commit message.
+
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> +struct atmel_ptc {
+> +	void __iomem		*ppp_regs;
+> +	void __iomem		*firmware;
+> +	int			irq;
+> +	uint8_t			imr;
+> +	volatile struct atmel_qtm_mailbox __iomem	*qtm_mb;
+> +	struct clk		*clk_per;
+> +	struct clk		*clk_int_osc;
+> +	struct clk		*clk_slow;
+> +	struct device		*dev;
+> +	struct completion	ppp_ack;
+> +	unsigned int		button_keycode[ATMEL_PTC_MAX_NODES];
+> +	struct input_dev	*buttons_input;
+> +	struct input_dev	*scroller_input[ATMEL_PTC_MAX_SCROLLERS];
+> +	bool			buttons_registered;
+> +	bool			scroller_registered[ATMEL_PTC_MAX_SCROLLERS];
+> +	uint32_t		button_event[ATMEL_PTC_MAX_NODES/32];
+> +	uint32_t		button_state[ATMEL_PTC_MAX_NODES/32];
+> +	uint32_t		scroller_event;
+> +	uint32_t		scroller_state;
+
+You should use u8, u16 and u32 instead of uint8_t, uint16_t and
+uint32_t.
+
+> diff --git a/include/uapi/linux/atmel_ptc.h b/include/uapi/linux/atmel_ptc.h
+> new file mode 100644
+> index 0000000..d15c4df
+> --- /dev/null
+> +++ b/include/uapi/linux/atmel_ptc.h
+
+
+Is there any sample application showing how to configure the PTC?
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
