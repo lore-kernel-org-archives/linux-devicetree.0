@@ -1,78 +1,36 @@
-From: Jan Glauber <jan.glauber-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: mtd: Add Cavium SOCs NAND bindings
-Date: Mon, 3 Apr 2017 18:18:49 +0200
-Message-ID: <20170403161849.GA2845@hardcore>
-References: <20170327160524.29019-1-jglauber@cavium.com>
- <20170327160524.29019-2-jglauber@cavium.com>
- <20170403132937.z5mxksabo6kmo4jy@rob-hp-laptop>
- <20170403143840.GA23698@hardcore>
- <CAL_JsqJ2VgF_Lp-vpdn6VL71K4z6Mu7DWYSaLZ_N0U+jaTuPsQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 06/13] dt: bindings: Add bindings for Marvell Xenon SD
+ Host Controller
+Date: Mon, 3 Apr 2017 11:19:26 -0500
+Message-ID: <20170403161926.wfj7foddu33gxuae@rob-hp-laptop>
+References: <cover.51071caa64e5df81264a91b9a81ed1e94f47d2c4.1490886907.git-series.gregory.clement@free-electrons.com>
+ <ecacddaa5d38b678e1c8c95b56f65f4a39527ead.1490886907.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ2VgF_Lp-vpdn6VL71K4z6Mu7DWYSaLZ_N0U+jaTuPsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ecacddaa5d38b678e1c8c95b56f65f4a39527ead.1490886907.git-series.gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ziji Hu <huziji@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.c>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 03, 2017 at 09:47:05AM -0500, Rob Herring wrote:
-> On Mon, Apr 3, 2017 at 9:38 AM, Jan Glauber
-> <jan.glauber-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> > On Mon, Apr 03, 2017 at 08:29:37AM -0500, Rob Herring wrote:
-> >> On Mon, Mar 27, 2017 at 06:05:23PM +0200, Jan Glauber wrote:
-> >> > Add device tree binding description for Cavium SOC nand flash controller.
-> >> >
-> >> > CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> > CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> >> > CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> >
-> >> > Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >> > ---
-> >> >  .../devicetree/bindings/mtd/cavium_nand.txt        | 32 ++++++++++++++++++++++
-> >> >  1 file changed, 32 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/mtd/cavium_nand.txt b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> >> > new file mode 100644
-> >> > index 0000000..4698d1f
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> >> > @@ -0,0 +1,32 @@
-> >> > +* Cavium NAND controller
-> >> > +
-> >> > +Required properties:
-> >> > +
-> >> > +- compatible:              should be "cavium,cn8xxx-nand"
-> >>
-> >> Don't use wildcards in compatible strings. For PCI devices, this should
-> >> be based on the PCI vendor and device IDs.
-> >>
-> >
-> > Is there a syntax for compatible PCI devices? I'm afraid I've not seen
-> > this yet, can you give an example?
+On Thu, Mar 30, 2017 at 05:22:58PM +0200, Gregory CLEMENT wrote:
+> From: Hu Ziji <huziji@marvell.com>
 > 
-> www.o3one.org/hwdocs/openfirmware/pci_supplement_2_1.pdf
-
-Thanks, I probably should have read this before...
-
-So it will be something like:
-compatible = "pci177d,a04f"
-
-A bit unreadable, but it solves the wildcard issue.
-
-> > Most of Cavium's devices are PCI devices, we just added the compatible
-> > as convenience and usually it is not parsed.
+> Marvell Xenon SDHC can support eMMC/SD/SDIO.
+> Add Xenon-specific properties.
+> Also add properties for Xenon PHY setting.
 > 
-> Linux doesn't parse it, but it's still required in the binding.
+> Signed-off-by: Hu Ziji <huziji@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt | 170 +++++++-
+>  1 file changed, 170 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
 
-OK.
+I acked v6 and it seems like a minor change, though I had to search for 
+both because there is no revision history nor explanation why you didn't 
+add my ack.
 
---Jan
-
-> Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org> 
