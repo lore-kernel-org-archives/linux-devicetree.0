@@ -1,323 +1,502 @@
-From: Wadim Egorov <w.egorov@phytec.de>
-Subject: [PATCH 2/3] ARM: dts: rockchip: Add support for PCM-947 carrier board
-Date: Mon, 3 Apr 2017 12:23:04 +0200
-Message-ID: <1491214985-18331-2-git-send-email-w.egorov@phytec.de>
-References: <1491214985-18331-1-git-send-email-w.egorov@phytec.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491214985-18331-1-git-send-email-w.egorov@phytec.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: rockchip: Add support for phyCORE-RK3288 SoM
+Date: Mon, 3 Apr 2017 12:23:03 +0200
+Message-ID: <1491214985-18331-1-git-send-email-w.egorov@phytec.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add basic support for the PCM-947 carrier board, a RK3288 based development
-board made by PHYTEC. This board works in a combination with
-the phyCORE-RK3288 System on Module.
+The phyCORE-RK3288 is a SoM (System on Module) containing a RK3288 SoC.
+The module can be connected to different carrier boards.
+It can be also equipped with different RAM, SPI flash and eMMC variants.
+The Rapid Development Kit option is using the following setup:
 
-Following interfaces and devices are available on the PCM-947 carrier board:
+  - 1 GB DDR3 RAM (2 Banks)
+  - 1x 4 KB EEPROM
+  - DP83867 Gigabit Ethernet PHY
+  - 16 MB SPI Flash
+  - 4 GB eMMC Flash
 
-  - 2x UART
-  - micro SDMMC
-  - USB host and USB otg
-  - USB 3503 HSIC hub
-  - Ethernet
-  - 2nd alternative KSZ9031 ethernet phy
-  - Display connectors: PHYTEC LVDS, DDG LVDS, parallel signals, HDMI
-  - Parallel Camera CIF
-  - SGTL5000-32QFN audio codec
-  - 4x LEDs connected via PCA9533
-  - 2 user buttons
-  - Expansion connectors for WiFi and other modules
-  - RTC RV-4162-C7
-  - Resistive touch STMPE811
-  - EEPROM M24C32
-
-Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/rk3288-phycore-rdk.dts | 263 +++++++++++++++++++++++++++++++
- 2 files changed, 264 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-phycore-rdk.dts
+ arch/arm/boot/dts/rk3288-phycore-som.dtsi | 463 ++++++++++++++++++++++++++++++
+ 1 file changed, 463 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3288-phycore-som.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0118084..8c3cb4d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -692,6 +692,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-firefly.dtb \
- 	rk3288-firefly-reload.dtb \
- 	rk3288-miqi.dtb \
-+	rk3288-phycore-rdk.dtb \
- 	rk3288-popmetal.dtb \
- 	rk3288-r89.dtb \
- 	rk3288-rock2-square.dtb \
-diff --git a/arch/arm/boot/dts/rk3288-phycore-rdk.dts b/arch/arm/boot/dts/rk3288-phycore-rdk.dts
+diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
 new file mode 100644
-index 0000000..16a2b96
+index 0000000..36e690e
 --- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-phycore-rdk.dts
-@@ -0,0 +1,263 @@
++++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+@@ -0,0 +1,463 @@
 +/*
 + * Copyright (C) 2017 PHYTEC Messtechnik GmbH
-+ * Author: Wadim Egorov <w.egorov@phytec.de>
++ * Author: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
 +
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/leds-pca9532.h>
-+#include "rk3288-phycore-som.dtsi"
++#include <dt-bindings/net/ti-dp83867.h>
++#include "rk3288.dtsi"
 +
 +/ {
-+	model = "Phytec RK3288 PCM-947";
-+	compatible = "phytec,rk3288-pcm-947", "phytec,rk3288-phycore-som", "rockchip,rk3288";
++	model = "Phytec RK3288 phyCORE";
++	compatible = "phytec,rk3288-phycore-som", "rockchip,rk3288";
 +
-+	user_buttons: user-buttons {
-+		compatible = "gpio-keys";
++	/*
++	 * Set the minimum memory size here and
++	 * let the bootloader set the real size.
++	 */
++	memory {
++		device_type = "memory";
++		reg = <0 0x8000000>;
++	};
++
++	aliases {
++		rtc0 = &i2c_rtc;
++		rtc1 = &rk818;
++	};
++
++	ext_gmac: external-gmac-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <125000000>;
++		clock-output-names = "ext_gmac";
++	};
++
++	leds: user-leds {
++		compatible = "gpio-leds";
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&user_button_pins>;
++		pinctrl-0 = <&user_led>;
 +
-+		button@0 {
-+			label = "home";
-+			linux,code = <KEY_HOME>;
-+			gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
-+			wakeup-source;
++		user {
++			label = "green_led";
++			gpios = <&gpio7 2 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "keep";
 +		};
-+
-+		button@1 {
-+			label = "menu";
-+			linux,code = <KEY_MENU>;
-+			gpios = <&gpio8 3 GPIO_ACTIVE_HIGH>;
-+			wakeup-source;
-+		};
 +	};
 +
-+	vcc_host0_5v: usb-host0-regulator {
++	vdd_emmc_io: vdd-emmc-io {
 +		compatible = "regulator-fixed";
-+		gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host0_vbus_drv>;
-+		regulator-name = "vcc_host0_5v";
++		regulator-name = "vdd_emmc_io";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vdd_3v3_io>;
++	};
++
++	vdd_in_otg_out: vdd-in-otg-out {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_in_otg_out";
++		regulator-always-on;
++		regulator-boot-on;
 +		regulator-min-microvolt = <5000000>;
 +		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&vdd_in_otg_out>;
 +	};
 +
-+	vcc_host1_5v: usb-host1-regulator {
++	vdd_misc_1v8: vdd-misc-1v8 {
 +		compatible = "regulator-fixed";
-+		gpio = <&gpio2 0 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host1_vbus_drv>;
-+		regulator-name = "vcc_host1_5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
++		regulator-name = "vdd_misc_1v8";
 +		regulator-always-on;
-+		vin-supply = <&vdd_in_otg_out>;
++		regulator-boot-on;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
 +	};
++};
 +
-+	vcc_otg_5v: usb-otg-regulator {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio2 12 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&otg_vbus_drv>;
-+		regulator-name = "vcc_otg_5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&vdd_in_otg_out>;
-+	};
++&cpu0 {
++	cpu0-supply = <&vdd_cpu>;
++	operating-points = <
++		/* KHz    uV */
++		1800000	1400000
++		1608000	1350000
++		1512000 1300000
++		1416000 1200000
++		1200000 1100000
++		1008000 1050000
++		 816000 1000000
++		 696000  950000
++		 600000  900000
++		 408000  900000
++		 312000  900000
++		 216000  900000
++		 126000  900000
++	>;
++};
++
++&emmc {
++	status = "okay";
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	disable-wp;
++	non-removable;
++	num-slots = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_pwr &emmc_bus8>;
++	vmmc-supply = <&vdd_3v3_io>;
++	vqmmc-supply = <&vdd_emmc_io>;
 +};
 +
 +&gmac {
-+	status = "okay";
++	assigned-clocks = <&cru SCLK_MAC>;
++	assigned-clock-parents = <&ext_gmac>;
++	clock_in_out = "input";
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins &phy_rst &phy_int>;
++	phy-supply = <&vdd_eth_2v5>;
++	phy-mode = "rgmii-id";
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
++	tx_delay = <0x0>;
++	rx_delay = <0x0>;
++	phy-handle = <&phy0>;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++
++		phy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++			interrupt-parent = <&gpio4>;
++			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++			ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
++			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
++			ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
++			enet-phy-lane-no-swap;
++		};
++	};
 +};
 +
 +&hdmi {
++	ddc-i2c-bus = <&i2c5>;
++};
++
++&io_domains {
++	rockchip,grf = <&grf>;
++	sdcard-supply = <&vdd_io_sd>;
++	flash0-supply = <&vdd_emmc_io>;
++	flash1-supply = <&vdd_misc_1v8>;
++	gpio1830-supply = <&vdd_3v3_io>;
++	gpio30-supply = <&vdd_3v3_io>;
++	bb-supply = <&vdd_3v3_io>;
++	dvp-supply = <&vdd_3v3_io>;
++	lcdc-supply = <&vdd_3v3_io>;
++	wifi-supply = <&vdd_3v3_io>;
++	audio-supply = <&vdd_3v3_io>;
 +	status = "okay";
 +};
 +
-+&i2c1 {
++&i2c0 {
 +	status = "okay";
++	clock-frequency = <400000>;
 +
-+	stmpe@44 {
-+		compatible = "st,stmpe811";
-+		reg = <0x44>;
-+	};
-+
-+	adc@64 {
-+		compatible = "maxim,max1037";
-+		reg = <0x64>;
-+	};
-+
-+	i2c_rtc: rtc@68 {
-+		compatible = "rv4162";
-+		reg = <0x68>;
++	rk818: pmic@1c {
++		compatible = "rockchip,rk818";
++		reg = <0x1c>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c_rtc_int>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <10 0>;
++		pinctrl-0 = <&pmic_int>;
++		rockchip,system-power-controller;
++		wakeup-source;
++		#clock-cells = <1>;
++
++		vcc1-supply = <&vdd_sys>;
++		vcc2-supply = <&vdd_sys>;
++		vcc3-supply = <&vdd_sys>;
++		vcc4-supply = <&vdd_sys>;
++		boost-supply = <&vdd_in_otg_out>;
++		vcc6-supply = <&vdd_sys>;
++		vcc7-supply = <&vdd_misc_1v8>;
++		vcc8-supply = <&vdd_misc_1v8>;
++		vcc9-supply = <&vdd_3v3_io>;
++		vddio-supply = <&vdd_3v3_io>;
++
++		regulators {
++			vdd_log: DCDC_REG1 {
++				regulator-name = "vdd_log";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_gpu: DCDC_REG2 {
++				regulator-name = "vdd_gpu";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1250000>;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-name = "vcc_ddr";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vdd_3v3_io: DCDC_REG4 {
++				regulator-name = "vdd_3v3_io";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vdd_sys: DCDC_BOOST {
++				regulator-name = "vdd_sys";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5000000>;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <5000000>;
++				};
++			};
++
++			/* vcc9 */
++			vdd_sd: SWITCH_REG {
++				regulator-name = "vdd_sd";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			/* vcc6 */
++			vdd_eth_2v5: LDO_REG2 {
++				regulator-name = "vdd_eth_2v5";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <2500000>;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <2500000>;
++				};
++			};
++
++			/* vcc7 */
++			vdd_1v0: LDO_REG3 {
++				regulator-name = "vdd_1v0";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			/* vcc8 */
++			vdd_1v8_lcd_ldo: LDO_REG4 {
++				regulator-name = "vdd_1v8_lcd_ldo";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			/* vcc8 */
++			vdd_1v0_lcd: LDO_REG6 {
++				regulator-name = "vdd_1v0_lcd";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			/* vcc7 */
++			vdd_1v8_ldo: LDO_REG7 {
++				regulator-name = "vdd_1v8_ldo";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			/* vcc9 */
++			vdd_io_sd: LDO_REG9 {
++				regulator-name = "vdd_io_sd";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++		};
 +	};
-+};
 +
-+&i2c3 {
-+	status = "okay";
-+
-+	i2c_eeprom_cb: eeprom@51 {
++	/* M24C32-D */
++	i2c_eeprom: eeprom@50 {
 +		compatible = "atmel,24c32";
-+		reg = <0x51>;
++		reg = <0x50>;
 +		pagesize = <32>;
 +	};
-+};
 +
-+&i2c4 {
-+	status = "okay";
-+
-+	/* PCA9533 - 4-bit LED dimmer */
-+	leddim: leddimmer@62 {
-+		compatible = "nxp,pca9533";
-+		reg = <0x62>;
-+
-+		led1 {
-+			label = "red:user1";
-+			linux,default-trigger = "none";
-+			type = <PCA9532_TYPE_LED>;
-+		};
-+
-+		led2 {
-+			label = "green:user2";
-+			linux,default-trigger = "none";
-+			type = <PCA9532_TYPE_LED>;
-+		};
-+
-+		led3 {
-+			label = "blue:user3";
-+			linux,default-trigger = "none";
-+			type = <PCA9532_TYPE_LED>;
-+		};
-+
-+		led4 {
-+			label = "red:user4";
-+			linux,default-trigger = "none";
-+			type = <PCA9532_TYPE_LED>;
-+		};
++	vdd_cpu: fan53555@60 {
++		compatible = "fcs,fan53555";
++		reg = <0x60>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-enable-ramp-delay = <300>;
++		regulator-name = "vdd_cpu";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1430000>;
++		regulator-ramp-delay = <8000>;
++		vin-supply = <&vdd_sys>;
 +	};
-+};
-+
-+&i2c5 {
-+	status = "okay";
 +};
 +
 +&pinctrl {
-+	pcfg_pull_up_drv_12ma: pcfg-pull-up-drv-12ma {
-+		bias-pull-up;
-+		drive-strength = <12>;
++	pcfg_output_high: pcfg-output-high {
++		output-high;
 +	};
 +
-+	buttons {
-+		user_button_pins: user-button-pins {
-+			/* button 1 */
-+			rockchip,pins = <8 3 RK_FUNC_GPIO &pcfg_pull_up>,
-+			/* button 2 */
-+					<8 0 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	rv4162 {
-+		i2c_rtc_int: i2c-rtc-int {
-+			rockchip,pins = <5 10 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	sdmmc {
++	emmc {
 +		/*
-+		 * Default drive strength isn't enough to achieve even
-+		 * high-speed mode on pcm-947 board so bump up to 12 mA.
++		 * We run eMMC at max speed; bump up drive strength.
++		 * We also have external pulls, so disable the internal ones.
 +		 */
-+		sdmmc_bus4: sdmmc-bus4 {
-+			rockchip,pins = <6 16 RK_FUNC_1 &pcfg_pull_up_drv_12ma>,
-+					<6 17 RK_FUNC_1 &pcfg_pull_up_drv_12ma>,
-+					<6 18 RK_FUNC_1 &pcfg_pull_up_drv_12ma>,
-+					<6 19 RK_FUNC_1 &pcfg_pull_up_drv_12ma>;
++		emmc_clk: emmc-clk {
++			rockchip,pins = <3 18 RK_FUNC_2 &pcfg_pull_none_12ma>;
 +		};
 +
-+		sdmmc_clk: sdmmc-clk {
-+			rockchip,pins = <6 20 RK_FUNC_1 &pcfg_pull_none_12ma>;
++		emmc_cmd: emmc-cmd {
++			rockchip,pins = <3 16 RK_FUNC_2 &pcfg_pull_none_12ma>;
 +		};
 +
-+		sdmmc_cmd: sdmmc-cmd {
-+			rockchip,pins = <6 21 RK_FUNC_1 &pcfg_pull_up_drv_12ma>;
-+		};
-+
-+		sdmmc_pwr: sdmmc-pwr {
-+			rockchip,pins = <7 11 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	touchscreen {
-+		ts_irq_pin: ts-irq-pin {
-+			rockchip,pins = <5 15 RK_FUNC_GPIO &pcfg_pull_none>;
++		emmc_bus8: emmc-bus8 {
++			rockchip,pins = <3 0 RK_FUNC_2 &pcfg_pull_none_12ma>,
++					<3 1 RK_FUNC_2 &pcfg_pull_none_12ma>,
++					<3 2 RK_FUNC_2 &pcfg_pull_none_12ma>,
++					<3 3 RK_FUNC_2 &pcfg_pull_none_12ma>,
++					<3 4 RK_FUNC_2 &pcfg_pull_none_12ma>,
++					<3 5 RK_FUNC_2 &pcfg_pull_none_12ma>,
++					<3 6 RK_FUNC_2 &pcfg_pull_none_12ma>,
++					<3 7 RK_FUNC_2 &pcfg_pull_none_12ma>;
 +		};
 +	};
 +
-+	usb_host {
-+		host0_vbus_drv: host0-vbus-drv {
-+			rockchip,pins = <2 13 RK_FUNC_GPIO &pcfg_pull_none>;
++	gmac {
++		phy_int: phy-int {
++			rockchip,pins = <4 2 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +
-+		host1_vbus_drv: host1-vbus-drv {
-+			rockchip,pins = <2 0 RK_FUNC_GPIO &pcfg_pull_none>;
++		phy_rst: phy-rst {
++			rockchip,pins = <4 8 RK_FUNC_GPIO &pcfg_output_high>;
++		};
++	};
++
++	leds {
++		user_led: user-led {
++			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_output_high>;
 +		};
 +	};
 +
-+	usb_otg {
-+		otg_vbus_drv: otg-vbus-drv {
-+			rockchip,pins = <2 12 RK_FUNC_GPIO &pcfg_pull_none>;
++	pmic {
++		pmic_int: pmic-int {
++			rockchip,pins = <RK_GPIO0 4 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		/* Pin for switching state between sleep and non-sleep state */
++		pmic_sleep: pmic-sleep {
++			rockchip,pins = <RK_GPIO0 0 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +	};
 +};
 +
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	card-detect-delay = <200>;
-+	disable-wp;
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-+	vmmc-supply = <&vdd_io_sd>;
-+	vqmmc-supply = <&vdd_io_sd>;
++&pwm1 {
 +	status = "okay";
 +};
 +
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
++&saradc {
++	status = "okay";
++	vref-supply = <&vdd_1v8_ldo>;
++};
++
++&spi2 {
++	status = "okay";
++
++	serial_flash: m25p80@0 {
++		compatible = "micron,n25q128a13", "jedec,spi-nor";
++		reg = <0x0>;
++		spi-max-frequency = <50000000>;
++		m25p,fast-read;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		status = "okay";
++	};
++};
++
++&tsadc {
++	status = "okay";
++	rockchip,hw-tshut-mode = <0>;
++	rockchip,hw-tshut-polarity = <0>;
++};
++
++&vopb {
 +	status = "okay";
 +};
 +
-+&uart2 {
++&vopb_mmu {
 +	status = "okay";
 +};
 +
-+&usbphy {
++&vopl {
 +	status = "okay";
 +};
 +
-+&usb_host0_ehci {
++&vopl_mmu {
 +	status = "okay";
 +};
 +
-+&usb_host1 {
-+	status = "okay";
-+};
-+
-+&usb_otg {
++&wdt {
 +	status = "okay";
 +};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
