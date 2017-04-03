@@ -1,147 +1,82 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivers/serial: Add driver for Aspeed virtual UART
-Date: Mon, 3 Apr 2017 16:41:03 +0930
-Message-ID: <CACPK8Xd0U9sbWb-ScJ-MR8qwsXwxhP6_mrnEj4AXkGO66X=7kQ@mail.gmail.com>
-References: <20170328054458.29341-1-joel@jms.id.au> <20170328054458.29341-3-joel@jms.id.au>
- <CAHp75VfmbHrPFXO3UFmSciCnVuoB+5vFxy7iOnwVS5YBSPO3+Q@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Add support for the R_CCU on
+ Allwinner H3/A64 SoCs
+Date: Mon, 3 Apr 2017 09:36:40 +0200
+Message-ID: <20170403073640.7l7mar6zjcgytf6z@lukather>
+References: <20170329104246.34204-1-icenowy@aosc.io>
+ <20170402160237.osgt32ugw7cz7ubg@lukather>
+ <alpine.LNX.2.20.1704030029590.823@x220i>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VfmbHrPFXO3UFmSciCnVuoB+5vFxy7iOnwVS5YBSPO3+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tolepy6lgddw5d5l"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE7XQ7DQKGQE3OFI2WA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <alpine.LNX.2.20.1704030029590.823@x220i>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
 
-Thanks for the review. I've incorporatd most of your comments in a v2
-that I'll send out once I've given it a spin on hardware.
+--tolepy6lgddw5d5l
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Sun, Apr 2, 2017 at 10:37 PM, Andy Shevchenko
-<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> +static ssize_t ast_vuart_show_addr(struct device *dev,
->> +               struct device_attribute *attr, char *buf)
->> +{
->> +       struct ast_vuart *vuart = dev_get_drvdata(dev);
->> +       u16 addr;
->> +
->
->> +       addr = (readb(vuart->regs + AST_VUART_ADDRH) << 8) |
->> +               (readb(vuart->regs + AST_VUART_ADDRL));
->
-> It looks like you have register shift 2 bits and byte accessors. We
-> have some helpers for that (serial_in() / serial_out() or alike).
+On Mon, Apr 03, 2017 at 12:32:08AM +0800, Icenowy Zheng wrote:
+> 
+> 
+> On Sun, 2 Apr 2017, Maxime Ripard wrote:
+> 
+> > Hi,
+> > 
+> > On Wed, Mar 29, 2017 at 06:42:41PM +0800, Icenowy Zheng wrote:
+> > > Allwinner SoCs after sun6i-a31 nearly all have a R_CCU in PRCM part.
+> > > (V3s and R40 do not have it, as they have even no PRCM)
+> > > 
+> > > This patch adds support for the ones on H3/A64.
+> > > 
+> > > Some clock/reset values are reserved for easier extending the support to
+> > > A31/A23, but for this I think some changes to the PRCM MFD should be made,
+> > > see [1] (Although this is only a sketch).
+> > > 
+> > > The r_pio device node is also added for A64, as the driver is already
+> > > merged, and its depends (r_ccu) is now met.
+> > > 
+> > > [1] https://github.com/wens/linux/commits/sunxi-ng-prcm
+> > 
+> > It looks good now, thanks.
+> > 
+> > Beside from the minor fix you've mentionned, please don't use the
+> > defined IDs (yet) in your DT patches (3 to 5).
+> 
+> Thanks! (I think it's the same question we meet when merging V3s patchset,
+> right? :-) )
 
-Thanks for the pointer. I took a look at this. It looks like I need to
-define my own accessor?
+Exactly. When doing that kind of conversion, in order to not break the
+compilation, we would take the DT patches through the clock
+tree.
 
-I don't think it's worth it for the one read and one write we have in
-this driver.
+However, this doesn't work very well when we also have DT patches that
+conflicts with those clock conversion ones that would need to get
+through arm-soc.
 
->
->> +
->> +       return snprintf(buf, PAGE_SIZE - 1, "0x%x\n", addr);
->> +}
->> +
+And in this case, this is even more complex since you have the H3/H5
+split patches that would need to go through yet another branch.
 
->> +static int ast_vuart_probe(struct platform_device *pdev)
->> +{
->> +       struct uart_8250_port port;
->> +       struct resource resource;
->> +       struct ast_vuart *vuart;
->> +       struct device_node *np;
->> +       u32 clk, prop;
->> +       int rc;
->> +
->
->> +       np = pdev->dev.of_node;
->
-> And if np == NULL?
+Not using the defines for now, and sending a fix later fixes all these
+issues.
 
-The driver will fail to probe due to the of_property_read_u32 calls
-returning an error.
+Maxime
 
->> +       /* If current-speed was set, then try not to change it. */
->> +       if (of_property_read_u32(np, "current-speed", &prop) == 0)
->> +               port.port.custom_divisor = clk / (16 * prop);
->> +
->> +       /* Check for shifted address mapping */
->> +       if (of_property_read_u32(np, "reg-offset", &prop) == 0)
->> +               port.port.mapbase += prop;
->> +
->> +       /* Check for registers offset within the devices address range */
->> +       if (of_property_read_u32(np, "reg-shift", &prop) == 0)
->> +               port.port.regshift = prop;
->> +
->> +       /* Check for fifo size */
->> +       if (of_property_read_u32(np, "fifo-size", &prop) == 0)
->> +               port.port.fifosize = prop;
->
-> Perhaps you need other way around, check for error and supply a
-> default in such case.
-
-We leave port.fifosize unmodified (set to zero) if there is no valid
-device tree property. As the property is optional, it's not an error
-if it's not present.
-
->> +
->> +       /* Check for a fixed line number */
->> +       rc = of_alias_get_id(np, "serial");
->> +       if (rc >= 0)
->> +               port.port.line = rc;
->> +
->> +       port.port.irq = irq_of_parse_and_map(np, 0);
->
->> +       port.port.irqflags = IRQF_SHARED;
->
-> This is set by core. You already supplied correct flag for that below.
-
-By setting UPF_SHARE_IRQ the core does correctly requset_irq with
-IRQF_SHARED set. However, it does not store this in in port->irqflags,
-so other tests in eg. serial8250_do_startup that test for IRQF_SHARED
-will fail. This is a bug that we hit the other day.
-
-Would you like a patch to the core that either tests for
-UPF_SHARE_IRQ, or set IRQF_SHARED early on?
-
->
->> +       port.port.iotype = UPIO_MEM;
->> +       if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
->
-> You hide an error code from of_property_read_u32() here. Why?
-
-The property is optional, so if it doesn't exist we want to continue
-without error.
-
-We return EINVAL if the property is invalid, as the device tree code
-will give us ENODATA or EOVERFLOW, which I don't think is informative
-for a driver to return.
-
-> And if there is an error you are continuing with what? 0?
-
-we continue with port.port.iotype = UPIO_MEM from above.
-
->> +               switch (prop) {
->> +               case 1:
->> +                       port.port.iotype = UPIO_MEM;
->> +                       break;
->> +               case 4:
->> +                       port.port.iotype = of_device_is_big_endian(np) ?
->> +                                      UPIO_MEM32BE : UPIO_MEM32;
->> +                       break;
->> +               default:
->> +                       dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
->> +                                prop);
->> +                       rc = -EINVAL;
->> +                       goto err_clk_disable;
->> +               }
->> +       }
-
-Cheers,
-
-Joel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--tolepy6lgddw5d5l--
