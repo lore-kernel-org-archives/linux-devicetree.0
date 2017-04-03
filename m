@@ -1,69 +1,91 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/3] device property: Move FW type specific functionality
- to FW specific files
-Date: Fri, 31 Mar 2017 16:20:22 +0300
-Message-ID: <f356b466-38b9-83b7-bfb7-1e64f686f212@linux.intel.com>
-References: <1490353432-12017-1-git-send-email-sakari.ailus@linux.intel.com>
- <20170327113100.GZ2957@lahna.fi.intel.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: uniphier: add input-delay properties to
+ Cadence eMMC node
+Date: Mon, 3 Apr 2017 15:28:43 +0900
+Message-ID: <CAK7LNARtKO-a7tX5U2NGAw707uSLcfxABo1yt44QQfE2go7EmQ@mail.gmail.com>
+References: <1490934045-18874-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170327113100.GZ2957-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1490934045-18874-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Piotr Sroka <piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mika,
+MTD developers,
+Please ignore this patch.
 
-Thanks for the review again!
+I accidentally sent this patch to a wrong ML.
+Sorry for the noise.
 
-Mika Westerberg wrote:
-> On Fri, Mar 24, 2017 at 01:03:50PM +0200, Sakari Ailus wrote:
->> +static int acpi_fwnode_property_read_int_array(
->
-> This is really ugly way to split arguments into multiple lines IMHO.
->
->> +	struct fwnode_handle *fwnode, const char *propname,
->> +	unsigned int elem_size, void *val, size_t nval)
->
->
-> I would much more see something like:
->
-> static int
-> acpi_fwnode_property_read_int_array(struct fwnode_handle *fwnode,
-> 	const char *propname, unsigned int elem_size, void *val, size_t nval)
->
-> or even
->
-> static int
-> acpi_fwnode_property_read_int_array(struct fwnode_handle *fwnode,
-> 				    const char *propname,
-> 				    unsigned int elem_size,
-> 				    void *val, size_t nval)
->
-> ditto for all occurences.
->
-> Other than that this patch looks reasonable to me.
 
-I don't think CodingStyle defines any particular points where to wrap 
-the lines. Different conventions seem to exist:
 
-$ git grep '^\(static\|const\|inline\|int\|struct\|u\[0-9\).*($' |wc -l
-3106
 
-Not all of the occurrences found exhibit such indentation but then again 
-the above does not catch all of those that do either.
+2017-03-31 13:20 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> Since commit a04e2b383401 ("mmc: sdhci-cadence: Update PHY delay
+> configuration"), PHY parameters must be specified by DT.
+>
+> The hard-coded settings have been converted as follows:
+> - SDHCI_CDNS_PHY_DLY_SD_DEFAULT -> cdns,phy-input-delay-legacy
+> - SDHCI_CDNS_PHY_DLY_EMMC_SDR   -> cdns,phy-input-delay-mmc-highspeed
+> - SDHCI_CDNS_PHY_DLY_EMMC_DDR   -> cdns,phy-input-delay-mmc-ddr
+>
+> The following have not been moved:
+> - SDHCI_CDNS_PHY_DLY_SD_HS
+>    this is unneeded in the eMMC configuration
+> - SDHCI_CDNS_PHY_DLY_EMMC_LEGACY
+>    this is never enabled by the driver as it is covered by
+>    SDHCI_CDNS_PHY_DLY_SD_DEFAULT
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+>
+>  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 3 +++
+>  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 3 +++
+>  2 files changed, 6 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+> index 5dc5124..b6ebdc9 100644
+> --- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+> @@ -310,6 +310,9 @@
+>                         bus-width = <8>;
+>                         mmc-ddr-1_8v;
+>                         mmc-hs200-1_8v;
+> +                       cdns,phy-input-delay-legacy = <4>;
+> +                       cdns,phy-input-delay-mmc-highspeed = <2>;
+> +                       cdns,phy-input-delay-mmc-ddr = <3>;
+>                 };
+>
+>                 usb0: usb@5a800100 {
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+> index 6c9a72d..0ab6c2e 100644
+> --- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+> @@ -394,6 +394,9 @@
+>                         bus-width = <8>;
+>                         mmc-ddr-1_8v;
+>                         mmc-hs200-1_8v;
+> +                       cdns,phy-input-delay-legacy = <4>;
+> +                       cdns,phy-input-delay-mmc-highspeed = <2>;
+> +                       cdns,phy-input-delay-mmc-ddr = <3>;
+>                 };
+>
+>                 sd: sdhc@5a400000 {
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-I can change that if you insist but I'm telling you that it wouldn't be 
-alone in the kernel. :-)
+
 
 -- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
