@@ -1,88 +1,44 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v3 1/7] mfd: Add Device Tree bindings document for
- retu/tahvo ASIC chips
-Date: Mon, 3 Apr 2017 11:40:23 -0400
-Message-ID: <8e411455-3ed1-1de6-69f7-4854a1a823b0@osg.samsung.com>
-References: <20170401071854.23198-1-javier@osg.samsung.com>
- <20170401071854.23198-2-javier@osg.samsung.com>
- <20170403111301.52hm4wsplimviqso@dell>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 4/5] dt-bindings: soc/fsl: Update reserved memory
+ binding for QBMan
+Date: Mon, 3 Apr 2017 10:42:29 -0500
+Message-ID: <20170403154229.mf63zeiwv5naxyrr@rob-hp-laptop>
+References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com>
+ <1490822037-6752-5-git-send-email-roy.pledge@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170403111301.52hm4wsplimviqso@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1490822037-6752-5-git-send-email-roy.pledge@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roy Pledge <roy.pledge@nxp.com>
+Cc: devicetree@vger.kernel.org, madalin.bucur@nxp.com, robin.murphy@arm.com, oss@buserror.net, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
+On Wed, Mar 29, 2017 at 05:13:56PM -0400, Roy Pledge wrote:
+> Updates the QMan and BMan device tree bindings for reserved memory
+> nodes. This makes the reserved memory allocation compatiable with
 
-Thanks a lot for your feedback.
+s/compatiable/compatible/
 
-On 04/03/2017 07:13 AM, Lee Jones wrote:
-> On Sat, 01 Apr 2017, Javier Martinez Canillas wrote:
+> the shared-dma-pool usage.
+
+This change is not backwards compatible. Please state that and explain 
+why that is okay. If PPC needs to not change, then the old strings and 
+properties should remain, but deprecated.
+
 > 
->> There are Device Tree source files defining a device node for the
->> retu/tahvo I2C chip, but there isn't a DT binding document for it.
->>
->> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> ---
->>
->> Changes in v3: None
->> Changes in v2: None
->>
->>  Documentation/devicetree/bindings/mfd/retu.txt | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/retu.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/retu.txt b/Documentation/devicetree/bindings/mfd/retu.txt
->> new file mode 100644
->> index 000000000000..2309e599a731
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/retu.txt
->> @@ -0,0 +1,19 @@
->> +* Device tree bindings for Nokia Retu and Tahvo multi-function device
->> +
->> +Retu and Tahvo are a multi-function devices found on Nokia Internet
->> +Tablets (770, N800 and N810).
-> 
-> More information please.  What functions to they serve?
->
-
-I'm not really familiar with these drivers, I'm just doing this as a part
-of the bigger work to fix the I2C core to report a proper OF modaliases.
-
-So I took the information I could find in the driver Kconfig and headers,
-but I'll see if I can find more information in the driver or if there is
-documentation about these online.
- 
->> +Required properties:
->> +- compatible:		"nokia,retu-mfd" or "nokia,tahvo-mfd"
->> +- reg:			Specifies the I2C slave address of the ASIC chip
->> +
->> +Example:
->> +
->> +i2c0 {
->> +	retu_mfd: retu@1 {
-> 
-> Please avoid the term MFD at all times when using Device Tree.  DT is
-> meant to be OS agnostic and MFD is a Linuxisum.
->
-
-Yes, sorry. I just copied the DT snippet from a DTS that used this, I'll
-remove it on the next version.
-
->> +		compatible = "nokia,retu-mfd";
->> +		interrupt-parent = <&gpio4>;
->> +		interrupts = <12 IRQ_TYPE_EDGE_RISING>;
->> +		reg = <0x1>;
->> +	};
->> +};
-> 
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+> Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/soc/fsl/bman.txt | 10 +++++-----
+>  Documentation/devicetree/bindings/soc/fsl/qman.txt | 16 +++++++++-------
+>  2 files changed, 14 insertions(+), 12 deletions(-)
