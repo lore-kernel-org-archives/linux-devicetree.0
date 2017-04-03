@@ -1,62 +1,34 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC v4 07/10] dt-bindings: net: add binding for QCA7000
- UART
-Date: Mon, 3 Apr 2017 08:23:23 -0500
-Message-ID: <20170403132323.vugelfs2pz3p5p6h@rob-hp-laptop>
-References: <1490621848-24828-1-git-send-email-stefan.wahren@i2se.com>
- <1490621848-24828-8-git-send-email-stefan.wahren@i2se.com>
- <CAL_Jsq+gxS4u+b+C_eWeguFR0AFKuq8Hhe9Xo_5B_5w1hxvzEg@mail.gmail.com>
- <9a094176-ebe7-d906-ca9c-967285e53b07@i2se.com>
+Subject: Re: [PATCH 1/2] drm/sun4i: Add display backend
+ interrupt to device tree binding
+Date: Mon, 3 Apr 2017 08:24:34 -0500
+Message-ID: <20170403132434.v6nvj6hgaxnwmsej@rob-hp-laptop>
+References: <20170327143847.16259-1-wens@csie.org>
+ <20170327143847.16259-2-wens@csie.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBE42RHDQKGQEJAX5YQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <9a094176-ebe7-d906-ca9c-967285e53b07-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170327143847.16259-2-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 06:18:03PM +0200, Stefan Wahren wrote:
-> Am 27.03.2017 um 22:30 schrieb Rob Herring:
-> > On Mon, Mar 27, 2017 at 8:37 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
-> >> This is the serdev binding for the QCA7000 UART driver (Ethernet over UART).
-> >>
-> >> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> >> ---
-> >>
-> >> According to this binding are still some questions:
-> >>
-> >> Where should be the optional hardware flow control defined (at master or slave side)?
-> > Probably should be in the slave side. We already have uart-has-rtscts
-> > and rts/cts-gpios for the UART. Those mean we have RTS/CTS, but not
-> > necessarily that we want to enable them.
-> >
-> > In many cases, the driver may know what it needs.
+On Mon, Mar 27, 2017 at 10:38:46PM +0800, Chen-Yu Tsai wrote:
+> The display backend has an interrupt line. Add it to the device tree
+> binding.
 > 
-> Like all the other UART settings the hardware flow control can be
-> configured in the QCA7000 firmware and the driver can't detect it.
-> 
-> Property suggestion for the slave side:
-> 
-> use-rtscts
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Okay.
-
-> >> Is it okay to have two bindings (qca-qca7000-spi and qca-qca7000-uart) or should they be merged?
-> > Are they mutually-exclusive or both are used at the same time?
-> 
-> They are mutually-exclusive because they use the same pins.
-> 
-> >  What
-> > are the dependencies between the interfaces?
-> 
-> Except they uses the same pins of the QCA7000, i can't see any dependency.
-
-I think they should be a single doc.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
