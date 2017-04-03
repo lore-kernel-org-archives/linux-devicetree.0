@@ -1,41 +1,28 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] firmware: Add coreboot device tree binding
- documentation
-Date: Mon, 3 Apr 2017 09:32:42 -0500
-Message-ID: <20170403143242.5f7pqbawk5vcxe5j@rob-hp-laptop>
-References: <1490717489-19218-1-git-send-email-thierry.escande@collabora.com>
- <1490717489-19218-5-git-send-email-thierry.escande@collabora.com>
+Subject: Re: [PATCH 1/2] Documentation: dt: Update ti,emif bindings
+Date: Mon, 3 Apr 2017 09:34:59 -0500
+Message-ID: <20170403143459.ligq2bphu3n6zvkl@rob-hp-laptop>
+References: <20170328205511.21166-1-d-gerlach@ti.com>
+ <20170328205511.21166-2-d-gerlach@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1490717489-19218-5-git-send-email-thierry.escande-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <20170328205511.21166-2-d-gerlach-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Escande <thierry.escande-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 06:11:28PM +0200, Thierry Escande wrote:
-> From: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Tue, Mar 28, 2017 at 03:55:10PM -0500, Dave Gerlach wrote:
+> Update the Texas Instruments EMIF binding document to include the device
+> tree bindings for ti,emif-am3352 and ti,emif-am4372 which are used by
+> the ti-emif-sram driver to provide low-level PM functionality.
 > 
-> This patch adds documentation describing a device tree binding for the
-> coreboot firmware. It is meant to be dynamically added during boot and
-> contains address definitions for the coreboot table (a list of
-> variable-sized descriptors providing information about various compile-
-> and run-time generated firmware parameters) and the CBMEM area (the
-> structure containing most run-time resident memory regions set up by
-> coreboot).
-> 
-> These definitions allow kernel drivers to easily access data contained
-> in and pointed to by these regions (such as coreboot's in-memory log).
-> (An example implementation can be seen in the following patch)
-> 
-> Signed-off-by: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Thierry Escande <thierry.escande-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 > ---
->  .../devicetree/bindings/firmware/coreboot.txt      | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/coreboot.txt
+>  .../devicetree/bindings/memory-controllers/ti/emif.txt | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
