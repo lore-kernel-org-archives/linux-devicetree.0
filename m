@@ -1,13 +1,18 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 0/7] Add support for triggered buffer mode to STM32 ADC
-Date: Mon, 3 Apr 2017 16:53:37 +0200
-Message-ID: <63602dad-7640-1112-42aa-c4219d490041@st.com>
-References: <1485440915-30119-1-git-send-email-fabrice.gasnier@st.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: Re: [PATCH V4 1/2] dt-bindings: thermal: add support for Broadcom's
+ Northstar thermal
+Date: Mon, 3 Apr 2017 10:54:30 -0400
+Message-ID: <CAC3K-4q4Cfo5Nzpxf3v_MHBJgPFxny5PCEEiBZM-9TBStGS-GQ@mail.gmail.com>
+References: <20170331073132.21457-2-zajec5@gmail.com>
+ <20170331201124.656-1-zajec5@gmail.com>
+ <20170401195136.GD28514@localhost.localdomain>
+ <6dd907e4-c213-3174-8613-99427e6ea0e9@gmail.com>
+ <CAC3K-4r7xGoSSBwHKZjrS27jMFr_RYp1n4nRo2aAHzVAVbVi_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485440915-30119-1-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <CAC3K-4r7xGoSSBwHKZjrS27jMFr_RYp1n4nRo2aAHzVAVbVi_A@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,46 +22,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, benjamin.gaignard@st.com
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-rpi-kernel@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On 01/26/2017 03:28 PM, Fabrice Gasnier wrote:
-> The following patches add support for triggered buffer mode.
-> These are based on top of "Add PWM and IIO timer drivers for STM32"
-> series. Reference:
-> https://lkml.org/lkml/2017/1/20/116
->
-> STM32 ADC, can use either interrupts or DMA to collect data.
-> Either timer trigger output (TRGO) or PWM can be used as trigger source.
-> This patchset has been tested on STM32F429 eval board.
->
-...
-> Fabrice Gasnier (7):
->   iio: adc: stm32: add support for triggered buffer mode
->   iio: adc: stm32: Enable use of stm32 timer triggers
->   iio: adc: stm32: add trigger polarity extended attribute
->   Documentation: dt: iio: stm32-adc: optional dma support
->   iio: adc: stm32: add optional dma support
->   ARM: dts: stm32: Enable dma by default on stm32f4 adc
->   ARM: dts: stm32: Enable pwm1 and pwm3 on stm32f429i-eval
-
-Patches 6 & 7 (DT) applied on stm32-dt-for-v4.12
-
-Regards
-Alex
-
->
->  Documentation/ABI/testing/sysfs-bus-iio-adc-stm32  |  18 +
->  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   7 +
->  arch/arm/boot/dts/stm32429i-eval.dts               |  28 +
->  arch/arm/boot/dts/stm32f429.dtsi                   |   6 +
->  drivers/iio/adc/Kconfig                            |   5 +
->  drivers/iio/adc/stm32-adc-core.c                   |   1 +
->  drivers/iio/adc/stm32-adc-core.h                   |   2 +
->  drivers/iio/adc/stm32-adc.c                        | 633 ++++++++++++++++++++-
->  8 files changed, 676 insertions(+), 24 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-stm32
->
+T24gU3VuLCBBcHIgMiwgMjAxNyBhdCAxMTowNyBQTSwgSm9uIE1hc29uIDxqb24ubWFzb25AYnJv
+YWRjb20uY29tPiB3cm90ZToKPiBPbiBTYXQsIEFwciAxLCAyMDE3IGF0IDU6NTAgUE0sIFJhZmHF
+giBNacWCZWNraSA8emFqZWM1QGdtYWlsLmNvbT4gd3JvdGU6Cj4+IE9uIDA0LzAxLzIwMTcgMDk6
+NTEgUE0sIEVkdWFyZG8gVmFsZW50aW4gd3JvdGU6Cj4+Pgo+Pj4gT24gRnJpLCBNYXIgMzEsIDIw
+MTcgYXQgMTA6MTE6MjNQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+Pj4+Cj4+Pj4g
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+Pj4+Cj4+Pj4gVGhpcyBj
+b21taXQgZG9jdW1lbnRzIGJpbmRpbmcgZm9yIHRoZXJtYWwgdXNlZCBpbiBOb3J0aHN0YXIgZmFt
+aWx5IFNvQ3MuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFs
+QG1pbGVja2kucGw+Cj4+Pj4gLS0tCj4+Pj4gVjM6IEFkZCB0aGVybWFsLXpvbmVzIHRvIHRoZSBl
+eGFtcGxlCj4+Pj4gICAgIFJvYjogQmVjYXVzZSBvZiB0aGlzIHVwZGF0ZSwgSSBkaWRuJ3QgaW5j
+bHVkZSBBY2tlZC1ieSBJIGdvdCBmb3IgVjIKPj4+PiAtLS0KPj4+PiAgLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvdGhlcm1hbC9icmNtLG5zLXRoZXJtYWwgICAgfCAyNgo+Pj4+ICsrKysrKysrKysr
+KysrKysrKysrKysKPj4+PiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKPj4+PiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0Cj4+Pj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3RoZXJtYWwvYnJjbSxucy10aGVybWFsCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvYnJjbSxucy10aGVybWFsCj4+Pj4gYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9icmNtLG5zLXRoZXJtYWwK
+Pj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uYzU2MWM3
+MzQ5ZjE3Cj4+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy90aGVybWFsL2JyY20sbnMtdGhlcm1hbAo+Pj4+IEBAIC0wLDAgKzEsMjYg
+QEAKPj4+PiArKiBCcm9hZGNvbSBOb3J0aHN0YXIgVGhlcm1hbAo+Pj4+ICsKPj4+PiArVGhpcyBi
+aW5kaW5nIGRlc2NyaWJlcyB0aGVybWFsIHNlbnNvciB0aGF0IGlzIHBhcnQgb2YgTm9ydGhzdGFy
+J3MgRE1VCj4+Pj4gKERldmljZQo+Pj4+ICtNYW5hZ2VtZW50IFVuaXQpLgo+Pj4+ICsKPj4+PiAr
+UmVxdWlyZWQgcHJvcGVydGllczoKPj4+PiArLSBjb21wYXRpYmxlIDogTXVzdCBiZSAiYnJjbSxu
+cy10aGVybWFsIgo+Pj4+ICstIHJlZyA6IGlvbWVtIGFkZHJlc3MgcmFuZ2Ugb2YgUFZUTU9OIHJl
+Z2lzdGVycwo+Pj4+ICstICN0aGVybWFsLXNlbnNvci1jZWxscyA6IFNob3VsZCBiZSA8MD4KPj4+
+PiArCj4+Pj4gK0V4YW1wbGU6Cj4+Pj4gKwo+Pj4+ICt0aGVybWFsOiB0aGVybWFsQDE4MDBjMmMw
+IHsKPj4+PiArICAgICAgIGNvbXBhdGlibGUgPSAiYnJjbSxucy10aGVybWFsIjsKPj4+PiArICAg
+ICAgIHJlZyA9IDwweDE4MDBjMmMwIDB4MTA+Owo+Pj4+ICsgICAgICAgI3RoZXJtYWwtc2Vuc29y
+LWNlbGxzID0gPDA+Owo+Pj4+ICt9Owo+Pj4+ICsKPj4+PiArdGhlcm1hbC16b25lcyB7Cj4+Pj4g
+KyAgICAgICBjcHVfdGhlcm1hbDogY3B1LXRoZXJtYWwgewo+Pj4+ICsgICAgICAgICAgICAgICBw
+b2xsaW5nLWRlbGF5LXBhc3NpdmUgPSA8MD47Cj4+Pj4gKyAgICAgICAgICAgICAgIHBvbGxpbmct
+ZGVsYXkgPSA8MTAwMD47Cj4+Pj4gKyAgICAgICAgICAgICAgIGNvZWZmaWNpZW50cyA9IDwoLTU1
+NikgNDE4MDAwPjsKPj4+PiArICAgICAgICAgICAgICAgdGhlcm1hbC1zZW5zb3JzID0gPCZ0aGVy
+bWFsPjsKPj4+Cj4+Pgo+Pj4gWW91IG5lZWQgdG8gZGVmaW5lIHRyaXBzIGFuZCBjb29saW5nIGRl
+dmljZXMgaGVyZS4gT3RoZXJ3aXNlLCBtYWtlcwo+Pj4gbGl0dGxlIHNlbnNlIHRvIGhhdmUgdGhp
+cyBkZXZpY2UgaW4gdGhlcm1hbCBzdWJzeXN0ZW0uIEhlcmUgaXMgYW4KPj4+IGV4YW1wbGUgb2Yg
+bWluaW1hbCBzZXQ6Cj4+Pgo+Pj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
+L2tlcm5lbC9naXQvZXZhbGVudGkvbGludXgtc29jLXRoZXJtYWwuZ2l0L2NvbW1pdC8/aD1saW51
+cyZpZD0xZTJhYzk4MjFkZTZhODVkM2U4MzU4ZjIzODQzNjcwOGQxZDQ2ODY5Cj4+Pgo+Pj4gVGhl
+IGFib3ZlIGhhcyBubyBwYXNzaXZlIGFjdGlvbi4gSXQgaXMganVzdCBnb25uYSBzaHV0ZG93biB0
+aGUgc3lzdGVtIGlmCj4+PiB0ZW1wZXJhdHVyZSBjcm9zc2VzIGEgdGhyZXNob2xkLgo+Pj4KPj4+
+IEJ1dCwgYSB0eXBpY2FsIGNvb2xpbmcgZGV2aWNlIHdvdWxkIGJlIENQVSBmcmVxdWVuY3kgdGhy
+b3R0bGluZy4gRG8geW91Cj4+PiBoYXZlCj4+PiB0aGF0IHVwIGFuZCBydW5uaW5nIGluIHlvdXIg
+cm91dGVycz8KPj4KPj4KPj4gSSBkb24ndCBoYXZlIENQVSBmcmVxIHRocm90dGxpbmcsIHNvIHNo
+dXRkb3duIHdpbGwgYmUgdGhlIG9ubHkgc29sdXRpb24gZm9yCj4+IGNyaXRpY2FsIHRlbXAgcmln
+aHQgbm93Lgo+Pgo+PiBJIGtub3cgSSBzaG91bGQgaGF2ZSBhdCBsZWFzdCBhIHRyaXAgZm9yIGNy
+aXRpY2FsIHRlbXBlcmF0dXJlLCBidXQgdGhlCj4+IHByb2JsZW0KPj4gaXMgSSBkb24ndCBrbm93
+IHdoYXQgdmFsdWUgdG8gdXNlLiBUaGVyZSBpc24ndCBhbnkgaW5mbyBhYm91dCB0aGlzIGluIHB1
+YmxpYwo+PiBkYXRhc2hlZXRzLiBCcm9hZGNvbSdzIFNESyBkb2Vzbid0IG1lbnRpb24gaXQuIFZl
+bmRvcnMgc2hhcmUgb25seSB0aGUgbWF4Cj4+IGVudmlyb25tZW50IHRlbXAsIG5vdCB0aGUgbWF4
+IENQVSB0ZW1wLgo+Pgo+PiBTbyBmb3Igbm93IEkgb25seSBtZWFudCB0byBwcm92aWRlIHVzZXIg
+c3BhY2UgYWNjZXNzIHRvIHJlYWRpbmcgY3VycmVudCBDUFUKPj4gdGVtcGVyYXR1cmUuIEkgY291
+bGQgZG8gc29tZSBzdHJlc3MgdGVzdHMgYW5kIGFzayBvdGhlciB1c2VycyB0byBkbyBpdCBhcwo+
+PiB3ZWxsLgo+Pgo+PiBPciBtYXliZSBJIGNvdWxkIGp1c3QgcHV0IGluIERvY3VtZW50YXRpb24g
+c29tZSByb3VuZCB2YWx1ZSB0aGF0IG1ha2VzIG1vcmUKPj4gb3IKPj4gbGVzcyBzZW5zZSBhbmQg
+dGhlbiB3b3JrIG9uIGEgcHJvcGVyIGNvbnRlbnQgb2YgcmVhbCBEVFMgZmlsZXM/Cj4+Cj4+IFVu
+bGVzcyB3ZSBjYW4gZ2V0IHNvbWUgaGludCBmcm9tIEJyb2FkY29tIHBlb3BsZS4gSm9uPyBGbG9y
+aWFuPyBBbnlvbmU/Cj4KPiBJJ2xsIHBva2UgYXJvdW5kIGFuZCBzZWUgaWYgSSBjYW4gZmluZCBh
+IGRhdGFzaGVldCBmb3IgTlMvTlNQLiAgV29yc3QKPiBjYXNlLCBJIGNhbiBhc2sgb25lIG9mIHRo
+ZSBIVyBlbmdpbmVlcnMgZm9yIE5TUCwgYW5kIHdlIGNhbiB1c2UgdGhlCj4gc2FtZSB2YWx1ZSBm
+b3IgTlMuCgpJbiB0aGUgTlMgZG9jdW1lbnRhdGlvbiwgdW5kZXIgIkFic29sdXRlIE1heGltdW0g
+UmF0aW5ncyI6CgpUaGUgIk1heGltdW0gSnVuY3Rpb24gVGVtcGVyYXR1cmUiIGlzIDEyNSBDClRo
+ZSAiQ29tbWVyY2lhbCBBbWJpZW50IFRlbXBlcmF0dXJlIChPcGVyYXRpbmcpIiByYW5nZSBpcyAw
+IHRvIDc1IEMKVGhlICJJbmR1c3RyaWFsICBBbWJpZW50IFRlbXBlcmF0dXJlIChPcGVyYXRpbmcp
+IiByYW5nZSBpcyAtNDAgdG8gODUgQwpUaGUgIlN0b3JhZ2UgVGVtcGVyYXR1cmUiIHJhbmdlIGlz
+IC00MCB0byAxMjUgQwoKSW4gdGhlIE5TUCBkb2N1bWVudGF0aW9uLCB1bmRlciAiQWJzb2x1dGUg
+TWF4aW11bSBSYXRpbmdzIjoKClRoZSAiTWF4aW11bSBKdW5jdGlvbiBUZW1wZXJhdHVyZSIgaXMg
+MTEwIEMKVGhlICJDb21tZXJjaWFsIEFtYmllbnQgVGVtcGVyYXR1cmUgKE9wZXJhdGluZykiIHJh
+bmdlIGlzIDAgdG8gNzUgQwpUaGUgIkluZHVzdHJpYWwgIEFtYmllbnQgVGVtcGVyYXR1cmUgKE9w
+ZXJhdGluZykiIHJhbmdlIGlzIC00MCB0byA4NSBDClRoZSAiU3RvcmFnZSBUZW1wZXJhdHVyZSIg
+cmFuZ2UgaXMgLTQwIHRvIDEyNSBDCgpJIGJlbGlldmUgdGhlIGZpcnN0IG9uZSBpcyB0aGUgbnVt
+YmVyIHlvdSBhcmUgbG9va2luZyBmb3IuCgpUaGFua3MsCkpvbgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
