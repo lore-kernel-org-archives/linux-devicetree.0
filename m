@@ -1,58 +1,62 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/4] Introduce STM32F7 Clocks
-Date: Mon, 3 Apr 2017 16:42:44 +0200
-Message-ID: <c7042f7e-b4eb-1fcc-200c-b76b50e82424@st.com>
-References: <1483711165-17149-1-git-send-email-gabriel.fernandez@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: mtd: Add Cavium SOCs NAND bindings
+Date: Mon, 3 Apr 2017 09:47:05 -0500
+Message-ID: <CAL_JsqJ2VgF_Lp-vpdn6VL71K4z6Mu7DWYSaLZ_N0U+jaTuPsQ@mail.gmail.com>
+References: <20170327160524.29019-1-jglauber@cavium.com> <20170327160524.29019-2-jglauber@cavium.com>
+ <20170403132937.z5mxksabo6kmo4jy@rob-hp-laptop> <20170403143840.GA23698@hardcore>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483711165-17149-1-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gabriel.fernandez@st.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
-Cc: devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, ludovic.barre@st.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170403143840.GA23698@hardcore>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jan Glauber <jan.glauber-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-hi
+On Mon, Apr 3, 2017 at 9:38 AM, Jan Glauber
+<jan.glauber-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Apr 03, 2017 at 08:29:37AM -0500, Rob Herring wrote:
+>> On Mon, Mar 27, 2017 at 06:05:23PM +0200, Jan Glauber wrote:
+>> > Add device tree binding description for Cavium SOC nand flash controller.
+>> >
+>> > CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> > CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> >
+>> > Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/mtd/cavium_nand.txt        | 32 ++++++++++++++++++++++
+>> >  1 file changed, 32 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/mtd/cavium_nand.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/mtd/cavium_nand.txt b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
+>> > new file mode 100644
+>> > index 0000000..4698d1f
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
+>> > @@ -0,0 +1,32 @@
+>> > +* Cavium NAND controller
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible:              should be "cavium,cn8xxx-nand"
+>>
+>> Don't use wildcards in compatible strings. For PCI devices, this should
+>> be based on the PCI vendor and device IDs.
+>>
+>
+> Is there a syntax for compatible PCI devices? I'm afraid I've not seen
+> this yet, can you give an example?
 
-On 01/06/2017 02:59 PM, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->
-> This patch-set introduces STM32F7 clocks.
-> F7 Clocks are very similar as F4.
->
-> We  have some new clocks:
-> - hdmi-cec
-> - spdif-rx
-> - lptim1
-> - sai2
->
-> Uarts & I2cs can have different clock sources.
->
->
->
-> Gabriel Fernandez (4):
->   clk: stm32f7: Add stm32f7 clock DT bindings for STM32F746 boards
->   clk: stm32f7: Introduce stm32f7 clocks for STM32F746 boards
->   ARM: dts: stm32: stm32f7: Enable clocks for STM32F746 boards
->   dt-bindings: mfd: Add STM32F7 RCC numeric constants into DT include
->     file
->
->  .../devicetree/bindings/clock/st,stm32-rcc.txt     |  20 ++
->  arch/arm/boot/dts/stm32f746.dtsi                   |  80 ++++--
->  drivers/clk/clk-stm32f4.c                          | 277 ++++++++++++++++++++-
->  include/dt-bindings/clock/stm32fx-clock.h          |  20 ++
->  include/dt-bindings/mfd/stm32f7-rcc.h              | 112 +++++++++
->  5 files changed, 476 insertions(+), 33 deletions(-)
->  create mode 100644 include/dt-bindings/mfd/stm32f7-rcc.h
->
+www.o3one.org/hwdocs/openfirmware/pci_supplement_2_1.pdf
 
-Patchs 3 & 4 applied on stm32-dt-for-v4.12
+> Most of Cavium's devices are PCI devices, we just added the compatible
+> as convenience and usually it is not parsed.
+
+Linux doesn't parse it, but it's still required in the binding.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
