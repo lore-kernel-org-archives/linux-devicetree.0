@@ -1,98 +1,37 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: iio: stm32-dac: Add support for STM32
- DAC
-Date: Mon, 3 Apr 2017 11:42:40 -0500
-Message-ID: <20170403164240.hw4wza7y3s5faivb@rob-hp-laptop>
-References: <1490960707-22422-1-git-send-email-fabrice.gasnier@st.com>
- <1490960707-22422-2-git-send-email-fabrice.gasnier@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv6 05/10] s5p-cec.txt: document the HDMI controller phandle
+Date: Mon, 3 Apr 2017 11:43:21 -0500
+Message-ID: <20170403164321.f4mhego5onxy3t2l@rob-hp-laptop>
+References: <20170331122036.55706-1-hverkuil@xs4all.nl>
+ <20170331122036.55706-6-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1490960707-22422-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <20170331122036.55706-6-hverkuil@xs4all.nl>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Patrice.chotard@st.com, Krzysztof Kozlowski <krzk@kernel.org>, Russell King <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 01:45:04PM +0200, Fabrice Gasnier wrote:
-> Document STMicroelectronics STM32 DAC (digital-to-analog converter).
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/dac/st,stm32-dac.txt   | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
-> new file mode 100644
-> index 0000000..1981983
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
-> @@ -0,0 +1,56 @@
-> +STMicroelectronics STM32 DAC
-> +
-> +The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
-> +can be configured in 8- or 12-bit mode. In 12-bit mode, the data could be
-> +left- or right-aligned. It has two output channels, each with its own converter.
-> +It has built-in noise and triangle waveform generator and supports external
-> +triggers for conversions. The DAC's output buffer allows a high drive output
-> +current.
-> +
-> +Contents of a stm32 dac root node:
-> +-----------------------------------
-> +Required properties:
-> +- compatible: Must be "st,stm32h7-dac-core".
-> +- reg: Offset and length of the device's register set.
-> +- clocks: Must contain an entry for pclk (which feeds the peripheral bus
-> +  interface)
-> +- clock-names: Must be "pclk".
-> +- vref-supply: Phandle to the vref+ input analog reference supply.
-> +
-> +Optional properties:
-> +- resets: Must contain the phandle to the reset controller.
-> +- A pinctrl state named "default" for each DAC channel may be defined to set
-> +  DAC_OUTx pin in mode of operation for analog output on external pin.
-> +
-> +Contents of a stm32 dac child node:
-> +-----------------------------------
-> +DAC core node should contain at least one subnode, representing a
-> +DAC instance/channel available on the machine.
-> +
-> +Required properties:
-> +- compatible: Must be "st,stm32-dac".
-> +- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
-> +  Documentation/devicetree/bindings/iio/iio-bindings.txt
-> +- st,dac-channel: Must be either 1 or 2, to define channel in use (e.g.
-> +  single channels: 1 or 2)
-
-Use "reg" instead.
-
-> +
-> +Example:
-> +	dac: dac@40007400 {
-> +		compatible = "st,stm32h7-dac-core";
-> +		reg = <0x40007400 0x400>;
-> +		clocks = <&clk>;
-> +		clock-names = "pclk";
-> +		vref-supply = <&reg_vref>;
-> +
-> +		dac1: dac@1 {
-> +			compatible = "st,stm32-dac";
-> +			#io-channels-cells = <1>;
-> +			st,dac-channel = <1>;
-> +		};
-> +
-> +		dac2: dac@2 {
-> +			compatible = "st,stm32-dac";
-> +			#io-channels-cells = <1>;
-> +			st,dac-channel = <2>;
-> +		};
-> +	};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBNYXIgMzEsIDIwMTcgYXQgMDI6MjA6MzFQTSArMDIwMCwgSGFucyBWZXJrdWlsIHdy
+b3RlOgo+IEZyb206IEhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPiAKPiBV
+cGRhdGUgdGhlIGJpbmRpbmdzIGRvY3VtZW50aW5nIHRoZSBuZXcgaGRtaSBwaGFuZGxlLgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IEhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPiBB
+Y2tlZC1ieTogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPgo+IENDOiBsaW51
+eC1zYW1zdW5nLXNvY0B2Z2VyLmtlcm5lbC5vcmcKPiBDQzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmcKPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3M1
+cC1jZWMudHh0IHwgMiArKwo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpBY2tl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
