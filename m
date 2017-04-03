@@ -1,84 +1,67 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND v5 7/7] mfd: dt-bindings: Add RK805 device tree
- bindings document
-Date: Mon, 3 Apr 2017 12:06:17 +0100
-Message-ID: <20170403110617.gczms2uwdgfuaoao@dell>
-References: <1490595705-28844-1-git-send-email-zhangqing@rock-chips.com>
- <1490597615-852-1-git-send-email-zhangqing@rock-chips.com>
+Subject: Re: [PATCH v3 1/7] mfd: Add Device Tree bindings document for
+ retu/tahvo ASIC chips
+Date: Mon, 3 Apr 2017 12:13:01 +0100
+Message-ID: <20170403111301.52hm4wsplimviqso@dell>
+References: <20170401071854.23198-1-javier@osg.samsung.com>
+ <20170401071854.23198-2-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1490597615-852-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170401071854.23198-2-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Mar 2017, Elaine Zhang wrote:
+On Sat, 01 Apr 2017, Javier Martinez Canillas wrote:
 
-> Add device tree bindings documentation for Rockchip's RK805 PMIC.
+> There are Device Tree source files defining a device node for the
+> retu/tahvo I2C chip, but there isn't a DT binding document for it.
 > 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mfd/rk808.txt | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/mfd/retu.txt | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/retu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/retu.txt b/Documentation/devicetree/bindings/mfd/retu.txt
+> new file mode 100644
+> index 000000000000..2309e599a731
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/retu.txt
+> @@ -0,0 +1,19 @@
+> +* Device tree bindings for Nokia Retu and Tahvo multi-function device
+> +
+> +Retu and Tahvo are a multi-function devices found on Nokia Internet
+> +Tablets (770, N800 and N810).
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-  
-> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-> index 9636ae8d8d41..91b65227afeb 100644
-> --- a/Documentation/devicetree/bindings/mfd/rk808.txt
-> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-> @@ -1,11 +1,14 @@
->  RK8XX Power Management Integrated Circuit
->  
->  The rk8xx family current members:
-> +rk805
->  rk808
->  rk818
->  
->  Required properties:
-> -- compatible: "rockchip,rk808", "rockchip,rk818"
-> +- compatible: "rockchip,rk805"
-> +- compatible: "rockchip,rk808"
-> +- compatible: "rockchip,rk818"
->  - reg: I2C slave address
->  - interrupt-parent: The parent interrupt controller.
->  - interrupts: the interrupt outputs of the controller.
-> @@ -18,6 +21,14 @@ Optional properties:
->  - rockchip,system-power-controller: Telling whether or not this pmic is controlling
->    the system power.
->  
-> +Optional RK805 properties:
-> +- vcc1-supply:  The input supply for DCDC_REG1
-> +- vcc2-supply:  The input supply for DCDC_REG2
-> +- vcc3-supply:  The input supply for DCDC_REG3
-> +- vcc4-supply:  The input supply for DCDC_REG4
-> +- vcc5-supply:  The input supply for LDO_REG1 and LDO_REG2
-> +- vcc6-supply:  The input supply for LDO_REG3
+More information please.  What functions to they serve?
+
+> +Required properties:
+> +- compatible:		"nokia,retu-mfd" or "nokia,tahvo-mfd"
+> +- reg:			Specifies the I2C slave address of the ASIC chip
 > +
->  Optional RK808 properties:
->  - vcc1-supply:  The input supply for DCDC_REG1
->  - vcc2-supply:  The input supply for DCDC_REG2
-> @@ -56,6 +67,15 @@ by a child node of the 'regulators' node.
->  		/* standard regulator bindings here */
->  	};
->  
-> +Following regulators of the RK805 PMIC regulators are supported. Note that
-> +the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-> +number as described in RK805 datasheet.
+> +Example:
 > +
-> +	- DCDC_REGn
-> +		- valid values for n are 1 to 4.
-> +	- LDO_REGn
-> +		- valid values for n are 1 to 3
-> +
->  Following regulators of the RK808 PMIC block are supported. Note that
->  the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
->  number as described in RK808 datasheet.
+> +i2c0 {
+> +	retu_mfd: retu@1 {
+
+Please avoid the term MFD at all times when using Device Tree.  DT is
+meant to be OS agnostic and MFD is a Linuxisum.
+
+> +		compatible = "nokia,retu-mfd";
+> +		interrupt-parent = <&gpio4>;
+> +		interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+> +		reg = <0x1>;
+> +	};
+> +};
 
 -- 
 Lee Jones
