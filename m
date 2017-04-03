@@ -1,69 +1,73 @@
-From: Alexander Syring <alex@asyring.de>
-Subject: [PATCH] ARM: sun7i: Cubietruck: enable ACIN und USB power supply
- subnode
-Date: Mon,  3 Apr 2017 11:12:45 +0200
-Message-ID: <20170403091245.9766-1-alex@asyring.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: update the
+ Allwinner GPADC device tree binding for H3
+Date: Mon, 3 Apr 2017 11:15:23 +0200
+Message-ID: <20170403091523.6atl7nq4m2qkpn3d@lukather>
+References: <20170402133304.56824-1-icenowy@aosc.io>
+ <20170402133304.56824-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: alex@asyring.de
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vh5pm2scqdolestx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLFFRDDQKGQEI7QIS7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170402133304.56824-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Cubietruck has an AXP209 PMIC and can be power-supplied by ACIN via
- the CHG-IN pin or by USB.
 
-This enables the ACIN and the USB power supply subnode in the DT.
+--vh5pm2scqdolestx
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Alexander Syring <alex@asyring.de>
----
+On Sun, Apr 02, 2017 at 09:33:01PM +0800, Icenowy Zheng wrote:
+> Allwinner H3 features a thermal sensor like the one in A33, but has its
+> register re-arranged, the clock divider moved to CCU (originally the
+> clock divider is in ADC) and added a pair of bus clock and reset.
+> 
+> Update the binding document to cover H3.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 23 ++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> index badff3611a98..7753133ca0ff 100644
+> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> @@ -4,12 +4,20 @@ The Allwinner SoCs all have an ADC that can also act as a thermal sensor
+>  and sometimes as a touchscreen controller.
+>  
+>  Required properties:
+> -  - compatible: "allwinner,sun8i-a33-ths",
+> +  - compatible: must contain one of the following compatibles:
+> +		- "allwinner,sun8i-a33-ths"
+> +		- "allwinner,sun8i-h3-ths"
+>    - reg: mmio address range of the chip,
+>    - #thermal-sensor-cells: shall be 0,
+>    - #io-channel-cells: shall be 0,
+>  
+> -Example:
+> +Required properties for the following compatibles:
+> +		- "allwinner,sun8i-h3-ths"
+> +  - clocks: the bus clock and the input clock of the ADC,
+> +  - clock-names: should be "bus" and "ths",
 
-Send again to all relevant people
+I guess mod instead of ths would be more consistent.
 
----
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Maxime
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index feb995d29799..98431ef15bc9 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -267,6 +267,10 @@
-
- #include "axp209.dtsi"
-
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
- &reg_dcdc2 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <1000000>;
-@@ -323,6 +327,10 @@
- 	status = "okay";
- };
-
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
- &usbphy {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-@@ -333,3 +341,4 @@
- 	usb2_vbus-supply = <&reg_usb2_vbus>;
- 	status = "okay";
- };
-+
---
-2.11.0
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--vh5pm2scqdolestx--
