@@ -1,67 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: iio: Add max9611 ADC
-Date: Mon, 3 Apr 2017 08:26:31 -0500
-Message-ID: <20170403132631.nkvkd3lt2aov6qnn@rob-hp-laptop>
-References: <1490627578-15938-1-git-send-email-jacopo+renesas@jmondi.org>
- <1490627578-15938-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: mtd: Add Cavium SOCs NAND bindings
+Date: Mon, 3 Apr 2017 08:29:37 -0500
+Message-ID: <20170403132937.z5mxksabo6kmo4jy@rob-hp-laptop>
+References: <20170327160524.29019-1-jglauber@cavium.com>
+ <20170327160524.29019-2-jglauber@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1490627578-15938-2-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: geert@linux-m68k.org, wsa+renesas@sang-engineering.com, magnus.damm@gmail.com, laurent.pinchart@ideasonboard.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170327160524.29019-2-jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 05:12:55PM +0200, Jacopo Mondi wrote:
-> Add device tree bindings documentation for Maxim max9611/max9612 current
-> sense amplifier.
-
-"dt-bindings: iio: adc: ..." for the subject.
-
+On Mon, Mar 27, 2017 at 06:05:23PM +0200, Jan Glauber wrote:
+> Add device tree binding description for Cavium SOC nand flash controller.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 
+> Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/iio/adc/max9611.txt        | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/max9611.txt
+>  .../devicetree/bindings/mtd/cavium_nand.txt        | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cavium_nand.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/max9611.txt b/Documentation/devicetree/bindings/iio/adc/max9611.txt
+> diff --git a/Documentation/devicetree/bindings/mtd/cavium_nand.txt b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
 > new file mode 100644
-> index 0000000..8430d3b
+> index 0000000..4698d1f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/max9611.txt
-> @@ -0,0 +1,26 @@
-> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
+> +++ b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
+> @@ -0,0 +1,32 @@
+> +* Cavium NAND controller
 > +
-> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
-> +12-bits ADC communicating over I2c bus.
-> +The device node for this driver shall be a child of a I2c controller.
+> +Required properties:
 > +
-> +Required properties
-> +  - compatible: Should be "maxim,max9611" or "maxim,max9612"
-> +  - reg: The 7-bits long I2c address of the device
-> +  - shunt-resistor-uohm: Value, in uOhm, of the current sense shunt resistor
+> +- compatible:		should be "cavium,cn8xxx-nand"
 
-As Jonathan said.
+Don't use wildcards in compatible strings. For PCI devices, this should 
+be based on the PCI vendor and device IDs.
 
+> +- reg:			PCI devfn
+> +- clocks:		must contain system clock
+> +- #address-cells:	<1>
+> +- #size-cells:		<0>
+> +
+> +The nand flash controller may contain up to 8 subnodes representing
+> +NAND flash chips. Their properties are as follows.
+> +
+> +Required properties:
+> +- compatible:		should be "cavium,nandcs"
+> +- reg:			a single integer representing the chip-select number
+> +- nand-ecc-mode:	see nand.txt
 > +
 > +Example:
 > +
-> +&i2c4 {
-> +	csa: adc@7c {
-> +		compatible = "maxim,max9611";
-> +		reg = <0x7c>;
+> +nfc: nand@b,0 {
+> +	compatible = "cavium,cn8xxx-nand";
+> +	reg = <0x5800 0 0 0 0>;
+> +	clocks = <&sclk>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
 > +
-> +		shunt-resistor-uohm = <5000>;
-> +	};
+> +	nand@1 {
+> +		compatible = "cavium,nandcs";
+> +		reg = <1>;
+> +		nand-ecc-mode = "on-die";
 > +};
-> +
-> +This device node describes a current sense amplifier sitting on I2c4 bus
-> +with address 0x7c (read address is 0xf9, write address is 0xf8).
-> +A sense resistor of 0,005 Ohm is installed between RS+ and RS- current-sensing
-> +inputs.
 > -- 
-> 2.7.4
+> 2.9.0.rc0.21.g7777322
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
