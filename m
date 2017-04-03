@@ -1,123 +1,513 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 04/11] drm/sun4i: abstract the layer type
-Date: Mon, 3 Apr 2017 18:51:38 +0800
-Message-ID: <CAGb2v66gej-udjXVwrRLwTmVf+G1NL2eLeyTzTq8W1z=wD8NMQ@mail.gmail.com>
-References: <20170329194613.55548-1-icenowy@aosc.io> <20170329194613.55548-5-icenowy@aosc.io>
- <20170403081423.p6x4ytfoga2krygv@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] clk/axs10x: introduce AXS10X pll driver
+Date: Mon, 3 Apr 2017 11:54:05 +0100
+Message-ID: <a95895fc-9159-51ae-8ae6-f081acc5bfc2@synopsys.com>
+References: <1487682670-4164-1-git-send-email-vzakhar@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUWSRDDQKGQEMIRXLTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170403081423.p6x4ytfoga2krygv@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487682670-4164-1-git-send-email-vzakhar-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vlad Zakharov <Vladislav.Zakharov-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 3, 2017 at 4:14 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
+Hi Vlad,
+
+
+On 21-02-2017 13:11, Vlad Zakharov wrote:
+> AXS10X boards manages it's clocks using various PLLs. These PLL has same
+> dividers and corresponding control registers mapped to different addresses.
+> So we add one common driver for such PLLs.
 >
-> On Thu, Mar 30, 2017 at 03:46:06AM +0800, Icenowy Zheng wrote:
->> As we are going to add support for the Allwinner DE2 Mixer in sun4i-drm
->> driver, we will finally have two types of layer.
->>
->> Abstract the layer type to void * and a ops struct, which contains the
->> only function used by crtc -- get the drm_plane struct of the layer.
->>
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> ---
->> Refactored patch in v3.
->>
->>  drivers/gpu/drm/sun4i/sun4i_crtc.c  | 19 +++++++++++--------
->>  drivers/gpu/drm/sun4i/sun4i_crtc.h  |  3 ++-
->>  drivers/gpu/drm/sun4i/sun4i_layer.c | 19 ++++++++++++++++++-
->>  drivers/gpu/drm/sun4i/sun4i_layer.h |  2 +-
->>  drivers/gpu/drm/sun4i/sunxi_layer.h | 17 +++++++++++++++++
->>  5 files changed, 49 insertions(+), 11 deletions(-)
->>  create mode 100644 drivers/gpu/drm/sun4i/sunxi_layer.h
->>
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_crtc.c b/drivers/gpu/drm/sun4i/sun4i_crtc.c
->> index 3c876c3a356a..33854ee7f636 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_crtc.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_crtc.c
->> @@ -29,6 +29,7 @@
->>  #include "sun4i_crtc.h"
->>  #include "sun4i_drv.h"
->>  #include "sun4i_layer.h"
->> +#include "sunxi_layer.h"
->>  #include "sun4i_tcon.h"
->>
->>  static void sun4i_crtc_atomic_begin(struct drm_crtc *crtc,
->> @@ -149,7 +150,7 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
->>       scrtc->tcon = tcon;
->>
->>       /* Create our layers */
->> -     scrtc->layers = sun4i_layers_init(drm, scrtc->backend);
->> +     scrtc->layers = (void **)sun4i_layers_init(drm, scrtc);
->>       if (IS_ERR(scrtc->layers)) {
->>               dev_err(drm->dev, "Couldn't create the planes\n");
->>               return NULL;
->> @@ -157,14 +158,15 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
->>
->>       /* find primary and cursor planes for drm_crtc_init_with_planes */
->>       for (i = 0; scrtc->layers[i]; i++) {
->> -             struct sun4i_layer *layer = scrtc->layers[i];
->> +             void *layer = scrtc->layers[i];
->> +             struct drm_plane *plane = scrtc->layer_ops->get_plane(layer);
->>
->> -             switch (layer->plane.type) {
->> +             switch (plane->type) {
->>               case DRM_PLANE_TYPE_PRIMARY:
->> -                     primary = &layer->plane;
->> +                     primary = plane;
->>                       break;
->>               case DRM_PLANE_TYPE_CURSOR:
->> -                     cursor = &layer->plane;
->> +                     cursor = plane;
->>                       break;
->>               default:
->>                       break;
->> @@ -190,10 +192,11 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
->>       /* Set possible_crtcs to this crtc for overlay planes */
->>       for (i = 0; scrtc->layers[i]; i++) {
->>               uint32_t possible_crtcs = BIT(drm_crtc_index(&scrtc->crtc));
->> -             struct sun4i_layer *layer = scrtc->layers[i];
->> +             void *layer = scrtc->layers[i];
->> +             struct drm_plane *plane = scrtc->layer_ops->get_plane(layer);
->>
->> -             if (layer->plane.type == DRM_PLANE_TYPE_OVERLAY)
->> -                     layer->plane.possible_crtcs = possible_crtcs;
->> +             if (plane->type == DRM_PLANE_TYPE_OVERLAY)
->> +                     plane->possible_crtcs = possible_crtcs;
+> Each PLL on AXS10X board consist of three dividers: IDIV, FBDIV and
+> ODIV. Output clock value is managed using these dividers.
 >
-> I think the logic should be reversed here, the CRTC shouldn't care
-> (much) about the layers at all.
-
-Correct. It shouldn't. However since the layers are tied to a specific
-crtc, they get created as part of the crtc init sequence.
-
-> We should modify sun4i_crtc_init to get the argument it needs (primary
-> and cursor planes for example) through its parameters, and have the
-> caller (which iirc is sun4i_drv) call it with the right parameters
-
-The caller is (now) sun4i_crtc_init.
-
-> depending on whether you're using DE or DE2.
-
-Ack.
-
+> We add pre-defined tables with supported rate values and appropriate
+> configurations of IDIV, FBDIV and ODIV for each value.
 >
-> If we're doing that, I don't think we even need the pointer to the
-> array of layers in struct sun4i_crtc, which will make it easier to
-> deal with.
+> As of today we add support for PLLs that generate clock for the
+> following devices:
+>  * ARC core on AXC CPU tiles.
+>  * ARC PGU on ARC SDP Mainboard.
+> and more to come later.
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Vlad Zakharov <vzakhar-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> ---
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Changes v1..v2
+>  - Replace '_' with '-' in device tree nodes
+>
+>  .../devicetree/bindings/clock/snps,pll-clock.txt   |  28 ++
+>  MAINTAINERS                                        |   6 +
+>  drivers/clk/axs10x/Makefile                        |   1 +
+>  drivers/clk/axs10x/pll_clock.c                     | 384 +++++++++++++++++++++
+>  4 files changed, 419 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/snps,pll-clock.txt
+>  create mode 100644 drivers/clk/axs10x/pll_clock.c
+>
+> diff --git a/Documentation/devicetree/bindings/clock/snps,pll-clock.txt b/Documentation/devicetree/bindings/clock/snps,pll-clock.txt
+> new file mode 100644
+> index 0000000..5706246
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/snps,pll-clock.txt
+> @@ -0,0 +1,28 @@
+> +Binding for the AXS10X Generic PLL clock
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible: should be "snps,axs10x-<name>-pll-clock"
+> +  "snps,axs10x-arc-pll-clock"
+> +  "snps,axs10x-pgu-pll-clock"
+> +- reg: should always contain 2 pairs address - length: first for PLL config
+> +registers and second for corresponding LOCK CGU register.
+> +- clocks: shall be the input parent clock phandle for the PLL.
+> +- #clock-cells: from common clock binding; Should always be set to 0.
+> +
+> +Example:
+> +	input-clk: input-clk {
+> +		clock-frequency = <33333333>;
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	core-clk: core-clk@80 {
+> +		compatible = "snps,axs10x-arc-pll-clock";
+> +		reg = <0x80 0x10 0x100 0x10>;
+> +		#clock-cells = <0>;
+> +		clocks = <&input-clk>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3960e7f..5805833 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11910,6 +11910,12 @@ F:	arch/arc/plat-axs10x
+>  F:	arch/arc/boot/dts/ax*
+>  F:	Documentation/devicetree/bindings/arc/axs10*
+>  
+> +SYNOPSYS ARC SDP clock driver
+> +M:	Vlad Zakharov <vzakhar-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> +S:	Supported
+> +F:	drivers/clk/axs10x/*
+> +F:	Documentation/devicetree/bindings/clock/snps,pll-clock.txt
+> +
+>  SYSTEM CONFIGURATION (SYSCON)
+>  M:	Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>  M:	Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> diff --git a/drivers/clk/axs10x/Makefile b/drivers/clk/axs10x/Makefile
+> index 01996b8..d747dea 100644
+> --- a/drivers/clk/axs10x/Makefile
+> +++ b/drivers/clk/axs10x/Makefile
+> @@ -1 +1,2 @@
+>  obj-y += i2s_pll_clock.o
+> +obj-y += pll_clock.o
+> diff --git a/drivers/clk/axs10x/pll_clock.c b/drivers/clk/axs10x/pll_clock.c
+> new file mode 100644
+> index 0000000..784a0a2
+> --- /dev/null
+> +++ b/drivers/clk/axs10x/pll_clock.c
+> @@ -0,0 +1,384 @@
+> +/*
+> + * Synopsys AXS10X SDP Generic PLL clock driver
+> + *
+> + * Copyright (C) 2017 Synopsys
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +
+> +/* PLL registers addresses */
+> +#define PLL_REG_IDIV	0x0
+> +#define PLL_REG_FBDIV	0x4
+> +#define PLL_REG_ODIV	0x8
+> +
+> +/*
+> + * Bit fields of the PLL IDIV/FBDIV/ODIV registers:
+> + *  ________________________________________________________________________
+> + * |31                15|    14    |   13   |  12  |11         6|5         0|
+> + * |-------RESRVED------|-NOUPDATE-|-BYPASS-|-EDGE-|--HIGHTIME--|--LOWTIME--|
+> + * |____________________|__________|________|______|____________|___________|
+> + *
+> + * Following macros detirmine the way of access to these registers
+> + * They should be set up only using the macros.
+> + * reg should be and uint32_t variable.
+> + */
+> +
+> +#define PLL_REG_GET_LOW(reg)			\
+> +	(((reg) & (0x3F << 0)) >> 0)
+> +#define PLL_REG_GET_HIGH(reg)			\
+> +	(((reg) & (0x3F << 6)) >> 6)
+> +#define PLL_REG_GET_EDGE(reg)			\
+> +	(((reg) & (BIT(12))) ? 1 : 0)
+> +#define PLL_REG_GET_BYPASS(reg)			\
+> +	(((reg) & (BIT(13))) ? 1 : 0)
+> +#define PLL_REG_GET_NOUPD(reg)			\
+> +	(((reg) & (BIT(14))) ? 1 : 0)
+> +#define PLL_REG_GET_PAD(reg)			\
+> +	(((reg) & (0x1FFFF << 15)) >> 15)
+> +
+> +#define PLL_REG_SET_LOW(reg, value)		\
+> +	{ reg |= (((value) & 0x3F) << 0); }
+> +#define PLL_REG_SET_HIGH(reg, value)	\
+> +	{ reg |= (((value) & 0x3F) << 6); }
+> +#define PLL_REG_SET_EDGE(reg, value)	\
+> +	{ reg |= (((value) & 0x01) << 12); }
+> +#define PLL_REG_SET_BYPASS(reg, value)	\
+> +	{ reg |= (((value) & 0x01) << 13); }
+> +#define PLL_REG_SET_NOUPD(reg, value)	\
+> +	{ reg |= (((value) & 0x01) << 14); }
+> +#define PLL_REG_SET_PAD(reg, value)		\
+> +	{ reg |= (((value) & 0x1FFFF) << 15); }
+> +
+> +#define PLL_LOCK	0x1
+> +#define PLL_MAX_LOCK_TIME 100 /* 100 us */
+> +
+> +struct pll_cfg {
+> +	u32 rate;
+> +	u32 idiv;
+> +	u32 fbdiv;
+> +	u32 odiv;
+> +};
+> +
+> +struct pll_of_table {
+> +	unsigned long prate;
+> +	struct pll_cfg *pll_cfg_table;
+> +};
+> +
+> +struct pll_of_data {
+> +	struct pll_of_table *pll_table;
+> +};
+> +
+> +static struct pll_of_data pgu_pll_data = {
+> +	.pll_table = (struct pll_of_table []){
+> +		{
+> +			.prate = 27000000,
+> +			.pll_cfg_table = (struct pll_cfg []){
+> +				{ 25200000, 1, 84, 90 },
+> +				{ 50000000, 1, 100, 54 },
+> +				{ 74250000, 1, 44, 16 },
+> +				{ },
+> +			},
+> +		},
+> +		/* Used as list limiter */
+> +		{ },
+> +	},
+> +};
+> +
+> +static struct pll_of_data arc_pll_data = {
+> +	.pll_table = (struct pll_of_table []){
+> +		{
+> +			.prate = 33333333,
+> +			.pll_cfg_table = (struct pll_cfg []){
+> +				{ 33333333,  1, 1,  1 },
+> +				{ 50000000,  1, 30, 20 },
+> +				{ 75000000,  2, 45, 10 },
+> +				{ 90000000,  2, 54, 10 },
+> +				{ 100000000, 1, 30, 10 },
+> +				{ 125000000, 2, 45, 6 },
+> +				{ },
+> +			},
+> +		},
+> +		/* Used as list limiter */
+> +		{ },
+> +	},
+> +};
+> +
+> +struct pll_clk {
+> +	void __iomem *base;
+> +	void __iomem *lock;
+> +	const struct pll_of_data *pll_data;
+> +	struct clk_hw hw;
+> +	struct device *dev;
+> +};
+> +
+> +static inline void pll_write(struct pll_clk *clk, unsigned int reg,
+> +		unsigned int val)
+> +{
+> +	iowrite32(val, clk->base + reg);
+> +}
+> +
+> +static inline u32 pll_read(struct pll_clk *clk,
+> +		unsigned int reg)
+> +{
+> +	return ioread32(clk->base + reg);
+> +}
+> +
+> +static inline struct pll_clk *to_pll_clk(struct clk_hw *hw)
+> +{
+> +	return container_of(hw, struct pll_clk, hw);
+> +}
+> +
+> +static inline u32 div_get_value(unsigned int reg)
+> +{
+> +	if (PLL_REG_GET_BYPASS(reg))
+> +		return 1;
+> +
+> +	return (PLL_REG_GET_HIGH(reg) + PLL_REG_GET_LOW(reg));
+> +}
+> +
+> +static inline u32 encode_div(unsigned int id, int upd)
+> +{
+> +	uint32_t div = 0;
 
-Ack.
+"uint32_t" -> "u32"
 
-ChenYu
+> +
+> +	PLL_REG_SET_LOW(div, (id%2 == 0) ? id >> 1 : (id >> 1) + 1);
+> +	PLL_REG_SET_HIGH(div, id >> 1);
+> +	PLL_REG_SET_EDGE(div, id%2);
+> +	PLL_REG_SET_BYPASS(div, id == 1 ? 1 : 0);
+> +	PLL_REG_SET_NOUPD(div, !upd);
+> +
+> +	return div;
+> +}
+> +
+> +static const struct pll_cfg *pll_get_cfg(unsigned long prate,
+> +		const struct pll_of_table *pll_table)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; pll_table[i].prate != 0; i++)
+> +		if (pll_table[i].prate == prate)
+> +			return pll_table[i].pll_cfg_table;
+> +
+> +	return NULL;
+> +}
+> +
+> +static unsigned long pll_recalc_rate(struct clk_hw *hw,
+> +			unsigned long parent_rate)
+> +{
+> +	u64 rate;
+> +	u32 idiv, fbdiv, odiv;
+> +	struct pll_clk *clk = to_pll_clk(hw);
+> +
+> +	idiv = div_get_value(pll_read(clk, PLL_REG_IDIV));
+> +	fbdiv = div_get_value(pll_read(clk, PLL_REG_FBDIV));
+> +	odiv = div_get_value(pll_read(clk, PLL_REG_ODIV));
+> +
+> +	rate = (u64)parent_rate * fbdiv;
+> +	do_div(rate, idiv * odiv);
+> +
+> +	return (unsigned long)rate;
+> +}
+> +
+> +static long pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> +			unsigned long *prate)
+> +{
+> +	int i;
+> +	long best_rate;
+> +	struct pll_clk *clk = to_pll_clk(hw);
+> +	const struct pll_cfg *pll_cfg = pll_get_cfg(*prate,
+> +			clk->pll_data->pll_table);
+> +
+> +	if (!pll_cfg) {
+> +		dev_err(clk->dev, "invalid parent rate=%ld\n", *prate);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (pll_cfg[0].rate == 0)
+> +		return -EINVAL;
+> +
+> +	best_rate = pll_cfg[0].rate;
+> +
+> +	for (i = 1; pll_cfg[i].rate != 0; i++) {
+> +		if (abs(rate - pll_cfg[i].rate) < abs(rate - best_rate))
+> +			best_rate = pll_cfg[i].rate;
+> +	}
+> +
+> +	return best_rate;
+> +}
+> +
+> +static int pll_set_rate(struct clk_hw *hw, unsigned long rate,
+> +			unsigned long parent_rate)
+> +{
+> +	int i;
+> +	struct pll_clk *clk = to_pll_clk(hw);
+> +	const struct pll_cfg *pll_cfg = pll_get_cfg(parent_rate,
+> +			clk->pll_data->pll_table);
+> +
+> +	if (!pll_cfg) {
+> +		dev_err(clk->dev, "invalid parent rate=%ld\n", parent_rate);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; pll_cfg[i].rate != 0; i++) {
+> +		if (pll_cfg[i].rate == rate) {
+> +			pll_write(clk, PLL_REG_IDIV,
+> +					encode_div(pll_cfg[i].idiv, 0));
+> +			pll_write(clk, PLL_REG_FBDIV,
+> +					encode_div(pll_cfg[i].fbdiv, 0));
+> +			pll_write(clk, PLL_REG_ODIV,
+> +					encode_div(pll_cfg[i].odiv, 1));
+> +
+> +			/*
+> +			 * Wait until CGU relocks.
+> +			 * If after timeout CGU is unlocked yet return error
+> +			 */
+> +			udelay(PLL_MAX_LOCK_TIME);
+> +			if (ioread32(clk->lock) & PLL_LOCK)
+> +				return 0;
+> +			else
+> +				return -ETIMEDOUT;
+> +		}
+> +	}
+> +
+> +	dev_err(clk->dev, "invalid rate=%ld, parent_rate=%ld\n", rate,
+> +			parent_rate);
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct clk_ops pll_ops = {
+> +	.recalc_rate = pll_recalc_rate,
+> +	.round_rate = pll_round_rate,
+> +	.set_rate = pll_set_rate,
+> +};
+> +
+> +static int pll_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	const char *parent_name;
+> +	struct clk *clk;
+> +	struct pll_clk *pll_clk;
+> +	struct resource *mem;
+> +	struct clk_init_data init = { };
+> +
+> +	pll_clk = devm_kzalloc(dev, sizeof(*pll_clk), GFP_KERNEL);
+> +	if (!pll_clk)
+> +		return -ENOMEM;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pll_clk->base = devm_ioremap_resource(dev, mem);
+> +	if (IS_ERR(pll_clk->base))
+> +		return PTR_ERR(pll_clk->base);
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	pll_clk->lock = devm_ioremap_resource(dev, mem);
+> +	if (IS_ERR(pll_clk->lock))
+> +		return PTR_ERR(pll_clk->base);
+
+Typo: should be "return PTR_ERR(pll_clk->lock);"
+
+> +
+> +	init.name = dev->of_node->name;
+> +	init.ops = &pll_ops;
+> +	parent_name = of_clk_get_parent_name(dev->of_node, 0);
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = 1;
+> +	pll_clk->hw.init = &init;
+> +	pll_clk->dev = dev;
+> +	pll_clk->pll_data = of_device_get_match_data(dev);
+> +
+> +	if (!pll_clk->pll_data) {
+> +		dev_err(dev, "No OF match data provided\n");
+> +			return -EINVAL;
+> +	}
+> +
+> +	clk = devm_clk_register(dev, &pll_clk->hw);
+> +	if (IS_ERR(clk)) {
+> +		dev_err(dev, "failed to register %s clock (%ld)\n",
+> +				init.name, PTR_ERR(clk));
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	return of_clk_add_provider(dev->of_node, of_clk_src_simple_get, clk);
+> +}
+> +
+> +static int pll_clk_remove(struct platform_device *pdev)
+> +{
+> +	of_clk_del_provider(pdev->dev.of_node);
+> +	return 0;
+> +}
+> +
+> +static void __init of_pll_clk_setup(struct device_node *node)
+> +{
+> +	const char *parent_name;
+> +	struct clk *clk;
+> +	struct pll_clk *pll_clk;
+> +	struct clk_init_data init = { };
+> +
+> +	pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
+> +	if (!pll_clk)
+> +		return;
+> +
+> +	pll_clk->base = of_iomap(node, 0);
+> +	if (!pll_clk->base) {
+> +		pr_err("failed to map pll div registers\n");
+> +		iounmap(pll_clk->base);
+> +		return;
+> +	}
+> +
+> +	pll_clk->lock = of_iomap(node, 1);
+> +	if (!pll_clk->lock) {
+> +		pr_err("failed to map pll lock register\n");
+> +		iounmap(pll_clk->lock);
+> +		return;
+> +	}
+> +
+> +	init.name = node->name;
+> +	init.ops = &pll_ops;
+> +	parent_name = of_clk_get_parent_name(node, 0);
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = parent_name ? 1 : 0;
+> +	pll_clk->hw.init = &init;
+> +	pll_clk->pll_data = &arc_pll_data;
+> +
+> +	clk = clk_register(NULL, &pll_clk->hw);
+> +	if (IS_ERR(clk)) {
+> +		pr_err("failed to register %s clock (%ld)\n",
+> +				node->name, PTR_ERR(clk));
+> +		kfree(pll_clk);
+> +		return;
+> +	}
+> +
+> +	of_clk_add_provider(node, of_clk_src_simple_get, clk);
+> +}
+> +
+> +CLK_OF_DECLARE(axs10x_pll_clock, "snps,axs10x-arc-pll-clock", of_pll_clk_setup);
+> +
+> +static const struct of_device_id pll_clk_id[] = {
+> +	{ .compatible = "snps,axs10x-arc-pll-clock", .data = &arc_pll_data},
+> +	{ .compatible = "snps,axs10x-pgu-pll-clock", .data = &pgu_pll_data},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, pll_clk_id);
+> +
+> +static struct platform_driver pll_clk_driver = {
+> +	.driver = {
+> +		.name = "axs10x-pll-clock",
+> +		.of_match_table = pll_clk_id,
+> +	},
+> +	.probe = pll_clk_probe,
+> +	.remove = pll_clk_remove,
+> +};
+> +builtin_platform_driver(pll_clk_driver);
+> +
+> +MODULE_AUTHOR("Vlad Zakharov <vzakhar-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Synopsys AXS10X SDP Generic PLL Clock Driver");
+> +MODULE_LICENSE("GPL v2");
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
