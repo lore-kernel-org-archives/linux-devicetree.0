@@ -1,36 +1,26 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/5] irqchip/aspeed-i2c-ic: binding docs for Aspeed
- I2C Interrupt Controller
-Date: Mon, 3 Apr 2017 09:16:38 -0500
-Message-ID: <20170403141638.fki7s3obmt63wl7g@rob-hp-laptop>
-References: <20170328051226.21677-1-brendanhiggins@google.com>
- <20170328051226.21677-2-brendanhiggins@google.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V7 4/7] mfd: da9061: MFD core support
+Date: Mon, 3 Apr 2017 14:20:09 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CD6B183@SW-EX-MBX02.diasemi.com>
+References: <cover.1490712213.git.stwiss.opensource@diasemi.com>
+ <8987877cc54940358c5b7a65ca003cedc5586f0d.1490712213.git.stwiss.opensource@diasemi.com>
+ <20170403141214.q6ndii6c47pqfqx6@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170328051226.21677-2-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, mouse-Pma6HLj0uuo@public.gmane.org, clg-Bxea+6Xhats@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170403141214.q6ndii6c47pqfqx6@dell>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 10:12:22PM -0700, Brendan Higgins wrote:
-> Added device tree binding documentation for Aspeed I2C Interrupt
-> Controller.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> ---
-> Added in v6:
->   - Pulled "aspeed_i2c_controller" out into a interrupt controller since that is
->     what it actually does.
-> ---
->  .../interrupt-controller/aspeed,ast2400-i2c-ic.txt | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-i2c-ic.txt
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDMgQXByaWwgMjAxNyAxNToxMiwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+ID4gQEAgLTQ3NSw3
+ICs4NTUsMjUgQEAgc3RhdGljIGludCBkYTkwNjJfaTJjX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50
+ICppMmMsDQo+ID4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gIAl9DQo+ID4NCj4gPiAtCWNoaXAt
+PnJlZ21hcCA9IGRldm1fcmVnbWFwX2luaXRfaTJjKGkyYywgJmRhOTA2Ml9yZWdtYXBfY29uZmln
+KTsNCj4gPiArCXN3aXRjaCAoY2hpcC0+Y2hpcF90eXBlKSB7DQo+ID4gKwljYXNlKENPTVBBVF9U
+WVBFX0RBOTA2MSk6DQo+IA0KPiBCcmFja2V0cyBhcm91bmQgdGhlIGNhc2UgdmFsdWU/DQo+IA0K
+PiBUaGF0J3MgYSBuZXcgb25lIG9uIG1lLg0KDQpIbS4gRG8geW91IHdhbnQgbWUgdG8gcmVzZW5k
+IGl0IHdpdGhvdXQgYnJhY2VzPw0KDQpSZWdhcmRzLA0KU3RlcGhlbg0K
