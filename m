@@ -1,120 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/39] [media] dt-bindings: Add bindings for i.MX
- media driver
-Date: Mon, 3 Apr 2017 09:11:35 -0500
-Message-ID: <20170403141135.6rwwftkiqqicmn6a@rob-hp-laptop>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-3-git-send-email-steve_longerbeam@mentor.com>
- <CAL_JsqJm_JjuVPcOBERCqsnjTDdNoKr9xRE9MXMO4ivxGath2Q@mail.gmail.com>
- <20170329083904.GZ7909@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20170329083904.GZ7909@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew-CT Chen =?utf-8?B?KOmZs+aZuui/qik=?= <andrew-ct.chen@mediatek.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Nick Dyer <nick@shmanahar.org>, Songjun Wu <songjun.wu@microchip.com>, Hans Verkuil <hverkuil@xs4all.nl>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, shuah@kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Steve Longerbeam <slongerbeam@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, Benoit Parrot <bparrot@ti.com>Steve
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: [PATCH v8 1/2] media: i2c/ov5645: add the device tree binding document
+Date: Mon,  3 Apr 2017 17:02:28 +0300
+Message-ID: <1491228148-28505-1-git-send-email-todor.tomov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@kernel.org, laurent.pinchart@ideasonboard.com, hans.verkuil@cisco.com, sakari.ailus@iki.fi, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: Todor Tomov <todor.tomov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 09:39:05AM +0100, Russell King - ARM Linux wrote:
-> On Tue, Mar 28, 2017 at 07:21:34PM -0500, Rob Herring wrote:
-> > On Mon, Mar 27, 2017 at 7:40 PM, Steve Longerbeam <slongerbeam@gmail.com> wrote:
-> > > Add bindings documentation for the i.MX media driver.
-> > >
-> > > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/imx.txt | 74 +++++++++++++++++++++++++
-> > >  1 file changed, 74 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
-> > > new file mode 100644
-> > > index 0000000..3059c06
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/imx.txt
-> > > @@ -0,0 +1,74 @@
-> > > +Freescale i.MX Media Video Device
-> > > +=================================
-> > > +
-> > > +Video Media Controller node
-> > > +---------------------------
-> > > +
-> > > +This is the media controller node for video capture support. It is a
-> > > +virtual device that lists the camera serial interface nodes that the
-> > > +media device will control.
-> > > +
-> > > +Required properties:
-> > > +- compatible : "fsl,imx-capture-subsystem";
-> > > +- ports      : Should contain a list of phandles pointing to camera
-> > > +               sensor interface ports of IPU devices
-> > > +
-> > > +example:
-> > > +
-> > > +capture-subsystem {
-> > > +       compatible = "fsl,imx-capture-subsystem";
-> > > +       ports = <&ipu1_csi0>, <&ipu1_csi1>;
-> > > +};
-> > > +
-> > > +fim child node
-> > > +--------------
-> > > +
-> > > +This is an optional child node of the ipu_csi port nodes. If present and
-> > > +available, it enables the Frame Interval Monitor. Its properties can be
-> > > +used to modify the method in which the FIM measures frame intervals.
-> > > +Refer to Documentation/media/v4l-drivers/imx.rst for more info on the
-> > > +Frame Interval Monitor.
-> > > +
-> > > +Optional properties:
-> > > +- fsl,input-capture-channel: an input capture channel and channel flags,
-> > > +                            specified as <chan flags>. The channel number
-> > > +                            must be 0 or 1. The flags can be
-> > > +                            IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, or
-> > > +                            IRQ_TYPE_EDGE_BOTH, and specify which input
-> > > +                            capture signal edge will trigger the input
-> > > +                            capture event. If an input capture channel is
-> > > +                            specified, the FIM will use this method to
-> > > +                            measure frame intervals instead of via the EOF
-> > > +                            interrupt. The input capture method is much
-> > > +                            preferred over EOF as it is not subject to
-> > > +                            interrupt latency errors. However it requires
-> > > +                            routing the VSYNC or FIELD output signals of
-> > > +                            the camera sensor to one of the i.MX input
-> > > +                            capture pads (SD1_DAT0, SD1_DAT1), which also
-> > > +                            gives up support for SD1.
-> > > +
-> > > +
-> > > +mipi_csi2 node
-> > > +--------------
-> > > +
-> > > +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
-> > > +CSI-2 sensors.
-> > > +
-> > > +Required properties:
-> > > +- compatible   : "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
-> > 
-> > As I mentioned in v5, there's a DW CSI2 binding in progress. This
-> > needs to be based on that.
-> 
-> Maybe someone can provide some kind of reference to it, and it's
-> associated driver?
+Add the document for ov5645 device tree binding.
 
-Let me Google that for you (TM). The reference is in my comments on v5. 
-Here's a reference to it [1].
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ .../devicetree/bindings/media/i2c/ov5645.txt       | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
 
-[1] https://lkml.org/lkml/2017/3/20/524
-
-> 
-> -- 
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+new file mode 100644
+index 0000000..fd7aec9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+@@ -0,0 +1,54 @@
++* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
++
++The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
++an active array size of 2592H x 1944V. It is programmable through a serial I2C
++interface.
++
++Required Properties:
++- compatible: Value should be "ovti,ov5645".
++- clocks: Reference to the xclk clock.
++- clock-names: Should be "xclk".
++- clock-frequency: Frequency of the xclk clock.
++- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
++  to the hardware pin PWDNB which is physically active low.
++- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
++  the hardware pin RESETB.
++- vdddo-supply: Chip digital IO regulator.
++- vdda-supply: Chip analog regulator.
++- vddd-supply: Chip digital core regulator.
++
++The device node must contain one 'port' child node for its digital output
++video port, in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	&i2c1 {
++		...
++
++		ov5645: ov5645@78 {
++			compatible = "ovti,ov5645";
++			reg = <0x78>;
++
++			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&camera_rear_default>;
++
++			clocks = <&clks 200>;
++			clock-names = "xclk";
++			clock-frequency = <23880000>;
++
++			vdddo-supply = <&camera_dovdd_1v8>;
++			vdda-supply = <&camera_avdd_2v8>;
++			vddd-supply = <&camera_dvdd_1v2>;
++
++			port {
++				ov5645_ep: endpoint {
++					clock-lanes = <1>;
++					data-lanes = <0 2>;
++					remote-endpoint = <&csi0_ep>;
++				};
++			};
++		};
++	};
+-- 
+1.9.1
