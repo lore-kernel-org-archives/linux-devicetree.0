@@ -1,143 +1,104 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
-Date: Mon, 3 Apr 2017 22:38:58 +0200
-Message-ID: <dce7f2b1-8d1d-1c5d-5fa5-54c22b6f4758@gmail.com>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323203749.GB8563@amd> <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
- <20170329190725.GN20094@minitux> <20170329222301.GB7977@amd>
- <20170330000955.GP20094@minitux> <20170330074309.GA28533@amd>
- <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
- <20170403190032.GX20094@minitux>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH RFC] serial: imx: support an enable-gpio
+Date: Mon, 3 Apr 2017 22:54:01 +0200
+Message-ID: <20170403205401.jiahqjemq7lymlil@pengutronix.de>
+References: <1468400495-10471-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <CAOMZO5A4e7H-6feNN-cTABOKv+CUCU9Em_yFMhorZwXfeA-h0w@mail.gmail.com>
+ <CAL_JsqL8EQWoqyeyVb5Uj9ZaoB3Uz3yzbo114OR-FRrMEu8s=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170403190032.GX20094@minitux>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL8EQWoqyeyVb5Uj9ZaoB3Uz3yzbo114OR-FRrMEu8s=A@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2017 09:00 PM, Bjorn Andersson wrote:
-> On Fri 31 Mar 02:28 PDT 2017, Jacek Anaszewski wrote:
-> 
->> Hi Bjorn and Pavel,
->>
->> On 03/30/2017 09:43 AM, Pavel Machek wrote:
->>> Hi!
->>>
->>>>>> There is a binding for ti,lp55xx, but there's nothing I can reuse from
->>>>>> that binding...because it's completely different hardware.
->>>>>
->>>>> Agreed, if you drop the pattern stuff from the binding, at least for now. 
->>>>
->>>> I do not have a strong preference to expose these knobs in devicetree
->>>> and I do fear that finding some common "pattern" bindings that suits
->>>> everyone will be very difficult.
->>>>
->>>> So I'll drop them from the binding for now.
->>>
->>> Ok.
->>>
->>>>> If you want driver merged quickly, I believe the best way would be to
->>>>> leave out pattern support for now. We can merge the basic driver
->>>>> easily to 4.12.
->>>>>
->>>>
->>>> I'm not that much in a hurry and would rather see that we resolve any
->>>> outstanding issues with the implementation of the pattern handling.
->>>
->>> Ok, good.
->>>
->>>> But regardless of this we still have the problem that the typical
->>>> Qualcomm PMIC has 8 LPG-blocks and any triple could be driving a
->>>> RGB-LED. So we would have to create some sort of in-driver-wrapper
->>>> around any three instances exposing them as a single LED to the user.
->>>
->>> Yes, I believe we should do the wrapping. In N900 case, 
->>>
->>>> I rather expose the individual channels and make sure that when we
->>>> trigger a blink operation or enable a pattern (i.e. the two operations
->>>> that do require synchronization) we will perform that synchronization
->>>> under the hood.
->>>
->>> First, we need a way to tell userspace which LEDs are synchronized,
->>> because otherwise it will be confusing.
->>
->> There is one year old discussion [0] about the possible approaches
->> to RGB sub-LEDs synchronization problem and patterns in general.
->> My last message with API design proposal has been left unanswered.
->>
->> Probably we continue that discussion here.
->>
->> Generally Bjorn's drivers touch two yet to be addressed issues:
->> - RGB LED support
->> - Generic support for patterns
->>
->> It is likely that both issues can be solved by utilizing trigger
->> mechanism. The possible solution to the problem Bjorn tried to
->> address with /sys/class/leds/<led>/pattern comma separated list
->> could be a trigger with adjustable number of pattern intervals.
->>
->> The trigger once activated would create a directory with the
->> number of files corresponding to the number of requested intervals,
->> and then user could write an interval value by writing it to the
->> corresponding file. Somehow related approach has been implemented
->> for USB port LED trigger:
->>
->> 0f247626cbbf ('usb: core: Introduce a USB port LED trigger")
->>
->> In both RGB and pattern approaches we should assess
->> if it is acceptable to provide a pattern for trigger name,
->> e.g. blink-pattern-{num_intervals}.
->>
->> If so, then "echo transition-pattern-15" would create a directory
->> e.g. transition_intervals with files interval_0 to interval_14,
->> that could be adjusted by userspace.
->>
-> 
-> Having a RGB-trigger that proxy a accepts a userspace request of a
-> brightness-tripple and sets the brightness on the individual associated
-> LEDs sounds reasonable - but should probably be generalized to any
-> number of LEDs.
-> 
-> A slightly related matter is the question on how to use a single LED for
-> multiple trigger sources, e.g. how do I get a single LED to show
-> activity of two MMCs?.
+Hello,
 
-You would have to add a dedicated trigger, similar to usb port trigger,
-I mentioned in the previous message.
-
+On Mon, Apr 03, 2017 at 03:25:23PM -0500, Rob Herring wrote:
+> On Mon, Apr 3, 2017 at 10:01 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Hi Uwe,
+> >
+> > On Wed, Jul 13, 2016 at 6:01 AM, Uwe Kleine-König
+> > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> >> A part of my machine looks as follows (simplified):
+> >>
+> >> ,------------------------.
+> >> | ,---------.            |
+> >> | |  imx25  o--RX----◁---o---
+> >> | |         o--GPIO--'   |
+> >> | `---------'            |
+> >> `------------------------'
+> >>
+> >> that is, there is a driver on the RX line that must be enabled before
+> >> the UART can be used. (That is necessary because the default mux of the
+> >> RX pad after reset is an output.)
+> >>
+> >> To represent this in the device tree I do:
+> >>
+> >>         pinctrl_uart5: uart5 {
+> >>                 fsl,pins = <
+> >>                         ...
+> >>                         MX25_PAD_LBA__UART5_RXD         0x00000000
+> >>                         MX25_PAD_CS5__GPIO_3_21         0x00002001
+> >>                         ...
+> >>         };
+> >>
+> >>         &uart5 {
+> >>                 pinctrl-names = "default";
+> >>                 pinctrl-0 = <&pinctrl_uart5>;
+> >>
+> >>                 enable-gpio = <&gpio3 21 GPIO_ACTIVE_LOW>;
 > 
-> For the patterns I don't know how a trigger for this would look like,
-> how would setting the pattern of a trigger be propagated down to the
-> hardware?
+> enable-gpios
 
-We'd need a new op and API similar to blink_set()/led_blink_set().
+ack.
 
->>> Second, there are more issues than just patterns with the RGB
->>> LED. Most important is ability to set particular colors. You want to
->>> set the RGB LED to "white", but that does not mean you can set
->>> red=green=blue=1.0. You want color to look the same on LCD and on the
->>> LED, which means coefficients for white and some kind of function for
->>> brightness-to-PWM conversion.
->>
->> Shouldn't we leave that entirely to the userspace? Can we come up
->> with coefficients that will guarantee the same result on all existing
->> LCD devices?
->>
-> 
-> How about we just force user space perform the 3 writes and save us the
-> cost of another trigger in that case? Configuring the brightness of 3
-> LEDs is not board specific - and even with a RGB-interface we still need
-> to specify which RGB-LED should be controlled.
+> I imagine you already know this needs documentation. Make it common please.
 
-This is what we have now, so we can live with it. Addition of a new
-RGB trigger would be an improvement of the existing state.
+Sure, I first wanted to collect some feedback to get an idea if this
+would be accepted at all.
+
+The only candidate for common code to add this functionality would be
+uart_add_one_port. I wonder if this is early enough in every case.
+
+> >>                 ...
+> >>         };
+> >>
+> >> This way it's ensured that the gpio is only enabled when the LBA pad is
+> >> muxed as RX (together with the bootloader that sets the GPIO high).
+> >>
+> >> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+> > Since this is not imx serial specific it could be made more generic.
+> >
+> > What about extending
+> > Documentation/devicetree/bindings/serial/slave-device.txt to handle
+> > this GPIO, or maybe a regulator?
+
+I could add a regulator that would do the right thing, that would not
+match the hardware though.
+
+> This is more like a phy than a device you talk to. It could also be
+> something like an RS-232 xcvr enable (no one has done that already?).
+> I think it belongs in the uart's node. You could additionally have an
+> enable-gpios for a slave device.
+
+Yes, I agree here, it is better defined in the uart's node, not in the
+slave node.
+
+Is xcvr-enable-gpios or xceiver-enable-gpios a better name?
+
+Best regards
+Uwe
 
 -- 
-Best regards,
-Jacek Anaszewski
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
