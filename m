@@ -1,31 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: dt: Update ti,emif bindings
-Date: Mon, 3 Apr 2017 09:34:59 -0500
-Message-ID: <20170403143459.ligq2bphu3n6zvkl@rob-hp-laptop>
-References: <20170328205511.21166-1-d-gerlach@ti.com>
- <20170328205511.21166-2-d-gerlach@ti.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v10 5/5] ARM: configs: stm32: Add I2C support for STM32
+ defconfig
+Date: Mon, 3 Apr 2017 16:36:00 +0200
+Message-ID: <3b693eb4-b7f4-47bb-808e-17009b353b46@st.com>
+References: <1484832316-5594-1-git-send-email-cedric.madianga@gmail.com>
+ <1484832316-5594-6-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170328205511.21166-2-d-gerlach-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484832316-5594-6-git-send-email-cedric.madianga@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>, wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 03:55:10PM -0500, Dave Gerlach wrote:
-> Update the Texas Instruments EMIF binding document to include the device
-> tree bindings for ti,emif-am3352 and ti,emif-am4372 which are used by
-> the ti-emif-sram driver to provide low-level PM functionality.
-> 
-> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/memory-controllers/ti/emif.txt | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+Hi,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 01/19/2017 02:25 PM, M'boumba Cedric Madianga wrote:
+> This patch adds I2C support for STM32 default configuration
+>
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+> ---
+
+Applied on stm32-defconfig-for-v4.12
+
+Regards
+Alex
+
+>  arch/arm/configs/stm32_defconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+> index 5a72d69..323d2a3 100644
+> --- a/arch/arm/configs/stm32_defconfig
+> +++ b/arch/arm/configs/stm32_defconfig
+> @@ -47,6 +47,9 @@ CONFIG_SERIAL_NONSTANDARD=y
+>  CONFIG_SERIAL_STM32=y
+>  CONFIG_SERIAL_STM32_CONSOLE=y
+>  # CONFIG_HW_RANDOM is not set
+> +CONFIG_I2C=y
+> +CONFIG_I2C_CHARDEV=y
+> +CONFIG_I2C_STM32F4=y
+>  # CONFIG_HWMON is not set
+>  # CONFIG_USB_SUPPORT is not set
+>  CONFIG_NEW_LEDS=y
+>
