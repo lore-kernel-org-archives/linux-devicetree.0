@@ -1,104 +1,72 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: keystone: Add minimum support for K2G ICE
- evm
-Date: Mon, 3 Apr 2017 11:27:08 -0500
-Message-ID: <20170403162708.sf4ovwu3wm2tlyqh@rob-hp-laptop>
-References: <20170330152907.12595-1-fcooper@ti.com>
- <20170330152907.12595-3-fcooper@ti.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: irq: Export of_irq_count()
+Date: Mon, 3 Apr 2017 18:29:00 +0200
+Message-ID: <20170403162900.GA20719@ulmo.ba.sec>
+References: <20170403155547.19917-1-thierry.reding@gmail.com>
+ <CAL_JsqLGUuJZ6E3W+DXumtAfxtVPG8myqkZs7YL_KFc+RLgGGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170330152907.12595-3-fcooper-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAL_JsqLGUuJZ6E3W+DXumtAfxtVPG8myqkZs7YL_KFc+RLgGGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 10:29:07AM -0500, Franklin S Cooper Jr wrote:
-> Add barebones dts support for TI's K2G Industrial Communication Engine evm.
-> This dts allows the board to boot using a ram based filesystem.
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile             |  3 ++-
->  arch/arm/boot/dts/keystone-k2g-ice.dts | 42 ++++++++++++++++++++++++++++++++++
->  2 files changed, 44 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/keystone-k2g-ice.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 0118084..01a98f1 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -193,7 +193,8 @@ dtb-$(CONFIG_ARCH_KEYSTONE) += \
->  	keystone-k2hk-evm.dtb \
->  	keystone-k2l-evm.dtb \
->  	keystone-k2e-evm.dtb \
-> -	keystone-k2g-evm.dtb
-> +	keystone-k2g-evm.dtb \
-> +	keystone-k2g-ice.dtb
->  dtb-$(CONFIG_MACH_KIRKWOOD) += \
->  	kirkwood-b3.dtb \
->  	kirkwood-blackarmor-nas220.dtb \
-> diff --git a/arch/arm/boot/dts/keystone-k2g-ice.dts b/arch/arm/boot/dts/keystone-k2g-ice.dts
-> new file mode 100644
-> index 0000000..9ab5f42
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/keystone-k2g-ice.dts
-> @@ -0,0 +1,42 @@
-> +/*
-> + * Device Tree Source for K2G Industrial Communication Engine EVM
-> + *
-> + * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
 
-You can Use SPDX tags here.
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> + */
-> +/dts-v1/;
-> +
-> +#include "keystone-k2g.dtsi"
-> +
-> +/ {
-> +	compatible = "ti,k2g-ice", "ti,k2g", "ti,keystone";
-> +	model = "Texas Instruments K2G Industrial Communication EVM";
-> +
-> +	memory {
+On Mon, Apr 03, 2017 at 11:13:43AM -0500, Rob Herring wrote:
+> On Mon, Apr 3, 2017 at 10:55 AM, Thierry Reding
+> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >
+> > of_irq_count() is handy for obtaining the number of interrupts assigned
+> > to a device tree node. It is reasonable to want to access this function
+> > from loadable modules, so export the symbol to allow that.
+> >
+> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > Hi Rob, Frank,
+> >
+> > This patch is required for the new Tegra186 GPIO driver I'm trying to
+> > get merged for v4.12. It'd be great if I could get an Acked-by from you
+> > so that the patch can be merged through the GPIO tree along with a few
+> > other prerequisites for the new driver.
+>=20
+> Use platform_irq_count instead.
 
-memory@800000000
+Nice, that's much better.
 
-unless that gives you bootloader(s) problems.
+Thanks,
+Thierry
 
-> +		device_type = "memory";
-> +		reg = <0x00000008 0x00000000 0x00000000 0x20000000>;
-> +	};
-> +};
-> +
-> +&k2g_pinctrl {
-> +	uart0_pins: pinmux_uart0_pins {
-> +		pinctrl-single,pins = <
-> +			K2G_CORE_IOPAD(0x11cc) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
-> +			K2G_CORE_IOPAD(0x11d0) (BUFFER_CLASS_B | PIN_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
-> +		>;
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins>;
-> +	status = "okay";
-> +};
-> -- 
-> 2.10.0
-> 
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljieEwACgkQ3SOs138+
+s6GPjQ/+IZhVZ73eUFCZAdv4R/p3tVaWACafhRlwRZQ2bvG2tfjJoHgBN9Mf5m/0
+1VEc1NoVxSUJC7lAmCP/oqrqvSkXj221Mta1u/nMeEBmmo0/cfkat+SzdHiTU4r9
+lrhLsKEMepT/8MEsFxQeBQSoWqrHeYF/gbA4GTRyPNuITQRRh9xtRaYp7hFHcqD+
+lORLXC0JHZ8xdPpRh/8m1rZoi7kWR6rVaHxn8wxnp5qBIV4NZ5/g/40RnF1cRqDk
+QwJZ1CK/gAe1p7NLRxkac1fdgZA+VhWy3Ii3rtl6KUt+3b+0fBtetMhK8Tt9G7KZ
+ItfmEBynzmrYEjjapmc75/4Q4VEUAHy9Efg3IVreaXEPVVynXibabWWl1LfwDw7R
+InbV0xxqDG7Qjr15Gz7r+20MHC9ngppB7lt8FX8imqo265f4n21922Zq8R7QNtoN
+9CJzg63BPydMLEUz3bjyFbbH2Hbcn4FSmtIF+eaYSaxSx99KGTfM5TakClyO9VDC
+07Us26nKHIdeEjfUptmaCbImSWcuDhgbhRihtt8wvxS5xnlk/OKEnVQatyoG9x+q
+509j65RVH9NxZdI6912jg6620tFUknKOXEtYsqq5T+r9FN/rULDiZ1t0i8CIbdfK
+NLRfF71Zm8A5UbUvvkRTmFEUGSAUC3tRHy9FdM0/VzWx+He6Rw8=
+=W7JT
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
