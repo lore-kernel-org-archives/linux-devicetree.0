@@ -1,26 +1,66 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V7 4/7] mfd: da9061: MFD core support
-Date: Mon, 3 Apr 2017 14:20:09 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CD6B183@SW-EX-MBX02.diasemi.com>
-References: <cover.1490712213.git.stwiss.opensource@diasemi.com>
- <8987877cc54940358c5b7a65ca003cedc5586f0d.1490712213.git.stwiss.opensource@diasemi.com>
- <20170403141214.q6ndii6c47pqfqx6@dell>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2] i2c/muxes/i2c-mux-ltc4306: LTC4306 and LTC4305 I2C
+ multiplexer/switch
+Date: Mon, 3 Apr 2017 16:20:53 +0200
+Message-ID: <dcc59f26-6dec-dbf1-22d9-b681daf788a2@axentia.se>
+References: <1490782541-7832-1-git-send-email-michael.hennerich@analog.com>
+ <0d4c068f-d909-64be-421d-4500da7ebd4c@axentia.se>
+ <3c61461e-493c-4562-90c9-f30766591de2@axentia.se>
+ <f871f082-3acd-7a28-25c7-dd77d8286ae6@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170403141214.q6ndii6c47pqfqx6@dell>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <f871f082-3acd-7a28-25c7-dd77d8286ae6@analog.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: michael.hennerich@analog.com, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMgQXByaWwgMjAxNyAxNToxMiwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+ID4gQEAgLTQ3NSw3
-ICs4NTUsMjUgQEAgc3RhdGljIGludCBkYTkwNjJfaTJjX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50
-ICppMmMsDQo+ID4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gIAl9DQo+ID4NCj4gPiAtCWNoaXAt
-PnJlZ21hcCA9IGRldm1fcmVnbWFwX2luaXRfaTJjKGkyYywgJmRhOTA2Ml9yZWdtYXBfY29uZmln
-KTsNCj4gPiArCXN3aXRjaCAoY2hpcC0+Y2hpcF90eXBlKSB7DQo+ID4gKwljYXNlKENPTVBBVF9U
-WVBFX0RBOTA2MSk6DQo+IA0KPiBCcmFja2V0cyBhcm91bmQgdGhlIGNhc2UgdmFsdWU/DQo+IA0K
-PiBUaGF0J3MgYSBuZXcgb25lIG9uIG1lLg0KDQpIbS4gRG8geW91IHdhbnQgbWUgdG8gcmVzZW5k
-IGl0IHdpdGhvdXQgYnJhY2VzPw0KDQpSZWdhcmRzLA0KU3RlcGhlbg0K
+On 2017-04-03 15:36, Michael Hennerich wrote:
+> On 03.04.2017 14:03, Peter Rosin wrote:
+>> On 2017-03-31 17:29, Peter Rosin wrote:
+>>> Hi!
+>>>
+>>> Sorry for my incremental reviewing...
+>>>
+>>
+>> Another incremental...
+>>
+>>> On 2017-03-29 12:15, michael.hennerich@analog.com wrote:
+>>>> +
+>>>> +	/* Now create an adapter for each channel */
+>>>> +	for (num = 0; num < data->chip->nchans; num++) {
+>>>> +		ret = i2c_mux_add_adapter(muxc, 0, num, 0);
+>>>> +		if (ret) {
+>>>> +			dev_err(&client->dev,
+>>>> +				"failed to register multiplexed adapter %d\n",
+>>>> +				num);
+>>
+>> Just a heads up, I submitted a series to remove a bunch of dev_err calls
+>> when i2c_mux_add_adapter fails. See https://lkml.org/lkml/2017/4/3/115
+>>
+>> You can remove this one as well.
+>>
+>> And please use a subject of the form:
+>> i2c: mux: ltc4306: <message>
+> ok - no problem.
+
+You managed to drop the spaces after the new colons in the subject.
+
+And maybe there is a problem, because I don't see any reaction to any of
+the review comments I made in https://lkml.org/lkml/2017/3/31/525
+
+Was that on purpose? Sure, the gpio "jury" is still out on the bigger
+question so maybe you're waiting for that, but there were a few nitpicks
+as well. Anyway, sorry again for failing to compile all comments up front.
+
+> I sent out a new patch. Per Rob's request, I split out the dt-bindings 
+> into a separate patch.
+
+Thanks. I think(?) it is customary to have the bindings first, and then
+implement that "specification" in followup patches. No big deal though...
+
+Cheers,
+peda
+
