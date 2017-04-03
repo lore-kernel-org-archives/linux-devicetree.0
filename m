@@ -1,55 +1,90 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v10 5/5] ARM: configs: stm32: Add I2C support for STM32
- defconfig
-Date: Mon, 3 Apr 2017 16:36:00 +0200
-Message-ID: <3b693eb4-b7f4-47bb-808e-17009b353b46@st.com>
-References: <1484832316-5594-1-git-send-email-cedric.madianga@gmail.com>
- <1484832316-5594-6-git-send-email-cedric.madianga@gmail.com>
+From: Jan Glauber <jan.glauber-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: mtd: Add Cavium SOCs NAND bindings
+Date: Mon, 3 Apr 2017 16:38:40 +0200
+Message-ID: <20170403143840.GA23698@hardcore>
+References: <20170327160524.29019-1-jglauber@cavium.com>
+ <20170327160524.29019-2-jglauber@cavium.com>
+ <20170403132937.z5mxksabo6kmo4jy@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484832316-5594-6-git-send-email-cedric.madianga@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>, wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170403132937.z5mxksabo6kmo4jy@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 01/19/2017 02:25 PM, M'boumba Cedric Madianga wrote:
-> This patch adds I2C support for STM32 default configuration
+On Mon, Apr 03, 2017 at 08:29:37AM -0500, Rob Herring wrote:
+> On Mon, Mar 27, 2017 at 06:05:23PM +0200, Jan Glauber wrote:
+> > Add device tree binding description for Cavium SOC nand flash controller.
+> > 
+> > CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > 
+> > Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/mtd/cavium_nand.txt        | 32 ++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/cavium_nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/cavium_nand.txt b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
+> > new file mode 100644
+> > index 0000000..4698d1f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
+> > @@ -0,0 +1,32 @@
+> > +* Cavium NAND controller
+> > +
+> > +Required properties:
+> > +
+> > +- compatible:		should be "cavium,cn8xxx-nand"
+> 
+> Don't use wildcards in compatible strings. For PCI devices, this should 
+> be based on the PCI vendor and device IDs.
 >
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> ---
 
-Applied on stm32-defconfig-for-v4.12
+Is there a syntax for compatible PCI devices? I'm afraid I've not seen
+this yet, can you give an example?
 
-Regards
-Alex
+Most of Cavium's devices are PCI devices, we just added the compatible
+as convenience and usually it is not parsed.
 
->  arch/arm/configs/stm32_defconfig | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-> index 5a72d69..323d2a3 100644
-> --- a/arch/arm/configs/stm32_defconfig
-> +++ b/arch/arm/configs/stm32_defconfig
-> @@ -47,6 +47,9 @@ CONFIG_SERIAL_NONSTANDARD=y
->  CONFIG_SERIAL_STM32=y
->  CONFIG_SERIAL_STM32_CONSOLE=y
->  # CONFIG_HW_RANDOM is not set
-> +CONFIG_I2C=y
-> +CONFIG_I2C_CHARDEV=y
-> +CONFIG_I2C_STM32F4=y
->  # CONFIG_HWMON is not set
->  # CONFIG_USB_SUPPORT is not set
->  CONFIG_NEW_LEDS=y
->
+thanks,
+Jan
+
+> > +- reg:			PCI devfn
+> > +- clocks:		must contain system clock
+> > +- #address-cells:	<1>
+> > +- #size-cells:		<0>
+> > +
+> > +The nand flash controller may contain up to 8 subnodes representing
+> > +NAND flash chips. Their properties are as follows.
+> > +
+> > +Required properties:
+> > +- compatible:		should be "cavium,nandcs"
+> > +- reg:			a single integer representing the chip-select number
+> > +- nand-ecc-mode:	see nand.txt
+> > +
+> > +Example:
+> > +
+> > +nfc: nand@b,0 {
+> > +	compatible = "cavium,cn8xxx-nand";
+> > +	reg = <0x5800 0 0 0 0>;
+> > +	clocks = <&sclk>;
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +
+> > +	nand@1 {
+> > +		compatible = "cavium,nandcs";
+> > +		reg = <1>;
+> > +		nand-ecc-mode = "on-die";
+> > +};
+> > -- 
+> > 2.9.0.rc0.21.g7777322
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
