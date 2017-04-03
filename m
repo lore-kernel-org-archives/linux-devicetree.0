@@ -1,78 +1,93 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: mtd: Add Cavium SOCs NAND bindings
-Date: Mon, 3 Apr 2017 08:29:37 -0500
-Message-ID: <20170403132937.z5mxksabo6kmo4jy@rob-hp-laptop>
-References: <20170327160524.29019-1-jglauber@cavium.com>
- <20170327160524.29019-2-jglauber@cavium.com>
+From: <michael.hennerich@analog.com>
+Subject: [PATCH v3 2/2] dt-bindings:i2c:mux:ltc4306: Add dt-bindings for I2C multiplexer/switch
+Date: Mon, 3 Apr 2017 15:31:37 +0200
+Message-ID: <1491226297-4970-2-git-send-email-michael.hennerich@analog.com>
+References: <1491226297-4970-1-git-send-email-michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170327160524.29019-2-jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1491226297-4970-1-git-send-email-michael.hennerich@analog.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: wsa@the-dreams.de, peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 06:05:23PM +0200, Jan Glauber wrote:
-> Add device tree binding description for Cavium SOC nand flash controller.
-> 
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/mtd/cavium_nand.txt        | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/cavium_nand.txt b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> new file mode 100644
-> index 0000000..4698d1f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/cavium_nand.txt
-> @@ -0,0 +1,32 @@
-> +* Cavium NAND controller
-> +
-> +Required properties:
-> +
-> +- compatible:		should be "cavium,cn8xxx-nand"
+From: Michael Hennerich <michael.hennerich@analog.com>
 
-Don't use wildcards in compatible strings. For PCI devices, this should 
-be based on the PCI vendor and device IDs.
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/i2c/i2c-mux-ltc4306.txt    | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
 
-> +- reg:			PCI devfn
-> +- clocks:		must contain system clock
-> +- #address-cells:	<1>
-> +- #size-cells:		<0>
-> +
-> +The nand flash controller may contain up to 8 subnodes representing
-> +NAND flash chips. Their properties are as follows.
-> +
-> +Required properties:
-> +- compatible:		should be "cavium,nandcs"
-> +- reg:			a single integer representing the chip-select number
-> +- nand-ecc-mode:	see nand.txt
-> +
-> +Example:
-> +
-> +nfc: nand@b,0 {
-> +	compatible = "cavium,cn8xxx-nand";
-> +	reg = <0x5800 0 0 0 0>;
-> +	clocks = <&sclk>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	nand@1 {
-> +		compatible = "cavium,nandcs";
-> +		reg = <1>;
-> +		nand-ecc-mode = "on-die";
-> +};
-> -- 
-> 2.9.0.rc0.21.g7777322
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+new file mode 100644
+index 0000000..1e98c6b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+@@ -0,0 +1,61 @@
++* Linear Technology / Analog Devices I2C bus switch
++
++Required Properties:
++
++  - compatible: Must contain one of the following.
++    "lltc,ltc4305", "lltc,ltc4306"
++  - reg: The I2C address of the device.
++
++  The following required properties are defined externally:
++
++  - Standard I2C mux properties. See i2c-mux.txt in this directory.
++  - I2C child bus nodes. See i2c-mux.txt in this directory.
++
++Optional Properties:
++
++  - enable-gpios: Reference to the GPIO connected to the enable input.
++  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
++    children in idle state. This is necessary for example, if there are several
++    multiplexers on the bus and the devices behind them use same I2C addresses.
++  - gpio-controller: Marks the device node as a GPIO Controller.
++  - #gpio-cells: Should be two.  The first cell is the pin number and
++	the second cell is used to specify flags.
++	See ../gpio/gpio.txt for more information.
++  - ltc,downstream-accelerators-enable: Enables the rise time accelerators
++	on the downstream port.
++  - ltc,upstream-accelerators-enable: Enables the rise time accelerators
++	on the upstream port.
++
++Example:
++
++	ltc4306: i2c-mux@4a {
++		compatible = "lltc,ltc4306";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x4a>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			eeprom@50 {
++				compatible = "at,24c02";
++				reg = <0x50>;
++			};
++		};
++
++		i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			eeprom@50 {
++				compatible = "at,24c02";
++				reg = <0x50>;
++			};
++		};
++	};
+-- 
+2.7.4
+
