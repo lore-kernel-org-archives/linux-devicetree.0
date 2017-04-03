@@ -1,64 +1,58 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC] serial: imx: support an enable-gpio
-Date: Mon, 3 Apr 2017 12:01:11 -0300
-Message-ID: <CAOMZO5A4e7H-6feNN-cTABOKv+CUCU9Em_yFMhorZwXfeA-h0w@mail.gmail.com>
-References: <1468400495-10471-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Patrick Menschel <menschel.p@posteo.de>
+Subject: [PATCH v3 0/4] ARM: dts: sunxi: Add CAN node and can0_pins_a pinctrl
+ settings
+Date: Mon,  3 Apr 2017 19:00:10 +0200
+Message-ID: <1491238814-4888-1-git-send-email-menschel.p@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468400495-10471-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
+Cc: Patrick Menschel <menschel.p@posteo.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+The Allwinner A10/A20 SoCs have an on-board CAN (Controller Area Network)
+controller. This patch adds the CAN core to the SoC's include files,
+sun4i-a10.dtsi and sun7i-a20.dtsi.
 
-On Wed, Jul 13, 2016 at 6:01 AM, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> A part of my machine looks as follows (simplified):
->
-> ,------------------------.
-> | ,---------.            |
-> | |  imx25  o--RX----=E2=97=81---o---
-> | |         o--GPIO--'   |
-> | `---------'            |
-> `------------------------'
->
-> that is, there is a driver on the RX line that must be enabled before
-> the UART can be used. (That is necessary because the default mux of the
-> RX pad after reset is an output.)
->
-> To represent this in the device tree I do:
->
->         pinctrl_uart5: uart5 {
->                 fsl,pins =3D <
->                         ...
->                         MX25_PAD_LBA__UART5_RXD         0x00000000
->                         MX25_PAD_CS5__GPIO_3_21         0x00002001
->                         ...
->         };
->
->         &uart5 {
->                 pinctrl-names =3D "default";
->                 pinctrl-0 =3D <&pinctrl_uart5>;
->
->                 enable-gpio =3D <&gpio3 21 GPIO_ACTIVE_LOW>;
->                 ...
->         };
->
-> This way it's ensured that the gpio is only enabled when the LBA pad is
-> muxed as RX (together with the bootloader that sets the GPIO high).
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On linux-can mailing list was a discussion about updating the device tree bindings
+https://lkml.org/lkml/2015/9/17/220
+but it did not progress past writing the documentation file.
+Documentation/devicetree/bindings/net/can/sun4i_can.txt
 
-Since this is not imx serial specific it could be made more generic.
+The CAN controller can be enabled in a board specific dts file as
+described in the documentation file or by using a device tree overlay.
 
-What about extending
-Documentation/devicetree/bindings/serial/slave-device.txt to handle
-this GPIO, or maybe a regulator?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have tested the patch on a Banana Pi (A20 SoC) with mainline kernel 4.10.5.
+
+History:
+    v3: added "allwinner,sun7i-a20-can" compatible to can0 device node contents,
+        make separate patches for device nodes and pinctrl settings
+
+    v2: changed can0_pins_a node contents to new generic binding method, 
+	changed can0_pins_a node position by alphabetical order,
+        changed can0 device node position by rising physical address order
+
+    v1: initial
+
+Patrick Menschel (4):
+  ARM: dts: sun4i: Add CAN node
+  ARM: dts: sun4i: Add can0_pins_a pinctrl settings
+  ARM: dts: sun7i: Add CAN node
+  ARM: dts: sun7i: Add can0_pins_a pinctrl settings
+
+ arch/arm/boot/dts/sun4i-a10.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi | 14 ++++++++++++++
+ 2 files changed, 27 insertions(+)
+
+-- 
+1.9.1
