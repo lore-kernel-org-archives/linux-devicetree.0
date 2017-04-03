@@ -1,41 +1,64 @@
-From: Patrick Menschel <menschel.p@posteo.de>
-Subject: [PATCH v3 2/4] ARM: dts: sun4i: Add can0_pins_a pinctrl settings
-Date: Mon,  3 Apr 2017 19:00:12 +0200
-Message-ID: <1491238814-4888-3-git-send-email-menschel.p@posteo.de>
-References: <1491238814-4888-1-git-send-email-menschel.p@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491238814-4888-1-git-send-email-menschel.p@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
-Cc: Patrick Menschel <menschel.p@posteo.de>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC] serial: imx: support an enable-gpio
+Date: Mon, 3 Apr 2017 12:01:11 -0300
+Message-ID: <CAOMZO5A4e7H-6feNN-cTABOKv+CUCU9Em_yFMhorZwXfeA-h0w@mail.gmail.com>
+References: <1468400495-10471-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468400495-10471-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A10 SoC has an on-board CAN controller. This patch adds the
-pinctrl settings for pins PH20 and PH21.
+Hi Uwe,
 
-This patch is adapted from the description in
-Documentation/devicetree/bindings/net/can/sun4i_can.txt
+On Wed, Jul 13, 2016 at 6:01 AM, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> A part of my machine looks as follows (simplified):
+>
+> ,------------------------.
+> | ,---------.            |
+> | |  imx25  o--RX----=E2=97=81---o---
+> | |         o--GPIO--'   |
+> | `---------'            |
+> `------------------------'
+>
+> that is, there is a driver on the RX line that must be enabled before
+> the UART can be used. (That is necessary because the default mux of the
+> RX pad after reset is an output.)
+>
+> To represent this in the device tree I do:
+>
+>         pinctrl_uart5: uart5 {
+>                 fsl,pins =3D <
+>                         ...
+>                         MX25_PAD_LBA__UART5_RXD         0x00000000
+>                         MX25_PAD_CS5__GPIO_3_21         0x00002001
+>                         ...
+>         };
+>
+>         &uart5 {
+>                 pinctrl-names =3D "default";
+>                 pinctrl-0 =3D <&pinctrl_uart5>;
+>
+>                 enable-gpio =3D <&gpio3 21 GPIO_ACTIVE_LOW>;
+>                 ...
+>         };
+>
+> This way it's ensured that the gpio is only enabled when the LBA pad is
+> muxed as RX (together with the bootloader that sets the GPIO high).
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Signed-off-by: Patrick Menschel <menschel.p@posteo.de>
----
- arch/arm/boot/dts/sun4i-a10.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Since this is not imx serial specific it could be made more generic.
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 7c559e7..f7dced4 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -974,6 +974,11 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
- 
-+			can0_pins_a: can0@0 {
-+				pins = "PH20","PH21";
-+				function = "can";
-+			};
-+
- 			emac_pins_a: emac0@0 {
- 				pins = "PA0", "PA1", "PA2",
- 				       "PA3", "PA4", "PA5", "PA6",
--- 
-1.9.1
+What about extending
+Documentation/devicetree/bindings/serial/slave-device.txt to handle
+this GPIO, or maybe a regulator?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
