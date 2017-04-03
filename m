@@ -1,32 +1,74 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] dt-bindings: input: Add Atmel PTC subsystem bindings
-Date: Mon, 3 Apr 2017 11:50:38 -0500
-Message-ID: <20170403165038.ekfqixgog6idr35g@rob-hp-laptop>
-References: <20170331152250.12758-1-ludovic.desroches@microchip.com>
- <20170331152250.12758-5-ludovic.desroches@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-binding: meson_uart: add documentation for the
+ UARTs of amlogic
+Date: Mon, 3 Apr 2017 11:52:39 -0500
+Message-ID: <20170403165239.2k2sajeu2vout7hf@rob-hp-laptop>
+References: <20170331165437.26227-1-hgkr.klein@gmail.com>
+ <20170331165437.26227-3-hgkr.klein@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170331152250.12758-5-ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170331165437.26227-3-hgkr.klein@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Helmut Klein <hgkr.klein@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 05:22:50PM +0200, Ludovic Desroches wrote:
-> Add description of the Atmel PTC subsystem bindings.
+On Fri, Mar 31, 2017 at 06:54:35PM +0200, Helmut Klein wrote:
+> Add the documentation for the device tree binding of meson_uart
 > 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Signed-off-by: Helmut Klein <hgkr.klein@gmail.com>
 > ---
->  .../devicetree/bindings/input/atmel,ptc.txt        | 67 ++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/atmel,ptc.txt
+>  .../bindings/serial/amlogic,meson_uart.txt         | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt b/Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt
+> new file mode 100644
+> index 000000000000..8250a191c2fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/amlogic,meson_uart.txt
+> @@ -0,0 +1,30 @@
+> +* Amlogic Meson UART, used in multiple SoCs (e.g. S905, s905X, ...)
+> +
+> +Required properties:
+> +- compatible	: "amlogic,meson-uart"
 
-Other than the patch order,
+Should have SoC specific compatible strings in addition.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- reg		: offset and length of the register set for the device.
+> +- interrupts	: device interrupt
+> +- clocks	: a list of phandle + clock-specifier pairs, one for each
+> +		    entry in clock names.
+> +- clocks-names	: contains:
+> +   * "xtal" for the baud rate clock
+> +   * "core" for the core clock of none AO UARTs (optional)
+> +
+> +e.g.
+> +uart_A: serial@84c0 {
+> +	compatible = "amlogic,meson-uart";
+> +	reg = <0x0 0x84c0 0x0 0x14>;
+> +	pinctrl-0 = <&uart_a_pins &uart_a_cts_rts_pins>;
+> +	interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
+> +	clocks = <&xtal>, <&clkc CLKID_UART0>;
+> +	clock-names = "xtal", "core";
+> +	status = "ok";
+
+Drop status from examples.
+
+> +};
+> +
+> +Note: Each port should have an alias correctly numbered in "aliases" node.
+
+True for pretty much any uart, so you can drop this.
+
+> +
+> +e.g.
+> +aliases {
+> +	serial0 = &uart_AO;
+> +	serial1 = &uart_A;
+> +};
+> --
+> 2.11.0
+> 
