@@ -1,77 +1,77 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
-Date: Tue, 04 Apr 2017 00:54:43 +0200
-Message-ID: <1587425.dbD1NUOEYx@diego>
-References: <cover.1491118230.git.guillaume.tucker@collabora.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 2/7] mfd: retu: Add OF device ID table
+Date: Mon, 3 Apr 2017 15:58:13 -0700
+Message-ID: <20170403225813.GJ10760@atomide.com>
+References: <20170401071854.23198-1-javier@osg.samsung.com>
+ <20170401071854.23198-3-javier@osg.samsung.com>
+ <20170403111502.lotjpd746vkhekkg@dell>
+ <2147b8c9-02ee-1b9c-a74e-119b0b73d1d7@osg.samsung.com>
+ <20170403222010.xgbf7imyieyfroqr@rob-hp-laptop>
+ <a852be9e-e1f0-0975-abd0-a4a61f3a9750@osg.samsung.com>
+ <20170403225342.eqyh3van4q6bxpuv@raspberrypi-3.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1491118230.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170403225342.eqyh3van4q6bxpuv@raspberrypi-3.musicnaut.iki.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linux-OMAP <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guillaume,
+* Aaro Koskinen <aaro.koskinen@iki.fi> [170403 15:56]:
+> Hi,
+> 
+> On Mon, Apr 03, 2017 at 06:24:39PM -0400, Javier Martinez Canillas wrote:
+> > On 04/03/2017 06:20 PM, Rob Herring wrote:
+> > > On Mon, Apr 03, 2017 at 11:45:14AM -0400, Javier Martinez Canillas wrote:
+> > >> Hello Lee,
+> > >>
+> > >> On 04/03/2017 07:15 AM, Lee Jones wrote:
+> > >>
+> > >> [snip]
+> > >>
+> > >>>>  
+> > >>>> +static const struct of_device_id retu_of_match[] = {
+> > >>>> +	{ .compatible = "nokia,retu-mfd" },
+> > >>>> +	{ .compatible = "nokia,tahvo-mfd" },
+> > >>>
+> > >>> Please drop the "-mfd".
+> > >>>
+> > >>
+> > >> Yes, I also didn't like it but I didn't want to change it since that would
+> > >> mean that backward compatiblity and bisect-ability will be broken by this
+> > >> change.
+> > >>
+> > >> In other words, just adding a vendor prefix won't cause an issue if patches
+> > >> are merged independently since if DTS patches are merged before, the driver
+> > >> will still lookup using the I2C device ID table. And if the drivers patches
+> > >> are picked before, the DTS will match using the OF device ID table.
+> > >>
+> > >> But changing to "nokia,retu" and "nokia,tahvo" means that you will need to
+> > >> pick all patches and also that the DTS and drivers changes will have to be
+> > >> done in the same patch. If you are OK with that, then I can change in the
+> > >> next version.
+> > > 
+> > > tahvo is not documented nor used in any dts (in the kernel at least). 
+> 
+> True, there are no known DT users of Tahvo.
+> 
+> > > retu is used by 1 board and happened to work, but was never documented. 
+> > > So I think it is okay to change unless the N800 folks object.
+> > 
+> > I'm fine with changing it (in fact I just want to fix the I2C of modalias
+> > reporting). Does this mean that backward compatibility and bisect-ability
+> > should be preserved? Or it's OK to split the changes in different patches?
+> 
+> There are 2 boards actually, N800 and N810. Retu is critical, because
+> if retu-mfd/watchdog fails to probe the device will power off soon after
+> boot. So for bisect-ability you should make changes in a single patch.
 
-please keep in mind to also add me (as Rockchip maintainer) as recipient in 
-further submissions - as also listed by scripts/get_maintainer.pl.
+Also I wonder if this will work with arch/arm/mach-omap1/board-nokia770.c
+that does I2C_BOARD_INFO("tahvo-mfd", 0x02). Seems they all need to be
+changed with a single patch?
 
+Regards,
 
-Thanks
-Heiko
-
-Am Sonntag, 2. April 2017, 08:59:43 CEST schrieb Guillaume Tucker:
-> The ARM Mali Midgard GPU kernel driver is only available
-> out-of-tree and is not going to be merged in its current form.
-> However, it would be useful to have its device tree bindings
-> merged.  In particular, this would enable distributions to create
-> working driver packages (dkms...) without having to patch the
-> kernel.
-> 
-> The bindings for the earlier Mali Utgard GPU family have already
-> been merged, so this is essentially the same scenario but for
-> newer GPUs (Mali-T604 ~ Mali-T880).
-> 
-> This series of patches first imports the bindings from the latest
-> driver release with some clean-up then adds a gpu node for the
-> rk3288 SoC.  This was successfully tested on Radxa Rock2 Square,
-> Firefly, Veyron Minnie and Jerry boards board using Mali kernel
-> driver r16p0 and r12p0 user-space binary.
-> 
-> Changes since v1:
-> - enabled gpu on rk3288-veyron boards
-> 
-> Enric Balletbo i Serra (1):
->   ARM: dts: rockchip: enable ARM Mali GPU on rk3288-veyron
-> 
-> Guillaume Tucker (4):
->   dt-bindings: gpu: add bindings for the ARM Mali Midgard GPU
->   ARM: dts: rockchip: add ARM Mali GPU node for rk3288
->   ARM: dts: rockchip: enable ARM Mali GPU on rk3288-rock2-som
->   ARM: dts: rockchip: enable ARM Mali GPU on rk3288-firefly
-> 
->  .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53
-> ++++++++++++++++++++++ arch/arm/boot/dts/rk3288-firefly.dtsi              |
->  5 ++
->  arch/arm/boot/dts/rk3288-rock2-som.dtsi            |  5 ++
->  arch/arm/boot/dts/rk3288-veyron.dtsi               |  5 ++
->  arch/arm/boot/dts/rk3288.dtsi                      | 23 ++++++++++
->  5 files changed, 91 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> 
-> --
-> 2.11.0
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
