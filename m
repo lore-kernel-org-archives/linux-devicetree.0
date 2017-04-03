@@ -1,62 +1,77 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH 1/3] dt-bindings: power: supply: New bindings for LEGO
- MINDSTORMS EV3 battery
-Date: Mon,  3 Apr 2017 15:23:47 -0500
-Message-ID: <1491251029-23256-2-git-send-email-david@lechnology.com>
-References: <1491251029-23256-1-git-send-email-david@lechnology.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC] serial: imx: support an enable-gpio
+Date: Mon, 3 Apr 2017 15:25:23 -0500
+Message-ID: <CAL_JsqL8EQWoqyeyVb5Uj9ZaoB3Uz3yzbo114OR-FRrMEu8s=A@mail.gmail.com>
+References: <1468400495-10471-1-git-send-email-u.kleine-koenig@pengutronix.de> <CAOMZO5A4e7H-6feNN-cTABOKv+CUCU9Em_yFMhorZwXfeA-h0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1491251029-23256-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5A4e7H-6feNN-cTABOKv+CUCU9Em_yFMhorZwXfeA-h0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add a new device tree binding for LEGO MINDSTORMS EV3 battery. The EV3
-has some built-in capability for monitoring the attached battery.
+On Mon, Apr 3, 2017 at 10:01 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Uwe,
+>
+> On Wed, Jul 13, 2016 at 6:01 AM, Uwe Kleine-König
+> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> A part of my machine looks as follows (simplified):
+>>
+>> ,------------------------.
+>> | ,---------.            |
+>> | |  imx25  o--RX----◁---o---
+>> | |         o--GPIO--'   |
+>> | `---------'            |
+>> `------------------------'
+>>
+>> that is, there is a driver on the RX line that must be enabled before
+>> the UART can be used. (That is necessary because the default mux of the
+>> RX pad after reset is an output.)
+>>
+>> To represent this in the device tree I do:
+>>
+>>         pinctrl_uart5: uart5 {
+>>                 fsl,pins = <
+>>                         ...
+>>                         MX25_PAD_LBA__UART5_RXD         0x00000000
+>>                         MX25_PAD_CS5__GPIO_3_21         0x00002001
+>>                         ...
+>>         };
+>>
+>>         &uart5 {
+>>                 pinctrl-names = "default";
+>>                 pinctrl-0 = <&pinctrl_uart5>;
+>>
+>>                 enable-gpio = <&gpio3 21 GPIO_ACTIVE_LOW>;
 
-Signed-off-by: David Lechner <david@lechnology.com>
----
- .../bindings/power/supply/lego_ev3_battery.txt      | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/lego_ev3_battery.txt
+enable-gpios
 
-diff --git a/Documentation/devicetree/bindings/power/supply/lego_ev3_battery.txt b/Documentation/devicetree/bindings/power/supply/lego_ev3_battery.txt
-new file mode 100644
-index 0000000..5485633
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/lego_ev3_battery.txt
-@@ -0,0 +1,21 @@
-+LEGO MINDSTORMS EV3 Battery
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+LEGO MINDSTORMS EV3 has some built-in capability for monitoring the battery.
-+It uses 6 AA batteries or a special Li-ion rechargeable battery pack that is
-+detected by a key switch in the battery compartment.
-+
-+Required properties:
-+ - compatible: Must be "lego,ev3-battery"
-+ - io-channels: phandles to analog inputs for reading voltage and current
-+ - io-channel-names: Must be "voltage", "current"
-+ - rechargeable-gpios: phandle to the rechargeable battery indication gpio
-+
-+Example:
-+
-+	battery {
-+		compatible = "lego,ev3-battery";
-+		io-channels = <&adc 4>, <&adc 3>;
-+		io-channel-names = "voltage", "current";
-+		rechargeable-gpios = <&gpio 136 GPIO_ACTIVE_LOW>;
-+	};
--- 
-2.7.4
+I imagine you already know this needs documentation. Make it common please.
+
+>>                 ...
+>>         };
+>>
+>> This way it's ensured that the gpio is only enabled when the LBA pad is
+>> muxed as RX (together with the bootloader that sets the GPIO high).
+>>
+>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> Since this is not imx serial specific it could be made more generic.
+>
+> What about extending
+> Documentation/devicetree/bindings/serial/slave-device.txt to handle
+> this GPIO, or maybe a regulator?
+
+This is more like a phy than a device you talk to. It could also be
+something like an RS-232 xcvr enable (no one has done that already?).
+I think it belongs in the uart's node. You could additionally have an
+enable-gpios for a slave device.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
