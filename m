@@ -1,45 +1,113 @@
-From: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
-Subject: Re: [RFC PATCH 4/5] dt-bindings: soc/fsl: Update reserved memory
- binding for QBMan
-Date: Mon, 3 Apr 2017 19:49:03 +0000
-Message-ID: <VI1PR04MB32166AA6361CD6F24DBC3AAF86080@VI1PR04MB3216.eurprd04.prod.outlook.com>
-References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com>
- <1490822037-6752-5-git-send-email-roy.pledge@nxp.com>
- <20170403154229.mf63zeiwv5naxyrr@rob-hp-laptop>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] Documentation: DT: bindings:
+ input: touschcreen: remove sun4i documentation
+Date: Mon, 3 Apr 2017 13:09:51 -0700
+Message-ID: <20170403200951.GA5613@dtor-ws>
+References: <20170321153611.16228-1-quentin.schulz@free-electrons.com>
+ <20170321153611.16228-6-quentin.schulz@free-electrons.com>
+ <20170329075826.4curjodxgi34tgco@dell>
+Reply-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+Return-path: <linux-sunxi+bncBDP6N55ZUYDRBGGYRLDQKGQE2LWA6DQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170329075826.4curjodxgi34tgco@dell>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/3/2017 11:42 AM, Rob Herring wrote:=0A=
-> On Wed, Mar 29, 2017 at 05:13:56PM -0400, Roy Pledge wrote:=0A=
->> Updates the QMan and BMan device tree bindings for reserved memory=0A=
->> nodes. This makes the reserved memory allocation compatiable with=0A=
-> s/compatiable/compatible/=0A=
->=0A=
->> the shared-dma-pool usage.=0A=
-> This change is not backwards compatible. Please state that and explain =
-=0A=
-> why that is okay. If PPC needs to not change, then the old strings and =
-=0A=
-> properties should remain, but deprecated.=0A=
-I think I can make the old device trees compatible since the=0A=
-"compatible" string changed without too much effort or ifdefery in the=0A=
-code.  However I would like to eventually see all PPC users move to the=0A=
-new mode as I do believe it is more in alignment with the spirit of the=0A=
-reserved-memory framework that is in the kernel.  Do I need to mention=0A=
-the old mode in the binding.txt file?  I'm trying to keep things clean=0A=
-so someone reading the binding doesn't get a headache and trying to=0A=
-preserve my own sanity as we move forward with adding new features to=0A=
-this driver.=0A=
-=0A=
-Roy=0A=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Mar 29, 2017 at 08:58:26AM +0100, Lee Jones wrote:
+> On Tue, 21 Mar 2017, Quentin Schulz wrote:
+>=20
+> > This patch removes the sun4i touchscreen controller binding
+> > documentation since it has been merged with the sun4i GPADC binding
+> > documentation.
+> >=20
+> > Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >=20
+> > added in v2
+> >=20
+> >  .../bindings/input/touchscreen/sun4i.txt           | 38 --------------=
+--------
+>=20
+> Just an Input Ack missing here.
+
+Acked-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+>=20
+> >  1 file changed, 38 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen=
+/sun4i.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/sun4i.=
+txt b/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
+> > deleted file mode 100644
+> > index 89abecd..0000000
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
+> > +++ /dev/null
+> > @@ -1,38 +0,0 @@
+> > -sun4i resistive touchscreen controller
+> > ---------------------------------------
+> > -
+> > -Required properties:
+> > - - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
+> > -   "allwinner,sun6i-a31-ts"
+> > - - reg: mmio address range of the chip
+> > - - interrupts: interrupt to which the chip is connected
+> > - - #thermal-sensor-cells: shall be 0
+> > -
+> > -Optional properties:
+> > - - allwinner,ts-attached	 : boolean indicating that an actual touchscr=
+een
+> > -				   is attached to the controller
+> > - - allwinner,tp-sensitive-adjust : integer (4 bits)
+> > -				   adjust sensitivity of pen down detection
+> > -				   between 0 (least sensitive) and 15
+> > -				   (defaults to 15)
+> > - - allwinner,filter-type	 : integer (2 bits)
+> > -				   select median and averaging filter
+> > -				   samples used for median / averaging filter
+> > -				   0: 4/2
+> > -				   1: 5/3
+> > -				   2: 8/4
+> > -				   3: 16/8
+> > -				   (defaults to 1)
+> > -
+> > -Example:
+> > -
+> > -	rtp: rtp@01c25000 {
+> > -		compatible =3D "allwinner,sun4i-a10-ts";
+> > -		reg =3D <0x01c25000 0x100>;
+> > -		interrupts =3D <29>;
+> > -		allwinner,ts-attached;
+> > -		#thermal-sensor-cells =3D <0>;
+> > -		/* sensitive/noisy touch panel */
+> > -		allwinner,tp-sensitive-adjust =3D <0>;
+> > -		allwinner,filter-type =3D <3>;
+> > -	};
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+Dmitry
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
