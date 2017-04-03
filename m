@@ -1,113 +1,85 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 05/11] Documentation: DT: bindings:
- input: touschcreen: remove sun4i documentation
-Date: Mon, 3 Apr 2017 13:09:51 -0700
-Message-ID: <20170403200951.GA5613@dtor-ws>
-References: <20170321153611.16228-1-quentin.schulz@free-electrons.com>
- <20170321153611.16228-6-quentin.schulz@free-electrons.com>
- <20170329075826.4curjodxgi34tgco@dell>
-Reply-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH 3/3] ARM: dts: da850: Add node for LEGO MINDSTORMS EV3 Battery
+Date: Mon,  3 Apr 2017 15:23:49 -0500
+Message-ID: <1491251029-23256-4-git-send-email-david@lechnology.com>
+References: <1491251029-23256-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDP6N55ZUYDRBGGYRLDQKGQE2LWA6DQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170329075826.4curjodxgi34tgco@dell>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1491251029-23256-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 29, 2017 at 08:58:26AM +0100, Lee Jones wrote:
-> On Tue, 21 Mar 2017, Quentin Schulz wrote:
->=20
-> > This patch removes the sun4i touchscreen controller binding
-> > documentation since it has been merged with the sun4i GPADC binding
-> > documentation.
-> >=20
-> > Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> >=20
-> > added in v2
-> >=20
-> >  .../bindings/input/touchscreen/sun4i.txt           | 38 --------------=
---------
->=20
-> Just an Input Ack missing here.
+This adds a new node to the LEGO MINDSTORMS EV3 device tree for the battery.
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: David Lechner <david@lechnology.com>
+---
+ arch/arm/boot/dts/da850-lego-ev3.dts | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
->=20
-> >  1 file changed, 38 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen=
-/sun4i.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/sun4i.=
-txt b/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
-> > deleted file mode 100644
-> > index 89abecd..0000000
-> > --- a/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
-> > +++ /dev/null
-> > @@ -1,38 +0,0 @@
-> > -sun4i resistive touchscreen controller
-> > ---------------------------------------
-> > -
-> > -Required properties:
-> > - - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
-> > -   "allwinner,sun6i-a31-ts"
-> > - - reg: mmio address range of the chip
-> > - - interrupts: interrupt to which the chip is connected
-> > - - #thermal-sensor-cells: shall be 0
-> > -
-> > -Optional properties:
-> > - - allwinner,ts-attached	 : boolean indicating that an actual touchscr=
-een
-> > -				   is attached to the controller
-> > - - allwinner,tp-sensitive-adjust : integer (4 bits)
-> > -				   adjust sensitivity of pen down detection
-> > -				   between 0 (least sensitive) and 15
-> > -				   (defaults to 15)
-> > - - allwinner,filter-type	 : integer (2 bits)
-> > -				   select median and averaging filter
-> > -				   samples used for median / averaging filter
-> > -				   0: 4/2
-> > -				   1: 5/3
-> > -				   2: 8/4
-> > -				   3: 16/8
-> > -				   (defaults to 1)
-> > -
-> > -Example:
-> > -
-> > -	rtp: rtp@01c25000 {
-> > -		compatible =3D "allwinner,sun4i-a10-ts";
-> > -		reg =3D <0x01c25000 0x100>;
-> > -		interrupts =3D <29>;
-> > -		allwinner,ts-attached;
-> > -		#thermal-sensor-cells =3D <0>;
-> > -		/* sensitive/noisy touch panel */
-> > -		allwinner,tp-sensitive-adjust =3D <0>;
-> > -		allwinner,filter-type =3D <3>;
-> > -	};
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
---=20
-Dmitry
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+index c20580a..99cd561 100644
+--- a/arch/arm/boot/dts/da850-lego-ev3.dts
++++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+@@ -172,6 +172,18 @@
+ 		gpio = <&gpio 111 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	/*
++	 * The EV3 can use 6-AA batteries or a rechargable Li-ion battery pack.
++	 */
++	battery {
++		pinctrl-names = "default";
++		pintctrl-0 = <&battery_pins>;
++		compatible = "lego,ev3-battery";
++		io-channels = <&adc 4>, <&adc 3>;
++		io-channel-names = "voltage", "current";
++		rechargeable-gpios = <&gpio 136 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &pmx_core {
+@@ -235,6 +247,15 @@
+ 			0x34 0x00000008 0x0000000f
+ 		>;
+ 	};
++
++	battery_pins: pinmux_battery_pins {
++		pinctrl-single,bits = <
++			/* GP0[6] */
++			0x04 0x00000080 0x000000f0
++			/* GP8[8] */
++			0x4c 0x00000080 0x000000f0
++		>;
++	};
+ };
+ 
+ &pinconf {
+@@ -349,6 +370,13 @@
+ 
+ &gpio {
+ 	status = "okay";
++
++	/* Don't pull down battery voltage adc io channel */
++	batt_volt_en {
++		gpio-hog;
++		gpios = <6 GPIO_ACTIVE_HIGH>;
++		output-low;
++	};
+ };
+ 
+ &usb_phy {
+-- 
+2.7.4
