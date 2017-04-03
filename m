@@ -1,82 +1,50 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V5 1/2] dt-bindings: thermal: add support for Broadcom's Northstar thermal
-Date: Mon,  3 Apr 2017 17:48:28 +0200
-Message-ID: <20170403154829.29780-1-zajec5@gmail.com>
-References: <20170331201124.656-1-zajec5@gmail.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] Input: silead - list all supported compatible strings in
+ binding document
+Date: Mon, 3 Apr 2017 11:51:55 -0400
+Message-ID: <6574d158-7fe8-7a2f-dab6-1c155780c785@osg.samsung.com>
+References: <20170329182531.17349-1-javier@osg.samsung.com>
+ <20170403152543.im7tbkhfc3lj7lyt@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170331201124.656-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170403152543.im7tbkhfc3lj7lyt@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Dolca <robert.dolca@intel.com>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Hello Rob,
 
-This commit documents binding for thermal used in Northstar family SoCs.
+On 04/03/2017 11:25 AM, Rob Herring wrote:
+> On Wed, Mar 29, 2017 at 02:25:31PM -0400, Javier Martinez Canillas wrote:
+>> The driver contains compatible strings for different models, but the DT
+>> binding doc only lists one of them. Add the remaining to the document.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>> ---
+>>
+>>  .../devicetree/bindings/input/touchscreen/silead_gsl1680.txt       | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> "dt-bindings: input: ..." is preferred for the subject, but no need to 
+> respin just for that.
+>
 
-There isn't any known Northstar device with active cooling system so DT
-example has empty cooling-maps node. There is also no support for CPU
-frequency throttling so I put only a critical trip in the example.
+Can we document it in Documentation/devicetree/bindings/submitting-patches.txt?
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-V3: Add thermal-zones to the example
-V5: Extend example by including trips and cooling-maps. Update commit message
----
- .../devicetree/bindings/thermal/brcm,ns-thermal    | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/brcm,ns-thermal
+I'm asking because is true that at the beginning we used "dt-bindings: foo" for
+all DT bindings patches but then many (most?) maintainers started asking for the
+subsystem subject line to be used for both drivers and DT bindings docs since
+they would be merging both and also they could miss the DT bindings patches if
+their subsystem prefix was not used.
 
-diff --git a/Documentation/devicetree/bindings/thermal/brcm,ns-thermal b/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
-new file mode 100644
-index 000000000000..68e047170039
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
-@@ -0,0 +1,37 @@
-+* Broadcom Northstar Thermal
-+
-+This binding describes thermal sensor that is part of Northstar's DMU (Device
-+Management Unit).
-+
-+Required properties:
-+- compatible : Must be "brcm,ns-thermal"
-+- reg : iomem address range of PVTMON registers
-+- #thermal-sensor-cells : Should be <0>
-+
-+Example:
-+
-+thermal: thermal@1800c2c0 {
-+	compatible = "brcm,ns-thermal";
-+	reg = <0x1800c2c0 0x10>;
-+	#thermal-sensor-cells = <0>;
-+};
-+
-+thermal-zones {
-+	cpu_thermal: cpu-thermal {
-+		polling-delay-passive = <0>;
-+		polling-delay = <1000>;
-+		coefficients = <(-556) 418000>;
-+		thermal-sensors = <&thermal>;
-+
-+		trips {
-+			cpu-crit {
-+				temperature	= <125000>;
-+				hysteresis	= <0>;
-+				type		= "critical";
-+			};
-+		};
-+
-+		cooling-maps {
-+		};
-+	};
-+};
+> Acked-by: Rob Herring <robh@kernel.org> 
+> 
+
+Best regards,
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
