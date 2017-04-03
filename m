@@ -1,114 +1,189 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH V4 1/2] dt-bindings: thermal: add support for Broadcom's
- Northstar thermal
-Date: Sun, 2 Apr 2017 23:07:16 -0400
-Message-ID: <CAC3K-4r7xGoSSBwHKZjrS27jMFr_RYp1n4nRo2aAHzVAVbVi_A@mail.gmail.com>
-References: <20170331073132.21457-2-zajec5@gmail.com> <20170331201124.656-1-zajec5@gmail.com>
- <20170401195136.GD28514@localhost.localdomain> <6dd907e4-c213-3174-8613-99427e6ea0e9@gmail.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength"
+ DT property
+Date: Mon, 3 Apr 2017 12:16:34 +0900
+Message-ID: <CAK7LNAToTmirpkhNmPCLhcTXG_SFqS762mEGK3mjyqLKXuWa1Q@mail.gmail.com>
+References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
+ <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com>
+ <20170330160238.59e5a2c1@bbrezillon> <CAK7LNARUKwMHd79ALDx_SDY9XKcHPY96xTAOMQx6XarFgwb-AA@mail.gmail.com>
+ <20170331114659.4964be35@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <6dd907e4-c213-3174-8613-99427e6ea0e9@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-pm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170331114659.4964be35@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 1, 2017 at 5:50 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
-> On 04/01/2017 09:51 PM, Eduardo Valentin wrote:
->>
->> On Fri, Mar 31, 2017 at 10:11:23PM +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
->>>
->>> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->>>
->>> This commit documents binding for thermal used in Northstar family SoCs=
-.
->>>
->>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->>> ---
->>> V3: Add thermal-zones to the example
->>>     Rob: Because of this update, I didn't include Acked-by I got for V2
->>> ---
->>>  .../devicetree/bindings/thermal/brcm,ns-thermal    | 26
->>> ++++++++++++++++++++++
->>>  1 file changed, 26 insertions(+)
->>>  create mode 100644
->>> Documentation/devicetree/bindings/thermal/brcm,ns-thermal
->>>
->>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
->>> b/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
->>> new file mode 100644
->>> index 000000000000..c561c7349f17
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/thermal/brcm,ns-thermal
->>> @@ -0,0 +1,26 @@
->>> +* Broadcom Northstar Thermal
->>> +
->>> +This binding describes thermal sensor that is part of Northstar's DMU
->>> (Device
->>> +Management Unit).
->>> +
->>> +Required properties:
->>> +- compatible : Must be "brcm,ns-thermal"
->>> +- reg : iomem address range of PVTMON registers
->>> +- #thermal-sensor-cells : Should be <0>
->>> +
->>> +Example:
->>> +
->>> +thermal: thermal@1800c2c0 {
->>> +       compatible =3D "brcm,ns-thermal";
->>> +       reg =3D <0x1800c2c0 0x10>;
->>> +       #thermal-sensor-cells =3D <0>;
->>> +};
->>> +
->>> +thermal-zones {
->>> +       cpu_thermal: cpu-thermal {
->>> +               polling-delay-passive =3D <0>;
->>> +               polling-delay =3D <1000>;
->>> +               coefficients =3D <(-556) 418000>;
->>> +               thermal-sensors =3D <&thermal>;
->>
->>
->> You need to define trips and cooling devices here. Otherwise, makes
->> little sense to have this device in thermal subsystem. Here is an
->> example of minimal set:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-therm=
-al.git/commit/?h=3Dlinus&id=3D1e2ac9821de6a85d3e8358f238436708d1d46869
->>
->> The above has no passive action. It is just gonna shutdown the system if
->> temperature crosses a threshold.
->>
->> But, a typical cooling device would be CPU frequency throttling. Do you
->> have
->> that up and running in your routers?
->
->
-> I don't have CPU freq throttling, so shutdown will be the only solution f=
-or
-> critical temp right now.
->
-> I know I should have at least a trip for critical temperature, but the
-> problem
-> is I don't know what value to use. There isn't any info about this in pub=
-lic
-> datasheets. Broadcom's SDK doesn't mention it. Vendors share only the max
-> environment temp, not the max CPU temp.
->
-> So for now I only meant to provide user space access to reading current C=
-PU
-> temperature. I could do some stress tests and ask other users to do it as
-> well.
->
-> Or maybe I could just put in Documentation some round value that makes mo=
-re
-> or
-> less sense and then work on a proper content of real DTS files?
->
-> Unless we can get some hint from Broadcom people. Jon? Florian? Anyone?
+Hi Boris,
 
-I'll poke around and see if I can find a datasheet for NS/NSP.  Worst
-case, I can ask one of the HW engineers for NSP, and we can use the
-same value for NS.
+
+
+2017-03-31 18:46 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+
+> You can try something like that when no explicit ecc.strength and
+> ecc.size has been set in the DT and when ECC_MAXIMIZE was not passed.
+>
+> static int
+> denali_get_closest_ecc_strength(struct denali_nand_info *denali,
+>                                 int strength)
+> {
+>         /*
+>          * Whatever you need to select a strength that is greater than
+>          * or equal to strength.
+>          */
+>
+>         return X;
+> }
+
+
+Is here anything specific to Denali?
+
+
+> static int denali_try_to_match_ecc_req(struct denali_nand_info *denali)
+> {
+>         struct nand_chip *chip = &denali->nand;
+>         struct mtd_info *mtd = nand_to_mtd(chip);
+>         int max_ecc_bytes = mtd->oobsize - denali->bbtskipbytes;
+>         int ecc_steps, ecc_strength, ecc_bytes;
+>         int ecc_size = chip->ecc_step_ds;
+>         int ecc_strength = chip->ecc_strength_ds;
+>
+>         /*
+>          * No information provided by the NAND chip, let the core
+>          * maximize the strength.
+>          */
+>         if (!ecc_size || !ecc_strength)
+>                 return -ENOTSUPP;
+>
+>         if (ecc_size > 512)
+>                 ecc_size = 1024;
+>         else
+>                 ecc_size = 512;
+>
+>         /* Adjust ECC step size based on hardware support. */
+>         if (ecc_size == 1024 &&
+>             !(denali->caps & DENALI_CAP_ECC_SIZE_1024))
+>                 ecc_size = 512;
+>         else if(ecc_size == 512 &&
+>                 !(denali->caps & DENALI_CAP_ECC_SIZE_512))
+>                 ecc_size = 1024;
+>
+>         if (ecc_size < chip->ecc_size_ds) {
+>                 /*
+>                  * When the selected size if smaller than the expected
+>                  * one we try to use the same strength but on 512 blocks
+>                  * so that we can still fix the same number of errors
+>                  * even if they are concentrated in the first 512bytes
+>                  * of a 1024bytes portion.
+>                  */
+>                 ecc_strength = chip->ecc_strength_ds;
+>                 ecc_strength = denali_get_closest_ecc_strength(denali,
+>                                                                ecc_strength);
+>         } else {
+>                 /* Always prefer 1024bytes ECC blocks when possible. */
+>                 if (ecc_size != 1024 &&
+>                     (denali->caps & DENALI_CAP_ECC_SIZE_1024) &&
+>                     mtd->writesize > 1024)
+>                         ecc_size = 1024;
+>
+>                 /*
+>                  * Adjust the strength based on the selected ECC step
+>                  * size.
+>                  */
+>                 ecc_strength = DIV_ROUND_UP(ecc_size,
+>                                             chip->ecc_step_ds) *
+>                                chip->ecc_strength_ds;
+>         }
+>
+>         ecc_bytes = denali_calc_ecc_bytes(ecc_size,
+>                                           ecc_strength);
+>         ecc_bytes *= mtd->writesize / ecc_size;
+>
+>         /*
+>          * If we don't have enough space, let the core maximize
+>          * the strength.
+>          */
+>         if (ecc_bytes > max_ecc_bytes)
+>                 return -ENOTSUPP;
+>
+>         chip->ecc.strength = ecc_strength;
+>         chip->ecc.size = ecc_size;
+>
+>         return 0;
+> }
+
+
+As a whole, this does not seem to driver-specific.
+
+
+[1] A driver provides some pairs of (ecc_strength, ecc_size)
+    it can support.
+
+[2] The core framework knows the chip's requirement
+    (ecc_strength_ds, ecc_size_ds).
+
+
+Then, the core framework provides a function
+to return a most recommended (ecc_strength, ecc_size).
+
+
+
+struct nand_ecc_spec {
+       int ecc_strength;
+       int ecc_size;
+};
+
+/*
+ * This function choose the most recommented (ecc_str, ecc_size)
+ * "recommended" means: minimum ecc stregth that meets
+ * the chip's requirment.
+ *
+ *
+ * @chip   - nand_chip
+ * @controller_ecc_spec - Array of (ecc_str, ecc_size) supported by the
+                          controller. (terminated by NULL as sentinel)
+ */
+struct nand_ecc_spec * nand_try_to_match_ecc_req(struct nand_chip *chip,
+                                                 struct nand_ecc_spec
+*controller_ecc_spec)
+{
+      /*
+       * Return the pointer to the most recommended
+       * struct nand_ecc_spec.
+       * If nothing suitable found, return NULL.
+       */
+}
+
+
+
+Then, Denali driver can call it:
+
+
+        recommended_ecc_spec = nand_try_to_match_ecc_req(chip,
+                                                         denali->ecc_spec);
+        if (recommended_ecc_spec) {
+                chip->ecc.strength = recommended_ecc_spec.ecc_strength;
+                chip->ecc.size = recommended_ecc_spec.ecc_size;
+        } else {
+                /*
+                 * Do something  (for example, maximize the ECC)
+                 */
+        }
+
+
+
+
+
+It seems weird to force this to the Denali driver.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
