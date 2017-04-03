@@ -1,102 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 3/5] i2c: aspeed: added documentation for Aspeed I2C
- driver
-Date: Mon, 3 Apr 2017 09:24:10 -0500
-Message-ID: <20170403142410.57qqtuvawu3qon2m@rob-hp-laptop>
-References: <20170328051226.21677-1-brendanhiggins@google.com>
- <20170328051226.21677-4-brendanhiggins@google.com>
+Subject: Re: [PATCH 2/2] drivers/serial: Add driver for Aspeed virtual UART
+Date: Mon, 3 Apr 2017 09:25:16 -0500
+Message-ID: <20170403142516.5rqv7yznkapryteu@rob-hp-laptop>
+References: <20170328054458.29341-1-joel@jms.id.au>
+ <20170328054458.29341-3-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170328051226.21677-4-brendanhiggins@google.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: wsa@the-dreams.de, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, joel@jms.id.au, vz@mleia.com, mouse@mayc.ru, clg@kaod.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, benh@kernel.crashing.org
+In-Reply-To: <20170328054458.29341-3-joel@jms.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, Jeremy Kerr <jk@ozlabs.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 10:12:24PM -0700, Brendan Higgins wrote:
-> Added device tree binding documentation for Aspeed I2C busses.
+On Tue, Mar 28, 2017 at 04:14:58PM +1030, Joel Stanley wrote:
+> From: Jeremy Kerr <jk@ozlabs.org>
 > 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> This change adds a driver for the 16550-based Aspeed virtual UART
+> device. We use a similar process to the of_serial driver for device
+> probe, but expose some VUART-specific functions through sysfs too.
+> 
+> OpenPOWER host firmware doesn't like it when the host-side of the
+> VUART's FIFO is not drained. This driver only disables host TX discard
+> mode when the port is in use. We set the VUART enabled bit when we bind
+> to the device, and clear it on unbind.
+> 
+> We don't want to do this on open/release, as the host may be using this
+> bit to configure serial output modes, which is independent of whether
+> the devices has been opened by BMC userspace.
+> 
+> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 > ---
-> Changes for v2:
->   - None
-> Changes for v3:
->   - Removed reference to "bus" device tree param
-> Changes for v4:
->   - None
-> Changes for v5:
->   - None
-> Changes for v6:
->   - Replaced the controller property with and interrupt controller, leaving only
->     the busses in the I2C documentation.
-> ---
->  .../devicetree/bindings/i2c/i2c-aspeed.txt         | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> new file mode 100644
-> index 000000000000..fbcc501706b1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> @@ -0,0 +1,49 @@
-> +Device tree configuration for the I2C busses on the AST24XX and AST25XX SoCs.
-> +
-> +Required Properties:
-> +- #address-cells	: should be 1
-> +- #size-cells		: should be 0
-> +- reg			: address offset and range of bus
-> +- compatible		: should be "aspeed,ast2400-i2c-bus"
-> +			  or "aspeed,ast2500-i2c-bus"
-> +- clocks		: root clock of bus, should reference the APB
-> +			  clock
-> +- interrupts		: interrupt number
-> +- interrupt-parent	: interrupt controller for bus, should reference a
-> +			  aspeed,ast2400-i2c-ic or aspeed,ast2500-i2c-ic
-> +			  interrupt controller
-> +
-> +Optional Properties:
-> +- clock-frequency	: frequency of the bus clock in Hz
-> +			  defaults to 100 kHz when not specified
-> +
-> +Example:
-> +
-> +i2c {
-> +	compatible = "simple-bus";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges = <0 0x1e78a000 0x1000>;
-> +
-> +	i2c_ic: interrupt-controller@0 {
-> +		#interrupt-cells = <1>;
-> +		compatible = "aspeed,ast2400-i2c-ic";
-> +		reg = <0x0 0x40>;
-> +		interrupts = <12>;
-> +		interrupt-controller;
-> +	};
-> +
-> +	i2c0: i2c-bus@40 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		#interrupt-cells = <1>;
-> +		reg = <0x40 0x40>;
-> +		compatible = "aspeed,ast2400-i2c-bus";
-> +		bus = <0>;
+>  Documentation/devicetree/bindings/serial/8250.txt |   2 +
 
-Not documented and what's it for?
+For the binding:
 
-> +		clocks = <&clk_apb>;
-> +		clock-frequency = <100000>;
-> +		status = "disabled";
+Acked-by: Rob Herring <robh@kernel.org>
 
-Drop status from examples.
-
-> +		interrupts = <0>;
-> +		interrupt-parent = <&i2c_ic>;
-> +	};
-> +};
-> -- 
-> 2.12.2.564.g063fe858b8-goog
-> 
+>  drivers/tty/serial/Kconfig                        |  10 +
+>  drivers/tty/serial/Makefile                       |   1 +
+>  drivers/tty/serial/aspeed-vuart.c                 | 335 ++++++++++++++++++++++
+>  4 files changed, 348 insertions(+)
+>  create mode 100644 drivers/tty/serial/aspeed-vuart.c
