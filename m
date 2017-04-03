@@ -1,53 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 16/37] mtd: nand: denali_dt: add compatible strings
- for UniPhier SoC variants
-Date: Mon, 3 Apr 2017 10:46:52 -0500
-Message-ID: <20170403154652.tzfgy4l2m33pqvzd@rob-hp-laptop>
-References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
- <1490856383-31560-17-git-send-email-yamada.masahiro@socionext.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v3 5/7] mfd: Add Device Tree bindings document for TI
+ tps6105x chip
+Date: Mon, 3 Apr 2017 11:47:50 -0400
+Message-ID: <b1118a87-9b39-bb04-d43e-f8f2b366904b@osg.samsung.com>
+References: <20170401071854.23198-1-javier@osg.samsung.com>
+ <20170401071854.23198-6-javier@osg.samsung.com>
+ <20170403111540.7k3rjucvcxe5cunf@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1490856383-31560-17-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Enrico Jorns <ejo@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Graham Moore <grmoore@opensource.altera.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170403111540.7k3rjucvcxe5cunf@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 03:46:02PM +0900, Masahiro Yamada wrote:
-> Add two compatible strings for UniPhier SoCs.
-> 
-> "socionext,uniphier-denali-nand-v5a" is used on UniPhier sLD3, LD4,
-> Pro4, sLD8 SoCs.
-> 
-> "socionext,uniphier-denali-nand-v5b" is used on UniPhier Pro5, PXs2,
-> LD6b, LD11, LD20 SoCs.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Changes in v3: None
-> Changes in v2:
->   - Change the compatible strings
->   - Fix the ecc_strength_capability
->   - Override revision number for the newer one
-> 
->  .../devicetree/bindings/mtd/denali-nand.txt        |  6 ++++++
->  drivers/mtd/nand/denali_dt.c                       | 23 ++++++++++++++++++++++
->  2 files changed, 29 insertions(+)
+Hello Lee,
 
-Acked-by: Rob Herring <robh@kernel.org> 
+On 04/03/2017 07:15 AM, Lee Jones wrote:
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+[snip]
+
+>> +
+>> +The TP61050/TPS61052 is a high-power "white LED driver". This boost converter
+>> +is also used for other things than white LEDs, and also contains a GPIO pin.
+> 
+> What functions does it offer?
+>
+
+Same comment than before, I'm not really familiar with this driver. But I'll
+look what are the MFD cell instantiated to better understand dev functions
+and expand this documentation accordingly.
+ 
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
