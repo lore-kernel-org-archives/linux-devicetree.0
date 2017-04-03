@@ -1,58 +1,40 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v6 02/39] [media] dt-bindings: Add bindings for i.MX
- media driver
-Date: Mon, 3 Apr 2017 16:15:11 +0100
-Message-ID: <20170403151511.GA7909@n2100.armlinux.org.uk>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-3-git-send-email-steve_longerbeam@mentor.com>
- <CAL_JsqJm_JjuVPcOBERCqsnjTDdNoKr9xRE9MXMO4ivxGath2Q@mail.gmail.com>
- <70bacfb5-aef1-76d1-37d2-23a524903d45@mentor.com>
- <20170403140743.trxep36s4z4piyl3@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 12/23] drivers/fsi: Add documentation for GPIO bindings
+Date: Mon, 3 Apr 2017 10:24:03 -0500
+Message-ID: <20170403152403.uqjtwe33s7s6l7ib@rob-hp-laptop>
+References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
+ <20170329174340.89109-13-cbostic@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170403140743.trxep36s4z4piyl3@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Steve Longerbeam <steve_longerbeam@mentor.com>, Steve Longerbeam <slongerbeam@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Nick Dyer <nick@shmanahar.org>, markus.heiser@darmarit.de, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Benoit Parrot <bparrot@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, tiffany lin <tiffany.lin@mediatek.com>, Jean-Christophe Trotin <jean-christo>
+In-Reply-To: <20170329174340.89109-13-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 03, 2017 at 09:07:43AM -0500, Rob Herring wrote:
-> On Tue, Mar 28, 2017 at 05:35:52PM -0700, Steve Longerbeam wrote:
-> > I assume if there's another binding doc in progress, it means
-> > someone is working on another Synopsys DW CSI-2 subdevice driver.
+On Wed, Mar 29, 2017 at 12:43:29PM -0500, Christopher Bostic wrote:
+> From: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 > 
-> Yes. see http://patchwork.ozlabs.org/patch/736177/
+> Add fsi master gpio device tree binding documentation
 > 
-> > Unfortunately I don't have the time to contribute and switch to
-> > this other subdevice, and do test/debug.
-> 
-> >From a DT perspective, I'm not asking that you share the subdevice 
-> driver, only the binding. Simply put, there's 1 h/w block here, so there 
-> should only be 1 binding. The binding is an ABI, so you can't just merge 
-> it and change it later.
+> Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/fsi/fsi-master-gpio.txt    | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
 
-I think it would be nice to have some kind of standard base binding
-for CSI2 interfaces, but beyond the standard compatible/reg/interrupts
-and graph properties, I'm not sure what it would look like.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
 
-As far as those properties go, the iMX6 version does better than the
-DW version, because we specify the full graph, whereas the DW version
-only specifies the downstream link.  Once that's done, there's some
-properties (like those specifying the output configuration) which
-probably ought to be moved to the graph links instead, once they exist.
+But what happened to the bus description? There's never a need to 
+describe slave devices (even discoverable buses like USB and PCI still 
+need them sometimes)? As it stands now, I have no idea what FSI is from 
+reading bindings/fsi/*.
 
-So, if anything, I think it's the DW version needs to be augmented with
-fuller information, and some of the properties moved.
-
-Also, as I've mentioned in my other reply, while they may both appear
-to be called "Synopsys DW CSI-2" devices, they appear to be quite
-different from the hardware perspective.
-
-The rest 
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
