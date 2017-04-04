@@ -1,65 +1,87 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
-Date: Tue, 4 Apr 2017 17:38:44 +0200
-Message-ID: <CAJKOXPd-h4QqLXJ5AYr1KgpjvROaWpVZnd9KmeeGoVRQifssbw@mail.gmail.com>
-References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
- <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
- <93e79e92-a102-e931-8d63-843031848888@samsung.com> <58DA1E38.50907@samsung.com>
- <CAJKOXPeD4HKemKTrnC2JaON3JkuNGO9g+Hg8M7F6f2WusiYkhg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] ARM: dts: sun4i: Add CAN node
+Date: Tue, 4 Apr 2017 17:40:18 +0200
+Message-ID: <20170404154018.6phu2udfgwuzklkk@lukather>
+References: <1491238814-4888-1-git-send-email-menschel.p@posteo.de>
+ <1491238814-4888-2-git-send-email-menschel.p@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPeD4HKemKTrnC2JaON3JkuNGO9g+Hg8M7F6f2WusiYkhg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>, jy0922.shim@samsung.com, Seung Woo Kim <sw0312.kim@samsung.com>, airlied@linux.ie, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, a.hajda@samsung.com, Andi Shyti <andi.shyti@samsung.com>, LW@karo-electronics.de, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ka5cukxufqo6yptp"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1491238814-4888-2-git-send-email-menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Patrick Menschel <menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 28, 2017 at 11:38 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Tue, Mar 28, 2017 at 11:26 AM, Inki Dae <inki.dae@samsung.com> wrote:
->> Merged.
->
-> Hi,
->
-> I do not see the tag (with DT patches) merged by you which I provided
-> to you before. These are essential for bisectability. Without them,
-> kernel bisectability is broken. Did you merged the tag somewhere?
->
-> Best regards,
-> Krzysztof
->
->> Thanks,
->> Inki Dae
 
-Inki,
+--ka5cukxufqo6yptp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I still do not see the DTS tag [1] merged in your tree but you applied
-patches breaking the display. I looked at exynos-drm-next branch.
+On Mon, Apr 03, 2017 at 07:00:11PM +0200, Patrick Menschel wrote:
+> The A10 SoC has an on-board CAN controller.
+> This patch adds the device node.
+>=20
+> This patch is adapted from the description in
+> Documentation/devicetree/bindings/net/can/sun4i_can.txt
+>=20
+> Signed-off-by: Patrick Menschel <menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun4i-a10.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a=
+10.dtsi
+> index ba20b48..7c559e7 100644
+> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> @@ -1313,6 +1313,14 @@
+>  			#size-cells =3D <0>;
+>  		};
+> =20
+> +		can0: can@01c2bc00 {
+> +			compatible =3D "allwinner,sun4i-a10-can";
+> +			reg =3D <0x01c2bc00 0x400>;
+> +			interrupts =3D <26>;
+> +			clocks =3D <&apb1_gates 4>;
+> +			status =3D "disabled";
+> +		};
+> +
 
-We talked already about bisectability and with Hoegeun we provided
-proper solution. Hoegeun split the patchset and I sent you a stable
-tag to merge. Be aware not to apply the DTS patch because you would
-effectively duplicate it. Instead, deal like with any pull request -
-merge the tag as dependency *before* applying DRM DSI patch.
+This wasn't ordered properly. Fixed and applied.
 
-I saw also a branch like this:
-https://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git/log/?h=exynos-drm-next-tm2
-but this is something obviously wrong. I do not know what are your
-plans to do with it, but please drop it as it brings only confusion.
+Maxime
 
-Best regards,
-Krzysztof
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-[1] https://www.spinics.net/lists/arm-kernel/msg567053.html
+--ka5cukxufqo6yptp
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> 2017년 03월 22일 10:36에 Hoegeun Kwon 이(가) 쓴 글:
->>> Hi inki,
->>>
->>> Could you check the this patch?
->>> For reference, patch 1/5 and 2/5 have already been applied to Krzysztof tree.
->>>
->>> Best regards,
->>> Hoegeun
->>>
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJY475iAAoJEBx+YmzsjxAgUMoP/2RK7ZIuiKlVu21BoZAaEXIL
+FaxXfL3i/31qgs06++m6tdWmln0frjmfQmCad8e4AuF5RFO3PvxvIP/0L+gpUXc2
+rAjuOc4C4h+F7cP4PqbXA5iEKYl2gkc5o4Yfq5NdP90CAtvJRVGtQLoFtoHCXAzI
+Dk3G90tj0NMF4Hf09Dc5Z/txYY70WU9ZalF9hgj4iFvsEgNS/vmWc1oMxZa7Go0M
+oFPWDLGS6rkQ7kfVcnX0bvhVJnrVGJRvCvtUGKNjNon5p4K0akvBU9XvXwAP8+XR
+oTtJ4hbwmbXRungSLv1folWIb3ORb3QunQt+QpQbogMf292SZKwamOrtIZBLaYOX
+d9CSouBl7qWo2oMwuHt3hXUgNwrLLOBgmorzofh+/3iUxxQ8IArnLoOuRO6eZqGO
+6lJ17tj6i0ckypC5n50tbnbLM3uyR7O5d/cC31n/ADXx/RXt8nGyqS5TorBsqB1K
+YFiQuD5aDpYjLSSx0mHZLbpchIWJBE4vc1UK4r0xiDes4JxlfPMgHcoK2ls6AAZ3
+J5P80GLmjFELX4PH/a6jy79FIZIqF4wfjFA2Gx8+ybWY4s3SLp9lcT+vLLOJYOec
+joauYuKBZpiHqjMJZXSP8R2Gc5kRmlHh5gI3+72qU/s5yOwHWDh3WD9EgGEpzk7q
+q03YHDYGu5FvaRWA3FY4
+=v/hd
+-----END PGP SIGNATURE-----
+
+--ka5cukxufqo6yptp--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
