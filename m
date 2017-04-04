@@ -1,81 +1,82 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: Add retu/tahvo ASIC chips
- bindings
-Date: Tue, 4 Apr 2017 13:01:20 -0400
-Message-ID: <9967ec41-cdc1-5cd2-4a62-e3a83cc6fa80@osg.samsung.com>
-References: <20170404153036.6651-1-javier@osg.samsung.com>
- <20170404153036.6651-2-javier@osg.samsung.com>
- <CAL_JsqLfo7jbf+fdZnqhUN=RC_Z4=Evn=5XmSr-XMw+952XYaQ@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] rtc: Reuse rtc-sh driver to support RZ/A1
+Date: Tue, 4 Apr 2017 13:11:00 -0400
+Message-ID: <20170404171100.GA14047@verge.net.au>
+References: <20170329173035.67477-1-chris.brandt@renesas.com>
+ <20170403160337.g3fzjbfhllnaoafz@piout.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLfo7jbf+fdZnqhUN=RC_Z4=Evn=5XmSr-XMw+952XYaQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCF6L7545UEBBKVHR7DQKGQEETYMPRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170403160337.g3fzjbfhllnaoafz-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
-
-On 04/04/2017 12:54 PM, Rob Herring wrote:
-> On Tue, Apr 4, 2017 at 10:30 AM, Javier Martinez Canillas
-> <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
->> There are Device Tree source files defining a device node for the
->> retu/tahvo I2C chip, but there isn't a DT binding document for it.
->>
->> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->>
->> ---
->>
->> Changes in v4:
->> - Use "dt-bindings: mfd:" prefix in subject line (Rob Herring).
->> - Add information about what functions the device serve (Lee Jones).
->> - Avoid using MFD in Device Tree (Lee Jones).
->>
->> Changes in v3: None
->> Changes in v2: None
->>
->>  Documentation/devicetree/bindings/mfd/retu.txt | 21 +++++++++++++++++++++
->>  1 file changed, 21 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/retu.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/retu.txt b/Documentation/devicetree/bindings/mfd/retu.txt
->> new file mode 100644
->> index 000000000000..7df21a2b28ea
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/retu.txt
->> @@ -0,0 +1,21 @@
->> +* Device tree bindings for Nokia Retu and Tahvo multi-function device
->> +
->> +Retu and Tahvo are a multi-function devices found on Nokia Internet
->> +Tablets (770, N800 and N810). The Retu chip provides watchdog timer
->> +and power button control functionalities while Tahvo chip provides
->> +USB transceiver functionality.
->> +
->> +Required properties:
->> +- compatible:          "nokia,retu" or "nokia,tahvo"
->> +- reg:                 Specifies the I2C slave address of the ASIC chip
+On Mon, Apr 03, 2017 at 06:03:37PM +0200, Alexandre Belloni wrote:
+> Hi,
 > 
-> Missing interrupts here.
+> On 29/03/2017 at 10:30:28 -0700, Chris Brandt wrote:
+> > Basically, the same RTC that was used in SuperH devices is now used in
+> > RZ/A1 devices. Therefore with some slight changes, that driver can be
+> > reused.
+> > 
+> > Additionally, since ARM architectures require Device Tree configurations,
+> > device tree support has been added.
+> > 
+> > This was tested on RZ/A1H RSK board. Once the correct time was programmed
+> > into the RTC running off a 32.768kHz crystal, you can retain an accurate
+> > system clock between reboots (hard and soft) until power is finally removed
+> > from the board (there is no batter backup on the RSK board).
+> > 
+> > v3:
+> > * remove 'power-domains' from example in documentation
+> > * update commit message subject and body of dt-bindings
+> > 
+> > v2:
+> > * removed HAVE_CLK from Kconfig
+> > * when using DT, look for "fck" instead of "rtc0"
+> > * changed (res == NULL) to (!res)
+> > * added Reviewed-by for rtc-sh.c
+> > * added interrupt-names and clock-names
+> > * clocks now include counting sources
+> > * added clock-names "fck", "rtc_x1", "rtc_x3", "extal"
+> > * changed 'is a RTC' to 'is an RTC' in commit message
+> > * changed "rtc0" to "rtc"
+> > * Added clock nodes for RTC_X1 and RTC_X3 pin inputs
+> > * each commit now has a log message
+> > 
+> > 
+> > Chris Brandt (7):
+> >   rtc: rtc-sh: add support for rza series
+> >   dt-bindings: rtc: document the rtc-sh bindings
 > 
-
-Right, sorry for missing that. I'll wait for Lee's feedback before
-posting a new version in case I missed something else.
-
-> With that:
+> I applied those two, I'll let Simon take the device tree patches.
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
+> Thanks!
+> 
+> >   ARM: dts: r7s72100: add rtc clock to device tree
+> >   ARM: dts: r7s72100: add RTC_X clock inputs to device tree
+> >   ARM: dts: r7s72100: add rtc to device tree
+> >   ARM: dts: rskrza1: set rtc_x1 clock value
+> >   ARM: dts: rskrza1: add rtc DT support
 
-Thanks a lot for your review and acks!
+Thanks, I have queued up the dts patches.
 
-Best regards,
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
