@@ -1,58 +1,68 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 1/6] ARM: tegra: Remove unnecessary inclusion of
- flowctrl header
-Date: Tue, 4 Apr 2017 15:41:52 +0200
-Message-ID: <20170404134152.GD843@ulmo.ba.sec>
-References: <1490704978-22906-1-git-send-email-jonathanh@nvidia.com>
- <1490704978-22906-2-git-send-email-jonathanh@nvidia.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V4 1/2] regulator: DT: Add settling time property for non-linear voltage change
+Date: Tue, 4 Apr 2017 18:59:49 +0530
+Message-ID: <1491312590-20887-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SO98HVl1bnMOfKZd"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1490704978-22906-2-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Some regulators (some PWM regulators) have the voltage transition
+exponentially. On such cases, the settling time for voltage change
+is treated as constant time.
 
---SO98HVl1bnMOfKZd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add DT property for providing the settling time for any level of
+voltage change for non-linear voltage change.
 
-On Tue, Mar 28, 2017 at 01:42:53PM +0100, Jon Hunter wrote:
-> The Tegra flowctrl.h header is included unnecessarily by the Tegra
-> sleep.S source file. Remove this unnecessary inclusion.
->=20
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/mach-tegra/sleep.S | 2 --
->  1 file changed, 2 deletions(-)
+signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Applied to for-4.12/arm/soc, thanks.
+---
+This patch is continuation of discussion on patch
+   regulator: pwm: Fix regulator ramp delay for continuous mode
+   https://patchwork.kernel.org/patch/9216857/
+where is it discussed to have separate property for PWM which has
+exponential voltage transition.
 
-Thierry
+Changes from V1:
+- Pass the flag to tell that voltage ramp is exponential instead of
+  providing delay.
 
---SO98HVl1bnMOfKZd
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes from V2:
+- Based on review comment from V1, make the settling time property
+  independent of the regulator-ramp-delay and move this out of PWM
+  regulator.
 
------BEGIN PGP SIGNATURE-----
+Changes from V3:
+- The change was sent long back and resuming this patch.
+- Added Rob's ack from V3 and content is same as V3.
+   https://lkml.org/lkml/2016/11/30/632
+- Rebase on linux-next tag 20170330 for resend.
+---
+ Documentation/devicetree/bindings/regulator/regulator.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljjop4ACgkQ3SOs138+
-s6GWwxAAumgjaXji88L090H2+1tjHb5AxpVfedPNBXcXXHdHcUoMCfYoXUJXHdwV
-pOVVI9BikFfrvnxhaKMWzCaKn9TVswlJuMzsK9HQIujq9HzvhY2MSAn03cJ+Rb8S
-FDgoUGrP5e3mW4TP8QEqhGwZ//PsYcoNLQQCq699UmydqOvqtgSFkjFhF7b4WycM
-+oUtcfu+fBobeSGErXdjmxJ2pjsSz8w88LVCzVNJYD0KGPT/oZfDj2laQohqgUz0
-zmiVabKBCza4byqBYJ6gbTyywA78fWi0183XtY5Pn/ULaDDQFtAvK1GblJAhqNcC
-eMtxwBXeLCQbKnegHxTqT7ljGnDVr/NhgPEEAu5ddKli0rRuoybj+MateBPVqftx
-JtkvaCXjaMSCRNiu6iCC9wj4knLR86bC6+Dzyesgy5gmhi0UCDbaA3K6PElmlrlc
-0Lq7L+2XvzyBlqSknTyA5M5CYqWPdiWPlpMamgZfrZTgQsmSFgLl5CudCw3bRQ+W
-dpDUYbJGUHLsAsVobCw33BSvQBZrJMycPXW3zrfUD6uvLOJyuEk25ncA0s4wN1oq
-pYwZnEy5pOQSNLQ4OL8HLalglIiTdf2/Qqwc+C/4NOKG5m0cMU/PYyI+GzRhMvX0
-dVQeO1SHBuciHr2RB2M6Wj28NFr3DiEdFJw7Xd1oId2GAuDuQeU=
-=pWy4
------END PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 6ab5aef..d18edb0 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -21,6 +21,9 @@ Optional properties:
+   design requires. This property describes the total system ramp time
+   required due to the combination of internal ramping of the regulator itself,
+   and board design issues such as trace capacitance and load on the supply.
++- regulator-settling-time-us: Settling time, in microseconds, for voltage
++  change if regulator have the constant time for any level voltage change.
++  This is useful when regulator have exponential voltage change.
+ - regulator-soft-start: Enable soft start so that voltage ramps slowly
+ - regulator-state-mem sub-root node for Suspend-to-RAM mode
+   : suspend to memory, the device goes to sleep, but all data stored in memory,
+-- 
+2.1.4
 
---SO98HVl1bnMOfKZd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
