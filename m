@@ -1,329 +1,2218 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH V10 07/12] of/acpi: Configure dma operations at probe time
- for platform/amba/pci bus devices
-Date: Tue, 4 Apr 2017 18:00:32 +0530
-Message-ID: <60b8502f-bdcf-713a-56ce-8f3eec5e1603@codeaurora.org>
-References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
- <1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
- <1491301105-5274-8-git-send-email-sricharan@codeaurora.org>
- <1d036139-b885-bac6-01c0-78d3ac690d80@arm.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v3] clk: stm32h7: Add stm32h743 clock driver
+Date: Tue, 4 Apr 2017 14:30:14 +0200
+Message-ID: <1491309014-13967-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1d036139-b885-bac6-01c0-78d3ac690d80@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, gregkh@linuxfoundation.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-On 4/4/2017 5:47 PM, Robin Murphy wrote:
-> On 04/04/17 11:18, Sricharan R wrote:
->> Configuring DMA ops at probe time will allow deferring device probe when
->> the IOMMU isn't available yet. The dma_configure for the device is
->> now called from the generic device_attach callback just before the
->> bus/driver probe is called. This way, configuring the DMA ops for the
->> device would be called at the same place for all bus_types, hence the
->> deferred probing mechanism should work for all buses as well.
->>
->> pci_bus_add_devices    (platform/amba)(_device_create/driver_register)
->>        |                         |
->> pci_bus_add_device     (device_add/driver_register)
->>        |                         |
->> device_attach           device_initial_probe
->>        |                         |
->> __device_attach_driver    __device_attach_driver
->>        |
->> driver_probe_device
->>        |
->> really_probe
->>        |
->> dma_configure
->>
->> Similarly on the device/driver_unregister path __device_release_driver is
->> called which inturn calls dma_deconfigure.
->>
->> This patch changes the dma ops configuration to probe time for
->> both OF and ACPI based platform/amba/pci bus devices.
->
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
->
-> It's possible we could subsume {of,acpi}_dma_deconfigure() into
-> dma_deconfigure() entirely in future if it becomes clear that neither of
-> them will ever need to do anything firmware-specific, but I think for
-> now it's probably safer to keep the current symmetry - calling
-> arch_teardown_dma_ops() twice is benign (and even if it weren't, I'd say
-> it really should be!)
->
+This patch enables clocks for STM32H743 boards.
 
-Ya, calling it twice should cause no harm. If nothing firmware specific
-gets added this could simply be put in deconfigure itself in future.
-Thanks for all the reviews !!
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-Regards,
-  Sricharan
+for MFD changes:
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+for DT-Bindings
+Acked-by: Rob Herring <robh@kernel.org>
+v3:
+  - fix compatible string "stm32h7-pll" into "st,stm32h7-pll"
+  - fix bad parent name for mco2 clock
+  - set CLK_SET_RATE_PARENT for ltdc clock
+  - set CLK_IGNORE_UNUSED for pll1
+  - disable power domain write protection on disable ops if needed
 
 
+v2:
+  - rename compatible string "stm32,pll" into "stm32h7-pll"
+  - suppress "st,pllrge" property
+  - suppress "st, frac-status" property
+  - change management of "st,frac"  property
+	0 : enable 0 pll integer mode 
+	other values : enable pll in fractional mode (value is
+	the fractional factor)
+---
+ .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |  151 ++
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-stm32h7.c                          | 1675 ++++++++++++++++++++
+ include/dt-bindings/clock/stm32h7-clks.h           |  165 ++
+ include/dt-bindings/mfd/stm32h7-rcc.h              |  137 ++
+ 5 files changed, 2129 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+ create mode 100644 drivers/clk/clk-stm32h7.c
+ create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+ create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
 
-> Robin.
->
->> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Tested-by: Hanjun Guo <hanjun.guo@linaro.org>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com> (drivers/pci part)
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>
->>  [V10] Added dummy dma_(de)configure functions in case
->>        of !CONFIG_HAS_DMA to avoid build breaks.
->>
->>  drivers/acpi/glue.c         |  5 -----
->>  drivers/base/dd.c           |  9 +++++++++
->>  drivers/base/dma-mapping.c  | 40 ++++++++++++++++++++++++++++++++++++++++
->>  drivers/of/platform.c       |  5 +----
->>  drivers/pci/probe.c         | 28 ----------------------------
->>  include/linux/dma-mapping.h | 12 ++++++++++++
->>  6 files changed, 62 insertions(+), 37 deletions(-)
->>
->> diff --git a/drivers/acpi/glue.c b/drivers/acpi/glue.c
->> index fb19e1c..c05f241 100644
->> --- a/drivers/acpi/glue.c
->> +++ b/drivers/acpi/glue.c
->> @@ -176,7 +176,6 @@ int acpi_bind_one(struct device *dev, struct acpi_device *acpi_dev)
->>  	struct list_head *physnode_list;
->>  	unsigned int node_id;
->>  	int retval = -EINVAL;
->> -	enum dev_dma_attr attr;
->>
->>  	if (has_acpi_companion(dev)) {
->>  		if (acpi_dev) {
->> @@ -233,10 +232,6 @@ int acpi_bind_one(struct device *dev, struct acpi_device *acpi_dev)
->>  	if (!has_acpi_companion(dev))
->>  		ACPI_COMPANION_SET(dev, acpi_dev);
->>
->> -	attr = acpi_get_dma_attr(acpi_dev);
->> -	if (attr != DEV_DMA_NOT_SUPPORTED)
->> -		acpi_dma_configure(dev, attr);
->> -
->>  	acpi_physnode_link_name(physical_node_name, node_id);
->>  	retval = sysfs_create_link(&acpi_dev->dev.kobj, &dev->kobj,
->>  				   physical_node_name);
->> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
->> index a1fbf55..4882f06 100644
->> --- a/drivers/base/dd.c
->> +++ b/drivers/base/dd.c
->> @@ -19,6 +19,7 @@
->>
->>  #include <linux/device.h>
->>  #include <linux/delay.h>
->> +#include <linux/dma-mapping.h>
->>  #include <linux/module.h>
->>  #include <linux/kthread.h>
->>  #include <linux/wait.h>
->> @@ -356,6 +357,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->>  	if (ret)
->>  		goto pinctrl_bind_failed;
->>
->> +	ret = dma_configure(dev);
->> +	if (ret)
->> +		goto dma_failed;
->> +
->>  	if (driver_sysfs_add(dev)) {
->>  		printk(KERN_ERR "%s: driver_sysfs_add(%s) failed\n",
->>  			__func__, dev_name(dev));
->> @@ -417,6 +422,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->>  	goto done;
->>
->>  probe_failed:
->> +	dma_deconfigure(dev);
->> +dma_failed:
->>  	if (dev->bus)
->>  		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
->>  					     BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
->> @@ -826,6 +833,8 @@ static void __device_release_driver(struct device *dev, struct device *parent)
->>  			drv->remove(dev);
->>
->>  		device_links_driver_cleanup(dev);
->> +		dma_deconfigure(dev);
->> +
->>  		devres_release_all(dev);
->>  		dev->driver = NULL;
->>  		dev_set_drvdata(dev, NULL);
->> diff --git a/drivers/base/dma-mapping.c b/drivers/base/dma-mapping.c
->> index efd71cf..449b948 100644
->> --- a/drivers/base/dma-mapping.c
->> +++ b/drivers/base/dma-mapping.c
->> @@ -7,9 +7,11 @@
->>   * This file is released under the GPLv2.
->>   */
->>
->> +#include <linux/acpi.h>
->>  #include <linux/dma-mapping.h>
->>  #include <linux/export.h>
->>  #include <linux/gfp.h>
->> +#include <linux/of_device.h>
->>  #include <linux/slab.h>
->>  #include <linux/vmalloc.h>
->>
->> @@ -341,3 +343,41 @@ void dma_common_free_remap(void *cpu_addr, size_t size, unsigned long vm_flags)
->>  	vunmap(cpu_addr);
->>  }
->>  #endif
->> +
->> +/*
->> + * Common configuration to enable DMA API use for a device
->> + */
->> +#include <linux/pci.h>
->> +
->> +int dma_configure(struct device *dev)
->> +{
->> +	struct device *bridge = NULL, *dma_dev = dev;
->> +	enum dev_dma_attr attr;
->> +
->> +	if (dev_is_pci(dev)) {
->> +		bridge = pci_get_host_bridge_device(to_pci_dev(dev));
->> +		dma_dev = bridge;
->> +		if (IS_ENABLED(CONFIG_OF) && dma_dev->parent &&
->> +		    dma_dev->parent->of_node)
->> +			dma_dev = dma_dev->parent;
->> +	}
->> +
->> +	if (dma_dev->of_node) {
->> +		of_dma_configure(dev, dma_dev->of_node);
->> +	} else if (has_acpi_companion(dma_dev)) {
->> +		attr = acpi_get_dma_attr(to_acpi_device_node(dma_dev->fwnode));
->> +		if (attr != DEV_DMA_NOT_SUPPORTED)
->> +			acpi_dma_configure(dev, attr);
->> +	}
->> +
->> +	if (bridge)
->> +		pci_put_host_bridge_device(bridge);
->> +
->> +	return 0;
->> +}
->> +
->> +void dma_deconfigure(struct device *dev)
->> +{
->> +	of_dma_deconfigure(dev);
->> +	acpi_dma_deconfigure(dev);
->> +}
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index 5344db5..2aa4ebb 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/of_address.h>
->>  #include <linux/of_device.h>
->> +#include <linux/of_iommu.h>
->>  #include <linux/of_irq.h>
->>  #include <linux/of_platform.h>
->>  #include <linux/platform_device.h>
->> @@ -186,11 +187,9 @@ static struct platform_device *of_platform_device_create_pdata(
->>
->>  	dev->dev.bus = &platform_bus_type;
->>  	dev->dev.platform_data = platform_data;
->> -	of_dma_configure(&dev->dev, dev->dev.of_node);
->>  	of_msi_configure(&dev->dev, dev->dev.of_node);
->>
->>  	if (of_device_add(dev) != 0) {
->> -		of_dma_deconfigure(&dev->dev);
->>  		platform_device_put(dev);
->>  		goto err_clear_flag;
->>  	}
->> @@ -248,7 +247,6 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->>  		dev_set_name(&dev->dev, "%s", bus_id);
->>  	else
->>  		of_device_make_bus_id(&dev->dev);
->> -	of_dma_configure(&dev->dev, dev->dev.of_node);
->>
->>  	/* Allow the HW Peripheral ID to be overridden */
->>  	prop = of_get_property(node, "arm,primecell-periphid", NULL);
->> @@ -542,7 +540,6 @@ static int of_platform_device_destroy(struct device *dev, void *data)
->>  		amba_device_unregister(to_amba_device(dev));
->>  #endif
->>
->> -	of_dma_deconfigure(dev);
->>  	of_node_clear_flag(dev->of_node, OF_POPULATED);
->>  	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
->>  	return 0;
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index dfc9a27..5a8dd43 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -1893,33 +1893,6 @@ static void pci_set_msi_domain(struct pci_dev *dev)
->>  	dev_set_msi_domain(&dev->dev, d);
->>  }
->>
->> -/**
->> - * pci_dma_configure - Setup DMA configuration
->> - * @dev: ptr to pci_dev struct of the PCI device
->> - *
->> - * Function to update PCI devices's DMA configuration using the same
->> - * info from the OF node or ACPI node of host bridge's parent (if any).
->> - */
->> -static void pci_dma_configure(struct pci_dev *dev)
->> -{
->> -	struct device *bridge = pci_get_host_bridge_device(dev);
->> -
->> -	if (IS_ENABLED(CONFIG_OF) &&
->> -		bridge->parent && bridge->parent->of_node) {
->> -			of_dma_configure(&dev->dev, bridge->parent->of_node);
->> -	} else if (has_acpi_companion(bridge)) {
->> -		struct acpi_device *adev = to_acpi_device_node(bridge->fwnode);
->> -		enum dev_dma_attr attr = acpi_get_dma_attr(adev);
->> -
->> -		if (attr == DEV_DMA_NOT_SUPPORTED)
->> -			dev_warn(&dev->dev, "DMA not supported.\n");
->> -		else
->> -			acpi_dma_configure(&dev->dev, attr);
->> -	}
->> -
->> -	pci_put_host_bridge_device(bridge);
->> -}
->> -
->>  void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->>  {
->>  	int ret;
->> @@ -1933,7 +1906,6 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->>  	dev->dev.dma_mask = &dev->dma_mask;
->>  	dev->dev.dma_parms = &dev->dma_parms;
->>  	dev->dev.coherent_dma_mask = 0xffffffffull;
->> -	pci_dma_configure(dev);
->>
->>  	pci_set_dma_max_seg_size(dev, 65536);
->>  	pci_set_dma_seg_boundary(dev, 0xffffffff);
->> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
->> index 0977317..4f3eece 100644
->> --- a/include/linux/dma-mapping.h
->> +++ b/include/linux/dma-mapping.h
->> @@ -728,6 +728,18 @@ void *dma_mark_declared_memory_occupied(struct device *dev,
->>  }
->>  #endif /* CONFIG_HAVE_GENERIC_DMA_COHERENT */
->>
->> +#ifdef CONFIG_HAS_DMA
->> +int dma_configure(struct device *dev);
->> +void dma_deconfigure(struct device *dev);
->> +#else
->> +static inline int dma_configure(struct device *dev)
->> +{
->> +	return 0;
->> +}
->> +
->> +static inline void dma_deconfigure(struct device *dev) {}
->> +#endif
->> +
->>  /*
->>   * Managed DMA API
->>   */
->>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
+diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+new file mode 100644
+index 0000000..d34ce5b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+@@ -0,0 +1,151 @@
++STMicroelectronics STM32H7 Reset and Clock Controller
++=====================================================
++
++The RCC IP is both a reset and a clock controller.
++
++Please refer to clock-bindings.txt for common clock controller binding usage.
++Please also refer to reset.txt for common reset controller binding usage.
++
++Required properties:
++- compatible: Should be:
++  "st,stm32h743-rcc"
++
++- reg: should be register base and length as documented in the
++  datasheet
++
++- #reset-cells: 1, see below
++
++- #clock-cells : from common clock binding; shall be set to 1
++
++- clocks: External oscillator clock phandle
++  - high speed external clock signal (HSE)
++  - low speed external clock signal (LSE)
++  - external I2S clock (I2S_CKIN)
++
++- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
++  write protection (RTC clock).
++
++- pll x node: Allow to register a pll with specific parameters.
++  Please see PLL section below.
++
++Example:
++
++	rcc: rcc@58024400 {
++		#reset-cells = <1>;
++		#clock-cells = <2>
++		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
++		reg = <0x58024400 0x400>;
++		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
++
++		st,syscfg = <&pwrcfg>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		vco1@0 {
++			#clock-cells = <0>;
++			compatible = "st,stm32h7-pll";
++			reg = <0>;
++		};
++
++		vco2@1 {
++			#clock-cells = <0>;
++			compatible = "st,stm32h7-pll";
++			reg = <1>;
++			st,clock-div = <2>;
++			st,clock-mult = <40>;
++			st,frac = <0>;
++			st,vcosel = <1>;
++		};
++		vco3@2 {
++			#clock-cells = <0>;
++			compatible = "st,stm32h7-pll";
++			reg = <2>;
++			st,clock-div = <2>;
++			st,clock-mult = <40>;
++			st,frac = <1024>;
++			st,vcosel = <1>;
++		};
++	};
++
++
++STM32H7 PLL
++-----------
++
++The VCO of STM32 PLL could be reprensented like this:
++
++  Vref    ---------       --------
++    ---->| / DIVM  |---->| x DIVN | ------> VCO
++          ---------       --------
++		             ^
++			     |
++	                  -------
++		         | FRACN |
++		          -------
++
++When the PLL is configured in integer mode:
++- VCO = ( Vref / DIVM ) * DIVN
++
++When the PLL is configured in fractional mode:
++- VCO = ( Vref / DIVM ) * ( DIVN + FRACN / 2^13)
++
++
++Required properties for pll node:
++- compatible: Should be:
++  "st,stm32h7-pll"
++
++- #clock-cells: from common clock binding; shall be set to 0
++- reg: Should be the pll number.
++
++Optional properties:
++- st,clock-div:  DIVM division factor       : <1..63>
++- st,clock-mult: DIVN multiplication factor : <4..512>
++
++- st,frac:
++   - 0 Pll is configured in integer mode
++   - <1..8191> Pll is configure in fractional mode and the value is
++     the part of the multiplication factor.
++
++- st,vcosel: VCO selection
++  - 0: Wide VCO range:192 to 836 MHz
++  - 1: Medium VCO range:150 to 420 MHz
++
++The peripheral clock consumer should specify the desired clock by
++having the clock ID in its "clocks" phandle cell.
++
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/stm32h7-clks.h header and can be used in device
++tree sources.
++
++Example:
++
++		timer5: timer@40000c00 {
++			compatible = "st,stm32-timer";
++			reg = <0x40000c00 0x400>;
++			interrupts = <50>;
++			clocks = <&rcc TIM5_CK>;
++
++		};
++
++Specifying softreset control of devices
++=======================================
++
++Device nodes should specify the reset channel required in their "resets"
++property, containing a phandle to the reset device node and an index specifying
++which channel to use.
++The index is the bit number within the RCC registers bank, starting from RCC
++base address.
++It is calculated as: index = register_offset / 4 * 32 + bit_offset.
++Where bit_offset is the bit offset within the register.
++
++For example, for CRC reset:
++  crc = AHB4RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x88 / 4 * 32 + 19 = 1107
++
++All available preprocessor macros for reset are defined dt-bindings//mfd/stm32h7-rcc.h
++header and can be used in device tree sources.
++
++example:
++
++	timer2 {
++		resets	= <&rcc STM32H7_APB1L_RESET(TIM2)>;
++	};
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 92c12b8..734aa02 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -42,6 +42,7 @@ obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
+ obj-$(CONFIG_COMMON_CLK_SI514)		+= clk-si514.o
+ obj-$(CONFIG_COMMON_CLK_SI570)		+= clk-si570.o
+ obj-$(CONFIG_ARCH_STM32)		+= clk-stm32f4.o
++obj-$(CONFIG_ARCH_STM32)		+= clk-stm32h7.o
+ obj-$(CONFIG_ARCH_TANGO)		+= clk-tango4.o
+ obj-$(CONFIG_CLK_TWL6040)		+= clk-twl6040.o
+ obj-$(CONFIG_ARCH_U300)			+= clk-u300.o
+diff --git a/drivers/clk/clk-stm32h7.c b/drivers/clk/clk-stm32h7.c
+new file mode 100644
+index 0000000..cdcb27e
+--- /dev/null
++++ b/drivers/clk/clk-stm32h7.c
+@@ -0,0 +1,1675 @@
++/*
++ * Copyright (C) Gabriel Fernandez 2017
++ * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
++ *
++ * License terms: GPL V2.0.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/regmap.h>
++
++#include <dt-bindings/clock/stm32h7-clks.h>
++
++/* Reset Clock Control Registers */
++#define RCC_CR		0x00
++#define RCC_CFGR	0x10
++#define RCC_D1CFGR	0x18
++#define RCC_D2CFGR	0x1C
++#define RCC_D3CFGR	0x20
++#define RCC_PLLCKSELR	0x28
++#define RCC_PLLCFGR	0x2C
++#define RCC_PLL1DIVR	0x30
++#define RCC_PLL1FRACR	0x34
++#define RCC_PLL2DIVR	0x38
++#define RCC_PLL2FRACR	0x3C
++#define RCC_PLL3DIVR	0x40
++#define RCC_PLL3FRACR	0x44
++#define RCC_D1CCIPR	0x4C
++#define RCC_D2CCIP1R	0x50
++#define RCC_D2CCIP2R	0x54
++#define RCC_D3CCIPR	0x58
++#define RCC_BDCR	0x70
++#define RCC_CSR		0x74
++#define RCC_AHB3ENR	0xD4
++#define RCC_AHB1ENR	0xD8
++#define RCC_AHB2ENR	0xDC
++#define RCC_AHB4ENR	0xE0
++#define RCC_APB3ENR	0xE4
++#define RCC_APB1LENR	0xE8
++#define RCC_APB1HENR	0xEC
++#define RCC_APB2ENR	0xF0
++#define RCC_APB4ENR	0xF4
++
++static DEFINE_SPINLOCK(rlock);
++
++static void __iomem *base;
++static struct regmap *pdrm;
++static struct clk_hw **hws;
++
++/* System clock parent */
++static const char * const sys_src[] = {
++	"hsi_ck", "csi_ck", "hse_ck", "pll1_p" };
++
++static const char * const tracein_src[] = {
++	"hsi_ck", "csi_ck", "hse_ck", "pll1_r" };
++
++static const char * const per_src[] = {
++	"hsi_ker", "csi_ker", "hse_ck", "disabled" };
++
++static const char * const pll_src[] = {
++	"hsi_ck", "csi_ck", "hse_ck", "no clock" };
++
++static const char * const sdmmc_src[] = { "pll1_q", "pll2_r" };
++
++static const char * const dsi_src[] = { "ck_dsi_phy", "pll2_q" };
++
++static const char * const qspi_src[] = {
++	"hclk", "pll1_q", "pll2_r", "per_ck" };
++
++static const char * const fmc_src[] = {
++	"hclk", "pll1_q", "pll2_r", "per_ck" };
++
++/* Kernel clock parent */
++static const char * const swp_src[] = {	"pclk1", "hsi_ker" };
++
++static const char * const fdcan_src[] = { "hse_ck", "pll1_q", "pll2_q" };
++
++static const char * const dfsdm1_src[] = { "pclk2", "sys_ck" };
++
++static const char * const spdifrx_src[] = {
++	"pll1_q", "pll2_r", "pll3_r", "hsi_ker" };
++
++static const char *spi_src1[5] = {
++	"pll1_q", "pll2_p", "pll3_p", NULL, "per_ck" };
++
++static const char * const spi_src2[] = {
++	"pclk2", "pll2_q", "pll3_q", "hsi_ker", "csi_ker", "hse_ck" };
++
++static const char * const spi_src3[] = {
++	"pclk4", "pll2_q", "pll3_q", "hsi_ker", "csi_ker", "hse_ck" };
++
++static const char * const lptim_src1[] = {
++	"pclk1", "pll2_p", "pll3_r", "lse_ck", "lsi_ck", "per_ck" };
++
++static const char * const lptim_src2[] = {
++	"pclk4", "pll2_p", "pll3_r", "lse_ck", "lsi_ck", "per_ck" };
++
++static const char * const cec_src[] = {"lse_ck", "lsi_ck", "csi_ker_div122" };
++
++static const char * const usbotg_src[] = {"pll1_q", "pll3_q", "rc48_ck" };
++
++/* i2c 1,2,3 src */
++static const char * const i2c_src1[] = {
++	"pclk1", "pll3_r", "hsi_ker", "csi_ker" };
++
++static const char * const i2c_src2[] = {
++	"pclk4", "pll3_r", "hsi_ker", "csi_ker" };
++
++static const char * const rng_src[] = {
++	"rc48_ck", "pll1_q", "lse_ck", "lsi_ck" };
++
++/* usart 1,6 src */
++static const char * const usart_src1[] = {
++	"pclk2", "pll2_q", "pll3_q", "hsi_ker", "csi_ker", "lse_ck" };
++
++/* usart 2,3,4,5,7,8 src */
++static const char * const usart_src2[] = {
++	"pclk1", "pll2_q", "pll3_q", "hsi_ker", "csi_ker", "lse_ck" };
++
++static const char *sai_src[5] = {
++	"pll1_q", "pll2_p", "pll3_p", NULL, "per_ck" };
++
++static const char * const adc_src[] = { "pll2_p", "pll3_r", "per_ck" };
++
++/* lptim 2,3,4,5 src */
++static const char * const lpuart1_src[] = {
++	"pclk3", "pll2_q", "pll3_q", "csi_ker", "lse_ck" };
++
++static const char * const hrtim_src[] = { "tim2_ker", "d1cpre" };
++
++/* RTC clock parent */
++static const char * const rtc_src[] = { "off", "lse_ck", "lsi_ck", "hse_1M" };
++
++/* Micro-controller output clock parent */
++static const char * const mco_src1[] = {
++	"hsi_ck", "lse_ck", "hse_ck", "pll1_q",	"rc48_ck" };
++
++static const char * const mco_src2[] = {
++	"sys_ck", "pll2_p", "hse_ck", "pll1_p", "csi_ck", "lsi_ck" };
++
++/* LCD clock */
++static const char * const ltdc_src[] = {"pll3_r"};
++
++/* Power domain helper */
++static inline void disable_power_domain_write_protection(void)
++{
++	if (pdrm)
++		regmap_update_bits(pdrm, 0x00, (1 << 8), (1 << 8));
++}
++
++static inline void enable_power_domain_write_protection(void)
++{
++	if (pdrm)
++		regmap_update_bits(pdrm, 0x00, (1 << 8), (0 << 8));
++}
++
++static inline int is_enable_power_domain_write_protection(void)
++{
++	if (pdrm) {
++		u32 val;
++
++		regmap_read(pdrm, 0x00, &val);
++
++		return !(val & 0x100);
++	}
++	return -1;
++}
++
++/* Gate clock with ready bit and backup domain management */
++struct stm32_ready_gate {
++	struct	clk_gate gate;
++	u8	bit_rdy;
++	u8	backup_domain;
++};
++
++#define to_ready_gate_clk(_rgate) container_of(_rgate, struct stm32_ready_gate,\
++		gate)
++
++#define RGATE_TIMEOUT 600000
++
++static int ready_gate_clk_is_enabled(struct clk_hw *hw)
++{
++	return clk_gate_ops.is_enabled(hw);
++}
++
++static int ready_gate_clk_enable(struct clk_hw *hw)
++{
++	struct clk_gate *gate = to_clk_gate(hw);
++	struct stm32_ready_gate *rgate = to_ready_gate_clk(gate);
++	int dbp_status;
++	int bit_status;
++	unsigned int timeout = RGATE_TIMEOUT;
++
++	if (clk_gate_ops.is_enabled(hw))
++		return 0;
++
++	dbp_status = is_enable_power_domain_write_protection();
++
++	if (rgate->backup_domain && dbp_status)
++		disable_power_domain_write_protection();
++
++	clk_gate_ops.enable(hw);
++
++	do {
++		bit_status = !(readl(gate->reg) & BIT(rgate->bit_rdy));
++
++		if (bit_status)
++			udelay(1000);
++
++	} while (bit_status && --timeout);
++
++	if (rgate->backup_domain && dbp_status)
++		enable_power_domain_write_protection();
++
++	return bit_status;
++}
++
++static void ready_gate_clk_disable(struct clk_hw *hw)
++{
++	struct clk_gate *gate = to_clk_gate(hw);
++	struct stm32_ready_gate *rgate = to_ready_gate_clk(gate);
++	int dbp_status;
++	int bit_status;
++	unsigned int timeout = RGATE_TIMEOUT;
++
++	if (!ready_gate_clk_is_enabled(hw))
++		return;
++
++	dbp_status = is_enable_power_domain_write_protection();
++
++	if (rgate->backup_domain && dbp_status)
++		disable_power_domain_write_protection();
++
++		clk_gate_ops.disable(hw);
++
++	do {
++		bit_status = !!(readl(gate->reg) & BIT(rgate->bit_rdy));
++
++		if (bit_status)
++			udelay(1000);
++
++	} while (bit_status && --timeout);
++	if (rgate->backup_domain && dbp_status)
++		enable_power_domain_write_protection();
++}
++
++static const struct clk_ops ready_gate_clk_ops = {
++	.enable		= ready_gate_clk_enable,
++	.disable	= ready_gate_clk_disable,
++	.is_enabled	= ready_gate_clk_is_enabled,
++};
++
++static struct clk_hw *clk_register_ready_gate(struct device *dev,
++		const char *name, const char *parent_name,
++		void __iomem *reg, u8 bit_idx, u8 bit_rdy,
++		u8 backup_domain, unsigned long flags, spinlock_t *lock)
++{
++	struct stm32_ready_gate *rgate;
++	struct clk_init_data init = { NULL };
++	struct clk_hw *hw;
++	int ret;
++
++	rgate = kzalloc(sizeof(*rgate), GFP_KERNEL);
++	if (!rgate)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &ready_gate_clk_ops;
++	init.flags = flags;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++
++	rgate->bit_rdy = bit_rdy;
++	rgate->backup_domain = backup_domain;
++
++	rgate->gate.lock = lock;
++	rgate->gate.reg = reg;
++	rgate->gate.bit_idx = bit_idx;
++	rgate->gate.hw.init = &init;
++
++	hw = &rgate->gate.hw;
++	ret = clk_hw_register(dev, hw);
++	if (ret) {
++		kfree(rgate);
++		hw = ERR_PTR(ret);
++	}
++
++	return hw;
++}
++
++struct gate_cfg {
++	u32 offset;
++	u8  bit_idx;
++};
++
++struct muxdiv_cfg {
++	u32 offset;
++	u8 shift;
++	u8 width;
++};
++
++struct composite_clk_cfg {
++	struct gate_cfg *gate;
++	struct muxdiv_cfg *mux;
++	struct muxdiv_cfg *div;
++	const char *name;
++	const char * const *parent_name;
++	int num_parents;
++	u32 flags;
++};
++
++struct composite_clk_gcfg_t {
++	u8 flags;
++	const struct clk_ops *ops;
++};
++
++/*
++ * General config definition of a composite clock (only clock diviser for rate)
++ */
++struct composite_clk_gcfg {
++	struct composite_clk_gcfg_t *mux;
++	struct composite_clk_gcfg_t *div;
++	struct composite_clk_gcfg_t *gate;
++};
++
++#define M_CFG_MUX(_mux_ops, _mux_flags)\
++	.mux = &(struct composite_clk_gcfg_t) { _mux_flags, _mux_ops}
++
++#define M_CFG_DIV(_rate_ops, _rate_flags)\
++	.div = &(struct composite_clk_gcfg_t) {_rate_flags, _rate_ops}
++
++#define M_CFG_GATE(_gate_ops, _gate_flags)\
++	.gate = &(struct composite_clk_gcfg_t) { _gate_flags, _gate_ops}
++
++static struct clk_mux *_get_cmux(void __iomem *reg, u8 shift, u8 width,
++		u32 flags, spinlock_t *lock)
++{
++	struct clk_mux *mux;
++
++	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
++	if (!mux)
++		return ERR_PTR(-ENOMEM);
++
++	mux->reg	= reg;
++	mux->shift	= shift;
++	mux->mask	= (1 << width) - 1;
++	mux->flags	= flags;
++	mux->lock	= lock;
++
++	return mux;
++}
++
++static struct clk_divider *_get_cdiv(void __iomem *reg, u8 shift, u8 width,
++		u32 flags, spinlock_t *lock)
++{
++	struct clk_divider *div;
++
++	div = kzalloc(sizeof(*div), GFP_KERNEL);
++
++	if (!div)
++		return ERR_PTR(-ENOMEM);
++
++	div->reg   = reg;
++	div->shift = shift;
++	div->width = width;
++	div->flags = flags;
++	div->lock  = lock;
++
++	return div;
++}
++
++static struct clk_gate *_get_cgate(void __iomem *reg, u8 bit_idx, u32 flags,
++		spinlock_t *lock)
++{
++	struct clk_gate *gate;
++
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate)
++		return ERR_PTR(-ENOMEM);
++
++	gate->reg	= reg;
++	gate->bit_idx	= bit_idx;
++	gate->flags	= flags;
++	gate->lock	= lock;
++
++	return gate;
++}
++
++struct composite_cfg {
++	struct clk_hw *mux_hw;
++	struct clk_hw *div_hw;
++	struct clk_hw *gate_hw;
++
++	const struct clk_ops *mux_ops;
++	const struct clk_ops *div_ops;
++	const struct clk_ops *gate_ops;
++};
++
++static void get_cfg_composite_div(const struct composite_clk_gcfg *gcfg,
++		const struct composite_clk_cfg *cfg,
++		struct composite_cfg *composite, spinlock_t *lock)
++{
++	struct clk_mux     *mux = NULL;
++	struct clk_divider *div = NULL;
++	struct clk_gate    *gate = NULL;
++	const struct clk_ops *mux_ops, *div_ops, *gate_ops;
++	struct clk_hw *mux_hw;
++	struct clk_hw *div_hw;
++	struct clk_hw *gate_hw;
++
++	mux_ops = div_ops = gate_ops = NULL;
++	mux_hw = div_hw = gate_hw = NULL;
++
++	if (gcfg->mux) {
++		mux = _get_cmux(base + cfg->mux->offset,
++				cfg->mux->shift,
++				cfg->mux->width,
++				gcfg->mux->flags, lock);
++
++		if (!IS_ERR(mux)) {
++			mux_hw = &mux->hw;
++			mux_ops = gcfg->mux->ops ?
++				  gcfg->mux->ops : &clk_mux_ops;
++		}
++	}
++
++	if (gcfg->div) {
++		div = _get_cdiv(base + cfg->div->offset,
++				cfg->div->shift,
++				cfg->div->width,
++				gcfg->div->flags, lock);
++
++		if (!IS_ERR(div)) {
++			div_hw = &div->hw;
++			div_ops = gcfg->div->ops ?
++				  gcfg->div->ops : &clk_divider_ops;
++		}
++
++	}
++
++	if (gcfg->gate) {
++		gate = _get_cgate(base + cfg->gate->offset,
++				cfg->gate->bit_idx,
++				gcfg->gate->flags, lock);
++
++		if (!IS_ERR(gate)) {
++			gate_hw = &gate->hw;
++			gate_ops = gcfg->gate->ops ?
++				   gcfg->gate->ops : &clk_gate_ops;
++		}
++
++	}
++
++	composite->mux_hw = mux_hw;
++	composite->mux_ops = mux_ops;
++
++	composite->div_hw = div_hw;
++	composite->div_ops = div_ops;
++
++	composite->gate_hw = gate_hw;
++	composite->gate_ops = gate_ops;
++}
++
++/* Kernel Timer */
++struct timer_ker {
++	u8 dppre_shift;
++	struct clk_hw hw;
++	spinlock_t *lock;
++};
++
++#define to_timer_ker(_hw) container_of(_hw, struct timer_ker, hw)
++
++static unsigned long timer_ker_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct timer_ker *clk_elem = to_timer_ker(hw);
++	u32 timpre;
++	u32 dppre_shift = clk_elem->dppre_shift;
++	u32 prescaler;
++	u32 mul;
++
++	timpre = (readl(base + RCC_CFGR) >> 15) & 0x01;
++
++	prescaler = (readl(base + RCC_D2CFGR) >> dppre_shift) & 0x03;
++
++	mul = 2;
++
++	if (prescaler < 4)
++		mul = 1;
++
++	else if (timpre && prescaler > 4)
++		mul = 4;
++
++	return parent_rate * mul;
++}
++
++static const struct clk_ops timer_ker_ops = {
++	.recalc_rate = timer_ker_recalc_rate,
++};
++
++static struct clk_hw *clk_register_stm32_timer_ker(struct device *dev,
++		const char *name, const char *parent_name,
++		unsigned long flags,
++		u8 dppre_shift,
++		spinlock_t lock)
++{
++	struct timer_ker *element;
++	struct clk_init_data init;
++	struct clk_hw *hw;
++	int err;
++
++	element = kzalloc(sizeof(*element), GFP_KERNEL);
++	if (!element)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &timer_ker_ops;
++	init.flags = flags;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++
++	element->hw.init = &init;
++	element->lock = &lock;
++	element->dppre_shift = dppre_shift;
++
++	hw = &element->hw;
++	err = clk_hw_register(dev, hw);
++
++	if (err) {
++		kfree(element);
++		return ERR_PTR(err);
++	}
++
++	return hw;
++}
++
++static const struct clk_div_table d1cpre_div_table[] = {
++	{ 0, 1 }, { 1, 1 }, { 2, 1 }, { 3, 1},
++	{ 4, 1 }, { 5, 1 }, { 6, 1 }, { 7, 1},
++	{ 8, 2 }, { 9, 4 }, { 10, 8 }, { 11, 16 },
++	{ 12, 64 }, { 13, 128 }, { 14, 256 },
++	{ 15, 512 },
++	{ 0 },
++};
++
++static const struct clk_div_table ppre_div_table[] = {
++	{ 0, 1 }, { 1, 1 }, { 2, 1 }, { 3, 1},
++	{ 4, 2 }, { 5, 4 }, { 6, 8 }, { 7, 16 },
++	{ 0 },
++};
++
++static void register_core_and_bus_clocks(void)
++{
++	/* CORE AND BUS */
++	hws[SYS_D1CPRE] = clk_hw_register_divider_table(NULL, "d1cpre",
++			"sys_ck", CLK_IGNORE_UNUSED, base + RCC_D1CFGR, 8, 4, 0,
++			d1cpre_div_table, &rlock);
++
++	hws[HCLK] = clk_hw_register_divider_table(NULL, "hclk", "d1cpre",
++			CLK_IGNORE_UNUSED, base + RCC_D1CFGR, 0, 4, 0,
++			d1cpre_div_table, &rlock);
++
++	/* D1 DOMAIN */
++	/* * CPU Systick */
++	hws[CPU_SYSTICK] = clk_hw_register_fixed_factor(NULL, "systick",
++			"d1cpre", 0, 1, 8);
++
++	/* * APB3 peripheral */
++	hws[PCLK3] = clk_hw_register_divider_table(NULL, "pclk3", "hclk", 0,
++			base + RCC_D1CFGR, 4, 3, 0,
++			ppre_div_table, &rlock);
++
++	/* D2 DOMAIN */
++	/* * APB1 peripheral */
++	hws[PCLK1] = clk_hw_register_divider_table(NULL, "pclk1", "hclk", 0,
++			base + RCC_D2CFGR, 4, 3, 0,
++			ppre_div_table, &rlock);
++
++	/* Timers prescaler clocks */
++	clk_register_stm32_timer_ker(NULL, "tim1_ker", "pclk1", 0,
++			4, rlock);
++
++	/* * APB2 peripheral */
++	hws[PCLK2] = clk_hw_register_divider_table(NULL, "pclk2", "hclk", 0,
++			base + RCC_D2CFGR, 8, 3, 0, ppre_div_table, &rlock);
++
++	clk_register_stm32_timer_ker(NULL, "tim2_ker", "pclk2", 0, 8, rlock);
++
++	/* D3 DOMAIN */
++	/* * APB4 peripheral */
++	hws[PCLK4] = clk_hw_register_divider_table(NULL, "pclk4", "hclk", 0,
++			base + RCC_D3CFGR, 4, 3, 0,
++			ppre_div_table, &rlock);
++}
++
++/* MUX clock configuration */
++struct stm32_mux_clk {
++	const char *name;
++	const char * const *parents;
++	u8 num_parents;
++	u32 offset;
++	u8 shift;
++	u8 width;
++	u32 flags;
++};
++
++#define M_MCLOCF(_name, _parents, _mux_offset, _mux_shift, _mux_width, _flags)\
++{\
++	.name		= _name,\
++	.parents	= _parents,\
++	.num_parents	= ARRAY_SIZE(_parents),\
++	.offset		= _mux_offset,\
++	.shift		= _mux_shift,\
++	.width		= _mux_width,\
++	.flags		= _flags,\
++}
++#define M_MCLOC(_name, _parents, _mux_offset, _mux_shift, _mux_width)\
++	M_MCLOCF(_name, _parents, _mux_offset, _mux_shift, _mux_width, 0)\
++
++static const struct stm32_mux_clk stm32_mclk[] __initconst = {
++	M_MCLOC("per_ck",	per_src,	RCC_D1CCIPR,	28, 3),
++	M_MCLOC("pllsrc",	pll_src,	RCC_PLLCKSELR,	 0, 3),
++	M_MCLOC("sys_ck",	sys_src,	RCC_CFGR,	 0, 3),
++	M_MCLOC("tracein_ck",	tracein_src,	RCC_CFGR,	 0, 3),
++};
++
++/* Oscillary clock configuration */
++struct stm32_osc_clk {
++	const char *name;
++	const char *parent;
++	u32 gate_offset;
++	u8 bit_idx;
++	u8 bit_rdy;
++	u32 flags;
++};
++
++#define OSC_CLKF(_name, _parent, _gate_offset, _bit_idx, _bit_rdy, _flags)\
++{\
++	.name		= _name,\
++	.parent		= _parent,\
++	.gate_offset	= _gate_offset,\
++	.bit_idx	= _bit_idx,\
++	.bit_rdy	= _bit_rdy,\
++	.flags		= _flags,\
++}
++#define OSC_CLK(_name, _parent, _gate_offset, _bit_idx, _bit_rdy)\
++	OSC_CLKF(_name, _parent, _gate_offset, _bit_idx, _bit_rdy, 0)
++
++static const struct stm32_osc_clk stm32_oclk[] __initconst = {
++	OSC_CLKF("hsi_ck",  "hsidiv",   RCC_CR,   0,  2, CLK_IGNORE_UNUSED),
++	OSC_CLKF("hsi_ker", "hsidiv",   RCC_CR,   1,  2, CLK_IGNORE_UNUSED),
++	OSC_CLKF("csi_ck",  "clk-csi",  RCC_CR,   7,  8, CLK_IGNORE_UNUSED),
++	OSC_CLKF("csi_ker", "clk-csi",  RCC_CR,   9,  8, CLK_IGNORE_UNUSED),
++	OSC_CLKF("rc48_ck", "clk-rc48", RCC_CR,  12, 13, CLK_IGNORE_UNUSED),
++	OSC_CLKF("lsi_ck",  "clk-lsi",  RCC_CSR,  0,  1, CLK_IGNORE_UNUSED),
++};
++
++/* PLL configuration */
++struct st32h7_pll_cfg {
++	u8 bit_idx;
++	u32 offset_divr;
++	u8 bit_frac_en;
++	u32 offset_frac;
++	u8 divm;
++};
++
++struct stm32_pll_data {
++	const char *name;
++	const char *parent_name;
++	unsigned long flags;
++	const struct st32h7_pll_cfg *cfg;
++};
++
++static const struct st32h7_pll_cfg stm32h7_pll1 = {
++	.bit_idx = 24,
++	.offset_divr = RCC_PLL1DIVR,
++	.bit_frac_en = 0,
++	.offset_frac = RCC_PLL1FRACR,
++	.divm = 4,
++};
++
++static const struct st32h7_pll_cfg stm32h7_pll2 = {
++	.bit_idx = 26,
++	.offset_divr = RCC_PLL2DIVR,
++	.bit_frac_en = 4,
++	.offset_frac = RCC_PLL2FRACR,
++	.divm = 12,
++};
++
++static const struct st32h7_pll_cfg stm32h7_pll3 = {
++	.bit_idx = 28,
++	.offset_divr = RCC_PLL3DIVR,
++	.bit_frac_en = 8,
++	.offset_frac = RCC_PLL3FRACR,
++	.divm = 20,
++};
++
++static const struct stm32_pll_data stm32_pll[] = {
++	{ "vco1", "pllsrc", CLK_IGNORE_UNUSED, &stm32h7_pll1 },
++	{ "vco2", "pllsrc", 0, &stm32h7_pll2 },
++	{ "vco3", "pllsrc", 0, &stm32h7_pll3 },
++};
++
++struct stm32_fractional_divider {
++	void __iomem	*mreg;
++	u8		mshift;
++	u8		mwidth;
++	u32		mmask;
++
++	void __iomem	*nreg;
++	u8		nshift;
++	u8		nwidth;
++
++	void __iomem	*freg_status;
++	u8		freg_bit;
++	void __iomem	*freg_value;
++	u8		fshift;
++	u8		fwidth;
++
++	u8		flags;
++	struct clk_hw	hw;
++	spinlock_t	*lock;
++};
++
++struct stm32_pll_obj {
++	spinlock_t *lock;
++	struct stm32_fractional_divider div;
++	struct stm32_ready_gate rgate;
++	struct clk_hw hw;
++};
++
++#define to_pll(_hw) container_of(_hw, struct stm32_pll_obj, hw)
++
++static int pll_is_enabled(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	struct clk_hw *_hw = &clk_elem->rgate.gate.hw;
++
++	__clk_hw_set_clk(_hw, hw);
++
++	return ready_gate_clk_ops.is_enabled(_hw);
++}
++
++static int pll_enable(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	struct clk_hw *_hw = &clk_elem->rgate.gate.hw;
++
++	__clk_hw_set_clk(_hw, hw);
++
++	return ready_gate_clk_ops.enable(_hw);
++}
++
++static void pll_disable(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	struct clk_hw *_hw = &clk_elem->rgate.gate.hw;
++
++	__clk_hw_set_clk(_hw, hw);
++
++	ready_gate_clk_ops.disable(_hw);
++}
++
++static int pll_frac_is_enabled(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	struct stm32_fractional_divider *fd = &clk_elem->div;
++
++	return (readl(fd->freg_status) >> fd->freg_bit) & 0x01;
++}
++
++static unsigned long pll_read_frac(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	struct stm32_fractional_divider *fd = &clk_elem->div;
++
++	return (readl(fd->freg_value) >> fd->fshift) &
++		GENMASK(fd->fwidth - 1, 0);
++}
++
++static unsigned long pll_fd_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	struct stm32_fractional_divider *fd = &clk_elem->div;
++	unsigned long m, n;
++	u32 val, mask;
++	u64 rate, rate1 = 0;
++
++	val = clk_readl(fd->mreg);
++	mask = (GENMASK(fd->mwidth - 1, 0) << fd->mshift);
++	m = (val & mask) >> fd->mshift;
++
++	val = clk_readl(fd->nreg);
++	mask = (GENMASK(fd->nwidth - 1, 0) << fd->nshift);
++	n = ((val & mask) >> fd->nshift) + 1;
++
++	if (!n || !m)
++		return parent_rate;
++
++	rate = (u64)parent_rate * n;
++	do_div(rate, m);
++
++	if (pll_frac_is_enabled(hw)) {
++		val = pll_read_frac(hw);
++		rate1 = (u64) parent_rate * (u64) val;
++		do_div(rate1, (m * 8191));
++	}
++
++	return rate + rate1;
++}
++
++static const struct clk_ops pll_ops = {
++	.enable		= pll_enable,
++	.disable	= pll_disable,
++	.is_enabled	= pll_is_enabled,
++	.recalc_rate	= pll_fd_recalc_rate,
++};
++
++static struct clk_hw *clk_register_stm32_pll(struct device *dev,
++		const char *name,
++		const char *parent,
++		unsigned long flags,
++		const struct st32h7_pll_cfg *cfg,
++		spinlock_t *lock)
++{
++
++	struct stm32_pll_obj *pll;
++	struct clk_init_data init = { NULL };
++	struct clk_hw *hw;
++	int ret;
++	struct stm32_fractional_divider *div = NULL;
++	struct stm32_ready_gate *rgate;
++
++	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
++	if (!pll)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &pll_ops;
++	init.flags = flags;
++	init.parent_names = &parent;
++	init.num_parents = 1;
++	pll->hw.init = &init;
++
++	hw = &pll->hw;
++	rgate = &pll->rgate;
++
++	rgate->bit_rdy = cfg->bit_idx + 1;
++	rgate->gate.lock = lock;
++	rgate->gate.reg = base + RCC_CR;
++	rgate->gate.bit_idx = cfg->bit_idx;
++
++	div = &pll->div;
++	div->flags = 0;
++	div->mreg = base + RCC_PLLCKSELR;
++	div->mshift = cfg->divm;
++	div->mwidth = 6;
++	div->nreg = base +  cfg->offset_divr;
++	div->nshift = 0;
++	div->nwidth = 9;
++
++	div->freg_status = base + RCC_PLLCFGR;
++	div->freg_bit = cfg->bit_frac_en;
++	div->freg_value = base +  cfg->offset_frac;
++	div->fshift = 3;
++	div->fwidth = 13;
++
++	div->lock = lock;
++
++	ret = clk_hw_register(dev, hw);
++	if (ret) {
++		kfree(pll);
++		hw = ERR_PTR(ret);
++	}
++
++	return hw;
++}
++
++/* ODF CLOCKS */
++static unsigned long odf_divider_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	return clk_divider_ops.recalc_rate(hw, parent_rate);
++}
++
++static long odf_divider_round_rate(struct clk_hw *hw, unsigned long rate,
++		unsigned long *prate)
++{
++	return clk_divider_ops.round_rate(hw, rate, prate);
++}
++
++static int odf_divider_set_rate(struct clk_hw *hw, unsigned long rate,
++		unsigned long parent_rate)
++{
++	struct clk_hw *hwp;
++	int pll_status;
++	int ret;
++
++	hwp = clk_hw_get_parent(hw);
++
++	pll_status = pll_is_enabled(hwp);
++
++	if (pll_status)
++		pll_disable(hwp);
++
++	ret = clk_divider_ops.set_rate(hw, rate, parent_rate);
++
++	if (pll_status)
++		pll_enable(hwp);
++
++	return ret;
++}
++
++static const struct clk_ops odf_divider_ops = {
++	.recalc_rate	= odf_divider_recalc_rate,
++	.round_rate	= odf_divider_round_rate,
++	.set_rate	= odf_divider_set_rate,
++};
++
++
++static int odf_gate_is_enabled(struct clk_hw *hw)
++{
++	return clk_gate_ops.is_enabled(hw);
++}
++
++static int odf_gate_enable(struct clk_hw *hw)
++{
++	struct clk_hw *hwp;
++	int pll_status;
++	int ret;
++
++	if (odf_gate_is_enabled(hw))
++		return 0;
++
++	hwp = clk_hw_get_parent(hw);
++
++	pll_status = pll_is_enabled(hwp);
++
++	if (pll_status)
++		pll_disable(hwp);
++
++	ret = clk_gate_ops.enable(hw);
++
++	if (pll_status)
++		pll_enable(hwp);
++
++	return ret;
++}
++
++static void odf_gate_disable(struct clk_hw *hw)
++{
++	struct clk_hw *hwp;
++	int pll_status;
++
++	if (!odf_gate_is_enabled(hw))
++		return;
++
++	clk_gate_ops.disable(hw);
++
++	hwp = clk_hw_get_parent(hw);
++
++	pll_status = pll_is_enabled(hwp);
++
++	if (pll_status)
++		pll_disable(hwp);
++
++	clk_gate_ops.disable(hw);
++
++	if (pll_status)
++		pll_enable(hwp);
++}
++
++static const struct clk_ops odf_gate_ops = {
++	.enable		= odf_gate_enable,
++	.disable	= odf_gate_disable,
++	.is_enabled	= odf_gate_is_enabled,
++};
++
++static struct composite_clk_gcfg odf_clk_gcfg = {
++	M_CFG_DIV(&odf_divider_ops, 0),
++	M_CFG_GATE(&odf_gate_ops, 0),
++};
++
++#define M_ODF_F(_name, _parent, _gate_offset,  _bit_idx, _rate_offset,\
++		_rate_shift, _rate_width, _flags)\
++{\
++	.mux = NULL,\
++	.div = &(struct muxdiv_cfg) {_rate_offset, _rate_shift, _rate_width},\
++	.gate = &(struct gate_cfg) {_gate_offset, _bit_idx },\
++	.name = _name,\
++	.parent_name = &(const char *) {_parent},\
++	.num_parents = 1,\
++	.flags = _flags,\
++}
++
++#define M_ODF(_name, _parent, _gate_offset,  _bit_idx, _rate_offset,\
++		_rate_shift, _rate_width)\
++M_ODF_F(_name, _parent, _gate_offset,  _bit_idx, _rate_offset,\
++		_rate_shift, _rate_width, 0)\
++
++static const struct composite_clk_cfg stm32_odf[3][3] = {
++	{
++		M_ODF_F("pll1_p", "vco1", RCC_PLLCFGR, 16, RCC_PLL1DIVR,  9, 7,
++				CLK_IGNORE_UNUSED),
++		M_ODF_F("pll1_q", "vco1", RCC_PLLCFGR, 17, RCC_PLL1DIVR, 16, 7,
++				CLK_IGNORE_UNUSED),
++		M_ODF_F("pll1_r", "vco1", RCC_PLLCFGR, 18, RCC_PLL1DIVR, 24, 7,
++				CLK_IGNORE_UNUSED),
++	},
++
++	{
++		M_ODF("pll2_p", "vco2", RCC_PLLCFGR, 19, RCC_PLL2DIVR,  9, 7),
++		M_ODF("pll2_q", "vco2", RCC_PLLCFGR, 20, RCC_PLL2DIVR, 16, 7),
++		M_ODF("pll2_r", "vco2", RCC_PLLCFGR, 21, RCC_PLL2DIVR, 24, 7),
++	},
++	{
++		M_ODF("pll3_p", "vco3", RCC_PLLCFGR, 22, RCC_PLL3DIVR,  9, 7),
++		M_ODF("pll3_q", "vco3", RCC_PLLCFGR, 23, RCC_PLL3DIVR, 16, 7),
++		M_ODF("pll3_r", "vco3", RCC_PLLCFGR, 24, RCC_PLL3DIVR, 24, 7),
++	}
++};
++
++/* PLL config structure from DT */
++struct pll_param {
++	u32 index;
++	u32 mult;
++	u32 div;
++	u32 frac;
++	u32 vcosel;
++};
++
++static int of_get_stm32_pll(struct device_node *np, struct pll_param *param)
++{
++	if (of_property_read_u32(np, "reg", &param->index) ||
++			param->index >= ARRAY_SIZE(stm32_pll))
++		return -EINVAL;
++
++	of_property_read_u32(np, "st,clock-div", &param->div);
++
++	of_property_read_u32(np, "st,clock-mult", &param->mult);
++
++	param->frac = ~0;
++	of_property_read_u32(np, "st,frac", &param->frac);
++
++	param->vcosel = ~0;
++	of_property_read_u32(np, "st,vcosel", &param->vcosel);
++
++	return 0;
++}
++
++
++static void stm32_pll_save_param(struct pll_param *pll_dt_cfg,
++		const struct st32h7_pll_cfg *cfg)
++{
++	unsigned long m, n;
++	u32 val, mask;
++	int idx = pll_dt_cfg->index;
++	int pll_status, pllrge;
++	unsigned long ref_ck;
++
++
++	/* Save PLL parameters from DT if needed */
++	m = pll_dt_cfg->div;
++	n = pll_dt_cfg->mult;
++	if (!(n || m || pll_dt_cfg->frac != ~0 ||
++				pll_dt_cfg->vcosel != ~0))
++		return;
++
++	/* We have to disable pll before modify pll register */
++	val = clk_readl(base + RCC_CR);
++	pll_status = val & BIT(cfg->bit_idx);
++	if (pll_status) {
++		val &= ~BIT(cfg->bit_idx);
++		writel(val, base + RCC_CR);
++	}
++
++	/* Save DIVM division factor  */
++	val = clk_readl(base + RCC_PLLCKSELR);
++	mask = 0x3f << cfg->divm;
++	if (m) {
++		val &= ~mask;
++		val |= (m << cfg->divm);
++		writel(val, base + RCC_PLLCKSELR);
++	} else
++		m = (val & mask) >> cfg->divm ?: 1;
++
++	/* Save DIVN multiplication factor */
++	if (n)  {
++		val = clk_readl(base +  cfg->offset_divr);
++		val &= ~0x1ff;
++		val |= (n - 1);
++		writel(val, base +  cfg->offset_divr);
++	}
++
++	/* If there is a "st,frac" property */
++	if (pll_dt_cfg->frac != ~0) {
++		u32 val_status;
++		int status = 0;
++
++		/* 0: pll is configured in integer mode */
++		/* else is configured in fractional mode */
++		if (pll_dt_cfg->frac)
++			status = 1;
++
++		/* clear frac status  before */
++		val_status = readl(base + RCC_PLLCFGR);
++		val_status &= ~BIT(cfg->bit_frac_en);
++		writel(val_status, base + RCC_PLLCFGR);
++
++		/* Save the fractional factor */
++		if (status) {
++			/* write frac value */
++			val = clk_readl(base +  cfg->offset_frac);
++			val &= ~(0x1fff << 3);
++			val |= ((pll_dt_cfg->frac) << 3);
++			writel(val, base +  cfg->offset_frac);
++
++			/* Enable fractional mode */
++			val_status |= status << cfg->bit_frac_en;
++			writel(val_status, base + RCC_PLLCFGR);
++		}
++	}
++
++	/* Save VCO frequency range */
++	if (pll_dt_cfg->vcosel != ~0) {
++		val = readl(base + RCC_PLLCFGR);
++		val &= ~BIT(cfg->bit_frac_en + 1);
++		val |= (pll_dt_cfg->vcosel & 0x01) << (cfg->bit_frac_en + 1);
++		writel(val, base + RCC_PLLCFGR);
++	}
++
++	/* Update PLLRGE */
++	ref_ck = clk_get_rate(__clk_lookup(stm32_pll[idx].parent_name)) / m;
++
++	pllrge = 3;
++	if (ref_ck < 2000000)
++		pllrge = 0;
++	else if (ref_ck < 4000000)
++		pllrge = 1;
++	else if (ref_ck < 8000000)
++		pllrge = 2;
++
++	/* Write reference frequency range */
++	val = readl(base + RCC_PLLCFGR);
++	val &= ~(0x3 << (cfg->bit_frac_en + 2));
++	val |= (pllrge & 0x3) << (cfg->bit_frac_en + 2);
++	writel(val, base + RCC_PLLCFGR);
++
++	/* Restore pll status */
++	if (pll_status) {
++		val = clk_readl(base + RCC_CR);
++		val |= BIT(cfg->bit_idx);
++		writel(val, base + RCC_CR);
++	}
++}
++
++static void stm32_h7_pll_init(struct device_node *np)
++{
++	struct pll_param pll_dt_cfg = { };
++	struct clk_hw *hw;
++	int idx, n;
++
++	if (of_get_stm32_pll(np, &pll_dt_cfg))
++		return;
++
++	idx = pll_dt_cfg.index;
++
++	stm32_pll_save_param(&pll_dt_cfg, stm32_pll[idx].cfg);
++
++	/* Register the VCO */
++	hw = clk_register_stm32_pll(NULL, stm32_pll[idx].name,
++			stm32_pll[idx].parent_name, stm32_pll[idx].flags,
++			stm32_pll[idx].cfg,
++			&rlock);
++
++	/* Register the 3 output dividers */
++	for (n = 0; n < 3; n++) {
++		struct composite_cfg c_cfg;
++
++		get_cfg_composite_div(&odf_clk_gcfg, &stm32_odf[idx][n],
++				&c_cfg,	&rlock);
++
++		hws[ODF_BANK + (idx * 3) + n] = clk_hw_register_composite(NULL,
++				stm32_odf[idx][n].name,
++				stm32_odf[idx][n].parent_name,
++				stm32_odf[idx][n].num_parents,
++				c_cfg.mux_hw, c_cfg.mux_ops,
++				c_cfg.div_hw, c_cfg.div_ops,
++				c_cfg.gate_hw, c_cfg.gate_ops,
++				stm32_odf[idx][n].flags);
++	}
++}
++
++/* PERIF CLOCKS */
++struct pclk_t {
++	u32 gate_offset;
++	u8 bit_idx;
++	const char *name;
++	const char *parent;
++	u32 flags;
++};
++
++#define PER_CLKF(_gate_offset, _bit_idx, _name, _parent, _flags)\
++{\
++	.gate_offset	= _gate_offset,\
++	.bit_idx	= _bit_idx,\
++	.name		= _name,\
++	.parent		= _parent,\
++	.flags		= _flags,\
++}
++#define PER_CLK(_gate_offset, _bit_idx, _name, _parent)\
++	PER_CLKF(_gate_offset, _bit_idx, _name, _parent, 0)
++
++static const struct pclk_t pclk[] = {
++	PER_CLK(RCC_AHB3ENR, 31, "d1sram1", "hclk"),
++	PER_CLK(RCC_AHB3ENR, 30, "itcm", "hclk"),
++	PER_CLK(RCC_AHB3ENR, 29, "dtcm2", "hclk"),
++	PER_CLK(RCC_AHB3ENR, 28, "dtcm1", "hclk"),
++	PER_CLK(RCC_AHB3ENR, 8, "flitf", "hclk"),
++	PER_CLK(RCC_AHB3ENR, 5, "jpgdec", "hclk"),
++	PER_CLK(RCC_AHB3ENR, 4, "dma2d", "hclk"),
++	PER_CLK(RCC_AHB3ENR, 0, "mdma", "hclk"),
++	PER_CLK(RCC_AHB1ENR, 28, "usb2ulpi", "hclk"),
++	PER_CLK(RCC_AHB1ENR, 26, "usb1ulpi", "hclk"),
++	PER_CLK(RCC_AHB1ENR, 17, "eth1rx", "hclk"),
++	PER_CLK(RCC_AHB1ENR, 16, "eth1tx", "hclk"),
++	PER_CLK(RCC_AHB1ENR, 15, "eth1mac", "hclk"),
++	PER_CLK(RCC_AHB1ENR, 14, "art", "hclk"),
++	PER_CLK(RCC_AHB1ENR, 1, "dma2", "hclk"),
++	PER_CLK(RCC_AHB1ENR, 0, "dma1", "hclk"),
++	PER_CLK(RCC_AHB2ENR, 31, "d2sram3", "hclk"),
++	PER_CLK(RCC_AHB2ENR, 30, "d2sram2", "hclk"),
++	PER_CLK(RCC_AHB2ENR, 29, "d2sram1", "hclk"),
++	PER_CLK(RCC_AHB2ENR, 5, "hash", "hclk"),
++	PER_CLK(RCC_AHB2ENR, 4, "crypt", "hclk"),
++	PER_CLK(RCC_AHB2ENR, 0, "camitf", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 28, "bkpram", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 25, "hsem", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 21, "bdma", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 19, "crc", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 10, "gpiok", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 9, "gpioj", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 8, "gpioi", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 7, "gpioh", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 6, "gpiog", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 5, "gpiof", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 4, "gpioe", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 3, "gpiod", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 2, "gpioc", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 1, "gpiob", "hclk"),
++	PER_CLK(RCC_AHB4ENR, 0, "gpioa", "hclk"),
++	PER_CLK(RCC_APB3ENR, 6, "wwdg1", "pclk3"),
++	PER_CLK(RCC_APB1LENR, 29, "dac12", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 11, "wwdg2", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 8, "tim14", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 7, "tim13", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 6, "tim12", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 5, "tim7", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 4, "tim6", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 3, "tim5", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 2, "tim4", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 1, "tim3", "pclk1"),
++	PER_CLK(RCC_APB1LENR, 0, "tim2", "pclk1"),
++	PER_CLK(RCC_APB1HENR, 5, "mdios", "pclk1"),
++	PER_CLK(RCC_APB1HENR, 4, "opamp", "pclk1"),
++	PER_CLK(RCC_APB1HENR, 1, "crs", "pclk1"),
++	PER_CLK(RCC_APB2ENR, 18, "tim17", "pclk2"),
++	PER_CLK(RCC_APB2ENR, 17, "tim16", "pclk2"),
++	PER_CLK(RCC_APB2ENR, 16, "tim15", "pclk2"),
++	PER_CLK(RCC_APB2ENR, 1, "tim8", "pclk2"),
++	PER_CLK(RCC_APB2ENR, 0, "tim1", "pclk2"),
++	PER_CLK(RCC_APB4ENR, 26, "tmpsens", "pclk4"),
++	PER_CLK(RCC_APB4ENR, 16, "rtcapb", "pclk4"),
++	PER_CLK(RCC_APB4ENR, 15, "vref", "pclk4"),
++	PER_CLK(RCC_APB4ENR, 14, "comp12", "pclk4"),
++	PER_CLK(RCC_APB4ENR, 1, "syscfg", "pclk4"),
++};
++
++/* KERNEL CLOCKS */
++#define KER_CLKF(_gate_offset, _bit_idx,\
++		_mux_offset, _mux_shift, _mux_width,\
++		_name, _parent_name,\
++		_flags) \
++{ \
++	.gate = &(struct gate_cfg) {_gate_offset, _bit_idx},\
++	.mux = &(struct muxdiv_cfg) {_mux_offset, _mux_shift, _mux_width },\
++	.name = _name, \
++	.parent_name = _parent_name, \
++	.num_parents = ARRAY_SIZE(_parent_name),\
++	.flags = _flags,\
++}
++#define KER_CLK(_gate_offset, _bit_idx, _mux_offset, _mux_shift, _mux_width,\
++		_name, _parent_name) \
++KER_CLKF(_gate_offset, _bit_idx, _mux_offset, _mux_shift, _mux_width,\
++		_name, _parent_name, 0)\
++
++#define KER_CLKF_NOMUX(_gate_offset, _bit_idx,\
++		_name, _parent_name,\
++		_flags) \
++{ \
++	.gate = &(struct gate_cfg) {_gate_offset, _bit_idx},\
++	.mux = NULL,\
++	.name = _name, \
++	.parent_name = _parent_name, \
++	.num_parents = 1,\
++	.flags = _flags,\
++}
++
++static const struct composite_clk_cfg kclk[] = {
++	KER_CLK(RCC_AHB3ENR,  16, RCC_D1CCIPR,	16, 1, "sdmmc1", sdmmc_src),
++	KER_CLKF(RCC_AHB3ENR, 14, RCC_D1CCIPR,	 4, 2, "quadspi", qspi_src,
++			CLK_IGNORE_UNUSED),
++	KER_CLKF(RCC_AHB3ENR, 12, RCC_D1CCIPR,	 0, 2, "fmc", fmc_src,
++			CLK_IGNORE_UNUSED),
++	KER_CLK(RCC_AHB1ENR,  27, RCC_D2CCIP2R,	20, 2, "usb2otg", usbotg_src),
++	KER_CLK(RCC_AHB1ENR,  25, RCC_D2CCIP2R, 20, 2, "usb1otg", usbotg_src),
++	KER_CLK(RCC_AHB1ENR,   5, RCC_D3CCIPR,	16, 2, "adc12", adc_src),
++	KER_CLK(RCC_AHB2ENR,   9, RCC_D1CCIPR,	16, 1, "sdmmc2", sdmmc_src),
++	KER_CLK(RCC_AHB2ENR,   6, RCC_D2CCIP2R,	 8, 2, "rng", rng_src),
++	KER_CLK(RCC_AHB4ENR,  24, RCC_D3CCIPR,  16, 2, "adc3", adc_src),
++	KER_CLK(RCC_APB3ENR,   4, RCC_D1CCIPR,	 8, 1, "dsi", dsi_src),
++	KER_CLKF_NOMUX(RCC_APB3ENR, 3, "ltdc", ltdc_src, CLK_SET_RATE_PARENT),
++	KER_CLK(RCC_APB1LENR, 31, RCC_D2CCIP2R,  0, 3, "usart8", usart_src2),
++	KER_CLK(RCC_APB1LENR, 30, RCC_D2CCIP2R,  0, 3, "usart7", usart_src2),
++	KER_CLK(RCC_APB1LENR, 27, RCC_D2CCIP2R, 22, 2, "hdmicec", cec_src),
++	KER_CLK(RCC_APB1LENR, 23, RCC_D2CCIP2R, 12, 2, "i2c3", i2c_src1),
++	KER_CLK(RCC_APB1LENR, 22, RCC_D2CCIP2R, 12, 2, "i2c2", i2c_src1),
++	KER_CLK(RCC_APB1LENR, 21, RCC_D2CCIP2R, 12, 2, "i2c1", i2c_src1),
++	KER_CLK(RCC_APB1LENR, 20, RCC_D2CCIP2R,	 0, 3, "uart5", usart_src2),
++	KER_CLK(RCC_APB1LENR, 19, RCC_D2CCIP2R,  0, 3, "uart4", usart_src2),
++	KER_CLK(RCC_APB1LENR, 18, RCC_D2CCIP2R,  0, 3, "usart3", usart_src2),
++	KER_CLK(RCC_APB1LENR, 17, RCC_D2CCIP2R,  0, 3, "usart2", usart_src2),
++	KER_CLK(RCC_APB1LENR, 16, RCC_D2CCIP1R, 20, 2, "spdifrx", spdifrx_src),
++	KER_CLK(RCC_APB1LENR, 15, RCC_D2CCIP1R, 16, 3, "spi3", spi_src1),
++	KER_CLK(RCC_APB1LENR, 14, RCC_D2CCIP1R, 16, 3, "spi2", spi_src1),
++	KER_CLK(RCC_APB1LENR,  9, RCC_D2CCIP2R, 28, 3, "lptim1", lptim_src1),
++	KER_CLK(RCC_APB1HENR,  8, RCC_D2CCIP1R, 28, 2, "fdcan", fdcan_src),
++	KER_CLK(RCC_APB1HENR,  2, RCC_D2CCIP1R, 31, 1, "swp", swp_src),
++	KER_CLK(RCC_APB2ENR,  29, RCC_CFGR,	14, 1, "hrtim", hrtim_src),
++	KER_CLK(RCC_APB2ENR,  28, RCC_D2CCIP1R, 24, 1, "dfsdm1", dfsdm1_src),
++	KER_CLK(RCC_APB2ENR,  24, RCC_D2CCIP1R,  6, 3, "sai3", sai_src),
++	KER_CLK(RCC_APB2ENR,  23, RCC_D2CCIP1R,  6, 3, "sai2", sai_src),
++	KER_CLK(RCC_APB2ENR,  22, RCC_D2CCIP1R,  0, 3, "sai1", sai_src),
++	KER_CLK(RCC_APB2ENR,  20, RCC_D2CCIP1R, 16, 3, "spi5", spi_src2),
++	KER_CLK(RCC_APB2ENR,  13, RCC_D2CCIP1R, 16, 3, "spi4", spi_src2),
++	KER_CLK(RCC_APB2ENR,  12, RCC_D2CCIP1R, 16, 3, "spi1", spi_src1),
++	KER_CLK(RCC_APB2ENR,   5, RCC_D2CCIP2R,  3, 3, "usart6", usart_src1),
++	KER_CLK(RCC_APB2ENR,   4, RCC_D2CCIP2R,  3, 3, "usart1", usart_src1),
++	KER_CLK(RCC_APB4ENR,  21, RCC_D3CCIPR,	24, 3, "sai4b", sai_src),
++	KER_CLK(RCC_APB4ENR,  21, RCC_D3CCIPR,	21, 3, "sai4a", sai_src),
++	KER_CLK(RCC_APB4ENR,  12, RCC_D3CCIPR,	13, 3, "lptim5", lptim_src2),
++	KER_CLK(RCC_APB4ENR,  11, RCC_D3CCIPR,	13, 3, "lptim4", lptim_src2),
++	KER_CLK(RCC_APB4ENR,  10, RCC_D3CCIPR,	13, 3, "lptim3", lptim_src2),
++	KER_CLK(RCC_APB4ENR,   9, RCC_D3CCIPR,	10, 3, "lptim2", lptim_src2),
++	KER_CLK(RCC_APB4ENR,   7, RCC_D3CCIPR,	 8, 2, "i2c4", i2c_src2),
++	KER_CLK(RCC_APB4ENR,   5, RCC_D3CCIPR,	28, 3, "spi6", spi_src3),
++	KER_CLK(RCC_APB4ENR,   3, RCC_D3CCIPR,	 0, 3, "lpuart1", lpuart1_src),
++};
++
++static struct composite_clk_gcfg kernel_clk_cfg = {
++	M_CFG_MUX(NULL, 0),
++	M_CFG_GATE(NULL, 0),
++};
++
++/* RTC clock */
++static u8 rtc_mux_get_parent(struct clk_hw *hw)
++{
++	return clk_mux_ops.get_parent(hw);
++}
++
++static int rtc_mux_set_parent(struct clk_hw *hw, u8 index)
++{
++	int dbp_status;
++	int err;
++
++	dbp_status = is_enable_power_domain_write_protection();
++
++	if (dbp_status)
++		disable_power_domain_write_protection();
++
++	err = clk_mux_ops.set_parent(hw, index);
++
++	if (dbp_status)
++		enable_power_domain_write_protection();
++
++	return err;
++}
++
++static int rtc_mux_determine_rate(struct clk_hw *hw,
++		struct clk_rate_request *req)
++{
++	return clk_mux_ops.determine_rate(hw, req);
++}
++
++static const struct clk_ops rtc_mux_ops = {
++	.get_parent	= rtc_mux_get_parent,
++	.set_parent	= rtc_mux_set_parent,
++	.determine_rate = rtc_mux_determine_rate,
++};
++
++/* Clock gate with backup domain protection management */
++static int bd_gate_is_enabled(struct clk_hw *hw)
++{
++	return clk_gate_ops.is_enabled(hw);
++}
++
++static int bd_gate_enable(struct clk_hw *hw)
++{
++	int dbp_status;
++	int err;
++
++	if (bd_gate_is_enabled(hw))
++		return 0;
++
++	dbp_status = is_enable_power_domain_write_protection();
++
++	if (dbp_status)
++		disable_power_domain_write_protection();
++
++	err = clk_gate_ops.enable(hw);
++
++	if (dbp_status)
++		enable_power_domain_write_protection();
++
++	return err;
++}
++
++static void bd_gate_disable(struct clk_hw *hw)
++{
++	int dbp_status;
++
++	if (!bd_gate_is_enabled(hw))
++		return;
++
++	dbp_status = is_enable_power_domain_write_protection();
++
++	if (dbp_status)
++		disable_power_domain_write_protection();
++
++	clk_gate_ops.disable(hw);
++
++	if (dbp_status)
++		enable_power_domain_write_protection();
++}
++
++static const struct clk_ops bd_gate_ops = {
++	.enable		= bd_gate_enable,
++	.disable	= bd_gate_disable,
++	.is_enabled	= bd_gate_is_enabled,
++};
++
++static struct composite_clk_gcfg rtc_clk_cfg = {
++	M_CFG_MUX(&rtc_mux_ops, 0),
++	M_CFG_GATE(&bd_gate_ops, 0),
++};
++
++static const struct composite_clk_cfg rtc_clk =
++	KER_CLK(RCC_BDCR, 15, RCC_BDCR, 8, 2, "rtc_ck", rtc_src);
++
++/* Micro-controller output clock */
++static struct composite_clk_gcfg mco_clk_cfg = {
++	M_CFG_MUX(NULL, 0),
++	M_CFG_DIV(NULL,	CLK_DIVIDER_ONE_BASED | CLK_DIVIDER_ALLOW_ZERO),
++};
++
++#define M_MCO_F(_name, _parents, _mux_offset,  _mux_shift, _mux_width,\
++		_rate_offset, _rate_shift, _rate_width,\
++		_flags)\
++{\
++	.mux = &(struct muxdiv_cfg) {_mux_offset, _mux_shift, _mux_width },\
++	.div = &(struct muxdiv_cfg) {_rate_offset, _rate_shift, _rate_width},\
++	.gate = NULL,\
++	.name = _name,\
++	.parent_name = _parents,\
++	.num_parents = ARRAY_SIZE(_parents),\
++	.flags = _flags,\
++}
++
++static const struct composite_clk_cfg mco_clk[] = {
++	M_MCO_F("mco1", mco_src1, RCC_CFGR, 22, 4, RCC_CFGR, 18, 4, 0),
++	M_MCO_F("mco2", mco_src2, RCC_CFGR, 29, 3, RCC_CFGR, 25, 4, 0),
++};
++
++static void __init stm32h7_rcc_init(struct device_node *np)
++{
++	struct clk_hw_onecell_data *clk_data;
++	struct device_node *node;
++	struct composite_cfg c_cfg;
++	int n;
++	const char *hse_clk, *lse_clk, *i2s_clk;
++
++	clk_data = kzalloc(sizeof(*clk_data) +
++			sizeof(*clk_data->hws) * STM32H7_MAX_CLKS,
++			GFP_KERNEL);
++	if (!clk_data)
++		return;
++
++	clk_data->num = STM32H7_MAX_CLKS;
++
++	hws = clk_data->hws;
++
++	for (n = 0; n < STM32H7_MAX_CLKS; n++)
++		hws[n] = ERR_PTR(-ENOENT);
++
++	/* get RCC base @ from DT */
++	base = of_iomap(np, 0);
++	if (!base) {
++		pr_err("%s: unable to map resource", np->name);
++		goto err_free_clks;
++	}
++
++	pdrm = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
++	if (IS_ERR(pdrm)) {
++		pdrm = NULL;
++		pr_warn("%s: Unable to get syscfg\n", __func__);
++	}
++
++	/* Put parent names from DT */
++	hse_clk = of_clk_get_parent_name(np, 0);
++	lse_clk = of_clk_get_parent_name(np, 1);
++	i2s_clk = of_clk_get_parent_name(np, 2);
++
++	sai_src[3] = i2s_clk;
++	spi_src1[3] = i2s_clk;
++
++	/* Register Internal oscillators */
++	clk_hw_register_fixed_rate(NULL, "clk-hsi", NULL, 0, 64000000);
++	clk_hw_register_fixed_rate(NULL, "clk-csi", NULL, 0, 4000000);
++	clk_hw_register_fixed_rate(NULL, "clk-lsi", NULL, 0, 32000);
++	clk_hw_register_fixed_rate(NULL, "clk-rc48", NULL, 0, 48000);
++
++	/* This clock is coming from outside. Frequencies unknown */
++	hws[CK_DSI_PHY] = clk_hw_register_fixed_rate(NULL, "ck_dsi_phy", NULL,
++			0, 0);
++
++	hws[HSI_DIV] = clk_hw_register_divider(NULL, "hsidiv", "clk-hsi", 0,
++			base + RCC_CR, 3, 2, CLK_DIVIDER_POWER_OF_TWO,
++			&rlock);
++
++	hws[HSE_1M] = clk_hw_register_divider(NULL, "hse_1M", "hse_ck",	0,
++			base + RCC_CFGR, 8, 6, CLK_DIVIDER_ONE_BASED |
++			CLK_DIVIDER_ALLOW_ZERO,
++			&rlock);
++
++	/* Mux system clocks */
++	for (n = 0; n < ARRAY_SIZE(stm32_mclk); n++)
++		hws[MCLK_BANK + n] = clk_hw_register_mux(NULL,
++				stm32_mclk[n].name,
++				stm32_mclk[n].parents,
++				stm32_mclk[n].num_parents,
++				stm32_mclk[n].flags,
++				stm32_mclk[n].offset + base,
++				stm32_mclk[n].shift,
++				stm32_mclk[n].width,
++				0,
++				&rlock);
++
++	register_core_and_bus_clocks();
++
++	/* Oscillary clocks */
++	for (n = 0; n < ARRAY_SIZE(stm32_oclk); n++)
++		hws[OSC_BANK + n] = clk_register_ready_gate(NULL,
++				stm32_oclk[n].name,
++				stm32_oclk[n].parent,
++				stm32_oclk[n].gate_offset + base,
++				stm32_oclk[n].bit_idx,
++				stm32_oclk[n].bit_rdy,
++				0,
++				stm32_oclk[n].flags,
++				&rlock);
++
++	hws[HSE_CK] = clk_register_ready_gate(NULL,
++				"hse_ck",
++				hse_clk,
++				RCC_CR + base,
++				16, 17,
++				0,
++				0,
++				&rlock);
++
++	hws[LSE_CK] = clk_register_ready_gate(NULL,
++				"lse_ck",
++				lse_clk,
++				RCC_BDCR + base,
++				0, 1,
++				1,
++				0,
++				&rlock);
++
++	hws[CSI_KER_DIV122 + n] = clk_hw_register_fixed_factor(NULL,
++			"csi_ker_div122", "csi_ker", 0, 1, 122);
++
++	/* PLLs */
++	for_each_compatible_node(node, NULL, "st,stm32h7-pll")
++		stm32_h7_pll_init(node);
++
++	/* Peripheral clocks */
++	for (n = 0; n < ARRAY_SIZE(pclk); n++)
++		hws[PERIF_BANK + n] = clk_hw_register_gate(NULL, pclk[n].name,
++				pclk[n].parent,
++				pclk[n].flags, base + pclk[n].gate_offset,
++				pclk[n].bit_idx, pclk[n].flags, &rlock);
++
++	/* Kernel clocks */
++	for (n = 0; n < ARRAY_SIZE(kclk); n++) {
++		get_cfg_composite_div(&kernel_clk_cfg, &kclk[n], &c_cfg,
++				&rlock);
++
++		hws[KERN_BANK + n] = clk_hw_register_composite(NULL,
++				kclk[n].name,
++				kclk[n].parent_name,
++				kclk[n].num_parents,
++				c_cfg.mux_hw, c_cfg.mux_ops,
++				c_cfg.div_hw, c_cfg.div_ops,
++				c_cfg.gate_hw, c_cfg.gate_ops,
++				kclk[n].flags);
++	}
++
++	/* RTC clock (default state is off) */
++	clk_hw_register_fixed_rate(NULL, "off", NULL, 0, 0);
++
++	get_cfg_composite_div(&rtc_clk_cfg, &rtc_clk, &c_cfg, &rlock);
++
++	hws[RTC_CK] = clk_hw_register_composite(NULL,
++			rtc_clk.name,
++			rtc_clk.parent_name,
++			rtc_clk.num_parents,
++			c_cfg.mux_hw, c_cfg.mux_ops,
++			c_cfg.div_hw, c_cfg.div_ops,
++			c_cfg.gate_hw, c_cfg.gate_ops,
++			rtc_clk.flags);
++
++	/* Micro-controller clocks */
++	for (n = 0; n < ARRAY_SIZE(mco_clk); n++) {
++		get_cfg_composite_div(&mco_clk_cfg, &mco_clk[n], &c_cfg,
++				&rlock);
++
++		hws[MCO_BANK + n] = clk_hw_register_composite(NULL,
++				mco_clk[n].name,
++				mco_clk[n].parent_name,
++				mco_clk[n].num_parents,
++				c_cfg.mux_hw, c_cfg.mux_ops,
++				c_cfg.div_hw, c_cfg.div_ops,
++				c_cfg.gate_hw, c_cfg.gate_ops,
++				mco_clk[n].flags);
++	}
++
++	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
++
++	return;
++
++err_free_clks:
++	kfree(clk_data);
++}
++CLK_OF_DECLARE_DRIVER(stm32h7_rcc, "st,stm32h743-rcc", stm32h7_rcc_init);
+diff --git a/include/dt-bindings/clock/stm32h7-clks.h b/include/dt-bindings/clock/stm32h7-clks.h
+new file mode 100644
+index 0000000..6637272
+--- /dev/null
++++ b/include/dt-bindings/clock/stm32h7-clks.h
+@@ -0,0 +1,165 @@
++/* SYS, CORE AND BUS CLOCKS */
++#define SYS_D1CPRE 0
++#define HCLK 1
++#define PCLK1 2
++#define PCLK2 3
++#define PCLK3 4
++#define PCLK4 5
++#define HSI_DIV 6
++#define HSE_1M 7
++#define I2S_CKIN 8
++#define CK_DSI_PHY 9
++#define HSE_CK 10
++#define LSE_CK 11
++#define CSI_KER_DIV122 12
++#define RTC_CK 13
++#define CPU_SYSTICK 14
++
++/* OSCILLATOR BANK */
++#define OSC_BANK 18
++#define HSI_CK 18
++#define HSI_KER_CK 19
++#define CSI_CK 20
++#define CSI_KER_CK 21
++#define RC48_CK 22
++#define LSI_CK 23
++
++/* MCLOCK BANK */
++#define MCLK_BANK 28
++#define PER_CK 28
++#define PLLSRC 29
++#define SYS_CK 30
++#define TRACEIN_CK 31
++
++/* ODF BANK */
++#define ODF_BANK 32
++#define PLL1_P 32
++#define PLL1_Q 33
++#define PLL1_R 34
++#define PLL2_P 35
++#define PLL2_Q 36
++#define PLL2_R 37
++#define PLL3_P 38
++#define PLL3_Q 39
++#define PLL3_R 40
++
++/* MCO BANK */
++#define MCO_BANK 41
++#define MCO1 41
++#define MCO2 42
++
++/* PERIF BANK */
++#define PERIF_BANK 50
++#define D1SRAM1_CK 50
++#define ITCM_CK 51
++#define DTCM2_CK 52
++#define DTCM1_CK 53
++#define FLITF_CK 54
++#define JPGDEC_CK 55
++#define DMA2D_CK 56
++#define MDMA_CK 57
++#define USB2ULPI_CK 58
++#define USB1ULPI_CK 59
++#define ETH1RX_CK 60
++#define ETH1TX_CK 61
++#define ETH1MAC_CK 62
++#define ART_CK 63
++#define DMA2_CK 64
++#define DMA1_CK 65
++#define D2SRAM3_CK 66
++#define D2SRAM2_CK 67
++#define D2SRAM1_CK 68
++#define HASH_CK 69
++#define CRYPT_CK 70
++#define CAMITF_CK 71
++#define BKPRAM_CK 72
++#define HSEM_CK 73
++#define BDMA_CK 74
++#define CRC_CK 75
++#define GPIOK_CK 76
++#define GPIOJ_CK 77
++#define GPIOI_CK 78
++#define GPIOH_CK 79
++#define GPIOG_CK 80
++#define GPIOF_CK 81
++#define GPIOE_CK 82
++#define GPIOD_CK 83
++#define GPIOC_CK 84
++#define GPIOB_CK 85
++#define GPIOA_CK 86
++#define WWDG1_CK 87
++#define DAC12_CK 88
++#define WWDG2_CK 89
++#define TIM14_CK 90
++#define TIM13_CK 91
++#define TIM12_CK 92
++#define TIM7_CK 93
++#define TIM6_CK 94
++#define TIM5_CK 95
++#define TIM4_CK 96
++#define TIM3_CK 97
++#define TIM2_CK 98
++#define MDIOS_CK 99
++#define OPAMP_CK 100
++#define CRS_CK 101
++#define TIM17_CK 102
++#define TIM16_CK 103
++#define TIM15_CK 104
++#define TIM8_CK 105
++#define TIM1_CK 106
++#define TMPSENS_CK 107
++#define RTCAPB_CK 108
++#define VREF_CK 109
++#define COMP12_CK 110
++#define SYSCFG_CK 111
++
++/* KERNEL BANK */
++#define KERN_BANK 120
++#define SDMMC1_CK 120
++#define QUADSPI_CK 121
++#define FMC_CK 122
++#define USB2OTG_CK 123
++#define USB1OTG_CK 124
++#define ADC12_CK 125
++#define SDMMC2_CK 126
++#define RNG_CK 127
++#define ADC3_CK 128
++#define DSI_CK 129
++#define LTDC_CK 130
++#define USART8_CK 131
++#define USART7_CK 132
++#define HDMICEC_CK 133
++#define I2C3_CK 134
++#define I2C2_CK 135
++#define I2C1_CK 136
++#define UART5_CK 137
++#define UART4_CK 138
++#define USART3_CK 139
++#define USART2_CK 140
++#define SPDIFRX_CK 141
++#define SPI3_CK 142
++#define SPI2_CK 143
++#define LPTIM1_CK 144
++#define FDCAN_CK 145
++#define SWP_CK 146
++#define HRTIM_CK 147
++#define DFSDM1_CK 148
++#define SAI3_CK 149
++#define SAI2_CK 150
++#define SAI1_CK 151
++#define SPI5_CK 152
++#define SPI4_CK 153
++#define SPI1_CK 154
++#define USART6_CK 155
++#define USART1_CK 156
++#define SAI4B_CK 157
++#define SAI4A_CK 158
++#define LPTIM5_CK 159
++#define LPTIM4_CK 160
++#define LPTIM3_CK 161
++#define LPTIM2_CK 162
++#define I2C4_CK 163
++#define SPI6_CK 164
++#define LPUART1_CK 165
++
++#define STM32H7_MAX_CLKS 166
+diff --git a/include/dt-bindings/mfd/stm32h7-rcc.h b/include/dt-bindings/mfd/stm32h7-rcc.h
+new file mode 100644
+index 0000000..3af6a65
+--- /dev/null
++++ b/include/dt-bindings/mfd/stm32h7-rcc.h
+@@ -0,0 +1,137 @@
++/*
++ * This header provides constants for the STM32H7 RCC IP
++ */
++
++#ifndef _DT_BINDINGS_MFD_STM32H7_RCC_H
++#define _DT_BINDINGS_MFD_STM32H7_RCC_H
++
++/* AHB3 */
++#define STM32H7_RCC_AHB3_MDMA		0
++#define STM32H7_RCC_AHB3_DMA2D		4
++#define STM32H7_RCC_AHB3_JPGDEC		5
++#define STM32H7_RCC_AHB3_FMC		12
++#define STM32H7_RCC_AHB3_QUADSPI	14
++#define STM32H7_RCC_AHB3_SDMMC1		16
++#define STM32H7_RCC_AHB3_CPU		31
++
++#define STM32H7_AHB3_RESET(bit) (STM32H7_RCC_AHB3_##bit + (0x7C * 8))
++
++/* AHB1 */
++#define STM32H7_RCC_AHB1_DMA1		0
++#define STM32H7_RCC_AHB1_DMA2		1
++#define STM32H7_RCC_AHB1_ADC12		5
++#define STM32H7_RCC_AHB1_ART		14
++#define STM32H7_RCC_AHB1_ETH1MAC	15
++#define STM32H7_RCC_AHB1_USB1OTG	25
++#define STM32H7_RCC_AHB1_USB2OTG	27
++
++#define STM32H7_AHB1_RESET(bit) (STM32H7_RCC_AHB1_##bit + (0x80 * 8))
++
++/* AHB2 */
++#define STM32H7_RCC_AHB2_CAMITF		0
++#define STM32H7_RCC_AHB2_CRYPT		4
++#define STM32H7_RCC_AHB2_HASH		5
++#define STM32H7_RCC_AHB2_RNG		6
++#define STM32H7_RCC_AHB2_SDMMC2		9
++
++#define STM32H7_AHB2_RESET(bit) (STM32H7_RCC_AHB2_##bit + (0x84 * 8))
++
++/* AHB4 */
++#define STM32H7_RCC_AHB4_GPIOA		0
++#define STM32H7_RCC_AHB4_GPIOB		1
++#define STM32H7_RCC_AHB4_GPIOC		2
++#define STM32H7_RCC_AHB4_GPIOD		3
++#define STM32H7_RCC_AHB4_GPIOE		4
++#define STM32H7_RCC_AHB4_GPIOF		5
++#define STM32H7_RCC_AHB4_GPIOG		6
++#define STM32H7_RCC_AHB4_GPIOH		7
++#define STM32H7_RCC_AHB4_GPIOI		8
++#define STM32H7_RCC_AHB4_GPIOJ		9
++#define STM32H7_RCC_AHB4_GPIOK		10
++#define STM32H7_RCC_AHB4_CRC		19
++#define STM32H7_RCC_AHB4_BDMA		21
++#define STM32H7_RCC_AHB4_ADC3		24
++#define STM32H7_RCC_AHB4_HSEM		25
++
++#define STM32H7_AHB4_RESET(bit) (STM32H7_RCC_AHB4_##bit + (0x88 * 8))
++
++
++/* APB3 */
++#define STM32H7_RCC_APB3_LTDC		3
++#define STM32H7_RCC_APB3_DSI		4
++
++#define STM32H7_APB3_RESET(bit) (STM32H7_RCC_APB3_##bit + (0x8C * 8))
++
++/* APB1L */
++#define STM32H7_RCC_APB1L_TIM2		0
++#define STM32H7_RCC_APB1L_TIM3		1
++#define STM32H7_RCC_APB1L_TIM4		2
++#define STM32H7_RCC_APB1L_TIM5		3
++#define STM32H7_RCC_APB1L_TIM6		4
++#define STM32H7_RCC_APB1L_TIM7		5
++#define STM32H7_RCC_APB1L_TIM12		6
++#define STM32H7_RCC_APB1L_TIM13		7
++#define STM32H7_RCC_APB1L_TIM14		8
++#define STM32H7_RCC_APB1L_LPTIM1	9
++#define STM32H7_RCC_APB1L_SPI2		14
++#define STM32H7_RCC_APB1L_SPI3		15
++#define STM32H7_RCC_APB1L_SPDIF_RX	16
++#define STM32H7_RCC_APB1L_USART2	17
++#define STM32H7_RCC_APB1L_USART3	18
++#define STM32H7_RCC_APB1L_UART4		19
++#define STM32H7_RCC_APB1L_UART5		20
++#define STM32H7_RCC_APB1L_I2C1		21
++#define STM32H7_RCC_APB1L_I2C2		22
++#define STM32H7_RCC_APB1L_I2C3		23
++#define STM32H7_RCC_APB1L_HDMICEC	27
++#define STM32H7_RCC_APB1L_DAC12		29
++#define STM32H7_RCC_APB1L_USART7	30
++#define STM32H7_RCC_APB1L_USART8	31
++
++#define STM32H7_APB1L_RESET(bit) (STM32H7_RCC_APB1L_##bit + (0x90 * 8))
++
++/* APB1H */
++#define STM32H7_RCC_APB1H_CRS		1
++#define STM32H7_RCC_APB1H_SWP		2
++#define STM32H7_RCC_APB1H_OPAMP		4
++#define STM32H7_RCC_APB1H_MDIOS		5
++#define STM32H7_RCC_APB1H_FDCAN		8
++
++#define STM32H7_APB1H_RESET(bit) (STM32H7_RCC_APB1H_##bit + (0x94 * 8))
++
++/* APB2 */
++#define STM32H7_RCC_APB2_TIM1		0
++#define STM32H7_RCC_APB2_TIM8		1
++#define STM32H7_RCC_APB2_USART1		4
++#define STM32H7_RCC_APB2_USART6		5
++#define STM32H7_RCC_APB2_SPI1		12
++#define STM32H7_RCC_APB2_SPI4		13
++#define STM32H7_RCC_APB2_TIM15		16
++#define STM32H7_RCC_APB2_TIM16		17
++#define STM32H7_RCC_APB2_TIM17		18
++#define STM32H7_RCC_APB2_SPI5		20
++#define STM32H7_RCC_APB2_SAI1		22
++#define STM32H7_RCC_APB2_SAI2		23
++#define STM32H7_RCC_APB2_SAI3		24
++#define STM32H7_RCC_APB2_DFSDM1		28
++#define STM32H7_RCC_APB2_HRTIM		29
++
++#define STM32H7_APB2_RESET(bit) (STM32H7_RCC_APB2_##bit + (0x98 * 8))
++
++/* APB4 */
++#define STM32H7_RCC_APB4_SYSCFG		1
++#define STM32H7_RCC_APB4_LPUART1	3
++#define STM32H7_RCC_APB4_SPI6		5
++#define STM32H7_RCC_APB4_I2C4		7
++#define STM32H7_RCC_APB4_LPTIM2		9
++#define STM32H7_RCC_APB4_LPTIM3		10
++#define STM32H7_RCC_APB4_LPTIM4		11
++#define STM32H7_RCC_APB4_LPTIM5		12
++#define STM32H7_RCC_APB4_COMP12		14
++#define STM32H7_RCC_APB4_VREF		15
++#define STM32H7_RCC_APB4_SAI4		21
++#define STM32H7_RCC_APB4_TMPSENS	26
++
++#define STM32H7_APB4_RESET(bit) (STM32H7_RCC_APB4_##bit + (0x9C * 8))
++
++#endif /* _DT_BINDINGS_MFD_STM32H7_RCC_H */
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+1.9.1
+
