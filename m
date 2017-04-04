@@ -1,115 +1,73 @@
-From: Anurup M <anurupvasu@gmail.com>
-Subject: [PATCH v7 9/9] dts: arm64: hip07: Add Hisilicon SoC PMU support
-Date: Tue,  4 Apr 2017 06:56:42 -0400
-Message-ID: <1491303402-140597-1-git-send-email-anurup.m@huawei.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, will.deacon@arm.com, robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, huangdaode@hisilicon.com, linuxarm@huawei.com, dikshit.n@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V10 05/12] ACPI/IORT: Add function to check SMMUs drivers
+	presence
+Date: Tue, 4 Apr 2017 12:04:39 +0100
+Message-ID: <e2713b7b-718d-c059-2e14-cc6ab7636a22@arm.com>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-6-git-send-email-sricharan@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1491301105-5274-6-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for djtag, L3 cache and MN to support uncore events.
+On 04/04/17 11:18, Sricharan R wrote:
+> From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> 
+> The IOMMU probe deferral implementation requires a mechanism to detect
+> if drivers for SMMU components are built-in in the kernel to detect
+> whether IOMMU configuration for a given device should be deferred (ie
+> SMMU drivers present but still not probed) or not (drivers not present).
+> 
+> Add a simple function to IORT to detect if SMMU drivers for SMMU
+> components managed by IORT are built-in in the kernel.
 
-Signed-off-by: Anurup M <anurup.m@huawei.com>
----
- arch/arm64/boot/dts/hisilicon/hip07.dtsi | 87 ++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+Ah, if only DT could be this neat and tidy :D
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index 5144eb1..1099f6e 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1056,4 +1056,91 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	djtag0: djtag@60010000 {
-+		compatible = "hisilicon,hip07-cpu-djtag-v2";
-+		reg = <0x0 0x60010000 0x0 0x10000>;
-+		hisilicon,scl-id = <0x03>;
-+
-+		/* L3 cache bank 0 for socket0 CPU die scl#3 */
-+		pmul3c0 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 1 for socket0 CPU die scl#3 */
-+		pmul3c1 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 2 for socket0 CPU die scl#3 */
-+		pmul3c2 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 3 for socket0 CPU die scl#3 */
-+		pmul3c3 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/*
-+		 * Miscellaneous node for socket0
-+		 * CPU die scl#3
-+		 */
-+		pmumn0 {
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+		};
-+	};
-+
-+	djtag1: djtag@40010000 {
-+		compatible = "hisilicon,hip07-cpu-djtag-v2";
-+		reg = <0x0 0x40010000 0x0 0x10000>;
-+		hisilicon,scl-id = <0x01>;
-+
-+		/* L3 cache bank 0 for socket0 CPU die scl#1 */
-+		pmul3c0 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 1 for socket0 CPU die scl#1 */
-+		pmul3c1 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 2 for socket0 CPU die scl#1 */
-+		pmul3c2 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 3 for socket0 CPU die scl#1 */
-+		pmul3c3 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/*
-+		 * Miscellaneous node for socket0
-+		 * CPU die scl#1
-+		 */
-+		pmumn1 {
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+		};
-+	};
-+
- };
--- 
-2.1.4
+Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+
+> Tested-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> Cc: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/acpi/arm64/iort.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 4a5bb96..3dd9ec3 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -523,6 +523,19 @@ static int arm_smmu_iort_xlate(struct device *dev, u32 streamid,
+>  	return ret;
+>  }
+>  
+> +static inline bool iort_iommu_driver_enabled(u8 type)
+> +{
+> +	switch (type) {
+> +	case ACPI_IORT_NODE_SMMU_V3:
+> +		return IS_BUILTIN(CONFIG_ARM_SMMU_V3);
+> +	case ACPI_IORT_NODE_SMMU:
+> +		return IS_BUILTIN(CONFIG_ARM_SMMU);
+> +	default:
+> +		pr_warn("IORT node type %u does not describe an SMMU\n", type);
+> +		return false;
+> +	}
+> +}
+> +
+>  static const struct iommu_ops *iort_iommu_xlate(struct device *dev,
+>  					struct acpi_iort_node *node,
+>  					u32 streamid)
+> 
