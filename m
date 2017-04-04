@@ -1,67 +1,48 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 11/11] arm64: allwinner: a64: enable Wi-Fi for Pine64
-Date: Wed,  5 Apr 2017 02:01:45 +0800
-Message-ID: <20170404180145.12897-12-icenowy@aosc.io>
-References: <20170404180145.12897-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Tue, 4 Apr 2017 14:22:03 -0400
+Message-ID: <df7c7be0-8590-3517-403a-e50aeea61b8d@timesys.com>
+References: <1489785040-26477-1-git-send-email-akshay.bhat@timesys.com>
+ <1489785040-26477-2-git-send-email-akshay.bhat@timesys.com>
+ <32114de2-8ab7-daec-9b36-209cab0ea550@timesys.com>
+ <145b8725-c3dd-e899-8a3e-133e68a3b1e6@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBWWBR7DQKGQEVC4YTSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170404180145.12897-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <145b8725-c3dd-e899-8a3e-133e68a3b1e6-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Wi-Fi modules of Pine64 is powered via DLDO4 and ELDO1 (the latter
-one provides I/O voltage).
 
-Add device node for it.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On 04/04/2017 11:34 AM, Marc Kleine-Budde wrote:
+> On 03/24/2017 06:20 PM, Akshay Bhat wrote:
+>> Hi Marc,
+>>
+>> On 03/17/2017 05:10 PM, Akshay Bhat wrote:
+>>> This patch adds support for the Holt HI-311x CAN controller. The HI311x
+>>> CAN controller is capable of transmitting and receiving standard data
+>>> frames, extended data frames and remote frames. The HI311x interfaces
+>>> with the host over SPI.
+>>>
+>>> Datasheet: www.holtic.com/documents/371-hi-3110_v-rev-jpdf.do
+>>>
+>>> Signed-off-by: Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>
+>>
+>> If there are no further review comments can this series be applied to
+>> can-next or does it need to wait for the next kernel release cycle (4.13)?
+> 
+> The driver doesn't check if the workqueue allocation is successfull,
+> I've squashed this patch:
+> 
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 7da074f95065..9d90bb32aa87 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -64,6 +64,11 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
-+	};
- };
- 
- &ehci1 {
-@@ -91,6 +96,17 @@
- 	status = "okay";
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_dldo4>;
-+	vqmmc-supply = <&reg_eldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
--- 
-2.12.2
+Thanks Marc, appreciate it. The squashed patch looks good.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
