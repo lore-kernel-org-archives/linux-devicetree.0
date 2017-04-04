@@ -1,103 +1,141 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V10 04/12] of: dma: Make of_dma_deconfigure() public
-Date: Tue, 4 Apr 2017 11:47:17 +0100
-Message-ID: <2b2b6268-ad58-4c10-8866-e44a777a4128@arm.com>
-References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
-	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
-	<1491301105-5274-5-git-send-email-sricharan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1491301105-5274-5-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+From: Anurup M <anurupvasu@gmail.com>
+Subject: [PATCH v7 0/9] perf: arm64: Support for Hisilicon SoC Hardware event counters
+Date: Tue,  4 Apr 2017 06:54:39 -0400
+Message-ID: <1491303279-140208-1-git-send-email-anurup.m@huawei.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, catalin.marinas@arm.com, geert+renesas@glider.be, davem@davemloft.net, akpm@linux-foundation.org, corbet@lwn.net, mark.rutland@arm.com, will.deacon@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, huangdaode@hisilicon.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, dikshit.n@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/17 11:18, Sricharan R wrote:
-> From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> 
-> As part of moving DMA initializing to probe time the
-> of_dma_deconfigure() function will need to be called from different
-> source files. Make it public and move it to drivers/of/device.c where
-> the of_dma_configure() function is.
+Provide Support for Hisilicon SoC(HiP05/06/07) Hardware event counters.
+The Hisilicon SoC HiP0x series has many uncore or non-CPU performance
+events and counters units.
 
-Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+This v7 version has addressed review comments of v6 version and based on 4.11-rc1.
 
-> Tested-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> ---
->  drivers/of/device.c       | 12 ++++++++++++
->  drivers/of/platform.c     |  5 -----
->  include/linux/of_device.h |  3 +++
->  3 files changed, 15 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 09dedd0..c17c19d 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -136,6 +136,18 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->  }
->  EXPORT_SYMBOL_GPL(of_dma_configure);
->  
-> +/**
-> + * of_dma_deconfigure - Clean up DMA configuration
-> + * @dev:	Device for which to clean up DMA configuration
-> + *
-> + * Clean up all configuration performed by of_dma_configure_ops() and free all
-> + * resources that have been allocated.
-> + */
-> +void of_dma_deconfigure(struct device *dev)
-> +{
-> +	arch_teardown_dma_ops(dev);
-> +}
-> +
->  int of_device_register(struct platform_device *pdev)
->  {
->  	device_initialize(&pdev->dev);
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 5dfcc96..5344db5 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -158,11 +158,6 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  }
->  EXPORT_SYMBOL(of_device_alloc);
->  
-> -static void of_dma_deconfigure(struct device *dev)
-> -{
-> -	arch_teardown_dma_ops(dev);
-> -}
-> -
->  /**
->   * of_platform_device_create_pdata - Alloc, initialize and register an of_device
->   * @np: pointer to node to create device for
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index c12dace..af98455 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -56,6 +56,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
->  }
->  
->  void of_dma_configure(struct device *dev, struct device_node *np);
-> +void of_dma_deconfigure(struct device *dev);
->  #else /* CONFIG_OF */
->  
->  static inline int of_driver_match_device(struct device *dev,
-> @@ -105,6 +106,8 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
->  }
->  static inline void of_dma_configure(struct device *dev, struct device_node *np)
->  {}
-> +static inline void of_dma_deconfigure(struct device *dev)
-> +{}
->  #endif /* CONFIG_OF */
->  
->  #endif /* _LINUX_OF_DEVICE_H */
-> 
+This patch series is implemented refering to arm-cci, Intel/AMD uncore and
+also the cavium thunderX and xgene uncore pmu patches.
+
+Support for Hisilicon L3 cache(L3C) and Miscellaneous nodes(MN) hardware
+events and counters are added in this implementation.
+
+The uncore PMU units are registered as separate PMUs. 
+e.g. in the case of L3 cache, which consist of 4 banks/instances, each bank
+is registered with perf as separate PMU, as each bank have separate control
+registers and interrupts. These units are also not CPU affine in the current
+chip versions.
+
+The Hisilicon uncore PMUs can be found under /sys/bus/event_source/devices.
+The counters are exported via sysfs in the corresponding events files
+under the PMU directory so the perf tool can list the event names.
+
+There is no counter overflow IRQ support in hardware for these uncore PMUs.
+So the driver use poll method using hrtimer to avoid overflow.
+
+ToDo:
+1) ACPI probe and reset support.
+
+Version history
+---------------
+v7
+--
+- use BUG_ON for djtag access timeout and simplified callers.
+- Split hisilicon,module-id in dt-bindings and add hisilicon,instance-id
+  property. Also describe the properties with more detail.
+- Add event group validation for available counters.
+- Fold hrtimer patches to main PMU patches of L3 cache and MN.
+- Move event used mask to hisi_pmu_hwevents struct.
+- Remove some unused #define.
+- Fix all sparse and gcc W=1 warnings.
+- Fix comments of V6 version.
+
+v6
+--
+- Rebase to 4.11-rc1
+- Modify Copyright year to 2017.
+
+v5
+--
+- Use hrtimer to avoid overflow as MN counter overflow IRQ is broken
+  in hardware.
+- Remove IRQ handling of MN in driver and update pmu dt-bindings.
+- Fix reveiw comments in v4 version.
+
+v4
+--
+- Counter overflow IRQ handling for MN PMU.
+- Use hrtimer to avoid counter overflow in L3 Cache PMU.
+- Use hisi-cpu- and hisi-io- for djtag compatible field.
+- Fix reveiw comments in v3 version.
+
+v3
+--
+- Fix review comments of v2 version.
+- Handle event groups. Do not allow group of mixed PMUs.
+- Use hip0x prefix for compatible names.
+- Fix all sparse and gcc W=1 warnings.
+
+v2
+--
+- Fix review comments of v1 version.
+- Move djtag driver to drivers/perf/hisilicon.
+- Have separate PMU instance for each L3 cache banks.
+- Modify device properties in DTS as per review comments.
+- Handle hardware version difference.
+- Change compatible names of djtag so use prefix hisi-
+  and remove chip version as driver only depend on djtag
+  hw version.
+- use devm_kzalloc.
+- Remove DDRC changes in this series. As the DDRC PMU doesnot
+  depend on djtag it will be send separately.
+
+v1
+--
+-Initial version with support for L3C, MN and DDRC event counters
+-Djtag driver is used to access registers of L3 cache and MN.
+
+Anurup M (6):
+  arm64: MAINTAINERS: hisi: Add hisilicon SoC PMU support
+  dt-bindings: perf: hisi: Add Devicetree bindings for Hisilicon SoC PMU
+  Documentation: perf: hisi: Documentation for HiP05/06/07 PMU event
+    counting.
+  drivers: perf: hisi: Update Kconfig for Hisilicon PMU support
+  drivers: perf: hisi: Add support for Hisilicon SoC event counters
+  dts: arm64: hip07: Add Hisilicon SoC PMU support
+
+Shaokun Zhang (1):
+  drivers: perf: hisi: Miscellanous node(MN) event counting in perf
+
+Tan Xiaojun (2):
+  dt-bindings: hisi: Add Hisilicon HiP05/06/07 Djtag dts bindings
+  drivers: perf: hisi: Add support for Hisilicon Djtag driver
+
+ .../devicetree/bindings/arm/hisilicon/djtag.txt    |  80 +++
+ .../devicetree/bindings/arm/hisilicon/pmu.txt      |  93 +++
+ Documentation/perf/hisi-pmu.txt                    |  75 +++
+ MAINTAINERS                                        |  10 +
+ arch/arm64/boot/dts/hisilicon/hip07.dtsi           |  87 +++
+ drivers/perf/Kconfig                               |   8 +
+ drivers/perf/Makefile                              |   1 +
+ drivers/perf/hisilicon/Makefile                    |   1 +
+ drivers/perf/hisilicon/djtag.c                     | 684 +++++++++++++++++++++
+ drivers/perf/hisilicon/djtag.h                     |  47 ++
+ drivers/perf/hisilicon/hisi_uncore_l3c.c           | 598 ++++++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_mn.c            | 478 ++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pmu.c           | 424 +++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pmu.h           | 137 +++++
+ 14 files changed, 2723 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+ create mode 100644 Documentation/perf/hisi-pmu.txt
+ create mode 100644 drivers/perf/hisilicon/Makefile
+ create mode 100644 drivers/perf/hisilicon/djtag.c
+ create mode 100644 drivers/perf/hisilicon/djtag.h
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_l3c.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_mn.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.h
+
+-- 
+2.1.4
