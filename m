@@ -1,59 +1,42 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am57xx-idk: Add DCAN support
-Date: Tue, 4 Apr 2017 08:56:26 -0700
-Message-ID: <20170404155624.GQ10760@atomide.com>
-References: <8981d49e7011a7246ff7dc6a9a9da0a56dfe5621.1487670384.git.nsekhar@ti.com>
- <f8862417-e9e0-e2ac-865a-9684f96a5128@ti.com>
- <20170306184113.GN20572@atomide.com>
- <042d52f4-3148-0564-a41a-5212ede042d5@ti.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 4/6] arm64: dts: rockchip: add core dtsi file for RK3328 SoCs
+Date: Tue, 04 Apr 2017 18:04:03 +0200
+Message-ID: <6636047.jL6XHNkknt@phil>
+References: <1490607650-18650-1-git-send-email-cl@rock-chips.com> <1490607650-18650-4-git-send-email-cl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <042d52f4-3148-0564-a41a-5212ede042d5-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, "Quadros, Roger" <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490607650-18650-4-git-send-email-cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> [170330 07:26]:
-> Hi Tony,
+Am Montag, 27. März 2017, 17:40:48 CEST schrieb cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org:
+> From: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> On Tuesday 07 March 2017 12:11 AM, Tony Lindgren wrote:
-> > * Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> [170221 02:13]:
-> >> On Tuesday 21 February 2017 03:30 PM, Sekhar Nori wrote:
-> >>> From: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
-> >>>
-> >>> AM571x IDK and the AM572x IDK use CAN1 interface.
-> >>> This patch enables it for both boards.
-> >>>
-> >>> Tested on AM572x IDK using cansequence.
-> >>>
-> >>> Signed-off-by: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
-> >>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> >>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> >>> [nsekhar-l0cyMroinI0@public.gmane.org: move to use DRA7XX_CORE_IOPAD())
-> >>> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> >>
-> >> I should have noted that although CAN does function on the IDK with this
-> >> patch, there are "omap_hwmod: dcan1: _wait_target_disable failed"
-> >> messages that come up due to lack of workaround for errata i893[1]
-> >>
-> >> Roger does have some patches to workaround that errata. If you want to
-> >> wait for those patches to be submitted and accepted first, it should be
-> >> fine as well.
-> > 
-> > OK let's wait a bit on this then to avoid introducing extra warnings.
+> This patch adds core dtsi file for Rockchip RK3328 SoCs.
 > 
-> Now that Roger's hwmod patches for the DCAN errata are in linux-next,
-> this patch can be applied safely. Let me know if you need me to resend it.
+> Signed-off-by: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-No need to resend, applying into omap-for-v4.12/dt-v2.
+applied for 4.12, with the following list of changes:
 
-Thanks,
+- reorder some properties to bring them in alphabetical order
+- dropped the status-disabled from the power-controller
+  power-domain control is a quite essential part of the system, so if
+  boards really want to disable them, they should do it in their board file
+  Having power-domains on all the time, is also our default in all other
+  devicetrees.
+- removed #dma-cells from spi0 -> this is not a dma controller
+- reword the cru assigned-clocks comment a bit
+- fixed sdmmc1_bus4 pins, as indicated by Shawn and after looking up the
+  correct pins in the manual
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+And a final question, are you sure about SCLK_PDM becoming a child of the
+APLL in your cru assigned-clocks, as the APLL will vary later on with cpufreq
+active?
+
+
+Heiko
