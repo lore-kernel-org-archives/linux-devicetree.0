@@ -1,44 +1,108 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: genmai: Enable rtc and rtc_x1 clock
-Date: Tue, 4 Apr 2017 13:17:28 -0400
-Message-ID: <20170404171728.GB14047@verge.net.au>
-References: <1491235398-26549-1-git-send-email-jacopo+renesas@jmondi.org>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master
+Date: Tue, 4 Apr 2017 12:32:24 -0500
+Message-ID: <93b21624-11fc-b71b-aa78-6cb4371c87ae@linux.vnet.ibm.com>
+References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
+ <20170329174340.89109-20-cbostic@linux.vnet.ibm.com>
+ <CACPK8XfOSYPidHF6=psC4mP-tkRyWTu0psdcK6EwA2E6FF53Uw@mail.gmail.com>
+ <0e1bcf3a-e8d7-9f50-bdf7-2a1e7466665b@linux.vnet.ibm.com>
+ <1490907014.3177.207.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCF6L7545UEBBLNKR7DQKGQEWW2L5TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1491235398-26549-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1490907014.3177.207.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, rostedt@goodmis.org, mingo@redhat.com, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Alistair Popple <alistair@popple.id.au>, "Edward A . James" <eajames@us.ibm.com>, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 03, 2017 at 06:03:18PM +0200, Jacopo Mondi wrote:
-> Enable the 32.768 kHz RTC_X1 clock by setting the frequency value to
-> non-zero and enable the realtime clock.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> This patch depends on Chris Brandt's series
-> "rtc: Reuse rtc-sh driver to support RZ/A1"
-> Please queue this on top of that.
 
-Thanks, done.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+On 3/30/17 3:50 PM, Benjamin Herrenschmidt wrote:
+> On Thu, 2017-03-30 at 13:15 -0500, Christopher Bostic wrote:
+>>>> +static void serial_in(struct fsi_master_gpio *master, struct fsi_gpio_msg *msg,
+>>>> +                       uint8_t num_bits)
+>>>> +{
+>>>> +       uint8_t bit, in_bit;
+>>>> +
+>>>> +       set_sda_input(master);
+>>>> +
+>>>> +       for (bit = 0; bit < num_bits; bit++) {
+>>>> +               clock_toggle(master, 1);
+>>>> +               in_bit = sda_in(master);
+>>>> +               msg->msg <<= 1;
+>>>> +               msg->msg |= ~in_bit & 0x1;      /* Data is negative active */
+>>>> +       }
+>>>> +       msg->bits += num_bi	ts;
+>>>> +}
+>>>> +
+>>>> +static void serial_out(struct fsi_master_gpio *master,
+>>>> +                       const struct fsi_gpio_msg *cmd)
+>>>> +{
+>>>> +       uint8_t bit;
+>>>> +       uint64_t msg = ~cmd->msg;       /* Data is negative active */
+>>>> +       uint64_t sda_mask = 0x1ULL << (cmd->bits - 1);
+>>>> +       uint64_t last_bit = ~0;
+>>>> +       int next_bit;
+>>>> +
+>>>> +       if (!cmd->bits) {
+>>>> +               dev_warn(master->dev, "trying to output 0 bits\n");
+>>>> +               return;
+>>>> +       }
+>>>> +       set_sda_output(master, 0);
+>>>> +
+>>>> +       /* Send the start bit */
+>>>> +       sda_out(master, 0);
+>>>> +       clock_toggle(master, 1);
+>>>> +
+>>>> +       /* Send the message */
+>>>> +       for (bit = 0; bit < cmd->bits; bit++) {
+>>>> +               next_bit = (msg & sda_mask) >> (cmd->bits - 1);
+>>>> +               if (last_bit ^ next_bit) {
+>>>> +                       sda_out(master, next_bit);
+>>>> +                       last_bit = next_bit;
+>>>> +               }
+>>>> +               clock_toggle(master, 1);
+>>>> +               msg <<= 1;
+>>>> +       }
+>>>> +}
+> As I mentioned privately, I don't think this is right, unless your
+> clock signal is inverted or my protocol spec is wrong...
+>
+> Your clock toggle is written so you call it right after the rising
+> edge. It does delay, 0, delay, 1.
+>
+> But according to the FSI timing diagram I have, you need to establish
+> the data around the falling edge, it gets sampled by the slave on the
+> rising edge. So as it is, your code risks violating the slave hold
+> time.
+>
+> On input, you need to sample on the falling edge, right before it. You
+> are sampling after the rising edge, so you aren't leaving enough time
+> for the slave to establish the data.
+>
+> You could probably just flip clock_toggle() around. Make it: 0, delay,
+> 1, delay.
+>
+> That way you can do for sends: sda_out + toggle, and for receive
+> toggle + sda_in. That will make you establish your output data and
+> sample right before the falling edge, which should be ok provided the
+> diagram I have is right.
+
+Hi Ben,
+
+Agreed that there is room for improvement.   I intend to look further 
+into your suggestions from here and our private conversation on the 
+matter and make changes as appropriate.  I have an open issue to track 
+this.  As it exists in this patch reads/writes from master to slave 
+fundamentally work.   Given the pervasiveness and time to fully evaluate 
+and test any protocol updates I intend address this in the near future 
+with a separate follow on patch.
+
+Thanks,
+Chris
+>
+> Cheers,
+> Ben.
+>
