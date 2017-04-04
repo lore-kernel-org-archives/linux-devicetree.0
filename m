@@ -1,59 +1,88 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] clk: tegra: add missing Tegra210 clocks
-Date: Tue, 4 Apr 2017 16:03:25 +0200
-Message-ID: <20170404140325.GK843@ulmo.ba.sec>
-References: <1490192598-26862-1-git-send-email-pdeschrijver@nvidia.com>
+From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] mmc: core: add mmc-card hardware reset enable support
+Date: Tue, 4 Apr 2017 16:16:34 +0200
+Message-ID: <1491315394-7568-1-git-send-email-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7ArrI7P/b+va1vZ8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1490192598-26862-1-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mikko Perttunen <mperttunen@nvidia.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Some eMMCs disable their hardware reset line (RST_N) by default. To enable
+it the host must set the corresponding bit in ECSD. An example for such
+a device is the Micron MTFCxGACAANA-4M.
 
---7ArrI7P/b+va1vZ8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch adds a new mmc-card devicetree property to let the host enable
+this feature during card initialization.
 
-On Wed, Mar 22, 2017 at 04:23:16PM +0200, Peter De Schrijver wrote:
-> iqc1, iqc2, tegra_clk_pll_a_out_adsp, tegra_clk_pll_a_out0_out_adsp, adsp
-> and adsp neon were not modelled. dp2 wasn't modelled for Tegra210.
->=20
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-id.h               |  6 ++++++
->  drivers/clk/tegra/clk-tegra-periph.c     |  6 ++++++
->  drivers/clk/tegra/clk-tegra210.c         |  7 +++++++
->  include/dt-bindings/clock/tegra210-car.h | 16 ++++++++--------
->  4 files changed, 27 insertions(+), 8 deletions(-)
+Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc-card.txt |  3 +++
+ drivers/mmc/core/mmc.c                             | 21 +++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-Applied to for-4.12/clk, thanks.
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+index a70fcd6..8590a40 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-card.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+@@ -12,6 +12,9 @@ Required properties:
+ Optional properties:
+ -broken-hpi : Use this to indicate that the mmc-card has a broken hpi
+               implementation, and that hpi should not be used
++-enable-hw-reset : some eMMC devices have disabled the hw reset functionality
++                   (RST_N_FUNCTION) by default. By adding this property the
++                   host will enable it during initialization.
+ 
+ Example:
+ 
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index b502601..518d0e3 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -1520,9 +1520,16 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
+ 	int err;
+ 	u32 cid[4];
+ 	u32 rocr;
++	struct device_node *np;
++	bool enable_rst_n = false;
+ 
+ 	WARN_ON(!host->claimed);
+ 
++	np = mmc_of_find_child_device(host, 0);
++	if (np && of_device_is_compatible(np, "mmc-card"))
++		enable_rst_n = of_property_read_bool(np, "enable-hw-reset");
++	of_node_put(np);
++
+ 	/* Set correct bus mode for MMC before attempting init */
+ 	if (!mmc_host_is_spi(host))
+ 		mmc_set_bus_mode(host, MMC_BUSMODE_OPENDRAIN);
+@@ -1810,6 +1817,20 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
+ 		}
+ 	}
+ 
++	/*
++	 * try to enable RST_N if requested
++	 * This is needed because some eMMC chips disable this function by
++	 * default.
++	 */
++	if (enable_rst_n) {
++		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
++				 EXT_CSD_RST_N_FUNCTION, EXT_CSD_RST_N_ENABLED,
++				 card->ext_csd.generic_cmd6_time);
++		if (err && err != -EBADMSG)
++			pr_warn("%s: Enabling RST_N feature failed\n",
++				mmc_hostname(card->host));
++	}
++
+ 	if (!oldcard)
+ 		host->card = card;
+ 
+-- 
+2.1.4
 
-Thierry
-
---7ArrI7P/b+va1vZ8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljjp60ACgkQ3SOs138+
-s6Ff6BAAgAs8lgtU6unbMIYgOq6qzmXu6z3uHvHTZMYMDC+XMMd9r885n2gTgEtV
-Njq0cGyCFySlIK2ZXW2lb0lyNP1EaQcdVDufWIbJSxyuMe7y4dZ+lXBBqO0qPBPo
-I7WKpfKhvbBcrQjpdlHQEHYAc2gdn5V6XbuZLDNAGIelm596AxI3vSS4lnz0FIPd
-2SFXRJHib5kMcxeV7NTo2ZyEL8cKSsDQnLYmi/gNcTp07YriuE7Cu/jZrCrCiaDd
-7EQOkrZ3/sdmAwlUvJTcMkuT4dTXNfzY6wgNNJkl4H2Gas2ZYAMlLcUNai95Nduk
-icYIx8ixKpJERmJyyYN0/sx0uYipc/4oK2N2zESN093bWOFkKpw7Wg/d4TWA742U
-rHgzccw6TleWDqBQcgIZ9eGF5iq5LFWlJHm/IJ7RYdzvrWVFAAYGEBK402yZylac
-ipNf40XFr74uc9K/BZ93PJheI60B5Vd+Z7z/qpbFa/Pwb/eZsIL50J/4jhlEeisZ
-B29tof7/ylHcvmi4bzn6wenXJ7jbWgsoCkOQ/uas92AsOJtWLo9rNLE1suSYy3Cj
-ZxBz4Yk/MxmgUz3yLixflyEuP0uYyS96k7yuPmP+xt5EQqqTWFKG6gFp6MTLQ91v
-sXhIyOdLaX/m4Mya4bG9zVK5WWq2gzVfyvIxltLBaGvnRyWhIwI=
-=SOvC
------END PGP SIGNATURE-----
-
---7ArrI7P/b+va1vZ8--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
