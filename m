@@ -1,99 +1,145 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V4 2/2] regulator: Add settling time for non-linear voltage transition
-Date: Tue, 4 Apr 2017 18:59:50 +0530
-Message-ID: <1491312590-20887-2-git-send-email-ldewangan@nvidia.com>
-References: <1491312590-20887-1-git-send-email-ldewangan@nvidia.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCHv6 00/14] atmel-isi/ov7670/ov2640: convert to standalone
+ drivers
+Date: Tue, 4 Apr 2017 16:00:23 +0200
+Message-ID: <58432e90-e5db-9825-8b2d-7f08ca6d716b@atmel.com>
+References: <20170328082347.11159-1-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491312590-20887-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170328082347.11159-1-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, "Wu, Songjun" <Songjun.Wu@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Some regulators (some PWM regulators) have the voltage transition
-non-linear i.e. exponentially. On such cases, the settling time
-for voltage transition can not be presented in the voltage-ramp-delay.
+Le 28/03/2017 à 10:23, Hans Verkuil a écrit :
+> From: Hans Verkuil <hans.verkuil@cisco.com>
+> 
+> This patch series converts the soc-camera atmel-isi to a standalone V4L2
+> driver.
+> 
+> The same is done for the ov7670 and ov2640 sensor drivers: the ov7670 was
+> used to test the atmel-isi driver. The ov2640 is needed because the em28xx
+> driver has a soc_camera include dependency. Both ov7670 and ov2640 sensors
+> have been tested with the atmel-isi driver.
+> 
+> The first 5 patches improve the ov7670 sensor driver, mostly adding modern
+> features such as DT support.
+> 
+> The next three convert the atmel-isi and move it out of soc_camera.
+> 
+> The following 6 patches convert ov2640 and drop the soc_camera dependency
+> in em28xx. I have tested that this works with my 'SpeedLink Vicious And
+> Divine Laplace webcam'.
+> 
+> Tested with my sama5d3-Xplained board, the ov2640 sensor and two ov7670
+> sensors: one with and one without reset/pwdn pins. Also tested with my
+> em28xx-based webcam.
+> 
+> I'd like to get this in for 4.12. Fingers crossed.
+> 
+> Regards,
+> 
+>         Hans
+> 
+> Changes since v5:
+> - Dropped the last two dts patches as these were for demonstration purposes
+>   only.
+> - Simplified isi_graph_init() return handling as suggested by Sakari.
+> - Simplified atmel-isi format handling as suggested by Guennadi. Thanks for
+>   the suggestion, this improves the code nicely!
+> - Improved RGB handling in atmel-isi, allowing for all YUV ordering and not
+>   just YUYV. Tested with YUYV and UYVY (the only two I can test with my
+>   hardware).
+> - Improved commit message of the "atmel-isi: document device tree bindings"
+>   patch and dropped unnecessary properties from the example as per Rob's
+>   comments.
+> 
+> Changes since v4:
+> - the ov2640 colorspace fixes were inexplicably part of an atmel-isi patch.
+>   Split it off as a separate patch.
+> - add V4L2_SUBDEV_FL_HAS_DEVNODE to ov2640.
+> - drop #if defined(CONFIG_MEDIA_CONTROLLER) guard around media_entity_cleanup
+>   in ov2640.
+> 
+> Changes since v3:
+> - ov2640/ov7670: call clk_disable_unprepare where needed. I assumed this was
+>   done by the devm_clk_get cleanup, but that wasn't the case.
+> - bindings: be even more explicit about which properties are mandatory.
+> - ov2640/ov7670: drop unused bus-width from the dts binding examples and from
+>   the actual dts patches.
+> 
+> Changes since v2:
+> - Incorporated Sakari's and Rob's device tree bindings comments.
+> - ov2640: dropped the reset/power changes. These actually broke the em28xx
+>   and there was really nothing wrong with it.
+> - merged the "ov2640: allow use inside em28xx" into patches 10 and 11.
+>   It really shouldn't have been a separate patch in the first place.
+> - rebased on top of 4.11-rc1.
+> 
+> Changes since v1:
+> 
+> - Dropped MC support from atmel-isi and ov7670: not needed to make this
+>   work. Only for the ov2640 was it kept since the em28xx driver requires it.
+> - Use devm_clk_get instead of clk_get.
+> - The ov7670 lower limit of the clock speed is 10 MHz instead of 12. Adjust
+>   accordingly.
+> 
+> 
+> Hans Verkuil (14):
+>   ov7670: document device tree bindings
+>   ov7670: call v4l2_async_register_subdev
+>   ov7670: fix g/s_parm
+>   ov7670: get xclk
+>   ov7670: add devicetree support
+>   atmel-isi: update device tree bindings documentation
+>   atmel-isi: remove dependency of the soc-camera framework
+>   atmel-isi: move out of soc_camera to atmel
+>   ov2640: fix colorspace handling
+>   ov2640: update bindings
+>   ov2640: convert from soc-camera to a standard subdev sensor driver.
+>   ov2640: use standard clk and enable it.
+>   ov2640: add MC support
+>   em28xx: drop last soc_camera link
 
-Add new property for non-linear voltage transition and handle this
-in getting the voltage settling time.
+For the record, here is my test tag:
+Tested-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+On a Microchip/Atmel SAMA5D4-EK with OV2640 and the per-existing OV7740.
+Thanks a lot Hans for this valuable work!
 
----
-This patch is continuation of discussion on patch
-    regulator: pwm: Fix regulator ramp delay for continuous mode
-https://patchwork.kernel.org/patch/9216857/
-where is it discussed to have separate property for PWM which has
-exponential voltage transition.
+Best regards,
 
-Changes from V1:
-- Use new DT property to finding that voltage ramp is exponential or
-  not and use flag for having fixed delay for all voltage change.
 
-Changes from V2:
-- Based on review comment from V1, make the settling time property
-  independent of the regulator-ramp-delay and move this to core
-  framework instead of handling in PWM regulator.
+>  .../devicetree/bindings/media/atmel-isi.txt        |   91 +-
+>  .../devicetree/bindings/media/i2c/ov2640.txt       |   23 +-
+>  .../devicetree/bindings/media/i2c/ov7670.txt       |   43 +
+>  MAINTAINERS                                        |    1 +
+>  drivers/media/i2c/Kconfig                          |   11 +
+>  drivers/media/i2c/Makefile                         |    1 +
+>  drivers/media/i2c/{soc_camera => }/ov2640.c        |  153 +--
+>  drivers/media/i2c/ov7670.c                         |   75 +-
+>  drivers/media/i2c/soc_camera/Kconfig               |    6 -
+>  drivers/media/i2c/soc_camera/Makefile              |    1 -
+>  drivers/media/platform/Makefile                    |    1 +
+>  drivers/media/platform/atmel/Kconfig               |   11 +-
+>  drivers/media/platform/atmel/Makefile              |    1 +
+>  drivers/media/platform/atmel/atmel-isi.c           | 1368 ++++++++++++++++++++
+>  .../platform/{soc_camera => atmel}/atmel-isi.h     |    0
+>  drivers/media/platform/soc_camera/Kconfig          |   11 -
+>  drivers/media/platform/soc_camera/Makefile         |    1 -
+>  drivers/media/platform/soc_camera/atmel-isi.c      | 1167 -----------------
+>  drivers/media/usb/em28xx/em28xx-camera.c           |    9 -
+>  19 files changed, 1614 insertions(+), 1360 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7670.txt
+>  rename drivers/media/i2c/{soc_camera => }/ov2640.c (92%)
+>  create mode 100644 drivers/media/platform/atmel/atmel-isi.c
+>  rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.h (100%)
+>  delete mode 100644 drivers/media/platform/soc_camera/atmel-isi.c
+> 
 
-Changes from V3:
-- The change was sent long back and resuming this patch.
-- Rebase on linux-next tag 20170330 for resend.
----
- drivers/regulator/core.c          | 2 ++
- drivers/regulator/of_regulator.c  | 4 ++++
- include/linux/regulator/machine.h | 3 +++
- 3 files changed, 9 insertions(+)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 0753635..7303454 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -2773,6 +2773,8 @@ static int _regulator_set_voltage_time(struct regulator_dev *rdev,
- 		ramp_delay = rdev->constraints->ramp_delay;
- 	else if (rdev->desc->ramp_delay)
- 		ramp_delay = rdev->desc->ramp_delay;
-+	else if (rdev->constraints->settling_time)
-+		return rdev->constraints->settling_time;
- 
- 	if (ramp_delay == 0) {
- 		rdev_dbg(rdev, "ramp_delay not set\n");
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 4f613ec..09d677d 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -86,6 +86,10 @@ static void of_get_regulation_constraints(struct device_node *np,
- 			constraints->ramp_disable = true;
- 	}
- 
-+	ret = of_property_read_u32(np, "regulator-settling-time-us", &pval);
-+	if (!ret)
-+		constraints->settling_time = pval;
-+
- 	ret = of_property_read_u32(np, "regulator-enable-ramp-delay", &pval);
- 	if (!ret)
- 		constraints->enable_time = pval;
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index c9f795e..117699d 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -108,6 +108,8 @@ struct regulator_state {
-  * @initial_state: Suspend state to set by default.
-  * @initial_mode: Mode to set at startup.
-  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
-+ * @settling_time: Time to settle down after voltage change when voltage
-+ *		   change is non-linear (unit: microseconds).
-  * @active_discharge: Enable/disable active discharge. The enum
-  *		      regulator_active_discharge values are used for
-  *		      initialisation.
-@@ -149,6 +151,7 @@ struct regulation_constraints {
- 	unsigned int initial_mode;
- 
- 	unsigned int ramp_delay;
-+	unsigned int settling_time;
- 	unsigned int enable_time;
- 
- 	unsigned int active_discharge;
 -- 
-2.1.4
+Nicolas Ferre
