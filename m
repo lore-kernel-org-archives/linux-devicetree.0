@@ -1,75 +1,92 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH V3 0/5] iommu/arm-smmu: Add runtime pm/sleep support
-Date: Tue, 4 Apr 2017 10:45:59 +0530
-Message-ID: <8b5298ed-72cf-f62a-03e4-7f27d7d91a20@codeaurora.org>
-References: <1489073748-3659-1-git-send-email-sricharan@codeaurora.org>
- <20170331175457.GD4897@arm.com>
- <CAF6AEGv_1pNvhCc-mVP5S28Yt5kTJmTRfe8tKSJpEmxfOKM7Jg@mail.gmail.com>
- <20170403172307.GI5706@arm.com>
+From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] i2c/muxes/i2c-mux-ltc4306: LTC4306 and LTC4305 I2C
+ multiplexer/switch
+Date: Tue, 4 Apr 2017 08:32:22 +0200
+Message-ID: <5a320a13-1d61-a643-fc40-791b4d588d9a@analog.com>
+References: <1490782541-7832-1-git-send-email-michael.hennerich@analog.com>
+ <0d4c068f-d909-64be-421d-4500da7ebd4c@axentia.se>
+ <3c61461e-493c-4562-90c9-f30766591de2@axentia.se>
+ <f871f082-3acd-7a28-25c7-dd77d8286ae6@analog.com>
+ <dcc59f26-6dec-dbf1-22d9-b681daf788a2@axentia.se>
+Reply-To: <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170403172307.GI5706@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <dcc59f26-6dec-dbf1-22d9-b681daf788a2-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
-
-On 4/3/2017 10:53 PM, Will Deacon wrote:
-> On Fri, Mar 31, 2017 at 10:58:16PM -0400, Rob Clark wrote:
->> On Fri, Mar 31, 2017 at 1:54 PM, Will Deacon <will.deacon@arm.com> wrote:
->>> On Thu, Mar 09, 2017 at 09:05:43PM +0530, Sricharan R wrote:
->>>> This series provides the support for turning on the arm-smmu's
->>>> clocks/power domains using runtime pm. This is done using the
->>>> recently introduced device links patches, which lets the symmu's
->>>> runtime to follow the master's runtime pm, so the smmu remains
->>>> powered only when the masters use it.
+On 03.04.2017 16:20, Peter Rosin wrote:
+> On 2017-04-03 15:36, Michael Hennerich wrote:
+>> On 03.04.2017 14:03, Peter Rosin wrote:
+>>> On 2017-03-31 17:29, Peter Rosin wrote:
+>>>> Hi!
+>>>>
+>>>> Sorry for my incremental reviewing...
+>>>>
 >>>
->>> Do you have any numbers for the power savings you achieve with this?
->>> How often do we actually manage to stop the SMMU clocks on an SoC with
->>> a handful of masters?
+>>> Another incremental...
 >>>
->>> In other words, is this too coarse-grained to be useful, or is it common
->>> that all the devices upstream of the SMMU are suspended?
->>
->> well, if you think about a phone/tablet with a command mode panel,
->> pretty much all devices will be suspended most of the time ;-)
+>>>> On 2017-03-29 12:15, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org wrote:
+>>>>> +
+>>>>> +	/* Now create an adapter for each channel */
+>>>>> +	for (num = 0; num < data->chip->nchans; num++) {
+>>>>> +		ret = i2c_mux_add_adapter(muxc, 0, num, 0);
+>>>>> +		if (ret) {
+>>>>> +			dev_err(&client->dev,
+>>>>> +				"failed to register multiplexed adapter %d\n",
+>>>>> +				num);
+>>>
+>>> Just a heads up, I submitted a series to remove a bunch of dev_err calls
+>>> when i2c_mux_add_adapter fails. See https://lkml.org/lkml/2017/4/3/115
+>>>
+>>> You can remove this one as well.
+>>>
+>>> And please use a subject of the form:
+>>> i2c: mux: ltc4306: <message>
+>> ok - no problem.
 >
-> Well, that's really what I was asking about. I assumed that periodic
-> modem/radio transactions would keep the SMMU clocked, so would like to get a
-> rough idea of the power savings achieved with this coarse-grained approach.
+> You managed to drop the spaces after the new colons in the subject.
+>
+> And maybe there is a problem, because I don't see any reaction to any of
+> the review comments I made in https://lkml.org/lkml/2017/3/31/525
+>
+> Was that on purpose? Sure, the gpio "jury" is still out on the bigger
+> question so maybe you're waiting for that, but there were a few nitpicks
+> as well. Anyway, sorry again for failing to compile all comments up front.
+
+Hi Peter,
+
+sorry - this was not on purpose. I simply missed your second to last 
+incremental review. I fix the subject now finally.
+
+Thanks for your patience.
+
+>
+>> I sent out a new patch. Per Rob's request, I split out the dt-bindings
+>> into a separate patch.
+>
+> Thanks. I think(?) it is customary to have the bindings first, and then
+> implement that "specification" in followup patches. No big deal though...
+>
+> Cheers,
+> peda
+>
 >
 
-One main reason for introducing this was to enable power for
-the iommus separately in those places where the iommu gets
-accessed without the context of the master, pm runtime was
-done to use the device links feature and also those iommus
-had their power-domains to be enabled (during the iommu probe,
-faults) (downstream was modelling those power-domains as
-'regulators' which was not correct) and have to be clocked
-as well.
-
-I was in the process of trying to measure the power difference
-that this would achieve. One concern here is, this series depends
-on the device link between master and iommu.
-So essentially the masters have to be pm runtime adapted fully
-to use this. For my testing i was using couple of them (mdp, gpu),
-by just enabling pm runtime for them, not full pm runtime though.
-But i will come-up with the numbers by instrumenting little more.
-The downstream code explicitly turns on the iommu clocks/regulators
-in the standalone path (called without master context and after
-that, lets the master to control the iommu clocks ( the iommu
-clocks are populated in master DT data as well), so ensures iommu
-is clocked only when really needed by the master. So number
-measured from downstream should also give the power numbers in
-another way.
-
-Regards,
-  Sricharan
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of Code Aurora Forum, hosted by The Linux Foundation
+Greetings,
+Michael
+
+--
+Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
+Sitz der Gesellschaft München, Registergericht München HRB 40368,
+Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
