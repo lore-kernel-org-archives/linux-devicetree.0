@@ -1,88 +1,49 @@
-From: Patrick Menschel <menschel.p@posteo.de>
-Subject: [PATCH v4 1/6] ARM: dts: sun4i: fix device node ordering
-Date: Tue,  4 Apr 2017 20:36:27 +0200
-Message-ID: <1491330992-9876-2-git-send-email-menschel.p@posteo.de>
-References: <1491330992-9876-1-git-send-email-menschel.p@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491330992-9876-1-git-send-email-menschel.p@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
-Cc: Patrick Menschel <menschel.p@posteo.de>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: keystone: Add support for new K2G evm
+Date: Tue, 4 Apr 2017 13:42:05 -0500
+Message-ID: <ad424a8e-353d-c942-2e14-bd98b537d72d@ti.com>
+References: <20170330152907.12595-1-fcooper@ti.com>
+ <694db3ba-cf40-790b-29e0-39f34607caf3@oracle.com>
+ <b3f2604f-2649-6319-3689-fbd84fa926bb@oracle.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b3f2604f-2649-6319-3689-fbd84fa926bb-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch changes the device node position of ps20 and ps21 to fix
-ordering by rising physical address.
 
-From
 
-uart7: serial@01c29c00
-i2c0: i2c@01c2ac00
-i2c1: i2c@01c2b000
-i2c2: i2c@01c2b400
-ps20: ps2@01c2a000
-ps21: ps2@01c2a400
+On 04/04/2017 10:33 AM, Santosh Shilimkar wrote:
+> On 4/3/2017 9:44 AM, santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org wrote:
+>> Hi Franklin,
+>>
+>> On 3/30/17 8:29 AM, Franklin S Cooper Jr wrote:
+>>> This patchset adds support for new K2G Industrial Communication Engine
+>>> evm. For now only a bare minimal dts which will allow ram boot.
+>>> Additional
+>>> peripherals will be added when base K2G SoC patches are upstreamed
+>>> allowing
+>>> peripherals to be enabled.
+>>>
+>>
+>>>   ARM: keystone: Create new binding for K2G ICE evm
+>>>   ARM: dts: keystone: Add minimum support for K2G ICE evm
+>>>
+>> Can you clarify Rob's comment on second patch and re-post the updated
+>> patch with his ack if you agree ? Will apply the series.
+>>
+> Just to be clear, you need to send v2 with Rob's comment addressed
+> for me to pick it up.
 
-to
-
-uart7: serial@01c29c00
-ps20: ps2@01c2a000
-ps21: ps2@01c2a400
-i2c0: i2c@01c2ac00
-i2c1: i2c@01c2b000
-i2c2: i2c@01c2b400
-
-Signed-off-by: Patrick Menschel <menschel.p@posteo.de>
----
- arch/arm/boot/dts/sun4i-a10.dtsi | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index ba20b48..498f7f2 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -1283,6 +1283,22 @@
- 			status = "disabled";
- 		};
- 
-+		ps20: ps2@01c2a000 {
-+			compatible = "allwinner,sun4i-a10-ps2";
-+			reg = <0x01c2a000 0x400>;
-+			interrupts = <62>;
-+			clocks = <&apb1_gates 6>;
-+			status = "disabled";
-+		};
-+
-+		ps21: ps2@01c2a400 {
-+			compatible = "allwinner,sun4i-a10-ps2";
-+			reg = <0x01c2a400 0x400>;
-+			interrupts = <63>;
-+			clocks = <&apb1_gates 7>;
-+			status = "disabled";
-+		};
-+
- 		i2c0: i2c@01c2ac00 {
- 			compatible = "allwinner,sun4i-a10-i2c";
- 			reg = <0x01c2ac00 0x400>;
-@@ -1313,20 +1329,5 @@
- 			#size-cells = <0>;
- 		};
- 
--		ps20: ps2@01c2a000 {
--			compatible = "allwinner,sun4i-a10-ps2";
--			reg = <0x01c2a000 0x400>;
--			interrupts = <62>;
--			clocks = <&apb1_gates 6>;
--			status = "disabled";
--		};
--
--		ps21: ps2@01c2a400 {
--			compatible = "allwinner,sun4i-a10-ps2";
--			reg = <0x01c2a400 0x400>;
--			interrupts = <63>;
--			clocks = <&apb1_gates 7>;
--			status = "disabled";
--		};
- 	};
- };
--- 
-2.7.4
+Will do.
+> 
+> Regards,
+> Snatosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
