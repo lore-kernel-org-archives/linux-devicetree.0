@@ -1,87 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: update the Allwinner GPADC
- device tree binding for H3
-Date: Tue, 4 Apr 2017 09:47:15 -0500
-Message-ID: <20170404144715.fa5sy427u2cz4e6z@rob-hp-laptop>
-References: <20170402133304.56824-1-icenowy@aosc.io>
- <20170402133304.56824-2-icenowy@aosc.io>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 01/14] dt/bindings: Document pinctrl-ingenic
+Date: Tue, 4 Apr 2017 09:48:51 -0500
+Message-ID: <20170404144851.s53lj3hfdu5mjlx5@rob-hp-laptop>
+References: <20170125185207.23902-2-paul@crapouillou.net>
+ <20170402204244.14216-1-paul@crapouillou.net>
+ <20170402204244.14216-2-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170402133304.56824-2-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170402204244.14216-2-paul@crapouillou.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, james.hogan@imgtec.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 02, 2017 at 09:33:01PM +0800, Icenowy Zheng wrote:
-> Allwinner H3 features a thermal sensor like the one in A33, but has its
-> register re-arranged, the clock divider moved to CCU (originally the
-> clock divider is in ADC) and added a pair of bus clock and reset.
+On Sun, Apr 02, 2017 at 10:42:31PM +0200, Paul Cercueil wrote:
+> This commit adds documentation for the devicetree bindings of the
+> pinctrl-ingenic driver, which handles pin configuration and pin
+> muxing of the Ingenic SoCs currently supported by the Linux kernel.
 > 
-> Update the binding document to cover H3.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 23 ++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> index badff3611a98..7753133ca0ff 100644
-> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> @@ -4,12 +4,20 @@ The Allwinner SoCs all have an ADC that can also act as a thermal sensor
->  and sometimes as a touchscreen controller.
->  
->  Required properties:
-> -  - compatible: "allwinner,sun8i-a33-ths",
-> +  - compatible: must contain one of the following compatibles:
-> +		- "allwinner,sun8i-a33-ths"
-> +		- "allwinner,sun8i-h3-ths"
->    - reg: mmio address range of the chip,
->    - #thermal-sensor-cells: shall be 0,
->    - #io-channel-cells: shall be 0,
->  
-> -Example:
-> +Required properties for the following compatibles:
-> +		- "allwinner,sun8i-h3-ths"
-> +  - clocks: the bus clock and the input clock of the ADC,
-> +  - clock-names: should be "bus" and "ths",
-> +  - resets: the bus reset of the ADC,
-> +
-> +Example for A33:
->  	ths: ths@01c25000 {
->  		compatible = "allwinner,sun8i-a33-ths";
->  		reg = <0x01c25000 0x100>;
-> @@ -17,6 +25,17 @@ Example:
->  		#io-channel-cells = <0>;
->  	};
->  
-> +Example for H3:
-> +	ths: ths@01c25000 {
+>  .../bindings/pinctrl/ingenic,pinctrl.txt           | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
 
-adc@...
-
-And drop the leading 0.
-
-> +		compatible = "allwinner,sun8i-h3-ths";
-> +		reg = <0x01c25000 0x100>;
-> +		clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
-> +		clock-names = "bus", "ths";
-> +		resets = <&ccu RST_BUS_THS>;
-> +		#thermal-sensor-cells = <0>;
-> +		#io-channel-cells = <0>;
-> +	};
-> +
->  sun4i, sun5i and sun6i SoCs are also supported via the older binding:
->  
->  sun4i resistive touchscreen controller
-> -- 
-> 2.12.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Acked-by: Rob Herring <robh@kernel.org>
