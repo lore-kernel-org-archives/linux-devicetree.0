@@ -1,13 +1,12 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 05/11] arm64: allwinner: a64: add AXP803 node to
- Pine64 device tree
-Date: Wed,  5 Apr 2017 02:01:39 +0800
-Message-ID: <20170404180145.12897-6-icenowy@aosc.io>
+Subject: [PATCH 06/11] dt-bindings: add AXP803's regulator info
+Date: Wed,  5 Apr 2017 02:01:40 +0800
+Message-ID: <20170404180145.12897-7-icenowy@aosc.io>
 References: <20170404180145.12897-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBXOAR7DQKGQEMZIIFII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB3WAR7DQKGQEIBOAWWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170404180145.12897-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,36 +19,52 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Pine64 (including Pine64+) boards have an AXP803 as its main PMIC.
+AXP803 have the most regulators in currently supported AXP PMICs.
 
-Add its device node.
+Add info for the regulators in the dt-bindings document.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 27 ++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index c680ed385da3..2132d8e6cb3d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -95,6 +95,17 @@
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index 31607631b0d8..67981bdfd782 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -138,6 +138,33 @@ LDO_IO1		: LDO		: ips-supply		: GPIO 1
+ RTC_LDO		: LDO		: ips-supply		: always on
+ SW		: On/Off Switch : swin-supply
  
-+&r_rsb {
-+	status = "okay";
++AXP803 regulators, type, and corresponding input supply names:
 +
-+	axp803: pmic@3a3 {
-+		compatible = "x-powers,axp803";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
++Regulator	  Type		  Supply Name		  Notes
++---------	  ----		  -----------		  -----
++DCDC1		: DC-DC buck	: vin1-supply
++DCDC2		: DC-DC buck	: vin2-supply		: poly-phase capable
++DCDC3		: DC-DC	buck	: vin3-supply		: poly-phase capable
++DCDC4		: DC-DC	buck	: vin4-supply
++DCDC5		: DC-DC	buck	: vin5-supply		: poly-phase capable
++DCDC6		: DC-DC	buck	: vin6-supply		: poly-phase capable
++DC1SW		: On/Off Switch	:			: DCDC1 secondary output
++ALDO1		: LDO		: aldoin-supply		: shared supply
++ALDO2		: LDO		: aldoin-supply		: shared supply
++ALDO3		: LDO		: aldoin-supply		: shared supply
++DLDO1		: LDO		: dldoin-supply		: shared supply
++DLDO2		: LDO		: dldoin-supply		: shared supply
++DLDO3		: LDO		: dldoin-supply		: shared supply
++DLDO4		: LDO		: dldoin-supply		: shared supply
++ELDO1		: LDO		: eldoin-supply		: shared supply
++ELDO2		: LDO		: eldoin-supply		: shared supply
++ELDO3		: LDO		: eldoin-supply		: shared supply
++FLDO1		: LDO		: fldoin-supply		: shared supply
++FLDO2		: LDO		: fldoin-supply		: shared supply
++LDO_IO0		: LDO		: ips-supply		: GPIO 0
++LDO_IO1		: LDO		: ips-supply		: GPIO 1
++RTC_LDO		: LDO		: ips-supply		: always on
 +
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
+ Example:
+ 
+ axp209: pmic@34 {
 -- 
 2.12.2
