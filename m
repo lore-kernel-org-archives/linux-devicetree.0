@@ -1,106 +1,52 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v8 1/2] media: i2c/ov5645: add the device tree binding
- document
-Date: Tue, 4 Apr 2017 12:31:51 +0300
-Message-ID: <20170404093150.GB3288@valkosipuli.retiisi.org.uk>
-References: <1491228148-28505-1-git-send-email-todor.tomov@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v4 0/5] Add support for the R_CCU on Allwinner H3/A64 SoCs
+Date: Tue,  4 Apr 2017 17:50:55 +0800
+Message-ID: <20170404095100.18649-1-icenowy@aosc.io>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1491228148-28505-1-git-send-email-todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Todor,
+Allwinner SoCs after sun6i-a31 nearly all have a R_CCU in PRCM part.
+(V3s and R40 do not have it, as they have even no PRCM)
 
-On Mon, Apr 03, 2017 at 05:02:28PM +0300, Todor Tomov wrote:
-> Add the document for ov5645 device tree binding.
-> 
-> Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov5645.txt       | 54 ++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> new file mode 100644
-> index 0000000..fd7aec9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> @@ -0,0 +1,54 @@
-> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-> +
-> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-> +an active array size of 2592H x 1944V. It is programmable through a serial I2C
-> +interface.
-> +
-> +Required Properties:
-> +- compatible: Value should be "ovti,ov5645".
-> +- clocks: Reference to the xclk clock.
-> +- clock-names: Should be "xclk".
-> +- clock-frequency: Frequency of the xclk clock.
-> +- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> +  to the hardware pin PWDNB which is physically active low.
-> +- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> +  the hardware pin RESETB.
-> +- vdddo-supply: Chip digital IO regulator.
-> +- vdda-supply: Chip analog regulator.
-> +- vddd-supply: Chip digital core regulator.
-> +
-> +The device node must contain one 'port' child node for its digital output
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	&i2c1 {
-> +		...
-> +
-> +		ov5645: ov5645@78 {
-> +			compatible = "ovti,ov5645";
-> +			reg = <0x78>;
-> +
-> +			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> +			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&camera_rear_default>;
-> +
-> +			clocks = <&clks 200>;
-> +			clock-names = "xclk";
-> +			clock-frequency = <23880000>;
-> +
-> +			vdddo-supply = <&camera_dovdd_1v8>;
-> +			vdda-supply = <&camera_avdd_2v8>;
-> +			vddd-supply = <&camera_dvdd_1v2>;
-> +
-> +			port {
-> +				ov5645_ep: endpoint {
-> +					clock-lanes = <1>;
-> +					data-lanes = <0 2>;
+This patch adds support for the ones on H3/A64.
 
-If the sensor does not support lane reordering, I'd use 0 for the clock lane
-and lanes starting from 1 for data-lanes.
+Some clock/reset values are reserved for easier extending the support to
+A31/A23, but for this I think some changes to the PRCM MFD should be made,
+see [1] (Although this is only a sketch).
 
-I guess it'd be good to document this but that's definitely out of scope of
-the patchset.
+The r_pio device node is also added for A64, as the driver is already
+merged, and its depends (r_ccu) is now met.
 
-Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+[1] https://github.com/wens/linux/commits/sunxi-ng-prcm
 
-> +					remote-endpoint = <&csi0_ep>;
-> +				};
-> +			};
-> +		};
-> +	};
+Icenowy Zheng (5):
+  dt-bindings: update device tree binding for Allwinner PRCM CCUs
+  clk: sunxi-ng: add support for PRCM CCUs
+  arm64: allwinner: a64: add r_ccu node
+  ARM: sunxi: h3/h5: switch apb0-related clocks to r_ccu
+  arm64: allwinner: a64: add R_PIO pinctrl node
+
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |  17 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  45 ++---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  29 +++
+ drivers/clk/sunxi-ng/Kconfig                       |   6 +
+ drivers/clk/sunxi-ng/Makefile                      |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c                 | 213 +++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-r.h                 |  27 +++
+ include/dt-bindings/clock/sun8i-r-ccu.h            |  59 ++++++
+ include/dt-bindings/reset/sun8i-r-ccu.h            |  53 +++++
+ 9 files changed, 418 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r.h
+ create mode 100644 include/dt-bindings/clock/sun8i-r-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun8i-r-ccu.h
 
 -- 
-Kind regards,
+2.12.2
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
