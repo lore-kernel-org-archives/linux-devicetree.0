@@ -1,59 +1,63 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: tegra: Add GPU node for Tegra 186
-Date: Tue, 4 Apr 2017 15:22:16 +0200
-Message-ID: <20170404132216.GB843@ulmo.ba.sec>
-References: <20170330091831.18322-2-acourbot@nvidia.com>
- <20170330092828.13336-1-acourbot@nvidia.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/2] clk: vc5: Add support for IDT VersaClock 5P49V5935
+Date: Tue, 4 Apr 2017 15:23:57 +0200
+Message-ID: <CAMuHMdUOtY5i0_BoS7cKYzWKpA_fF3VssN4bZnNyFB117EpacQ@mail.gmail.com>
+References: <1491311788-31905-1-git-send-email-alexey_firago@mentor.com>
+ <1491311788-31905-3-git-send-email-alexey_firago@mentor.com> <72c66927-0acf-c888-2b4b-906a6c27e15c@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170330092828.13336-1-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <72c66927-0acf-c888-2b4b-906a6c27e15c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 4, 2017 at 3:21 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>On 04/04/2017 03:16 PM, Alexey Firago wrote:
+>> +     switch (vc5->model) {
+>> +     case IDT_VC5_5P49V5923:
+>> +     case IDT_VC5_5P49V5933:
+>> +             vc5->clk_fod_cnt = 2;
+>> +             vc5->clk_out_cnt = 3;
+>> +             break;
+>> +     case IDT_VC5_5P49V5935:
+>> +             vc5->clk_fod_cnt = 4;
+>> +             vc5->clk_out_cnt = 5;
+>> +             break;
+>> +     default:
+>> +             /* Should never go here */
+>> +             dev_err(&client->dev, "unsupported IDT VC5 ID specified\n");
+>> +             return -EINVAL;
+>> +     }
+>> +
+>>       vc5->pin_xin = devm_clk_get(&client->dev, "xin");
+>>       if (PTR_ERR(vc5->pin_xin) == -EPROBE_DEFER)
+>>               return -EPROBE_DEFER;
 
---6sX45UoQRIJXqkqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> @@ -744,7 +772,7 @@ static int vc5_probe(struct i2c_client *client,
+>>       return 0;
+>>
+>>  err_clk:
+>> -     if (vc5->model == IDT_VC5_5P49V5933)
+>> +     if (vc5->model == IDT_VC5_5P49V5933 || vc5->model == IDT_VC5_5P49V5935)
+>
+> Maybe we should introduce some sort of flags to describe the VC
+> properties instead of using the model all over the place ?
 
-On Thu, Mar 30, 2017 at 06:28:28PM +0900, Alexandre Courbot wrote:
-> Add the DT node for the GP10B GPU on Tegra 186.
->=20
-> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+Yep, a structure describing the features (incl. fod_cnt and out_cnt), to be
+pointed to by clk_vc5_of_match[].data.
 
-Applied to for-4.12/arm64/dt, thanks.
+Gr{oetje,eeting}s,
 
-Thierry
+                        Geert
 
---6sX45UoQRIJXqkqR
-Content-Type: application/pgp-signature; name="signature.asc"
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljjnggACgkQ3SOs138+
-s6HY+Q//QNe/KYydkDCCj8yCHJnJKNysQuFF3glxJN0SS1JR5C4NnsiiwCi/ClMi
-v9jZyAoBV3R2Cs6o8OO4vxey5YLrjNYQ+Ho5rOIUhccMhIvmshfg3A2qH01H2NN+
-aX8T8NwW0MIcDkmPvXx/9NFJFOqJx64EERXWQdwd5g+xqRTLpsdhCDbL67sdMShY
-wX0aGVThJXRwON5nRX0qJpAOQgEq8H+BEByQHqZWb3aTHlCqR97yOSelOqDR3N2Q
-2JScLzolHnhmt6EOHpznVWnr8HKJoLZxoXX3zELpiZ0trq3plQVi6ABayNpldi5L
-2ja1aDMaNM9G28P7YgvpL74OBZ0J7yg0aSlhjTyVjqzehW5FoEpPmqohtopEd1pG
-c3cL/JKNExXjRMyhy5mwzcPQGtXUqhTBG654vyy1X+WKfjIYl6I1TNLmXV+C26nr
-ZDKLcxTOzP2TmIgaMcSpIwGmOZdCLNWfIv0RRpFQOr8zEfnOb6s4qdx28lPURu2X
-zz7uSyWtD+HTMFYkm2RXNdokeqTXbnzz6UhGxJ3UcKj/kmMA61Wzb0WIOD0WMtz3
-vLd+JFvjOnxvlwG0FrCAC5t6h3my3UC3TAKDa19h6K6ZgUvlSaNCY0/jVkDnGmp7
-PhtXvFTEM0STzvl5K3R9NPRXgWV4lyz1VwDT62d6J+OjvnO5uig=
-=5pOL
------END PGP SIGNATURE-----
-
---6sX45UoQRIJXqkqR--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
