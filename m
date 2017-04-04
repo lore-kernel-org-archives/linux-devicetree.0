@@ -1,54 +1,120 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master
-Date: Wed, 05 Apr 2017 08:19:20 +1000
-Message-ID: <1491344360.4166.68.camel@kernel.crashing.org>
-References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
- <20170329174340.89109-20-cbostic@linux.vnet.ibm.com>
- <CACPK8XfOSYPidHF6=psC4mP-tkRyWTu0psdcK6EwA2E6FF53Uw@mail.gmail.com>
- <0e1bcf3a-e8d7-9f50-bdf7-2a1e7466665b@linux.vnet.ibm.com>
- <1490907014.3177.207.camel@kernel.crashing.org>
- <93b21624-11fc-b71b-aa78-6cb4371c87ae@linux.vnet.ibm.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities
+ output video on pad 1
+Date: Wed, 5 Apr 2017 00:10:53 +0100
+Message-ID: <20170404231053.GE7909@n2100.armlinux.org.uk>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
+ <1490894749.2404.33.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <93b21624-11fc-b71b-aa78-6cb4371c87ae@linux.vnet.ibm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christopher Bostic <cbostic@linux.vnet.ibm.com>, Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, rostedt@goodmis.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, "Edward A .
- James" <eajames@us.ibm.com>, Alistair Popple <alistair@popple.id.au>, mingo@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1490894749.2404.33.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media@v
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE3LTA0LTA0IGF0IDEyOjMyIC0wNTAwLCBDaHJpc3RvcGhlciBCb3N0aWMgd3Jv
-dGU6Cj4gQWdyZWVkIHRoYXQgdGhlcmUgaXMgcm9vbSBmb3IgaW1wcm92ZW1lbnQuwqDCoCBJIGlu
-dGVuZCB0byBsb29rIGZ1cnRoZXLCoAo+IGludG8geW91ciBzdWdnZXN0aW9ucyBmcm9tIGhlcmUg
-YW5kIG91ciBwcml2YXRlIGNvbnZlcnNhdGlvbiBvbiB0aGXCoAo+IG1hdHRlciBhbmQgbWFrZSBj
-aGFuZ2VzIGFzIGFwcHJvcHJpYXRlLsKgIEkgaGF2ZSBhbiBvcGVuIGlzc3VlIHRvIHRyYWNrwqAK
-PiB0aGlzLsKgIEFzIGl0IGV4aXN0cyBpbiB0aGlzIHBhdGNoIHJlYWRzL3dyaXRlcyBmcm9tIG1h
-c3RlciB0byBzbGF2ZcKgCj4gZnVuZGFtZW50YWxseSB3b3JrLsKgwqAKCk15IHVuZGVyc3RhbmRp
-bmcgaXMgdGhleSAic2VlbSB0byB3b3JrIGlmIHlvdSBnZXQgbHVja3kgd2l0aCB0aGUgdGltaW5n
-CmFuZCBmYWxsIGFwYXJ0IHVuZGVyIGxvYWQiLiBPciBkaWQgSSBoZWFyIHdyb25nID8KCj4gIEdp
-dmVuIHRoZSBwZXJ2YXNpdmVuZXNzIGFuZCB0aW1lIHRvIGZ1bGx5IGV2YWx1YXRlwqAKPiBhbmQg
-dGVzdCBhbnkgcHJvdG9jb2wgdXBkYXRlcyBJIGludGVuZCBhZGRyZXNzIHRoaXMgaW4gdGhlIG5l
-YXIgZnV0dXJlwqAKPiB3aXRoIGEgc2VwYXJhdGUgZm9sbG93IG9uIHBhdGNoLgoKUGxlYXNlIHRy
-eSB0aGUgc2ltcGxlIGNoYW5nZSBJIHByb3Bvc2VkIGluIG15IGVtYWlsLiBJdCdzIGEgNCBvciA1
-CmxpbmVzIGNoYW5nZSBtYXggdG8geW91ciBjbG9ja190b2dnbGUgZnVuY3Rpb24gYW5kIGhvdyBp
-dCdzIGNhbGxlZCBpbgpzZW5kIGFuZCByZWNlaXZlLiBJdCBzaG91bGQgYmUgdHJpdmlhbCB0byBj
-aGVjayBpZiB0aGluZ3Mgc3RpbGwgInNlZW0KdG8gd29yayIgdG8gYmVnaW4gd2l0aC4KCkRvIHlv
-dSBoYXZlIHNvbWUga2luZCBvZiB0ZXN0IG1lY2hhbmlzbSB0aGF0IGhhbW1lcnMgdGhlIEZTSQpj
-b250aW51b3VzbHkgPyBTdWNoIGFzIGRvaW5nIGEgc2VyaWVzIG9mwqBwdXRtZW1wcm9jL2dldG1l
-bXByb2MgJgpjaGVja2luZyB0aGUgdmFsdWVzID8KClRoZW4geW91IGNhbiBydW4gdGhhdCB3aGls
-ZSBoYW1tZXJpbmcgdGhlIExQQyBidXMgYW5kIGdlbmVyYWxseSBwdXR0aW5nCnRoZSBCTUMgdW5k
-ZXIgbG9hZCBhbmQgeW91J2xsIHF1aWNrbHkgc2VlIGlmIGl0J3MgcmVsaWFibGUgb3Igbm90LgoK
-Q2hlZXJzLApCZW4uCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Mar 30, 2017 at 07:25:49PM +0200, Philipp Zabel wrote:
+> The TVP5150 DT bindings specify a single output port (port 0) that
+> corresponds to the video output pad (pad 1, DEMOD_PAD_VID_OUT).
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> I'm trying to get this to work with a TVP5150 analog TV decoder, and the
+> first problem is that this device doesn't have pad 0 as its single
+> output pad. Instead, as a MEDIA_ENT_F_ATV_DECODER entity, it has for
+> pads (input, video out, vbi out, audio out), and video out is pad 1,
+> whereas the device tree only defines a single port (0).
+
+Looking at the patch, it's highlighted another review point with
+Steve's driver.
+
+> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+> index 17e2386a3ca3a..c52d6ca797965 100644
+> --- a/drivers/staging/media/imx/imx-media-dev.c
+> +++ b/drivers/staging/media/imx/imx-media-dev.c
+> @@ -267,6 +267,15 @@ static int imx_media_create_link(struct imx_media_dev *imxmd,
+>  	source_pad = link->local_pad;
+>  	sink_pad = link->remote_pad;
+>  
+> +	/*
+> +	 * If the source subdev is an analog video decoder with a single source
+> +	 * port, assume that this port 0 corresponds to the DEMOD_PAD_VID_OUT
+> +	 * entity pad.
+> +	 */
+> +	if (source->entity.function == MEDIA_ENT_F_ATV_DECODER &&
+> +	    local_sd->num_sink_pads == 0 && local_sd->num_src_pads == 1)
+> +		source_pad = DEMOD_PAD_VID_OUT;
+> +
+>  	v4l2_info(&imxmd->v4l2_dev, "%s: %s:%d -> %s:%d\n", __func__,
+>  		  source->name, source_pad, sink->name, sink_pad);
+
+What is "local" and what is "remote" here?  It seems that, in the case of
+a link being created with the sensor(etc), it's all back to front.
+
+Eg, I see locally:
+
+imx-media: imx_media_create_link: imx219 0-0010:0 -> imx6-mipi-csi2:0
+
+So here, "source" is the imx219 (the sensor), and sink is "imx6-mipi-csi2"
+(part of the iMX6 capture.)  However, this makes "local_sd" the subdev of
+the sensor, and "remote_sd" the subdev of the CSI2 interface - which is
+totally back to front - this code is part of the iMX6 capture system,
+so "local" implies that it should be part of that, and the "remote" thing
+would be the sensor.
+
+Hence, this seems completely confused.  I'd suggest that:
+
+(a) the "pad->pad.flags & MEDIA_PAD_FL_SINK" test in imx_media_create_link()
+    is moved into imx_media_create_links(), and placed here instead:
+
+		for (j = 0; j < num_pads; j++) {
+			pad = &local_sd->pad[j];
+
+			if (pad->pad.flags & MEDIA_PAD_FL_SINK)
+				continue;
+
+			...
+		}
+
+    as the pad isn't going to spontaneously change this flag while we
+    consider each individual link.  However, maybe the test should be:
+
+			if (!(pad->pad.flags & MEDIA_PAD_FL_SOURCE))
+
+    ?
+
+(b) the terms "local" and "remote" in imx_media_create_link() are
+    replaced with "source" and "sink" respectively, since this will
+    now be called with a guaranteed source pad.
+
+As for Philipp's solution, I'm not sure what the correct solution for
+something like this is.  It depends how you view "hardware interface"
+as defined by video-interfaces.txt, and whether the pads on the TVP5150
+represent the hardware interfaces.  If we take the view that the pads
+do represent hardware interfaces, then using the reg= property on the
+port node will solve this problem.
+
+If not, it would mean that we would have to have the iMX capture code
+scan the pads on the source device, looking for outputs - but that
+runs into a problem - if the source device has multiple outputs, does
+the reg= property specify the output pad index or the pad number, and
+what if one binding for a device specifies it one way and another
+device's binding specifies it a different way.
+
+There's lots of scope for making things really painful here, and
+ending up with needing sensor-specific code in capture drivers to
+work around different decisions on this.
+
+I think someone needs to nail this down, if it's not already too late.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
