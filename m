@@ -1,16 +1,17 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 09/13] ARM64: dts: meson-gx: Add support for HDMI output
-Date: Tue, 04 Apr 2017 04:57:14 -0700
-Message-ID: <m2fuho8jxh.fsf@baylibre.com>
+Subject: Re: [PATCH v2 08/13] ARM64: dts: meson-gx: Add shared CMA dma memory
+ pool
+Date: Tue, 04 Apr 2017 04:57:36 -0700
+Message-ID: <m2bmsc8jwv.fsf@baylibre.com>
 References: <1490109950-21421-1-git-send-email-narmstrong@baylibre.com>
- <1490109950-21421-10-git-send-email-narmstrong@baylibre.com>
- <be91a6f7-19ad-5d50-4f0c-03e2821493d4@baylibre.com>
+ <1490109950-21421-9-git-send-email-narmstrong@baylibre.com>
+ <43dd4aec-7002-5844-2e34-8507860a8268@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <be91a6f7-19ad-5d50-4f0c-03e2821493d4@baylibre.com> (Neil
- Armstrong's message of "Tue, 4 Apr 2017 10:10:24 +0200")
+In-Reply-To: <43dd4aec-7002-5844-2e34-8507860a8268@baylibre.com> (Neil
+ Armstrong's message of "Tue, 4 Apr 2017 10:41:05 +0200")
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -25,11 +26,11 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.fr
 List-Id: devicetree@vger.kernel.org
 
 TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPiB3cml0ZXM6Cgo+IE9uIDAz
-LzIxLzIwMTcgMDQ6MjUgUE0sIE5laWwgQXJtc3Ryb25nIHdyb3RlOgo+PiBBZGQgSERNSSBvdXRw
-dXQgYW5kIGNvbm5lY3RvciBub2Rlcy4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IE5laWwgQXJtc3Ry
-b25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KClsuLi5dCgo+Cj4gSGkgS2V2aW4sCj4KPiBQ
-bGVhc2UgdGFrZSB0aGlzIG9uZSBmb3IgdGhlIGFtbG9naWMgYXJtLXNvYyBEVCB0cmVlLgo+CgpB
-cHBsaWVkIHRvIHY0LjEyL2R0NjQsCgpLZXZpbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+LzIxLzIwMTcgMDQ6MjUgUE0sIE5laWwgQXJtc3Ryb25nIHdyb3RlOgo+PiBUaGUgSERNSSBtb2Rl
+cyBuZWVkcyBtb3JlIENNQSBtZW1vcnkgdG8gYmUgcmVzZXJ2ZWQgYXQgYm9vdC10aW1lLgo+PiAK
+Pj4gU2lnbmVkLW9mZi1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29t
+PgoKWy4uLl0KCj4gSGkgS2V2aW4sCj4KPiBQbGVhc2UgdGFrZSB0aGlzIG9uZSBmb3IgdGhlIGFt
+bG9naWMgYXJtLXNvYyBEVCB0cmVlLgo+CgpBcHBsaWVkIHRvIHY0LjEyL2R0NjQsCgpLZXZpbgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
