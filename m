@@ -1,108 +1,314 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 08/11] dt-bindings: Add bindings for the Amlogic Meson
- dw-hdmi extension
-Date: Tue,  4 Apr 2017 14:15:28 +0200
-Message-ID: <1491308131-22071-9-git-send-email-narmstrong@baylibre.com>
-References: <1491308131-22071-1-git-send-email-narmstrong@baylibre.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V10 07/12] of/acpi: Configure dma operations at probe time
+	for platform/amba/pci bus devices
+Date: Tue, 4 Apr 2017 13:17:40 +0100
+Message-ID: <1d036139-b885-bac6-01c0-78d3ac690d80@arm.com>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-8-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1491308131-22071-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: airlied@linux.ie
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1491301105-5274-8-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBiaW5kaW5nIGRlc2NyaWJlcyB0aGUgQW1sb2dpYyBNZXNvbiBzcGVjaWZpYyBleHRlbnNp
-b24gdG8gdGhlClN5bm9wc3lzIERlc2lnbndhcmUgSERNSSBDb250cm9sbGVyLgoKQWNrZWQtYnk6
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClNpZ25lZC1vZmYtYnk6IE5laWwgQXJtc3Ry
-b25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9h
-bWxvZ2ljLG1lc29uLWR3LWhkbWkudHh0ICAgICB8IDExMSArKysrKysrKysrKysrKysrKysrKysK
-IDEgZmlsZSBjaGFuZ2VkLCAxMTEgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tZHct
-aGRtaS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9hbWxvZ2ljLG1lc29uLWR3LWhkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1oZG1pLnR4dApuZXcgZmlsZSBt
-b2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi43ZjA0MGVkCi0tLSAvZGV2L251bGwKKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1o
-ZG1pLnR4dApAQCAtMCwwICsxLDExMSBAQAorQW1sb2dpYyBzcGVjaWZpYyBleHRlbnNpb25zIHRv
-IHRoZSBTeW5vcHN5cyBEZXNpZ253YXJlIEhETUkgQ29udHJvbGxlcgorPT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQor
-CitUaGUgQW1sb2dpYyBNZXNvbiBTeW5vcHN5cyBEZXNpZ253YXJlIEludGVncmF0aW9uIGlzIGNv
-bXBvc2VkIG9mIDoKKy0gQSBTeW5vcHN5cyBEZXNpZ25XYXJlIEhETUkgQ29udHJvbGxlciBJUAor
-LSBBIFRPUCBjb250cm9sIGJsb2NrIGNvbnRyb2xsaW5nIHRoZSBDbG9ja3MgYW5kIFBIWQorLSBB
-IGN1c3RvbSBIRE1JIFBIWSBpbiBvcmRlciB0byBjb252ZXJ0IHZpZGVvIHRvIFRNRFMgc2lnbmFs
-CisgX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KK3wgICAgICAgICAgICBIRE1J
-IFRPUCAgICAgICAgICAgICAgIHw8PSBIUEQKK3xfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX3wKK3wgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgIHwKK3wgIFN5bm9w
-c3lzIEhETUkgICB8ICAgSERNSSBQSFkgICAgIHw9PiBUTURTCit8ICAgIENvbnRyb2xsZXIgICAg
-fF9fX19fX19fX19fX19fX198Cit8X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX198
-PD0+IEREQworCitUaGUgSERNSSBUT1AgYmxvY2sgb25seSBzdXBwb3J0cyBIUEQgc2Vuc2luZy4K
-K1RoZSBTeW5vcHN5cyBIRE1JIENvbnRyb2xsZXIgaW50ZXJydXB0IGlzIHJvdXRlZCB0aHJvdWdo
-IHRoZQorVE9QIEJsb2NrIGludGVycnVwdC4KK0NvbW11bmljYXRpb24gdG8gdGhlIFRPUCBCbG9j
-ayBhbmQgdGhlIFN5bm9wc3lzIEhETUkgQ29udHJvbGxlciBpcyBkb25lCit2aWEgYSBwYWlyIG9m
-IGRlZGljYXRlZCBhZGRyK3JlYWQvd3JpdGUgcmVnaXN0ZXJzLgorVGhlIEhETUkgUEhZIGlzIGNv
-bmZpZ3VyZWQgYnkgcmVnaXN0ZXJzIGluIHRoZSBISEkgcmVnaXN0ZXIgYmxvY2suCisKK1BpeGVs
-IGRhdGEgYXJyaXZlcyBpbiA0OjQ6NCBmb3JtYXQgZnJvbSB0aGUgVkVOQyBibG9jayBhbmQgdGhl
-IFZQVSBIRE1JIG11eAorc2VsZWN0cyBlaXRoZXIgdGhlIEVOQ0kgZW5jb2RlciBmb3IgdGhlIDU3
-Nmkgb3IgNDgwaSBmb3JtYXRzIG9yIHRoZSBFTkNQCitlbmNvZGVyIGZvciBhbGwgdGhlIG90aGVy
-IGZvcm1hdHMgaW5jbHVkaW5nIGludGVybGFjZWQgSEQgZm9ybWF0cy4KKworVGhlIFZFTkMgdXNl
-cyBhIERWSSBlbmNvZGVyIG9uIHRvcCBvZiB0aGUgRU5DSSBvciBFTkNQIGVuY29kZXJzIHRvIGdl
-bmVyYXRlCitEVkkgdGltaW5ncyBmb3IgdGhlIEhETUkgY29udHJvbGxlci4KKworQW1sb2dpYyBN
-ZXNvbiBHWEJCLCBHWEwgYW5kIEdYTSBTb0NzIGZhbWlsaWVzIGVtYmVkcyB0aGUgU3lub3BzeXMg
-RGVzaWduV2FyZQorSERNSSBUWCBJUCB2ZXJzaW9uIDIuMDFhIHdpdGggSERDUCBhbmQgSTJDICYg
-Uy9QRElGCithdWRpbyBzb3VyY2UgaW50ZXJmYWNlcy4KKworUmVxdWlyZWQgcHJvcGVydGllczoK
-Ky0gY29tcGF0aWJsZTogdmFsdWUgc2hvdWxkIGJlIGRpZmZlcmVudCBmb3IgZWFjaCBTb0MgZmFt
-aWx5IGFzIDoKKwktIEdYQkIgKFM5MDUpIDogImFtbG9naWMsbWVzb24tZ3hiYi1kdy1oZG1pIgor
-CS0gR1hMIChTOTA1WCwgUzkwNUQpIDogImFtbG9naWMsbWVzb24tZ3hsLWR3LWhkbWkiCisJLSBH
-WE0gKFM5MTIpIDogImFtbG9naWMsbWVzb24tZ3htLWR3LWhkbWkiCisJZm9sbG93ZWQgYnkgdGhl
-IGNvbW1vbiAiYW1sb2dpYyxtZXNvbi1neC1kdy1oZG1pIgorLSByZWc6IFBoeXNpY2FsIGJhc2Ug
-YWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgorLSBpbnRl
-cnJ1cHRzOiBUaGUgSERNSSBpbnRlcnJ1cHQgbnVtYmVyCistIGNsb2NrcywgY2xvY2stbmFtZXMg
-OiBtdXN0IGhhdmUgdGhlIHBoYW5kbGVzIHRvIHRoZSBIRE1JIGlhaGIgYW5kIGlzZnIgY2xvY2tz
-LAorICBhbmQgdGhlIEFtbG9naWMgTWVzb24gdmVuY2kgY2xvY2tzIGFzIGRlc2NyaWJlZCBpbgor
-ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3Mu
-dHh0LAorICB0aGUgY2xvY2tzIGFyZSBzb2Mgc3BlY2lmaWMsIHRoZSBjbG9jay1uYW1lcyBzaG91
-bGQgYmUgImlhaGIiLCAiaXNmciIsICJ2ZW5jaSIKKy0gcmVzZXRzLCByZXNldHMtbmFtZXM6IG11
-c3QgaGF2ZSB0aGUgcGhhbmRsZXMgdG8gdGhlIEhETUkgYXBiLCBnbHVlIGFuZCBwaHkKKyAgcmVz
-ZXRzIGFzIGRlc2NyaWJlZCBpbiA6CisgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9yZXNldC9yZXNldC50eHQsCisgIHRoZSByZXNldC1uYW1lcyBzaG91bGQgYmUgImhkbWl0eF9h
-cGIiLCAiaGRtaXR4IiwgImhkbWl0eF9waHkiCisKK1JlcXVpcmVkIG5vZGVzOgorCitUaGUgY29u
-bmVjdGlvbnMgdG8gdGhlIEhETUkgcG9ydHMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBo
-CitiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2dyYXBoLnR4dC4KKworVGhlIGZvbGxvd2luZyB0YWJsZSBsaXN0cyBmb3IgZWFjaCBzdXBwb3J0
-ZWQgbW9kZWwgdGhlIHBvcnQgbnVtYmVyCitjb3JyZXNwb25kaW5nIHRvIGVhY2ggSERNSSBvdXRw
-dXQgYW5kIGlucHV0LgorCisJCVBvcnQgMAkJUG9ydCAxCistLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQorIFM5MDUgKEdYQkIpCVZFTkMgSW5wdXQJVE1EUyBPdXRwdXQK
-KyBTOTA1WCAoR1hMKQlWRU5DIElucHV0CVRNRFMgT3V0cHV0CisgUzkwNUQgKEdYTCkJVkVOQyBJ
-bnB1dAlUTURTIE91dHB1dAorIFM5MTIgKEdYTSkJVkVOQyBJbnB1dAlUTURTIE91dHB1dAorCitF
-eGFtcGxlOgorCitoZG1pLWNvbm5lY3RvciB7CisJY29tcGF0aWJsZSA9ICJoZG1pLWNvbm5lY3Rv
-ciI7CisJdHlwZSA9ICJhIjsKKworCXBvcnQgeworCQloZG1pX2Nvbm5lY3Rvcl9pbjogZW5kcG9p
-bnQgeworCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX3R4X3RtZHNfb3V0PjsKKwkJfTsKKwl9
-OworfTsKKworaGRtaV90eDogaGRtaS10eEBjODgzYTAwMCB7CisJY29tcGF0aWJsZSA9ICJhbWxv
-Z2ljLG1lc29uLWd4YmItZHctaGRtaSIsICJhbWxvZ2ljLG1lc29uLWd4LWR3LWhkbWkiOworCXJl
-ZyA9IDwweDAgMHhjODgzYTAwMCAweDAgMHgxYz47CisJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDU3
-IElSUV9UWVBFX0VER0VfUklTSU5HPjsKKwlyZXNldHMgPSA8JnJlc2V0IFJFU0VUX0hETUlUWF9D
-QVBCMz4sCisJCSA8JnJlc2V0IFJFU0VUX0hETUlfU1lTVEVNX1JFU0VUPiwKKwkJIDwmcmVzZXQg
-UkVTRVRfSERNSV9UWD47CisJcmVzZXQtbmFtZXMgPSAiaGRtaXR4X2FwYiIsICJoZG1pdHgiLCAi
-aGRtaXR4X3BoeSI7CisJY2xvY2tzID0gPCZjbGtjIENMS0lEX0hETUlfUENMSz4sCisJCSA8JmNs
-a2MgQ0xLSURfQ0xLODE+LAorCQkgPCZjbGtjIENMS0lEX0dDTEtfVkVOQ0lfSU5UMD47CisJY2xv
-Y2stbmFtZXMgPSAiaXNmciIsICJpYWhiIiwgInZlbmNpIjsKKwkjYWRkcmVzcy1jZWxscyA9IDwx
-PjsKKwkjc2l6ZS1jZWxscyA9IDwwPjsKKworCS8qIFZQVSBWRU5DIElucHV0ICovCisJaGRtaV90
-eF92ZW5jX3BvcnQ6IHBvcnRAMCB7CisJCXJlZyA9IDwwPjsKKworCQloZG1pX3R4X2luOiBlbmRw
-b2ludCB7CisJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfdHhfb3V0PjsKKwkJfTsKKwl9Owor
-CisJLyogVE1EUyBPdXRwdXQgKi8KKwloZG1pX3R4X3RtZHNfcG9ydDogcG9ydEAxIHsKKwkJcmVn
-ID0gPDE+OworCisJCWhkbWlfdHhfdG1kc19vdXQ6IGVuZHBvaW50IHsKKwkJCXJlbW90ZS1lbmRw
-b2ludCA9IDwmaGRtaV9jb25uZWN0b3JfaW4+OworCQl9OworCX07Cit9OwotLSAKMS45LjEKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 04/04/17 11:18, Sricharan R wrote:
+> Configuring DMA ops at probe time will allow deferring device probe when
+> the IOMMU isn't available yet. The dma_configure for the device is
+> now called from the generic device_attach callback just before the
+> bus/driver probe is called. This way, configuring the DMA ops for the
+> device would be called at the same place for all bus_types, hence the
+> deferred probing mechanism should work for all buses as well.
+> 
+> pci_bus_add_devices    (platform/amba)(_device_create/driver_register)
+>        |                         |
+> pci_bus_add_device     (device_add/driver_register)
+>        |                         |
+> device_attach           device_initial_probe
+>        |                         |
+> __device_attach_driver    __device_attach_driver
+>        |
+> driver_probe_device
+>        |
+> really_probe
+>        |
+> dma_configure
+> 
+> Similarly on the device/driver_unregister path __device_release_driver is
+> called which inturn calls dma_deconfigure.
+> 
+> This patch changes the dma ops configuration to probe time for
+> both OF and ACPI based platform/amba/pci bus devices.
+
+Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+
+It's possible we could subsume {of,acpi}_dma_deconfigure() into
+dma_deconfigure() entirely in future if it becomes clear that neither of
+them will ever need to do anything firmware-specific, but I think for
+now it's probably safer to keep the current symmetry - calling
+arch_teardown_dma_ops() twice is benign (and even if it weren't, I'd say
+it really should be!)
+
+Robin.
+
+> Tested-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Tested-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> (drivers/pci part)
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+> 
+>  [V10] Added dummy dma_(de)configure functions in case
+>        of !CONFIG_HAS_DMA to avoid build breaks.
+> 
+>  drivers/acpi/glue.c         |  5 -----
+>  drivers/base/dd.c           |  9 +++++++++
+>  drivers/base/dma-mapping.c  | 40 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/of/platform.c       |  5 +----
+>  drivers/pci/probe.c         | 28 ----------------------------
+>  include/linux/dma-mapping.h | 12 ++++++++++++
+>  6 files changed, 62 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/acpi/glue.c b/drivers/acpi/glue.c
+> index fb19e1c..c05f241 100644
+> --- a/drivers/acpi/glue.c
+> +++ b/drivers/acpi/glue.c
+> @@ -176,7 +176,6 @@ int acpi_bind_one(struct device *dev, struct acpi_device *acpi_dev)
+>  	struct list_head *physnode_list;
+>  	unsigned int node_id;
+>  	int retval = -EINVAL;
+> -	enum dev_dma_attr attr;
+>  
+>  	if (has_acpi_companion(dev)) {
+>  		if (acpi_dev) {
+> @@ -233,10 +232,6 @@ int acpi_bind_one(struct device *dev, struct acpi_device *acpi_dev)
+>  	if (!has_acpi_companion(dev))
+>  		ACPI_COMPANION_SET(dev, acpi_dev);
+>  
+> -	attr = acpi_get_dma_attr(acpi_dev);
+> -	if (attr != DEV_DMA_NOT_SUPPORTED)
+> -		acpi_dma_configure(dev, attr);
+> -
+>  	acpi_physnode_link_name(physical_node_name, node_id);
+>  	retval = sysfs_create_link(&acpi_dev->dev.kobj, &dev->kobj,
+>  				   physical_node_name);
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index a1fbf55..4882f06 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -19,6 +19,7 @@
+>  
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+>  #include <linux/module.h>
+>  #include <linux/kthread.h>
+>  #include <linux/wait.h>
+> @@ -356,6 +357,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+>  	if (ret)
+>  		goto pinctrl_bind_failed;
+>  
+> +	ret = dma_configure(dev);
+> +	if (ret)
+> +		goto dma_failed;
+> +
+>  	if (driver_sysfs_add(dev)) {
+>  		printk(KERN_ERR "%s: driver_sysfs_add(%s) failed\n",
+>  			__func__, dev_name(dev));
+> @@ -417,6 +422,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+>  	goto done;
+>  
+>  probe_failed:
+> +	dma_deconfigure(dev);
+> +dma_failed:
+>  	if (dev->bus)
+>  		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+>  					     BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
+> @@ -826,6 +833,8 @@ static void __device_release_driver(struct device *dev, struct device *parent)
+>  			drv->remove(dev);
+>  
+>  		device_links_driver_cleanup(dev);
+> +		dma_deconfigure(dev);
+> +
+>  		devres_release_all(dev);
+>  		dev->driver = NULL;
+>  		dev_set_drvdata(dev, NULL);
+> diff --git a/drivers/base/dma-mapping.c b/drivers/base/dma-mapping.c
+> index efd71cf..449b948 100644
+> --- a/drivers/base/dma-mapping.c
+> +++ b/drivers/base/dma-mapping.c
+> @@ -7,9 +7,11 @@
+>   * This file is released under the GPLv2.
+>   */
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/export.h>
+>  #include <linux/gfp.h>
+> +#include <linux/of_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+>  
+> @@ -341,3 +343,41 @@ void dma_common_free_remap(void *cpu_addr, size_t size, unsigned long vm_flags)
+>  	vunmap(cpu_addr);
+>  }
+>  #endif
+> +
+> +/*
+> + * Common configuration to enable DMA API use for a device
+> + */
+> +#include <linux/pci.h>
+> +
+> +int dma_configure(struct device *dev)
+> +{
+> +	struct device *bridge = NULL, *dma_dev = dev;
+> +	enum dev_dma_attr attr;
+> +
+> +	if (dev_is_pci(dev)) {
+> +		bridge = pci_get_host_bridge_device(to_pci_dev(dev));
+> +		dma_dev = bridge;
+> +		if (IS_ENABLED(CONFIG_OF) && dma_dev->parent &&
+> +		    dma_dev->parent->of_node)
+> +			dma_dev = dma_dev->parent;
+> +	}
+> +
+> +	if (dma_dev->of_node) {
+> +		of_dma_configure(dev, dma_dev->of_node);
+> +	} else if (has_acpi_companion(dma_dev)) {
+> +		attr = acpi_get_dma_attr(to_acpi_device_node(dma_dev->fwnode));
+> +		if (attr != DEV_DMA_NOT_SUPPORTED)
+> +			acpi_dma_configure(dev, attr);
+> +	}
+> +
+> +	if (bridge)
+> +		pci_put_host_bridge_device(bridge);
+> +
+> +	return 0;
+> +}
+> +
+> +void dma_deconfigure(struct device *dev)
+> +{
+> +	of_dma_deconfigure(dev);
+> +	acpi_dma_deconfigure(dev);
+> +}
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 5344db5..2aa4ebb 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_iommu.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> @@ -186,11 +187,9 @@ static struct platform_device *of_platform_device_create_pdata(
+>  
+>  	dev->dev.bus = &platform_bus_type;
+>  	dev->dev.platform_data = platform_data;
+> -	of_dma_configure(&dev->dev, dev->dev.of_node);
+>  	of_msi_configure(&dev->dev, dev->dev.of_node);
+>  
+>  	if (of_device_add(dev) != 0) {
+> -		of_dma_deconfigure(&dev->dev);
+>  		platform_device_put(dev);
+>  		goto err_clear_flag;
+>  	}
+> @@ -248,7 +247,6 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>  		dev_set_name(&dev->dev, "%s", bus_id);
+>  	else
+>  		of_device_make_bus_id(&dev->dev);
+> -	of_dma_configure(&dev->dev, dev->dev.of_node);
+>  
+>  	/* Allow the HW Peripheral ID to be overridden */
+>  	prop = of_get_property(node, "arm,primecell-periphid", NULL);
+> @@ -542,7 +540,6 @@ static int of_platform_device_destroy(struct device *dev, void *data)
+>  		amba_device_unregister(to_amba_device(dev));
+>  #endif
+>  
+> -	of_dma_deconfigure(dev);
+>  	of_node_clear_flag(dev->of_node, OF_POPULATED);
+>  	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+>  	return 0;
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index dfc9a27..5a8dd43 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1893,33 +1893,6 @@ static void pci_set_msi_domain(struct pci_dev *dev)
+>  	dev_set_msi_domain(&dev->dev, d);
+>  }
+>  
+> -/**
+> - * pci_dma_configure - Setup DMA configuration
+> - * @dev: ptr to pci_dev struct of the PCI device
+> - *
+> - * Function to update PCI devices's DMA configuration using the same
+> - * info from the OF node or ACPI node of host bridge's parent (if any).
+> - */
+> -static void pci_dma_configure(struct pci_dev *dev)
+> -{
+> -	struct device *bridge = pci_get_host_bridge_device(dev);
+> -
+> -	if (IS_ENABLED(CONFIG_OF) &&
+> -		bridge->parent && bridge->parent->of_node) {
+> -			of_dma_configure(&dev->dev, bridge->parent->of_node);
+> -	} else if (has_acpi_companion(bridge)) {
+> -		struct acpi_device *adev = to_acpi_device_node(bridge->fwnode);
+> -		enum dev_dma_attr attr = acpi_get_dma_attr(adev);
+> -
+> -		if (attr == DEV_DMA_NOT_SUPPORTED)
+> -			dev_warn(&dev->dev, "DMA not supported.\n");
+> -		else
+> -			acpi_dma_configure(&dev->dev, attr);
+> -	}
+> -
+> -	pci_put_host_bridge_device(bridge);
+> -}
+> -
+>  void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  {
+>  	int ret;
+> @@ -1933,7 +1906,6 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  	dev->dev.dma_mask = &dev->dma_mask;
+>  	dev->dev.dma_parms = &dev->dma_parms;
+>  	dev->dev.coherent_dma_mask = 0xffffffffull;
+> -	pci_dma_configure(dev);
+>  
+>  	pci_set_dma_max_seg_size(dev, 65536);
+>  	pci_set_dma_seg_boundary(dev, 0xffffffff);
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index 0977317..4f3eece 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -728,6 +728,18 @@ void *dma_mark_declared_memory_occupied(struct device *dev,
+>  }
+>  #endif /* CONFIG_HAVE_GENERIC_DMA_COHERENT */
+>  
+> +#ifdef CONFIG_HAS_DMA
+> +int dma_configure(struct device *dev);
+> +void dma_deconfigure(struct device *dev);
+> +#else
+> +static inline int dma_configure(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void dma_deconfigure(struct device *dev) {}
+> +#endif
+> +
+>  /*
+>   * Managed DMA API
+>   */
+> 
