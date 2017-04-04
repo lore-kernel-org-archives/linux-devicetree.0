@@ -1,105 +1,107 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2] i2c/muxes/i2c-mux-ltc4306: LTC4306 and LTC4305 I2C
- multiplexer/switch
-Date: Tue, 4 Apr 2017 11:28:23 +0200
-Message-ID: <b5838bae-8108-1a0e-5234-d14cb5e95e52@axentia.se>
-References: <1490782541-7832-1-git-send-email-michael.hennerich@analog.com>
- <0d4c068f-d909-64be-421d-4500da7ebd4c@axentia.se>
- <e0027ff7-948e-60f1-a492-72ab4a67605f@analog.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v8 1/2] media: i2c/ov5645: add the device tree binding
+ document
+Date: Tue, 4 Apr 2017 12:31:51 +0300
+Message-ID: <20170404093150.GB3288@valkosipuli.retiisi.org.uk>
+References: <1491228148-28505-1-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <e0027ff7-948e-60f1-a492-72ab4a67605f@analog.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: michael.hennerich@analog.com, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1491228148-28505-1-git-send-email-todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-*snip* *snip*
+Hi Todor,
 
->>> +static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
->>> +{
->>> +	struct ltc4306 *data = gpiochip_get_data(chip);
->>> +	int ret = 0;
->>> +
->>> +	if (gpiochip_line_is_open_drain(chip, offset) ||
->>> +	    (data->regs[LTC_REG_MODE] & BIT(7 - offset))) {
->>
->> I wonder about this open-coded register cache. So, gpio people, is there
->> a guarantee from gpiolib that only one gpio_chip operation is in flight
->> concurrently? Because I don't see any evidence of that. With that in
->> mind, I think some locking is needed?
+On Mon, Apr 03, 2017 at 05:02:28PM +0300, Todor Tomov wrote:
+> Add the document for ov5645 device tree binding.
 > 
-> I thought there is a per chip mutex in the gpiolib. But I can't find 
-> anything like this either. Since these two gpios can be used from 
-> different internal or external users. The locking seem to be needed.
+> Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5645.txt       | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
 > 
-> This gets us back to the regmap option. I did a quick grep, and 9 out of 
-> 205 drivers using regmap i2c, also use i2c_smbus... concurrently.
-> 
-> grep -Rl regmap_init_i2c ./drivers  | xargs grep -l i2c_smbus_ | grep "\.c"
-> 
-> Mostly to work around non uniform transfer layouts.
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> new file mode 100644
+> index 0000000..fd7aec9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> @@ -0,0 +1,54 @@
+> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
+> +
+> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+> +an active array size of 2592H x 1944V. It is programmable through a serial I2C
+> +interface.
+> +
+> +Required Properties:
+> +- compatible: Value should be "ovti,ov5645".
+> +- clocks: Reference to the xclk clock.
+> +- clock-names: Should be "xclk".
+> +- clock-frequency: Frequency of the xclk clock.
+> +- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> +  to the hardware pin PWDNB which is physically active low.
+> +- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> +  the hardware pin RESETB.
+> +- vdddo-supply: Chip digital IO regulator.
+> +- vdda-supply: Chip analog regulator.
+> +- vddd-supply: Chip digital core regulator.
+> +
+> +The device node must contain one 'port' child node for its digital output
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	&i2c1 {
+> +		...
+> +
+> +		ov5645: ov5645@78 {
+> +			compatible = "ovti,ov5645";
+> +			reg = <0x78>;
+> +
+> +			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+> +			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&camera_rear_default>;
+> +
+> +			clocks = <&clks 200>;
+> +			clock-names = "xclk";
+> +			clock-frequency = <23880000>;
+> +
+> +			vdddo-supply = <&camera_dovdd_1v8>;
+> +			vdda-supply = <&camera_avdd_2v8>;
+> +			vddd-supply = <&camera_dvdd_1v2>;
+> +
+> +			port {
+> +				ov5645_ep: endpoint {
+> +					clock-lanes = <1>;
+> +					data-lanes = <0 2>;
 
-I see three options.
+If the sensor does not support lane reordering, I'd use 0 for the clock lane
+and lanes starting from 1 for data-lanes.
 
-1. Go with regmap and convert to mux-locked. Then the unlocked i2c-xfer
-becomes an ordinary i2c-xfer (or smbus, whatever). This will result in
-the cleanest code.
+I guess it'd be good to document this but that's definitely out of scope of
+the patchset.
 
-2. Go with regmap and stay parent-locked. Then hook into the regmap
-locking as is done in one of the drivers that have worked around similar
-problems with regmap and parent-locked i2c-mux interactions:
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-drivers/media/dvb-frontends/rtl2830.c
-drivers/media/dvb-frontends/m88ds3103.c
+> +					remote-endpoint = <&csi0_ep>;
+> +				};
+> +			};
+> +		};
+> +	};
 
-This will probably work, but you'd need to add a number of extra helper
-functions.
+-- 
+Kind regards,
 
-3. Exclude register 3 from regmap and only use regmap for the other
-registers. This will be a bit ugly and ad-hoc, will need clear comments
-on what is going on and why it is safe etc. And I want to see it before
-I accept it. And it might not be my call to begin with, because TBH, it
-sounds a bit disgusting...
-
-> I'll check with Mark Brown on this topic.
-
-Ok, might be a good idea...
-
->>> +
->>> +add_adapter_failed:
->>> +	i2c_mux_del_adapters(muxc);
->>> +gpio_default:
->>> +	gpiod_direction_input(data->en_gpio);
->>
->> This was actually not what I had in mind when I asked about it in v1, and
->> this looks a bit strange. You have no way of knowing if the pin was
->> configured as input when probe was called, and I don't see code like this
->> all over the place. Maybe it's is ok to not disable the chip over
->> suspend/resume, I was just asking because it looked a bit strange to grab
->> a pin and then forget about it. Now that I think about it some more, it's
->> probably ok to do just that since it is perhaps not possible to make the
->> chip draw less power by deasserting enable, but what do I know?
-> 
-> GPIOs are assumed by default inputs. So if you want to undo the actions 
-> in probe. The logical consequence is to move them back to inputs, and 
-> let the external PULL-UP or PULL-DOWN on the ENABLE decide what happens. 
-> I would also prefer to leave it enabled, so that the GPIOs can retain
-
-My point is that I do not see any probe functions undoing gpio configs.
-Why bother in this case? Or are other probe functions really doing this?
-I actually didn't check, but I haven't stumbled over it previously and
-at least think I would have noticed...
-
-> it's last state. Well I think the device draws a bit less power when 
-> disabled. But we don't support runtime PM anyways.
-
-It might not be safe to reset the gpio pins over a suspend/resume depending
-on what they are used for, so it is probably a bad idea to go there. Sorry
-for bringing the whole issue up and muddying the waters...
-
-Cheers,
-peda
-
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
