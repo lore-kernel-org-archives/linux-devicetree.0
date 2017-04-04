@@ -1,96 +1,124 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 02/14] dt/bindings: Document gpio-ingenic
-Date: Tue, 4 Apr 2017 09:52:40 -0500
-Message-ID: <20170404145240.z3vx24svh4dduo2o@rob-hp-laptop>
-References: <20170125185207.23902-2-paul@crapouillou.net>
- <20170402204244.14216-1-paul@crapouillou.net>
- <20170402204244.14216-3-paul@crapouillou.net>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: update the
+ Allwinner GPADC device tree binding for H3
+Date: Tue, 4 Apr 2017 23:02:52 +0800
+Message-ID: <bdc43a73-a2d6-01ae-8113-277f7174697c@aosc.io>
+References: <20170402133304.56824-1-icenowy@aosc.io>
+ <20170402133304.56824-2-icenowy@aosc.io>
+ <20170404144715.fa5sy427u2cz4e6z@rob-hp-laptop>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170402204244.14216-3-paul@crapouillou.net>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, james.hogan@imgtec.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBTPLR3DQKGQECTMBGAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170404144715.fa5sy427u2cz4e6z@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 02, 2017 at 10:42:32PM +0200, Paul Cercueil wrote:
-> This commit adds documentation for the devicetree bindings of the
-> gpio-ingenic driver, which handles GPIOs of the Ingenic SoCs
-> currently supported by the Linux kernel.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  .../devicetree/bindings/gpio/ingenic,gpio.txt      | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
-> 
->  v2: New patch
->  v3: No changes
->  v4: Update for the v4 version of the gpio-ingenic driver
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt b/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
-> new file mode 100644
-> index 000000000000..f54af444f7c3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
-> @@ -0,0 +1,48 @@
-> +Ingenic jz47xx GPIO controller
-> +
-> +That the Ingenic GPIO driver node must be a sub-node of the Ingenic pinctrl
-> +driver node.
-> +
-> +Required properties:
-> +--------------------
-> +
-> + - compatible: Must contain one of:
-> +    - "ingenic,jz4740-gpio"
-> +    - "ingenic,jz4770-gpio"
-> +    - "ingenic,jz4780-gpio"
-> +	And one of:
-> +	- "ingenic,gpio-bank-a"
-> +	- "ingenic,gpio-bank-b"
-> +	- "ingenic,gpio-bank-c"
-> +	- "ingenic,gpio-bank-d"
-> +	- "ingenic,gpio-bank-e" (for SoC version > jz4740)
-> +	- "ingenic,gpio-bank-f" (for SoC version > jz4740)
 
-This is quite strange. Why do you need the bank? Doesn't gpio-ranges 
-give you that info? Maybe use reg property here instead.
 
-> + - interrupt-controller: Marks the device node as an interrupt controller.
-> + - interrupts: Interrupt specifier for the controllers interrupt.
-> + - #interrupt-cells: Should be 2. Refer to
-> +   ../interrupt-controller/interrupts.txt for more details.
-> + - gpio-controller: Marks the device node as a GPIO controller.
-> + - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
-> +    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
-> +    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
-> + - gpio-ranges: Range of pins managed by the GPIO controller. Refer to
-> +   'gpio.txt' in this directory for more details.
-> +
-> +Example:
-> +--------
-> +
-> +&pinctrl {
-> +	gpa: gpio-controller@0 {
+=E5=9C=A8 2017=E5=B9=B404=E6=9C=8804=E6=97=A5 22:47, Rob Herring =E5=86=99=
+=E9=81=93:
+> On Sun, Apr 02, 2017 at 09:33:01PM +0800, Icenowy Zheng wrote:
+>> Allwinner H3 features a thermal sensor like the one in A33, but has its
+>> register re-arranged, the clock divider moved to CCU (originally the
+>> clock divider is in ADC) and added a pair of bus clock and reset.
+>>
+>> Update the binding document to cover H3.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 23 +++++++++++++++=
++++++--
+>>  1 file changed, 21 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Doc=
+umentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+>> index badff3611a98..7753133ca0ff 100644
+>> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+>> @@ -4,12 +4,20 @@ The Allwinner SoCs all have an ADC that can also act a=
+s a thermal sensor
+>>  and sometimes as a touchscreen controller.
+>>
+>>  Required properties:
+>> -  - compatible: "allwinner,sun8i-a33-ths",
+>> +  - compatible: must contain one of the following compatibles:
+>> +		- "allwinner,sun8i-a33-ths"
+>> +		- "allwinner,sun8i-h3-ths"
+>>    - reg: mmio address range of the chip,
+>>    - #thermal-sensor-cells: shall be 0,
+>>    - #io-channel-cells: shall be 0,
+>>
+>> -Example:
+>> +Required properties for the following compatibles:
+>> +		- "allwinner,sun8i-h3-ths"
+>> +  - clocks: the bus clock and the input clock of the ADC,
+>> +  - clock-names: should be "bus" and "ths",
+>> +  - resets: the bus reset of the ADC,
+>> +
+>> +Example for A33:
+>>  	ths: ths@01c25000 {
+>>  		compatible =3D "allwinner,sun8i-a33-ths";
+>>  		reg =3D <0x01c25000 0x100>;
+>> @@ -17,6 +25,17 @@ Example:
+>>  		#io-channel-cells =3D <0>;
+>>  	};
+>>
+>> +Example for H3:
+>> +	ths: ths@01c25000 {
+>
+> adc@...
 
-gpio@...
+It's a thermal sensor, so I think call it THS is more appropriate
+here. It's implemented as an ADC driver just because the internal
+code reusing of Linux. From device tree binding view I choose to
+call it ths.
 
-> +		compatible = "ingenic,gpio-bank-a", "ingenic,jz4740-gpio";
-> +
-> +		gpio-controller;
-> +		gpio-ranges = <&pinctrl 0 0 32>;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +
-> +		interrupt-parent = <&intc>;
-> +		interrupts = <28>;
-> +	};
-> +};
-> -- 
-> 2.11.0
-> 
+>
+> And drop the leading 0.
+
+OK.
+
+>
+>> +		compatible =3D "allwinner,sun8i-h3-ths";
+>> +		reg =3D <0x01c25000 0x100>;
+>> +		clocks =3D <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
+>> +		clock-names =3D "bus", "ths";
+>> +		resets =3D <&ccu RST_BUS_THS>;
+>> +		#thermal-sensor-cells =3D <0>;
+>> +		#io-channel-cells =3D <0>;
+>> +	};
+>> +
+>>  sun4i, sun5i and sun6i SoCs are also supported via the older binding:
+>>
+>>  sun4i resistive touchscreen controller
+>> --
+>> 2.12.2
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
