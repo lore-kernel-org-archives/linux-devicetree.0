@@ -1,44 +1,85 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v4 0/8] mfd: Add OF device table to I2C drivers that are
- missing it
-Date: Tue, 4 Apr 2017 13:46:30 -0400
-Message-ID: <a5a9a7c2-1888-f6ba-5541-3cb3ee1d90ba@osg.samsung.com>
-References: <20170404153036.6651-1-javier@osg.samsung.com>
- <20170404174323.GA13234@atomide.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 00/11] AXP803 PMIC support for Pine64
+Date: Wed,  5 Apr 2017 02:01:34 +0800
+Message-ID: <20170404180145.12897-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170404174323.GA13234-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBVN7R7DQKGQE5OTBEBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Tony,
+The Pine64 (including Pine64+) boards have an AXP803 PMIC, which is a PMIC
+similar to AXP288, but tweaked to use with Allwinner SoCs rather than Intel
+tablets (with DCIN and Vbus re-splitted like other AXP PMICs, and RSB bus
+support added).
 
-On 04/04/2017 01:43 PM, Tony Lindgren wrote:
-> * Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> [170404 08:33]:
->> Most patches can be applied independently, with the exception of patches
->> 2 to 4 that should be applied in the same tree to keep bisect-ability.
-> 
-> Probably best to merge this all via MFD or i2c:
->
+This patchset adds support for it and enabled it in Pine64 device tree.
 
-I would prefer MFD since the changes in that subsystem are the ones that
-could cause issues. The changes for I2C is just a update to an example.
- 
-> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->
+This patchset can be splitted into two big parts:
 
-Thanks!
+- Part1: PATCH 1/11 to PATCH 5/11, which are enabling the MFD (and the
+  power key functionality) of AXP803.
 
-Best regards,
+- Part2: PATCH 6/11 to PATCH 11/11, which are enabling the regulator
+  function of the AXP803 PMIC. Finally Wi-Fi function is added
+  as a usage of regulators function.
+
+PATCH 1 and 2 added RSB and NMI device nodes, which are used for the
+communication between A64 and AXP803.
+
+PATCH 3 adds basical devicetree binding for AXP803.
+
+PATCH 4 adds support for the AXP803 variant in axp20x-rsb mfd driver.
+
+PATCH 5 enabled the AXP803 MFD in Pine64 device tree.
+
+PATCH 6 adds devicetree binding for the regulators in AXP803.
+
+PATCH 7 adds support for the regulators in AXP803 in the axp20x-regulator
+driver.
+
+PATCH 8 enabled the regulator MFD cell in AXP803.
+
+PATCH 9 adds a DTSI file for AXP803, just like what have been done for other
+AXPs.
+
+PATCH 10 enabled the regulators on Pine64.
+
+PATCH 11 enabled Wi-Fi support on Pine64, which required DLDO4 and ELDO1
+regulators.
+
+Icenowy Zheng (11):
+  arm64: allwinner: a64: enable RSB on A64
+  arm64: allwinner: a64: add NMI controller on A64
+  dt-bindings: add device tree binding for X-Powers AXP803 PMIC
+  mfd: axp20x: support AXP803 variant
+  arm64: allwinner: a64: add AXP803 node to Pine64 device tree
+  dt-bindings: add AXP803's regulator info
+  regulator: axp20x-regulator: add support for AXP803
+  mfd: axp20x: add axp20x-regulator cell for AXP803
+  arm64: allwinner: a64: add DTSI file for AXP803 PMIC
+  arm64: allwinner: a64: enable AXP803 regulators for Pine64
+  arm64: allwinner: a64: enable Wi-Fi for Pine64
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt   |  30 ++++-
+ arch/arm64/boot/dts/allwinner/axp803.dtsi          | 150 +++++++++++++++++++++
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 136 +++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  29 ++++
+ drivers/mfd/axp20x-rsb.c                           |   1 +
+ drivers/mfd/axp20x.c                               | 115 ++++++++++++++++
+ drivers/regulator/axp20x-regulator.c               | 135 +++++++++++++++++--
+ include/linux/mfd/axp20x.h                         |  77 ++++++++++-
+ 8 files changed, 657 insertions(+), 16 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/axp803.dtsi
+
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.12.2
