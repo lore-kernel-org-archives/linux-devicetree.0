@@ -1,112 +1,90 @@
-From: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
-Date: Mon, 10 Apr 2017 12:57:14 +0530
-Message-ID: <CAEHZuqMJU=ZLL2xsbtpHLC6SU4uzNBpZmPPADs-g7=OXJyCbBQ@mail.gmail.com>
-References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
- <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
- <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com> <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
- <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3@ti.com> <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A@mail.gmail.com>
- <9fbef986-721c-05aa-28a1-4c49016fe2ca@ti.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: clock: gxbb: expose UART clocks
+Date: Tue, 04 Apr 2017 10:40:20 +0200
+Message-ID: <149129522024.91618.13395564164212234056@resonance>
+References: <20170331165437.26227-1-hgkr.klein@gmail.com>
+ <20170331165437.26227-2-hgkr.klein@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9fbef986-721c-05aa-28a1-4c49016fe2ca@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170331165437.26227-2-hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Helmut Klein <hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Quoting Helmut Klein (2017-03-31 18:54:34)
+> Expose the clock ids of the three none AO uarts to the dt-bindings
+> =
 
-On Mon, Apr 10, 2017 at 10:55 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi,
->
-> On Wednesday 05 April 2017 07:40 PM, Raviteja Garimella wrote:
->> Hi Kishon,
->>
->> On Wed, Apr 5, 2017 at 7:04 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>> Hi Ravi,
->>>
->>> On Wednesday 05 April 2017 06:30 PM, Raviteja Garimella wrote:
->>>> Hi Kishon,
->>>>
->>>> On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>> Hi,
->>>>>
->>>>> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
->>>>>> This is driver for USB DRD Phy used in Broadcom's Northstar2
->>>>>> SoC. The phy can be configured to be in Device mode or Host
->>>>>> mode based on the type of cable connected to the port. The
->>>>>> driver registers to  extcon framework to get appropriate
->>>>>> connect events for Host/Device cables connect/disconnect
->>>>>> states based on VBUS and ID interrupts.
->>>>>
->>>>> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
->>>>> Northstar2.
->>>>>
->>>>
->>>> Will do.
->>>>
->>>>> Sorry for not letting you know this earlier. But I feel the design of the
->>>>> driver should be changed. Extcon shouldn't be used here. The extcon
->>>>> notifications should be sent to the consumer driver and the consumer driver
->>>>> should be responsible for invoking the phy ops.
->>>>>
->>>>
->>>> The consumer drivers here would be a UDC driver (USB device
->>>> controller), EHCI and OHCI host controller drivers.
->>>> I was already suggested in UDC driver review to deal with extcon in Phy driver.
->>>>
->>>> This phy connects to 2 host controllers, and one device controller.
->>>> That's the design in Broadcom Northstar2
->>>> platform. The values of the VBUS and ID pins of this port are
->>>> determined based on the type of the cable (device cable
->>>> or host cable). And. phy has to be configured accordingly.
->>>>
->>>>> The phy ops being invoked during extcon events doesn't look right.
->>>>
->>>> Could you please elaborate on the concern, so that we can think of
->>>> mitigating those issues in this driver?
->>>> Since we are dealing with phy init/shutdown in this driver itself, are
->>>> you okay with moving the extcon handling code
->>>> out of phy ops ?
->>>
->>> yeah, For e.g., ns2_drd_phy_init is part of phy_ops and is being invoked from
->>> extcon events too. Can a phy which is initialized by a phy consumer (say your
->>> UDC invokes phy_init) can be shutdown by an extcon event?
->>>
->>> Maybe a clear explanation of when phy_ops here will be invoked and when it will
->>> set using extcon events might help.
->>>
->>
->> Say, we have a USB pendrive which is connected to the DRD port through
->> a host cable.
->> Now the PHY will be initialized to be in host mode.
->> When the pendrive is unplugged, and we now connect the NS2 device to
->> some linux PC,
->> now the PHY has to be shutdown, and re-initialized to be in Device mode.
->>
->> On unplug event, it is set neither to Host nor Device mode (basically
->> shutdown). Next time which ever cable is connected, the PHY is
->> initialized to the respective
->> mode.
->>
->> Please let me know if it's fine to do these initializations outside
->> phy ops, because those will
->> be irrelevant for phy consumers (the controllers) as it's anyways
->> dealt in the phy driver through
->> extcon.
->
-> How does the consumer get to know whether they have to operate in host mode or
-> device mode?
->
-In NS2, we have host controllers and device controller (not OTG/other
-that can switch
-between host and device mode). It's only phy that can be in host/device mode.
-Since both Host Controllers and Device Controller are connected to the same PHY,
-it is based on the extcon logic (the type of cable connected) that PHY
-will be in one
-of the modes host/device and the respective controller will operate.
+> Signed-off-by: Helmut Klein <hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> Thanks
-> Kishon
+Acked-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+> ---
+>  drivers/clk/meson/gxbb.h              | 6 +++---
+>  include/dt-bindings/clock/gxbb-clkc.h | 3 +++
+>  2 files changed, 6 insertions(+), 3 deletions(-)
+> =
+
+> diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+> index 8ee2022ce5d5..1edfaa5fe307 100644
+> --- a/drivers/clk/meson/gxbb.h
+> +++ b/drivers/clk/meson/gxbb.h
+> @@ -194,7 +194,7 @@
+>  /* #define CLKID_SAR_ADC */
+>  #define CLKID_SMART_CARD         24
+>  #define CLKID_RNG0               25
+> -#define CLKID_UART0              26
+> +/* CLKID_UART0 */
+>  #define CLKID_SDHC               27
+>  #define CLKID_STREAM             28
+>  #define CLKID_ASYNC_FIFO         29
+> @@ -216,7 +216,7 @@
+>  #define CLKID_ADC                45
+>  #define CLKID_BLKMV              46
+>  #define CLKID_AIU                47
+> -#define CLKID_UART1              48
+> +/* CLKID_UART1 */
+>  #define CLKID_G2D                49
+>  /* CLKID_USB0 */
+>  /* CLKID_USB1 */
+> @@ -236,7 +236,7 @@
+>  /* CLKID_USB0_DDR_BRIDGE */
+>  #define CLKID_MMC_PCLK           66
+>  #define CLKID_DVIN               67
+> -#define CLKID_UART2              68
+> +/* CLKID_UART2 */
+>  /* #define CLKID_SANA */
+>  #define CLKID_VPU_INTR           70
+>  #define CLKID_SEC_AHB_AHB3_BRIDGE 71
+> diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/=
+clock/gxbb-clkc.h
+> index 692846c7941b..7b329df47752 100644
+> --- a/include/dt-bindings/clock/gxbb-clkc.h
+> +++ b/include/dt-bindings/clock/gxbb-clkc.h
+> @@ -15,13 +15,16 @@
+>  #define CLKID_SPI              34
+>  #define CLKID_I2C              22
+>  #define CLKID_SAR_ADC          23
+> +#define CLKID_UART0            26
+>  #define CLKID_ETH              36
+> +#define CLKID_UART1            48
+>  #define CLKID_USB0             50
+>  #define CLKID_USB1             51
+>  #define CLKID_USB              55
+>  #define CLKID_HDMI_PCLK                63
+>  #define CLKID_USB1_DDR_BRIDGE  64
+>  #define CLKID_USB0_DDR_BRIDGE  65
+> +#define CLKID_UART2            68
+>  #define CLKID_SANA             69
+>  #define CLKID_GCLK_VENCI_INT0  77
+>  #define CLKID_AO_I2C           93
+> --
+> 2.11.0
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
