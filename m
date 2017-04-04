@@ -1,145 +1,65 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Tue, 4 Apr 2017 17:34:02 +0200
-Message-ID: <145b8725-c3dd-e899-8a3e-133e68a3b1e6@pengutronix.de>
-References: <1489785040-26477-1-git-send-email-akshay.bhat@timesys.com>
- <1489785040-26477-2-git-send-email-akshay.bhat@timesys.com>
- <32114de2-8ab7-daec-9b36-209cab0ea550@timesys.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
+Date: Tue, 4 Apr 2017 17:38:44 +0200
+Message-ID: <CAJKOXPd-h4QqLXJ5AYr1KgpjvROaWpVZnd9KmeeGoVRQifssbw@mail.gmail.com>
+References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
+ <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
+ <93e79e92-a102-e931-8d63-843031848888@samsung.com> <58DA1E38.50907@samsung.com>
+ <CAJKOXPeD4HKemKTrnC2JaON3JkuNGO9g+Hg8M7F6f2WusiYkhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="Ou3NJ88cjXeCF4a4HFmoLIfH65plqiWi9"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <32114de2-8ab7-daec-9b36-209cab0ea550-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPeD4HKemKTrnC2JaON3JkuNGO9g+Hg8M7F6f2WusiYkhg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>, jy0922.shim@samsung.com, Seung Woo Kim <sw0312.kim@samsung.com>, airlied@linux.ie, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, a.hajda@samsung.com, Andi Shyti <andi.shyti@samsung.com>, LW@karo-electronics.de, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Ou3NJ88cjXeCF4a4HFmoLIfH65plqiWi9
-Content-Type: multipart/mixed; boundary="jNFWwvbh4tEe0jMhE2oCrWDvaB6i99xI2";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Message-ID: <145b8725-c3dd-e899-8a3e-133e68a3b1e6-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-References: <1489785040-26477-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
- <1489785040-26477-2-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
- <32114de2-8ab7-daec-9b36-209cab0ea550-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-In-Reply-To: <32114de2-8ab7-daec-9b36-209cab0ea550-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+On Tue, Mar 28, 2017 at 11:38 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Tue, Mar 28, 2017 at 11:26 AM, Inki Dae <inki.dae@samsung.com> wrote:
+>> Merged.
+>
+> Hi,
+>
+> I do not see the tag (with DT patches) merged by you which I provided
+> to you before. These are essential for bisectability. Without them,
+> kernel bisectability is broken. Did you merged the tag somewhere?
+>
+> Best regards,
+> Krzysztof
+>
+>> Thanks,
+>> Inki Dae
 
---jNFWwvbh4tEe0jMhE2oCrWDvaB6i99xI2
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Inki,
 
-On 03/24/2017 06:20 PM, Akshay Bhat wrote:
-> Hi Marc,
->=20
-> On 03/17/2017 05:10 PM, Akshay Bhat wrote:
->> This patch adds support for the Holt HI-311x CAN controller. The HI311=
-x
->> CAN controller is capable of transmitting and receiving standard data
->> frames, extended data frames and remote frames. The HI311x interfaces
->> with the host over SPI.
->>
->> Datasheet: www.holtic.com/documents/371-hi-3110_v-rev-jpdf.do
->>
->> Signed-off-by: Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>
->=20
-> If there are no further review comments can this series be applied to
-> can-next or does it need to wait for the next kernel release cycle (4.1=
-3)?
+I still do not see the DTS tag [1] merged in your tree but you applied
+patches breaking the display. I looked at exynos-drm-next branch.
 
-The driver doesn't check if the workqueue allocation is successfull,
-I've squashed this patch:
+We talked already about bisectability and with Hoegeun we provided
+proper solution. Hoegeun split the patchset and I sent you a stable
+tag to merge. Be aware not to apply the DTS patch because you would
+effectively duplicate it. Instead, deal like with any pull request -
+merge the tag as dependency *before* applying DRM DSI patch.
 
-> diff --git a/drivers/net/can/spi/hi311x.c b/drivers/net/can/spi/hi311x.=
-c
-> index ff4bb40d855e..170e8e3971b2 100644
-> --- a/drivers/net/can/spi/hi311x.c
-> +++ b/drivers/net/can/spi/hi311x.c
-> @@ -780,20 +780,24 @@ static int hi3110_open(struct net_device *net)
-> =20
->         priv->wq =3D alloc_workqueue("hi3110_wq", WQ_FREEZABLE | WQ_MEM=
-_RECLAIM,
->                                    0);
-> +       if (!priv->wq) {
-> +               ret =3D -ENOMEM;
-> +               goto out_free_irq;
-> +       }
->         INIT_WORK(&priv->tx_work, hi3110_tx_work_handler);
->         INIT_WORK(&priv->restart_work, hi3110_restart_work_handler);
-> =20
->         ret =3D hi3110_hw_reset(spi);
->         if (ret)
-> -               goto out_free_irq;
-> +               goto out_free_wq;
-> =20
->         ret =3D hi3110_setup(net);
->         if (ret)
-> -               goto out_free_irq;
-> +               goto out_free_wq;
-> =20
->         ret =3D hi3110_set_normal_mode(spi);
->         if (ret)
-> -               goto out_free_irq;
-> +               goto out_free_wq;
-> =20
->         can_led_event(net, CAN_LED_EVENT_OPEN);
->         netif_wake_queue(net);
-> @@ -801,11 +805,12 @@ static int hi3110_open(struct net_device *net)
-> =20
->         return 0;
-> =20
-> -out_free_irq:
-> + out_free_wq:
-> +       destroy_workqueue(priv->wq);
-> + out_free_irq:
->         free_irq(spi->irq, priv);
->         hi3110_hw_sleep(spi);
-> -
-> -out_close:
-> + out_close:
->         hi3110_power_enable(priv->transceiver, 0);
->         close_candev(net);
->         mutex_unlock(&priv->hi3110_lock);
+I saw also a branch like this:
+https://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git/log/?h=exynos-drm-next-tm2
+but this is something obviously wrong. I do not know what are your
+plans to do with it, but please drop it as it brings only confusion.
 
-Marc
+Best regards,
+Krzysztof
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+[1] https://www.spinics.net/lists/arm-kernel/msg567053.html
 
-
---jNFWwvbh4tEe0jMhE2oCrWDvaB6i99xI2--
-
---Ou3NJ88cjXeCF4a4HFmoLIfH65plqiWi9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAljjvOoACgkQHv7KIOw4
-HPY0cwf8D0AHTCaiMeT20EYHvmn1V7ckfhQHLdabULzQeT7QlbzhFZ9c4Ej1q9Bv
-QoKK+EWo5TNscBLzdKjxMMR212jomD8W0MdfnhhA+pxtLs0uTJZSQSXB8KQeFavq
-OvRYroXKuPl8LlsWFW2zxunEnQXTjabec6G/4l2M83vLK3wT1BiY1JGQEaaSpTui
-7DUMNamE6JSXo9iJaMVGYhJ+m+fngbT++0Byl66kbqu+qfU339rw9/g9r5gHvcjC
-NyMcbGQq348gQZCdkmhuBASRK2ZDTA6zxwJ8wbWl8bppYJYxbN/rWufUC+08UQqB
-EBOUQIw31mGj6YMWI+ClnW4NSG35ag==
-=X5XG
------END PGP SIGNATURE-----
-
---Ou3NJ88cjXeCF4a4HFmoLIfH65plqiWi9--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> 2017년 03월 22일 10:36에 Hoegeun Kwon 이(가) 쓴 글:
+>>> Hi inki,
+>>>
+>>> Could you check the this patch?
+>>> For reference, patch 1/5 and 2/5 have already been applied to Krzysztof tree.
+>>>
+>>> Best regards,
+>>> Hoegeun
+>>>
