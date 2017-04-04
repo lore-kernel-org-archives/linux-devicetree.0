@@ -1,68 +1,52 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: display: rk3288-mipi-dsi: add reset property
-Date: Tue, 4 Apr 2017 14:30:47 -0400
-Message-ID: <20170404183047.s7flyjv6vfhzxzb6@art_vandelay>
-References: <20170224125506.21533-1-john@metanate.com>
- <20170224125506.21533-24-john@metanate.com>
- <20170302215643.GA49163@google.com>
- <20170303113945.3bd2cbd9.john@metanate.com>
- <20170312120659.hpiwnsto6hkxs5yh@rob-hp-laptop>
- <20170404141513.2bad3b1b.john@metanate.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170404141513.2bad3b1b.john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Patrick Menschel <menschel.p@posteo.de>
+Subject: [PATCH v4 0/6] ARM: dts: sunxi: Add CAN node and can0_pins_a pinctrl settings
+Date: Tue,  4 Apr 2017 20:36:26 +0200
+Message-ID: <1491330992-9876-1-git-send-email-menschel.p@posteo.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
+Cc: Patrick Menschel <menschel.p@posteo.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 04, 2017 at 02:15:13PM +0100, John Keeping wrote:
-> Hi Sean,
-> 
-> On Sun, 12 Mar 2017 07:06:59 -0500, Rob Herring wrote:
-> 
-> > On Fri, Mar 03, 2017 at 11:39:45AM +0000, John Keeping wrote:
-> > > This reset is required in order to fully reset the internal state of the
-> > > MIPI controller.
-> > > 
-> > > Signed-off-by: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > > On Thu, 2 Mar 2017 13:56:46 -0800, Brian Norris wrote:  
-> > > > On Fri, Feb 24, 2017 at 12:55:06PM +0000, John Keeping wrote:  
-> > > > > +	/*
-> > > > > +	 * Note that the reset was not defined in the initial device tree, so
-> > > > > +	 * we have to be prepared for it not being found.
-> > > > > +	 */
-> > > > > +	apb_rst = devm_reset_control_get(dev, "apb");    
-> > > > 
-> > > > Did this reset ever get documented in the device tree bindings? I
-> > > > couldn't find it. Perhaps a follow-up patch is in order?  
-> > > 
-> > > Here's a patch to do that.
-> > > 
-> > >  .../devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt  | 7 +++++++
-> > >  1 file changed, 7 insertions(+)  
-> > 
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> I don't see this patch in linux-next, so I guess it has fallen through
-> the cracks somewhere.  Since we have Rob's ack, can you pick this via
-> drm-misc?
-> 
+The Allwinner A10/A20 SoCs have an on-board CAN (Controller Area Network)
+controller. This patch adds the CAN core to the SoC's include files,
+sun4i-a10.dtsi and sun7i-a20.dtsi.
 
-Yeah, sorry about that. Applied to misc-next
+On linux-can mailing list was a discussion about updating the device tree bindings
+https://lkml.org/lkml/2015/9/17/220
+but it did not progress past writing the documentation file.
+Documentation/devicetree/bindings/net/can/sun4i_can.txt
 
-Sean
+The CAN controller can be enabled in a board specific dts file as
+described in the documentation file or by using a device tree overlay.
 
-> 
-> Regards,
-> John
+I have tested the patch on a Banana Pi (A20 SoC) with mainline kernel 4.10.5.
+
+History:
+    v4: fixed style problems,
+        changed device node position of ps20 and ps21 to fix ordering
+        by rising physical address
+
+    v3: added "allwinner,sun7i-a20-can" compatible to can0 device node contents,
+        make separate patches for device nodes and pinctrl settings
+
+    v2: changed can0_pins_a node contents to new generic binding method, 
+	changed can0_pins_a node position by alphabetical order,
+        changed can0 device node position by rising physical address order
+
+    v1: initial
+
+Patrick Menschel (6):
+  ARM: dts: sun4i: fix device node ordering
+  ARM: dts: sun4i: Add CAN node
+  ARM: dts: sun4i: Add can0_pins_a pinctrl settings
+  ARM: dts: sun7i: fix device node ordering
+  ARM: dts: sun7i: Add CAN node
+  ARM: dts: sun7i: Add can0_pins_a pinctrl settings
+
+ arch/arm/boot/dts/sun4i-a10.dtsi | 38 ++++++++++++++++++++++-----------
+ arch/arm/boot/dts/sun7i-a20.dtsi | 45 ++++++++++++++++++++++++++--------------
+ 2 files changed, 56 insertions(+), 27 deletions(-)
 
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
