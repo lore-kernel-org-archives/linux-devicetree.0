@@ -1,61 +1,128 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [RFC PATCH 4/5] dt-bindings: soc/fsl: Update reserved memory
- binding for QBMan
-Date: Mon, 03 Apr 2017 19:32:33 -0500
-Message-ID: <1491265953.2944.78.camel@buserror.net>
-References: <1490822037-6752-1-git-send-email-roy.pledge@nxp.com>
-         <1490822037-6752-5-git-send-email-roy.pledge@nxp.com>
-         <20170403154229.mf63zeiwv5naxyrr@rob-hp-laptop>
-         <VI1PR04MB32166AA6361CD6F24DBC3AAF86080@VI1PR04MB3216.eurprd04.prod.outlook.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali
+ Midgard GPU
+Date: Mon, 3 Apr 2017 21:00:56 -0500
+Message-ID: <20170404020056.d7osj7rmog22xbjd@rob-hp-laptop>
+References: <cover.1491118230.git.guillaume.tucker@collabora.com>
+ <db45d0d68957d699f13a0d92f4f84d8ebfd0270e.1491118230.git.guillaume.tucker@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <VI1PR04MB32166AA6361CD6F24DBC3AAF86080-mr6QIVyDiCHPlBEOArXH089NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <db45d0d68957d699f13a0d92f4f84d8ebfd0270e.1491118230.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-04-03 at 19:49 +0000, Roy Pledge wrote:
-> On 4/3/2017 11:42 AM, Rob Herring wrote:
-> > 
-> > On Wed, Mar 29, 2017 at 05:13:56PM -0400, Roy Pledge wrote:
-> > > 
-> > > Updates the QMan and BMan device tree bindings for reserved memory
-> > > nodes. This makes the reserved memory allocation compatiable with
-> > s/compatiable/compatible/
-> > 
-> > > 
-> > > the shared-dma-pool usage.
-> > This change is not backwards compatible. Please state that and explain 
-> > why that is okay. If PPC needs to not change, then the old strings and 
-> > properties should remain, but deprecated.
-> I think I can make the old device trees compatible since the
-> "compatible" string changed without too much effort or ifdefery in the
-> code.  However I would like to eventually see all PPC users move to the
-> new mode as I do believe it is more in alignment with the spirit of the
-> reserved-memory framework that is in the kernel.
+On Sun, Apr 02, 2017 at 08:59:44AM +0100, Guillaume Tucker wrote:
+> The ARM Mali Midgard GPU family is present in a number of SoCs
+> from many different vendors such as Samsung Exynos and Rockchip.
+> 
+> Import the device tree bindings documentation from the r16p0
+> release of the Mali Midgard GPU kernel driver:
+> 
+>   https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-midgard-gpu/TX011-SW-99002-r16p0-00rel0.tgz
+> 
+> The following optional bindings have been omitted in this initial
+> version as they are only used in very specific cases:
+> 
+>   * snoop_enable_smc
+>   * snoop_disable_smc
+>   * jm_config
+>   * power_model
+>   * system-coherency
+>   * ipa-model
+> 
+> The example has been simplified accordingly.
+> 
+> The compatible string definition has been limited to
+> "arm,mali-midgard" to avoid checkpatch.pl warnings and to match
+> what the driver actually expects (as of r16p0 out-of-tree).
+> 
+> CC: John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> new file mode 100644
+> index 000000000000..da8fc6d21bbf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> @@ -0,0 +1,53 @@
+> +#
+> +# (C) COPYRIGHT 2013-2016 ARM Limited.
+> +# Copyright (C) 2017 Collabora Ltd
+> +#
+> +# This program is free software and is provided to you under the terms of the
+> +# GNU General Public License version 2 as published by the Free Software
+> +# Foundation, and any use by you of this program is subject to the terms
+> +# of such GNU licence.
+> +#
+> +
+> +
+> +ARM Mali Midgard GPU
+> +====================
+> +
+> +Required properties:
+> +
+> +- compatible : Should be "arm,mali-midgard".
 
-How much benefit is there to changing PPC if you have to retain the old method
-anyway for compatibility?  Whereas if you don't convert, you retain test
-coverage for the old device trees, and don't have to worry about
-the memblock_end_of_DRAM() questions.
+As Neil said...
 
->   Do I need to mention the old mode in the binding.txt file? 
+> +- reg : Physical base address of the device and length of the register area.
+> +- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
+> +- interrupt-names : Contains the names of IRQ resources in the order they were
+> +  provided in the interrupts property. Must contain: "JOB, "MMU", "GPU".
+> +
+> +Optional:
+> +
+> +- clocks : Phandle to clock for the Mali Midgard device.
+> +- clock-names : Shall be "clk_mali".
 
-Yes.
+"clk_" is redundant. Actually, if there is only 1 clock, then just drop 
+names. But there's not at least a core and bus clock?
 
->  I'm trying to keep things clean
-> so someone reading the binding doesn't get a headache and trying to
-> preserve my own sanity as we move forward with adding new features to
-> this driver.
+> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+> +- operating-points : Refer to Documentation/devicetree/bindings/power/opp.txt
+> +  for details.
 
-If they're sufficiently different then just describe the new and old nodes
-separately rather than putting a bunch of if/else clauses in there.
+Is this going to be sufficient vs. operating-points-v2? Or should it be 
+a power domain with OPPs? 
 
--Scott
+> +
+> +Example for a Mali-T602:
+> +
+> +gpu@0xfc010000 {
 
+Drop the '0x'.
+
+> +	compatible = "arm,mali-midgard";
+> +	reg = <0xfc010000 0x4000>;
+> +	interrupts = <0 36 4>, <0 37 4>, <0 38 4>;
+> +	interrupt-names = "JOB", "MMU", "GPU";
+> +
+> +	clocks = <&pclk_mali>;
+> +	clock-names = "clk_mali";
+> +	mali-supply = <&vdd_mali>;
+> +	operating-points = <
+> +		/* KHz   uV */
+> +		533000 1250000,
+> +		450000 1150000,
+> +		400000 1125000,
+> +		350000 1075000,
+> +		266000 1025000,
+> +		160000  925000,
+> +		100000  912500,
+> +	>;
+> +};
+> -- 
+> 2.11.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
