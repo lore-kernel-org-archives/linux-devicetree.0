@@ -1,145 +1,86 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCHv6 00/14] atmel-isi/ov7670/ov2640: convert to standalone
- drivers
-Date: Tue, 4 Apr 2017 16:00:23 +0200
-Message-ID: <58432e90-e5db-9825-8b2d-7f08ca6d716b@atmel.com>
-References: <20170328082347.11159-1-hverkuil@xs4all.nl>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 2/6] soc/tegra: Move Tegra flowctrl driver
+Date: Tue, 4 Apr 2017 16:01:03 +0200
+Message-ID: <20170404140103.GE843@ulmo.ba.sec>
+References: <1490704978-22906-1-git-send-email-jonathanh@nvidia.com>
+ <1490704978-22906-3-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170328082347.11159-1-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, "Wu, Songjun" <Songjun.Wu@microchip.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="BZaMRJmqxGScZ8Mx"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1490704978-22906-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 28/03/2017 à 10:23, Hans Verkuil a écrit :
-> From: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> This patch series converts the soc-camera atmel-isi to a standalone V4L2
-> driver.
-> 
-> The same is done for the ov7670 and ov2640 sensor drivers: the ov7670 was
-> used to test the atmel-isi driver. The ov2640 is needed because the em28xx
-> driver has a soc_camera include dependency. Both ov7670 and ov2640 sensors
-> have been tested with the atmel-isi driver.
-> 
-> The first 5 patches improve the ov7670 sensor driver, mostly adding modern
-> features such as DT support.
-> 
-> The next three convert the atmel-isi and move it out of soc_camera.
-> 
-> The following 6 patches convert ov2640 and drop the soc_camera dependency
-> in em28xx. I have tested that this works with my 'SpeedLink Vicious And
-> Divine Laplace webcam'.
-> 
-> Tested with my sama5d3-Xplained board, the ov2640 sensor and two ov7670
-> sensors: one with and one without reset/pwdn pins. Also tested with my
-> em28xx-based webcam.
-> 
-> I'd like to get this in for 4.12. Fingers crossed.
-> 
-> Regards,
-> 
->         Hans
-> 
-> Changes since v5:
-> - Dropped the last two dts patches as these were for demonstration purposes
->   only.
-> - Simplified isi_graph_init() return handling as suggested by Sakari.
-> - Simplified atmel-isi format handling as suggested by Guennadi. Thanks for
->   the suggestion, this improves the code nicely!
-> - Improved RGB handling in atmel-isi, allowing for all YUV ordering and not
->   just YUYV. Tested with YUYV and UYVY (the only two I can test with my
->   hardware).
-> - Improved commit message of the "atmel-isi: document device tree bindings"
->   patch and dropped unnecessary properties from the example as per Rob's
->   comments.
-> 
-> Changes since v4:
-> - the ov2640 colorspace fixes were inexplicably part of an atmel-isi patch.
->   Split it off as a separate patch.
-> - add V4L2_SUBDEV_FL_HAS_DEVNODE to ov2640.
-> - drop #if defined(CONFIG_MEDIA_CONTROLLER) guard around media_entity_cleanup
->   in ov2640.
-> 
-> Changes since v3:
-> - ov2640/ov7670: call clk_disable_unprepare where needed. I assumed this was
->   done by the devm_clk_get cleanup, but that wasn't the case.
-> - bindings: be even more explicit about which properties are mandatory.
-> - ov2640/ov7670: drop unused bus-width from the dts binding examples and from
->   the actual dts patches.
-> 
-> Changes since v2:
-> - Incorporated Sakari's and Rob's device tree bindings comments.
-> - ov2640: dropped the reset/power changes. These actually broke the em28xx
->   and there was really nothing wrong with it.
-> - merged the "ov2640: allow use inside em28xx" into patches 10 and 11.
->   It really shouldn't have been a separate patch in the first place.
-> - rebased on top of 4.11-rc1.
-> 
-> Changes since v1:
-> 
-> - Dropped MC support from atmel-isi and ov7670: not needed to make this
->   work. Only for the ov2640 was it kept since the em28xx driver requires it.
-> - Use devm_clk_get instead of clk_get.
-> - The ov7670 lower limit of the clock speed is 10 MHz instead of 12. Adjust
->   accordingly.
-> 
-> 
-> Hans Verkuil (14):
->   ov7670: document device tree bindings
->   ov7670: call v4l2_async_register_subdev
->   ov7670: fix g/s_parm
->   ov7670: get xclk
->   ov7670: add devicetree support
->   atmel-isi: update device tree bindings documentation
->   atmel-isi: remove dependency of the soc-camera framework
->   atmel-isi: move out of soc_camera to atmel
->   ov2640: fix colorspace handling
->   ov2640: update bindings
->   ov2640: convert from soc-camera to a standard subdev sensor driver.
->   ov2640: use standard clk and enable it.
->   ov2640: add MC support
->   em28xx: drop last soc_camera link
 
-For the record, here is my test tag:
-Tested-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+--BZaMRJmqxGScZ8Mx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On a Microchip/Atmel SAMA5D4-EK with OV2640 and the per-existing OV7740.
-Thanks a lot Hans for this valuable work!
+On Tue, Mar 28, 2017 at 01:42:54PM +0100, Jon Hunter wrote:
+> The flowctrl driver is required for both ARM and ARM64 Tegra devices
+> and in order to enable support for it for ARM64, move the Tegra flowctrl
+> driver into drivers/soc/tegra.
+>=20
+> By moving the flowctrl driver, tegra_flowctrl_init() is now called by
+> via an early initcall and to prevent this function from attempting to
+> mapping IO space for a non-Tegra device, a test for 'soc_is_tegra()'
+> is also added.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/mach-tegra/Makefile          |   1 -
+>  arch/arm/mach-tegra/cpuidle-tegra20.c |   3 +-
+>  arch/arm/mach-tegra/flowctrl.c        | 179 ----------------------------=
+----
+>  arch/arm/mach-tegra/flowctrl.h        |  66 ------------
+>  arch/arm/mach-tegra/platsmp.c         |   2 +-
+>  arch/arm/mach-tegra/pm.c              |   2 +-
+>  arch/arm/mach-tegra/reset-handler.S   |   2 +-
+>  arch/arm/mach-tegra/sleep-tegra20.S   |   3 +-
+>  arch/arm/mach-tegra/sleep-tegra30.S   |   2 +-
+>  arch/arm/mach-tegra/tegra.c           |   2 -
+>  drivers/soc/tegra/Kconfig             |   7 ++
+>  drivers/soc/tegra/Makefile            |   1 +
+>  drivers/soc/tegra/flowctrl.c          | 187 ++++++++++++++++++++++++++++=
+++++++
+>  include/soc/tegra/flowctrl.h          |  82 +++++++++++++++
+>  14 files changed, 285 insertions(+), 254 deletions(-)
+>  delete mode 100644 arch/arm/mach-tegra/flowctrl.c
+>  delete mode 100644 arch/arm/mach-tegra/flowctrl.h
+>  create mode 100644 drivers/soc/tegra/flowctrl.c
+>  create mode 100644 include/soc/tegra/flowctrl.h
 
-Best regards,
+Applied to for-4.12/soc, thanks.
 
+Thierry
 
->  .../devicetree/bindings/media/atmel-isi.txt        |   91 +-
->  .../devicetree/bindings/media/i2c/ov2640.txt       |   23 +-
->  .../devicetree/bindings/media/i2c/ov7670.txt       |   43 +
->  MAINTAINERS                                        |    1 +
->  drivers/media/i2c/Kconfig                          |   11 +
->  drivers/media/i2c/Makefile                         |    1 +
->  drivers/media/i2c/{soc_camera => }/ov2640.c        |  153 +--
->  drivers/media/i2c/ov7670.c                         |   75 +-
->  drivers/media/i2c/soc_camera/Kconfig               |    6 -
->  drivers/media/i2c/soc_camera/Makefile              |    1 -
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/atmel/Kconfig               |   11 +-
->  drivers/media/platform/atmel/Makefile              |    1 +
->  drivers/media/platform/atmel/atmel-isi.c           | 1368 ++++++++++++++++++++
->  .../platform/{soc_camera => atmel}/atmel-isi.h     |    0
->  drivers/media/platform/soc_camera/Kconfig          |   11 -
->  drivers/media/platform/soc_camera/Makefile         |    1 -
->  drivers/media/platform/soc_camera/atmel-isi.c      | 1167 -----------------
->  drivers/media/usb/em28xx/em28xx-camera.c           |    9 -
->  19 files changed, 1614 insertions(+), 1360 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7670.txt
->  rename drivers/media/i2c/{soc_camera => }/ov2640.c (92%)
->  create mode 100644 drivers/media/platform/atmel/atmel-isi.c
->  rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.h (100%)
->  delete mode 100644 drivers/media/platform/soc_camera/atmel-isi.c
-> 
+--BZaMRJmqxGScZ8Mx
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Nicolas Ferre
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljjpx0ACgkQ3SOs138+
+s6EW0xAAiLpq3+Hfu6QClJt+l7EVE2fYmJAGsL7hLrCEbj8iEyZrWWAQk41Pjr/t
+gt3iPDurm+O/Gio/r+6wZ21D8v02LwZpyIlIuDFs8pv0OY5MiQLMvWZgxBsTAyCM
+tyQDrUBBaMrcuMjAG/fFsTy5Sp2EA6BmtBg/l64MyaZD2XOpYtErfJygN1pmyUiF
+DUF/4XWgI2K61NMaLeL/9ywtzl92Toh8F7uLIuwXN0x/6aYd2eA1UEBZAzLEVNk5
+lAzphhiBLS7Llpqj95QJw9zJ8bVsAXv87IAW1JyrygtvAQYW0YzpUD8usXeKPUfw
+ArwX8VSCakLLSXU+8tEdHMIUvsg/BLsx1a5yWuAcdAjcqVEDcwe3zi8fI+N/KyFM
+VnHZuOUp0aOzZkzDNT2kSgV6lVk2Uz138d6LhWMlkyBgRpVo22fwOktC5+NLaNIZ
+rDJIo0EbVZPJTrlnRyZ3J7lXQQy4age3MKQJdQaS7RDQsof2+RcAyDF0LJZoC7de
+b0s4nK4E/jnkSpZhOna8RxItnjdfWjXUUaNw7rrAhRY//5P5WhgRJZCYYKBGXiEq
+QRviy6wRsIsVjSGTs2gtnwkgp9ei0OlbMn7kgkSIKbVfh+Sy0NTXOPrKd7Xe0k9R
+uMyFuyak2B9okAuQ5Cn3ePe1JlTSzt8XJM80SMuaG9VnwNwTSEs=
+=wlw0
+-----END PGP SIGNATURE-----
+
+--BZaMRJmqxGScZ8Mx--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
