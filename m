@@ -1,53 +1,86 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 3/3] arm64: allwinner: a64: enable EHCI0/OHCI0 controller for Pine64
-Date: Wed,  5 Apr 2017 02:45:18 +0800
-Message-ID: <20170404184518.33610-3-icenowy@aosc.io>
-References: <20170404184518.33610-1-icenowy@aosc.io>
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master (fwd)
+Date: Tue, 4 Apr 2017 14:10:59 -0500
+Message-ID: <c993bd4c-dea5-a02b-63dd-57a0d548b030@linux.vnet.ibm.com>
+References: <alpine.DEB.2.20.1703302337590.2105@hadrien>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170404184518.33610-1-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.20.1703302337590.2105@hadrien>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+To: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Cc: joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The upper USB port of Pine64 board is connected to the SoC's USB0 port,
-which can now switch from the MUSB controller to the EHCI/OHCI pair.
 
-Enable the EHCI/OHCI pair in the Pine64 device tree.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 3/30/17 4:39 PM, Julia Lawall wrote:
+> Is master on line 514 allocated with kmalloc, or the devm call on line
+> 522?
+Hi Julia,
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index c680ed385da3..4782add50b94 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -66,6 +66,10 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -91,6 +95,10 @@
- 	status = "okay";
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
--- 
-2.12.2
+Its allocated with the devm call on line 522.   The kfree  on line 514 
+wouldn't be necessary in that case - will remove.
+Thanks for pointing that out.
+
+Chris
+
+> julia
+>
+> ---------- Forwarded message ----------
+> Date: Fri, 31 Mar 2017 00:15:09 +0800
+> From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> To: kbuild-JC7UmRfGjtg@public.gmane.org
+> Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+> Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master
+>
+> Hi Chris,
+>
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v4.11-rc4 next-20170330]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Christopher-Bostic/FSI-device-driver-implementation/20170330-184914
+> :::::: branch date: 5 hours ago
+> :::::: commit date: 5 hours ago
+>
+>>> drivers/fsi/fsi-master-gpio.c:514:1-6: WARNING: invalid free of devm_ allocated data
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout f4bd3b6a41c7a59e9ce2e65947a4d3dfc2ee4a29
+> vim +514 drivers/fsi/fsi-master-gpio.c
+>
+> f4bd3b6a Chris Bostic 2017-03-29  498  {
+> f4bd3b6a Chris Bostic 2017-03-29  499  	struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
+> f4bd3b6a Chris Bostic 2017-03-29  500
+> f4bd3b6a Chris Bostic 2017-03-29  501  	if (link != 0)
+> f4bd3b6a Chris Bostic 2017-03-29  502  		return -ENODEV;
+> f4bd3b6a Chris Bostic 2017-03-29  503  	if (master->gpio_enable)
+> f4bd3b6a Chris Bostic 2017-03-29  504  		gpiod_set_value(master->gpio_enable, 1);
+> f4bd3b6a Chris Bostic 2017-03-29  505
+> f4bd3b6a Chris Bostic 2017-03-29  506  	return 0;
+> f4bd3b6a Chris Bostic 2017-03-29  507  }
+> f4bd3b6a Chris Bostic 2017-03-29  508
+> f4bd3b6a Chris Bostic 2017-03-29  509  static void fsi_master_gpio_release(struct device *dev)
+> f4bd3b6a Chris Bostic 2017-03-29  510  {
+> f4bd3b6a Chris Bostic 2017-03-29  511  	struct fsi_master_gpio *master = to_fsi_master_gpio(
+> f4bd3b6a Chris Bostic 2017-03-29  512  						dev_to_fsi_master(dev));
+> f4bd3b6a Chris Bostic 2017-03-29  513
+> f4bd3b6a Chris Bostic 2017-03-29 @514  	kfree(master);
+> f4bd3b6a Chris Bostic 2017-03-29  515  }
+> f4bd3b6a Chris Bostic 2017-03-29  516
+> f4bd3b6a Chris Bostic 2017-03-29  517  static int fsi_master_gpio_probe(struct platform_device *pdev)
+> f4bd3b6a Chris Bostic 2017-03-29  518  {
+> f4bd3b6a Chris Bostic 2017-03-29  519  	struct fsi_master_gpio *master;
+> f4bd3b6a Chris Bostic 2017-03-29  520  	struct gpio_desc *gpio;
+> f4bd3b6a Chris Bostic 2017-03-29  521
+> f4bd3b6a Chris Bostic 2017-03-29  522  	master = devm_kzalloc(&pdev->dev, sizeof(*master), GFP_KERNEL);
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
