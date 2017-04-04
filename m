@@ -1,29 +1,98 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 6/6] dt-bindings: document rockchip rk3328-evb board
-Date: Tue, 04 Apr 2017 18:10:03 +0200
-Message-ID: <1634255.6cUxPo2PCl@phil>
-References: <1490607650-18650-1-git-send-email-cl@rock-chips.com> <1490607983-5599-1-git-send-email-cl@rock-chips.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] memory: ti-emif-sram: introduce relocatable
+ suspend/resume handlers
+Date: Tue, 4 Apr 2017 09:11:52 -0700
+Message-ID: <20170404161151.GS10760@atomide.com>
+References: <20170328205511.21166-1-d-gerlach@ti.com>
+ <20170328205511.21166-3-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1490607983-5599-1-git-send-email-cl@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: cl@rock-chips.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, zhengxing@rock-chips.com, andy.yan@rock-chips.com, jay.xu@rock-chips.com, matthias.bgg@gmail.com, paweljarosz3691@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, wxt@rock-chips.com, david.wu@rock-chips.com, linux-iio@vger.kernel.org, shawn.lin@rock-chips.com, akpm@linux-foundation.org, dianders@chromium.org, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, afaerber@suse.de, shawnguo@kernel.org, khilman@baylibre.com, arnd@arndb.de, fabio.estevam@nxp.com, zhangqing@rock-chips.com, kever.yang@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170328205511.21166-3-d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 27. März 2017, 17:46:23 CEST schrieb cl@rock-chips.com:
-> From: Liang Chen <cl@rock-chips.com>
+Russell,
+
+* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [170328 13:57]:
+> Certain SoCs like Texas Instruments AM335x and AM437x require parts
+> of the EMIF PM code to run late in the suspend sequence from SRAM,
+> such as saving and restoring the EMIF context and placing the memory
+> into self-refresh.
 > 
-> Use "rockchip,rk3328-evb" compatible string for Rockchip RK3328
-> evaluation board.
+> One requirement for these SoCs to suspend and enter its lowest power
+> mode, called DeepSleep0, is that the PER power domain must be shut off.
+> Because the EMIF (DDR Controller) resides within this power domain, it
+> will lose context during a suspend operation, so we must save it so we
+> can restore once we resume. However, we cannot execute this code from
+> external memory, as it is not available at this point, so the code must
+> be executed late in the suspend path from SRAM.
 > 
-> Signed-off-by: Liang Chen <cl@rock-chips.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> This patch introduces a ti-emif-sram driver that includes several
+> functions written in ARM ASM that are relocatable so the PM SRAM
+> code can use them. It also allocates a region of writable SRAM to
+> be used by the code running in the executable region of SRAM to save
+> and restore the EMIF context. It can export a table containing the
+> absolute addresses of the available PM functions so that other SRAM
+> code can branch to them. This code is required for suspend/resume on
+> AM335x and AM437x to work.
+> 
+> In addition to this, to be able to share data structures between C and
+> the ti-emif-sram-pm assembly code, we can automatically generate all of
+> the C struct member offsets and sizes as macros by making use of the ARM
+> asm-offsets file. In the same header that we define our data structures
+> in we also define all the macros in an inline function and by adding a
+> call to this in the asm_offsets file all macros are properly generated
+> and available to the assembly code without cluttering up the asm-offsets
+> file.
+> 
+> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/kernel/asm-offsets.c    |   6 +
+>  drivers/memory/Kconfig           |  10 ++
+>  drivers/memory/Makefile          |   4 +
+>  drivers/memory/emif.h            |  17 ++
+>  drivers/memory/ti-emif-pm.c      | 295 ++++++++++++++++++++++++++++++++++
+>  drivers/memory/ti-emif-sram-pm.S | 334 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/ti-emif-sram.h     | 143 +++++++++++++++++
+>  7 files changed, 809 insertions(+)
+>  create mode 100644 drivers/memory/ti-emif-pm.c
+>  create mode 100644 drivers/memory/ti-emif-sram-pm.S
+>  create mode 100644 include/linux/ti-emif-sram.h
+> 
+> diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+> index 608008229c7d..d728b5660e36 100644
+> --- a/arch/arm/kernel/asm-offsets.c
+> +++ b/arch/arm/kernel/asm-offsets.c
+> @@ -28,6 +28,7 @@
+>  #include <asm/vdso_datapage.h>
+>  #include <asm/hardware/cache-l2x0.h>
+>  #include <linux/kbuild.h>
+> +#include <linux/ti-emif-sram.h>
+>  
+>  /*
+>   * Make sure that the compiler and target are compatible.
+> @@ -183,5 +184,10 @@ int main(void)
+>  #ifdef CONFIG_VDSO
+>    DEFINE(VDSO_DATA_SIZE,	sizeof(union vdso_data_store));
+>  #endif
+> +#if defined(CONFIG_SOC_AM33XX) || defined(CONFIG_SOC_AM43XX)
+> +  BLANK();
+> +  ti_emif_offsets();
+> +#endif
+> +
+>    return 0; 
+>  }
 
-applied after moving the entry above the rk3399-evb.
+Does the above look OK to you?
 
+Regards,
 
-Thanks
-Heiko
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
