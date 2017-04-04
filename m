@@ -1,1023 +1,158 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH linux v6 2/2] drivers: hwmon: Support for ASPEED PWM/Fan
- tach
-Date: Tue, 4 Apr 2017 09:30:35 -0700
-Message-ID: <df3b61af-ab09-8d86-fd3e-bab1bc949313@roeck-us.net>
-References: <20170403233025.26952-1-jaghu@google.com>
- <20170403233025.26952-3-jaghu@google.com>
- <6c02a301-fe8f-3a70-465b-ef7de8864c47@roeck-us.net>
+From: Patrick Menschel <menschel.p@posteo.de>
+Subject: Re: [PATCH v3 1/4] ARM: dts: sun4i: Add CAN node
+Date: Tue, 4 Apr 2017 18:54:35 +0200
+Message-ID: <a92644d4-6fbd-fc0f-6369-d97e7f46a738@posteo.de>
+References: <1491238814-4888-1-git-send-email-menschel.p@posteo.de>
+ <1491238814-4888-2-git-send-email-menschel.p@posteo.de>
+ <20170404154018.6phu2udfgwuzklkk@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <6c02a301-fe8f-3a70-465b-ef7de8864c47@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, joel@jms.id.au, jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, corbet@lwn.net, linux-doc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms060502010705000902040604"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20170404154018.6phu2udfgwuzklkk@lukather>
+Sender: linux-can-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/2017 05:55 AM, Guenter Roeck wrote:
-> On 04/03/2017 04:30 PM, Jaghathiswari Rankappagounder Natarajan wrote:
->> The ASPEED AST2400/2500 PWM controller supports 8 PWM output ports.
->> The ASPEED AST2400/2500 Fan tach controller supports 16 tachometer
->> inputs.
->> The device driver matches on the device tree node. The configuration
->> values are read from the device tree and written to the respective registers.
->> The driver provides a sysfs entries through which the user can
->> configure the duty-cycle value (ranging from 0 to 100 percent) and read
->> the fan tach rpm value.
+This is a cryptographically signed message in MIME format.
+
+--------------ms060502010705000902040604
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
+
+Am 04.04.2017 um 17:40 schrieb Maxime Ripard:
+> On Mon, Apr 03, 2017 at 07:00:11PM +0200, Patrick Menschel wrote:
+>> The A10 SoC has an on-board CAN controller.
+>> This patch adds the device node.
 >>
->> Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+>> This patch is adapted from the description in
+>> Documentation/devicetree/bindings/net/can/sun4i_can.txt
+>>
+>> Signed-off-by: Patrick Menschel <menschel.p@posteo.de>
+>> ---
+>>  arch/arm/boot/dts/sun4i-a10.dtsi | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4=
+i-a10.dtsi
+>> index ba20b48..7c559e7 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+>> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+>> @@ -1313,6 +1313,14 @@
+>>  			#size-cells =3D <0>;
+>>  		};
+>> =20
+>> +		can0: can@01c2bc00 {
+>> +			compatible =3D "allwinner,sun4i-a10-can";
+>> +			reg =3D <0x01c2bc00 0x400>;
+>> +			interrupts =3D <26>;
+>> +			clocks =3D <&apb1_gates 4>;
+>> +			status =3D "disabled";
+>> +		};
+>> +
+> This wasn't ordered properly. Fixed and applied.
 >
-> Applied.
 >
+Now that you mention it, ps20 and ps21 do not follow follow the rising
+address order.
 
-Follow-up: Sparse complains as follows.
+        uart7: serial@01c29c00 {
+            ...
+        i2c0: i2c@01c2ac00 {
+            ...
+        i2c1: i2c@01c2b000 {
+            ...
+        i2c2: i2c@01c2b400 {
+            ...
+        can0: can@01c2bc00 {
+            ...
+        ps20: ps2@01c2a000 {
+            ....
+        ps21: ps2@01c2a400 {
+            ...
+      =20
+The correct order would be
+uart7, ps20, ps21, i2c0, i2c1, i2c2, can0 .
 
-drivers/hwmon/aspeed-pwm-tacho.c:156:14: warning: symbol 'regs' was not declared. Should it be static?
-drivers/hwmon/aspeed-pwm-tacho.c:324:30: warning: incorrect type in initializer (different address spaces)
-drivers/hwmon/aspeed-pwm-tacho.c:324:30:    expected void [noderef] <asn:2>*regs
-drivers/hwmon/aspeed-pwm-tacho.c:324:30:    got void *context
-drivers/hwmon/aspeed-pwm-tacho.c:333:30: warning: incorrect type in initializer (different address spaces)
-drivers/hwmon/aspeed-pwm-tacho.c:333:30:    expected void [noderef] <asn:2>*regs
-drivers/hwmon/aspeed-pwm-tacho.c:333:30:    got void *context
-drivers/hwmon/aspeed-pwm-tacho.c:516:25: warning: dubious: !x & !y
-drivers/hwmon/aspeed-pwm-tacho.c:793:24: warning: incorrect type in argument 3 (different address spaces)
-drivers/hwmon/aspeed-pwm-tacho.c:793:24:    expected void *bus_context
-drivers/hwmon/aspeed-pwm-tacho.c:793:24:    got void [noderef] <asn:2>*[assigned] regs
-
-Can you please look into this and send me a follow-up patch ?
-
-156 seems unnecessary/unused, 324, 333, and 793 might need a typecast, 516 is really fishy.
+I'll fix that in patch v4.
 
 Thanks,
-Guenter
+Patrick
 
-> Thanks,
-> Guenter
->
->> ---
->>  v6
->> - Corrected odd line breaks
->> - Changed upto to up to
->> - Dropped unrelated changes
->> - Removed struct and used regs pointer directly
->> - Made groups to be null terminated
->> - Made correction in calculation of val/raw_data
->> - Removed else after return
->> - Removed unnecessary continuation lines
->>
->>  v5:
->> - Changed the driver to suit the changes in the device tree documentation
->>
->>  v4:
->> - Modified this driver to suit the representation in the devicetree
->>
->>  v3:
->> - Only sent out device tree documentation; did not send this driver
->>
->>  v2:
->> - Used BIT()
->> - Used regmap
->> - Avoided division when raw data is 0
->> - Removed empty lines between declaration
->> - Removed macros; Used two attribute groups and used is_visible callback
->> - Returned error when properties are undefined
->> - Removed .owner field
->> - Used PTR_ERR_OR_ZERO
->> - Removed explicit of_node_put for child nodes
->>
->>  Documentation/hwmon/aspeed-pwm-tacho |  22 +
->>  drivers/hwmon/Kconfig                |   9 +
->>  drivers/hwmon/Makefile               |   1 +
->>  drivers/hwmon/aspeed-pwm-tacho.c     | 846 +++++++++++++++++++++++++++++++++++
->>  4 files changed, 878 insertions(+)
->>  create mode 100644 Documentation/hwmon/aspeed-pwm-tacho
->>  create mode 100644 drivers/hwmon/aspeed-pwm-tacho.c
->>
->> diff --git a/Documentation/hwmon/aspeed-pwm-tacho b/Documentation/hwmon/aspeed-pwm-tacho
->> new file mode 100644
->> index 000000000000..7cfb34977460
->> --- /dev/null
->> +++ b/Documentation/hwmon/aspeed-pwm-tacho
->> @@ -0,0 +1,22 @@
->> +Kernel driver aspeed-pwm-tacho
->> +==============================
->> +
->> +Supported chips:
->> +    ASPEED AST2400/2500
->> +
->> +Authors:
->> +    <jaghu@google.com>
->> +
->> +Description:
->> +------------
->> +This driver implements support for ASPEED AST2400/2500 PWM and Fan Tacho
->> +controller. The PWM controller supports upto 8 PWM outputs. The Fan tacho
->> +controller supports up to 16 tachometer inputs.
->> +
->> +The driver provides the following sensor accesses in sysfs:
->> +
->> +fanX_input    ro    provide current fan rotation value in RPM as reported
->> +            by the fan to the device.
->> +
->> +pwmX        rw    get or set PWM fan control value. This is an integer
->> +            value between 0(off) and 255(full speed).
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index 45cef3d2c75c..757b5b0705bf 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -341,6 +341,15 @@ config SENSORS_ASB100
->>        This driver can also be built as a module.  If so, the module
->>        will be called asb100.
->>
->> +config SENSORS_ASPEED
->> +    tristate "ASPEED AST2400/AST2500 PWM and Fan tach driver"
->> +    help
->> +      This driver provides support for ASPEED AST2400/AST2500 PWM
->> +      and Fan Tacho controllers.
->> +
->> +      This driver can also be built as a module. If so, the module
->> +      will be called aspeed_pwm_tacho.
->> +
->>  config SENSORS_ATXP1
->>      tristate "Attansic ATXP1 VID controller"
->>      depends on I2C
->> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
->> index aecf4ba17460..83025cc9bb45 100644
->> --- a/drivers/hwmon/Makefile
->> +++ b/drivers/hwmon/Makefile
->> @@ -46,6 +46,7 @@ obj-$(CONFIG_SENSORS_ADT7475)    += adt7475.o
->>  obj-$(CONFIG_SENSORS_APPLESMC)    += applesmc.o
->>  obj-$(CONFIG_SENSORS_ARM_SCPI)    += scpi-hwmon.o
->>  obj-$(CONFIG_SENSORS_ASC7621)    += asc7621.o
->> +obj-$(CONFIG_SENSORS_ASPEED)    += aspeed-pwm-tacho.o
->>  obj-$(CONFIG_SENSORS_ATXP1)    += atxp1.o
->>  obj-$(CONFIG_SENSORS_CORETEMP)    += coretemp.o
->>  obj-$(CONFIG_SENSORS_DA9052_ADC)+= da9052-hwmon.o
->> diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
->> new file mode 100644
->> index 000000000000..29010ad94208
->> --- /dev/null
->> +++ b/drivers/hwmon/aspeed-pwm-tacho.c
->> @@ -0,0 +1,846 @@
->> +/*
->> + * Copyright (c) 2016 Google, Inc
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 or later as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/delay.h>
->> +#include <linux/hwmon.h>
->> +#include <linux/hwmon-sysfs.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/sysfs.h>
->> +#include <linux/regmap.h>
->> +
->> +/* ASPEED PWM & FAN Tach Register Definition */
->> +#define ASPEED_PTCR_CTRL        0x00
->> +#define ASPEED_PTCR_CLK_CTRL        0x04
->> +#define ASPEED_PTCR_DUTY0_CTRL        0x08
->> +#define ASPEED_PTCR_DUTY1_CTRL        0x0c
->> +#define ASPEED_PTCR_TYPEM_CTRL        0x10
->> +#define ASPEED_PTCR_TYPEM_CTRL1        0x14
->> +#define ASPEED_PTCR_TYPEN_CTRL        0x18
->> +#define ASPEED_PTCR_TYPEN_CTRL1        0x1c
->> +#define ASPEED_PTCR_TACH_SOURCE        0x20
->> +#define ASPEED_PTCR_TRIGGER        0x28
->> +#define ASPEED_PTCR_RESULT        0x2c
->> +#define ASPEED_PTCR_INTR_CTRL        0x30
->> +#define ASPEED_PTCR_INTR_STS        0x34
->> +#define ASPEED_PTCR_TYPEM_LIMIT        0x38
->> +#define ASPEED_PTCR_TYPEN_LIMIT        0x3C
->> +#define ASPEED_PTCR_CTRL_EXT        0x40
->> +#define ASPEED_PTCR_CLK_CTRL_EXT    0x44
->> +#define ASPEED_PTCR_DUTY2_CTRL        0x48
->> +#define ASPEED_PTCR_DUTY3_CTRL        0x4c
->> +#define ASPEED_PTCR_TYPEO_CTRL        0x50
->> +#define ASPEED_PTCR_TYPEO_CTRL1        0x54
->> +#define ASPEED_PTCR_TACH_SOURCE_EXT    0x60
->> +#define ASPEED_PTCR_TYPEO_LIMIT        0x78
->> +
->> +/* ASPEED_PTCR_CTRL : 0x00 - General Control Register */
->> +#define ASPEED_PTCR_CTRL_SET_PWMD_TYPE_PART1    15
->> +#define ASPEED_PTCR_CTRL_SET_PWMD_TYPE_PART2    6
->> +#define ASPEED_PTCR_CTRL_SET_PWMD_TYPE_MASK    (BIT(7) | BIT(15))
->> +
->> +#define ASPEED_PTCR_CTRL_SET_PWMC_TYPE_PART1    14
->> +#define ASPEED_PTCR_CTRL_SET_PWMC_TYPE_PART2    5
->> +#define ASPEED_PTCR_CTRL_SET_PWMC_TYPE_MASK    (BIT(6) | BIT(14))
->> +
->> +#define ASPEED_PTCR_CTRL_SET_PWMB_TYPE_PART1    13
->> +#define ASPEED_PTCR_CTRL_SET_PWMB_TYPE_PART2    4
->> +#define ASPEED_PTCR_CTRL_SET_PWMB_TYPE_MASK    (BIT(5) | BIT(13))
->> +
->> +#define ASPEED_PTCR_CTRL_SET_PWMA_TYPE_PART1    12
->> +#define ASPEED_PTCR_CTRL_SET_PWMA_TYPE_PART2    3
->> +#define ASPEED_PTCR_CTRL_SET_PWMA_TYPE_MASK    (BIT(4) | BIT(12))
->> +
->> +#define    ASPEED_PTCR_CTRL_FAN_NUM_EN(x)    BIT(16 + (x))
->> +
->> +#define    ASPEED_PTCR_CTRL_PWMD_EN    BIT(11)
->> +#define    ASPEED_PTCR_CTRL_PWMC_EN    BIT(10)
->> +#define    ASPEED_PTCR_CTRL_PWMB_EN    BIT(9)
->> +#define    ASPEED_PTCR_CTRL_PWMA_EN    BIT(8)
->> +
->> +#define    ASPEED_PTCR_CTRL_CLK_SRC    BIT(1)
->> +#define    ASPEED_PTCR_CTRL_CLK_EN        BIT(0)
->> +
->> +/* ASPEED_PTCR_CLK_CTRL : 0x04 - Clock Control Register */
->> +/* TYPE N */
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEN_MASK        GENMASK(31, 16)
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEN_UNIT        24
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEN_H        20
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEN_L        16
->> +/* TYPE M */
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEM_MASK         GENMASK(15, 0)
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEM_UNIT        8
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEM_H        4
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEM_L        0
->> +
->> +/*
->> + * ASPEED_PTCR_DUTY_CTRL/1/2/3 : 0x08/0x0C/0x48/0x4C - PWM-FAN duty control
->> + * 0/1/2/3 register
->> + */
->> +#define DUTY_CTRL_PWM2_FALL_POINT    24
->> +#define DUTY_CTRL_PWM2_RISE_POINT    16
->> +#define DUTY_CTRL_PWM2_RISE_FALL_MASK    GENMASK(31, 16)
->> +#define DUTY_CTRL_PWM1_FALL_POINT    8
->> +#define DUTY_CTRL_PWM1_RISE_POINT    0
->> +#define DUTY_CTRL_PWM1_RISE_FALL_MASK   GENMASK(15, 0)
->> +
->> +/* ASPEED_PTCR_TYPEM_CTRL : 0x10/0x18/0x50 - Type M/N/O Ctrl 0 Register */
->> +#define TYPE_CTRL_FAN_MASK        (GENMASK(5, 1) | GENMASK(31, 16))
->> +#define TYPE_CTRL_FAN1_MASK        GENMASK(31, 0)
->> +#define TYPE_CTRL_FAN_PERIOD        16
->> +#define TYPE_CTRL_FAN_MODE        4
->> +#define TYPE_CTRL_FAN_DIVISION        1
->> +#define TYPE_CTRL_FAN_TYPE_EN        1
->> +
->> +/* ASPEED_PTCR_TACH_SOURCE : 0x20/0x60 - Tach Source Register */
->> +/* bit [0,1] at 0x20, bit [2] at 0x60 */
->> +#define TACH_PWM_SOURCE_BIT01(x)    ((x) * 2)
->> +#define TACH_PWM_SOURCE_BIT2(x)        ((x) * 2)
->> +#define TACH_PWM_SOURCE_MASK_BIT01(x)    (0x3 << ((x) * 2))
->> +#define TACH_PWM_SOURCE_MASK_BIT2(x)    BIT((x) * 2)
->> +
->> +/* ASPEED_PTCR_RESULT : 0x2c - Result Register */
->> +#define RESULT_STATUS_MASK        BIT(31)
->> +#define RESULT_VALUE_MASK        0xfffff
->> +
->> +/* ASPEED_PTCR_CTRL_EXT : 0x40 - General Control Extension #1 Register */
->> +#define ASPEED_PTCR_CTRL_SET_PWMH_TYPE_PART1    15
->> +#define ASPEED_PTCR_CTRL_SET_PWMH_TYPE_PART2    6
->> +#define ASPEED_PTCR_CTRL_SET_PWMH_TYPE_MASK    (BIT(7) | BIT(15))
->> +
->> +#define ASPEED_PTCR_CTRL_SET_PWMG_TYPE_PART1    14
->> +#define ASPEED_PTCR_CTRL_SET_PWMG_TYPE_PART2    5
->> +#define ASPEED_PTCR_CTRL_SET_PWMG_TYPE_MASK    (BIT(6) | BIT(14))
->> +
->> +#define ASPEED_PTCR_CTRL_SET_PWMF_TYPE_PART1    13
->> +#define ASPEED_PTCR_CTRL_SET_PWMF_TYPE_PART2    4
->> +#define ASPEED_PTCR_CTRL_SET_PWMF_TYPE_MASK    (BIT(5) | BIT(13))
->> +
->> +#define ASPEED_PTCR_CTRL_SET_PWME_TYPE_PART1    12
->> +#define ASPEED_PTCR_CTRL_SET_PWME_TYPE_PART2    3
->> +#define ASPEED_PTCR_CTRL_SET_PWME_TYPE_MASK    (BIT(4) | BIT(12))
->> +
->> +#define    ASPEED_PTCR_CTRL_PWMH_EN    BIT(11)
->> +#define    ASPEED_PTCR_CTRL_PWMG_EN    BIT(10)
->> +#define    ASPEED_PTCR_CTRL_PWMF_EN    BIT(9)
->> +#define    ASPEED_PTCR_CTRL_PWME_EN    BIT(8)
->> +
->> +/* ASPEED_PTCR_CLK_EXT_CTRL : 0x44 - Clock Control Extension #1 Register */
->> +/* TYPE O */
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEO_MASK         GENMASK(15, 0)
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEO_UNIT        8
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEO_H        4
->> +#define ASPEED_PTCR_CLK_CTRL_TYPEO_L        0
->> +
->> +#define PWM_MAX 255
->> +
->> +#define M_PWM_DIV_H 0x00
->> +#define M_PWM_DIV_L 0x05
->> +#define M_PWM_PERIOD 0x5F
->> +#define M_TACH_CLK_DIV 0x00
->> +#define M_TACH_MODE 0x00
->> +#define M_TACH_UNIT 0x1000
->> +#define INIT_FAN_CTRL 0xFF
->> +
->> +void __iomem *regs;
->> +
->> +struct aspeed_pwm_tacho_data {
->> +    struct regmap *regmap;
->> +    unsigned long clk_freq;
->> +    bool pwm_present[8];
->> +    bool fan_tach_present[16];
->> +    u8 type_pwm_clock_unit[3];
->> +    u8 type_pwm_clock_division_h[3];
->> +    u8 type_pwm_clock_division_l[3];
->> +    u8 type_fan_tach_clock_division[3];
->> +    u16 type_fan_tach_unit[3];
->> +    u8 pwm_port_type[8];
->> +    u8 pwm_port_fan_ctrl[8];
->> +    u8 fan_tach_ch_source[16];
->> +    const struct attribute_group *groups[3];
->> +};
->> +
->> +enum type { TYPEM, TYPEN, TYPEO };
->> +
->> +struct type_params {
->> +    u32 l_value;
->> +    u32 h_value;
->> +    u32 unit_value;
->> +    u32 clk_ctrl_mask;
->> +    u32 clk_ctrl_reg;
->> +    u32 ctrl_reg;
->> +    u32 ctrl_reg1;
->> +};
->> +
->> +static const struct type_params type_params[] = {
->> +    [TYPEM] = {
->> +        .l_value = ASPEED_PTCR_CLK_CTRL_TYPEM_L,
->> +        .h_value = ASPEED_PTCR_CLK_CTRL_TYPEM_H,
->> +        .unit_value = ASPEED_PTCR_CLK_CTRL_TYPEM_UNIT,
->> +        .clk_ctrl_mask = ASPEED_PTCR_CLK_CTRL_TYPEM_MASK,
->> +        .clk_ctrl_reg = ASPEED_PTCR_CLK_CTRL,
->> +        .ctrl_reg = ASPEED_PTCR_TYPEM_CTRL,
->> +        .ctrl_reg1 = ASPEED_PTCR_TYPEM_CTRL1,
->> +    },
->> +    [TYPEN] = {
->> +        .l_value = ASPEED_PTCR_CLK_CTRL_TYPEN_L,
->> +        .h_value = ASPEED_PTCR_CLK_CTRL_TYPEN_H,
->> +        .unit_value = ASPEED_PTCR_CLK_CTRL_TYPEN_UNIT,
->> +        .clk_ctrl_mask = ASPEED_PTCR_CLK_CTRL_TYPEN_MASK,
->> +        .clk_ctrl_reg = ASPEED_PTCR_CLK_CTRL,
->> +        .ctrl_reg = ASPEED_PTCR_TYPEN_CTRL,
->> +        .ctrl_reg1 = ASPEED_PTCR_TYPEN_CTRL1,
->> +    },
->> +    [TYPEO] = {
->> +        .l_value = ASPEED_PTCR_CLK_CTRL_TYPEO_L,
->> +        .h_value = ASPEED_PTCR_CLK_CTRL_TYPEO_H,
->> +        .unit_value = ASPEED_PTCR_CLK_CTRL_TYPEO_UNIT,
->> +        .clk_ctrl_mask = ASPEED_PTCR_CLK_CTRL_TYPEO_MASK,
->> +        .clk_ctrl_reg = ASPEED_PTCR_CLK_CTRL_EXT,
->> +        .ctrl_reg = ASPEED_PTCR_TYPEO_CTRL,
->> +        .ctrl_reg1 = ASPEED_PTCR_TYPEO_CTRL1,
->> +    }
->> +};
->> +
->> +enum pwm_port { PWMA, PWMB, PWMC, PWMD, PWME, PWMF, PWMG, PWMH };
->> +
->> +struct pwm_port_params {
->> +    u32 pwm_en;
->> +    u32 ctrl_reg;
->> +    u32 type_part1;
->> +    u32 type_part2;
->> +    u32 type_mask;
->> +    u32 duty_ctrl_rise_point;
->> +    u32 duty_ctrl_fall_point;
->> +    u32 duty_ctrl_reg;
->> +    u32 duty_ctrl_rise_fall_mask;
->> +};
->> +
->> +static const struct pwm_port_params pwm_port_params[] = {
->> +    [PWMA] = {
->> +        .pwm_en = ASPEED_PTCR_CTRL_PWMA_EN,
->> +        .ctrl_reg = ASPEED_PTCR_CTRL,
->> +        .type_part1 = ASPEED_PTCR_CTRL_SET_PWMA_TYPE_PART1,
->> +        .type_part2 = ASPEED_PTCR_CTRL_SET_PWMA_TYPE_PART2,
->> +        .type_mask = ASPEED_PTCR_CTRL_SET_PWMA_TYPE_MASK,
->> +        .duty_ctrl_rise_point = DUTY_CTRL_PWM1_RISE_POINT,
->> +        .duty_ctrl_fall_point = DUTY_CTRL_PWM1_FALL_POINT,
->> +        .duty_ctrl_reg = ASPEED_PTCR_DUTY0_CTRL,
->> +        .duty_ctrl_rise_fall_mask = DUTY_CTRL_PWM1_RISE_FALL_MASK,
->> +    },
->> +    [PWMB] = {
->> +        .pwm_en = ASPEED_PTCR_CTRL_PWMB_EN,
->> +        .ctrl_reg = ASPEED_PTCR_CTRL,
->> +        .type_part1 = ASPEED_PTCR_CTRL_SET_PWMB_TYPE_PART1,
->> +        .type_part2 = ASPEED_PTCR_CTRL_SET_PWMB_TYPE_PART2,
->> +        .type_mask = ASPEED_PTCR_CTRL_SET_PWMB_TYPE_MASK,
->> +        .duty_ctrl_rise_point = DUTY_CTRL_PWM2_RISE_POINT,
->> +        .duty_ctrl_fall_point = DUTY_CTRL_PWM2_FALL_POINT,
->> +        .duty_ctrl_reg = ASPEED_PTCR_DUTY0_CTRL,
->> +        .duty_ctrl_rise_fall_mask = DUTY_CTRL_PWM2_RISE_FALL_MASK,
->> +    },
->> +    [PWMC] = {
->> +        .pwm_en = ASPEED_PTCR_CTRL_PWMC_EN,
->> +        .ctrl_reg = ASPEED_PTCR_CTRL,
->> +        .type_part1 = ASPEED_PTCR_CTRL_SET_PWMC_TYPE_PART1,
->> +        .type_part2 = ASPEED_PTCR_CTRL_SET_PWMC_TYPE_PART2,
->> +        .type_mask = ASPEED_PTCR_CTRL_SET_PWMC_TYPE_MASK,
->> +        .duty_ctrl_rise_point = DUTY_CTRL_PWM1_RISE_POINT,
->> +        .duty_ctrl_fall_point = DUTY_CTRL_PWM1_FALL_POINT,
->> +        .duty_ctrl_reg = ASPEED_PTCR_DUTY1_CTRL,
->> +        .duty_ctrl_rise_fall_mask = DUTY_CTRL_PWM1_RISE_FALL_MASK,
->> +    },
->> +    [PWMD] = {
->> +        .pwm_en = ASPEED_PTCR_CTRL_PWMD_EN,
->> +        .ctrl_reg = ASPEED_PTCR_CTRL,
->> +        .type_part1 = ASPEED_PTCR_CTRL_SET_PWMD_TYPE_PART1,
->> +        .type_part2 = ASPEED_PTCR_CTRL_SET_PWMD_TYPE_PART2,
->> +        .type_mask = ASPEED_PTCR_CTRL_SET_PWMD_TYPE_MASK,
->> +        .duty_ctrl_rise_point = DUTY_CTRL_PWM2_RISE_POINT,
->> +        .duty_ctrl_fall_point = DUTY_CTRL_PWM2_FALL_POINT,
->> +        .duty_ctrl_reg = ASPEED_PTCR_DUTY1_CTRL,
->> +        .duty_ctrl_rise_fall_mask = DUTY_CTRL_PWM2_RISE_FALL_MASK,
->> +    },
->> +    [PWME] = {
->> +        .pwm_en = ASPEED_PTCR_CTRL_PWME_EN,
->> +        .ctrl_reg = ASPEED_PTCR_CTRL_EXT,
->> +        .type_part1 = ASPEED_PTCR_CTRL_SET_PWME_TYPE_PART1,
->> +        .type_part2 = ASPEED_PTCR_CTRL_SET_PWME_TYPE_PART2,
->> +        .type_mask = ASPEED_PTCR_CTRL_SET_PWME_TYPE_MASK,
->> +        .duty_ctrl_rise_point = DUTY_CTRL_PWM1_RISE_POINT,
->> +        .duty_ctrl_fall_point = DUTY_CTRL_PWM1_FALL_POINT,
->> +        .duty_ctrl_reg = ASPEED_PTCR_DUTY2_CTRL,
->> +        .duty_ctrl_rise_fall_mask = DUTY_CTRL_PWM1_RISE_FALL_MASK,
->> +    },
->> +    [PWMF] = {
->> +        .pwm_en = ASPEED_PTCR_CTRL_PWMF_EN,
->> +        .ctrl_reg = ASPEED_PTCR_CTRL_EXT,
->> +        .type_part1 = ASPEED_PTCR_CTRL_SET_PWMF_TYPE_PART1,
->> +        .type_part2 = ASPEED_PTCR_CTRL_SET_PWMF_TYPE_PART2,
->> +        .type_mask = ASPEED_PTCR_CTRL_SET_PWMF_TYPE_MASK,
->> +        .duty_ctrl_rise_point = DUTY_CTRL_PWM2_RISE_POINT,
->> +        .duty_ctrl_fall_point = DUTY_CTRL_PWM2_FALL_POINT,
->> +        .duty_ctrl_reg = ASPEED_PTCR_DUTY2_CTRL,
->> +        .duty_ctrl_rise_fall_mask = DUTY_CTRL_PWM2_RISE_FALL_MASK,
->> +    },
->> +    [PWMG] = {
->> +        .pwm_en = ASPEED_PTCR_CTRL_PWMG_EN,
->> +        .ctrl_reg = ASPEED_PTCR_CTRL_EXT,
->> +        .type_part1 = ASPEED_PTCR_CTRL_SET_PWMG_TYPE_PART1,
->> +        .type_part2 = ASPEED_PTCR_CTRL_SET_PWMG_TYPE_PART2,
->> +        .type_mask = ASPEED_PTCR_CTRL_SET_PWMG_TYPE_MASK,
->> +        .duty_ctrl_rise_point = DUTY_CTRL_PWM1_RISE_POINT,
->> +        .duty_ctrl_fall_point = DUTY_CTRL_PWM1_FALL_POINT,
->> +        .duty_ctrl_reg = ASPEED_PTCR_DUTY3_CTRL,
->> +        .duty_ctrl_rise_fall_mask = DUTY_CTRL_PWM1_RISE_FALL_MASK,
->> +    },
->> +    [PWMH] = {
->> +        .pwm_en = ASPEED_PTCR_CTRL_PWMH_EN,
->> +        .ctrl_reg = ASPEED_PTCR_CTRL_EXT,
->> +        .type_part1 = ASPEED_PTCR_CTRL_SET_PWMH_TYPE_PART1,
->> +        .type_part2 = ASPEED_PTCR_CTRL_SET_PWMH_TYPE_PART2,
->> +        .type_mask = ASPEED_PTCR_CTRL_SET_PWMH_TYPE_MASK,
->> +        .duty_ctrl_rise_point = DUTY_CTRL_PWM2_RISE_POINT,
->> +        .duty_ctrl_fall_point = DUTY_CTRL_PWM2_FALL_POINT,
->> +        .duty_ctrl_reg = ASPEED_PTCR_DUTY3_CTRL,
->> +        .duty_ctrl_rise_fall_mask = DUTY_CTRL_PWM2_RISE_FALL_MASK,
->> +    }
->> +};
->> +
->> +static int regmap_aspeed_pwm_tacho_reg_write(void *context, unsigned int reg,
->> +                         unsigned int val)
->> +{
->> +    void __iomem *regs = context;
->> +
->> +    writel(val, regs + reg);
->> +    return 0;
->> +}
->> +
->> +static int regmap_aspeed_pwm_tacho_reg_read(void *context, unsigned int reg,
->> +                        unsigned int *val)
->> +{
->> +    void __iomem *regs = context;
->> +
->> +    *val = readl(regs + reg);
->> +    return 0;
->> +}
->> +
->> +static const struct regmap_config aspeed_pwm_tacho_regmap_config = {
->> +    .reg_bits = 32,
->> +    .val_bits = 32,
->> +    .reg_stride = 4,
->> +    .max_register = ASPEED_PTCR_TYPEO_LIMIT,
->> +    .reg_write = regmap_aspeed_pwm_tacho_reg_write,
->> +    .reg_read = regmap_aspeed_pwm_tacho_reg_read,
->> +    .fast_io = true,
->> +};
->> +
->> +static void aspeed_set_clock_enable(struct regmap *regmap, bool val)
->> +{
->> +    regmap_update_bits(regmap, ASPEED_PTCR_CTRL,
->> +               ASPEED_PTCR_CTRL_CLK_EN,
->> +               val ? ASPEED_PTCR_CTRL_CLK_EN : 0);
->> +}
->> +
->> +static void aspeed_set_clock_source(struct regmap *regmap, int val)
->> +{
->> +    regmap_update_bits(regmap, ASPEED_PTCR_CTRL,
->> +               ASPEED_PTCR_CTRL_CLK_SRC,
->> +               val ? ASPEED_PTCR_CTRL_CLK_SRC : 0);
->> +}
->> +
->> +static void aspeed_set_pwm_clock_values(struct regmap *regmap, u8 type,
->> +                    u8 div_high, u8 div_low, u8 unit)
->> +{
->> +    u32 reg_value = ((div_high << type_params[type].h_value) |
->> +             (div_low << type_params[type].l_value) |
->> +             (unit << type_params[type].unit_value));
->> +
->> +    regmap_update_bits(regmap, type_params[type].clk_ctrl_reg,
->> +               type_params[type].clk_ctrl_mask, reg_value);
->> +}
->> +
->> +static void aspeed_set_pwm_port_enable(struct regmap *regmap, u8 pwm_port,
->> +                       bool enable)
->> +{
->> +    regmap_update_bits(regmap, pwm_port_params[pwm_port].ctrl_reg,
->> +               pwm_port_params[pwm_port].pwm_en,
->> +               enable ? pwm_port_params[pwm_port].pwm_en : 0);
->> +}
->> +
->> +static void aspeed_set_pwm_port_type(struct regmap *regmap,
->> +                     u8 pwm_port, u8 type)
->> +{
->> +    u32 reg_value = (type & 0x1) << pwm_port_params[pwm_port].type_part1;
->> +
->> +    reg_value |= (type & 0x2) << pwm_port_params[pwm_port].type_part2;
->> +
->> +    regmap_update_bits(regmap, pwm_port_params[pwm_port].ctrl_reg,
->> +               pwm_port_params[pwm_port].type_mask, reg_value);
->> +}
->> +
->> +static void aspeed_set_pwm_port_duty_rising_falling(struct regmap *regmap,
->> +                            u8 pwm_port, u8 rising,
->> +                            u8 falling)
->> +{
->> +    u32 reg_value = (rising <<
->> +             pwm_port_params[pwm_port].duty_ctrl_rise_point);
->> +    reg_value |= (falling <<
->> +              pwm_port_params[pwm_port].duty_ctrl_fall_point);
->> +
->> +    regmap_update_bits(regmap, pwm_port_params[pwm_port].duty_ctrl_reg,
->> +               pwm_port_params[pwm_port].duty_ctrl_rise_fall_mask,
->> +               reg_value);
->> +}
->> +
->> +static void aspeed_set_tacho_type_enable(struct regmap *regmap, u8 type,
->> +                     bool enable)
->> +{
->> +    regmap_update_bits(regmap, type_params[type].ctrl_reg,
->> +               TYPE_CTRL_FAN_TYPE_EN,
->> +               enable ? TYPE_CTRL_FAN_TYPE_EN : 0);
->> +}
->> +
->> +static void aspeed_set_tacho_type_values(struct regmap *regmap, u8 type,
->> +                     u8 mode, u16 unit, u8 division)
->> +{
->> +    u32 reg_value = ((mode << TYPE_CTRL_FAN_MODE) |
->> +             (unit << TYPE_CTRL_FAN_PERIOD) |
->> +             (division << TYPE_CTRL_FAN_DIVISION));
->> +
->> +    regmap_update_bits(regmap, type_params[type].ctrl_reg,
->> +               TYPE_CTRL_FAN_MASK, reg_value);
->> +    regmap_update_bits(regmap, type_params[type].ctrl_reg1,
->> +               TYPE_CTRL_FAN1_MASK, unit << 16);
->> +}
->> +
->> +static void aspeed_set_fan_tach_ch_enable(struct regmap *regmap, u8 fan_tach_ch,
->> +                      bool enable)
->> +{
->> +    regmap_update_bits(regmap, ASPEED_PTCR_CTRL,
->> +               ASPEED_PTCR_CTRL_FAN_NUM_EN(fan_tach_ch),
->> +               enable ?
->> +               ASPEED_PTCR_CTRL_FAN_NUM_EN(fan_tach_ch) : 0);
->> +}
->> +
->> +static void aspeed_set_fan_tach_ch_source(struct regmap *regmap, u8 fan_tach_ch,
->> +                      u8 fan_tach_ch_source)
->> +{
->> +    u32 reg_value1 = ((fan_tach_ch_source & 0x3) <<
->> +              TACH_PWM_SOURCE_BIT01(fan_tach_ch));
->> +    u32 reg_value2 = (((fan_tach_ch_source & 0x4) >> 2) <<
->> +              TACH_PWM_SOURCE_BIT2(fan_tach_ch));
->> +
->> +    regmap_update_bits(regmap, ASPEED_PTCR_TACH_SOURCE,
->> +               TACH_PWM_SOURCE_MASK_BIT01(fan_tach_ch),
->> +               reg_value1);
->> +
->> +    regmap_update_bits(regmap, ASPEED_PTCR_TACH_SOURCE_EXT,
->> +               TACH_PWM_SOURCE_MASK_BIT2(fan_tach_ch),
->> +               reg_value2);
->> +}
->> +
->> +static void aspeed_set_pwm_port_fan_ctrl(struct aspeed_pwm_tacho_data *priv,
->> +                     u8 index, u8 fan_ctrl)
->> +{
->> +    u16 period, dc_time_on;
->> +
->> +    period = priv->type_pwm_clock_unit[priv->pwm_port_type[index]];
->> +    period += 1;
->> +    dc_time_on = (fan_ctrl * period) / PWM_MAX;
->> +
->> +    if (dc_time_on == 0) {
->> +        aspeed_set_pwm_port_enable(priv->regmap, index, false);
->> +    } else {
->> +        if (dc_time_on == period)
->> +            dc_time_on = 0;
->> +
->> +        aspeed_set_pwm_port_duty_rising_falling(priv->regmap, index, 0,
->> +                            dc_time_on);
->> +        aspeed_set_pwm_port_enable(priv->regmap, index, true);
->> +    }
->> +}
->> +
->> +static u32 aspeed_get_fan_tach_ch_measure_period(struct aspeed_pwm_tacho_data
->> +                         *priv, u8 type)
->> +{
->> +    u32 clk;
->> +    u16 tacho_unit;
->> +    u8 clk_unit, div_h, div_l, tacho_div;
->> +
->> +    clk = priv->clk_freq;
->> +    clk_unit = priv->type_pwm_clock_unit[type];
->> +    div_h = priv->type_pwm_clock_division_h[type];
->> +    div_h = 0x1 << div_h;
->> +    div_l = priv->type_pwm_clock_division_l[type];
->> +    if (div_l == 0)
->> +        div_l = 1;
->> +    else
->> +        div_l = div_l * 2;
->> +
->> +    tacho_unit = priv->type_fan_tach_unit[type];
->> +    tacho_div = priv->type_fan_tach_clock_division[type];
->> +
->> +    tacho_div = 0x4 << (tacho_div * 2);
->> +    return clk / (clk_unit * div_h * div_l * tacho_div * tacho_unit);
->> +}
->> +
->> +static u32 aspeed_get_fan_tach_ch_rpm(struct aspeed_pwm_tacho_data *priv,
->> +                      u8 fan_tach_ch)
->> +{
->> +    u32 raw_data, tach_div, clk_source, timeout = 0, sec, val;
->> +    u8 fan_tach_ch_source, type;
->> +
->> +    regmap_write(priv->regmap, ASPEED_PTCR_TRIGGER, 0);
->> +    regmap_write(priv->regmap, ASPEED_PTCR_TRIGGER, 0x1 << fan_tach_ch);
->> +
->> +    fan_tach_ch_source = priv->fan_tach_ch_source[fan_tach_ch];
->> +    type = priv->pwm_port_type[fan_tach_ch_source];
->> +
->> +    sec = (1000 / aspeed_get_fan_tach_ch_measure_period(priv, type));
->> +
->> +    msleep(sec);
->> +
->> +    while (!(regmap_read(priv->regmap, ASPEED_PTCR_RESULT, &val))
->> +            & !(val & RESULT_STATUS_MASK)) {
->> +        timeout++;
->> +        if (timeout > 1)
->> +            return 0;
->> +        msleep(sec);
->> +    }
->> +
->> +    raw_data = val & RESULT_VALUE_MASK;
->> +    tach_div = priv->type_fan_tach_clock_division[type];
->> +    tach_div = 0x4 << (tach_div * 2);
->> +    clk_source = priv->clk_freq;
->> +
->> +    if (raw_data == 0)
->> +        return 0;
->> +
->> +    return (clk_source * 60) / (2 * raw_data * tach_div);
->> +}
->> +
->> +static ssize_t set_pwm(struct device *dev, struct device_attribute *attr,
->> +               const char *buf, size_t count)
->> +{
->> +    struct sensor_device_attribute *sensor_attr = to_sensor_dev_attr(attr);
->> +    int index = sensor_attr->index;
->> +    int ret;
->> +    struct aspeed_pwm_tacho_data *priv = dev_get_drvdata(dev);
->> +    long fan_ctrl;
->> +
->> +    ret = kstrtol(buf, 10, &fan_ctrl);
->> +    if (ret != 0)
->> +        return ret;
->> +
->> +    if (fan_ctrl < 0 || fan_ctrl > PWM_MAX)
->> +        return -EINVAL;
->> +
->> +    if (priv->pwm_port_fan_ctrl[index] == fan_ctrl)
->> +        return count;
->> +
->> +    priv->pwm_port_fan_ctrl[index] = fan_ctrl;
->> +    aspeed_set_pwm_port_fan_ctrl(priv, index, fan_ctrl);
->> +
->> +    return count;
->> +}
->> +
->> +static ssize_t show_pwm(struct device *dev, struct device_attribute *attr,
->> +            char *buf)
->> +{
->> +    struct sensor_device_attribute *sensor_attr = to_sensor_dev_attr(attr);
->> +    int index = sensor_attr->index;
->> +    struct aspeed_pwm_tacho_data *priv = dev_get_drvdata(dev);
->> +
->> +    return sprintf(buf, "%u\n", priv->pwm_port_fan_ctrl[index]);
->> +}
->> +
->> +static ssize_t show_rpm(struct device *dev, struct device_attribute *attr,
->> +            char *buf)
->> +{
->> +    struct sensor_device_attribute *sensor_attr = to_sensor_dev_attr(attr);
->> +    int index = sensor_attr->index;
->> +    u32 rpm;
->> +    struct aspeed_pwm_tacho_data *priv = dev_get_drvdata(dev);
->> +
->> +    rpm = aspeed_get_fan_tach_ch_rpm(priv, index);
->> +
->> +    return sprintf(buf, "%u\n", rpm);
->> +}
->> +
->> +static umode_t pwm_is_visible(struct kobject *kobj,
->> +                  struct attribute *a, int index)
->> +{
->> +    struct device *dev = container_of(kobj, struct device, kobj);
->> +    struct aspeed_pwm_tacho_data *priv = dev_get_drvdata(dev);
->> +
->> +    if (!priv->pwm_present[index])
->> +        return 0;
->> +    return a->mode;
->> +}
->> +
->> +static umode_t fan_dev_is_visible(struct kobject *kobj,
->> +                  struct attribute *a, int index)
->> +{
->> +    struct device *dev = container_of(kobj, struct device, kobj);
->> +    struct aspeed_pwm_tacho_data *priv = dev_get_drvdata(dev);
->> +
->> +    if (!priv->fan_tach_present[index])
->> +        return 0;
->> +    return a->mode;
->> +}
->> +
->> +static SENSOR_DEVICE_ATTR(pwm0, 0644,
->> +            show_pwm, set_pwm, 0);
->> +static SENSOR_DEVICE_ATTR(pwm1, 0644,
->> +            show_pwm, set_pwm, 1);
->> +static SENSOR_DEVICE_ATTR(pwm2, 0644,
->> +            show_pwm, set_pwm, 2);
->> +static SENSOR_DEVICE_ATTR(pwm3, 0644,
->> +            show_pwm, set_pwm, 3);
->> +static SENSOR_DEVICE_ATTR(pwm4, 0644,
->> +            show_pwm, set_pwm, 4);
->> +static SENSOR_DEVICE_ATTR(pwm5, 0644,
->> +            show_pwm, set_pwm, 5);
->> +static SENSOR_DEVICE_ATTR(pwm6, 0644,
->> +            show_pwm, set_pwm, 6);
->> +static SENSOR_DEVICE_ATTR(pwm7, 0644,
->> +            show_pwm, set_pwm, 7);
->> +static struct attribute *pwm_dev_attrs[] = {
->> +    &sensor_dev_attr_pwm0.dev_attr.attr,
->> +    &sensor_dev_attr_pwm1.dev_attr.attr,
->> +    &sensor_dev_attr_pwm2.dev_attr.attr,
->> +    &sensor_dev_attr_pwm3.dev_attr.attr,
->> +    &sensor_dev_attr_pwm4.dev_attr.attr,
->> +    &sensor_dev_attr_pwm5.dev_attr.attr,
->> +    &sensor_dev_attr_pwm6.dev_attr.attr,
->> +    &sensor_dev_attr_pwm7.dev_attr.attr,
->> +    NULL,
->> +};
->> +
->> +static const struct attribute_group pwm_dev_group = {
->> +    .attrs = pwm_dev_attrs,
->> +    .is_visible = pwm_is_visible,
->> +};
->> +
->> +static SENSOR_DEVICE_ATTR(fan0_input, 0444,
->> +        show_rpm, NULL, 0);
->> +static SENSOR_DEVICE_ATTR(fan1_input, 0444,
->> +        show_rpm, NULL, 1);
->> +static SENSOR_DEVICE_ATTR(fan2_input, 0444,
->> +        show_rpm, NULL, 2);
->> +static SENSOR_DEVICE_ATTR(fan3_input, 0444,
->> +        show_rpm, NULL, 3);
->> +static SENSOR_DEVICE_ATTR(fan4_input, 0444,
->> +        show_rpm, NULL, 4);
->> +static SENSOR_DEVICE_ATTR(fan5_input, 0444,
->> +        show_rpm, NULL, 5);
->> +static SENSOR_DEVICE_ATTR(fan6_input, 0444,
->> +        show_rpm, NULL, 6);
->> +static SENSOR_DEVICE_ATTR(fan7_input, 0444,
->> +        show_rpm, NULL, 7);
->> +static SENSOR_DEVICE_ATTR(fan8_input, 0444,
->> +        show_rpm, NULL, 8);
->> +static SENSOR_DEVICE_ATTR(fan9_input, 0444,
->> +        show_rpm, NULL, 9);
->> +static SENSOR_DEVICE_ATTR(fan10_input, 0444,
->> +        show_rpm, NULL, 10);
->> +static SENSOR_DEVICE_ATTR(fan11_input, 0444,
->> +        show_rpm, NULL, 11);
->> +static SENSOR_DEVICE_ATTR(fan12_input, 0444,
->> +        show_rpm, NULL, 12);
->> +static SENSOR_DEVICE_ATTR(fan13_input, 0444,
->> +        show_rpm, NULL, 13);
->> +static SENSOR_DEVICE_ATTR(fan14_input, 0444,
->> +        show_rpm, NULL, 14);
->> +static SENSOR_DEVICE_ATTR(fan15_input, 0444,
->> +        show_rpm, NULL, 15);
->> +static struct attribute *fan_dev_attrs[] = {
->> +    &sensor_dev_attr_fan0_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan1_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan2_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan3_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan4_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan5_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan6_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan7_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan8_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan9_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan10_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan11_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan12_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan13_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan14_input.dev_attr.attr,
->> +    &sensor_dev_attr_fan15_input.dev_attr.attr,
->> +    NULL
->> +};
->> +
->> +static const struct attribute_group fan_dev_group = {
->> +    .attrs = fan_dev_attrs,
->> +    .is_visible = fan_dev_is_visible,
->> +};
->> +
->> +/*
->> + * The clock type is type M :
->> + * The PWM frequency = 24MHz / (type M clock division L bit *
->> + * type M clock division H bit * (type M PWM period bit + 1))
->> + */
->> +static void aspeed_create_type(struct aspeed_pwm_tacho_data *priv)
->> +{
->> +    priv->type_pwm_clock_division_h[TYPEM] = M_PWM_DIV_H;
->> +    priv->type_pwm_clock_division_l[TYPEM] = M_PWM_DIV_L;
->> +    priv->type_pwm_clock_unit[TYPEM] = M_PWM_PERIOD;
->> +    aspeed_set_pwm_clock_values(priv->regmap, TYPEM, M_PWM_DIV_H,
->> +                    M_PWM_DIV_L, M_PWM_PERIOD);
->> +    aspeed_set_tacho_type_enable(priv->regmap, TYPEM, true);
->> +    priv->type_fan_tach_clock_division[TYPEM] = M_TACH_CLK_DIV;
->> +    priv->type_fan_tach_unit[TYPEM] = M_TACH_UNIT;
->> +    aspeed_set_tacho_type_values(priv->regmap, TYPEM, M_TACH_MODE,
->> +                     M_TACH_UNIT, M_TACH_CLK_DIV);
->> +}
->> +
->> +static void aspeed_create_pwm_port(struct aspeed_pwm_tacho_data *priv,
->> +                   u8 pwm_port)
->> +{
->> +    aspeed_set_pwm_port_enable(priv->regmap, pwm_port, true);
->> +    priv->pwm_present[pwm_port] = true;
->> +
->> +    priv->pwm_port_type[pwm_port] = TYPEM;
->> +    aspeed_set_pwm_port_type(priv->regmap, pwm_port, TYPEM);
->> +
->> +    priv->pwm_port_fan_ctrl[pwm_port] = INIT_FAN_CTRL;
->> +    aspeed_set_pwm_port_fan_ctrl(priv, pwm_port, INIT_FAN_CTRL);
->> +}
->> +
->> +static void aspeed_create_fan_tach_channel(struct aspeed_pwm_tacho_data *priv,
->> +                       u8 *fan_tach_ch,
->> +                       int count,
->> +                       u8 pwm_source)
->> +{
->> +    u8 val, index;
->> +
->> +    for (val = 0; val < count; val++) {
->> +        index = fan_tach_ch[val];
->> +        aspeed_set_fan_tach_ch_enable(priv->regmap, index, true);
->> +        priv->fan_tach_present[index] = true;
->> +        priv->fan_tach_ch_source[index] = pwm_source;
->> +        aspeed_set_fan_tach_ch_source(priv->regmap, index, pwm_source);
->> +    }
->> +}
->> +
->> +static int aspeed_create_fan(struct device *dev,
->> +                 struct device_node *child,
->> +                 struct aspeed_pwm_tacho_data *priv)
->> +{
->> +    u8 *fan_tach_ch;
->> +    u32 pwm_port;
->> +    int ret, count;
->> +
->> +    ret = of_property_read_u32(child, "reg", &pwm_port);
->> +    if (ret)
->> +        return ret;
->> +    aspeed_create_pwm_port(priv, (u8)pwm_port);
->> +
->> +    count = of_property_count_u8_elems(child, "aspeed,fan-tach-ch");
->> +    if (count < 1)
->> +        return -EINVAL;
->> +    fan_tach_ch = devm_kzalloc(dev, sizeof(*fan_tach_ch) * count,
->> +                   GFP_KERNEL);
->> +    if (!fan_tach_ch)
->> +        return -ENOMEM;
->> +    ret = of_property_read_u8_array(child, "aspeed,fan-tach-ch",
->> +                    fan_tach_ch, count);
->> +    if (ret)
->> +        return ret;
->> +    aspeed_create_fan_tach_channel(priv, fan_tach_ch, count, pwm_port);
->> +
->> +    return 0;
->> +}
->> +
->> +static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct device_node *np, *child;
->> +    struct aspeed_pwm_tacho_data *priv;
->> +    void __iomem *regs;
->> +    struct resource *res;
->> +    struct device *hwmon;
->> +    struct clk *clk;
->> +    int ret;
->> +
->> +    np = dev->of_node;
->> +
->> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +    if (!res)
->> +        return -ENOENT;
->> +    regs = devm_ioremap_resource(dev, res);
->> +    if (IS_ERR(regs))
->> +        return PTR_ERR(regs);
->> +    priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->> +    if (!priv)
->> +        return -ENOMEM;
->> +    priv->regmap = devm_regmap_init(dev, NULL, regs,
->> +            &aspeed_pwm_tacho_regmap_config);
->> +    if (IS_ERR(priv->regmap))
->> +        return PTR_ERR(priv->regmap);
->> +    regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
->> +    regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
->> +
->> +    clk = devm_clk_get(dev, NULL);
->> +    if (IS_ERR(clk))
->> +        return -ENODEV;
->> +    priv->clk_freq = clk_get_rate(clk);
->> +    aspeed_set_clock_enable(priv->regmap, true);
->> +    aspeed_set_clock_source(priv->regmap, 0);
->> +
->> +    aspeed_create_type(priv);
->> +
->> +    for_each_child_of_node(np, child) {
->> +        ret = aspeed_create_fan(dev, child, priv);
->> +        of_node_put(child);
->> +        if (ret)
->> +            return ret;
->> +    }
->> +    of_node_put(np);
->> +
->> +    priv->groups[0] = &pwm_dev_group;
->> +    priv->groups[1] = &fan_dev_group;
->> +    priv->groups[2] = NULL;
->> +    hwmon = devm_hwmon_device_register_with_groups(dev,
->> +                               "aspeed_pwm_tacho",
->> +                               priv, priv->groups);
->> +
->> +    return PTR_ERR_OR_ZERO(hwmon);
->> +}
->> +
->> +static const struct of_device_id of_pwm_tacho_match_table[] = {
->> +    { .compatible = "aspeed,ast2400-pwm-tacho", },
->> +    { .compatible = "aspeed,ast2500-pwm-tacho", },
->> +    {},
->> +};
->> +MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
->> +
->> +static struct platform_driver aspeed_pwm_tacho_driver = {
->> +    .probe        = aspeed_pwm_tacho_probe,
->> +    .driver        = {
->> +        .name    = "aspeed_pwm_tacho",
->> +        .of_match_table = of_pwm_tacho_match_table,
->> +    },
->> +};
->> +
->> +module_platform_driver(aspeed_pwm_tacho_driver);
->> +
->> +MODULE_AUTHOR("Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>");
->> +MODULE_DESCRIPTION("ASPEED PWM and Fan Tacho device driver");
->> +MODULE_LICENSE("GPL");
->> --
->> 2.12.2.715.g7642488e1d-goog
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
 
+--------------ms060502010705000902040604
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+CfcwggSvMIIDl6ADAgECAhEA4CPLFRKDU4mtYW56VGdrITANBgkqhkiG9w0BAQsFADBvMQsw
+CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4
+dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290
+MB4XDTE0MTIyMjAwMDAwMFoXDTIwMDUzMDEwNDgzOFowgZsxCzAJBgNVBAYTAkdCMRswGQYD
+VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNP
+TU9ETyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01PRE8gU0hBLTI1NiBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBAImxDdp6UxlOcFIdvFamBia3uEngludRq/HwWhNJFaO0jBtgvHpRQqd5jKQi3xdh
+TpHVdiMKFNNKAn+2HQmAbqUEPdm6uxb+oYepLkNSQxZ8rzJQyKZPWukI2M+TJZx7iOgwZOak
++FaA/SokFDMXmaxE5WmLo0YGS8Iz1OlAnwawsayTQLm1CJM6nCpToxDbPSBhPFUDjtlOdiUC
+ISn6o3xxdk/u4V+B6ftUgNvDezVSt4TeIj0sMC0xf1m9UjewM2ktQ+v61qXxl3dnUYzZ7ifr
+vKUHOHaMpKk4/9+M9QOsSb7K93OZOg8yq5yVOhM9DkY6V3RhUL7GQD/L5OKfoiECAwEAAaOC
+ARcwggETMB8GA1UdIwQYMBaAFK29mHo0tCb3+sQmVO8DveAky1QaMB0GA1UdDgQWBBSSYWuC
+4aKgqk/sZ/HCo/e0gADB7DAOBgNVHQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAd
+BgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwEQYDVR0gBAowCDAGBgRVHSAAMEQGA1Ud
+HwQ9MDswOaA3oDWGM2h0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9BZGRUcnVzdEV4dGVybmFs
+Q0FSb290LmNybDA1BggrBgEFBQcBAQQpMCcwJQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVz
+ZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQELBQADggEBABsqbqxVwTqriMXY7c1V86prYSvACRAj
+mQ/FZmpvsfW0tXdeDwJhAN99Bf4Ss6SAgAD8+x1banICCkG8BbrBWNUmwurVTYT7/oKYz1gb
+4yJjnFL4uwU2q31Ypd6rO2Pl2tVz7+zg+3vio//wQiOcyraNTT7kSxgDsqgt1Ni7QkuQaYUQ
+26Y3NOh74AEQpZzKOsefT4g0bopl0BqKu6ncyso20fT8wmQpNa/WsadxEdIDQ7GPPprsnjJT
+9HaSyoY0B7ksyuYcStiZDcGG4pCS+1pCaiMhEOllx/XVu37qjIUgAmLq0ToHLFnFmTPyOInl
+tukWeh95FPZKEBom+nyK+5swggVAMIIEKKADAgECAhEAvREavCLRTrKKuEIsseliUTANBgkq
+hkiG9w0BAQsFADCBmzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3Rl
+cjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxQTA/BgNV
+BAMTOENPTU9ETyBTSEEtMjU2IENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVt
+YWlsIENBMB4XDTE2MDYwNDAwMDAwMFoXDTE3MDYwNDIzNTk1OVowJTEjMCEGCSqGSIb3DQEJ
+ARYUbWVuc2NoZWwucEBwb3N0ZW8uZGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+AQDhF/cULHYMLK+xHh/HbwO1aY3M+56GI9uRfRLAJWEEpdSFWvW8whRizlAZ0t9eHDzzCI1l
+wi7xDKBfwJt3VNxVjqHs3JjpcxSln/22AF3t8BKy3ACUtw6COlAk7bbwxr29qf7R4wFjumdS
+AS4uc6vDEBqlLrpdQCICwgOne97Dvi849VmbCBTCLTDpMxgrOXkiveGmQ2wBqLEPU/9o5ZH8
+jcCbenY5GZTh7u4gvigPfgIu79jE3dS6he+c64SWgcD7bI/zA9KMCkRuvLrFnN+bu8TeH9jy
+FpdsFuJ4+7mjoYsalR7S/wm0M7pbcZEDw2fJp4XogbLFmpjIlJjA8QM1AgMBAAGjggHyMIIB
+7jAfBgNVHSMEGDAWgBSSYWuC4aKgqk/sZ/HCo/e0gADB7DAdBgNVHQ4EFgQUsac6ykMiqHZ3
+OqhHkkcxeF9NoW8wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYI
+KwYBBQUHAwQGCysGAQQBsjEBAwUCMBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsG
+DCsGAQQBsjEBAgEBATArMCkGCCsGAQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0
+L0NQUzBdBgNVHR8EVjBUMFKgUKBOhkxodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9T
+SEEyNTZDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGQBggrBgEF
+BQcBAQSBgzCBgDBYBggrBgEFBQcwAoZMaHR0cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RP
+U0hBMjU2Q2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAkBggrBgEF
+BQcwAYYYaHR0cDovL29jc3AuY29tb2RvY2EuY29tMB8GA1UdEQQYMBaBFG1lbnNjaGVsLnBA
+cG9zdGVvLmRlMA0GCSqGSIb3DQEBCwUAA4IBAQBSqnMFVFL1I7Hr3/FWhV3r0cHCSYrAAJu0
+lpgUJcvf6TOGuWNTksdyxbRFWyB6uc6trI9VrQHXbUhHHaUOPyDYBT50Xv4BrgIFYpQe7JI1
+IYPyE5PAR4323CeOTADK4S7KyerSRm7ZnqRCOHp6NTC/2cehFgkfCuO01AeRmzyA8arANiZf
+TS2rPtd31PjpBQ0OpngLxn2qWEIf90Ibq+XxSuiXaLg4l2PI/975QLi0nn466Ql7U2nUeawn
+R34LMZk1c2ImpKZUX+cpz17btGWyohXSdXLQnrruWvO2dx4F5AjuJ/F8JHbIm17I/mlzh883
+4e16eovJEoiXCNVlmxZ3MYIERDCCBEACAQEwgbEwgZsxCzAJBgNVBAYTAkdCMRswGQYDVQQI
+ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9E
+TyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01PRE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGlj
+YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAL0RGrwi0U6yirhCLLHpYlEwDQYJYIZIAWUD
+BAIBBQCgggJjMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3
+MDQwNDE2NTQzNVowLwYJKoZIhvcNAQkEMSIEILmGCD4imy/UGkerIpiA5HKDz3pdXzCLY1jC
+1URUUp5LMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBAjAKBggq
+hkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4DAgcwDQYIKoZI
+hvcNAwICASgwgcIGCSsGAQQBgjcQBDGBtDCBsTCBmzELMAkGA1UEBhMCR0IxGzAZBgNVBAgT
+EkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RP
+IENBIExpbWl0ZWQxQTA/BgNVBAMTOENPTU9ETyBTSEEtMjU2IENsaWVudCBBdXRoZW50aWNh
+dGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAvREavCLRTrKKuEIsseliUTCBxAYLKoZIhvcN
+AQkQAgsxgbSggbEwgZsxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0
+ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMUEwPwYD
+VQQDEzhDT01PRE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBF
+bWFpbCBDQQIRAL0RGrwi0U6yirhCLLHpYlEwDQYJKoZIhvcNAQEBBQAEggEArkNeLIcMD8V0
+EwudhHMKSlrqpPBMy8CGSmVgBhm1wob/E9QlP2sX4UJEniCik88HbscprATnYXD2YaCKu+oJ
+nbfUiqxkQvw+/9ineAtLYybMZpHRMCTC1C3JaNHtBXHOOvrry4Is6sGSEuabPFSQk2R0+IDL
+xZa4xyD7IJzs+5mZuSNysZjL6K5AYDejh9KoeLhFqWRXpy14UWD3zdFI7q+5HPBEQBxdS/kd
+amaaQt08l/FY2zVlGjQDRTJ0JDZy0jdxd4D7dkQNuVzkXzMYk98DbIqeZk7nQrMy8VtBr6D9
+oAJP9EMNtIQjXBmx4EVeb6TxeA+IcmFl0yBV+8IWWwAAAAAAAA==
+--------------ms060502010705000902040604--
