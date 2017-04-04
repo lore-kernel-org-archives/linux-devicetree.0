@@ -1,84 +1,61 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH V10 12/12] ACPI/IORT: Remove linker section for IORT
- entries probing
-Date: Tue, 4 Apr 2017 12:33:11 +0100
-Message-ID: <fd719e47-2dff-c8f5-b979-d54d2cbf7796@arm.com>
-References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
- <1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
- <1491301105-5274-13-git-send-email-sricharan@codeaurora.org>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v3 5/7] mfd: Add Device Tree bindings document for TI
+ tps6105x chip
+Date: Tue, 4 Apr 2017 07:48:48 -0400
+Message-ID: <c2496732-b72d-e8f6-9b1d-2c06848fda07@osg.samsung.com>
+References: <20170401071854.23198-1-javier@osg.samsung.com>
+ <20170401071854.23198-6-javier@osg.samsung.com>
+ <20170403111540.7k3rjucvcxe5cunf@dell>
+ <b1118a87-9b39-bb04-d43e-f8f2b366904b@osg.samsung.com>
+ <20170404082739.6w6ltgdr2mgaqq4l@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491301105-5274-13-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, gregkh@linuxfoundation.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170404082739.6w6ltgdr2mgaqq4l@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/17 11:18, Sricharan R wrote:
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> 
-> The IORT linker section introduced by commit 34ceea275f62
-> ("ACPI/IORT: Introduce linker section for IORT entries probing")
-> was needed to make sure SMMU drivers are registered (and therefore
-> probed) in the kernel before devices using the SMMU have a chance
-> to probe in turn.
-> 
-> Through the introduction of deferred IOMMU configuration the linker
-> section based IORT probing infrastructure is not needed any longer, in
-> that device/SMMU probe dependencies are managed through the probe
-> deferral mechanism, making the IORT linker section infrastructure
-> unused, so that it can be removed.
-> 
-> Remove the unused IORT linker section probing infrastructure
-> from the kernel to complete the ACPI IORT IOMMU configure probe
-> deferral mechanism implementation.
+Hello Lee,
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+On 04/04/2017 04:27 AM, Lee Jones wrote:
+> On Mon, 03 Apr 2017, Javier Martinez Canillas wrote:
+> 
+>> Hello Lee,
+>>
+>> On 04/03/2017 07:15 AM, Lee Jones wrote:
+>>
+>> [snip]
+>>
+>>>> +
+>>>> +The TP61050/TPS61052 is a high-power "white LED driver". This boost converter
+>>>> +is also used for other things than white LEDs, and also contains a GPIO pin.
+>>>
+>>> What functions does it offer?
+>>>
+>>
+>> Same comment than before, I'm not really familiar with this driver. But I'll
+>> look what are the MFD cell instantiated to better understand dev functions
+>> and expand this documentation accordingly.
+> 
+> Writing documentation for H/W you are unfamiliar with is a bad idea IMHO.
+>
 
-> Tested-by: Hanjun Guo <hanjun.guo@linaro.org>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Sricharan R <sricharan@codeaurora.org>
-> ---
->  drivers/acpi/arm64/iort.c         | 2 --
->  include/asm-generic/vmlinux.lds.h | 1 -
->  include/linux/acpi_iort.h         | 3 ---
->  3 files changed, 6 deletions(-)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index e323ece..e7b1940 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -1000,6 +1000,4 @@ void __init acpi_iort_init(void)
->  	}
->  
->  	iort_init_platform_devices();
-> -
-> -	acpi_probe_device_table(iort);
->  }
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index 0968d13..9faa26c 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -566,7 +566,6 @@
->  	IRQCHIP_OF_MATCH_TABLE()					\
->  	ACPI_PROBE_TABLE(irqchip)					\
->  	ACPI_PROBE_TABLE(clksrc)					\
-> -	ACPI_PROBE_TABLE(iort)						\
->  	EARLYCON_TABLE()
->  
->  #define INIT_TEXT							\
-> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-> index 77e0809..f167e1d04 100644
-> --- a/include/linux/acpi_iort.h
-> +++ b/include/linux/acpi_iort.h
-> @@ -52,7 +52,4 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
->  { return NULL; }
->  #endif
->  
-> -#define IORT_ACPI_DECLARE(name, table_id, fn)		\
-> -	ACPI_DECLARE_PROBE_ENTRY(iort, name, table_id, 0, NULL, 0, fn)
-> -
->  #endif /* __ACPI_IORT_H__ */
-> 
+I just wanted to add an OF device ID table to the driver to make sure the
+driver won't have a regression when the I2C core reports an OF modalias
+but was asked to also write a DT binding doc in this case...
+
+I'm happy to drop the DT binding doc patch and someone more familiar to do
+it as a follow up.
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
