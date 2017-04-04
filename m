@@ -1,65 +1,54 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities output
- video on pad 1
-Date: Tue, 4 Apr 2017 15:11:46 -0700
-Message-ID: <9bfabc5c-d90f-6487-537d-20515ec61f9c@gmail.com>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
- <1490894749.2404.33.camel@pengutronix.de>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master
+Date: Wed, 05 Apr 2017 08:19:20 +1000
+Message-ID: <1491344360.4166.68.camel@kernel.crashing.org>
+References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
+ <20170329174340.89109-20-cbostic@linux.vnet.ibm.com>
+ <CACPK8XfOSYPidHF6=psC4mP-tkRyWTu0psdcK6EwA2E6FF53Uw@mail.gmail.com>
+ <0e1bcf3a-e8d7-9f50-bdf7-2a1e7466665b@linux.vnet.ibm.com>
+ <1490907014.3177.207.camel@kernel.crashing.org>
+ <93b21624-11fc-b71b-aa78-6cb4371c87ae@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1490894749.2404.33.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <93b21624-11fc-b71b-aa78-6cb4371c87ae@linux.vnet.ibm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christopher Bostic <cbostic@linux.vnet.ibm.com>, Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, rostedt@goodmis.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, "Edward A .
+ James" <eajames@us.ibm.com>, Alistair Popple <alistair@popple.id.au>, mingo@redhat.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/30/2017 10:25 AM, Philipp Zabel wrote:
-> The TVP5150 DT bindings specify a single output port (port 0) that
-> corresponds to the video output pad (pad 1, DEMOD_PAD_VID_OUT).
->
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> I'm trying to get this to work with a TVP5150 analog TV decoder, and the
-> first problem is that this device doesn't have pad 0 as its single
-> output pad. Instead, as a MEDIA_ENT_F_ATV_DECODER entity, it has for
-> pads (input, video out, vbi out, audio out), and video out is pad 1,
-> whereas the device tree only defines a single port (0).
-
-Shouldn't the DT bindings define ports for these other pads?
-I haven't seen this documented anywhere, but shouldn't there
-be a 1:1 correspondence between DT ports and media pads?
-
-Steve
-
-
-> ---
->
->  drivers/staging/media/imx/imx-media-dev.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-> index 17e2386a3ca3a..c52d6ca797965 100644
-> --- a/drivers/staging/media/imx/imx-media-dev.c
-> +++ b/drivers/staging/media/imx/imx-media-dev.c
-> @@ -267,6 +267,15 @@ static int imx_media_create_link(struct imx_media_dev *imxmd,
->  	source_pad = link->local_pad;
->  	sink_pad = link->remote_pad;
->
-> +	/*
-> +	 * If the source subdev is an analog video decoder with a single source
-> +	 * port, assume that this port 0 corresponds to the DEMOD_PAD_VID_OUT
-> +	 * entity pad.
-> +	 */
-> +	if (source->entity.function == MEDIA_ENT_F_ATV_DECODER &&
-> +	    local_sd->num_sink_pads == 0 && local_sd->num_src_pads == 1)
-> +		source_pad = DEMOD_PAD_VID_OUT;
-> +
->  	v4l2_info(&imxmd->v4l2_dev, "%s: %s:%d -> %s:%d\n", __func__,
->  		  source->name, source_pad, sink->name, sink_pad);
->
->
+T24gVHVlLCAyMDE3LTA0LTA0IGF0IDEyOjMyIC0wNTAwLCBDaHJpc3RvcGhlciBCb3N0aWMgd3Jv
+dGU6Cj4gQWdyZWVkIHRoYXQgdGhlcmUgaXMgcm9vbSBmb3IgaW1wcm92ZW1lbnQuwqDCoCBJIGlu
+dGVuZCB0byBsb29rIGZ1cnRoZXLCoAo+IGludG8geW91ciBzdWdnZXN0aW9ucyBmcm9tIGhlcmUg
+YW5kIG91ciBwcml2YXRlIGNvbnZlcnNhdGlvbiBvbiB0aGXCoAo+IG1hdHRlciBhbmQgbWFrZSBj
+aGFuZ2VzIGFzIGFwcHJvcHJpYXRlLsKgIEkgaGF2ZSBhbiBvcGVuIGlzc3VlIHRvIHRyYWNrwqAK
+PiB0aGlzLsKgIEFzIGl0IGV4aXN0cyBpbiB0aGlzIHBhdGNoIHJlYWRzL3dyaXRlcyBmcm9tIG1h
+c3RlciB0byBzbGF2ZcKgCj4gZnVuZGFtZW50YWxseSB3b3JrLsKgwqAKCk15IHVuZGVyc3RhbmRp
+bmcgaXMgdGhleSAic2VlbSB0byB3b3JrIGlmIHlvdSBnZXQgbHVja3kgd2l0aCB0aGUgdGltaW5n
+CmFuZCBmYWxsIGFwYXJ0IHVuZGVyIGxvYWQiLiBPciBkaWQgSSBoZWFyIHdyb25nID8KCj4gIEdp
+dmVuIHRoZSBwZXJ2YXNpdmVuZXNzIGFuZCB0aW1lIHRvIGZ1bGx5IGV2YWx1YXRlwqAKPiBhbmQg
+dGVzdCBhbnkgcHJvdG9jb2wgdXBkYXRlcyBJIGludGVuZCBhZGRyZXNzIHRoaXMgaW4gdGhlIG5l
+YXIgZnV0dXJlwqAKPiB3aXRoIGEgc2VwYXJhdGUgZm9sbG93IG9uIHBhdGNoLgoKUGxlYXNlIHRy
+eSB0aGUgc2ltcGxlIGNoYW5nZSBJIHByb3Bvc2VkIGluIG15IGVtYWlsLiBJdCdzIGEgNCBvciA1
+CmxpbmVzIGNoYW5nZSBtYXggdG8geW91ciBjbG9ja190b2dnbGUgZnVuY3Rpb24gYW5kIGhvdyBp
+dCdzIGNhbGxlZCBpbgpzZW5kIGFuZCByZWNlaXZlLiBJdCBzaG91bGQgYmUgdHJpdmlhbCB0byBj
+aGVjayBpZiB0aGluZ3Mgc3RpbGwgInNlZW0KdG8gd29yayIgdG8gYmVnaW4gd2l0aC4KCkRvIHlv
+dSBoYXZlIHNvbWUga2luZCBvZiB0ZXN0IG1lY2hhbmlzbSB0aGF0IGhhbW1lcnMgdGhlIEZTSQpj
+b250aW51b3VzbHkgPyBTdWNoIGFzIGRvaW5nIGEgc2VyaWVzIG9mwqBwdXRtZW1wcm9jL2dldG1l
+bXByb2MgJgpjaGVja2luZyB0aGUgdmFsdWVzID8KClRoZW4geW91IGNhbiBydW4gdGhhdCB3aGls
+ZSBoYW1tZXJpbmcgdGhlIExQQyBidXMgYW5kIGdlbmVyYWxseSBwdXR0aW5nCnRoZSBCTUMgdW5k
+ZXIgbG9hZCBhbmQgeW91J2xsIHF1aWNrbHkgc2VlIGlmIGl0J3MgcmVsaWFibGUgb3Igbm90LgoK
+Q2hlZXJzLApCZW4uCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
