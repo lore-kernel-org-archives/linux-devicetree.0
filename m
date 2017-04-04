@@ -1,198 +1,108 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/3 v5] iio: xoadc: augment DT bindings a bit
-Date: Tue,  4 Apr 2017 14:08:17 +0200
-Message-ID: <20170404120819.6921-1-linus.walleij@linaro.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 08/11] dt-bindings: Add bindings for the Amlogic Meson
+ dw-hdmi extension
+Date: Tue,  4 Apr 2017 14:15:28 +0200
+Message-ID: <1491308131-22071-9-git-send-email-narmstrong@baylibre.com>
+References: <1491308131-22071-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1491308131-22071-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: airlied@linux.ie
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In order to accommodate in a logical manner for the premuxed channels
-in PM8921 and the similarly addressed channels in later PMICs, we
-need a twocell arrangement with premux and analog mux setting as
-a tuple to uniquely identify a hardware channel.
-
-These bindings are not yet in use, so it should be fine to augment
-them before we actually start using it in drivers and device trees.
-
-This scheme came out of lengthy discussions and reverse-engineering
-and reading of the few information sources we have.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v3->v5:
-- Some nitpicky spelling fixes. Added Rob's ACK.
-ChangeLog v2->v3:
-- Drop leading zeroes on unit addresses.
-ChangeLog v1->v2:
-- Name nodes with <01 02> in a foo@0102 pattern.
-- Minor spelling nits.
-- Delete flimsy leftover docs from an interrim development path.
----
- .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 76 ++++++++++++----------
- 1 file changed, 42 insertions(+), 34 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-index 53cd146d8096..3ae06127789e 100644
---- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-@@ -19,32 +19,42 @@ Required properties:
-   with PMIC variant but is typically something like 2.2 or 1.8V.
- 
- The following required properties are standard for IO channels, see
--iio-bindings.txt for more details:
-+iio-bindings.txt for more details, but notice that this particular
-+ADC has a special addressing scheme that require two cells for
-+identifying each ADC channel:
- 
--- #address-cells: should be set to <1>
-+- #address-cells: should be set to <2>, the first cell is the
-+  prescaler (on PM8058) or premux (on PM8921) with two valid bits
-+  so legal values are 0x00, 0x01 or 0x02. The second cell
-+  is the main analog mux setting (0x00..0x0f). The combination
-+  of prescaler/premux and analog mux uniquely addresses a hardware
-+  channel on all systems.
- 
- - #size-cells: should be set to <0>
- 
--- #io-channel-cells: should be set to <1>
-+- #io-channel-cells: should be set to <2>, again the cells are
-+  precaler or premux followed by the analog muxing line.
- 
- - interrupts: should refer to the parent PMIC interrupt controller
-   and reference the proper ADC interrupt.
- 
- Required subnodes:
- 
--The ADC channels are configured as subnodes of the ADC. Since some of
--them are used for calibrating the ADC, these nodes are compulsory:
-+The ADC channels are configured as subnodes of the ADC.
-+
-+Since some of them are used for calibrating the ADC, these nodes are
-+compulsory:
- 
- adc-channel@c {
--	reg = <0x0c>;
-+	reg = <0x00 0x0c>;
- };
- 
- adc-channel@d {
--	reg = <0x0d>;
-+	reg = <0x00 0x0d>;
- };
- 
- adc-channel@f {
--	reg = <0x0f>;
-+	reg = <0x00 0x0f>;
- };
- 
- These three nodes are used for absolute and ratiometric calibration
-@@ -52,13 +62,13 @@ and only need to have these reg values: they are by hardware definition
- 1:1 ratio converters that sample 625, 1250 and 0 milliV and create
- an interpolation calibration for all other ADCs.
- 
--Optional subnodes: any channels other than channel 0x0c, 0x0d and
--0x0f are optional.
-+Optional subnodes: any channels other than channels [0x00 0x0c],
-+[0x00 0x0d] and [0x00 0x0f] are optional.
- 
- Required channel node properties:
- 
- - reg: should contain the hardware channel number in the range
--  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-+  0 .. 0xff (8 bits).
- 
- Optional channel node properties:
- 
-@@ -94,56 +104,54 @@ Example:
- xoadc: xoadc@197 {
- 	compatible = "qcom,pm8058-adc";
- 	reg = <0x197>;
--	interrupt-parent = <&pm8058>;
--	interrupts = <76 1>;
--	#address-cells = <1>;
-+	interrupts-extended = <&pm8058 76 IRQ_TYPE_EDGE_RISING>;
-+	#address-cells = <2>;
- 	#size-cells = <0>;
--	#io-channel-cells = <1>;
-+	#io-channel-cells = <2>;
- 
- 	vcoin: adc-channel@0 {
--		reg = <0x00>;
-+		reg = <0x00 0x00>;
- 	};
- 	vbat: adc-channel@1 {
--		reg = <0x01>;
-+		reg = <0x00 0x01>;
- 	};
- 	dcin: adc-channel@2 {
--		reg = <0x02>;
-+		reg = <0x00 0x02>;
- 	};
- 	ichg: adc-channel@3 {
--		reg = <0x03>;
-+		reg = <0x00 0x03>;
- 	};
- 	vph_pwr: adc-channel@4 {
--		reg = <0x04>;
-+		reg = <0x00 0x04>;
- 	};
- 	usb_vbus: adc-channel@a {
--		reg = <0x0a>;
-+		reg = <0x00 0x0a>;
- 	};
- 	die_temp: adc-channel@b {
--		reg = <0x0b>;
-+		reg = <0x00 0x0b>;
- 	};
- 	ref_625mv: adc-channel@c {
--		reg = <0x0c>;
-+		reg = <0x00 0x0c>;
- 	};
- 	ref_1250mv: adc-channel@d {
--		reg = <0x0d>;
-+		reg = <0x00 0x0d>;
- 	};
- 	ref_325mv: adc-channel@e {
--		reg = <0x0e>;
-+		reg = <0x00 0x0e>;
- 	};
- 	ref_muxoff: adc-channel@f {
--		reg = <0x0f>;
-+		reg = <0x00 0x0f>;
- 	};
- };
- 
--
- /* IIO client node */
- iio-hwmon {
- 	compatible = "iio-hwmon";
--	io-channels = <&xoadc 0x01>, /* Battery */
--		    <&xoadc 0x02>, /* DC in (charger) */
--		    <&xoadc 0x04>, /* VPH the main system voltage */
--		    <&xoadc 0x0b>, /* Die temperature */
--		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
--		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
--		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
-+	io-channels = <&xoadc 0x00 0x01>, /* Battery */
-+		    <&xoadc 0x00 0x02>, /* DC in (charger) */
-+		    <&xoadc 0x00 0x04>, /* VPH the main system voltage */
-+		    <&xoadc 0x00 0x0b>, /* Die temperature */
-+		    <&xoadc 0x00 0x0c>, /* Reference voltage 1.25V */
-+		    <&xoadc 0x00 0x0d>, /* Reference voltage 0.625V */
-+		    <&xoadc 0x00 0x0e>; /* Reference voltage 0.325V */
- };
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBiaW5kaW5nIGRlc2NyaWJlcyB0aGUgQW1sb2dpYyBNZXNvbiBzcGVjaWZpYyBleHRlbnNp
+b24gdG8gdGhlClN5bm9wc3lzIERlc2lnbndhcmUgSERNSSBDb250cm9sbGVyLgoKQWNrZWQtYnk6
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClNpZ25lZC1vZmYtYnk6IE5laWwgQXJtc3Ry
+b25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9h
+bWxvZ2ljLG1lc29uLWR3LWhkbWkudHh0ICAgICB8IDExMSArKysrKysrKysrKysrKysrKysrKysK
+IDEgZmlsZSBjaGFuZ2VkLCAxMTEgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tZHct
+aGRtaS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9hbWxvZ2ljLG1lc29uLWR3LWhkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1oZG1pLnR4dApuZXcgZmlsZSBt
+b2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi43ZjA0MGVkCi0tLSAvZGV2L251bGwKKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1o
+ZG1pLnR4dApAQCAtMCwwICsxLDExMSBAQAorQW1sb2dpYyBzcGVjaWZpYyBleHRlbnNpb25zIHRv
+IHRoZSBTeW5vcHN5cyBEZXNpZ253YXJlIEhETUkgQ29udHJvbGxlcgorPT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQor
+CitUaGUgQW1sb2dpYyBNZXNvbiBTeW5vcHN5cyBEZXNpZ253YXJlIEludGVncmF0aW9uIGlzIGNv
+bXBvc2VkIG9mIDoKKy0gQSBTeW5vcHN5cyBEZXNpZ25XYXJlIEhETUkgQ29udHJvbGxlciBJUAor
+LSBBIFRPUCBjb250cm9sIGJsb2NrIGNvbnRyb2xsaW5nIHRoZSBDbG9ja3MgYW5kIFBIWQorLSBB
+IGN1c3RvbSBIRE1JIFBIWSBpbiBvcmRlciB0byBjb252ZXJ0IHZpZGVvIHRvIFRNRFMgc2lnbmFs
+CisgX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KK3wgICAgICAgICAgICBIRE1J
+IFRPUCAgICAgICAgICAgICAgIHw8PSBIUEQKK3xfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX3wKK3wgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgIHwKK3wgIFN5bm9w
+c3lzIEhETUkgICB8ICAgSERNSSBQSFkgICAgIHw9PiBUTURTCit8ICAgIENvbnRyb2xsZXIgICAg
+fF9fX19fX19fX19fX19fX198Cit8X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX198
+PD0+IEREQworCitUaGUgSERNSSBUT1AgYmxvY2sgb25seSBzdXBwb3J0cyBIUEQgc2Vuc2luZy4K
+K1RoZSBTeW5vcHN5cyBIRE1JIENvbnRyb2xsZXIgaW50ZXJydXB0IGlzIHJvdXRlZCB0aHJvdWdo
+IHRoZQorVE9QIEJsb2NrIGludGVycnVwdC4KK0NvbW11bmljYXRpb24gdG8gdGhlIFRPUCBCbG9j
+ayBhbmQgdGhlIFN5bm9wc3lzIEhETUkgQ29udHJvbGxlciBpcyBkb25lCit2aWEgYSBwYWlyIG9m
+IGRlZGljYXRlZCBhZGRyK3JlYWQvd3JpdGUgcmVnaXN0ZXJzLgorVGhlIEhETUkgUEhZIGlzIGNv
+bmZpZ3VyZWQgYnkgcmVnaXN0ZXJzIGluIHRoZSBISEkgcmVnaXN0ZXIgYmxvY2suCisKK1BpeGVs
+IGRhdGEgYXJyaXZlcyBpbiA0OjQ6NCBmb3JtYXQgZnJvbSB0aGUgVkVOQyBibG9jayBhbmQgdGhl
+IFZQVSBIRE1JIG11eAorc2VsZWN0cyBlaXRoZXIgdGhlIEVOQ0kgZW5jb2RlciBmb3IgdGhlIDU3
+Nmkgb3IgNDgwaSBmb3JtYXRzIG9yIHRoZSBFTkNQCitlbmNvZGVyIGZvciBhbGwgdGhlIG90aGVy
+IGZvcm1hdHMgaW5jbHVkaW5nIGludGVybGFjZWQgSEQgZm9ybWF0cy4KKworVGhlIFZFTkMgdXNl
+cyBhIERWSSBlbmNvZGVyIG9uIHRvcCBvZiB0aGUgRU5DSSBvciBFTkNQIGVuY29kZXJzIHRvIGdl
+bmVyYXRlCitEVkkgdGltaW5ncyBmb3IgdGhlIEhETUkgY29udHJvbGxlci4KKworQW1sb2dpYyBN
+ZXNvbiBHWEJCLCBHWEwgYW5kIEdYTSBTb0NzIGZhbWlsaWVzIGVtYmVkcyB0aGUgU3lub3BzeXMg
+RGVzaWduV2FyZQorSERNSSBUWCBJUCB2ZXJzaW9uIDIuMDFhIHdpdGggSERDUCBhbmQgSTJDICYg
+Uy9QRElGCithdWRpbyBzb3VyY2UgaW50ZXJmYWNlcy4KKworUmVxdWlyZWQgcHJvcGVydGllczoK
+Ky0gY29tcGF0aWJsZTogdmFsdWUgc2hvdWxkIGJlIGRpZmZlcmVudCBmb3IgZWFjaCBTb0MgZmFt
+aWx5IGFzIDoKKwktIEdYQkIgKFM5MDUpIDogImFtbG9naWMsbWVzb24tZ3hiYi1kdy1oZG1pIgor
+CS0gR1hMIChTOTA1WCwgUzkwNUQpIDogImFtbG9naWMsbWVzb24tZ3hsLWR3LWhkbWkiCisJLSBH
+WE0gKFM5MTIpIDogImFtbG9naWMsbWVzb24tZ3htLWR3LWhkbWkiCisJZm9sbG93ZWQgYnkgdGhl
+IGNvbW1vbiAiYW1sb2dpYyxtZXNvbi1neC1kdy1oZG1pIgorLSByZWc6IFBoeXNpY2FsIGJhc2Ug
+YWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgorLSBpbnRl
+cnJ1cHRzOiBUaGUgSERNSSBpbnRlcnJ1cHQgbnVtYmVyCistIGNsb2NrcywgY2xvY2stbmFtZXMg
+OiBtdXN0IGhhdmUgdGhlIHBoYW5kbGVzIHRvIHRoZSBIRE1JIGlhaGIgYW5kIGlzZnIgY2xvY2tz
+LAorICBhbmQgdGhlIEFtbG9naWMgTWVzb24gdmVuY2kgY2xvY2tzIGFzIGRlc2NyaWJlZCBpbgor
+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3Mu
+dHh0LAorICB0aGUgY2xvY2tzIGFyZSBzb2Mgc3BlY2lmaWMsIHRoZSBjbG9jay1uYW1lcyBzaG91
+bGQgYmUgImlhaGIiLCAiaXNmciIsICJ2ZW5jaSIKKy0gcmVzZXRzLCByZXNldHMtbmFtZXM6IG11
+c3QgaGF2ZSB0aGUgcGhhbmRsZXMgdG8gdGhlIEhETUkgYXBiLCBnbHVlIGFuZCBwaHkKKyAgcmVz
+ZXRzIGFzIGRlc2NyaWJlZCBpbiA6CisgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9yZXNldC9yZXNldC50eHQsCisgIHRoZSByZXNldC1uYW1lcyBzaG91bGQgYmUgImhkbWl0eF9h
+cGIiLCAiaGRtaXR4IiwgImhkbWl0eF9waHkiCisKK1JlcXVpcmVkIG5vZGVzOgorCitUaGUgY29u
+bmVjdGlvbnMgdG8gdGhlIEhETUkgcG9ydHMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBo
+CitiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2dyYXBoLnR4dC4KKworVGhlIGZvbGxvd2luZyB0YWJsZSBsaXN0cyBmb3IgZWFjaCBzdXBwb3J0
+ZWQgbW9kZWwgdGhlIHBvcnQgbnVtYmVyCitjb3JyZXNwb25kaW5nIHRvIGVhY2ggSERNSSBvdXRw
+dXQgYW5kIGlucHV0LgorCisJCVBvcnQgMAkJUG9ydCAxCistLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQorIFM5MDUgKEdYQkIpCVZFTkMgSW5wdXQJVE1EUyBPdXRwdXQK
+KyBTOTA1WCAoR1hMKQlWRU5DIElucHV0CVRNRFMgT3V0cHV0CisgUzkwNUQgKEdYTCkJVkVOQyBJ
+bnB1dAlUTURTIE91dHB1dAorIFM5MTIgKEdYTSkJVkVOQyBJbnB1dAlUTURTIE91dHB1dAorCitF
+eGFtcGxlOgorCitoZG1pLWNvbm5lY3RvciB7CisJY29tcGF0aWJsZSA9ICJoZG1pLWNvbm5lY3Rv
+ciI7CisJdHlwZSA9ICJhIjsKKworCXBvcnQgeworCQloZG1pX2Nvbm5lY3Rvcl9pbjogZW5kcG9p
+bnQgeworCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX3R4X3RtZHNfb3V0PjsKKwkJfTsKKwl9
+OworfTsKKworaGRtaV90eDogaGRtaS10eEBjODgzYTAwMCB7CisJY29tcGF0aWJsZSA9ICJhbWxv
+Z2ljLG1lc29uLWd4YmItZHctaGRtaSIsICJhbWxvZ2ljLG1lc29uLWd4LWR3LWhkbWkiOworCXJl
+ZyA9IDwweDAgMHhjODgzYTAwMCAweDAgMHgxYz47CisJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDU3
+IElSUV9UWVBFX0VER0VfUklTSU5HPjsKKwlyZXNldHMgPSA8JnJlc2V0IFJFU0VUX0hETUlUWF9D
+QVBCMz4sCisJCSA8JnJlc2V0IFJFU0VUX0hETUlfU1lTVEVNX1JFU0VUPiwKKwkJIDwmcmVzZXQg
+UkVTRVRfSERNSV9UWD47CisJcmVzZXQtbmFtZXMgPSAiaGRtaXR4X2FwYiIsICJoZG1pdHgiLCAi
+aGRtaXR4X3BoeSI7CisJY2xvY2tzID0gPCZjbGtjIENMS0lEX0hETUlfUENMSz4sCisJCSA8JmNs
+a2MgQ0xLSURfQ0xLODE+LAorCQkgPCZjbGtjIENMS0lEX0dDTEtfVkVOQ0lfSU5UMD47CisJY2xv
+Y2stbmFtZXMgPSAiaXNmciIsICJpYWhiIiwgInZlbmNpIjsKKwkjYWRkcmVzcy1jZWxscyA9IDwx
+PjsKKwkjc2l6ZS1jZWxscyA9IDwwPjsKKworCS8qIFZQVSBWRU5DIElucHV0ICovCisJaGRtaV90
+eF92ZW5jX3BvcnQ6IHBvcnRAMCB7CisJCXJlZyA9IDwwPjsKKworCQloZG1pX3R4X2luOiBlbmRw
+b2ludCB7CisJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfdHhfb3V0PjsKKwkJfTsKKwl9Owor
+CisJLyogVE1EUyBPdXRwdXQgKi8KKwloZG1pX3R4X3RtZHNfcG9ydDogcG9ydEAxIHsKKwkJcmVn
+ID0gPDE+OworCisJCWhkbWlfdHhfdG1kc19vdXQ6IGVuZHBvaW50IHsKKwkJCXJlbW90ZS1lbmRw
+b2ludCA9IDwmaGRtaV9jb25uZWN0b3JfaW4+OworCQl9OworCX07Cit9OwotLSAKMS45LjEKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
