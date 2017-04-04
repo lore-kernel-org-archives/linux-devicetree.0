@@ -1,76 +1,105 @@
-From: Liam Breck <liam@networkimprov.net>
-Subject: [PATCH v12.4 8/10] devicetree: power: bq27xxx: Add monitored-battery documentation
-Date: Tue,  4 Apr 2017 01:57:04 -0700
-Message-ID: <20170404085706.32592-6-liam@networkimprov.net>
-References: <20170404085706.32592-1-liam@networkimprov.net>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170404085706.32592-1-liam@networkimprov.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, linux-pm@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Matt Ranostay <matt@ranostay.consulting>, Liam Breck <kernel@networkimprov.net>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2] i2c/muxes/i2c-mux-ltc4306: LTC4306 and LTC4305 I2C
+ multiplexer/switch
+Date: Tue, 4 Apr 2017 11:28:23 +0200
+Message-ID: <b5838bae-8108-1a0e-5234-d14cb5e95e52@axentia.se>
+References: <1490782541-7832-1-git-send-email-michael.hennerich@analog.com>
+ <0d4c068f-d909-64be-421d-4500da7ebd4c@axentia.se>
+ <e0027ff7-948e-60f1-a492-72ab4a67605f@analog.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <e0027ff7-948e-60f1-a492-72ab4a67605f@analog.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: michael.hennerich@analog.com, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Liam Breck <kernel@networkimprov.net>
+*snip* *snip*
 
-Document monitored-battery = <&battery_node>
+>>> +static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
+>>> +{
+>>> +	struct ltc4306 *data = gpiochip_get_data(chip);
+>>> +	int ret = 0;
+>>> +
+>>> +	if (gpiochip_line_is_open_drain(chip, offset) ||
+>>> +	    (data->regs[LTC_REG_MODE] & BIT(7 - offset))) {
+>>
+>> I wonder about this open-coded register cache. So, gpio people, is there
+>> a guarantee from gpiolib that only one gpio_chip operation is in flight
+>> concurrently? Because I don't see any evidence of that. With that in
+>> mind, I think some locking is needed?
+> 
+> I thought there is a per chip mutex in the gpiolib. But I can't find 
+> anything like this either. Since these two gpios can be used from 
+> different internal or external users. The locking seem to be needed.
+> 
+> This gets us back to the regmap option. I did a quick grep, and 9 out of 
+> 205 drivers using regmap i2c, also use i2c_smbus... concurrently.
+> 
+> grep -Rl regmap_init_i2c ./drivers  | xargs grep -l i2c_smbus_ | grep "\.c"
+> 
+> Mostly to work around non uniform transfer layouts.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-Signed-off-by: Liam Breck <kernel@networkimprov.net>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Sebastian Reichel <sre@kernel.org>
----
- .../devicetree/bindings/power/supply/bq27xxx.txt   | 31 +++++++++++++++++-----
- 1 file changed, 24 insertions(+), 7 deletions(-)
+I see three options.
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-index b0c95ef..a4b62b3 100644
---- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-+++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-@@ -1,7 +1,7 @@
--Binding for TI BQ27XXX fuel gauge family
-+TI BQ27XXX fuel gauge family
- 
- Required properties:
--- compatible: Should contain one of the following:
-+- compatible: contains one of the following:
-  * "ti,bq27200" - BQ27200
-  * "ti,bq27210" - BQ27210
-  * "ti,bq27500" - deprecated, use revision specific property below
-@@ -26,11 +26,28 @@ Required properties:
-  * "ti,bq27425" - BQ27425
-  * "ti,bq27441" - BQ27441
-  * "ti,bq27621" - BQ27621
--- reg: integer, i2c address of the device.
-+- reg: integer, I2C address of the fuel gauge.
-+
-+Optional properties:
-+- monitored-battery: phandle of battery characteristics devicetree node
-+    The fuel gauge uses the following battery properties:
-+    + energy-full-design-microwatt-hours
-+    + charge-full-design-microamp-hours
-+    + voltage-min-design-microvolt
-+  Both or neither of the *-full-design-*-hours properties must be set.
-+  See Documentation/devicetree/bindings/power/supply/battery.txt
- 
- Example:
- 
--bq27510g3 {
--    compatible = "ti,bq27510g3";
--    reg = <0x55>;
--};
-+	bat: battery {
-+		compatible = "simple-battery";
-+		voltage-min-design-microvolt = <3200000>;
-+		energy-full-design-microwatt-hours = <5290000>;
-+		charge-full-design-microamp-hours = <1430000>;
-+	};
-+
-+	bq27510g3: fuel-gauge@55 {
-+		compatible = "ti,bq27510g3";
-+		reg = <0x55>;
-+		monitored-battery = <&bat>;
-+	};
--- 
-2.9.3
+1. Go with regmap and convert to mux-locked. Then the unlocked i2c-xfer
+becomes an ordinary i2c-xfer (or smbus, whatever). This will result in
+the cleanest code.
+
+2. Go with regmap and stay parent-locked. Then hook into the regmap
+locking as is done in one of the drivers that have worked around similar
+problems with regmap and parent-locked i2c-mux interactions:
+
+drivers/media/dvb-frontends/rtl2830.c
+drivers/media/dvb-frontends/m88ds3103.c
+
+This will probably work, but you'd need to add a number of extra helper
+functions.
+
+3. Exclude register 3 from regmap and only use regmap for the other
+registers. This will be a bit ugly and ad-hoc, will need clear comments
+on what is going on and why it is safe etc. And I want to see it before
+I accept it. And it might not be my call to begin with, because TBH, it
+sounds a bit disgusting...
+
+> I'll check with Mark Brown on this topic.
+
+Ok, might be a good idea...
+
+>>> +
+>>> +add_adapter_failed:
+>>> +	i2c_mux_del_adapters(muxc);
+>>> +gpio_default:
+>>> +	gpiod_direction_input(data->en_gpio);
+>>
+>> This was actually not what I had in mind when I asked about it in v1, and
+>> this looks a bit strange. You have no way of knowing if the pin was
+>> configured as input when probe was called, and I don't see code like this
+>> all over the place. Maybe it's is ok to not disable the chip over
+>> suspend/resume, I was just asking because it looked a bit strange to grab
+>> a pin and then forget about it. Now that I think about it some more, it's
+>> probably ok to do just that since it is perhaps not possible to make the
+>> chip draw less power by deasserting enable, but what do I know?
+> 
+> GPIOs are assumed by default inputs. So if you want to undo the actions 
+> in probe. The logical consequence is to move them back to inputs, and 
+> let the external PULL-UP or PULL-DOWN on the ENABLE decide what happens. 
+> I would also prefer to leave it enabled, so that the GPIOs can retain
+
+My point is that I do not see any probe functions undoing gpio configs.
+Why bother in this case? Or are other probe functions really doing this?
+I actually didn't check, but I haven't stumbled over it previously and
+at least think I would have noticed...
+
+> it's last state. Well I think the device draws a bit less power when 
+> disabled. But we don't support runtime PM anyways.
+
+It might not be safe to reset the gpio pins over a suspend/resume depending
+on what they are used for, so it is probably a bad idea to go there. Sorry
+for bringing the whole issue up and muddying the waters...
+
+Cheers,
+peda
+
