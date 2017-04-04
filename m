@@ -1,39 +1,60 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2] phy: cpcap-usb: Add CPCAP PMIC USB support
-Date: Mon, 3 Apr 2017 20:27:09 -0700
-Message-ID: <20170404032708.GM10760@atomide.com>
-References: <20170322234602.5888-1-tony@atomide.com>
- <d47b0f99-1ef8-3bff-0fbe-edb95ed41e23@ti.com>
- <20170327150518.GH10760@atomide.com>
- <3661b0cc-bf79-0347-ae4c-db6bdfdf6293@ti.com>
+From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: Device Tree Binding for Intel FPGA Video and Image Processing
+ Suite
+Date: Tue, 4 Apr 2017 03:57:40 +0000
+Message-ID: <FB1B748C9B55D647AEE382CBB370D20F064744@PGSMSX109.gar.corp.intel.com>
+References: <1490949905.21575.8.camel@intel.com>
+ <CAL_JsqJa6rdk=fxHVkHdjFrkBx-E6hGUfoZt2cAzaMvq2TJkNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3661b0cc-bf79-0347-ae4c-db6bdfdf6293-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJa6rdk=fxHVkHdjFrkBx-E6hGUfoZt2cAzaMvq2TJkNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170330 04:51]:
-> On Monday 27 March 2017 08:35 PM, Tony Lindgren wrote:
-> > Seems this can be also done when implementing PM runtime handling.
-> > If you want some of these changes done for the initial patch,
-> > please let me know.
-> 
-> I think it's better we get extcon stuff in the initial patch so that we don't
-> have to maintain some piece of code for legacy dt. Others can be added later.
-
-Sure, I'll take a look at that hopefully this week at some
-point.
-
-Regards,
-
-Tony
+SGkgUm9iLA0KDQpBcG9sb2dpZXMgZm9yIHRoZSBtaXN0YWtlLiBCZWxvdyBhcmUgdGhlIGJpbmRp
+bmdzDQoNCkZyb20gMjNhOWUyNzRiYjUxN2I4ZTIzMmM1YWE0Y2Y5NzM3ZGUxNjQ0YjcwOCBNb24g
+U2VwIDE3IDAwOjAwOjAwIDIwMDENCkZyb206IE9uZywgSGVhbiBMb29uZyA8aGVhbi5sb29uZy5v
+bmdAaW50ZWwuY29tPg0KRGF0ZTogVGh1LCAzMCBNYXIgMjAxNyAxNzo1OTozNyArMDgwMA0KU3Vi
+amVjdDogW1BBVENIdjBdIEludGVsIEZQR0EgVmlkZW8gYW5kIEltYWdlIFByb2Nlc3NpbmcgU3Vp
+dGUgZGV2aWNlIHRyZWUgYmluZGluZw0KDQogICAgICAgIERldmljZSB0cmVlIGJpbmRpbmcgZm9y
+IEludGVsIEZQR0EgVmlkZW8gYW5kIEltYWdlDQogICAgICAgIFByb2Nlc3NpbmcgU3VpdGUuIFRo
+ZSBiaW5kaW5nIGludm9sdmVkIHdvdWxkIGJlIGdlbmVyYXRlZA0KICAgICAgICBmcm9tIHRoZSBB
+bHRlcmEgKEludGVsKSBRc3lzIHN5c3RlbS4gVGhlIGJpbmRpbmdzIHdvdWxkDQogICAgICAgIHNl
+dCB0aGUgbWF4IHdpZHRoLCBtYXggaGVpZ2h0LCBidXRzIHBlciBwaXhlbCBhbmQgbWVtb3J5DQog
+ICAgICAgIHBvcnQgd2lkdGguIFRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIG9ubHkgc3VwcG9ydHMg
+dGhlIEludGVsDQogICAgICAgIEFycmlhMTAgZGV2a2l0IGFuZCBpdHMgdmFyaWFudHMuIFZlbmRv
+ciBuYW1lIHJldGFpbmVkIGFzDQogICAgICAgIGFsdHIuDQoNClNpZ25lZC1vZmYtYnk6IE9uZywg
+SGVhbiBMb29uZyA8aGVhbi5sb29uZy5vbmdAaW50ZWwuY29tPg0KLS0tDQogLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZ3B1L2FsdHIsdmlwLWZiMi50eHQgICAgICAgfCAgIDI0ICsrKysrKysrKysr
+KysrKysrKysrDQogMSBmaWxlcyBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9u
+cygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZ3B1L2FsdHIsdmlwLWZiMi50eHQNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncHUvYWx0cix2aXAtZmIyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncHUvYWx0cix2aXAtZmIyLnR4dA0KbmV3IGZpbGUgbW9kZSAxMDA2
+NDQNCmluZGV4IDAwMDAwMDAuLjliYTMyMDkNCi0tLSAvZGV2L251bGwNCisrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYWx0cix2aXAtZmIyLnR4dA0KQEAgLTAsMCAr
+MSwyNCBAQA0KK0ludGVsIFZpZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVm
+ZmVyIElJIGJpbmRpbmdzDQorDQorU3VwcG9ydGVkIGhhcmR3YXJlOiAgQXJyaWEgMTAgYW5kIGFi
+b3ZlIHdpdGggZGlzcGxheSBwb3J0IElQDQorDQorUmVxdWlyZWQgcHJvcGVydGllczoNCistIGNv
+bXBhdGlibGU6ICJhbHRyLHZpcC1mcmFtZS1idWZmZXItMi4wIg0KKy0gcmVnOiBQaHlzaWNhbCBi
+YXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgZnJhbWVidWZmZXIgY29udHJvbGxlcidzDQor
+ICByZWdpc3RlcnMuDQorLSBtYXgtd2lkdGg6IFRoZSB3aWR0aCBvZiB0aGUgZnJhbWVidWZmZXIg
+aW4gcGl4ZWxzLg0KKy0gbWF4LWhlaWdodDogVGhlIGhlaWdodCBvZiB0aGUgZnJhbWVidWZmZXIg
+aW4gcGl4ZWxzLg0KKy0gYml0cy1wZXItc3ltYm9sOiBvbmx5ICI4IiBpcyBjdXJyZW50bHkgc3Vw
+cG9ydGVkDQorLSBtZW0tcG9ydC13aWR0aCA9IHRoZSBidXMgd2lkdGggb2YgdGhlIGF2YWxvbiBt
+YXN0ZXIgcG9ydCBvbiB0aGUgZnJhbWUgcmVhZGVyDQorDQorRXhhbXBsZToNCisNCitkcF8wX2Zy
+YW1lX2J1ZjogdmlwQDB4MTAwMDAwMjgwIHsNCisgICAgICAgY29tcGF0aWJsZSA9ICJhbHRyLHZp
+cC1mcmFtZS1idWZmZXItMi4wIjsNCisgICAgICAgcmVnID0gPDB4MDAwMDAwMDEgMHgwMDAwMDI4
+MCAweDAwMDAwMDQwPjsNCisgICAgICAgYWx0cixtYXgtd2lkdGggPSA8MTI4MD47DQorICAgICAg
+IGFsdHIsbWF4LWhlaWdodCA9IDw3MjA+Ow0KKyAgICAgICBhbHRyLGJpdHMtcGVyLXN5bWJvbCA9
+IDw4PjsNCisgICAgICAgYWx0cixtZW0tcG9ydC13aWR0aCA9IDwxMjg+Ow0KK307DQorDQotLSAN
+CjEuNy4xDQoNCg==
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
