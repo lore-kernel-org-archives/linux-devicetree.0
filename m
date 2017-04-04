@@ -1,36 +1,198 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 08/13] ARM64: dts: meson-gx: Add shared CMA dma memory
- pool
-Date: Tue, 04 Apr 2017 04:57:36 -0700
-Message-ID: <m2bmsc8jwv.fsf@baylibre.com>
-References: <1490109950-21421-1-git-send-email-narmstrong@baylibre.com>
- <1490109950-21421-9-git-send-email-narmstrong@baylibre.com>
- <43dd4aec-7002-5844-2e34-8507860a8268@baylibre.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/3 v5] iio: xoadc: augment DT bindings a bit
+Date: Tue,  4 Apr 2017 14:08:17 +0200
+Message-ID: <20170404120819.6921-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <43dd4aec-7002-5844-2e34-8507860a8268@baylibre.com> (Neil
- Armstrong's message of "Tue, 4 Apr 2017 10:41:05 +0200")
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPiB3cml0ZXM6Cgo+IE9uIDAz
-LzIxLzIwMTcgMDQ6MjUgUE0sIE5laWwgQXJtc3Ryb25nIHdyb3RlOgo+PiBUaGUgSERNSSBtb2Rl
-cyBuZWVkcyBtb3JlIENNQSBtZW1vcnkgdG8gYmUgcmVzZXJ2ZWQgYXQgYm9vdC10aW1lLgo+PiAK
-Pj4gU2lnbmVkLW9mZi1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29t
-PgoKWy4uLl0KCj4gSGkgS2V2aW4sCj4KPiBQbGVhc2UgdGFrZSB0aGlzIG9uZSBmb3IgdGhlIGFt
-bG9naWMgYXJtLXNvYyBEVCB0cmVlLgo+CgpBcHBsaWVkIHRvIHY0LjEyL2R0NjQsCgpLZXZpbgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+In order to accommodate in a logical manner for the premuxed channels
+in PM8921 and the similarly addressed channels in later PMICs, we
+need a twocell arrangement with premux and analog mux setting as
+a tuple to uniquely identify a hardware channel.
+
+These bindings are not yet in use, so it should be fine to augment
+them before we actually start using it in drivers and device trees.
+
+This scheme came out of lengthy discussions and reverse-engineering
+and reading of the few information sources we have.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v3->v5:
+- Some nitpicky spelling fixes. Added Rob's ACK.
+ChangeLog v2->v3:
+- Drop leading zeroes on unit addresses.
+ChangeLog v1->v2:
+- Name nodes with <01 02> in a foo@0102 pattern.
+- Minor spelling nits.
+- Delete flimsy leftover docs from an interrim development path.
+---
+ .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 76 ++++++++++++----------
+ 1 file changed, 42 insertions(+), 34 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+index 53cd146d8096..3ae06127789e 100644
+--- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+@@ -19,32 +19,42 @@ Required properties:
+   with PMIC variant but is typically something like 2.2 or 1.8V.
+ 
+ The following required properties are standard for IO channels, see
+-iio-bindings.txt for more details:
++iio-bindings.txt for more details, but notice that this particular
++ADC has a special addressing scheme that require two cells for
++identifying each ADC channel:
+ 
+-- #address-cells: should be set to <1>
++- #address-cells: should be set to <2>, the first cell is the
++  prescaler (on PM8058) or premux (on PM8921) with two valid bits
++  so legal values are 0x00, 0x01 or 0x02. The second cell
++  is the main analog mux setting (0x00..0x0f). The combination
++  of prescaler/premux and analog mux uniquely addresses a hardware
++  channel on all systems.
+ 
+ - #size-cells: should be set to <0>
+ 
+-- #io-channel-cells: should be set to <1>
++- #io-channel-cells: should be set to <2>, again the cells are
++  precaler or premux followed by the analog muxing line.
+ 
+ - interrupts: should refer to the parent PMIC interrupt controller
+   and reference the proper ADC interrupt.
+ 
+ Required subnodes:
+ 
+-The ADC channels are configured as subnodes of the ADC. Since some of
+-them are used for calibrating the ADC, these nodes are compulsory:
++The ADC channels are configured as subnodes of the ADC.
++
++Since some of them are used for calibrating the ADC, these nodes are
++compulsory:
+ 
+ adc-channel@c {
+-	reg = <0x0c>;
++	reg = <0x00 0x0c>;
+ };
+ 
+ adc-channel@d {
+-	reg = <0x0d>;
++	reg = <0x00 0x0d>;
+ };
+ 
+ adc-channel@f {
+-	reg = <0x0f>;
++	reg = <0x00 0x0f>;
+ };
+ 
+ These three nodes are used for absolute and ratiometric calibration
+@@ -52,13 +62,13 @@ and only need to have these reg values: they are by hardware definition
+ 1:1 ratio converters that sample 625, 1250 and 0 milliV and create
+ an interpolation calibration for all other ADCs.
+ 
+-Optional subnodes: any channels other than channel 0x0c, 0x0d and
+-0x0f are optional.
++Optional subnodes: any channels other than channels [0x00 0x0c],
++[0x00 0x0d] and [0x00 0x0f] are optional.
+ 
+ Required channel node properties:
+ 
+ - reg: should contain the hardware channel number in the range
+-  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
++  0 .. 0xff (8 bits).
+ 
+ Optional channel node properties:
+ 
+@@ -94,56 +104,54 @@ Example:
+ xoadc: xoadc@197 {
+ 	compatible = "qcom,pm8058-adc";
+ 	reg = <0x197>;
+-	interrupt-parent = <&pm8058>;
+-	interrupts = <76 1>;
+-	#address-cells = <1>;
++	interrupts-extended = <&pm8058 76 IRQ_TYPE_EDGE_RISING>;
++	#address-cells = <2>;
+ 	#size-cells = <0>;
+-	#io-channel-cells = <1>;
++	#io-channel-cells = <2>;
+ 
+ 	vcoin: adc-channel@0 {
+-		reg = <0x00>;
++		reg = <0x00 0x00>;
+ 	};
+ 	vbat: adc-channel@1 {
+-		reg = <0x01>;
++		reg = <0x00 0x01>;
+ 	};
+ 	dcin: adc-channel@2 {
+-		reg = <0x02>;
++		reg = <0x00 0x02>;
+ 	};
+ 	ichg: adc-channel@3 {
+-		reg = <0x03>;
++		reg = <0x00 0x03>;
+ 	};
+ 	vph_pwr: adc-channel@4 {
+-		reg = <0x04>;
++		reg = <0x00 0x04>;
+ 	};
+ 	usb_vbus: adc-channel@a {
+-		reg = <0x0a>;
++		reg = <0x00 0x0a>;
+ 	};
+ 	die_temp: adc-channel@b {
+-		reg = <0x0b>;
++		reg = <0x00 0x0b>;
+ 	};
+ 	ref_625mv: adc-channel@c {
+-		reg = <0x0c>;
++		reg = <0x00 0x0c>;
+ 	};
+ 	ref_1250mv: adc-channel@d {
+-		reg = <0x0d>;
++		reg = <0x00 0x0d>;
+ 	};
+ 	ref_325mv: adc-channel@e {
+-		reg = <0x0e>;
++		reg = <0x00 0x0e>;
+ 	};
+ 	ref_muxoff: adc-channel@f {
+-		reg = <0x0f>;
++		reg = <0x00 0x0f>;
+ 	};
+ };
+ 
+-
+ /* IIO client node */
+ iio-hwmon {
+ 	compatible = "iio-hwmon";
+-	io-channels = <&xoadc 0x01>, /* Battery */
+-		    <&xoadc 0x02>, /* DC in (charger) */
+-		    <&xoadc 0x04>, /* VPH the main system voltage */
+-		    <&xoadc 0x0b>, /* Die temperature */
+-		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
+-		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
+-		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
++	io-channels = <&xoadc 0x00 0x01>, /* Battery */
++		    <&xoadc 0x00 0x02>, /* DC in (charger) */
++		    <&xoadc 0x00 0x04>, /* VPH the main system voltage */
++		    <&xoadc 0x00 0x0b>, /* Die temperature */
++		    <&xoadc 0x00 0x0c>, /* Reference voltage 1.25V */
++		    <&xoadc 0x00 0x0d>, /* Reference voltage 0.625V */
++		    <&xoadc 0x00 0x0e>; /* Reference voltage 0.325V */
+ };
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
