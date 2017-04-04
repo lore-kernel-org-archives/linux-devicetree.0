@@ -1,36 +1,61 @@
 From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v3 7/8] ARM: configs: stm32: STMPE1600 GPIO expander
-Date: Tue, 4 Apr 2017 17:44:37 +0200
-Message-ID: <1491320678-17246-8-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v3 5/8] ARM: dts: stm32: Enable STMPE1600 gpio expander of
+ STM32F429-EVAL board
+Date: Tue, 4 Apr 2017 17:44:35 +0200
+Message-ID: <1491320678-17246-6-git-send-email-hugues.fruchet@st.com>
 References: <1491320678-17246-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1491320678-17246-1-git-send-email-hugues.fruchet@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable STMPE1600 GPIO expander.
+Enable STMPE1600 gpio expander of STM32F429-EVAL board.
 
 Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- arch/arm/configs/stm32_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/stm32429i-eval.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-index a9d8e3c..84adc88 100644
---- a/arch/arm/configs/stm32_defconfig
-+++ b/arch/arm/configs/stm32_defconfig
-@@ -49,6 +49,8 @@ CONFIG_SERIAL_STM32_CONSOLE=y
- # CONFIG_HW_RANDOM is not set
- # CONFIG_HWMON is not set
- CONFIG_REGULATOR=y
-+CONFIG_GPIO_STMPE=y
-+CONFIG_MFD_STMPE=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- # CONFIG_USB_SUPPORT is not set
- CONFIG_NEW_LEDS=y
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 87733d3..7ffcf07 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -154,6 +154,23 @@
+ 	pinctrl-0 = <&i2c1_pins>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
++
++	stmpe1600: stmpe1600@42 {
++		compatible = "st,stmpe1600";
++		reg = <0x42>;
++		irq-gpio = <&gpioi 8 0>;
++		irq-trigger = <3>;
++		interrupts = <8 3>;
++		interrupt-parent = <&exti>;
++		interrupt-controller;
++		wakeup-source;
++
++		stmpegpio: stmpe_gpio {
++			compatible = "st,stmpe-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++	};
+ };
+ 
+ &mac {
 -- 
 1.9.1
