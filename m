@@ -1,111 +1,58 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: Re: [PATCH v8 1/2] media: i2c/ov5645: add the device tree binding
- document
-Date: Tue, 4 Apr 2017 14:06:44 +0300
-Message-ID: <58E37E44.9040506@linaro.org>
-References: <1491228148-28505-1-git-send-email-todor.tomov@linaro.org>
- <20170404093150.GB3288@valkosipuli.retiisi.org.uk>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V10 06/12] of: device: Fix overflow of coherent_dma_mask
+Date: Tue, 4 Apr 2017 12:10:51 +0100
+Message-ID: <906032bd-8f3d-f34c-7c0f-0222c39fb552@arm.com>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-7-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170404093150.GB3288@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mchehab@kernel.org, laurent.pinchart@ideasonboard.com, hans.verkuil@cisco.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1491301105-5274-7-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On 04/04/17 11:18, Sricharan R wrote:
+> Size of the dma-range is calculated as coherent_dma_mask + 1
+> and passed to arch_setup_dma_ops further. It overflows when
+> the coherent_dma_mask is set for full 64 bits 0xFFFFFFFFFFFFFFFF,
+> resulting in size getting passed as 0 wrongly. Fix this by
+> passsing in max(mask, mask + 1). Note that in this case
+> when the mask is set to full 64bits, we will be passing the mask
+> itself to arch_setup_dma_ops instead of the size. The real fix
+> for this should be to make arch_setup_dma_ops receive the
+> mask and handle it, to be done in the future.
 
-Thank you for the time to review this again.
+Agreed; in the meantime, this fix is neat and robust enough.
 
-On 04/04/2017 12:31 PM, Sakari Ailus wrote:
-> Hi Todor,
-> 
-> On Mon, Apr 03, 2017 at 05:02:28PM +0300, Todor Tomov wrote:
->> Add the document for ov5645 device tree binding.
->>
->> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
->> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> ---
->>  .../devicetree/bindings/media/i2c/ov5645.txt       | 54 ++++++++++++++++++++++
->>  1 file changed, 54 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
->> new file mode 100644
->> index 0000000..fd7aec9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
->> @@ -0,0 +1,54 @@
->> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
->> +
->> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
->> +an active array size of 2592H x 1944V. It is programmable through a serial I2C
->> +interface.
->> +
->> +Required Properties:
->> +- compatible: Value should be "ovti,ov5645".
->> +- clocks: Reference to the xclk clock.
->> +- clock-names: Should be "xclk".
->> +- clock-frequency: Frequency of the xclk clock.
->> +- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
->> +  to the hardware pin PWDNB which is physically active low.
->> +- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
->> +  the hardware pin RESETB.
->> +- vdddo-supply: Chip digital IO regulator.
->> +- vdda-supply: Chip analog regulator.
->> +- vddd-supply: Chip digital core regulator.
->> +
->> +The device node must contain one 'port' child node for its digital output
->> +video port, in accordance with the video interface bindings defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +Example:
->> +
->> +	&i2c1 {
->> +		...
->> +
->> +		ov5645: ov5645@78 {
->> +			compatible = "ovti,ov5645";
->> +			reg = <0x78>;
->> +
->> +			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
->> +			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&camera_rear_default>;
->> +
->> +			clocks = <&clks 200>;
->> +			clock-names = "xclk";
->> +			clock-frequency = <23880000>;
->> +
->> +			vdddo-supply = <&camera_dovdd_1v8>;
->> +			vdda-supply = <&camera_avdd_2v8>;
->> +			vddd-supply = <&camera_dvdd_1v2>;
->> +
->> +			port {
->> +				ov5645_ep: endpoint {
->> +					clock-lanes = <1>;
->> +					data-lanes = <0 2>;
-> 
-> If the sensor does not support lane reordering, I'd use 0 for the clock lane
-> and lanes starting from 1 for data-lanes.
+Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 
-Yes, the sensor doesn't really support lane reordering. I'll keep this in mind for the next time.
-
+> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/of/device.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I guess it'd be good to document this but that's definitely out of scope of
-> the patchset.
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index c17c19d..c2ae6bb 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -107,7 +107,7 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>  	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>  	if (ret < 0) {
+>  		dma_addr = offset = 0;
+> -		size = dev->coherent_dma_mask + 1;
+> +		size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+>  	} else {
+>  		offset = PFN_DOWN(paddr - dma_addr);
+>  		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
 > 
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> 
->> +					remote-endpoint = <&csi0_ep>;
->> +				};
->> +			};
->> +		};
->> +	};
-> 
-
--- 
-Best regards,
-Todor Tomov
