@@ -1,91 +1,114 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 1/4] input: misc: introduce Atmel PTC driver
-Date: Tue, 4 Apr 2017 08:47:16 +0200
-Message-ID: <20170404064716.6uibtyin73otpqsd@rfolt0960.corp.atmel.com>
-References: <20170331152250.12758-1-ludovic.desroches@microchip.com>
- <20170331152250.12758-2-ludovic.desroches@microchip.com>
- <20170403155840.vln4wg56iunrmdcw@piout.net>
+From: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Document the STM32 QSPI bindings
+Date: Tue, 4 Apr 2017 09:28:33 +0200
+Message-ID: <bd7cf1f8-e3b6-5752-47ef-2f54d56f81cc@st.com>
+References: <1490979724-10905-1-git-send-email-ludovic.Barre@st.com>
+ <1490979724-10905-2-git-send-email-ludovic.Barre@st.com>
+ <20170403165735.sopfhlxzefkzrbfh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170403155840.vln4wg56iunrmdcw@piout.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170403165735.sopfhlxzefkzrbfh@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 03, 2017 at 05:58:40PM +0200, Alexandre Belloni wrote:
-> On 31/03/2017 at 17:22:47 +0200, Ludovic Desroches wrote:
-> > From: Ludovic Desroches <ludovic.desroches@atmel.com>
-> 
-> I think you probably want to switch to your microchip email.
-> 
-> Also, this requires a proper commit message.
+Hi Rob
 
-I'll fix this, I'll take the cover letter as commit message and update
-the mail address.
+thanks for review
+my comments below
 
-> 
-> > 
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> > +struct atmel_ptc {
-> > +	void __iomem		*ppp_regs;
-> > +	void __iomem		*firmware;
-> > +	int			irq;
-> > +	uint8_t			imr;
-> > +	volatile struct atmel_qtm_mailbox __iomem	*qtm_mb;
-> > +	struct clk		*clk_per;
-> > +	struct clk		*clk_int_osc;
-> > +	struct clk		*clk_slow;
-> > +	struct device		*dev;
-> > +	struct completion	ppp_ack;
-> > +	unsigned int		button_keycode[ATMEL_PTC_MAX_NODES];
-> > +	struct input_dev	*buttons_input;
-> > +	struct input_dev	*scroller_input[ATMEL_PTC_MAX_SCROLLERS];
-> > +	bool			buttons_registered;
-> > +	bool			scroller_registered[ATMEL_PTC_MAX_SCROLLERS];
-> > +	uint32_t		button_event[ATMEL_PTC_MAX_NODES/32];
-> > +	uint32_t		button_state[ATMEL_PTC_MAX_NODES/32];
-> > +	uint32_t		scroller_event;
-> > +	uint32_t		scroller_state;
-> 
-> You should use u8, u16 and u32 instead of uint8_t, uint16_t and
-> uint32_t.
+br
+Ludo
 
-Do you want me to also change the atmel_ptc.h header and use __u8 and co?
-Since I share it with bare metal software, uintxx_t was more convenient.
+On 04/03/2017 06:57 PM, Rob Herring wrote:
+> On Fri, Mar 31, 2017 at 07:02:03PM +0200, Ludovic Barre wrote:
+>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>
+>> This patch adds documentation of device tree bindings for the STM32
+>> QSPI controller.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/mtd/stm32-quadspi.txt      | 45 ++++++++++++++++++++++
+>>   1 file changed, 45 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/stm32-quadspi.txt b/Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
+>> new file mode 100644
+>> index 0000000..95a8ebd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
+>> @@ -0,0 +1,45 @@
+>> +* STMicroelectronics Quad Serial Peripheral Interface(QuadSPI)
+>> +
+>> +Required properties:
+>> +- compatible: should be "st,stm32f469-qspi"
+>> +- reg: contains the register location and length.
+>> +  (optional) the memory mapping address and length
+> Why optional? Either the h/w has it or doesn't. If some chips don't,
+> they should have a different compatible string.
+in fact, the stm32 qspi controller can operate in any of the following 
+modes:
+-indirect mode: all the operations are performed using the qspi registers
+with read/write.
+-read memory-mapped mode: the external Flash memory is mapped to the
+  microcontroller address space and is seen by the system as if it was
+  an internal memory (use memcpy_fromio). this mode improve read throughput
 
-> 
-> > diff --git a/include/uapi/linux/atmel_ptc.h b/include/uapi/linux/atmel_ptc.h
-> > new file mode 100644
-> > index 0000000..d15c4df
-> > --- /dev/null
-> > +++ b/include/uapi/linux/atmel_ptc.h
-> 
-> 
-> Is there any sample application showing how to configure the PTC?
-> 
+if qspi_mm is defined the qspi controller use read memory-mapped mode
+else the controller transfers in indirect mode.
+>> +- reg-names: list of the names corresponding to the previous register
+>> +  Should contain "qspi" to register location
+>> +  (optional) "qspi_mm" if read in memory map mode (improve read throughput)
+>> +- interrupts: should contain the interrupt for the device
+>> +- clocks: the phandle of the clock needed by the QSPI controller
+>> +- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
+>> +
+>> +Optional properties:
+>> +- resets: must contain the phandle to the reset controller.
+>> +
+>> +A spi flash must be a child of the nor_flash node and could have some
+>> +properties. Also see jedec,spi-nor.txt.
+>> +
+>> +Required properties:
+>> +- reg: chip-Select number (QSPI controller may connect 2 nor flashes)
+>> +- spi-max-frequency: max frequency of spi bus
+>> +
+>> +Optional property:
+>> +- spi-rx-bus-width: the bus width (number of data wires)
+> Just "see ../spi/spi-bus.txt" for the description
+ok
+>
+>> +
+>> +Example:
+>> +
+>> +qspi: qspi@a0001000 {
+> spi@...
+ok
+>> +	compatible = "st,stm32f469-qspi";
+>> +	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
+>> +	reg-names = "qspi", "qspi_mm";
+>> +	interrupts = <91>;
+>> +	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
+>> +	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_qspi0>;
+>> +
+>> +	flash@0 {
+>> +		reg = <0>;
+>> +		spi-rx-bus-width = <4>;
+>> +		spi-max-frequency = <108000000>;
+>> +		...
+>> +	};
+>> +};
+>> -- 
+>> 2.7.4
+>>
 
-Tooling and examples are in development.
-
-The tool allows you to produce the atmel_ptc.conf binary or to tweak the
-configuration in real time with commands such as:
-- set node_group_conf count 10
-- get node_config 0
-- dump_conf
-- export_conf atmel_ptc.conf
-
-The application only use input devices.
-
-
-Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
