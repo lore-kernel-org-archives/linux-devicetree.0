@@ -1,58 +1,47 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v4 7/8] mfd: tps6105x: Add OF device ID table
-Date: Tue,  4 Apr 2017 11:30:35 -0400
-Message-ID: <20170404153036.6651-8-javier@osg.samsung.com>
-References: <20170404153036.6651-1-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170404153036.6651-1-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>
+From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 0/2] ARM: dts: keystone: Add support for new K2G evm
+Date: Tue, 4 Apr 2017 08:33:25 -0700
+Message-ID: <b3f2604f-2649-6319-3689-fbd84fa926bb@oracle.com>
+References: <20170330152907.12595-1-fcooper@ti.com>
+ <694db3ba-cf40-790b-29e0-39f34607caf3@oracle.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <694db3ba-cf40-790b-29e0-39f34607caf3@oracle.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-The driver doesn't have a struct of_device_id table but supported devices
-are registered via Device Trees. This is working on the assumption that a
-I2C device registered via OF will always match a legacy I2C device ID and
-that the MODALIAS reported will always be of the form i2c:<device>.
+On 4/3/2017 9:44 AM, santosh.shilimkar@oracle.com wrote:
+> Hi Franklin,
+>
+> On 3/30/17 8:29 AM, Franklin S Cooper Jr wrote:
+>> This patchset adds support for new K2G Industrial Communication Engine
+>> evm. For now only a bare minimal dts which will allow ram boot.
+>> Additional
+>> peripherals will be added when base K2G SoC patches are upstreamed
+>> allowing
+>> peripherals to be enabled.
+>>
+>
+>>   ARM: keystone: Create new binding for K2G ICE evm
+>>   ARM: dts: keystone: Add minimum support for K2G ICE evm
+>>
+> Can you clarify Rob's comment on second patch and re-post the updated
+> patch with his ack if you agree ? Will apply the series.
+>
+Just to be clear, you need to send v2 with Rob's comment addressed
+for me to pick it up.
 
-But this could change in the future so the correct approach is to have a
-OF device ID table if the devices are registered via OF.
-
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
----
-
-Changes in v4: None
-Changes in v3:
-- Add a vendor prefix to the compatible string (Rob Herring).
-
-Changes in v2:
-- Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
-
- drivers/mfd/tps6105x.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/mfd/tps6105x.c b/drivers/mfd/tps6105x.c
-index baa12ea666fb..187848c93779 100644
---- a/drivers/mfd/tps6105x.c
-+++ b/drivers/mfd/tps6105x.c
-@@ -173,9 +173,17 @@ static const struct i2c_device_id tps6105x_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, tps6105x_id);
- 
-+static const struct of_device_id tps6105x_of_match[] = {
-+	{ .compatible = "ti,tps61050" },
-+	{ .compatible = "ti,tps61052" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, tps6105x_of_match);
-+
- static struct i2c_driver tps6105x_driver = {
- 	.driver = {
- 		.name	= "tps6105x",
-+		.of_match_table = tps6105x_of_match,
- 	},
- 	.probe		= tps6105x_probe,
- 	.remove		= tps6105x_remove,
--- 
-2.9.3
+Regards,
+Snatosh
