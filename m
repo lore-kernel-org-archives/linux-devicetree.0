@@ -1,115 +1,68 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH V7 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
-Date: Wed, 5 Apr 2017 19:08:27 +0530
-Message-ID: <a59d6776-5855-9d04-a5be-de03456b8d2e@ti.com>
-References: <1491395558-16902-1-git-send-email-vivek.gautam@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 07/16] regulator: madera-micsupp: Mic
+ supply for Cirrus Logic Madera codecs
+Date: Wed, 5 Apr 2017 14:40:54 +0100
+Message-ID: <20170405134054.kz3j56vza4pqki75@sirena.org.uk>
+References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1491386884-30689-8-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1491395558-16902-1-git-send-email-vivek.gautam@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============1243590200263891673=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1491386884-30689-8-git-send-email-rf@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
 
-On Wednesday 05 April 2017 06:02 PM, Vivek Gautam wrote:
-> This patch series adds couple of PHY drivers for Qualcomm chipsets.
-> a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
-> b) qcom-qmp phy driver: that is a combo phy providing support for
->    USB3, PCIe, UFS and few other controllers.
-> 
-> The patches are based on next branch of linux-phy tree.
-> 
-> These patches have been tested on Dragon board db820c hardware with
-> required set of dt patches and the patches to get rpm up on msm8996.
-> Couple of other patches [1, 2] fixing DMA config for XHCI are also
-> pulled in for testing.
-> A branch based on torvald's master is available in github [3].
+--===============1243590200263891673==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yg7s55w6sf3rsynu"
+Content-Disposition: inline
 
-I get a bunch of checkpatch errors/warnings when I run checkpatch with --strict
-option. Those look simple enough to be fixed. Can you respin your series fixing
-those?
 
-Thanks
-Kishon
+--yg7s55w6sf3rsynu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> Changes since v6:
->  - Rebased on phy/next and *not* including phy grouping series[4].
->  - qusb2-phy: addressed Stephen's comment.
->    - Dropped pm8994_s2 corner regulator from QUSB2 phy bindings.
->  - qmp-phy: none on functionality side.
->  
-> Changes since v5:
->  - Addressed review comments from Bjorn:
->    - Removed instances of readl/wirtel_relaxed calls from the drivers.
->      Instead, using simple readl/writel. Inserting a readl after a writel
->      to ensure the write is through to the device.
->    - Replaced regulator handling with regulator_bulk_** apis. This helps
->      in cutting down a lot of regulator handling code.
->    - Fixed minor return statements.
-> 
-> Changes since v4:
->  - Addressed comment to add child nodes for qmp phy driver. Each phy lane
->    now has a separate child node under the main qmp node.
->  - Modified the clock and reset initialization and enable methods.
->    Different phys - pcie, usb and later ufs, have varying number of clocks
->    and resets that are mandatory. So adding provision for clocks and reset
->    lists helps in requesting all mandatory resources for individual phys
->    and handle their failure cases accordingly.
-> 
-> Changes since v3:
->  - Addressed review comments given by Rob and Stephen for qusb2 phy
->    and qmp phy bindings respectively.
->  - Addressed review comments given by Stephen and Bjorn for qmp phy driver.
-> 
-> Changes since v2:
->  - Addressed review comments given by Rob and Stephen for bindings.
->  - Addressed the review comments given by Stephen for the qusb2 and qmp
->    phy drivers.
-> 
-> Changes since v1:
->  - Moved device tree binding documentation to separate patches, as suggested
->    by Rob.
->  - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
->    given by Rob.
->  - Addressed review comments from Kishon.
->  - Addressed review comments from Srinivas for QMP phy driver.
->  - Addressed kbuild warning.
-> 
-> Please see individual patches for detailed changelogs.
-> 
-> [1] https://patchwork.kernel.org/patch/9567767/
-> [2] https://patchwork.kernel.org/patch/9567779/
-> [3] https://github.com/vivekgautam1/linux/tree/linux-v4.11-rc5-qmp-phy-db820c
-> [4] https://lkml.org/lkml/2017/3/20/407
-> 
-> Vivek Gautam (4):
->   dt-bindings: phy: Add support for QUSB2 phy
->   phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
->   dt-bindings: phy: Add support for QMP phy
->   phy: qcom-qmp: new qmp phy driver for qcom-chipsets
-> 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  106 ++
->  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   43 +
->  drivers/phy/Kconfig                                |   18 +
->  drivers/phy/Makefile                               |    2 +
->  drivers/phy/phy-qcom-qmp.c                         | 1153 ++++++++++++++++++++
->  drivers/phy/phy-qcom-qusb2.c                       |  491 +++++++++
->  6 files changed, 1813 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->  create mode 100644 drivers/phy/phy-qcom-qmp.c
->  create mode 100644 drivers/phy/phy-qcom-qusb2.c
-> 
+On Wed, Apr 05, 2017 at 11:07:55AM +0100, Richard Fitzgerald wrote:
+> The adds a driver for the microphone supply regulator on Cirrus Logic
+> Madera class codecs.
+
+Again, this appears to have only data and minor code style changes
+relative to the existing arizona driver - is there no opportunity for
+code sharing here?
+
+--yg7s55w6sf3rsynu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljk8+UACgkQJNaLcl1U
+h9DjLQf/V7WQSviOq7Bmu9Ux6URk3qyYGILULku08/0wNCeZIsuhueHgIW3p+JI6
+tpSTMtnAbXGHW2NqRvxGS0rDkmOYkfP0oFZE2zBXt3ve8EFVjK4YBVOaOhL1iXYl
+bfLCw/hF3Ct6XF1qpW1btD9kBb4TQuDfRXW+ywTk0pbQtHjBlTl7dJVK5o44psYk
+/OVRKw8dj67PZkzcx1bdd8zwicu8KQuwYjYk2ku1HX4qDUE0ImuOlg25EJifimAR
+TqsxrFR+FRoX9fC/TzJcGrG6DYVLebmnHgvF2v/QM9jWW/0oHRJ2G5+TW3iShUTc
+DDO7TlDHKRNzAAFpdwFhUPvlPXT/Mg==
+=WT0w
+-----END PGP SIGNATURE-----
+
+--yg7s55w6sf3rsynu--
+
+--===============1243590200263891673==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1243590200263891673==--
