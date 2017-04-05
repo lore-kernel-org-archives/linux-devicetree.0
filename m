@@ -1,17 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH 10/11] arm64: allwinner: a64: enable
- AXP803 regulators for Pine64
-Date: Wed, 5 Apr 2017 10:08:57 +0200
-Message-ID: <20170405080857.hetsjgatyh6hbsoh@lukather>
-References: <20170405061552.C15201033DF@relay.mailchannels.net>
+Subject: Re: Re: [PATCH v3 04/11] drm/sun4i: abstract the layer type
+Date: Wed, 5 Apr 2017 10:09:58 +0200
+Message-ID: <20170405080958.lrqoled7df5ugtur@lukather>
+References: <20170405052325.98B958A2E94@relay.mailchannels.net>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hha2ry3hsdxzf6om"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGWMSLDQKGQEZJOY3MI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="t3dovqbrjqdziyjs"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV6MSLDQKGQEFL2SKMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170405061552.C15201033DF-Y9/x5g2N/Tt0ykcd9G8QkxTxI0vvWBSX@public.gmane.org>
+In-Reply-To: <20170405052325.98B958A2E94-Y9/x5g2N/Tt0ykcd9G8QkxTxI0vvWBSX@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,185 +18,160 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---hha2ry3hsdxzf6om
+--t3dovqbrjqdziyjs
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 
-On Wed, Apr 05, 2017 at 02:15:43PM +0800, Icenowy Zheng wrote:
->=20
-> 2017=E5=B9=B44=E6=9C=885=E6=97=A5 14:13=E4=BA=8E Maxime Ripard <maxime.ri=
-pard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > On Wed, Apr 05, 2017 at 02:01:44AM +0800, Icenowy Zheng wrote:=20
-> > > Add support of AXP803 regulators in the Pine64 device tree, in order =
-to=20
-> > > enable many future functionalities, e.g. Wi-Fi.=20
-> > >=20
-> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>=20
-> > > ---=20
-> > >=C2=A0 .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 109 ++++++=
-+++++++++++++++=20
-> > >=C2=A0 1 file changed, 109 insertions(+)=20
-> > >=20
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts=20
-> > > index 2132d8e6cb3d..7da074f95065 100644=20
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts=20
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts=20
-> > > @@ -106,6 +106,115 @@=20
-> > >=C2=A0 };=20
-> > >=C2=A0 };=20
-> > >=C2=A0=20
-> > > +#include "axp803.dtsi"=20
-> > > +=20
-> > > +&reg_aldo1 {=20
-> > > + regulator-min-microvolt =3D <2800000>;=20
-> > > + regulator-max-microvolt =3D <2800000>;=20
-> > > + regulator-name =3D "vcc-csi";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_aldo2 {=20
-> > > + regulator-always-on;=20
-> > > + regulator-min-microvolt =3D <1800000>;=20
-> > > + regulator-max-microvolt =3D <3300000>;=20
-> > > + regulator-name =3D "vcc-pl";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_aldo3 {=20
-> > > + regulator-always-on;=20
-> > > + regulator-min-microvolt =3D <2700000>;=20
-> > > + regulator-max-microvolt =3D <3300000>;=20
-> > > + regulator-name =3D "vcc-pll-avcc";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_dc1sw {=20
-> > > + regulator-name =3D "vcc-phy";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_dcdc1 {=20
-> > > + regulator-always-on;=20
-> > > + regulator-min-microvolt =3D <3300000>;=20
-> > > + regulator-max-microvolt =3D <3300000>;=20
-> > > + regulator-name =3D "vcc-3v3";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_dcdc2 {=20
-> > > + regulator-always-on;=20
-> > > + regulator-min-microvolt =3D <1000000>;=20
-> > > + regulator-max-microvolt =3D <1300000>;=20
-> > > + regulator-name =3D "vdd-cpux";=20
-> > > +};=20
-> > > +=20
-> > > +/* DCDC3 is polyphased with DCDC2 */=20
-> > > +=20
-> > > +&reg_dcdc5 {=20
-> > > + regulator-always-on;=20
-> > > + regulator-min-microvolt =3D <1500000>;=20
-> > > + regulator-max-microvolt =3D <1500000>;=20
-> > > + regulator-name =3D "vcc-dram";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_dcdc6 {=20
-> > > + regulator-always-on;=20
-> > > + regulator-min-microvolt =3D <1100000>;=20
-> > > + regulator-max-microvolt =3D <1100000>;=20
-> > > + regulator-name =3D "vdd-sys";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_dldo1 {=20
-> > > + regulator-min-microvolt =3D <3300000>;=20
-> > > + regulator-max-microvolt =3D <3300000>;=20
-> > > + regulator-name =3D "vcc-hdmi";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_dldo2 {=20
-> > > + regulator-min-microvolt =3D <3300000>;=20
-> > > + regulator-max-microvolt =3D <3300000>;=20
-> > > + regulator-name =3D "vcc-mipi";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_dldo3 {=20
-> > > + regulator-min-microvolt =3D <3300000>;=20
-> > > + regulator-max-microvolt =3D <3300000>;=20
-> > > + regulator-name =3D "avdd-csi";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_dldo4 {=20
-> > > + regulator-min-microvolt =3D <3300000>;=20
-> > > + regulator-max-microvolt =3D <3300000>;=20
-> > > + regulator-name =3D "vcc-wifi";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_eldo1 {=20
-> > > + regulator-min-microvolt =3D <1800000>;=20
-> > > + regulator-max-microvolt =3D <1800000>;=20
-> > > + regulator-name =3D "cpvdd";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_eldo3 {=20
-> > > + regulator-min-microvolt =3D <1800000>;=20
-> > > + regulator-max-microvolt =3D <1800000>;=20
-> > > + regulator-name =3D "vdd-1v8-csi";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_fldo1 {=20
-> > > + regulator-min-microvolt =3D <1200000>;=20
-> > > + regulator-max-microvolt =3D <1200000>;=20
-> > > + regulator-name =3D "vcc-1v2-hsic";=20
-> > > +};=20
-> > > +=20
-> > > +&reg_fldo2 {=20
-> > > + regulator-always-on;=20
-> > > + regulator-min-microvolt =3D <1100000>;=20
-> > > + regulator-max-microvolt =3D <1100000>;=20
-> > > + regulator-name =3D "vdd-cpus";=20
-> > > +};=20
-> >
-> > Why do you need to always power the AR100 on?=20
->=20
-> It's for CPUS power domain, not the AR100 processor.
->=20
-> Kill it will lead to instantly system hang.
-
-What are you calling CPUS then?
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---hha2ry3hsdxzf6om
+T24gV2VkLCBBcHIgMDUsIDIwMTcgYXQgMDE6MjM6MTVQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3
+cm90ZToNCj4gDQo+IDIwMTflubQ05pyINeaXpSAxMDoyN+S6jiBDaGVuLVl1IFRzYWkgPHdlbnNA
+Y3NpZS5vcmc+5YaZ6YGT77yaDQo+ID4NCj4gPiBPbiBXZWQsIEFwciA1LCAyMDE3IGF0IDM6NTMg
+QU0sIEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4gd3JvdGU6IA0KPiA+ID4gDQo+ID4g
+PiANCj4gPiA+IOWcqCAyMDE35bm0MDTmnIgwNeaXpSAwMzoyOCwgU2VhbiBQYXVsIOWGmemBkzog
+DQo+ID4gPj4gDQo+ID4gPj4gT24gVGh1LCBNYXIgMzAsIDIwMTcgYXQgMDM6NDY6MDZBTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZTogDQo+ID4gPj4+IA0KPiA+ID4+PiBBcyB3ZSBhcmUgZ29p
+bmcgdG8gYWRkIHN1cHBvcnQgZm9yIHRoZSBBbGx3aW5uZXIgREUyIE1peGVyIGluIHN1bjRpLWRy
+bSANCj4gPiA+Pj4gZHJpdmVyLCB3ZSB3aWxsIGZpbmFsbHkgaGF2ZSB0d28gdHlwZXMgb2YgbGF5
+ZXIuIA0KPiA+ID4+PiANCj4gPiA+Pj4gQWJzdHJhY3QgdGhlIGxheWVyIHR5cGUgdG8gdm9pZCAq
+IGFuZCBhIG9wcyBzdHJ1Y3QsIHdoaWNoIGNvbnRhaW5zIHRoZSANCj4gPiA+Pj4gb25seSBmdW5j
+dGlvbiB1c2VkIGJ5IGNydGMgLS0gZ2V0IHRoZSBkcm1fcGxhbmUgc3RydWN0IG9mIHRoZSBsYXll
+ci4gDQo+ID4gPj4+IA0KPiA+ID4+PiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vu
+b3d5QGFvc2MuaW8+IA0KPiA+ID4+PiAtLS0gDQo+ID4gPj4+IFJlZmFjdG9yZWQgcGF0Y2ggaW4g
+djMuIA0KPiA+ID4+PiANCj4gPiA+Pj7CoCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfY3J0
+Yy5jwqAgfCAxOSArKysrKysrKysrKy0tLS0tLS0tIA0KPiA+ID4+PsKgIGRyaXZlcnMvZ3B1L2Ry
+bS9zdW40aS9zdW40aV9jcnRjLmjCoCB8wqAgMyArKy0gDQo+ID4gPj4+wqAgZHJpdmVycy9ncHUv
+ZHJtL3N1bjRpL3N1bjRpX2xheWVyLmMgfCAxOSArKysrKysrKysrKysrKysrKystIA0KPiA+ID4+
+PsKgIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9sYXllci5oIHzCoCAyICstIA0KPiA+ID4+
+PsKgIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW54aV9sYXllci5oIHwgMTcgKysrKysrKysrKysr
+KysrKysgDQo+ID4gPj4+wqAgNSBmaWxlcyBjaGFuZ2VkLCA0OSBpbnNlcnRpb25zKCspLCAxMSBk
+ZWxldGlvbnMoLSkgDQo+ID4gPj4+wqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS9zdW40aS9zdW54aV9sYXllci5oIA0KPiA+ID4+PiANCj4gPiA+Pj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9jcnRjLmMgDQo+ID4gPj4+IGIvZHJpdmVycy9ncHUv
+ZHJtL3N1bjRpL3N1bjRpX2NydGMuYyANCj4gPiA+Pj4gaW5kZXggM2M4NzZjM2EzNTZhLi4zMzg1
+NGVlN2Y2MzYgMTAwNjQ0IA0KPiA+ID4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
+NGlfY3J0Yy5jIA0KPiA+ID4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfY3J0
+Yy5jIA0KPiA+ID4+PiBAQCAtMjksNiArMjksNyBAQCANCj4gPiA+Pj7CoCAjaW5jbHVkZSAic3Vu
+NGlfY3J0Yy5oIiANCj4gPiA+Pj7CoCAjaW5jbHVkZSAic3VuNGlfZHJ2LmgiIA0KPiA+ID4+PsKg
+ICNpbmNsdWRlICJzdW40aV9sYXllci5oIiANCj4gPiA+Pj4gKyNpbmNsdWRlICJzdW54aV9sYXll
+ci5oIiANCj4gPiA+Pj7CoCAjaW5jbHVkZSAic3VuNGlfdGNvbi5oIiANCj4gPiA+Pj4gDQo+ID4g
+Pj4+wqAgc3RhdGljIHZvaWQgc3VuNGlfY3J0Y19hdG9taWNfYmVnaW4oc3RydWN0IGRybV9jcnRj
+ICpjcnRjLCANCj4gPiA+Pj4gQEAgLTE0OSw3ICsxNTAsNyBAQCBzdHJ1Y3Qgc3VuNGlfY3J0YyAq
+c3VuNGlfY3J0Y19pbml0KHN0cnVjdCBkcm1fZGV2aWNlIA0KPiA+ID4+PiAqZHJtLCANCj4gPiA+
+Pj7CoMKgwqDCoMKgwqDCoMKgIHNjcnRjLT50Y29uID0gdGNvbjsgDQo+ID4gPj4+IA0KPiA+ID4+
+PsKgwqDCoMKgwqDCoMKgwqAgLyogQ3JlYXRlIG91ciBsYXllcnMgKi8gDQo+ID4gPj4+IC3CoMKg
+wqDCoMKgwqAgc2NydGMtPmxheWVycyA9IHN1bjRpX2xheWVyc19pbml0KGRybSwgc2NydGMtPmJh
+Y2tlbmQpOyANCj4gPiA+Pj4gK8KgwqDCoMKgwqDCoCBzY3J0Yy0+bGF5ZXJzID0gKHZvaWQgKiop
+c3VuNGlfbGF5ZXJzX2luaXQoZHJtLCBzY3J0Yyk7IA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqAg
+aWYgKElTX0VSUihzY3J0Yy0+bGF5ZXJzKSkgeyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBkZXZfZXJyKGRybS0+ZGV2LCAiQ291bGRuJ3QgY3JlYXRlIHRoZSBwbGFu
+ZXNcbiIpOyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4g
+TlVMTDsgDQo+ID4gPj4+IEBAIC0xNTcsMTQgKzE1OCwxNSBAQCBzdHJ1Y3Qgc3VuNGlfY3J0YyAq
+c3VuNGlfY3J0Y19pbml0KHN0cnVjdCANCj4gPiA+Pj4gZHJtX2RldmljZSAqZHJtLCANCj4gPiA+
+Pj4gDQo+ID4gPj4+wqDCoMKgwqDCoMKgwqDCoCAvKiBmaW5kIHByaW1hcnkgYW5kIGN1cnNvciBw
+bGFuZXMgZm9yIGRybV9jcnRjX2luaXRfd2l0aF9wbGFuZXMgDQo+ID4gPj4+ICovIA0KPiA+ID4+
+PsKgwqDCoMKgwqDCoMKgwqAgZm9yIChpID0gMDsgc2NydGMtPmxheWVyc1tpXTsgaSsrKSB7IA0K
+PiA+ID4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qgc3VuNGlfbGF5ZXIg
+KmxheWVyID0gc2NydGMtPmxheWVyc1tpXTsgDQo+ID4gPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHZvaWQgKmxheWVyID0gc2NydGMtPmxheWVyc1tpXTsgDQo+ID4gPj4+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gDQo+ID4g
+Pj4+IHNjcnRjLT5sYXllcl9vcHMtPmdldF9wbGFuZShsYXllcik7IA0KPiA+ID4+PiANCj4gPiA+
+Pj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3dpdGNoIChsYXllci0+cGxhbmUudHlw
+ZSkgeyANCj4gPiA+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3dpdGNoIChwbGFu
+ZS0+dHlwZSkgeyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjYXNl
+IERSTV9QTEFORV9UWVBFX1BSSU1BUlk6IA0KPiA+ID4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbWFyeSA9ICZsYXllci0+cGxhbmU7IA0KPiA+ID4+
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbWFyeSA9
+IHBsYW5lOyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgYnJlYWs7IA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGNhc2UgRFJNX1BMQU5FX1RZUEVfQ1VSU09SOiANCj4gPiA+Pj4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGN1cnNvciA9ICZsYXllci0+cGxhbmU7IA0KPiA+
+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY3Vyc29y
+ID0gcGxhbmU7IA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBicmVhazsgDQo+ID4gPj4+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgZGVmYXVsdDogDQo+ID4gPj4+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGJyZWFrOyANCj4gPiA+Pj4gQEAgLTE5MCwxMCArMTkyLDExIEBAIHN0cnVj
+dCBzdW40aV9jcnRjICpzdW40aV9jcnRjX2luaXQoc3RydWN0IA0KPiA+ID4+PiBkcm1fZGV2aWNl
+ICpkcm0sIA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqAgLyogU2V0IHBvc3NpYmxlX2NydGNzIHRv
+IHRoaXMgY3J0YyBmb3Igb3ZlcmxheSBwbGFuZXMgKi8gDQo+ID4gPj4+wqDCoMKgwqDCoMKgwqDC
+oCBmb3IgKGkgPSAwOyBzY3J0Yy0+bGF5ZXJzW2ldOyBpKyspIHsgDQo+ID4gPj4+wqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdWludDMyX3QgcG9zc2libGVfY3J0Y3MgPSANCj4gPiA+
+Pj4gQklUKGRybV9jcnRjX2luZGV4KCZzY3J0Yy0+Y3J0YykpOyANCj4gPiA+Pj4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IHN1bjRpX2xheWVyICpsYXllciA9IHNjcnRjLT5s
+YXllcnNbaV07IA0KPiA+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB2b2lkICps
+YXllciA9IHNjcnRjLT5sYXllcnNbaV07IA0KPiA+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSA9IA0KPiA+ID4+PiBzY3J0Yy0+bGF5ZXJf
+b3BzLT5nZXRfcGxhbmUobGF5ZXIpOyANCj4gPiA+Pj4gDQo+ID4gPj4+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIGlmIChsYXllci0+cGxhbmUudHlwZSA9PSBEUk1fUExBTkVfVFlQRV9P
+VkVSTEFZKSANCj4gPiA+Pj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGxheWVyLT5wbGFuZS5wb3NzaWJsZV9jcnRjcyA9IHBvc3NpYmxlX2NydGNzOyANCj4g
+PiA+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKHBsYW5lLT50eXBlID09IERS
+TV9QTEFORV9UWVBFX09WRVJMQVkpIA0KPiA+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgcGxhbmUtPnBvc3NpYmxlX2NydGNzID0gcG9zc2libGVfY3J0
+Y3M7IA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqAgfSANCj4gPiA+Pj4gDQo+ID4gPj4+wqDCoMKg
+wqDCoMKgwqDCoCByZXR1cm4gc2NydGM7IA0KPiA+ID4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL3N1bjRpL3N1bjRpX2NydGMuaCANCj4gPiA+Pj4gYi9kcml2ZXJzL2dwdS9kcm0vc3Vu
+NGkvc3VuNGlfY3J0Yy5oIA0KPiA+ID4+PiBpbmRleCAyMzBjYjhmMGQ2MDEuLmE0MDM2ZWU0NGNm
+OCAxMDA2NDQgDQo+ID4gPj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9jcnRj
+LmggDQo+ID4gPj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9jcnRjLmggDQo+
+ID4gPj4+IEBAIC0xOSw3ICsxOSw4IEBAIHN0cnVjdCBzdW40aV9jcnRjIHsgDQo+ID4gPj4+IA0K
+PiA+ID4+PsKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IHN1bjRpX2JhY2tlbmTCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgICpiYWNrZW5kOyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBzdW40
+aV90Y29uwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqdGNvbjsgDQo+ID4gPj4+IC3CoMKg
+wqDCoMKgwqAgc3RydWN0IHN1bjRpX2xheWVywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKips
+YXllcnM7IA0KPiA+ID4+PiArwqDCoMKgwqDCoMKgIHZvaWTCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKipsYXllcnM7IA0KPiA+ID4+PiArwqDC
+oMKgwqDCoMKgIGNvbnN0IHN0cnVjdCBzdW54aV9sYXllcl9vcHPCoMKgwqAgKmxheWVyX29wczsg
+DQo+ID4gPj4gDQo+ID4gPj4gDQo+ID4gPj4gSSB0aGluayB5b3Ugc2hvdWxkIHByb2JhYmx5IHRh
+a2UgYSBkaWZmZXJlbnQgYXBwcm9hY2ggdG8gYWJzdHJhY3QgdGhlIA0KPiA+ID4+IGxheWVyIA0K
+PiA+ID4+IHR5cGUuIEhvdyBhYm91dCBjcmVhdGluZyANCj4gPiA+PiANCj4gPiA+PiBzdHJ1Y3Qg
+c3VueGlfbGF5ZXIgeyANCj4gPiA+PsKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGRybV9wbGFuZSBw
+bGFuZTsgDQo+ID4gPj4gfSANCj4gPiA+PiANCj4gPiA+PiBiYXNlIGFuZCB0aGVuIHN1YmNsYXNz
+aW5nIHRoYXQgZm9yIHN1bjRpIGFuZCBzdW44aT8gQnkgZG9pbmcgdGhpcyB5b3UgY2FuIA0KPiA+
+ID4+IGF2b2lkIA0KPiA+ID4+IHRoZSBuYXN0eSBjYXN0aW5nIGFuZCB5b3UgY2FuIGFsc28gZ2V0
+IHJpZCBvZiB0aGUgZ2V0X3BsYW5lKCkgaG9vayBhbmQgDQo+ID4gPj4gbGF5ZXJfb3BzLiANCj4g
+PiA+IA0KPiA+ID4gDQo+ID4gPiBGb3IgdGhlIHNpdHVhdGlvbiB0aGF0IHVzaW5nICoqIHRoaW5n
+cyBhcmUgZWFzaWx5IHRvIGdldCB3ZWlyZC4gDQo+ID4NCj4gPiBUaGF0IGNvZGUgY291bGQgYmUg
+cmV3b3JrZWQsIGJ5IGluaXRpYWxpemluZyB0aGUgbGF5ZXJzIGRpcmVjdGx5IHdpdGhpbiANCj4g
+PiB0aGUgY3J0YyBpbml0IGNvZGUuIElmIHlvdSBsb29rIGF0IHJvY2tjaGlwJ3MgZHJtIGRyaXZl
+ciwgeW91J2xsIHNlZSANCj4gPiB0aGV5IGRvIHRoaXMuIFRoZXJlIGlzIGEgZ29vZCByZWFzb24g
+dG8gZG8gaXQgdGhpcyB3YXksIGFzIHlvdSBuZWVkIA0KPiA+IHRvIGZpcnN0IGNyZWF0ZSB0aGUg
+cHJpbWFyeSBhbmQgY3Vyc29yIGxheWVycywgcGFzcyB0aGVtIGluIHdoZW4geW91IA0KPiA+IGNy
+ZWF0ZSB0aGUgY3J0YywgdGhlbiBpbml0aWFsaXplIGFueSBhZGRpdGlvbmFsIGxheWVycyB3aXRo
+IHRoZSANCj4gPiBwb3NzaWJsZV9jcnRjcyBiaXRtYXAuIA0KPiANCj4gQnV0IGZ1cnRodXJseSBt
+YXliZSBtb3JlIGxheWVycyB3aWxsIGJlIGNyZWF0ZWQgZm9yIERFMiBtaXhlciwgYW5kDQo+IG1h
+eSBldmVuIGRlcGVuZHMgb24gbWl4ZXIgdHlwZSAoT24gQTgzVC9IMy9BNjQvSDUgbWl4ZXIxIGhh
+cyBmZXdlcg0KPiBjaGFubmVsIHRoYW4gbWl4ZXIwKS4NCg0KWW91J2xsIGFsd2F5cyBoYXZlIG9u
+ZSBwcmltYXJ5IGFuZCBvbmUgY3Vyc29yIHBsYW5lLCBubyBtYXR0ZXIgaG93DQptdWNoIHBsYW5l
+cyB5b3Ugc3VwcG9ydC4NCg0KTWF4aW1lDQoNCi0tIA0KTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVj
+dHJvbnMNCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcNCmh0dHA6Ly9mcmVl
+LWVsZWN0cm9ucy5jb20NCg0KLS0gCllvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5
+b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91
+cC4KVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGdyb3VwIGFuZCBzdG9wIHJlY2VpdmluZyBlbWFp
+bHMgZnJvbSBpdCwgc2VuZCBhbiBlbWFpbCB0byBsaW51eC1zdW54aSt1bnN1YnNjcmliZUBnb29n
+bGVncm91cHMuY29tLgpGb3IgbW9yZSBvcHRpb25zLCB2aXNpdCBodHRwczovL2dyb3Vwcy5nb29n
+bGUuY29tL2Qvb3B0b3V0Lgo=
+--t3dovqbrjqdziyjs
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJY5KYVAAoJEBx+YmzsjxAgex4QAIYADzy9LVDOYnYBP9L+gE5E
-SFjPtVYgLuehvZAy7NXwCIsFA5aocuRxsSDZIxfu6+31kJg410S7z3CIW+oDtimt
-R+tIU+3cpZIV+3af35jC79c/f2JUSEpoknqyEPEexfn2LKp0DaR6Z+EJRxO/1g4v
-wnU412fh9cqbYIqOPlvz5KQWt61h9xWYRgU4eSWe4AQERA27kc9KaagHXKTKc195
-vQhxNua7RCUFePo+s0yHpTKRWWrcv6ZDkvOcu4sJ1KZzzSeeLDFobGm0XM5My95d
-KfDadEw49EhmSj4rtS3x8hzvixOhGTdhjgDAMxwmwkIIVpx67Qjf8Nzgj+vV6AiC
-3/ZZTZZXxVQulEj5UaVXjfGsrwf6IDePvTCQN7L7VzvRvzHlXIjxUNlm9dcpICPE
-V2cLaPvM1bToLhhKdU9Ab/aUvheGso87IB56Fs+PKUpYDdyS7fZQmgOPHvmXI6cV
-tpLSyX16T0n1CzG/F337FDBEzRqMvcYQa6GITqrqs5/u5ybS8ruxwwNi5lSGRga7
-yQiqbvy1zsjJHYV15prYELKxmLnyhl3SCinOfxAUfJSec82yneaytdIc7sR5vnbR
-y2+1hIrZT+UP+twKKx0tWYcG0lRWmkrC2fjKIa6F/y6lmAXR/X6GvwWC2lHjxR/D
-5BFVf23+Qp8Hl0JrWOzL
-=uMuW
+iQIcBAEBCAAGBQJY5KZWAAoJEBx+YmzsjxAgCPIP/36WTMRsXB92DEqwe3tZKdVI
+asaz9lcb9tCH/X0PiwpiYBsvLg2VwTzm/x3xcXc1b7A1g/qZZORPI9ZkI902Kl4m
+EL5HL8HHIjRZ7dobzr728JV4o7aZtwz2rwXfvI2SkZxDoCFhE8zUx9HcFkRcaYQR
+xEpEnzBM5IOExcQqcY517cnd0whe4CNYYCbKmdbYKyhRSSp7Q3VnygppU1G5HE3Y
+nKKIjrEfyi3MbZfR1x4XTo3CUi6oVSq+vRVMuJX7WwkpM1ZMg4gmcFjkXG8guyJ0
+/AB7JFll9hdXjJreq7dc4FayE/HzRfCbUf0HcR5P14LQ5eOd/1T+0ygxtOYvoK7X
+BhCAO4HcZk7TKE7CqGCXVTJP1p7hbOyLzRoOgMDU/OJWa/l0VStofyFVLFyfGf6X
+ytiR9ko5ctgAtDgUXKFRe1l1bvyvIAHxRan++qd/IjHUFXgRDQayFZ/0ofdKILM1
+DO9PJhzwt6R7FkixYU814WMsEpyZjyXLKubw5dvkOolfBAc0RpJ3NSpTiccyxQ9E
+SB0umW3sQ36JZJhvSyhb+PnEj9v26O4Vjqk0EG0xJ1efUEWt3KWt7QkWZTpfzZZN
+4nw1ozWYrojenEwBxyDcJiNjMKT8px/MUWp/wKL1O2l6ZdHKBKgN4D9H/m2bshWt
+BgbDYd9hXb3GmNPXIbk9
+=9DSD
 -----END PGP SIGNATURE-----
 
---hha2ry3hsdxzf6om--
+--t3dovqbrjqdziyjs--
