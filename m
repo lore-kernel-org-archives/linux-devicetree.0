@@ -1,60 +1,46 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH 03/11] dt-bindings: add device tree binding
- for X-Powers AXP803 PMIC
-Date: Wed, 5 Apr 2017 11:52:35 +0800
-Message-ID: <CAGb2v66sjjn5NxZ0KJ2Q396307rURV1MAj9EfbyWah3w9RSqRA@mail.gmail.com>
-References: <20170404180145.12897-1-icenowy@aosc.io> <20170404180145.12897-4-icenowy@aosc.io>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170404180145.12897-4-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 0/2] drivers: serial: Aspeed VUART driver
+Date: Wed,  5 Apr 2017 13:33:50 +0930
+Message-ID: <20170405040352.5661-1-joel@jms.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, Andy Shevchenko <andy.shevchenko@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 2:01 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> AXP803 is a PMIC produced by Shenzhen X-Powers, with either I2C or RSB
-> bus.
->
-> Add a compatible for it.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/axp20x.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> index b41d2601c6ba..31607631b0d8 100644
-> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -7,11 +7,12 @@ axp209 (X-Powers)
->  axp221 (X-Powers)
->  axp223 (X-Powers)
->  axp809 (X-Powers)
-> +axp803 (X-Powers)
->
->  Required properties:
->  - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
->               "x-powers,axp221", "x-powers,axp223", "x-powers,axp806",
-> -             "x-powers,axp809"
-> +             "x-powers,axp809", "x-powers,axp803"
+This is v2 of a driver for the Aspeed VUART. This version addresses feedback
+from Andy and Greg, and adds Rob's ack for the bindings change.
 
-Please sort them in ascending order. Otherwise,
+The VUART is a serial device on the BMC side of the LPC bus that connects a BMC
+to it's host processor.
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+We add a flag to the serial core to allow the driver to skip probing of the
+THRE irq behaviour, which could hang due to the host not reading bytes out of
+the buffer.
 
->  - reg: The I2C slave address or RSB hardware address for the AXP chip
->  - interrupt-parent: The parent interrupt controller
->  - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
-> --
-> 2.12.2
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We've been using this on systems for over a year, so it has seen a good amount
+of testing.
+
+Cheers,
+
+Joel
+
+Jeremy Kerr (1):
+  drivers/serial: Add driver for Aspeed virtual UART
+
+Joel Stanley (1):
+  serial: 8250: Add flag so drivers can avoid THRE probe
+
+ Documentation/ABI/stable/sysfs-driver-aspeed-vuart |  15 +
+ Documentation/devicetree/bindings/serial/8250.txt  |   2 +
+ drivers/tty/serial/8250/8250_port.c                |   2 +-
+ drivers/tty/serial/8250/Kconfig                    |  10 +
+ drivers/tty/serial/8250/Makefile                   |   1 +
+ drivers/tty/serial/8250/aspeed-vuart.c             | 341 +++++++++++++++++++++
+ include/linux/serial_core.h                        |   1 +
+ 7 files changed, 371 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-driver-aspeed-vuart
+ create mode 100644 drivers/tty/serial/8250/aspeed-vuart.c
+
+-- 
+2.11.0
