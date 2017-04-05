@@ -1,74 +1,59 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities
- output video on pad 1
-Date: Wed, 5 Apr 2017 13:17:25 -0300
-Message-ID: <20170405131725.22c13a1d@vento.lan>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
- <1490894749.2404.33.camel@pengutronix.de>
- <20170404231053.GE7909@n2100.armlinux.org.uk>
- <19f0ce92-cad6-8950-8018-e3224e2bf266@gmail.com>
- <7235285c-f39a-64bc-195a-11cfde9e67c5@gmail.com>
- <20170405082134.GF7909@n2100.armlinux.org.uk>
- <1491384859.2381.51.camel@pengutronix.de>
- <20170405115336.7135e542@vento.lan>
- <CAGoCfizXdDV_Eo1NSOAb+-wrC7F47iFQKyP8-wiJMpb-nsYArA@mail.gmail.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH 0/2] mtd: spi-nor: add stm32 qspi driver
+Date: Wed, 5 Apr 2017 18:20:23 +0200
+Message-ID: <19157469-9fcd-27aa-f870-21e46f7ffcab@st.com>
+References: <1490619296-8168-1-git-send-email-ludovic.Barre@st.com>
+ <5224f3cd-a128-9e72-c0c8-62a137ceeb79@wedev4u.fr>
+ <d1c2f0a9-302d-ea7c-5d1b-ad32b9950ed4@st.com>
+ <e04fa293-63d4-7a7e-a998-37aab31167e5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAGoCfizXdDV_Eo1NSOAb+-wrC7F47iFQKyP8-wiJMpb-nsYArA@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Devin Heitmueller <dheitmueller@kernellabs.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Pavel Machek <pavel@ucw.cz>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <e04fa293-63d4-7a7e-a998-37aab31167e5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 5 Apr 2017 11:39:06 -0400
-Devin Heitmueller <dheitmueller@kernellabs.com> escreveu:
+hi Cyrille, Marek
 
-> > Currently, the driver doesn't support (2), because, at the time
-> > I wrote the driver, I didn't find a way to read the interrupts generated
-> > by tvp5150 at em28xx[1], due to the lack of em28xx documentation,
-> > but adding support for it shoudn't be hard. I may eventually do it
-> > when I have some time to play with my ISEE hardware.  
-> 
-> For what it's worth, I doubt most of the em28xx designs have the
-> tvp5150 interrupt request line connected in any way.
+I've re-based and tested my patchset onto
 
-True. But, on embedded hardware, such line may be connected into the
-SoC. Actually, from the IGEPv3 expansion diagram:
+"mtd: spi-nor: introduce more SPI protocols and the Dual Transfer Mode"
 
-	https://www.isee.biz/support/downloads/item/igepv2-expansion-rc-schematics
+So I can deliver my patchset before or after Cyrille patchset
 
-The INT line is connected to CAM_IRQ. That's connected to GPIO_154 pin
-at OMAP3.
+How do you wish process? what version do you want for the v3?
 
-So, on a first glance, it seems possible to use it, instead of polling.
 
-> You would likely
-> have to poll the FIFO status register via I2C,
+BR
 
-Yes, I considered this option when I wrote the driver. It could work, 
-although it would likely have some performance drawback, as the driver
-would need to poll it at least 60 times per second.
+Ludo
 
-> or use the feature to
-> embed the sliced data into as VANC data in the 656 output (as
-> described in sec 3.9 of the tvp5150am1 spec).
+On 03/30/2017 12:15 PM, Marek Vasut wrote:
+> On 03/30/2017 09:31 AM, Ludovic BARRE wrote:
+>> hi Cyrille
+>>
+>> I see your patch series
+>>
+>> [PATCH v5 0/6] mtd: spi-nor: parse SFDP tables to setup (Q)SPI memories
+>>
+>> No problem, I rebase my V2 onto your patch
+> I still didn't review that, so it might take a bit until it hits
+> mainline. I think the stm32 stuff looks pretty OK, so we can take that
+> before the SFDP stuff, no?
+>
 
-True, but the bridge driver would need to handle such data. 
 
-I remember I looked on this when I wrote the driver, but I was
-unable to find a way for em28xx to parse (or forward) such
-data packets.
-
-Thanks,
-Mauro
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
