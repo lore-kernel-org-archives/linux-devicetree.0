@@ -1,83 +1,92 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] of/pci: Fix memory leak in of_pci_get_host_bridge_resources
-Date: Wed, 5 Apr 2017 08:21:45 -0500
-Message-ID: <CAL_JsqJ3D0cvyAmCDxd-MDRaxB5h72Jca-JnRqVNQEdCHEV=gg@mail.gmail.com>
-References: <1490256755-889-1-git-send-email-jeffy.chen@rock-chips.com>
- <1490256755-889-3-git-send-email-jeffy.chen@rock-chips.com>
- <CAL_Jsq+xxG6w6J+Zz-kcJ+rA9jJomyHFiazHzcPHuQizn-4-wg@mail.gmail.com>
- <CAE_wzQ9ZVDiDGP4k_2i2KL4JxtRn_S7gjFXUTYZncMLx2m77gQ@mail.gmail.com>
- <CAErSpo6CZ1hoHyzEnWBi7VDr51bLurF4-4t=-v4jH27kOpzYrg@mail.gmail.com> <58E454CF.7050501@rock-chips.com>
+From: "Han, Nandor (GE Healthcare)" <nandor.han@ge.com>
+Subject: [PATCH 1/3] gpio - Add EXAR XRA1403 SPI GPIO expander driver
+Date: Wed, 5 Apr 2017 13:24:49 +0000
+Message-ID: <HE1P101MB01883B516828F26921267A4FE60A0@HE1P101MB0188.NAMP101.PROD.OUTLOOK.COM>
+References: <cover.1490595641.git.nandor.han@ge.com>
+ <6bf04ba1761f0692cb461558f0c8836f0d1f7ad8.1490595641.git.nandor.han@ge.com>
+ <CACRpkdZB_cxqw0=M4YOhcwdZe7BxJtVKA290yGH-jxPU2MDgBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58E454CF.7050501@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jeffy <jeffy.chen@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Dmitry Torokhov <dtor@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, toshi.kani@hpe.com, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZB_cxqw0=M4YOhcwdZe7BxJtVKA290yGH-jxPU2MDgBg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Malinen, Semi (GE Healthcare)" <semi.malinen@ge.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 4, 2017 at 9:22 PM, jeffy <jeffy.chen@rock-chips.com> wrote:
-> Hi Bjorn,
->
->
-> On 04/05/2017 03:18 AM, Bjorn Helgaas wrote:
->>
->> On Thu, Mar 23, 2017 at 5:58 PM, Dmitry Torokhov <dtor@chromium.org>
->> wrote:
->>>
->>> On Thu, Mar 23, 2017 at 3:07 PM, Rob Herring <robh@kernel.org> wrote:
->>>>
->>>> On Thu, Mar 23, 2017 at 3:12 AM, Jeffy Chen <jeffy.chen@rock-chips.com>
->>>> wrote:
->>>>>
->>>>> Currently we only free the allocated resource struct when error.
->>>>> This would cause memory leak after pci_free_resource_list.
-
->>>>> -       pci_add_resource(resources, bus_range);
->>>>> +       *window->res = res;
->>>>
->>>>
->>>> Well, now this seems racy. You add a blank resource to the list first
->>>> and then fill it in.
->>>>
->>>
->>> Huh? There is absolutely no guarantees for concurrent access here.
->>> pcI_add_resource_offset() first adds a resource and then modifies
->>> offset. Here we add an empty resource and then fill it in.
->>
->>
->> I don't really like this pattern either.  Even if there's no actual
->> racy behavior, it takes more analysis than necessary to figure that
->> out.
->>
->> pci_add_resource_offset() allocates a resource list entry, sets the
->> offset, then adds it to the list.  It doesn't update a resource entry
->> that might be visible to anybody else.  Here we do update a resource
->> that is already visible to others because it's already on the list.
->
-> i was following ./drivers/pnp/resource.c, but i'm agree this is not a good
-> way.
->
-> i'll upload a new version to fix this in another way. more ideas:
-> 1/ pass a struct device to of_pci_get_host_bridge_resources and use
-> devm_kzalloc
-
-I would pick this one of the 3 options or...
-
-> 2/ add a new type of flags(or reuse IORESOURCE_AUTO) to tell
-> pci_free_resource_list to kfree them)
-> 3/ add new helpers of of_pci_add_resource[_offset] to alloc empty res, fill
-> it, add to list.
-
-2 other options:
-
-Add a function to undo everything that
-of_pci_get_host_bridge_resources does. Then every caller of
-of_pci_get_host_bridge_resources should have a call to that function.
-
-Or maybe you can add a pci_free_resource_list_and_resources (needs a
-better name) to free both resources and list. Then audit all the
-current callers of pci_free_resource_list and determine which one's
-can be changed (maybe it is all of them).
-
-Rob
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMgV2FsbGVpaiBb
+bWFpbHRvOmxpbnVzLndhbGxlaWpAbGluYXJvLm9yZ10NCj4gU2VudDogMjkgTWFyY2ggMjAxNyAw
+NTowNw0KPiBUbzogSGFuLCBOYW5kb3IgKEdFIEhlYWx0aGNhcmUpIDxuYW5kb3IuaGFuQGdlLmNv
+bT4NCj4gQ2M6IEFsZXhhbmRyZSBDb3VyYm90IDxnbnVyb3VAZ21haWwuY29tPjsgUm9iIEhlcnJp
+bmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFy
+bS5jb20+OyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IE1hbGluZW4sIFNlbWkgKEdF
+IEhlYWx0aGNhcmUpIDxzZW1pLm1hbGluZW5AZ2UuY29tPg0KPiBTdWJqZWN0OiBFWFQ6IFJlOiBb
+UEFUQ0ggMS8zXSBncGlvIC0gQWRkIEVYQVIgWFJBMTQwMyBTUEkgR1BJTyBleHBhbmRlciBkcml2
+ZXINCj4gDQo+IE9uIE1vbiwgTWFyIDI3LCAyMDE3IGF0IDg6MjMgQU0sIE5hbmRvciBIYW4gPG5h
+bmRvci5oYW5AZ2UuY29tPiB3cm90ZToNCj4gDQo+ID4gVGhpcyBpcyBhIHNpbXBsZSBkcml2ZXIg
+dGhhdCBwcm92aWRlcyBhIC9zeXMvY2xhc3MvZ3Bpbw0KPiA+IGludGVyZmFjZSBmb3IgY29udHJv
+bGxpbmcgYW5kIGNvbmZpZ3VyaW5nIHRoZSBHUElPIGxpbmVzLg0KPiANCj4gVXNlIHRoZSBncGlv
+IHRvb2xzIGluIHRvb2xzL2dwaW8sIHVzZSB0aGUgY2hhcmFjY3RlciBkZXZpY2UuDQo+IERvIG5v
+dCB1c2Ugc3lzZnMuIENoYW5nZSB0aGlzIHRvIHJlZmVyZW5jZSB0aGUgdG9vbHMuDQo+IA0KPiA+
+IEl0IGRvZXMgbm90IHByb3ZpZGUgc3VwcG9ydCBmb3IgY2hpcCBzZWxlY3Qgb3IgaW50ZXJydXB0
+cy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE5hbmRvciBIYW4gPG5hbmRvci5oYW5AZ2UuY29t
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNlbWkgTWFsaW5lbiA8c2VtaS5tYWxpbmVuQGdlLmNvbT4N
+Cj4gKC4uLikNCj4gPiArZXhhciAgIEV4YXIgQ29ycG9yYXRpb24NCj4gDQo+IFNlbmQgdGhpcyBh
+cyBhIHNlcGFyYXRlIHBhdGNoIHRvIHRoZSBEVCBiaW5kaW5ncyBtYWludGFpbmVyDQo+IChSb2Ig
+SGVycmluZy4pDQo+IA0KDQpPSy4gSSB3aWxsIGNyZWF0ZSBhIHNlcGFyYXRlIHBhdGNoIHdpdGgg
+dGhpcyBvbmUuIA0KSSBndWVzcyBpcyBub3QgYW4gaXNzdWUgdG8gc2VuZCBhbGwgdGhlIHBhdGNo
+ZXMgdG8gUm9iIGFzIHdlbGwuDQoNCjxzbmlwPg0KDQo+ID4gKw0KPiA+ICsgICAgICAgcmV0ID0g
+eHJhMTQwM19nZXRfYnl0ZSh4cmEsIGFkZHIgKyAoYml0ID4gNykpOw0KPiA+ICsgICAgICAgaWYg
+KHJldCA8IDApDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsg
+ICAgICAgcmV0dXJuICEhKHJldCAmIEJJVChiaXQgJSA4KSk7DQo+ID4gK30NCj4gDQo+IFRoaXMg
+bG9va3MgbGlrZSBpdCBjYW4gdXNlIHJlZ21hcC1zcGkgcmlnaHQgb2ZmLCBkbyB5b3UgYWdyZWU/
+DQo+IA0KDQpZZXMuIFVzaW5nIHJlZ21hcC1zcGkgd2lsbCBkZWZpbml0ZWx5IGltcHJvdmUgdGhl
+IGNvZGUgcmVhZGFiaWxpdHkgYW5kIHJlZHVjZSBib2lsZXJwbGF0ZS4NCkRvbmUuDQoNCj4gZ2l0
+IGdyZXAgZGV2bV9yZWdtYXBfaW5pdF9zcGkNCj4gc2hvdWxkIGdpdmUgeW91IHNvbWUgZXhhbXBs
+ZXMgb2YgaG93IHRvIHVzZSBpdC4NCj4gDQo+IElmIGl0J3Mgbm90IG9mZi10aGUgc2hlbGYgcmVn
+bWFwIGRyaXZlcnMgbGlrZQ0KPiBkcml2ZXJzL2lpby9wcmVzc3VyZS9tcGwxMTVfc3BpLmMNCj4g
+Z2l2ZSBleGFtcGxlcyBvZiBob3cgdG8gbWFrZSBtb3JlIGVsYWJvcmF0ZSBjdXN0b20NCj4gU1BJ
+IHRyYW5zZmVycyB3aXRoIHJlZ21hcC4NCj4gDQoNClRoYW5rcywgSSBkaWQgY2hlY2sgb3RoZXIg
+ZHJpdmVycyBhcyBleGFtcGxlcy4gDQpOb3QgdGhhdCBJIG5lZWRlZCBmb3IgdGhpcyBkcml2ZXIs
+IGJ1dCAuLi5tcGwxMTVfc3BpLmMgZG9lc24ndCBzZWVtIHRvDQp1c2UgcmVnbWFwIChjaGVja2Vk
+IG9uIG5leHQtMjAxNzAzMjcpDQoNCjxzbmlwPg0KDQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKHZh
+bHVlICE9IHJldCkgew0KPiA+ICsgICAgICAgICAgICAgICB0eFswXSA9IGFkZHIgPDwgMTsNCj4g
+PiArICAgICAgICAgICAgICAgdHhbMV0gPSB2YWx1ZTsNCj4gPiArICAgICAgICAgICAgICAgcmV0
+ID0gc3BpX3dyaXRlKHhyYS0+c3BpLCB0eCwgc2l6ZW9mKHR4KSk7DQo+ID4gKyAgICAgICB9IGVs
+c2Ugew0KPiA+ICsgICAgICAgICAgICAgICByZXQgPSAwOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsN
+Cj4gPiArb3V0X3VubG9jazoNCj4gPiArICAgICAgIG11dGV4X3VubG9jaygmeHJhLT5sb2NrKTsN
+Cj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICt9DQo+IA0KPiBDbGFzc2ljYWwg
+bWFzay1hbmQtc2V0IGltcGxlbWVudGF0aW9uIHJpZ2h0Pw0KPiBXaXRoIHJlZ21hcCB0aGlzIGJl
+Y29tZXMgc2ltcGx5IHJlZ21hcF91cGRhdGVfYml0cyhtYXAsIGFkZHIsIG1hc2ssIHNldCkNCj4g
+DQoNClRydWUuIDopDQoNCjxzbmlwPg0KDQo+ID4gKyAgICAgICAvKiBicmluZyB0aGUgY2hpcCBv
+dXQgb2YgcmVzZXQgKi8NCj4gPiArICAgICAgIHJlc2V0X2dwaW8gPSBncGlvZF9nZXRfb3B0aW9u
+YWwoJnNwaS0+ZGV2LCAicmVzZXQiLCBHUElPRF9PVVRfTE9XKTsNCj4gPiArICAgICAgIGlmIChJ
+U19FUlIocmVzZXRfZ3BpbykpDQo+ID4gKyAgICAgICAgICAgICAgIGRldl93YXJuKCZzcGktPmRl
+diwgImNvdWxkIG5vdCBnZXQgcmVzZXQtZ3Bpb3NcbiIpOw0KPiA+ICsgICAgICAgZWxzZSBpZiAo
+cmVzZXRfZ3BpbykNCj4gPiArICAgICAgICAgICAgICAgZ3Bpb2RfcHV0KHJlc2V0X2dwaW8pOw0K
+PiANCj4gSSBkb24ndCB0aGluayB5b3Ugc2hvdWxkIHB1dCBpdCwgb3RoZXIgdGhhbiBpbiB0aGUg
+cmVtb3ZlKCkNCj4gZnVuY3Rpb24gYW5kIGluIHRoYXQgY2FzZSB5b3UgbmVlZCB0byBoYXZlIGl0
+IGluIHRoZQ0KPiBzdGF0ZSBjb250YWluZXIuDQoNCkNhbiB5b3UgcGxlYXNlIGJlIG1vcmUgZXhw
+bGljaXQgaGVyZS4NCg0KQ3VycmVudGx5IEknbSB0cnlpbmcgdG8gYnJpbmcgdGhlIGRldmljZSBv
+dXQgZnJvbSByZXNldCBpbiBjYXNlIHJlc2V0IEdQSU8gaXMgcHJvdmlkZWQuDQpJIGRvbid0IHNl
+ZSBob3cgdGhpcyBjb3VsZCBiZSBkb25lIGluIHJlbW92ZSgpICA6KQ0KDQo+IA0KPiA+ICsgICAg
+ICAgbXV0ZXhfaW5pdCgmeHJhLT5sb2NrKTsNCj4gPiArDQo+ID4gKyAgICAgICB4cmEtPmNoaXAu
+ZGlyZWN0aW9uX2lucHV0ID0geHJhMTQwM19kaXJlY3Rpb25faW5wdXQ7DQo+ID4gKyAgICAgICB4
+cmEtPmNoaXAuZGlyZWN0aW9uX291dHB1dCA9IHhyYTE0MDNfZGlyZWN0aW9uX291dHB1dDsNCj4g
+DQo+IFBsZWFzZSBpbXBsZW1lbnQgLmdldF9kaXJlY3Rpb24oKS4gVGhpcyBpcyB2ZXJ5IG5pY2Ug
+dG8gaGF2ZS4NCj4gDQoNCkRvbmUNCg0KPiA+ICtzdGF0aWMgaW50IHhyYTE0MDNfcmVtb3ZlKHN0
+cnVjdCBzcGlfZGV2aWNlICpzcGkpDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCB4cmExNDAz
+ICp4cmEgPSBzcGlfZ2V0X2RydmRhdGEoc3BpKTsNCj4gPiArDQo+ID4gKyAgICAgICBncGlvY2hp
+cF9yZW1vdmUoJnhyYS0+Y2hpcCk7DQo+IA0KPiBVc2UgZGV2bV9ncGlvY2hpcF9hZGRfZGF0YSgp
+IGFuZCB0aGlzIHJlbW92ZSBpcyBub3QNCj4gbmVlZGVkIGF0IGFsbC4NCj4gDQoNClRydWUuIERv
+bmUNCg0KPHNuaXA+DQoNCj4gPiArc3Vic3lzX2luaXRjYWxsKHhyYTE0MDNfaW5pdCk7DQo+ID4g
+Kw0KPiA+ICtzdGF0aWMgdm9pZCBfX2V4aXQgeHJhMTQwM19leGl0KHZvaWQpDQo+ID4gK3sNCj4g
+PiArICAgICAgIHNwaV91bnJlZ2lzdGVyX2RyaXZlcigmeHJhMTQwM19kcml2ZXIpOw0KPiA+ICt9
+DQo+ID4gK21vZHVsZV9leGl0KHhyYTE0MDNfZXhpdCk7DQo+IA0KPiBUaGlzIHNlZW1zIGxpa2Ug
+dHJpY2tzeS4gSnVzdCBtb2R1bGVfc3BpX2RyaXZlcigpDQo+IHNob3VsZCBiZSBmaW5lIGRvbid0
+IHlvdSB0aGluaz8NCg0KWWVhaC4gVEJIIEkgZG9uJ3QgaGF2ZSBhIHN0cm9uZyByZWFzb24gd2h5
+IG1vZHVsZV9zcGlfZHJpdmVyIGluaXQgbGV2ZWwgc2hvdWxkbid0IGJlIGVub3VnaC4gDQpEb25l
+Lg0KDQpSZWdhcmRzLA0KICAgIE5hbmRvcg0K
