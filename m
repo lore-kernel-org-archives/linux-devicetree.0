@@ -1,75 +1,66 @@
-From: Vlad Zakharov <Vladislav.Zakharov@synopsys.com>
-Subject: Re: [PATCH v2] clk/axs10x: introduce AXS10X pll driver
-Date: Wed, 5 Apr 2017 16:06:11 +0000
-Message-ID: <1491408370.9650.24.camel@synopsys.com>
-References: <1487682670-4164-1-git-send-email-vzakhar@synopsys.com>
-         <20170405013525.GJ18246@codeaurora.org>
+From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Subject: Re: [PATCH 1/1] ARM: dts: armada-xp-linksys-mamba: use wan instead
+ of internet for DSA port
+Date: Wed, 5 Apr 2017 18:08:08 +0200
+Message-ID: <20170405180808.4f8924cb@gmail.com>
+References: <20170405052847.326-1-ralph.sennhauser@gmail.com>
+ <20170405142824.GB13449@lunn.ch>
+ <20170405172224.38c1f9fb@gmail.com>
+ <20170405155032.GL13449@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170405013525.GJ18246@codeaurora.org>
-Content-Language: en-US
-Content-ID: <ED2C7F144EA49946834A1EEF08572A0A@internal.synopsys.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: "sboyd@codeaurora.org" <sboyd@codeaurora.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170405155032.GL13449@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlcGhlbiwNCg0KT24gVHVlLCAyMDE3LTA0LTA0IGF0IDE4OjM1IC0wNzAwLCBTdGVwaGVu
-IEJveWQgd3JvdGU6DQo+ID4gK8KgwqDCoMKgwqAucGxsX3RhYmxlID0gKHN0cnVjdCBwbGxfb2Zf
-dGFibGUgW10pew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHsNCj4gPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLnByYXRlID0gMjcwMDAwMDAsDQo+
-IA0KPiBDYW4gdGhpcyBiZSBhbm90aGVyIGNsayBpbiB0aGUgZnJhbWV3b3JrIGluc3RlYWQgb2Yg
-aGFyZGNvZGluZw0KPiB0aGUgcGFyZW50IHJhdGU/DQoNCkluIGZhY3QgdGhlcmUgaXMgYW5vdGhl
-ciBjbGsgaW4gdGhlIGZyYW1ld29yayB0aGF0IHJlcHJlc2VudHMgdGhpcyBwYXJlbnQgY2xvY2su
-IEJ1dCB0aGlzIGZpZWxkIGlzIG5lZWRlZCB0byBnZXQNCmFwcHJvcHJpYXRlIHBsbF9jZmdfdGFi
-bGUgYXMgaXQgZGVwZW5kcyBvbiBwYXJlbnQgY2xvY2sgZnJlcXVlbmN5LiBCZWxvdyBpbiBwbGxf
-Y2ZnX2dldCBmdW5jdGlvbiB3ZSBhcmUgc2VhcmNoaW5nIGZvcg0KdGhlIGNvcnJlY3QgdGFibGUg
-Y29tcGFyaW5nIC5wYXJlbnRfbm9kZSBmaWVsZCB3aXRoIHJlYWwgaGFyZHdhcmUgcGFyZW50IGNs
-b2NrIGZyZXF1ZW5jeToNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+OC0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KZm9yIChpID0gMDsgcGxsX3RhYmxlW2ld
-LnByYXRlICE9IDA7IGkrKykNCsKgIMKgIGlmIChwbGxfdGFibGVbaV0ucHJhdGUgPT0gcHJhdGUp
-DQrCoCDCoCDCoCDCoCByZXR1cm4gcGxsX3RhYmxlW2ldLnBsbF9jZmdfdGFibGU7DQotLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPjgtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0NCg0KPiANCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgLnBsbF9jZmdfdGFibGUgPSAoc3RydWN0IHBsbF9jZmcgW10pew0KPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgeyAyNTIw
-MDAwMCwgMSwgODQsIDkwIH0sDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB7IDUwMDAwMDAwLCAxLCAxMDAsIDU0IH0sDQo+ID4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqB7IDc0MjUwMDAwLCAxLCA0NCwgMTYgfSwNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHsgfSwNCj4gPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfSwNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqB9LA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8qIFVzZWQgYXMgbGlz
-dCBsaW1pdGVyICovDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgeyB9LA0KPiANCj4g
-VGhlcmUncyBvbmx5IGV2ZXIgb25lLCBzbyBJJ20gY29uZnVzZWQgd2h5IHdlJ3JlIG1ha2luZyBh
-IGxpc3QuDQoNCkJ5IHRoaXMgcGF0Y2ggd2Ugb25seSBhZGQgc3VwcG9ydCBvZiBjb3JlIGFyYyBw
-bGwgYW5kIHBndSBwbGwgYW5kIHRvZGF5IHRoZXkgYXJlIGNsb2NrZWQgYnkgdGhlIG9ubHkgcGFy
-ZW50IGNsb2Nrcw0KaW50cm9kdWNlZCBoZXJlLiBCdXQgb3RoZXIgcGxscyBvbiBheHMxMHggbWF5
-IGJlIGRyaXZlbiBieSBkaWZmZXJlbnQgb3IgY29uZmlndXJhYmxlIGNsb2Nrcywgc28gaW4gc3Vj
-aCBjYXNlcyB3ZSB3aWxsDQpoYXZlIG1vcmUgdGhhbiBvbmUgZW50cnkgaW4gdGhpcyBsaXN0LiBB
-bmQgd2UgYXJlIGdvaW5nIHRvIGFkZCBtb3JlIHN1cHBvcnRlZCBwbGxzIHRvIHRoaXMgZHJpdmVy
-IGluIHRoZSBuZWFyZXN0IGZ1dHVyZS4NCg0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoGNsayA9IGNs
-a19yZWdpc3RlcihOVUxMLCAmcGxsX2Nsay0+aHcpOw0KPiA+ICvCoMKgwqDCoMKgaWYgKElTX0VS
-UihjbGspKSB7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcHJfZXJyKCJmYWlsZWQg
-dG8gcmVnaXN0ZXIgJXMgY2xvY2sgKCVsZClcbiIsDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBub2RlLT5uYW1lLCBQVFJfRVJS
-KGNsaykpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGtmcmVlKHBsbF9jbGspOw0K
-PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybjsNCj4gPiArwqDCoMKgwqDCoH0N
-Cj4gPiArDQo+ID4gK8KgwqDCoMKgwqBvZl9jbGtfYWRkX3Byb3ZpZGVyKG5vZGUsIG9mX2Nsa19z
-cmNfc2ltcGxlX2dldCwgY2xrKTsNCj4gDQo+IENhbiB5b3UgcGxlYXNlIHVzZSB0aGUgY2xrX2h3
-IGJhc2VkIHByb3ZpZGVyIGFuZCBjbGsgcmVnaXN0cmF0aW9uDQo+IGZ1bmN0aW9ucz8NCg0KU3Vy
-ZS4gQ291bGQgeW91IGJlIHNvIGtpbmQgdG8gZXhwbGFpbiB3aGF0IGlzIHRoZSBkaWZmZXJlbmNl
-IGJldHdlZW4gaHcgYW5kIG5vbi1odyBiYXNlZCBwcm92aWRlciBhbmQgY2xrIHJlZ2lzdHJhdGlv
-bg0KZnVuY3Rpb25zIHBsZWFzZT8gSW4gd2hpY2ggY2FzZXMgdGhleSBhcmUgcHJlZmVycmVkP8Kg
-DQoNCj4gDQo+ID4gK30NCj4gPiArDQo+ID4gK0NMS19PRl9ERUNMQVJFKGF4czEweF9wbGxfY2xv
-Y2ssICJzbnBzLGF4czEweC1hcmMtcGxsLWNsb2NrIiwgb2ZfcGxsX2Nsa19zZXR1cCk7DQo+IA0K
-PiBEb2VzIHRoaXMgbmVlZCB0byBiZSBDTEtfT0ZfREVDTEFSRV9EUklWRVI/IEkgbWVhbiBkb2Vz
-IHRoZQ0KPiBkcml2ZXIgbmVlZCB0byBwcm9iZSBhbmQgYWxzbyBoYXZlIHRoaXMgb2YgZGVjbGFy
-ZSBoYXBwZW4/IElzIHRoZQ0KPiBQTEwgc3BlY2lhbCBhbmQgbmVlZHMgdG8gYmUgdXNlZCBmb3Ig
-dGhlIHRpbWVycz8NCg0KSXQgaXMgc3BlY2lhbCBhbmQgaXMgdXNlZCBmb3IgdGhlIHRpbWVycywg
-c28gd2UgaGF2ZSB0byBDTEtfT0ZfREVDTEFSRSBpdC4gT24gdGhlIG90aGVyIGhhbmQgc2ltaWxh
-ciBwbGwgaXMgdXNlZCB0bw0KZHJpdmUgUEdVIGNsb2NrIGZyZXF1ZW5jeSBhbmQgb3RoZXIgc3Vi
-c3lzdGVtcyBhbmQgc28gd2UgYWRkIHVzdWFsIHByb2JlIGZ1bmMuDQoNCi0tIA0KQmVzdCByZWdh
-cmRzLA0KVmxhZCBaYWtoYXJvdiA8dnpha2hhckBzeW5vcHN5cy5jb20+
+Hi Andrew,
+
+On Wed, 5 Apr 2017 17:50:32 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
+
+> > In fact "internet" label on the case is uppercase, would this matter
+> > for you for new bindings, or would you still use the lowercase
+> > version?  
+> 
+> I would use lower case, just to fix with the general convention that
+> interface names are lower case.
+
+Thanks
+
+> 
+> > > I would say, this is now too late. Changing an interface name will
+> > > break configuration scripts. We are stuck with it.
+> > >   
+> > 
+> > If it weren't for commit cb4f71c42988 that would have been obvious
+> > for me as well.  
+> 
+> Yes, that was not nice. But it was also very earlier in the life of
+> 38x, so it just affected a few developers with reference boards, not
+> real products out in the wild, as far as i remember.
+> 
+>      Andrew
+
+The mentioned commit bit me amongst others, see
+https://lkml.org/lkml/2016/8/21/62
+
+In fact I expect the impact to be much lower this time around, before
+4.10 DSA was no contender for swconfig (out of tree switch driver as
+used by OpenWrt and others). On Mamba ~200Mbit was top speed. Now they
+perform roughly the same.
+
+
+Thanks
+Ralph
