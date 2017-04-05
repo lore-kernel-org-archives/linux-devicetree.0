@@ -1,83 +1,137 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v6 1/4] dt-bindings: phy: Add support for QUSB2 phy
-Date: Wed, 5 Apr 2017 14:39:37 +0530
-Message-ID: <1b88275d-4965-4fc3-3bc1-24f086b52bb7@codeaurora.org>
-References: <1490018046-8549-1-git-send-email-vivek.gautam@codeaurora.org>
- <1490018046-8549-2-git-send-email-vivek.gautam@codeaurora.org>
- <20170404182839.GE18246@codeaurora.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v6 05/23] PCI: endpoint: Create configfs entry for EPC device
+ and EPF driver
+Date: Wed, 5 Apr 2017 14:22:25 +0530
+Message-ID: <20170405085243.18123-6-kishon@ti.com>
+References: <20170405085243.18123-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170404182839.GE18246@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: kishon@ti.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170405085243.18123-1-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: hch@infradead.org, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
+Invoke APIs provided by pci-ep-cfs to create configfs entry for every EPC
+device and EPF driver to help users in creating EPF device and binding the
+EPF device to the EPC device.
 
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/endpoint/pci-epc-core.c | 4 ++++
+ drivers/pci/endpoint/pci-epf-core.c | 4 ++++
+ include/linux/pci-epc.h             | 2 ++
+ include/linux/pci-epf.h             | 2 ++
+ 4 files changed, 12 insertions(+)
 
-On 04/04/2017 11:58 PM, Stephen Boyd wrote:
-> On 03/20, Vivek Gautam wrote:
->> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->> new file mode 100644
->> index 000000000000..a6d19acde9e0
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->> @@ -0,0 +1,45 @@
->> +Qualcomm QUSB2 phy controller
->> +=============================
->> +
->> +QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
->> +
->> +Required properties:
->> + - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
->> + - reg: offset and length of the PHY register set.
->> + - #phy-cells: must be 0.
->> +
->> + - clocks: a list of phandles and clock-specifier pairs,
->> +	   one for each entry in clock-names.
->> + - clock-names: must be "cfg_ahb" for phy config clock,
->> +			"ref" for 19.2 MHz ref clk,
->> +			"iface" for phy interface clock (Optional).
->> +
->> + - vdd-phy-supply: Phandle to a regulator supply to PHY core block.
->> + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
->> + - vdda-phy-dpdm-supply: Phandle to 3.1V regulator supply to Dp/Dm port signals.
->> +
->> + - resets: Phandle to reset to phy block.
->> +
->> +Optional properties:
->> + - nvmem-cells: Phandle to nvmem cell that contains 'HS Tx trim'
->> +		tuning parameter value for qusb2 phy.
->> +
->> + - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
->> +
->> +Example:
->> +	hsusb_phy: phy@7411000 {
->> +		compatible = "qcom,msm8996-qusb2-phy";
->> +		reg = <0x7411000 0x180>;
->> +		#phy-cells = <0>;
->> +
->> +		clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
->> +			<&gcc GCC_RX1_USB2_CLKREF_CLK>,
->> +		clock-names = "cfg_ahb", "ref";
->> +
->> +		vdd-phy-supply = <&pm8994_s2>;
-> pm8994_s2 is a "corner" regulator. I'm not sure how we're going
-> to have it listed here as something like a regulator supply in
-> the binding. We probably should leave it out for now and let the
-> power domain + pm_qos stuff for corners work out. From what I see
-> in the downstream driver the code is setting the corner to '4'
-> when active, and '1' when inactive.
-
-Sure, let's allow power domain and corner voltage work handle
-this. I will drop this regulator entry from bindings, and the driver.
-
-
-Best regards
-Vivek
-
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 54b366ece844..9ae9e59b2a74 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -24,6 +24,7 @@
+ 
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
++#include <linux/pci-ep-cfs.h>
+ 
+ static struct class *pci_epc_class;
+ 
+@@ -441,6 +442,7 @@ EXPORT_SYMBOL_GPL(pci_epc_linkup);
+  */
+ void pci_epc_destroy(struct pci_epc *epc)
+ {
++	pci_ep_cfs_remove_epc_group(epc->group);
+ 	device_unregister(&epc->dev);
+ 	kfree(epc);
+ }
+@@ -507,6 +509,8 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+ 	if (ret)
+ 		goto put_dev;
+ 
++	epc->group = pci_ep_cfs_add_epc_group(dev_name(dev));
++
+ 	return epc;
+ 
+ put_dev:
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 7564a29f435c..92db7dcd911c 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -24,6 +24,7 @@
+ 
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
++#include <linux/pci-ep-cfs.h>
+ 
+ static struct bus_type pci_epf_bus_type;
+ static struct device_type pci_epf_type;
+@@ -143,6 +144,7 @@ EXPORT_SYMBOL_GPL(pci_epf_alloc_space);
+  */
+ void pci_epf_unregister_driver(struct pci_epf_driver *driver)
+ {
++	pci_ep_cfs_remove_epf_group(driver->group);
+ 	driver_unregister(&driver->driver);
+ }
+ EXPORT_SYMBOL_GPL(pci_epf_unregister_driver);
+@@ -172,6 +174,8 @@ int __pci_epf_register_driver(struct pci_epf_driver *driver,
+ 	if (ret)
+ 		return ret;
+ 
++	driver->group = pci_ep_cfs_add_epf_group(driver->driver.name);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(__pci_epf_register_driver);
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 8c63d3c37f76..af5edbf3eea3 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -77,6 +77,7 @@ struct pci_epc_mem {
+  * @ops: function pointers for performing endpoint operations
+  * @mem: address space of the endpoint controller
+  * @max_functions: max number of functions that can be configured in this EPC
++ * @group: configfs group representing the PCI EPC device
+  * @lock: spinlock to protect pci_epc ops
+  */
+ struct pci_epc {
+@@ -85,6 +86,7 @@ struct pci_epc {
+ 	const struct pci_epc_ops	*ops;
+ 	struct pci_epc_mem		*mem;
+ 	u8				max_functions;
++	struct config_group		*group;
+ 	/* spinlock to protect against concurrent access of EP controller */
+ 	spinlock_t			lock;
+ };
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index 5628714f7bcf..0d529cb90143 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -82,6 +82,7 @@ struct pci_epf_ops {
+  * @driver: PCI EPF driver
+  * @ops: set of function pointers for performing EPF operations
+  * @owner: the owner of the module that registers the PCI EPF driver
++ * @group: configfs group corresponding to the PCI EPF driver
+  * @id_table: identifies EPF devices for probing
+  */
+ struct pci_epf_driver {
+@@ -91,6 +92,7 @@ struct pci_epf_driver {
+ 	struct device_driver	driver;
+ 	struct pci_epf_ops	*ops;
+ 	struct module		*owner;
++	struct config_group	*group;
+ 	const struct pci_epf_device_id	*id_table;
+ };
+ 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.11.0
