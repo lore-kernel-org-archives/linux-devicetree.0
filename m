@@ -1,79 +1,79 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH 2/3] arm64: allwinner: a64: add USB0 OHCI/EHCI related
- devicetree parts
-Date: Wed, 5 Apr 2017 15:33:09 +0800
-Message-ID: <a4ca2175-b4df-42e4-1f85-20d34430d4dc@aosc.io>
-References: <20170404184518.33610-1-icenowy@aosc.io>
- <20170404184518.33610-2-icenowy@aosc.io>
- <20170405071508.yaur35xuli4jgkfb@lukather>
- <7828ffa0-f570-9841-a9e6-fe175f8169ac@aosc.io>
- <20170405072631.ou4e5gafvagwpykq@lukather>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] drm: rcar-du: Document the vsps property in the DT bindings
+Date: Wed, 5 Apr 2017 09:54:38 +0200
+Message-ID: <CAMuHMdWYq-w9T4chEh4Hg0+9_MCb+bivD3sgHeCoMPe61=czjg@mail.gmail.com>
+References: <20170327095652.5755-1-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdUiDzGt6bz96D-5yRLF-HiZfpQTTxKP5Y4+j-9HiF1LLQ@mail.gmail.com>
+ <8105647.ANSr0hWnZy@avalon> <CAMuHMdWSuz79mdHLuT4jDQsNvecFck21aBNLOrs5JHmMXnyTCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170405072631.ou4e5gafvagwpykq@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWSuz79mdHLuT4jDQsNvecFck21aBNLOrs5JHmMXnyTCQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
-
-在 2017年04月05日 15:26, Maxime Ripard 写道:
-> On Wed, Apr 05, 2017 at 03:17:19PM +0800, Icenowy Zheng wrote:
->>
->>
->> 在 2017年04月05日 15:15, Maxime Ripard 写道:
->>> On Wed, Apr 05, 2017 at 02:45:17AM +0800, Icenowy Zheng wrote:
->>>> As we added USB0 route auto switching support for A64, add related
->>>> device tree parts to the A64 DTSI file (EHCI0/OHCI0 controllers and the
->>>> pmu0 memory area for PHY).
->>>>
->>>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->>>> ---
->>>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 24 ++++++++++++++++++++++++
->>>>  1 file changed, 24 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> index 1c64ea2d23f9..a8916df99048 100644
->>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> @@ -179,8 +179,10 @@
->>>>  		usbphy: phy@01c19400 {
->>>>  			compatible = "allwinner,sun50i-a64-usb-phy";
->>>>  			reg = <0x01c19400 0x14>,
->>>> +			      <0x01c1a800 0x4>,
->>>>  			      <0x01c1b800 0x4>;
->>>>  			reg-names = "phy_ctrl",
->>>> +				    "pmu0",
+On Fri, Mar 31, 2017 at 11:21 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Fri, Mar 31, 2017 at 11:19 AM, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+>> On Monday 27 Mar 2017 13:05:48 Geert Uytterhoeven wrote:
+>>> On Mon, Mar 27, 2017 at 11:56 AM, Laurent Pinchart wrote:
+>>> > The property is used by the driver but is missing from the DT bindings.
+>>> > Document it.
+>>> >
+>>> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>>> > Signed-off-by: Laurent Pinchart
+>>> > <laurent.pinchart+renesas@ideasonboard.com>
+>>> > ---
+>>> >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+>>> >  1 file changed, 5 insertions(+)
+>>> >
+>>> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt
+>>> > b/Documentation/devicetree/bindings/display/renesas,du.txt index
+>>> > 1a02f099a0ff..cf34893a1b53 100644
+>>> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+>>> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+>>> >
+>>> > @@ -36,6 +36,11 @@ Required Properties:
+>>> >        When supplied they must be named "dclkin.x" with "x" being the
+>>> >        input
+>>> >        clock numerical index.
+>>> >
+>>> > +Optional Properties:
+>>> > +
+>>> > +  - vsps: A list of phandles to the VSP nodes that handle the memory
+>>> > +    interfaces for the DU channels (Gen3 only).
 >>>
->>> This breaks the older DTs, and that property isn't documented.
+>>> ", one per channel"?
+>>>
+>>> Required for Gen3, optional for Gen2? (cfr. Sergei's patches).
 >>
->> It's already documented.
->>
->> In the H3 dual-route patchset I have already added this.
->>
->> ("  * "pmu0" for H3, V3s and A64")
+>> How about making it mandatory on Gen2 as well ? The VSPs are there, even if
+>> the driver doesn't use them, it makes sense to describe the connection. Of
 >
-> This is not in linux-next then, sorry.
-
-It's already in next-20160405.
-
+> Fine for me, as this is hardware description.
 >
->> P.S. to be compatible with older DTs, I think I should adjust
->> the phy driver, make it enable dual-route function only when
->> pmu0 is present.
+>> course the driver will treat the property as optional for backward
+>> compatibility.
 >
-> That, or if we're quick enough, we can still add it to 4.11. There's a
-> bit of time left.
+> OK.
 
-Thus the device tree binding patch and the DT part of this patchset
-should be all pushed to 4.11 .
+Will you do this as an incremental update?
+I noticed the initial version is now in drm-next.
 
-The device tree binding patch is commit ee73fd7dfc86 ("dt: bindings: add 
-pmu0 regs for USB PHYs on Allwinner H3/V3s/A64").
+Thanks!
 
->
-> Maxime
->
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
