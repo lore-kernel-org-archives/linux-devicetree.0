@@ -1,77 +1,113 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [Query] DT warnings with ranges and sub-nodes
-Date: Wed, 5 Apr 2017 14:58:13 +0100
-Message-ID: <5b1fc8af-b5e1-75bd-6cf3-84ea75e4987f@arm.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 2/2] memory: ti-emif-sram: introduce relocatable
+ suspend/resume handlers
+Date: Wed, 5 Apr 2017 14:59:34 +0100
+Message-ID: <20170405135933.GN23750@n2100.armlinux.org.uk>
+References: <20170328205511.21166-1-d-gerlach@ti.com>
+ <20170328205511.21166-3-d-gerlach@ti.com>
+ <20170404161151.GS10760@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170404161151.GS10760@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Keerthy J <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Tue, Apr 04, 2017 at 09:11:52AM -0700, Tony Lindgren wrote:
+> Russell,
+> 
+> * Dave Gerlach <d-gerlach@ti.com> [170328 13:57]:
+> > Certain SoCs like Texas Instruments AM335x and AM437x require parts
+> > of the EMIF PM code to run late in the suspend sequence from SRAM,
+> > such as saving and restoring the EMIF context and placing the memory
+> > into self-refresh.
+> > 
+> > One requirement for these SoCs to suspend and enter its lowest power
+> > mode, called DeepSleep0, is that the PER power domain must be shut off.
+> > Because the EMIF (DDR Controller) resides within this power domain, it
+> > will lose context during a suspend operation, so we must save it so we
+> > can restore once we resume. However, we cannot execute this code from
+> > external memory, as it is not available at this point, so the code must
+> > be executed late in the suspend path from SRAM.
+> > 
+> > This patch introduces a ti-emif-sram driver that includes several
+> > functions written in ARM ASM that are relocatable so the PM SRAM
+> > code can use them. It also allocates a region of writable SRAM to
+> > be used by the code running in the executable region of SRAM to save
+> > and restore the EMIF context. It can export a table containing the
+> > absolute addresses of the available PM functions so that other SRAM
+> > code can branch to them. This code is required for suspend/resume on
+> > AM335x and AM437x to work.
+> > 
+> > In addition to this, to be able to share data structures between C and
+> > the ti-emif-sram-pm assembly code, we can automatically generate all of
+> > the C struct member offsets and sizes as macros by making use of the ARM
+> > asm-offsets file. In the same header that we define our data structures
+> > in we also define all the macros in an inline function and by adding a
+> > call to this in the asm_offsets file all macros are properly generated
+> > and available to the assembly code without cluttering up the asm-offsets
+> > file.
+> > 
+> > Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> > ---
+> >  arch/arm/kernel/asm-offsets.c    |   6 +
+> >  drivers/memory/Kconfig           |  10 ++
+> >  drivers/memory/Makefile          |   4 +
+> >  drivers/memory/emif.h            |  17 ++
+> >  drivers/memory/ti-emif-pm.c      | 295 ++++++++++++++++++++++++++++++++++
+> >  drivers/memory/ti-emif-sram-pm.S | 334 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/ti-emif-sram.h     | 143 +++++++++++++++++
+> >  7 files changed, 809 insertions(+)
+> >  create mode 100644 drivers/memory/ti-emif-pm.c
+> >  create mode 100644 drivers/memory/ti-emif-sram-pm.S
+> >  create mode 100644 include/linux/ti-emif-sram.h
+> > 
+> > diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+> > index 608008229c7d..d728b5660e36 100644
+> > --- a/arch/arm/kernel/asm-offsets.c
+> > +++ b/arch/arm/kernel/asm-offsets.c
+> > @@ -28,6 +28,7 @@
+> >  #include <asm/vdso_datapage.h>
+> >  #include <asm/hardware/cache-l2x0.h>
+> >  #include <linux/kbuild.h>
+> > +#include <linux/ti-emif-sram.h>
+> >  
+> >  /*
+> >   * Make sure that the compiler and target are compatible.
+> > @@ -183,5 +184,10 @@ int main(void)
+> >  #ifdef CONFIG_VDSO
+> >    DEFINE(VDSO_DATA_SIZE,	sizeof(union vdso_data_store));
+> >  #endif
+> > +#if defined(CONFIG_SOC_AM33XX) || defined(CONFIG_SOC_AM43XX)
+> > +  BLANK();
+> > +  ti_emif_offsets();
+> > +#endif
+> > +
+> >    return 0; 
+> >  }
+> 
+> Does the above look OK to you?
 
-I am seeing some warning in juno DTS files. I would like to get your
-feedback on how to resolve them.
+I'm not going to comment on this yet, but I'll instead comment on the
+newly appeared sram_exec_copy() stuff.
 
-Warning messages:
+So, a few years ago, we went to significant effort in ARM land to come
+up with a way to _safely_ copy assembler from the kernel into SRAM,
+because copying code to SRAM that is compiled in thumb mode and then
+executing it is _not_ as simple as memcpy(), cast the pointer to a
+function pointer, and then call the function pointer.
 
-Warning (simple_bus_reg): Node /smb@8000000/motherboard/flash@0,00000000
-simple-bus unit address format error, expected "0"
-Warning (simple_bus_reg): Node
-/smb@8000000/motherboard/ethernet@2,00000000 simple-bus unit address
-format error, expected "200000000"
-Warning (simple_bus_reg): Node
-/smb@8000000/motherboard/iofpga@3,00000000 simple-bus unit address
-format error, expected "300000000"
+The SRAM stuff throws all that out, instead preferring the dumb memcpy()
+approach.
 
-We have
-
-        smb@8000000 {
-                compatible = "simple-bus";
-                #address-cells = <2>;
-                #size-cells = <1>;
-                ranges = <0 0 0 0x08000000 0x04000000>,
-                         <1 0 0 0x14000000 0x04000000>,
-                         <2 0 0 0x18000000 0x04000000>,
-                         <3 0 0 0x1c000000 0x04000000>,
-                         <4 0 0 0x0c000000 0x04000000>,
-                         <5 0 0 0x10000000 0x04000000>;
-		...
-	
-		flash@0,00000000 {
-			...
-		};
-		ethernet@2,00000000 {
-			...
-		};
-		iofpga@3,00000000 {
-			...
-		};
-	};
-
-All of which are @offset 0x0 in their respective ranges.
-
-How do we specify the range as well as the offset ? Does the below
-look like correct way of fixing those warnings ?
-	flash@0
-	ethernet@200000000
-	iofpga@300000000
-
-Or can I ignore these warning as I see the syntax to be correct as
-provided in example in ePAPR(page 99 under Appendix B1 Ebony Device
-Tree). Sorry if I have missed to follow any other thread on the same.
+This needs resolving, and I'd like to see it resolved to the satisfaction
+of architecture maintainers before we progress any further down this
+route.
 
 -- 
-Regards,
-Sudeep
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
