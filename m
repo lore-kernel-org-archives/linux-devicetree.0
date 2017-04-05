@@ -1,84 +1,100 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 0/9] Renesas RZ/A1 pin and gpio controller
-Date: Wed,  5 Apr 2017 16:07:18 +0200
-Message-ID: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 1/9] pinctrl: generic: Add bi-directional and output-enable
+Date: Wed,  5 Apr 2017 16:07:19 +0200
+Message-ID: <1491401247-7030-2-git-send-email-jacopo+renesas@jmondi.org>
+References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: linus.walleij@linaro.org, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-   this is 4th round of gpio/pincontroller for RZ/A1 devices.
+Add bi-directional and output-enable pin configuration properties.
 
-As you suggested in v3 review, I have now added what we called pinmux flags
-to the list of standard pinconf generic properties, and we're now using
-generic parsing routines to collect them and apply them when multiplexing
-pins.
+bi-directional allows to specify when a pin shall operate in input and
+output mode at the same time. This is particularly useful in platforms
+where input and output buffers have to be manually enabled.
 
-The device tree bindings changed significantly, and as anticipated I have not
-incorporated Rob's ack as I would like him to have a look there again.
+output-enable is just syntactic sugar to specify that a pin shall
+operate in output mode, ignoring the provided argument.
+This pairs with input-enable pin configuration option.
 
-As a bonus, parsing of pin mux nodes now happens at dt_node_to_map() time, and
-not at probe time. This makes the driver play nicely with device tree
-overlays, that as Geert pointed out, were not supported in v3.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 2 ++
+ drivers/pinctrl/pinconf-generic.c                              | 3 +++
+ include/linux/pinctrl/pinconf-generic.h                        | 3 +++
+ 3 files changed, 8 insertions(+)
 
-Tested with SCIF, RIIC, ETHER and gpio-leds on Genmai board.
-
-Thanks
-   j
-
-
-v1 -> v2:
-- change pin configuration flags as suggested by Chris
-- gpio set direction function fixed as suggested by Chris
-- add some more example on pin configuration flag usage to dt-binding doc
-- fix gpio-controller names to remove unit address as suggested by Geert
-- some comments chopped here and there to make the driver less verbose
-
-v2 -> v3:
-- fix grammar and syntax in comment and documentation
-- fix code style (reverse xmas tree ordering in variable declaration)
-- use irqsave/irqrestore in spinlock lock/unlock
-- use devm_ version of kasprintf (memory returned was not properly free)
-- use bitops.h operation ffs and fls to make sure a single bit is set in pmx
-  mask
-- Add Geert's reviewed-by to DTS patches
-
-v3 -> v4:
-- use "pinmux" property in pmx sub-nodes in place of "renesas,pins"
-- use pinconf standard properties to set pin mux additional flags
-- add "bi-directional" and "output-enable" to pinconf generic properties
-- perform pmx function parsing at dt_node_to_map() time
-- change DT bindings to use GENERIC_PINCONF
-- change DT bindings to allow sub-nodes to have "pinmux" property specified
-- several renames (register names, DT parse functions, set_mux() function)
-
-Jacopo Mondi (9):
-  pinctrl: generic: Add bi-directional and output-enable
-  pinctrl: Renesas RZ/A1 pin and gpio controller
-  dt-bindings: pinctrl: Add RZ/A1 bindings doc
-  arm: dts: dt-bindings: Add Renesas RZ/A1 pinctrl header
-  arm: dts: r7s72100: Add pin controller node
-  arm: dts: genmai: Add SCIF2 pin group
-  arm: dts: genmai: Add RIIC2 pin group
-  arm: dts: genmai: Add user led device nodes
-  arm: dts: genmai: Add ethernet pin group
-
- .../bindings/pinctrl/pinctrl-bindings.txt          |   2 +
- .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 218 +++++
- arch/arm/boot/dts/r7s72100-genmai.dts              |  76 ++
- arch/arm/boot/dts/r7s72100.dtsi                    |  78 ++
- drivers/pinctrl/Kconfig                            |  11 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinconf-generic.c                  |   3 +
- drivers/pinctrl/pinctrl-rza1.c                     | 995 +++++++++++++++++++++
- include/dt-bindings/pinctrl/r7s72100-pinctrl.h     |  16 +
- include/linux/pinctrl/pinconf-generic.h            |   3 +
- 10 files changed, 1403 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
- create mode 100644 drivers/pinctrl/pinctrl-rza1.c
- create mode 100644 include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-
---
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index bf3f7b0..f2ed458 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -222,6 +222,7 @@ bias-bus-hold		- latch weakly
+ bias-pull-up		- pull up the pin
+ bias-pull-down		- pull down the pin
+ bias-pull-pin-default	- use pin-default pull state
++bi-directional		- pin supports simultaneous input/output operations
+ drive-push-pull		- drive actively high and low
+ drive-open-drain	- drive with open drain
+ drive-open-source	- drive with open source
+@@ -234,6 +235,7 @@ input-debounce		- debounce mode with debound time X
+ power-source		- select between different power supplies
+ low-power-enable	- enable low power mode
+ low-power-disable	- disable low power mode
++output-enable		- enable output on pin regardless of output value
+ output-low		- set the pin to output mode with low level
+ output-high		- set the pin to output mode with high level
+ slew-rate		- set the slew rate
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index ce3335a..03e6808 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -35,6 +35,7 @@ static const struct pin_config_item conf_items[] = {
+ 	PCONFDUMP(PIN_CONFIG_BIAS_PULL_PIN_DEFAULT,
+ 				"input bias pull to pin specific state", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_BIAS_PULL_UP, "input bias pull up", NULL, false),
++	PCONFDUMP(PIN_CONFIG_BIDIRECTIONAL, "bi-directional pin operations", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_DRAIN, "output drive open drain", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
+@@ -160,6 +161,7 @@ static const struct pinconf_generic_params dt_params[] = {
+ 	{ "bias-pull-up", PIN_CONFIG_BIAS_PULL_UP, 1 },
+ 	{ "bias-pull-pin-default", PIN_CONFIG_BIAS_PULL_PIN_DEFAULT, 1 },
+ 	{ "bias-pull-down", PIN_CONFIG_BIAS_PULL_DOWN, 1 },
++	{ "bi-directional", PIN_CONFIG_BIDIRECTIONAL, 1 },
+ 	{ "drive-open-drain", PIN_CONFIG_DRIVE_OPEN_DRAIN, 0 },
+ 	{ "drive-open-source", PIN_CONFIG_DRIVE_OPEN_SOURCE, 0 },
+ 	{ "drive-push-pull", PIN_CONFIG_DRIVE_PUSH_PULL, 0 },
+@@ -172,6 +174,7 @@ static const struct pinconf_generic_params dt_params[] = {
+ 	{ "input-schmitt-enable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 1 },
+ 	{ "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
+ 	{ "low-power-enable", PIN_CONFIG_LOW_POWER_MODE, 1 },
++	{ "output-enable", PIN_CONFIG_OUTPUT, 1, },
+ 	{ "output-high", PIN_CONFIG_OUTPUT, 1, },
+ 	{ "output-low", PIN_CONFIG_OUTPUT, 0, },
+ 	{ "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index 7620eb1..279e3c5 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -42,6 +42,8 @@
+  * @PIN_CONFIG_BIAS_PULL_UP: the pin will be pulled up (usually with high
+  *	impedance to VDD). If the argument is != 0 pull-up is enabled,
+  *	if it is 0, pull-up is total, i.e. the pin is connected to VDD.
++ * @PIN_CONFIG_BIDIRECTIONAL: the pin will be configured to allow simultaneous
++ *	input and output operations.
+  * @PIN_CONFIG_DRIVE_OPEN_DRAIN: the pin will be driven with open drain (open
+  *	collector) which means it is usually wired with other output ports
+  *	which are then pulled up with an external resistor. Setting this
+@@ -96,6 +98,7 @@ enum pin_config_param {
+ 	PIN_CONFIG_BIAS_PULL_DOWN,
+ 	PIN_CONFIG_BIAS_PULL_PIN_DEFAULT,
+ 	PIN_CONFIG_BIAS_PULL_UP,
++	PIN_CONFIG_BIDIRECTIONAL,
+ 	PIN_CONFIG_DRIVE_OPEN_DRAIN,
+ 	PIN_CONFIG_DRIVE_OPEN_SOURCE,
+ 	PIN_CONFIG_DRIVE_PUSH_PULL,
+-- 
 2.7.4
