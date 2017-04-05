@@ -1,97 +1,62 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 11/23] drivers/fsi: Add master unscan
-Date: Tue,  4 Apr 2017 21:05:55 -0500
-Message-ID: <20170405020607.79939-12-cbostic@linux.vnet.ibm.com>
-References: <20170405020607.79939-1-cbostic@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170405020607.79939-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: Re: [PATCH v4 4/6] arm64: dts: rockchip: add core dtsi file for RK3328
+ SoCs
+Date: Wed, 05 Apr 2017 10:07:41 +0800
+Message-ID: <58E4516D.4000805@rock-chips.com>
+References: <1490607650-18650-1-git-send-email-cl@rock-chips.com> <1490607650-18650-4-git-send-email-cl@rock-chips.com> <6636047.jL6XHNkknt@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6636047.jL6XHNkknt@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, cl@rock-chips.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, zhengxing@rock-chips.com, andy.yan@rock-chips.com, jay.xu@rock-chips.com, matthias.bgg@gmail.com, paweljarosz3691@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, wxt@rock-chips.com, david.wu@rock-chips.com, linux-iio@vger.kernel.org, shawn.lin@rock-chips.com, akpm@linux-foundation.org, dianders@chromium.org, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, afaerber@suse.de, shawnguo@kernel.org, khilman@baylibre.com, arnd@arndb.de, fabio.estevam@nxp.com, kever.yang@rock-chips.com, tony.xie@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 
-Allow a master to undo a previous scan.  Should a master scan a bus
-twice it will need to ensure it doesn't double register any
-previously detected device.
 
-Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
----
- drivers/fsi/fsi-core.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+On 04/05/2017 12:04 AM, Heiko Stuebner wrote:
+> Am Montag, 27. März 2017, 17:40:48 CEST schrieb cl@rock-chips.com:
+>> From: Liang Chen <cl@rock-chips.com>
+>>
+>> This patch adds core dtsi file for Rockchip RK3328 SoCs.
+>>
+>> Signed-off-by: Liang Chen <cl@rock-chips.com>
+>
+> applied for 4.12, with the following list of changes:
+>
+> - reorder some properties to bring them in alphabetical order
+> - dropped the status-disabled from the power-controller
+>    power-domain control is a quite essential part of the system, so if
+>    boards really want to disable them, they should do it in their board file
+>    Having power-domains on all the time, is also our default in all other
+>    devicetrees.
+> - removed #dma-cells from spi0 -> this is not a dma controller
+> - reword the cru assigned-clocks comment a bit
+> - fixed sdmmc1_bus4 pins, as indicated by Shawn and after looking up the
+>    correct pins in the manual
+>
+>
+> And a final question, are you sure about SCLK_PDM becoming a child of the
+> APLL in your cru assigned-clocks, as the APLL will vary later on with cpufreq
+> active?
+>
+the NPLL will vary later on with cpufreq active.
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 4da0b030..75d2a88 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -69,6 +69,7 @@ struct fsi_slave {
- 	uint32_t		size;	/* size of slave address space */
- };
- 
-+#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
- #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
- 
- static int fsi_master_read(struct fsi_master *master, int link,
-@@ -491,6 +492,37 @@ static int fsi_master_scan(struct fsi_master *master)
- 	return 0;
- }
- 
-+static int __fsi_slave_remove_device(struct device *dev, void *arg)
-+{
-+	device_unregister(dev);
-+	return 0;
-+}
-+
-+static int __fsi_master_remove_slave(struct device *dev, void *arg)
-+{
-+	device_for_each_child(dev, NULL, __fsi_slave_remove_device);
-+	device_unregister(dev);
-+	return 0;
-+}
-+
-+static void fsi_master_unscan(struct fsi_master *master)
-+{
-+	device_for_each_child(&master->dev, NULL, __fsi_master_remove_slave);
-+}
-+
-+static ssize_t master_rescan_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct fsi_master *master = to_fsi_master(dev);
-+
-+	fsi_master_unscan(master);
-+	fsi_master_scan(master);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR(rescan, 0200, NULL, master_rescan_store);
-+
- int fsi_master_register(struct fsi_master *master)
- {
- 	int rc;
-@@ -507,7 +539,15 @@ int fsi_master_register(struct fsi_master *master)
- 		return rc;
- 	}
- 
-+	rc = device_create_file(&master->dev, &dev_attr_rescan);
-+	if (rc) {
-+		device_unregister(&master->dev);
-+		ida_simple_remove(&master_ida, master->idx);
-+		return rc;
-+	}
-+
- 	fsi_master_scan(master);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(fsi_master_register);
--- 
-1.8.2.2
+The NPLL is better than APLL, so NPLL is for clk_core,and apll is for pdm.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+please see the TRM in CRU:
+1.4 Function Description
+/........./
+To maximize the flexibility, some of clocks can select divider source 
+from 5 PLLs. (Note: It’s
+recommended to use NEW PLL instead of ARM PLL as arm clock source, 
+because NEW PLL is
+near to ARM. And it’s jitter is better than ARM PLL).
+
+>
+> Heiko
+>
+>
+>
