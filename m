@@ -1,183 +1,327 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities
- output video on pad 1
-Date: Wed, 5 Apr 2017 11:53:36 -0300
-Message-ID: <20170405115336.7135e542@vento.lan>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
- <1490894749.2404.33.camel@pengutronix.de>
- <20170404231053.GE7909@n2100.armlinux.org.uk>
- <19f0ce92-cad6-8950-8018-e3224e2bf266@gmail.com>
- <7235285c-f39a-64bc-195a-11cfde9e67c5@gmail.com>
- <20170405082134.GF7909@n2100.armlinux.org.uk>
- <1491384859.2381.51.camel@pengutronix.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 04/11] mfd: axp20x: support AXP803 variant
+Date: Wed, 5 Apr 2017 22:58:58 +0800
+Message-ID: <CAGb2v67ymQ4xY2q8pqSBkg12VcOomwE27Rw=UsMsY4BzQEZ=Yw@mail.gmail.com>
+References: <20170404180145.12897-1-icenowy@aosc.io> <20170404180145.12897-5-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1491384859.2381.51.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBS4MSTDQKGQE7EDPRHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170404180145.12897-5-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 05 Apr 2017 11:34:19 +0200
-Philipp Zabel <p.zabel@pengutronix.de> escreveu:
+On Wed, Apr 5, 2017 at 2:01 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> AXP803 is a new PMIC chip produced by X-Powers, usually paired with A64
+> via RSB bus. The PMIC itself is like AXP288, but with RSB support and
+> dedicated VBUS and ACIN.
+>
+> Add support for it in the axp20x mfd driver.
+>
+> Currently only power key function is supported.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  drivers/mfd/axp20x-rsb.c   |   1 +
+>  drivers/mfd/axp20x.c       | 113 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/axp20x.h |  40 +++++++++++++++-
+>  3 files changed, 153 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
+> index a732cb50bcff..3ff8a7d1ce88 100644
+> --- a/drivers/mfd/axp20x-rsb.c
+> +++ b/drivers/mfd/axp20x-rsb.c
+> @@ -63,6 +63,7 @@ static const struct of_device_id axp20x_rsb_of_match[] = {
+>         { .compatible = "x-powers,axp223", .data = (void *)AXP223_ID },
+>         { .compatible = "x-powers,axp806", .data = (void *)AXP806_ID },
+>         { .compatible = "x-powers,axp809", .data = (void *)AXP809_ID },
+> +       { .compatible = "x-powers,axp803", .data = (void *)AXP803_ID },
 
-> On Wed, 2017-04-05 at 09:21 +0100, Russell King - ARM Linux wrote:
-> [...]
-> > > Actually what was I thinking, the TVP5150 is already an example of
-> > > such a device.
-> > > 
-> > > All of this could be solved if there was some direction information
-> > > in port nodes.  
-> > 
-> > I disagree.
-> >
-> > Philipp identified that the TVP5150 has four pads:
-> > 
-> > * Input pad
-> > * Video output pad
-> > * VBI output pad
-> > * Audio output pad  
-> 
-> I didn't think hard enough about this earlier, but there are really only
-> two hardware interfaces on TVP5150. The ADC input, which can be
-> connected to either of two composite input pins (AIP1A, AIP1B), or use
-> both for s-video, and the digital output connected to pins (YOUT[7:0]).
-> 
-> VBI data can be transferred via the output pins during horizontal or
-> vertical blanking, if I understand correctly, or read from a FIFO via
-> I2C.
-> 
-> There is no apparent support for audio data whatsoever, and the only
-> mention of audio in the data manual is a vague reference about an "audio
-> interface available on the TVP5150" providing a clock to an audio
-> interface between an external audio decoder and the backend processor.
-> 
-> Further, commit 55606310e77f ("[media] tvp5150: create the expected
-> number of pads") creates DEMOD_NUM_PADS pads, but doesn't mention or
-> initialize the audio pad. It clearly expects the value of DEMOD_NUM_PADS
-> to be 3. And indeed the fourth pad was added later in commit
-> bddc418787cc ("[media] au0828: use standard demod pads struct").
-> 
-> So to me it looks like the VBI and audio pads should be removed from
-> TVP5150.
+As mentioned in the previous patches, please sort them in ascending order.
 
-There are a number of drivers that can work with different
-types of TV demodulators. Typical examples of such hardware can be
-found at em28xx, saa7134, cx88 drivers (among lots of other drivers).
-Those drivers don't use the subdev API. Instead, they use a generic
-helper function with sets the pipelines, based on the pad number.
+>         { },
+>  };
+>  MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 5ba3b04cc9b1..e468e08d84db 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -43,6 +43,7 @@ static const char * const axp20x_model_names[] = {
+>         "AXP288",
+>         "AXP806",
+>         "AXP809",
+> +       "AXP803",
 
-The problem here is that, currently, both MC API and MC core
-lacks a way to identify PAD ports per type, as the only information
-that a bridge driver has is a pad number. So, in order for a
-generic helper function to work, we had to hardcode pad numbers,
-in a way that it would work for all possible types of demods.
+Same here.
 
-It shouldn't be hard to add a "pad_type" information at media_pad
-struct, but passing such info to userspace requires a new API
-(we're calling it as "properties API"). Sakari was meant to send
-us an updated RFC for it[1] with a patchset, back in 2015, but
-this never happened.
+>  };
+>
+>  static const struct regmap_range axp152_writeable_ranges[] = {
+> @@ -165,6 +166,32 @@ static const struct regmap_access_table axp806_volatile_table = {
+>         .n_yes_ranges   = ARRAY_SIZE(axp806_volatile_ranges),
+>  };
+>
+> +static const struct regmap_range axp803_writeable_ranges[] = {
+> +       regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ6_STATE),
+> +       regmap_reg_range(AXP20X_DCDC_MODE, AXP288_FG_TUNE5),
+> +};
+> +
+> +static const struct regmap_range axp803_volatile_ranges[] = {
+> +       regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP288_POWER_REASON),
+> +       regmap_reg_range(AXP288_BC_GLOBAL, AXP288_BC_GLOBAL),
+> +       regmap_reg_range(AXP288_BC_DET_STAT, AXP288_BC_DET_STAT),
+> +       regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IPSOUT_V_HIGH_L),
+> +       regmap_reg_range(AXP20X_TIMER_CTRL, AXP20X_TIMER_CTRL),
+> +       regmap_reg_range(AXP22X_GPIO_STATE, AXP22X_GPIO_STATE),
+> +       regmap_reg_range(AXP288_RT_BATT_V_H, AXP288_RT_BATT_V_L),
+> +       regmap_reg_range(AXP20X_FG_RES, AXP288_FG_CC_CAP_REG),
+> +};
+> +
+> +static const struct regmap_access_table axp803_writeable_table = {
+> +       .yes_ranges     = axp803_writeable_ranges,
+> +       .n_yes_ranges   = ARRAY_SIZE(axp803_writeable_ranges),
+> +};
+> +
+> +static const struct regmap_access_table axp803_volatile_table = {
+> +       .yes_ranges     = axp803_volatile_ranges,
+> +       .n_yes_ranges   = ARRAY_SIZE(axp803_volatile_ranges),
+> +};
+> +
 
-[1] https://linuxtv.org/news.php?entry=2015-08-17.mchehab
+If they are the same as the AXP288, please just use that set,
+instead of duplicating it. You can add a note, like what I did
+for the AXP22x/AXP809.
 
-Each vendor chooses the demod using some random criteria 
-(usually, they use whatever costs less by the time they create a
-hardware model). Newer versions of the same hardware frequently
-has a different model.
+>  static struct resource axp152_pek_resources[] = {
+>         DEFINE_RES_IRQ_NAMED(AXP152_IRQ_PEK_RIS_EDGE, "PEK_DBR"),
+>         DEFINE_RES_IRQ_NAMED(AXP152_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
+> @@ -278,6 +305,20 @@ static struct resource axp809_pek_resources[] = {
+>         },
+>  };
+>
+> +static struct resource axp803_pek_resources[] = {
+> +       {
+> +               .name   = "PEK_DBR",
+> +               .start  = AXP803_IRQ_PEK_RIS_EDGE,
+> +               .end    = AXP803_IRQ_PEK_RIS_EDGE,
+> +               .flags  = IORESOURCE_IRQ,
+> +       }, {
+> +               .name   = "PEK_DBF",
+> +               .start  = AXP803_IRQ_PEK_FAL_EDGE,
+> +               .end    = AXP803_IRQ_PEK_FAL_EDGE,
+> +               .flags  = IORESOURCE_IRQ,
+> +       },
+> +};
+> +
 
-For example, in the case of em28xx driver, there are currently
-several types of demods supported there, like (among other options):
+You can use axp288_power_button_resources directly. See below
+about the interrupts and symbol names.
 
-- demods with tda9887, with is actually part of a tuner that has 
-  an outputs for IF luminance, IF chrominance and IF audio;
+>  static const struct regmap_config axp152_regmap_config = {
+>         .reg_bits       = 8,
+>         .val_bits       = 8,
+> @@ -323,6 +364,15 @@ static const struct regmap_config axp806_regmap_config = {
+>         .cache_type     = REGCACHE_RBTREE,
+>  };
+>
+> +static const struct regmap_config axp803_regmap_config = {
+> +       .reg_bits       = 8,
+> +       .val_bits       = 8,
+> +       .wr_table       = &axp803_writeable_table,
+> +       .volatile_table = &axp803_volatile_table,
+> +       .max_register   = AXP288_FG_TUNE5,
+> +       .cache_type     = REGCACHE_RBTREE,
+> +};
+> +
 
-- demods with xc3028, with is an integrated tuner + audio demod,
-  with outputs both video as a baseband signal and audio data via IF,
-  (or outputs a single IF signal, for Digital TV);
+Drop this and use axp288_regmap_config.
 
-- demods with both xc3028 and msp3400. The last one transforms
-  audio IF into I2S;
+>  #define INIT_REGMAP_IRQ(_variant, _irq, _off, _mask)                   \
+>         [_variant##_IRQ_##_irq] = { .reg_offset = (_off), .mask = BIT(_mask) }
+>
+> @@ -507,6 +557,43 @@ static const struct regmap_irq axp809_regmap_irqs[] = {
+>         INIT_REGMAP_IRQ(AXP809, GPIO0_INPUT,            4, 0),
+>  };
+>
+> +static const struct regmap_irq axp803_regmap_irqs[] = {
+> +       INIT_REGMAP_IRQ(AXP803, ACIN_OVER_V,            0, 7),
+> +       INIT_REGMAP_IRQ(AXP803, ACIN_PLUGIN,            0, 6),
+> +       INIT_REGMAP_IRQ(AXP803, ACIN_REMOVAL,           0, 5),
+> +       INIT_REGMAP_IRQ(AXP803, VBUS_OVER_V,            0, 4),
+> +       INIT_REGMAP_IRQ(AXP803, VBUS_PLUGIN,            0, 3),
+> +       INIT_REGMAP_IRQ(AXP803, VBUS_REMOVAL,           0, 2),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_PLUGIN,            1, 7),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_REMOVAL,           1, 6),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_ENT_ACT_MODE,      1, 5),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_EXIT_ACT_MODE,     1, 4),
+> +       INIT_REGMAP_IRQ(AXP803, CHARG,                  1, 3),
+> +       INIT_REGMAP_IRQ(AXP803, CHARG_DONE,             1, 2),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_CHG_TEMP_HIGH,     2, 7),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_CHG_TEMP_HIGH_END, 2, 6),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_CHG_TEMP_LOW,      2, 5),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_CHG_TEMP_LOW_END,  2, 4),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_ACT_TEMP_HIGH,     2, 3),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_ACT_TEMP_HIGH_END, 2, 2),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_ACT_TEMP_LOW,      2, 1),
+> +       INIT_REGMAP_IRQ(AXP803, BATT_ACT_TEMP_LOW_END,  2, 0),
+> +       INIT_REGMAP_IRQ(AXP803, DIE_TEMP_HIGH,          3, 7),
+> +       INIT_REGMAP_IRQ(AXP803, GPADC,                  3, 2),
+> +       INIT_REGMAP_IRQ(AXP803, LOW_PWR_LVL1,           3, 1),
+> +       INIT_REGMAP_IRQ(AXP803, LOW_PWR_LVL2,           3, 0),
+> +       INIT_REGMAP_IRQ(AXP803, TIMER,                  4, 7),
+> +       INIT_REGMAP_IRQ(AXP803, PEK_RIS_EDGE,           4, 6),
+> +       INIT_REGMAP_IRQ(AXP803, PEK_FAL_EDGE,           4, 5),
+> +       INIT_REGMAP_IRQ(AXP803, PEK_SHORT,              4, 4),
+> +       INIT_REGMAP_IRQ(AXP803, PEK_LONG,               4, 3),
+> +       INIT_REGMAP_IRQ(AXP803, PEK_OVER_OFF,           4, 2),
+> +       INIT_REGMAP_IRQ(AXP803, GPIO1_INPUT,            4, 1),
+> +       INIT_REGMAP_IRQ(AXP803, GPIO0_INPUT,            4, 0),
+> +       INIT_REGMAP_IRQ(AXP803, BC_USB_CHNG,            5, 1),
+> +       INIT_REGMAP_IRQ(AXP803, MV_CHNG,                5, 0),
+> +};
+> +
 
-- demods with saa711x (supported by saa7115 driver), with may or may 
-  not have raw VBI and/or sliced VBI, depending on the specific model,
-  with is detected during driver's probe.
+Looks like the same set as AXP288, albeit with different names.
+Please use that set instead of duplicating it. The different naming
+scheme is OK, as the symbols really only get used when defining
+resources for the various sub-devices.
 
-The generic function should be robust enough to handle all above
-cases.
+>  static const struct regmap_irq_chip axp152_regmap_irq_chip = {
+>         .name                   = "axp152_irq_chip",
+>         .status_base            = AXP152_IRQ1_STATE,
+> @@ -581,6 +668,18 @@ static const struct regmap_irq_chip axp809_regmap_irq_chip = {
+>         .num_regs               = 5,
+>  };
+>
+> +static const struct regmap_irq_chip axp803_regmap_irq_chip = {
+> +       .name                   = "axp803",
+> +       .status_base            = AXP20X_IRQ1_STATE,
+> +       .ack_base               = AXP20X_IRQ1_STATE,
+> +       .mask_base              = AXP20X_IRQ1_EN,
+> +       .mask_invert            = true,
+> +       .init_ack_masked        = true,
+> +       .irqs                   = axp803_regmap_irqs,
+> +       .num_irqs               = ARRAY_SIZE(axp803_regmap_irqs),
+> +       .num_regs               = 6,
+> +};
+> +
 
-Without a way to report the PAD type to userspace, applications
-that need to setup or recognize such pipelines need to hardcode the
-pad numbers on userspace. That's, by the way, one of the issues why
-it is currently impossible to write a full generic MC plugin at libv4l:
-there's currently no way for userspace to recognize what type of
-signals each PAD input or output carries.
+Same here.
 
-So, in short, the tvp5150 demod doesn't decode audio, but there
-are other demods that do it.
+In general we want to be able to share as much as possible.
+Otherwise we'd just have separate drivers.
 
-In the case of VBI, tvp5150 has actually two ways of reporting
-it:
+Regards
+ChenYu
 
-1) via YOUT[7:0] pins. VBI information is transmitted as a
-   set of raw samples, via an ancillary data block, during
-   vertical/horizontal blanking intervals. So, yes, it shares
-   the same hardware output, although the VBI contents are
-   actually multiplexed there. Please notice that not all
-   video out PADS encapsulate raw VBI the same way as tvp5150
-   (and some devices even don't support raw VBI, like saa7110 and
-   some models supported by saa7115 driver).
-
-2) via an interrupt that indicates that it decoded VBI data. The
-   VBI information itself is there on FIFO, accessible via a set of
-   registers (see "VBI Data processor" chapter at the datasheet).
-
-Currently, the driver doesn't support (2), because, at the time
-I wrote the driver, I didn't find a way to read the interrupts generated
-by tvp5150 at em28xx[1], due to the lack of em28xx documentation,
-but adding support for it shoudn't be hard. I may eventually do it
-when I have some time to play with my ISEE hardware.
-
-So, in the case of tvp5150 hardware, have those PADS:
-
-- Input baseband;
-- Video + raw VBI output;
-- sliced VBI output.
-
-Yet, we need an always unconnected audio output, in order to support
-different demods out there.
-
-[1] tvp5150 was written to support some em28xx-based devices
-
-> 
-> > So, it has one input and three outputs.  How does marking the direction
-> > in the port node (which would indicate that there was a data flow out of
-> > TVP5150 into the iMX6 capture) help identify which of those pads should
-> > be used?
-> >
-> > It would eliminate the input pad, but you still have three output pads
-> > to choose from.
-> > 
-> > So no, your idea can't work.  
-> 
-> In this case, removal of the VBI and audio pads might make this work,
-> but in general this is true. In my opinion, to make this truly generic,
-> we need an interface to ask the driver which media entity pad a given
-> device tree port corresponds to, as there might not even be a single
-> media entity corresponding to all ports for more complex devices.
-
-Yes. We also need something like that at the userspace API.
-
-Thanks,
-Mauro
+>  static struct mfd_cell axp20x_cells[] = {
+>         {
+>                 .name           = "axp20x-gpio",
+> @@ -787,6 +886,14 @@ static struct mfd_cell axp809_cells[] = {
+>         },
+>  };
+>
+> +static struct mfd_cell axp803_cells[] = {
+> +       {
+> +               .name                   = "axp20x-pek",
+> +               .num_resources          = ARRAY_SIZE(axp803_pek_resources),
+> +               .resources              = axp803_pek_resources,
+> +       }
+> +};
+> +
+>  static struct axp20x_dev *axp20x_pm_power_off;
+>  static void axp20x_power_off(void)
+>  {
+> @@ -867,6 +974,12 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
+>                 axp20x->regmap_cfg = &axp22x_regmap_config;
+>                 axp20x->regmap_irq_chip = &axp809_regmap_irq_chip;
+>                 break;
+> +       case AXP803_ID:
+> +               axp20x->nr_cells = ARRAY_SIZE(axp803_cells);
+> +               axp20x->cells = axp803_cells;
+> +               axp20x->regmap_cfg = &axp803_regmap_config;
+> +               axp20x->regmap_irq_chip = &axp803_regmap_irq_chip;
+> +               break;
+>         default:
+>                 dev_err(dev, "unsupported AXP20X ID %lu\n", axp20x->variant);
+>                 return -EINVAL;
+> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+> index dc8798cf2a24..b3220ef374d3 100644
+> --- a/include/linux/mfd/axp20x.h
+> +++ b/include/linux/mfd/axp20x.h
+> @@ -22,6 +22,7 @@ enum axp20x_variants {
+>         AXP288_ID,
+>         AXP806_ID,
+>         AXP809_ID,
+> +       AXP803_ID,
+>         NR_AXP20X_VARIANTS,
+>  };
+>
+> @@ -234,7 +235,7 @@ enum axp20x_variants {
+>  #define AXP22X_TS_ADC_L                        0x59
+>  #define AXP22X_BATLOW_THRES1           0xe6
+>
+> -/* AXP288 specific registers */
+> +/* AXP288/AXP803 specific registers */
+>  #define AXP288_POWER_REASON            0x02
+>  #define AXP288_BC_GLOBAL               0x2c
+>  #define AXP288_BC_VBUS_CNTL            0x2d
+> @@ -525,6 +526,43 @@ enum axp809_irqs {
+>         AXP809_IRQ_GPIO0_INPUT,
+>  };
+>
+> +enum axp803_irqs {
+> +       AXP803_IRQ_ACIN_OVER_V = 1,
+> +       AXP803_IRQ_ACIN_PLUGIN,
+> +       AXP803_IRQ_ACIN_REMOVAL,
+> +       AXP803_IRQ_VBUS_OVER_V,
+> +       AXP803_IRQ_VBUS_PLUGIN,
+> +       AXP803_IRQ_VBUS_REMOVAL,
+> +       AXP803_IRQ_BATT_PLUGIN,
+> +       AXP803_IRQ_BATT_REMOVAL,
+> +       AXP803_IRQ_BATT_ENT_ACT_MODE,
+> +       AXP803_IRQ_BATT_EXIT_ACT_MODE,
+> +       AXP803_IRQ_CHARG,
+> +       AXP803_IRQ_CHARG_DONE,
+> +       AXP803_IRQ_BATT_CHG_TEMP_HIGH,
+> +       AXP803_IRQ_BATT_CHG_TEMP_HIGH_END,
+> +       AXP803_IRQ_BATT_CHG_TEMP_LOW,
+> +       AXP803_IRQ_BATT_CHG_TEMP_LOW_END,
+> +       AXP803_IRQ_BATT_ACT_TEMP_HIGH,
+> +       AXP803_IRQ_BATT_ACT_TEMP_HIGH_END,
+> +       AXP803_IRQ_BATT_ACT_TEMP_LOW,
+> +       AXP803_IRQ_BATT_ACT_TEMP_LOW_END,
+> +       AXP803_IRQ_DIE_TEMP_HIGH,
+> +       AXP803_IRQ_GPADC,
+> +       AXP803_IRQ_LOW_PWR_LVL1,
+> +       AXP803_IRQ_LOW_PWR_LVL2,
+> +       AXP803_IRQ_TIMER,
+> +       AXP803_IRQ_PEK_RIS_EDGE,
+> +       AXP803_IRQ_PEK_FAL_EDGE,
+> +       AXP803_IRQ_PEK_SHORT,
+> +       AXP803_IRQ_PEK_LONG,
+> +       AXP803_IRQ_PEK_OVER_OFF,
+> +       AXP803_IRQ_GPIO1_INPUT,
+> +       AXP803_IRQ_GPIO0_INPUT,
+> +       AXP803_IRQ_BC_USB_CHNG,
+> +       AXP803_IRQ_MV_CHNG,
+> +};
+> +
+>  struct axp20x_dev {
+>         struct device                   *dev;
+>         int                             irq;
+> --
+> 2.12.2
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
