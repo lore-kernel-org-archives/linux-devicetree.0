@@ -1,44 +1,68 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 02/11] arm64: allwinner: a64: add NMI
- controller on A64
-Date: Wed, 5 Apr 2017 14:20:31 +0800
-Message-ID: <CAGb2v672Z2JedGF3n+8Hi78QG_hAxz0ZYXaCkw0GAkA3xEdKrA@mail.gmail.com>
-References: <20170404180145.12897-1-icenowy@aosc.io> <20170404180145.12897-3-icenowy@aosc.io>
- <CAGb2v67BucT8=FTgem3AmSU9XJA7OHoTCq3t3wBzDWyuwzZqaA@mail.gmail.com> <20170405061137.n66ectbkl7a2fv5f@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v4 0/6] ARM: dts: sunxi: Add CAN node and can0_pins_a
+ pinctrl settings
+Date: Wed, 5 Apr 2017 08:22:14 +0200
+Message-ID: <20170405062214.ejc4irrypxjoqufu@lukather>
+References: <1491330992-9876-1-git-send-email-menschel.p@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBR4ZSLDQKGQEG7EP5JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170405061137.n66ectbkl7a2fv5f@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="szsydsokvcl6e52r"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1491330992-9876-1-git-send-email-menschel.p@posteo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Patrick Menschel <menschel.p@posteo.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 2:11 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Wed, Apr 05, 2017 at 11:51:45AM +0800, Chen-Yu Tsai wrote:
->> On Wed, Apr 5, 2017 at 2:01 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->> > Allwinner A64 SoC features a NMI controller, which is usually connected
->> > to the AXP PMIC.
->> >
->> > Add support for it.
->> >
->> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>
->> This might not be the best representation of the R_INTC block. Though
->> we'd need to change it for all SoCs if we want to be accurate. For now,
->
-> What do you think would be a good representation?
 
-My gut feeling is that this is the old INTC from sun4/5i. It's supposed
-to be the interrupt controller for the embedded low power core. I've not
-done a thorough comparison though.
+--szsydsokvcl6e52r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ChenYu
+On Tue, Apr 04, 2017 at 08:36:26PM +0200, Patrick Menschel wrote:
+> The Allwinner A10/A20 SoCs have an on-board CAN (Controller Area Network)
+> controller. This patch adds the CAN core to the SoC's include files,
+> sun4i-a10.dtsi and sun7i-a20.dtsi.
+>=20
+> On linux-can mailing list was a discussion about updating the device tree=
+ bindings
+> https://lkml.org/lkml/2015/9/17/220
+> but it did not progress past writing the documentation file.
+> Documentation/devicetree/bindings/net/can/sun4i_can.txt
+>=20
+> The CAN controller can be enabled in a board specific dts file as
+> described in the documentation file or by using a device tree overlay.
+
+Applied 1 and 4. The others were already merged.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--szsydsokvcl6e52r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJY5I0SAAoJEBx+YmzsjxAgSOEQAKjxcsCT7Rrf5sSDHpcMvezw
+bopxOY5Gns17NPohj2yhOHhRMKjaw74SBadlZLcT6U2M/uWS/qXfyYMswVu1F5be
+py1BnAcZZ26fp8Xj4K+RFUZvq8dMO8vNUIjy3R3HYbwsaww7zY7w+q5MsvkpR4Wk
+lxWr46O2KhjCtTf8NESrlR/hg8PkZUoYhABeaaWTB5W4SkgKLhFcAyDrE/2th7j+
+sBJZkN5qyzfl7IZ/EUIsayGjxF/gXhYi4N/0N9pyL164tcCBIcfvs/kIJ0bgPqxu
+pxxhrjEL5NOiYMLeLCnZdwNFQoFaVK30bXTQ3SH0qQKRhTtNQDpA+A7TRjMUcsBM
+5sjWPAEUpt49vTxaZszxRH3Rs44IGq0il76TQcoGZiSvM0ioNR9DiXqESxTA+ZUs
+RzleddwE1UpCk7YEtZk+MbpbBtwWeSuB0fg9l3MYATyp3pc+1DGxzqIOs01TKUjR
+lyT3zvCHuXAfpSOz3EuVNWNjMeRjMhMnCMdYvSGPbqxUmtirck1B26d5xS7ZhB/d
+jSSibC523Onw8OZIfRbl9B9iXpAfOrLXSELyBJ4Ou9snsRoTOrh0RYvxmAQPqvhf
+U7kRzJwvBgzf/98w/0D+DvJ+3KoALQ72mcNOC4Ca8smETlgMx3hSLP5amu0tkq9x
+Ltnk+AyUPNbdPyXNlQ2i
+=Tx1B
+-----END PGP SIGNATURE-----
+
+--szsydsokvcl6e52r--
