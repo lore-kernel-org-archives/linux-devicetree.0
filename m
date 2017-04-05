@@ -1,111 +1,79 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [PATCH] mmc: core: add mmc-card hardware reset enable support
-Date: Wed, 5 Apr 2017 08:23:29 +0200
-Message-ID: <7b238b63-9d23-91ef-b76f-82b4f3677de3@skidata.com>
-References: <CGME20170404141714epcas5p495985819f877cc723ef217e9cefe89c1@epcas5p4.samsung.com>
- <1491315394-7568-1-git-send-email-richard.leitner@skidata.com>
- <ea610a5c-3857-14f8-3039-414bee724223@samsung.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 1/2] doc: Add bindings document for Xilinx LogiCore PR
+ Decoupler
+Date: Wed, 5 Apr 2017 08:26:33 +0200
+Message-ID: <efd9b44a-680b-e4fc-38bd-e126ef8b4094@xilinx.com>
+References: <20170324153321.4168-1-atull@kernel.org>
+ <20170324153321.4168-2-atull@kernel.org>
+ <20170330224429.yo42hgnr7nhm2ljv@rob-hp-laptop>
+ <CAAtXAHe0qnu7Ub6sing4VUgFa-tkdvH767kNbZnu1S5THHS2oQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <ea610a5c-3857-14f8-3039-414bee724223@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: shawn.lin@rock-chips.com, adrian.hunter@intel.com, linus.walleij@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@g0hl1n.net
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAtXAHe0qnu7Ub6sing4VUgFa-tkdvH767kNbZnu1S5THHS2oQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>, Rob Herring <robh@kernel.org>
+Cc: Alan Tull <atull@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/2017 06:40 AM, Jaehoon Chung wrote:
-> Hi,
-> 
-> On 04/04/2017 11:16 PM, Richard Leitner wrote:
->> Some eMMCs disable their hardware reset line (RST_N) by default. To enable
->> it the host must set the corresponding bit in ECSD. An example for such
->> a device is the Micron MTFCxGACAANA-4M.
+On 5.4.2017 01:36, Moritz Fischer wrote:
+> On Thu, Mar 30, 2017 at 05:44:29PM -0500, Rob Herring wrote:
+>> On Fri, Mar 24, 2017 at 10:33:20AM -0500, Alan Tull wrote:
+>>> From: Moritz Fischer <mdf@kernel.org>
 >>
->> This patch adds a new mmc-card devicetree property to let the host enable
->> this feature during card initialization.
+>> Please use "dt-bindings: fpga: ..." for the subject.
 >>
->> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/mmc-card.txt |  3 +++
->>  drivers/mmc/core/mmc.c                             | 21 +++++++++++++++++++++
->>  2 files changed, 24 insertions(+)
 >>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
->> index a70fcd6..8590a40 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmc-card.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
->> @@ -12,6 +12,9 @@ Required properties:
->>  Optional properties:
->>  -broken-hpi : Use this to indicate that the mmc-card has a broken hpi
->>                implementation, and that hpi should not be used
->> +-enable-hw-reset : some eMMC devices have disabled the hw reset functionality
->> +                   (RST_N_FUNCTION) by default. By adding this property the
->> +                   host will enable it during initialization.
+>>>
+>>> This adds the binding documentation for the Xilinx LogiCORE PR
+>>> Decoupler soft core.
+>>>
+>>> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>> Acked-by: Alan Tull <atull@kernel.org>
+>>
+>> I'm confused why you are sending these instead of Moritz? If it goes
+>> through you, then it should have your S-o-B too.
 > 
-> As i know, RST_N_FUNCTION is controlled bit[1:0]
-> 0x0 : RST_n disabled (by default)
-> 0x1 : permanently enabled
-> 0x2 : permanently disabled
+> Do you want me to resend this Alan (with Rob's suggestions)?
+>>
+>>> Cc: Sören Brinkmann <soren.brinkmann@xilinx.com>
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Cc: devicetree@vger.kernel.org
+>>> ---
+>>>  .../bindings/fpga/xilinx-pr-decoupler.txt          | 35 ++++++++++++++++++++++
+>>>  1 file changed, 35 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+>>> new file mode 100644
+>>> index 000000000000..2c527ac30398
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+>>> @@ -0,0 +1,35 @@
+>>> +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
+>>> +
+>>> +The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
+>>> +decouplers / fpga bridges.
+>>> +The controller can decouple/disable the bridges which prevents signal
+>>> +changes from passing through the bridge.  The controller can also
+>>> +couple / enable the bridges which allows traffic to pass through the
+>>> +bridge normally.
+>>> +
+>>> +The Driver supports only MMIO handling. A PR region can have multiple
+>>> +PR Decouplers which can be handled independently or chained via decouple/
+>>> +decouple_status signals.
+>>> +
+>>> +Required properties:
+>>> +- compatible : Should contain "xlnx,pr-decoupler-1.00" or "xlnx,pr-decoupler"
+>>
+>> I'd drop xlnx,pr-decoupler, but in any case, it should not be OR rather
+>> "followed by". Plus the example has both.
 > 
-> I think that it needs to add the description about these..
+> Michal wanted to have both, so I put both. Personally I don't care. I
+> think they have some downstream stuff that relied on it.
 
-Ok.
+Agree with Rob with using "followed by" instead of or.
 
->>  
->>  Example:
->>  
->> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
->> index b502601..518d0e3 100644
->> --- a/drivers/mmc/core/mmc.c
->> +++ b/drivers/mmc/core/mmc.c
->> @@ -1520,9 +1520,16 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
->>  	int err;
->>  	u32 cid[4];
->>  	u32 rocr;
->> +	struct device_node *np;
->> +	bool enable_rst_n = false;
->>  
->>  	WARN_ON(!host->claimed);
->>  
->> +	np = mmc_of_find_child_device(host, 0);
->> +	if (np && of_device_is_compatible(np, "mmc-card"))
->> +		enable_rst_n = of_property_read_bool(np, "enable-hw-reset");
->> +	of_node_put(np);
->> +
->>  	/* Set correct bus mode for MMC before attempting init */
->>  	if (!mmc_host_is_spi(host))
->>  		mmc_set_bus_mode(host, MMC_BUSMODE_OPENDRAIN);
->> @@ -1810,6 +1817,20 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
->>  		}
->>  	}
->>  
->> +	/*
->> +	 * try to enable RST_N if requested
->> +	 * This is needed because some eMMC chips disable this function by
->> +	 * default.
->> +	 */
->> +	if (enable_rst_n) {
->> +		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
->> +				 EXT_CSD_RST_N_FUNCTION, EXT_CSD_RST_N_ENABLED,
->> +				 card->ext_csd.generic_cmd6_time);
->> +		if (err && err != -EBADMSG)
->> +			pr_warn("%s: Enabling RST_N feature failed\n",
->> +				mmc_hostname(card->host));
->> +	}
-> 
-> If enabled hw-reset, it doesn't need to re-enable this bit.
-
-Ok. I can add a check to prevent setting it, if it is set already.
-
-> i didn't check the mmc-util..
-> If mmc-util provides the changing this, the using mmc-util is better than this.
-
-mmc-utils is providing a enable/disable hwreset feature. But as this
-setting is required for my hardware to allow rebooting it, I thought it
-would be better if it's in the kernel. So I/the hw doesn't have to
-depend on userspace tools.
-
-Nonetheless you're the experts, therefore if you say it shouldn't be in
-the kernel/dt I'd be fine with that too. ;-)
+M
