@@ -1,73 +1,62 @@
-From: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
-Date: Wed, 5 Apr 2017 18:30:45 +0530
-Message-ID: <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
-References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
- <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
- <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm64: allwinner: a64: add USB0
+ OHCI/EHCI related devicetree parts
+Date: Wed, 5 Apr 2017 15:05:17 +0200
+Message-ID: <20170405130517.vr6tanrswanangas@lukather>
+References: <20170405125053.6170-1-icenowy@aosc.io>
+ <20170405125053.6170-3-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mgukt5w6srn4eaue"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDWXSPDQKGQEIELGZFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170405125053.6170-3-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
 
-On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi,
->
-> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
->> This is driver for USB DRD Phy used in Broadcom's Northstar2
->> SoC. The phy can be configured to be in Device mode or Host
->> mode based on the type of cable connected to the port. The
->> driver registers to  extcon framework to get appropriate
->> connect events for Host/Device cables connect/disconnect
->> states based on VBUS and ID interrupts.
->
-> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
-> Northstar2.
->
+--mgukt5w6srn4eaue
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Will do.
+On Wed, Apr 05, 2017 at 08:50:52PM +0800, Icenowy Zheng wrote:
+> As we added USB0 route auto switching support for A64, add related
+> device tree parts to the A64 DTSI file (EHCI0/OHCI0 controllers and the
+> pmu0 memory area for PHY).
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 1c64ea2d23f9..a8916df99048 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -179,8 +179,10 @@
+>  		usbphy: phy@01c19400 {
+>  			compatible = "allwinner,sun50i-a64-usb-phy";
+>  			reg = <0x01c19400 0x14>,
+> +			      <0x01c1a800 0x4>,
+>  			      <0x01c1b800 0x4>;
+>  			reg-names = "phy_ctrl",
+> +				    "pmu0",
 
-> Sorry for not letting you know this earlier. But I feel the design of the
-> driver should be changed. Extcon shouldn't be used here. The extcon
-> notifications should be sent to the consumer driver and the consumer driver
-> should be responsible for invoking the phy ops.
->
+Again, this needs to be split apart, and sent for 4.11.
 
-The consumer drivers here would be a UDC driver (USB device
-controller), EHCI and OHCI host controller drivers.
-I was already suggested in UDC driver review to deal with extcon in Phy driver.
+Maxime
 
-This phy connects to 2 host controllers, and one device controller.
-That's the design in Broadcom Northstar2
-platform. The values of the VBUS and ID pins of this port are
-determined based on the type of the cable (device cable
-or host cable). And. phy has to be configured accordingly.
-
-> The phy ops being invoked during extcon events doesn't look right.
-
-Could you please elaborate on the concern, so that we can think of
-mitigating those issues in this driver?
-Since we are dealing with phy init/shutdown in this driver itself, are
-you okay with moving the extcon handling code
-out of phy ops ?
-
-Thanks,
-Ravi
->
-> Thanks
-> Kishon
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--mgukt5w6srn4eaue--
