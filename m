@@ -1,119 +1,129 @@
 From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 07/23] drivers/fsi: Implement slave initialisation
-Date: Tue,  4 Apr 2017 21:05:51 -0500
-Message-ID: <20170405020607.79939-8-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v5 08/23] drivers/fsi: Set slave SMODE to init communication
+Date: Tue,  4 Apr 2017 21:05:52 -0500
+Message-ID: <20170405020607.79939-9-cbostic@linux.vnet.ibm.com>
 References: <20170405020607.79939-1-cbostic@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170405020607.79939-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 
-Implement fsi_slave_init: if we can read a chip ID, create fsi_slave
-devices and register with the driver core.
+Set CFAM to appropriate ID so that the controlling master can manage
+link memory ranges.  Add slave engine register definitions.
 
-Includes changes from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>.
+Includes changes from Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>.
 
 Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- drivers/fsi/fsi-core.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 2 deletions(-)
+ drivers/fsi/fsi-core.c | 75 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 6e1cfdf..c705ca2 100644
+index c705ca2..b7b138b 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -17,9 +17,12 @@
- #include <linux/fsi.h>
- #include <linux/idr.h>
- #include <linux/module.h>
-+#include <linux/slab.h>
+@@ -21,6 +21,27 @@
  
  #include "fsi-master.h"
  
-+#define FSI_SLAVE_SIZE_23b		0x800000
++#define FSI_SLAVE_BASE			0x800
 +
- static DEFINE_IDA(master_ida);
++/*
++ * FSI slave engine control register offsets
++ */
++#define FSI_SMODE			0x0	/* R/W: Mode register */
++
++/*
++ * SMODE fields
++ */
++#define FSI_SMODE_WSC		0x80000000	/* Warm start done */
++#define FSI_SMODE_ECRC		0x20000000	/* Hw CRC check */
++#define FSI_SMODE_SID_SHIFT	24		/* ID shift */
++#define FSI_SMODE_SID_MASK	3		/* ID Mask */
++#define FSI_SMODE_ED_SHIFT	20		/* Echo delay shift */
++#define FSI_SMODE_ED_MASK	0xf		/* Echo delay mask */
++#define FSI_SMODE_SD_SHIFT	16		/* Send delay shift */
++#define FSI_SMODE_SD_MASK	0xf		/* Send delay mask */
++#define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
++#define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
++
+ #define FSI_SLAVE_SIZE_23b		0x800000
  
- struct fsi_slave {
-@@ -114,11 +117,70 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ static DEFINE_IDA(master_ida);
+@@ -117,6 +138,52 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
  			addr, val, size);
  }
  
-+static void fsi_slave_release(struct device *dev)
++/* Encode slave local bus echo delay */
++static inline uint32_t fsi_smode_echodly(int x)
 +{
-+	struct fsi_slave *slave = to_fsi_slave(dev);
-+
-+	kfree(slave);
++	return (x & FSI_SMODE_ED_MASK) << FSI_SMODE_ED_SHIFT;
 +}
 +
- static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
- {
--	/* todo: initialise slave device, perform engine scan */
-+	struct fsi_slave *slave;
-+	uint32_t chip_id;
-+	uint8_t crc;
-+	int rc;
++/* Encode slave local bus send delay */
++static inline uint32_t fsi_smode_senddly(int x)
++{
++	return (x & FSI_SMODE_SD_MASK) << FSI_SMODE_SD_SHIFT;
++}
 +
-+	/* Currently, we only support single slaves on a link, and use the
-+	 * full 23-bit address range
++/* Encode slave local bus clock rate ratio */
++static inline uint32_t fsi_smode_lbcrr(int x)
++{
++	return (x & FSI_SMODE_LBCRR_MASK) << FSI_SMODE_LBCRR_SHIFT;
++}
++
++/* Encode slave ID */
++static inline uint32_t fsi_smode_sid(int x)
++{
++	return (x & FSI_SMODE_SID_MASK) << FSI_SMODE_SID_SHIFT;
++}
++
++static const uint32_t fsi_slave_smode(int id)
++{
++	return FSI_SMODE_WSC | FSI_SMODE_ECRC
++		| fsi_smode_sid(id)
++		| fsi_smode_echodly(0xf) | fsi_smode_senddly(0xf)
++		| fsi_smode_lbcrr(0x8);
++}
++
++static int fsi_slave_set_smode(struct fsi_master *master, int link, int id)
++{
++	uint32_t smode;
++
++	/* set our smode register with the slave ID field to 0; this enables
++	 * extended slave addressing
 +	 */
-+	if (id != 0)
-+		return -EINVAL;
++	smode = fsi_slave_smode(id);
++	smode = cpu_to_be32(smode);
 +
-+	rc = fsi_master_read(master, link, id, 0, &chip_id, sizeof(chip_id));
++	return fsi_master_write(master, link, id, FSI_SLAVE_BASE + FSI_SMODE,
++			&smode, sizeof(smode));
++}
++
+ static void fsi_slave_release(struct device *dev)
+ {
+ 	struct fsi_slave *slave = to_fsi_slave(dev);
+@@ -155,6 +222,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	dev_info(&master->dev, "fsi: found chip %08x at %02x:%02x:%02x\n",
+ 			chip_id, master->idx, link, id);
+ 
++	rc = fsi_slave_set_smode(master, link, id);
 +	if (rc) {
-+		dev_warn(&master->dev, "can't read slave %02x:%02x %d\n",
++		dev_warn(&master->dev,
++				"can't set smode on slave:%02x:%02x %d\n",
 +				link, id, rc);
 +		return -ENODEV;
 +	}
-+	chip_id = be32_to_cpu(chip_id);
 +
-+	crc = fsi_crc4(0, chip_id, 32);
-+	if (crc) {
-+		dev_warn(&master->dev, "slave %02x:%02x invalid chip id CRC!\n",
-+				link, id);
-+		return -EIO;
-+	}
-+
-+	dev_info(&master->dev, "fsi: found chip %08x at %02x:%02x:%02x\n",
-+			chip_id, master->idx, link, id);
-+
-+	/* We can communicate with a slave; create the slave device and
-+	 * register.
-+	 */
-+	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
-+	if (!slave)
-+		return -ENOMEM;
-+
-+	slave->master = master;
-+	slave->dev.parent = &master->dev;
-+	slave->dev.release = fsi_slave_release;
-+	slave->link = link;
-+	slave->id = id;
-+	slave->size = FSI_SLAVE_SIZE_23b;
-+
-+	dev_set_name(&slave->dev, "slave@%02x:%02x", link, id);
-+	rc = device_register(&slave->dev);
-+	if (rc < 0) {
-+		dev_warn(&master->dev, "failed to create slave device: %d\n",
-+				rc);
-+		put_device(&slave->dev);
-+		return rc;
-+	}
-+
-+	/* todo: perform engine scan */
- 
--	return -ENODEV;
-+	return rc;
- }
- 
- /* FSI master support */
+ 	/* We can communicate with a slave; create the slave device and
+ 	 * register.
+ 	 */
 -- 
 1.8.2.2
 
