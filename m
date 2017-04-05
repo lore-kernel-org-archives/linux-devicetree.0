@@ -1,13 +1,11 @@
 From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Subject: [PATCH 2/3] ARM: dts: rockchip: rock2: Setup usb vbus-supply
-Date: Wed,  5 Apr 2017 16:06:11 +0200
-Message-ID: <20170405140613.4444-3-sjoerd.simons@collabora.co.uk>
-References: <20170405140613.4444-1-sjoerd.simons@collabora.co.uk>
+Subject: [PATCH 0/3] rockchip dwc2: Turn off vbus on shutdown
+Date: Wed,  5 Apr 2017 16:06:09 +0200
+Message-ID: <20170405140613.4444-1-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170405140613.4444-1-sjoerd.simons@collabora.co.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,43 +16,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: John Youn <johnyoun@synopsys.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the rockchip usb phy has a vbus-supply property use that to
-control the vbus regulator on rock2.
+A board I'm working on seems to get its usb->sata bridge in a rather
+confused state during reboot, which unfortunately can't be recovered on
+the next boot (only hard reset helps).
 
-Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
----
+This seems to be avoidable by turning off vbus, which turns the internal
+usb hub off on shutdown.
 
- arch/arm/boot/dts/rk3288-rock2-square.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+First patch add the ability to describe vbus regulators for the rockchip
+usb phy, second one starts using that on the rock2 square board and
+while the final one adds the actual workaround of turning off the phy on
+shutdown.
 
-diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-index a23a94811be8..8ed25e9f60bc 100644
---- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-+++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-@@ -125,10 +125,6 @@
- 		gpio = <&gpio0 RK_PB6 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&host_vbus_drv>;
--		/* Always on as the rockchip usb phy doesn't have a vbus-supply
--		 * property
--		 */
--		regulator-always-on;
- 		regulator-name = "vcc_host";
- 	};
- 
-@@ -279,6 +275,10 @@
- 	status = "okay";
- };
- 
-+&usbphy1 {
-+	vbus-supply = <&vcc_usb_host>;
-+};
-+
- &usb_host0_ehci {
- 	status = "okay";
- };
+
+Sjoerd Simons (3):
+  phy: rockchip-usb: Add vbus regulator support.
+  ARM: dts: rockchip: rock2: Setup usb vbus-supply
+  usb: dwc2: Power off the phy on shutdown
+
+ .../devicetree/bindings/phy/rockchip-usb-phy.txt      |  1 +
+ arch/arm/boot/dts/rk3288-rock2-square.dts             |  8 ++++----
+ drivers/phy/phy-rockchip-usb.c                        | 19 +++++++++++++++++++
+ drivers/usb/dwc2/platform.c                           |  3 +++
+ 4 files changed, 27 insertions(+), 4 deletions(-)
+
 -- 
 2.11.0
