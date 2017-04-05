@@ -1,32 +1,44 @@
-From: "Han, Nandor (GE Healthcare)" <nandor.han@ge.com>
-Subject: [PATCH 0/3] XRA1403,gpio - add XRA1403 gpio expander driver
-Date: Wed, 5 Apr 2017 12:46:58 +0000
-Message-ID: <HE1P101MB01884BDB83D25AE639A07396E60A0@HE1P101MB0188.NAMP101.PROD.OUTLOOK.COM>
-References: <cover.1490595641.git.nandor.han@ge.com>
- <CACRpkdZ-wD5SwBNtSPceV-mwJiAAU_03obk3Gv97kz0MzX7RLw@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 0/3] Allwinner A64 EHCI0/OHCI0 devicetree change
+Date: Wed,  5 Apr 2017 20:50:50 +0800
+Message-ID: <20170405125053.6170-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ-wD5SwBNtSPceV-mwJiAAU_03obk3Gv97kz0MzX7RLw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBROQSPDQKGQEMEV7HLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMgV2FsbGVpaiBb
-bWFpbHRvOmxpbnVzLndhbGxlaWpAbGluYXJvLm9yZ10NCj4gU2VudDogMjkgTWFyY2ggMjAxNyAw
-NDo1MQ0KPiBUbzogSGFuLCBOYW5kb3IgKEdFIEhlYWx0aGNhcmUpIDxuYW5kb3IuaGFuQGdlLmNv
-bT4NCj4gQ2M6IEFsZXhhbmRyZSBDb3VyYm90IDxnbnVyb3VAZ21haWwuY29tPjsgUm9iIEhlcnJp
-bmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFy
-bS5jb20+OyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogRVhUOiBSZTog
-W1BBVENIIDAvM10gWFJBMTQwMyxncGlvIC0gYWRkIFhSQTE0MDMgZ3BpbyBleHBhbmRlciBkcml2
-ZXINCj4gDQoNCjxzbmlwPg0KDQo+IERvICpOT1QqIHVzZSB0aGUgc3lzZnMgZm9yIHRlc3Rpbmcg
-R1BJTy4NCj4gVGhpcyBpcyBiZWluZyBwaGFzZWQgb3V0Lg0KPiANCj4gVXNlIHRoZSB0b29scyBp
-biB0b29scy9ncGlvLyogc28gdGhhdCB5b3UgZXhlcmNpc2UgdGhlDQo+IGNoYXJhY3RlciBkZXZp
-Y2UgaW5zdGVhZCBvZiB0aGUgb2xkIGRlcHJlY2F0ZWQgQUJJLg0KPiANCg0KVGhhbmtzIExpbnVz
-LCByZWFsbHkgZ29vZCBhbmQgIGhlbHBmdWwgY29tbWVudHMuDQpJIGFncmVlIHRoYXQgbWFrZSBt
-b3JlIHNlbnNlIHRvIHRlc3Qgd2l0aCB0b29scy9ncGlvLyouDQoNCj4gWW91cnMsDQo+IExpbnVz
-IFdhbGxlaWoNCg==
+This patchset contains devicetree parts of the EHCI0/OHCI0 controllers
+on A64 SoC.
+
+The first patch is a devicetree binding change, which has been planned
+for 4.12; however, as Maxime Ripard suggested, it should go in 4.11
+as it's part of the device's description.
+
+The second patch added pmu0 regs and EHCI/OHCI controllers for USB0.
+
+The third patch enabled EHCI0/OHCI0 for Pine64 board.
+
+This patchset should go in 4.11 as Maxime Ripard suggested.
+
+Icenowy Zheng (3):
+  dt: bindings: add pmu0 regs for USB PHYs on Allwinner H3/V3s/A64
+  arm64: allwinner: a64: add USB0 OHCI/EHCI related devicetree parts
+  arm64: allwinner: a64: enable EHCI0/OHCI0 controller for Pine64
+
+ .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |  8 ++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 24 ++++++++++++++++++++++
+ 3 files changed, 33 insertions(+)
+
+-- 
+2.12.2
