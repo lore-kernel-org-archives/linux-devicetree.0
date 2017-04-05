@@ -1,38 +1,119 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 3/3] clk: vc5: Add support for IDT VersaClock 5P49V5935
-Date: Wed, 5 Apr 2017 14:20:31 +0200
-Message-ID: <CAMuHMdXsJq+8jg=hxTsMexjtKTVpOLTRx+HzxoZTWyC_3+z1Zw@mail.gmail.com>
-References: <1491392819-698-1-git-send-email-alexey_firago@mentor.com> <1491392819-698-4-git-send-email-alexey_firago@mentor.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH V7 1/4] dt-bindings: phy: Add support for QUSB2 phy
+Date: Wed,  5 Apr 2017 18:02:35 +0530
+Message-ID: <1491395558-16902-2-git-send-email-vivek.gautam@codeaurora.org>
+References: <1491395558-16902-1-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1491392819-698-4-git-send-email-alexey_firago@mentor.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Alexey Firago <alexey_firago@mentor.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1491395558-16902-1-git-send-email-vivek.gautam@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: kishon@ti.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 1:46 PM, Alexey Firago <alexey_firago@mentor.com> wrote:
-> Update IDT VersaClock 5 driver to support 5P49V5935. This chip has
-> two clock inputs (internal XTAL or external CLKIN), four fractional
-> dividers (FODs) and five clock outputs (four universal clock outputs
-> and one reference clock output at OUT0_SELB_I2C).
->
-> Current driver supports up to 2 FODs and up to 3 clock outputs. This
-> patch sets max number of supported FODs to 4 and max number of supported
-> clock outputs to 5.
->
-> Signed-off-by: Alexey Firago <alexey_firago@mentor.com>
+Qualcomm chipsets have QUSB2 phy controller that provides
+HighSpeed functionality for DWC3 controller.
+Adding dt binding information for the same.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-Gr{oetje,eeting}s,
+Changes since v6:
+ - Dropped 'vdd-phy-supply' that used pm8994_s2 regulator, from bindings.
+   As Stephen said, the pm8994_s2 is a 'corner' regulator and it shouldn't
+   be right to put it as a regulator supply.
+   Work is in progress to handle these sort of power supplies.
 
-                        Geert
+Changes since v5:
+ - Removed leading 0 from the address in 'reg' property.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Changes since v4:
+ - None.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Changes since v3:
+ - Added 'Acked-by' from Rob.
+ - Removed 'reset-names' and 'nvmem-cell-names' from the bindings
+   since we use only one cell.
+
+Changes since v2:
+ - Removed binding for "ref_clk_src" since we don't request this
+   clock in the driver.
+ - Addressed s/vdda-phy-dpdm/vdda-phy-dpdm-supply.
+ - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
+ - Addressed s/tune2_hstx_trim_efuse/tune2_hstx_trim. Don't need to add
+   'efuse' suffix to nvmem cell.
+ - Addressed s/qusb2phy/phy for the node name.
+
+Changes since v1:
+ - New patch, forked out of the original driver patch:
+   "phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips"
+ - Updated dt bindings to remove 'hstx-trim-bit-offset' and
+   'hstx-trim-bit-len' bindings.
+
+ .../devicetree/bindings/phy/qcom-qusb2-phy.txt     | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+new file mode 100644
+index 000000000000..aa0fcb05acb3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+@@ -0,0 +1,43 @@
++Qualcomm QUSB2 phy controller
++=============================
++
++QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
++
++Required properties:
++ - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
++ - reg: offset and length of the PHY register set.
++ - #phy-cells: must be 0.
++
++ - clocks: a list of phandles and clock-specifier pairs,
++	   one for each entry in clock-names.
++ - clock-names: must be "cfg_ahb" for phy config clock,
++			"ref" for 19.2 MHz ref clk,
++			"iface" for phy interface clock (Optional).
++
++ - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
++ - vdda-phy-dpdm-supply: Phandle to 3.1V regulator supply to Dp/Dm port signals.
++
++ - resets: Phandle to reset to phy block.
++
++Optional properties:
++ - nvmem-cells: Phandle to nvmem cell that contains 'HS Tx trim'
++		tuning parameter value for qusb2 phy.
++
++ - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
++
++Example:
++	hsusb_phy: phy@7411000 {
++		compatible = "qcom,msm8996-qusb2-phy";
++		reg = <0x7411000 0x180>;
++		#phy-cells = <0>;
++
++		clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++			<&gcc GCC_RX1_USB2_CLKREF_CLK>,
++		clock-names = "cfg_ahb", "ref";
++
++		vdda-pll-supply = <&pm8994_l12>;
++		vdda-phy-dpdm-supply = <&pm8994_l24>;
++
++		resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
++		nvmem-cells = <&qusb2p_hstx_trim>;
++        };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
