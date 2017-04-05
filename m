@@ -1,99 +1,65 @@
-From: <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 1/2] dt-bindings: i2c: mux: ltc4306: Add dt-bindings for I2C multiplexer/switch
-Date: Wed, 5 Apr 2017 15:07:50 +0200
-Message-ID: <1491397671-14675-1-git-send-email-michael.hennerich@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 1/3] soc: imx: gpc: add defines for domain index
+Date: Wed,  5 Apr 2017 15:19:07 +0200
+Message-ID: <20170405131909.16880-1-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Makes referencing a specfic domain in the driver code
+less error prone.
 
-This patch adds support for the Analog Devices / Linear Technology
-LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
-The LTC4306 optionally provides two general purpose input/output pins
-(GPIOs) that can be configured as logic inputs, opendrain outputs or
-push-pull outputs via the generic GPIOLIB framework.
-
-Signed-off-by: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- .../devicetree/bindings/i2c/i2c-mux-ltc4306.txt    | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+v2: new patch
+---
+ drivers/soc/imx/gpc.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
-new file mode 100644
-index 0000000..1e98c6b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
-@@ -0,0 +1,61 @@
-+* Linear Technology / Analog Devices I2C bus switch
+diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
+index 4294287e5f6c..d4ebb325b558 100644
+--- a/drivers/soc/imx/gpc.c
++++ b/drivers/soc/imx/gpc.c
+@@ -235,6 +235,10 @@ static struct platform_driver imx_pgc_power_domain_driver = {
+ };
+ builtin_platform_driver(imx_pgc_power_domain_driver)
+ 
++#define GPC_PGC_DOMAIN_ARM	0
++#define GPC_PGC_DOMAIN_PU	1
++#define GPC_PGC_DOMAIN_DISPLAY	2
 +
-+Required Properties:
-+
-+  - compatible: Must contain one of the following.
-+    "lltc,ltc4305", "lltc,ltc4306"
-+  - reg: The I2C address of the device.
-+
-+  The following required properties are defined externally:
-+
-+  - Standard I2C mux properties. See i2c-mux.txt in this directory.
-+  - I2C child bus nodes. See i2c-mux.txt in this directory.
-+
-+Optional Properties:
-+
-+  - enable-gpios: Reference to the GPIO connected to the enable input.
-+  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
-+    children in idle state. This is necessary for example, if there are several
-+    multiplexers on the bus and the devices behind them use same I2C addresses.
-+  - gpio-controller: Marks the device node as a GPIO Controller.
-+  - #gpio-cells: Should be two.  The first cell is the pin number and
-+	the second cell is used to specify flags.
-+	See ../gpio/gpio.txt for more information.
-+  - ltc,downstream-accelerators-enable: Enables the rise time accelerators
-+	on the downstream port.
-+  - ltc,upstream-accelerators-enable: Enables the rise time accelerators
-+	on the upstream port.
-+
-+Example:
-+
-+	ltc4306: i2c-mux@4a {
-+		compatible = "lltc,ltc4306";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x4a>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			eeprom@50 {
-+				compatible = "at,24c02";
-+				reg = <0x50>;
-+			};
-+		};
-+
-+		i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			eeprom@50 {
-+				compatible = "at,24c02";
-+				reg = <0x50>;
-+			};
-+		};
-+	};
+ static struct genpd_power_state imx6_pm_domain_pu_state = {
+ 	.power_off_latency_ns = 25000,
+ 	.power_on_latency_ns = 2000000,
+@@ -340,7 +344,7 @@ static int imx_gpc_old_dt_init(struct device *dev, struct regmap *regmap,
+ genpd_err:
+ 	for (i = 0; i < num_domains; i++)
+ 		pm_genpd_remove(&imx_gpc_domains[i].base);
+-	imx_pgc_put_clocks(&imx_gpc_domains[1]);
++	imx_pgc_put_clocks(&imx_gpc_domains[GPC_PGC_DOMAIN_PU]);
+ clk_err:
+ 	return ret;
+ }
+@@ -441,12 +445,12 @@ static int imx_gpc_remove(struct platform_device *pdev)
+ 	if (!of_get_child_by_name(pdev->dev.of_node, "pgc")) {
+ 		of_genpd_del_provider(pdev->dev.of_node);
+ 
+-		ret = pm_genpd_remove(&imx_gpc_domains[1].base);
++		ret = pm_genpd_remove(&imx_gpc_domains[GPC_PGC_DOMAIN_PU].base);
+ 		if (ret)
+ 			return ret;
+-		imx_pgc_put_clocks(&imx_gpc_domains[1]);
++		imx_pgc_put_clocks(&imx_gpc_domains[GPC_PGC_DOMAIN_PU]);
+ 
+-		ret = pm_genpd_remove(&imx_gpc_domains[0].base);
++		ret = pm_genpd_remove(&imx_gpc_domains[GPC_PGC_DOMAIN_ARM].base);
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
-2.7.4
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
