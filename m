@@ -1,39 +1,159 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v2 2/2] dt-bindings: document: add firefly-rk3399 board support
-Date: Wed,  5 Apr 2017 17:33:20 +0800
-Message-ID: <1491384800-22412-2-git-send-email-kever.yang@rock-chips.com>
-References: <1491384800-22412-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491384800-22412-1-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, Liang Chen <cl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Randy Li <ayaka@soulik.info>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Eddie Cai <eddie.cai.linux@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Xing Zheng <zhengxing@rock-chips.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v6 04/23] Documentation: PCI: Guide to use PCI endpoint
+ configfs
+Date: Wed, 5 Apr 2017 14:22:24 +0530
+Message-ID: <20170405085243.18123-5-kishon@ti.com>
+References: <20170405085243.18123-1-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170405085243.18123-1-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: hch@infradead.org, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Use "firefly,firefly-rk3399" compatible string for firefly-rk3399 board.
+Add Documentation to help users use PCI endpoint to configure PCI endpoint
+function and to bind the endpoint function with endpoint controller.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Acked-By: Joao Pinto <jpinto@synopsys.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
+ Documentation/PCI/00-INDEX                      |   2 +
+ Documentation/PCI/endpoint/pci-endpoint-cfs.txt | 105 ++++++++++++++++++++++++
+ 2 files changed, 107 insertions(+)
+ create mode 100644 Documentation/PCI/endpoint/pci-endpoint-cfs.txt
 
-Changes in v2: None
-
- Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index 250fdf0..b5201f4 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -42,6 +42,10 @@ Rockchip platforms device tree bindings
-     Required root node properties:
-       - compatible = "firefly,firefly-rk3288-reload", "rockchip,rk3288";
- 
-+- Firefly Firefly-RK3399 board:
-+    Required root node properties:
-+      - compatible = "firefly,firefly-rk3399", "rockchip,rk3399";
+diff --git a/Documentation/PCI/00-INDEX b/Documentation/PCI/00-INDEX
+index ba950b296bd8..bf8223a1bf08 100644
+--- a/Documentation/PCI/00-INDEX
++++ b/Documentation/PCI/00-INDEX
+@@ -14,3 +14,5 @@ pcieaer-howto.txt
+ 	- the PCI Express Advanced Error Reporting Driver Guide HOWTO
+ endpoint/pci-endpoint.txt
+ 	- guide to add endpoint controller driver and endpoint function driver.
++endpoint/pci-endpoint-cfs.txt
++	- guide to use configfs to configure the PCI endpoint function.
+diff --git a/Documentation/PCI/endpoint/pci-endpoint-cfs.txt b/Documentation/PCI/endpoint/pci-endpoint-cfs.txt
+new file mode 100644
+index 000000000000..d740f29960a4
+--- /dev/null
++++ b/Documentation/PCI/endpoint/pci-endpoint-cfs.txt
+@@ -0,0 +1,105 @@
++                   CONFIGURING PCI ENDPOINT USING CONFIGFS
++                    Kishon Vijay Abraham I <kishon@ti.com>
 +
- - ChipSPARK PopMetal-RK3288 board:
-     Required root node properties:
-       - compatible = "chipspark,popmetal-rk3288", "rockchip,rk3288";
++The PCI Endpoint Core exposes configfs entry (pci_ep) to configure the
++PCI endpoint function and to bind the endpoint function
++with the endpoint controller. (For introducing other mechanisms to
++configure the PCI Endpoint Function refer to [1]).
++
++*) Mounting configfs
++
++The PCI Endpoint Core layer creates pci_ep directory in the mounted configfs
++directory. configfs can be mounted using the following command.
++
++	mount -t configfs none /sys/kernel/config
++
++*) Directory Structure
++
++The pci_ep configfs has two directories at its root: controllers and
++functions. Every EPC device present in the system will have an entry in
++the *controllers* directory and and every EPF driver present in the system
++will have an entry in the *functions* directory.
++
++/sys/kernel/config/pci_ep/
++	.. controllers/
++	.. functions/
++
++*) Creating EPF Device
++
++Every registered EPF driver will be listed in controllers directory. The
++entries corresponding to EPF driver will be created by the EPF core.
++
++/sys/kernel/config/pci_ep/functions/
++	.. <EPF Driver1>/
++		... <EPF Device 11>/
++		... <EPF Device 21>/
++	.. <EPF Driver2>/
++		... <EPF Device 12>/
++		... <EPF Device 22>/
++
++In order to create a <EPF device> of the type probed by <EPF Driver>, the
++user has to create a directory inside <EPF DriverN>.
++
++Every <EPF device> directory consists of the following entries that can be
++used to configure the standard configuration header of the endpoint function.
++(These entries are created by the framework when any new <EPF Device> is
++created)
++
++	.. <EPF Driver1>/
++		... <EPF Device 11>/
++			... vendorid
++			... deviceid
++			... revid
++			... progif_code
++			... subclass_code
++			... baseclass_code
++			... cache_line_size
++			... subsys_vendor_id
++			... subsys_id
++			... interrupt_pin
++
++*) EPC Device
++
++Every registered EPC device will be listed in controllers directory. The
++entries corresponding to EPC device will be created by the EPC core.
++
++/sys/kernel/config/pci_ep/controllers/
++	.. <EPC Device1>/
++		... <Symlink EPF Device11>/
++		... <Symlink EPF Device12>/
++		... start
++	.. <EPC Device2>/
++		... <Symlink EPF Device21>/
++		... <Symlink EPF Device22>/
++		... start
++
++The <EPC Device> directory will have a list of symbolic links to
++<EPF Device>. These symbolic links should be created by the user to
++represent the functions present in the endpoint device.
++
++The <EPC Device> directory will also have a *start* field. Once
++"1" is written to this field, the endpoint device will be ready to
++establish the link with the host. This is usually done after
++all the EPF devices are created and linked with the EPC device.
++
++
++			 | controllers/
++				| <Directory: EPC name>/
++					| <Symbolic Link: Function>
++					| start
++			 | functions/
++				| <Directory: EPF driver>/
++					| <Directory: EPF device>/
++						| vendorid
++						| deviceid
++						| revid
++						| progif_code
++						| subclass_code
++						| baseclass_code
++						| cache_line_size
++						| subsys_vendor_id
++						| subsys_id
++						| interrupt_pin
++						| function
++
++[1] -> Documentation/PCI/endpoint/pci-endpoint.txt
 -- 
-1.9.1
+2.11.0
