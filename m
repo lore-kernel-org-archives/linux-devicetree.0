@@ -1,66 +1,128 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 02/11] arm64: allwinner: a64: add NMI
- controller on A64
-Date: Wed, 5 Apr 2017 19:59:04 +0800
-Message-ID: <CAGb2v64zZcxBEGn5KjP3LLNVCfLSN-+BN_51HAA4nAM-nWDWCA@mail.gmail.com>
-References: <20170404180145.12897-1-icenowy@aosc.io> <20170404180145.12897-3-icenowy@aosc.io>
- <CAGb2v67BucT8=FTgem3AmSU9XJA7OHoTCq3t3wBzDWyuwzZqaA@mail.gmail.com>
- <20170405061137.n66ectbkl7a2fv5f@lukather> <CAGb2v672Z2JedGF3n+8Hi78QG_hAxz0ZYXaCkw0GAkA3xEdKrA@mail.gmail.com>
- <20170405072832.qunhfngatebcgn4q@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: add A33 GPADC binding
+Date: Wed, 5 Apr 2017 13:11:33 +0100
+Message-ID: <20170405121133.olhbcyzvjojth4lw@dell>
+References: <20170405090634.4649-1-quentin.schulz@free-electrons.com>
+ <20170405090634.4649-2-quentin.schulz@free-electrons.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBIFYSPDQKGQE5GQQ4FI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBB6F5SPDQKGQEKEEB2IY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170405072832.qunhfngatebcgn4q@lukather>
+Content-Disposition: inline
+In-Reply-To: <20170405090634.4649-2-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 3:28 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Wed, Apr 05, 2017 at 02:20:31PM +0800, Chen-Yu Tsai wrote:
->> On Wed, Apr 5, 2017 at 2:11 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Wed, Apr 05, 2017 at 11:51:45AM +0800, Chen-Yu Tsai wrote:
->> >> On Wed, Apr 5, 2017 at 2:01 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->> >> > Allwinner A64 SoC features a NMI controller, which is usually connected
->> >> > to the AXP PMIC.
->> >> >
->> >> > Add support for it.
->> >> >
->> >> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> >>
->> >> This might not be the best representation of the R_INTC block. Though
->> >> we'd need to change it for all SoCs if we want to be accurate. For now,
->> >
->> > What do you think would be a good representation?
->>
->> My gut feeling is that this is the old INTC from sun4/5i.
->
-> Ah, that would make sense.
->
->> It's supposed to be the interrupt controller for the embedded low
->> power core. I've not done a thorough comparison though.
->
-> Do we have some documentation / code for this one?
+On Wed, 05 Apr 2017, Quentin Schulz wrote:
 
-I can't remember where or if I saw any. If Allwinner ever released
-any source code for the OpenRISC core we could actually verify it.
+> This patch adds documentation for the A33 GPADC binding.
+>=20
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> v4:
+>   - correct patch title,
+>=20
+> v3:
+>   - fixed missing allwinner in front of compatible,
+>   - updated compatible to allwinner,sun8i-a33-ths to better reflect the
+>   datasheet's name,
+>   - updated example's DT node name and label to ths,
+>=20
+> added in v2
+>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 59 ++++++++++++++++=
+++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
 
-However the base address of this block, in addition to the register
-offsets found in the driver for "allwinner,sun6i-a31-sc-nmi" do match
-up with the sun4i irqchip. The question is if any of the other interrupt
-lines are hooked up, and if yes, to what. A possibility would be that
-it has all the interrupt lines in the SoC also hooked up, at the same
-numbers as the GIC (minus 32). It would feed both the GIC and CPUS.
-This is just an educated guess though.
+Applied, thanks.
 
-Regards
-ChenYu
+> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Docu=
+mentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> new file mode 100644
+> index 0000000..badff36
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> @@ -0,0 +1,59 @@
+> +Allwinner SoCs' GPADC Device Tree bindings
+> +------------------------------------------
+> +The Allwinner SoCs all have an ADC that can also act as a thermal sensor
+> +and sometimes as a touchscreen controller.
+> +
+> +Required properties:
+> +  - compatible: "allwinner,sun8i-a33-ths",
+> +  - reg: mmio address range of the chip,
+> +  - #thermal-sensor-cells: shall be 0,
+> +  - #io-channel-cells: shall be 0,
+> +
+> +Example:
+> +	ths: ths@01c25000 {
+> +		compatible =3D "allwinner,sun8i-a33-ths";
+> +		reg =3D <0x01c25000 0x100>;
+> +		#thermal-sensor-cells =3D <0>;
+> +		#io-channel-cells =3D <0>;
+> +	};
+> +
+> +sun4i, sun5i and sun6i SoCs are also supported via the older binding:
+> +
+> +sun4i resistive touchscreen controller
+> +--------------------------------------
+> +
+> +Required properties:
+> + - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
+> +   "allwinner,sun6i-a31-ts"
+> + - reg: mmio address range of the chip
+> + - interrupts: interrupt to which the chip is connected
+> + - #thermal-sensor-cells: shall be 0
+> +
+> +Optional properties:
+> + - allwinner,ts-attached	 : boolean indicating that an actual touchscree=
+n
+> +				   is attached to the controller
+> + - allwinner,tp-sensitive-adjust : integer (4 bits)
+> +				   adjust sensitivity of pen down detection
+> +				   between 0 (least sensitive) and 15
+> +				   (defaults to 15)
+> + - allwinner,filter-type	 : integer (2 bits)
+> +				   select median and averaging filter
+> +				   samples used for median / averaging filter
+> +				   0: 4/2
+> +				   1: 5/3
+> +				   2: 8/4
+> +				   3: 16/8
+> +				   (defaults to 1)
+> +
+> +Example:
+> +
+> +	rtp: rtp@01c25000 {
+> +		compatible =3D "allwinner,sun4i-a10-ts";
+> +		reg =3D <0x01c25000 0x100>;
+> +		interrupts =3D <29>;
+> +		allwinner,ts-attached;
+> +		#thermal-sensor-cells =3D <0>;
+> +		/* sensitive/noisy touch panel */
+> +		allwinner,tp-sensitive-adjust =3D <0>;
+> +		allwinner,filter-type =3D <3>;
+> +	};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
