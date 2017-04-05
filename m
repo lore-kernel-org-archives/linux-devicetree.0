@@ -1,189 +1,128 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [GIT PULL] PCI: Support for configurable PCI endpoint
-Date: Wed, 5 Apr 2017 14:22:20 +0530
-Message-ID: <20170405085243.18123-1-kishon@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities
+ output video on pad 1
+Date: Wed, 05 Apr 2017 11:34:19 +0200
+Message-ID: <1491384859.2381.51.camel@pengutronix.de>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
+ <1490894749.2404.33.camel@pengutronix.de>
+ <20170404231053.GE7909@n2100.armlinux.org.uk>
+ <19f0ce92-cad6-8950-8018-e3224e2bf266@gmail.com>
+ <7235285c-f39a-64bc-195a-11cfde9e67c5@gmail.com>
+ <20170405082134.GF7909@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: hch@infradead.org, nsekhar@ti.com, kishon@ti.com
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170405082134.GF7909@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, mchehab@kernel.org
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Wed, 2017-04-05 at 09:21 +0100, Russell King - ARM Linux wrote:
+[...]
+> > Actually what was I thinking, the TVP5150 is already an example of
+> > such a device.
+> > 
+> > All of this could be solved if there was some direction information
+> > in port nodes.
+> 
+> I disagree.
+>
+> Philipp identified that the TVP5150 has four pads:
+> 
+> * Input pad
+> * Video output pad
+> * VBI output pad
+> * Audio output pad
 
-Please find the pull request for PCI endpoint support below. I've
-also included all the history here.
+I didn't think hard enough about this earlier, but there are really only
+two hardware interfaces on TVP5150. The ADC input, which can be
+connected to either of two composite input pins (AIP1A, AIP1B), or use
+both for s-video, and the digital output connected to pins (YOUT[7:0]).
 
-Changes from v5:
-*) remove #syscon-cells property added in v5 and used 
-   of_parse_phandle_with_fixed_args
-*) fix compilation error in make.cross ARCH=blackfin that was because
-   pci_endpoint_test.c driver depends on COMPILE_TEST.
+VBI data can be transferred via the output pins during horizontal or
+vertical blanking, if I understand correctly, or read from a FIFO via
+I2C.
 
-Changes from v4:
-*) add #syscon-cells property and used of_parse_phandle_with_args
-   to perform a configuration in syscon module (as suggested by
-   Rob Herring)
-*) Remove unnecessary white space.
+There is no apparent support for audio data whatsoever, and the only
+mention of audio in the data manual is a vague reference about an "audio
+interface available on the TVP5150" providing a clock to an audio
+interface between an external audio decoder and the backend processor.
 
-Changes from v3:
-*) fixed a typo and adapted to https://lkml.org/lkml/2017/3/13/562.
+Further, commit 55606310e77f ("[media] tvp5150: create the expected
+number of pads") creates DEMOD_NUM_PADS pads, but doesn't mention or
+initialize the audio pad. It clearly expects the value of DEMOD_NUM_PADS
+to be 3. And indeed the fourth pad was added later in commit
+bddc418787cc ("[media] au0828: use standard demod pads struct").
 
-Changes from v2:
-*) changed the configfs structure as suggested by Christoph Hellwig. With
-   this change the framework creates configfs entry for EP function driver
-   and EP controller. Previously these entries have to be created by the
-   the user. (Haven't changed the epc core or epf core except for invoking
-   configfs APIs to create entries for EP function driver and EP controller.
-   That's mostly because the EP function device can still be created by
-   directly invoking the epf core API without using configfs).
-*) Now the user has to use configfs entry 'start' to start the link.
-   This was previously done by the function driver. However in the case of
-   multi function EP, the function driver shouldn't start the link.
+So to me it looks like the VBI and audio pads should be removed from
+TVP5150.
 
-Changes from v1:
-*) The preparation patches for adding EP support is removed and is sent
-   separately
-*) Added device ID for DRA74x/DRA72x and used it instead of
-   using "PCI_ANY_ID"
-*) Added userguide for PCI endpoint test function
+> So, it has one input and three outputs.  How does marking the direction
+> in the port node (which would indicate that there was a data flow out of
+> TVP5150 into the iMX6 capture) help identify which of those pads should
+> be used?
+>
+> It would eliminate the input pad, but you still have three output pads
+> to choose from.
+> 
+> So no, your idea can't work.
 
-Major Improvements from RFC:
- *) support multi-function devices (hw supported not virtual)
- *) Access host side buffers
- *) Raise MSI interrupts
- *) Add user space program to use the host side PCI driver
- *) Adapt all other users of designware to use the new design (only
-    compile tested. Since I have only dra7xx boards, the new design
-    has only been tested in dra7xx. I'd require the help of others
-    to test the platforms they have access to).
+In this case, removal of the VBI and audio pads might make this work,
+but in general this is true. In my opinion, to make this truly generic,
+we need an interface to ask the driver which media entity pad a given
+device tree port corresponds to, as there might not even be a single
+media entity corresponding to all ports for more complex devices.
 
-This is based on
-git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
-pci/host-designware
+> As I already stated, I believe that this case is already covered by
+> video-interfaces.txt:
+> 
+>   If more than
+>   one port is present in a device node or there is more than one endpoint at a
+>   port, or port node needs to be associated with a selected hardware interface,
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>   a common scheme using '#address-cells', '#size-cells' and 'reg' properties is
+>   used.
+> 
+> So, according to that, you do not need to have more than one port node
+> to use the reg property - it's _either_ more than one port _or_ to
+> select the hardware interface.
 
-Thanks
-Kishon
+I don't think enforcing a 1:1 correspondence between device tree node
+and media entity and enforcing port reg property == entity pad index is
+a good idea in the long run. Binding errors are going to be made that
+will have to be worked around at the driver level, and more complex
+devices might have to create multiple media entities / v4l2 subdevices
+with external ports that interface with the of graph.
 
-The following changes since commit 7ea64dcf602c21b3e5062ca90111ca4459fab403:
+> It all hinges on whether you consider the video output, VBI output or
+> audio output to be separate hardware interfaces that the singular
+> specified "port" node needs to select between.
+> 
+> There's another reason why the TVP5150 binding looks wrong and broken,
+> however.  How does the audio output get routed to other parts of the
+> system if you're using the video output, and how is that relationship
+> defined?  It's a v4l2 subdev pad, so it would need to be part of the
+> v4l2 subdev graph.  It sounds to me like the binding was created with
+> a narrow focused "this is the board in front of me, it only has video
+> wired up, I'm not going to consider other use cases" blinkered view.
 
-  __end__ (2017-04-04 15:29:37 -0500)
+I think the output part is accurate, as the audio pad is an artifact of
+an unrelated change. I'm not so sure about the VBI pad, but I think that
+shouldn't exist either. The input pad, on the other hand, not having any
+of graph representation in the device tree seems a bit strange. There
+was a custom binding for the inputs, that got quickly reverted:
+https://patchwork.kernel.org/patch/8395521/
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kishon/pci-endpoint.git tags/pci-endpoint-for-4.12
-
-for you to fetch changes up to a5c85ba45c9682456077d7277196e91f8ea5fd5c:
-
-  ARM: DRA7: clockdomain: Change the CLKTRCTRL of CM_PCIE_CLKSTCTRL to SW_WKUP (2017-04-05 14:05:28 +0530)
-
-----------------------------------------------------------------
-pci: endpoint: for 4.12
-
- *) Add PCI endpoint core layer
- *) Modify designware and dra7xx driver to be configured in EP mode
- *) Add a PCI endpoint *test* function driver and corresponding host
-    driver
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-----------------------------------------------------------------
-Kishon Vijay Abraham I (23):
-      PCI: endpoint: Add EP core layer to enable EP controller and EP functions
-      Documentation: PCI: Guide to use PCI Endpoint Core Layer
-      PCI: endpoint: Introduce configfs entry for configuring EP functions
-      Documentation: PCI: Guide to use PCI endpoint configfs
-      PCI: endpoint: Create configfs entry for EPC device and EPF driver
-      Documentation: PCI: Add specification for the *PCI test* function device
-      PCI: endpoint: functions: Add an EP function to test PCI
-      Documentation: PCI: Add binding documentation for pci-test endpoint function
-      PCI: dwc: designware: Add EP mode support
-      dt-bindings: PCI: Add DT bindings for PCI designware EP mode
-      PCI: dwc: dra7xx: Facilitate wrapper and MSI interrupts to be enabled independently
-      PCI: dwc: dra7xx: Add EP mode support
-      dt-bindings: PCI: dra7xx: Add DT bindings for PCI dra7xx EP mode
-      PCI: dwc: dra7xx: Workaround for errata id i870
-      dt-bindings: PCI: dra7xx: Add DT bindings to enable unaligned access
-      PCI: Add device IDs for DRA74x and DRA72x
-      misc: Add host side PCI driver for PCI test function device
-      Documentation: misc-devices: Add Documentation for pci-endpoint-test driver
-      tools: PCI: Add a userspace tool to test PCI endpoint
-      tools: PCI: Add sample test script to invoke pcitest
-      Documentation: PCI: Add userguide for PCI endpoint test function
-      MAINTAINERS: Add PCI Endpoint maintainer
-      ARM: DRA7: clockdomain: Change the CLKTRCTRL of CM_PCIE_CLKSTCTRL to SW_WKUP
-
- Documentation/PCI/00-INDEX                                |  10 +++
- Documentation/PCI/endpoint/function/binding/pci-test.txt  |  17 +++++
- Documentation/PCI/endpoint/pci-endpoint-cfs.txt           | 105 ++++++++++++++++++++++++++
- Documentation/PCI/endpoint/pci-endpoint.txt               | 215 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- Documentation/PCI/endpoint/pci-test-function.txt          |  66 ++++++++++++++++
- Documentation/PCI/endpoint/pci-test-howto.txt             | 179 +++++++++++++++++++++++++++++++++++++++++++
- Documentation/devicetree/bindings/pci/designware-pcie.txt |  26 +++++--
- Documentation/devicetree/bindings/pci/ti-pci.txt          |  42 +++++++++--
- Documentation/misc-devices/pci-endpoint-test.txt          |  35 +++++++++
- MAINTAINERS                                               |   9 +++
- arch/arm/mach-omap2/clockdomains7xx_data.c                |   2 +-
- drivers/Makefile                                          |   2 +
- drivers/misc/Kconfig                                      |   7 ++
- drivers/misc/Makefile                                     |   1 +
- drivers/misc/pci_endpoint_test.c                          | 534 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/Kconfig                                       |   1 +
- drivers/pci/dwc/Kconfig                                   |  36 ++++++++-
- drivers/pci/dwc/Makefile                                  |   5 +-
- drivers/pci/dwc/pci-dra7xx.c                              | 270 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
- drivers/pci/dwc/pcie-designware-ep.c                      | 342 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/dwc/pcie-designware.c                         | 125 ++++++++++++++++++++++++++++++
- drivers/pci/dwc/pcie-designware.h                         | 112 +++++++++++++++++++++++++++
- drivers/pci/endpoint/Kconfig                              |  31 ++++++++
- drivers/pci/endpoint/Makefile                             |   7 ++
- drivers/pci/endpoint/functions/Kconfig                    |  12 +++
- drivers/pci/endpoint/functions/Makefile                   |   5 ++
- drivers/pci/endpoint/functions/pci-epf-test.c             | 510 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/endpoint/pci-ep-cfs.c                         | 509 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/endpoint/pci-epc-core.c                       | 579 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/endpoint/pci-epc-mem.c                        | 143 +++++++++++++++++++++++++++++++++++
- drivers/pci/endpoint/pci-epf-core.c                       | 351 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mod_devicetable.h                           |  10 +++
- include/linux/pci-ep-cfs.h                                |  41 ++++++++++
- include/linux/pci-epc.h                                   | 144 +++++++++++++++++++++++++++++++++++
- include/linux/pci-epf.h                                   | 162 +++++++++++++++++++++++++++++++++++++++
- include/linux/pci_ids.h                                   |   2 +
- include/uapi/linux/Kbuild                                 |   1 +
- include/uapi/linux/pcitest.h                              |  19 +++++
- tools/pci/pcitest.c                                       | 186 +++++++++++++++++++++++++++++++++++++++++++++
- tools/pci/pcitest.sh                                      |  56 ++++++++++++++
- 40 files changed, 4869 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
- create mode 100644 Documentation/PCI/endpoint/pci-endpoint-cfs.txt
- create mode 100644 Documentation/PCI/endpoint/pci-endpoint.txt
- create mode 100644 Documentation/PCI/endpoint/pci-test-function.txt
- create mode 100644 Documentation/PCI/endpoint/pci-test-howto.txt
- create mode 100644 Documentation/misc-devices/pci-endpoint-test.txt
- create mode 100644 drivers/misc/pci_endpoint_test.c
- create mode 100644 drivers/pci/dwc/pcie-designware-ep.c
- create mode 100644 drivers/pci/endpoint/Kconfig
- create mode 100644 drivers/pci/endpoint/Makefile
- create mode 100644 drivers/pci/endpoint/functions/Kconfig
- create mode 100644 drivers/pci/endpoint/functions/Makefile
- create mode 100644 drivers/pci/endpoint/functions/pci-epf-test.c
- create mode 100644 drivers/pci/endpoint/pci-ep-cfs.c
- create mode 100644 drivers/pci/endpoint/pci-epc-core.c
- create mode 100644 drivers/pci/endpoint/pci-epc-mem.c
- create mode 100644 drivers/pci/endpoint/pci-epf-core.c
- create mode 100644 include/linux/pci-ep-cfs.h
- create mode 100644 include/linux/pci-epc.h
- create mode 100644 include/linux/pci-epf.h
- create mode 100644 include/uapi/linux/pcitest.h
- create mode 100644 tools/pci/pcitest.c
- create mode 100644 tools/pci/pcitest.sh
+regards
+Philipp
