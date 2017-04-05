@@ -1,333 +1,75 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 5/7] pinctrl: aramda-37xx: Add irqchip support
-Date: Wed, 05 Apr 2017 18:03:27 +0200
-Message-ID: <87d1cq6dv4.fsf@free-electrons.com>
-References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
- <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
- <70ffe3343c13d01737bf74e5de4898d0c0be07a0.1491405475.git-series.gregory.clement@free-electrons.com>
+From: Vlad Zakharov <Vladislav.Zakharov@synopsys.com>
+Subject: Re: [PATCH v2] clk/axs10x: introduce AXS10X pll driver
+Date: Wed, 5 Apr 2017 16:06:11 +0000
+Message-ID: <1491408370.9650.24.camel@synopsys.com>
+References: <1487682670-4164-1-git-send-email-vzakhar@synopsys.com>
+         <20170405013525.GJ18246@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <70ffe3343c13d01737bf74e5de4898d0c0be07a0.1491405475.git-series.gregory.clement@free-electrons.com>
- (Gregory CLEMENT's message of "Wed, 5 Apr 2017 17:18:06 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Victor Gu <xigu@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170405013525.GJ18246@codeaurora.org>
+Content-Language: en-US
+Content-ID: <ED2C7F144EA49946834A1EEF08572A0A@internal.synopsys.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Argh, I sill have the typo in the title of this patch! :(
-
-If you are going to apply it could you fix it, else it will be fixed in
-the next version.
-
-Sorry,
-
-Gregory
-
- 
- On mer., avril 05 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
-
-> The Armada 37xx SoCs can handle interrupt through GPIO. However it can
-> only manage the edge ones.
->
-> The way the interrupt are managed are classical so we can use the generic
-> interrupt chip model.
->
-> The only unusual "feature" is that many interrupts are connected to the
-> parent interrupt controller. But we do not take advantage of this and use
-> the chained irq with all of them.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 221 +++++++++++++++++++++-
->  1 file changed, 221 insertions(+)
->
-> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> index 5c96f5558310..7356516e0921 100644
-> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> @@ -13,7 +13,9 @@
->  #include <linux/gpio/driver.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_irq.h>
->  #include <linux/pinctrl/pinconf-generic.h>
->  #include <linux/pinctrl/pinconf.h>
->  #include <linux/pinctrl/pinctrl.h>
-> @@ -30,6 +32,11 @@
->  #define OUTPUT_CTL	0x20
->  #define SELECTION	0x30
->  
-> +#define IRQ_EN		0x0
-> +#define IRQ_POL		0x08
-> +#define IRQ_STATUS	0x10
-> +#define IRQ_WKUP	0x18
-> +
->  #define NB_FUNCS 2
->  #define GPIO_PER_REG	32
->  
-> @@ -75,9 +82,12 @@ struct armada_37xx_pmx_func {
->  
->  struct armada_37xx_pinctrl {
->  	struct regmap			*regmap;
-> +	void __iomem			*base;
->  	const struct armada_37xx_pin_data	*data;
->  	struct device			*dev;
->  	struct gpio_chip		gpio_chip;
-> +	struct irq_chip			irq_chip;
-> +	spinlock_t			irq_lock;
->  	struct pinctrl_desc		pctl;
->  	struct pinctrl_dev		*pctl_dev;
->  	struct armada_37xx_pin_group	*groups;
-> @@ -346,6 +356,14 @@ static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
->  	return armada_37xx_pmx_set_by_name(pctldev, name, grp);
->  }
->  
-> +static inline void armada_37xx_irq_update_reg(unsigned int *reg,
-> +					  struct irq_data *d)
-> +{
-> +	int offset = irqd_to_hwirq(d);
-> +
-> +	armada_37xx_update_reg(reg, offset);
-> +}
-> +
->  static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
->  					    unsigned int offset)
->  {
-> @@ -468,6 +486,206 @@ static const struct gpio_chip armada_37xx_gpiolib_chip = {
->  	.owner = THIS_MODULE,
->  };
->  
-> +void armada_37xx_irq_ack(struct irq_data *d)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-> +	u32 reg = IRQ_STATUS, mask = d->mask;
-> +	unsigned long flags;
-> +
-> +	armada_37xx_irq_update_reg(&reg, d);
-> +	spin_lock_irqsave(&info->irq_lock, flags);
-> +	writel(mask, info->base + reg);
-> +	spin_unlock_irqrestore(&info->irq_lock, flags);
-> +}
-> +
-> +void armada_37xx_irq_mask(struct irq_data *d)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-> +	u32 val, reg = IRQ_EN, mask = d->mask;
-> +	unsigned long flags;
-> +
-> +	armada_37xx_irq_update_reg(&reg, d);
-> +	spin_lock_irqsave(&info->irq_lock, flags);
-> +	val = readl(info->base + reg);
-> +	writel(val & ~mask, info->base + reg);
-> +	spin_unlock_irqrestore(&info->irq_lock, flags);
-> +}
-> +
-> +void armada_37xx_irq_unmask(struct irq_data *d)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-> +	u32 val, reg = IRQ_EN, mask = d->mask;
-> +	unsigned long flags;
-> +
-> +	armada_37xx_irq_update_reg(&reg, d);
-> +	spin_lock_irqsave(&info->irq_lock, flags);
-> +	val = readl(info->base + reg);
-> +	writel(val | mask, info->base + reg);
-> +	spin_unlock_irqrestore(&info->irq_lock, flags);
-> +}
-> +
-> +static int armada_37xx_irq_set_wake(struct irq_data *d, unsigned int on)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-> +	u32 val, reg = IRQ_WKUP, mask = d->mask;
-> +	unsigned long flags;
-> +
-> +	armada_37xx_irq_update_reg(&reg, d);
-> +	spin_lock_irqsave(&info->irq_lock, flags);
-> +	val = readl(info->base + reg);
-> +	if (on)
-> +		val |= mask;
-> +	else
-> +		val &= ~mask;
-> +	writel(val, info->base + reg);
-> +	spin_unlock_irqrestore(&info->irq_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int armada_37xx_irq_set_type(struct irq_data *d, unsigned int type)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-> +	u32 val, reg = IRQ_POL, mask = d->mask;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&info->irq_lock, flags);
-> +	armada_37xx_irq_update_reg(&reg, d);
-> +	val = readl(info->base + reg);
-> +	switch (type) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		val &= ~mask;
-> +		break;
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		val |= mask;
-> +		break;
-> +	default:
-> +		spin_unlock_irqrestore(&info->irq_lock, flags);
-> +		return -EINVAL;
-> +	}
-> +	writel(val, info->base + reg);
-> +	spin_unlock_irqrestore(&info->irq_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +static void armada_37xx_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct armada_37xx_pinctrl *info = gpiochip_get_data(gc);
-> +	struct irq_domain *d = gc->irqdomain;
-> +	int i;
-> +
-> +	chained_irq_enter(chip, desc);
-> +	for (i = 0; i <= d->revmap_size / GPIO_PER_REG; i++) {
-> +		u32 status;
-> +		unsigned long flags;
-> +
-> +		spin_lock_irqsave(&info->irq_lock, flags);
-> +		status = readl_relaxed(info->base + IRQ_STATUS + 4 * i);
-> +		/* Manage only the interrupt that was enabled */
-> +		status &= readl_relaxed(info->base + IRQ_EN + 4 * i);
-> +		spin_unlock_irqrestore(&info->irq_lock, flags);
-> +		while (status) {
-> +			u32 hwirq = ffs(status) - 1;
-> +			u32 virq = irq_find_mapping(d, hwirq +
-> +						     i * GPIO_PER_REG);
-> +
-> +			generic_handle_irq(virq);
-> +			status &= ~BIT(hwirq);
-> +		}
-> +	}
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static int armada_37xx_irqchip_register(struct platform_device *pdev,
-> +					struct armada_37xx_pinctrl *info)
-> +{
-> +	struct device_node *np = info->dev->of_node;
-> +	int nrirqs = info->data->nr_pins;
-> +	struct gpio_chip *gc = &info->gpio_chip;
-> +	struct irq_chip *irqchip = &info->irq_chip;
-> +	struct resource res;
-> +	int ret = -ENODEV, i, nr_irq_parent;
-> +
-> +	for_each_child_of_node(info->dev->of_node, np) {
-> +		if (of_find_property(np, "gpio-controller", NULL)) {
-> +			ret = 0;
-> +			break;
-> +		}
-> +	};
-> +	if (ret)
-> +		return ret;
-> +
-> +	nr_irq_parent = of_irq_count(np);
-> +	spin_lock_init(&info->irq_lock);
-> +
-> +	if (!nr_irq_parent) {
-> +		dev_err(&pdev->dev, "Invalid or no IRQ\n");
-> +		return 0;
-> +	}
-> +
-> +	if (of_address_to_resource(info->dev->of_node, 1, &res)) {
-> +		dev_err(info->dev, "cannot find IO resource\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	info->base = devm_ioremap_resource(info->dev, &res);
-> +	if (IS_ERR(info->base))
-> +		return PTR_ERR(info->base);
-> +
-> +	irqchip->irq_ack = armada_37xx_irq_ack;
-> +	irqchip->irq_mask = armada_37xx_irq_mask;
-> +	irqchip->irq_unmask = armada_37xx_irq_unmask;
-> +	irqchip->irq_set_wake = armada_37xx_irq_set_wake;
-> +	irqchip->irq_set_type = armada_37xx_irq_set_type;
-> +	irqchip->name = info->data->name;
-> +
-> +	ret = gpiochip_irqchip_add(gc, irqchip, 0,
-> +				   handle_edge_irq, IRQ_TYPE_NONE);
-> +	if (ret) {
-> +		dev_info(&pdev->dev, "could not add irqchip\n");
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * Many interrupts are connected to the parent interrupt
-> +	 * controller. But we do not take advantage of this and use
-> +	 * the chained irq with all of them.
-> +	 */
-> +	for (i = 0; i < nrirqs; i++) {
-> +		struct irq_data *d = irq_get_irq_data(gc->irq_base + i);
-> +
-> +		/*
-> +		 * The mask field is a "precomputed bitmask for
-> +		 * accessing the chip registers" which was introduced
-> +		 * for the generic irqchip framework. As we don't use
-> +		 * this framework, we can reuse this field for our own
-> +		 * usage.
-> +		 */
-> +		d->mask = BIT(i % GPIO_PER_REG);
-> +	}
-> +
-> +	for (i = 0; i < nr_irq_parent; i++) {
-> +		int irq = irq_of_parse_and_map(np, i);
-> +
-> +		if (irq < 0)
-> +			continue;
-> +
-> +		gpiochip_set_chained_irqchip(gc, irqchip, irq,
-> +					     armada_37xx_irq_handler);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int armada_37xx_gpiochip_register(struct platform_device *pdev,
->  					struct armada_37xx_pinctrl *info)
->  {
-> @@ -496,6 +714,9 @@ static int armada_37xx_gpiochip_register(struct platform_device *pdev,
->  	ret = devm_gpiochip_add_data(&pdev->dev, gc, info);
->  	if (ret)
->  		return ret;
-> +	ret = armada_37xx_irqchip_register(pdev, info);
-> +	if (ret)
-> +		return ret;
->  
->  	return 0;
->  }
-> -- 
-> git-series 0.9.1
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+SGkgU3RlcGhlbiwNCg0KT24gVHVlLCAyMDE3LTA0LTA0IGF0IDE4OjM1IC0wNzAwLCBTdGVwaGVu
+IEJveWQgd3JvdGU6DQo+ID4gK8KgwqDCoMKgwqAucGxsX3RhYmxlID0gKHN0cnVjdCBwbGxfb2Zf
+dGFibGUgW10pew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHsNCj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLnByYXRlID0gMjcwMDAwMDAsDQo+
+IA0KPiBDYW4gdGhpcyBiZSBhbm90aGVyIGNsayBpbiB0aGUgZnJhbWV3b3JrIGluc3RlYWQgb2Yg
+aGFyZGNvZGluZw0KPiB0aGUgcGFyZW50IHJhdGU/DQoNCkluIGZhY3QgdGhlcmUgaXMgYW5vdGhl
+ciBjbGsgaW4gdGhlIGZyYW1ld29yayB0aGF0IHJlcHJlc2VudHMgdGhpcyBwYXJlbnQgY2xvY2su
+IEJ1dCB0aGlzIGZpZWxkIGlzIG5lZWRlZCB0byBnZXQNCmFwcHJvcHJpYXRlIHBsbF9jZmdfdGFi
+bGUgYXMgaXQgZGVwZW5kcyBvbiBwYXJlbnQgY2xvY2sgZnJlcXVlbmN5LiBCZWxvdyBpbiBwbGxf
+Y2ZnX2dldCBmdW5jdGlvbiB3ZSBhcmUgc2VhcmNoaW5nIGZvcg0KdGhlIGNvcnJlY3QgdGFibGUg
+Y29tcGFyaW5nIC5wYXJlbnRfbm9kZSBmaWVsZCB3aXRoIHJlYWwgaGFyZHdhcmUgcGFyZW50IGNs
+b2NrIGZyZXF1ZW5jeToNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+OC0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KZm9yIChpID0gMDsgcGxsX3RhYmxlW2ld
+LnByYXRlICE9IDA7IGkrKykNCsKgIMKgIGlmIChwbGxfdGFibGVbaV0ucHJhdGUgPT0gcHJhdGUp
+DQrCoCDCoCDCoCDCoCByZXR1cm4gcGxsX3RhYmxlW2ldLnBsbF9jZmdfdGFibGU7DQotLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPjgtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0NCg0KPiANCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgLnBsbF9jZmdfdGFibGUgPSAoc3RydWN0IHBsbF9jZmcgW10pew0KPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgeyAyNTIw
+MDAwMCwgMSwgODQsIDkwIH0sDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB7IDUwMDAwMDAwLCAxLCAxMDAsIDU0IH0sDQo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqB7IDc0MjUwMDAwLCAxLCA0NCwgMTYgfSwNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHsgfSwNCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfSwNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqB9LA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8qIFVzZWQgYXMgbGlz
+dCBsaW1pdGVyICovDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgeyB9LA0KPiANCj4g
+VGhlcmUncyBvbmx5IGV2ZXIgb25lLCBzbyBJJ20gY29uZnVzZWQgd2h5IHdlJ3JlIG1ha2luZyBh
+IGxpc3QuDQoNCkJ5IHRoaXMgcGF0Y2ggd2Ugb25seSBhZGQgc3VwcG9ydCBvZiBjb3JlIGFyYyBw
+bGwgYW5kIHBndSBwbGwgYW5kIHRvZGF5IHRoZXkgYXJlIGNsb2NrZWQgYnkgdGhlIG9ubHkgcGFy
+ZW50IGNsb2Nrcw0KaW50cm9kdWNlZCBoZXJlLiBCdXQgb3RoZXIgcGxscyBvbiBheHMxMHggbWF5
+IGJlIGRyaXZlbiBieSBkaWZmZXJlbnQgb3IgY29uZmlndXJhYmxlIGNsb2Nrcywgc28gaW4gc3Vj
+aCBjYXNlcyB3ZSB3aWxsDQpoYXZlIG1vcmUgdGhhbiBvbmUgZW50cnkgaW4gdGhpcyBsaXN0LiBB
+bmQgd2UgYXJlIGdvaW5nIHRvIGFkZCBtb3JlIHN1cHBvcnRlZCBwbGxzIHRvIHRoaXMgZHJpdmVy
+IGluIHRoZSBuZWFyZXN0IGZ1dHVyZS4NCg0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoGNsayA9IGNs
+a19yZWdpc3RlcihOVUxMLCAmcGxsX2Nsay0+aHcpOw0KPiA+ICvCoMKgwqDCoMKgaWYgKElTX0VS
+UihjbGspKSB7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcHJfZXJyKCJmYWlsZWQg
+dG8gcmVnaXN0ZXIgJXMgY2xvY2sgKCVsZClcbiIsDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBub2RlLT5uYW1lLCBQVFJfRVJS
+KGNsaykpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGtmcmVlKHBsbF9jbGspOw0K
+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybjsNCj4gPiArwqDCoMKgwqDCoH0N
+Cj4gPiArDQo+ID4gK8KgwqDCoMKgwqBvZl9jbGtfYWRkX3Byb3ZpZGVyKG5vZGUsIG9mX2Nsa19z
+cmNfc2ltcGxlX2dldCwgY2xrKTsNCj4gDQo+IENhbiB5b3UgcGxlYXNlIHVzZSB0aGUgY2xrX2h3
+IGJhc2VkIHByb3ZpZGVyIGFuZCBjbGsgcmVnaXN0cmF0aW9uDQo+IGZ1bmN0aW9ucz8NCg0KU3Vy
+ZS4gQ291bGQgeW91IGJlIHNvIGtpbmQgdG8gZXhwbGFpbiB3aGF0IGlzIHRoZSBkaWZmZXJlbmNl
+IGJldHdlZW4gaHcgYW5kIG5vbi1odyBiYXNlZCBwcm92aWRlciBhbmQgY2xrIHJlZ2lzdHJhdGlv
+bg0KZnVuY3Rpb25zIHBsZWFzZT8gSW4gd2hpY2ggY2FzZXMgdGhleSBhcmUgcHJlZmVycmVkP8Kg
+DQoNCj4gDQo+ID4gK30NCj4gPiArDQo+ID4gK0NMS19PRl9ERUNMQVJFKGF4czEweF9wbGxfY2xv
+Y2ssICJzbnBzLGF4czEweC1hcmMtcGxsLWNsb2NrIiwgb2ZfcGxsX2Nsa19zZXR1cCk7DQo+IA0K
+PiBEb2VzIHRoaXMgbmVlZCB0byBiZSBDTEtfT0ZfREVDTEFSRV9EUklWRVI/IEkgbWVhbiBkb2Vz
+IHRoZQ0KPiBkcml2ZXIgbmVlZCB0byBwcm9iZSBhbmQgYWxzbyBoYXZlIHRoaXMgb2YgZGVjbGFy
+ZSBoYXBwZW4/IElzIHRoZQ0KPiBQTEwgc3BlY2lhbCBhbmQgbmVlZHMgdG8gYmUgdXNlZCBmb3Ig
+dGhlIHRpbWVycz8NCg0KSXQgaXMgc3BlY2lhbCBhbmQgaXMgdXNlZCBmb3IgdGhlIHRpbWVycywg
+c28gd2UgaGF2ZSB0byBDTEtfT0ZfREVDTEFSRSBpdC4gT24gdGhlIG90aGVyIGhhbmQgc2ltaWxh
+ciBwbGwgaXMgdXNlZCB0bw0KZHJpdmUgUEdVIGNsb2NrIGZyZXF1ZW5jeSBhbmQgb3RoZXIgc3Vi
+c3lzdGVtcyBhbmQgc28gd2UgYWRkIHVzdWFsIHByb2JlIGZ1bmMuDQoNCi0tIA0KQmVzdCByZWdh
+cmRzLA0KVmxhZCBaYWtoYXJvdiA8dnpha2hhckBzeW5vcHN5cy5jb20+
