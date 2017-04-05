@@ -1,147 +1,82 @@
-From: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH V1 1/1] mtd: mtk-nor: set controller to 4B mode with
- large capacity flash
-Date: Wed, 5 Apr 2017 11:34:34 +0800
-Message-ID: <1491363274.7262.10.camel@mhfsdcap03>
-References: <1490862222-723-1-git-send-email-guochun.mao@mediatek.com>
-         <1490862222-723-2-git-send-email-guochun.mao@mediatek.com>
-         <24d60072-4124-7ec4-6cd3-fd70f4f6b10a@wedev4u.fr>
-         <1490927207.7262.7.camel@mhfsdcap03>
-         <873a3dac-7d3a-0723-4c7d-c786d3398278@wedev4u.fr>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 01/11] arm64: allwinner: a64: enable RSB on A64
+Date: Wed, 5 Apr 2017 11:48:43 +0800
+Message-ID: <CAGb2v67wo1pDbLSLZzXHd+djinthfo0xhSgThHq2qcWjSktcYQ@mail.gmail.com>
+References: <20170404180145.12897-1-icenowy@aosc.io> <20170404180145.12897-2-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <873a3dac-7d3a-0723-4c7d-c786d3398278-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBM6SSHDQKGQEBFIPODY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170404180145.12897-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Cyrille,
+On Wed, Apr 5, 2017 at 2:01 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> Allwinner A64 have a RSB controller like the one on A23/A33 SoCs.
+>
+> Add it and its pinmux.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 6bc606b4d74d..9a75b1c7c91a 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -420,6 +420,27 @@
+>                         #gpio-cells = <3>;
+>                         interrupt-controller;
+>                         #interrupt-cells = <3>;
+> +
+> +                       r_rsb_pins: rsb@0 {
+> +                               pins = "PL0", "PL1";
+> +                               function = "s_rsb";
+> +                               drive-strength = <20>;
 
-Thank you for so detailed explanation.
-I'll check nor->addr_width in both mt8173_nor_read() and
-mt8173_nor_write().
+We don't need this. The hardware default should be enough.
 
-Best regards,
-Guochun
+> +                               bias-pull-up;
 
-On Fri, 2017-03-31 at 10:56 +0200, Cyrille Pitchen wrote:
-> Le 31/03/2017 à 04:26, Guochun Mao a écrit :
-> > Hi Cyrille, Marek,
-> > 
-> > Thanks for your suggestions.
-> > 
-> > On Thu, 2017-03-30 at 19:40 +0200, Cyrille Pitchen wrote:
-> >> Hi Guochun,
-> >>
-> >> Le 30/03/2017 à 10:23, Guochun Mao a écrit :
-> >>> when nor's size larger than 16MByte, nor and controller should
-> >>> enter 4Byte mode simultaneously.
-> >>>
-> >>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> ---
-> >>>  drivers/mtd/spi-nor/mtk-quadspi.c |    7 +++++++
-> >>>  1 file changed, 7 insertions(+)
-> >>>
-> >>> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
-> >>> index e661877..05cd8a8 100644
-> >>> --- a/drivers/mtd/spi-nor/mtk-quadspi.c
-> >>> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
-> >>> @@ -369,6 +369,13 @@ static int mt8173_nor_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
-> >>>  		/* We only handle 1 byte */
-> >>>  		ret = mt8173_nor_wr_sr(mt8173_nor, *buf);
-> >>>  		break;
-> >>> +	case SPINOR_OP_EN4B:
-> >>> +		/* Set nor controller to 4-byte address mode,
-> >>> +		 * and simultaneously set nor flash.
-> >>> +		 * This case should cooperate with default operation.
-> >>> +		 */
-> >>> +		writeb(readb(mt8173_nor->base + MTK_NOR_DUAL_REG) | 0x10,
-> >>> +				mt8173_nor->base + MTK_NOR_DUAL_REG);
-> >>
-> >> This is not good: you should check in both mt8173_nor_read() and
-> >> mt8173_nor_write() whether nor->addr_width is either 3 or 4.
-> >>
-> >> from include/linux/mtd/spi-nor.h:
-> >>  * @addr_width:		number of address bytes
-> >>
-> >> Besides SPI commands using an op code from 4-byte address instruction
-> >> set always carry a 4-byte address. They can be used directly, without
-> >> sending the SPINOR_OP_EN4B before. So you cannot assume that addresses
-> >> will be 4-byte long only if your SPI controller driver has seen a
-> >> SPINOR_OP_EN4B command before. This assumption is wrong.
-> > Nor->addr_width is assigned in spi_nor_scan in spi-nor.c, and it's not
-> > modified in later process.
-> > Does it means that we will not switch nor between 3Byte address and
-> > 4Byte?
-> > So, is it better to check nor->addr_width when do nor initialization?
-> >
-> 
-> Currently yes, nor->addr_width, nor->read_opcode, nor->read_dummy, and
-> nor->program_opcode are set once for all in spi_nor_scan().
-> 
-> However, nor->read() is likely to be called soon from spi_nor_scan()
-> with values of nor->addr_width, nor->read_opcode and nor->read_dummy
-> different from those selected when exiting spi_nor_scan().
-> 
-> So nor->read() / mt8173_nor_read should check nor->addr_width,
-> nor->read_opcode and nor->read_dummy at each call.
-> 
-> More precisely, I plan to use nor->read() from spi_nor_scan() to read
-> SFDP (Serial Flash Discoverable Parameters) data.
-> 
-> Whatever op code, numbers of address bytes and dummy cycles used for
-> (Fast) Read commands, the Read SFDP command uses fixed settings
-> standardized for all manufacturers and all memory parts:
-> - op code: 5Ah
-> - number of bytes for the address: 3 (even for memory > 128Mbits)
-> - number of dummy clock cycles: 8 clocks
-> 
-> https://patchwork.ozlabs.org/patch/742380/
-> 
-> Please have a look at the spi_nor_read_sfdp().
-> 
-> spi_nor_read_sfdp() is likely to be called from and only from
-> spi_nor_scan().
-> 
-> Best regards,
-> 
-> Cyrille
-> 
-> >>
-> >> SPI controller driver should never check SPINOR_OP_* op codes like this.
-> > I agree that SPI controller driver should not check SPINOR_OP_* op codes
-> > like what I do.
-> > I will correct it next version.
-> > 
-> > Best Regards,
-> > Guochun
-> >>
-> >> Then, testing SPINOR_OP_RDSR from mt8173_nor_read_reg() or
-> >> SPINOR_OP_WRSR from mt8173_nor_write_reg() is not a good practice too:
-> >> op codes may change depending on the memory manufacturer. So testing op
-> >> code values like you do can work with some memories but maybe not all.
-> >>
-> >> Finally, don't use 0x10, please define a macro instead.
-> >>
-> >> Best regards,
-> >>
-> >> Cyrille
-> >>
-> >>>  	default:
-> >>>  		ret = mt8173_nor_do_tx_rx(mt8173_nor, opcode, buf, len, NULL, 0);
-> >>>  		if (ret)
-> >>>
-> >>
-> > 
-> > 
-> > 
-> 
+Boards should have external pull-ups for these pins, as the PMICs
+start up in I2C mode. If any board actually doesn't have them and
+needs the internal pull-ups, they should be set at the board level.
 
+Otherwise,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+> +                       };
+> +               };
+> +
+> +               r_rsb: rsb@1f03400 {
+> +                       compatible = "allwinner,sun8i-a23-rsb";
+> +                       reg = <0x01f03400 0x400>;
+> +                       interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&r_ccu 6>;
+> +                       clock-frequency = <3000000>;
+> +                       resets = <&r_ccu 2>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&r_rsb_pins>;
+> +                       status = "disabled";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+>                 };
+>         };
+>  };
+> --
+> 2.12.2
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
