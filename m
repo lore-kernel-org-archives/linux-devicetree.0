@@ -1,84 +1,297 @@
 From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] clk: qcom: Elaborate on "active" clocks in the RPM
- clock bindings
-Date: Wed, 5 Apr 2017 15:02:18 -0700
-Message-ID: <20170405220218.GH7065@codeaurora.org>
-References: <20170322081842.20495-1-linus.walleij@linaro.org>
- <20170329005943.xqs6ouqbqwdzaayf@rob-hp-laptop>
- <CACRpkdYAT6Pw=9SjFgkQCaVN8EpSNdP61mkQSjV0FOfgQ0fZhw@mail.gmail.com>
+Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
+Date: Wed, 5 Apr 2017 15:32:33 -0700
+Message-ID: <20170405223233.GJ7065@codeaurora.org>
+References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYAT6Pw=9SjFgkQCaVN8EpSNdP61mkQSjV0FOfgQ0fZhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1489569810-24350-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/29, Linus Walleij wrote:
-> On Wed, Mar 29, 2017 at 2:59 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, Mar 22, 2017 at 09:18:42AM +0100, Linus Walleij wrote:
-> >> The concept of "active" clocks is just explained in a bried comment in the
-> >> device driver, let's explain it a bit more in the device tree bindings
-> >> so everyone understands this.
-> >>
-> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 8 ++++++++
-> >>  1 file changed, 8 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> >> index d470a0187035..cf80a00b7ff2 100644
-> >> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> >> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> >> @@ -18,6 +18,14 @@ Required properties :
-> >>
-> >>  - #clock-cells : shall contain 1
-> >>
-> >> +The clock enumerators are defined in <dt-bindings/clock/qcom,rpmcc.h>
-> >> +and come in pairs: FOO_CLK followed by FOO_A_CLK. The latter clock
-> >> +is an "active" clock, which means that the consumer only care that the
-> >> +clock is available when the system is active, i.e. not suspended. If
+On 03/15, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
+> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> 
+> This patch enables clocks for STM32H743 boards.
 
-I would further say that "is available when the apps CPU
-subsystem is active", i.e. not suspended or in deep idle. Really
-it's about optimizing the idle path so we don't have to keep
-things on for the CPU when it powers down. The system suspend
-case can usually be handled by regular clk API calls.
+Like what clocks exactly? All of them?
 
-> >> +it is important that the clock keeps running during system suspend,
-> >> +you need to specify the non-active clock, the one not containing
-> >> +*_A_* in the enumerator name.
-> >> +
-> >
-> > Sounds like abuse as the clock id is encoding policy into it. The number
-> > of clocks should be the number of inputs to a block. I wouldn't be
-> > opposed to some flags for clocks, but that should be a separate cell.
-> 
-> I'm sorry about that, but I'm just documenting what is already a fact and
-> was previously just implicit in the name.
-> 
-> I first had no idea what this *_A_* infix notation was about so after some
-> reading I found a comment in the driver saying this.
-> 
-> I guess Stephen can confirm and/or elaborate on this.
-> 
-> Keeping them around is I guess the lesser evil (as compard to
-> pulling up the deployed bindings with the roots) at this point.
-> 
+> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+> new file mode 100644
+> index 0000000..9d4b587
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+> @@ -0,0 +1,152 @@
+> +STMicroelectronics STM32H7 Reset and Clock Controller
+> +=====================================================
+> +
+> +The RCC IP is both a reset and a clock controller.
+> +
+> +Please refer to clock-bindings.txt for common clock controller binding usage.
+> +Please also refer to reset.txt for common reset controller binding usage.
+> +
+> +Required properties:
+> +- compatible: Should be:
+> +  "st,stm32h743-rcc"
+> +
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +
+> +- #reset-cells: 1, see below
+> +
+> +- #clock-cells : from common clock binding; shall be set to 1
+> +
+> +- clocks: External oscillator clock phandle
+> +  - high speed external clock signal (HSE)
+> +  - low speed external clock signal (LSE)
+> +  - external I2S clock (I2S_CKIN)
+> +
+> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
+> +  write protection (RTC clock).
+> +
+> +- pll x node: Allow to register a pll with specific parameters.
+> +  Please see PLL section below.
+> +
+> +Example:
+> +
+> +	rcc: rcc@58024400 {
+> +		#reset-cells = <1>;
+> +		#clock-cells = <2>
+> +		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+> +		reg = <0x58024400 0x400>;
+> +		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+> +
+> +		st,syscfg = <&pwrcfg>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		vco1@58024430 {
+> +			#clock-cells = <0>;
+> +			compatible = "stm32,pll";
+> +			reg = <0>;
 
-Yes we can't really do much now that we've put the binding out
-there. I guess we could have two cells and then fold that into a
-custom clk_hw getter function to map the two cells to the right
-clk. And then leave the original code around for backwards compat
-and detect which one to register as the clk_hw provider.
+reg is super confusing and doesn't match unit address.
 
-Either way, that wouldn't change the consumer binding because if
-they want to control the *_A_* and non *_A_* clks as individual
-controls they'll list the same physical clk twice in their
-'clocks' property.
+> +		};
+
+Why? Shouldn't we know this from the compatible string how many
+PLLs there are and where they're located? Export the PLLs through
+rcc node's clock-cells?
+
+> +
+> +		vco2@58024438 {
+> +			#clock-cells = <0>;
+> +			compatible = "stm32,pll";
+> +			reg = <1>;
+
+reg is super confusing and doesn't match unit address.
+
+> +			st,clock-div = <2>;
+> +			st,clock-mult = <40>;
+> +			st,frac-status = <0>;
+> +			st,frac = <0>;
+> +			st,vcosel = <1>;
+> +			st,pllrge = <2>;
+
+Does this stuff change on a per-board basis? I hope none of these
+properties need to be in DT.
+
+> +		};
+> +	};
+> +
+> +
+> +STM32H7 PLL
+> +-----------
+> +
+[...]
+> +
+> +Specifying softreset control of devices
+> +=======================================
+> +
+> +Device nodes should specify the reset channel required in their "resets"
+> +property, containing a phandle to the reset device node and an index specifying
+> +which channel to use.
+> +The index is the bit number within the RCC registers bank, starting from RCC
+> +base address.
+> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
+> +Where bit_offset is the bit offset within the register.
+> +
+> +For example, for CRC reset:
+> +  crc = AHB4RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x88 / 4 * 32 + 19 = 1107
+> +
+> +All available preprocessor macros for reset are defined dt-bindings//mfd/stm32h7-rcc.h
+
+One too many slashes?
+
+> +header and can be used in device tree sources.
+> +
+> +example:
+> +
+> +	timer2 {
+> +		resets	= <&rcc STM32H7_APB1L_RESET(TIM2)>;
+> +	};
+> diff --git a/drivers/clk/clk-stm32h7.c b/drivers/clk/clk-stm32h7.c
+> new file mode 100644
+> index 0000000..c8eb729
+> --- /dev/null
+> +++ b/drivers/clk/clk-stm32h7.c
+> @@ -0,0 +1,1586 @@
+> +/*
+> + * Copyright (C) Gabriel Fernandez 2017
+> + * Author: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> + *
+> + * License terms: GPL V2.0.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/clk.h>
+
+Is this used?
+
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/stm32h7-clks.h>
+> +
+> +/* Reset Clock Control Registers */
+> +#define RCC_CR		0x00
+> +#define RCC_CFGR	0x10
+> +#define RCC_D1CFGR	0x18
+> +#define RCC_D2CFGR	0x1C
+> +#define RCC_D3CFGR	0x20
+> +#define RCC_PLLCKSELR	0x28
+> +#define RCC_PLLCFGR	0x2C
+> +#define RCC_PLL1DIVR	0x30
+> +#define RCC_PLL1FRACR	0x34
+> +#define RCC_PLL2DIVR	0x38
+> +#define RCC_PLL2FRACR	0x3C
+> +#define RCC_PLL3DIVR	0x40
+> +#define RCC_PLL3FRACR	0x44
+> +#define RCC_D1CCIPR	0x4C
+> +#define RCC_D2CCIP1R	0x50
+> +#define RCC_D2CCIP2R	0x54
+> +#define RCC_D3CCIPR	0x58
+> +#define RCC_BDCR	0x70
+> +#define RCC_CSR		0x74
+> +#define RCC_AHB3ENR	0xD4
+> +#define RCC_AHB1ENR	0xD8
+> +#define RCC_AHB2ENR	0xDC
+> +#define RCC_AHB4ENR	0xE0
+> +#define RCC_APB3ENR	0xE4
+> +#define RCC_APB1LENR	0xE8
+> +#define RCC_APB1HENR	0xEC
+> +#define RCC_APB2ENR	0xF0
+> +#define RCC_APB4ENR	0xF4
+> +
+> +static DEFINE_SPINLOCK(rlock);
+
+This is super generic and will make lockdep debugging sad.
+Perhaps stm32rcc_lock?
+
+> +
+> +static void __iomem *base;
+> +static struct regmap *pdrm;
+> +static struct clk_hw **hws;
+> +
+> +/* System clock parent */
+> +static const char * const sys_src[] = {
+> +	"hsi_ck", "csi_ck", "hse_ck", "pll1_p" };
+> +
+> +static const char * const tracein_src[] = {
+> +	"hsi_ck", "csi_ck", "hse_ck", "pll1_r" };
+[...]
+> +
+> +static unsigned long pll_fd_recalc_rate(struct clk_hw *hw,
+> +		unsigned long parent_rate)
+> +{
+> +	struct stm32_pll_obj *clk_elem = to_pll(hw);
+> +	struct stm32_fractional_divider *fd = &clk_elem->div;
+> +	unsigned long m, n;
+> +	u32 val, mask;
+> +	u64 rate, rate1 = 0;
+> +
+> +	val = clk_readl(fd->mreg);
+
+Please don't use clk_readl() unless you need it for some reason.
+
+> +	mask = (GENMASK(fd->mwidth - 1, 0) << fd->mshift);
+> +	m = (val & mask) >> fd->mshift;
+> +
+> +	val = clk_readl(fd->nreg);
+> +	mask = (GENMASK(fd->nwidth - 1, 0) << fd->nshift);
+
+Useless parentheses. And isn't GENMASK supposed to take the
+actual bit positions? Then we avoid overflow issues?
+
+> +	n = ((val & mask) >> fd->nshift) + 1;
+> +
+> +	if (!n || !m)
+> +		return parent_rate;
+> +
+> +	rate = (u64)parent_rate * n;
+> +	do_div(rate, m);
+> +
+> +	if (pll_frac_is_enabled(hw)) {
+> +		val = pll_read_frac(hw);
+> +		rate1 = (u64) parent_rate * (u64) val;
+> +		do_div(rate1, (m * 8191));
+> +	}
+> +
+> +	return rate + rate1;
+> +}
+> +
+[...]
+> +
+> +	/* Micro-controller clocks */
+> +	for (n = 0; n < ARRAY_SIZE(mco_clk); n++) {
+> +		get_cfg_composite_div(&mco_clk_cfg, &mco_clk[n], &c_cfg,
+> +				&rlock);
+> +
+> +		hws[MCO_BANK + n] = clk_hw_register_composite(NULL,
+> +				mco_clk[n].name,
+> +				mco_clk[n].parent_name,
+> +				mco_clk[n].num_parents,
+> +				c_cfg.mux_hw, c_cfg.mux_ops,
+> +				c_cfg.div_hw, c_cfg.div_ops,
+> +				c_cfg.gate_hw, c_cfg.gate_ops,
+> +				mco_clk[n].flags);
+> +	}
+> +
+> +	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
+> +
+> +	return;
+> +
+> +err_free_clks:
+> +	kfree(clk_data);
+> +}
+> +CLK_OF_DECLARE_DRIVER(stm32h7_rcc, "st,stm32h743-rcc", stm32h7_rcc_init);
+
+Is there another driver that uses the same register space?
+Nothing showing up in -next right now. Perhaps a comment should
+be added to indicate the other driver.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
