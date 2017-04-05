@@ -1,52 +1,39 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next] macb: Add hardware PTP support.
-Date: Wed, 05 Apr 2017 06:43:03 -0700 (PDT)
-Message-ID: <20170405.064303.211440601700403108.davem@davemloft.net>
-References: <20170329.093914.152103359543418375.davem@davemloft.net>
- <1491225015-25553-1-git-send-email-rafalo@cadence.com>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 07/16] regulator: madera-micsupp: Mic
+ supply for Cirrus Logic Madera codecs
+Date: Wed, 5 Apr 2017 14:53:57 +0100
+Message-ID: <1491400437.4096.5.camel@rf-debian.wolfsonmicro.main>
+References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1491386884-30689-8-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20170405134054.kz3j56vza4pqki75@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1491225015-25553-1-git-send-email-rafalo@cadence.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: rafalo@cadence.com
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, richardcochran@gmail.com, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, harinikatakamlinux@gmail.com, Andrei.Pistirica@microchip.com, harini.katakam@xilinx.com, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170405134054.kz3j56vza4pqki75@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafal Ozieblo <rafalo@cadence.com>
-Date: Mon, 3 Apr 2017 14:10:15 +0100
-
-> This patch is based on original Harini's patch and Andrei's patch,
-> implemented in aseparate file to ease the review/maintanance
-> and integration with other platforms.
+On Wed, 2017-04-05 at 14:40 +0100, Mark Brown wrote:
+> On Wed, Apr 05, 2017 at 11:07:55AM +0100, Richard Fitzgerald wrote:
+> > The adds a driver for the microphone supply regulator on Cirrus Logic
+> > Madera class codecs.
 > 
-> In case that macb is compiled as a module, it has been renamed to
-> cadence-macb.ko to avoid naming confusion in Makefile.
-> 
-> This driver does support GEM-GXL:
-> - Enable HW time stamp
-> - Register ptp clock framework
-> - Initialize PTP related registers
-> - Updated dma buffer descriptor read/write mechanism
-> - HW time stamp on the PTP Ethernet packets are received using the
->   SO_TIMESTAMPING API. Where timers are obtained from the dma buffer
->   descriptors
-> - Added tsu_clk to device tree
-> 
-> Note: Patch on net-next, on April 3rd.
-> Signed-off-by: Rafal Ozieblo <rafalo@cadence.com>
+> Again, this appears to have only data and minor code style changes
+> relative to the existing arizona driver - is there no opportunity for
+> code sharing here?
 
-This patch does too many things at one time.  Each entry in that list
-of changes above should be a separate change, all posted together as
-a group as a proper patch series.
-
-Thank you.
+I'll have a look at how it would work out.
+My thought was that these two regulator drivers are so small it wasn't
+worth creating an entanglement between arizona and madera for so little
+code.
