@@ -1,68 +1,111 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 0/6] ARM: dts: sunxi: Add CAN node and can0_pins_a
- pinctrl settings
-Date: Wed, 5 Apr 2017 08:22:14 +0200
-Message-ID: <20170405062214.ejc4irrypxjoqufu@lukather>
-References: <1491330992-9876-1-git-send-email-menschel.p@posteo.de>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH] mmc: core: add mmc-card hardware reset enable support
+Date: Wed, 5 Apr 2017 08:23:29 +0200
+Message-ID: <7b238b63-9d23-91ef-b76f-82b4f3677de3@skidata.com>
+References: <CGME20170404141714epcas5p495985819f877cc723ef217e9cefe89c1@epcas5p4.samsung.com>
+ <1491315394-7568-1-git-send-email-richard.leitner@skidata.com>
+ <ea610a5c-3857-14f8-3039-414bee724223@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="szsydsokvcl6e52r"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1491330992-9876-1-git-send-email-menschel.p@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Menschel <menschel.p@posteo.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <ea610a5c-3857-14f8-3039-414bee724223@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: shawn.lin@rock-chips.com, adrian.hunter@intel.com, linus.walleij@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@g0hl1n.net
 List-Id: devicetree@vger.kernel.org
 
+On 04/05/2017 06:40 AM, Jaehoon Chung wrote:
+> Hi,
+> 
+> On 04/04/2017 11:16 PM, Richard Leitner wrote:
+>> Some eMMCs disable their hardware reset line (RST_N) by default. To enable
+>> it the host must set the corresponding bit in ECSD. An example for such
+>> a device is the Micron MTFCxGACAANA-4M.
+>>
+>> This patch adds a new mmc-card devicetree property to let the host enable
+>> this feature during card initialization.
+>>
+>> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/mmc-card.txt |  3 +++
+>>  drivers/mmc/core/mmc.c                             | 21 +++++++++++++++++++++
+>>  2 files changed, 24 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+>> index a70fcd6..8590a40 100644
+>> --- a/Documentation/devicetree/bindings/mmc/mmc-card.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
+>> @@ -12,6 +12,9 @@ Required properties:
+>>  Optional properties:
+>>  -broken-hpi : Use this to indicate that the mmc-card has a broken hpi
+>>                implementation, and that hpi should not be used
+>> +-enable-hw-reset : some eMMC devices have disabled the hw reset functionality
+>> +                   (RST_N_FUNCTION) by default. By adding this property the
+>> +                   host will enable it during initialization.
+> 
+> As i know, RST_N_FUNCTION is controlled bit[1:0]
+> 0x0 : RST_n disabled (by default)
+> 0x1 : permanently enabled
+> 0x2 : permanently disabled
+> 
+> I think that it needs to add the description about these..
 
---szsydsokvcl6e52r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok.
 
-On Tue, Apr 04, 2017 at 08:36:26PM +0200, Patrick Menschel wrote:
-> The Allwinner A10/A20 SoCs have an on-board CAN (Controller Area Network)
-> controller. This patch adds the CAN core to the SoC's include files,
-> sun4i-a10.dtsi and sun7i-a20.dtsi.
->=20
-> On linux-can mailing list was a discussion about updating the device tree=
- bindings
-> https://lkml.org/lkml/2015/9/17/220
-> but it did not progress past writing the documentation file.
-> Documentation/devicetree/bindings/net/can/sun4i_can.txt
->=20
-> The CAN controller can be enabled in a board specific dts file as
-> described in the documentation file or by using a device tree overlay.
+>>  
+>>  Example:
+>>  
+>> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+>> index b502601..518d0e3 100644
+>> --- a/drivers/mmc/core/mmc.c
+>> +++ b/drivers/mmc/core/mmc.c
+>> @@ -1520,9 +1520,16 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
+>>  	int err;
+>>  	u32 cid[4];
+>>  	u32 rocr;
+>> +	struct device_node *np;
+>> +	bool enable_rst_n = false;
+>>  
+>>  	WARN_ON(!host->claimed);
+>>  
+>> +	np = mmc_of_find_child_device(host, 0);
+>> +	if (np && of_device_is_compatible(np, "mmc-card"))
+>> +		enable_rst_n = of_property_read_bool(np, "enable-hw-reset");
+>> +	of_node_put(np);
+>> +
+>>  	/* Set correct bus mode for MMC before attempting init */
+>>  	if (!mmc_host_is_spi(host))
+>>  		mmc_set_bus_mode(host, MMC_BUSMODE_OPENDRAIN);
+>> @@ -1810,6 +1817,20 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
+>>  		}
+>>  	}
+>>  
+>> +	/*
+>> +	 * try to enable RST_N if requested
+>> +	 * This is needed because some eMMC chips disable this function by
+>> +	 * default.
+>> +	 */
+>> +	if (enable_rst_n) {
+>> +		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+>> +				 EXT_CSD_RST_N_FUNCTION, EXT_CSD_RST_N_ENABLED,
+>> +				 card->ext_csd.generic_cmd6_time);
+>> +		if (err && err != -EBADMSG)
+>> +			pr_warn("%s: Enabling RST_N feature failed\n",
+>> +				mmc_hostname(card->host));
+>> +	}
+> 
+> If enabled hw-reset, it doesn't need to re-enable this bit.
 
-Applied 1 and 4. The others were already merged.
+Ok. I can add a check to prevent setting it, if it is set already.
 
-Thanks!
-Maxime
+> i didn't check the mmc-util..
+> If mmc-util provides the changing this, the using mmc-util is better than this.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+mmc-utils is providing a enable/disable hwreset feature. But as this
+setting is required for my hardware to allow rebooting it, I thought it
+would be better if it's in the kernel. So I/the hw doesn't have to
+depend on userspace tools.
 
---szsydsokvcl6e52r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJY5I0SAAoJEBx+YmzsjxAgSOEQAKjxcsCT7Rrf5sSDHpcMvezw
-bopxOY5Gns17NPohj2yhOHhRMKjaw74SBadlZLcT6U2M/uWS/qXfyYMswVu1F5be
-py1BnAcZZ26fp8Xj4K+RFUZvq8dMO8vNUIjy3R3HYbwsaww7zY7w+q5MsvkpR4Wk
-lxWr46O2KhjCtTf8NESrlR/hg8PkZUoYhABeaaWTB5W4SkgKLhFcAyDrE/2th7j+
-sBJZkN5qyzfl7IZ/EUIsayGjxF/gXhYi4N/0N9pyL164tcCBIcfvs/kIJ0bgPqxu
-pxxhrjEL5NOiYMLeLCnZdwNFQoFaVK30bXTQ3SH0qQKRhTtNQDpA+A7TRjMUcsBM
-5sjWPAEUpt49vTxaZszxRH3Rs44IGq0il76TQcoGZiSvM0ioNR9DiXqESxTA+ZUs
-RzleddwE1UpCk7YEtZk+MbpbBtwWeSuB0fg9l3MYATyp3pc+1DGxzqIOs01TKUjR
-lyT3zvCHuXAfpSOz3EuVNWNjMeRjMhMnCMdYvSGPbqxUmtirck1B26d5xS7ZhB/d
-jSSibC523Onw8OZIfRbl9B9iXpAfOrLXSELyBJ4Ou9snsRoTOrh0RYvxmAQPqvhf
-U7kRzJwvBgzf/98w/0D+DvJ+3KoALQ72mcNOC4Ca8smETlgMx3hSLP5amu0tkq9x
-Ltnk+AyUPNbdPyXNlQ2i
-=Tx1B
------END PGP SIGNATURE-----
-
---szsydsokvcl6e52r--
+Nonetheless you're the experts, therefore if you say it shouldn't be in
+the kernel/dt I'd be fine with that too. ;-)
