@@ -1,44 +1,127 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] ARM: dts: armada-385-linksys: disk-activity trigger for all
-Date: Wed, 05 Apr 2017 17:27:02 +0200
-Message-ID: <87pogq6fjt.fsf@free-electrons.com>
-References: <20170330165405.14540-1-ralph.sennhauser@gmail.com>
-        <20170331153549.GA12814@lunn.ch>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH V7 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
+Date: Wed, 5 Apr 2017 20:54:20 +0530
+Message-ID: <CAFp+6iHRqY9njgP1eW-PpsuykfBDE-ZMroDtNRpe5kHp6oJH2Q@mail.gmail.com>
+References: <1491395558-16902-1-git-send-email-vivek.gautam@codeaurora.org> <a59d6776-5855-9d04-a5be-de03456b8d2e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170331153549.GA12814@lunn.ch> (Andrew Lunn's message of "Fri,
-        31 Mar 2017 17:35:49 +0200")
+In-Reply-To: <a59d6776-5855-9d04-a5be-de03456b8d2e@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: robh+dt <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ralph,
- 
- On ven., mars 31 2017, Andrew Lunn <andrew@lunn.ch> wrote:
+Hi Kishon,
 
-> On Thu, Mar 30, 2017 at 06:54:04PM +0200, Ralph Sennhauser wrote:
->> Commit a4ee7e18d808 ("ARM: dts: armada: Add default trigger for sata
->> led") adds the default trigger to individual boards, move it to
->> armada-385-linksys.dtsi which effectively enables the definition for
->> the WRT1900ACS (Shelby) as well as for future boards.
->> 
->> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+
+On Wed, Apr 5, 2017 at 7:08 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi Vivek,
 >
-> Centralising this makes sense.
+> On Wednesday 05 April 2017 06:02 PM, Vivek Gautam wrote:
+>> This patch series adds couple of PHY drivers for Qualcomm chipsets.
+>> a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
+>> b) qcom-qmp phy driver: that is a combo phy providing support for
+>>    USB3, PCIe, UFS and few other controllers.
+>>
+>> The patches are based on next branch of linux-phy tree.
+>>
+>> These patches have been tested on Dragon board db820c hardware with
+>> required set of dt patches and the patches to get rpm up on msm8996.
+>> Couple of other patches [1, 2] fixing DMA config for XHCI are also
+>> pulled in for testing.
+>> A branch based on torvald's master is available in github [3].
 >
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> I get a bunch of checkpatch errors/warnings when I run checkpatch with --strict
+> option. Those look simple enough to be fixed. Can you respin your series fixing
+> those?
 
-Applied on mvebu/dt
+Sure, I am on it.
+Thanks for pointing out.
 
-Thanks,
+Regards
+Vivek
 
-Gregory
+>
+> Thanks
+> Kishon
+>
+>>
+>> Changes since v6:
+>>  - Rebased on phy/next and *not* including phy grouping series[4].
+>>  - qusb2-phy: addressed Stephen's comment.
+>>    - Dropped pm8994_s2 corner regulator from QUSB2 phy bindings.
+>>  - qmp-phy: none on functionality side.
+>>
+>> Changes since v5:
+>>  - Addressed review comments from Bjorn:
+>>    - Removed instances of readl/wirtel_relaxed calls from the drivers.
+>>      Instead, using simple readl/writel. Inserting a readl after a writel
+>>      to ensure the write is through to the device.
+>>    - Replaced regulator handling with regulator_bulk_** apis. This helps
+>>      in cutting down a lot of regulator handling code.
+>>    - Fixed minor return statements.
+>>
+>> Changes since v4:
+>>  - Addressed comment to add child nodes for qmp phy driver. Each phy lane
+>>    now has a separate child node under the main qmp node.
+>>  - Modified the clock and reset initialization and enable methods.
+>>    Different phys - pcie, usb and later ufs, have varying number of clocks
+>>    and resets that are mandatory. So adding provision for clocks and reset
+>>    lists helps in requesting all mandatory resources for individual phys
+>>    and handle their failure cases accordingly.
+>>
+>> Changes since v3:
+>>  - Addressed review comments given by Rob and Stephen for qusb2 phy
+>>    and qmp phy bindings respectively.
+>>  - Addressed review comments given by Stephen and Bjorn for qmp phy driver.
+>>
+>> Changes since v2:
+>>  - Addressed review comments given by Rob and Stephen for bindings.
+>>  - Addressed the review comments given by Stephen for the qusb2 and qmp
+>>    phy drivers.
+>>
+>> Changes since v1:
+>>  - Moved device tree binding documentation to separate patches, as suggested
+>>    by Rob.
+>>  - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
+>>    given by Rob.
+>>  - Addressed review comments from Kishon.
+>>  - Addressed review comments from Srinivas for QMP phy driver.
+>>  - Addressed kbuild warning.
+>>
+>> Please see individual patches for detailed changelogs.
+>>
+>> [1] https://patchwork.kernel.org/patch/9567767/
+>> [2] https://patchwork.kernel.org/patch/9567779/
+>> [3] https://github.com/vivekgautam1/linux/tree/linux-v4.11-rc5-qmp-phy-db820c
+>> [4] https://lkml.org/lkml/2017/3/20/407
+>>
+>> Vivek Gautam (4):
+>>   dt-bindings: phy: Add support for QUSB2 phy
+>>   phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+>>   dt-bindings: phy: Add support for QMP phy
+>>   phy: qcom-qmp: new qmp phy driver for qcom-chipsets
+>>
+>>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  106 ++
+>>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   43 +
+>>  drivers/phy/Kconfig                                |   18 +
+>>  drivers/phy/Makefile                               |    2 +
+>>  drivers/phy/phy-qcom-qmp.c                         | 1153 ++++++++++++++++++++
+>>  drivers/phy/phy-qcom-qusb2.c                       |  491 +++++++++
+>>  6 files changed, 1813 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>>  create mode 100644 drivers/phy/phy-qcom-qmp.c
+>>  create mode 100644 drivers/phy/phy-qcom-qusb2.c
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
 
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
