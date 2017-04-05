@@ -1,177 +1,78 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [PATCH 10/11] arm64: allwinner: a64: enable
- AXP803 regulators for Pine64
-Date: Wed, 05 Apr 2017 14:15:43 +0800
-Message-ID: <58e48b95.8c9d810a.c6385.f3fbSMTPIN_ADDED_MISSING@gmr-mx.google.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+Date: Wed, 5 Apr 2017 06:16:17 +0000
+Message-ID: <DB6PR0402MB283701D478A1678D28894C77F30A0@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+References: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBFUXSLDQKGQEDUKTQ4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Scott Wood <oss@buserror.net>
 List-Id: devicetree@vger.kernel.org
 
+Hello Stephen and Michael,
 
-2017=E5=B9=B44=E6=9C=885=E6=97=A5 14:13=E4=BA=8E Maxime Ripard <maxime.ripa=
-rd-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Wed, Apr 05, 2017 at 02:01:44AM +0800, Icenowy Zheng wrote:=20
-> > Add support of AXP803 regulators in the Pine64 device tree, in order to=
-=20
-> > enable many future functionalities, e.g. Wi-Fi.=20
-> >=20
-> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>=20
-> > ---=20
-> >=C2=A0 .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 109 ++++++++=
-+++++++++++++=20
-> >=C2=A0 1 file changed, 109 insertions(+)=20
-> >=20
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch=
-/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts=20
-> > index 2132d8e6cb3d..7da074f95065 100644=20
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts=20
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts=20
-> > @@ -106,6 +106,115 @@=20
-> >=C2=A0 };=20
-> >=C2=A0 };=20
-> >=C2=A0=20
-> > +#include "axp803.dtsi"=20
-> > +=20
-> > +&reg_aldo1 {=20
-> > + regulator-min-microvolt =3D <2800000>;=20
-> > + regulator-max-microvolt =3D <2800000>;=20
-> > + regulator-name =3D "vcc-csi";=20
-> > +};=20
-> > +=20
-> > +&reg_aldo2 {=20
-> > + regulator-always-on;=20
-> > + regulator-min-microvolt =3D <1800000>;=20
-> > + regulator-max-microvolt =3D <3300000>;=20
-> > + regulator-name =3D "vcc-pl";=20
-> > +};=20
-> > +=20
-> > +&reg_aldo3 {=20
-> > + regulator-always-on;=20
-> > + regulator-min-microvolt =3D <2700000>;=20
-> > + regulator-max-microvolt =3D <3300000>;=20
-> > + regulator-name =3D "vcc-pll-avcc";=20
-> > +};=20
-> > +=20
-> > +&reg_dc1sw {=20
-> > + regulator-name =3D "vcc-phy";=20
-> > +};=20
-> > +=20
-> > +&reg_dcdc1 {=20
-> > + regulator-always-on;=20
-> > + regulator-min-microvolt =3D <3300000>;=20
-> > + regulator-max-microvolt =3D <3300000>;=20
-> > + regulator-name =3D "vcc-3v3";=20
-> > +};=20
-> > +=20
-> > +&reg_dcdc2 {=20
-> > + regulator-always-on;=20
-> > + regulator-min-microvolt =3D <1000000>;=20
-> > + regulator-max-microvolt =3D <1300000>;=20
-> > + regulator-name =3D "vdd-cpux";=20
-> > +};=20
-> > +=20
-> > +/* DCDC3 is polyphased with DCDC2 */=20
-> > +=20
-> > +&reg_dcdc5 {=20
-> > + regulator-always-on;=20
-> > + regulator-min-microvolt =3D <1500000>;=20
-> > + regulator-max-microvolt =3D <1500000>;=20
-> > + regulator-name =3D "vcc-dram";=20
-> > +};=20
-> > +=20
-> > +&reg_dcdc6 {=20
-> > + regulator-always-on;=20
-> > + regulator-min-microvolt =3D <1100000>;=20
-> > + regulator-max-microvolt =3D <1100000>;=20
-> > + regulator-name =3D "vdd-sys";=20
-> > +};=20
-> > +=20
-> > +&reg_dldo1 {=20
-> > + regulator-min-microvolt =3D <3300000>;=20
-> > + regulator-max-microvolt =3D <3300000>;=20
-> > + regulator-name =3D "vcc-hdmi";=20
-> > +};=20
-> > +=20
-> > +&reg_dldo2 {=20
-> > + regulator-min-microvolt =3D <3300000>;=20
-> > + regulator-max-microvolt =3D <3300000>;=20
-> > + regulator-name =3D "vcc-mipi";=20
-> > +};=20
-> > +=20
-> > +&reg_dldo3 {=20
-> > + regulator-min-microvolt =3D <3300000>;=20
-> > + regulator-max-microvolt =3D <3300000>;=20
-> > + regulator-name =3D "avdd-csi";=20
-> > +};=20
-> > +=20
-> > +&reg_dldo4 {=20
-> > + regulator-min-microvolt =3D <3300000>;=20
-> > + regulator-max-microvolt =3D <3300000>;=20
-> > + regulator-name =3D "vcc-wifi";=20
-> > +};=20
-> > +=20
-> > +&reg_eldo1 {=20
-> > + regulator-min-microvolt =3D <1800000>;=20
-> > + regulator-max-microvolt =3D <1800000>;=20
-> > + regulator-name =3D "cpvdd";=20
-> > +};=20
-> > +=20
-> > +&reg_eldo3 {=20
-> > + regulator-min-microvolt =3D <1800000>;=20
-> > + regulator-max-microvolt =3D <1800000>;=20
-> > + regulator-name =3D "vdd-1v8-csi";=20
-> > +};=20
-> > +=20
-> > +&reg_fldo1 {=20
-> > + regulator-min-microvolt =3D <1200000>;=20
-> > + regulator-max-microvolt =3D <1200000>;=20
-> > + regulator-name =3D "vcc-1v2-hsic";=20
-> > +};=20
-> > +=20
-> > +&reg_fldo2 {=20
-> > + regulator-always-on;=20
-> > + regulator-min-microvolt =3D <1100000>;=20
-> > + regulator-max-microvolt =3D <1100000>;=20
-> > + regulator-name =3D "vdd-cpus";=20
-> > +};=20
->
-> Why do you need to always power the AR100 on?=20
+Do you have any comments on this patch set which was acked by Rob?
 
-It's for CPUS power domain, not the AR100 processor.
+Regards,
+Andy
 
-Kill it will lead to instantly system hang.
+> -----Original Message-----
+> From: Yuantian Tang [mailto:andy.tang@nxp.com]
+> Sent: Monday, March 20, 2017 10:37 AM
+> To: mturquette@baylibre.com
+> Cc: sboyd@codeaurora.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> linux-clk@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Scott Wood
+> <oss@buserror.net>; Andy Tang <andy.tang@nxp.com>
+> Subject: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+>=20
+> From: Scott Wood <oss@buserror.net>
+>=20
+> ls1012a has separate input root clocks for core PLLs versus the platform =
+PLL,
+> with the latter described as sysclk in the hw docs.
+> Update the qoriq-clock binding to allow a second input clock, named
+> "coreclk".  If present, this clock will be used for the core PLLs.
+>=20
+> Signed-off-by: Scott Wood <oss@buserror.net>
+> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+> 	-- change the author to Scott
+>  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> index aa3526f..119cafd 100644
+> --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> @@ -56,6 +56,11 @@ Optional properties:
+>  - clocks: If clock-frequency is not specified, sysclk may be provided
+>  	as an input clock.  Either clock-frequency or clocks must be
+>  	provided.
+> +	A second input clock, called "coreclk", may be provided if
+> +	core PLLs are based on a different input clock from the
+> +	platform PLL.
+> +- clock-names: Required if a coreclk is present.  Valid names are
+> +	"sysclk" and "coreclk".
+>=20
+>  2. Clock Provider
+>=20
+> @@ -72,6 +77,7 @@ second cell is the clock index for the specified type.
+>  	2	hwaccel		index (n in CLKCGnHWACSR)
+>  	3	fman		0 for fm1, 1 for fm2
+>  	4	platform pll	0=3Dpll, 1=3Dpll/2, 2=3Dpll/3, 3=3Dpll/4
+> +	5	coreclk		must be 0
+>=20
+>  3. Example
+>=20
+> --
+> 2.1.0.27.g96db324
 
->
-> Maxime=20
->
-> --=20
-> Maxime Ripard, Free Electrons=20
-> Embedded Linux and Kernel engineering=20
-> http://free-electrons.com=20
->
-> --=20
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.=20
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org=20
-> For more options, visit https://groups.google.com/d/optout.=20
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
