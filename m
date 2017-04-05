@@ -1,68 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 07/16] regulator: madera-micsupp: Mic
- supply for Cirrus Logic Madera codecs
-Date: Wed, 5 Apr 2017 14:40:54 +0100
-Message-ID: <20170405134054.kz3j56vza4pqki75@sirena.org.uk>
-References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1491386884-30689-8-git-send-email-rf@opensource.wolfsonmicro.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next] macb: Add hardware PTP support.
+Date: Wed, 05 Apr 2017 06:43:03 -0700 (PDT)
+Message-ID: <20170405.064303.211440601700403108.davem@davemloft.net>
+References: <20170329.093914.152103359543418375.davem@davemloft.net>
+ <1491225015-25553-1-git-send-email-rafalo@cadence.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1243590200263891673=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1491386884-30689-8-git-send-email-rf@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1491225015-25553-1-git-send-email-rafalo@cadence.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: rafalo@cadence.com
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, richardcochran@gmail.com, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, harinikatakamlinux@gmail.com, Andrei.Pistirica@microchip.com, harini.katakam@xilinx.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Rafal Ozieblo <rafalo@cadence.com>
+Date: Mon, 3 Apr 2017 14:10:15 +0100
 
---===============1243590200263891673==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yg7s55w6sf3rsynu"
-Content-Disposition: inline
+> This patch is based on original Harini's patch and Andrei's patch,
+> implemented in aseparate file to ease the review/maintanance
+> and integration with other platforms.
+> 
+> In case that macb is compiled as a module, it has been renamed to
+> cadence-macb.ko to avoid naming confusion in Makefile.
+> 
+> This driver does support GEM-GXL:
+> - Enable HW time stamp
+> - Register ptp clock framework
+> - Initialize PTP related registers
+> - Updated dma buffer descriptor read/write mechanism
+> - HW time stamp on the PTP Ethernet packets are received using the
+>   SO_TIMESTAMPING API. Where timers are obtained from the dma buffer
+>   descriptors
+> - Added tsu_clk to device tree
+> 
+> Note: Patch on net-next, on April 3rd.
+> Signed-off-by: Rafal Ozieblo <rafalo@cadence.com>
 
+This patch does too many things at one time.  Each entry in that list
+of changes above should be a separate change, all posted together as
+a group as a proper patch series.
 
---yg7s55w6sf3rsynu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 05, 2017 at 11:07:55AM +0100, Richard Fitzgerald wrote:
-> The adds a driver for the microphone supply regulator on Cirrus Logic
-> Madera class codecs.
-
-Again, this appears to have only data and minor code style changes
-relative to the existing arizona driver - is there no opportunity for
-code sharing here?
-
---yg7s55w6sf3rsynu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljk8+UACgkQJNaLcl1U
-h9DjLQf/V7WQSviOq7Bmu9Ux6URk3qyYGILULku08/0wNCeZIsuhueHgIW3p+JI6
-tpSTMtnAbXGHW2NqRvxGS0rDkmOYkfP0oFZE2zBXt3ve8EFVjK4YBVOaOhL1iXYl
-bfLCw/hF3Ct6XF1qpW1btD9kBb4TQuDfRXW+ywTk0pbQtHjBlTl7dJVK5o44psYk
-/OVRKw8dj67PZkzcx1bdd8zwicu8KQuwYjYk2ku1HX4qDUE0ImuOlg25EJifimAR
-TqsxrFR+FRoX9fC/TzJcGrG6DYVLebmnHgvF2v/QM9jWW/0oHRJ2G5+TW3iShUTc
-DDO7TlDHKRNzAAFpdwFhUPvlPXT/Mg==
-=WT0w
------END PGP SIGNATURE-----
-
---yg7s55w6sf3rsynu--
-
---===============1243590200263891673==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1243590200263891673==--
+Thank you.
