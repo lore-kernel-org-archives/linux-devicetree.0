@@ -1,37 +1,65 @@
-From: Wesley Terpstra <wesley-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
-Subject: Re: cpu of_node links broken
-Date: Tue, 4 Apr 2017 23:49:24 -0700
-Message-ID: <CAMgXwThRqAO0vG0QVC7LYO2Srf9inh+osw7+u21abRVhH0LDSA@mail.gmail.com>
-References: <CAMgXwThQk=3V1HQ8YpoY57mpY0SrdyfAwS5szpsqwkS-r=FPAw@mail.gmail.com>
- <1491374467.4166.81.camel@kernel.crashing.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] phy: sun4i-usb: enable PHY0 dual route switching for
+ A64 USB PHY
+Date: Wed, 5 Apr 2017 09:03:51 +0200
+Message-ID: <20170405070351.etpupeqjeo7dhyxl@lukather>
+References: <20170404184518.33610-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w5fq67mx5xpb27qm"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491374467.4166.81.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170404184518.33610-1-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 4, 2017 at 11:41 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->> [    0.010000] cpu cpu0: Error -2 creating of_node link
-> Interesting. I've never seen that error, I wonder if that's because
-> we fail to link the CPU to an OF node to begin with on our platforms.
 
-You can find quite a few dmesg traces on google that include the
-warning. It affects at least nios2, microblaze and riscv.
+--w5fq67mx5xpb27qm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's because the 'sd' pointer in the of_node's kobject is null, which
-causes sysfs_do_create_link_sd to return -ENOENT. AFAICT, it's null
-because the device tree nodes have not yet been linked into sysfs;
-that is what of_core_init() does.
+On Wed, Apr 05, 2017 at 02:45:16AM +0800, Icenowy Zheng wrote:
+> Allwinner A64 SoC features a switchable PHY0 like the one in H3, which
+> can switch between a MUSB controller and a pair of OHCI/EHCI controller.
+>=20
+> Enable PHY0 route auto switching for A64.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-> Devices might try to create symlinks to device-tree nodes,
-> thus all devices that have OF node linkages should be created
-> after of_core_init() has been called.
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Your proposed patch fixes the warning for me on riscv.
+Thanks,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--w5fq67mx5xpb27qm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJY5JbXAAoJEBx+YmzsjxAgYiIQAIEuzMuiQr7Oyy3ObKJTmMAb
+y81TLLT1GkZ4wmehm2L4qRZwPZ0xVh19+8tXUG6li/2syaVh1+TWe2hZmYNyX77G
+onPavXdyJImCDcXEbM8GRlBSWPcTP3Os2z8KRu/5yZcPkymOv8Jeh8mGBj6yM2WY
+tBU+Cn/I1iMV7RvLYaXBh4eF+A+OHBrNKbo2j2y5iItM8eGykI1hmVh9IHb2eJ8r
+gGVlbgtnAOWl1n17fw0Uqf/c0aIq7dh2t0ax9i/IjOf4wJGhl9bIt2RVPphNKV4P
+iuXk2pRBUJgpoQo+9K+pHI49egqaGwgaB2cQnZsqUjFfDhgddkfVCyjtXZOC37dt
+CkcFvEDw3B6nZKX1/hKka5N0K7ZUDkKQLdejyywbiNxvQxvat1weIsgeCX+BipOY
+0Jg3jBCGv7+eWj819f5sq1ERfXdXwKFScGCVEtR7XVTZ+j0Zif5L2TxuOGNS3fzc
+07NwZkcVrHEy4c6XLBdf7uA7tNmNe3pr3nMiDqxrWQwNG7IEfbqLwI7zYOZaULoy
+lm0ceTNf4wmMJgbkiU9RVkS6+7UyeX4WPAbtJsWQHYlWXo7a6BnhlWwO1v6EgaM2
+ga1e5oxeKzk2rP1soxcMlyEoMC0jj8bDyZ3bkKI9osdWwFRG5Wbul61VRXxNU+Nd
+nf7qPoV6hLiYuM7OD5fo
+=ssZ2
+-----END PGP SIGNATURE-----
+
+--w5fq67mx5xpb27qm--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
