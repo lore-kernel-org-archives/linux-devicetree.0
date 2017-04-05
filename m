@@ -1,46 +1,91 @@
-From: Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] clk: vc5: Add structure to describe particular
- chip features
-Date: Wed, 5 Apr 2017 18:09:09 +0300
-Message-ID: <1ddf7610-035a-eb00-caf7-90f9d25f0172@mentor.com>
-References: <1491392819-698-1-git-send-email-alexey_firago@mentor.com>
- <1491392819-698-2-git-send-email-alexey_firago@mentor.com>
- <CAMuHMdXEa=1__WMtsRphKbN6h+jVkP7szudENsM3hvGSzDfbwg@mail.gmail.com>
- <de978809-5bec-d675-1ea3-cc61804e2c61@mentor.com>
- <23dd9324-ee97-633d-129e-6063af757f47@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 6/7] ARM64: dts: marvell: Add pinctrl nodes for Armada 3700
+Date: Wed,  5 Apr 2017 17:18:07 +0200
+Message-ID: <1defc5c1925e819b28f2b3802aadc9a8e7be224a.1491405475.git-series.gregory.clement@free-electrons.com>
+References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <23dd9324-ee97-633d-129e-6063af757f47-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+Add the nodes for the two pin controller present in the Armada 37xx SoCs.
 
-On 05.04.2017 17:20, Marek Vasut wrote:
->>>> +
->>>> +/* flags to describe chip features */
->>>> +/* chip has built-in oscilator */
->>>> +#define VC5_HAS_INTERNAL_XTAL  BIT(0)
->>>
->>> VC5_HAS_INTERNAL_OSC?
->>
->> I'm fine with renaming it, but shouldn't it be consistent with the rest
->> of the driver (see "internal-xtal", VC5_XTAL*, etc) and IDT datasheet?
->>
->
-> Do you have one with internal ring oscillator or with internal xtal ?
-> The one I had has internal xtal according to the datasheet.
->
+Initially the node was named gpio1 using the same name that for the
+register range in the datasheet. However renaming it pinctr_nb (nb for
+North Bridge) makes more sens.
 
-The one I have (5P49V5935) has internal 25MHz crystal according to the 
-datasheet.
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 42 +++++++++++++++++++--
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
---
-Alexey
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index b48d668a6ab6..c02b13479458 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -157,10 +157,29 @@
+ 				#clock-cells = <1>;
+ 			};
+ 
+-			gpio1: gpio@13800 {
+-				compatible = "marvell,mvebu-gpio-3700",
++			pinctrl_nb: pinctrl-nb@13800 {
++				compatible = "marvell,armada3710-nb-pinctrl",
+ 				"syscon", "simple-mfd";
+-				reg = <0x13800 0x500>;
++				reg = <0x13800 0x100>, <0x13C00 0x20>;
++				gpionb: gpionb {
++					#gpio-cells = <2>;
++					gpio-ranges = <&pinctrl_nb 0 0 36>;
++					gpio-controller;
++					interrupts =
++					<GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
++
++				};
+ 
+ 				xtalclk: xtal-clk {
+ 					compatible = "marvell,armada-3700-xtal-clock";
+@@ -169,6 +188,23 @@
+ 				};
+ 			};
+ 
++			pinctrl_sb: pinctrl-sb@18800 {
++				compatible = "marvell,armada3710-sb-pinctrl",
++				"syscon", "simple-mfd";
++				reg = <0x18800 0x100>, <0x18C00 0x20>;
++				gpiosb: gpiosb {
++					#gpio-cells = <2>;
++					gpio-ranges = <&pinctrl_sb 0 0 29>;
++					gpio-controller;
++					interrupts =
++					<GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++
+ 			eth0: ethernet@30000 {
+ 				   compatible = "marvell,armada-3700-neta";
+ 				   reg = <0x30000 0x4000>;
+-- 
+git-series 0.9.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
