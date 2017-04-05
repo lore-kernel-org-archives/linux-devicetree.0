@@ -1,47 +1,45 @@
-From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Subject: [PATCH 0/3] rockchip dwc2: Turn off vbus on shutdown
-Date: Wed,  5 Apr 2017 16:06:09 +0200
-Message-ID: <20170405140613.4444-1-sjoerd.simons@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Youn <johnyoun@synopsys.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v4 4/9] arm: dts: dt-bindings: Add Renesas RZ/A1 pinctrl header
+Date: Wed,  5 Apr 2017 16:07:22 +0200
+Message-ID: <1491401247-7030-5-git-send-email-jacopo+renesas@jmondi.org>
+References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A board I'm working on seems to get its usb->sata bridge in a rather
-confused state during reboot, which unfortunately can't be recovered on
-the next boot (only hard reset helps).
+Add dt-bindings for Renesas r7s72100 pin controller header file.
 
-This seems to be avoidable by turning off vbus, which turns the internal
-usb hub off on shutdown.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ include/dt-bindings/pinctrl/r7s72100-pinctrl.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/r7s72100-pinctrl.h
 
-First patch add the ability to describe vbus regulators for the rockchip
-usb phy, second one starts using that on the rock2 square board and
-while the final one adds the actual workaround of turning off the phy on
-shutdown.
-
-
-Sjoerd Simons (3):
-  phy: rockchip-usb: Add vbus regulator support.
-  ARM: dts: rockchip: rock2: Setup usb vbus-supply
-  usb: dwc2: Power off the phy on shutdown
-
- .../devicetree/bindings/phy/rockchip-usb-phy.txt      |  1 +
- arch/arm/boot/dts/rk3288-rock2-square.dts             |  8 ++++----
- drivers/phy/phy-rockchip-usb.c                        | 19 +++++++++++++++++++
- drivers/usb/dwc2/platform.c                           |  3 +++
- 4 files changed, 27 insertions(+), 4 deletions(-)
-
+diff --git a/include/dt-bindings/pinctrl/r7s72100-pinctrl.h b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+new file mode 100644
+index 0000000..6b609fe
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+@@ -0,0 +1,16 @@
++/*
++ * Defines macros and constants for Renesas RZ/A1 pin controller pin
++ * muxing functions.
++ */
++#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
++#define __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
++
++#define RZA1_PINS_PER_PORT	16
++
++/*
++ * Create the pin index from its bank and position numbers and store in
++ * the upper 16 bits the alternate function identifier
++ */
++#define RZA1_PINMUX(b, p, f)	((b) * RZA1_PINS_PER_PORT + (p) | (f << 16))
++
++#endif /* __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H */
 -- 
-2.11.0
+2.7.4
+
