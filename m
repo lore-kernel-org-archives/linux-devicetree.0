@@ -1,79 +1,85 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 1/2] doc: Add bindings document for Xilinx LogiCore PR
- Decoupler
-Date: Wed, 5 Apr 2017 08:26:33 +0200
-Message-ID: <efd9b44a-680b-e4fc-38bd-e126ef8b4094@xilinx.com>
-References: <20170324153321.4168-1-atull@kernel.org>
- <20170324153321.4168-2-atull@kernel.org>
- <20170330224429.yo42hgnr7nhm2ljv@rob-hp-laptop>
- <CAAtXAHe0qnu7Ub6sing4VUgFa-tkdvH767kNbZnu1S5THHS2oQ@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: cpu of_node links broken
+Date: Wed, 05 Apr 2017 16:41:07 +1000
+Message-ID: <1491374467.4166.81.camel@kernel.crashing.org>
+References: <CAMgXwThQk=3V1HQ8YpoY57mpY0SrdyfAwS5szpsqwkS-r=FPAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHe0qnu7Ub6sing4VUgFa-tkdvH767kNbZnu1S5THHS2oQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>, Rob Herring <robh@kernel.org>
-Cc: Alan Tull <atull@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Devicetree List <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMgXwThQk=3V1HQ8YpoY57mpY0SrdyfAwS5szpsqwkS-r=FPAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wesley Terpstra <wesley-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5.4.2017 01:36, Moritz Fischer wrote:
-> On Thu, Mar 30, 2017 at 05:44:29PM -0500, Rob Herring wrote:
->> On Fri, Mar 24, 2017 at 10:33:20AM -0500, Alan Tull wrote:
->>> From: Moritz Fischer <mdf@kernel.org>
->>
->> Please use "dt-bindings: fpga: ..." for the subject.
->>
->>
->>>
->>> This adds the binding documentation for the Xilinx LogiCORE PR
->>> Decoupler soft core.
->>>
->>> Signed-off-by: Moritz Fischer <mdf@kernel.org>
->>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>> Acked-by: Alan Tull <atull@kernel.org>
->>
->> I'm confused why you are sending these instead of Moritz? If it goes
->> through you, then it should have your S-o-B too.
-> 
-> Do you want me to resend this Alan (with Rob's suggestions)?
->>
->>> Cc: Sören Brinkmann <soren.brinkmann@xilinx.com>
->>> Cc: linux-kernel@vger.kernel.org
->>> Cc: devicetree@vger.kernel.org
->>> ---
->>>  .../bindings/fpga/xilinx-pr-decoupler.txt          | 35 ++++++++++++++++++++++
->>>  1 file changed, 35 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
->>> new file mode 100644
->>> index 000000000000..2c527ac30398
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
->>> @@ -0,0 +1,35 @@
->>> +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
->>> +
->>> +The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
->>> +decouplers / fpga bridges.
->>> +The controller can decouple/disable the bridges which prevents signal
->>> +changes from passing through the bridge.  The controller can also
->>> +couple / enable the bridges which allows traffic to pass through the
->>> +bridge normally.
->>> +
->>> +The Driver supports only MMIO handling. A PR region can have multiple
->>> +PR Decouplers which can be handled independently or chained via decouple/
->>> +decouple_status signals.
->>> +
->>> +Required properties:
->>> +- compatible : Should contain "xlnx,pr-decoupler-1.00" or "xlnx,pr-decoupler"
->>
->> I'd drop xlnx,pr-decoupler, but in any case, it should not be OR rather
->> "followed by". Plus the example has both.
-> 
-> Michal wanted to have both, so I put both. Personally I don't care. I
-> think they have some downstream stuff that relied on it.
+On Tue, 2017-04-04 at 23:12 -0700, Wesley Terpstra wrote:
+> In commit 5590f3196b293574a12be58d06d5e1120d8856ec symlinks from
+> devices to their OF node were added.
 
-Agree with Rob with using "followed by" instead of or.
+Yup. I did that ;)
 
-M
+> Unfortunately, the code looks for them in cpu_dev_init before they
+> exist (of_core_init has not run).
+> This results in:
+> [    0.010000] cpu cpu0: Error -2 creating of_node link
+> 
+> I don't know if this code used to work and it got broken, but as of
+> 4.6 it does not work and still does not work in 4.11. Moving
+> of_core_init() before platform_bus_init() in driver_init()
+> [drivers/base/init.c] fixes the problem for me.
+> 
+> Is there any downside to reordering these function calls?
+
+Interesting. I've never seen that error, I wonder if that's because
+we fail to link the CPU to an OF node to begin with on our platforms.
+
+I agree though. of_core_init() should probably be called before
+we create any device that might have an OF node reference.
+
+In fact we should probably be able to move it right before
+platform_bus_init(). Something like this (untested):
+
+[PATCH] drivers/base: Initialize OF sysfs core before creating devices
+
+Devices might try to create symlinks to device-tree nodes,
+thus all devices that have OF node linkages should be created
+after of_core_init() has been called.
+
+This especially includes cpu_dev_init().
+
+Reported-by: Wesley Terpstra <wesley-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
+Signed-off-when-somebody-tests-it-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+---
+
+diff --git a/drivers/base/init.c b/drivers/base/init.c
+index 48c0e22..f65d686 100644
+--- a/drivers/base/init.c
++++ b/drivers/base/init.c
+@@ -28,6 +28,13 @@ void __init driver_init(void)
+        firmware_init();
+        hypervisor_init();
+ 
++       /*
++        * This relies on the firmware_kobj already existing
++        * and should be done before any device that might have
++        * an OF link is created
++        */
++       of_core_init();
++
+        /* These are also core pieces, but must come after the
+         * core core pieces.
+         */
+@@ -35,5 +42,4 @@ void __init driver_init(void)
+        cpu_dev_init();
+        memory_dev_init();
+        container_dev_init();
+-       of_core_init();
+ }
+
+Cheers,
+Ben.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
