@@ -1,78 +1,44 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
-Date: Wed, 5 Apr 2017 06:16:17 +0000
-Message-ID: <DB6PR0402MB283701D478A1678D28894C77F30A0@DB6PR0402MB2837.eurprd04.prod.outlook.com>
-References: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 02/11] arm64: allwinner: a64: add NMI
+ controller on A64
+Date: Wed, 5 Apr 2017 14:20:31 +0800
+Message-ID: <CAGb2v672Z2JedGF3n+8Hi78QG_hAxz0ZYXaCkw0GAkA3xEdKrA@mail.gmail.com>
+References: <20170404180145.12897-1-icenowy@aosc.io> <20170404180145.12897-3-icenowy@aosc.io>
+ <CAGb2v67BucT8=FTgem3AmSU9XJA7OHoTCq3t3wBzDWyuwzZqaA@mail.gmail.com> <20170405061137.n66ectbkl7a2fv5f@lukather>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Scott Wood <oss@buserror.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBR4ZSLDQKGQEG7EP5JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170405061137.n66ectbkl7a2fv5f@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen and Michael,
+On Wed, Apr 5, 2017 at 2:11 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Wed, Apr 05, 2017 at 11:51:45AM +0800, Chen-Yu Tsai wrote:
+>> On Wed, Apr 5, 2017 at 2:01 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>> > Allwinner A64 SoC features a NMI controller, which is usually connected
+>> > to the AXP PMIC.
+>> >
+>> > Add support for it.
+>> >
+>> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>
+>> This might not be the best representation of the R_INTC block. Though
+>> we'd need to change it for all SoCs if we want to be accurate. For now,
+>
+> What do you think would be a good representation?
 
-Do you have any comments on this patch set which was acked by Rob?
+My gut feeling is that this is the old INTC from sun4/5i. It's supposed
+to be the interrupt controller for the embedded low power core. I've not
+done a thorough comparison though.
 
-Regards,
-Andy
-
-> -----Original Message-----
-> From: Yuantian Tang [mailto:andy.tang@nxp.com]
-> Sent: Monday, March 20, 2017 10:37 AM
-> To: mturquette@baylibre.com
-> Cc: sboyd@codeaurora.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> linux-clk@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Scott Wood
-> <oss@buserror.net>; Andy Tang <andy.tang@nxp.com>
-> Subject: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
->=20
-> From: Scott Wood <oss@buserror.net>
->=20
-> ls1012a has separate input root clocks for core PLLs versus the platform =
-PLL,
-> with the latter described as sysclk in the hw docs.
-> Update the qoriq-clock binding to allow a second input clock, named
-> "coreclk".  If present, this clock will be used for the core PLLs.
->=20
-> Signed-off-by: Scott Wood <oss@buserror.net>
-> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> v2:
-> 	-- change the author to Scott
->  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> index aa3526f..119cafd 100644
-> --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> @@ -56,6 +56,11 @@ Optional properties:
->  - clocks: If clock-frequency is not specified, sysclk may be provided
->  	as an input clock.  Either clock-frequency or clocks must be
->  	provided.
-> +	A second input clock, called "coreclk", may be provided if
-> +	core PLLs are based on a different input clock from the
-> +	platform PLL.
-> +- clock-names: Required if a coreclk is present.  Valid names are
-> +	"sysclk" and "coreclk".
->=20
->  2. Clock Provider
->=20
-> @@ -72,6 +77,7 @@ second cell is the clock index for the specified type.
->  	2	hwaccel		index (n in CLKCGnHWACSR)
->  	3	fman		0 for fm1, 1 for fm2
->  	4	platform pll	0=3Dpll, 1=3Dpll/2, 2=3Dpll/3, 3=3Dpll/4
-> +	5	coreclk		must be 0
->=20
->  3. Example
->=20
-> --
-> 2.1.0.27.g96db324
-
+ChenYu
