@@ -1,7 +1,7 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v5 04/23] drivers/fsi: Add crc4 helpers
-Date: Tue,  4 Apr 2017 21:05:48 -0500
-Message-ID: <20170405020607.79939-5-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v5 05/23] drivers/fsi: Add slave & master read/write APIs
+Date: Tue,  4 Apr 2017 21:05:49 -0500
+Message-ID: <20170405020607.79939-6-cbostic@linux.vnet.ibm.com>
 References: <20170405020607.79939-1-cbostic@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170405020607.79939-1-cbostic@linux.vnet.ibm.com>
@@ -12,87 +12,135 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-Add some helpers for the crc checks for the slave configuration table.
-This works 4-bits-at-a-time, using a simple table approach.
+Introduce functions to perform reads/writes on the slave address space;
+these simply pass the request on the slave's master with the correct
+link and slave ID.
 
-We will need this in the FSI core code, as well as any master
-implementations that need to calculate CRCs in software.
-
-We add this to the fsi code (rather than lib/), as we need a specific
-polynomial for FSI CRCs.
+We implement these on top of similar helpers for the master.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
 ---
- drivers/fsi/fsi-core.c   | 24 ++++++++++++++++++++++++
- drivers/fsi/fsi-master.h | 21 +++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+ drivers/fsi/fsi-core.c | 92 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index e90d45d..4bbca95 100644
+index 4bbca95..32698ed 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -32,6 +32,30 @@ struct fsi_slave {
+@@ -32,6 +32,11 @@ struct fsi_slave {
  
  #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
  
-+/* crc helpers */
-+static const uint8_t crc4_tab[] = {
-+	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
-+	0x1, 0x6, 0xf, 0x8, 0xa, 0xd, 0x4, 0x3,
-+};
++static int fsi_master_read(struct fsi_master *master, int link,
++		uint8_t slave_id, uint32_t addr, void *val, size_t size);
++static int fsi_master_write(struct fsi_master *master, int link,
++		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
 +
-+uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits)
-+{
-+	int i;
-+
-+	/* Align to 4-bits */
-+	bits = (bits + 3) & ~0x3;
-+
-+	/* mask off anything above the top bit */
-+	x &= (1ull << bits) - 1;
-+
-+	/* Calculate crc4 over four-bit nibbles, starting at the MSbit */
-+	for (i = bits - 4; i >= 0; i -= 4)
-+		c = crc4_tab[c ^ ((x >> i) & 0xf)];
-+
-+	return c;
-+}
-+EXPORT_SYMBOL_GPL(fsi_crc4);
-+
+ /* crc helpers */
+ static const uint8_t crc4_tab[] = {
+ 	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
+@@ -57,6 +62,58 @@ uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits)
+ EXPORT_SYMBOL_GPL(fsi_crc4);
+ 
  /* FSI slave support */
++static int fsi_slave_calc_addr(struct fsi_slave *slave, uint32_t *addrp,
++		uint8_t *idp)
++{
++	uint32_t addr = *addrp;
++	uint8_t id = *idp;
++
++	if (addr > slave->size)
++		return -EINVAL;
++
++	/* For 23 bit addressing, we encode the extra two bits in the slave
++	 * id (and the slave's actual ID needs to be 0).
++	 */
++	if (addr > 0x1fffff) {
++		if (slave->id != 0)
++			return -EINVAL;
++		id = (addr >> 21) & 0x3;
++		addr &= 0x1fffff;
++	}
++
++	*addrp = addr;
++	*idp = id;
++	return 0;
++}
++
++static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
++			void *val, size_t size)
++{
++	uint8_t id = slave->id;
++	int rc;
++
++	rc = fsi_slave_calc_addr(slave, &addr, &id);
++	if (rc)
++		return rc;
++
++	return fsi_master_read(slave->master, slave->link, id,
++			addr, val, size);
++}
++
++static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
++			const void *val, size_t size)
++{
++	uint8_t id = slave->id;
++	int rc;
++
++	rc = fsi_slave_calc_addr(slave, &addr, &id);
++	if (rc)
++		return rc;
++
++	return fsi_master_write(slave->master, slave->link, id,
++			addr, val, size);
++}
++
  static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
  {
-diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
-index 7764b00..d6a4885 100644
---- a/drivers/fsi/fsi-master.h
-+++ b/drivers/fsi/fsi-master.h
-@@ -38,4 +38,25 @@ struct fsi_master {
- extern int fsi_master_register(struct fsi_master *master);
- extern void fsi_master_unregister(struct fsi_master *master);
+ 	/* todo: initialise slave device, perform engine scan */
+@@ -65,6 +122,41 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ }
  
-+/**
-+ * crc4 helper: Given a starting crc4 state @c, calculate the crc4 vaue of @x,
-+ * which is @bits in length. This may be required by master implementations
-+ * that do not provide their own hardware checksums.
-+ *
-+ * The crc4 is performed on 4-bit chunks (which is all we need for FSI
-+ * calculations). Typically, we'll want a starting state of 0:
-+ *
-+ *  c = fsi_crc4(0, msg, len);
-+ *
-+ * To crc4 a message that includes a single start bit, initialise crc4 state
-+ * with:
-+ *
-+ *  c = fsi_crc4(0, 1, 1);
-+ *
-+ * Then update with message data:
-+ *
-+ *  c = fsi_crc4(c, msg, len);
-+ */
-+uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits);
+ /* FSI master support */
++static int fsi_check_access(uint32_t addr, size_t size)
++{
++	if (size != 1 && size != 2 && size != 4)
++		return -EINVAL;
 +
- #endif /* DRIVERS_FSI_MASTER_H */
++	if ((addr & 0x3) != (size & 0x3))
++		return -EINVAL;
++
++	return 0;
++}
++
++static int fsi_master_read(struct fsi_master *master, int link,
++		uint8_t slave_id, uint32_t addr, void *val, size_t size)
++{
++	int rc;
++
++	rc = fsi_check_access(addr, size);
++	if (rc)
++		return rc;
++
++	return master->read(master, link, slave_id, addr, val, size);
++}
++
++static int fsi_master_write(struct fsi_master *master, int link,
++		uint8_t slave_id, uint32_t addr, const void *val, size_t size)
++{
++	int rc;
++
++	rc = fsi_check_access(addr, size);
++	if (rc)
++		return rc;
++
++	return master->write(master, link, slave_id, addr, val, size);
++}
++
+ static int fsi_master_scan(struct fsi_master *master)
+ {
+ 	int link;
 -- 
 1.8.2.2
