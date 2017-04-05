@@ -1,81 +1,74 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt: bindings: add pmu0 regs for USB
- PHYs on Allwinner H3/V3s/A64
-Date: Thu, 6 Apr 2017 00:13:01 +0800
-Message-ID: <CAGb2v64jndyO2VvkZzzgHpX9x2FB6J66it_n8smG-tT0nQFB_g@mail.gmail.com>
-References: <20170405125053.6170-1-icenowy@aosc.io> <20170405125053.6170-2-icenowy@aosc.io>
- <1524732c-b72f-61ce-8ae7-1d764f85c903@ti.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities
+ output video on pad 1
+Date: Wed, 5 Apr 2017 13:17:25 -0300
+Message-ID: <20170405131725.22c13a1d@vento.lan>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
+ <1490894749.2404.33.camel@pengutronix.de>
+ <20170404231053.GE7909@n2100.armlinux.org.uk>
+ <19f0ce92-cad6-8950-8018-e3224e2bf266@gmail.com>
+ <7235285c-f39a-64bc-195a-11cfde9e67c5@gmail.com>
+ <20170405082134.GF7909@n2100.armlinux.org.uk>
+ <1491384859.2381.51.camel@pengutronix.de>
+ <20170405115336.7135e542@vento.lan>
+ <CAGoCfizXdDV_Eo1NSOAb+-wrC7F47iFQKyP8-wiJMpb-nsYArA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJVPSTDQKGQEOMIQIPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1524732c-b72f-61ce-8ae7-1d764f85c903-l0cyMroinI0@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CAGoCfizXdDV_Eo1NSOAb+-wrC7F47iFQKyP8-wiJMpb-nsYArA@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Devin Heitmueller <dheitmueller@kernellabs.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Pavel Machek <pavel@ucw.cz>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 8:58 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->
->
-> On Wednesday 05 April 2017 06:20 PM, Icenowy Zheng wrote:
->> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>
->> Allwinner H3/V3s/A64 SoCs have a special USB PHY0 that can route to two
->> controllers: one is MUSB and the other is a EHCI/OHCI pair.
->>
->> When it's routed to EHCI/OHCI pair, it will needs a "pmu0" regs to
->> tweak, like other EHCI/OHCI pairs in Allwinner SoCs.
->>
->> Add this to the binding of USB PHYs on Allwinner H3/V3s/A64.
->>
->> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> ---
->>
->> Kishon, could you push this to 4.11?
->
-> Is this for the patch titled "phy: sun4i-usb: add support for V3s USB PHY" that
-> was added during the last merge window.
+Em Wed, 5 Apr 2017 11:39:06 -0400
+Devin Heitmueller <dheitmueller@kernellabs.com> escreveu:
 
-Yes. In fact, as the description suggests, this also applies retroactively to
-H3 and A64, which were added in the following commits:
+> > Currently, the driver doesn't support (2), because, at the time
+> > I wrote the driver, I didn't find a way to read the interrupts generated
+> > by tvp5150 at em28xx[1], due to the lack of em28xx documentation,
+> > but adding support for it shoudn't be hard. I may eventually do it
+> > when I have some time to play with my ISEE hardware.  
+> 
+> For what it's worth, I doubt most of the em28xx designs have the
+> tvp5150 interrupt request line connected in any way.
 
-4.9  732e35da7b4a ("dt: bindings: add bindings for Allwinner A64 usb phy")
-4.5  626a630e003c ("phy-sun4i-usb: Add support for the host usb-phys found
-                    on the H3 SoC")
+True. But, on embedded hardware, such line may be connected into the
+SoC. Actually, from the IGEPv3 expansion diagram:
 
-Though this was missed at the time the binding was added.
+	https://www.isee.biz/support/downloads/item/igepv2-expansion-rc-schematics
 
-ChenYu
+The INT line is connected to CAM_IRQ. That's connected to GPIO_154 pin
+at OMAP3.
 
-> this patch looks simpler enough to be merged in this -rc cycle. However it
-> depends on Greg KH.
->
-> Thanks
-> Kishon
->
->>
->>  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->> index e42334258185..005bc22938ff 100644
->> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->> @@ -15,6 +15,7 @@ Required properties:
->>  - reg : a list of offset + length pairs
->>  - reg-names :
->>    * "phy_ctrl"
->> +  * "pmu0" for H3, V3s and A64
->>    * "pmu1"
->>    * "pmu2" for sun4i, sun6i or sun7i
->>  - #phy-cells : from the generic phy bindings, must be 1
->>
+So, on a first glance, it seems possible to use it, instead of polling.
+
+> You would likely
+> have to poll the FIFO status register via I2C,
+
+Yes, I considered this option when I wrote the driver. It could work, 
+although it would likely have some performance drawback, as the driver
+would need to poll it at least 60 times per second.
+
+> or use the feature to
+> embed the sliced data into as VANC data in the 656 output (as
+> described in sec 3.9 of the tvp5150am1 spec).
+
+True, but the bridge driver would need to handle such data. 
+
+I remember I looked on this when I wrote the driver, but I was
+unable to find a way for em28xx to parse (or forward) such
+data packets.
+
+Thanks,
+Mauro
