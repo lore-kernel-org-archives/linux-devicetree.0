@@ -1,49 +1,64 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 4/9] arm: dts: dt-bindings: Add Renesas RZ/A1 pinctrl header
-Date: Wed, 5 Apr 2017 16:27:16 +0200
-Message-ID: <CAMuHMdUZYCsUaAsEpDtTDoHThJza2sQUtcXP5T+h6vH4QVbRCg@mail.gmail.com>
-References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org> <1491401247-7030-5-git-send-email-jacopo+renesas@jmondi.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/1] ARM: dts: armada-xp-linksys-mamba: use wan instead
+ of internet for DSA port
+Date: Wed, 5 Apr 2017 16:28:24 +0200
+Message-ID: <20170405142824.GB13449@lunn.ch>
+References: <20170405052847.326-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491401247-7030-5-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170405052847.326-1-ralph.sennhauser@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 4:07 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-> @@ -0,0 +1,16 @@
-> +/*
-> + * Defines macros and constants for Renesas RZ/A1 pin controller pin
-> + * muxing functions.
-> + */
-> +#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
-> +#define __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
-> +
-> +#define RZA1_PINS_PER_PORT     16
-> +
-> +/*
-> + * Create the pin index from its bank and position numbers and store in
-> + * the upper 16 bits the alternate function identifier
-> + */
-> +#define RZA1_PINMUX(b, p, f)   ((b) * RZA1_PINS_PER_PORT + (p) | (f << 16))
+On Wed, Apr 05, 2017 at 07:28:46AM +0200, Ralph Sennhauser wrote:
+> The LEDs for the "wan" port are already labeled "mamba:amber:wan" resp.
+> "mamba:white:wan". So besides being an outlier with regard to the rest
+> of the product line (see table below) changing the label fixes an
+> internal inconsistency as well.
+> 
+> This will be visible in user space. Given commit cb4f71c42988 ("ARM:
+> dts: armada-38x: change order of ethernet DT nodes on Armada 38x") it's
+> expected to happen anyway. Commit 499400c9ac20 ("ARM: dts:
+> armada-xp-linksys-mamba: Utilize new DSA binding") switches to the new
+> bindings, use this opportunity to do it now rather than later.
+> 
+> |-----------------------------------------------------------------|
+> | Labels used for the case and those used for the DSA ports       |
+> |-----------------------------------------------------------------|
+> | case labels	| armada-385-linksys-*	| armada-xp-linksys-mamba |
+> |---------------|-----------------------|-------------------------|
+> | internet	| wan			| internet		  |
+> | 1		| lan1			| lan1			  |
+> | 2		| lan2			| lan2			  |
+> | 3		| lan3			| lan3			  |
+> | 4		| lan4			| lan4			  |
+> |-----------------------------------------------------------------|
 
-... | (f) << 16)
+Hi Ralph
 
-Gr{oetje,eeting}s,
+I always encourage people to use the case labels as interface names.
+So if i was going to make a change, it would be wan->internet for the 
+armada-385-linksys-*.
 
-                        Geert
+> I underestimated the urge of people to make all the same before. While I do not
+> particularly like this sort of change I see it coming anyway. So this patch is
+> meant to make it a deliberate decision so it no longer is an item lurking in
+> the shadows. Whether this patch gets taken or rejected my goal is reached.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+I would say, this is now too late. Changing an interface name will
+break configuration scripts. We are stuck with it.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+      Andrew
