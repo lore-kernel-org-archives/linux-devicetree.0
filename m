@@ -1,47 +1,88 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/fdt: introduce of_scan_flat_dt_subnodes and
- of_get_flat_dt_phandle
-Date: Thu, 06 Apr 2017 06:58:01 +1000
-Message-ID: <1491425881.4166.90.camel@kernel.crashing.org>
-References: <20170405123706.6081-1-npiggin@gmail.com>
-         <20170405123706.6081-3-npiggin@gmail.com>
-         <CAL_JsqK4zbACwWVb-rsrvBb4hjBCexrqKRKrzSiZrZH5w=bKqQ@mail.gmail.com>
-         <20170406003251.533e2845@roar.ozlabs.ibm.com>
-         <CAL_JsqLEvjb8S-+-JEa4ALHeCWHiR1A_4ur9kd3pBRJaFYWVKw@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] clk: qcom: Elaborate on "active" clocks in the RPM
+ clock bindings
+Date: Wed, 5 Apr 2017 15:02:18 -0700
+Message-ID: <20170405220218.GH7065@codeaurora.org>
+References: <20170322081842.20495-1-linus.walleij@linaro.org>
+ <20170329005943.xqs6ouqbqwdzaayf@rob-hp-laptop>
+ <CACRpkdYAT6Pw=9SjFgkQCaVN8EpSNdP61mkQSjV0FOfgQ0fZhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLEvjb8S-+-JEa4ALHeCWHiR1A_4ur9kd3pBRJaFYWVKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYAT6Pw=9SjFgkQCaVN8EpSNdP61mkQSjV0FOfgQ0fZhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-04-05 at 10:58 -0500, Rob Herring wrote:
-> Well, I'd like to avoid expanding usage of flat DT parsing in the
-> kernel. But you could just put this function into arch/powerpc and I'd
-> never see it, but I like that even less. Mainly, I just wanted to
-> raise the point.
+On 03/29, Linus Walleij wrote:
+> On Wed, Mar 29, 2017 at 2:59 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, Mar 22, 2017 at 09:18:42AM +0100, Linus Walleij wrote:
+> >> The concept of "active" clocks is just explained in a bried comment in the
+> >> device driver, let's explain it a bit more in the device tree bindings
+> >> so everyone understands this.
+> >>
+> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 8 ++++++++
+> >>  1 file changed, 8 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> >> index d470a0187035..cf80a00b7ff2 100644
+> >> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> >> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> >> @@ -18,6 +18,14 @@ Required properties :
+> >>
+> >>  - #clock-cells : shall contain 1
+> >>
+> >> +The clock enumerators are defined in <dt-bindings/clock/qcom,rpmcc.h>
+> >> +and come in pairs: FOO_CLK followed by FOO_A_CLK. The latter clock
+> >> +is an "active" clock, which means that the consumer only care that the
+> >> +clock is available when the system is active, i.e. not suspended. If
+
+I would further say that "is available when the apps CPU
+subsystem is active", i.e. not suspended or in deep idle. Really
+it's about optimizing the idle path so we don't have to keep
+things on for the CPU when it powers down. The system suspend
+case can usually be handled by regular clk API calls.
+
+> >> +it is important that the clock keeps running during system suspend,
+> >> +you need to specify the non-active clock, the one not containing
+> >> +*_A_* in the enumerator name.
+> >> +
+> >
+> > Sounds like abuse as the clock id is encoding policy into it. The number
+> > of clocks should be the number of inputs to a block. I wouldn't be
+> > opposed to some flags for clocks, but that should be a separate cell.
 > 
-> Your argument works until you need that setup in assembly code, then
-> you are in the situation that you need to either handle the setup in
-> bootloader/firmware or have an simple way to determine that condition.
+> I'm sorry about that, but I'm just documenting what is already a fact and
+> was previously just implicit in the name.
+> 
+> I first had no idea what this *_A_* infix notation was about so after some
+> reading I found a comment in the driver saying this.
+> 
+> I guess Stephen can confirm and/or elaborate on this.
+> 
+> Keeping them around is I guess the lesser evil (as compard to
+> pulling up the deployed bindings with the roots) at this point.
+> 
 
-The main issue is that changing that is a very very invasive change in
-an extremely fragile and rather nasty area of code shared by 32 and 64-
-bit for which we don't even have easy access to all the machines to
-test with anymore :)
+Yes we can't really do much now that we've put the binding out
+there. I guess we could have two cells and then fold that into a
+custom clk_hw getter function to map the two cells to the right
+clk. And then leave the original code around for backwards compat
+and detect which one to register as the clk_hw provider.
 
-It's probably not impossible, but it would delay the new cpu feature
-stuff that Nick is making by a lot, probably monthes, making it nearly
-impossible to get back into distros etc... 
+Either way, that wouldn't change the consumer binding because if
+they want to control the *_A_* and non *_A_* clks as individual
+controls they'll list the same physical clk twice in their
+'clocks' property.
 
-So while it might be something to consider, I would definitely keep
-that as a separate unit of work to do later.
-
-Cheers,
-Ben.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
