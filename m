@@ -1,208 +1,68 @@
-Return-Path: <SRS0=oPXI=3L=google.com=raltherr@kernel.org>
+Return-Path: <SRS0=ybYS=3O=aosc.io=icenowy@kernel.org>
+Date: Thu, 06 Apr 2017 03:11:38 +0800
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: update the Allwinner GPADC
+ device tree binding for H3
+From: Icenowy Zheng <icenowy@aosc.io>
 MIME-Version: 1.0
-In-Reply-To: <968a3a78-49d3-138b-ef6e-7cee3c133471@kernel.org>
-References: <20170328215259.31622-1-raltherr@google.com> <CACPK8Xcf2A8RMy7cthJrdi2CA0L_Hfi+2Hy3JBCzLTsofjhEuA@mail.gmail.com>
- <968a3a78-49d3-138b-ef6e-7cee3c133471@kernel.org>
-From: Rick Altherr <raltherr@google.com>
-Date: Mon, 3 Apr 2017 10:17:00 -0700
-Message-ID: <CAPLgG=my4re27Mx5Uruc9s_OEPpT6YG17VTf908iyi4GsD70yg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] Documentation: dt-bindings: Document bindings for
- Aspeed ADC
-Content-Type: multipart/alternative; boundary=001a114b3ebcd42e28054c46537c
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Joel Stanley <joel@jms.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Message-Id: <20170406095534.299945C355D@relay.mailchannels.net>
+To: Rob Herring <robh@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a114b3ebcd42e28054c46537c
-Content-Type: text/plain; charset=UTF-8
-
-On Sat, Apr 1, 2017 at 3:51 AM, Jonathan Cameron <jic23@kernel.org> wrote:
-
-> On 29/03/17 03:33, Joel Stanley wrote:
-> > On Wed, Mar 29, 2017 at 8:22 AM, Rick Altherr <raltherr@google.com>
-> wrote:
-> >> Signed-off-by: Rick Altherr <raltherr@google.com>
-> >> ---
-> >
-> > Acked-by: Joel Stanley <joel@jms.id.au>
-> I can't see why Rob would mind any of the changes made since he
-> Acked this (and having acked it I doubt he is looking at newer versions!)
-> so I'm going to take the view his Ack still applies.
->
-> Applied to the togreg branch of iio.git which will get pushed out first
-> as testing for the autobuilders to have a chance to play with it.
->
-> Thanks,
->
-> Jonathan
->
-
-Thanks!  I realized I forgot to include Acks when I sent out later
-versions.  I'll be more careful on that for future patches.
-
-
-> >
-> >>
-> >> Changes in v5: None
-> >> Changes in v4: None
-> >> Changes in v3:
-> >> - Consistently write hex contstants with lowercase letters
-> >> - Drop model numbers from description as same IP is used in every
-> generation
-> >>
-> >> Changes in v2:
-> >> - Rewritten as an IIO ADC device
-> >>
-> >>  .../devicetree/bindings/iio/adc/aspeed_adc.txt       | 20
-> ++++++++++++++++++++
-> >>  1 file changed, 20 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/
-> bindings/iio/adc/aspeed_adc.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-> b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-> >> new file mode 100644
-> >> index 000000000000..674e133b7cd7
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-> >> @@ -0,0 +1,20 @@
-> >> +Aspeed ADC
-> >> +
-> >> +This device is a 10-bit converter for 16 voltage channels.  All inputs
-> are
-> >> +single ended.
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "aspeed,ast2400-adc" or "aspeed,ast2500-adc"
-> >> +- reg: memory window mapping address and length
-> >> +- clocks: Input clock used to derive the sample clock. Expected to be
-> the
-> >> +          SoC's APB clock.
-> >> +- #io-channel-cells: Must be set to <1> to indicate channels are
-> selected
-> >> +                     by index.
-> >> +
-> >> +Example:
-> >> +       adc@1e6e9000 {
-> >> +               compatible = "aspeed,ast2400-adc";
-> >> +               reg = <0x1e6e9000 0xb0>;
-> >> +               clocks = <&clk_apb>;
-> >> +               #io-channel-cells = <1>;
-> >> +       };
-> >> --
-> >> 2.12.2.564.g063fe858b8-goog
-> >>
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >
->
->
-
---001a114b3ebcd42e28054c46537c
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Sat, Apr 1, 2017 at 3:51 AM, Jonathan Cameron <span dir=3D"ltr">&lt;=
-<a href=3D"mailto:jic23@kernel.org" target=3D"_blank">jic23@kernel.org</a>&=
-gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 =
-0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">On 29/=
-03/17 03:33, Joel Stanley wrote:<br>
-&gt; On Wed, Mar 29, 2017 at 8:22 AM, Rick Altherr &lt;<a href=3D"mailto:ra=
-ltherr@google.com">raltherr@google.com</a>&gt; wrote:<br>
-&gt;&gt; Signed-off-by: Rick Altherr &lt;<a href=3D"mailto:raltherr@google.=
-com">raltherr@google.com</a>&gt;<br>
-&gt;&gt; ---<br>
-&gt;<br>
-&gt; Acked-by: Joel Stanley &lt;<a href=3D"mailto:joel@jms.id.au">joel@jms.=
-id.au</a>&gt;<br>
-</span>I can&#39;t see why Rob would mind any of the changes made since he<=
-br>
-Acked this (and having acked it I doubt he is looking at newer versions!)<b=
-r>
-so I&#39;m going to take the view his Ack still applies.<br>
-<br>
-Applied to the togreg branch of iio.git which will get pushed out first<br>
-as testing for the autobuilders to have a chance to play with it.<br>
-<br>
-Thanks,<br>
-<br>
-Jonathan<br></blockquote><div><br></div><div>Thanks!=C2=A0 I realized I for=
-got to include Acks when I sent out later versions.=C2=A0 I&#39;ll be more =
-careful on that for future patches.</div><div>=C2=A0</div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
-ing-left:1ex">
-<div class=3D"HOEnZb"><div class=3D"h5">&gt;<br>
-&gt;&gt;<br>
-&gt;&gt; Changes in v5: None<br>
-&gt;&gt; Changes in v4: None<br>
-&gt;&gt; Changes in v3:<br>
-&gt;&gt; - Consistently write hex contstants with lowercase letters<br>
-&gt;&gt; - Drop model numbers from description as same IP is used in every =
-generation<br>
-&gt;&gt;<br>
-&gt;&gt; Changes in v2:<br>
-&gt;&gt; - Rewritten as an IIO ADC device<br>
-&gt;&gt;<br>
-&gt;&gt;=C2=A0 .../devicetree/bindings/iio/<wbr>adc/aspeed_adc.txt=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0| 20 ++++++++++++++++++++<br>
-&gt;&gt;=C2=A0 1 file changed, 20 insertions(+)<br>
-&gt;&gt;=C2=A0 create mode 100644 Documentation/devicetree/<wbr>bindings/ii=
-o/adc/aspeed_adc.<wbr>txt<br>
-&gt;&gt;<br>
-&gt;&gt; diff --git a/Documentation/devicetree/<wbr>bindings/iio/adc/aspeed=
-_adc.<wbr>txt b/Documentation/devicetree/<wbr>bindings/iio/adc/aspeed_adc.<=
-wbr>txt<br>
-&gt;&gt; new file mode 100644<br>
-&gt;&gt; index 000000000000..674e133b7cd7<br>
-&gt;&gt; --- /dev/null<br>
-&gt;&gt; +++ b/Documentation/devicetree/<wbr>bindings/iio/adc/aspeed_adc.<w=
-br>txt<br>
-&gt;&gt; @@ -0,0 +1,20 @@<br>
-&gt;&gt; +Aspeed ADC<br>
-&gt;&gt; +<br>
-&gt;&gt; +This device is a 10-bit converter for 16 voltage channels.=C2=A0 =
-All inputs are<br>
-&gt;&gt; +single ended.<br>
-&gt;&gt; +<br>
-&gt;&gt; +Required properties:<br>
-&gt;&gt; +- compatible: Should be &quot;aspeed,ast2400-adc&quot; or &quot;a=
-speed,ast2500-adc&quot;<br>
-&gt;&gt; +- reg: memory window mapping address and length<br>
-&gt;&gt; +- clocks: Input clock used to derive the sample clock. Expected t=
-o be the<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 SoC&#39;s APB clock.<br>
-&gt;&gt; +- #io-channel-cells: Must be set to &lt;1&gt; to indicate channel=
-s are selected<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0by index.<br>
-&gt;&gt; +<br>
-&gt;&gt; +Example:<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0adc@1e6e9000 {<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible=
- =3D &quot;aspeed,ast2400-adc&quot;;<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &l=
-t;0x1e6e9000 0xb0&gt;;<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0clocks =3D=
- &lt;&amp;clk_apb&gt;;<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#io-channe=
-l-cells =3D &lt;1&gt;;<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-&gt;&gt; --<br>
-&gt;&gt; 2.12.2.564.g063fe858b8-goog<br>
-&gt;&gt;<br>
-</div></div><span class=3D"HOEnZb"><font color=3D"#888888">&gt; --<br>
-&gt; To unsubscribe from this list: send the line &quot;unsubscribe linux-i=
-io&quot; in<br>
-&gt; the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org">=
-majordomo@vger.kernel.org</a><br>
-&gt; More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordo=
-mo-info.html" rel=3D"noreferrer" target=3D"_blank">http://vger.kernel.org/<=
-wbr>majordomo-info.html</a><br>
-&gt;<br>
-<br>
-</font></span></blockquote></div><br></div></div>
-
---001a114b3ebcd42e28054c46537c--
+CjIwMTflubQ05pyINuaXpSAwMzowNOS6jiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPuWG
+memBk++8mgo+Cj4gT24gVHVlLCBBcHIgNCwgMjAxNyBhdCAxMDowMiBBTSwgSWNlbm93eSBaaGVu
+ZyA8aWNlbm93eUBhb3NjLmlvPiB3cm90ZTogCj4gPiAKPiA+IAo+ID4g5ZyoIDIwMTflubQwNOac
+iDA05pelIDIyOjQ3LCBSb2IgSGVycmluZyDlhpnpgZM6IAo+ID4+IAo+ID4+IE9uIFN1biwgQXBy
+IDAyLCAyMDE3IGF0IDA5OjMzOjAxUE0gKzA4MDAsIEljZW5vd3kgWmhlbmcgd3JvdGU6IAo+ID4+
+PiAKPiA+Pj4gQWxsd2lubmVyIEgzIGZlYXR1cmVzIGEgdGhlcm1hbCBzZW5zb3IgbGlrZSB0aGUg
+b25lIGluIEEzMywgYnV0IGhhcyBpdHMgCj4gPj4+IHJlZ2lzdGVyIHJlLWFycmFuZ2VkLCB0aGUg
+Y2xvY2sgZGl2aWRlciBtb3ZlZCB0byBDQ1UgKG9yaWdpbmFsbHkgdGhlIAo+ID4+PiBjbG9jayBk
+aXZpZGVyIGlzIGluIEFEQykgYW5kIGFkZGVkIGEgcGFpciBvZiBidXMgY2xvY2sgYW5kIHJlc2V0
+LiAKPiA+Pj4gCj4gPj4+IFVwZGF0ZSB0aGUgYmluZGluZyBkb2N1bWVudCB0byBjb3ZlciBIMy4g
+Cj4gPj4+IAo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2Mu
+aW8+IAo+ID4+PiAtLS0gCj4gPj4+wqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N1bjRp
+LWdwYWRjLnR4dMKgwqDCoMKgwqDCoMKgIHwgMjMgCj4gPj4+ICsrKysrKysrKysrKysrKysrKysr
+LS0gCj4gPj4+wqAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
+KC0pIAo+ID4+PiAKPiA+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZmQvc3VuNGktZ3BhZGMudHh0IAo+ID4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZmQvc3VuNGktZ3BhZGMudHh0IAo+ID4+PiBpbmRleCBiYWRmZjM2MTFh
+OTguLjc3NTMxMzNjYTBmZiAxMDA2NDQgCj4gPj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZmQvc3VuNGktZ3BhZGMudHh0IAo+ID4+PiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N1bjRpLWdwYWRjLnR4dCAKPiA+Pj4gQEAgLTQs
+MTIgKzQsMjAgQEAgVGhlIEFsbHdpbm5lciBTb0NzIGFsbCBoYXZlIGFuIEFEQyB0aGF0IGNhbiBh
+bHNvIGFjdCBhcyAKPiA+Pj4gYSB0aGVybWFsIHNlbnNvciAKPiA+Pj7CoCBhbmQgc29tZXRpbWVz
+IGFzIGEgdG91Y2hzY3JlZW4gY29udHJvbGxlci4gCj4gPj4+IAo+ID4+PsKgIFJlcXVpcmVkIHBy
+b3BlcnRpZXM6IAo+ID4+PiAtwqAgLSBjb21wYXRpYmxlOiAiYWxsd2lubmVyLHN1bjhpLWEzMy10
+aHMiLCAKPiA+Pj4gK8KgIC0gY29tcGF0aWJsZTogbXVzdCBjb250YWluIG9uZSBvZiB0aGUgZm9s
+bG93aW5nIGNvbXBhdGlibGVzOiAKPiA+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+LSAiYWxsd2lubmVyLHN1bjhpLWEzMy10aHMiIAo+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCAtICJhbGx3aW5uZXIsc3VuOGktaDMtdGhzIiAKPiA+Pj7CoMKgwqAgLSByZWc6IG1t
+aW8gYWRkcmVzcyByYW5nZSBvZiB0aGUgY2hpcCwgCj4gPj4+wqDCoMKgIC0gI3RoZXJtYWwtc2Vu
+c29yLWNlbGxzOiBzaGFsbCBiZSAwLCAKPiA+Pj7CoMKgwqAgLSAjaW8tY2hhbm5lbC1jZWxsczog
+c2hhbGwgYmUgMCwgCj4gPj4+IAo+ID4+PiAtRXhhbXBsZTogCj4gPj4+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzIGZvciB0aGUgZm9sbG93aW5nIGNvbXBhdGlibGVzOiAKPiA+Pj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgLSAiYWxsd2lubmVyLHN1bjhpLWgzLXRocyIgCj4gPj4+ICvCoCAt
+IGNsb2NrczogdGhlIGJ1cyBjbG9jayBhbmQgdGhlIGlucHV0IGNsb2NrIG9mIHRoZSBBREMsIAo+
+ID4+PiArwqAgLSBjbG9jay1uYW1lczogc2hvdWxkIGJlICJidXMiIGFuZCAidGhzIiwgCj4gPj4+
+ICvCoCAtIHJlc2V0czogdGhlIGJ1cyByZXNldCBvZiB0aGUgQURDLCAKPiA+Pj4gKyAKPiA+Pj4g
+K0V4YW1wbGUgZm9yIEEzMzogCj4gPj4+wqDCoMKgwqDCoMKgwqDCoCB0aHM6IHRoc0AwMWMyNTAw
+MCB7IAo+ID4+PsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXBhdGlibGUgPSAi
+YWxsd2lubmVyLHN1bjhpLWEzMy10aHMiOyAKPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCByZWcgPSA8MHgwMWMyNTAwMCAweDEwMD47IAo+ID4+PiBAQCAtMTcsNiArMjUsMTcg
+QEAgRXhhbXBsZTogCj4gPj4+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgI2lvLWNo
+YW5uZWwtY2VsbHMgPSA8MD47IAo+ID4+PsKgwqDCoMKgwqDCoMKgwqAgfTsgCj4gPj4+IAo+ID4+
+PiArRXhhbXBsZSBmb3IgSDM6IAo+ID4+PiArwqDCoMKgwqDCoMKgIHRoczogdGhzQDAxYzI1MDAw
+IHsgCj4gPj4gCj4gPj4gCj4gPj4gYWRjQC4uLiAKPiA+IAo+ID4gCj4gPiBJdCdzIGEgdGhlcm1h
+bCBzZW5zb3IsIHNvIEkgdGhpbmsgY2FsbCBpdCBUSFMgaXMgbW9yZSBhcHByb3ByaWF0ZSAKPiA+
+IGhlcmUuIEl0J3MgaW1wbGVtZW50ZWQgYXMgYW4gQURDIGRyaXZlciBqdXN0IGJlY2F1c2UgdGhl
+IGludGVybmFsIAo+ID4gY29kZSByZXVzaW5nIG9mIExpbnV4LiBGcm9tIGRldmljZSB0cmVlIGJp
+bmRpbmcgdmlldyBJIGNob29zZSB0byAKPiA+IGNhbGwgaXQgdGhzLiAKPgo+IFRoZXJlJ3MgbnVt
+ZXJvdXMgb2NjdXJyZW5jZXMgaW4gdGhpcyBmaWxlIGFuZCB0aGUgZmlsZW5hbWUgdGhhdCBjYWxs
+IGl0IGFuIEFEQy4gCj4KPiBGdXJ0aGVybW9yZSwgbm9kZSBuYW1lcyBhcmUgc3VwcG9zZWQgdG8g
+YmUgZ2VuZXJpYywgbm90IHBhcnQgIydzIG9yIAo+IHdoYXRldmVyIHlvdSBkZWNpZGUgdG8gbWFr
+ZSB1cC4gU28gcGljayBmcm9tIGFkYyBvciB0ZW1wZXJhdHVyZS1zZW5zb3IgCj4gYXMgdGhvc2Ug
+YXJlIHRoZSBzdGFuZGFyZCBuYW1lcyAuIAoKT0suIEkgd2lsbCBtYWtlIGl0IDoKdGhzOiB0ZW1w
+ZXJhdHVyZS1zZW5zb3JAMWMyNTAwMAoKKENhbGxpbmcgaXQgdGVtcGVyYXR1cmUgc2Vuc29yIGlz
+IGFjY29yZGluZyB0byB0aGUgZGF0YXNoZWV0IG5hbWUpCgo+Cj4gUm9iIAo=
