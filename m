@@ -1,56 +1,112 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities
- output video on pad 1
-Date: Wed, 05 Apr 2017 11:43:47 +0200
-Message-ID: <1491385427.2381.58.camel@pengutronix.de>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
- <1490894749.2404.33.camel@pengutronix.de>
- <9bfabc5c-d90f-6487-537d-20515ec61f9c@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 00/11] add thermal throttling to
+ Allwinner A33 SoC
+Date: Wed, 5 Apr 2017 10:57:52 +0100
+Message-ID: <20170405095752.pji6o7u5no6svd5i@dell>
+References: <20170321153611.16228-1-quentin.schulz@free-electrons.com>
+ <20170404083133.ffrsxjsakynruwzv@dell>
+ <fcc2ec2c-cf46-0cf9-1933-53511fe77cf2@free-electrons.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <9bfabc5c-d90f-6487-537d-20515ec61f9c@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, mchehab@kernel.org, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBJP7SLDQKGQEBQYYP5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <fcc2ec2c-cf46-0cf9-1933-53511fe77cf2-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-04-04 at 15:11 -0700, Steve Longerbeam wrote:
-> 
-> On 03/30/2017 10:25 AM, Philipp Zabel wrote:
-> > The TVP5150 DT bindings specify a single output port (port 0) that
-> > corresponds to the video output pad (pad 1, DEMOD_PAD_VID_OUT).
-> >
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> > I'm trying to get this to work with a TVP5150 analog TV decoder, and the
-> > first problem is that this device doesn't have pad 0 as its single
-> > output pad. Instead, as a MEDIA_ENT_F_ATV_DECODER entity, it has for
-> > pads (input, video out, vbi out, audio out), and video out is pad 1,
-> > whereas the device tree only defines a single port (0).
-> 
-> Shouldn't the DT bindings define ports for these other pads?
+On Wed, 05 Apr 2017, Quentin Schulz wrote:
+> On 04/04/2017 10:31, Lee Jones wrote:
+> > On Tue, 21 Mar 2017, Quentin Schulz wrote:
+> >> v3:
+> >>   - fixed compatible name in DT and in documentation,
+> >>   - fixed DT node name and label,
+> >>   - added explanations in commit logs,
+> >>   - moved frequencies that need overvolting to board DTS instead of A3=
+3 DTSI,
+> >>   - fixed a typo in if is_enabled condition,
+> >>   - removed all patches concerning Olimex Olinuxino (no HW to test on)=
+,
+> >=20
+> > What is the plan for this series?
+> >=20
+> > I'm guessing there are no hard dependencies on the ARM parts?
+> >=20
+> > If not, I'm happy to take the changes to 'drivers/*'.
+> >=20
+>=20
+> I've sent a v4 to add some Acked-by and change a few commit "titles".
+> It's ready to be merged with only the following patch required (which
+> Jonathan asked if you could merge it through the mfd tree): "[RESEND
+> PATCH v4] iio: adc: add support for X-Powers AXP20X and AXP22X PMICs
+> ADCs" (https://patchwork.kernel.org/patch/9660879/)
 
-In this case, probably yes for the input pad, certainly no for the
-VBI/audio pads. See the other mail.
+Right, but how would you like *this* patch-set applied?
 
-> I haven't seen this documented anywhere, but shouldn't there
-> be a 1:1 correspondence between DT ports and media pads?
+I'm guessing the ARM patches need to go in via ARM-SoC.
 
-Not in general. But imagine a dual HDMI->CSI2 converter, for example. We
-don't support this yet, but that might reasonably be described in the
-device tree as a single device with two output ports. But the internal
-representation would be two completely separate v4l2 subdevices.
+What about the drivers/{input,iio,mfd} patches?
 
-regards
-Philipp
+I'm guessing they're to all go in via my tree?
+
+> >> [1] https://lkml.org/lkml/2016/12/13/298 : "[PATCH v9] add support for=
+ Allwinner
+> >> SoCs ADC"
+> >>
+> >> Thanks,
+> >> Quentin
+> >>
+> >> Maxime Ripard (1):
+> >>   ARM: sun8i: a33: Add devfreq-based GPU cooling
+> >>
+> >> Quentin Schulz (10):
+> >>   ARM: sun8i: a33: add operating-points-v2 property to all nodes
+> >>   ARM: sun8i: a33: add all operating points
+> >>   ARM: dts: sun8i: sina33: add cpu-supply
+> >>   Documentation: DT: bindings: mfd: add A33 GPADC binding
+> >>   Documentation: DT: bindings: input: touschcreen: remove sun4i
+> >>     documentation
+> >>   iio: adc: sun4i-gpadc-iio: move code used in MFD probing to new
+> >>     function
+> >>   iio: adc: sun4i-gpadc-iio: add support for A33 thermal sensor
+> >>   ARM: dtsi: sun8i: a33: add thermal sensor
+> >>   ARM: dtsi: sun8i: a33: add CPU thermal throttling
+> >>   ARM: sun8i: sina33: add highest OPP of CPUs
+> >>
+> >>  .../touchscreen/sun4i.txt =3D> mfd/sun4i-gpadc.txt}  |  21 +++
+> >>  arch/arm/boot/dts/sun8i-a23-a33.dtsi               |   1 +
+> >>  arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |  18 +++
+> >>  arch/arm/boot/dts/sun8i-a33.dtsi                   | 141 ++++++++++++=
++++++
+> >>  drivers/iio/adc/Kconfig                            |   2 +-
+> >>  drivers/iio/adc/sun4i-gpadc-iio.c                  | 170 ++++++++++++=
++++++----
+> >>  include/linux/mfd/sun4i-gpadc.h                    |   4 +
+> >>  7 files changed, 324 insertions(+), 33 deletions(-)
+> >>  rename Documentation/devicetree/bindings/{input/touchscreen/sun4i.txt=
+ =3D> mfd/sun4i-gpadc.txt} (64%)
+> >>
+> >=20
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
