@@ -1,93 +1,25 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
- support display out.
-Date: Wed, 05 Apr 2017 10:21:28 +0900
-Message-ID: <58E44698.5020605@samsung.com>
-References: <20170301111943.12170-1-enric.balletbo@collabora.com>
- <CGME20170301112844epcas4p34012f1564f1145f8d8a8967f4fe9a821@epcas4p3.samsung.com>
- <20170301111943.12170-2-enric.balletbo@collabora.com>
- <58B7C9BF.1040708@samsung.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V10 00/12] IOMMU probe deferral support
+Date: Tue, 4 Apr 2017 20:23:12 -0500
+Message-ID: <CAL_JsqJH9C9sNGBSLH88bJ=uKF7RibHDAUZUW9M2xeO2AM-FUw@mail.gmail.com>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org> <1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <58B7C9BF.1040708-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Tomasz Nowicki <tn@semihalf.com>, Hanjun Guo <hanjun.guo@linaro.org>, Sinan Kaya <okaya@codeaurora.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
+On Tue, Apr 4, 2017 at 5:18 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+> This series calls the dma ops configuration for the devices
+> at a generic place so that it works for all busses.
+> The dma_configure_ops for a device is now called during
+> the device_attach callback just before the probe of the
+> bus/driver is called. Similarly dma_deconfigure is called during
+> device/driver_detach path.
 
-On 2017년 03월 02일 16:29, Chanwoo Choi wrote:
-> Hi,
-> 
-> On 2017년 03월 01일 20:19, Enric Balletbo i Serra wrote:
->> From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>
->> This is the driver for the USB Type C cable detection mechanism
->> built into the ChromeOS Embedded Controller on systems that
->> have USB Type-C ports.
->>
->> At present, this allows for the presence of display out, but in
->> future, it may also be used to notify host and device type cables
->> and the presence of power.
->>
->> Signed-off-by: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->> Changes since v1:
->>  Requested by Chanwoo Choi
->>  - Rename files changing _ for -
->>  - Remove the unneeded blank line on bottom of header.
->>  - Remove kobject.h and cros_ec_commands.h includes.
->>  - Remove the debug message as is not necessary.
->>  - Use the tab for indentation instead of space for if sentence.
->>  - Define each variable on different lines when the variables should be
->>    initialized.
->>  - Remove EXTCON_USB and EXTCON_USB_HOST as are not really used for now.
->>  - Add one blank line to split out between state and property setting.
->>  - Add the author information (header and module)
->>
->>  Enric Balletbo
->>  - As Rob suggested to rename the compatible name to something indicating that
->>    is USB Type C related I also renamed the file names, extcon-cros-ec ->
->>    extcon-usbc-cros-ec, I think it's more clear.
->>
->>  drivers/extcon/Kconfig               |   7 +
->>  drivers/extcon/Makefile              |   1 +
->>  drivers/extcon/extcon-usbc-cros-ec.c | 415 +++++++++++++++++++++++++++++++++++
->>  include/linux/mfd/cros_ec_commands.h |  75 +++++++
->>  4 files changed, 498 insertions(+)
->>  create mode 100644 drivers/extcon/extcon-usbc-cros-ec.c
->>
-> 
-> Looks good to me.
-> Acked-by: Chanwoo Choi <cw00.chio-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> 
-> I think this patch should be handled with patches[1].
-> [1] https://lkml.org/lkml/2017/2/14/655
-> 
-> I think that one maintainer among following subsystems
-> (mfd, chrome h/w platform, rtc and extcon)
-> will apply their git repository, and then one maintainer
-> will send the pull request of immutable branch for these patches.
-> 
+For patches 3, 4, 6, 7, 8:
 
-As I mentioned, these patch should be handled with related patches[1].
-[1] https://lkml.org/lkml/2017/2/14/655
-
-So, I can't apply these patch on extcon git because there is a merge conflict
-and we should handle these patches with immutable branch between subsystem maintainer.
-
-The v4.11-rc5 was released, if you want to apply this patch to the v4.12-rc1,
-please take care of these patches.
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
