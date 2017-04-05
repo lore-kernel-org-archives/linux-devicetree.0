@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 1/2] dt: bindings: add pmu0 regs for USB PHYs on
- Allwinner H3/V3s/A64
-Date: Wed,  5 Apr 2017 22:30:33 +0800
-Message-ID: <20170405143034.8868-2-icenowy@aosc.io>
+Subject: [PATCH 2/2] arm64: allwinner: a64: add pmu0 regs for
+ USB PHY
+Date: Wed,  5 Apr 2017 22:30:34 +0800
+Message-ID: <20170405143034.8868-3-icenowy@aosc.io>
 References: <20170405143034.8868-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJX7SPDQKGQEVOED2PQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBMH7SPDQKGQETBSPF2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170405143034.8868-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,37 +17,33 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+The USB PHY in A64 has a "pmu0" region, which controls the EHCI/OHCI
+controller pair that can be connected to the PHY0.
 
-Allwinner H3/V3s/A64 SoCs have a special USB PHY0 that can route to two
-controllers: one is MUSB and the other is a EHCI/OHCI pair.
+Add the MMIO region for PHY node.
 
-When it's routed to EHCI/OHCI pair, it will needs a "pmu0" regs to
-tweak, like other EHCI/OHCI pairs in Allwinner SoCs.
-
-Add this to the binding of USB PHYs on Allwinner H3/V3s/A64.
-
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-index e42334258185..005bc22938ff 100644
---- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-@@ -15,6 +15,7 @@ Required properties:
- - reg : a list of offset + length pairs
- - reg-names :
-   * "phy_ctrl"
-+  * "pmu0" for H3, V3s and A64
-   * "pmu1"
-   * "pmu2" for sun4i, sun6i or sun7i
- - #phy-cells : from the generic phy bindings, must be 1
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 1c64ea2d23f9..0565779e66fa 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -179,8 +179,10 @@
+ 		usbphy: phy@01c19400 {
+ 			compatible = "allwinner,sun50i-a64-usb-phy";
+ 			reg = <0x01c19400 0x14>,
++			      <0x01c1a800 0x4>,
+ 			      <0x01c1b800 0x4>;
+ 			reg-names = "phy_ctrl",
++				    "pmu0",
+ 				    "pmu1";
+ 			clocks = <&ccu CLK_USB_PHY0>,
+ 				 <&ccu CLK_USB_PHY1>;
 -- 
 2.12.2
