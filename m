@@ -1,107 +1,41 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] mmc: core: add mmc-card hardware reset enable support
-Date: Wed, 05 Apr 2017 13:40:33 +0900
-Message-ID: <ea610a5c-3857-14f8-3039-414bee724223@samsung.com>
-References: <CGME20170404141714epcas5p495985819f877cc723ef217e9cefe89c1@epcas5p4.samsung.com>
- <1491315394-7568-1-git-send-email-richard.leitner@skidata.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/6] clk: qcom: CPU clock driver for msm8996
+Date: Wed,  5 Apr 2017 10:25:23 +0530
+Message-ID: <1491368129-24721-1-git-send-email-rnayak@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1491315394-7568-1-git-send-email-richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This series adds support for the CPU clocks on msm8996 devices.
+A previous post of RFC can be found here
+https://patchwork.kernel.org/patch/9355925/
 
-On 04/04/2017 11:16 PM, Richard Leitner wrote:
-> Some eMMCs disable their hardware reset line (RST_N) by default. To enable
-> it the host must set the corresponding bit in ECSD. An example for such
-> a device is the Micron MTFCxGACAANA-4M.
-> 
-> This patch adds a new mmc-card devicetree property to let the host enable
-> this feature during card initialization.
-> 
-> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc-card.txt |  3 +++
->  drivers/mmc/core/mmc.c                             | 21 +++++++++++++++++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> index a70fcd6..8590a40 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> @@ -12,6 +12,9 @@ Required properties:
->  Optional properties:
->  -broken-hpi : Use this to indicate that the mmc-card has a broken hpi
->                implementation, and that hpi should not be used
-> +-enable-hw-reset : some eMMC devices have disabled the hw reset functionality
-> +                   (RST_N_FUNCTION) by default. By adding this property the
-> +                   host will enable it during initialization.
+Rajendra Nayak (5):
+  clk: qcom: Make clk_alpha_pll_configure available to modules
+  clk: qcom: Add CPU clock driver for msm8996
+  clk: qcom: cpu-8996: Add support to switch to alternate PLL
+  clk: qcom: cpu-8996: Add support to switch below 600Mhz
+  arm64: dts: msm8996: Add CPU clock controller node
 
-As i know, RST_N_FUNCTION is controlled bit[1:0]
-0x0 : RST_n disabled (by default)
-0x1 : permanently enabled
-0x2 : permanently disabled
+Taniya Das (1):
+  clk: qcom: Fix .set_rate to handle alpha PLLs w/wo dynamic update
 
-I think that it needs to add the description about these..
->  
->  Example:
->  
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index b502601..518d0e3 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -1520,9 +1520,16 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
->  	int err;
->  	u32 cid[4];
->  	u32 rocr;
-> +	struct device_node *np;
-> +	bool enable_rst_n = false;
->  
->  	WARN_ON(!host->claimed);
->  
-> +	np = mmc_of_find_child_device(host, 0);
-> +	if (np && of_device_is_compatible(np, "mmc-card"))
-> +		enable_rst_n = of_property_read_bool(np, "enable-hw-reset");
-> +	of_node_put(np);
-> +
->  	/* Set correct bus mode for MMC before attempting init */
->  	if (!mmc_host_is_spi(host))
->  		mmc_set_bus_mode(host, MMC_BUSMODE_OPENDRAIN);
-> @@ -1810,6 +1817,20 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
->  		}
->  	}
->  
-> +	/*
-> +	 * try to enable RST_N if requested
-> +	 * This is needed because some eMMC chips disable this function by
-> +	 * default.
-> +	 */
-> +	if (enable_rst_n) {
-> +		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
-> +				 EXT_CSD_RST_N_FUNCTION, EXT_CSD_RST_N_ENABLED,
-> +				 card->ext_csd.generic_cmd6_time);
-> +		if (err && err != -EBADMSG)
-> +			pr_warn("%s: Enabling RST_N feature failed\n",
-> +				mmc_hostname(card->host));
-> +	}
+ .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              |   6 +
+ drivers/clk/qcom/Kconfig                           |   8 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |  72 +++-
+ drivers/clk/qcom/clk-alpha-pll.h                   |   5 +
+ drivers/clk/qcom/clk-cpu-8996.c                    | 440 +++++++++++++++++++++
+ 7 files changed, 538 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+ create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
 
-If enabled hw-reset, it doesn't need to re-enable this bit.
-i didn't check the mmc-util..
-If mmc-util provides the changing this, the using mmc-util is better than this.
-
-Best Regards,
-Jaehoon Chung
-
-> +
->  	if (!oldcard)
->  		host->card = card;
->  
-> 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
