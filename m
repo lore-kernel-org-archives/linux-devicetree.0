@@ -1,111 +1,318 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/fdt: introduce of_scan_flat_dt_subnodes and of_get_flat_dt_phandle
-Date: Wed, 5 Apr 2017 10:58:23 -0500
-Message-ID: <CAL_JsqLEvjb8S-+-JEa4ALHeCWHiR1A_4ur9kd3pBRJaFYWVKw@mail.gmail.com>
-References: <20170405123706.6081-1-npiggin@gmail.com> <20170405123706.6081-3-npiggin@gmail.com>
- <CAL_JsqK4zbACwWVb-rsrvBb4hjBCexrqKRKrzSiZrZH5w=bKqQ@mail.gmail.com> <20170406003251.533e2845@roar.ozlabs.ibm.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 07/11] regulator: axp20x-regulator: add
+ support for AXP803
+Date: Thu, 6 Apr 2017 00:01:33 +0800
+Message-ID: <CAGb2v678LGa9JVNeOjx8edfun-XmoYxRhj3=gtxHd1HjY=LS-A@mail.gmail.com>
+References: <20170404180145.12897-1-icenowy@aosc.io> <20170404180145.12897-8-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170406003251.533e2845-a5aMA/AkCkgK5Ils6ZIQy0EOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB5VJSTDQKGQE62ELVSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170404180145.12897-8-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 9:32 AM, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, 5 Apr 2017 08:35:06 -0500
-> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
->> On Wed, Apr 5, 2017 at 7:37 AM, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > Introduce primitives for FDT parsing. These will be used for powerpc
->> > cpufeatures node scanning, which has quite complex structure but should
->> > be processed early.
->>
->> Have you looked at unflattening the FDT earlier?
->
-> Hi, thanks for taking a look. Did you mean to trim the cc list?
+Hi,
 
-Ugg, no. I've added everyone back.
+On Wed, Apr 5, 2017 at 2:01 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> AXP803 PMIC also have a series of regulators (DCDCs and LDOs)
+> controllable via I2C/RSB bus.
+>
+> Add support for them.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  drivers/regulator/axp20x-regulator.c | 135 +++++++++++++++++++++++++++++++----
+>  include/linux/mfd/axp20x.h           |  37 ++++++++++
+>  2 files changed, 158 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+> index 0b9d4e3e52c7..219a731df392 100644
+> --- a/drivers/regulator/axp20x-regulator.c
+> +++ b/drivers/regulator/axp20x-regulator.c
+> @@ -355,6 +355,81 @@ static const struct regulator_desc axp809_regulators[] = {
+>         AXP_DESC_SW(AXP809, SW, "sw", "swin", AXP22X_PWR_OUT_CTRL2, BIT(6)),
+>  };
+>
+> +static const struct regulator_linear_range axp803_dcdc234_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE(500000, 0x0, 0x46, 10000),
+> +       REGULATOR_LINEAR_RANGE(1200000, 0x47, 0x4b, 20000),
+> +};
 
-> It may be possible but I'd like to avoid it if we can. There might
-> turn out to be some errata or feature that requires early setup. And
-> the current cpu feature parsing code does it with flat dt.
+Can you keep the ranges the datasheet uses? It makes it easier to compare.
 
-Well, I'd like to avoid expanding usage of flat DT parsing in the
-kernel. But you could just put this function into arch/powerpc and I'd
-never see it, but I like that even less. Mainly, I just wanted to
-raise the point.
+> +
+> +static const struct regulator_linear_range axp803_dcdc5_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE(800000, 0x0, 0x20, 10000),
+> +       REGULATOR_LINEAR_RANGE(1140000, 0x21, 0x43, 20000),
 
-Your argument works until you need that setup in assembly code, then
-you are in the situation that you need to either handle the setup in
-bootloader/firmware or have an simple way to determine that condition.
+1.14 ~ 1.84 / 0.02 = 36 steps. This would end at 0x44.
 
-Rob
+> +};
+> +
+> +static const struct regulator_linear_range axp803_dcdc6_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE(600000, 0x0, 0x32, 10000),
+> +       REGULATOR_LINEAR_RANGE(1120000, 0x33, 0x47, 20000),
+> +};
+> +
+> +static const struct regulator_linear_range axp803_dldo2_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE(700000, 0x0, 0x1a, 100000),
+> +       REGULATOR_LINEAR_RANGE(3400000, 0x1b, 0x1f, 200000),
+> +};
 
+This is the same as axp806_cldo2_ranges. To keep the variants sorted
+in ascending order, you could keep this version but replace references
+to axp806_cldo2_ranges with this one.
+
+> +
+> +static const struct regulator_desc axp803_regulators[] = {
+> +       AXP_DESC(AXP803, DCDC1, "dcdc1", "vin1", 1600, 3400, 100,
+> +                AXP803_DCDC1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(0)),
+> +       AXP_DESC_RANGES(AXP803, DCDC2, "dcdc2", "vin2", axp803_dcdc234_ranges,
+> +                       76, AXP803_DCDC2_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> +                       BIT(1)),
+> +       AXP_DESC_RANGES(AXP803, DCDC3, "dcdc3", "vin3", axp803_dcdc234_ranges,
+> +                       76, AXP803_DCDC3_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> +                       BIT(2)),
+> +       AXP_DESC_RANGES(AXP803, DCDC4, "dcdc4", "vin4", axp803_dcdc234_ranges,
+> +                       76, AXP803_DCDC4_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> +                       BIT(3)),
+> +       AXP_DESC_RANGES(AXP803, DCDC5, "dcdc5", "vin5", axp803_dcdc5_ranges,
+> +                       68, AXP803_DCDC5_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> +                       BIT(4)),
+> +       AXP_DESC_RANGES(AXP803, DCDC6, "dcdc6", "vin6", axp803_dcdc6_ranges,
+> +                       72, AXP803_DCDC6_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> +                       BIT(5)),
+> +       /* secondary switchable output of DCDC1 */
+> +       AXP_DESC_SW(AXP803, DC1SW, "dc1sw", NULL, AXP22X_PWR_OUT_CTRL2,
+> +                   BIT(7)),
+> +       AXP_DESC(AXP803, ALDO1, "aldo1", "aldoin", 700, 3300, 100,
+> +                AXP22X_ALDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(5)),
+> +       AXP_DESC(AXP803, ALDO2, "aldo2", "aldoin", 700, 3300, 100,
+> +                AXP22X_ALDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(6)),
+> +       AXP_DESC(AXP803, ALDO3, "aldo3", "aldoin", 700, 3300, 100,
+> +                AXP22X_ALDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(7)),
+> +       AXP_DESC(AXP803, DLDO1, "dldo1", "dldoin", 700, 3300, 100,
+> +                AXP22X_DLDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(3)),
+> +       AXP_DESC_RANGES(AXP803, DLDO2, "dldo2", "dldoin", axp803_dldo2_ranges,
+> +                       32, AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2,
+> +                       BIT(4)),
+> +       AXP_DESC(AXP803, DLDO3, "dldo3", "dldoin", 700, 3300, 100,
+> +                AXP22X_DLDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(5)),
+> +       AXP_DESC(AXP803, DLDO4, "dldo4", "dldoin", 700, 3300, 100,
+> +                AXP22X_DLDO4_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(6)),
+
+dldo3 and dldo4 are controlled from AXP22X_PWR_OUT_CTRL2.
+
+> +       AXP_DESC(AXP803, ELDO1, "eldo1", "eldoin", 700, 1900, 50,
+> +                AXP22X_ELDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(0)),
+> +       AXP_DESC(AXP803, ELDO2, "eldo2", "eldoin", 700, 1900, 50,
+> +                AXP22X_ELDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(1)),
+> +       AXP_DESC(AXP803, ELDO3, "eldo3", "eldoin", 700, 1900, 50,
+> +                AXP22X_ELDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(2)),
+> +       AXP_DESC(AXP803, FLDO1, "fldo1", "fldoin", 700, 1450, 50,
+> +                AXP803_FLDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(2)),
+> +       AXP_DESC(AXP803, FLDO2, "fldo2", "fldoin", 700, 1450, 50,
+> +                AXP803_FLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(3)),
+
+The fields for fldo* are only four bits wide.
+
+> +       AXP_DESC_IO(AXP803, LDO_IO0, "ldo_io0", "ips", 700, 3300, 100,
+> +                   AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
+> +                   AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
+> +       AXP_DESC_IO(AXP803, LDO_IO1, "ldo_io1", "ips", 700, 3300, 100,
+> +                   AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
+> +                   AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
+> +       AXP_DESC_FIXED(AXP803, RTC_LDO, "rtc_ldo", "ips", 3000),
+> +};
+> +
+>  static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+>  {
+>         struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+> @@ -377,6 +452,13 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+>                  * (See include/linux/mfd/axp20x.h)
+>                  */
+>                 reg = AXP806_DCDC_FREQ_CTRL;
+> +       case AXP803_ID:
+
+AXP803 should come before AXP806.
+
+> +               /*
+> +                * AXP803 also have DCDC work frequency setting register at a
+> +                * different position.
+> +                */
+> +               if (axp20x->variant == AXP803_ID)
+> +                       reg = AXP803_DCDC_FREQ_CTRL;
+>         case AXP221_ID:
+>         case AXP223_ID:
+>         case AXP809_ID:
+> @@ -474,7 +556,13 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
+>                 mask = AXP22X_WORKMODE_DCDCX_MASK(id - AXP22X_DCDC1);
+>                 workmode <<= id - AXP22X_DCDC1;
+>                 break;
+> +       case AXP803_ID:
+
+Same here. Also this switch block has empty lines separating each case.
+
+> +               if (id < AXP803_DCDC1 || id > AXP803_DCDC6)
+> +                       return -EINVAL;
 >
->> > Signed-off-by: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > ---
->> >  drivers/of/fdt.c       | 39 +++++++++++++++++++++++++++++++++++++++
->> >  include/linux/of_fdt.h |  6 ++++++
->> >  2 files changed, 45 insertions(+)
->> >
->> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> > index e5ce4b59e162..a45854fe5156 100644
->> > --- a/drivers/of/fdt.c
->> > +++ b/drivers/of/fdt.c
->> > @@ -754,6 +754,37 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
->> >  }
->> >
->> >  /**
->> > + * of_scan_flat_dt_subnodes - scan sub-nodes of a node call callback on each.
->> > + * @it: callback function
->> > + * @data: context data pointer
->> > + *
->> > + * This function is used to scan sub-nodes of a node.
->> > + */
->> > +int __init of_scan_flat_dt_subnodes(unsigned long node,
->> > +                                   int (*it)(unsigned long node,
->> > +                                             const char *uname,
->> > +                                             void *data),
->> > +                                   void *data)
->> > +{
->> > +       const void *blob = initial_boot_params;
->> > +       const char *pathp;
->> > +       int offset, rc = 0;
->> > +
->> > +       offset = node;
->> > +        for (offset = fdt_first_subnode(blob, offset);
->> > +             offset >= 0 && !rc;
->> > +             offset = fdt_next_subnode(blob, offset)) {
->>
->> fdt_for_each_subnode()
+> +               mask = AXP22X_WORKMODE_DCDCX_MASK(id - AXP803_DCDC1);
+> +               workmode <<= id - AXP803_DCDC1;
+> +               break;
+>         default:
+>                 /* should not happen */
+>                 WARN_ON(1);
+> @@ -492,20 +580,34 @@ static bool axp20x_is_polyphase_slave(struct axp20x_dev *axp20x, int id)
+>  {
+>         u32 reg = 0;
 >
-> Got it.
+> -       /* Only AXP806 has poly-phase outputs */
+> -       if (axp20x->variant != AXP806_ID)
+> +       /*
+> +        * Currently in our supported AXP variants, only AXP806 and AXP803
+> +        * have polyphase regulators.
+> +        */
+> +       switch (axp20x->variant) {
+> +       case AXP806_ID:
+> +               regmap_read(axp20x->regmap, AXP806_DCDC_MODE_CTRL2, &reg);
+> +
+> +               switch (id) {
+> +               case AXP806_DCDCB:
+> +                       return (((reg & GENMASK(7, 6)) == BIT(6)) ||
+> +                               ((reg & GENMASK(7, 6)) == BIT(7)));
+> +               case AXP806_DCDCC:
+> +                       return ((reg & GENMASK(7, 6)) == BIT(7));
+> +               case AXP806_DCDCE:
+> +                       return !!(reg & BIT(5));
+> +               }
+> +       case AXP803_ID:
+
+803 before 806.
+
+> +               regmap_read(axp20x->regmap, AXP803_POLYPHASE_CTRL, &reg);
+> +
+> +               switch (id) {
+> +               case AXP803_DCDC3:
+> +                       return !!(reg & BIT(6));
+> +               case AXP803_DCDC6:
+> +                       return !!(reg & BIT(7));
+> +               }
+> +       default:
+>                 return false;
+> -
+> -       regmap_read(axp20x->regmap, AXP806_DCDC_MODE_CTRL2, &reg);
+> -
+> -       switch (id) {
+> -       case AXP806_DCDCB:
+> -               return (((reg & GENMASK(7, 6)) == BIT(6)) ||
+> -                       ((reg & GENMASK(7, 6)) == BIT(7)));
+> -       case AXP806_DCDCC:
+> -               return ((reg & GENMASK(7, 6)) == BIT(7));
+> -       case AXP806_DCDCE:
+> -               return !!(reg & BIT(5));
+>         }
 >
->>
->> > +
->> > +               pathp = fdt_get_name(blob, offset, NULL);
->> > +               if (*pathp == '/')
->> > +                       pathp = kbasename(pathp);
->>
->> Seems a bit odd that you parse the name in this function. Perhaps the
->> caller should do that, or if you want subnodes matching a certain
->> name, then do the matching here. But you didn't copy me on the rest of
->> the series, so I don't know how you are using this.
+>         return false;
+> @@ -548,6 +650,10 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                 regulators = axp809_regulators;
+>                 nregulators = AXP809_REG_ID_MAX;
+>                 break;
+> +       case AXP803_ID:
+> +               regulators = axp803_regulators;
+> +               nregulators = AXP803_REG_ID_MAX;
+> +               break;
+
+Ascending order.
+
+>         default:
+>                 dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+>                         axp20x->variant);
+> @@ -579,7 +685,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                  * name.
+>                  */
+>                 if ((regulators == axp22x_regulators && i == AXP22X_DC1SW) ||
+> -                   (regulators == axp809_regulators && i == AXP809_DC1SW)) {
+> +                   (regulators == axp809_regulators && i == AXP809_DC1SW) ||
+> +                   (regulators == axp803_regulators && i == AXP803_DC1SW)) {
+
+803 before 809.
+
+So, mostly ordering issues, and a few minor errors.
+
+Regards
+ChenYu
+
+>                         new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
+>                                                 GFP_KERNEL);
+>                         *new_desc = regulators[i];
+> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+> index b3220ef374d3..858d5b1b43b9 100644
+> --- a/include/linux/mfd/axp20x.h
+> +++ b/include/linux/mfd/axp20x.h
+> @@ -119,6 +119,17 @@ enum axp20x_variants {
+>  #define AXP806_BUS_ADDR_EXT            0xfe
+>  #define AXP806_REG_ADDR_EXT            0xff
 >
-> Hmm, it was a while since writing that part. I guess I just copied
-> of_scan_flat_dt interface.
+> +#define AXP803_POLYPHASE_CTRL          0x14
+> +#define AXP803_FLDO1_V_OUT             0x1c
+> +#define AXP803_FLDO2_V_OUT             0x1d
+> +#define AXP803_DCDC1_V_OUT             0x20
+> +#define AXP803_DCDC2_V_OUT             0x21
+> +#define AXP803_DCDC3_V_OUT             0x22
+> +#define AXP803_DCDC4_V_OUT             0x23
+> +#define AXP803_DCDC5_V_OUT             0x24
+> +#define AXP803_DCDC6_V_OUT             0x25
+> +#define AXP803_DCDC_FREQ_CTRL          0x3b
+> +
+>  /* Interrupt */
+>  #define AXP152_IRQ1_EN                 0x40
+>  #define AXP152_IRQ2_EN                 0x41
+> @@ -350,6 +361,32 @@ enum {
+>         AXP809_REG_ID_MAX,
+>  };
 >
-> Caller is in this patch:
+> +enum {
+> +       AXP803_DCDC1 = 0,
+> +       AXP803_DCDC2,
+> +       AXP803_DCDC3,
+> +       AXP803_DCDC4,
+> +       AXP803_DCDC5,
+> +       AXP803_DCDC6,
+> +       AXP803_DC1SW,
+> +       AXP803_ALDO1,
+> +       AXP803_ALDO2,
+> +       AXP803_ALDO3,
+> +       AXP803_DLDO1,
+> +       AXP803_DLDO2,
+> +       AXP803_DLDO3,
+> +       AXP803_DLDO4,
+> +       AXP803_ELDO1,
+> +       AXP803_ELDO2,
+> +       AXP803_ELDO3,
+> +       AXP803_FLDO1,
+> +       AXP803_FLDO2,
+> +       AXP803_RTC_LDO,
+> +       AXP803_LDO_IO0,
+> +       AXP803_LDO_IO1,
+> +       AXP803_REG_ID_MAX,
+> +};
+> +
+>  /* IRQs */
+>  enum {
+>         AXP152_IRQ_LDO0IN_CONNECT = 1,
+> --
+> 2.12.2
 >
-> https://patchwork.ozlabs.org/patch/747262/
->
-> I'll include you in subsequent post if you prefer.
->
-> Thanks,
-> Nick
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
