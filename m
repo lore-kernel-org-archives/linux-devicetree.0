@@ -1,7 +1,7 @@
 From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 20/23] drivers/fsi/gpio: Add tracepoints for GPIO master
-Date: Tue,  4 Apr 2017 21:06:04 -0500
-Message-ID: <20170405020607.79939-21-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v5 23/23] drivers/fsi: Use asynchronous slave mode
+Date: Tue,  4 Apr 2017 21:06:07 -0500
+Message-ID: <20170405020607.79939-24-cbostic@linux.vnet.ibm.com>
 References: <20170405020607.79939-1-cbostic@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170405020607.79939-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
@@ -12,132 +12,98 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-Add trace points for key GPIO operations of the GPIO based FSI
-master.
+For slaves that are behind a software-clocked master, we want FSI CFAMs
+to run asynchronously to the FSI clock, so set up our slaves to be in
+async mode.
 
 Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- drivers/fsi/fsi-master-gpio.c          |  9 +++++
- include/trace/events/fsi_master_gpio.h | 68 ++++++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
- create mode 100644 include/trace/events/fsi_master_gpio.h
+ drivers/fsi/fsi-core.c        | 22 +++++++++++++++++++++-
+ drivers/fsi/fsi-master-gpio.c |  1 +
+ drivers/fsi/fsi-master.h      |  2 ++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 747d0e3..a6ed34f 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -47,6 +47,7 @@
+ #define FSI_SMODE		0x0	/* R/W: Mode register */
+ #define FSI_SISC		0x8	/* R/W: Interrupt condition */
+ #define FSI_SSTAT		0x14	/* R  : Slave status */
++#define FSI_LLMODE		0x100	/* R/W: Link layer mode register */
+ 
+ /*
+  * SMODE fields
+@@ -62,6 +63,11 @@
+ #define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
+ #define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
+ 
++/*
++ * LLMODE fields
++ */
++#define FSI_LLMODE_ASYNC	0x1
++
+ #define FSI_SLAVE_SIZE_23b		0x800000
+ 
+ static DEFINE_IDA(master_ida);
+@@ -560,8 +566,8 @@ static void fsi_slave_release(struct device *dev)
+ 
+ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ {
++	uint32_t chip_id, llmode;
+ 	struct fsi_slave *slave;
+-	uint32_t chip_id;
+ 	uint8_t crc;
+ 	int rc;
+ 
+@@ -597,6 +603,20 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 		return -ENODEV;
+ 	}
+ 
++	/* If we're behind a master that doesn't provide a self-running bus
++	 * clock, put the slave into async mode
++	 */
++	if (master->flags & FSI_MASTER_FLAG_SWCLOCK) {
++		llmode = cpu_to_be32(FSI_LLMODE_ASYNC);
++		rc = fsi_master_write(master, link, id,
++				FSI_SLAVE_BASE + FSI_LLMODE,
++				&llmode, sizeof(llmode));
++		if (rc)
++			dev_warn(&master->dev,
++				"can't set llmode on slave:%02x:%02x %d\n",
++				link, id, rc);
++	}
++
+ 	/* We can communicate with a slave; create the slave device and
+ 	 * register.
+ 	 */
 diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-index 9fedfaf..5d9e0b0 100644
+index 5d9e0b0..d5cce88 100644
 --- a/drivers/fsi/fsi-master-gpio.c
 +++ b/drivers/fsi/fsi-master-gpio.c
-@@ -61,6 +61,9 @@ struct fsi_master_gpio {
- 	struct gpio_desc	*gpio_mux;	/* Mux control */
- };
+@@ -569,6 +569,7 @@ static int fsi_master_gpio_probe(struct platform_device *pdev)
+ 	master->gpio_mux = gpio;
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/fsi_master_gpio.h>
-+
- #define to_fsi_master_gpio(m) container_of(m, struct fsi_master_gpio, master)
+ 	master->master.n_links = 1;
++	master->master.flags = FSI_MASTER_FLAG_SWCLOCK;
+ 	master->master.read = fsi_master_gpio_read;
+ 	master->master.write = fsi_master_gpio_write;
+ 	master->master.term = fsi_master_gpio_term;
+diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
+index d6a4885..fd39924 100644
+--- a/drivers/fsi/fsi-master.h
++++ b/drivers/fsi/fsi-master.h
+@@ -19,6 +19,8 @@
  
- struct fsi_gpio_msg {
-@@ -128,6 +131,8 @@ static void serial_in(struct fsi_master_gpio *master, struct fsi_gpio_msg *msg,
- 		msg->msg |= ~in_bit & 0x1;	/* Data is negative active */
- 	}
- 	msg->bits += num_bits;
-+
-+	trace_fsi_master_gpio_in(master, num_bits, msg->msg);
- }
+ #include <linux/device.h>
  
- static void serial_out(struct fsi_master_gpio *master,
-@@ -139,6 +144,8 @@ static void serial_out(struct fsi_master_gpio *master,
- 	uint64_t last_bit = ~0;
- 	int next_bit;
- 
-+	trace_fsi_master_gpio_out(master, cmd->bits, cmd->msg);
++#define FSI_MASTER_FLAG_SWCLOCK	0x1
 +
- 	if (!cmd->bits) {
- 		dev_warn(master->dev, "trying to output 0 bits\n");
- 		return;
-@@ -464,6 +471,8 @@ static int fsi_master_gpio_break(struct fsi_master *_master, int link)
- 	if (link != 0)
- 		return -ENODEV;
- 
-+	trace_fsi_master_gpio_break(master);
-+
- 	set_sda_output(master, 1);
- 	sda_out(master, 1);
- 	clock_toggle(master, FSI_PRE_BREAK_CLOCKS);
-diff --git a/include/trace/events/fsi_master_gpio.h b/include/trace/events/fsi_master_gpio.h
-new file mode 100644
-index 0000000..11b36c1
---- /dev/null
-+++ b/include/trace/events/fsi_master_gpio.h
-@@ -0,0 +1,68 @@
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM fsi_master_gpio
-+
-+#if !defined(_TRACE_FSI_MASTER_GPIO_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_FSI_MASTER_GPIO_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(fsi_master_gpio_in,
-+	TP_PROTO(const struct fsi_master_gpio *master, int bits, uint64_t msg),
-+	TP_ARGS(master, bits, msg),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	bits)
-+		__field(uint64_t, msg)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+		__entry->bits = bits;
-+		__entry->msg  = msg & ((1ull<<bits) - 1);
-+	),
-+	TP_printk("fsi-gpio%d => %0*llx[%d]",
-+		__entry->master_idx,
-+		(__entry->bits + 3) / 4,
-+		__entry->msg,
-+		__entry->bits
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_gpio_out,
-+	TP_PROTO(const struct fsi_master_gpio *master, int bits, uint64_t msg),
-+	TP_ARGS(master, bits, msg),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	bits)
-+		__field(uint64_t, msg)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+		__entry->bits = bits;
-+		__entry->msg  = msg & ((1ull<<bits) - 1);
-+	),
-+	TP_printk("fsi-gpio%d <= %0*llx[%d]",
-+		__entry->master_idx,
-+		(__entry->bits + 3) / 4,
-+		__entry->msg,
-+		__entry->bits
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_gpio_break,
-+	TP_PROTO(const struct fsi_master_gpio *master),
-+	TP_ARGS(master),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+	),
-+	TP_printk("fsi-gpio%d ----break---",
-+		__entry->master_idx
-+	)
-+);
-+
-+#endif /* _TRACE_FSI_MASTER_GPIO_H */
-+
-+#include <trace/define_trace.h>
+ struct fsi_master {
+ 	struct device	dev;
+ 	int		idx;
 -- 
 1.8.2.2
 
