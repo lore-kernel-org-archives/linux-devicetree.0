@@ -1,92 +1,53 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 6/7] ARM64: dts: marvell: Add pinctrl nodes for Armada 3700
-Date: Wed,  5 Apr 2017 17:18:07 +0200
-Message-ID: <1defc5c1925e819b28f2b3802aadc9a8e7be224a.1491405475.git-series.gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v4 2/7] arm64: marvell: enable the Armada 37xx pinctrl driver
+Date: Wed,  5 Apr 2017 17:18:03 +0200
+Message-ID: <d5015ded3a76ae4b1d2d1ef43ab4cc2e51050a03.1491405475.git-series.gregory.clement@free-electrons.com>
 References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Hua Jing <jinghua@marvell.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the nodes for the two pin controller present in the Armada 37xx SoCs.
+This commit makes sure the driver for the Armada 37xx pin controller is
+enabled.
 
-Initially the node was named gpio1 using the same name that for the
-register range in the datasheet. However renaming it pinctr_nb (nb for
-North Bridge) makes more sens.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 42 +++++++++++++++++++--
- 1 file changed, 39 insertions(+), 3 deletions(-)
+ arch/arm64/Kconfig.platforms | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index b48d668a6ab6..c02b13479458 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -157,10 +157,29 @@
- 				#clock-cells = <1>;
- 			};
- 
--			gpio1: gpio@13800 {
--				compatible = "marvell,mvebu-gpio-3700",
-+			pinctrl_nb: pinctrl-nb@13800 {
-+				compatible = "marvell,armada3710-nb-pinctrl",
- 				"syscon", "simple-mfd";
--				reg = <0x13800 0x500>;
-+				reg = <0x13800 0x100>, <0x13C00 0x20>;
-+				gpionb: gpionb {
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&pinctrl_nb 0 0 36>;
-+					gpio-controller;
-+					interrupts =
-+					<GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				};
- 
- 				xtalclk: xtal-clk {
- 					compatible = "marvell,armada-3700-xtal-clock";
-@@ -169,6 +188,23 @@
- 				};
- 			};
- 
-+			pinctrl_sb: pinctrl-sb@18800 {
-+				compatible = "marvell,armada3710-sb-pinctrl",
-+				"syscon", "simple-mfd";
-+				reg = <0x18800 0x100>, <0x18C00 0x20>;
-+				gpiosb: gpiosb {
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&pinctrl_sb 0 0 29>;
-+					gpio-controller;
-+					interrupts =
-+					<GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+			};
-+
- 			eth0: ethernet@30000 {
- 				   compatible = "marvell,armada-3700-neta";
- 				   reg = <0x30000 0x4000>;
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 129cc5ae4091..9aa71a3f3f50 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -103,8 +103,13 @@ config ARCH_MVEBU
+ 	select ARMADA_AP806_SYSCON
+ 	select ARMADA_CP110_SYSCON
+ 	select ARMADA_37XX_CLK
++	select GPIOLIB
++	select GPIOLIB_IRQCHIP
+ 	select MVEBU_ODMI
+ 	select MVEBU_PIC
++	select OF_GPIO
++	select PINCTRL
++	select PINCTRL_ARMADA_37XX
+ 	help
+ 	  This enables support for Marvell EBU familly, including:
+ 	   - Armada 3700 SoC Family
 -- 
 git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
