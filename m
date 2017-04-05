@@ -1,116 +1,101 @@
-From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 5/9] arm: dts: r7s72100: Add pin controller node
-Date: Wed,  5 Apr 2017 16:07:23 +0200
-Message-ID: <1491401247-7030-6-git-send-email-jacopo+renesas@jmondi.org>
-References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
+Date: Wed, 5 Apr 2017 19:40:53 +0530
+Message-ID: <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A@mail.gmail.com>
+References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
+ <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com> <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
+ <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491401247-7030-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add pin controller node with 12 gpio controller sub-nodes to
-r7s72100 dtsi.
+Hi Kishon,
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/r7s72100.dtsi | 78 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+On Wed, Apr 5, 2017 at 7:04 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> Hi Ravi,
+>
+> On Wednesday 05 April 2017 06:30 PM, Raviteja Garimella wrote:
+>> Hi Kishon,
+>>
+>> On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
+>>>> This is driver for USB DRD Phy used in Broadcom's Northstar2
+>>>> SoC. The phy can be configured to be in Device mode or Host
+>>>> mode based on the type of cable connected to the port. The
+>>>> driver registers to  extcon framework to get appropriate
+>>>> connect events for Host/Device cables connect/disconnect
+>>>> states based on VBUS and ID interrupts.
+>>>
+>>> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
+>>> Northstar2.
+>>>
+>>
+>> Will do.
+>>
+>>> Sorry for not letting you know this earlier. But I feel the design of the
+>>> driver should be changed. Extcon shouldn't be used here. The extcon
+>>> notifications should be sent to the consumer driver and the consumer driver
+>>> should be responsible for invoking the phy ops.
+>>>
+>>
+>> The consumer drivers here would be a UDC driver (USB device
+>> controller), EHCI and OHCI host controller drivers.
+>> I was already suggested in UDC driver review to deal with extcon in Phy driver.
+>>
+>> This phy connects to 2 host controllers, and one device controller.
+>> That's the design in Broadcom Northstar2
+>> platform. The values of the VBUS and ID pins of this port are
+>> determined based on the type of the cable (device cable
+>> or host cable). And. phy has to be configured accordingly.
+>>
+>>> The phy ops being invoked during extcon events doesn't look right.
+>>
+>> Could you please elaborate on the concern, so that we can think of
+>> mitigating those issues in this driver?
+>> Since we are dealing with phy init/shutdown in this driver itself, are
+>> you okay with moving the extcon handling code
+>> out of phy ops ?
+>
+> yeah, For e.g., ns2_drd_phy_init is part of phy_ops and is being invoked from
+> extcon events too. Can a phy which is initialized by a phy consumer (say your
+> UDC invokes phy_init) can be shutdown by an extcon event?
+>
+> Maybe a clear explanation of when phy_ops here will be invoked and when it will
+> set using extcon events might help.
+>
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index b8aa256..9342ff4 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -180,6 +180,84 @@
- 		};
- 	};
- 
-+	pinctrl: pin-controller@fcfe3000 {
-+		compatible = "renesas,r7s72100-ports";
-+
-+		reg = <0xfcfe3000 0x4230>;
-+
-+		port0: gpio-0 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 6>;
-+		};
-+
-+		port1: gpio-1 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 16 16>;
-+		};
-+
-+		port2: gpio-2 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 32 16>;
-+		};
-+
-+		port3: gpio-3 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 48 16>;
-+		};
-+
-+		port4: gpio-4 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 64 16>;
-+		};
-+
-+		port5: gpio-5 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 80 11>;
-+		};
-+
-+		port6: gpio-6 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 96 16>;
-+		};
-+
-+		port7: gpio-7 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 112 16>;
-+		};
-+
-+		port8: gpio-8 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 128 16>;
-+		};
-+
-+		port9: gpio-9 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 144 8>;
-+		};
-+
-+		port10: gpio-10 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 160 16>;
-+		};
-+
-+		port11: gpio-11 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 176 16>;
-+		};
-+	};
-+
- 	scif0: serial@e8007000 {
- 		compatible = "renesas,scif-r7s72100", "renesas,scif";
- 		reg = <0xe8007000 64>;
--- 
-2.7.4
+Say, we have a USB pendrive which is connected to the DRD port through
+a host cable.
+Now the PHY will be initialized to be in host mode.
+When the pendrive is unplugged, and we now connect the NS2 device to
+some linux PC,
+now the PHY has to be shutdown, and re-initialized to be in Device mode.
 
+On unplug event, it is set neither to Host nor Device mode (basically
+shutdown). Next time which ever cable is connected, the PHY is
+initialized to the respective
+mode.
+
+Please let me know if it's fine to do these initializations outside
+phy ops, because those will
+be irrelevant for phy consumers (the controllers) as it's anyways
+dealt in the phy driver through
+extcon.
+
+Thanks,
+Ravi
+
+
+> Thanks
+> Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
