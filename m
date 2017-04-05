@@ -1,124 +1,114 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v4 0/7] Add support for pinctrl/gpio on Armada 37xx
-Date: Wed,  5 Apr 2017 17:18:01 +0200
-Message-ID: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v4 7/7] ARM64: dts: marvell: armada37xx: add pinctrl definition
+Date: Wed,  5 Apr 2017 17:18:08 +0200
+Message-ID: <7b07bd69cd506effa716c41f8ec3dda7a7c6c563.1491405475.git-series.gregory.clement@free-electrons.com>
+References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Hua Jing <jinghua@marvell.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Start to populate the device tree of the Armada 37xx with the pincontrol
+configuration used on the board providing a dts.
 
-In this forth version I improved the driver based on the review from
-Linus Walleij and I fixed a configuration issue with uart2. For the
-record, this series adds support for the pin and gpio controllers
-present on the Armada 37xx SoCs.
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ arch/arm64/boot/dts/marvell/armada-3720-db.dts |  8 +++++-
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi   | 31 +++++++++++++++++++-
+ 2 files changed, 39 insertions(+)
 
-Each Armada 37xx SoC comes with 2 pin controllers: one on the south
-bridge (managing 28 pins) and one on the north bridge (managing 36 pins).
-
-At the hardware level the controller configure the pins by group and not
-pin by pin.
-
-The gpio controller is also capable to handle interrupt from gpio.
-
-Changelog
-
-v3 -> v4
-- Some group are configured by several bits in the register:
-  extend the armada_37xx_pin_group struct to manage it.
-
-- Fix the uart2 and cspi2/3 configuration
-
-- Document the armada_37xx_add_function(), armada_37xx_fill_group()
-  and armada_37xx_fill_funcs().
-
-- Use devm_gpiochip_add_data()
-
-- Use irq_find_mapping instead of irq_linear_revmap
-
-- Use handle_edge_irq instead of the wrong handle_level_irq
-
-- Add comment about the fact the we have multiple parent interrupt
-
-- Add comment about the mask usage of the irq_data struct
-
-- Use BIT() macro when possible
-
-- Select more CONFIG symbol needed for GPIO and interrupt support
-
-v2 -> v3
- - use gpio-ranges (patch 4)
-
- - Document gpio-ranges usage (patch 1)
-
- - do not use anymore a global pin index (patch 3)
-
-v1 -> v2:
-- Update binding documentation making clear that mfd and syscon must
-  be used (patch 1).
-
-- Split the fist patch adding pin controller support for Armada 37xx
-  in arm64 part (for kconfig) and pinctrl part (patch 2 and 3)
-
-- Add MFD_SYSCON dependency (patch 3)
-
-- Add kerneldoc for the armada_37xx_pin_group struct (patch 3)
-
-- Rename _add_function() to armada_37xx_add_function() (patch 3)
-
-- Use an inline function to update the reg offset (patch 4)
-
-- Rename gpiolib_register to gpiochip_register (patch 4)
-
-- Add a comment about the two registers limit (patch 4)
-
-- Add explicit gpio node in the device tree (patch 4)
-
-- Convert the driver to use GPIOLIB_IRQCHIP (patch 5)
-
-- Add a critical section when accessing the hardware registers (patch 5)
-
-- Use the gpio subnode (patch 5)
-
-Thanks,
-
-Gregory
-
-Gregory CLEMENT (7):
-  pinctrl: dt-bindings: Add documentation for Armada 37xx pin controllers
-  arm64: marvell: enable the Armada 37xx pinctrl driver
-  pinctrl: armada-37xx: Add pin controller support for Armada 37xx
-  pinctrl: armada-37xx: Add gpio support
-  pinctrl: aramda-37xx: Add irqchip support
-  ARM64: dts: marvell: Add pinctrl nodes for Armada 3700
-  ARM64: dts: marvell: armada37xx: add pinctrl definition
-
- Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt         |   7 +-
- Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt | 183 ++++++++++++++-
- arch/arm64/Kconfig.platforms                                              |   5 +-
- arch/arm64/boot/dts/marvell/armada-3720-db.dts                            |   8 +-
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi                              |  73 ++++-
- drivers/pinctrl/Makefile                                                  |   2 +-
- drivers/pinctrl/mvebu/Kconfig                                             |   7 +-
- drivers/pinctrl/mvebu/Makefile                                            |   3 +-
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c                               | 969 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 9 files changed, 1249 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
- create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-
-base-commit: c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+index 86602c907a61..e749c5727490 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+@@ -63,6 +63,8 @@
+ };
+ 
+ &i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
+ 	status = "okay";
+ };
+ 
+@@ -73,6 +75,8 @@
+ 
+ &spi0 {
+ 	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi_quad_pins>;
+ 
+ 	m25p80@0 {
+ 		compatible = "jedec,spi-nor";
+@@ -103,6 +107,8 @@
+ 
+ /* Exported on the micro USB connector CON32 through an FTDI */
+ &uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
+ 	status = "okay";
+ };
+ 
+@@ -128,6 +134,8 @@
+ };
+ 
+ &eth0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>;
+ 	phy-mode = "rgmii-id";
+ 	phy = <&phy0>;
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index c02b13479458..2ac25f54d01d 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -186,6 +186,31 @@
+ 					clock-output-names = "xtal";
+ 					#clock-cells = <0>;
+ 				};
++
++				spi_quad_pins: spi-quad-pins {
++					groups = "spi_quad";
++					function = "spi";
++				};
++
++				i2c1_pins: i2c1-pins {
++					groups = "i2c1";
++					function = "i2c";
++				};
++
++				i2c2_pins: i2c2-pins {
++					groups = "i2c2";
++					function = "i2c";
++				};
++
++				uart1_pins: uart1-pins {
++					groups = "uart1";
++					function = "uart";
++				};
++
++				uart2_pins: uart2-pins {
++					groups = "uart2";
++					function = "uart";
++				};
+ 			};
+ 
+ 			pinctrl_sb: pinctrl-sb@18800 {
+@@ -203,6 +228,12 @@
+ 					<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
+ 					<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
+ 				};
++
++				rgmii_pins: mii-pins {
++					groups = "rgmii";
++					function = "mii";
++				};
++
+ 			};
+ 
+ 			eth0: ethernet@30000 {
 -- 
 git-series 0.9.1
