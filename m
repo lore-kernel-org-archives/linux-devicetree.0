@@ -1,15 +1,15 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
 Subject: Re: [PATCH 1/4] dt-bindings: iio: stm32-dac: Add support for STM32 DAC
-Date: Wed, 5 Apr 2017 16:47:29 +0200
-Message-ID: <2386fb3e-142b-48f2-9308-9ff085aa4c4f@st.com>
+Date: Wed, 5 Apr 2017 16:48:20 +0200
+Message-ID: <94c63ce8-c48e-edbc-8e71-95b4aefd55cf@st.com>
 References: <1490960707-22422-1-git-send-email-fabrice.gasnier@st.com>
  <1490960707-22422-2-git-send-email-fabrice.gasnier@st.com>
- <a6c51b90-c14b-412c-1006-cf0dd7abda0d@kernel.org>
+ <20170403164240.hw4wza7y3s5faivb@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a6c51b90-c14b-412c-1006-cf0dd7abda0d@kernel.org>
+In-Reply-To: <20170403164240.hw4wza7y3s5faivb@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,12 +19,12 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, amelie.delaunay@st.com, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linus.walleij@linaro.org, benjamin.gaignard@st.com
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, amelie.delaunay@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, jic23@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2017 01:16 PM, Jonathan Cameron wrote:
-> On 31/03/17 12:45, Fabrice Gasnier wrote:
+On 04/03/2017 06:42 PM, Rob Herring wrote:
+> On Fri, Mar 31, 2017 at 01:45:04PM +0200, Fabrice Gasnier wrote:
 >> Document STMicroelectronics STM32 DAC (digital-to-analog converter).
 >>
 >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
@@ -43,25 +43,10 @@ On 04/02/2017 01:16 PM, Jonathan Cameron wrote:
 >> +
 >> +The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
 >> +can be configured in 8- or 12-bit mode. In 12-bit mode, the data could be
->> +left- or right-aligned.
-> Whilst possibly true, do we care about the alignment?  That'll all get wrapped
-> up in the driver.
-Hi Jonathan,
-
-I'll update this description in V2
-
-> 
->> It has two output channels, each with its own converter.
+>> +left- or right-aligned. It has two output channels, each with its own converter.
 >> +It has built-in noise and triangle waveform generator and supports external
 >> +triggers for conversions. The DAC's output buffer allows a high drive output
 >> +current.
-> Ah.. This is going to be fun :) More unusual hardware to find in an SoC.
-Yes, let's discuss this on following patches.
-
-Thanks your review,
-Best Regards,
-Fabrice
-
 >> +
 >> +Contents of a stm32 dac root node:
 >> +-----------------------------------
@@ -89,6 +74,17 @@ Fabrice
 >> +  Documentation/devicetree/bindings/iio/iio-bindings.txt
 >> +- st,dac-channel: Must be either 1 or 2, to define channel in use (e.g.
 >> +  single channels: 1 or 2)
+> 
+> Use "reg" instead.
+
+Hi Rob,
+
+Thanks your reviewing. I'll update this in V2
+
+Best Regards,
+Fabrice
+
+> 
 >> +
 >> +Example:
 >> +	dac: dac@40007400 {
@@ -110,5 +106,6 @@ Fabrice
 >> +			st,dac-channel = <2>;
 >> +		};
 >> +	};
+>> -- 
+>> 1.9.1
 >>
-> 
