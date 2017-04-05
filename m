@@ -1,158 +1,84 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v5] of/pci: Fix memory leak in of_pci_get_host_bridge_resources
-Date: Wed,  5 Apr 2017 10:28:22 +0800
-Message-ID: <1491359303-1385-2-git-send-email-jeffy.chen@rock-chips.com>
-References: <1491359303-1385-1-git-send-email-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491359303-1385-1-git-send-email-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: robh@kernel.org, toshi.kani@hpe.com, shawn.lin@rock-chips.com, briannorris@chromium.org, linux-kernel@vger.kernel.org, dianders@chromium.org, bhelgaas@google.com, dtor@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: imx7: add USDHC NAND clock to SDHC
+ instances
+Date: Tue, 04 Apr 2017 19:36:01 -0700
+Message-ID: <c95a7f535296623bdd4e4a640b3c27f5@agner.ch>
+References: <20170330005029.6472-1-stefan@agner.ch>
+ <20170330005029.6472-2-stefan@agner.ch>
+ <20170401030312.GB24882@b29396-OptiPlex-7040>
+ <5c8339900fa1bd6215fb94d4386f7e06@agner.ch>
+ <CAOMZO5CprxqnqRXMFJLBAgYAZGGnXNs3ZciyVz_mSLRnnSQQRQ@mail.gmail.com>
+ <CAOMZO5A7QQEe5rgBbJBzo8GY41aYV9WA8e9teCUROyihg0kq_g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5A7QQEe5rgBbJBzo8GY41aYV9WA8e9teCUROyihg0kq_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently we only free the allocated resource struct when error.
-This would cause memory leak after pci_free_resource_list.
+On 2017-04-04 19:15, Fabio Estevam wrote:
+> On Sun, Apr 2, 2017 at 2:02 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sat, Apr 1, 2017 at 1:15 AM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
+>>
+>>> IMX7D_IPG_ROOT_CLK is currently not a valid clock in upstream... So we
+>>> would have to add it to the clock driver first.
+>>>
+>>> I guess we could/should add it anyway at one point? But probably also as
+>>> init on, just to make sure Linux does not disable it since it is
+>>> currently used by several IPs implicitly.
+>>
+>> Yes, I made a previous attempt do add  IMX7D_IPG_ROOT_CLK and it did
+>> not work as I did not put it in the init_on clock list.
+>>
+>> Will submit a new patch adding it to init_on, thanks.
+> 
+> I thought that adding IMX7D_IPG_ROOT_CLK would do the trick, but the
+> patch below also causes the kernel to not boot:
+> 
+> --- a/drivers/clk/imx/clk-imx7d.c
+> +++ b/drivers/clk/imx/clk-imx7d.c
+> @@ -386,7 +386,7 @@ static int const clks_init_on[] __initconst = {
+>         IMX7D_PLL_SYS_MAIN_480M_CLK, IMX7D_NAND_USDHC_BUS_ROOT_CLK,
+>         IMX7D_DRAM_PHYM_ROOT_CLK, IMX7D_DRAM_ROOT_CLK,
+>         IMX7D_DRAM_PHYM_ALT_ROOT_CLK, IMX7D_DRAM_ALT_ROOT_CLK,
+> -       IMX7D_AHB_CHANNEL_ROOT_CLK,
+> +       IMX7D_AHB_CHANNEL_ROOT_CLK, IMX7D_IPG_ROOT_CLK,
+>  };
+> 
+>  static struct clk_onecell_data clk_data;
+> @@ -788,7 +788,7 @@ static void __init imx7d_clocks_init(struct
+> device_node *ccm_node)
+>         clks[IMX7D_WRCLK_ROOT_DIV] =
+> imx_clk_divider2("wrclk_post_div", "wrclk_pre_div", base + 0xbd00, 0,
+> 6);
+>         clks[IMX7D_CLKO1_ROOT_DIV] =
+> imx_clk_divider2("clko1_post_div", "clko1_pre_div", base + 0xbd80, 0,
+> 6);
+>         clks[IMX7D_CLKO2_ROOT_DIV] =
+> imx_clk_divider2("clko2_post_div", "clko2_pre_div", base + 0xbe00, 0,
+> 6);
+> -
+> +       clks[IMX7D_IPG_ROOT_CLK] = imx_clk_divider2("ipg_root_clk",
+> "ahb_root_clk", base + 0x9080, 0, 2);
+>         clks[IMX7D_ARM_A7_ROOT_CLK] = imx_clk_gate4("arm_a7_root_clk",
+> "arm_a7_div", base + 0x4000, 0);
+>         clks[IMX7D_ARM_M4_ROOT_CLK] = imx_clk_gate4("arm_m4_root_clk",
+> "arm_m4_div", base + 0x4010, 0);
+>         clks[IMX7D_ARM_M0_ROOT_CLK] = imx_clk_gate4("arm_m0_root_clk",
+> "arm_m0_div", base + 0x4020, 0);
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
+Hm, imx_clk_divider2 sets CLK_SET_RATE_PARENT, maybe that influences the
+parent?
 
-Changes in v5:
-Fix some careless compile errors.
+I guess we actually don't want the clock framework to change that clock
+rate, not sure whether we can freeze it or similar.
 
-Changes in v4:
-Use IORESOURCE_AUTO to mark struct resources which could be copied.
-
-Changes in v3:
-Add some comments.
-
-Changes in v2:
-Don't change the resource_list_create_entry's behavior.
-
- drivers/of/of_pci.c | 51 ++++++++++++++++++---------------------------------
- drivers/pci/bus.c   |  7 ++++++-
- 2 files changed, 24 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 0ee42c3..49233bf 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -189,9 +189,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 			unsigned char busno, unsigned char bus_max,
- 			struct list_head *resources, resource_size_t *io_base)
- {
--	struct resource_entry *window;
--	struct resource *res;
--	struct resource *bus_range;
-+	struct resource res;
- 	struct of_pci_range range;
- 	struct of_pci_range_parser parser;
- 	char range_type[4];
-@@ -200,24 +198,21 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 	if (io_base)
- 		*io_base = (resource_size_t)OF_BAD_ADDR;
- 
--	bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
--	if (!bus_range)
--		return -ENOMEM;
--
- 	pr_info("host bridge %s ranges:\n", dev->full_name);
- 
--	err = of_pci_parse_bus_range(dev, bus_range);
-+	err = of_pci_parse_bus_range(dev, &res);
- 	if (err) {
--		bus_range->start = busno;
--		bus_range->end = bus_max;
--		bus_range->flags = IORESOURCE_BUS;
--		pr_info("  No bus range found for %s, using %pR\n",
--			dev->full_name, bus_range);
-+		res.start = busno;
-+		res.end = bus_max;
-+		res.flags = IORESOURCE_BUS;
-+		pr_info("  No bus range found for %s\n", dev->full_name);
- 	} else {
--		if (bus_range->end > bus_range->start + bus_max)
--			bus_range->end = bus_range->start + bus_max;
-+		if (res.end > res.start + bus_max)
-+			res.end = res.start + bus_max;
- 	}
--	pci_add_resource(resources, bus_range);
-+
-+	res.flags |= IORESOURCE_AUTO;
-+	pci_add_resource(resources, &res);
- 
- 	/* Check for ranges property */
- 	err = of_pci_range_parser_init(&parser, dev);
-@@ -244,24 +239,16 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
- 			continue;
- 
--		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
--		if (!res) {
--			err = -ENOMEM;
--			goto parse_failed;
--		}
--
--		err = of_pci_range_to_resource(&range, dev, res);
--		if (err) {
--			kfree(res);
-+		err = of_pci_range_to_resource(&range, dev, &res);
-+		if (err)
- 			continue;
--		}
- 
--		if (resource_type(res) == IORESOURCE_IO) {
-+		if (resource_type(&res) == IORESOURCE_IO) {
- 			if (!io_base) {
- 				pr_err("I/O range found for %s. Please provide an io_base pointer to save CPU base address\n",
- 					dev->full_name);
- 				err = -EINVAL;
--				goto conversion_failed;
-+				goto parse_failed;
- 			}
- 			if (*io_base != (resource_size_t)OF_BAD_ADDR)
- 				pr_warn("More than one I/O resource converted for %s. CPU base address for old range lost!\n",
-@@ -269,16 +256,14 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 			*io_base = range.cpu_addr;
- 		}
- 
--		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
-+		res.flags |= IORESOURCE_AUTO;
-+		pci_add_resource_offset(resources, &res,
-+					res.start - range.pci_addr);
- 	}
- 
- 	return 0;
- 
--conversion_failed:
--	kfree(res);
- parse_failed:
--	resource_list_for_each_entry(window, resources)
--		kfree(window->res);
- 	pci_free_resource_list(resources);
- 	return err;
- }
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index bc56cf1..3dbcb95 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -22,12 +22,17 @@ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
- {
- 	struct resource_entry *entry;
- 
--	entry = resource_list_create_entry(res, 0);
-+	entry = resource_list_create_entry(NULL, 0);
- 	if (!entry) {
- 		printk(KERN_ERR "PCI: can't add host bridge window %pR\n", res);
- 		return;
- 	}
- 
-+	if (res->flags & IORESOURCE_AUTO)
-+		*entry->res = *res;
-+	else
-+		entry->res = res;
-+
- 	entry->offset = offset;
- 	resource_list_add_tail(entry, resources);
- }
--- 
-2.1.4
+--
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
