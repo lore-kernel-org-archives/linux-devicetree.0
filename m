@@ -1,67 +1,81 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 06/16] regulator: madera-ldo1: LDO1 driver
- for Cirrus Logic Madera codecs
-Date: Wed, 5 Apr 2017 14:28:44 +0100
-Message-ID: <20170405132844.h4itieglcbzyl3jf@sirena.org.uk>
-References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1491386884-30689-7-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
+Date: Wed, 5 Apr 2017 19:04:48 +0530
+Message-ID: <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3@ti.com>
+References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
+ <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com>
+ <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4685258558027622994=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1491386884-30689-7-git-send-email-rf@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Ravi,
 
---===============4685258558027622994==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="74azknti32ogp66j"
-Content-Disposition: inline
+On Wednesday 05 April 2017 06:30 PM, Raviteja Garimella wrote:
+> Hi Kishon,
+> 
+> On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> Hi,
+>>
+>> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
+>>> This is driver for USB DRD Phy used in Broadcom's Northstar2
+>>> SoC. The phy can be configured to be in Device mode or Host
+>>> mode based on the type of cable connected to the port. The
+>>> driver registers to  extcon framework to get appropriate
+>>> connect events for Host/Device cables connect/disconnect
+>>> states based on VBUS and ID interrupts.
+>>
+>> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
+>> Northstar2.
+>>
+> 
+> Will do.
+> 
+>> Sorry for not letting you know this earlier. But I feel the design of the
+>> driver should be changed. Extcon shouldn't be used here. The extcon
+>> notifications should be sent to the consumer driver and the consumer driver
+>> should be responsible for invoking the phy ops.
+>>
+> 
+> The consumer drivers here would be a UDC driver (USB device
+> controller), EHCI and OHCI host controller drivers.
+> I was already suggested in UDC driver review to deal with extcon in Phy driver.
+> 
+> This phy connects to 2 host controllers, and one device controller.
+> That's the design in Broadcom Northstar2
+> platform. The values of the VBUS and ID pins of this port are
+> determined based on the type of the cable (device cable
+> or host cable). And. phy has to be configured accordingly.
+> 
+>> The phy ops being invoked during extcon events doesn't look right.
+> 
+> Could you please elaborate on the concern, so that we can think of
+> mitigating those issues in this driver?
+> Since we are dealing with phy init/shutdown in this driver itself, are
+> you okay with moving the extcon handling code
+> out of phy ops ?
 
+yeah, For e.g., ns2_drd_phy_init is part of phy_ops and is being invoked from
+extcon events too. Can a phy which is initialized by a phy consumer (say your
+UDC invokes phy_init) can be shutdown by an extcon event?
 
---74azknti32ogp66j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Maybe a clear explanation of when phy_ops here will be invoked and when it will
+set using extcon events might help.
 
-On Wed, Apr 05, 2017 at 11:07:54AM +0100, Richard Fitzgerald wrote:
-> This patch adds a driver for the internal LDO1 regulator on
-> some Cirrus Logic Madera class codecs.
-
-There appear to be only data differences to the existing arizona driver,
-is it possible to share the code?
-
---74azknti32ogp66j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljk8QsACgkQJNaLcl1U
-h9BnIQf8DygzO0mcDjqy6rkrjC8MGwrU0WVKZ4V5WpVIaDO62AnyWNPh8coFdO5I
-vLjZrMAWJtdx4Uo8eh3LC2sukQAvRiZ0jFnvWTPhbSGu2loOHupiYDxZmzIjpOg5
-OyH7ALWVlVmORa7V+QL+RbZnyanfiSvEMSJNPLTpTA7aOqPfYB3b4IF38QF/hoY0
-bFmrwtspZY75JMfugmAYhbWzPz9ED9IPUlENdy6nWef/AFWSehtMwmgH/Y992r4t
-5MCBxZ2Pvr6UBj5M9YKdQpGqbXsUgOsKpLumIehFwZCwbVIXfXYu56W3l3L+615O
-10hGYHzV+bWNQdyqAM2t18tInkJIUQ==
-=YIZp
------END PGP SIGNATURE-----
-
---74azknti32ogp66j--
-
---===============4685258558027622994==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4685258558027622994==--
+Thanks
+Kishon
