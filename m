@@ -1,99 +1,43 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 17/39] platform: add video-multiplexer subdevice driver
-Date: Wed, 5 Apr 2017 20:05:00 +0200
-Message-ID: <20170405180500.GA30408@amd>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-18-git-send-email-steve_longerbeam@mentor.com>
- <20170405111857.GA26831@amd>
- <1491393519.2904.40.camel@pengutronix.de>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCHv3 00/10] Nokia H4+ support
+Date: Wed, 5 Apr 2017 13:16:58 -0500
+Message-ID: <CAL_Jsq+NU3M5yuBpK1UGgzCVvq0eABMApCqEe3_d5+tDaABsgQ@mail.gmail.com>
+References: <20170328155939.31566-1-sre@kernel.org> <CAL_JsqJcQ9ANtt71KRitOJ9spKD1SaeoL4RDftiCEPs8TjLJGA@mail.gmail.com>
+ <C1A408F2-1DF8-4F49-B399-B936542DE6BC@holtmann.org> <20170331133353.GA32267@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0079288279166808232=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1491393519.2904.40.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, Sascha Hauer <s.hauer@pengutronix.de>, tiffany.lin@mediatek.com, bparrot@ti.com, laurent.pinchart+renesas@ideasonboard.com, horms+renesas@verge.net.au, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170331133353.GA32267@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sre@kernel.org>, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 31, 2017 at 8:33 AM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Wed, Mar 29, 2017 at 11:33:26PM +0200, Marcel Holtmann wrote:
+>> Hi Rob,
+>>
+>> >> Here is PATCHv3 for the Nokia bluetooth patchset. I addressed all comments from
+>> >> Rob and Pavel regarding the serdev patches and dropped the *.dts patches, since
+>> >> they were queued by Tony. I also changed the patch order, so that the serdev
+>> >> patches come first. All of them have Acked-by from Rob, so I think it makes
+>> >> sense to merge them to serdev subsystem (now) and provide an immutable branch
+>> >> for the bluetooth subsystem.
+>> >
+>> > Greg doesn't read cover letters generally and since the serdev patches
+>> > are Cc rather than To him, he's probably not planning to pick them up.
+>>
+>> I wonder actually if we should merge all of these via bluetooth-next
+>> tree with proper Ack from Greg. However it would be good to also get
+>> buy in from Dave for merging this ultimately through net-next.
+>
+> I don't really care where it goes.  I can take the whole thing in my
+> tty/serial tree now if no one objects and I get an ack from the relevant
+> maintainers {hint...}
 
---===============0079288279166808232==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
-Content-Disposition: inline
+I think it is better if it goes thru BT tree. I have another driver
+converted that is dependent on this series. There's a couple other
+serdev changes on the list too, but this shouldn't depend on them.
 
-
---tKW2IUtsqtDRztdT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed 2017-04-05 13:58:39, Lucas Stach wrote:
-> Am Mittwoch, den 05.04.2017, 13:18 +0200 schrieb Pavel Machek:
-> > Hi!
-> >=20
-> > > + * video stream multiplexer controlled via gpio or syscon
-> > > + *
-> > > + * Copyright (C) 2013 Pengutronix, Sascha Hauer <kernel@pengutronix.=
-de>
-> > > + * Copyright (C) 2016 Pengutronix, Philipp Zabel <kernel@pengutronix=
-=2Ede>
-> >=20
-> > This is actually quite interesting. Same email address for two
-> > people...
-> >=20
-> > Plus, I believe this wants to say that copyright is with Pengutronix,
-> > not Sascha and Philipp. In that case you probably want to list
-> > copyright and authors separately?
-> >=20
-> Nope, copyright doesn't get transferred to the employer within the rules
-> of the German "Urheberrecht", but stays at the original author of the
-> code.
-
-Ok, then I guess it should be
-
-Copyright (C) 2013 Sascha Hauer
-Work sponsored by Pengutronix, use <kernel@pengutronix.de> as contact addre=
-ss
-
-or something? I know license change is not on the table, but I guess
-it is good to get legal stuff right.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---tKW2IUtsqtDRztdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljlMcwACgkQMOfwapXb+vKkWACbBnPa3cgyEKxN1tS7o3P6D/1Y
-QHsAmwYhI79b2BZk9g22pr1jAsIF4UDo
-=Cfym
------END PGP SIGNATURE-----
-
---tKW2IUtsqtDRztdT--
-
---===============0079288279166808232==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============0079288279166808232==--
+Rob
