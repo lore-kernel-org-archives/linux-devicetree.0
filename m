@@ -1,234 +1,819 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v6 21/23] Documentation: PCI: Add userguide for PCI endpoint
- test function
-Date: Wed, 5 Apr 2017 14:22:41 +0530
-Message-ID: <20170405085243.18123-22-kishon@ti.com>
-References: <20170405085243.18123-1-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170405085243.18123-1-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: hch@infradead.org, nsekhar@ti.com, kishon@ti.com
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH v2 1/2] arm64: dts: rk3399: add support for firefly-rk3399 board
+Date: Wed,  5 Apr 2017 17:33:19 +0800
+Message-ID: <1491384800-22412-1-git-send-email-kever.yang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, Liang Chen <cl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation to help users use pci-epf-test function driver and
-pci_endpoint_test host driver for testing PCI.
+Firefly-rk3399 is a bord from T-Firefly, you can find detail about
+it here:
+http://en.t-firefly.com/en/firenow/Firefly_RK3399/
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+This patch add basic node for the board and make it able to bring
+up.
+
+Peripheral works:
+- usb hub which connect to ehci controller;
+- UART2 debug
+- eMMC
+- PCIe
+
+Not work:
+- USB 3.0 HOST, type-C port
+- sdio, sd-card
+
+Not test for other peripheral:
+- HDMI
+- Ethernet
+- OPTICAL
+- WiFi/BT
+- MIPI CSI/DSI
+- IR
+- EDP/DP
+
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
 ---
- Documentation/PCI/00-INDEX                    |   2 +
- Documentation/PCI/endpoint/pci-test-howto.txt | 179 ++++++++++++++++++++++++++
- 2 files changed, 181 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-test-howto.txt
 
-diff --git a/Documentation/PCI/00-INDEX b/Documentation/PCI/00-INDEX
-index 2fc901a1c32e..00c9a90b6f38 100644
---- a/Documentation/PCI/00-INDEX
-+++ b/Documentation/PCI/00-INDEX
-@@ -18,5 +18,7 @@ endpoint/pci-endpoint-cfs.txt
- 	- guide to use configfs to configure the PCI endpoint function.
- endpoint/pci-test-function.txt
- 	- specification of *PCI test* function device.
-+endpoint/pci-test-howto.txt
-+	- userguide for PCI endpoint test function.
- endpoint/function/binding/
- 	- binding documentation for PCI endpoint function
-diff --git a/Documentation/PCI/endpoint/pci-test-howto.txt b/Documentation/PCI/endpoint/pci-test-howto.txt
+Changes in v2:
+- rebase on Heiko's for-next
+- using pinctrl binding header definition instead of a number
+- other fix by comments from Heiko and Andreas.
+
+ arch/arm64/boot/dts/rockchip/Makefile           |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399-firefly.dts | 750 ++++++++++++++++++++++++
+ 2 files changed, 751 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index b5636bb..bcfa53b 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
+ 
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
 new file mode 100644
-index 000000000000..75f48c3bb191
+index 0000000..d427d40
 --- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-test-howto.txt
-@@ -0,0 +1,179 @@
-+			    PCI TEST USERGUIDE
-+		    Kishon Vijay Abraham I <kishon@ti.com>
++++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+@@ -0,0 +1,750 @@
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-+This document is a guide to help users use pci-epf-test function driver
-+and pci_endpoint_test host driver for testing PCI. The list of steps to
-+be followed in the host side and EP side is given below.
++/dts-v1/;
++#include <dt-bindings/pwm/pwm.h>
++#include "rk3399.dtsi"
 +
-+1. Endpoint Device
++/ {
++	model = "Firefly-RK3399 Board";
++	compatible = "firefly,firefly-rk3399", "rockchip,rk3399";
 +
-+1.1 Endpoint Controller Devices
++	backlight: backlight {
++		status = "okay";
++		compatible = "pwm-backlight";
++		enable-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
++		pwms = <&pwm0 0 25000 0>;
++		brightness-levels = <
++			  0   1   2   3   4   5   6   7
++			  8   9  10  11  12  13  14  15
++			 16  17  18  19  20  21  22  23
++			 24  25  26  27  28  29  30  31
++			 32  33  34  35  36  37  38  39
++			 40  41  42  43  44  45  46  47
++			 48  49  50  51  52  53  54  55
++			 56  57  58  59  60  61  62  63
++			 64  65  66  67  68  69  70  71
++			 72  73  74  75  76  77  78  79
++			 80  81  82  83  84  85  86  87
++			 88  89  90  91  92  93  94  95
++			 96  97  98  99 100 101 102 103
++			104 105 106 107 108 109 110 111
++			112 113 114 115 116 117 118 119
++			120 121 122 123 124 125 126 127
++			128 129 130 131 132 133 134 135
++			136 137 138 139 140 141 142 143
++			144 145 146 147 148 149 150 151
++			152 153 154 155 156 157 158 159
++			160 161 162 163 164 165 166 167
++			168 169 170 171 172 173 174 175
++			176 177 178 179 180 181 182 183
++			184 185 186 187 188 189 190 191
++			192 193 194 195 196 197 198 199
++			200 201 202 203 204 205 206 207
++			208 209 210 211 212 213 214 215
++			216 217 218 219 220 221 222 223
++			224 225 226 227 228 229 230 231
++			232 233 234 235 236 237 238 239
++			240 241 242 243 244 245 246 247
++			248 249 250 251 252 253 254 255>;
++		default-brightness-level = <200>;
++	};
 +
-+To find the list of endpoint controller devices in the system:
++	clkin_gmac: external-gmac-clock {
++		compatible = "fixed-clock";
++		clock-frequency = <125000000>;
++		clock-output-names = "clkin_gmac";
++		#clock-cells = <0>;
++	};
 +
-+	# ls /sys/class/pci_epc/
-+	  51000000.pcie_ep
++	rt5640-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,name = "rockchip,rt5640-codec";
++		simple-audio-card,mclk-fs = <256>;
++		simple-audio-card,widgets =
++			"Microphone", "Mic Jack",
++			"Headphone", "Headphone Jack";
++		simple-audio-card,routing =
++			"Mic Jack", "MICBIAS1",
++			"IN1P", "Mic Jack",
++			"Headphone Jack", "HPOL",
++			"Headphone Jack", "HPOR";
 +
-+If PCI_ENDPOINT_CONFIGFS is enabled
-+	# ls /sys/kernel/config/pci_ep/controllers
-+	  51000000.pcie_ep
++		simple-audio-card,cpu {
++			sound-dai = <&i2s1>;
++		};
 +
-+1.2 Endpoint Function Drivers
++		simple-audio-card,codec {
++			sound-dai = <&rt5640>;
++		};
++	};
 +
-+To find the list of endpoint function drivers in the system:
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_enable_h>;
 +
-+	# ls /sys/bus/pci-epf/drivers
-+	  pci_epf_test
++		/*
++		 * On the module itself this is one of these (depending
++		 * on the actual card populated):
++		 * - SDIO_RESET_L_WL_REG_ON
++		 * - PDN (power down when low)
++		 */
++		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
++	};
 +
-+If PCI_ENDPOINT_CONFIGFS is enabled
-+	# ls /sys/kernel/config/pci_ep/functions
-+	  pci_epf_test
++	vcc3v3_pcie: vcc3v3-pcie-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		regulator-always-on;
++		regulator-boot-on;
++		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pcie_drv>;
++		regulator-name = "vcc3v3_pcie";
++	};
 +
-+1.3 Creating pci-epf-test Device
++	vcc3v3_sys: vcc3v3-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
 +
-+PCI endpoint function device can be created using the configfs. To create
-+pci-epf-test device, the following commands can be used
++	vcc5v0_host: vcc5v0-host-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio1 RK_PA0 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host_vbus_drv>;
++		regulator-name = "vcc5v0_host";
++		regulator-always-on;
++	};
 +
-+	# mount -t configfs none /sys/kernel/config
-+	# cd /sys/kernel/config/pci_ep/
-+	# mkdir functions/pci_epf_test/func1
++	vcc5v0_sys: vcc5v0-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
 +
-+The "mkdir func1" above creates the pci-epf-test function device that will
-+be probed by pci_epf_test driver.
++	vcc_phy: vcc-phy-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_phy";
++		regulator-always-on;
++		regulator-boot-on;
++	};
 +
-+The PCI endpoint framework populates the directory with the following
-+configurable fields.
++	vdd_log: vdd-log {
++		compatible = "pwm-regulator";
++		pwms = <&pwm2 0 25000 1>;
++		regulator-name = "vdd_log";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-always-on;
++		regulator-boot-on;
 +
-+	# ls functions/pci_epf_test/func1
-+	  baseclass_code	interrupt_pin	revid		subsys_vendor_id
-+	  cache_line_size	msi_interrupts	subclass_code	vendorid
-+	  deviceid          	progif_code	subsys_id
++		/* for rockchip boot on */
++		rockchip,pwm_id= <2>;
++		rockchip,pwm_voltage = <1000000>;
++	};
 +
-+The PCI endpoint function driver populates these entries with default values
-+when the device is bound to the driver. The pci-epf-test driver populates
-+vendorid with 0xffff and interrupt_pin with 0x0001
++	vccadc_ref: vccadc-ref {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc1v8_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++};
 +
-+	# cat functions/pci_epf_test/func1/vendorid
-+	  0xffff
-+	# cat functions/pci_epf_test/func1/interrupt_pin
-+	  0x0001
++&cpu_l0 {
++	cpu-supply = <&vdd_cpu_l>;
++};
 +
-+1.4 Configuring pci-epf-test Device
++&cpu_l1 {
++	cpu-supply = <&vdd_cpu_l>;
++};
 +
-+The user can configure the pci-epf-test device using configfs entry. In order
-+to change the vendorid and the number of MSI interrupts used by the function
-+device, the following commands can be used.
++&cpu_l2 {
++	cpu-supply = <&vdd_cpu_l>;
++};
 +
-+	# echo 0x104c > functions/pci_epf_test/func1/vendorid
-+	# echo 0xb500 > functions/pci_epf_test/func1/deviceid
-+	# echo 16 > functions/pci_epf_test/func1/msi_interrupts
++&cpu_l3 {
++	cpu-supply = <&vdd_cpu_l>;
++};
 +
-+1.5 Binding pci-epf-test Device to EP Controller
++&cpu_b0 {
++	cpu-supply = <&vdd_cpu_b>;
++};
 +
-+In order for the endpoint function device to be useful, it has to be bound to
-+a PCI endpoint controller driver. Use the configfs to bind the function
-+device to one of the controller driver present in the system.
++&cpu_b1 {
++	cpu-supply = <&vdd_cpu_b>;
++};
 +
-+	# ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
++&emmc_phy {
++	status = "okay";
++};
 +
-+Once the above step is completed, the PCI endpoint is ready to establish a link
-+with the host.
++&gmac {
++	assigned-clocks = <&cru SCLK_RMII_SRC>;
++	assigned-clock-parents = <&clkin_gmac>;
++	clock_in_out = "input";
++	phy-supply = <&vcc_phy>;
++	phy-mode = "rgmii";
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>;
++	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 50000>;
++	tx_delay = <0x28>;
++	rx_delay = <0x11>;
++	status = "okay";
++};
 +
-+1.6 Start the Link
++&i2c0 {
++	status = "okay";
++	i2c-scl-rising-time-ns = <168>;
++	i2c-scl-falling-time-ns = <4>;
++	clock-frequency = <400000>;
 +
-+In order for the endpoint device to establish a link with the host, the _start_
-+field should be populated with '1'.
++	vdd_cpu_b: pmic@40 {
++		compatible = "silergy,syr827";
++		reg = <0x40>;
++		vin-supply = <&vcc5v0_sys>;
++		regulator-compatible = "fan53555-reg";
++		regulator-name = "vdd_cpu_b";
++		regulator-min-microvolt = <712500>;
++		regulator-max-microvolt = <1500000>;
++		regulator-ramp-delay = <1000>;
++		vsel-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_HIGH>;
++		fcs,suspend-voltage-selector = <0>;
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-initial-state = <3>;
++			regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
 +
-+	# echo 1 > controllers/51000000.pcie_ep/start
++	vdd_gpu: syr828@41 {
++		compatible = "silergy,syr828";
++		reg = <0x41>;
++		vin-supply = <&vcc5v0_sys>;
++		regulator-compatible = "fan53555-reg";
++		regulator-name = "vdd_gpu";
++		regulator-min-microvolt = <712500>;
++		regulator-max-microvolt = <1500000>;
++		regulator-ramp-delay = <1000>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-initial-state = <3>;
++			regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
 +
-+2. RootComplex Device
++	rk808: pmic@1b {
++		compatible = "rockchip,rk808";
++		reg = <0x1b>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_int_l>;
++		rockchip,system-power-controller;
++		wakeup-source;
++		#clock-cells = <1>;
++		clock-output-names = "xin32k", "rk808-clkout2";
 +
-+2.1 lspci Output
++		vcc1-supply = <&vcc3v3_sys>;
++		vcc2-supply = <&vcc3v3_sys>;
++		vcc3-supply = <&vcc3v3_sys>;
++		vcc4-supply = <&vcc3v3_sys>;
++		vcc6-supply = <&vcc3v3_sys>;
++		vcc7-supply = <&vcc3v3_sys>;
++		vcc8-supply = <&vcc3v3_sys>;
++		vcc9-supply = <&vcc3v3_sys>;
++		vcc10-supply = <&vcc3v3_sys>;
++		vcc11-supply = <&vcc3v3_sys>;
++		vcc12-supply = <&vcc3v3_sys>;
++		vddio-supply = <&vcc1v8_pmu>;
 +
-+Note that the devices listed here correspond to the value populated in 1.4 above
++		regulators {
++			vdd_center: DCDC_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-ramp-delay = <6001>;
++				regulator-name = "vdd_center";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
 +
-+	00:00.0 PCI bridge: Texas Instruments Device 8888 (rev 01)
-+	01:00.0 Unassigned class [ff00]: Texas Instruments Device b500
++			vdd_cpu_l: DCDC_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-ramp-delay = <6001>;
++				regulator-name = "vdd_cpu_l";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
 +
-+2.2 Using Endpoint Test function Device
++			vcc_ddr: DCDC_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc_ddr";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
 +
-+pcitest.sh added in tools/pci/ can be used to run all the default PCI endpoint
-+tests. Before pcitest.sh can be used pcitest.c should be compiled using the
-+following commands.
++			vcc_1v8: DCDC_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_1v8";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
 +
-+	cd <kernel-dir>
-+	make headers_install ARCH=arm
-+	arm-linux-gnueabihf-gcc -Iusr/include tools/pci/pcitest.c -o pcitest
-+	cp pcitest  <rootfs>/usr/sbin/
-+	cp tools/pci/pcitest.sh <rootfs>
++			vcc1v8_dvp: LDO_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc1v8_dvp";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
 +
-+2.2.1 pcitest.sh Output
-+	# ./pcitest.sh
-+	BAR tests
++			vcc3v0_tp: LDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-name = "vcc3v0_tp";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
 +
-+	BAR0:           OKAY
-+	BAR1:           OKAY
-+	BAR2:           OKAY
-+	BAR3:           OKAY
-+	BAR4:           NOT OKAY
-+	BAR5:           NOT OKAY
++			vcc1v8_pmu: LDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc1v8_pmu";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
 +
-+	Interrupt tests
++			vcc_sd: LDO_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_sd";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
 +
-+	LEGACY IRQ:     NOT OKAY
-+	MSI1:           OKAY
-+	MSI2:           OKAY
-+	MSI3:           OKAY
-+	MSI4:           OKAY
-+	MSI5:           OKAY
-+	MSI6:           OKAY
-+	MSI7:           OKAY
-+	MSI8:           OKAY
-+	MSI9:           OKAY
-+	MSI10:          OKAY
-+	MSI11:          OKAY
-+	MSI12:          OKAY
-+	MSI13:          OKAY
-+	MSI14:          OKAY
-+	MSI15:          OKAY
-+	MSI16:          OKAY
-+	MSI17:          NOT OKAY
-+	MSI18:          NOT OKAY
-+	MSI19:          NOT OKAY
-+	MSI20:          NOT OKAY
-+	MSI21:          NOT OKAY
-+	MSI22:          NOT OKAY
-+	MSI23:          NOT OKAY
-+	MSI24:          NOT OKAY
-+	MSI25:          NOT OKAY
-+	MSI26:          NOT OKAY
-+	MSI27:          NOT OKAY
-+	MSI28:          NOT OKAY
-+	MSI29:          NOT OKAY
-+	MSI30:          NOT OKAY
-+	MSI31:          NOT OKAY
-+	MSI32:          NOT OKAY
++			vcca3v0_codec: LDO_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-name = "vcca3v0_codec";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
 +
-+	Read Tests
++			vcc_1v5: LDO_REG6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1500000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-name = "vcc_1v5";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1500000>;
++				};
++			};
 +
-+	READ (      1 bytes):           OKAY
-+	READ (   1024 bytes):           OKAY
-+	READ (   1025 bytes):           OKAY
-+	READ (1024000 bytes):           OKAY
-+	READ (1024001 bytes):           OKAY
++			vcca1v8_codec: LDO_REG7 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcca1v8_codec";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
 +
-+	Write Tests
++			vcc_3v0: LDO_REG8 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-name = "vcc_3v0";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3000000>;
++				};
++			};
 +
-+	WRITE (      1 bytes):          OKAY
-+	WRITE (   1024 bytes):          OKAY
-+	WRITE (   1025 bytes):          OKAY
-+	WRITE (1024000 bytes):          OKAY
-+	WRITE (1024001 bytes):          OKAY
++			vcc3v3_s3: SWITCH_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc3v3_s3";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
 +
-+	Copy Tests
++			vcc3v3_s0: SWITCH_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc3v3_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++		};
++	};
++};
 +
-+	COPY (      1 bytes):           OKAY
-+	COPY (   1024 bytes):           OKAY
-+	COPY (   1025 bytes):           OKAY
-+	COPY (1024000 bytes):           OKAY
-+	COPY (1024001 bytes):           OKAY
++&i2c1 {
++	status = "okay";
++	i2c-scl-rising-time-ns = <300>;
++	i2c-scl-falling-time-ns = <15>;
++
++	gsl3673: gsl3673@40 {
++		compatible = "GSL,GSL3673";
++		reg = <0x40>;
++		screen_max_x = <1536>;
++		screen_max_y = <2048>;
++		irq_gpio_number = <&gpio1 RK_PC4 IRQ_TYPE_LEVEL_LOW>;
++		rst_gpio_number = <&gpio4 RK_PC6 GPIO_ACTIVE_HIGH>;
++	};
++
++	rt5640: rt5640@1c {
++		#sound-dai-cells = <0>;
++		compatible = "realtek,rt5640";
++		reg = <0x1c>;
++		clocks = <&cru SCLK_I2S_8CH_OUT>;
++		clock-names = "mclk";
++		realtek,in1-differential;
++		pinctrl-names = "default";
++		pinctrl-0 = <&rt5640_hpcon>;
++		hp-con-gpio = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;
++		io-channels = <&saradc 4>;
++		hp-det-adc-value = <500>;
++	};
++};
++
++&i2c3 {
++	status = "okay";
++	i2c-scl-rising-time-ns = <450>;
++	i2c-scl-falling-time-ns = <15>;
++};
++
++&i2c4 {
++	status = "okay";
++	i2c-scl-rising-time-ns = <600>;
++	i2c-scl-falling-time-ns = <20>;
++
++	fusb0: fusb30x@22 {
++		compatible = "fairchild,fusb302";
++		reg = <0x22>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&fusb0_int>;
++		int-n-gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
++		vbus-5v-gpios = <&gpio2 RK_PA0 GPIO_ACTIVE_HIGH>;
++		status = "okay";
++	};
++
++	mpu6500@68 {
++		status = "okay";
++		compatible = "invensense,mpu6500";
++		reg = <0x68>;
++		irq-gpio = <&gpio1 RK_PC6 IRQ_TYPE_EDGE_RISING>;
++		mpu-int_config = <0x10>;
++		mpu-level_shifter = <0>;
++		mpu-orientation = <0 1 0 1 0 0 0 0 1>;
++		orientation-x= <1>;
++		orientation-y= <0>;
++		orientation-z= <0>;
++		mpu-debug = <1>;
++	};
++};
++
++&i2s0 {
++	status = "okay";
++	rockchip,i2s-broken-burst-len;
++	rockchip,playback-channels = <8>;
++	rockchip,capture-channels = <8>;
++	#sound-dai-cells = <0>;
++};
++
++&i2s1 {
++	status = "okay";
++	rockchip,i2s-broken-burst-len;
++	rockchip,playback-channels = <2>;
++	rockchip,capture-channels = <2>;
++	#sound-dai-cells = <0>;
++};
++
++&i2s2 {
++	#sound-dai-cells = <0>;
++	status = "okay";
++};
++
++&io_domains {
++	status = "okay";
++
++	bt656-supply = <&vcc1v8_dvp>;
++	audio-supply = <&vcca1v8_codec>;
++	sdmmc-supply = <&vcc_sd>;
++	gpio1830-supply = <&vcc_3v0>;
++};
++
++&pcie_phy {
++	status = "okay";
++};
++
++&pcie0 {
++	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
++	num-lanes = <4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_clkreqn>;
++	status = "okay";
++};
++
++&pmu_io_domains {
++	status = "okay";
++	pmu1830-supply = <&vcc_3v0>;
++};
++
++&pinctrl {
++	buttons {
++		pwrbtn: pwrbtn {
++			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	lcd-panel {
++		lcd_panel_reset: lcd-panel-reset {
++			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	pcie {
++		pcie_drv: pcie-drv {
++			rockchip,pins =
++				<1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
++			};
++			pcie_3g_drv: pcie-3g-drv {
++			rockchip,pins =
++				<0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	pmic {
++		vsel1_gpio: vsel1-gpio {
++			rockchip,pins =
++				<1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++
++		vsel2_gpio: vsel2-gpio {
++			rockchip,pins =
++			<1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++
++	sdio-pwrseq {
++		wifi_enable_h: wifi-enable-h {
++			rockchip,pins =
++				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	wireless-bluetooth {
++		uart0_gpios: uart0-gpios {
++			rockchip,pins =
++				<2 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	rt5640 {
++		rt5640_hpcon: rt5640-hpcon {
++			rockchip,pins = <4 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	pmic {
++		pmic_int_l: pmic-int-l {
++			rockchip,pins =
++				<1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	usb2 {
++		host_vbus_drv: host-vbus-drv {
++			rockchip,pins =
++				<1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	fusb30x {
++		fusb0_int: fusb0-int {
++			rockchip,pins = <1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++};
++
++&pwm0 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++};
++
++&saradc {
++	status = "okay";
++	vref-supply = <&vccadc_ref>;
++};
++
++&sdhci {
++	bus-width = <8>;
++	keep-power-in-suspend;
++	mmc-hs400-1_8v;
++	mmc-hs400-enhanced-strobe;
++	non-removable;
++	status = "okay";
++	supports-emmc;
++};
++
++&tsadc {
++	/* tshut mode 0:CRU 1:GPIO */
++	rockchip,hw-tshut-mode = <1>;
++	/* tshut polarity 0:LOW 1:HIGH */
++	rockchip,hw-tshut-polarity = <1>;
++	status = "okay";
++};
++
++&u2phy0 {
++	status = "okay";
++	extcon = <&fusb0>;
++
++	u2phy0_otg: otg-port {
++		status = "okay";
++	};
++
++	u2phy0_host: host-port {
++		phy-supply = <&vcc5v0_host>;
++		status = "okay";
++	};
++};
++
++&u2phy1 {
++	status = "okay";
++
++	u2phy1_otg: otg-port {
++		status = "okay";
++	};
++
++	u2phy1_host: host-port {
++		phy-supply = <&vcc5v0_host>;
++		status = "okay";
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_xfer &uart0_cts>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
 -- 
-2.11.0
+1.9.1
