@@ -1,177 +1,155 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v3 04/11] drm/sun4i: abstract the layer type
-Date: Wed, 5 Apr 2017 10:09:58 +0200
-Message-ID: <20170405080958.lrqoled7df5ugtur@lukather>
-References: <20170405052325.98B958A2E94@relay.mailchannels.net>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 0/7] add support for AXP20X and AXP22X
+ battery power supply driver
+Date: Wed,  5 Apr 2017 10:10:52 +0200
+Message-ID: <20170405081059.1684-1-quentin.schulz@free-electrons.com>
+Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="t3dovqbrjqdziyjs"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV6MSLDQKGQEFL2SKMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBI6NSLDQKGQE5RI5FIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170405052325.98B958A2E94-Y9/x5g2N/Tt0ykcd9G8QkxTxI0vvWBSX@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This is a series for AXP20X and AXP22X battery power supply without the
+support for changing constant charge current from the DT. The patches for
+supporting the constant charge current from DT are ready and will be sent
+once the battery framework required to make this work has been merged.
 
---t3dovqbrjqdziyjs
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: base64
+Quote from v4 cover letter:
 
-T24gV2VkLCBBcHIgMDUsIDIwMTcgYXQgMDE6MjM6MTVQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3
-cm90ZToNCj4gDQo+IDIwMTflubQ05pyINeaXpSAxMDoyN+S6jiBDaGVuLVl1IFRzYWkgPHdlbnNA
-Y3NpZS5vcmc+5YaZ6YGT77yaDQo+ID4NCj4gPiBPbiBXZWQsIEFwciA1LCAyMDE3IGF0IDM6NTMg
-QU0sIEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4gd3JvdGU6IA0KPiA+ID4gDQo+ID4g
-PiANCj4gPiA+IOWcqCAyMDE35bm0MDTmnIgwNeaXpSAwMzoyOCwgU2VhbiBQYXVsIOWGmemBkzog
-DQo+ID4gPj4gDQo+ID4gPj4gT24gVGh1LCBNYXIgMzAsIDIwMTcgYXQgMDM6NDY6MDZBTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZTogDQo+ID4gPj4+IA0KPiA+ID4+PiBBcyB3ZSBhcmUgZ29p
-bmcgdG8gYWRkIHN1cHBvcnQgZm9yIHRoZSBBbGx3aW5uZXIgREUyIE1peGVyIGluIHN1bjRpLWRy
-bSANCj4gPiA+Pj4gZHJpdmVyLCB3ZSB3aWxsIGZpbmFsbHkgaGF2ZSB0d28gdHlwZXMgb2YgbGF5
-ZXIuIA0KPiA+ID4+PiANCj4gPiA+Pj4gQWJzdHJhY3QgdGhlIGxheWVyIHR5cGUgdG8gdm9pZCAq
-IGFuZCBhIG9wcyBzdHJ1Y3QsIHdoaWNoIGNvbnRhaW5zIHRoZSANCj4gPiA+Pj4gb25seSBmdW5j
-dGlvbiB1c2VkIGJ5IGNydGMgLS0gZ2V0IHRoZSBkcm1fcGxhbmUgc3RydWN0IG9mIHRoZSBsYXll
-ci4gDQo+ID4gPj4+IA0KPiA+ID4+PiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vu
-b3d5QGFvc2MuaW8+IA0KPiA+ID4+PiAtLS0gDQo+ID4gPj4+IFJlZmFjdG9yZWQgcGF0Y2ggaW4g
-djMuIA0KPiA+ID4+PiANCj4gPiA+Pj7CoCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfY3J0
-Yy5jwqAgfCAxOSArKysrKysrKysrKy0tLS0tLS0tIA0KPiA+ID4+PsKgIGRyaXZlcnMvZ3B1L2Ry
-bS9zdW40aS9zdW40aV9jcnRjLmjCoCB8wqAgMyArKy0gDQo+ID4gPj4+wqAgZHJpdmVycy9ncHUv
-ZHJtL3N1bjRpL3N1bjRpX2xheWVyLmMgfCAxOSArKysrKysrKysrKysrKysrKystIA0KPiA+ID4+
-PsKgIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9sYXllci5oIHzCoCAyICstIA0KPiA+ID4+
-PsKgIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW54aV9sYXllci5oIHwgMTcgKysrKysrKysrKysr
-KysrKysgDQo+ID4gPj4+wqAgNSBmaWxlcyBjaGFuZ2VkLCA0OSBpbnNlcnRpb25zKCspLCAxMSBk
-ZWxldGlvbnMoLSkgDQo+ID4gPj4+wqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9zdW40aS9zdW54aV9sYXllci5oIA0KPiA+ID4+PiANCj4gPiA+Pj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9jcnRjLmMgDQo+ID4gPj4+IGIvZHJpdmVycy9ncHUv
-ZHJtL3N1bjRpL3N1bjRpX2NydGMuYyANCj4gPiA+Pj4gaW5kZXggM2M4NzZjM2EzNTZhLi4zMzg1
-NGVlN2Y2MzYgMTAwNjQ0IA0KPiA+ID4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
-NGlfY3J0Yy5jIA0KPiA+ID4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfY3J0
-Yy5jIA0KPiA+ID4+PiBAQCAtMjksNiArMjksNyBAQCANCj4gPiA+Pj7CoCAjaW5jbHVkZSAic3Vu
-NGlfY3J0Yy5oIiANCj4gPiA+Pj7CoCAjaW5jbHVkZSAic3VuNGlfZHJ2LmgiIA0KPiA+ID4+PsKg
-ICNpbmNsdWRlICJzdW40aV9sYXllci5oIiANCj4gPiA+Pj4gKyNpbmNsdWRlICJzdW54aV9sYXll
-ci5oIiANCj4gPiA+Pj7CoCAjaW5jbHVkZSAic3VuNGlfdGNvbi5oIiANCj4gPiA+Pj4gDQo+ID4g
-Pj4+wqAgc3RhdGljIHZvaWQgc3VuNGlfY3J0Y19hdG9taWNfYmVnaW4oc3RydWN0IGRybV9jcnRj
-ICpjcnRjLCANCj4gPiA+Pj4gQEAgLTE0OSw3ICsxNTAsNyBAQCBzdHJ1Y3Qgc3VuNGlfY3J0YyAq
-c3VuNGlfY3J0Y19pbml0KHN0cnVjdCBkcm1fZGV2aWNlIA0KPiA+ID4+PiAqZHJtLCANCj4gPiA+
-Pj7CoMKgwqDCoMKgwqDCoMKgIHNjcnRjLT50Y29uID0gdGNvbjsgDQo+ID4gPj4+IA0KPiA+ID4+
-PsKgwqDCoMKgwqDCoMKgwqAgLyogQ3JlYXRlIG91ciBsYXllcnMgKi8gDQo+ID4gPj4+IC3CoMKg
-wqDCoMKgwqAgc2NydGMtPmxheWVycyA9IHN1bjRpX2xheWVyc19pbml0KGRybSwgc2NydGMtPmJh
-Y2tlbmQpOyANCj4gPiA+Pj4gK8KgwqDCoMKgwqDCoCBzY3J0Yy0+bGF5ZXJzID0gKHZvaWQgKiop
-c3VuNGlfbGF5ZXJzX2luaXQoZHJtLCBzY3J0Yyk7IA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqAg
-aWYgKElTX0VSUihzY3J0Yy0+bGF5ZXJzKSkgeyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBkZXZfZXJyKGRybS0+ZGV2LCAiQ291bGRuJ3QgY3JlYXRlIHRoZSBwbGFu
-ZXNcbiIpOyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4g
-TlVMTDsgDQo+ID4gPj4+IEBAIC0xNTcsMTQgKzE1OCwxNSBAQCBzdHJ1Y3Qgc3VuNGlfY3J0YyAq
-c3VuNGlfY3J0Y19pbml0KHN0cnVjdCANCj4gPiA+Pj4gZHJtX2RldmljZSAqZHJtLCANCj4gPiA+
-Pj4gDQo+ID4gPj4+wqDCoMKgwqDCoMKgwqDCoCAvKiBmaW5kIHByaW1hcnkgYW5kIGN1cnNvciBw
-bGFuZXMgZm9yIGRybV9jcnRjX2luaXRfd2l0aF9wbGFuZXMgDQo+ID4gPj4+ICovIA0KPiA+ID4+
-PsKgwqDCoMKgwqDCoMKgwqAgZm9yIChpID0gMDsgc2NydGMtPmxheWVyc1tpXTsgaSsrKSB7IA0K
-PiA+ID4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qgc3VuNGlfbGF5ZXIg
-KmxheWVyID0gc2NydGMtPmxheWVyc1tpXTsgDQo+ID4gPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHZvaWQgKmxheWVyID0gc2NydGMtPmxheWVyc1tpXTsgDQo+ID4gPj4+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gDQo+ID4g
-Pj4+IHNjcnRjLT5sYXllcl9vcHMtPmdldF9wbGFuZShsYXllcik7IA0KPiA+ID4+PiANCj4gPiA+
-Pj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3dpdGNoIChsYXllci0+cGxhbmUudHlw
-ZSkgeyANCj4gPiA+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3dpdGNoIChwbGFu
-ZS0+dHlwZSkgeyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjYXNl
-IERSTV9QTEFORV9UWVBFX1BSSU1BUlk6IA0KPiA+ID4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbWFyeSA9ICZsYXllci0+cGxhbmU7IA0KPiA+ID4+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbWFyeSA9
-IHBsYW5lOyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgYnJlYWs7IA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGNhc2UgRFJNX1BMQU5FX1RZUEVfQ1VSU09SOiANCj4gPiA+Pj4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGN1cnNvciA9ICZsYXllci0+cGxhbmU7IA0KPiA+
-ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY3Vyc29y
-ID0gcGxhbmU7IA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBicmVhazsgDQo+ID4gPj4+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgZGVmYXVsdDogDQo+ID4gPj4+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIGJyZWFrOyANCj4gPiA+Pj4gQEAgLTE5MCwxMCArMTkyLDExIEBAIHN0cnVj
-dCBzdW40aV9jcnRjICpzdW40aV9jcnRjX2luaXQoc3RydWN0IA0KPiA+ID4+PiBkcm1fZGV2aWNl
-ICpkcm0sIA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqAgLyogU2V0IHBvc3NpYmxlX2NydGNzIHRv
-IHRoaXMgY3J0YyBmb3Igb3ZlcmxheSBwbGFuZXMgKi8gDQo+ID4gPj4+wqDCoMKgwqDCoMKgwqDC
-oCBmb3IgKGkgPSAwOyBzY3J0Yy0+bGF5ZXJzW2ldOyBpKyspIHsgDQo+ID4gPj4+wqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdWludDMyX3QgcG9zc2libGVfY3J0Y3MgPSANCj4gPiA+
-Pj4gQklUKGRybV9jcnRjX2luZGV4KCZzY3J0Yy0+Y3J0YykpOyANCj4gPiA+Pj4gLcKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IHN1bjRpX2xheWVyICpsYXllciA9IHNjcnRjLT5s
-YXllcnNbaV07IA0KPiA+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB2b2lkICps
-YXllciA9IHNjcnRjLT5sYXllcnNbaV07IA0KPiA+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSA9IA0KPiA+ID4+PiBzY3J0Yy0+bGF5ZXJf
-b3BzLT5nZXRfcGxhbmUobGF5ZXIpOyANCj4gPiA+Pj4gDQo+ID4gPj4+IC3CoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGlmIChsYXllci0+cGxhbmUudHlwZSA9PSBEUk1fUExBTkVfVFlQRV9P
-VkVSTEFZKSANCj4gPiA+Pj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGxheWVyLT5wbGFuZS5wb3NzaWJsZV9jcnRjcyA9IHBvc3NpYmxlX2NydGNzOyANCj4g
-PiA+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKHBsYW5lLT50eXBlID09IERS
-TV9QTEFORV9UWVBFX09WRVJMQVkpIA0KPiA+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgcGxhbmUtPnBvc3NpYmxlX2NydGNzID0gcG9zc2libGVfY3J0
-Y3M7IA0KPiA+ID4+PsKgwqDCoMKgwqDCoMKgwqAgfSANCj4gPiA+Pj4gDQo+ID4gPj4+wqDCoMKg
-wqDCoMKgwqDCoCByZXR1cm4gc2NydGM7IA0KPiA+ID4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL3N1bjRpL3N1bjRpX2NydGMuaCANCj4gPiA+Pj4gYi9kcml2ZXJzL2dwdS9kcm0vc3Vu
-NGkvc3VuNGlfY3J0Yy5oIA0KPiA+ID4+PiBpbmRleCAyMzBjYjhmMGQ2MDEuLmE0MDM2ZWU0NGNm
-OCAxMDA2NDQgDQo+ID4gPj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9jcnRj
-LmggDQo+ID4gPj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9jcnRjLmggDQo+
-ID4gPj4+IEBAIC0xOSw3ICsxOSw4IEBAIHN0cnVjdCBzdW40aV9jcnRjIHsgDQo+ID4gPj4+IA0K
-PiA+ID4+PsKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IHN1bjRpX2JhY2tlbmTCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgICpiYWNrZW5kOyANCj4gPiA+Pj7CoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBzdW40
-aV90Y29uwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqdGNvbjsgDQo+ID4gPj4+IC3CoMKg
-wqDCoMKgwqAgc3RydWN0IHN1bjRpX2xheWVywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKips
-YXllcnM7IA0KPiA+ID4+PiArwqDCoMKgwqDCoMKgIHZvaWTCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKipsYXllcnM7IA0KPiA+ID4+PiArwqDC
-oMKgwqDCoMKgIGNvbnN0IHN0cnVjdCBzdW54aV9sYXllcl9vcHPCoMKgwqAgKmxheWVyX29wczsg
-DQo+ID4gPj4gDQo+ID4gPj4gDQo+ID4gPj4gSSB0aGluayB5b3Ugc2hvdWxkIHByb2JhYmx5IHRh
-a2UgYSBkaWZmZXJlbnQgYXBwcm9hY2ggdG8gYWJzdHJhY3QgdGhlIA0KPiA+ID4+IGxheWVyIA0K
-PiA+ID4+IHR5cGUuIEhvdyBhYm91dCBjcmVhdGluZyANCj4gPiA+PiANCj4gPiA+PiBzdHJ1Y3Qg
-c3VueGlfbGF5ZXIgeyANCj4gPiA+PsKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGRybV9wbGFuZSBw
-bGFuZTsgDQo+ID4gPj4gfSANCj4gPiA+PiANCj4gPiA+PiBiYXNlIGFuZCB0aGVuIHN1YmNsYXNz
-aW5nIHRoYXQgZm9yIHN1bjRpIGFuZCBzdW44aT8gQnkgZG9pbmcgdGhpcyB5b3UgY2FuIA0KPiA+
-ID4+IGF2b2lkIA0KPiA+ID4+IHRoZSBuYXN0eSBjYXN0aW5nIGFuZCB5b3UgY2FuIGFsc28gZ2V0
-IHJpZCBvZiB0aGUgZ2V0X3BsYW5lKCkgaG9vayBhbmQgDQo+ID4gPj4gbGF5ZXJfb3BzLiANCj4g
-PiA+IA0KPiA+ID4gDQo+ID4gPiBGb3IgdGhlIHNpdHVhdGlvbiB0aGF0IHVzaW5nICoqIHRoaW5n
-cyBhcmUgZWFzaWx5IHRvIGdldCB3ZWlyZC4gDQo+ID4NCj4gPiBUaGF0IGNvZGUgY291bGQgYmUg
-cmV3b3JrZWQsIGJ5IGluaXRpYWxpemluZyB0aGUgbGF5ZXJzIGRpcmVjdGx5IHdpdGhpbiANCj4g
-PiB0aGUgY3J0YyBpbml0IGNvZGUuIElmIHlvdSBsb29rIGF0IHJvY2tjaGlwJ3MgZHJtIGRyaXZl
-ciwgeW91J2xsIHNlZSANCj4gPiB0aGV5IGRvIHRoaXMuIFRoZXJlIGlzIGEgZ29vZCByZWFzb24g
-dG8gZG8gaXQgdGhpcyB3YXksIGFzIHlvdSBuZWVkIA0KPiA+IHRvIGZpcnN0IGNyZWF0ZSB0aGUg
-cHJpbWFyeSBhbmQgY3Vyc29yIGxheWVycywgcGFzcyB0aGVtIGluIHdoZW4geW91IA0KPiA+IGNy
-ZWF0ZSB0aGUgY3J0YywgdGhlbiBpbml0aWFsaXplIGFueSBhZGRpdGlvbmFsIGxheWVycyB3aXRo
-IHRoZSANCj4gPiBwb3NzaWJsZV9jcnRjcyBiaXRtYXAuIA0KPiANCj4gQnV0IGZ1cnRodXJseSBt
-YXliZSBtb3JlIGxheWVycyB3aWxsIGJlIGNyZWF0ZWQgZm9yIERFMiBtaXhlciwgYW5kDQo+IG1h
-eSBldmVuIGRlcGVuZHMgb24gbWl4ZXIgdHlwZSAoT24gQTgzVC9IMy9BNjQvSDUgbWl4ZXIxIGhh
-cyBmZXdlcg0KPiBjaGFubmVsIHRoYW4gbWl4ZXIwKS4NCg0KWW91J2xsIGFsd2F5cyBoYXZlIG9u
-ZSBwcmltYXJ5IGFuZCBvbmUgY3Vyc29yIHBsYW5lLCBubyBtYXR0ZXIgaG93DQptdWNoIHBsYW5l
-cyB5b3Ugc3VwcG9ydC4NCg0KTWF4aW1lDQoNCi0tIA0KTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVj
-dHJvbnMNCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcNCmh0dHA6Ly9mcmVl
-LWVsZWN0cm9ucy5jb20NCg0KLS0gCllvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5
-b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91
-cC4KVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGdyb3VwIGFuZCBzdG9wIHJlY2VpdmluZyBlbWFp
-bHMgZnJvbSBpdCwgc2VuZCBhbiBlbWFpbCB0byBsaW51eC1zdW54aSt1bnN1YnNjcmliZUBnb29n
-bGVncm91cHMuY29tLgpGb3IgbW9yZSBvcHRpb25zLCB2aXNpdCBodHRwczovL2dyb3Vwcy5nb29n
-bGUuY29tL2Qvb3B0b3V0Lgo=
---t3dovqbrjqdziyjs
-Content-Type: application/pgp-signature; name="signature.asc"
+The X-Powers AXP20X and AXP22X PMICs have multiple ADCs. They expose
+information and data of the various power supplies they support such as
+ACIN, battery and VBUS. For example, they expose the current battery
+voltage, charge or discharge, as well as ACIN and VBUS current voltages
+and currents, internal PMIC temperature and ADC on 2 different GPIOs
+when in the right mode (for the AXP209 only).
 
------BEGIN PGP SIGNATURE-----
+The ACIN power supply driver is added by this patch. The AXP20X and
+AXP22X can both read the status and the "usability" of the power supply
+but only the AXP209 will be able to tell the current current and voltage
+of the power supply by reading ADC channels. It is simply not supported
+by the AXP22X PMICs.
 
-iQIcBAEBCAAGBQJY5KZWAAoJEBx+YmzsjxAgCPIP/36WTMRsXB92DEqwe3tZKdVI
-asaz9lcb9tCH/X0PiwpiYBsvLg2VwTzm/x3xcXc1b7A1g/qZZORPI9ZkI902Kl4m
-EL5HL8HHIjRZ7dobzr728JV4o7aZtwz2rwXfvI2SkZxDoCFhE8zUx9HcFkRcaYQR
-xEpEnzBM5IOExcQqcY517cnd0whe4CNYYCbKmdbYKyhRSSp7Q3VnygppU1G5HE3Y
-nKKIjrEfyi3MbZfR1x4XTo3CUi6oVSq+vRVMuJX7WwkpM1ZMg4gmcFjkXG8guyJ0
-/AB7JFll9hdXjJreq7dc4FayE/HzRfCbUf0HcR5P14LQ5eOd/1T+0ygxtOYvoK7X
-BhCAO4HcZk7TKE7CqGCXVTJP1p7hbOyLzRoOgMDU/OJWa/l0VStofyFVLFyfGf6X
-ytiR9ko5ctgAtDgUXKFRe1l1bvyvIAHxRan++qd/IjHUFXgRDQayFZ/0ofdKILM1
-DO9PJhzwt6R7FkixYU814WMsEpyZjyXLKubw5dvkOolfBAc0RpJ3NSpTiccyxQ9E
-SB0umW3sQ36JZJhvSyhb+PnEj9v26O4Vjqk0EG0xJ1efUEWt3KWt7QkWZTpfzZZN
-4nw1ozWYrojenEwBxyDcJiNjMKT8px/MUWp/wKL1O2l6ZdHKBKgN4D9H/m2bshWt
-BgbDYd9hXb3GmNPXIbk9
-=9DSD
------END PGP SIGNATURE-----
+The battery power supply driver is also added by this patch. The AXP20X
+and AXP22X share most of their behaviour but have slight variations. The
+allowed target voltages for battery charging are not the same, the
+AXP22X PMIC are able to tell if the battery percentage computed by the
+PMIC is trustworthy and they have different formulas for computing max
+current for battery power supply. The driver is able to give the current
+voltage and current of the battery (be it charging or discharging), the
+maximal and minimal voltage and maximal current allowed for the battery,
+whether the battery is present and usable and its capacity. It will get
+the battery current current and voltage by reading the ADC channels. The
+PMIC allows maximal voltages (4.36V for AXP20X and 4.22V and 4.24V for
+AXP22X) that should not be used with Lithium-based batteries and since
+this PMIC is supposed to be used with Lithium-based batteries, they have
+been disabled. The values returned by the ADC driver are multipled by
+1000 to scale from the mV returned by the ADC to the uV expected by the
+power supply framework.
 
---t3dovqbrjqdziyjs--
+This series of patch adds DT bindings for ACIN power supply, ADC and
+battery power supply drivers for AXP20X and AXP22X PMICs and their
+documentation. It also enables the supported power supplies for the
+Nextthing Co. CHIP and Sinlinx SinA33 boards.
+
+The different drivers are also added to the MFD cells of the AXP20X and
+AXP22X cells and the writeable and volatile regs updated to work with
+the newly added drivers.
+
+This series of patch is based on a previous upstreaming attempt done by
+Bruno Pr=C3=A9mont few months ago. It differs in three points: the ADC
+driver does not tell the battery temperature (TS_IN) as I do not have a
+board to test it with, it does not tell the instantaneous battery power
+as it returns crazy values for me and finally no support for OCV curves
+for the battery.
+
+You can test these patches from this repo and branch:
+https://github.com/QSchulz/linux/tree/axp2xx_adc_batt_ac_v4
+
+v4:
+ - added the ability to set maximum constant charge current from sysfs,
+ - added a warning when setting a higher than current maximum constant char=
+ge
+ current,
+ - set default to minimum possible value for current and maximum constant c=
+harge
+ current when no battery DT is present or invalid battery DT,
+ - fixed a forgotten custom formula to compute maximum constant charge curr=
+ent
+ for AXP22X,
+ - automatically lower the current constant charge current when it is highe=
+r
+ than the maximum constant charge current about to be set,
+
+v3:
+ - Removed DT property for constant charge current in favor of the WIP
+ battery framework as requested by Sebastian Reichel,
+ - Using a simple if condition instead of a switch in the ADC driver,
+ - Fixed error handling in ADC driver's probe,
+ - Fixed missing call to iio_map_array_unregister in the ADC driver's
+ remove,
+ - Removed ADC driver's DT node and documentation,
+ - Merged IIO channel mapping patches into the original ADC driver
+ patch,
+ - Removed `adding V-OFF to writeable reg' patch as it's already in
+ writeable reg range,
+
+v2:
+ - Some registers' name have been changed to better reflect their
+ purpose,
+ - Make VBUS power supply driver use IIO channels when AXP ADC driver is
+ enabled, but fall back on previous behavior when disabled. This is made
+ to avoid the ADC driver overwritting registers for VBUS power supply
+ ADC when removed,
+ - Removed useless adding of data registers to volatile registers,
+ - Reordered IIO channels, now grouped by same part of the PMIC (e.g.
+ voltage and current of the battery have the same index in different
+ IIO types),
+ - Added structures for specific data instead of matching on IDs,
+ - Switched from DT IIO channels mapping to iio_map structures IIO
+ channels mapping,
+
+Quentin
+
+Quentin Schulz (7):
+  dt-bindings: power: supply: add AXP20X/AXP22X battery DT binding
+  power: supply: add battery driver for AXP20X and AXP22X PMICs
+  mfd: axp20x: add MFD cells for AXP20X and AXP22X battery driver
+  ARM: dtsi: axp209: add battery power supply subnode
+  ARM: dtsi: axp22x: add battery power supply subnode
+  ARM: dts: sun8i: sina33: enable battery power supply subnode
+  ARM: sun5i: chip: enable battery power supply subnode
+
+ .../bindings/power/supply/axp20x_battery.txt       |  28 ++
+ arch/arm/boot/dts/axp209.dtsi                      |   5 +
+ arch/arm/boot/dts/axp22x.dtsi                      |   5 +
+ arch/arm/boot/dts/sun5i-r8-chip.dts                |   4 +
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   4 +
+ drivers/mfd/axp20x.c                               |   9 +
+ drivers/power/supply/Kconfig                       |  12 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/axp20x_battery.c              | 502 +++++++++++++++++=
+++++
+ 9 files changed, 570 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_b=
+attery.txt
+ create mode 100644 drivers/power/supply/axp20x_battery.c
+
+--=20
+2.9.3
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
