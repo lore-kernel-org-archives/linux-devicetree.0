@@ -1,92 +1,67 @@
-From: "Han, Nandor (GE Healthcare)" <nandor.han@ge.com>
-Subject: [PATCH 1/3] gpio - Add EXAR XRA1403 SPI GPIO expander driver
-Date: Wed, 5 Apr 2017 13:24:49 +0000
-Message-ID: <HE1P101MB01883B516828F26921267A4FE60A0@HE1P101MB0188.NAMP101.PROD.OUTLOOK.COM>
-References: <cover.1490595641.git.nandor.han@ge.com>
- <6bf04ba1761f0692cb461558f0c8836f0d1f7ad8.1490595641.git.nandor.han@ge.com>
- <CACRpkdZB_cxqw0=M4YOhcwdZe7BxJtVKA290yGH-jxPU2MDgBg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 06/16] regulator: madera-ldo1: LDO1 driver
+ for Cirrus Logic Madera codecs
+Date: Wed, 5 Apr 2017 14:28:44 +0100
+Message-ID: <20170405132844.h4itieglcbzyl3jf@sirena.org.uk>
+References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1491386884-30689-7-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZB_cxqw0=M4YOhcwdZe7BxJtVKA290yGH-jxPU2MDgBg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Malinen, Semi (GE Healthcare)" <semi.malinen@ge.com>
+Content-Type: multipart/mixed; boundary="===============4685258558027622994=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1491386884-30689-7-git-send-email-rf@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMgV2FsbGVpaiBb
-bWFpbHRvOmxpbnVzLndhbGxlaWpAbGluYXJvLm9yZ10NCj4gU2VudDogMjkgTWFyY2ggMjAxNyAw
-NTowNw0KPiBUbzogSGFuLCBOYW5kb3IgKEdFIEhlYWx0aGNhcmUpIDxuYW5kb3IuaGFuQGdlLmNv
-bT4NCj4gQ2M6IEFsZXhhbmRyZSBDb3VyYm90IDxnbnVyb3VAZ21haWwuY29tPjsgUm9iIEhlcnJp
-bmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFy
-bS5jb20+OyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IE1hbGluZW4sIFNlbWkgKEdF
-IEhlYWx0aGNhcmUpIDxzZW1pLm1hbGluZW5AZ2UuY29tPg0KPiBTdWJqZWN0OiBFWFQ6IFJlOiBb
-UEFUQ0ggMS8zXSBncGlvIC0gQWRkIEVYQVIgWFJBMTQwMyBTUEkgR1BJTyBleHBhbmRlciBkcml2
-ZXINCj4gDQo+IE9uIE1vbiwgTWFyIDI3LCAyMDE3IGF0IDg6MjMgQU0sIE5hbmRvciBIYW4gPG5h
-bmRvci5oYW5AZ2UuY29tPiB3cm90ZToNCj4gDQo+ID4gVGhpcyBpcyBhIHNpbXBsZSBkcml2ZXIg
-dGhhdCBwcm92aWRlcyBhIC9zeXMvY2xhc3MvZ3Bpbw0KPiA+IGludGVyZmFjZSBmb3IgY29udHJv
-bGxpbmcgYW5kIGNvbmZpZ3VyaW5nIHRoZSBHUElPIGxpbmVzLg0KPiANCj4gVXNlIHRoZSBncGlv
-IHRvb2xzIGluIHRvb2xzL2dwaW8sIHVzZSB0aGUgY2hhcmFjY3RlciBkZXZpY2UuDQo+IERvIG5v
-dCB1c2Ugc3lzZnMuIENoYW5nZSB0aGlzIHRvIHJlZmVyZW5jZSB0aGUgdG9vbHMuDQo+IA0KPiA+
-IEl0IGRvZXMgbm90IHByb3ZpZGUgc3VwcG9ydCBmb3IgY2hpcCBzZWxlY3Qgb3IgaW50ZXJydXB0
-cy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE5hbmRvciBIYW4gPG5hbmRvci5oYW5AZ2UuY29t
-Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNlbWkgTWFsaW5lbiA8c2VtaS5tYWxpbmVuQGdlLmNvbT4N
-Cj4gKC4uLikNCj4gPiArZXhhciAgIEV4YXIgQ29ycG9yYXRpb24NCj4gDQo+IFNlbmQgdGhpcyBh
-cyBhIHNlcGFyYXRlIHBhdGNoIHRvIHRoZSBEVCBiaW5kaW5ncyBtYWludGFpbmVyDQo+IChSb2Ig
-SGVycmluZy4pDQo+IA0KDQpPSy4gSSB3aWxsIGNyZWF0ZSBhIHNlcGFyYXRlIHBhdGNoIHdpdGgg
-dGhpcyBvbmUuIA0KSSBndWVzcyBpcyBub3QgYW4gaXNzdWUgdG8gc2VuZCBhbGwgdGhlIHBhdGNo
-ZXMgdG8gUm9iIGFzIHdlbGwuDQoNCjxzbmlwPg0KDQo+ID4gKw0KPiA+ICsgICAgICAgcmV0ID0g
-eHJhMTQwM19nZXRfYnl0ZSh4cmEsIGFkZHIgKyAoYml0ID4gNykpOw0KPiA+ICsgICAgICAgaWYg
-KHJldCA8IDApDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsg
-ICAgICAgcmV0dXJuICEhKHJldCAmIEJJVChiaXQgJSA4KSk7DQo+ID4gK30NCj4gDQo+IFRoaXMg
-bG9va3MgbGlrZSBpdCBjYW4gdXNlIHJlZ21hcC1zcGkgcmlnaHQgb2ZmLCBkbyB5b3UgYWdyZWU/
-DQo+IA0KDQpZZXMuIFVzaW5nIHJlZ21hcC1zcGkgd2lsbCBkZWZpbml0ZWx5IGltcHJvdmUgdGhl
-IGNvZGUgcmVhZGFiaWxpdHkgYW5kIHJlZHVjZSBib2lsZXJwbGF0ZS4NCkRvbmUuDQoNCj4gZ2l0
-IGdyZXAgZGV2bV9yZWdtYXBfaW5pdF9zcGkNCj4gc2hvdWxkIGdpdmUgeW91IHNvbWUgZXhhbXBs
-ZXMgb2YgaG93IHRvIHVzZSBpdC4NCj4gDQo+IElmIGl0J3Mgbm90IG9mZi10aGUgc2hlbGYgcmVn
-bWFwIGRyaXZlcnMgbGlrZQ0KPiBkcml2ZXJzL2lpby9wcmVzc3VyZS9tcGwxMTVfc3BpLmMNCj4g
-Z2l2ZSBleGFtcGxlcyBvZiBob3cgdG8gbWFrZSBtb3JlIGVsYWJvcmF0ZSBjdXN0b20NCj4gU1BJ
-IHRyYW5zZmVycyB3aXRoIHJlZ21hcC4NCj4gDQoNClRoYW5rcywgSSBkaWQgY2hlY2sgb3RoZXIg
-ZHJpdmVycyBhcyBleGFtcGxlcy4gDQpOb3QgdGhhdCBJIG5lZWRlZCBmb3IgdGhpcyBkcml2ZXIs
-IGJ1dCAuLi5tcGwxMTVfc3BpLmMgZG9lc24ndCBzZWVtIHRvDQp1c2UgcmVnbWFwIChjaGVja2Vk
-IG9uIG5leHQtMjAxNzAzMjcpDQoNCjxzbmlwPg0KDQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKHZh
-bHVlICE9IHJldCkgew0KPiA+ICsgICAgICAgICAgICAgICB0eFswXSA9IGFkZHIgPDwgMTsNCj4g
-PiArICAgICAgICAgICAgICAgdHhbMV0gPSB2YWx1ZTsNCj4gPiArICAgICAgICAgICAgICAgcmV0
-ID0gc3BpX3dyaXRlKHhyYS0+c3BpLCB0eCwgc2l6ZW9mKHR4KSk7DQo+ID4gKyAgICAgICB9IGVs
-c2Ugew0KPiA+ICsgICAgICAgICAgICAgICByZXQgPSAwOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsN
-Cj4gPiArb3V0X3VubG9jazoNCj4gPiArICAgICAgIG11dGV4X3VubG9jaygmeHJhLT5sb2NrKTsN
-Cj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICt9DQo+IA0KPiBDbGFzc2ljYWwg
-bWFzay1hbmQtc2V0IGltcGxlbWVudGF0aW9uIHJpZ2h0Pw0KPiBXaXRoIHJlZ21hcCB0aGlzIGJl
-Y29tZXMgc2ltcGx5IHJlZ21hcF91cGRhdGVfYml0cyhtYXAsIGFkZHIsIG1hc2ssIHNldCkNCj4g
-DQoNClRydWUuIDopDQoNCjxzbmlwPg0KDQo+ID4gKyAgICAgICAvKiBicmluZyB0aGUgY2hpcCBv
-dXQgb2YgcmVzZXQgKi8NCj4gPiArICAgICAgIHJlc2V0X2dwaW8gPSBncGlvZF9nZXRfb3B0aW9u
-YWwoJnNwaS0+ZGV2LCAicmVzZXQiLCBHUElPRF9PVVRfTE9XKTsNCj4gPiArICAgICAgIGlmIChJ
-U19FUlIocmVzZXRfZ3BpbykpDQo+ID4gKyAgICAgICAgICAgICAgIGRldl93YXJuKCZzcGktPmRl
-diwgImNvdWxkIG5vdCBnZXQgcmVzZXQtZ3Bpb3NcbiIpOw0KPiA+ICsgICAgICAgZWxzZSBpZiAo
-cmVzZXRfZ3BpbykNCj4gPiArICAgICAgICAgICAgICAgZ3Bpb2RfcHV0KHJlc2V0X2dwaW8pOw0K
-PiANCj4gSSBkb24ndCB0aGluayB5b3Ugc2hvdWxkIHB1dCBpdCwgb3RoZXIgdGhhbiBpbiB0aGUg
-cmVtb3ZlKCkNCj4gZnVuY3Rpb24gYW5kIGluIHRoYXQgY2FzZSB5b3UgbmVlZCB0byBoYXZlIGl0
-IGluIHRoZQ0KPiBzdGF0ZSBjb250YWluZXIuDQoNCkNhbiB5b3UgcGxlYXNlIGJlIG1vcmUgZXhw
-bGljaXQgaGVyZS4NCg0KQ3VycmVudGx5IEknbSB0cnlpbmcgdG8gYnJpbmcgdGhlIGRldmljZSBv
-dXQgZnJvbSByZXNldCBpbiBjYXNlIHJlc2V0IEdQSU8gaXMgcHJvdmlkZWQuDQpJIGRvbid0IHNl
-ZSBob3cgdGhpcyBjb3VsZCBiZSBkb25lIGluIHJlbW92ZSgpICA6KQ0KDQo+IA0KPiA+ICsgICAg
-ICAgbXV0ZXhfaW5pdCgmeHJhLT5sb2NrKTsNCj4gPiArDQo+ID4gKyAgICAgICB4cmEtPmNoaXAu
-ZGlyZWN0aW9uX2lucHV0ID0geHJhMTQwM19kaXJlY3Rpb25faW5wdXQ7DQo+ID4gKyAgICAgICB4
-cmEtPmNoaXAuZGlyZWN0aW9uX291dHB1dCA9IHhyYTE0MDNfZGlyZWN0aW9uX291dHB1dDsNCj4g
-DQo+IFBsZWFzZSBpbXBsZW1lbnQgLmdldF9kaXJlY3Rpb24oKS4gVGhpcyBpcyB2ZXJ5IG5pY2Ug
-dG8gaGF2ZS4NCj4gDQoNCkRvbmUNCg0KPiA+ICtzdGF0aWMgaW50IHhyYTE0MDNfcmVtb3ZlKHN0
-cnVjdCBzcGlfZGV2aWNlICpzcGkpDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCB4cmExNDAz
-ICp4cmEgPSBzcGlfZ2V0X2RydmRhdGEoc3BpKTsNCj4gPiArDQo+ID4gKyAgICAgICBncGlvY2hp
-cF9yZW1vdmUoJnhyYS0+Y2hpcCk7DQo+IA0KPiBVc2UgZGV2bV9ncGlvY2hpcF9hZGRfZGF0YSgp
-IGFuZCB0aGlzIHJlbW92ZSBpcyBub3QNCj4gbmVlZGVkIGF0IGFsbC4NCj4gDQoNClRydWUuIERv
-bmUNCg0KPHNuaXA+DQoNCj4gPiArc3Vic3lzX2luaXRjYWxsKHhyYTE0MDNfaW5pdCk7DQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgdm9pZCBfX2V4aXQgeHJhMTQwM19leGl0KHZvaWQpDQo+ID4gK3sNCj4g
-PiArICAgICAgIHNwaV91bnJlZ2lzdGVyX2RyaXZlcigmeHJhMTQwM19kcml2ZXIpOw0KPiA+ICt9
-DQo+ID4gK21vZHVsZV9leGl0KHhyYTE0MDNfZXhpdCk7DQo+IA0KPiBUaGlzIHNlZW1zIGxpa2Ug
-dHJpY2tzeS4gSnVzdCBtb2R1bGVfc3BpX2RyaXZlcigpDQo+IHNob3VsZCBiZSBmaW5lIGRvbid0
-IHlvdSB0aGluaz8NCg0KWWVhaC4gVEJIIEkgZG9uJ3QgaGF2ZSBhIHN0cm9uZyByZWFzb24gd2h5
-IG1vZHVsZV9zcGlfZHJpdmVyIGluaXQgbGV2ZWwgc2hvdWxkbid0IGJlIGVub3VnaC4gDQpEb25l
-Lg0KDQpSZWdhcmRzLA0KICAgIE5hbmRvcg0K
+
+--===============4685258558027622994==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="74azknti32ogp66j"
+Content-Disposition: inline
+
+
+--74azknti32ogp66j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Apr 05, 2017 at 11:07:54AM +0100, Richard Fitzgerald wrote:
+> This patch adds a driver for the internal LDO1 regulator on
+> some Cirrus Logic Madera class codecs.
+
+There appear to be only data differences to the existing arizona driver,
+is it possible to share the code?
+
+--74azknti32ogp66j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljk8QsACgkQJNaLcl1U
+h9BnIQf8DygzO0mcDjqy6rkrjC8MGwrU0WVKZ4V5WpVIaDO62AnyWNPh8coFdO5I
+vLjZrMAWJtdx4Uo8eh3LC2sukQAvRiZ0jFnvWTPhbSGu2loOHupiYDxZmzIjpOg5
+OyH7ALWVlVmORa7V+QL+RbZnyanfiSvEMSJNPLTpTA7aOqPfYB3b4IF38QF/hoY0
+bFmrwtspZY75JMfugmAYhbWzPz9ED9IPUlENdy6nWef/AFWSehtMwmgH/Y992r4t
+5MCBxZ2Pvr6UBj5M9YKdQpGqbXsUgOsKpLumIehFwZCwbVIXfXYu56W3l3L+615O
+10hGYHzV+bWNQdyqAM2t18tInkJIUQ==
+=YIZp
+-----END PGP SIGNATURE-----
+
+--74azknti32ogp66j--
+
+--===============4685258558027622994==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4685258558027622994==--
