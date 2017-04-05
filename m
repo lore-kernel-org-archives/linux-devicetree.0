@@ -1,64 +1,38 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/1] ARM: dts: armada-xp-linksys-mamba: use wan instead
- of internet for DSA port
-Date: Wed, 5 Apr 2017 16:28:24 +0200
-Message-ID: <20170405142824.GB13449@lunn.ch>
-References: <20170405052847.326-1-ralph.sennhauser@gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 0/2] pmu0 MMIO region for A64 USB PHY
+Date: Wed,  5 Apr 2017 22:30:32 +0800
+Message-ID: <20170405143034.8868-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170405052847.326-1-ralph.sennhauser@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBG77SPDQKGQEVDTMTKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 05, 2017 at 07:28:46AM +0200, Ralph Sennhauser wrote:
-> The LEDs for the "wan" port are already labeled "mamba:amber:wan" resp.
-> "mamba:white:wan". So besides being an outlier with regard to the rest
-> of the product line (see table below) changing the label fixes an
-> internal inconsistency as well.
-> 
-> This will be visible in user space. Given commit cb4f71c42988 ("ARM:
-> dts: armada-38x: change order of ethernet DT nodes on Armada 38x") it's
-> expected to happen anyway. Commit 499400c9ac20 ("ARM: dts:
-> armada-xp-linksys-mamba: Utilize new DSA binding") switches to the new
-> bindings, use this opportunity to do it now rather than later.
-> 
-> |-----------------------------------------------------------------|
-> | Labels used for the case and those used for the DSA ports       |
-> |-----------------------------------------------------------------|
-> | case labels	| armada-385-linksys-*	| armada-xp-linksys-mamba |
-> |---------------|-----------------------|-------------------------|
-> | internet	| wan			| internet		  |
-> | 1		| lan1			| lan1			  |
-> | 2		| lan2			| lan2			  |
-> | 3		| lan3			| lan3			  |
-> | 4		| lan4			| lan4			  |
-> |-----------------------------------------------------------------|
+The USB PHY of A64 contains a "pmu0" MMIO region, which contains some control
+registers for the EHCI0/OHCI0 pair on A64 SoC.
 
-Hi Ralph
+This pair is not used currently in 4.11, but when enabling it in 4.12, the
+MMIO region is needed.
 
-I always encourage people to use the case labels as interface names.
-So if i was going to make a change, it would be wan->internet for the 
-armada-385-linksys-*.
+In order to prevent device tree compatibility breakage, add this region in
+4.11.
 
-> I underestimated the urge of people to make all the same before. While I do not
-> particularly like this sort of change I see it coming anyway. So this patch is
-> meant to make it a deliberate decision so it no longer is an item lurking in
-> the shadows. Whether this patch gets taken or rejected my goal is reached.
+Icenowy Zheng (2):
+  dt: bindings: add pmu0 regs for USB PHYs on Allwinner H3/V3s/A64
+  arm64: allwinner: a64: add pmu0 regs for USB PHY
 
-I would say, this is now too late. Changing an interface name will
-break configuration scripts. We are stuck with it.
+ Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi           | 2 ++
+ 2 files changed, 3 insertions(+)
 
-      Andrew
+-- 
+2.12.2
