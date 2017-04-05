@@ -1,38 +1,65 @@
-From: Kalle Valo <kvalo@qca.qualcomm.com>
-Subject: Re: [PATCH 1/7] Documentation: dt: net: Update the ath9k binding for
- SoC devices
-Date: Wed, 5 Apr 2017 10:09:44 +0000
-Message-ID: <87tw63i2s7.fsf@kamboji.qca.qualcomm.com>
-References: <1489439116-4233-1-git-send-email-albeu@free.fr>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 4/6] arm64: dts: rockchip: add core dtsi file for RK3328 SoCs
+Date: Wed, 05 Apr 2017 12:11:11 +0200
+Message-ID: <4811905.ImQG7774i7@diego>
+References: <1490607650-18650-1-git-send-email-cl@rock-chips.com> <6636047.jL6XHNkknt@phil> <58E4516D.4000805@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489439116-4233-1-git-send-email-albeu@free.fr> (Alban's message
-        of "Mon, 13 Mar 2017 22:05:09 +0100")
-Content-Language: en-US
+In-Reply-To: <58E4516D.4000805@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alban <albeu@free.fr>
-Cc: ath9k-devel <ath9k-devel@qca.qualcomm.com>, John Crispin <john@phrozen.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: cl@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, zhengxing@rock-chips.com, andy.yan@rock-chips.com, jay.xu@rock-chips.com, matthias.bgg@gmail.com, paweljarosz3691@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, wxt@rock-chips.com, david.wu@rock-chips.com, linux-iio@vger.kernel.org, shawn.lin@rock-chips.com, akpm@linux-foundation.org, dianders@chromium.org, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, afaerber@suse.de, shawnguo@kernel.org, khilman@baylibre.com, arnd@arndb.de, fabio.estevam@nxp.com, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Alban <albeu@free.fr> writes:
+Hi Elaine,
 
-> The current binding only cover PCI devices so extend it for SoC devices.
->
-> Most SoC platforms use an MTD partition for the calibration data
-> instead of an EEPROM. The qca,no-eeprom property was added to allow
-> loading the EEPROM content using firmware loading. This new binding
-> replace this hack with NVMEM cells, so we also mark the qca,no-eeprom
-> property as deprecated in case anyone ever used it.
+Am Mittwoch, 5. April 2017, 10:07:41 CEST schrieb Elaine Zhang:
+> On 04/05/2017 12:04 AM, Heiko Stuebner wrote:
+> > Am Montag, 27. März 2017, 17:40:48 CEST schrieb cl@rock-chips.com:
+> >> From: Liang Chen <cl@rock-chips.com>
+> >> 
+> >> This patch adds core dtsi file for Rockchip RK3328 SoCs.
+> >> 
+> >> Signed-off-by: Liang Chen <cl@rock-chips.com>
+> > 
+> > applied for 4.12, with the following list of changes:
+> > 
+> > - reorder some properties to bring them in alphabetical order
+> > - dropped the status-disabled from the power-controller
+> > 
+> >    power-domain control is a quite essential part of the system, so if
+> >    boards really want to disable them, they should do it in their board
+> >    file
+> >    Having power-domains on all the time, is also our default in all other
+> >    devicetrees.
+> > 
+> > - removed #dma-cells from spi0 -> this is not a dma controller
+> > - reword the cru assigned-clocks comment a bit
+> > - fixed sdmmc1_bus4 pins, as indicated by Shawn and after looking up the
+> > 
+> >    correct pins in the manual
+> > 
+> > And a final question, are you sure about SCLK_PDM becoming a child of the
+> > APLL in your cru assigned-clocks, as the APLL will vary later on with
+> > cpufreq active?
+> 
+> the NPLL will vary later on with cpufreq active.
+> 
+> The NPLL is better than APLL, so NPLL is for clk_core,and apll is for pdm.
+> 
+> please see the TRM in CRU:
+> 1.4 Function Description
+> /........./
+> To maximize the flexibility, some of clocks can select divider source
+> from 5 PLLs. (Note: It’s
+> recommended to use NEW PLL instead of ARM PLL as arm clock source,
+> because NEW PLL is
+> near to ARM. And it’s jitter is better than ARM PLL).
 
-A patchset like this should definitely have a cover letter and explain
-the backround and reasoning for this patchset. Currently I'm just
-guessing.
+Thanks for the clarification - this way it definitly makes sense.
 
-> Signed-off-by: Alban <albeu@free.fr>
 
-Please use your full name both in From and S-o-b lines.
-
---=20
-Kalle Valo=
+Thanks
+Heiko
