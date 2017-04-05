@@ -1,819 +1,608 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v2 1/2] arm64: dts: rk3399: add support for firefly-rk3399 board
-Date: Wed,  5 Apr 2017 17:33:19 +0800
-Message-ID: <1491384800-22412-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, Liang Chen <cl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v6 07/23] PCI: endpoint: functions: Add an EP function to test
+ PCI
+Date: Wed, 5 Apr 2017 14:22:27 +0530
+Message-ID: <20170405085243.18123-8-kishon@ti.com>
+References: <20170405085243.18123-1-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170405085243.18123-1-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: hch@infradead.org, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Firefly-rk3399 is a bord from T-Firefly, you can find detail about
-it here:
-http://en.t-firefly.com/en/firenow/Firefly_RK3399/
+Adds a new endpoint function driver (to program the virtual test device)
+making use of the EP-core library.
 
-This patch add basic node for the board and make it able to bring
-up.
-
-Peripheral works:
-- usb hub which connect to ehci controller;
-- UART2 debug
-- eMMC
-- PCIe
-
-Not work:
-- USB 3.0 HOST, type-C port
-- sdio, sd-card
-
-Not test for other peripheral:
-- HDMI
-- Ethernet
-- OPTICAL
-- WiFi/BT
-- MIPI CSI/DSI
-- IR
-- EDP/DP
-
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
+ drivers/pci/endpoint/Kconfig                  |   2 +
+ drivers/pci/endpoint/Makefile                 |   2 +-
+ drivers/pci/endpoint/functions/Kconfig        |  12 +
+ drivers/pci/endpoint/functions/Makefile       |   5 +
+ drivers/pci/endpoint/functions/pci-epf-test.c | 510 ++++++++++++++++++++++++++
+ 5 files changed, 530 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pci/endpoint/functions/Kconfig
+ create mode 100644 drivers/pci/endpoint/functions/Makefile
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-test.c
 
-Changes in v2:
-- rebase on Heiko's for-next
-- using pinctrl binding header definition instead of a number
-- other fix by comments from Heiko and Andreas.
-
- arch/arm64/boot/dts/rockchip/Makefile           |   1 +
- arch/arm64/boot/dts/rockchip/rk3399-firefly.dts | 750 ++++++++++++++++++++++++
- 2 files changed, 751 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index b5636bb..bcfa53b 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
+diff --git a/drivers/pci/endpoint/Kconfig b/drivers/pci/endpoint/Kconfig
+index c86bca9b7de3..c23f146fb5a6 100644
+--- a/drivers/pci/endpoint/Kconfig
++++ b/drivers/pci/endpoint/Kconfig
+@@ -26,4 +26,6 @@ config PCI_ENDPOINT_CONFIGFS
+ 	   configure the endpoint function and used to bind the
+ 	   function with a endpoint controller.
  
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
++source "drivers/pci/endpoint/functions/Kconfig"
++
+ endmenu
+diff --git a/drivers/pci/endpoint/Makefile b/drivers/pci/endpoint/Makefile
+index 7219d51bb401..1041f80a4645 100644
+--- a/drivers/pci/endpoint/Makefile
++++ b/drivers/pci/endpoint/Makefile
+@@ -4,4 +4,4 @@
+ 
+ obj-$(CONFIG_PCI_ENDPOINT_CONFIGFS)	+= pci-ep-cfs.o
+ obj-$(CONFIG_PCI_ENDPOINT)		+= pci-epc-core.o pci-epf-core.o\
+-					   pci-epc-mem.o
++					   pci-epc-mem.o functions/
+diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
 new file mode 100644
-index 0000000..d427d40
+index 000000000000..175edad42d2f
 --- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-@@ -0,0 +1,750 @@
-+/*
-+ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
++++ b/drivers/pci/endpoint/functions/Kconfig
+@@ -0,0 +1,12 @@
++#
++# PCI Endpoint Functions
++#
++
++config PCI_EPF_TEST
++	tristate "PCI Endpoint Test driver"
++	depends on PCI_ENDPOINT
++	help
++	   Enable this configuration option to enable the test driver
++	   for PCI Endpoint.
++
++	   If in doubt, say "N" to disable Endpoint test driver.
+diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
+new file mode 100644
+index 000000000000..6d94a4801838
+--- /dev/null
++++ b/drivers/pci/endpoint/functions/Makefile
+@@ -0,0 +1,5 @@
++#
++# Makefile for PCI Endpoint Functions
++#
++
++obj-$(CONFIG_PCI_EPF_TEST)		+= pci-epf-test.o
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+new file mode 100644
+index 000000000000..d6a7a12a99f7
+--- /dev/null
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -0,0 +1,510 @@
++/**
++ * Test driver to test endpoint functionality
 + *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
++ * Copyright (C) 2017 Texas Instruments
++ * Author: Kishon Vijay Abraham I <kishon@ti.com>
 + *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 of
++ * the License as published by the Free Software Foundation.
 + *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
 +
-+/dts-v1/;
-+#include <dt-bindings/pwm/pwm.h>
-+#include "rk3399.dtsi"
++#include <linux/crc32.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/pci_ids.h>
++#include <linux/random.h>
 +
-+/ {
-+	model = "Firefly-RK3399 Board";
-+	compatible = "firefly,firefly-rk3399", "rockchip,rk3399";
++#include <linux/pci-epc.h>
++#include <linux/pci-epf.h>
++#include <linux/pci_regs.h>
 +
-+	backlight: backlight {
-+		status = "okay";
-+		compatible = "pwm-backlight";
-+		enable-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
-+		pwms = <&pwm0 0 25000 0>;
-+		brightness-levels = <
-+			  0   1   2   3   4   5   6   7
-+			  8   9  10  11  12  13  14  15
-+			 16  17  18  19  20  21  22  23
-+			 24  25  26  27  28  29  30  31
-+			 32  33  34  35  36  37  38  39
-+			 40  41  42  43  44  45  46  47
-+			 48  49  50  51  52  53  54  55
-+			 56  57  58  59  60  61  62  63
-+			 64  65  66  67  68  69  70  71
-+			 72  73  74  75  76  77  78  79
-+			 80  81  82  83  84  85  86  87
-+			 88  89  90  91  92  93  94  95
-+			 96  97  98  99 100 101 102 103
-+			104 105 106 107 108 109 110 111
-+			112 113 114 115 116 117 118 119
-+			120 121 122 123 124 125 126 127
-+			128 129 130 131 132 133 134 135
-+			136 137 138 139 140 141 142 143
-+			144 145 146 147 148 149 150 151
-+			152 153 154 155 156 157 158 159
-+			160 161 162 163 164 165 166 167
-+			168 169 170 171 172 173 174 175
-+			176 177 178 179 180 181 182 183
-+			184 185 186 187 188 189 190 191
-+			192 193 194 195 196 197 198 199
-+			200 201 202 203 204 205 206 207
-+			208 209 210 211 212 213 214 215
-+			216 217 218 219 220 221 222 223
-+			224 225 226 227 228 229 230 231
-+			232 233 234 235 236 237 238 239
-+			240 241 242 243 244 245 246 247
-+			248 249 250 251 252 253 254 255>;
-+		default-brightness-level = <200>;
-+	};
++#define COMMAND_RAISE_LEGACY_IRQ	BIT(0)
++#define COMMAND_RAISE_MSI_IRQ		BIT(1)
++#define MSI_NUMBER_SHIFT		2
++#define MSI_NUMBER_MASK			(0x3f << MSI_NUMBER_SHIFT)
++#define COMMAND_READ			BIT(8)
++#define COMMAND_WRITE			BIT(9)
++#define COMMAND_COPY			BIT(10)
 +
-+	clkin_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		clock-frequency = <125000000>;
-+		clock-output-names = "clkin_gmac";
-+		#clock-cells = <0>;
-+	};
++#define STATUS_READ_SUCCESS		BIT(0)
++#define STATUS_READ_FAIL		BIT(1)
++#define STATUS_WRITE_SUCCESS		BIT(2)
++#define STATUS_WRITE_FAIL		BIT(3)
++#define STATUS_COPY_SUCCESS		BIT(4)
++#define STATUS_COPY_FAIL		BIT(5)
++#define STATUS_IRQ_RAISED		BIT(6)
++#define STATUS_SRC_ADDR_INVALID		BIT(7)
++#define STATUS_DST_ADDR_INVALID		BIT(8)
 +
-+	rt5640-sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,name = "rockchip,rt5640-codec";
-+		simple-audio-card,mclk-fs = <256>;
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic Jack",
-+			"Headphone", "Headphone Jack";
-+		simple-audio-card,routing =
-+			"Mic Jack", "MICBIAS1",
-+			"IN1P", "Mic Jack",
-+			"Headphone Jack", "HPOL",
-+			"Headphone Jack", "HPOR";
++#define TIMER_RESOLUTION		1
 +
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s1>;
-+		};
++static struct workqueue_struct *kpcitest_workqueue;
 +
-+		simple-audio-card,codec {
-+			sound-dai = <&rt5640>;
-+		};
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rk808 1>;
-+		clock-names = "ext_clock";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_enable_h>;
-+
-+		/*
-+		 * On the module itself this is one of these (depending
-+		 * on the actual card populated):
-+		 * - SDIO_RESET_L_WL_REG_ON
-+		 * - PDN (power down when low)
-+		 */
-+		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	vcc3v3_pcie: vcc3v3-pcie-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pcie_drv>;
-+		regulator-name = "vcc3v3_pcie";
-+	};
-+
-+	vcc3v3_sys: vcc3v3-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc5v0_host: vcc5v0-host-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio1 RK_PA0 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_vbus_drv>;
-+		regulator-name = "vcc5v0_host";
-+		regulator-always-on;
-+	};
-+
-+	vcc5v0_sys: vcc5v0-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
-+	vcc_phy: vcc-phy-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_phy";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vdd_log: vdd-log {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm2 0 25000 1>;
-+		regulator-name = "vdd_log";
-+		regulator-min-microvolt = <800000>;
-+		regulator-max-microvolt = <1400000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+
-+		/* for rockchip boot on */
-+		rockchip,pwm_id= <2>;
-+		rockchip,pwm_voltage = <1000000>;
-+	};
-+
-+	vccadc_ref: vccadc-ref {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v8_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
++struct pci_epf_test {
++	void			*reg[6];
++	struct pci_epf		*epf;
++	struct delayed_work	cmd_handler;
 +};
 +
-+&cpu_l0 {
-+	cpu-supply = <&vdd_cpu_l>;
++struct pci_epf_test_reg {
++	u32	magic;
++	u32	command;
++	u32	status;
++	u64	src_addr;
++	u64	dst_addr;
++	u32	size;
++	u32	checksum;
++} __packed;
++
++static struct pci_epf_header test_header = {
++	.vendorid	= PCI_ANY_ID,
++	.deviceid	= PCI_ANY_ID,
++	.baseclass_code = PCI_CLASS_OTHERS,
++	.interrupt_pin	= PCI_INTERRUPT_INTA,
 +};
 +
-+&cpu_l1 {
-+	cpu-supply = <&vdd_cpu_l>;
++static int bar_size[] = { 512, 1024, 16384, 131072, 1048576 };
++
++static int pci_epf_test_copy(struct pci_epf_test *epf_test)
++{
++	int ret;
++	void __iomem *src_addr;
++	void __iomem *dst_addr;
++	phys_addr_t src_phys_addr;
++	phys_addr_t dst_phys_addr;
++	struct pci_epf *epf = epf_test->epf;
++	struct device *dev = &epf->dev;
++	struct pci_epc *epc = epf->epc;
++	struct pci_epf_test_reg *reg = epf_test->reg[0];
++
++	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
++	if (!src_addr) {
++		dev_err(dev, "failed to allocate source address\n");
++		reg->status = STATUS_SRC_ADDR_INVALID;
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	ret = pci_epc_map_addr(epc, src_phys_addr, reg->src_addr, reg->size);
++	if (ret) {
++		dev_err(dev, "failed to map source address\n");
++		reg->status = STATUS_SRC_ADDR_INVALID;
++		goto err_src_addr;
++	}
++
++	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
++	if (!dst_addr) {
++		dev_err(dev, "failed to allocate destination address\n");
++		reg->status = STATUS_DST_ADDR_INVALID;
++		ret = -ENOMEM;
++		goto err_src_map_addr;
++	}
++
++	ret = pci_epc_map_addr(epc, dst_phys_addr, reg->dst_addr, reg->size);
++	if (ret) {
++		dev_err(dev, "failed to map destination address\n");
++		reg->status = STATUS_DST_ADDR_INVALID;
++		goto err_dst_addr;
++	}
++
++	memcpy(dst_addr, src_addr, reg->size);
++
++	pci_epc_unmap_addr(epc, dst_phys_addr);
++
++err_dst_addr:
++	pci_epc_mem_free_addr(epc, dst_phys_addr, dst_addr, reg->size);
++
++err_src_map_addr:
++	pci_epc_unmap_addr(epc, src_phys_addr);
++
++err_src_addr:
++	pci_epc_mem_free_addr(epc, src_phys_addr, src_addr, reg->size);
++
++err:
++	return ret;
++}
++
++static int pci_epf_test_read(struct pci_epf_test *epf_test)
++{
++	int ret;
++	void __iomem *src_addr;
++	void *buf;
++	u32 crc32;
++	phys_addr_t phys_addr;
++	struct pci_epf *epf = epf_test->epf;
++	struct device *dev = &epf->dev;
++	struct pci_epc *epc = epf->epc;
++	struct pci_epf_test_reg *reg = epf_test->reg[0];
++
++	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
++	if (!src_addr) {
++		dev_err(dev, "failed to allocate address\n");
++		reg->status = STATUS_SRC_ADDR_INVALID;
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	ret = pci_epc_map_addr(epc, phys_addr, reg->src_addr, reg->size);
++	if (ret) {
++		dev_err(dev, "failed to map address\n");
++		reg->status = STATUS_SRC_ADDR_INVALID;
++		goto err_addr;
++	}
++
++	buf = kzalloc(reg->size, GFP_KERNEL);
++	if (!buf) {
++		ret = -ENOMEM;
++		goto err_map_addr;
++	}
++
++	memcpy(buf, src_addr, reg->size);
++
++	crc32 = crc32_le(~0, buf, reg->size);
++	if (crc32 != reg->checksum)
++		ret = -EIO;
++
++	kfree(buf);
++
++err_map_addr:
++	pci_epc_unmap_addr(epc, phys_addr);
++
++err_addr:
++	pci_epc_mem_free_addr(epc, phys_addr, src_addr, reg->size);
++
++err:
++	return ret;
++}
++
++static int pci_epf_test_write(struct pci_epf_test *epf_test)
++{
++	int ret;
++	void __iomem *dst_addr;
++	void *buf;
++	phys_addr_t phys_addr;
++	struct pci_epf *epf = epf_test->epf;
++	struct device *dev = &epf->dev;
++	struct pci_epc *epc = epf->epc;
++	struct pci_epf_test_reg *reg = epf_test->reg[0];
++
++	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
++	if (!dst_addr) {
++		dev_err(dev, "failed to allocate address\n");
++		reg->status = STATUS_DST_ADDR_INVALID;
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	ret = pci_epc_map_addr(epc, phys_addr, reg->dst_addr, reg->size);
++	if (ret) {
++		dev_err(dev, "failed to map address\n");
++		reg->status = STATUS_DST_ADDR_INVALID;
++		goto err_addr;
++	}
++
++	buf = kzalloc(reg->size, GFP_KERNEL);
++	if (!buf) {
++		ret = -ENOMEM;
++		goto err_map_addr;
++	}
++
++	get_random_bytes(buf, reg->size);
++	reg->checksum = crc32_le(~0, buf, reg->size);
++
++	memcpy(dst_addr, buf, reg->size);
++
++	/*
++	 * wait 1ms inorder for the write to complete. Without this delay L3
++	 * error in observed in the host system.
++	 */
++	mdelay(1);
++
++	kfree(buf);
++
++err_map_addr:
++	pci_epc_unmap_addr(epc, phys_addr);
++
++err_addr:
++	pci_epc_mem_free_addr(epc, phys_addr, dst_addr, reg->size);
++
++err:
++	return ret;
++}
++
++static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test)
++{
++	u8 irq;
++	u8 msi_count;
++	struct pci_epf *epf = epf_test->epf;
++	struct pci_epc *epc = epf->epc;
++	struct pci_epf_test_reg *reg = epf_test->reg[0];
++
++	reg->status |= STATUS_IRQ_RAISED;
++	msi_count = pci_epc_get_msi(epc);
++	irq = (reg->command & MSI_NUMBER_MASK) >> MSI_NUMBER_SHIFT;
++	if (irq > msi_count || msi_count <= 0)
++		pci_epc_raise_irq(epc, PCI_EPC_IRQ_LEGACY, 0);
++	else
++		pci_epc_raise_irq(epc, PCI_EPC_IRQ_MSI, irq);
++}
++
++static void pci_epf_test_cmd_handler(struct work_struct *work)
++{
++	int ret;
++	u8 irq;
++	u8 msi_count;
++	struct pci_epf_test *epf_test = container_of(work, struct pci_epf_test,
++						     cmd_handler.work);
++	struct pci_epf *epf = epf_test->epf;
++	struct pci_epc *epc = epf->epc;
++	struct pci_epf_test_reg *reg = epf_test->reg[0];
++
++	if (!reg->command)
++		goto reset_handler;
++
++	if (reg->command & COMMAND_RAISE_LEGACY_IRQ) {
++		reg->status = STATUS_IRQ_RAISED;
++		pci_epc_raise_irq(epc, PCI_EPC_IRQ_LEGACY, 0);
++		goto reset_handler;
++	}
++
++	if (reg->command & COMMAND_WRITE) {
++		ret = pci_epf_test_write(epf_test);
++		if (ret)
++			reg->status |= STATUS_WRITE_FAIL;
++		else
++			reg->status |= STATUS_WRITE_SUCCESS;
++		pci_epf_test_raise_irq(epf_test);
++		goto reset_handler;
++	}
++
++	if (reg->command & COMMAND_READ) {
++		ret = pci_epf_test_read(epf_test);
++		if (!ret)
++			reg->status |= STATUS_READ_SUCCESS;
++		else
++			reg->status |= STATUS_READ_FAIL;
++		pci_epf_test_raise_irq(epf_test);
++		goto reset_handler;
++	}
++
++	if (reg->command & COMMAND_COPY) {
++		ret = pci_epf_test_copy(epf_test);
++		if (!ret)
++			reg->status |= STATUS_COPY_SUCCESS;
++		else
++			reg->status |= STATUS_COPY_FAIL;
++		pci_epf_test_raise_irq(epf_test);
++		goto reset_handler;
++	}
++
++	if (reg->command & COMMAND_RAISE_MSI_IRQ) {
++		msi_count = pci_epc_get_msi(epc);
++		irq = (reg->command & MSI_NUMBER_MASK) >> MSI_NUMBER_SHIFT;
++		if (irq > msi_count || msi_count <= 0)
++			goto reset_handler;
++		reg->status = STATUS_IRQ_RAISED;
++		pci_epc_raise_irq(epc, PCI_EPC_IRQ_MSI, irq);
++		goto reset_handler;
++	}
++
++reset_handler:
++	reg->command = 0;
++
++	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
++			   msecs_to_jiffies(1));
++}
++
++static void pci_epf_test_linkup(struct pci_epf *epf)
++{
++	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
++
++	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
++			   msecs_to_jiffies(1));
++}
++
++static void pci_epf_test_unbind(struct pci_epf *epf)
++{
++	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
++	struct pci_epc *epc = epf->epc;
++	int bar;
++
++	cancel_delayed_work(&epf_test->cmd_handler);
++	pci_epc_stop(epc);
++	for (bar = BAR_0; bar <= BAR_5; bar++) {
++		if (epf_test->reg[bar]) {
++			pci_epf_free_space(epf, epf_test->reg[bar], bar);
++			pci_epc_clear_bar(epc, bar);
++		}
++	}
++}
++
++static int pci_epf_test_set_bar(struct pci_epf *epf)
++{
++	int flags;
++	int bar;
++	int ret;
++	struct pci_epf_bar *epf_bar;
++	struct pci_epc *epc = epf->epc;
++	struct device *dev = &epf->dev;
++	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
++
++	flags = PCI_BASE_ADDRESS_SPACE_MEMORY | PCI_BASE_ADDRESS_MEM_TYPE_32;
++	if (sizeof(dma_addr_t) == 0x8)
++		flags |= PCI_BASE_ADDRESS_MEM_TYPE_64;
++
++	for (bar = BAR_0; bar <= BAR_5; bar++) {
++		epf_bar = &epf->bar[bar];
++		ret = pci_epc_set_bar(epc, bar, epf_bar->phys_addr,
++				      epf_bar->size, flags);
++		if (ret) {
++			pci_epf_free_space(epf, epf_test->reg[bar], bar);
++			dev_err(dev, "failed to set BAR%d\n", bar);
++			if (bar == BAR_0)
++				return ret;
++		}
++	}
++
++	return 0;
++}
++
++static int pci_epf_test_alloc_space(struct pci_epf *epf)
++{
++	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
++	struct device *dev = &epf->dev;
++	void *base;
++	int bar;
++
++	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
++				   BAR_0);
++	if (!base) {
++		dev_err(dev, "failed to allocated register space\n");
++		return -ENOMEM;
++	}
++	epf_test->reg[0] = base;
++
++	for (bar = BAR_1; bar <= BAR_5; bar++) {
++		base = pci_epf_alloc_space(epf, bar_size[bar - 1], bar);
++		if (!base)
++			dev_err(dev, "failed to allocate space for BAR%d\n",
++				bar);
++		epf_test->reg[bar] = base;
++	}
++
++	return 0;
++}
++
++static int pci_epf_test_bind(struct pci_epf *epf)
++{
++	int ret;
++	struct pci_epf_header *header = epf->header;
++	struct pci_epc *epc = epf->epc;
++	struct device *dev = &epf->dev;
++
++	if (WARN_ON_ONCE(!epc))
++		return -EINVAL;
++
++	ret = pci_epc_write_header(epc, header);
++	if (ret) {
++		dev_err(dev, "configuration header write failed\n");
++		return ret;
++	}
++
++	ret = pci_epf_test_alloc_space(epf);
++	if (ret)
++		return ret;
++
++	ret = pci_epf_test_set_bar(epf);
++	if (ret)
++		return ret;
++
++	ret = pci_epc_set_msi(epc, epf->msi_interrupts);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int pci_epf_test_probe(struct pci_epf *epf)
++{
++	struct pci_epf_test *epf_test;
++	struct device *dev = &epf->dev;
++
++	epf_test = devm_kzalloc(dev, sizeof(*epf_test), GFP_KERNEL);
++	if (!epf)
++		return -ENOMEM;
++
++	epf->header = &test_header;
++	epf_test->epf = epf;
++
++	INIT_DELAYED_WORK(&epf_test->cmd_handler, pci_epf_test_cmd_handler);
++
++	epf_set_drvdata(epf, epf_test);
++	return 0;
++}
++
++static int pci_epf_test_remove(struct pci_epf *epf)
++{
++	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
++
++	kfree(epf_test);
++	return 0;
++}
++
++static struct pci_epf_ops ops = {
++	.unbind	= pci_epf_test_unbind,
++	.bind	= pci_epf_test_bind,
++	.linkup = pci_epf_test_linkup,
 +};
 +
-+&cpu_l2 {
-+	cpu-supply = <&vdd_cpu_l>;
++static const struct pci_epf_device_id pci_epf_test_ids[] = {
++	{
++		.name = "pci_epf_test",
++	},
++	{},
 +};
 +
-+&cpu_l3 {
-+	cpu-supply = <&vdd_cpu_l>;
++static struct pci_epf_driver test_driver = {
++	.driver.name	= "pci_epf_test",
++	.probe		= pci_epf_test_probe,
++	.remove		= pci_epf_test_remove,
++	.id_table	= pci_epf_test_ids,
++	.ops		= &ops,
++	.owner		= THIS_MODULE,
 +};
 +
-+&cpu_b0 {
-+	cpu-supply = <&vdd_cpu_b>;
-+};
-+
-+&cpu_b1 {
-+	cpu-supply = <&vdd_cpu_b>;
-+};
-+
-+&emmc_phy {
-+	status = "okay";
-+};
-+
-+&gmac {
-+	assigned-clocks = <&cru SCLK_RMII_SRC>;
-+	assigned-clock-parents = <&clkin_gmac>;
-+	clock_in_out = "input";
-+	phy-supply = <&vcc_phy>;
-+	phy-mode = "rgmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 50000>;
-+	tx_delay = <0x28>;
-+	rx_delay = <0x11>;
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	i2c-scl-rising-time-ns = <168>;
-+	i2c-scl-falling-time-ns = <4>;
-+	clock-frequency = <400000>;
-+
-+	vdd_cpu_b: pmic@40 {
-+		compatible = "silergy,syr827";
-+		reg = <0x40>;
-+		vin-supply = <&vcc5v0_sys>;
-+		regulator-compatible = "fan53555-reg";
-+		regulator-name = "vdd_cpu_b";
-+		regulator-min-microvolt = <712500>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-ramp-delay = <1000>;
-+		vsel-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_HIGH>;
-+		fcs,suspend-voltage-selector = <0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-initial-state = <3>;
-+			regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
-+	vdd_gpu: syr828@41 {
-+		compatible = "silergy,syr828";
-+		reg = <0x41>;
-+		vin-supply = <&vcc5v0_sys>;
-+		regulator-compatible = "fan53555-reg";
-+		regulator-name = "vdd_gpu";
-+		regulator-min-microvolt = <712500>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-ramp-delay = <1000>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-initial-state = <3>;
-+			regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
-+	rk808: pmic@1b {
-+		compatible = "rockchip,rk808";
-+		reg = <0x1b>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_int_l>;
-+		rockchip,system-power-controller;
-+		wakeup-source;
-+		#clock-cells = <1>;
-+		clock-output-names = "xin32k", "rk808-clkout2";
-+
-+		vcc1-supply = <&vcc3v3_sys>;
-+		vcc2-supply = <&vcc3v3_sys>;
-+		vcc3-supply = <&vcc3v3_sys>;
-+		vcc4-supply = <&vcc3v3_sys>;
-+		vcc6-supply = <&vcc3v3_sys>;
-+		vcc7-supply = <&vcc3v3_sys>;
-+		vcc8-supply = <&vcc3v3_sys>;
-+		vcc9-supply = <&vcc3v3_sys>;
-+		vcc10-supply = <&vcc3v3_sys>;
-+		vcc11-supply = <&vcc3v3_sys>;
-+		vcc12-supply = <&vcc3v3_sys>;
-+		vddio-supply = <&vcc1v8_pmu>;
-+
-+		regulators {
-+			vdd_center: DCDC_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-name = "vdd_center";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_cpu_l: DCDC_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-name = "vdd_cpu_l";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_ddr: DCDC_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc_ddr";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc_1v8: DCDC_REG4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc_1v8";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vcc1v8_dvp: LDO_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc1v8_dvp";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc3v0_tp: LDO_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-name = "vcc3v0_tp";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc1v8_pmu: LDO_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc1v8_pmu";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vcc_sd: LDO_REG4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc_sd";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			vcca3v0_codec: LDO_REG5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-name = "vcca3v0_codec";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_1v5: LDO_REG6 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-name = "vcc_1v5";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1500000>;
-+				};
-+			};
-+
-+			vcca1v8_codec: LDO_REG7 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcca1v8_codec";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_3v0: LDO_REG8 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-name = "vcc_3v0";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3000000>;
-+				};
-+			};
-+
-+			vcc3v3_s3: SWITCH_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc3v3_s3";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc3v3_s0: SWITCH_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc3v3_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	i2c-scl-rising-time-ns = <300>;
-+	i2c-scl-falling-time-ns = <15>;
-+
-+	gsl3673: gsl3673@40 {
-+		compatible = "GSL,GSL3673";
-+		reg = <0x40>;
-+		screen_max_x = <1536>;
-+		screen_max_y = <2048>;
-+		irq_gpio_number = <&gpio1 RK_PC4 IRQ_TYPE_LEVEL_LOW>;
-+		rst_gpio_number = <&gpio4 RK_PC6 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	rt5640: rt5640@1c {
-+		#sound-dai-cells = <0>;
-+		compatible = "realtek,rt5640";
-+		reg = <0x1c>;
-+		clocks = <&cru SCLK_I2S_8CH_OUT>;
-+		clock-names = "mclk";
-+		realtek,in1-differential;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&rt5640_hpcon>;
-+		hp-con-gpio = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;
-+		io-channels = <&saradc 4>;
-+		hp-det-adc-value = <500>;
-+	};
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+	i2c-scl-rising-time-ns = <450>;
-+	i2c-scl-falling-time-ns = <15>;
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+	i2c-scl-rising-time-ns = <600>;
-+	i2c-scl-falling-time-ns = <20>;
-+
-+	fusb0: fusb30x@22 {
-+		compatible = "fairchild,fusb302";
-+		reg = <0x22>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&fusb0_int>;
-+		int-n-gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
-+		vbus-5v-gpios = <&gpio2 RK_PA0 GPIO_ACTIVE_HIGH>;
-+		status = "okay";
-+	};
-+
-+	mpu6500@68 {
-+		status = "okay";
-+		compatible = "invensense,mpu6500";
-+		reg = <0x68>;
-+		irq-gpio = <&gpio1 RK_PC6 IRQ_TYPE_EDGE_RISING>;
-+		mpu-int_config = <0x10>;
-+		mpu-level_shifter = <0>;
-+		mpu-orientation = <0 1 0 1 0 0 0 0 1>;
-+		orientation-x= <1>;
-+		orientation-y= <0>;
-+		orientation-z= <0>;
-+		mpu-debug = <1>;
-+	};
-+};
-+
-+&i2s0 {
-+	status = "okay";
-+	rockchip,i2s-broken-burst-len;
-+	rockchip,playback-channels = <8>;
-+	rockchip,capture-channels = <8>;
-+	#sound-dai-cells = <0>;
-+};
-+
-+&i2s1 {
-+	status = "okay";
-+	rockchip,i2s-broken-burst-len;
-+	rockchip,playback-channels = <2>;
-+	rockchip,capture-channels = <2>;
-+	#sound-dai-cells = <0>;
-+};
-+
-+&i2s2 {
-+	#sound-dai-cells = <0>;
-+	status = "okay";
-+};
-+
-+&io_domains {
-+	status = "okay";
-+
-+	bt656-supply = <&vcc1v8_dvp>;
-+	audio-supply = <&vcca1v8_codec>;
-+	sdmmc-supply = <&vcc_sd>;
-+	gpio1830-supply = <&vcc_3v0>;
-+};
-+
-+&pcie_phy {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
-+	num-lanes = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_clkreqn>;
-+	status = "okay";
-+};
-+
-+&pmu_io_domains {
-+	status = "okay";
-+	pmu1830-supply = <&vcc_3v0>;
-+};
-+
-+&pinctrl {
-+	buttons {
-+		pwrbtn: pwrbtn {
-+			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	lcd-panel {
-+		lcd_panel_reset: lcd-panel-reset {
-+			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	pcie {
-+		pcie_drv: pcie-drv {
-+			rockchip,pins =
-+				<1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+			pcie_3g_drv: pcie-3g-drv {
-+			rockchip,pins =
-+				<0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	pmic {
-+		vsel1_gpio: vsel1-gpio {
-+			rockchip,pins =
-+				<1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+
-+		vsel2_gpio: vsel2-gpio {
-+			rockchip,pins =
-+			<1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
-+
-+	sdio-pwrseq {
-+		wifi_enable_h: wifi-enable-h {
-+			rockchip,pins =
-+				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	wireless-bluetooth {
-+		uart0_gpios: uart0-gpios {
-+			rockchip,pins =
-+				<2 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	rt5640 {
-+		rt5640_hpcon: rt5640-hpcon {
-+			rockchip,pins = <4 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmic {
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins =
-+				<1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	usb2 {
-+		host_vbus_drv: host-vbus-drv {
-+			rockchip,pins =
-+				<1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	fusb30x {
-+		fusb0_int: fusb0-int {
-+			rockchip,pins = <1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-+
-+&pwm0 {
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	status = "okay";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vccadc_ref>;
-+};
-+
-+&sdhci {
-+	bus-width = <8>;
-+	keep-power-in-suspend;
-+	mmc-hs400-1_8v;
-+	mmc-hs400-enhanced-strobe;
-+	non-removable;
-+	status = "okay";
-+	supports-emmc;
-+};
-+
-+&tsadc {
-+	/* tshut mode 0:CRU 1:GPIO */
-+	rockchip,hw-tshut-mode = <1>;
-+	/* tshut polarity 0:LOW 1:HIGH */
-+	rockchip,hw-tshut-polarity = <1>;
-+	status = "okay";
-+};
-+
-+&u2phy0 {
-+	status = "okay";
-+	extcon = <&fusb0>;
-+
-+	u2phy0_otg: otg-port {
-+		status = "okay";
-+	};
-+
-+	u2phy0_host: host-port {
-+		phy-supply = <&vcc5v0_host>;
-+		status = "okay";
-+	};
-+};
-+
-+&u2phy1 {
-+	status = "okay";
-+
-+	u2phy1_otg: otg-port {
-+		status = "okay";
-+	};
-+
-+	u2phy1_host: host-port {
-+		phy-supply = <&vcc5v0_host>;
-+		status = "okay";
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host0_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ohci {
-+	status = "okay";
-+};
++static int __init pci_epf_test_init(void)
++{
++	int ret;
++
++	kpcitest_workqueue = alloc_workqueue("kpcitest",
++					     WQ_MEM_RECLAIM | WQ_HIGHPRI, 0);
++	ret = pci_epf_register_driver(&test_driver);
++	if (ret) {
++		pr_err("failed to register pci epf test driver --> %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++module_init(pci_epf_test_init);
++
++static void __exit pci_epf_test_exit(void)
++{
++	pci_epf_unregister_driver(&test_driver);
++}
++module_exit(pci_epf_test_exit);
++
++MODULE_DESCRIPTION("PCI EPF TEST DRIVER");
++MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
++MODULE_LICENSE("GPL v2");
 -- 
-1.9.1
+2.11.0
