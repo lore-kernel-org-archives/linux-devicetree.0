@@ -1,127 +1,49 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH V7 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
-Date: Wed, 5 Apr 2017 20:54:20 +0530
-Message-ID: <CAFp+6iHRqY9njgP1eW-PpsuykfBDE-ZMroDtNRpe5kHp6oJH2Q@mail.gmail.com>
-References: <1491395558-16902-1-git-send-email-vivek.gautam@codeaurora.org> <a59d6776-5855-9d04-a5be-de03456b8d2e@ti.com>
+From: Devin Heitmueller <dheitmueller@kernellabs.com>
+Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities output
+ video on pad 1
+Date: Wed, 5 Apr 2017 11:39:06 -0400
+Message-ID: <CAGoCfizXdDV_Eo1NSOAb+-wrC7F47iFQKyP8-wiJMpb-nsYArA@mail.gmail.com>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
+ <1490894749.2404.33.camel@pengutronix.de>
+ <20170404231053.GE7909@n2100.armlinux.org.uk>
+ <19f0ce92-cad6-8950-8018-e3224e2bf266@gmail.com>
+ <7235285c-f39a-64bc-195a-11cfde9e67c5@gmail.com>
+ <20170405082134.GF7909@n2100.armlinux.org.uk>
+ <1491384859.2381.51.camel@pengutronix.de>
+ <20170405115336.7135e542@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a59d6776-5855-9d04-a5be-de03456b8d2e@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: robh+dt <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170405115336.7135e542@vento.lan>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Pavel Machek <pavel@ucw.cz>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+> Currently, the driver doesn't support (2), because, at the time
+> I wrote the driver, I didn't find a way to read the interrupts generated
+> by tvp5150 at em28xx[1], due to the lack of em28xx documentation,
+> but adding support for it shoudn't be hard. I may eventually do it
+> when I have some time to play with my ISEE hardware.
 
+For what it's worth, I doubt most of the em28xx designs have the
+tvp5150 interrupt request line connected in any way.  You would likely
+have to poll the FIFO status register via I2C, or use the feature to
+embed the sliced data into as VANC data in the 656 output (as
+described in sec 3.9 of the tvp5150am1 spec).
 
-On Wed, Apr 5, 2017 at 7:08 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi Vivek,
->
-> On Wednesday 05 April 2017 06:02 PM, Vivek Gautam wrote:
->> This patch series adds couple of PHY drivers for Qualcomm chipsets.
->> a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
->> b) qcom-qmp phy driver: that is a combo phy providing support for
->>    USB3, PCIe, UFS and few other controllers.
->>
->> The patches are based on next branch of linux-phy tree.
->>
->> These patches have been tested on Dragon board db820c hardware with
->> required set of dt patches and the patches to get rpm up on msm8996.
->> Couple of other patches [1, 2] fixing DMA config for XHCI are also
->> pulled in for testing.
->> A branch based on torvald's master is available in github [3].
->
-> I get a bunch of checkpatch errors/warnings when I run checkpatch with --strict
-> option. Those look simple enough to be fixed. Can you respin your series fixing
-> those?
-
-Sure, I am on it.
-Thanks for pointing out.
-
-Regards
-Vivek
-
->
-> Thanks
-> Kishon
->
->>
->> Changes since v6:
->>  - Rebased on phy/next and *not* including phy grouping series[4].
->>  - qusb2-phy: addressed Stephen's comment.
->>    - Dropped pm8994_s2 corner regulator from QUSB2 phy bindings.
->>  - qmp-phy: none on functionality side.
->>
->> Changes since v5:
->>  - Addressed review comments from Bjorn:
->>    - Removed instances of readl/wirtel_relaxed calls from the drivers.
->>      Instead, using simple readl/writel. Inserting a readl after a writel
->>      to ensure the write is through to the device.
->>    - Replaced regulator handling with regulator_bulk_** apis. This helps
->>      in cutting down a lot of regulator handling code.
->>    - Fixed minor return statements.
->>
->> Changes since v4:
->>  - Addressed comment to add child nodes for qmp phy driver. Each phy lane
->>    now has a separate child node under the main qmp node.
->>  - Modified the clock and reset initialization and enable methods.
->>    Different phys - pcie, usb and later ufs, have varying number of clocks
->>    and resets that are mandatory. So adding provision for clocks and reset
->>    lists helps in requesting all mandatory resources for individual phys
->>    and handle their failure cases accordingly.
->>
->> Changes since v3:
->>  - Addressed review comments given by Rob and Stephen for qusb2 phy
->>    and qmp phy bindings respectively.
->>  - Addressed review comments given by Stephen and Bjorn for qmp phy driver.
->>
->> Changes since v2:
->>  - Addressed review comments given by Rob and Stephen for bindings.
->>  - Addressed the review comments given by Stephen for the qusb2 and qmp
->>    phy drivers.
->>
->> Changes since v1:
->>  - Moved device tree binding documentation to separate patches, as suggested
->>    by Rob.
->>  - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
->>    given by Rob.
->>  - Addressed review comments from Kishon.
->>  - Addressed review comments from Srinivas for QMP phy driver.
->>  - Addressed kbuild warning.
->>
->> Please see individual patches for detailed changelogs.
->>
->> [1] https://patchwork.kernel.org/patch/9567767/
->> [2] https://patchwork.kernel.org/patch/9567779/
->> [3] https://github.com/vivekgautam1/linux/tree/linux-v4.11-rc5-qmp-phy-db820c
->> [4] https://lkml.org/lkml/2017/3/20/407
->>
->> Vivek Gautam (4):
->>   dt-bindings: phy: Add support for QUSB2 phy
->>   phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
->>   dt-bindings: phy: Add support for QMP phy
->>   phy: qcom-qmp: new qmp phy driver for qcom-chipsets
->>
->>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  106 ++
->>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   43 +
->>  drivers/phy/Kconfig                                |   18 +
->>  drivers/phy/Makefile                               |    2 +
->>  drivers/phy/phy-qcom-qmp.c                         | 1153 ++++++++++++++++++++
->>  drivers/phy/phy-qcom-qusb2.c                       |  491 +++++++++
->>  6 files changed, 1813 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->>  create mode 100644 drivers/phy/phy-qcom-qmp.c
->>  create mode 100644 drivers/phy/phy-qcom-qusb2.c
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+Devin
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Devin J. Heitmueller - Kernel Labs
+http://www.kernellabs.com
