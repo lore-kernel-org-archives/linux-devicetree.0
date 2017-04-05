@@ -1,81 +1,64 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 9/9] arm: dts: genmai: Add ethernet pin group
-Date: Wed,  5 Apr 2017 16:07:27 +0200
-Message-ID: <1491401247-7030-10-git-send-email-jacopo+renesas@jmondi.org>
+From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 6/9] arm: dts: genmai: Add SCIF2 pin group
+Date: Wed,  5 Apr 2017 16:07:24 +0200
+Message-ID: <1491401247-7030-7-git-send-email-jacopo+renesas@jmondi.org>
 References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491401247-7030-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add pin configuration subnode for ETHER ethernet controller.
+Add pin configuration subnode for SCIF2 serial debug interface.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r7s72100-genmai.dts | 41 +++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ arch/arm/boot/dts/r7s72100-genmai.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-index f7c512e..328f4c9 100644
+index 118a8e2..c28d74b 100644
 --- a/arch/arm/boot/dts/r7s72100-genmai.dts
 +++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-@@ -63,6 +63,34 @@
- 		pinmux = <RZA1_PINMUX(1, 4, 1)>, <RZA1_PINMUX(1, 5, 1)>;
- 		bi-directional;
+@@ -11,6 +11,7 @@
+ 
+ /dts-v1/;
+ #include "r7s72100.dtsi"
++#include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
+ 
+ / {
+ 	model = "Genmai";
+@@ -36,6 +37,14 @@
  	};
-+
-+	ether_pins: ether {
-+		pins {
-+			/* Ethernet on Ports 1,2,3,5 */
-+			pinmux = <RZA1_PINMUX(1, 14, 4)>,/* P1_14 = ET_COL  */
-+				 <RZA1_PINMUX(5, 9, 2)>, /* P5_9 = ET_MDC   */
-+				 <RZA1_PINMUX(3, 4, 2)>, /* P3_4 = ET_RXCLK */
-+				 <RZA1_PINMUX(3, 5, 2)>, /* P3_5 = ET_RXER  */
-+				 <RZA1_PINMUX(3, 6, 2)>, /* P3_6 = ET_RXDV  */
-+				 <RZA1_PINMUX(2, 0, 2)>, /* P2_0 = ET_TXCLK */
-+				 <RZA1_PINMUX(2, 1, 2)>, /* P2_1 = ET_TXER  */
-+				 <RZA1_PINMUX(2, 2, 2)>, /* P2_2 = ET_TXEN  */
-+				 <RZA1_PINMUX(2, 3, 2)>, /* P2_3 = ET_CRS   */
-+				 <RZA1_PINMUX(2, 4, 2)>, /* P2_4 = ET_TXD0  */
-+				 <RZA1_PINMUX(2, 5, 2)>, /* P2_5 = ET_TXD1  */
-+				 <RZA1_PINMUX(2, 6, 2)>, /* P2_6 = ET_TXD2  */
-+				 <RZA1_PINMUX(2, 7, 2)>, /* P2_7 = ET_TXD3  */
-+				 <RZA1_PINMUX(2, 8, 2)>, /* P2_8 = ET_RXD0  */
-+				 <RZA1_PINMUX(2, 9, 2)>, /* P2_9 = ET_RXD1  */
-+				 <RZA1_PINMUX(2, 10, 2)>,/* P2_10 = ET_RXD2 */
-+				 <RZA1_PINMUX(2, 11, 2)>;/* P2_11 = ET_RXD3 */
-+		};
-+
-+		pins_bidir {
-+			pinmux = <RZA1_PINMUX(3, 3, 2)>;/* P3_3 = ET_MDIO  */
-+			bi-directional;
-+		};
-+	};
  };
  
- &extal_clk {
-@@ -77,6 +105,19 @@
- 	status = "okay";
- };
- 
-+&ether {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ether_pins>;
++&pinctrl {
 +
-+	status = "okay";
-+
-+	renesas,no-ether-link;
-+	phy-handle = <&phy0>;
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
++	scif2_pins: serial2 {
++		/* P3_0 as TxD2; P3_2 as RxD2 */
++		pinmux = <RZA1_PINMUX(3, 0, 6)>, <RZA1_PINMUX(3, 2, 4)>;
 +	};
 +};
 +
- &i2c2 {
+ &extal_clk {
+ 	clock-frequency = <13330000>;
+ };
+@@ -60,6 +69,9 @@
+ };
+ 
+ &scif2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&scif2_pins>;
++
  	status = "okay";
- 	clock-frequency = <400000>;
+ };
+ 
 -- 
 2.7.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
