@@ -1,16 +1,13 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
-Date: Wed, 5 Apr 2017 19:04:48 +0530
-Message-ID: <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3@ti.com>
-References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
- <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
- <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com>
- <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
+Subject: Re: [PATCH V7 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
+Date: Wed, 5 Apr 2017 19:08:27 +0530
+Message-ID: <a59d6776-5855-9d04-a5be-de03456b8d2e@ti.com>
+References: <1491395558-16902-1-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
+In-Reply-To: <1491395558-16902-1-git-send-email-vivek.gautam@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,62 +17,99 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ravi,
+Hi Vivek,
 
-On Wednesday 05 April 2017 06:30 PM, Raviteja Garimella wrote:
-> Hi Kishon,
+On Wednesday 05 April 2017 06:02 PM, Vivek Gautam wrote:
+> This patch series adds couple of PHY drivers for Qualcomm chipsets.
+> a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
+> b) qcom-qmp phy driver: that is a combo phy providing support for
+>    USB3, PCIe, UFS and few other controllers.
 > 
-> On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> Hi,
->>
->> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
->>> This is driver for USB DRD Phy used in Broadcom's Northstar2
->>> SoC. The phy can be configured to be in Device mode or Host
->>> mode based on the type of cable connected to the port. The
->>> driver registers to  extcon framework to get appropriate
->>> connect events for Host/Device cables connect/disconnect
->>> states based on VBUS and ID interrupts.
->>
->> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
->> Northstar2.
->>
+> The patches are based on next branch of linux-phy tree.
 > 
-> Will do.
-> 
->> Sorry for not letting you know this earlier. But I feel the design of the
->> driver should be changed. Extcon shouldn't be used here. The extcon
->> notifications should be sent to the consumer driver and the consumer driver
->> should be responsible for invoking the phy ops.
->>
-> 
-> The consumer drivers here would be a UDC driver (USB device
-> controller), EHCI and OHCI host controller drivers.
-> I was already suggested in UDC driver review to deal with extcon in Phy driver.
-> 
-> This phy connects to 2 host controllers, and one device controller.
-> That's the design in Broadcom Northstar2
-> platform. The values of the VBUS and ID pins of this port are
-> determined based on the type of the cable (device cable
-> or host cable). And. phy has to be configured accordingly.
-> 
->> The phy ops being invoked during extcon events doesn't look right.
-> 
-> Could you please elaborate on the concern, so that we can think of
-> mitigating those issues in this driver?
-> Since we are dealing with phy init/shutdown in this driver itself, are
-> you okay with moving the extcon handling code
-> out of phy ops ?
+> These patches have been tested on Dragon board db820c hardware with
+> required set of dt patches and the patches to get rpm up on msm8996.
+> Couple of other patches [1, 2] fixing DMA config for XHCI are also
+> pulled in for testing.
+> A branch based on torvald's master is available in github [3].
 
-yeah, For e.g., ns2_drd_phy_init is part of phy_ops and is being invoked from
-extcon events too. Can a phy which is initialized by a phy consumer (say your
-UDC invokes phy_init) can be shutdown by an extcon event?
-
-Maybe a clear explanation of when phy_ops here will be invoked and when it will
-set using extcon events might help.
+I get a bunch of checkpatch errors/warnings when I run checkpatch with --strict
+option. Those look simple enough to be fixed. Can you respin your series fixing
+those?
 
 Thanks
 Kishon
+
+> 
+> Changes since v6:
+>  - Rebased on phy/next and *not* including phy grouping series[4].
+>  - qusb2-phy: addressed Stephen's comment.
+>    - Dropped pm8994_s2 corner regulator from QUSB2 phy bindings.
+>  - qmp-phy: none on functionality side.
+>  
+> Changes since v5:
+>  - Addressed review comments from Bjorn:
+>    - Removed instances of readl/wirtel_relaxed calls from the drivers.
+>      Instead, using simple readl/writel. Inserting a readl after a writel
+>      to ensure the write is through to the device.
+>    - Replaced regulator handling with regulator_bulk_** apis. This helps
+>      in cutting down a lot of regulator handling code.
+>    - Fixed minor return statements.
+> 
+> Changes since v4:
+>  - Addressed comment to add child nodes for qmp phy driver. Each phy lane
+>    now has a separate child node under the main qmp node.
+>  - Modified the clock and reset initialization and enable methods.
+>    Different phys - pcie, usb and later ufs, have varying number of clocks
+>    and resets that are mandatory. So adding provision for clocks and reset
+>    lists helps in requesting all mandatory resources for individual phys
+>    and handle their failure cases accordingly.
+> 
+> Changes since v3:
+>  - Addressed review comments given by Rob and Stephen for qusb2 phy
+>    and qmp phy bindings respectively.
+>  - Addressed review comments given by Stephen and Bjorn for qmp phy driver.
+> 
+> Changes since v2:
+>  - Addressed review comments given by Rob and Stephen for bindings.
+>  - Addressed the review comments given by Stephen for the qusb2 and qmp
+>    phy drivers.
+> 
+> Changes since v1:
+>  - Moved device tree binding documentation to separate patches, as suggested
+>    by Rob.
+>  - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
+>    given by Rob.
+>  - Addressed review comments from Kishon.
+>  - Addressed review comments from Srinivas for QMP phy driver.
+>  - Addressed kbuild warning.
+> 
+> Please see individual patches for detailed changelogs.
+> 
+> [1] https://patchwork.kernel.org/patch/9567767/
+> [2] https://patchwork.kernel.org/patch/9567779/
+> [3] https://github.com/vivekgautam1/linux/tree/linux-v4.11-rc5-qmp-phy-db820c
+> [4] https://lkml.org/lkml/2017/3/20/407
+> 
+> Vivek Gautam (4):
+>   dt-bindings: phy: Add support for QUSB2 phy
+>   phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+>   dt-bindings: phy: Add support for QMP phy
+>   phy: qcom-qmp: new qmp phy driver for qcom-chipsets
+> 
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  106 ++
+>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   43 +
+>  drivers/phy/Kconfig                                |   18 +
+>  drivers/phy/Makefile                               |    2 +
+>  drivers/phy/phy-qcom-qmp.c                         | 1153 ++++++++++++++++++++
+>  drivers/phy/phy-qcom-qusb2.c                       |  491 +++++++++
+>  6 files changed, 1813 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>  create mode 100644 drivers/phy/phy-qcom-qmp.c
+>  create mode 100644 drivers/phy/phy-qcom-qusb2.c
+> 
