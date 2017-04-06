@@ -1,63 +1,51 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] [media] imx: csi: retain current field order and
- colorimetry setting as default
-Date: Thu, 06 Apr 2017 17:01:52 +0200
-Message-ID: <1491490912.2392.74.camel@pengutronix.de>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-         <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
-         <1491486929.2392.29.camel@pengutronix.de>
-         <20170406140533.GF17774@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170406140533.GF17774@n2100.armlinux.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@v
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/4] Add ZTE VGA driver support
+Date: Thu,  6 Apr 2017 23:01:06 +0800
+Message-ID: <1491490870-6330-1-git-send-email-shawnguo@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Xin Zhou <zhou.xin8-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-04-06 at 15:05 +0100, Russell King - ARM Linux wrote:
-> On Thu, Apr 06, 2017 at 03:55:29PM +0200, Philipp Zabel wrote:
-> > +
-> > +	/* Retain current field setting as default */
-> > +	if (sdformat->format.field == V4L2_FIELD_ANY)
-> > +		sdformat->format.field = fmt->field;
-> > +
-> > +	/* Retain current colorspace setting as default */
-> > +	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
-> > +		sdformat->format.colorspace = fmt->colorspace;
-> > +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
-> > +			sdformat->format.xfer_func = fmt->xfer_func;
-> > +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
-> > +			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
-> > +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
-> > +			sdformat->format.quantization = fmt->quantization;
-> > +	} else {
-> > +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
-> > +			sdformat->format.xfer_func =
-> > +				V4L2_MAP_XFER_FUNC_DEFAULT(
-> > +						sdformat->format.colorspace);
-> > +		}
-> > +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
-> > +			sdformat->format.ycbcr_enc =
-> > +				V4L2_MAP_YCBCR_ENC_DEFAULT(
-> > +						sdformat->format.colorspace);
-> > +		}
-> > +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
-> > +			sdformat->format.quantization =
-> > +				V4L2_MAP_QUANTIZATION_DEFAULT(
-> > +						cc->cs != IPUV3_COLORSPACE_YUV,
-> > +						sdformat->format.colorspace,
-> > +						sdformat->format.ycbcr_enc);
-> > +		}
-> > +	}
-> 
-> Would it make sense for this to be a helper function?
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Quite possible, the next subdev that has to set frame_interval on both
-pads manually because its upstream source pad doesn't suport
-frame_interval might want to do the same.
+The series adds the driver for ZTE VGA device, which becomes the third
+VOU output device we support, besides the existing HDMI and TV Encoder.
 
-regards
-Philipp
+Changes for v2:
+ - Add return check for encoder and connector init function calls.
+ - Improve comments in function zx_vga_irq_handler() to avoid confusion.
+ - Add lock for VGA_AUTO_DETECT_SEL register access to avoid race
+   condition between irq handler and .get_modes hook.
+ - Copy device tree maintainer and list for bindings doc.
+
+Shawn Guo (4):
+  drm: zte: do not enable clock auto-gating by default
+  drm: zte: move CSC register definitions into a common header
+  dt-bindings: display: add support for ZTE VGA device
+  drm: zte: add VGA driver support
+
+ .../devicetree/bindings/display/zte,vou.txt        |  21 +
+ drivers/gpu/drm/zte/Makefile                       |   1 +
+ drivers/gpu/drm/zte/zx_common_regs.h               |  31 ++
+ drivers/gpu/drm/zte/zx_drm_drv.c                   |   1 +
+ drivers/gpu/drm/zte/zx_drm_drv.h                   |   1 +
+ drivers/gpu/drm/zte/zx_plane.c                     |   1 +
+ drivers/gpu/drm/zte/zx_plane_regs.h                |  18 -
+ drivers/gpu/drm/zte/zx_vga.c                       | 530 +++++++++++++++++++++
+ drivers/gpu/drm/zte/zx_vga_regs.h                  |  36 ++
+ drivers/gpu/drm/zte/zx_vou.c                       |  36 +-
+ drivers/gpu/drm/zte/zx_vou_regs.h                  |  12 +-
+ 11 files changed, 663 insertions(+), 25 deletions(-)
+ create mode 100644 drivers/gpu/drm/zte/zx_common_regs.h
+ create mode 100644 drivers/gpu/drm/zte/zx_vga.c
+ create mode 100644 drivers/gpu/drm/zte/zx_vga_regs.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
