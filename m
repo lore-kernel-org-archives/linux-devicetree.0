@@ -1,329 +1,492 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
-Date: Thu, 6 Apr 2017 11:35:42 +0200
-Message-ID: <bd680d0a-0b2f-91fc-a940-b2fef4300ca3@st.com>
-References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
- <20170405223233.GJ7065@codeaurora.org>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C
+ multiplexer/switch
+Date: Thu, 6 Apr 2017 10:39:28 +0200
+Message-ID: <a5127934-863a-64d6-88e6-b8119035baf9@axentia.se>
+References: <1491397671-14675-1-git-send-email-michael.hennerich@analog.com>
+ <1491397671-14675-2-git-send-email-michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170405223233.GJ7065@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, radoslaw.pietrzyk@gmail.com, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, andrea.merello@gmail.com, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491397671-14675-2-git-send-email-michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi Michael,
 
+I would still like to hear from someone with more gpio experience.
 
-On 04/06/2017 12:32 AM, Stephen Boyd wrote:
-> On 03/15, gabriel.fernandez@st.com wrote:
->> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>
->> This patch enables clocks for STM32H743 boards.
-> Like what clocks exactly? All of them?
->
-Yes all of them, it's new IP
+Anyway, from my point of view, there's just a few minor things left,
+with comments inline as usual.
 
+Thanks for you patience!
 
->> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->> new file mode 100644
->> index 0000000..9d4b587
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->> @@ -0,0 +1,152 @@
->> +STMicroelectronics STM32H7 Reset and Clock Controller
->> +=====================================================
->> +
->> +The RCC IP is both a reset and a clock controller.
->> +
->> +Please refer to clock-bindings.txt for common clock controller binding usage.
->> +Please also refer to reset.txt for common reset controller binding usage.
->> +
->> +Required properties:
->> +- compatible: Should be:
->> +  "st,stm32h743-rcc"
->> +
->> +- reg: should be register base and length as documented in the
->> +  datasheet
->> +
->> +- #reset-cells: 1, see below
->> +
->> +- #clock-cells : from common clock binding; shall be set to 1
->> +
->> +- clocks: External oscillator clock phandle
->> +  - high speed external clock signal (HSE)
->> +  - low speed external clock signal (LSE)
->> +  - external I2S clock (I2S_CKIN)
->> +
->> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
->> +  write protection (RTC clock).
->> +
->> +- pll x node: Allow to register a pll with specific parameters.
->> +  Please see PLL section below.
->> +
->> +Example:
->> +
->> +	rcc: rcc@58024400 {
->> +		#reset-cells = <1>;
->> +		#clock-cells = <2>
->> +		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
->> +		reg = <0x58024400 0x400>;
->> +		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
->> +
->> +		st,syscfg = <&pwrcfg>;
->> +
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		vco1@58024430 {
->> +			#clock-cells = <0>;
->> +			compatible = "stm32,pll";
->> +			reg = <0>;
-> reg is super confusing and doesn't match unit address.
-ok i fixed it in the v2
+Cheers,
+peda
 
->
->> +		};
-> Why? Shouldn't we know this from the compatible string how many
-> PLLs there are and where they're located? Export the PLLs through
-> rcc node's clock-cells?
->
-Because i need to offer the possibility to change the PLL VCO 
-frequencies at the start-up of this driver clock.
-The VCO algorithm needs a division factor, a multiplication factor and a 
-fractional factor.
-Lot's of solution are possible for one frequency and it's nightmare to 
-satisfy the 3 output dividers of the PLL.
+On 2017-04-05 15:07, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org wrote:
+> From: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+> 
+> This patch adds support for the Analog Devices / Linear Technology
+> LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
+> The LTC4306 optionally provides two general purpose input/output pins
+> (GPIOs) that can be configured as logic inputs, opendrain outputs or
+> push-pull outputs via the generic GPIOLIB framework.
+> 
+> Signed-off-by: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 
+>  - Sort makefile entries
+>  - Sort driver includes
+>  - Use proper defines
+>  - Miscellaneous coding style fixups
+>  - Rename mux select callback
+>  - Revise i2c-mux-idle-disconnect handling
+>  - Add ENABLE GPIO handling on error and device removal.
+>  - Remove surplus of_match_device call.
+> 
+> Changes since v2:
+> 
+>  - Stop double error reporting (i2c_mux_add_adapter)
+>  - Change subject
+>  - Split dt bindings to separate patch
+> 
+> Changes since v3:
+> 
+>  - Change subject and add spaces
+>  - Convert to I2C_MUX_LOCKED
+>  - Convert to regmap
+>  - Remove local register cache
+>  - Restore previous ENABLE GPIO handling
+>  - Initially pulse ENABLE low
+>  - Eliminate i2c client struct in driver state structure
+>  - Simplify error return path
+>  - Misc minor cleanups
+> ---
+>  MAINTAINERS                         |   8 +
+>  drivers/i2c/muxes/Kconfig           |  11 ++
+>  drivers/i2c/muxes/Makefile          |   1 +
+>  drivers/i2c/muxes/i2c-mux-ltc4306.c | 310 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 330 insertions(+)
+>  create mode 100644 drivers/i2c/muxes/i2c-mux-ltc4306.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c776906..9a27a19 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7698,6 +7698,14 @@ S:	Maintained
+>  F:	Documentation/hwmon/ltc4261
+>  F:	drivers/hwmon/ltc4261.c
+>  
+> +LTC4306 I2C MULTIPLEXER DRIVER
+> +M:	Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+> +W:	http://ez.analog.com/community/linux-device-drivers
+> +L:	linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +S:	Supported
+> +F:	drivers/i2c/muxes/i2c-mux-ltc4306.c
+> +F:	Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+> +
+>  LTP (Linux Test Project)
+>  M:	Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+>  M:	Cyril Hrubis <chrubis-AlSwsSmVLrQ@public.gmane.org>
+> diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
+> index 10b3d17..41153b4 100644
+> --- a/drivers/i2c/muxes/Kconfig
+> +++ b/drivers/i2c/muxes/Kconfig
+> @@ -30,6 +30,17 @@ config I2C_MUX_GPIO
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called i2c-mux-gpio.
+>  
+> +config I2C_MUX_LTC4306
+> +	tristate "LTC LTC4306/5 I2C multiplexer"
+> +	select GPIOLIB
+> +	select REGMAP_I2C
+> +	help
+> +	  If you say yes here you get support for the LTC LTC4306 or LTC4305
 
+This reads a bit funny, and I think you should just spell out the
+first LTC? But perhaps not in the tristate above though, depending
+on how long it gets?
 
->> +
->> +		vco2@58024438 {
->> +			#clock-cells = <0>;
->> +			compatible = "stm32,pll";
->> +			reg = <1>;
-> reg is super confusing and doesn't match unit address.
->
->> +			st,clock-div = <2>;
->> +			st,clock-mult = <40>;
->> +			st,frac-status = <0>;
->> +			st,frac = <0>;
->> +			st,vcosel = <1>;
->> +			st,pllrge = <2>;
-> Does this stuff change on a per-board basis? I hope none of these
-> properties need to be in DT.
-These properties are optionals.
-I absolute need it to custumize VCO  frequencies of a pll without the 
-boot loader..
+> +	  I2C mux/switch devices.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called i2c-mux-ltc4306.
+> +
+>  config I2C_MUX_PCA9541
+>  	tristate "NXP PCA9541 I2C Master Selector"
+>  	help
+> diff --git a/drivers/i2c/muxes/Makefile b/drivers/i2c/muxes/Makefile
+> index 9948fa4..ff7618c 100644
+> --- a/drivers/i2c/muxes/Makefile
+> +++ b/drivers/i2c/muxes/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_I2C_ARB_GPIO_CHALLENGE)	+= i2c-arb-gpio-challenge.o
+>  obj-$(CONFIG_I2C_DEMUX_PINCTRL)		+= i2c-demux-pinctrl.o
+>  
+>  obj-$(CONFIG_I2C_MUX_GPIO)	+= i2c-mux-gpio.o
+> +obj-$(CONFIG_I2C_MUX_LTC4306)	+= i2c-mux-ltc4306.o
+>  obj-$(CONFIG_I2C_MUX_MLXCPLD)	+= i2c-mux-mlxcpld.o
+>  obj-$(CONFIG_I2C_MUX_PCA9541)	+= i2c-mux-pca9541.o
+>  obj-$(CONFIG_I2C_MUX_PCA954x)	+= i2c-mux-pca954x.o
+> diff --git a/drivers/i2c/muxes/i2c-mux-ltc4306.c b/drivers/i2c/muxes/i2c-mux-ltc4306.c
+> new file mode 100644
+> index 0000000..7d34434
+> --- /dev/null
+> +++ b/drivers/i2c/muxes/i2c-mux-ltc4306.c
+> @@ -0,0 +1,310 @@
+> +/*
+> + * Linear Technology LTC4306 and LTC4305 I2C multiplexer/switch
+> + *
+> + * Copyright (C) 2017 Analog Devices Inc.
+> + *
+> + * Licensed under the GPL-2.
+> + *
+> + * Based on: i2c-mux-pca954x.c
+> + *
+> + * Datasheet: http://cds.linear.com/docs/en/datasheet/4306.pdf
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/i2c-mux.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +#define LTC4305_MAX_NCHANS 2
+> +#define LTC4306_MAX_NCHANS 4
+> +
+> +#define LTC_REG_STATUS	0x0
+> +#define LTC_REG_CONFIG	0x1
+> +#define LTC_REG_MODE	0x2
+> +#define LTC_REG_SWITCH	0x3
+> +
+> +#define LTC_DOWNSTREAM_ACCL_EN	BIT(6)
+> +#define LTC_UPSTREAM_ACCL_EN	BIT(7)
+> +
+> +#define LTC_GPIO_ALL_INPUT	0xC0
+> +#define LTC_SWITCH_MASK		0xF0
+> +
+> +enum ltc_type {
+> +	ltc_4305,
+> +	ltc_4306,
+> +};
+> +
+> +struct chip_desc {
+> +	u8 nchans;
+> +	u8 num_gpios;
+> +};
+> +
+> +struct ltc4306 {
+> +	struct regmap *regmap;
+> +	struct gpio_chip gpiochip;
+> +	const struct chip_desc *chip;
+> +};
+> +
+> +static const struct chip_desc chips[] = {
+> +	[ltc_4305] = {
+> +		.nchans = LTC4305_MAX_NCHANS,
+> +	},
+> +	[ltc_4306] = {
+> +		.nchans = LTC4306_MAX_NCHANS,
+> +		.num_gpios = 2,
+> +	},
+> +};
+> +
+> +static bool ltc4306_is_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	return (reg == LTC_REG_CONFIG) ? true : false;
+> +}
+> +
+> +static const struct regmap_config ltc4306_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = LTC_REG_SWITCH,
+> +	.volatile_reg = ltc4306_is_volatile_reg,
+> +	.cache_type = REGCACHE_RBTREE,
 
-i suppressed  "st,frac-status" and  "st,pllrge" in the v2
->
->> +		};
->> +	};
->> +
->> +
->> +STM32H7 PLL
->> +-----------
->> +
-> [...]
->> +
->> +Specifying softreset control of devices
->> +=======================================
->> +
->> +Device nodes should specify the reset channel required in their "resets"
->> +property, containing a phandle to the reset device node and an index specifying
->> +which channel to use.
->> +The index is the bit number within the RCC registers bank, starting from RCC
->> +base address.
->> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
->> +Where bit_offset is the bit offset within the register.
->> +
->> +For example, for CRC reset:
->> +  crc = AHB4RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x88 / 4 * 32 + 19 = 1107
->> +
->> +All available preprocessor macros for reset are defined dt-bindings//mfd/stm32h7-rcc.h
-> One too many slashes?
-ok i will fix it
+Did you consider REGCACHE_FLAT? There are very few registers and no hole
+in the map, and maintaining a tree seems like total overkill.
 
->
->> +header and can be used in device tree sources.
->> +
->> +example:
->> +
->> +	timer2 {
->> +		resets	= <&rcc STM32H7_APB1L_RESET(TIM2)>;
->> +	};
->> diff --git a/drivers/clk/clk-stm32h7.c b/drivers/clk/clk-stm32h7.c
->> new file mode 100644
->> index 0000000..c8eb729
->> --- /dev/null
->> +++ b/drivers/clk/clk-stm32h7.c
->> @@ -0,0 +1,1586 @@
->> +/*
->> + * Copyright (C) Gabriel Fernandez 2017
->> + * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
->> + *
->> + * License terms: GPL V2.0.
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <linux/clk.h>
-> Is this used?
-No i will suppress it
+> +};
+> +
+> +static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	struct ltc4306 *data = gpiochip_get_data(chip);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = regmap_read(data->regmap, LTC_REG_CONFIG, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return (val & BIT(1 - offset));
 
->
->> +#include <linux/clk-provider.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/slab.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/stm32h7-clks.h>
->> +
->> +/* Reset Clock Control Registers */
->> +#define RCC_CR		0x00
->> +#define RCC_CFGR	0x10
->> +#define RCC_D1CFGR	0x18
->> +#define RCC_D2CFGR	0x1C
->> +#define RCC_D3CFGR	0x20
->> +#define RCC_PLLCKSELR	0x28
->> +#define RCC_PLLCFGR	0x2C
->> +#define RCC_PLL1DIVR	0x30
->> +#define RCC_PLL1FRACR	0x34
->> +#define RCC_PLL2DIVR	0x38
->> +#define RCC_PLL2FRACR	0x3C
->> +#define RCC_PLL3DIVR	0x40
->> +#define RCC_PLL3FRACR	0x44
->> +#define RCC_D1CCIPR	0x4C
->> +#define RCC_D2CCIP1R	0x50
->> +#define RCC_D2CCIP2R	0x54
->> +#define RCC_D3CCIPR	0x58
->> +#define RCC_BDCR	0x70
->> +#define RCC_CSR		0x74
->> +#define RCC_AHB3ENR	0xD4
->> +#define RCC_AHB1ENR	0xD8
->> +#define RCC_AHB2ENR	0xDC
->> +#define RCC_AHB4ENR	0xE0
->> +#define RCC_APB3ENR	0xE4
->> +#define RCC_APB1LENR	0xE8
->> +#define RCC_APB1HENR	0xEC
->> +#define RCC_APB2ENR	0xF0
->> +#define RCC_APB4ENR	0xF4
->> +
->> +static DEFINE_SPINLOCK(rlock);
-> This is super generic and will make lockdep debugging sad.
-> Perhaps stm32rcc_lock?
-ok
+The outer parentheses do not add anything, and I think they might remain
+from when you just removed a double negation at some point. But is it
+good practice to indicate "high" with anything other than one? Sure, the
+gpiolib function that wraps the ->get() op does the !! dance for you,
+but even so, every single one of the half dozen random gpio providers I
+looked at had code to coerce the value to 0/1 (or error). Which makes me
+think you should also have it. And the gpio_chip documentation on ->get()
+agrees with me...
 
->
->> +
->> +static void __iomem *base;
->> +static struct regmap *pdrm;
->> +static struct clk_hw **hws;
->> +
->> +/* System clock parent */
->> +static const char * const sys_src[] = {
->> +	"hsi_ck", "csi_ck", "hse_ck", "pll1_p" };
->> +
->> +static const char * const tracein_src[] = {
->> +	"hsi_ck", "csi_ck", "hse_ck", "pll1_r" };
-> [...]
->> +
->> +static unsigned long pll_fd_recalc_rate(struct clk_hw *hw,
->> +		unsigned long parent_rate)
->> +{
->> +	struct stm32_pll_obj *clk_elem = to_pll(hw);
->> +	struct stm32_fractional_divider *fd = &clk_elem->div;
->> +	unsigned long m, n;
->> +	u32 val, mask;
->> +	u64 rate, rate1 = 0;
->> +
->> +	val = clk_readl(fd->mreg);
-> Please don't use clk_readl() unless you need it for some reason.
-ok
+> +}
+> +
+> +static void ltc4306_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> +			     int value)
+> +{
+> +	struct ltc4306 *data = gpiochip_get_data(chip);
+> +
+> +	regmap_update_bits(data->regmap, LTC_REG_CONFIG, BIT(5 - offset),
+> +			   value ? BIT(5 - offset) : 0);
+> +}
+> +
+> +static int ltc4306_gpio_direction_input(struct gpio_chip *chip,
+> +					unsigned int offset)
+> +{
+> +	struct ltc4306 *data = gpiochip_get_data(chip);
+> +
+> +	return regmap_update_bits(data->regmap, LTC_REG_MODE,
+> +				  BIT(7 - offset), BIT(7 - offset));
+> +}
+> +
+> +static int ltc4306_gpio_direction_output(struct gpio_chip *chip,
+> +					 unsigned int offset, int value)
+> +{
+> +	struct ltc4306 *data = gpiochip_get_data(chip);
+> +
+> +	ltc4306_gpio_set(chip, offset, value);
+> +	return regmap_update_bits(data->regmap, LTC_REG_MODE,
+> +				  BIT(7 - offset), 0);
+> +}
+> +
+> +static int ltc4306_gpio_set_config(struct gpio_chip *chip,
+> +				   unsigned int offset, unsigned long config)
+> +{
+> +	struct ltc4306 *data = gpiochip_get_data(chip);
+> +	unsigned int val;
+> +
+> +	switch (pinconf_to_config_param(config)) {
+> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +		val = 0;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +		val = BIT(4 - offset);
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return regmap_update_bits(data->regmap, LTC_REG_MODE,
+> +				  BIT(4 - offset), val);
+> +}
+> +
+> +static int ltc4306_gpio_init(struct ltc4306 *data)
+> +{
+> +	struct device *dev = regmap_get_device(data->regmap);
+> +
+> +	if (!data->chip->num_gpios)
+> +		return 0;
+> +
+> +	data->gpiochip.label = dev_name(dev);
+> +	data->gpiochip.base = -1;
+> +	data->gpiochip.ngpio = data->chip->num_gpios;
+> +	data->gpiochip.parent = dev;
+> +	data->gpiochip.can_sleep = true;
+> +	data->gpiochip.direction_input = ltc4306_gpio_direction_input;
+> +	data->gpiochip.direction_output = ltc4306_gpio_direction_output;
 
->
->> +	mask = (GENMASK(fd->mwidth - 1, 0) << fd->mshift);
->> +	m = (val & mask) >> fd->mshift;
->> +
->> +	val = clk_readl(fd->nreg);
->> +	mask = (GENMASK(fd->nwidth - 1, 0) << fd->nshift);
-> Useless parentheses. And isn't GENMASK supposed to take the
-> actual bit positions? Then we avoid overflow issues?
-ok il will fix it.
+I'm missing a get_direction op?
 
->> +	n = ((val & mask) >> fd->nshift) + 1;
->> +
->> +	if (!n || !m)
->> +		return parent_rate;
->> +
->> +	rate = (u64)parent_rate * n;
->> +	do_div(rate, m);
->> +
->> +	if (pll_frac_is_enabled(hw)) {
->> +		val = pll_read_frac(hw);
->> +		rate1 = (u64) parent_rate * (u64) val;
->> +		do_div(rate1, (m * 8191));
->> +	}
->> +
->> +	return rate + rate1;
->> +}
->> +
-> [...]
->> +
->> +	/* Micro-controller clocks */
->> +	for (n = 0; n < ARRAY_SIZE(mco_clk); n++) {
->> +		get_cfg_composite_div(&mco_clk_cfg, &mco_clk[n], &c_cfg,
->> +				&rlock);
->> +
->> +		hws[MCO_BANK + n] = clk_hw_register_composite(NULL,
->> +				mco_clk[n].name,
->> +				mco_clk[n].parent_name,
->> +				mco_clk[n].num_parents,
->> +				c_cfg.mux_hw, c_cfg.mux_ops,
->> +				c_cfg.div_hw, c_cfg.div_ops,
->> +				c_cfg.gate_hw, c_cfg.gate_ops,
->> +				mco_clk[n].flags);
->> +	}
->> +
->> +	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
->> +
->> +	return;
->> +
->> +err_free_clks:
->> +	kfree(clk_data);
->> +}
->> +CLK_OF_DECLARE_DRIVER(stm32h7_rcc, "st,stm32h743-rcc", stm32h7_rcc_init);
-> Is there another driver that uses the same register space?
-> Nothing showing up in -next right now. Perhaps a comment should
-> be added to indicate the other driver.
-Yes the reset controler.
-ok il will add a comment.
+> +	data->gpiochip.get = ltc4306_gpio_get;
+> +	data->gpiochip.set = ltc4306_gpio_set;
+> +	data->gpiochip.set_config = ltc4306_gpio_set_config;
+> +	data->gpiochip.owner = THIS_MODULE;
+> +
+> +	/* gpiolib assumes all GPIOs default input */
+> +	regmap_write(data->regmap, LTC_REG_MODE, LTC_GPIO_ALL_INPUT);
+> +
+> +	return devm_gpiochip_add_data(dev, &data->gpiochip, data);
+> +}
+> +
+> +static int ltc4306_select_mux(struct i2c_mux_core *muxc, u32 chan)
+> +{
+> +	struct ltc4306 *data = i2c_mux_priv(muxc);
+> +
+> +	return regmap_update_bits(data->regmap, LTC_REG_SWITCH,
+> +				  LTC_SWITCH_MASK, BIT(7 - chan));
 
+Since the bits outside the mask are ignored for writes, I'd go with
+regmap_write. Especially since those bits are volatile, which admittedly
+will not have much impact until there is a need to read those volatile
+bits outside the mask. But still.
 
-BR
-Gabriel
+> +}
+> +
+> +static int ltc4306_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
+> +{
+> +	struct ltc4306 *data = i2c_mux_priv(muxc);
+> +
+> +	return regmap_update_bits(data->regmap, LTC_REG_SWITCH,
+> +				  LTC_SWITCH_MASK, 0);
+
+Dito.
+
+> +}
+> +
+> +static const struct i2c_device_id ltc4306_id[] = {
+> +	{ "ltc4305", ltc_4305 },
+> +	{ "ltc4306", ltc_4306 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ltc4306_id);
+> +
+> +static const struct of_device_id ltc4306_of_match[] = {
+> +	{ .compatible = "lltc,ltc4305", .data = &chips[ltc_4305] },
+> +	{ .compatible = "lltc,ltc4306", .data = &chips[ltc_4306] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ltc4306_of_match);
+> +
+> +static int ltc4306_probe(struct i2c_client *client,
+> +			 const struct i2c_device_id *id)
+> +{
+> +	struct i2c_adapter *adap = to_i2c_adapter(client->dev.parent);
+> +	struct device_node *of_node = client->dev.of_node;
+> +	struct i2c_mux_core *muxc;
+> +	struct ltc4306 *data;
+> +	struct gpio_desc *gpio;
+> +	bool idle_disc = false;
+> +	int num, ret;
+> +
+> +	if (of_node)
+> +		idle_disc = of_property_read_bool(of_node,
+> +						  "i2c-mux-idle-disconnect");
+> +
+> +	muxc = i2c_mux_alloc(adap, &client->dev,
+> +			     LTC4306_MAX_NCHANS, sizeof(*data),
+
+Hmmm, I didn't see this before, but if you do some more rearranging, it
+should be possible to replace LTC4306_MAX_NCHANS with data->chip->nchans
+and reduce resource waste for ltc4305. But it's just storage for two
+pointers which is really really minor... Feel free to ignore.
+
+But you want to set a good example, right :-)
+
+> +			     I2C_MUX_LOCKED, ltc4306_select_mux,
+> +			     idle_disc ? ltc4306_deselect_mux : NULL);
+> +	if (!muxc)
+> +		return -ENOMEM;
+> +	data = i2c_mux_priv(muxc);
+> +
+> +	i2c_set_clientdata(client, muxc);
+> +
+> +	data->regmap = devm_regmap_init_i2c(client, &ltc4306_regmap_config);
+> +	if (IS_ERR(data->regmap)) {
+> +		ret = PTR_ERR(data->regmap);
+> +		dev_err(&client->dev, "Failed to allocate register map: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Reset and enable the mux if an enable GPIO is specified. */
+> +	gpio = devm_gpiod_get_optional(&client->dev, "enable", GPIOD_OUT_LOW);
+> +	if (IS_ERR(gpio))
+> +		return PTR_ERR(gpio);
+> +
+> +	if (gpio) {
+> +		udelay(1);
+> +		gpiod_set_value(gpio, 1);
+> +	}
+> +
+> +	/*
+> +	 * Write the mux register at addr to verify
+> +	 * that the mux is in fact present. This also
+> +	 * initializes the mux to disconnected state.
+> +	 */
+> +	if (regmap_write(data->regmap, LTC_REG_SWITCH, 0) < 0) {
+> +		dev_warn(&client->dev, "probe failed\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (of_node) {
+> +		unsigned int val = 0;
+> +
+> +		data->chip = of_device_get_match_data(&client->dev);
+> +
+> +		if (of_property_read_bool(of_node,
+> +					  "ltc,downstream-accelerators-enable"))
+> +			val |= LTC_DOWNSTREAM_ACCL_EN;
+> +
+> +		if (of_property_read_bool(of_node,
+> +					  "ltc,upstream-accelerators-enable"))
+> +			val |= LTC_UPSTREAM_ACCL_EN;
+> +
+> +		if (regmap_write(data->regmap, LTC_REG_CONFIG, val) < 0)
+> +			return -ENODEV;
+> +	} else {
+> +		data->chip = &chips[id->driver_data];
+> +	}
+> +
+> +	ret = ltc4306_gpio_init(data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Now create an adapter for each channel */
+> +	for (num = 0; num < data->chip->nchans; num++) {
+> +		ret = i2c_mux_add_adapter(muxc, 0, num, 0);
+> +		if (ret) {
+> +			i2c_mux_del_adapters(muxc);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	dev_info(&client->dev,
+> +		 "registered %d multiplexed busses for I2C switch %s\n",
+> +		 num, client->name);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ltc4306_remove(struct i2c_client *client)
+> +{
+> +	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
+> +
+> +	i2c_mux_del_adapters(muxc);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct i2c_driver ltc4306_driver = {
+> +	.driver		= {
+> +		.name	= "ltc4306",
+> +		.of_match_table = of_match_ptr(ltc4306_of_match),
+> +	},
+> +	.probe		= ltc4306_probe,
+> +	.remove		= ltc4306_remove,
+> +	.id_table	= ltc4306_id,
+> +};
+> +
+> +module_i2c_driver(ltc4306_driver);
+> +
+> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Linear Technology LTC4306, LTC4305 I2C mux/switch driver");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
