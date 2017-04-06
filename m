@@ -1,98 +1,48 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] [media] imx: csi: retain current field order and
- colorimetry setting as default
-Date: Thu, 06 Apr 2017 18:01:21 +0200
-Message-ID: <1491494481.2392.102.camel@pengutronix.de>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
-         <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
-         <1491486929.2392.29.camel@pengutronix.de>
-         <0f9690f8-c7f6-59ff-9e3e-123af9972d4b@xs4all.nl>
-         <1491490451.2392.70.camel@pengutronix.de>
-         <59e72974-bfb0-6061-8b13-5f13f8723ba6@xs4all.nl>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/1] gpio: core: Decouple open drain/source flag with
+ active low/high
+Date: Thu, 6 Apr 2017 19:10:38 +0300
+Message-ID: <CAHp75Ver7n=Xoer0YzA0sVVrcXKOB1bDz0ygSm0V0YoyYbe3pg@mail.gmail.com>
+References: <1491485752-28030-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59e72974-bfb0-6061-8b13-5f13f8723ba6-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-medi
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1491485752-28030-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-04-06 at 17:43 +0200, Hans Verkuil wrote:
-> On 04/06/2017 04:54 PM, Philipp Zabel wrote:
-> > On Thu, 2017-04-06 at 16:20 +0200, Hans Verkuil wrote:
-> >> On 04/06/2017 03:55 PM, Philipp Zabel wrote:
-> >>> If the the field order is set to ANY in set_fmt, choose the currently
-> >>> set field order. If the colorspace is set to DEFAULT, choose the current
-> >>> colorspace.  If any of xfer_func, ycbcr_enc or quantization are set to
-> >>> DEFAULT, either choose the current setting, or the default setting for the
-> >>> new colorspace, if non-DEFAULT colorspace was given.
-> >>>
-> >>> This allows to let field order and colorimetry settings be propagated
-> >>> from upstream by calling media-ctl on the upstream entity source pad,
-> >>> and then call media-ctl on the sink pad to manually set the input frame
-> >>> interval, without changing the already set field order and colorimetry
-> >>> information.
-> >>>
-> >>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>> ---
-> >>> This is based on imx-media-staging-md-v14, and it is supposed to allow
-> >>> configuring the pipeline with media-ctl like this:
-> >>>
-> >>> 1) media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY8_1X16/1920x1080]"
-> >>> 2) media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY8_1X16/1920x108]"
-> >>> 3) media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY8_1X16/1920x1080]"
-> >>> 4) media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60]"
-> >>> 5) media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080@1/30]"
-> >>>
-> >>> Without having step 4) overwrite the colorspace and field order set on
-> >>> 'ipu1_csi0':0 by the propagation in step 3).
-> >>> ---
-> >>>  drivers/staging/media/imx/imx-media-csi.c | 34 +++++++++++++++++++++++++++++++
-> >>>  1 file changed, 34 insertions(+)
-> >>>
-> >>> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-> >>> index 64dc454f6b371..d94ce1de2bf05 100644
-> >>> --- a/drivers/staging/media/imx/imx-media-csi.c
-> >>> +++ b/drivers/staging/media/imx/imx-media-csi.c
-> >>> @@ -1325,6 +1325,40 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
-> >>>  	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
-> >>>  
-> >>>  	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
-> >>> +
-> >>> +	/* Retain current field setting as default */
-> >>> +	if (sdformat->format.field == V4L2_FIELD_ANY)
-> >>> +		sdformat->format.field = fmt->field;
-> >>
-> >> sdformat->format.field should never be FIELD_ANY. If it is, then that's a
-> >> subdev bug and I'm pretty sure FIELD_NONE was intended.
-> > 
-> > This is the subdev. sdformat is passed in from userspace, so we have to
-> > deal with it being set to ANY. I'm trying hard right now not to return
-> > ANY though. The values in sdformat->format are applied to fmt down
-> > below.
-> 
-> Do you have a git tree with this patch? It is really hard to review without
-> having the full imx-media-csi.c source.
+On Thu, Apr 6, 2017 at 4:35 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> Currently, the GPIO interface is said to Open Drain if it is Single
+> Ended and active LOW. Similarly, it is said as Open Source if it is
+> Single Ended and active HIGH.
+>
+> The active HIGH/LOW is used in the interface for setting the pin
+> state to HIGH or LOW when enabling/disabling the interface.
+>
+> In Open Drain interface, pin is set to HIGH by putting pin in
+> high impedance and LOW by driving to the LOW.
+>
+> In Open Source interface, pin is set to HIGH by driving pin to
+> HIGH and set to LOW by putting pin in high impedance.
+>
+> With above, the Open Drain/Source is unrelated to the active LOW/HIGH
+> in interface. There is interface where the enable/disable of interface
+> is ether active LOW or HIGH but it is Open Drain type.
+>
+> Hence decouple the Open Drain with Single Ended + Active LOW and
+> Open Source with Single Ended + Active HIGH.
+>
+> Adding different flag for the Open Drain/Open Source which is valid
+> only when Single ended flag is enabled.
 
-The patch applies on top of
+>         if (single_ended) {
+> -               if (active_low)
+> +               if (open_drain)
 
-  https://github.com/slongerbeam/mediatree.git imx-media-staging-md-v14
+This breaks ACPI case, right?
 
-I have uploaded a branch
-
-  git://git.pengutronix.de/git/pza/linux imx-media-staging-md-v14+color
-
-with the patch applied on top.
-
-> I think one problem is that it is not clearly defined how subdevs and colorspace
-> information should work.
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+With Best Regards,
+Andy Shevchenko
