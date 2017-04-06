@@ -1,84 +1,55 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V4 4/4] pwm: tegra: Add support to configure pin state
- in suspends/resume
-Date: Thu, 6 Apr 2017 22:10:47 +0530
-Message-ID: <58E66F8F.1030802@nvidia.com>
-References: <1491488461-24621-1-git-send-email-ldewangan@nvidia.com> <1491488461-24621-5-git-send-email-ldewangan@nvidia.com> <e6eef15a-45e4-002b-dd45-38c268070241@nvidia.com>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Subject: [PATCH] ARM: dts: aspeed: add a fastread property
+Date: Thu,  6 Apr 2017 19:02:33 +0200
+Message-ID: <1491498153-26564-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <e6eef15a-45e4-002b-dd45-38c268070241@nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, thierry.reding@gmail.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Oops, it was actually v2.
-
-On Thursday 06 April 2017 08:47 PM, Jon Hunter wrote:
-> On 06/04/17 15:21, Laxman Dewangan wrote:
->> In some of NVIDIA Tegra's platform, PWM controller is used to
->> control the PWM controlled regulators. PWM signal is connected to
->> the VID pin of the regulator where duty cycle of PWM signal decide
->> the voltage level of the regulator output.
->>
->> The tristate (high impedance of PWM pin form Tegra) also define
->> one of the state of PWM regulator which needs to be configure in
->> suspend state of system.
->>
->> Add support to configure the pin state via pinctrl frameworks in
->> suspend and active state of the system.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->> ---
->> Changes from v1:
->> - Use standard pinctrl names for sleep and active state.
->> - Use API pinctrl_pm_select_*()
->>
->>   drivers/pwm/pwm-tegra.c | 22 ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>
->> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
->> index e9c4de5..af1bd4f 100644
->> --- a/drivers/pwm/pwm-tegra.c
->> +++ b/drivers/pwm/pwm-tegra.c
->> @@ -29,6 +29,7 @@
->>   #include <linux/of_device.h>
->>   #include <linux/pwm.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/pinctrl/consumer.h>
->>   #include <linux/slab.h>
->>   #include <linux/reset.h>
->>   
->> @@ -256,6 +257,22 @@ static int tegra_pwm_remove(struct platform_device *pdev)
->>   	return pwmchip_remove(&pc->chip);
->>   }
->>   
->> +#ifdef CONFIG_PM_SLEEP
->> +static int tegra_pwm_suspend(struct device *dev)
->> +{
->> +	pinctrl_pm_select_sleep_state(dev);
-> Why not return the error code here?
-
-As the pin state in suspend is optional, I dont  want to return error if 
-the sleep state is not available.
-
-However, it seems pinctrl take care of retuning success if there is no 
-sleep state. By seeing code.
-Let me test this on different condition and it it works fine then we can 
-return the return of pinctrl_pm_select_*()
-
-
-BTW, it should be OK to have pwm_tegra_resume/suspend wrapper, not 
-directly use the pinctrl_pm_select_* in pm ops suspend/resume. The 
-prototype matches.
-
-
-
->
-> By the way, do you plan to include patches to populate the bindings for
-> the pwm devices?
-
-I am planning to populate the GPU regulator which is PWM based. This 
-will only populate the regulator.
+QWxsIGNoaXBzIG9uIE9wZW5QT1dFUiBwbGF0Zm9ybXMgc3VwcG9ydCB0aGUgZmFzdHJlYWQgU1BJ
+IGNvbW1hbmQuCgpTaWduZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xnQGthb2Qub3Jn
+PgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1hc3QyNTAwLWV2Yi5kdHMgICAgICB8IDIg
+KysKIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXBhbG1ldHRvLmR0cyB8IDIgKysK
+IGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXJvbXVsdXMuZHRzICB8IDIgKysKIDMg
+ZmlsZXMgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvYXNwZWVkLWFzdDI1MDAtZXZiLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1h
+c3QyNTAwLWV2Yi5kdHMKaW5kZXggOGY4MmU4YWIxODc1Li43YzkwZGFjOTk4MjIgMTAwNjQ0Ci0t
+LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1hc3QyNTAwLWV2Yi5kdHMKKysrIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvYXNwZWVkLWFzdDI1MDAtZXZiLmR0cwpAQCAtMjQsNiArMjQsNyBAQAogCXN0
+YXR1cyA9ICJva2F5IjsKIAlmbGFzaEAwIHsKIAkJc3RhdHVzID0gIm9rYXkiOworCQltMjVwLGZh
+c3QtcmVhZDsKIAkJbGFiZWwgPSAiYm1jIjsKIAl9OwogfTsKQEAgLTMyLDYgKzMzLDcgQEAKIAlz
+dGF0dXMgPSAib2theSI7CiAJZmxhc2hAMCB7CiAJCXN0YXR1cyA9ICJva2F5IjsKKwkJbTI1cCxm
+YXN0LXJlYWQ7CiAJCWxhYmVsID0gInBub3IiOwogCX07CiB9OwpkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtcGFsbWV0dG8uZHRzIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvYXNwZWVkLWJtYy1vcHAtcGFsbWV0dG8uZHRzCmluZGV4IGFhYjE4ODlmNzAyZi4uMTEyNTUx
+NzY2Mjc1IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLW9wcC1wYWxt
+ZXR0by5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtcGFsbWV0dG8u
+ZHRzCkBAIC0zNSw2ICszNSw3IEBACiAJc3RhdHVzID0gIm9rYXkiOwogCWZsYXNoQDAgewogCQlz
+dGF0dXMgPSAib2theSI7CisJCW0yNXAsZmFzdC1yZWFkOwogCQlsYWJlbCA9ICJibWMiOwogCX07
+CiB9OwpAQCAtNDMsNiArNDQsNyBAQAogCXN0YXR1cyA9ICJva2F5IjsKIAlmbGFzaEAwIHsKIAkJ
+c3RhdHVzID0gIm9rYXkiOworCQltMjVwLGZhc3QtcmVhZDsKIAkJbGFiZWwgPSAicG5vciI7CiAJ
+fTsKIH07CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLW9wcC1yb211
+bHVzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXJvbXVsdXMuZHRzCmlu
+ZGV4IGUzYzYzNThiYzdkOS4uYjgyZjY3ZWIzZGFlIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290
+L2R0cy9hc3BlZWQtYm1jLW9wcC1yb211bHVzLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9h
+c3BlZWQtYm1jLW9wcC1yb211bHVzLmR0cwpAQCAtMzUsNiArMzUsNyBAQAogCXN0YXR1cyA9ICJv
+a2F5IjsKIAlmbGFzaEAwIHsKIAkJc3RhdHVzID0gIm9rYXkiOworCQltMjVwLGZhc3QtcmVhZDsK
+IAkJbGFiZWwgPSAiYm1jIjsKIAl9OwogfTsKQEAgLTQzLDYgKzQ0LDcgQEAKIAlzdGF0dXMgPSAi
+b2theSI7CiAJZmxhc2hAMCB7CiAJCXN0YXR1cyA9ICJva2F5IjsKKwkJbTI1cCxmYXN0LXJlYWQ7
+CiAJCWxhYmVsID0gInBub3IiOwogCX07CiB9OwotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
