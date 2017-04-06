@@ -1,56 +1,114 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH v2 3/4] dt-bindings: display: add support for ZTE VGA device
-Date: Thu,  6 Apr 2017 23:01:09 +0800
-Message-ID: <1491490870-6330-4-git-send-email-shawnguo@kernel.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 2/4] drm: zte: move CSC register definitions into a common header
+Date: Thu,  6 Apr 2017 23:01:08 +0800
+Message-ID: <1491490870-6330-3-git-send-email-shawnguo@kernel.org>
 References: <1491490870-6330-1-git-send-email-shawnguo@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1491490870-6330-1-git-send-email-shawnguo@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Xin Zhou <zhou.xin8@zte.com.cn>, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491490870-6330-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Xin Zhou <zhou.xin8-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4KCkl0IGFkZHMgYmluZGluZ3Mg
-ZG9jIGZvciBaVEUgVk9VIFZHQSBvdXRwdXQgZGV2aWNlLgoKU2lnbmVkLW9mZi1ieTogU2hhd24g
-R3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3p0ZSx2b3UudHh0ICAgICAgICAgfCAyMSArKysrKysrKysrKysrKysrKysrKysKIDEg
-ZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvenRlLHZvdS50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dAppbmRleCA5YzM1NjI4NDIz
-MmIuLjM4NDc2NDc1ZmQ2MCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvenRlLHZvdS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvenRlLHZvdS50eHQKQEAgLTU4LDYgKzU4LDE4IEBAIFJlcXVpcmVk
-IHByb3BlcnRpZXM6CiAgICBpbnRlZ2VyIGNlbGxzLiAgVGhlIGZpcnN0IGNlbGwgaXMgdGhlIG9m
-ZnNldCBvZiBTWVNDVFJMIHJlZ2lzdGVyIHVzZWQKICAgIHRvIGNvbnRyb2wgVFYgRW5jb2RlciBE
-QUMgcG93ZXIsIGFuZCB0aGUgc2Vjb25kIGNlbGwgaXMgdGhlIGJpdCBtYXNrLgogCisqIFZHQSBv
-dXRwdXQgZGV2aWNlCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CisgLSBjb21wYXRpYmxlOiBzaG91
-bGQgYmUgInp0ZSx6eDI5NjcxOC12Z2EiCisgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBh
-bmQgbGVuZ3RoIG9mIHRoZSBWR0EgZGV2aWNlIElPIHJlZ2lvbgorIC0gaW50ZXJydXB0cyA6IFZH
-QSBpbnRlcnJ1cHQgbnVtYmVyIHRvIENQVQorIC0gY2xvY2tzOiBQaGFuZGxlIHdpdGggY2xvY2st
-c3BlY2lmaWVyIHBvaW50aW5nIHRvIFZHQSBJMkMgY2xvY2suCisgLSBjbG9jay1uYW1lczogTXVz
-dCBiZSAiaTJjX3djbGsiLgorIC0genRlLHZnYS1wb3dlci1jb250cm9sOiB0aGUgcGhhbmRsZSB0
-byBTWVNDVFJMIGJsb2NrIGZvbGxvd2VkIGJ5IHR3bworICAgaW50ZWdlciBjZWxscy4gIFRoZSBm
-aXJzdCBjZWxsIGlzIHRoZSBvZmZzZXQgb2YgU1lTQ1RSTCByZWdpc3RlciB1c2VkCisgICB0byBj
-b250cm9sIFZHQSBEQUMgcG93ZXIsIGFuZCB0aGUgc2Vjb25kIGNlbGwgaXMgdGhlIGJpdCBtYXNr
-LgorCiBFeGFtcGxlOgogCiB2b3U6IHZvdUAxNDQwMDAwIHsKQEAgLTgxLDYgKzkzLDE1IEBAIHZv
-dTogdm91QDE0NDAwMDAgewogCQkJICAgICAgIm1haW5fd2NsayIsICJhdXhfd2NsayI7CiAJfTsK
-IAorCXZnYTogdmdhQDgwMDAgeworCQljb21wYXRpYmxlID0gInp0ZSx6eDI5NjcxOC12Z2EiOwor
-CQlyZWcgPSA8MHg4MDAwIDB4MTAwMD47CisJCWludGVycnVwdHMgPSA8R0lDX1NQSSA4NiBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsKKwkJY2xvY2tzID0gPCZ0b3Bjcm0gVkdBX0kyQ19XQ0xLPjsKKwkJ
-Y2xvY2stbmFtZXMgPSAiaTJjX3djbGsiOworCQl6dGUsdmdhLXBvd2VyLWNvbnRyb2wgPSA8JnN5
-c2N0cmwgMHgxNzAgMHhlMD47CisJfTsKKwogCWhkbWk6IGhkbWlAYzAwMCB7CiAJCWNvbXBhdGli
-bGUgPSAienRlLHp4Mjk2NzE4LWhkbWkiOwogCQlyZWcgPSA8MHhjMDAwIDB4NDAwMD47Ci0tIAox
-LjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+The CSC (Color Space Conversion) block in VOU is used by not only
+Graphic Layer (plane) but also channel (CRTC) module.  Let's move
+its register definitions into a common header, so that CRTC driver can
+include it when needed.
+
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Acked-by: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+---
+ drivers/gpu/drm/zte/zx_common_regs.h | 31 +++++++++++++++++++++++++++++++
+ drivers/gpu/drm/zte/zx_plane.c       |  1 +
+ drivers/gpu/drm/zte/zx_plane_regs.h  | 18 ------------------
+ 3 files changed, 32 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/gpu/drm/zte/zx_common_regs.h
+
+diff --git a/drivers/gpu/drm/zte/zx_common_regs.h b/drivers/gpu/drm/zte/zx_common_regs.h
+new file mode 100644
+index 000000000000..2afd80664c51
+--- /dev/null
++++ b/drivers/gpu/drm/zte/zx_common_regs.h
+@@ -0,0 +1,31 @@
++/*
++ * Copyright (C) 2017 Sanechips Technology Co., Ltd.
++ * Copyright 2017 Linaro Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __ZX_COMMON_REGS_H__
++#define __ZX_COMMON_REGS_H__
++
++/* CSC registers */
++#define CSC_CTRL0			0x30
++#define CSC_COV_MODE_SHIFT		16
++#define CSC_COV_MODE_MASK		(0xffff << CSC_COV_MODE_SHIFT)
++#define CSC_BT601_IMAGE_RGB2YCBCR	0
++#define CSC_BT601_IMAGE_YCBCR2RGB	1
++#define CSC_BT601_VIDEO_RGB2YCBCR	2
++#define CSC_BT601_VIDEO_YCBCR2RGB	3
++#define CSC_BT709_IMAGE_RGB2YCBCR	4
++#define CSC_BT709_IMAGE_YCBCR2RGB	5
++#define CSC_BT709_VIDEO_RGB2YCBCR	6
++#define CSC_BT709_VIDEO_YCBCR2RGB	7
++#define CSC_BT2020_IMAGE_RGB2YCBCR	8
++#define CSC_BT2020_IMAGE_YCBCR2RGB	9
++#define CSC_BT2020_VIDEO_RGB2YCBCR	10
++#define CSC_BT2020_VIDEO_YCBCR2RGB	11
++#define CSC_WORK_ENABLE			BIT(0)
++
++#endif /* __ZX_COMMON_REGS_H__ */
+diff --git a/drivers/gpu/drm/zte/zx_plane.c b/drivers/gpu/drm/zte/zx_plane.c
+index d646ac931663..4a6252720c10 100644
+--- a/drivers/gpu/drm/zte/zx_plane.c
++++ b/drivers/gpu/drm/zte/zx_plane.c
+@@ -16,6 +16,7 @@
+ #include <drm/drm_plane_helper.h>
+ #include <drm/drmP.h>
+ 
++#include "zx_common_regs.h"
+ #include "zx_drm_drv.h"
+ #include "zx_plane.h"
+ #include "zx_plane_regs.h"
+diff --git a/drivers/gpu/drm/zte/zx_plane_regs.h b/drivers/gpu/drm/zte/zx_plane_regs.h
+index 65f271aeabed..9c655f59f9f7 100644
+--- a/drivers/gpu/drm/zte/zx_plane_regs.h
++++ b/drivers/gpu/drm/zte/zx_plane_regs.h
+@@ -77,24 +77,6 @@
+ #define LUMA_STRIDE(x)	 (((x) << LUMA_STRIDE_SHIFT) & LUMA_STRIDE_MASK)
+ #define CHROMA_STRIDE(x) (((x) << CHROMA_STRIDE_SHIFT) & CHROMA_STRIDE_MASK)
+ 
+-/* CSC registers */
+-#define CSC_CTRL0			0x30
+-#define CSC_COV_MODE_SHIFT		16
+-#define CSC_COV_MODE_MASK		(0xffff << CSC_COV_MODE_SHIFT)
+-#define CSC_BT601_IMAGE_RGB2YCBCR	0
+-#define CSC_BT601_IMAGE_YCBCR2RGB	1
+-#define CSC_BT601_VIDEO_RGB2YCBCR	2
+-#define CSC_BT601_VIDEO_YCBCR2RGB	3
+-#define CSC_BT709_IMAGE_RGB2YCBCR	4
+-#define CSC_BT709_IMAGE_YCBCR2RGB	5
+-#define CSC_BT709_VIDEO_RGB2YCBCR	6
+-#define CSC_BT709_VIDEO_YCBCR2RGB	7
+-#define CSC_BT2020_IMAGE_RGB2YCBCR	8
+-#define CSC_BT2020_IMAGE_YCBCR2RGB	9
+-#define CSC_BT2020_VIDEO_RGB2YCBCR	10
+-#define CSC_BT2020_VIDEO_YCBCR2RGB	11
+-#define CSC_WORK_ENABLE			BIT(0)
+-
+ /* RSZ registers */
+ #define RSZ_SRC_CFG			0x00
+ #define RSZ_DEST_CFG			0x04
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
