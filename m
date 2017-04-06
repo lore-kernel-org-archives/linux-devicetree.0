@@ -1,97 +1,86 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH 2/2] memory: ti-emif-sram: introduce relocatable
- suspend/resume handlers
-Date: Thu, 6 Apr 2017 20:00:09 +0100
-Message-ID: <20170406190008.GO23750@n2100.armlinux.org.uk>
-References: <20170328205511.21166-1-d-gerlach@ti.com>
- <20170328205511.21166-3-d-gerlach@ti.com>
- <20170404161151.GS10760@atomide.com>
- <20170405135933.GN23750@n2100.armlinux.org.uk>
- <20170405143318.GE13234@atomide.com>
- <5cd63e14-52df-6010-4193-c926cdd76839@ti.com>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] Extend pca9532 device tree support
+Date: Thu, 6 Apr 2017 21:00:09 +0200
+Message-ID: <a8509d26-6e35-e2f7-9784-90f3c54accbf@gmail.com>
+References: <1490880833-22199-1-git-send-email-fb@ltec.ch>
+ <b54c77d5-b4f7-9517-8c5b-9200c766204a@gmail.com> <20170406155005.GA10363@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5cd63e14-52df-6010-4193-c926cdd76839-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170406155005.GA10363@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Felix Brack <fb-GovowT2ENgg@public.gmane.org>
+Cc: rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 05, 2017 at 09:48:26AM -0500, Dave Gerlach wrote:
-> Russell,
-> On 04/05/2017 09:33 AM, Tony Lindgren wrote:
-> >* Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> [170405 07:02]:
-> >>I'm not going to comment on this yet, but I'll instead comment on the
-> >>newly appeared sram_exec_copy() stuff.
-> >>
-> >>So, a few years ago, we went to significant effort in ARM land to come
-> >>up with a way to _safely_ copy assembler from the kernel into SRAM,
-> >>because copying code to SRAM that is compiled in thumb mode and then
-> >>executing it is _not_ as simple as memcpy(), cast the pointer to a
-> >>function pointer, and then call the function pointer.
-> >>
-> >>The SRAM stuff throws all that out, instead preferring the dumb memcpy()
-> >>approach.
-> >>
-> >>This needs resolving, and I'd like to see it resolved to the satisfaction
-> >>of architecture maintainers before we progress any further down this
-> >>route.
+Hi Pavel,
+
+On 04/06/2017 05:50 PM, Pavel Machek wrote:
+> Hi!
 > 
-> I'm sure you are referring to fncpy, correct? This is what we used before
-> with ARM specific code to do the copy, but we've moved into drivers now.
+>>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>> index 198f3ba..8374075 100644
+>>> --- a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>> @@ -17,6 +17,8 @@ Optional sub-node properties:
+>>>  	- label: see Documentation/devicetree/bindings/leds/common.txt
+>>>  	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
+>>>  	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
+>>> +	- default-state: see Documentation/devicetree/bindings/leds/common.txt
+>>> +	  This property is only valid for sub-nodes of type <PCA9532_TYPE_LED>.
+>>>  
+>>>  Example:
+>>>    #include <dt-bindings/leds/leds-pca9532.h>
+>>> @@ -33,6 +35,14 @@ Example:
+>>>        label = "pca:green:power";
+>>>        type = <PCA9532_TYPE_LED>;
+>>>      };
+>>> +    kernel-booting {
+>>> +    	type = <PCA9532_TYPE_LED>;
+>>> +    	default-state = "on";
+>>> +    };
+>>> +    sys-stat {
+>>> +    	type = <PCA9532_TYPE_LED>;
+>>> +    	default-state = "keep"; // don't touch, was set by U-Boot
+>>> +    };
+>>
+>> Adjusted above indentation to match the preceding lines.
+> 
+>>> @@ -475,6 +494,16 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
+>>>  		of_property_read_u32(child, "type", &pdata->leds[i].type);
+>>>  		of_property_read_string(child, "linux,default-trigger",
+>>>  					&pdata->leds[i].default_trigger);
+>>> +		if (!of_property_read_string(child, "default-state", &state)) {
+>>> +			if (!strcmp(state, "on"))
+>>> +				pdata->leds[i].state = PCA9532_ON;
+>>> +			else if (!strcmp(state, "keep"))
+>>> +				pdata->leds[i].state = PCA9532_KEEP;
+>>> +			else if (!strcmp(state, "pwm0"))
+>>> +				pdata->leds[i].state = PCA9532_PWM0;
+>>> +			else if (!strcmp(state, "pwm1"))
+>>> +				pdata->leds[i].state = PCA9532_PWM1;
+>>> +		}
+>>>  		if (++i >= maxleds) {
+>>>  			of_node_put(child);
+>>>  			break;
+> 
+> This seems to look for "pwm0" and "pwm1" strings, which do not seem to
+> be documented.
+> 
+> Plus... is it useful to have default-state? We already have default
+> trigger. If we keep the value by default (on PC, we do something like
+> that) this patch should not be neccessary?
 
-Right, and as I explained above, fncpy() exists with very good reason.
-The following does not work on ARM:
+Thanks for the heads-up. Dropping the patch for now.
+I guess that pwm0/1 got propagated to v2 by an omission.
 
-	sram = alloc(function_size);
-
-	memcpy(sram, function, function_size);
-
-	sram_ptr = (function_cast_t)sram;
-
-	sram_ptr(args);
-
-when the function is Thumb.  There are two problems with the above code
-that fncpy() solves, both stemming from the same root cause:
-
-1. The address of "function" will be offset by one byte, so the memcpy()
-   will miss copying the first byte of the function.
-
-2. sram_ptr will not be offset by one byte.
-
-This is because, with Thumb functions, the "address" of the function is
-offset by one byte - by the architecture requirements - to indicate that
-it is to be called in Thumb mode.
-
-> What are your thoughts on exposing fncpy outside of arch/arm?
-
-You may use it by including asm/fncpy.h, but you may not move it out of
-that file.  fncpy() is there exactly because it's _architecture_ specific.
-
-If you're looking to make this generic, then we need cross-arch agreement
-on how we can copy functions, and I'd recommend that fncpy() becomes that
-generic copy function.  fncpy() has advantages over memcpy() besides
-encoding the architecture specific knowledge - the biggest one is that
-it guarantees type safety as well.  It ensures that the function pointer
-that it's returning conforms with the function it's being asked to copy.
-
-It strikes me, looking at the SRAM stuff, that the baby has been
-completely thrown out with the bath water...
-
-And really, this SRAM stuff _should_ have been through architecture
-maintainer review before being merged into mainline so that these issues
-could have been highlighted before hand.
-
-This looks to me like yet another huge big review failure in kernel land,
-because people are insistant on continually dividing stuff up by
-sub-directory.  This has got to stop.
+Regarding default-on: Felix, do you have any use case that require
+default-on set to "keep"?
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Best regards,
+Jacek Anaszewski
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
