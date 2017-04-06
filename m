@@ -1,111 +1,52 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] Add Basic SoC support for MT6797
-Date: Thu, 6 Apr 2017 20:11:05 +0800
-Message-ID: <1491480665.6485.4.camel@mtkswgap22>
-References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
-         <1490229971.25996.2.camel@mtkswgap22>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: update the
+ Allwinner GPADC device tree binding for H3
+Date: Thu, 6 Apr 2017 13:11:58 +0100
+Message-ID: <20170406121158.b33rrt4f54k3dz6f@dell>
+References: <20170406095534.299945C355D@relay.mailchannels.net>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1490229971.25996.2.camel@mtkswgap22>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBEXBTDDQKGQEQAX3C5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170406095534.299945C355D-Y9/x5g2N/Tt0ykcd9G8QkxTxI0vvWBSX@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias, Stephen
+On Thu, 06 Apr 2017, Icenowy Zheng wrote:
+> 2017=E5=B9=B44=E6=9C=886=E6=97=A5 03:04=E4=BA=8E Rob Herring <robh@kernel=
+.org>=E5=86=99=E9=81=93=EF=BC=9A
+> > On Tue, Apr 4, 2017 at 10:02 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:=
+=20
 
-Would you like to give some comments for this patch set?
-If there are any suggestions, I will try my best to fix the errors.
+> > > =E5=9C=A8 2017=E5=B9=B404=E6=9C=8804=E6=97=A5 22:47, Rob Herring =E5=
+=86=99=E9=81=93:=20
 
-Thanks. 
+> OK. I will make it :
+> ths: temperature-sensor@1c25000
 
-On Thu, 2017-03-23 at 08:46 +0800, Mars Cheng wrote:
-> Hi Matthias, Rob, Marc, Stephen
-> 
-> gentle ping for this patch set.
-> 
-> Thanks.
-> 
-> On Sun, 2017-03-19 at 23:26 +0800, Mars Cheng wrote:
-> > This patch set adds basic SoC support for mediatek's first 10-core
-> > chip, X20, also known as MT6797.
-> > 
-> > - based on 4.11-rc1
-> > - support multiple base address for sysirq
-> > - support common clk framework
-> > 
-> > Changes since v2:
-> > - prevent uncessary #intpol-bases for mtk-sysirq
-> > - add fast path for mtk-sysirq set_type when introducing multiple bases
-> > - add acked-by and tested-by
-> > - remove wrong usage for timer node
-> > 
-> > Changes since v1:
-> > - add multiple base addresses support, v1 only allow 2 bases
-> > - clean up clk driver
-> > 
-> > 
-> > Kevin-CW Chen (2):
-> >   dt-bindings: arm: mediatek: document clk bindings for MT6797
-> >   clk: mediatek: add clk support for MT6797
-> > 
-> > Mars Cheng (10):
-> >   dt-bindings: mediatek: multiple bases support for sysirq
-> >   irqchip: mtk-sysirq: extend intpol base to arbitrary number
-> >   irqchip: mtk-sysirq: prevent unnecessary visibility when set_type
-> >   dt-bindings: mediatek: Add bindings for mediatek MT6797 Platform
-> >   arm64: dts: mediatek: add mt6797 support
-> >   soc: mediatek: avoid using fixed spm power status defines
-> >   soc: mediatek: add vdec item for scpsys
-> >   dt-bindings: mediatek: add MT6797 power dt-bindings
-> >   soc: mediatek: add MT6797 scysys support
-> >   arm64: dts: mediatek: add clk and scp nodes for MT6797
-> > 
-> >  Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
-> >  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
-> >  .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
-> >  .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
-> >  .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
-> >  .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
-> >  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
-> >  .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
-> >  .../interrupt-controller/mediatek,sysirq.txt       |   12 +-
-> >  .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
-> >  .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +-
-> >  arch/arm64/boot/dts/mediatek/Makefile              |    1 +
-> >  arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
-> >  arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  245 +++++++
-> >  drivers/clk/mediatek/Kconfig                       |   32 +
-> >  drivers/clk/mediatek/Makefile                      |    5 +
-> >  drivers/clk/mediatek/clk-mt6797-img.c              |   76 +++
-> >  drivers/clk/mediatek/clk-mt6797-mm.c               |  136 ++++
-> >  drivers/clk/mediatek/clk-mt6797-vdec.c             |   93 +++
-> >  drivers/clk/mediatek/clk-mt6797-venc.c             |   78 +++
-> >  drivers/clk/mediatek/clk-mt6797.c                  |  716 ++++++++++++++++++++
-> >  drivers/irqchip/irq-mtk-sysirq.c                   |  116 +++-
-> >  drivers/soc/mediatek/mtk-scpsys.c                  |  149 +++-
-> >  include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
-> >  include/dt-bindings/power/mt6797-power.h           |   30 +
-> >  25 files changed, 1993 insertions(+), 33 deletions(-)
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> >  create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
-> >  create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
-> >  create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
-> >  create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
-> >  create mode 100644 drivers/clk/mediatek/clk-mt6797.c
-> >  create mode 100644 include/dt-bindings/clock/mt6797-clk.h
-> >  create mode 100644 include/dt-bindings/power/mt6797-power.h
-> > 
-> > --
-> > 1.7.9.5
-> > 
-> 
+Can you fix your broken email client please?  You need to set it up to
+reply to mails to they stay threaded.  Your mailer is currently
+sending all of your replies as their own, independent messages.
 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
