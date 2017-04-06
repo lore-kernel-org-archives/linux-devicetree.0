@@ -1,49 +1,50 @@
-From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v1 2/3] ARM: dts: imx6qdl.dtsi: add "fsl,imx6q-snvs-lpgpr" node
-Date: Thu,  6 Apr 2017 09:31:06 +0200
-Message-ID: <20170406073107.32445-2-o.rempel@pengutronix.de>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v1 3/3] nvmem: dt: document SNVS LPGPR binding
+Date: Thu,  6 Apr 2017 09:31:07 +0200
+Message-ID: <20170406073107.32445-3-o.rempel@pengutronix.de>
 References: <20170406073107.32445-1-o.rempel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170406073107.32445-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170406073107.32445-1-o.rempel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: o.rempel@pengutronix.de
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This node is for Low Power General Purpose Registe wich can
-be used as Non-Volatile Storage.
+Documenation bindings for the Low Power General Purpose Registe
+available on i.MX6 SoCs in the Secure Non-Volatile Storage.
 
-Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 6d7bf6496117..8e90014705c3 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -768,6 +768,12 @@
- 					mask = <0x60>;
- 					status = "disabled";
- 				};
+diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+new file mode 100644
+index 000000000000..9a8be1a2d12e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+@@ -0,0 +1,15 @@
++Device tree bindings for Low Power General Purpose Registe found in i.MX6Q/D
++Secure Non-Volatile Storage.
 +
-+				snvs_lpgpr: snvs-lpgpr {
-+					compatible = "fsl,imx6q-snvs-lpgpr";
-+					regmap = <&snvs>;
-+					offset = <0x68>;
-+				};
- 			};
- 
- 			epit1: epit@020d0000 { /* EPIT1 */
++Required properties:
++- compatible: should be one of
++	"fsl,imx6q-snvs-lpgpr" (i.MX6Q/D/DL/S).
++- offset: Should contain the offset relative to syscon parrent node.
++- regmap: Should contain a phandle pointing to syscon.
++
++Example:
++	snvs_lpgpr: snvs-lpgpr {
++		compatible = "fsl,imx6q-snvs-lpgpr";
++		regmap = <&snvs>;
++		offset = <0x68>;
++	};
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
