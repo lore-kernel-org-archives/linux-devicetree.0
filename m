@@ -1,162 +1,79 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH] [media] imx: csi: retain current field order and
- colorimetry setting as default
-Date: Thu, 6 Apr 2017 17:43:00 +0200
-Message-ID: <59e72974-bfb0-6061-8b13-5f13f8723ba6@xs4all.nl>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
- <1491486929.2392.29.camel@pengutronix.de>
- <0f9690f8-c7f6-59ff-9e3e-123af9972d4b@xs4all.nl>
- <1491490451.2392.70.camel@pengutronix.de>
+From: Alexey Firago <alexey_firago@mentor.com>
+Subject: Re: [PATCH v3 1/3] clk: vc5: Add structure to describe particular
+ chip features
+Date: Thu, 6 Apr 2017 18:45:49 +0300
+Message-ID: <ee0dbbd0-78ba-2344-759e-da022215fbe1@mentor.com>
+References: <1491470130-6655-1-git-send-email-alexey_firago@mentor.com>
+ <1491470130-6655-2-git-send-email-alexey_firago@mentor.com>
+ <d461ac7d-4081-4444-6875-de4d8013dec3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1491490451.2392.70.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.c
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <d461ac7d-4081-4444-6875-de4d8013dec3@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, geert@linux-m68k.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2017 04:54 PM, Philipp Zabel wrote:
-> On Thu, 2017-04-06 at 16:20 +0200, Hans Verkuil wrote:
->> On 04/06/2017 03:55 PM, Philipp Zabel wrote:
->>> If the the field order is set to ANY in set_fmt, choose the currently
->>> set field order. If the colorspace is set to DEFAULT, choose the current
->>> colorspace.  If any of xfer_func, ycbcr_enc or quantization are set to
->>> DEFAULT, either choose the current setting, or the default setting for the
->>> new colorspace, if non-DEFAULT colorspace was given.
->>>
->>> This allows to let field order and colorimetry settings be propagated
->>> from upstream by calling media-ctl on the upstream entity source pad,
->>> and then call media-ctl on the sink pad to manually set the input frame
->>> interval, without changing the already set field order and colorimetry
->>> information.
->>>
->>> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
->>> ---
->>> This is based on imx-media-staging-md-v14, and it is supposed to allow
->>> configuring the pipeline with media-ctl like this:
->>>
->>> 1) media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY8_1X16/1920x1080]"
->>> 2) media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY8_1X16/1920x108]"
->>> 3) media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY8_1X16/1920x1080]"
->>> 4) media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60]"
->>> 5) media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080@1/30]"
->>>
->>> Without having step 4) overwrite the colorspace and field order set on
->>> 'ipu1_csi0':0 by the propagation in step 3).
->>> ---
->>>  drivers/staging/media/imx/imx-media-csi.c | 34 +++++++++++++++++++++++++++++++
->>>  1 file changed, 34 insertions(+)
->>>
->>> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
->>> index 64dc454f6b371..d94ce1de2bf05 100644
->>> --- a/drivers/staging/media/imx/imx-media-csi.c
->>> +++ b/drivers/staging/media/imx/imx-media-csi.c
->>> @@ -1325,6 +1325,40 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
->>>  	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
->>>  
->>>  	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
->>> +
->>> +	/* Retain current field setting as default */
->>> +	if (sdformat->format.field == V4L2_FIELD_ANY)
->>> +		sdformat->format.field = fmt->field;
->>
->> sdformat->format.field should never be FIELD_ANY. If it is, then that's a
->> subdev bug and I'm pretty sure FIELD_NONE was intended.
-> 
-> This is the subdev. sdformat is passed in from userspace, so we have to
-> deal with it being set to ANY. I'm trying hard right now not to return
-> ANY though. The values in sdformat->format are applied to fmt down
-> below.
 
-Do you have a git tree with this patch? It is really hard to review without
-having the full imx-media-csi.c source.
 
-I think one problem is that it is not clearly defined how subdevs and colorspace
-information should work.
+On 06.04.2017 17:54, Marek Vasut wrote:
+> On 04/06/2017 11:15 AM, Alexey Firago wrote:
+>> Introduce vc5_chip_info structure to describe features of a particular
+>> VC5 chip (id, number of FODs, number of outputs, flags).
+>> For now flags are only used to indicate if chip has internal XTAL.
+>> vc5_chip_info is set on probe from the matched of_device_id->data.
+>>
+>> Also add defines to specify maximum number of FODs and clock outputs
+>> supported by the driver.
+>>
+>> With these changes it should be easier to extend driver to support
+>> more VC5 models.
+>>
+>> Signed-off-by: Alexey Firago <alexey_firago@mentor.com>
+>
+> Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
+>
+>> ---
+>>  drivers/clk/clk-versaclock5.c | 65 +++++++++++++++++++++++++++++++------------
+>>  1 file changed, 47 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+>> index 56741f3..4e81fb1 100644
+>> --- a/drivers/clk/clk-versaclock5.c
+>> +++ b/drivers/clk/clk-versaclock5.c
+>> @@ -113,12 +113,30 @@
+>>  #define VC5_MUX_IN_XIN		BIT(0)
+>>  #define VC5_MUX_IN_CLKIN	BIT(1)
+>>
+>> +/* Maximum number of clk_out supported by this driver */
+>> +#define VC5_MAX_CLK_OUT_NUM	3
+>> +
+>> +/* Maximum number of FODs supported by this driver */
+>> +#define VC5_MAX_FOD_NUM	2
+>> +
+>> +/* flags to describe chip features */
+>> +/* chip has built-in oscilator */
+>> +#define VC5_HAS_INTERNAL_XTAL	BIT(0)
+>> +
+>>  /* Supported IDT VC5 models. */
+>>  enum vc5_model {
+>>  	IDT_VC5_5P49V5923,
+>>  	IDT_VC5_5P49V5933,
+>>  };
+>>
+>> +/* Structure to describe features of a particular VC5 model */
+>> +struct vc5_chip_info {
+>> +	const enum vc5_model	model;
+>> +	const unsigned int	clk_fod_cnt;
+>> +	const unsigned int	clk_out_cnt;
+>> +	u32			flags;
+>
+> Shouldn't this also be const ?
 
-Regards,
+It probably should, since we are not changing flags at runtime 
+currently. Will resend.
 
-	Hans
+Thanks,
+Alexey
 
-> 
->>> +
->>> +	/* Retain current colorspace setting as default */
->>> +	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
->>> +		sdformat->format.colorspace = fmt->colorspace;
->>
->> No! Subdevs should never return COLORSPACE_DEFAULT. If they do, then fix
->> them. If this happens a lot (I'm not sure how reliably subdevs fill this
->> in) you could set it to COLORSPACE_RAW. Perhaps with a WARN_ON_ONCE.
-> 
-> Same here, if userspace calls VIDIOC_SUBDEV_S_FMT with DEFAULT
-> colorspace, I don't want to return that unchanged, but overwrite it with
-> the currently set value.
-> 
->>> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
->>> +			sdformat->format.xfer_func = fmt->xfer_func;
->>> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
->>> +			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
->>> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
->>> +			sdformat->format.quantization = fmt->quantization;
->>
->> Nack. This is meaningless.
-> 
-> It isn't. It may be wrong, but it is not without effect. If the
-> colorimetry info (in fmt) is currently set to something that is
-> non-standard, calling VIDIOC_SUBDEV_S_FMT with DEFAULT in xfer_func,
-> ycbcr_enc or quantization will cause those old values to be retained,
-> instead of overwriting them to DEFAULT.
-> 
->>> +	} else {
->>> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
->>> +			sdformat->format.xfer_func =
->>> +				V4L2_MAP_XFER_FUNC_DEFAULT(
->>> +						sdformat->format.colorspace);
->>> +		}
->>> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
->>> +			sdformat->format.ycbcr_enc =
->>> +				V4L2_MAP_YCBCR_ENC_DEFAULT(
->>> +						sdformat->format.colorspace);
->>> +		}
->>> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
->>> +			sdformat->format.quantization =
->>> +				V4L2_MAP_QUANTIZATION_DEFAULT(
->>> +						cc->cs != IPUV3_COLORSPACE_YUV,
->>> +						sdformat->format.colorspace,
->>> +						sdformat->format.ycbcr_enc);
->>> +		}
->>
->> This isn't wrong, but it is perfectly fine to keep the DEFAULT here and let
->> the application call V4L2_MAP_.
->>
->> I get the feeling this patch is a workaround for subdev errors. Either that,
->> or the commit log doesn't give me enough information to really understand the
->> problem that's being addressed here.
-> 
-> It's the latter. I should have written VIDIOC_SUBDEV_S_FMT instead of
-> just set_fmt in the comment.
-> 
->> Regards,
->>
->> 	Hans
->>
->>> +	}
->>> +
->>>  	*fmt = sdformat->format;
-> 
-> Here sdformat is applied to the subdev pad.
-> 
-> regards
-> Philipp
-> 
