@@ -1,47 +1,56 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 1/4] drm: zte: do not enable clock auto-gating by default
-Date: Thu,  6 Apr 2017 23:01:07 +0800
-Message-ID: <1491490870-6330-2-git-send-email-shawnguo@kernel.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH v2 3/4] dt-bindings: display: add support for ZTE VGA device
+Date: Thu,  6 Apr 2017 23:01:09 +0800
+Message-ID: <1491490870-6330-4-git-send-email-shawnguo@kernel.org>
 References: <1491490870-6330-1-git-send-email-shawnguo@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491490870-6330-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Xin Zhou <zhou.xin8-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1491490870-6330-1-git-send-email-shawnguo@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Xin Zhou <zhou.xin8@zte.com.cn>, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Some VOU modules do not work well with clock auto-gating.  For example,
-VGA I2C bus will fail to read EDID data from monitor.  Let's not enable
-this feature by default, and leave it to the possible future low-power
-optimization.
-
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Acked-by: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
----
- drivers/gpu/drm/zte/zx_vou.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/zte/zx_vou.c b/drivers/gpu/drm/zte/zx_vou.c
-index cf92d675feaa..2a2d90bd9425 100644
---- a/drivers/gpu/drm/zte/zx_vou.c
-+++ b/drivers/gpu/drm/zte/zx_vou.c
-@@ -720,9 +720,6 @@ static void vou_hw_init(struct zx_vou_hw *vou)
- 	/* Release reset for all VOU modules */
- 	zx_writel(vou->vouctl + VOU_SOFT_RST, ~0);
- 
--	/* Enable clock auto-gating for all VOU modules */
--	zx_writel(vou->vouctl + VOU_CLK_REQEN, ~0);
--
- 	/* Enable all VOU module clocks */
- 	zx_writel(vou->vouctl + VOU_CLK_EN, ~0);
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4KCkl0IGFkZHMgYmluZGluZ3Mg
+ZG9jIGZvciBaVEUgVk9VIFZHQSBvdXRwdXQgZGV2aWNlLgoKU2lnbmVkLW9mZi1ieTogU2hhd24g
+R3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3p0ZSx2b3UudHh0ICAgICAgICAgfCAyMSArKysrKysrKysrKysrKysrKysrKysKIDEg
+ZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvenRlLHZvdS50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dAppbmRleCA5YzM1NjI4NDIz
+MmIuLjM4NDc2NDc1ZmQ2MCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvenRlLHZvdS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvenRlLHZvdS50eHQKQEAgLTU4LDYgKzU4LDE4IEBAIFJlcXVpcmVk
+IHByb3BlcnRpZXM6CiAgICBpbnRlZ2VyIGNlbGxzLiAgVGhlIGZpcnN0IGNlbGwgaXMgdGhlIG9m
+ZnNldCBvZiBTWVNDVFJMIHJlZ2lzdGVyIHVzZWQKICAgIHRvIGNvbnRyb2wgVFYgRW5jb2RlciBE
+QUMgcG93ZXIsIGFuZCB0aGUgc2Vjb25kIGNlbGwgaXMgdGhlIGJpdCBtYXNrLgogCisqIFZHQSBv
+dXRwdXQgZGV2aWNlCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CisgLSBjb21wYXRpYmxlOiBzaG91
+bGQgYmUgInp0ZSx6eDI5NjcxOC12Z2EiCisgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBh
+bmQgbGVuZ3RoIG9mIHRoZSBWR0EgZGV2aWNlIElPIHJlZ2lvbgorIC0gaW50ZXJydXB0cyA6IFZH
+QSBpbnRlcnJ1cHQgbnVtYmVyIHRvIENQVQorIC0gY2xvY2tzOiBQaGFuZGxlIHdpdGggY2xvY2st
+c3BlY2lmaWVyIHBvaW50aW5nIHRvIFZHQSBJMkMgY2xvY2suCisgLSBjbG9jay1uYW1lczogTXVz
+dCBiZSAiaTJjX3djbGsiLgorIC0genRlLHZnYS1wb3dlci1jb250cm9sOiB0aGUgcGhhbmRsZSB0
+byBTWVNDVFJMIGJsb2NrIGZvbGxvd2VkIGJ5IHR3bworICAgaW50ZWdlciBjZWxscy4gIFRoZSBm
+aXJzdCBjZWxsIGlzIHRoZSBvZmZzZXQgb2YgU1lTQ1RSTCByZWdpc3RlciB1c2VkCisgICB0byBj
+b250cm9sIFZHQSBEQUMgcG93ZXIsIGFuZCB0aGUgc2Vjb25kIGNlbGwgaXMgdGhlIGJpdCBtYXNr
+LgorCiBFeGFtcGxlOgogCiB2b3U6IHZvdUAxNDQwMDAwIHsKQEAgLTgxLDYgKzkzLDE1IEBAIHZv
+dTogdm91QDE0NDAwMDAgewogCQkJICAgICAgIm1haW5fd2NsayIsICJhdXhfd2NsayI7CiAJfTsK
+IAorCXZnYTogdmdhQDgwMDAgeworCQljb21wYXRpYmxlID0gInp0ZSx6eDI5NjcxOC12Z2EiOwor
+CQlyZWcgPSA8MHg4MDAwIDB4MTAwMD47CisJCWludGVycnVwdHMgPSA8R0lDX1NQSSA4NiBJUlFf
+VFlQRV9MRVZFTF9ISUdIPjsKKwkJY2xvY2tzID0gPCZ0b3Bjcm0gVkdBX0kyQ19XQ0xLPjsKKwkJ
+Y2xvY2stbmFtZXMgPSAiaTJjX3djbGsiOworCQl6dGUsdmdhLXBvd2VyLWNvbnRyb2wgPSA8JnN5
+c2N0cmwgMHgxNzAgMHhlMD47CisJfTsKKwogCWhkbWk6IGhkbWlAYzAwMCB7CiAJCWNvbXBhdGli
+bGUgPSAienRlLHp4Mjk2NzE4LWhkbWkiOwogCQlyZWcgPSA8MHhjMDAwIDB4NDAwMD47Ci0tIAox
+LjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
