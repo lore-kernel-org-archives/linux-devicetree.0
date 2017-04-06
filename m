@@ -1,110 +1,162 @@
-From: olivier moysan <olivier.moysan@st.com>
-Subject: [PATCH 1/2] dt-bindings: Document STM32 I2S bindings
-Date: Thu, 6 Apr 2017 17:40:35 +0200
-Message-ID: <1491493236-2574-2-git-send-email-olivier.moysan@st.com>
-References: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH] [media] imx: csi: retain current field order and
+ colorimetry setting as default
+Date: Thu, 6 Apr 2017 17:43:00 +0200
+Message-ID: <59e72974-bfb0-6061-8b13-5f13f8723ba6@xs4all.nl>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
+ <1491486929.2392.29.camel@pengutronix.de>
+ <0f9690f8-c7f6-59ff-9e3e-123af9972d4b@xs4all.nl>
+ <1491490451.2392.70.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, olivier.moysan@st.com
-Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1491490451.2392.70.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.c
 List-Id: devicetree@vger.kernel.org
 
-Add documentation of device tree bindings for STM32 SPI/I2S.
+On 04/06/2017 04:54 PM, Philipp Zabel wrote:
+> On Thu, 2017-04-06 at 16:20 +0200, Hans Verkuil wrote:
+>> On 04/06/2017 03:55 PM, Philipp Zabel wrote:
+>>> If the the field order is set to ANY in set_fmt, choose the currently
+>>> set field order. If the colorspace is set to DEFAULT, choose the current
+>>> colorspace.  If any of xfer_func, ycbcr_enc or quantization are set to
+>>> DEFAULT, either choose the current setting, or the default setting for the
+>>> new colorspace, if non-DEFAULT colorspace was given.
+>>>
+>>> This allows to let field order and colorimetry settings be propagated
+>>> from upstream by calling media-ctl on the upstream entity source pad,
+>>> and then call media-ctl on the sink pad to manually set the input frame
+>>> interval, without changing the already set field order and colorimetry
+>>> information.
+>>>
+>>> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+>>> ---
+>>> This is based on imx-media-staging-md-v14, and it is supposed to allow
+>>> configuring the pipeline with media-ctl like this:
+>>>
+>>> 1) media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY8_1X16/1920x1080]"
+>>> 2) media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY8_1X16/1920x108]"
+>>> 3) media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY8_1X16/1920x1080]"
+>>> 4) media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60]"
+>>> 5) media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080@1/30]"
+>>>
+>>> Without having step 4) overwrite the colorspace and field order set on
+>>> 'ipu1_csi0':0 by the propagation in step 3).
+>>> ---
+>>>  drivers/staging/media/imx/imx-media-csi.c | 34 +++++++++++++++++++++++++++++++
+>>>  1 file changed, 34 insertions(+)
+>>>
+>>> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+>>> index 64dc454f6b371..d94ce1de2bf05 100644
+>>> --- a/drivers/staging/media/imx/imx-media-csi.c
+>>> +++ b/drivers/staging/media/imx/imx-media-csi.c
+>>> @@ -1325,6 +1325,40 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+>>>  	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
+>>>  
+>>>  	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
+>>> +
+>>> +	/* Retain current field setting as default */
+>>> +	if (sdformat->format.field == V4L2_FIELD_ANY)
+>>> +		sdformat->format.field = fmt->field;
+>>
+>> sdformat->format.field should never be FIELD_ANY. If it is, then that's a
+>> subdev bug and I'm pretty sure FIELD_NONE was intended.
+> 
+> This is the subdev. sdformat is passed in from userspace, so we have to
+> deal with it being set to ANY. I'm trying hard right now not to return
+> ANY though. The values in sdformat->format are applied to fmt down
+> below.
 
-Signed-off-by: olivier moysan <olivier.moysan@st.com>
----
- .../devicetree/bindings/sound/st,stm32h7-i2s.txt   | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32h7-i2s.txt
+Do you have a git tree with this patch? It is really hard to review without
+having the full imx-media-csi.c source.
 
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32h7-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32h7-i2s.txt
-new file mode 100644
-index 0000000..b99467a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/st,stm32h7-i2s.txt
-@@ -0,0 +1,71 @@
-+STMicroelectronics STM32 SPI/I2S Controller
-+
-+The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
-+Only some SPI instances support I2S.
-+
-+Required properties:
-+  - compatible: Must be "st,stm32h7-i2s"
-+  - #sound-dai-cells: Must be 1. (one parameter)
-+    This parameter allows to specify CPU DAI index in soundcard CPU dai link.
-+	index 0: playback DAI
-+	index 1: capture DAI
-+	index 2: full duplex DAI
-+  - reg: Offset and length of the device's register set.
-+  - interrupts: Must contain the interrupt line id.
-+  - clocks: Must contain phandle and clock specifier pairs for each entry
-+	in clock-names.
-+  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
-+	"i2sclk": clock which feeds the internal clock generator
-+	"pclk": clock which feeds the peripheral bus interface
-+	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
-+	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
-+  - dmas: DMA specifiers for tx and rx dma.
-+    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
-+  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
-+  - pinctrl-names: should contain only value "default"
-+  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
-+
-+Optional properties:
-+  - resets: Reference to a reset controller asserting the reset controller
-+
-+Example:
-+sound_card {
-+	compatible = "audio-graph-card";
-+	dais = <&i2s2_port 0>;
-+};
-+
-+i2s2: audio-controller@40003800 {
-+	compatible = "st,stm32h7-i2s";
-+	#sound-dai-cells = <1>;
-+	reg = <0x40003800 0x400>;
-+	interrupts = <36>;
-+	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
-+	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
-+	dmas = <&dmamux2 2 39 0x400 0x1>,
-+		       <&dmamux2 3 40 0x400 0x1>;
-+	dma-names = "rx", "tx";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2s2>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2s2_port: port@0 {
-+			reg = <0>;
-+			cpu_endpoint: endpoint {
-+				remote-endpoint = <&codec_endpoint>;
-+				audio-graph-card,format = "i2s";
-+				audio-graph-card,bitclock-master = <&codec_endpoint>;
-+				audio-graph-card,frame-master = <&codec_endpoint>;
-+			};
-+		};
-+};
-+
-+audio-codec {
-+		codec_port: port {
-+			codec_endpoint: endpoint {
-+				remote-endpoint = <&cpu_endpoint>;
-+		};
-+	};
-+};
--- 
-1.9.1
+I think one problem is that it is not clearly defined how subdevs and colorspace
+information should work.
+
+Regards,
+
+	Hans
+
+> 
+>>> +
+>>> +	/* Retain current colorspace setting as default */
+>>> +	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
+>>> +		sdformat->format.colorspace = fmt->colorspace;
+>>
+>> No! Subdevs should never return COLORSPACE_DEFAULT. If they do, then fix
+>> them. If this happens a lot (I'm not sure how reliably subdevs fill this
+>> in) you could set it to COLORSPACE_RAW. Perhaps with a WARN_ON_ONCE.
+> 
+> Same here, if userspace calls VIDIOC_SUBDEV_S_FMT with DEFAULT
+> colorspace, I don't want to return that unchanged, but overwrite it with
+> the currently set value.
+> 
+>>> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
+>>> +			sdformat->format.xfer_func = fmt->xfer_func;
+>>> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
+>>> +			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
+>>> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
+>>> +			sdformat->format.quantization = fmt->quantization;
+>>
+>> Nack. This is meaningless.
+> 
+> It isn't. It may be wrong, but it is not without effect. If the
+> colorimetry info (in fmt) is currently set to something that is
+> non-standard, calling VIDIOC_SUBDEV_S_FMT with DEFAULT in xfer_func,
+> ycbcr_enc or quantization will cause those old values to be retained,
+> instead of overwriting them to DEFAULT.
+> 
+>>> +	} else {
+>>> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
+>>> +			sdformat->format.xfer_func =
+>>> +				V4L2_MAP_XFER_FUNC_DEFAULT(
+>>> +						sdformat->format.colorspace);
+>>> +		}
+>>> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
+>>> +			sdformat->format.ycbcr_enc =
+>>> +				V4L2_MAP_YCBCR_ENC_DEFAULT(
+>>> +						sdformat->format.colorspace);
+>>> +		}
+>>> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
+>>> +			sdformat->format.quantization =
+>>> +				V4L2_MAP_QUANTIZATION_DEFAULT(
+>>> +						cc->cs != IPUV3_COLORSPACE_YUV,
+>>> +						sdformat->format.colorspace,
+>>> +						sdformat->format.ycbcr_enc);
+>>> +		}
+>>
+>> This isn't wrong, but it is perfectly fine to keep the DEFAULT here and let
+>> the application call V4L2_MAP_.
+>>
+>> I get the feeling this patch is a workaround for subdev errors. Either that,
+>> or the commit log doesn't give me enough information to really understand the
+>> problem that's being addressed here.
+> 
+> It's the latter. I should have written VIDIOC_SUBDEV_S_FMT instead of
+> just set_fmt in the comment.
+> 
+>> Regards,
+>>
+>> 	Hans
+>>
+>>> +	}
+>>> +
+>>>  	*fmt = sdformat->format;
+> 
+> Here sdformat is applied to the subdev pad.
+> 
+> regards
+> Philipp
+> 
