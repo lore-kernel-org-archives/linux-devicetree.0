@@ -1,72 +1,41 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 3/4] pwm: tegra: Add DT binding details to configure pin
- in suspends/resume
-Date: Thu, 6 Apr 2017 15:03:54 +0100
-Message-ID: <0f99b415-5f6f-dc90-244b-f6cc593f9a09@nvidia.com>
-References: <1491401626-31303-1-git-send-email-ldewangan@nvidia.com>
- <1491401626-31303-4-git-send-email-ldewangan@nvidia.com>
- <33445b27-ae0b-b28e-afca-e7b776b4b7c0@nvidia.com>
- <20170406130315.GB7784@ulmo.ba.sec> <58E6405E.5020402@nvidia.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: change fixup of dma-ranges size to error
+Date: Thu, 6 Apr 2017 09:03:50 -0500
+Message-ID: <CAL_Jsq+GLBtaezUiTbm0DAA2+MjcvxAcCsS-qJrr05YcTO5tdw@mail.gmail.com>
+References: <1491459529-31391-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <58E6405E.5020402@nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491459529-31391-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 6, 2017 at 1:18 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>
+> of_dma_get_range() has workaround code to fixup a device tree that
+> incorrectly specified a mask instead of a size for property
+> dma-ranges.  That device tree was fixed a year ago in v4.6, so
+> the workaround is no longer needed.  Leave a data validation
+> check in place, but no longer do the fixup.  Move the check
+> one level deeper in the call stack so that other possible users
+> of dma-ranges will also be protected.
+>
+> The fix to the device tree was in
+> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree").
 
-On 06/04/17 14:19, Laxman Dewangan wrote:
-> 
-> On Thursday 06 April 2017 06:33 PM, Thierry Reding wrote:
->> * PGP Signed by an unknown key
->>
->> On Thu, Apr 06, 2017 at 09:57:09AM +0100, Jon Hunter wrote:
->>> On 05/04/17 15:13, Laxman Dewangan wrote:
->>>> +state of the system. The configuration of pin is provided via the
->>>> pinctrl
->>>> +DT node as detailed in the pinctrl DT binding document
->>>> +    Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->>>> +
->>>> +The PWM node will have following optional properties.
->>>> +pinctrl-names:    Pin state names. Must be "suspend" and "resume".
->>> Why not just use the pre-defined names here? There is a pre-defined name
->>> for "default", "idle" and "sleep" and then you can use the following
->>> APIs and avoid the lookup of the state ...
->>>
->>> pinctrl_pm_select_default_state()
->>> pinctrl_pm_select_idle_state()
->>> pinctrl_pm_select_sleep_state()
->>>
->>> Note for i2c [0][1], I used "default" as the active/on state (which I
->>> know is not that descriptive) and then used 'idle' as the suspended
->>> state. This way we don't need any custom names.
->> Agreed, I think that's how these states are meant to be used.
-> I did quick grep for the pinctrl_pm_select_* functions in the code tree
-> and found usage of these APIs in some of the places.
-> I am taking the reference of i2c-st, i2c-nomadic and
-> extcon/extcon-usb-gpio.c drivers and from this the interpretation is
-> 
-> default state: When interface active and transfer need to be done in IO
-> interface.
-> idle state: Active state of the system but interface is not active, put
-> in non-active state of the interface.
-> sleep state: When system entering into suspend and IO interface is going
-> to be inactive.
-> 
-> So in PWM case, we will need the "default" and "sleep" state.
-> 
-> In suspend(), set the "sleep" state and in resume, set the "default" state.
-> 
-> + Linus W as I refereed his st/nomadik driver for reference.
+NACK. This was by design. You can't represent a size of 2^64 or 2^32.
+Well, technically you can for the latter, but then you have to grow
+#size-cells to 2 for an otherwise all 32-bit system which seems kind
+of pointless and wasteful. You could further restrict this to only
+allow ~0 and not just any case with bit 0 set.
 
-I mis-spoke before, I used 'idle' for i2c as I am using it in the
-context of the runtime-pm callbacks and not suspend. So sleep is fine
-with me.
+I'm pretty sure AMD is not the only system. There were 32-bit systems too.
 
-Jon
-
--- 
-nvpublic
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
