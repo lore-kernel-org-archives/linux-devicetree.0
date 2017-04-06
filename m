@@ -1,57 +1,99 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 3/4] pwm: tegra: Add DT binding details to configure pin
- in suspends/resume
-Date: Thu, 6 Apr 2017 18:49:26 +0530
-Message-ID: <58E6405E.5020402@nvidia.com>
-References: <1491401626-31303-1-git-send-email-ldewangan@nvidia.com> <1491401626-31303-4-git-send-email-ldewangan@nvidia.com> <33445b27-ae0b-b28e-afca-e7b776b4b7c0@nvidia.com> <20170406130315.GB7784@ulmo.ba.sec>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] [media] imx: csi: retain current field order and
+ colorimetry setting as default
+Date: Thu, 06 Apr 2017 15:55:29 +0200
+Message-ID: <1491486929.2392.29.camel@pengutronix.de>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+         <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170406130315.GB7784@ulmo.ba.sec>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490661656-10318-22-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+If the the field order is set to ANY in set_fmt, choose the currently
+set field order. If the colorspace is set to DEFAULT, choose the current
+colorspace.  If any of xfer_func, ycbcr_enc or quantization are set to
+DEFAULT, either choose the current setting, or the default setting for the
+new colorspace, if non-DEFAULT colorspace was given.
 
-On Thursday 06 April 2017 06:33 PM, Thierry Reding wrote:
-> * PGP Signed by an unknown key
->
-> On Thu, Apr 06, 2017 at 09:57:09AM +0100, Jon Hunter wrote:
->> On 05/04/17 15:13, Laxman Dewangan wrote:
->>> +state of the system. The configuration of pin is provided via the pinctrl
->>> +DT node as detailed in the pinctrl DT binding document
->>> +	Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->>> +
->>> +The PWM node will have following optional properties.
->>> +pinctrl-names:	Pin state names. Must be "suspend" and "resume".
->> Why not just use the pre-defined names here? There is a pre-defined name
->> for "default", "idle" and "sleep" and then you can use the following
->> APIs and avoid the lookup of the state ...
->>
->> pinctrl_pm_select_default_state()
->> pinctrl_pm_select_idle_state()
->> pinctrl_pm_select_sleep_state()
->>
->> Note for i2c [0][1], I used "default" as the active/on state (which I
->> know is not that descriptive) and then used 'idle' as the suspended
->> state. This way we don't need any custom names.
-> Agreed, I think that's how these states are meant to be used.
-I did quick grep for the pinctrl_pm_select_* functions in the code tree 
-and found usage of these APIs in some of the places.
-I am taking the reference of i2c-st, i2c-nomadic and 
-extcon/extcon-usb-gpio.c drivers and from this the interpretation is
+This allows to let field order and colorimetry settings be propagated
+from upstream by calling media-ctl on the upstream entity source pad,
+and then call media-ctl on the sink pad to manually set the input frame
+interval, without changing the already set field order and colorimetry
+information.
 
-default state: When interface active and transfer need to be done in IO 
-interface.
-idle state: Active state of the system but interface is not active, put 
-in non-active state of the interface.
-sleep state: When system entering into suspend and IO interface is going 
-to be inactive.
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+This is based on imx-media-staging-md-v14, and it is supposed to allow
+configuring the pipeline with media-ctl like this:
 
-So in PWM case, we will need the "default" and "sleep" state.
+1) media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY8_1X16/1920x1080]"
+2) media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY8_1X16/1920x108]"
+3) media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY8_1X16/1920x1080]"
+4) media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60]"
+5) media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080@1/30]"
 
-In suspend(), set the "sleep" state and in resume, set the "default" state.
+Without having step 4) overwrite the colorspace and field order set on
+'ipu1_csi0':0 by the propagation in step 3).
+---
+ drivers/staging/media/imx/imx-media-csi.c | 34 +++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-+ Linus W as I refereed his st/nomadik driver for reference.
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 64dc454f6b371..d94ce1de2bf05 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -1325,6 +1325,40 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
+ 
+ 	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
++
++	/* Retain current field setting as default */
++	if (sdformat->format.field == V4L2_FIELD_ANY)
++		sdformat->format.field = fmt->field;
++
++	/* Retain current colorspace setting as default */
++	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
++		sdformat->format.colorspace = fmt->colorspace;
++		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
++			sdformat->format.xfer_func = fmt->xfer_func;
++		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
++			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
++		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
++			sdformat->format.quantization = fmt->quantization;
++	} else {
++		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
++			sdformat->format.xfer_func =
++				V4L2_MAP_XFER_FUNC_DEFAULT(
++						sdformat->format.colorspace);
++		}
++		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
++			sdformat->format.ycbcr_enc =
++				V4L2_MAP_YCBCR_ENC_DEFAULT(
++						sdformat->format.colorspace);
++		}
++		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
++			sdformat->format.quantization =
++				V4L2_MAP_QUANTIZATION_DEFAULT(
++						cc->cs != IPUV3_COLORSPACE_YUV,
++						sdformat->format.colorspace,
++						sdformat->format.ycbcr_enc);
++		}
++	}
++
+ 	*fmt = sdformat->format;
+ 
+ 	if (sdformat->pad == CSI_SINK_PAD) {
+-- 
+2.11.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
