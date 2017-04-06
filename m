@@ -1,57 +1,72 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] regulator: Add driver for voltage controlled
- regulators
-Date: Thu, 6 Apr 2017 19:21:36 +0100
-Message-ID: <20170406182136.yrwdoyqeuz4qxc6d@sirena.org.uk>
-References: <20170331205035.126001-1-mka@chromium.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: change fixup of dma-ranges size to error
+Date: Thu, 6 Apr 2017 11:37:16 -0700
+Message-ID: <58E68ADC.6040603@gmail.com>
+References: <1491459529-31391-1-git-send-email-frowand.list@gmail.com>
+ <CAL_Jsq+GLBtaezUiTbm0DAA2+MjcvxAcCsS-qJrr05YcTO5tdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zevge64hlv4wpbne"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170331205035.126001-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAL_Jsq+GLBtaezUiTbm0DAA2+MjcvxAcCsS-qJrr05YcTO5tdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 04/06/17 07:03, Rob Herring wrote:
+> On Thu, Apr 6, 2017 at 1:18 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>>
+>> of_dma_get_range() has workaround code to fixup a device tree that
+>> incorrectly specified a mask instead of a size for property
+>> dma-ranges.  That device tree was fixed a year ago in v4.6, so
+>> the workaround is no longer needed.  Leave a data validation
+>> check in place, but no longer do the fixup.  Move the check
+>> one level deeper in the call stack so that other possible users
+>> of dma-ranges will also be protected.
+>>
+>> The fix to the device tree was in
+>> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree").
+> 
+> NACK.
+> This was by design. You can't represent a size of 2^64 or 2^32.
 
---zevge64hlv4wpbne
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I agree that being unable to represent a size of 2^32 in a u32 and
+a size of 2^64 in a u64 is the underlying issue.
 
-On Fri, Mar 31, 2017 at 01:50:35PM -0700, Matthias Kaehlcke wrote:
+But the code to convert a mask to a size is _not_ design, it is a
+hack that temporarily worked around a device tree that did not follow
+the dma-ranges binding in the ePAPR.
 
-> +- compatible		  : must be "vctrl-regulator".
-> +- regulator-min-microvolt : smallest voltage consumers may set
-> +- regulator-max-microvolt : largest voltage consumers may set
-> +- ctrl-regulator:	  : the name of the regulator supplying the control
-> +			    voltage.
+That device tree was corrected a year ago to provide a size instead of
+a mask.
 
-This looks good except for this bit where we read the regulator name out
-of the DT, that's generally a sign of bad practice for things that are
-less simple passives than things like this or fixed voltage regulators.
-As with the supplies for fixed voltage regulators just pick a name for
-the supply (ctrl seems fine to me) and use that, neither option is
-perfect but at elast this less typing for everyone and it's consistent
-with what other similar things are already doing.
+> Well, technically you can for the latter, but then you have to grow
+> #size-cells to 2 for an otherwise all 32-bit system which seems kind
+> of pointless and wasteful. You could further restrict this to only
+> allow ~0 and not just any case with bit 0 set.
+> 
+> I'm pretty sure AMD is not the only system. There were 32-bit systems too.
 
---zevge64hlv4wpbne
-Content-Type: application/pgp-signature; name="signature.asc"
+I examined all instances of property dma-ranges in in tree dts files in
+Linux 4.11-rc1.  There are none that incorrectly specify mask instead of
+size.
 
------BEGIN PGP SIGNATURE-----
+#size-cells only changes to 2 for the dma-ranges property and the ranges
+property when size is 2^32, so that is a very small amount of space.
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljmhy8ACgkQJNaLcl1U
-h9D3ygf/QqKl27xYmCuuVeg9JE3AOM3YAY5UTqo3gsL4JMhWSXJMITA++WsiuKLW
-3bYJeHxYW7PxpgYJB1hxw1O1tXbh1qQLOeMpZJNb6vwcYtj+AyBngyAECHB1U1kY
-cmLgyrU/LzH8LRtjm+SWTS/vLDiG0mCfTGrb9clK3SCyho1cg3bsrQhXQPpAlcg7
-FndSlsnMzzrmoEq2rEm8i0hADNqFaZ5V4AJd9Ktuwq4kSq75/702YSluDMY9Nh45
-lj2ypHw4UiX1FPfSN8S+xCbVn6R88kkDsI8zRpTjezgxFKv/qgCBvNXUaULInvAn
-2uYHfSLICAmLUO8Fa1wgVwcIjYATtw==
-=HHCZ
------END PGP SIGNATURE-----
+The patch does not allow for a size of 2^64.  If a system requires a
+size of 2^64 then the type of size needs to increase to be larger
+than a u64.  If you would like for the code to be defensive and
+detect a device tree providing a size of 2^64 then I can add a
+check to of_dma_get_range() to return -EINVAL if #size-cells > 2.
+When that error triggers, the type of size can be changed.
 
---zevge64hlv4wpbne--
+> 
+> Rob
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
