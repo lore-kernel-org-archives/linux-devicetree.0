@@ -1,41 +1,42 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/1] gpio: core: Decouple open drain/source flag with
- active low/high
-Date: Thu, 6 Apr 2017 20:30:20 +0300
-Message-ID: <CAHp75VcHh8HOvocHsTuHmNRAt5J5WdOUAuWDiup+Ubz=-WQ0bQ@mail.gmail.com>
-References: <1491485752-28030-1-git-send-email-ldewangan@nvidia.com>
- <CAHp75Ver7n=Xoer0YzA0sVVrcXKOB1bDz0ygSm0V0YoyYbe3pg@mail.gmail.com> <58E67328.5040805@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH v3 0/9] ARM: dts: i.MX6: Add lcdif/sound nodes on Engicam SOMs
+Date: Thu,  6 Apr 2017 23:32:06 +0530
+Message-ID: <1491501735-1649-1-git-send-email-jagan@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58E67328.5040805@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 6, 2017 at 7:56 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-> On Thursday 06 April 2017 09:40 PM, Andy Shevchenko wrote:
->> On Thu, Apr 6, 2017 at 4:35 PM, Laxman Dewangan <ldewangan@nvidia.com>
->> wrote:
+From: Jagan Teki <jagan@amarulasolutions.com>
 
->>> Adding different flag for the Open Drain/Open Source which is valid
->>> only when Single ended flag is enabled.
->>>          if (single_ended) {
->>> -               if (active_low)
->>> +               if (open_drain)
->>
->> This breaks ACPI case, right?
+This patchset, add support for LVDS, touchscreen, sound card and related codec
+and can nodes all Engicam SOM's which are supporting mainline as of now.
 
-> In acpi case, single_ended is not handled. It only handles the active LOW.
->
-> From code:
+Jagan Teki (9):
+  ARM: dts: imx6ul-isiot: Add Sound card with codec node
+  ARM: dts: imx6ul-geam: Add Sound card with codec node
+  ARM: dts: imx6qdl-icore: Add Sound card with codec node
+  ARM: dts: imx6dl-icore-rqs: Add sgtl5000 codec node
+  ARM: dts: imx6qdl-icore-rqs: Replace to use simple-audio-card
+  ARM: dts: imx6dl-icore: Add LVDS support
+  ARM: dts: imx6dl-icore: Add touchscreen node
+  ARM: dts: imx6qdl-icore-rqs: Add CAN nodes
+  ARM: dts: imx6ul-isiot: Add FEC node support
 
-Fair enough.
-I would look into ACPI spec for possibility to add this kind of functionality.
-
-Thanks.
+ arch/arm/boot/dts/imx6dl-icore-rqs.dts     | 19 ++++++++
+ arch/arm/boot/dts/imx6dl-icore.dts         | 45 +++++++++++++++++
+ arch/arm/boot/dts/imx6q-icore-ofcap10.dts  | 11 +++++
+ arch/arm/boot/dts/imx6q-icore-ofcap12.dts  | 11 +++++
+ arch/arm/boot/dts/imx6q-icore-rqs.dts      | 21 ++++----
+ arch/arm/boot/dts/imx6q-icore.dts          | 11 +++++
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi   | 51 ++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-icore.dtsi       | 48 +++++++++++++++++++
+ arch/arm/boot/dts/imx6ul-geam-kit.dts      | 12 +++++
+ arch/arm/boot/dts/imx6ul-geam.dtsi         | 26 ++++++++++
+ arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 ++++
+ arch/arm/boot/dts/imx6ul-isiot.dtsi        | 77 ++++++++++++++++++++++++++++++
+ 12 files changed, 329 insertions(+), 13 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+1.9.1
