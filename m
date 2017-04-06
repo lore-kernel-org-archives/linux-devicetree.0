@@ -1,69 +1,74 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
-Date: Thu, 06 Apr 2017 13:33:59 +0900
-Message-ID: <58E5C537.1020301@samsung.com>
-References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
- <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
- <93e79e92-a102-e931-8d63-843031848888@samsung.com>
- <58DA1E38.50907@samsung.com>
- <CAJKOXPeD4HKemKTrnC2JaON3JkuNGO9g+Hg8M7F6f2WusiYkhg@mail.gmail.com>
- <CAJKOXPd-h4QqLXJ5AYr1KgpjvROaWpVZnd9KmeeGoVRQifssbw@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 01/23] PCI: endpoint: Add EP core layer to enable EP
+ controller and EP functions
+Date: Thu, 6 Apr 2017 10:49:17 +0530
+Message-ID: <f02ddadd-239a-b559-ab85-0bed3f3e0112@ti.com>
+References: <20170405085243.18123-1-kishon@ti.com>
+ <20170405085243.18123-2-kishon@ti.com>
+ <20170405165254.GA17066@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CAJKOXPd-h4QqLXJ5AYr1KgpjvROaWpVZnd9KmeeGoVRQifssbw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, catalin.marinas@arm.com, Seung Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, kgene@kernel.org, dri-devel@lists.freedesktop.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, will.deacon@arm.com, Marek Szyprowski <m.szyprowski@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170405165254.GA17066-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgoyMDE364WEIDA07JuUIDA17J28IDAwOjM47JeQIEtyenlzenRvZiBLb3psb3dza2kg7J20KOqw
-gCkg7JO0IOq4gDoKPiBPbiBUdWUsIE1hciAyOCwgMjAxNyBhdCAxMTozOCBBTSwgS3J6eXN6dG9m
-IEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPiB3cm90ZToKPj4gT24gVHVlLCBNYXIgMjgsIDIw
-MTcgYXQgMTE6MjYgQU0sIElua2kgRGFlIDxpbmtpLmRhZUBzYW1zdW5nLmNvbT4gd3JvdGU6Cj4+
-PiBNZXJnZWQuCj4+Cj4+IEhpLAo+Pgo+PiBJIGRvIG5vdCBzZWUgdGhlIHRhZyAod2l0aCBEVCBw
-YXRjaGVzKSBtZXJnZWQgYnkgeW91IHdoaWNoIEkgcHJvdmlkZWQKPj4gdG8geW91IGJlZm9yZS4g
-VGhlc2UgYXJlIGVzc2VudGlhbCBmb3IgYmlzZWN0YWJpbGl0eS4gV2l0aG91dCB0aGVtLAo+PiBr
-ZXJuZWwgYmlzZWN0YWJpbGl0eSBpcyBicm9rZW4uIERpZCB5b3UgbWVyZ2VkIHRoZSB0YWcgc29t
-ZXdoZXJlPwo+Pgo+PiBCZXN0IHJlZ2FyZHMsCj4+IEtyenlzenRvZgo+Pgo+Pj4gVGhhbmtzLAo+
-Pj4gSW5raSBEYWUKPiAKPiBJbmtpLAo+IAo+IEkgc3RpbGwgZG8gbm90IHNlZSB0aGUgRFRTIHRh
-ZyBbMV0gbWVyZ2VkIGluIHlvdXIgdHJlZSBidXQgeW91IGFwcGxpZWQKPiBwYXRjaGVzIGJyZWFr
-aW5nIHRoZSBkaXNwbGF5LiBJIGxvb2tlZCBhdCBleHlub3MtZHJtLW5leHQgYnJhbmNoLgo+IAo+
-IFdlIHRhbGtlZCBhbHJlYWR5IGFib3V0IGJpc2VjdGFiaWxpdHkgYW5kIHdpdGggSG9lZ2V1biB3
-ZSBwcm92aWRlZAo+IHByb3BlciBzb2x1dGlvbi4gSG9lZ2V1biBzcGxpdCB0aGUgcGF0Y2hzZXQg
-YW5kIEkgc2VudCB5b3UgYSBzdGFibGUKPiB0YWcgdG8gbWVyZ2UuIEJlIGF3YXJlIG5vdCB0byBh
-cHBseSB0aGUgRFRTIHBhdGNoIGJlY2F1c2UgeW91IHdvdWxkCj4gZWZmZWN0aXZlbHkgZHVwbGlj
-YXRlIGl0LiBJbnN0ZWFkLCBkZWFsIGxpa2Ugd2l0aCBhbnkgcHVsbCByZXF1ZXN0IC0KPiBtZXJn
-ZSB0aGUgdGFnIGFzIGRlcGVuZGVuY3kgKmJlZm9yZSogYXBwbHlpbmcgRFJNIERTSSBwYXRjaC4K
-CktyenlzenRvZiwKCkkgdGhpbmsgbWVyZ2luZyB0aGUgRFRTIHRhZyBpcyBub3QgbmVjZXNzYXJ5
-IGJlY2F1c2UgZHQgYW5kIGRybSBwYXRjaGVzIHdpbGwgZ28gdG8gLW5leHQgc2VwYXJhdGVseS4K
-QW55d2F5LCBjb25maXJtZWQgeW91ciBlbWFpbCBqdXN0IG5vdy4gU2VlbXMgYmV0dGVyIHNvIGRp
-ZCB3aGF0IHlvdSB3YW50LgoKClRoYW5rcywKSW5raSBEYWUKCj4gCj4gSSBzYXcgYWxzbyBhIGJy
-YW5jaCBsaWtlIHRoaXM6Cj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tl
-cm5lbC9naXQvZGFlaW5raS9kcm0tZXh5bm9zLmdpdC9sb2cvP2g9ZXh5bm9zLWRybS1uZXh0LXRt
-Mgo+IGJ1dCB0aGlzIGlzIHNvbWV0aGluZyBvYnZpb3VzbHkgd3JvbmcuIEkgZG8gbm90IGtub3cg
-d2hhdCBhcmUgeW91cgo+IHBsYW5zIHRvIGRvIHdpdGggaXQsIGJ1dCBwbGVhc2UgZHJvcCBpdCBh
-cyBpdCBicmluZ3Mgb25seSBjb25mdXNpb24uCj4gCj4gQmVzdCByZWdhcmRzLAo+IEtyenlzenRv
-Zgo+IAo+IFsxXSBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzU2
-NzA1My5odG1sCj4gCj4+PiAyMDE364WEIDAz7JuUIDIy7J28IDEwOjM27JeQIEhvZWdldW4gS3dv
-biDsnbQo6rCAKSDsk7Qg6riAOgo+Pj4+IEhpIGlua2ksCj4+Pj4KPj4+PiBDb3VsZCB5b3UgY2hl
-Y2sgdGhlIHRoaXMgcGF0Y2g/Cj4+Pj4gRm9yIHJlZmVyZW5jZSwgcGF0Y2ggMS81IGFuZCAyLzUg
-aGF2ZSBhbHJlYWR5IGJlZW4gYXBwbGllZCB0byBLcnp5c3p0b2YgdHJlZS4KPj4+Pgo+Pj4+IEJl
-c3QgcmVnYXJkcywKPj4+PiBIb2VnZXVuCj4+Pj4KPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20g
-dGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+IHRo
-ZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBt
-YWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5o
-dG1sCj4gCj4gCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+Hi Bjorn,
+
+On Wednesday 05 April 2017 10:22 PM, Bjorn Helgaas wrote:
+> On Wed, Apr 05, 2017 at 02:22:21PM +0530, Kishon Vijay Abraham I wrote:
+>> Introduce a new EP core layer in order to support endpoint functions in
+>> linux kernel. This comprises the EPC library (Endpoint Controller Library)
+>> and EPF library (Endpoint Function Library). EPC library implements
+>> functions specific to an endpoint controller and EPF library implements
+>> functions specific to an endpoint function.
+>> ...
+> 
+>> +/**
+>> + * pci_epf_linkup() - Notify the function driver that EPC device has
+>> + *		      established a connection with the Root Complex.
+>> + * @epf: the EPF device bound to the EPC device which has established
+>> + *	 the connection with the host
+>> + *
+>> + * Invoke to notify the function driver that EPC device has established
+>> + * a connection with the Root Complex.
+>> + */
+>> +void pci_epf_linkup(struct pci_epf *epf)
+>> +{
+>> +	if (!epf->driver)
+>> +		dev_WARN(&epf->dev, "epf device not bound to driver\n");
+>> +
+>> +	epf->driver->ops->linkup(epf);
+> 
+> I don't understand what's going on here.  We warn if epf->driver is
+> NULL, but the next thing we do is dereference it.
+> 
+> For NULL pointers that are symptoms of Linux defects, I usually prefer
+> not to check at all so that a dereference generates an oops and we can
+> debug the problem.  For NULL pointers caused by user error, we would
+> generally return an error that percolates up to the user.
+> 
+> I haven't competely wrapped my head around this endpoint support, but
+> I assume a NULL pointer here would be caused by user error, not
+> necessarily a Linux defect.  So why would we dereference a NULL
+> pointer?  And what happens when we do?  Is this just going to oops an
+> embedded Linux running inside the endpoint?  Is that the correct
+> behavior?
+
+With the new configfs directory structure, this should be a kernel error.
+However the EPF layer should be independent of how it's API's are used i.e
+someone can create a new sysfs/configfs structure and the value of epf->driver
+might be dependent on user actions.
+
+I think I'd prefer not to dereference NULL pointers since we anyways have a
+dev_WARN for debug. I'll resend this patch with return if epf->driver is NULL.
+
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
