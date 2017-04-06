@@ -1,50 +1,329 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V10 03/12] of: dma: Move range size workaround to
-	of_dma_get_range()
-Date: Thu, 6 Apr 2017 15:05:31 +0530
-Message-ID: <4b56ef2a-3ede-6093-69d9-576b6e73ea44@codeaurora.org>
-References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
-	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
-	<1491301105-5274-4-git-send-email-sricharan@codeaurora.org>
-	<58E5DF13.2020700@gmail.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
+Date: Thu, 6 Apr 2017 11:35:42 +0200
+Message-ID: <bd680d0a-0b2f-91fc-a940-b2fef4300ca3@st.com>
+References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
+ <20170405223233.GJ7065@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <58E5DF13.2020700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170405223233.GJ7065@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, radoslaw.pietrzyk@gmail.com, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, andrea.merello@gmail.com, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+Hi Stephen,
 
-On 4/6/2017 11:54 AM, Frank Rowand wrote:
-> On 04/04/17 03:18, Sricharan R wrote:
->> From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+On 04/06/2017 12:32 AM, Stephen Boyd wrote:
+> On 03/15, gabriel.fernandez@st.com wrote:
+>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
 >>
->> Invalid dma-ranges values should be worked around when retrieving the
->> DMA range in of_dma_get_range(), not by all callers of the function.
->> This isn't much of a problem now that we have a single caller, but that
->> situation will change when moving DMA configuration to device probe
->> time.
+>> This patch enables clocks for STM32H743 boards.
+> Like what clocks exactly? All of them?
 >
-> Please drop this patch from the series.  I just now sent Rob an
-> alternative that reflects other changes that have occurred since
-> this patch series was first created many, many moons ago
-> (https://lkml.org/lkml/2017/4/6/53).
+Yes all of them, it's new IP
 
-ok, would drop this.
 
-Regards,
-  Sricharan
+>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>> new file mode 100644
+>> index 0000000..9d4b587
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>> @@ -0,0 +1,152 @@
+>> +STMicroelectronics STM32H7 Reset and Clock Controller
+>> +=====================================================
+>> +
+>> +The RCC IP is both a reset and a clock controller.
+>> +
+>> +Please refer to clock-bindings.txt for common clock controller binding usage.
+>> +Please also refer to reset.txt for common reset controller binding usage.
+>> +
+>> +Required properties:
+>> +- compatible: Should be:
+>> +  "st,stm32h743-rcc"
+>> +
+>> +- reg: should be register base and length as documented in the
+>> +  datasheet
+>> +
+>> +- #reset-cells: 1, see below
+>> +
+>> +- #clock-cells : from common clock binding; shall be set to 1
+>> +
+>> +- clocks: External oscillator clock phandle
+>> +  - high speed external clock signal (HSE)
+>> +  - low speed external clock signal (LSE)
+>> +  - external I2S clock (I2S_CKIN)
+>> +
+>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
+>> +  write protection (RTC clock).
+>> +
+>> +- pll x node: Allow to register a pll with specific parameters.
+>> +  Please see PLL section below.
+>> +
+>> +Example:
+>> +
+>> +	rcc: rcc@58024400 {
+>> +		#reset-cells = <1>;
+>> +		#clock-cells = <2>
+>> +		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+>> +		reg = <0x58024400 0x400>;
+>> +		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+>> +
+>> +		st,syscfg = <&pwrcfg>;
+>> +
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		vco1@58024430 {
+>> +			#clock-cells = <0>;
+>> +			compatible = "stm32,pll";
+>> +			reg = <0>;
+> reg is super confusing and doesn't match unit address.
+ok i fixed it in the v2
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>
+>> +		};
+> Why? Shouldn't we know this from the compatible string how many
+> PLLs there are and where they're located? Export the PLLs through
+> rcc node's clock-cells?
+>
+Because i need to offer the possibility to change the PLL VCO 
+frequencies at the start-up of this driver clock.
+The VCO algorithm needs a division factor, a multiplication factor and a 
+fractional factor.
+Lot's of solution are possible for one frequency and it's nightmare to 
+satisfy the 3 output dividers of the PLL.
+
+
+>> +
+>> +		vco2@58024438 {
+>> +			#clock-cells = <0>;
+>> +			compatible = "stm32,pll";
+>> +			reg = <1>;
+> reg is super confusing and doesn't match unit address.
+>
+>> +			st,clock-div = <2>;
+>> +			st,clock-mult = <40>;
+>> +			st,frac-status = <0>;
+>> +			st,frac = <0>;
+>> +			st,vcosel = <1>;
+>> +			st,pllrge = <2>;
+> Does this stuff change on a per-board basis? I hope none of these
+> properties need to be in DT.
+These properties are optionals.
+I absolute need it to custumize VCO  frequencies of a pll without the 
+boot loader..
+
+i suppressed  "st,frac-status" and  "st,pllrge" in the v2
+>
+>> +		};
+>> +	};
+>> +
+>> +
+>> +STM32H7 PLL
+>> +-----------
+>> +
+> [...]
+>> +
+>> +Specifying softreset control of devices
+>> +=======================================
+>> +
+>> +Device nodes should specify the reset channel required in their "resets"
+>> +property, containing a phandle to the reset device node and an index specifying
+>> +which channel to use.
+>> +The index is the bit number within the RCC registers bank, starting from RCC
+>> +base address.
+>> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
+>> +Where bit_offset is the bit offset within the register.
+>> +
+>> +For example, for CRC reset:
+>> +  crc = AHB4RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x88 / 4 * 32 + 19 = 1107
+>> +
+>> +All available preprocessor macros for reset are defined dt-bindings//mfd/stm32h7-rcc.h
+> One too many slashes?
+ok i will fix it
+
+>
+>> +header and can be used in device tree sources.
+>> +
+>> +example:
+>> +
+>> +	timer2 {
+>> +		resets	= <&rcc STM32H7_APB1L_RESET(TIM2)>;
+>> +	};
+>> diff --git a/drivers/clk/clk-stm32h7.c b/drivers/clk/clk-stm32h7.c
+>> new file mode 100644
+>> index 0000000..c8eb729
+>> --- /dev/null
+>> +++ b/drivers/clk/clk-stm32h7.c
+>> @@ -0,0 +1,1586 @@
+>> +/*
+>> + * Copyright (C) Gabriel Fernandez 2017
+>> + * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> + *
+>> + * License terms: GPL V2.0.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/clk.h>
+> Is this used?
+No i will suppress it
+
+>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include <dt-bindings/clock/stm32h7-clks.h>
+>> +
+>> +/* Reset Clock Control Registers */
+>> +#define RCC_CR		0x00
+>> +#define RCC_CFGR	0x10
+>> +#define RCC_D1CFGR	0x18
+>> +#define RCC_D2CFGR	0x1C
+>> +#define RCC_D3CFGR	0x20
+>> +#define RCC_PLLCKSELR	0x28
+>> +#define RCC_PLLCFGR	0x2C
+>> +#define RCC_PLL1DIVR	0x30
+>> +#define RCC_PLL1FRACR	0x34
+>> +#define RCC_PLL2DIVR	0x38
+>> +#define RCC_PLL2FRACR	0x3C
+>> +#define RCC_PLL3DIVR	0x40
+>> +#define RCC_PLL3FRACR	0x44
+>> +#define RCC_D1CCIPR	0x4C
+>> +#define RCC_D2CCIP1R	0x50
+>> +#define RCC_D2CCIP2R	0x54
+>> +#define RCC_D3CCIPR	0x58
+>> +#define RCC_BDCR	0x70
+>> +#define RCC_CSR		0x74
+>> +#define RCC_AHB3ENR	0xD4
+>> +#define RCC_AHB1ENR	0xD8
+>> +#define RCC_AHB2ENR	0xDC
+>> +#define RCC_AHB4ENR	0xE0
+>> +#define RCC_APB3ENR	0xE4
+>> +#define RCC_APB1LENR	0xE8
+>> +#define RCC_APB1HENR	0xEC
+>> +#define RCC_APB2ENR	0xF0
+>> +#define RCC_APB4ENR	0xF4
+>> +
+>> +static DEFINE_SPINLOCK(rlock);
+> This is super generic and will make lockdep debugging sad.
+> Perhaps stm32rcc_lock?
+ok
+
+>
+>> +
+>> +static void __iomem *base;
+>> +static struct regmap *pdrm;
+>> +static struct clk_hw **hws;
+>> +
+>> +/* System clock parent */
+>> +static const char * const sys_src[] = {
+>> +	"hsi_ck", "csi_ck", "hse_ck", "pll1_p" };
+>> +
+>> +static const char * const tracein_src[] = {
+>> +	"hsi_ck", "csi_ck", "hse_ck", "pll1_r" };
+> [...]
+>> +
+>> +static unsigned long pll_fd_recalc_rate(struct clk_hw *hw,
+>> +		unsigned long parent_rate)
+>> +{
+>> +	struct stm32_pll_obj *clk_elem = to_pll(hw);
+>> +	struct stm32_fractional_divider *fd = &clk_elem->div;
+>> +	unsigned long m, n;
+>> +	u32 val, mask;
+>> +	u64 rate, rate1 = 0;
+>> +
+>> +	val = clk_readl(fd->mreg);
+> Please don't use clk_readl() unless you need it for some reason.
+ok
+
+>
+>> +	mask = (GENMASK(fd->mwidth - 1, 0) << fd->mshift);
+>> +	m = (val & mask) >> fd->mshift;
+>> +
+>> +	val = clk_readl(fd->nreg);
+>> +	mask = (GENMASK(fd->nwidth - 1, 0) << fd->nshift);
+> Useless parentheses. And isn't GENMASK supposed to take the
+> actual bit positions? Then we avoid overflow issues?
+ok il will fix it.
+
+>> +	n = ((val & mask) >> fd->nshift) + 1;
+>> +
+>> +	if (!n || !m)
+>> +		return parent_rate;
+>> +
+>> +	rate = (u64)parent_rate * n;
+>> +	do_div(rate, m);
+>> +
+>> +	if (pll_frac_is_enabled(hw)) {
+>> +		val = pll_read_frac(hw);
+>> +		rate1 = (u64) parent_rate * (u64) val;
+>> +		do_div(rate1, (m * 8191));
+>> +	}
+>> +
+>> +	return rate + rate1;
+>> +}
+>> +
+> [...]
+>> +
+>> +	/* Micro-controller clocks */
+>> +	for (n = 0; n < ARRAY_SIZE(mco_clk); n++) {
+>> +		get_cfg_composite_div(&mco_clk_cfg, &mco_clk[n], &c_cfg,
+>> +				&rlock);
+>> +
+>> +		hws[MCO_BANK + n] = clk_hw_register_composite(NULL,
+>> +				mco_clk[n].name,
+>> +				mco_clk[n].parent_name,
+>> +				mco_clk[n].num_parents,
+>> +				c_cfg.mux_hw, c_cfg.mux_ops,
+>> +				c_cfg.div_hw, c_cfg.div_ops,
+>> +				c_cfg.gate_hw, c_cfg.gate_ops,
+>> +				mco_clk[n].flags);
+>> +	}
+>> +
+>> +	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
+>> +
+>> +	return;
+>> +
+>> +err_free_clks:
+>> +	kfree(clk_data);
+>> +}
+>> +CLK_OF_DECLARE_DRIVER(stm32h7_rcc, "st,stm32h743-rcc", stm32h7_rcc_init);
+> Is there another driver that uses the same register space?
+> Nothing showing up in -next right now. Perhaps a comment should
+> be added to indicate the other driver.
+Yes the reset controler.
+ok il will add a comment.
+
+
+BR
+Gabriel
