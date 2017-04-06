@@ -1,43 +1,95 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] Documentation: dt-bindings: iio: Add max9611 ADC
-Date: Thu, 6 Apr 2017 16:43:50 +0200
-Message-ID: <CAMuHMdUNWJ2C9b9Xzod5HRU_ZG3mVamN6a-ZdOywODJqv6TxQw@mail.gmail.com>
-References: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org> <1491488454-22468-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V10 06/12] of: device: Fix overflow of coherent_dma_mask
+Date: Thu, 6 Apr 2017 15:45:37 +0100
+Message-ID: <ca028e7a-eca5-6ca4-7679-3dc393aa575b@arm.com>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-7-git-send-email-sricharan@codeaurora.org>
+	<58E5E7B7.1050400@gmail.com>
+	<b081f333-084d-ffa5-635f-f7f1c0232ac3@arm.com>
+	<CAL_JsqLsE378hfs=xNvSdPV2r+7H81cAFzOwtda2W+mFVoohuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491488454-22468-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAL_JsqLsE378hfs=xNvSdPV2r+7H81cAFzOwtda2W+mFVoohuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Nowicki <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Sudeep Holla <sudeep.holla>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 6, 2017 at 4:20 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/max9611.txt
-> @@ -0,0 +1,27 @@
-> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
-> +
-> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
-> +12-bits ADC communicating over I2c bus.
-> +The device node for this driver shall be a child of a I2c controller.
-> +
-> +Required properties
-> +  - compatible: Should be "maxim,max9611" or "maxim,max9612"
-> +  - reg: The 7-bits long I2c address of the device
-> +  - shunt-resistor-micro-homs: Value, in micro Ohms, of the current sense shunt
+On 06/04/17 14:56, Rob Herring wrote:
+> On Thu, Apr 6, 2017 at 5:24 AM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 06/04/17 08:01, Frank Rowand wrote:
+>>> On 04/04/17 03:18, Sricharan R wrote:
+>>>> Size of the dma-range is calculated as coherent_dma_mask + 1
+>>>> and passed to arch_setup_dma_ops further. It overflows when
+>>>> the coherent_dma_mask is set for full 64 bits 0xFFFFFFFFFFFFFFFF,
+>>>> resulting in size getting passed as 0 wrongly. Fix this by
+>>>> passsing in max(mask, mask + 1). Note that in this case
+>>>> when the mask is set to full 64bits, we will be passing the mask
+>>>> itself to arch_setup_dma_ops instead of the size. The real fix
+>>>> for this should be to make arch_setup_dma_ops receive the
+>>>> mask and handle it, to be done in the future.
+>>>>
+>>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>> ---
+>>>>  drivers/of/device.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>>>> index c17c19d..c2ae6bb 100644
+>>>> --- a/drivers/of/device.c
+>>>> +++ b/drivers/of/device.c
+>>>> @@ -107,7 +107,7 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>>>>      ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>>>>      if (ret < 0) {
+>>>>              dma_addr = offset = 0;
+>>>> -            size = dev->coherent_dma_mask + 1;
+>>>> +            size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+>>>>      } else {
+>>>>              offset = PFN_DOWN(paddr - dma_addr);
+>>>>              dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>>>>
+>>>
+>>> NACK.
+>>>
+>>> Passing an invalid size to arch_setup_dma_ops() is only part of the problem.
+>>> size is also used in of_dma_configure() before calling arch_setup_dma_ops():
+>>>
+>>>         dev->coherent_dma_mask = min(dev->coherent_dma_mask,
+>>>                                      DMA_BIT_MASK(ilog2(dma_addr + size)));
+>>>         *dev->dma_mask = min((*dev->dma_mask),
+>>>                              DMA_BIT_MASK(ilog2(dma_addr + size)));
+>>>
+>>> which would be incorrect for size == 0xffffffffffffffffULL when
+>>> dma_addr != 0.  So the proposed fix really is not papering over
+>>> the base problem very well.
+>>
+>> I'm not sure I agree there. Granted, there exist many more problematic
+>> aspects than are dealt with here (I've got more patches cooking to sort
+>> out some of the other issues we have with dma-ranges), but considering
+>> size specifically:
+>>
+>> - It is not possible to explicitly specify a range with a size of 2^64
+>> in DT. If someone does specify a size of 0, they've done a silly thing
+>> and should not be surprised that it ends badly.
+> 
+> And because of this, we allow ~0 (both 32 and 64 bit) in DT dma-ranges
+> and fix these up as 2^32 and 2^64 sizes.
 
-s/homs/ohms/
+...which is what Frank's patch gets rid of.
 
-> +                               resistor
+Robin.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> Rob
+> 
