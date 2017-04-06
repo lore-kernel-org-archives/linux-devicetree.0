@@ -1,49 +1,38 @@
-From: <Yasunari.Takiguchi@sony.com>
-Subject: [PATCH 5/5] media: Update MAINTAINERS file for CXD2880
-Date: Thu, 6 Apr 2017 17:06:03 +0900
-Message-ID: <1491465963-9793-1-git-send-email-Yasunari.Takiguchi@sony.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tbird20d@gmail.com, frowand.list@gmail.com, Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>, Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>, Hideki Nozawa <Hideki.Nozawa@sony.com>, Kota Yonezawa <Kota.Yonezawa@sony.com>, Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>, Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+From: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of: Add vendor prefix for Nordic Semiconductor
+Date: Thu,  6 Apr 2017 03:29:27 -0500
+Message-ID: <20170406082927.31405-1-kumar.gala@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+Nordic Semiconductor is a semiconductor company specializing in ARM
+Cortex-M based SoCs for low-power wireless communication, especially
+Bluetooth.
 
-This is MAINTAINERS file update about the driver for
-Sony CXD2880 DVB-T2/T tuner + demodulator.
-
-Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
-Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
-Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
-Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
-Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
-Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+Signed-off-by: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- MAINTAINERS |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6640601..c34335d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8034,6 +8034,15 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Supported
- F:	drivers/media/dvb-frontends/cxd2841er*
- 
-+MEDIA DRIVERS FOR CXD2880
-+M:	Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
-+L:	linux-media@vger.kernel.org
-+W:	http://linuxtv.org/
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Supported
-+F:	drivers/media/dvb-frontends/cxd2880/*
-+F:	drivers/media/spi/cxd2880*
-+
- MEDIA DRIVERS FOR HORUS3A
- M:	Sergey Kozlov <serjk@netup.ru>
- M:	Abylay Ospan <aospan@netup.ru>
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ec0bfb9..dd9e7b2 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -212,6 +212,7 @@ newhaven	Newhaven Display International
+ ni	National Instruments
+ nintendo	Nintendo
+ nokia	Nokia
++nordic	Nordic Semiconductor
+ nuvoton	Nuvoton Technology Corporation
+ nvd	New Vision Display
+ nvidia	NVIDIA
 -- 
-1.7.9.5
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
