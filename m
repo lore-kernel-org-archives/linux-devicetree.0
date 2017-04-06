@@ -1,105 +1,97 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v2] Extend pca9532 device tree support
-Date: Thu, 6 Apr 2017 17:50:05 +0200
-Message-ID: <20170406155005.GA10363@amd>
-References: <1490880833-22199-1-git-send-email-fb@ltec.ch>
- <b54c77d5-b4f7-9517-8c5b-9200c766204a@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] [media] imx: csi: retain current field order and
+ colorimetry setting as default
+Date: Thu, 06 Apr 2017 18:01:21 +0200
+Message-ID: <1491494481.2392.102.camel@pengutronix.de>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+         <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
+         <1491486929.2392.29.camel@pengutronix.de>
+         <0f9690f8-c7f6-59ff-9e3e-123af9972d4b@xs4all.nl>
+         <1491490451.2392.70.camel@pengutronix.de>
+         <59e72974-bfb0-6061-8b13-5f13f8723ba6@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b54c77d5-b4f7-9517-8c5b-9200c766204a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <59e72974-bfb0-6061-8b13-5f13f8723ba6-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Felix Brack <fb-GovowT2ENgg@public.gmane.org>, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-medi
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2017-04-06 at 17:43 +0200, Hans Verkuil wrote:
+> On 04/06/2017 04:54 PM, Philipp Zabel wrote:
+> > On Thu, 2017-04-06 at 16:20 +0200, Hans Verkuil wrote:
+> >> On 04/06/2017 03:55 PM, Philipp Zabel wrote:
+> >>> If the the field order is set to ANY in set_fmt, choose the currently
+> >>> set field order. If the colorspace is set to DEFAULT, choose the current
+> >>> colorspace.  If any of xfer_func, ycbcr_enc or quantization are set to
+> >>> DEFAULT, either choose the current setting, or the default setting for the
+> >>> new colorspace, if non-DEFAULT colorspace was given.
+> >>>
+> >>> This allows to let field order and colorimetry settings be propagated
+> >>> from upstream by calling media-ctl on the upstream entity source pad,
+> >>> and then call media-ctl on the sink pad to manually set the input frame
+> >>> interval, without changing the already set field order and colorimetry
+> >>> information.
+> >>>
+> >>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >>> ---
+> >>> This is based on imx-media-staging-md-v14, and it is supposed to allow
+> >>> configuring the pipeline with media-ctl like this:
+> >>>
+> >>> 1) media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY8_1X16/1920x1080]"
+> >>> 2) media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY8_1X16/1920x108]"
+> >>> 3) media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY8_1X16/1920x1080]"
+> >>> 4) media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60]"
+> >>> 5) media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080@1/30]"
+> >>>
+> >>> Without having step 4) overwrite the colorspace and field order set on
+> >>> 'ipu1_csi0':0 by the propagation in step 3).
+> >>> ---
+> >>>  drivers/staging/media/imx/imx-media-csi.c | 34 +++++++++++++++++++++++++++++++
+> >>>  1 file changed, 34 insertions(+)
+> >>>
+> >>> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+> >>> index 64dc454f6b371..d94ce1de2bf05 100644
+> >>> --- a/drivers/staging/media/imx/imx-media-csi.c
+> >>> +++ b/drivers/staging/media/imx/imx-media-csi.c
+> >>> @@ -1325,6 +1325,40 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+> >>>  	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
+> >>>  
+> >>>  	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
+> >>> +
+> >>> +	/* Retain current field setting as default */
+> >>> +	if (sdformat->format.field == V4L2_FIELD_ANY)
+> >>> +		sdformat->format.field = fmt->field;
+> >>
+> >> sdformat->format.field should never be FIELD_ANY. If it is, then that's a
+> >> subdev bug and I'm pretty sure FIELD_NONE was intended.
+> > 
+> > This is the subdev. sdformat is passed in from userspace, so we have to
+> > deal with it being set to ANY. I'm trying hard right now not to return
+> > ANY though. The values in sdformat->format are applied to fmt down
+> > below.
+> 
+> Do you have a git tree with this patch? It is really hard to review without
+> having the full imx-media-csi.c source.
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch applies on top of
 
-Hi!
+  https://github.com/slongerbeam/mediatree.git imx-media-staging-md-v14
 
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/=
-Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> > index 198f3ba..8374075 100644
-> > --- a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> > +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> > @@ -17,6 +17,8 @@ Optional sub-node properties:
-> >  	- label: see Documentation/devicetree/bindings/leds/common.txt
-> >  	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (de=
-fault NONE)
-> >  	- linux,default-trigger: see Documentation/devicetree/bindings/leds/c=
-ommon.txt
-> > +	- default-state: see Documentation/devicetree/bindings/leds/common.txt
-> > +	  This property is only valid for sub-nodes of type <PCA9532_TYPE_LED=
->.
-> > =20
-> >  Example:
-> >    #include <dt-bindings/leds/leds-pca9532.h>
-> > @@ -33,6 +35,14 @@ Example:
-> >        label =3D "pca:green:power";
-> >        type =3D <PCA9532_TYPE_LED>;
-> >      };
-> > +    kernel-booting {
-> > +    	type =3D <PCA9532_TYPE_LED>;
-> > +    	default-state =3D "on";
-> > +    };
-> > +    sys-stat {
-> > +    	type =3D <PCA9532_TYPE_LED>;
-> > +    	default-state =3D "keep"; // don't touch, was set by U-Boot
-> > +    };
->=20
-> Adjusted above indentation to match the preceding lines.
+I have uploaded a branch
 
-> > @@ -475,6 +494,16 @@ pca9532_of_populate_pdata(struct device *dev, stru=
-ct device_node *np)
-> >  		of_property_read_u32(child, "type", &pdata->leds[i].type);
-> >  		of_property_read_string(child, "linux,default-trigger",
-> >  					&pdata->leds[i].default_trigger);
-> > +		if (!of_property_read_string(child, "default-state", &state)) {
-> > +			if (!strcmp(state, "on"))
-> > +				pdata->leds[i].state =3D PCA9532_ON;
-> > +			else if (!strcmp(state, "keep"))
-> > +				pdata->leds[i].state =3D PCA9532_KEEP;
-> > +			else if (!strcmp(state, "pwm0"))
-> > +				pdata->leds[i].state =3D PCA9532_PWM0;
-> > +			else if (!strcmp(state, "pwm1"))
-> > +				pdata->leds[i].state =3D PCA9532_PWM1;
-> > +		}
-> >  		if (++i >=3D maxleds) {
-> >  			of_node_put(child);
-> >  			break;
+  git://git.pengutronix.de/git/pza/linux imx-media-staging-md-v14+color
 
-This seems to look for "pwm0" and "pwm1" strings, which do not seem to
-be documented.
+with the patch applied on top.
 
-Plus... is it useful to have default-state? We already have default
-trigger. If we keep the value by default (on PC, we do something like
-that) this patch should not be neccessary?
-									Pavel
-								=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> I think one problem is that it is not clearly defined how subdevs and colorspace
+> information should work.
 
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+regards
+Philipp
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljmY60ACgkQMOfwapXb+vJjTwCfTmzz6spv13i2UXy2qJa4DYtt
-7zIAoJM4jqHHzmMOLst0SGNtz9sYj800
-=/w/V
------END PGP SIGNATURE-----
-
---1yeeQ81UyVL57Vl7--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
