@@ -1,121 +1,107 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH] [media] imx: csi: retain current field order and
- colorimetry setting as default
-Date: Thu, 6 Apr 2017 16:20:21 +0200
-Message-ID: <0f9690f8-c7f6-59ff-9e3e-123af9972d4b@xs4all.nl>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
- <1491486929.2392.29.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 0/4] iio: adc: Maxim max9611 driver
+Date: Thu,  6 Apr 2017 16:20:50 +0200
+Message-ID: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491486929.2392.29.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel@driverdev
+To: geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2017 03:55 PM, Philipp Zabel wrote:
-> If the the field order is set to ANY in set_fmt, choose the currently
-> set field order. If the colorspace is set to DEFAULT, choose the current
-> colorspace.  If any of xfer_func, ycbcr_enc or quantization are set to
-> DEFAULT, either choose the current setting, or the default setting for the
-> new colorspace, if non-DEFAULT colorspace was given.
-> 
-> This allows to let field order and colorimetry settings be propagated
-> from upstream by calling media-ctl on the upstream entity source pad,
-> and then call media-ctl on the sink pad to manually set the input frame
-> interval, without changing the already set field order and colorimetry
-> information.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> This is based on imx-media-staging-md-v14, and it is supposed to allow
-> configuring the pipeline with media-ctl like this:
-> 
-> 1) media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY8_1X16/1920x1080]"
-> 2) media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY8_1X16/1920x108]"
-> 3) media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY8_1X16/1920x1080]"
-> 4) media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60]"
-> 5) media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080@1/30]"
-> 
-> Without having step 4) overwrite the colorspace and field order set on
-> 'ipu1_csi0':0 by the propagation in step 3).
-> ---
->  drivers/staging/media/imx/imx-media-csi.c | 34 +++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-> index 64dc454f6b371..d94ce1de2bf05 100644
-> --- a/drivers/staging/media/imx/imx-media-csi.c
-> +++ b/drivers/staging/media/imx/imx-media-csi.c
-> @@ -1325,6 +1325,40 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
->  	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
->  
->  	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
-> +
-> +	/* Retain current field setting as default */
-> +	if (sdformat->format.field == V4L2_FIELD_ANY)
-> +		sdformat->format.field = fmt->field;
+Hi there,
+   fifth round for max9611/9612 ADC iio driver.
 
-sdformat->format.field should never be FIELD_ANY. If it is, then that's a
-subdev bug and I'm pretty sure FIELD_NONE was intended.
+I have changed dt-bindings to use "shunt-resistor-micro-ohms" as ina2xx does,
+and changed the sysfs attributes exposing the shunt resistor value to use Ohms
+as units.
 
-> +
-> +	/* Retain current colorspace setting as default */
-> +	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
-> +		sdformat->format.colorspace = fmt->colorspace;
+Output of iio_info on Salvator-X board for max9611 chip installed on
+VDD_0.8 lines.
+The VDD_0.8 line powers the CPU cluster and on-board RAM.
 
-No! Subdevs should never return COLORSPACE_DEFAULT. If they do, then fix
-them. If this happens a lot (I'm not sure how reliably subdevs fill this
-in) you could set it to COLORSPACE_RAW. Perhaps with a WARN_ON_ONCE.
+        iio:device0: max9611
+                5 channels found:
+                        voltage0:  (input)
+                        1 channel-specific attributes found:
+                                attr 0: input value: 4.085000000
+                        voltage1:  (input)
+                        3 channel-specific attributes found:
+                                attr 0: scale value: 14
+                                attr 1: offset value: 1
+                                attr 2: raw value: 59
+                        power:  (input)
+                        2 channel-specific attributes found:
+                                attr 0: shunt_resistor value: 5.000
+                                attr 1: input value: 663.404000000
+                        current:  (input)
+                        2 channel-specific attributes found:
+                                attr 0: shunt_resistor value: 5.000
+                                attr 1: input value: 817.000000000
+                        temp:  (input)
+                        2 channel-specific attributes found:
+                                attr 0: scale value: 480.076812289
+                                attr 1: raw value: 59
 
-> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
-> +			sdformat->format.xfer_func = fmt->xfer_func;
-> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
-> +			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
-> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
-> +			sdformat->format.quantization = fmt->quantization;
+The collected information represent:
 
-Nack. This is meaningless.
+* voltage0 (current sense voltage) Vcsa
+  voltage drop between RS+ and RS- input = 4,085 mV
+* voltage1: (common input voltage) Vcim
+  voltage at RS+ input = (59 - 1) * 14 = 812 mV
+* current flowing on shunt resistor (Icsa)
+  = Vcsa / Rshunt = 817 mA
+* power load on the sensed line (Pload)
+  = Vcim * Icsa = 663 m
+* die temperature = (57 * 480.07) = 27360 milli Celsius
 
-> +	} else {
-> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
-> +			sdformat->format.xfer_func =
-> +				V4L2_MAP_XFER_FUNC_DEFAULT(
-> +						sdformat->format.colorspace);
-> +		}
-> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
-> +			sdformat->format.ycbcr_enc =
-> +				V4L2_MAP_YCBCR_ENC_DEFAULT(
-> +						sdformat->format.colorspace);
-> +		}
-> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
-> +			sdformat->format.quantization =
-> +				V4L2_MAP_QUANTIZATION_DEFAULT(
-> +						cc->cs != IPUV3_COLORSPACE_YUV,
-> +						sdformat->format.colorspace,
-> +						sdformat->format.ycbcr_enc);
-> +		}
+v1 -> v2:
+- Drop wildcard (max961x) in driver, documentation and dt-bindings. Use
+  max9611 instead.
+- Make 3 processed channels for csa voltage, csa current and power load
+- Remove wrapper functions around i2c buffer access
+- Add locking in read_raw()
+- Make 2 separate attributes for shunt resistor: current and power
+- Renamed shunt resistor attribute
+- Fixed several review comments
 
-This isn't wrong, but it is perfectly fine to keep the DEFAULT here and let
-the application call V4L2_MAP_.
+v2 -> v3:
+- Incorporated Geert's suggestions on using a more generic name for ADC nodes
+  in device tree
+- Changed "maxim,shunt-resistor-uohm" to "shunt-resistor-uohm"
+- Update documentation accordingly to the two previous changes
 
-I get the feeling this patch is a workaround for subdev errors. Either that,
-or the commit log doesn't give me enough information to really understand the
-problem that's being addressed here.
+v3 -> v4:
+- Move all locking to read_single() function
+- Re-structure read_raw() with Jonathan's and Peter's comments
+- Rename some defines pre-pending MAX9611 prefix
+- Use values from .comaptible entries for device name
+- Change temperature scale to have a value in milli Celsius
+- Simplify init routine using read_single
 
-Regards,
+v4 -> v5:
+- Change device tree property name for shunt resistor in
+  "shunt-resistor-micro-ohms"
+- Display shunt resistor value with Ohms as units in sysfs
 
-	Hans
+Jacopo Mondi (4):
+  Documentation: dt-bindings: iio: Add max9611 ADC
+  iio: Documentation: Add max9611 sysfs documentation
+  iio: adc: Add Maxim max9611 ADC driver
+  arm64: dts: salvator-x: Add current sense amplifiers
 
-> +	}
-> +
->  	*fmt = sdformat->format;
->  
->  	if (sdformat->pad == CSI_SINK_PAD) {
-> 
+ .../ABI/testing/sysfs-bus-iio-adc-max9611          |  17 +
+ .../devicetree/bindings/iio/adc/max9611.txt        |  27 +
+ arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts |  18 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/max9611.c                          | 587 +++++++++++++++++++++
+ 6 files changed, 660 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/max9611.txt
+ create mode 100644 drivers/iio/adc/max9611.c
+
+--
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
