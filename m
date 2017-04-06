@@ -1,22 +1,22 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: cs35l35: Improve power down time" to the asoc tree
-Date: Thu, 06 Apr 2017 19:55:17 +0100
-Message-ID: <E1cwCYv-0001k5-Hq@debutante>
-References: <1491483134-28079-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: Applied "regulator: helpers: Add regmap set_pull_down helper" to the regulator tree
+Date: Thu, 06 Apr 2017 19:55:33 +0100
+Message-ID: <E1cwCZB-0001u0-0R@debutante>
+References: <1490710484-25277-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491483134-28079-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <1490710484-25277-5-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgbrian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.orglinux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: cs35l35: Improve power down time
+   regulator: helpers: Add regmap set_pull_down helper
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,63 +37,83 @@ to this mail.
 Thanks,
 Mark
 
->From 2c84afb52ebea59e9862fcb8234126b7ae1d1960 Mon Sep 17 00:00:00 2001
+>From f7d37bc3cb20828ac43b22cbd40222877ee2c46a Mon Sep 17 00:00:00 2001
 From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Date: Thu, 6 Apr 2017 13:52:12 +0100
-Subject: [PATCH] ASoC: cs35l35: Improve power down time
+Date: Tue, 28 Mar 2017 15:14:41 +0100
+Subject: [PATCH] regulator: helpers: Add regmap set_pull_down helper
 
-Shorten the time it takes to power down the amp by disabling the volume
-ramp whilst doing the final shutdown. The driver has already muted the
-amplifier at this stage so doing the volume ramp serves no purpose.
+Add a helper function regulator_set_pull_down_regmap to allow regmap
+based regulators to easily enable pull down.
 
 Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Acked-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- sound/soc/codecs/cs35l35.c | 8 ++++++++
- sound/soc/codecs/cs35l35.h | 3 +++
- 2 files changed, 11 insertions(+)
+ drivers/regulator/helpers.c      | 18 ++++++++++++++++++
+ include/linux/regulator/driver.h |  8 ++++++++
+ 2 files changed, 26 insertions(+)
 
-diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
-index 9688274f7c90..1db07a6296a4 100644
---- a/sound/soc/codecs/cs35l35.c
-+++ b/sound/soc/codecs/cs35l35.c
-@@ -187,6 +187,10 @@ static int cs35l35_sdin_event(struct snd_soc_dapm_widget *w,
- 		regmap_update_bits(cs35l35->regmap, CS35L35_PWRCTL1,
- 					  CS35L35_PDN_ALL_MASK, 1);
+diff --git a/drivers/regulator/helpers.c b/drivers/regulator/helpers.c
+index a75e7da49af8..2ae7c3ac5940 100644
+--- a/drivers/regulator/helpers.c
++++ b/drivers/regulator/helpers.c
+@@ -464,6 +464,24 @@ int regulator_set_soft_start_regmap(struct regulator_dev *rdev)
+ EXPORT_SYMBOL_GPL(regulator_set_soft_start_regmap);
  
-+		/* Already muted, so disable volume ramp for faster shutdown */
-+		regmap_update_bits(cs35l35->regmap, CS35L35_AMP_DIG_VOL_CTL,
-+				   CS35L35_AMP_DIGSFT_MASK, 0);
+ /**
++ * regulator_set_pull_down_regmap - Default set_pull_down() using regmap
++ *
++ * @rdev: device to operate on.
++ */
++int regulator_set_pull_down_regmap(struct regulator_dev *rdev)
++{
++	unsigned int val;
 +
- 		reinit_completion(&cs35l35->pdn_done);
++	val = rdev->desc->pull_down_val_on;
++	if (!val)
++		val = rdev->desc->pull_down_mask;
++
++	return regmap_update_bits(rdev->regmap, rdev->desc->pull_down_reg,
++				  rdev->desc->pull_down_mask, val);
++}
++EXPORT_SYMBOL_GPL(regulator_set_pull_down_regmap);
++
++/**
+  * regulator_get_bypass_regmap - Default get_bypass() using regmap
+  *
+  * @rdev: device to operate on.
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index 1054c033e783..8a9078dd2a5f 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -296,6 +296,10 @@ enum regulator_type {
+  * @soft_start_mask: Mask for control when using regmap set_soft_start
+  * @soft_start_val_on: Enabling value for control when using regmap
+  *                     set_soft_start
++ * @pull_down_reg: Register for control when using regmap set_pull_down
++ * @pull_down_mask: Mask for control when using regmap set_pull_down
++ * @pull_down_val_on: Enabling value for control when using regmap
++ *                     set_pull_down
+  *
+  * @enable_time: Time taken for initial enable of regulator (in uS).
+  * @off_on_delay: guard time (in uS), before re-enabling a regulator
+@@ -352,6 +356,9 @@ struct regulator_desc {
+ 	unsigned int soft_start_reg;
+ 	unsigned int soft_start_mask;
+ 	unsigned int soft_start_val_on;
++	unsigned int pull_down_reg;
++	unsigned int pull_down_mask;
++	unsigned int pull_down_val_on;
  
- 		ret = wait_for_completion_timeout(&cs35l35->pdn_done,
-@@ -199,6 +203,10 @@ static int cs35l35_sdin_event(struct snd_soc_dapm_widget *w,
- 		regmap_update_bits(cs35l35->regmap, CS35L35_CLK_CTL1,
- 					CS35L35_MCLK_DIS_MASK,
- 					1 << CS35L35_MCLK_DIS_SHIFT);
-+
-+		regmap_update_bits(cs35l35->regmap, CS35L35_AMP_DIG_VOL_CTL,
-+				   CS35L35_AMP_DIGSFT_MASK,
-+				   1 << CS35L35_AMP_DIGSFT_SHIFT);
- 		break;
- 	default:
- 		dev_err(codec->dev, "Invalid event = 0x%x\n", event);
-diff --git a/sound/soc/codecs/cs35l35.h b/sound/soc/codecs/cs35l35.h
-index 156d2f0e6fd8..54e9ac536b20 100644
---- a/sound/soc/codecs/cs35l35.h
-+++ b/sound/soc/codecs/cs35l35.h
-@@ -190,6 +190,9 @@
- #define CS35L35_AMP_GAIN_ZC_MASK	0x10
- #define CS35L35_AMP_GAIN_ZC_SHIFT	4
+ 	unsigned int enable_time;
  
-+#define CS35L35_AMP_DIGSFT_MASK		0x02
-+#define CS35L35_AMP_DIGSFT_SHIFT	1
-+
- /* CS35L35_SP_FMT_CTL3 */
- #define CS35L35_SP_I2S_DRV_MASK		0x03
- #define CS35L35_SP_I2S_DRV_SHIFT	0
+@@ -484,6 +491,7 @@ int regulator_set_voltage_time_sel(struct regulator_dev *rdev,
+ int regulator_set_bypass_regmap(struct regulator_dev *rdev, bool enable);
+ int regulator_get_bypass_regmap(struct regulator_dev *rdev, bool *enable);
+ int regulator_set_soft_start_regmap(struct regulator_dev *rdev);
++int regulator_set_pull_down_regmap(struct regulator_dev *rdev);
+ 
+ int regulator_set_active_discharge_regmap(struct regulator_dev *rdev,
+ 					  bool enable);
 -- 
 2.11.0
 
