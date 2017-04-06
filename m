@@ -1,87 +1,124 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V10 06/12] of: device: Fix overflow of coherent_dma_mask
-Date: Thu, 6 Apr 2017 08:56:33 -0500
-Message-ID: <CAL_JsqLsE378hfs=xNvSdPV2r+7H81cAFzOwtda2W+mFVoohuA@mail.gmail.com>
-References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
-	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
-	<1491301105-5274-7-git-send-email-sricharan@codeaurora.org>
-	<58E5E7B7.1050400@gmail.com>
-	<b081f333-084d-ffa5-635f-f7f1c0232ac3@arm.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 1/1] gpio: core: Decouple open drain/source flag with active low/high
+Date: Thu, 6 Apr 2017 19:05:52 +0530
+Message-ID: <1491485752-28030-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <b081f333-084d-ffa5-635f-f7f1c0232ac3-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Nowicki <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Sudeep Holla <sudeep.holla>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, frowand.list@gmail.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 6, 2017 at 5:24 AM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 06/04/17 08:01, Frank Rowand wrote:
->> On 04/04/17 03:18, Sricharan R wrote:
->>> Size of the dma-range is calculated as coherent_dma_mask + 1
->>> and passed to arch_setup_dma_ops further. It overflows when
->>> the coherent_dma_mask is set for full 64 bits 0xFFFFFFFFFFFFFFFF,
->>> resulting in size getting passed as 0 wrongly. Fix this by
->>> passsing in max(mask, mask + 1). Note that in this case
->>> when the mask is set to full 64bits, we will be passing the mask
->>> itself to arch_setup_dma_ops instead of the size. The real fix
->>> for this should be to make arch_setup_dma_ops receive the
->>> mask and handle it, to be done in the future.
->>>
->>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> ---
->>>  drivers/of/device.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/of/device.c b/drivers/of/device.c
->>> index c17c19d..c2ae6bb 100644
->>> --- a/drivers/of/device.c
->>> +++ b/drivers/of/device.c
->>> @@ -107,7 +107,7 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->>>      ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
->>>      if (ret < 0) {
->>>              dma_addr = offset = 0;
->>> -            size = dev->coherent_dma_mask + 1;
->>> +            size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
->>>      } else {
->>>              offset = PFN_DOWN(paddr - dma_addr);
->>>              dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->>>
->>
->> NACK.
->>
->> Passing an invalid size to arch_setup_dma_ops() is only part of the problem.
->> size is also used in of_dma_configure() before calling arch_setup_dma_ops():
->>
->>         dev->coherent_dma_mask = min(dev->coherent_dma_mask,
->>                                      DMA_BIT_MASK(ilog2(dma_addr + size)));
->>         *dev->dma_mask = min((*dev->dma_mask),
->>                              DMA_BIT_MASK(ilog2(dma_addr + size)));
->>
->> which would be incorrect for size == 0xffffffffffffffffULL when
->> dma_addr != 0.  So the proposed fix really is not papering over
->> the base problem very well.
->
-> I'm not sure I agree there. Granted, there exist many more problematic
-> aspects than are dealt with here (I've got more patches cooking to sort
-> out some of the other issues we have with dma-ranges), but considering
-> size specifically:
->
-> - It is not possible to explicitly specify a range with a size of 2^64
-> in DT. If someone does specify a size of 0, they've done a silly thing
-> and should not be surprised that it ends badly.
+Currently, the GPIO interface is said to Open Drain if it is Single
+Ended and active LOW. Similarly, it is said as Open Source if it is
+Single Ended and active HIGH.
 
-And because of this, we allow ~0 (both 32 and 64 bit) in DT dma-ranges
-and fix these up as 2^32 and 2^64 sizes.
+The active HIGH/LOW is used in the interface for setting the pin
+state to HIGH or LOW when enabling/disabling the interface.
 
-Rob
+In Open Drain interface, pin is set to HIGH by putting pin in
+high impedance and LOW by driving to the LOW.
+
+In Open Source interface, pin is set to HIGH by driving pin to
+HIGH and set to LOW by putting pin in high impedance.
+
+With above, the Open Drain/Source is unrelated to the active LOW/HIGH
+in interface. There is interface where the enable/disable of interface
+is ether active LOW or HIGH but it is Open Drain type.
+
+Hence decouple the Open Drain with Single Ended + Active LOW and
+Open Source with Single Ended + Active HIGH.
+
+Adding different flag for the Open Drain/Open Source which is valid
+only when Single ended flag is enabled.
+
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+ drivers/gpio/gpiolib-of.c       |  2 +-
+ drivers/gpio/gpiolib.c          |  4 +++-
+ include/dt-bindings/gpio/gpio.h | 12 ++++++++----
+ include/linux/of_gpio.h         |  1 +
+ 4 files changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 975b9f6..b13b7c7 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -147,7 +147,7 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+ 		*flags |= GPIO_ACTIVE_LOW;
+ 
+ 	if (of_flags & OF_GPIO_SINGLE_ENDED) {
+-		if (of_flags & OF_GPIO_ACTIVE_LOW)
++		if (of_flags & OF_GPIO_OPEN_DRAIN)
+ 			*flags |= GPIO_OPEN_DRAIN;
+ 		else
+ 			*flags |= GPIO_OPEN_SOURCE;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 4aa1e78..c22e572 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3333,6 +3333,7 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 	unsigned long lflags = 0;
+ 	bool active_low = false;
+ 	bool single_ended = false;
++	bool open_drain = false;
+ 	int ret;
+ 
+ 	if (!fwnode)
+@@ -3346,6 +3347,7 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 		if (!IS_ERR(desc)) {
+ 			active_low = flags & OF_GPIO_ACTIVE_LOW;
+ 			single_ended = flags & OF_GPIO_SINGLE_ENDED;
++			open_drain = flags & OF_GPIO_OPEN_DRAIN;
+ 		}
+ 	} else if (is_acpi_node(fwnode)) {
+ 		struct acpi_gpio_info info;
+@@ -3366,7 +3368,7 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 		lflags |= GPIO_ACTIVE_LOW;
+ 
+ 	if (single_ended) {
+-		if (active_low)
++		if (open_drain)
+ 			lflags |= GPIO_OPEN_DRAIN;
+ 		else
+ 			lflags |= GPIO_OPEN_SOURCE;
+diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
+index c673d2c..b4f54da 100644
+--- a/include/dt-bindings/gpio/gpio.h
++++ b/include/dt-bindings/gpio/gpio.h
+@@ -17,11 +17,15 @@
+ #define GPIO_PUSH_PULL 0
+ #define GPIO_SINGLE_ENDED 2
+ 
++/* Bit 2 express Open drain or open source */
++#define GPIO_LINE_OPEN_SOURCE 0
++#define GPIO_LINE_OPEN_DRAIN 4
++
+ /*
+- * Open Drain/Collector is the combination of single-ended active low,
+- * Open Source/Emitter is the combination of single-ended active high.
++ * Open Drain/Collector is the combination of single-ended open drain interface.
++ * Open Source/Emitter is the combination of single-ended open source interface.
+  */
+-#define GPIO_OPEN_DRAIN (GPIO_SINGLE_ENDED | GPIO_ACTIVE_LOW)
+-#define GPIO_OPEN_SOURCE (GPIO_SINGLE_ENDED | GPIO_ACTIVE_HIGH)
++#define GPIO_OPEN_DRAIN (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN)
++#define GPIO_OPEN_SOURCE (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_SOURCE)
+ 
+ #endif
+diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+index 3f87ea5..1e089d5 100644
+--- a/include/linux/of_gpio.h
++++ b/include/linux/of_gpio.h
+@@ -30,6 +30,7 @@ struct device_node;
+ enum of_gpio_flags {
+ 	OF_GPIO_ACTIVE_LOW = 0x1,
+ 	OF_GPIO_SINGLE_ENDED = 0x2,
++	OF_GPIO_OPEN_DRAIN = 0x4,
+ };
+ 
+ #ifdef CONFIG_OF_GPIO
+-- 
+2.1.4
+
