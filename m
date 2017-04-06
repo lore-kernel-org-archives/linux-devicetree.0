@@ -1,124 +1,123 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: update the
- Allwinner GPADC device tree binding for H3
-Date: Thu, 06 Apr 2017 03:11:38 +0800
-Message-ID: <58e61093.8c9d810a.74942.1a49SMTPIN_ADDED_MISSING@gmr-mx.google.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC] [media] imx: assume MEDIA_ENT_F_ATV_DECODER entities
+ output video on pad 1
+Date: Thu, 06 Apr 2017 11:57:26 +0200
+Message-ID: <1491472646.2392.23.camel@pengutronix.de>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+         <1490661656-10318-20-git-send-email-steve_longerbeam@mentor.com>
+         <1490894749.2404.33.camel@pengutronix.de>
+         <20170404231053.GE7909@n2100.armlinux.org.uk>
+         <19f0ce92-cad6-8950-8018-e3224e2bf266@gmail.com>
+         <7235285c-f39a-64bc-195a-11cfde9e67c5@gmail.com>
+         <20170405082134.GF7909@n2100.armlinux.org.uk>
+         <1491384859.2381.51.camel@pengutronix.de>
+         <20170405115336.7135e542@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBFNBTDDQKGQEHHE62EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170405115336.7135e542-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2017-04-05 at 11:53 -0300, Mauro Carvalho Chehab wrote:
+[...]
+> There are a number of drivers that can work with different
+> types of TV demodulators. Typical examples of such hardware can be
+> found at em28xx, saa7134, cx88 drivers (among lots of other drivers).
+> Those drivers don't use the subdev API. Instead, they use a generic
+> helper function with sets the pipelines, based on the pad number.
+> 
+> The problem here is that, currently, both MC API and MC core
+> lacks a way to identify PAD ports per type, as the only information
+> that a bridge driver has is a pad number. So, in order for a
+> generic helper function to work, we had to hardcode pad numbers,
+> in a way that it would work for all possible types of demods.
+> 
+> It shouldn't be hard to add a "pad_type" information at media_pad
+> struct, but passing such info to userspace requires a new API
+> (we're calling it as "properties API"). Sakari was meant to send
+> us an updated RFC for it[1] with a patchset, back in 2015, but
+> this never happened.
+> 
+> [1] https://linuxtv.org/news.php?entry=2015-08-17.mchehab
+[...]
 
-2017=E5=B9=B44=E6=9C=886=E6=97=A5 03:04=E4=BA=8E Rob Herring <robh@kernel.o=
-rg>=E5=86=99=E9=81=93=EF=BC=9A
+That would be most useful.
+
+> So, in short, the tvp5150 demod doesn't decode audio, but there
+> are other demods that do it.
+> 
+> In the case of VBI, tvp5150 has actually two ways of reporting
+> it:
+> 
+> 1) via YOUT[7:0] pins. VBI information is transmitted as a
+>    set of raw samples, via an ancillary data block, during
+>    vertical/horizontal blanking intervals. So, yes, it shares
+>    the same hardware output, although the VBI contents are
+>    actually multiplexed there. Please notice that not all
+>    video out PADS encapsulate raw VBI the same way as tvp5150
+>    (and some devices even don't support raw VBI, like saa7110 and
+>    some models supported by saa7115 driver).
+
+This is the physical interface that corresponds to the output port
+(should be port@1) in the device tree. It should correspond to the video
+output media entity pad.
+What is unclear to is me whether the VBI media entity pad also should
+correspond to the same physical interface / DT port.
+
+> 2) via an interrupt that indicates that it decoded VBI data. The
+>    VBI information itself is there on FIFO, accessible via a set of
+>    registers (see "VBI Data processor" chapter at the datasheet).
 >
-> On Tue, Apr 4, 2017 at 10:02 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:=
-=20
-> >=20
-> >=20
-> > =E5=9C=A8 2017=E5=B9=B404=E6=9C=8804=E6=97=A5 22:47, Rob Herring =E5=86=
-=99=E9=81=93:=20
-> >>=20
-> >> On Sun, Apr 02, 2017 at 09:33:01PM +0800, Icenowy Zheng wrote:=20
-> >>>=20
-> >>> Allwinner H3 features a thermal sensor like the one in A33, but has i=
-ts=20
-> >>> register re-arranged, the clock divider moved to CCU (originally the=
-=20
-> >>> clock divider is in ADC) and added a pair of bus clock and reset.=20
-> >>>=20
-> >>> Update the binding document to cover H3.=20
-> >>>=20
-> >>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>=20
-> >>> ---=20
-> >>>=C2=A0 .../devicetree/bindings/mfd/sun4i-gpadc.txt=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 23=20
-> >>> ++++++++++++++++++++--=20
-> >>>=C2=A0 1 file changed, 21 insertions(+), 2 deletions(-)=20
-> >>>=20
-> >>> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt=20
-> >>> b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt=20
-> >>> index badff3611a98..7753133ca0ff 100644=20
-> >>> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt=20
-> >>> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt=20
-> >>> @@ -4,12 +4,20 @@ The Allwinner SoCs all have an ADC that can also ac=
-t as=20
-> >>> a thermal sensor=20
-> >>>=C2=A0 and sometimes as a touchscreen controller.=20
-> >>>=20
-> >>>=C2=A0 Required properties:=20
-> >>> -=C2=A0 - compatible: "allwinner,sun8i-a33-ths",=20
-> >>> +=C2=A0 - compatible: must contain one of the following compatibles:=
-=20
-> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 - "allwinner,sun8i-a33-ths"=20
-> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 - "allwinner,sun8i-h3-ths"=20
-> >>>=C2=A0=C2=A0=C2=A0 - reg: mmio address range of the chip,=20
-> >>>=C2=A0=C2=A0=C2=A0 - #thermal-sensor-cells: shall be 0,=20
-> >>>=C2=A0=C2=A0=C2=A0 - #io-channel-cells: shall be 0,=20
-> >>>=20
-> >>> -Example:=20
-> >>> +Required properties for the following compatibles:=20
-> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 - "allwinner,sun8i-h3-ths"=20
-> >>> +=C2=A0 - clocks: the bus clock and the input clock of the ADC,=20
-> >>> +=C2=A0 - clock-names: should be "bus" and "ths",=20
-> >>> +=C2=A0 - resets: the bus reset of the ADC,=20
-> >>> +=20
-> >>> +Example for A33:=20
-> >>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ths: ths@01c25000 {=
-=20
-> >>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "allwinner,sun8i-a33-ths";=20
-> >>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x01c25000 0x100>;=20
-> >>> @@ -17,6 +25,17 @@ Example:=20
-> >>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 #io-channel-cells =3D <0>;=20
-> >>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };=20
-> >>>=20
-> >>> +Example for H3:=20
-> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ths: ths@01c25000 {=20
-> >>=20
-> >>=20
-> >> adc@...=20
-> >=20
-> >=20
-> > It's a thermal sensor, so I think call it THS is more appropriate=20
-> > here. It's implemented as an ADC driver just because the internal=20
-> > code reusing of Linux. From device tree binding view I choose to=20
-> > call it ths.=20
->
-> There's numerous occurrences in this file and the filename that call it a=
-n ADC.=20
->
-> Furthermore, node names are supposed to be generic, not part #'s or=20
-> whatever you decide to make up. So pick from adc or temperature-sensor=20
-> as those are the standard names .=20
+> Currently, the driver doesn't support (2), because, at the time
+> I wrote the driver, I didn't find a way to read the interrupts generated
+> by tvp5150 at em28xx[1], due to the lack of em28xx documentation,
+> but adding support for it shoudn't be hard. I may eventually do it
+> when I have some time to play with my ISEE hardware.
+> 
+> So, in the case of tvp5150 hardware, have those PADS:
+> 
+> - Input baseband;
+> - Video + raw VBI output;
+> - sliced VBI output.
 
-OK. I will make it :
-ths: temperature-sensor@1c25000
+This DEMOD_PAD_VBI_OUT, does it correspond to 1) or 2) above?
 
-(Calling it temperature sensor is according to the datasheet name)
+> Yet, we need an always unconnected audio output, in order to support
+> different demods out there.
 
->
-> Rob=20
+Are you saying we have to keep pad[DEMOD_PAD_AUDIO_OUT] in tvp5150 even
+though it doesn't exist because the framework can't cope with an
+audio-less ATV_DECODER that only has three pads?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> [1] tvp5150 was written to support some em28xx-based devices
+> 
+> > 
+> > > So, it has one input and three outputs.  How does marking the direction
+> > > in the port node (which would indicate that there was a data flow out of
+> > > TVP5150 into the iMX6 capture) help identify which of those pads should
+> > > be used?
+> > >
+> > > It would eliminate the input pad, but you still have three output pads
+> > > to choose from.
+> > > 
+> > > So no, your idea can't work.  
+> > 
+> > In this case, removal of the VBI and audio pads might make this work,
+> > but in general this is true. In my opinion, to make this truly generic,
+> > we need an interface to ask the driver which media entity pad a given
+> > device tree port corresponds to, as there might not even be a single
+> > media entity corresponding to all ports for more complex devices.
+> 
+> Yes. We also need something like that at the userspace API.
+
+thanks
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
