@@ -1,59 +1,33 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH] [media] imx: csi: retain current field order and
- colorimetry setting as default
-Date: Thu, 6 Apr 2017 15:05:33 +0100
-Message-ID: <20170406140533.GF17774@n2100.armlinux.org.uk>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
- <1491486929.2392.29.camel@pengutronix.de>
+From: Brian Austin <brian.austin@cirrus.com>
+Subject: Re: [PATCH 1/3] ASoC: cs35l35: Improve power down time
+Date: Thu, 6 Apr 2017 09:12:18 -0500
+Message-ID: <737e98d4-2937-4a92-a967-aff80a4ba71b@EX3.ad.cirrus.com>
+References: <1491483134-28079-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1491486929.2392.29.camel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@v
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1491483134-28079-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, brian.austin@cirrus.com, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, lgirdwood@gmail.com, Paul.Handrigan@cirrus.com, robh+dt@kernel.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 03:55:29PM +0200, Philipp Zabel wrote:
-> +
-> +	/* Retain current field setting as default */
-> +	if (sdformat->format.field == V4L2_FIELD_ANY)
-> +		sdformat->format.field = fmt->field;
-> +
-> +	/* Retain current colorspace setting as default */
-> +	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
-> +		sdformat->format.colorspace = fmt->colorspace;
-> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
-> +			sdformat->format.xfer_func = fmt->xfer_func;
-> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
-> +			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
-> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
-> +			sdformat->format.quantization = fmt->quantization;
-> +	} else {
-> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
-> +			sdformat->format.xfer_func =
-> +				V4L2_MAP_XFER_FUNC_DEFAULT(
-> +						sdformat->format.colorspace);
-> +		}
-> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
-> +			sdformat->format.ycbcr_enc =
-> +				V4L2_MAP_YCBCR_ENC_DEFAULT(
-> +						sdformat->format.colorspace);
-> +		}
-> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
-> +			sdformat->format.quantization =
-> +				V4L2_MAP_QUANTIZATION_DEFAULT(
-> +						cc->cs != IPUV3_COLORSPACE_YUV,
-> +						sdformat->format.colorspace,
-> +						sdformat->format.ycbcr_enc);
-> +		}
-> +	}
+On Thu, 6 Apr 2017, Charles Keepax wrote:
 
-Would it make sense for this to be a helper function?
+> Shorten the time it takes to power down the amp by disabling the volume
+> ramp whilst doing the final shutdown. The driver has already muted the
+> amplifier at this stage so doing the volume ramp serves no purpose.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+For the series
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Acked-by: Brian Austin <brian.austin@cirrus.com>
