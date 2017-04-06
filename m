@@ -1,8 +1,7 @@
 From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v5 4/5] ARM: dts: stm32: Add watchdog support for STM32F429
- eval board
-Date: Thu, 6 Apr 2017 14:19:27 +0200
-Message-ID: <1491481168-22213-5-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v5 3/5] ARM: dts: stm32: Add watchdog support for STM32F429 SoC
+Date: Thu, 6 Apr 2017 14:19:26 +0200
+Message-ID: <1491481168-22213-4-git-send-email-yannick.fertre@st.com>
 References: <1491481168-22213-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,28 +21,39 @@ To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob He
 Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds watchdog support for STM32x9I-Eval board.
+Add watchdog into DT for stm32f429 family.
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+Signed-off-by: Yannick FERTRE <yannick.fertre@st.com>
 ---
- arch/arm/boot/dts/stm32429i-eval.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/stm32f429.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 6e4b42a..ff29980 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -144,6 +144,11 @@
- 	};
- };
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 89327d6..d84dd44 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -64,7 +64,7 @@
+ 			clock-frequency = <32768>;
+ 		};
  
-+&iwdg {
-+	status = "okay";
-+	timeout-sec = <32>;
-+};
+-		clk-lsi {
++		clk_lsi: clk-lsi {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <32000>;
+@@ -306,6 +306,13 @@
+ 			status = "disabled";
+ 		};
+ 
++		iwdg: watchdog@40003000 {
++			compatible = "st,stm32-iwdg";
++			reg = <0x40003000 0x400>;
++			clocks = <&clk_lsi>;
++			status = "disabled";
++		};
 +
- &adc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&adc3_in8_pin>;
+ 		usart2: serial@40004400 {
+ 			compatible = "st,stm32-usart", "st,stm32-uart";
+ 			reg = <0x40004400 0x400>;
 -- 
 1.9.1
