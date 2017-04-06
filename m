@@ -1,19 +1,31 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v3 8/9] ARM: dts: imx6qdl-icore-rqs: Add CAN nodes
-Date: Thu,  6 Apr 2017 23:32:14 +0530
-Message-ID: <1491501735-1649-9-git-send-email-jagan@openedev.com>
+Subject: [PATCH v3 5/9] ARM: dts: imx6qdl-icore-rqs: Replace to use
+ simple-audio-card
+Date: Thu,  6 Apr 2017 23:32:11 +0530
+Message-ID: <1491501735-1649-6-git-send-email-jagan@openedev.com>
 References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1491501735-1649-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-Add support for can1 and can2 nodes on Engicam i.CoreM6 RQS
-QDL module boards.
+This patch replace fsl,imx-audio-sgtl5000 and use simple-audio-card
+for Engicam i.CoreM6 RQS QDL platform boards.
 
 Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Matteo Lisi <matteo.lisi@engicam.com>
@@ -21,94 +33,50 @@ Cc: Michael Trimarchi <michael@amarulasolutions.com>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v3:
-- none
-Changes for v2:
-- s/flexcan/can
-- s/pinctrl_flexcan/pinctrl_can
+- Newly added patch
 
- arch/arm/boot/dts/imx6dl-icore-rqs.dts   |  8 ++++++++
- arch/arm/boot/dts/imx6q-icore-rqs.dts    |  8 ++++++++
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 26 ++++++++++++++++++++++++++
- 3 files changed, 42 insertions(+)
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore-rqs.dts b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-index 053e7cb..74335c4 100644
---- a/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-@@ -60,3 +60,11 @@
- 		VDDD-supply = <&reg_1p8v>;
- 	};
- };
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-index d45e4f5..2d4539a 100644
---- a/arch/arm/boot/dts/imx6q-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-@@ -49,6 +49,14 @@
- 	compatible = "engicam,imx6-icore-rqs", "fsl,imx6q";
- };
- 
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-+
- &i2c3 {
- 	sgtl5000: codec@a {
- 		compatible = "fsl,sgtl5000";
 diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-index 0e79a5b..998fa77 100644
+index d24e531..0e79a5b 100644
 --- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -145,6 +145,18 @@
+@@ -120,16 +120,28 @@
+ 	};
+ 
+ 	sound {
+-		compatible = "fsl,imx-audio-sgtl5000";
+-		model = "imx-audio-sgtl5000";
+-		ssi-controller = <&ssi1>;
+-		audio-codec = <&sgtl5000>;
+-		audio-routing =
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "imx6qdl-icore-sgtl5000";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&dailink_master>;
++		simple-audio-card,frame-master = <&dailink_master>;
++		simple-audio-card,widgets =
++			"Microphone", "Mic Jack",
++			"Line", "Line In",
++			"Line", "Line Out",
++			"Headphone", "Headphone Jack";
++		simple-audio-card,routing =
+ 			"MIC_IN", "Mic Jack",
+ 			"Mic Jack", "Mic Bias",
+ 			"Headphone Jack", "HP_OUT";
+-		mux-int-port = <1>;
+-		mux-ext-port = <4>;
++
++		simple-audio-card,cpu {
++			sound-dai = <&ssi1>;
++		};
++
++		dailink_master: simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++		};
  	};
  };
  
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_can1>;
-+	xceiver-supply = <&reg_3p3v>;
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_can2>;
-+	xceiver-supply = <&reg_3p3v>;
-+};
-+
- &clks {
- 	assigned-clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>;
- 	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
-@@ -296,6 +308,20 @@
- 		>;
- 	};
- 
-+	pinctrl_can1: can1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x1b020
-+			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX 0x1b020
-+		>;
-+	};
-+
-+	pinctrl_can2: can2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x1b020
-+			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x1b020
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
 -- 
 1.9.1
