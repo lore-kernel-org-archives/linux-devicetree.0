@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 9/9] ARM: dts: imx6ul-isiot: Add FEC node support
-Date: Thu,  6 Apr 2017 23:32:15 +0530
-Message-ID: <1491501735-1649-10-git-send-email-jagan@openedev.com>
+Subject: [PATCH v3 7/9] ARM: dts: imx6dl-icore: Add touchscreen node
+Date: Thu,  6 Apr 2017 23:32:13 +0530
+Message-ID: <1491501735-1649-8-git-send-email-jagan@openedev.com>
 References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1491501735-1649-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
@@ -12,72 +12,40 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Add support for fec1 node on Engicam Is.IoT variant boards.
+max11801 touchscreen on Engicam iCoreM6 DualLite/Solo module is
+connected via i2c1, so add max11801: touchscreen@48 on i2c1.
 
 Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
 Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
-Changes for v3:
+Changes for v3,v2:
 - none
-Changes for v2:
-- Newly added patch
 
- arch/arm/boot/dts/imx6ul-isiot.dtsi | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm/boot/dts/imx6dl-icore.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 7e947e5..ccc5477 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -129,6 +129,24 @@
+diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
+index ea9ab05..27f37cd 100644
+--- a/arch/arm/boot/dts/imx6dl-icore.dts
++++ b/arch/arm/boot/dts/imx6dl-icore.dts
+@@ -58,6 +58,15 @@
  	status = "okay";
  };
  
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
++&i2c1 {
++	max11801: touchscreen@48 {
++		compatible = "maxim,max11801";
++		reg = <0x48>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
 +	};
 +};
 +
- &pwm8 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm8>;
-@@ -159,6 +177,21 @@
- };
- 
- &iomuxc {
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET2_RX_DATA0__ENET1_MDIO	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_DATA1__ENET1_MDC	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-+			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
+ &i2c3 {
+ 	sgtl5000: codec@a {
+ 		compatible = "fsl,sgtl5000";
 -- 
 1.9.1
 
