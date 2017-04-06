@@ -1,52 +1,122 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: update the
- Allwinner GPADC device tree binding for H3
-Date: Thu, 6 Apr 2017 13:11:58 +0100
-Message-ID: <20170406121158.b33rrt4f54k3dz6f@dell>
-References: <20170406095534.299945C355D@relay.mailchannels.net>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH V8 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
+Date: Thu, 6 Apr 2017 17:47:19 +0530
+Message-ID: <11bb299d-3209-48d8-7583-d2e276eef6fc@codeaurora.org>
+References: <1491457885-5254-1-git-send-email-vivek.gautam@codeaurora.org>
+ <9f928f13-3bee-6f36-6760-095da5a03495@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBEXBTDDQKGQEQAX3C5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170406095534.299945C355D-Y9/x5g2N/Tt0ykcd9G8QkxTxI0vvWBSX@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <9f928f13-3bee-6f36-6760-095da5a03495@ti.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 06 Apr 2017, Icenowy Zheng wrote:
-> 2017=E5=B9=B44=E6=9C=886=E6=97=A5 03:04=E4=BA=8E Rob Herring <robh@kernel=
-.org>=E5=86=99=E9=81=93=EF=BC=9A
-> > On Tue, Apr 4, 2017 at 10:02 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:=
-=20
 
-> > > =E5=9C=A8 2017=E5=B9=B404=E6=9C=8804=E6=97=A5 22:47, Rob Herring =E5=
-=86=99=E9=81=93:=20
 
-> OK. I will make it :
-> ths: temperature-sensor@1c25000
+On 04/06/2017 03:41 PM, Kishon Vijay Abraham I wrote:
+>
+> On Thursday 06 April 2017 11:21 AM, Vivek Gautam wrote:
+>> Hi Kishon,
+>> Here's the series with fixed checkpatch warnings/checks.
+>> Please pick it for phy/next.
+>>
+>> This patch series adds couple of PHY drivers for Qualcomm chipsets.
+>> a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
+>> b) qcom-qmp phy driver: that is a combo phy providing support for
+>>     USB3, PCIe, UFS and few other controllers.
+>>
+>> The patches are based on next branch of linux-phy tree.
+>>
+>> These patches have been tested on Dragon board db820c hardware with
+>> required set of dt patches.
+>> The tested branch[3] is based on torvald's master with greg's usb/usb-next
+>> merged. Additionally the patches to get rpm up on msm8996 are also pulled
+>> in.
+> merged, thanks!
 
-Can you fix your broken email client please?  You need to set it up to
-reply to mails to they stay threaded.  Your mailer is currently
-sending all of your replies as their own, independent messages.
+Thanks Kishon.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+BRs
+Vivek
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>
+> -Kishon
+>> Changes since v7:
+>>   - Fixed 'checkpatch --strict' alignment warnings/checks, and
+>>     added Stephen's Reviewed-by tag.
+>>
+>> Changes since v6:
+>>   - Rebased on phy/next and *not* including phy grouping series[4].
+>>   - qusb2-phy: addressed Stephen's comment.
+>>     - Dropped pm8994_s2 corner regulator from QUSB2 phy bindings.
+>>   - qmp-phy: none on functionality side.
+>>   
+>> Changes since v5:
+>>   - Addressed review comments from Bjorn:
+>>     - Removed instances of readl/wirtel_relaxed calls from the drivers.
+>>       Instead, using simple readl/writel. Inserting a readl after a writel
+>>       to ensure the write is through to the device.
+>>     - Replaced regulator handling with regulator_bulk_** apis. This helps
+>>       in cutting down a lot of regulator handling code.
+>>     - Fixed minor return statements.
+>>
+>> Changes since v4:
+>>   - Addressed comment to add child nodes for qmp phy driver. Each phy lane
+>>     now has a separate child node under the main qmp node.
+>>   - Modified the clock and reset initialization and enable methods.
+>>     Different phys - pcie, usb and later ufs, have varying number of clocks
+>>     and resets that are mandatory. So adding provision for clocks and reset
+>>     lists helps in requesting all mandatory resources for individual phys
+>>     and handle their failure cases accordingly.
+>>
+>> Changes since v3:
+>>   - Addressed review comments given by Rob and Stephen for qusb2 phy
+>>     and qmp phy bindings respectively.
+>>   - Addressed review comments given by Stephen and Bjorn for qmp phy driver.
+>>
+>> Changes since v2:
+>>   - Addressed review comments given by Rob and Stephen for bindings.
+>>   - Addressed the review comments given by Stephen for the qusb2 and qmp
+>>     phy drivers.
+>>
+>> Changes since v1:
+>>   - Moved device tree binding documentation to separate patches, as suggested
+>>     by Rob.
+>>   - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
+>>     given by Rob.
+>>   - Addressed review comments from Kishon.
+>>   - Addressed review comments from Srinivas for QMP phy driver.
+>>   - Addressed kbuild warning.
+>>
+>> Please see individual patches for detailed changelogs.
+>>
+>> [1] https://patchwork.kernel.org/patch/9567767/
+>> [2] https://patchwork.kernel.org/patch/9567779/
+>> [3] https://github.com/vivekgautam1/linux/tree/linux-v4.11-rc5-qmp-phy-db820c
+>> [4] https://lkml.org/lkml/2017/3/20/407
+>>
+>> Vivek Gautam (4):
+>>    dt-bindings: phy: Add support for QUSB2 phy
+>>    phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+>>    dt-bindings: phy: Add support for QMP phy
+>>    phy: qcom-qmp: new qmp phy driver for qcom-chipsets
+>>
+>>   .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  106 ++
+>>   .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   43 +
+>>   drivers/phy/Kconfig                                |   18 +
+>>   drivers/phy/Makefile                               |    2 +
+>>   drivers/phy/phy-qcom-qmp.c                         | 1153 ++++++++++++++++++++
+>>   drivers/phy/phy-qcom-qusb2.c                       |  493 +++++++++
+>>   6 files changed, 1815 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>>   create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>>   create mode 100644 drivers/phy/phy-qcom-qmp.c
+>>   create mode 100644 drivers/phy/phy-qcom-qusb2.c
+>>
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
