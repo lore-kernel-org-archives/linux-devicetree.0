@@ -1,142 +1,111 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RESEND PATCH V7 1/5] Documentation: devicetree: watchdog:
- da9062/61 watchdog timer binding
-Date: Thu, 6 Apr 2017 04:32:18 -0700
-Message-ID: <d258bf91-06cd-dd96-c1e1-ef310c89565e@roeck-us.net>
-References: <cover.1491467308.git.stwiss.opensource@diasemi.com>
- <1d280a35fc522f7b271c730988ab0f186fef25ba.1491467308.git.stwiss.opensource@diasemi.com>
+From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 00/12] Add Basic SoC support for MT6797
+Date: Thu, 6 Apr 2017 20:11:05 +0800
+Message-ID: <1491480665.6485.4.camel@mtkswgap22>
+References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
+         <1490229971.25996.2.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1d280a35fc522f7b271c730988ab0f186fef25ba.1491467308.git.stwiss.opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@iguana.be>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Zhang Rui <rui.zhang@intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490229971.25996.2.camel@mtkswgap22>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2017 01:28 AM, Steve Twiss wrote:
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
->
-> Add binding information for DA9062 and DA9061 watchdog.
->
-> Example bindings for both DA9062 and DA9061 devices are added. For
-> the DA9061 device, a fallback compatible line is added as a valid
-> combination of compatible strings.
->
-> The original binding for DA9062 (only) used to reside inside the
-> Documentation/devicetree/bindings/mfd/da9062.txt MFD document.
-> The da9062-watchdog section was deleted in that file and replaced
-> with a link to the new DA9061/62 binding information stored in this
-> patch.
->
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Hi Matthias, Stephen
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Would you like to give some comments for this patch set?
+If there are any suggestions, I will try my best to fix the errors.
 
->
-> ---
->
-> Hi,
->
-> I have just noticed.
->
-> The driver code changes for the da9062/61 watchdog have been applied to
-> the linux kernel. The da9062/61 alterations for
-> drivers/watchdog/da9062_wdt.c appear in linux-stable/v4.10-rc1. Those
-> changes are linked to this binding patch, but this patch seems to have
-> been missed out.
->
-> The source code dependency for this patch is given in the commit:
-> 72106c1 v4.10-rc1 watchdog: da9062/61: watchdog driver
->
-> I don't see anything blocking for merge of this patch now.
->
-> Regards,
-> Steve
->
-> This patch applies against linux-next and v4.11-rc3
->
-> v6 -> v7
->  - NO CODE CHANGE
->
-> v5 -> v6
->  - NO CODE CHANGE
->  - Rebased from v4.9 to v4.11-rc3
->
-> v4 -> v5
->  - NO CODE CHANGE
->  - Rebased from v4.8 to v4.9
->
-> v3 -> v4
->  - NO CODE CHANGE
->  - Patch renamed from [PATCH V3 2/9] to [PATCH V4 1/8]
->  - Added Acked-by Rob Herring
->
-> v2 -> v3
->  - Patch renamed from [PATCH V1 02/10] to [PATCH V3 2/9]
->  - Each compatible line should be a valid combination of compatible
->    strings, alter DA9061 line to include the fall back compatible string
->  - Update the commit message to describe this change
->  - Add information about associated patches from this set without
->    describing them as being explicitly dependent on this binding
->
-> v1 -> v2
->  - Patch renamed from [PATCH V1 07/10] to [PATCH V2 02/10] -- these
->    changes were made to fix checkpatch warnings caused by the patch
->    set dependency order
->  - Updated the patch description to be explicit about where parts of
->    this binding had originally been stored
->  - A second example for DA9061 is provided to highlight the use of a
->    fall-back compatible option for the DA9062 watchdog driver
->
-> As previously:
->
-> For the watchdog case: the DA9062 device driver is compatible with the
-> DA9061 and for this reason there is minimal change required to the DA9062
-> watchdog device driver. The example for the DA9061 watchdog shows the
-> use of a fall-back compatible string.
->
-> Other information:
-> The device driver from this patch set (associated with this binding) is
->   [PATCH V5 6/8] watchdog: da9061: watchdog driver
->
-> Regards,
-> Steve Twiss, Dialog Semiconductor
->
->
->  .../devicetree/bindings/watchdog/da9062-wdt.txt    | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/da9062-wdt.txt
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/da9062-wdt.txt b/Documentation/devicetree/bindings/watchdog/da9062-wdt.txt
-> new file mode 100644
-> index 0000000..b935b52
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/da9062-wdt.txt
-> @@ -0,0 +1,23 @@
-> +* Dialog Semiconductor DA9062/61 Watchdog Timer
-> +
-> +Required properties:
-> +
-> +- compatible: should be one of the following valid compatible string lines:
-> +	"dlg,da9061-watchdog", "dlg,da9062-watchdog"
-> +	"dlg,da9062-watchdog"
-> +
-> +Example: DA9062
-> +
-> +	pmic0: da9062@58 {
-> +		watchdog {
-> +			compatible = "dlg,da9062-watchdog";
-> +		};
-> +	};
-> +
-> +Example: DA9061 using a fall-back compatible for the DA9062 watchdog driver
-> +
-> +	pmic0: da9061@58 {
-> +		watchdog {
-> +			compatible = "dlg,da9061-watchdog", "dlg,da9062-watchdog";
-> +		};
-> +	};
->
+Thanks. 
+
+On Thu, 2017-03-23 at 08:46 +0800, Mars Cheng wrote:
+> Hi Matthias, Rob, Marc, Stephen
+> 
+> gentle ping for this patch set.
+> 
+> Thanks.
+> 
+> On Sun, 2017-03-19 at 23:26 +0800, Mars Cheng wrote:
+> > This patch set adds basic SoC support for mediatek's first 10-core
+> > chip, X20, also known as MT6797.
+> > 
+> > - based on 4.11-rc1
+> > - support multiple base address for sysirq
+> > - support common clk framework
+> > 
+> > Changes since v2:
+> > - prevent uncessary #intpol-bases for mtk-sysirq
+> > - add fast path for mtk-sysirq set_type when introducing multiple bases
+> > - add acked-by and tested-by
+> > - remove wrong usage for timer node
+> > 
+> > Changes since v1:
+> > - add multiple base addresses support, v1 only allow 2 bases
+> > - clean up clk driver
+> > 
+> > 
+> > Kevin-CW Chen (2):
+> >   dt-bindings: arm: mediatek: document clk bindings for MT6797
+> >   clk: mediatek: add clk support for MT6797
+> > 
+> > Mars Cheng (10):
+> >   dt-bindings: mediatek: multiple bases support for sysirq
+> >   irqchip: mtk-sysirq: extend intpol base to arbitrary number
+> >   irqchip: mtk-sysirq: prevent unnecessary visibility when set_type
+> >   dt-bindings: mediatek: Add bindings for mediatek MT6797 Platform
+> >   arm64: dts: mediatek: add mt6797 support
+> >   soc: mediatek: avoid using fixed spm power status defines
+> >   soc: mediatek: add vdec item for scpsys
+> >   dt-bindings: mediatek: add MT6797 power dt-bindings
+> >   soc: mediatek: add MT6797 scysys support
+> >   arm64: dts: mediatek: add clk and scp nodes for MT6797
+> > 
+> >  Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+> >  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
+> >  .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
+> >  .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
+> >  .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
+> >  .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
+> >  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
+> >  .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
+> >  .../interrupt-controller/mediatek,sysirq.txt       |   12 +-
+> >  .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+> >  .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +-
+> >  arch/arm64/boot/dts/mediatek/Makefile              |    1 +
+> >  arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
+> >  arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  245 +++++++
+> >  drivers/clk/mediatek/Kconfig                       |   32 +
+> >  drivers/clk/mediatek/Makefile                      |    5 +
+> >  drivers/clk/mediatek/clk-mt6797-img.c              |   76 +++
+> >  drivers/clk/mediatek/clk-mt6797-mm.c               |  136 ++++
+> >  drivers/clk/mediatek/clk-mt6797-vdec.c             |   93 +++
+> >  drivers/clk/mediatek/clk-mt6797-venc.c             |   78 +++
+> >  drivers/clk/mediatek/clk-mt6797.c                  |  716 ++++++++++++++++++++
+> >  drivers/irqchip/irq-mtk-sysirq.c                   |  116 +++-
+> >  drivers/soc/mediatek/mtk-scpsys.c                  |  149 +++-
+> >  include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
+> >  include/dt-bindings/power/mt6797-power.h           |   30 +
+> >  25 files changed, 1993 insertions(+), 33 deletions(-)
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
+> >  create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
+> >  create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
+> >  create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
+> >  create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
+> >  create mode 100644 drivers/clk/mediatek/clk-mt6797.c
+> >  create mode 100644 include/dt-bindings/clock/mt6797-clk.h
+> >  create mode 100644 include/dt-bindings/power/mt6797-power.h
+> > 
+> > --
+> > 1.7.9.5
+> > 
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
