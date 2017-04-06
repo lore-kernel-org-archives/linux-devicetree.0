@@ -1,79 +1,35 @@
-From: Alexey Firago <alexey_firago@mentor.com>
-Subject: Re: [PATCH v3 1/3] clk: vc5: Add structure to describe particular
- chip features
-Date: Thu, 6 Apr 2017 18:45:49 +0300
-Message-ID: <ee0dbbd0-78ba-2344-759e-da022215fbe1@mentor.com>
-References: <1491470130-6655-1-git-send-email-alexey_firago@mentor.com>
- <1491470130-6655-2-git-send-email-alexey_firago@mentor.com>
- <d461ac7d-4081-4444-6875-de4d8013dec3@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 3/4] dt-bindings: display: add support for ZTE VGA
+ device
+Date: Thu, 6 Apr 2017 10:46:56 -0500
+Message-ID: <CAL_JsqJqDPT80HPXp937fK+SFzz1yJEyoePPDo48RBguvthRHA@mail.gmail.com>
+References: <1491490870-6330-1-git-send-email-shawnguo@kernel.org>
+ <1491490870-6330-4-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <d461ac7d-4081-4444-6875-de4d8013dec3@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, geert@linux-m68k.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1491490870-6330-4-git-send-email-shawnguo@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xin Zhou <zhou.xin8@zte.com.cn>, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel <dri-devel@lists.freedesktop.org>, Jun Nie <jun.nie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06.04.2017 17:54, Marek Vasut wrote:
-> On 04/06/2017 11:15 AM, Alexey Firago wrote:
->> Introduce vc5_chip_info structure to describe features of a particular
->> VC5 chip (id, number of FODs, number of outputs, flags).
->> For now flags are only used to indicate if chip has internal XTAL.
->> vc5_chip_info is set on probe from the matched of_device_id->data.
->>
->> Also add defines to specify maximum number of FODs and clock outputs
->> supported by the driver.
->>
->> With these changes it should be easier to extend driver to support
->> more VC5 models.
->>
->> Signed-off-by: Alexey Firago <alexey_firago@mentor.com>
->
-> Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
->
->> ---
->>  drivers/clk/clk-versaclock5.c | 65 +++++++++++++++++++++++++++++++------------
->>  1 file changed, 47 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
->> index 56741f3..4e81fb1 100644
->> --- a/drivers/clk/clk-versaclock5.c
->> +++ b/drivers/clk/clk-versaclock5.c
->> @@ -113,12 +113,30 @@
->>  #define VC5_MUX_IN_XIN		BIT(0)
->>  #define VC5_MUX_IN_CLKIN	BIT(1)
->>
->> +/* Maximum number of clk_out supported by this driver */
->> +#define VC5_MAX_CLK_OUT_NUM	3
->> +
->> +/* Maximum number of FODs supported by this driver */
->> +#define VC5_MAX_FOD_NUM	2
->> +
->> +/* flags to describe chip features */
->> +/* chip has built-in oscilator */
->> +#define VC5_HAS_INTERNAL_XTAL	BIT(0)
->> +
->>  /* Supported IDT VC5 models. */
->>  enum vc5_model {
->>  	IDT_VC5_5P49V5923,
->>  	IDT_VC5_5P49V5933,
->>  };
->>
->> +/* Structure to describe features of a particular VC5 model */
->> +struct vc5_chip_info {
->> +	const enum vc5_model	model;
->> +	const unsigned int	clk_fod_cnt;
->> +	const unsigned int	clk_out_cnt;
->> +	u32			flags;
->
-> Shouldn't this also be const ?
-
-It probably should, since we are not changing flags at runtime 
-currently. Will resend.
-
-Thanks,
-Alexey
-
+T24gVGh1LCBBcHIgNiwgMjAxNyBhdCAxMDowMSBBTSwgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
+ZWwub3JnPiB3cm90ZToKPiBGcm9tOiBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPgo+
+Cj4gSXQgYWRkcyBiaW5kaW5ncyBkb2MgZm9yIFpURSBWT1UgVkdBIG91dHB1dCBkZXZpY2UuCj4K
+PiBTaWduZWQtb2ZmLWJ5OiBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPgo+IC0tLQo+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3p0ZSx2b3UudHh0ICAgICAgICAgfCAy
+MSArKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMo
+KykKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
