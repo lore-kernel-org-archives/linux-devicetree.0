@@ -1,78 +1,78 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 1/9] phy: phy-mt65xx-usb3: improve RX detection
- stable time
-Date: Thu, 6 Apr 2017 18:49:39 +0800
-Message-ID: <1491475779.19361.4.camel@mhfsdcap03>
-References: <1490945735-9531-1-git-send-email-chunfeng.yun@mediatek.com>
-         <de1b9870-d325-e97a-a2f0-bd355c70356c@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 07/16] regulator: madera-micsupp: Mic
+ supply for Cirrus Logic Madera codecs
+Date: Thu, 6 Apr 2017 11:57:44 +0100
+Message-ID: <20170406105744.f5qpmmi2pjvc7n2z@sirena.org.uk>
+References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1491386884-30689-8-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20170405134054.kz3j56vza4pqki75@sirena.org.uk>
+ <1491400437.4096.5.camel@rf-debian.wolfsonmicro.main>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <de1b9870-d325-e97a-a2f0-bd355c70356c-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6717022043634860279=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1491400437.4096.5.camel@rf-debian.wolfsonmicro.main>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-04-06 at 15:58 +0530, Kishon Vijay Abraham I wrote:
-> 
-> On Friday 31 March 2017 01:05 PM, Chunfeng Yun wrote:
-> > The default value of RX detection stable time is 10us, and this
-> > margin is too big for some critical cases which cause U3 link fail
-> > and link to U2(probability is about 1%). So change it to 5us.
-> > 
-> merged all the phy patches in this series to linux-phy -next.
-Thanks a lot
-> 
-> Thanks
-> Kishon
-> 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/phy/phy-mt65xx-usb3.c |   18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-> > index d972067..fe2392a 100644
-> > --- a/drivers/phy/phy-mt65xx-usb3.c
-> > +++ b/drivers/phy/phy-mt65xx-usb3.c
-> > @@ -112,6 +112,14 @@
-> >  #define P3D_RG_CDR_BIR_LTD0		GENMASK(12, 8)
-> >  #define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
-> >  
-> > +#define U3P_U3_PHYD_RXDET1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x128)
-> > +#define P3D_RG_RXDET_STB2_SET		GENMASK(17, 9)
-> > +#define P3D_RG_RXDET_STB2_SET_VAL(x)	((0x1ff & (x)) << 9)
-> > +
-> > +#define U3P_U3_PHYD_RXDET2		(SSUSB_SIFSLV_U3PHYD_BASE + 0x12c)
-> > +#define P3D_RG_RXDET_STB2_SET_P3	GENMASK(8, 0)
-> > +#define P3D_RG_RXDET_STB2_SET_P3_VAL(x)	(0x1ff & (x))
-> > +
-> >  #define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x0018)
-> >  #define XC3_RG_U3_XTAL_RX_PWD		BIT(9)
-> >  #define XC3_RG_U3_FRC_XTAL_RX_PWD	BIT(8)
-> > @@ -295,6 +303,16 @@ static void phy_instance_init(struct mt65xx_u3phy *u3phy,
-> >  	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
-> >  	writel(tmp, port_base + U3P_PHYD_CDR1);
-> >  
-> > +	tmp = readl(port_base + U3P_U3_PHYD_RXDET1);
-> > +	tmp &= ~P3D_RG_RXDET_STB2_SET;
-> > +	tmp |= P3D_RG_RXDET_STB2_SET_VAL(0x10);
-> > +	writel(tmp, port_base + U3P_U3_PHYD_RXDET1);
-> > +
-> > +	tmp = readl(port_base + U3P_U3_PHYD_RXDET2);
-> > +	tmp &= ~P3D_RG_RXDET_STB2_SET_P3;
-> > +	tmp |= P3D_RG_RXDET_STB2_SET_P3_VAL(0x10);
-> > +	writel(tmp, port_base + U3P_U3_PHYD_RXDET2);
-> > +
-> >  	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
-> >  }
-> >  
-> > 
+
+--===============6717022043634860279==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5wfkgd3jlpzi3vd7"
+Content-Disposition: inline
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5wfkgd3jlpzi3vd7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Apr 05, 2017 at 02:53:57PM +0100, Richard Fitzgerald wrote:
+> On Wed, 2017-04-05 at 14:40 +0100, Mark Brown wrote:
+
+> > Again, this appears to have only data and minor code style changes
+> > relative to the existing arizona driver - is there no opportunity for
+> > code sharing here?
+
+> I'll have a look at how it would work out.
+> My thought was that these two regulator drivers are so small it wasn't
+> worth creating an entanglement between arizona and madera for so little
+> code.
+
+It's a fairly small amount of code but it's an extremely high proportion
+of the code in the driver and doing something a bit unusual, not just
+boilerplate.
+
+--5wfkgd3jlpzi3vd7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljmHycACgkQJNaLcl1U
+h9DhaAf+MgOeQ1O1F7YETxiO6bPPXlueOsp5OuXiyDXFjzO/9ekNHkmsjxrSQvpT
+8dcJVUx8lEHEvBB5zDs608/EobDSl+TKPT6Ud1O2ouczXHFxj627/6+bU8s9avNi
+V593V8cSNP9/9qzB60+iBOsLRvtICY2YPGmIuftVBI1bJFIDbxzMZvYApY1+q99Q
+KZiUuGM2VRlHPfDQhHODX1dlN8HNtVzMHmN1ldE1u2Catl3VAus9Cjo62g69tCkM
+7KuHk3plxKPLdZD/lej8/OW1GB1qy/gS03Ui4eRgOJJz4jBGDzty4zQP1myiIXW2
+MevGyBfDke4KCZNx3kQ7V6Y4AgTRBg==
+=/bkc
+-----END PGP SIGNATURE-----
+
+--5wfkgd3jlpzi3vd7--
+
+--===============6717022043634860279==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6717022043634860279==--
