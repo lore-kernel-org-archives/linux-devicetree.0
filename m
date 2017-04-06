@@ -1,119 +1,108 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH V8 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
-Date: Thu, 6 Apr 2017 15:41:57 +0530
-Message-ID: <9f928f13-3bee-6f36-6760-095da5a03495@ti.com>
-References: <1491457885-5254-1-git-send-email-vivek.gautam@codeaurora.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V10 06/12] of: device: Fix overflow of coherent_dma_mask
+Date: Thu, 6 Apr 2017 11:24:31 +0100
+Message-ID: <b081f333-084d-ffa5-635f-f7f1c0232ac3@arm.com>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-7-git-send-email-sricharan@codeaurora.org>
+	<58E5E7B7.1050400@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1491457885-5254-1-git-send-email-vivek.gautam@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <58E5E7B7.1050400-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/04/17 08:01, Frank Rowand wrote:
+> On 04/04/17 03:18, Sricharan R wrote:
+>> Size of the dma-range is calculated as coherent_dma_mask + 1
+>> and passed to arch_setup_dma_ops further. It overflows when
+>> the coherent_dma_mask is set for full 64 bits 0xFFFFFFFFFFFFFFFF,
+>> resulting in size getting passed as 0 wrongly. Fix this by
+>> passsing in max(mask, mask + 1). Note that in this case
+>> when the mask is set to full 64bits, we will be passing the mask
+>> itself to arch_setup_dma_ops instead of the size. The real fix
+>> for this should be to make arch_setup_dma_ops receive the
+>> mask and handle it, to be done in the future.
+>>
+>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  drivers/of/device.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>> index c17c19d..c2ae6bb 100644
+>> --- a/drivers/of/device.c
+>> +++ b/drivers/of/device.c
+>> @@ -107,7 +107,7 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>>  	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>>  	if (ret < 0) {
+>>  		dma_addr = offset = 0;
+>> -		size = dev->coherent_dma_mask + 1;
+>> +		size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+>>  	} else {
+>>  		offset = PFN_DOWN(paddr - dma_addr);
+>>  		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>>
+> 
+> NACK.
+> 
+> Passing an invalid size to arch_setup_dma_ops() is only part of the problem.
+> size is also used in of_dma_configure() before calling arch_setup_dma_ops():
+> 
+>         dev->coherent_dma_mask = min(dev->coherent_dma_mask,
+>                                      DMA_BIT_MASK(ilog2(dma_addr + size)));
+>         *dev->dma_mask = min((*dev->dma_mask),
+>                              DMA_BIT_MASK(ilog2(dma_addr + size)));
+> 
+> which would be incorrect for size == 0xffffffffffffffffULL when
+> dma_addr != 0.  So the proposed fix really is not papering over
+> the base problem very well.
 
+I'm not sure I agree there. Granted, there exist many more problematic
+aspects than are dealt with here (I've got more patches cooking to sort
+out some of the other issues we have with dma-ranges), but considering
+size specifically:
 
-On Thursday 06 April 2017 11:21 AM, Vivek Gautam wrote:
-> Hi Kishon,
-> Here's the series with fixed checkpatch warnings/checks.
-> Please pick it for phy/next.
-> 
-> This patch series adds couple of PHY drivers for Qualcomm chipsets.
-> a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
-> b) qcom-qmp phy driver: that is a combo phy providing support for
->    USB3, PCIe, UFS and few other controllers.
-> 
-> The patches are based on next branch of linux-phy tree.
-> 
-> These patches have been tested on Dragon board db820c hardware with
-> required set of dt patches.
-> The tested branch[3] is based on torvald's master with greg's usb/usb-next
-> merged. Additionally the patches to get rpm up on msm8996 are also pulled
-> in.
+- It is not possible to explicitly specify a range with a size of 2^64
+in DT. If someone does specify a size of 0, they've done a silly thing
+and should not be surprised that it ends badly.
 
-merged, thanks!
+- It *is* perfectly legitimate for bus code (or a previous device
+driver, once we start coming here at probe time) to have set a device's
+DMA mask to 0xffffffffffffffffULL. If this code then blindly overflows
+and infers an invalid size of 0 from that, breaking things in the
+process, that is this code's fault alone. It just so happens that
+nothing managed to trigger the latent problem until patch #7 here shakes
+up the callsites.
 
--Kishon
+Yes, wacky impossible base + size combinations in DT were a theoretical
+problem before, and remain a theoretical problem, but also fall into the
+"how did you ever expect this to work?" category. There's certainly
+plenty more we can do to improve the DT parsing/validation, but that
+still doesn't apply to this path where the information is *not* coming
+from the DT at all.
+
+> I agree that the proper solution involves passing a mask instead
+> of a size to arch_setup_dma_ops().
+
+Having started writing that patch too, I can tell you it's a big bugger
+touching multiple architectures and fixing up various drivers doing
+stupid things, hence why I'm happy with this point fix being the lesser
+of two evils in terms of not holding up this mostly-orthogonal series.
+
+Robin.
+
 > 
-> Changes since v7:
->  - Fixed 'checkpatch --strict' alignment warnings/checks, and
->    added Stephen's Reviewed-by tag.
-> 
-> Changes since v6:
->  - Rebased on phy/next and *not* including phy grouping series[4].
->  - qusb2-phy: addressed Stephen's comment.
->    - Dropped pm8994_s2 corner regulator from QUSB2 phy bindings.
->  - qmp-phy: none on functionality side.
->  
-> Changes since v5:
->  - Addressed review comments from Bjorn:
->    - Removed instances of readl/wirtel_relaxed calls from the drivers.
->      Instead, using simple readl/writel. Inserting a readl after a writel
->      to ensure the write is through to the device.
->    - Replaced regulator handling with regulator_bulk_** apis. This helps
->      in cutting down a lot of regulator handling code.
->    - Fixed minor return statements.
-> 
-> Changes since v4:
->  - Addressed comment to add child nodes for qmp phy driver. Each phy lane
->    now has a separate child node under the main qmp node.
->  - Modified the clock and reset initialization and enable methods.
->    Different phys - pcie, usb and later ufs, have varying number of clocks
->    and resets that are mandatory. So adding provision for clocks and reset
->    lists helps in requesting all mandatory resources for individual phys
->    and handle their failure cases accordingly.
-> 
-> Changes since v3:
->  - Addressed review comments given by Rob and Stephen for qusb2 phy
->    and qmp phy bindings respectively.
->  - Addressed review comments given by Stephen and Bjorn for qmp phy driver.
-> 
-> Changes since v2:
->  - Addressed review comments given by Rob and Stephen for bindings.
->  - Addressed the review comments given by Stephen for the qusb2 and qmp
->    phy drivers.
-> 
-> Changes since v1:
->  - Moved device tree binding documentation to separate patches, as suggested
->    by Rob.
->  - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
->    given by Rob.
->  - Addressed review comments from Kishon.
->  - Addressed review comments from Srinivas for QMP phy driver.
->  - Addressed kbuild warning.
-> 
-> Please see individual patches for detailed changelogs.
-> 
-> [1] https://patchwork.kernel.org/patch/9567767/
-> [2] https://patchwork.kernel.org/patch/9567779/
-> [3] https://github.com/vivekgautam1/linux/tree/linux-v4.11-rc5-qmp-phy-db820c
-> [4] https://lkml.org/lkml/2017/3/20/407
-> 
-> Vivek Gautam (4):
->   dt-bindings: phy: Add support for QUSB2 phy
->   phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
->   dt-bindings: phy: Add support for QMP phy
->   phy: qcom-qmp: new qmp phy driver for qcom-chipsets
-> 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  106 ++
->  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   43 +
->  drivers/phy/Kconfig                                |   18 +
->  drivers/phy/Makefile                               |    2 +
->  drivers/phy/phy-qcom-qmp.c                         | 1153 ++++++++++++++++++++
->  drivers/phy/phy-qcom-qusb2.c                       |  493 +++++++++
->  6 files changed, 1815 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->  create mode 100644 drivers/phy/phy-qcom-qmp.c
->  create mode 100644 drivers/phy/phy-qcom-qusb2.c
+> -Frank
 > 
