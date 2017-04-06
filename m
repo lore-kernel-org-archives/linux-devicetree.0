@@ -1,74 +1,81 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH] [media] imx: csi: retain current field order and
- colorimetry setting as default
-Date: Thu, 6 Apr 2017 16:10:33 +0100
-Message-ID: <20170406151032.GH17774@n2100.armlinux.org.uk>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
- <1491486929.2392.29.camel@pengutronix.de>
- <20170406140533.GF17774@n2100.armlinux.org.uk>
- <1491490912.2392.74.camel@pengutronix.de>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V4 4/4] pwm: tegra: Add support to configure pin state in
+ suspends/resume
+Date: Thu, 6 Apr 2017 16:17:34 +0100
+Message-ID: <e6eef15a-45e4-002b-dd45-38c268070241@nvidia.com>
+References: <1491488461-24621-1-git-send-email-ldewangan@nvidia.com>
+ <1491488461-24621-5-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1491490912.2392.74.camel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@v
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1491488461-24621-5-git-send-email-ldewangan@nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, thierry.reding@gmail.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 05:01:52PM +0200, Philipp Zabel wrote:
-> On Thu, 2017-04-06 at 15:05 +0100, Russell King - ARM Linux wrote:
-> > On Thu, Apr 06, 2017 at 03:55:29PM +0200, Philipp Zabel wrote:
-> > > +
-> > > +	/* Retain current field setting as default */
-> > > +	if (sdformat->format.field == V4L2_FIELD_ANY)
-> > > +		sdformat->format.field = fmt->field;
-> > > +
-> > > +	/* Retain current colorspace setting as default */
-> > > +	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
-> > > +		sdformat->format.colorspace = fmt->colorspace;
-> > > +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
-> > > +			sdformat->format.xfer_func = fmt->xfer_func;
-> > > +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
-> > > +			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
-> > > +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
-> > > +			sdformat->format.quantization = fmt->quantization;
-> > > +	} else {
-> > > +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
-> > > +			sdformat->format.xfer_func =
-> > > +				V4L2_MAP_XFER_FUNC_DEFAULT(
-> > > +						sdformat->format.colorspace);
-> > > +		}
-> > > +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
-> > > +			sdformat->format.ycbcr_enc =
-> > > +				V4L2_MAP_YCBCR_ENC_DEFAULT(
-> > > +						sdformat->format.colorspace);
-> > > +		}
-> > > +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
-> > > +			sdformat->format.quantization =
-> > > +				V4L2_MAP_QUANTIZATION_DEFAULT(
-> > > +						cc->cs != IPUV3_COLORSPACE_YUV,
-> > > +						sdformat->format.colorspace,
-> > > +						sdformat->format.ycbcr_enc);
-> > > +		}
-> > > +	}
-> > 
-> > Would it make sense for this to be a helper function?
+
+On 06/04/17 15:21, Laxman Dewangan wrote:
+> In some of NVIDIA Tegra's platform, PWM controller is used to
+> control the PWM controlled regulators. PWM signal is connected to
+> the VID pin of the regulator where duty cycle of PWM signal decide
+> the voltage level of the regulator output.
 > 
-> Quite possible, the next subdev that has to set frame_interval on both
-> pads manually because its upstream source pad doesn't suport
-> frame_interval might want to do the same.
+> The tristate (high impedance of PWM pin form Tegra) also define
+> one of the state of PWM regulator which needs to be configure in
+> suspend state of system.
+> 
+> Add support to configure the pin state via pinctrl frameworks in
+> suspend and active state of the system.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+> Changes from v1:
+> - Use standard pinctrl names for sleep and active state.
+> - Use API pinctrl_pm_select_*()
+> 
+>  drivers/pwm/pwm-tegra.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index e9c4de5..af1bd4f 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/pwm.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/slab.h>
+>  #include <linux/reset.h>
+>  
+> @@ -256,6 +257,22 @@ static int tegra_pwm_remove(struct platform_device *pdev)
+>  	return pwmchip_remove(&pc->chip);
+>  }
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int tegra_pwm_suspend(struct device *dev)
+> +{
+> +	pinctrl_pm_select_sleep_state(dev);
 
-Hmm.  I'm not sure I agree with this approach.  If a subdev hardware
-does not support any modification of the colourspace or field, then
-it should not be modifyable at the source pad - it should retain the
-propagated settings from the sink pad.
+Why not return the error code here?
 
-I thought I had already sent a patch doing exactly that.
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_pwm_resume(struct device *dev)
+> +{
+> +	pinctrl_pm_select_default_state(dev);
+
+And here.
+
+By the way, do you plan to include patches to populate the bindings for
+the pwm devices?
+
+Cheers
+Jon
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+nvpublic
