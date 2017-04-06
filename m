@@ -1,41 +1,59 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: change fixup of dma-ranges size to error
-Date: Thu, 6 Apr 2017 09:03:50 -0500
-Message-ID: <CAL_Jsq+GLBtaezUiTbm0DAA2+MjcvxAcCsS-qJrr05YcTO5tdw@mail.gmail.com>
-References: <1491459529-31391-1-git-send-email-frowand.list@gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH] [media] imx: csi: retain current field order and
+ colorimetry setting as default
+Date: Thu, 6 Apr 2017 15:05:33 +0100
+Message-ID: <20170406140533.GF17774@n2100.armlinux.org.uk>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+ <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
+ <1491486929.2392.29.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491459529-31391-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1491486929.2392.29.camel@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@v
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 6, 2017 at 1:18 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->
-> of_dma_get_range() has workaround code to fixup a device tree that
-> incorrectly specified a mask instead of a size for property
-> dma-ranges.  That device tree was fixed a year ago in v4.6, so
-> the workaround is no longer needed.  Leave a data validation
-> check in place, but no longer do the fixup.  Move the check
-> one level deeper in the call stack so that other possible users
-> of dma-ranges will also be protected.
->
-> The fix to the device tree was in
-> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree").
+On Thu, Apr 06, 2017 at 03:55:29PM +0200, Philipp Zabel wrote:
+> +
+> +	/* Retain current field setting as default */
+> +	if (sdformat->format.field == V4L2_FIELD_ANY)
+> +		sdformat->format.field = fmt->field;
+> +
+> +	/* Retain current colorspace setting as default */
+> +	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
+> +		sdformat->format.colorspace = fmt->colorspace;
+> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
+> +			sdformat->format.xfer_func = fmt->xfer_func;
+> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
+> +			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
+> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
+> +			sdformat->format.quantization = fmt->quantization;
+> +	} else {
+> +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
+> +			sdformat->format.xfer_func =
+> +				V4L2_MAP_XFER_FUNC_DEFAULT(
+> +						sdformat->format.colorspace);
+> +		}
+> +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
+> +			sdformat->format.ycbcr_enc =
+> +				V4L2_MAP_YCBCR_ENC_DEFAULT(
+> +						sdformat->format.colorspace);
+> +		}
+> +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
+> +			sdformat->format.quantization =
+> +				V4L2_MAP_QUANTIZATION_DEFAULT(
+> +						cc->cs != IPUV3_COLORSPACE_YUV,
+> +						sdformat->format.colorspace,
+> +						sdformat->format.ycbcr_enc);
+> +		}
+> +	}
 
-NACK. This was by design. You can't represent a size of 2^64 or 2^32.
-Well, technically you can for the latter, but then you have to grow
-#size-cells to 2 for an otherwise all 32-bit system which seems kind
-of pointless and wasteful. You could further restrict this to only
-allow ~0 and not just any case with bit 0 set.
+Would it make sense for this to be a helper function?
 
-I'm pretty sure AMD is not the only system. There were 32-bit systems too.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
