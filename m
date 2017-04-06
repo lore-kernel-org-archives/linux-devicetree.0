@@ -1,38 +1,41 @@
-From: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] of: Add vendor prefix for Nordic Semiconductor
-Date: Thu,  6 Apr 2017 03:29:27 -0500
-Message-ID: <20170406082927.31405-1-kumar.gala@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/3] ARM: dts: rockchip: Add support for phyCORE-RK3288 SoM
+Date: Thu, 06 Apr 2017 10:30:46 +0200
+Message-ID: <1872284.4EEa8KbvLF@phil>
+References: <1491214985-18331-1-git-send-email-w.egorov@phytec.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1491214985-18331-1-git-send-email-w.egorov@phytec.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wadim Egorov <w.egorov@phytec.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Nordic Semiconductor is a semiconductor company specializing in ARM
-Cortex-M based SoCs for low-power wireless communication, especially
-Bluetooth.
+Am Montag, 3. April 2017, 12:23:03 CEST schrieb Wadim Egorov:
+> The phyCORE-RK3288 is a SoM (System on Module) containing a RK3288 SoC.
+> The module can be connected to different carrier boards.
+> It can be also equipped with different RAM, SPI flash and eMMC variants.
+> The Rapid Development Kit option is using the following setup:
+> 
+>   - 1 GB DDR3 RAM (2 Banks)
+>   - 1x 4 KB EEPROM
+>   - DP83867 Gigabit Ethernet PHY
+>   - 16 MB SPI Flash
+>   - 4 GB eMMC Flash
+> 
+> Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
 
-Signed-off-by: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+applied for 4.12 with the following minor changes:
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ec0bfb9..dd9e7b2 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -212,6 +212,7 @@ newhaven	Newhaven Display International
- ni	National Instruments
- nintendo	Nintendo
- nokia	Nokia
-+nordic	Nordic Semiconductor
- nuvoton	Nuvoton Technology Corporation
- nvd	New Vision Display
- nvidia	NVIDIA
--- 
-2.9.3
+- moved phy-handle property up a bit
+- switches compatible and #address+#size-cells in mdio0
+- dropped rockchip,grf from &io_domains (grf is a simple-mfd and can
+  get the grf syscon on its own via its parent)
+- vdd_cpu: regulator@60 (from fan53555@60)
+- serial_flash: flash@0 (from m25p80@0)
+  Nodes should be named after their "category" not the actual device
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Heiko
