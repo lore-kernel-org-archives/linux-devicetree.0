@@ -1,55 +1,58 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Subject: [PATCH] ARM: dts: aspeed: add a fastread property
-Date: Thu,  6 Apr 2017 19:02:33 +0200
-Message-ID: <1491498153-26564-1-git-send-email-clg@kaod.org>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 3/4] pwm: tegra: Add DT binding details to configure
+ pin in suspends/resume
+Date: Thu, 6 Apr 2017 22:18:18 +0530
+Message-ID: <58E67152.1080400@nvidia.com>
+References: <1491488461-24621-1-git-send-email-ldewangan@nvidia.com> <1491488461-24621-4-git-send-email-ldewangan@nvidia.com> <f43c83a9-8ae0-73b0-d41d-97d3bc6c253e@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f43c83a9-8ae0-73b0-d41d-97d3bc6c253e-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWxsIGNoaXBzIG9uIE9wZW5QT1dFUiBwbGF0Zm9ybXMgc3VwcG9ydCB0aGUgZmFzdHJlYWQgU1BJ
-IGNvbW1hbmQuCgpTaWduZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xnQGthb2Qub3Jn
-PgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1hc3QyNTAwLWV2Yi5kdHMgICAgICB8IDIg
-KysKIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXBhbG1ldHRvLmR0cyB8IDIgKysK
-IGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXJvbXVsdXMuZHRzICB8IDIgKysKIDMg
-ZmlsZXMgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvYXNwZWVkLWFzdDI1MDAtZXZiLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1h
-c3QyNTAwLWV2Yi5kdHMKaW5kZXggOGY4MmU4YWIxODc1Li43YzkwZGFjOTk4MjIgMTAwNjQ0Ci0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1hc3QyNTAwLWV2Yi5kdHMKKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvYXNwZWVkLWFzdDI1MDAtZXZiLmR0cwpAQCAtMjQsNiArMjQsNyBAQAogCXN0
-YXR1cyA9ICJva2F5IjsKIAlmbGFzaEAwIHsKIAkJc3RhdHVzID0gIm9rYXkiOworCQltMjVwLGZh
-c3QtcmVhZDsKIAkJbGFiZWwgPSAiYm1jIjsKIAl9OwogfTsKQEAgLTMyLDYgKzMzLDcgQEAKIAlz
-dGF0dXMgPSAib2theSI7CiAJZmxhc2hAMCB7CiAJCXN0YXR1cyA9ICJva2F5IjsKKwkJbTI1cCxm
-YXN0LXJlYWQ7CiAJCWxhYmVsID0gInBub3IiOwogCX07CiB9OwpkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtcGFsbWV0dG8uZHRzIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvYXNwZWVkLWJtYy1vcHAtcGFsbWV0dG8uZHRzCmluZGV4IGFhYjE4ODlmNzAyZi4uMTEyNTUx
-NzY2Mjc1IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLW9wcC1wYWxt
-ZXR0by5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtcGFsbWV0dG8u
-ZHRzCkBAIC0zNSw2ICszNSw3IEBACiAJc3RhdHVzID0gIm9rYXkiOwogCWZsYXNoQDAgewogCQlz
-dGF0dXMgPSAib2theSI7CisJCW0yNXAsZmFzdC1yZWFkOwogCQlsYWJlbCA9ICJibWMiOwogCX07
-CiB9OwpAQCAtNDMsNiArNDQsNyBAQAogCXN0YXR1cyA9ICJva2F5IjsKIAlmbGFzaEAwIHsKIAkJ
-c3RhdHVzID0gIm9rYXkiOworCQltMjVwLGZhc3QtcmVhZDsKIAkJbGFiZWwgPSAicG5vciI7CiAJ
-fTsKIH07CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLW9wcC1yb211
-bHVzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXJvbXVsdXMuZHRzCmlu
-ZGV4IGUzYzYzNThiYzdkOS4uYjgyZjY3ZWIzZGFlIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290
-L2R0cy9hc3BlZWQtYm1jLW9wcC1yb211bHVzLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9h
-c3BlZWQtYm1jLW9wcC1yb211bHVzLmR0cwpAQCAtMzUsNiArMzUsNyBAQAogCXN0YXR1cyA9ICJv
-a2F5IjsKIAlmbGFzaEAwIHsKIAkJc3RhdHVzID0gIm9rYXkiOworCQltMjVwLGZhc3QtcmVhZDsK
-IAkJbGFiZWwgPSAiYm1jIjsKIAl9OwogfTsKQEAgLTQzLDYgKzQ0LDcgQEAKIAlzdGF0dXMgPSAi
-b2theSI7CiAJZmxhc2hAMCB7CiAJCXN0YXR1cyA9ICJva2F5IjsKKwkJbTI1cCxmYXN0LXJlYWQ7
-CiAJCWxhYmVsID0gInBub3IiOwogCX07CiB9OwotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+On Thursday 06 April 2017 08:56 PM, Jon Hunter wrote:
+> On 06/04/17 15:21, Laxman Dewangan wrote:
+>> In some of NVIDIA Tegra's platform, PWM controller is used to
+>> control the PWM controlled regulators. PWM signal is connected to
+>> the VID pin of the regulator where duty cycle of PWM signal decide
+>> the voltage level of the regulator output.
+>>
+>> The tristate (high impedance of PWM pin form Tegra) also define
+> s/form/from/
+> s/define/defines/
+>
+>> one of the state of PWM regulator which needs to be configure in
+>> suspend state of system.
+> It maybe clearer to say that when the system enters suspend the
+> regulator requires the pwm output to be tristated.
+
+Not necessarily that every PWM regulator interfaces needs it.  It 
+depends on the devices.
+So I will say:
+
+When system enters suspend, in some of PWM regulator interface, it is 
+required to to set the PWM output to be tristated.
+
+
+>   	pwm: pwm@7000a000 {
+> @@ -29,3 +42,33 @@ Example:
+>   		resets = <&tegra_car 17>;
+>   		reset-names = "pwm";
+>   	};
+> +
+> +
+> +Example with the pin configuration for suspend and resume:
+> +=========================================================
+> +Pin PE7 is used as PWM interface.
+> Nit-pick. On what devices? Sounds like this is verbatim. Maybe state
+> what device this is an example for.
+
+Let me phrase it as:
+Suppose pin PE7 (On tegra210) interfaced with the regulator device and 
+this requires PWM output to be tristated when system enters suspend.
+Following will be DT binding to achieve this:
