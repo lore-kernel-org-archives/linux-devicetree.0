@@ -1,117 +1,76 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 4/8] regulator: core: Check enabling bypass respects
- constraints
-Date: Thu, 6 Apr 2017 19:52:02 +0100
-Message-ID: <20170406185202.uixxcv3dgucrddgc@sirena.org.uk>
-References: <cover.1490199005.git.leonard.crestez@nxp.com>
- <1edff9bc610969b0c53fa1080d5db021c8e00b2d.1490199005.git.leonard.crestez@nxp.com>
- <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
- <1490704781.3546.57.camel@nxp.com>
- <20170328164754.z2c2ttovs3sxbcos@sirena.org.uk>
- <1490730595.15830.1.camel@nxp.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ra3w566qgvgkdp4p"
+Subject: Applied "ASoC: cs35l35: Add DT binding to specify usage of an external boost supply" to the asoc tree
+Date: Thu, 06 Apr 2017 19:55:11 +0100
+Message-ID: <E1cwCYp-0001hx-IW@debutante>
+References: <1491483134-28079-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1490730595.15830.1.camel-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1491483134-28079-3-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Gong <yibin.gong-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgbrian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---ra3w566qgvgkdp4p
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   ASoC: cs35l35: Add DT binding to specify usage of an external boost supply
 
-On Tue, Mar 28, 2017 at 10:49:55PM +0300, Leonard Crestez wrote:
-> On Tue, 2017-03-28 at 17:47 +0100, Mark Brown wrote:
+has been applied to the asoc tree at
 
-> > To repeat what I said previously the whole point of bypassing is to not
-> > do regulation and generally the constraints in the unregulated idle case
-> > are substantially more relaxed.=A0=A0This would break use cases relying=
- on
-> > the existing behaviour which wouldn't expect to affect the parent
-> > voltage at all, either stopping things working or making them less
-> > efficient by needlessly regulating the voltage down which defeats the
-> > main point of bypassing.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> So what you want is to prevent voltage changes unless strictly
-> required, even lowering? What I want is to get the minimum voltage in
-> the SOC because that's where power is being consumed.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-So your end goal here is to bypass a regulator which is forced into your
-system design by being integrated into the SoC which isn't able to
-regulate down to a low enough voltage for your use case?  I guess one
-question is if you need to use the regulator at all?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> It's not at all obvious that in bypass mode the output constraints of a
-> regulator need not be respected by the core. I expected the opposite,
-> this is something that should be documented.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-SubmittingPatches...  Bear in mind that most regulators are fixed
-voltage in a given system so bypass would be very difficult to use if it
-tried to pass the constraints upstream.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> But if the bypassed regulator has a downstream consumer then it's
-> requirements should definitely still be met in bypass mode, right? I
-> could set my maximum voltage directly from cpufreq in that case.
+Thanks,
+Mark
 
-What we're interpreting bypass mode as meaning is "stop regulating".
-There will still be some limits but we're expecting them to be enforced
-in the extremes of the constraints in the parent regulators.
+>From 0c67fb5544061cb990e07a73e1b7ba1f8ca22479 Mon Sep 17 00:00:00 2001
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Date: Thu, 6 Apr 2017 13:52:14 +0100
+Subject: [PATCH] ASoC: cs35l35: Add DT binding to specify usage of an external
+ boost supply
 
-> Or should a bypassed regulator ignore all other requests? One of the
-> behaviors that this patch series relies on is that calling set_voltage
-> on a bypassed regulator propagates this request to the supply and picks
-> the minimum voltage there. An alternative implementation would be to
+Add a device tree binding to let the driver know that the amplifier is
+configured to use an external boost supply.
 
-Yes, the expectation is that if anything is being changed it won't have
-any effect until regulation is reenabled but we're not particularly
-expecting much activity on bypassed regulators.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Acked-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/cs35l35.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> call set_voltage directly on the supply regulator by changing the
-> "{arm,soc,pu}-supply" references in DT to point to the PMIC instead.
-> Would that be better?
+diff --git a/Documentation/devicetree/bindings/sound/cs35l35.txt b/Documentation/devicetree/bindings/sound/cs35l35.txt
+index 958f0eabfdfc..457d176dcee0 100644
+--- a/Documentation/devicetree/bindings/sound/cs35l35.txt
++++ b/Documentation/devicetree/bindings/sound/cs35l35.txt
+@@ -33,6 +33,10 @@ Optional properties:
+   - cirrus,shared-boost : Boolean to enable ClassH tracking of Advisory Signal
+   if 2 Devices share Boost BST_CTL
+ 
++  - cirrus,external-boost : Boolean to specify the device is using an external
++  boost supply, note that sharing a boost from another cs35l35 would constitute
++  using an external supply for the slave device
++
+   - cirrus,sp-drv-strength : Value for setting the Serial Port drive strength
+   Table 3-10 of the datasheet lists drive-strength specifications
+   0 = 1x (Default)
+-- 
+2.11.0
 
-That's more what's expected here.
-
-> Both approaches work. Relying on propagation feels like it is the
-> "right way" to handle this, even if it's harder to get right and the
-> regulator core does not entirely support it. But it's possible that
-> this is based on a misunderstanding of what "bypass" is actually
-> supposed to do.
-
-Another option would be to add a regulator configuration which allowed
-the regulator to transparently go into bypass mode if the parent could
-do things directly, only enabling regulation if the parent couldn't
-support.  That would mean you'd loose the supply cleanup function which
-is typically part of why there are LDOs in the system but it sounds like
-you're OK with that in at least your use case.
-
-We could also perhaps have a way to set the regulator into permanent
-bypass mode from the constraints for use cases that just never need it
-and then remap the supply relationship at probe time (which avoids any
-special runtime casing) for something even simpler.
-
---ra3w566qgvgkdp4p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljmjlEACgkQJNaLcl1U
-h9DQ7wf/S+52rtA9B/eMbuFHseLfxuLT50Xgc3krngfpbcV9H0lixOixX1zKaIAk
-9l2tSSwGHMz6IuJO/d4/m8eAKUo7Udxwysuc6MLeDHLVR5qEGOou2EAepF4ER2Ms
-CJd33jsEk3qH5C+yZF6As6D9OpLtYMMqRg2r6bjhZDrRovc6acpLI2eJmIR3akbd
-4UuhieDPil+b/3xqoYk55k3fIazL4ZOLlycORJvz7uBpe1TnW/Ze+SuqHf9iYS96
-UkjNoYzf4W/ghuXFo6aQYbesdkNk9KN71j6TkQBvXBKWrwz1wq7ZP5j6MmFkTanH
-g0XJKSdvN+SH03pTSkBgcX9oBS4GMg==
-=xKQ2
------END PGP SIGNATURE-----
-
---ra3w566qgvgkdp4p--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
