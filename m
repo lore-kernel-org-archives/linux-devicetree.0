@@ -1,62 +1,61 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/fdt: introduce of_scan_flat_dt_subnodes and of_get_flat_dt_phandle
-Date: Thu, 6 Apr 2017 09:09:41 -0500
-Message-ID: <CAL_JsqKuomE41grhAvjFxkFbS4A3-M_TK8gP8FU=HdDpQ3TTkg@mail.gmail.com>
-References: <20170405123706.6081-1-npiggin@gmail.com> <20170405123706.6081-3-npiggin@gmail.com>
- <CAL_JsqK4zbACwWVb-rsrvBb4hjBCexrqKRKrzSiZrZH5w=bKqQ@mail.gmail.com>
- <20170406003251.533e2845@roar.ozlabs.ibm.com> <CAL_JsqLEvjb8S-+-JEa4ALHeCWHiR1A_4ur9kd3pBRJaFYWVKw@mail.gmail.com>
- <1491425881.4166.90.camel@kernel.crashing.org> <20170406103829.67d462e1@roar.ozlabs.ibm.com>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Fix issues and factorize arm/arm64 capacity
+ information code
+Date: Thu, 6 Apr 2017 15:14:02 +0100
+Message-ID: <20170406141402.GJ9429@e106622-lin>
+References: <20170327131825.32134-1-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170406103829.67d462e1-a5aMA/AkCkgK5Ils6ZIQy0EOCMrvLtNR@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170327131825.32134-1-juri.lelli-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 7:38 PM, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, 06 Apr 2017 06:58:01 +1000
-> Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->
->> On Wed, 2017-04-05 at 10:58 -0500, Rob Herring wrote:
->> > Well, I'd like to avoid expanding usage of flat DT parsing in the
->> > kernel. But you could just put this function into arch/powerpc and I'd
->> > never see it, but I like that even less. Mainly, I just wanted to
->> > raise the point.
->> >
->> > Your argument works until you need that setup in assembly code, then
->> > you are in the situation that you need to either handle the setup in
->> > bootloader/firmware or have an simple way to determine that condition.
->>
->> The main issue is that changing that is a very very invasive change in
->> an extremely fragile and rather nasty area of code shared by 32 and 64-
->> bit for which we don't even have easy access to all the machines to
->> test with anymore :)
->>
->> It's probably not impossible, but it would delay the new cpu feature
->> stuff that Nick is making by a lot, probably monthes, making it nearly
->> impossible to get back into distros etc...
->>
->> So while it might be something to consider, I would definitely keep
->> that as a separate unit of work to do later.
->
-> Yeah, it's no longer a "drop in" replacement for existing features
-> testing if we do this, which makes it hard to backport too (we will
-> need this for compatibility with future firmware, so it will have to
-> go into distro kernels.)
->
-> Given that it's quite a small addition to of/fdt code, hopefully
-> that gives you a reasonable justification to accept it.
->
-> If you prefer not to, that's okay, but I think we would have to carry
-> it in arch/powerpc at least for a time, because of the schedule we're
-> working to for POWER9 enablement. As a longer term item I agree with you
-> and Ben, it would be worth considering unflattening earlier.
+Hi,
 
-As I mentioned, keeping it in arch/powerpc I like even less. So this is fine.
+On 27/03/17 14:18, Juri Lelli wrote:
+> Hi,
+> 
+> arm and arm64 topology.c share a lot of code related to parsing of capacity
+> information. This is v3 of a solution [1] (based on Will's, Catalin's and
+> Mark's off-line suggestions) to move such common code in a single place:
+> drivers/base/arch_topology.c (by creating such file and conditionally compiling
+> it for arm and arm64 only).
+> 
+> First 4 patches are actually fixes for the current code.
+> 
+> Patch 5 is the actual refactoring.
+> 
+> Patch 6 is a minor change suggested by Greg and can be squashed as needed.
+> 
+> Patch 7 removes one of the extern symbols by changing a bit the now common
+> code.
+> 
+> Patch 8 removes the remaining externs (as required by Russell during v1 review)
+> by creating a new header file include/linux/arch_topology.h and including that
+> from arm, arm64 and drivers.
+> 
+> Last patch addresses Dietmar's comments to v1 and adds a 'atd_' prefix to
+> interfaces exported by drivers code and used by arch (and potentially others in
+> the future).
+> 
+> Changes from v2:
+> 
+>  - rebase on top of 4.11-rc4
+>  - fix various problems pointed out by Greg, thanks for the review!
+>    (see patch 5 for details)
+> 
 
-Rob
+Thanks Vincent for your comments.
+
+Everybody else, ping?
+
+Thanks,
+
+- Juri
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
