@@ -1,116 +1,44 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH V10 06/12] of: device: Fix overflow of coherent_dma_mask
-Date: Thu, 6 Apr 2017 12:24:12 -0700
-Message-ID: <58E695DC.7010808@gmail.com>
-References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
- <1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
- <1491301105-5274-7-git-send-email-sricharan@codeaurora.org>
- <58E5E7B7.1050400@gmail.com> <b081f333-084d-ffa5-635f-f7f1c0232ac3@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <b081f333-084d-ffa5-635f-f7f1c0232ac3@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Sricharan R <sricharan@codeaurora.org>, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, gregkh@linuxfoundation.org
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: Make of_match_node() an inline stub for CONFIG_OF=n
+Date: Thu,  6 Apr 2017 12:32:24 -0700
+Message-ID: <20170406193224.10046-1-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/17 03:24, Robin Murphy wrote:
-> On 06/04/17 08:01, Frank Rowand wrote:
->> On 04/04/17 03:18, Sricharan R wrote:
->>> Size of the dma-range is calculated as coherent_dma_mask + 1
->>> and passed to arch_setup_dma_ops further. It overflows when
->>> the coherent_dma_mask is set for full 64 bits 0xFFFFFFFFFFFFFFFF,
->>> resulting in size getting passed as 0 wrongly. Fix this by
->>> passsing in max(mask, mask + 1). Note that in this case
->>> when the mask is set to full 64bits, we will be passing the mask
->>> itself to arch_setup_dma_ops instead of the size. The real fix
->>> for this should be to make arch_setup_dma_ops receive the
->>> mask and handle it, to be done in the future.
->>>
->>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->>> ---
->>>  drivers/of/device.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/of/device.c b/drivers/of/device.c
->>> index c17c19d..c2ae6bb 100644
->>> --- a/drivers/of/device.c
->>> +++ b/drivers/of/device.c
->>> @@ -107,7 +107,7 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->>>  	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
->>>  	if (ret < 0) {
->>>  		dma_addr = offset = 0;
->>> -		size = dev->coherent_dma_mask + 1;
->>> +		size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
->>>  	} else {
->>>  		offset = PFN_DOWN(paddr - dma_addr);
->>>  		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->>>
->>
->> NACK.
->>
->> Passing an invalid size to arch_setup_dma_ops() is only part of the problem.
->> size is also used in of_dma_configure() before calling arch_setup_dma_ops():
->>
->>         dev->coherent_dma_mask = min(dev->coherent_dma_mask,
->>                                      DMA_BIT_MASK(ilog2(dma_addr + size)));
->>         *dev->dma_mask = min((*dev->dma_mask),
->>                              DMA_BIT_MASK(ilog2(dma_addr + size)));
->>
->> which would be incorrect for size == 0xffffffffffffffffULL when
->> dma_addr != 0.  So the proposed fix really is not papering over
->> the base problem very well.
-> 
-> I'm not sure I agree there. Granted, there exist many more problematic
-> aspects than are dealt with here (I've got more patches cooking to sort
-> out some of the other issues we have with dma-ranges), but considering
-> size specifically:
-> 
-> - It is not possible to explicitly specify a range with a size of 2^64
-> in DT. If someone does specify a size of 0, they've done a silly thing
-> and should not be surprised that it ends badly.
-> 
-> - It *is* perfectly legitimate for bus code (or a previous device
-> driver, once we start coming here at probe time) to have set a device's
-> DMA mask to 0xffffffffffffffffULL. If this code then blindly overflows
-> and infers an invalid size of 0 from that, breaking things in the
-> process, that is this code's fault alone. It just so happens that
-> nothing managed to trigger the latent problem until patch #7 here shakes
-> up the callsites.
+Make of_match_node() an inline function when CONFIG_OF=n which allows the
+compiler to eliminate warnings about unused variables.
 
-The existing code that uses size does not appear capable of dealing with
-the case of DMA mask of 0xffffffffffffffffULL since 2^64 does not fit
-into size.
+Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ include/linux/of.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-The code affected by the DMA mask is not within my area of knowledge, so
-take the following with a grain of salt.  If a DMA mask of
-0xffffffffffffffffULL is provided, would the code still work without error
-(though with reduced capability) if the mask was changed to
-0xefffffffffffffffULL?  I would guess that the location to do so would
-be where dev->coherent_dma_mask is set, or some other location that
-is not of_dma_configure().  This would just be a temporary workaround.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 21e6323de0f3..2803a85e81ec 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -839,7 +839,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
+ }
+ 
+ #define of_match_ptr(_ptr)	NULL
+-#define of_match_node(_matches, _node)	NULL
++static inline const struct of_device_id *of_match_node(
++	const struct of_device_id *matches, const struct device_node *node)
++{
++	return NULL;
++}
+ #endif /* CONFIG_OF */
+ 
+ /* Default string compare functions, Allow arch asm/prom.h to override */
+-- 
+2.9.3
 
-
-> Yes, wacky impossible base + size combinations in DT were a theoretical
-> problem before, and remain a theoretical problem, but also fall into the
-> "how did you ever expect this to work?" category. There's certainly
-> plenty more we can do to improve the DT parsing/validation, but that
-> still doesn't apply to this path where the information is *not* coming
-> from the DT at all.
-> 
->> I agree that the proper solution involves passing a mask instead
->> of a size to arch_setup_dma_ops().
-> 
-> Having started writing that patch too, I can tell you it's a big bugger
-> touching multiple architectures and fixing up various drivers doing
-> stupid things, hence why I'm happy with this point fix being the lesser
-> of two evils in terms of not holding up this mostly-orthogonal series.
-> 
-> Robin.
-> 
->>
->> -Frank
->>
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
