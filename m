@@ -1,115 +1,55 @@
-From: <Yasunari.Takiguchi@sony.com>
-Subject: [PATCH 0/5] dt-bindings: media: Add document file and driver
-Date: Thu, 6 Apr 2017 16:42:18 +0900
-Message-ID: <1491464538-7651-1-git-send-email-Yasunari.Takiguchi@sony.com>
+From: <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+Subject: [PATCH 1/5] dt-bindings: media: Add document file for CXD2880 SPI I/F
+Date: Thu, 6 Apr 2017 16:54:33 +0900
+Message-ID: <1491465273-9338-1-git-send-email-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tbird20d@gmail.com, frowand.list@gmail.com, Masayuki.Yamamoto@sony.com, Hideki.Nozawa@sony.com, Kota.Yonezawa@sony.com, Toshihiko.Matsumoto@sony.com, Satoshi.C.Watanabe@sony.com, Yasunari.Takiguchi@jp.sony.com, Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>, Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
 
-Hi,
+This is the document file for Sony CXD2880 DVB-T2/T tuner + demodulator.
+It contains the description of the SPI adapter binding.
 
-This is the patch series of Sony CXD2880 DVB-T2/T tuner + demodulator driver.
-The driver supports DVB-API and interfaces through SPI.
-
-We have tested the driver on Raspberry Pi 3 and got picture and sound from a media player.
-
-Thanks,
-Takiguchi
+Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
+Signed-off-by: Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>
+Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
+Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
+Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
 ---
- Documentation//devicetree/bindings/media/spi/sony-cxd2880.txt        |   14 ++++++++++++++
- drivers/media/spi/Kconfig                                            |   14 +
- drivers/media/spi/Makefile                                           |    5 +
- drivers/media/spi/cxd2880-spi.c                                      |  727 +++++++++++++++++++++++++++++++++++++++
- drivers/media/dvb-frontends/Kconfig                                  |    2 +
- drivers/media/dvb-frontends/Makefile                                 |    1 +
- drivers/media/dvb-frontends/cxd2880/Kconfig                          |    6 +
- drivers/media/dvb-frontends/cxd2880/Makefile                         |   22 +
- drivers/media/dvb-frontends/cxd2880/cxd2880.h                        |   46 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_common.c                 |   84 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_common.h                 |   86 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c              |  147 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h              |   40 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h                    |   50 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c                  |   99 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h                  |   44 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_io.c                     |   68 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_io.h                     |   62 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_math.c                   |   89 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_math.h                   |   40 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h                    |   51 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c             |  130 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h             |   45 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_stdlib.h                 |   35 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_stopwatch_port.c         |   71 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.c                 | 3925 ++++++++++++++++++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.h                 |  395 ++
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_driver_version.h  |   29 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.c             |  207 ++
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.h             |   52 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_top.c                    | 1550 ++++++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt.h                   |   91 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h                  |  402 ++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt.c             |  197 ++
- drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt.h             |   58 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt2.c            |  311 +++
- drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt2.h            |   64 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt.c            | 1072 +++++++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt.h            |   62 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c           | 1309 ++++++++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h           |   82 +
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c       | 2523 ++++++++++++++++++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.h       |  170 ++
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt_mon.c        | 1190 +++++++++
- drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt_mon.h        |  106 +
- MAINTAINERS                                                          |    9 +++++++++
- 46 files changed, 15782 insertions(+)
-
+ .../devicetree/bindings/media/spi/sony-cxd2880.txt |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt
- create mode 100644 drivers/media/spi/cxd2880-spi.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/Kconfig
- create mode 100644 drivers/media/dvb-frontends/cxd2880/Makefile
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_common.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_common.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_io.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_io.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_math.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_math.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_stdlib.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_stopwatch_port.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_driver_version.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_top.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt2.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ_dvbt2.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2_mon.h
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt_mon.c
- create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt_mon.h
+
+diff --git a/Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt b/Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt
+new file mode 100644
+index 0000000..fc5aa26
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt
+@@ -0,0 +1,14 @@
++Sony CXD2880 DVB-T2/T tuner + demodulator driver SPI adapter
++
++Required properties:
++- compatible: Should be "sony,cxd2880".
++- reg: SPI chip select number for the device.
++- spi-max-frequency: Maximum bus speed, should be set to <55000000> (55MHz).
++
++Example:
++
++cxd2880@0 {
++	compatible = "sony,cxd2880";
++	reg = <0>; /* CE0 */
++	spi-max-frequency = <55000000>; /* 55MHz */
++};
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
