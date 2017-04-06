@@ -1,307 +1,685 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 5/5] iio: dac: stm32: add support for waveform generator
-Date: Thu, 6 Apr 2017 18:11:56 +0200
-Message-ID: <1491495116-7209-6-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 2/5] iio: dac: add support for stm32 DAC
+Date: Thu, 6 Apr 2017 18:11:53 +0200
+Message-ID: <1491495116-7209-3-git-send-email-fabrice.gasnier@st.com>
 References: <1491495116-7209-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1491495116-7209-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, benjamin.gaignard@st.com
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491495116-7209-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-STM32 DAC has built-in noise or triangle waveform generator.
-- "wavetype" extended attribute selects noise or triangle.
-- "amplitude" extended attribute selects amplitude for waveform generator
+Add support for STMicroelectronics STM32 DAC. It's a 12-bit, voltage
+output digital-to-analog converter. It has two output channels, each
+with its own converter.
+It supports 8 bits or 12bits left/right aligned data format. Only
+12bits right-aligned is used here. It has built-in noise or
+triangle waveform generator, and supports external triggers for
+conversions.
+Each channel can be used independently, with separate trigger, then
+separate IIO devices are used to handle this. Core driver is intended
+to share common resources such as clock, reset, reference voltage and
+registers.
 
-A DC offset can be added to waveform generator output. This can be done
-using out_voltage[1/2]_offset
-
-Waveform generator requires a trigger to be configured, to increment /
-decrement internal counter in case of triangle generator. Noise
-generator is a bit different,  but also requires a trigger to generate
-samples.
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 ---
 Changes in v2:
-- use _offset parameter to add DC offset to waveform generator
-- Rework ABI to better fit existing DDS ABI: use out_voltageY_wavetype,
-  out_voltage_wavetype_available, out_voltageY_amplitude,
-  out_voltage_amplitude_available
-- Better explain trigger usage in case of waveform generator.
+- Define 'Hi-Z'/'enable' powerdown modes instead of using 'enable'
+  attribute normally not used for DACs.
+- use 'reg' instead of 'st,dac-channel' property
+- Use macro to differentiate channels
+- Fix typos, remove leading '&' for functions
+- Add comments on single channel per device
+- Use devm_iio_device_register variant, removes need for .remove
 ---
- Documentation/ABI/testing/sysfs-bus-iio-dac-stm32 |  16 +++
- drivers/iio/dac/stm32-dac-core.h                  |   4 +
- drivers/iio/dac/stm32-dac.c                       | 158 +++++++++++++++++++++-
- 3 files changed, 177 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
+ drivers/iio/dac/Kconfig          |  15 ++
+ drivers/iio/dac/Makefile         |   2 +
+ drivers/iio/dac/stm32-dac-core.c | 180 ++++++++++++++++++++
+ drivers/iio/dac/stm32-dac-core.h |  51 ++++++
+ drivers/iio/dac/stm32-dac.c      | 350 +++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 598 insertions(+)
+ create mode 100644 drivers/iio/dac/stm32-dac-core.c
+ create mode 100644 drivers/iio/dac/stm32-dac-core.h
+ create mode 100644 drivers/iio/dac/stm32-dac.c
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
+diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+index d3084028..7198648 100644
+--- a/drivers/iio/dac/Kconfig
++++ b/drivers/iio/dac/Kconfig
+@@ -274,6 +274,21 @@ config MCP4922
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called mcp4922.
+ 
++config STM32_DAC
++	tristate "STMicroelectronics STM32 DAC"
++	depends on (ARCH_STM32 && OF) || COMPILE_TEST
++	depends on REGULATOR
++	select STM32_DAC_CORE
++	help
++	  Say yes here to build support for STMicroelectronics STM32 Digital
++	  to Analog Converter (DAC).
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called stm32-dac.
++
++config STM32_DAC_CORE
++	tristate
++
+ config VF610_DAC
+ 	tristate "Vybrid vf610 DAC driver"
+ 	depends on OF
+diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+index f01bf4a..afe8ae7 100644
+--- a/drivers/iio/dac/Makefile
++++ b/drivers/iio/dac/Makefile
+@@ -29,4 +29,6 @@ obj-$(CONFIG_MAX517) += max517.o
+ obj-$(CONFIG_MAX5821) += max5821.o
+ obj-$(CONFIG_MCP4725) += mcp4725.o
+ obj-$(CONFIG_MCP4922) += mcp4922.o
++obj-$(CONFIG_STM32_DAC_CORE) += stm32-dac-core.o
++obj-$(CONFIG_STM32_DAC) += stm32-dac.o
+ obj-$(CONFIG_VF610_DAC) += vf610_dac.o
+diff --git a/drivers/iio/dac/stm32-dac-core.c b/drivers/iio/dac/stm32-dac-core.c
 new file mode 100644
-index 0000000..8f1fa009
+index 0000000..75e4878
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
-@@ -0,0 +1,16 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_wavetype
-+What:		/sys/bus/iio/devices/iio:deviceX/out_voltage_wavetype_available
-+KernelVersion:	4.12
-+Contact:	fabrice.gasnier@st.com
-+Description:
-+		List and/or select waveform generation provided by STM32 DAC:
-+		- "flat": waveform generator disabled (default)
-+		- "noise": select noise waveform
-+		- "triangle": select triangle waveform
++++ b/drivers/iio/dac/stm32-dac-core.c
+@@ -0,0 +1,180 @@
++/*
++ * This file is part of STM32 DAC driver
++ *
++ * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
++ * Author: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>.
++ *
++ * License type: GPLv2
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
++ * or FITNESS FOR A PARTICULAR PURPOSE.
++ * See the GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program. If not, see <http://www.gnu.org/licenses/>.
++ */
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_amplitude
-+What:		/sys/bus/iio/devices/iio:deviceX/out_voltage_amplitude_available
-+KernelVersion:	4.12
-+Contact:	fabrice.gasnier@st.com
-+Description:
-+		List and/or select amplitude used for waveform generator
-diff --git a/drivers/iio/dac/stm32-dac-core.h b/drivers/iio/dac/stm32-dac-core.h
-index e51a468..0f02975 100644
---- a/drivers/iio/dac/stm32-dac-core.h
-+++ b/drivers/iio/dac/stm32-dac-core.h
-@@ -37,8 +37,12 @@
- #define STM32H7_DAC_CR_TEN1		BIT(1)
- #define STM32H7_DAC_CR_TSEL1_SHIFT	2
- #define STM32H7_DAC_CR_TSEL1		GENMASK(5, 2)
-+#define STM32_DAC_CR_WAVE1		GENMASK(7, 6)
-+#define STM32_DAC_CR_MAMP1		GENMASK(11, 8)
- #define STM32H7_DAC_CR_HFSEL		BIT(15)
- #define STM32_DAC_CR_EN2		BIT(16)
-+#define STM32_DAC_CR_WAVE2		GENMASK(23, 22)
-+#define STM32_DAC_CR_MAMP2		GENMASK(27, 24)
- 
- /* STM32_DAC_SWTRIGR bit fields */
- #define STM32_DAC_SWTRIGR_SWTRIG1	BIT(0)
-diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
-index a7a078e..2ed75db 100644
---- a/drivers/iio/dac/stm32-dac.c
-+++ b/drivers/iio/dac/stm32-dac.c
-@@ -42,10 +42,12 @@
- /**
-  * struct stm32_dac - private data of DAC driver
-  * @common:		reference to DAC common data
-+ * @wavetype:		waveform generator
-  * @swtrig:		Using software trigger
-  */
- struct stm32_dac {
- 	struct stm32_dac_common *common;
-+	u32 wavetype;
- 	bool swtrig;
- };
- 
-@@ -222,6 +224,29 @@ static int stm32_dac_set_value(struct stm32_dac *dac, int channel, int val)
- 	return ret;
- }
- 
-+static int stm32_dac_get_offset(struct stm32_dac *dac, int channel, int *val)
-+{
-+	int ret;
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
 +
-+	/* Offset is only relevant in waveform generation mode. */
-+	if (!dac->wavetype) {
-+		*val = 0;
-+		return IIO_VAL_INT;
-+	}
++#include "stm32-dac-core.h"
 +
-+	/*
-+	 * In waveform generation mode, DC offset in DHR is added to waveform
-+	 * generator output, then stored to DOR (data output register).
-+	 * Read offset from DHR.
-+	 */
-+	if (STM32_DAC_IS_CHAN_1(channel))
-+		ret = regmap_read(dac->common->regmap, STM32_DAC_DHR12R1, val);
-+	else
-+		ret = regmap_read(dac->common->regmap, STM32_DAC_DHR12R2, val);
-+
-+	return ret ? ret : IIO_VAL_INT;
-+}
-+
- static int stm32_dac_read_raw(struct iio_dev *indio_dev,
- 			      struct iio_chan_spec const *chan,
- 			      int *val, int *val2, long mask)
-@@ -231,6 +256,8 @@ static int stm32_dac_read_raw(struct iio_dev *indio_dev,
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
- 		return stm32_dac_get_value(dac, chan->channel, val);
-+	case IIO_CHAN_INFO_OFFSET:
-+		return stm32_dac_get_offset(dac, chan->channel, val);
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = dac->common->vref_mv;
- 		*val2 = chan->scan_type.realbits;
-@@ -247,8 +274,16 @@ static int stm32_dac_write_raw(struct iio_dev *indio_dev,
- 	struct stm32_dac *dac = iio_priv(indio_dev);
- 
- 	switch (mask) {
-+	case IIO_CHAN_INFO_OFFSET:
-+		/* Offset only makes sense in waveform generation mode */
-+		if (dac->wavetype)
-+			return stm32_dac_set_value(dac, chan->channel, val);
-+		return -EBUSY;
- 	case IIO_CHAN_INFO_RAW:
--		return stm32_dac_set_value(dac, chan->channel, val);
-+		if (!dac->wavetype)
-+			return stm32_dac_set_value(dac, chan->channel, val);
-+		/* raw value is read only in waveform generation mode */
-+		return -EBUSY;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -334,6 +369,122 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
- 	.set = stm32_dac_set_powerdown_mode,
- };
- 
-+/* waveform generator wave selection */
-+static const char * const stm32_dac_wavetype_desc[] = {
-+	"flat",
-+	"noise",
-+	"triangle",
++/**
++ * struct stm32_dac_priv - stm32 DAC core private data
++ * @pclk:		peripheral clock common for all DACs
++ * @rst:		peripheral reset control
++ * @vref:		regulator reference
++ * @common:		Common data for all DAC instances
++ */
++struct stm32_dac_priv {
++	struct clk *pclk;
++	struct reset_control *rst;
++	struct regulator *vref;
++	struct stm32_dac_common common;
 +};
 +
-+static int stm32_dac_set_wavetype(struct iio_dev *indio_dev,
-+				  const struct iio_chan_spec *chan,
-+				  unsigned int wavetype)
++static struct stm32_dac_priv *to_stm32_dac_priv(struct stm32_dac_common *com)
 +{
-+	struct stm32_dac *dac = iio_priv(indio_dev);
-+	u32 mask, val;
++	return container_of(com, struct stm32_dac_priv, common);
++}
++
++static const struct regmap_config stm32_dac_regmap_cfg = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = sizeof(u32),
++	.max_register = 0x3fc,
++};
++
++static int stm32_dac_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct stm32_dac_priv *priv;
++	struct regmap *regmap;
++	struct resource *res;
++	void __iomem *mmio;
 +	int ret;
 +
-+	/*
-+	 * Waveform generator requires a trigger to be configured, to increment
-+	 * or decrement internal counter in case of triangle generator. Noise
-+	 * generator is a bit different, but also requires a trigger to
-+	 * generate samples.
-+	 */
-+	if (wavetype && !indio_dev->trig)
-+		dev_dbg(&indio_dev->dev, "Wavegen requires a trigger\n");
++	if (!dev->of_node)
++		return -ENODEV;
 +
-+	if (STM32_DAC_IS_CHAN_1(chan->channel)) {
-+		val = FIELD_PREP(STM32_DAC_CR_WAVE1, wavetype);
-+		mask = STM32_DAC_CR_WAVE1;
-+	} else {
-+		val = FIELD_PREP(STM32_DAC_CR_WAVE2, wavetype);
-+		mask = STM32_DAC_CR_WAVE2;
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	mmio = devm_ioremap_resource(dev, res);
++	if (IS_ERR(mmio))
++		return PTR_ERR(mmio);
++
++	regmap = devm_regmap_init_mmio(dev, mmio, &stm32_dac_regmap_cfg);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++	priv->common.regmap = regmap;
++
++	priv->vref = devm_regulator_get(dev, "vref");
++	if (IS_ERR(priv->vref)) {
++		ret = PTR_ERR(priv->vref);
++		dev_err(dev, "vref get failed, %d\n", ret);
++		return ret;
 +	}
 +
-+	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, mask, val);
-+	if (ret)
++	ret = regulator_enable(priv->vref);
++	if (ret < 0) {
++		dev_err(dev, "vref enable failed\n");
 +		return ret;
-+	dac->wavetype = wavetype;
++	}
++
++	ret = regulator_get_voltage(priv->vref);
++	if (ret < 0) {
++		dev_err(dev, "vref get voltage failed, %d\n", ret);
++		goto err_vref;
++	}
++	priv->common.vref_mv = ret / 1000;
++	dev_dbg(dev, "vref+=%dmV\n", priv->common.vref_mv);
++
++	priv->pclk = devm_clk_get(dev, "pclk");
++	if (IS_ERR(priv->pclk)) {
++		ret = PTR_ERR(priv->pclk);
++		dev_err(dev, "pclk get failed\n");
++		goto err_vref;
++	}
++
++	ret = clk_prepare_enable(priv->pclk);
++	if (ret < 0) {
++		dev_err(dev, "pclk enable failed\n");
++		goto err_vref;
++	}
++
++	priv->rst = devm_reset_control_get(dev, NULL);
++	if (!IS_ERR(priv->rst)) {
++		reset_control_assert(priv->rst);
++		udelay(2);
++		reset_control_deassert(priv->rst);
++	}
++
++	/* When clock speed is higher than 80MHz, set HFSEL */
++	priv->common.hfsel = (clk_get_rate(priv->pclk) > 80000000UL);
++	ret = regmap_update_bits(regmap, STM32_DAC_CR, STM32H7_DAC_CR_HFSEL,
++				 priv->common.hfsel ? STM32H7_DAC_CR_HFSEL : 0);
++	if (ret)
++		goto err_pclk;
++
++	platform_set_drvdata(pdev, &priv->common);
++
++	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, dev);
++	if (ret < 0) {
++		dev_err(dev, "failed to populate DT children\n");
++		goto err_pclk;
++	}
++
++	return 0;
++
++err_pclk:
++	clk_disable_unprepare(priv->pclk);
++err_vref:
++	regulator_disable(priv->vref);
++
++	return ret;
++}
++
++static int stm32_dac_remove(struct platform_device *pdev)
++{
++	struct stm32_dac_common *common = platform_get_drvdata(pdev);
++	struct stm32_dac_priv *priv = to_stm32_dac_priv(common);
++
++	of_platform_depopulate(&pdev->dev);
++	clk_disable_unprepare(priv->pclk);
++	regulator_disable(priv->vref);
 +
 +	return 0;
 +}
 +
-+static int stm32_dac_get_wavetype(struct iio_dev *indio_dev,
-+				  const struct iio_chan_spec *chan)
++static const struct of_device_id stm32_dac_of_match[] = {
++	{ .compatible = "st,stm32h7-dac-core", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, stm32_dac_of_match);
++
++static struct platform_driver stm32_dac_driver = {
++	.probe = stm32_dac_probe,
++	.remove = stm32_dac_remove,
++	.driver = {
++		.name = "stm32-dac-core",
++		.of_match_table = stm32_dac_of_match,
++	},
++};
++module_platform_driver(stm32_dac_driver);
++
++MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>");
++MODULE_DESCRIPTION("STMicroelectronics STM32 DAC core driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:stm32-dac-core");
+diff --git a/drivers/iio/dac/stm32-dac-core.h b/drivers/iio/dac/stm32-dac-core.h
+new file mode 100644
+index 0000000..daf0993
+--- /dev/null
++++ b/drivers/iio/dac/stm32-dac-core.h
+@@ -0,0 +1,51 @@
++/*
++ * This file is part of STM32 DAC driver
++ *
++ * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
++ * Author: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>.
++ *
++ * License type: GPLv2
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
++ * or FITNESS FOR A PARTICULAR PURPOSE.
++ * See the GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef __STM32_DAC_CORE_H
++#define __STM32_DAC_CORE_H
++
++#include <linux/regmap.h>
++
++/* STM32 DAC registers */
++#define STM32_DAC_CR		0x00
++#define STM32_DAC_DHR12R1	0x08
++#define STM32_DAC_DHR12R2	0x14
++#define STM32_DAC_DOR1		0x2C
++#define STM32_DAC_DOR2		0x30
++
++/* STM32_DAC_CR bit fields */
++#define STM32_DAC_CR_EN1		BIT(0)
++#define STM32H7_DAC_CR_HFSEL		BIT(15)
++#define STM32_DAC_CR_EN2		BIT(16)
++
++/**
++ * struct stm32_dac_common - stm32 DAC driver common data (for all instances)
++ * @regmap: DAC registers shared via regmap
++ * @vref_mv: reference voltage (mv)
++ * @hfsel: high speed bus clock selected
++ */
++struct stm32_dac_common {
++	struct regmap			*regmap;
++	int				vref_mv;
++	bool				hfsel;
++};
++
++#endif
+diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+new file mode 100644
+index 0000000..c0d993a
+--- /dev/null
++++ b/drivers/iio/dac/stm32-dac.c
+@@ -0,0 +1,350 @@
++/*
++ * This file is part of STM32 DAC driver
++ *
++ * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
++ * Authors: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
++ *	    Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
++ *
++ * License type: GPLv2
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
++ * or FITNESS FOR A PARTICULAR PURPOSE.
++ * See the GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/bitfield.h>
++#include <linux/delay.h>
++#include <linux/iio/iio.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include "stm32-dac-core.h"
++
++#define STM32_DAC_CHANNEL_1		1
++#define STM32_DAC_CHANNEL_2		2
++#define STM32_DAC_IS_CHAN_1(ch)		((ch) & STM32_DAC_CHANNEL_1)
++
++/**
++ * struct stm32_dac - private data of DAC driver
++ * @common:		reference to DAC common data
++ */
++struct stm32_dac {
++	struct stm32_dac_common *common;
++};
++
++static int stm32_dac_is_enabled(struct iio_dev *indio_dev, int channel)
 +{
 +	struct stm32_dac *dac = iio_priv(indio_dev);
-+	u32 val;
++	u32 en, val;
 +	int ret;
 +
 +	ret = regmap_read(dac->common->regmap, STM32_DAC_CR, &val);
 +	if (ret < 0)
 +		return ret;
-+
-+	if (STM32_DAC_IS_CHAN_1(chan->channel))
-+		return FIELD_GET(STM32_DAC_CR_WAVE1, val);
++	if (STM32_DAC_IS_CHAN_1(channel))
++		en = FIELD_GET(STM32_DAC_CR_EN1, val);
 +	else
-+		return FIELD_GET(STM32_DAC_CR_WAVE2, val);
++		en = FIELD_GET(STM32_DAC_CR_EN2, val);
++
++	return !!en;
 +}
 +
-+static const struct iio_enum stm32_dac_wavetype_enum = {
-+	.items = stm32_dac_wavetype_desc,
-+	.num_items = ARRAY_SIZE(stm32_dac_wavetype_desc),
-+	.get = stm32_dac_get_wavetype,
-+	.set = stm32_dac_set_wavetype,
-+};
-+
-+/*
-+ * waveform generator mamp selection: mask/amplitude
-+ * - noise: LFSR mask (linear feedback shift register, umasks bit 0, [1:0]...)
-+ * - triangle: amplitude (equal to 1, 3, 5, 7... 4095)
-+ */
-+static const char * const stm32_dac_amplitude_desc[] = {
-+	"1", "3", "7", "15", "31", "63", "127", "255", "511", "1023", "2047",
-+	"4095",
-+};
-+
-+static int stm32_dac_set_amplitude(struct iio_dev *indio_dev,
-+				   const struct iio_chan_spec *chan,
-+				   unsigned int amplitude)
++static int stm32_dac_enable(struct iio_dev *indio_dev, int channel)
 +{
 +	struct stm32_dac *dac = iio_priv(indio_dev);
-+	u32 mask, val;
++	u32 en = STM32_DAC_IS_CHAN_1(channel) ?
++		STM32_DAC_CR_EN1 : STM32_DAC_CR_EN2;
++	int ret;
 +
-+	if (STM32_DAC_IS_CHAN_1(chan->channel)) {
-+		val = FIELD_PREP(STM32_DAC_CR_MAMP1, amplitude);
-+		mask = STM32_DAC_CR_MAMP1;
-+	} else {
-+		val = FIELD_PREP(STM32_DAC_CR_MAMP2, amplitude);
-+		mask = STM32_DAC_CR_MAMP2;
++	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, en, en);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Enable failed\n");
++		return ret;
 +	}
 +
-+	return regmap_update_bits(dac->common->regmap, STM32_DAC_CR, mask, val);
++	/*
++	 * When HFSEL is set, it is not allowed to write the DHRx register
++	 * during 8 clock cycles after the ENx bit is set. It is not allowed
++	 * to make software/hardware trigger during this period either.
++	 */
++	if (dac->common->hfsel)
++		udelay(1);
++
++	return 0;
 +}
 +
-+static int stm32_dac_get_amplitude(struct iio_dev *indio_dev,
-+				   const struct iio_chan_spec *chan)
++static int stm32_dac_disable(struct iio_dev *indio_dev, int channel)
 +{
 +	struct stm32_dac *dac = iio_priv(indio_dev);
-+	u32 val;
++	u32 en = STM32_DAC_IS_CHAN_1(channel) ?
++		STM32_DAC_CR_EN1 : STM32_DAC_CR_EN2;
 +	int ret;
 +
-+	ret = regmap_read(dac->common->regmap, STM32_DAC_CR, &val);
++	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, en, 0);
++	if (ret)
++		dev_err(&indio_dev->dev, "Disable failed\n");
++
++	return ret;
++}
++
++static int stm32_dac_get_value(struct stm32_dac *dac, int channel, int *val)
++{
++	int ret;
++
++	if (STM32_DAC_IS_CHAN_1(channel))
++		ret = regmap_read(dac->common->regmap, STM32_DAC_DOR1, val);
++	else
++		ret = regmap_read(dac->common->regmap, STM32_DAC_DOR2, val);
++
++	return ret ? ret : IIO_VAL_INT;
++}
++
++static int stm32_dac_set_value(struct stm32_dac *dac, int channel, int val)
++{
++	int ret;
++
++	if (STM32_DAC_IS_CHAN_1(channel))
++		ret = regmap_write(dac->common->regmap, STM32_DAC_DHR12R1, val);
++	else
++		ret = regmap_write(dac->common->regmap, STM32_DAC_DHR12R2, val);
++
++	return ret;
++}
++
++static int stm32_dac_read_raw(struct iio_dev *indio_dev,
++			      struct iio_chan_spec const *chan,
++			      int *val, int *val2, long mask)
++{
++	struct stm32_dac *dac = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		return stm32_dac_get_value(dac, chan->channel, val);
++	case IIO_CHAN_INFO_SCALE:
++		*val = dac->common->vref_mv;
++		*val2 = chan->scan_type.realbits;
++		return IIO_VAL_FRACTIONAL_LOG2;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int stm32_dac_write_raw(struct iio_dev *indio_dev,
++			       struct iio_chan_spec const *chan,
++			       int val, int val2, long mask)
++{
++	struct stm32_dac *dac = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		return stm32_dac_set_value(dac, chan->channel, val);
++	default:
++		return -EINVAL;
++	}
++}
++
++static int stm32_dac_debugfs_reg_access(struct iio_dev *indio_dev,
++					unsigned reg, unsigned writeval,
++					unsigned *readval)
++{
++	struct stm32_dac *dac = iio_priv(indio_dev);
++
++	if (!readval)
++		return regmap_write(dac->common->regmap, reg, writeval);
++	else
++		return regmap_read(dac->common->regmap, reg, readval);
++}
++
++static const struct iio_info stm32_dac_iio_info = {
++	.read_raw = stm32_dac_read_raw,
++	.write_raw = stm32_dac_write_raw,
++	.debugfs_reg_access = stm32_dac_debugfs_reg_access,
++	.driver_module = THIS_MODULE,
++};
++
++static const char * const stm32_dac_powerdown_modes[] = {
++	"Hi-Z",
++	"enable",
++};
++
++static int stm32_dac_get_powerdown_mode(struct iio_dev *indio_dev,
++					const struct iio_chan_spec *chan)
++{
++	return stm32_dac_is_enabled(indio_dev, chan->channel);
++}
++
++static int stm32_dac_set_powerdown_mode(struct iio_dev *indio_dev,
++					const struct iio_chan_spec *chan,
++					unsigned int type)
++{
++	if (type)
++		return stm32_dac_enable(indio_dev, chan->channel);
++	else
++		return stm32_dac_disable(indio_dev, chan->channel);
++}
++
++static ssize_t stm32_dac_read_powerdown(struct iio_dev *indio_dev,
++					uintptr_t private,
++					const struct iio_chan_spec *chan,
++					char *buf)
++{
++	int ret = stm32_dac_is_enabled(indio_dev, chan->channel);
++
 +	if (ret < 0)
 +		return ret;
 +
-+	if (STM32_DAC_IS_CHAN_1(chan->channel))
-+		return FIELD_GET(STM32_DAC_CR_MAMP1, val);
-+	else
-+		return FIELD_GET(STM32_DAC_CR_MAMP2, val);
++	return sprintf(buf, "%d\n", ret);
 +}
 +
-+static const struct iio_enum stm32_dac_amplitude_enum = {
-+	.items = stm32_dac_amplitude_desc,
-+	.num_items = ARRAY_SIZE(stm32_dac_amplitude_desc),
-+	.get = stm32_dac_get_amplitude,
-+	.set = stm32_dac_set_amplitude,
++static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
++					 uintptr_t private,
++					 const struct iio_chan_spec *chan,
++					 const char *buf, size_t len)
++{
++	unsigned int en;
++	int ret;
++
++	ret = kstrtouint(buf, 0, &en);
++	if (ret)
++		return ret;
++
++	ret = stm32_dac_set_powerdown_mode(indio_dev, chan, en);
++	if (ret < 0)
++		return ret;
++
++	return len;
++}
++
++static const struct iio_enum stm32_dac_powerdown_mode_en = {
++	.items = stm32_dac_powerdown_modes,
++	.num_items = ARRAY_SIZE(stm32_dac_powerdown_modes),
++	.get = stm32_dac_get_powerdown_mode,
++	.set = stm32_dac_set_powerdown_mode,
 +};
 +
- static const struct iio_chan_spec_ext_info stm32_dac_ext_info[] = {
- 	{
- 		.name = "powerdown",
-@@ -343,6 +494,10 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
- 	},
- 	IIO_ENUM("powerdown_mode", IIO_SEPARATE, &stm32_dac_powerdown_mode_en),
- 	IIO_ENUM_AVAILABLE("powerdown_mode", &stm32_dac_powerdown_mode_en),
-+	IIO_ENUM("wavetype", IIO_SEPARATE, &stm32_dac_wavetype_enum),
-+	IIO_ENUM_AVAILABLE("wavetype", &stm32_dac_wavetype_enum),
-+	IIO_ENUM("amplitude", IIO_SEPARATE, &stm32_dac_amplitude_enum),
-+	IIO_ENUM_AVAILABLE("amplitude", &stm32_dac_amplitude_enum),
- 	{},
- };
- 
-@@ -352,6 +507,7 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
- 	.output = 1,					\
- 	.channel = chan,				\
- 	.info_mask_separate =				\
-+		BIT(IIO_CHAN_INFO_OFFSET) |		\
- 		BIT(IIO_CHAN_INFO_RAW) |		\
- 		BIT(IIO_CHAN_INFO_SCALE),		\
- 	/* scan_index is always 0 as num_channels is 1 */ \
++static const struct iio_chan_spec_ext_info stm32_dac_ext_info[] = {
++	{
++		.name = "powerdown",
++		.read = stm32_dac_read_powerdown,
++		.write = stm32_dac_write_powerdown,
++		.shared = IIO_SEPARATE,
++	},
++	IIO_ENUM("powerdown_mode", IIO_SEPARATE, &stm32_dac_powerdown_mode_en),
++	IIO_ENUM_AVAILABLE("powerdown_mode", &stm32_dac_powerdown_mode_en),
++	{},
++};
++
++#define STM32_DAC_CHANNEL(chan, name) {			\
++	.type = IIO_VOLTAGE,				\
++	.indexed = 1,					\
++	.output = 1,					\
++	.channel = chan,				\
++	.info_mask_separate =				\
++		BIT(IIO_CHAN_INFO_RAW) |		\
++		BIT(IIO_CHAN_INFO_SCALE),		\
++	/* scan_index is always 0 as num_channels is 1 */ \
++	.scan_type = {					\
++		.sign = 'u',				\
++		.realbits = 12,				\
++		.storagebits = 16,			\
++	},						\
++	.datasheet_name = name,				\
++	.ext_info = stm32_dac_ext_info			\
++}
++
++static const struct iio_chan_spec stm32_dac_channels[] = {
++	STM32_DAC_CHANNEL(STM32_DAC_CHANNEL_1, "out1"),
++	STM32_DAC_CHANNEL(STM32_DAC_CHANNEL_2, "out2"),
++};
++
++static int stm32_dac_chan_of_init(struct iio_dev *indio_dev)
++{
++	struct device_node *np = indio_dev->dev.of_node;
++	unsigned int i;
++	u32 channel;
++	int ret;
++
++	ret = of_property_read_u32(np, "reg", &channel);
++	if (ret) {
++		dev_err(&indio_dev->dev, "Failed to read reg property\n");
++		return ret;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(stm32_dac_channels); i++) {
++		if (stm32_dac_channels[i].channel == channel)
++			break;
++	}
++	if (i >= ARRAY_SIZE(stm32_dac_channels)) {
++		dev_err(&indio_dev->dev, "Invalid st,dac-channel\n");
++		return -EINVAL;
++	}
++
++	indio_dev->channels = &stm32_dac_channels[i];
++	/*
++	 * Expose only one channel here, as they can be used independently,
++	 * with separate trigger. Then separate IIO devices are instantiated
++	 * to manage this.
++	 */
++	indio_dev->num_channels = 1;
++
++	return 0;
++};
++
++static int stm32_dac_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct iio_dev *indio_dev;
++	struct stm32_dac *dac;
++	int ret;
++
++	if (!np)
++		return -ENODEV;
++
++	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*dac));
++	if (!indio_dev)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, indio_dev);
++
++	dac = iio_priv(indio_dev);
++	dac->common = dev_get_drvdata(pdev->dev.parent);
++	indio_dev->name = dev_name(&pdev->dev);
++	indio_dev->dev.parent = &pdev->dev;
++	indio_dev->dev.of_node = pdev->dev.of_node;
++	indio_dev->info = &stm32_dac_iio_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	ret = stm32_dac_chan_of_init(indio_dev);
++	if (ret < 0)
++		return ret;
++
++	return devm_iio_device_register(&pdev->dev, indio_dev);
++}
++
++static const struct of_device_id stm32_dac_of_match[] = {
++	{ .compatible = "st,stm32-dac", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, stm32_dac_of_match);
++
++static struct platform_driver stm32_dac_driver = {
++	.probe = stm32_dac_probe,
++	.driver = {
++		.name = "stm32-dac",
++		.of_match_table = stm32_dac_of_match,
++	},
++};
++module_platform_driver(stm32_dac_driver);
++
++MODULE_ALIAS("platform:stm32-dac");
++MODULE_AUTHOR("Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>");
++MODULE_DESCRIPTION("STMicroelectronics STM32 DAC driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
