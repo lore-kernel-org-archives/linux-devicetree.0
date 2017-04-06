@@ -1,54 +1,57 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 7/9] ARM: dts: imx6dl-icore: Add touchscreen node
-Date: Thu,  6 Apr 2017 23:32:13 +0530
-Message-ID: <1491501735-1649-8-git-send-email-jagan@openedev.com>
-References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] regulator: Add driver for voltage controlled
+ regulators
+Date: Thu, 6 Apr 2017 19:21:36 +0100
+Message-ID: <20170406182136.yrwdoyqeuz4qxc6d@sirena.org.uk>
+References: <20170331205035.126001-1-mka@chromium.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zevge64hlv4wpbne"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491501735-1649-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170331205035.126001-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-max11801 touchscreen on Engicam iCoreM6 DualLite/Solo module is
-connected via i2c1, so add max11801: touchscreen@48 on i2c1.
+--zevge64hlv4wpbne
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v3,v2:
-- none
+On Fri, Mar 31, 2017 at 01:50:35PM -0700, Matthias Kaehlcke wrote:
 
- arch/arm/boot/dts/imx6dl-icore.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> +- compatible		  : must be "vctrl-regulator".
+> +- regulator-min-microvolt : smallest voltage consumers may set
+> +- regulator-max-microvolt : largest voltage consumers may set
+> +- ctrl-regulator:	  : the name of the regulator supplying the control
+> +			    voltage.
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
-index ea9ab05..27f37cd 100644
---- a/arch/arm/boot/dts/imx6dl-icore.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore.dts
-@@ -58,6 +58,15 @@
- 	status = "okay";
- };
- 
-+&i2c1 {
-+	max11801: touchscreen@48 {
-+		compatible = "maxim,max11801";
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
- &i2c3 {
- 	sgtl5000: codec@a {
- 		compatible = "fsl,sgtl5000";
--- 
-1.9.1
+This looks good except for this bit where we read the regulator name out
+of the DT, that's generally a sign of bad practice for things that are
+less simple passives than things like this or fixed voltage regulators.
+As with the supplies for fixed voltage regulators just pick a name for
+the supply (ctrl seems fine to me) and use that, neither option is
+perfect but at elast this less typing for everyone and it's consistent
+with what other similar things are already doing.
 
+--zevge64hlv4wpbne
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljmhy8ACgkQJNaLcl1U
+h9D3ygf/QqKl27xYmCuuVeg9JE3AOM3YAY5UTqo3gsL4JMhWSXJMITA++WsiuKLW
+3bYJeHxYW7PxpgYJB1hxw1O1tXbh1qQLOeMpZJNb6vwcYtj+AyBngyAECHB1U1kY
+cmLgyrU/LzH8LRtjm+SWTS/vLDiG0mCfTGrb9clK3SCyho1cg3bsrQhXQPpAlcg7
+FndSlsnMzzrmoEq2rEm8i0hADNqFaZ5V4AJd9Ktuwq4kSq75/702YSluDMY9Nh45
+lj2ypHw4UiX1FPfSN8S+xCbVn6R88kkDsI8zRpTjezgxFKv/qgCBvNXUaULInvAn
+2uYHfSLICAmLUO8Fa1wgVwcIjYATtw==
+=HHCZ
+-----END PGP SIGNATURE-----
+
+--zevge64hlv4wpbne--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
