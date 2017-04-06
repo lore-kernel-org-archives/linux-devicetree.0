@@ -1,129 +1,65 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 07/12] clk: mediatek: add clk support for MT6797
-Date: Thu, 6 Apr 2017 13:08:52 -0700
-Message-ID: <20170406200852.GQ7065@codeaurora.org>
-References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
- <1489937193-2953-8-git-send-email-mars.cheng@mediatek.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 05/10] dt-bindings: Add Ampire AM-480272H3TMQW-T01H
+ panel
+Date: Thu, 6 Apr 2017 23:27:01 +0200
+Message-ID: <20170406212701.GA27728@ulmo.ba.sec>
+References: <1490694293-18358-1-git-send-email-yannick.fertre@st.com>
+ <1490694293-18358-6-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1489937193-2953-8-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1490694293-18358-6-git-send-email-yannick.fertre-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Cc: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/19, Mars Cheng wrote:
-> From: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Add MT6797 clock support, include topckgen, apmixedsys, infracfg
-> and subsystem clocks
-> 
-> Signed-off-by: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Tested-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks fine to me except for the one comment below. Did you want
-me to merge it into clk tree?
+On Tue, Mar 28, 2017 at 11:44:48AM +0200, Yannick Fertre wrote:
+> This patch adds documentation of device tree bindings for the WVGA panel
+> Ampire AM-480272H3TMQW-T01H.
+>=20
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+> ---
+>  .../display/panel/ampire,am-480272h3tmqw-t01h.txt  | 26 ++++++++++++++++=
+++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ampir=
+e,am-480272h3tmqw-t01h.txt
 
-> diff --git a/drivers/clk/mediatek/clk-mt6797.c b/drivers/clk/mediatek/clk-mt6797.c
-> new file mode 100644
-> index 0000000..7ebb7f1
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt6797.c
-> @@ -0,0 +1,716 @@
-> +/*
-> + * Copyright (c) 2016 MediaTek Inc.
-> + * Author: Kevin Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
+Applied, thanks.
 
-Is this include used? Please include clk-provider if the file is
-a clk driver. Same comment applies to other files in this patch.
+Thierry
 
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "clk-mtk.h"
-> +#include "clk-gate.h"
-> +
-> +#include <dt-bindings/clock/mt6797-clk.h>
-> +
-> +/*
-> + * For some clocks, we don't care what their actual rates are. And these
-> + * clocks may change their rate on different products or different scenarios.
-> + * So we model these clocks' rate as 0, to denote it's not an actual rate.
-> + */
-> +
-> +static DEFINE_SPINLOCK(mt6797_clk_lock);
-> +
-> +static const struct mtk_fixed_factor top_fixed_divs[] = {
-> +	FACTOR(CLK_TOP_SYSPLL_CK, "syspll_ck", "mainpll", 1, 1),
-> +	FACTOR(CLK_TOP_SYSPLL_D2, "syspll_d2", "mainpll", 1, 2),
-> +	FACTOR(CLK_TOP_SYSPLL1_D2, "syspll1_d2", "syspll_d2", 1, 2),
-[...]
-> +	clk_init = of_device_get_match_data(&pdev->dev);
-> +	if (!clk_init)
-> +		return -EINVAL;
-> +
-> +	r = clk_init(pdev);
-> +	if (r)
-> +		dev_err(&pdev->dev,
-> +			"could not register clock provider: %s: %d\n",
-> +			pdev->name, r);
-> +
-> +	return r;
-> +}
-> +
-> +static struct platform_driver clk_mt6797_drv = {
-> +	.probe = clk_mt6797_probe,
-> +	.driver = {
-> +		.name = "clk-mt6797",
-> +		.owner = THIS_MODULE,
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This can be removed, platform_driver_register() does it already.
+-----BEGIN PGP SIGNATURE-----
 
-> +		.of_match_table = of_match_clk_mt6797,
-> +	},
-> +};
-> +
-> +static int __init clk_mt6797_init(void)
-> +{
-> +	return platform_driver_register(&clk_mt6797_drv);
-> +}
-> +
-> +arch_initcall(clk_mt6797_init);
-> diff --git a/include/dt-bindings/clock/mt6797-clk.h b/include/dt-bindings/clock/mt6797-clk.h
-> new file mode 100644
-> index 0000000..e48aa47
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/mt6797-clk.h
-> @@ -0,0 +1,281 @@
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljmsqIACgkQ3SOs138+
+s6Eg5A/+M4UPldFXvqJVcM41niFeXL+yWYSbmSl2utD3tKU7JuIy2E/2wiV2cS2n
+NOCVXn5BCq7JfMQ58rj2IvxTLp7ngnRlweQaqzYoMwbKD5rljdmeq2oP6KwDltlJ
+MjM13EKHNHDyUCzzatMT/3mkSiZs8tM7gmaNsyUMSUn5DfakKlNacKVo1CrQbSFI
+LS2l64vL1B9VC86jEqRuiqLfrFDoPr0wMibbEjN1X4yzgmRwYAVXXX+gfRw/j2dO
+VKQMFq0guQn6KTEt2xiClHjoApuDri+UsIvyYxZgZDQEWBWJWyztGn0h2pr13sg1
+Fu3+ce7UptBPzE/NZm90d7TuNOVYEpRNywcVcMgYcM5VZc6c1LjVJpBEhHFbND9k
+yHqW8xBYA+c1Cly02JKyq+EMSbtaKTicyBKXOUPICdaZQxJ/j3te4TA+BWjc/WZ1
+szYcHLEIsatMewUKh6pWsvKMK1wEuReaNIDRQgreV9shY3mMx7sjCFV1401mqavp
+h+RcTfBa2K1tN4h1Ne3rzSBH79AnFT55Iy082prILkFj5ZUobZEdrFiI4Bypf85X
+8Tx7QQs4yDbwMSt1/452yYGrWMpHZEe/B3Oy2PZ9o/2P4RMQ4jIVTukgv4YwJNCL
+MAE8M/jSEOKwRr/Bq374Swx5rTmBaRupEEzJJ0pHrTm0ulwD9MA=
+=O58W
+-----END PGP SIGNATURE-----
 
-I think arm-soc folks don't want us merging whole drivers into
-the DT branch anymore, so please split off the dt-bindings header
-into a different patch that we can apply directly. Then we can
-layer the driver on top and just send off the header to arm-soc
-via a stable clk branch.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--lrZ03NoBR/3+SXJZ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
