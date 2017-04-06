@@ -1,17 +1,17 @@
 From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH V8 1/4] dt-bindings: phy: Add support for QUSB2 phy
-Date: Thu,  6 Apr 2017 11:21:22 +0530
-Message-ID: <1491457885-5254-2-git-send-email-vivek.gautam@codeaurora.org>
+Subject: [PATCH V8 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Thu,  6 Apr 2017 11:21:24 +0530
+Message-ID: <1491457885-5254-4-git-send-email-vivek.gautam@codeaurora.org>
 References: <1491457885-5254-1-git-send-email-vivek.gautam@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1491457885-5254-1-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Qualcomm chipsets have QUSB2 phy controller that provides
-HighSpeed functionality for DWC3 controller.
+Qualcomm chipsets have QMP phy controller that provides
+support to a number of controller, viz. PCIe, UFS, and USB.
 Adding dt binding information for the same.
 
 Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
@@ -23,95 +23,161 @@ Changes since v7:
  - None, just added Stephen's Reviewed-by tag.
 
 Changes since v6:
- - Dropped 'vdd-phy-supply' that used pm8994_s2 regulator, from bindings.
-   As Stephen said, the pm8994_s2 is a 'corner' regulator and it shouldn't
-   be right to put it as a regulator supply.
-   Work is in progress to handle these sort of power supplies.
+ - none.
 
 Changes since v5:
- - Removed leading 0 from the address in 'reg' property.
+ - Added Rob's 'Ack' for the new child nodes based bindings.
+ - Dropped leading 0 from the address in 'reg' property.
+ - Fixed '@xyz' part of the node name with correct address.
 
 Changes since v4:
- - None.
+ - Added bindings for child nodes. Each phy lane is represented by child
+   node with its own register space (for tx, rx and pcs blocks), and clocks
+   and resets for power control facility.
+ - Removed register space and lane offsets for tx, rx and pcs blocks from
+   qmp phy node.
+ - #phy-cells is now part of each child node and thus must be 0.
+ - Added information on list of mandatory clocks and resets for each phy.
 
 Changes since v3:
- - Added 'Acked-by' from Rob.
- - Removed 'reset-names' and 'nvmem-cell-names' from the bindings
-   since we use only one cell.
+ - Added #clock-cells = <1>, indicating that phy is a clock provider.
 
 Changes since v2:
  - Removed binding for "ref_clk_src" since we don't request this
    clock in the driver.
- - Addressed s/vdda-phy-dpdm/vdda-phy-dpdm-supply.
  - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
- - Addressed s/tune2_hstx_trim_efuse/tune2_hstx_trim. Don't need to add
-   'efuse' suffix to nvmem cell.
- - Addressed s/qusb2phy/phy for the node name.
+ - Using 'phy' for the node name.
 
 Changes since v1:
  - New patch, forked out of the original driver patch:
-   "phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips"
- - Updated dt bindings to remove 'hstx-trim-bit-offset' and
-   'hstx-trim-bit-len' bindings.
+   "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
+ - Added 'Acked-by' from Rob.
+ - Updated bindings to include mem resource as a list of
+   offset - length pair for serdes block and for each lane.
+ - Added a new binding for 'lane-offsets' that contains offsets
+   to tx, rx and pcs blocks from each lane base address.
 
- .../devicetree/bindings/phy/qcom-qusb2-phy.txt     | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 106 +++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
 new file mode 100644
-index 000000000000..aa0fcb05acb3
+index 000000000000..e11c563a65ec
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-@@ -0,0 +1,43 @@
-+Qualcomm QUSB2 phy controller
-+=============================
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -0,0 +1,106 @@
++Qualcomm QMP PHY controller
++===========================
 +
-+QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
++QMP phy controller supports physical layer functionality for a number of
++controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
 +
 +Required properties:
-+ - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
-+ - reg: offset and length of the PHY register set.
-+ - #phy-cells: must be 0.
++ - compatible: compatible list, contains:
++	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
++	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
++
++ - reg: offset and length of register set for PHY's common serdes block.
++
++ - #clock-cells: must be 1
++    - Phy pll outputs a bunch of clocks for Tx, Rx and Pipe
++      interface (for pipe based PHYs). These clock are then gate-controlled
++      by gcc.
++ - #address-cells: must be 1
++ - #size-cells: must be 1
++ - ranges: must be present
 +
 + - clocks: a list of phandles and clock-specifier pairs,
 +	   one for each entry in clock-names.
-+ - clock-names: must be "cfg_ahb" for phy config clock,
-+			"ref" for 19.2 MHz ref clk,
-+			"iface" for phy interface clock (Optional).
++ - clock-names: "cfg_ahb" for phy config clock,
++		"aux" for phy aux clock,
++		"ref" for 19.2 MHz ref clk,
++		For "qcom,msm8996-qmp-pcie-phy" must contain:
++			"aux", "cfg_ahb", "ref".
++		For "qcom,msm8996-qmp-usb3-phy" must contain:
++			"aux", "cfg_ahb", "ref".
 +
++ - resets: a list of phandles and reset controller specifier pairs,
++	   one for each entry in reset-names.
++ - reset-names: "phy" for reset of phy block,
++		"common" for phy common block reset,
++		"cfg" for phy's ahb cfg block reset (Optional).
++		For "qcom,msm8996-qmp-pcie-phy" must contain:
++		 "phy", "common", "cfg".
++		For "qcom,msm8996-qmp-usb3-phy" must contain
++		 "phy", "common".
++
++ - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
 + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-+ - vdda-phy-dpdm-supply: Phandle to 3.1V regulator supply to Dp/Dm port signals.
-+
-+ - resets: Phandle to reset to phy block.
 +
 +Optional properties:
-+ - nvmem-cells: Phandle to nvmem cell that contains 'HS Tx trim'
-+		tuning parameter value for qusb2 phy.
++ - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
++			pll block.
 +
-+ - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
++Required nodes:
++ - Each device node of QMP phy is required to have as many child nodes as
++   the number of lanes the PHY has.
++
++Required properties for child node:
++ - reg: list of offset and length pairs of register sets for PHY blocks -
++	tx, rx and pcs.
++
++ - #phy-cells: must be 0
++
++ - clocks: a list of phandles and clock-specifier pairs,
++	   one for each entry in clock-names.
++ - clock-names: Must contain following for pcie and usb qmp phys:
++		 "pipe<lane-number>" for pipe clock specific to each lane.
++
++ - resets: a list of phandles and reset controller specifier pairs,
++	   one for each entry in reset-names.
++ - reset-names: Must contain following for pcie qmp phys:
++		 "lane<lane-number>" for reset specific to each lane.
 +
 +Example:
-+	hsusb_phy: phy@7411000 {
-+		compatible = "qcom,msm8996-qusb2-phy";
-+		reg = <0x7411000 0x180>;
-+		#phy-cells = <0>;
++	phy@34000 {
++		compatible = "qcom,msm8996-qmp-pcie-phy";
++		reg = <0x34000 0x488>;
++		#clock-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
-+		clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+			<&gcc GCC_RX1_USB2_CLKREF_CLK>,
-+		clock-names = "cfg_ahb", "ref";
++		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
++			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
++			<&gcc GCC_PCIE_CLKREF_CLK>;
++		clock-names = "aux", "cfg_ahb", "ref";
 +
++		vdda-phy-supply = <&pm8994_l28>;
 +		vdda-pll-supply = <&pm8994_l12>;
-+		vdda-phy-dpdm-supply = <&pm8994_l24>;
 +
-+		resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+		nvmem-cells = <&qusb2p_hstx_trim>;
-+        };
++		resets = <&gcc GCC_PCIE_PHY_BCR>,
++			<&gcc GCC_PCIE_PHY_COM_BCR>,
++			<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
++		reset-names = "phy", "common", "cfg";
++
++		pciephy_0: lane@35000 {
++			reg = <0x35000 0x130>,
++				<0x35200 0x200>,
++				<0x35400 0x1dc>;
++			#phy-cells = <0>;
++
++			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
++			clock-names = "pipe0";
++			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
++			reset-names = "lane0";
++		};
++
++		pciephy_1: lane@36000 {
++		...
++		...
++	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
