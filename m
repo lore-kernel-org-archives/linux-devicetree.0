@@ -1,65 +1,69 @@
-From: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/fdt: introduce of_scan_flat_dt_subnodes and
- of_get_flat_dt_phandle
-Date: Thu, 6 Apr 2017 10:38:29 +1000
-Message-ID: <20170406103829.67d462e1@roar.ozlabs.ibm.com>
-References: <20170405123706.6081-1-npiggin@gmail.com>
-        <20170405123706.6081-3-npiggin@gmail.com>
-        <CAL_JsqK4zbACwWVb-rsrvBb4hjBCexrqKRKrzSiZrZH5w=bKqQ@mail.gmail.com>
-        <20170406003251.533e2845@roar.ozlabs.ibm.com>
-        <CAL_JsqLEvjb8S-+-JEa4ALHeCWHiR1A_4ur9kd3pBRJaFYWVKw@mail.gmail.com>
-        <1491425881.4166.90.camel@kernel.crashing.org>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v5 3/5] drm/exynos: dsi: Fix the parse_dt function
+Date: Thu, 06 Apr 2017 13:33:59 +0900
+Message-ID: <58E5C537.1020301@samsung.com>
+References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170308045502epcas1p2d2f7a0f768082b7a54b2ebe260e78436@epcas1p2.samsung.com>
+ <1488948852-5380-4-git-send-email-hoegeun.kwon@samsung.com>
+ <93e79e92-a102-e931-8d63-843031848888@samsung.com>
+ <58DA1E38.50907@samsung.com>
+ <CAJKOXPeD4HKemKTrnC2JaON3JkuNGO9g+Hg8M7F6f2WusiYkhg@mail.gmail.com>
+ <CAJKOXPd-h4QqLXJ5AYr1KgpjvROaWpVZnd9KmeeGoVRQifssbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491425881.4166.90.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CAJKOXPd-h4QqLXJ5AYr1KgpjvROaWpVZnd9KmeeGoVRQifssbw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, catalin.marinas@arm.com, Seung Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, kgene@kernel.org, dri-devel@lists.freedesktop.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, will.deacon@arm.com, Marek Szyprowski <m.szyprowski@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 06 Apr 2017 06:58:01 +1000
-Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-
-> On Wed, 2017-04-05 at 10:58 -0500, Rob Herring wrote:
-> > Well, I'd like to avoid expanding usage of flat DT parsing in the
-> > kernel. But you could just put this function into arch/powerpc and I'd
-> > never see it, but I like that even less. Mainly, I just wanted to
-> > raise the point.
-> > 
-> > Your argument works until you need that setup in assembly code, then
-> > you are in the situation that you need to either handle the setup in
-> > bootloader/firmware or have an simple way to determine that condition.  
-> 
-> The main issue is that changing that is a very very invasive change in
-> an extremely fragile and rather nasty area of code shared by 32 and 64-
-> bit for which we don't even have easy access to all the machines to
-> test with anymore :)
-> 
-> It's probably not impossible, but it would delay the new cpu feature
-> stuff that Nick is making by a lot, probably monthes, making it nearly
-> impossible to get back into distros etc... 
-> 
-> So while it might be something to consider, I would definitely keep
-> that as a separate unit of work to do later.
-
-Yeah, it's no longer a "drop in" replacement for existing features
-testing if we do this, which makes it hard to backport too (we will
-need this for compatibility with future firmware, so it will have to
-go into distro kernels.)
-
-Given that it's quite a small addition to of/fdt code, hopefully
-that gives you a reasonable justification to accept it.
-
-If you prefer not to, that's okay, but I think we would have to carry
-it in arch/powerpc at least for a time, because of the schedule we're
-working to for POWER9 enablement. As a longer term item I agree with you
-and Ben, it would be worth considering unflattening earlier.
-
-Thanks,
-Nick
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgoyMDE364WEIDA07JuUIDA17J28IDAwOjM47JeQIEtyenlzenRvZiBLb3psb3dza2kg7J20KOqw
+gCkg7JO0IOq4gDoKPiBPbiBUdWUsIE1hciAyOCwgMjAxNyBhdCAxMTozOCBBTSwgS3J6eXN6dG9m
+IEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPiB3cm90ZToKPj4gT24gVHVlLCBNYXIgMjgsIDIw
+MTcgYXQgMTE6MjYgQU0sIElua2kgRGFlIDxpbmtpLmRhZUBzYW1zdW5nLmNvbT4gd3JvdGU6Cj4+
+PiBNZXJnZWQuCj4+Cj4+IEhpLAo+Pgo+PiBJIGRvIG5vdCBzZWUgdGhlIHRhZyAod2l0aCBEVCBw
+YXRjaGVzKSBtZXJnZWQgYnkgeW91IHdoaWNoIEkgcHJvdmlkZWQKPj4gdG8geW91IGJlZm9yZS4g
+VGhlc2UgYXJlIGVzc2VudGlhbCBmb3IgYmlzZWN0YWJpbGl0eS4gV2l0aG91dCB0aGVtLAo+PiBr
+ZXJuZWwgYmlzZWN0YWJpbGl0eSBpcyBicm9rZW4uIERpZCB5b3UgbWVyZ2VkIHRoZSB0YWcgc29t
+ZXdoZXJlPwo+Pgo+PiBCZXN0IHJlZ2FyZHMsCj4+IEtyenlzenRvZgo+Pgo+Pj4gVGhhbmtzLAo+
+Pj4gSW5raSBEYWUKPiAKPiBJbmtpLAo+IAo+IEkgc3RpbGwgZG8gbm90IHNlZSB0aGUgRFRTIHRh
+ZyBbMV0gbWVyZ2VkIGluIHlvdXIgdHJlZSBidXQgeW91IGFwcGxpZWQKPiBwYXRjaGVzIGJyZWFr
+aW5nIHRoZSBkaXNwbGF5LiBJIGxvb2tlZCBhdCBleHlub3MtZHJtLW5leHQgYnJhbmNoLgo+IAo+
+IFdlIHRhbGtlZCBhbHJlYWR5IGFib3V0IGJpc2VjdGFiaWxpdHkgYW5kIHdpdGggSG9lZ2V1biB3
+ZSBwcm92aWRlZAo+IHByb3BlciBzb2x1dGlvbi4gSG9lZ2V1biBzcGxpdCB0aGUgcGF0Y2hzZXQg
+YW5kIEkgc2VudCB5b3UgYSBzdGFibGUKPiB0YWcgdG8gbWVyZ2UuIEJlIGF3YXJlIG5vdCB0byBh
+cHBseSB0aGUgRFRTIHBhdGNoIGJlY2F1c2UgeW91IHdvdWxkCj4gZWZmZWN0aXZlbHkgZHVwbGlj
+YXRlIGl0LiBJbnN0ZWFkLCBkZWFsIGxpa2Ugd2l0aCBhbnkgcHVsbCByZXF1ZXN0IC0KPiBtZXJn
+ZSB0aGUgdGFnIGFzIGRlcGVuZGVuY3kgKmJlZm9yZSogYXBwbHlpbmcgRFJNIERTSSBwYXRjaC4K
+CktyenlzenRvZiwKCkkgdGhpbmsgbWVyZ2luZyB0aGUgRFRTIHRhZyBpcyBub3QgbmVjZXNzYXJ5
+IGJlY2F1c2UgZHQgYW5kIGRybSBwYXRjaGVzIHdpbGwgZ28gdG8gLW5leHQgc2VwYXJhdGVseS4K
+QW55d2F5LCBjb25maXJtZWQgeW91ciBlbWFpbCBqdXN0IG5vdy4gU2VlbXMgYmV0dGVyIHNvIGRp
+ZCB3aGF0IHlvdSB3YW50LgoKClRoYW5rcywKSW5raSBEYWUKCj4gCj4gSSBzYXcgYWxzbyBhIGJy
+YW5jaCBsaWtlIHRoaXM6Cj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tl
+cm5lbC9naXQvZGFlaW5raS9kcm0tZXh5bm9zLmdpdC9sb2cvP2g9ZXh5bm9zLWRybS1uZXh0LXRt
+Mgo+IGJ1dCB0aGlzIGlzIHNvbWV0aGluZyBvYnZpb3VzbHkgd3JvbmcuIEkgZG8gbm90IGtub3cg
+d2hhdCBhcmUgeW91cgo+IHBsYW5zIHRvIGRvIHdpdGggaXQsIGJ1dCBwbGVhc2UgZHJvcCBpdCBh
+cyBpdCBicmluZ3Mgb25seSBjb25mdXNpb24uCj4gCj4gQmVzdCByZWdhcmRzLAo+IEtyenlzenRv
+Zgo+IAo+IFsxXSBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzU2
+NzA1My5odG1sCj4gCj4+PiAyMDE364WEIDAz7JuUIDIy7J28IDEwOjM27JeQIEhvZWdldW4gS3dv
+biDsnbQo6rCAKSDsk7Qg6riAOgo+Pj4+IEhpIGlua2ksCj4+Pj4KPj4+PiBDb3VsZCB5b3UgY2hl
+Y2sgdGhlIHRoaXMgcGF0Y2g/Cj4+Pj4gRm9yIHJlZmVyZW5jZSwgcGF0Y2ggMS81IGFuZCAyLzUg
+aGF2ZSBhbHJlYWR5IGJlZW4gYXBwbGllZCB0byBLcnp5c3p0b2YgdHJlZS4KPj4+Pgo+Pj4+IEJl
+c3QgcmVnYXJkcywKPj4+PiBIb2VnZXVuCj4+Pj4KPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20g
+dGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+IHRo
+ZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBt
+YWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5o
+dG1sCj4gCj4gCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
