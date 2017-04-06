@@ -1,51 +1,86 @@
-Return-Path: <SRS0=nJwA=3T=aosc.io=icenowy@kernel.org>
-Date: Wed, 12 Apr 2017 02:08:31 +0800
-Subject: Re: [linux-sunxi] Re: [PATCH v2 03/11] dt-bindings: add device tree
- binding for X-Powers AXP803 PMIC
-From: Icenowy Zheng <icenowy@aosc.io>
+Return-Path: <SRS0=6gHk=3O=nvidia.com=ldewangan@kernel.org>
+Message-ID: <58E674FB.3080006@nvidia.com>
+Date: Thu, 6 Apr 2017 22:33:55 +0530
+From: Laxman Dewangan <ldewangan@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Message-Id: <20170411180844.9176B125521@relay.mailchannels.net>
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH V2 2/4] pwm: tegra: Increase precision in pwm rate calculation
+References: <1491488461-24621-1-git-send-email-ldewangan@nvidia.com> <1491488461-24621-3-git-send-email-ldewangan@nvidia.com> <20170406162417.GB19312@ulmo.ba.sec>
+In-Reply-To: <20170406162417.GB19312@ulmo.ba.sec>
+Content-Type: multipart/alternative;
+	boundary="------------090305010106000103050904"
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: robh+dt@kernel.org, jonathanh@nvidia.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-CjIwMTflubQ05pyIMTLml6Ug5LiK5Y2IMTI6Mjnkuo4gTGVlIEpvbmVzIDxsZWUuam9uZXNAbGlu
-YXJvLm9yZz7lhpnpgZPvvJoKPgo+IE9uIFR1ZSwgMTEgQXByIDIwMTcsIENoZW4tWXUgVHNhaSB3
-cm90ZToKPgo+ID4gSGksCj4gPiAKPiA+IE9uIFR1ZSwgQXByIDExLCAyMDE3IGF0IDExOjAwIFBN
-LCBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+IHdyb3RlOgo+ID4gPgo+ID4gPgo+ID4g
-PiBPbiBUdWUsIDExIEFwciAyMDE3LCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiA+Cj4gPiA+PiBPbiBT
-YXQsIDA4IEFwciAyMDE3LCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+ID4gPj4KPiA+ID4+PiBBWFA4
-MDMgaXMgYSBQTUlDIHByb2R1Y2VkIGJ5IFNoZW56aGVuIFgtUG93ZXJzLCB3aXRoIGVpdGhlciBJ
-MkMgb3IgUlNCCj4gPiA+Pj4gYnVzLgo+ID4gPj4+Cj4gPiA+Pj4gQWRkIGEgY29tcGF0aWJsZSBm
-b3IgaXQuCj4gPiA+Pj4KPiA+ID4+PiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vu
-b3d5QGFvc2MuaW8+Cj4gPiA+Pj4gQWNrZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9y
-Zz4KPiA+ID4+PiAtLS0KPiA+ID4+PiBDaGFuZ2VzIGluIHYyOgo+ID4gPj4+IC0gUGxhY2UgQVhQ
-ODAzIGJlZm9yZSBBWFA4MDYvODA5Lgo+ID4gPj4+IC0gQWRkZWQgQ2hlbi1ZdSdzIEFDSy4KPiA+
-ID4+Pgo+ID4gPj4+wqAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9heHAy
-MHgudHh0IHwgNSArKystLQo+ID4gPj4+wqAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygr
-KSwgMiBkZWxldGlvbnMoLSkKPiA+ID4+Cj4gPiA+Pgo+ID4gPj4gRm9yIG15IG93biByZWZlcmVu
-Y2U6Cj4gPiA+PsKgIEFja2VkLWZvci1NRkQtYnk6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFy
-by5vcmc+Cj4gPiA+Cj4gPiA+Cj4gPiA+IEV4Y3VzZSBtZS4uLiBXaG8gd2lsbCBhcHBseSB0aGlz
-IHBhdGNoPwo+Cj4gRXhjdXNlIHlvdT/CoCBBcmUgeW91IHRyeWluZyB0byBiZSBwb2xpdGUsIG9y
-IHJ1ZGU/Cj4KPiBJJ20gZ3Vlc3NpbmcgZHVlIHRvIHRoZSBsYWdnaW5nICcuLi4nLCB0aGF0IGl0
-J3MgdGhlIGxhdHRlcj8KCk9oIHNvcnJ5LCBJIG1lYW4gdGhlIGZvcm1lci4uLgoKPgo+ID4gPiBJ
-IHRoaW5rIHRoaXMgcGF0Y2ggc2hvdWxkIGJlIGFwcGxpZWQgYnkgeW91IGFzIGl0J3MgaW4gYmlu
-ZGluZ3MvbWZkCj4gPiA+IGRpcmVjdG9yeSwgaG93ZXZlciwgaWYgSSdtIHdyb25nLCBwbGVhc2Ug
-cG9pbnQgb3V0IDstKQo+ID4KPiA+IFdlIG5lZWQgdGhlIERUIG1haW50YWluZXJzIHRvIGFjayBp
-dCBmaXJzdC4gOikKPgo+IFdlIGRvbid0IHJlYWxseSBuZWVkIHRoZSBEVCBNYWludGFpbmVycyB0
-byBnZXQgaW52b2x2ZWQgaGVyZS4KPgo+IFdoYXQgSSBkbyBuZWVkIGlzIGVpdGhlciBjbGVhciBk
-aXJlY3Rpb24gYXMgdG8gaG93IHRoaXMKPiBwYXRjaC1zZXQgc2hvdWxkIGJlIGFwcGxpZWQsIG9y
-IGFuIGluZGljYXRpb24gb2Ygd2hpY2ggcGF0Y2hlcyBhcmUKPiBkZXBlbmRhbnQgb24gb3RoZXJz
-IGFuZCB3aGljaCBhcmUgb3J0aG9nb25hbCBhbmQgY2FuIGJlIGFwcGxpZWQKPiBpbmRlcGVuZGVu
-dGx5LgoKVGhpcyBwYXRjaCBpcyBpbmRlcGVuZGVudCwgYWx0aG91Z2ggdGhlIHJlZ3VsYXRvciBi
-aW5kaW5nIHBhdGNoCmRlcGVuZHMgb24gaXQuCgpUaGUgcmVhbCBkcml2ZXIgcGF0Y2hlcyB3aWxs
-IG5lZWQgdGhlIGJpbmRpbmcgcGF0Y2hlcyB0byBiZSBtZXJnZWQKZmlyc3QuCgpBbmQgdGhlIGR0
-IHBhdGNoZXMgZGVwZW5kIG9uIGFsc28gdGhlIGJpbmRpbmcgcGF0Y2hlcy4KCj4KPiAtLSAKPiBM
-ZWUgSm9uZXMKPiBMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCj4g
-TGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCj4gRm9sbG93
-IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwo+Cj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+--------------090305010106000103050904
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+
+
+On Thursday 06 April 2017 09:54 PM, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+>
+> On Thu, Apr 06, 2017 at 07:50:59PM +0530, Laxman Dewangan wrote:
+>> The rate of the PWM calculated as follows:
+>> 	hz = NSEC_PER_SEC / period_ns;
+>>   	rate = (rate + (hz / 2)) / hz;
+>>
+>> This has the precision loss in lower PWM rate.
+>> Changing this to have more precision as:
+>> 	hz = DIV_ROUND_CLOSE(NSEC_PER_SEC * 100, period_ns);
+>> 	rate = DIV_ROUND_CLOSE(rate * 100, hz)
+> DIV_ROUND_CLOSEST(). And I much prefer this to the actual code below. I
+> don't think it's necessary to have a local variable for the precision.
+Do you suggest to use DIV_ROUND_CLOSEST() instead of 
+DIV_ROUND_CLOSEST_ULL()?
+
+This is ULL division and so we need to use this one.
+
+Or am I missing something
+
+--------------090305010106000103050904
+Content-Type: text/html; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <br>
+    <div class="moz-cite-prefix">On Thursday 06 April 2017 09:54 PM,
+      Thierry Reding wrote:<br>
+    </div>
+    <blockquote cite="mid:20170406162417.GB19312@ulmo.ba.sec"
+      type="cite">
+      <pre wrap="">* PGP Signed by an unknown key
+
+On Thu, Apr 06, 2017 at 07:50:59PM +0530, Laxman Dewangan wrote:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">The rate of the PWM calculated as follows:
+	hz = NSEC_PER_SEC / period_ns;
+ 	rate = (rate + (hz / 2)) / hz;
+
+This has the precision loss in lower PWM rate.
+Changing this to have more precision as:
+	hz = DIV_ROUND_CLOSE(NSEC_PER_SEC * 100, period_ns);
+	rate = DIV_ROUND_CLOSE(rate * 100, hz)
+</pre>
+      </blockquote>
+      <pre wrap="">
+DIV_ROUND_CLOSEST(). And I much prefer this to the actual code below. I
+don't think it's necessary to have a local variable for the precision.
+</pre>
+    </blockquote>
+    Do you suggest to use DIV_ROUND_CLOSEST() instead of <font
+      face="sans-serif">DIV_ROUND_CLOSEST_ULL</font>()?<br>
+    <br>
+    This is ULL division and so we need to use this one.<br>
+    <br>
+    Or am I missing something<br>
+  </body>
+</html>
+
+--------------090305010106000103050904--
