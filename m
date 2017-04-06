@@ -1,78 +1,139 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 1/9] phy: phy-mt65xx-usb3: improve RX detection stable
- time
-Date: Thu, 6 Apr 2017 15:58:45 +0530
-Message-ID: <de1b9870-d325-e97a-a2f0-bd355c70356c@ti.com>
-References: <1490945735-9531-1-git-send-email-chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490945735-9531-1-git-send-email-chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [RFC] Documentation: pinctrl: Add "pinmux" property
+Date: Thu,  6 Apr 2017 12:35:55 +0200
+Message-ID: <1491474955-25605-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linus.walleij@linaro.org, geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Document "pinmux" property as part of generic pin controller
+documentation.
+Fix 2 minor typos in documentation while at there.
 
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-On Friday 31 March 2017 01:05 PM, Chunfeng Yun wrote:
-> The default value of RX detection stable time is 10us, and this
-> margin is too big for some critical cases which cause U3 link fail
-> and link to U2(probability is about 1%). So change it to 5us.
-> 
-merged all the phy patches in this series to linux-phy -next.
+---
+Hi Linus and linux-gpio community.
+
+During development of Renesas RZ/A1 pin controller I've been suggested to add
+description of "pinmux" property to generic pin controller documentation.
+Currently several pin controller drivers are using this property in place of
+the already documented "pin"/"group" and "function" ones: stm32, mt65xx, mt8173
+and in-review r7s72100, not sure about at91-sama5d2)
+
+Sending this one as RFC to collect feedback. If the change is not rejected is it
+worth adding to pin controller core helper functions to parse the newly
+documented property, as this commit
+<https://patchwork.kernel.org/patch/9411231/>
+did for "pinctrl-pin-array" one?
+
+All drivers using "pinmux" exhibit the same behavior which is fine as long as
+"pinmux" only accepts a list of u32 parameters.
+
+	...
+	pins = of_find_property(node, "pinmux", NULL);
+	...
+	npins = pins->length / sizeof(u32);
+	...
+	of_property_read_u32_index(node, "pinmux",
+				   i, &pinfunc);
+	...
 
 Thanks
-Kishon
 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  drivers/phy/phy-mt65xx-usb3.c |   18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-> index d972067..fe2392a 100644
-> --- a/drivers/phy/phy-mt65xx-usb3.c
-> +++ b/drivers/phy/phy-mt65xx-usb3.c
-> @@ -112,6 +112,14 @@
->  #define P3D_RG_CDR_BIR_LTD0		GENMASK(12, 8)
->  #define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
->  
-> +#define U3P_U3_PHYD_RXDET1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x128)
-> +#define P3D_RG_RXDET_STB2_SET		GENMASK(17, 9)
-> +#define P3D_RG_RXDET_STB2_SET_VAL(x)	((0x1ff & (x)) << 9)
-> +
-> +#define U3P_U3_PHYD_RXDET2		(SSUSB_SIFSLV_U3PHYD_BASE + 0x12c)
-> +#define P3D_RG_RXDET_STB2_SET_P3	GENMASK(8, 0)
-> +#define P3D_RG_RXDET_STB2_SET_P3_VAL(x)	(0x1ff & (x))
-> +
->  #define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x0018)
->  #define XC3_RG_U3_XTAL_RX_PWD		BIT(9)
->  #define XC3_RG_U3_FRC_XTAL_RX_PWD	BIT(8)
-> @@ -295,6 +303,16 @@ static void phy_instance_init(struct mt65xx_u3phy *u3phy,
->  	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
->  	writel(tmp, port_base + U3P_PHYD_CDR1);
->  
-> +	tmp = readl(port_base + U3P_U3_PHYD_RXDET1);
-> +	tmp &= ~P3D_RG_RXDET_STB2_SET;
-> +	tmp |= P3D_RG_RXDET_STB2_SET_VAL(0x10);
-> +	writel(tmp, port_base + U3P_U3_PHYD_RXDET1);
-> +
-> +	tmp = readl(port_base + U3P_U3_PHYD_RXDET2);
-> +	tmp &= ~P3D_RG_RXDET_STB2_SET_P3;
-> +	tmp |= P3D_RG_RXDET_STB2_SET_P3_VAL(0x10);
-> +	writel(tmp, port_base + U3P_U3_PHYD_RXDET2);
-> +
->  	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
->  }
->  
-> 
+---
+ .../bindings/pinctrl/pinctrl-bindings.txt          | 46 +++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index f2ed458..6609389 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -162,8 +162,8 @@ state_2_node_a {
+ 	pins = "mfio29", "mfio30";
+ };
+
+-Optionally an altenative binding can be used if more suitable depending on the
+-pin controller hardware. For hardaware where there is a large number of identical
++Optionally an alternative binding can be used if more suitable depending on the
++pin controller hardware. For hardware where there is a large number of identical
+ pin controller instances, naming each pin and function can easily become
+ unmaintainable. This is especially the case if the same controller is used for
+ different pins and functions depending on the SoC revision and packaging.
+@@ -198,6 +198,28 @@ registers, and must not be a virtual index of pin instances. The reason for
+ this is to avoid mapping of the index in the dts files and the pin controller
+ driver as it can change.
+
++For hardware where pin multiplexing configurations have to be specified for
++each single pin the number of required sub-nodes containing "pin" and
++"function" properties can quickly escalate and become hard to write and
++maintain.
++
++For cases like this, the pin controller driver may use the pinmux helper
++property, where the pin identifier is packed with mux configuration settings
++in a single integer.
++
++The pinmux property accepts an array of integers, each of them describing
++a single pin multiplexing configuration.
++
++pincontroller {
++	state_0_node_a {
++		pinmux = <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ...;
++	};
++};
++
++Each individual pin controller driver bindings documentation shall specify
++how those values (pin IDs and pin multiplexing configuration) are defined and
++assembled together.
++
+ == Generic pin configuration node content ==
+
+ Many data items that are represented in a pin configuration node are common
+@@ -210,12 +232,15 @@ structure of the DT nodes that contain these properties.
+ Supported generic properties are:
+
+ pins			- the list of pins that properties in the node
+-			  apply to (either this or "group" has to be
++			  apply to (either this, "group" or "pinmux" has to be
+ 			  specified)
+ group			- the group to apply the properties to, if the driver
+ 			  supports configuration of whole groups rather than
+-			  individual pins (either this or "pins" has to be
+-			  specified)
++			  individual pins (either this, "pins" or "pinmux" has
++			  to be specified)
++pinmux			- the list of numeric pin ids and their mux settings
++			  that properties in the node apply to (either this,
++			  "pins" or "groups" have to be specified)
+ bias-disable		- disable any pin bias
+ bias-high-impedance	- high impedance mode ("third-state", "floating")
+ bias-bus-hold		- latch weakly
+@@ -260,6 +285,12 @@ state_2_node_a {
+ 		bias-pull-up;
+ 	};
+ };
++state_3_node_a {
++	mux {
++		pinmux = <GPIOx_PINm_MUXn>, <GPIOx_PINj_MUXk)>;
++		input-enable;
++	};
++};
+
+ Some of the generic properties take arguments. For those that do, the
+ arguments are described below.
+@@ -268,6 +299,11 @@ arguments are described below.
+   binding for the hardware defines:
+   - Whether the entries are integers or strings, and their meaning.
+
++- pinmux takes a list of pin IDs and mux settings as required argument. The
++  specific bindings for the hardware defines:
++  - How pin IDs and mux settings are defined and assembled together in a single
++    integer.
++
+ - bias-pull-up, -down and -pin-default take as optional argument on hardware
+   supporting it the pull strength in Ohm. bias-disable will disable the pull.
+
+--
+2.7.4
