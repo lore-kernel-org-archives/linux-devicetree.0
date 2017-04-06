@@ -1,92 +1,76 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V3 3/4] pwm: tegra: Add DT binding details to configure
- pin in suspends/resume
-Date: Thu, 6 Apr 2017 16:26:16 +0100
-Message-ID: <f43c83a9-8ae0-73b0-d41d-97d3bc6c253e@nvidia.com>
-References: <1491488461-24621-1-git-send-email-ldewangan@nvidia.com>
- <1491488461-24621-4-git-send-email-ldewangan@nvidia.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH v3 1/3] clk: vc5: Add structure to describe particular
+ chip features
+Date: Thu, 6 Apr 2017 16:54:02 +0200
+Message-ID: <d461ac7d-4081-4444-6875-de4d8013dec3@gmail.com>
+References: <1491470130-6655-1-git-send-email-alexey_firago@mentor.com>
+ <1491470130-6655-2-git-send-email-alexey_firago@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1491488461-24621-4-git-send-email-ldewangan@nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, thierry.reding@gmail.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1491470130-6655-2-git-send-email-alexey_firago@mentor.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Alexey Firago <alexey_firago@mentor.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, geert@linux-m68k.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 06/04/17 15:21, Laxman Dewangan wrote:
-> In some of NVIDIA Tegra's platform, PWM controller is used to
-> control the PWM controlled regulators. PWM signal is connected to
-> the VID pin of the regulator where duty cycle of PWM signal decide
-> the voltage level of the regulator output.
+On 04/06/2017 11:15 AM, Alexey Firago wrote:
+> Introduce vc5_chip_info structure to describe features of a particular
+> VC5 chip (id, number of FODs, number of outputs, flags).
+> For now flags are only used to indicate if chip has internal XTAL.
+> vc5_chip_info is set on probe from the matched of_device_id->data.
 > 
-> The tristate (high impedance of PWM pin form Tegra) also define
-
-s/form/from/
-s/define/defines/
-
-> one of the state of PWM regulator which needs to be configure in
-> suspend state of system.
-
-It maybe clearer to say that when the system enters suspend the
-regulator requires the pwm output to be tristated.
-
-> Add DT binding details to provide the pin configuration state
-> from PWM and pinctrl DT node in suspend and active state of
-> the system.
+> Also add defines to specify maximum number of FODs and clock outputs
+> supported by the driver.
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> With these changes it should be easier to extend driver to support
+> more VC5 models.
+> 
+> Signed-off-by: Alexey Firago <alexey_firago@mentor.com>
+
+Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
+
 > ---
-> Changes from v1:
-> - Use standard pinctrl names for sleep and active state.
+>  drivers/clk/clk-versaclock5.c | 65 +++++++++++++++++++++++++++++++------------
+>  1 file changed, 47 insertions(+), 18 deletions(-)
 > 
->  .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> index b4e7377..4128cdc 100644
-> --- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> @@ -19,6 +19,19 @@ Required properties:
->  - reset-names: Must include the following entries:
->    - pwm
+> diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+> index 56741f3..4e81fb1 100644
+> --- a/drivers/clk/clk-versaclock5.c
+> +++ b/drivers/clk/clk-versaclock5.c
+> @@ -113,12 +113,30 @@
+>  #define VC5_MUX_IN_XIN		BIT(0)
+>  #define VC5_MUX_IN_CLKIN	BIT(1)
 >  
-> +Optional properties:
-> +============================
-> +In some of the interface like PWM based regulator device, it is required
-> +to configure the pins differently in different states, especially in suspend
-> +state of the system. The configuration of pin is provided via the pinctrl
-> +DT node as detailed in the pinctrl DT binding document
-> +	Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +/* Maximum number of clk_out supported by this driver */
+> +#define VC5_MAX_CLK_OUT_NUM	3
 > +
-> +The PWM node will have following optional properties.
-> +pinctrl-names:	Pin state names. Must be "default" and "sleep".
-> +pinctrl-0:	Node handle for the default/active state of pi configurations.
-
-s/pi/pin/
-s/Node handle/phandle/
-
-> +pinctrl-1:	Node handle for the sleep state of pin configurations.
+> +/* Maximum number of FODs supported by this driver */
+> +#define VC5_MAX_FOD_NUM	2
 > +
->  Example:
+> +/* flags to describe chip features */
+> +/* chip has built-in oscilator */
+> +#define VC5_HAS_INTERNAL_XTAL	BIT(0)
+> +
+>  /* Supported IDT VC5 models. */
+>  enum vc5_model {
+>  	IDT_VC5_5P49V5923,
+>  	IDT_VC5_5P49V5933,
+>  };
 >  
->  	pwm: pwm@7000a000 {
-> @@ -29,3 +42,33 @@ Example:
->  		resets = <&tegra_car 17>;
->  		reset-names = "pwm";
->  	};
-> +
-> +
-> +Example with the pin configuration for suspend and resume:
-> +=========================================================
-> +Pin PE7 is used as PWM interface.
+> +/* Structure to describe features of a particular VC5 model */
+> +struct vc5_chip_info {
+> +	const enum vc5_model	model;
+> +	const unsigned int	clk_fod_cnt;
+> +	const unsigned int	clk_out_cnt;
+> +	u32			flags;
 
-Nit-pick. On what devices? Sounds like this is verbatim. Maybe state
-what device this is an example for.
+Shouldn't this also be const ?
 
-Jon
+> +};
+
+[...]
 
 -- 
-nvpublic
+Best regards,
+Marek Vasut
