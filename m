@@ -1,112 +1,366 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] pwm: tegra: Add DT binding details to configure pin
- in suspends/resume
-Date: Thu, 6 Apr 2017 15:03:15 +0200
-Message-ID: <20170406130315.GB7784@ulmo.ba.sec>
-References: <1491401626-31303-1-git-send-email-ldewangan@nvidia.com>
- <1491401626-31303-4-git-send-email-ldewangan@nvidia.com>
- <33445b27-ae0b-b28e-afca-e7b776b4b7c0@nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <33445b27-ae0b-b28e-afca-e7b776b4b7c0-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 2/3] ARM: dts: rockchip: Add support for PCM-947 carrier board
+Date: Thu, 6 Apr 2017 15:04:25 +0200
+Message-ID: <1491483866-18368-2-git-send-email-w.egorov@phytec.de>
+References: <1491483866-18368-1-git-send-email-w.egorov@phytec.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491483866-18368-1-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add basic support for the PCM-947 carrier board, a RK3288 based development
+board made by PHYTEC. This board works in a combination with
+the phyCORE-RK3288 System on Module.
 
---St7VIuEGZ6dlpu13
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Following interfaces and devices are available on the PCM-947 carrier board:
 
-On Thu, Apr 06, 2017 at 09:57:09AM +0100, Jon Hunter wrote:
->=20
-> On 05/04/17 15:13, Laxman Dewangan wrote:
-> > In some of NVIDIA Tegra's platform, PWM controller is used to
-> > control the PWM controlled regulators. PWM signal is connected to
-> > the VID pin of the regulator where duty cycle of PWM signal decide
-> > the voltage level of the regulator output.
-> >=20
-> > The tristate (high impedance of PWM pin form Tegra) also define
-> > one of the state of PWM regulator which needs to be configure in
-> > suspend state of system.
-> >=20
-> > Add DT binding details to provide the pin configuration state
-> > from PWM and pinctrl DT node in suspend and active state of
-> > the system.
-> >=20
-> > Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 43 ++++++++++++++=
-++++++++
-> >  1 file changed, 43 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.t=
-xt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> > index b4e7377..145c323 100644
-> > --- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> > +++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> > @@ -19,6 +19,19 @@ Required properties:
-> >  - reset-names: Must include the following entries:
-> >    - pwm
-> > =20
-> > +Optional properties:
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> > +In some of the interface like PWM based regualator device, it is requi=
-red
-> > +to configure the pins diffrently in different states, specially in sus=
-pend
->=20
-> s/diffrently/differently
-> s/specially/especially
->=20
-> > +state of the system. The configuration of pin is provided via the pinc=
-trl
-> > +DT node as detailed in the pinctrl DT binding document
-> > +	Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > +
-> > +The PWM node will have following optional properties.
-> > +pinctrl-names:	Pin state names. Must be "suspend" and "resume".
->=20
-> Why not just use the pre-defined names here? There is a pre-defined name
-> for "default", "idle" and "sleep" and then you can use the following
-> APIs and avoid the lookup of the state ...
->=20
-> pinctrl_pm_select_default_state()
-> pinctrl_pm_select_idle_state()
-> pinctrl_pm_select_sleep_state()
->=20
-> Note for i2c [0][1], I used "default" as the active/on state (which I
-> know is not that descriptive) and then used 'idle' as the suspended
-> state. This way we don't need any custom names.
+  - 2x UART
+  - micro SDMMC
+  - USB host and USB otg
+  - USB 3503 HSIC hub
+  - Ethernet
+  - 2nd alternative KSZ9031 ethernet phy
+  - Display connectors: PHYTEC LVDS, DDG LVDS, parallel signals, HDMI
+  - Parallel Camera CIF
+  - SGTL5000-32QFN audio codec
+  - 4x LEDs connected via PCA9533
+  - 2 user buttons
+  - Expansion connectors for WiFi and other modules
+  - RTC RV-4162-C7
+  - Resistive touch STMPE811
+  - EEPROM M24C32
 
-Agreed, I think that's how these states are meant to be used.
+Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+---
+Changes in v2:
+- Added a dual license which is used for all rk3288 based boards.
+---
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/rk3288-phycore-rdk.dts | 298 +++++++++++++++++++++++++++++++
+ 2 files changed, 299 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3288-phycore-rdk.dts
 
-Thierry
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0118084..8c3cb4d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -692,6 +692,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+ 	rk3288-firefly.dtb \
+ 	rk3288-firefly-reload.dtb \
+ 	rk3288-miqi.dtb \
++	rk3288-phycore-rdk.dtb \
+ 	rk3288-popmetal.dtb \
+ 	rk3288-r89.dtb \
+ 	rk3288-rock2-square.dtb \
+diff --git a/arch/arm/boot/dts/rk3288-phycore-rdk.dts b/arch/arm/boot/dts/rk3288-phycore-rdk.dts
+new file mode 100644
+index 0000000..870f96b
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-phycore-rdk.dts
+@@ -0,0 +1,298 @@
++/*
++ * Device tree file for Phytec PCM-947 carrier board
++ * Copyright (C) 2017 PHYTEC Messtechnik GmbH
++ * Author: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/leds-pca9532.h>
++#include "rk3288-phycore-som.dtsi"
++
++/ {
++	model = "Phytec RK3288 PCM-947";
++	compatible = "phytec,rk3288-pcm-947", "phytec,rk3288-phycore-som", "rockchip,rk3288";
++
++	user_buttons: user-buttons {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&user_button_pins>;
++
++		button@0 {
++			label = "home";
++			linux,code = <KEY_HOME>;
++			gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
++			wakeup-source;
++		};
++
++		button@1 {
++			label = "menu";
++			linux,code = <KEY_MENU>;
++			gpios = <&gpio8 3 GPIO_ACTIVE_HIGH>;
++			wakeup-source;
++		};
++	};
++
++	vcc_host0_5v: usb-host0-regulator {
++		compatible = "regulator-fixed";
++		gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host0_vbus_drv>;
++		regulator-name = "vcc_host0_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		vin-supply = <&vdd_in_otg_out>;
++	};
++
++	vcc_host1_5v: usb-host1-regulator {
++		compatible = "regulator-fixed";
++		gpio = <&gpio2 0 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host1_vbus_drv>;
++		regulator-name = "vcc_host1_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		vin-supply = <&vdd_in_otg_out>;
++	};
++
++	vcc_otg_5v: usb-otg-regulator {
++		compatible = "regulator-fixed";
++		gpio = <&gpio2 12 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&otg_vbus_drv>;
++		regulator-name = "vcc_otg_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		vin-supply = <&vdd_in_otg_out>;
++	};
++};
++
++&gmac {
++	status = "okay";
++};
++
++&hdmi {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
++
++	stmpe@44 {
++		compatible = "st,stmpe811";
++		reg = <0x44>;
++	};
++
++	adc@64 {
++		compatible = "maxim,max1037";
++		reg = <0x64>;
++	};
++
++	i2c_rtc: rtc@68 {
++		compatible = "rv4162";
++		reg = <0x68>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c_rtc_int>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <10 0>;
++	};
++};
++
++&i2c3 {
++	status = "okay";
++
++	i2c_eeprom_cb: eeprom@51 {
++		compatible = "atmel,24c32";
++		reg = <0x51>;
++		pagesize = <32>;
++	};
++};
++
++&i2c4 {
++	status = "okay";
++
++	/* PCA9533 - 4-bit LED dimmer */
++	leddim: leddimmer@62 {
++		compatible = "nxp,pca9533";
++		reg = <0x62>;
++
++		led1 {
++			label = "red:user1";
++			linux,default-trigger = "none";
++			type = <PCA9532_TYPE_LED>;
++		};
++
++		led2 {
++			label = "green:user2";
++			linux,default-trigger = "none";
++			type = <PCA9532_TYPE_LED>;
++		};
++
++		led3 {
++			label = "blue:user3";
++			linux,default-trigger = "none";
++			type = <PCA9532_TYPE_LED>;
++		};
++
++		led4 {
++			label = "red:user4";
++			linux,default-trigger = "none";
++			type = <PCA9532_TYPE_LED>;
++		};
++	};
++};
++
++&i2c5 {
++	status = "okay";
++};
++
++&pinctrl {
++	pcfg_pull_up_drv_12ma: pcfg-pull-up-drv-12ma {
++		bias-pull-up;
++		drive-strength = <12>;
++	};
++
++	buttons {
++		user_button_pins: user-button-pins {
++			/* button 1 */
++			rockchip,pins = <8 3 RK_FUNC_GPIO &pcfg_pull_up>,
++			/* button 2 */
++					<8 0 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	rv4162 {
++		i2c_rtc_int: i2c-rtc-int {
++			rockchip,pins = <5 10 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	sdmmc {
++		/*
++		 * Default drive strength isn't enough to achieve even
++		 * high-speed mode on pcm-947 board so bump up to 12 mA.
++		 */
++		sdmmc_bus4: sdmmc-bus4 {
++			rockchip,pins = <6 16 RK_FUNC_1 &pcfg_pull_up_drv_12ma>,
++					<6 17 RK_FUNC_1 &pcfg_pull_up_drv_12ma>,
++					<6 18 RK_FUNC_1 &pcfg_pull_up_drv_12ma>,
++					<6 19 RK_FUNC_1 &pcfg_pull_up_drv_12ma>;
++		};
++
++		sdmmc_clk: sdmmc-clk {
++			rockchip,pins = <6 20 RK_FUNC_1 &pcfg_pull_none_12ma>;
++		};
++
++		sdmmc_cmd: sdmmc-cmd {
++			rockchip,pins = <6 21 RK_FUNC_1 &pcfg_pull_up_drv_12ma>;
++		};
++
++		sdmmc_pwr: sdmmc-pwr {
++			rockchip,pins = <7 11 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	touchscreen {
++		ts_irq_pin: ts-irq-pin {
++			rockchip,pins = <5 15 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	usb_host {
++		host0_vbus_drv: host0-vbus-drv {
++			rockchip,pins = <2 13 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		host1_vbus_drv: host1-vbus-drv {
++			rockchip,pins = <2 0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	usb_otg {
++		otg_vbus_drv: otg-vbus-drv {
++			rockchip,pins = <2 12 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++};
++
++&sdmmc {
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	card-detect-delay = <200>;
++	disable-wp;
++	num-slots = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
++	vmmc-supply = <&vdd_io_sd>;
++	vqmmc-supply = <&vdd_io_sd>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&usbphy {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host1 {
++	status = "okay";
++};
++
++&usb_otg {
++	status = "okay";
++};
+-- 
+1.9.1
 
---St7VIuEGZ6dlpu13
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljmPJMACgkQ3SOs138+
-s6Hipw/8C7iXIxKTniDsRjJiW7L06O8kcYIoKk/Fg3uRE/rVxyyrrD5tslfl25Yw
-Sv1o2vPDSqRnMMMIOD+/Ibe6DSWrYAT2KMT5vm7KBikXOqXhEDHyNvszFD4EELqe
-2LN5RF/uX7oqHMaHU1bBULga9VQbYPAgI7U6AsFEk32nxWQnmuoFkR0ApnjE8UJd
-nZjdMjLe92Hlnj8H1av5/SNTCi3ZMlrtuytjJHwnScfP8/Jls3xrqkdea9++GLMA
-FJbcs8fShsJoufkwiYXT5BRh/5L7XjC+uhNUdnZdh8HMe/cIaRXBDXLF06jks2K1
-qyghweTyI0QMURc5SWdmTfHUmdCphrT87bMwxW5lVU0+47og5FRx2YLZIOfdl09J
-8Fvu+aUCrJh1TsUYt1h1K9sKH5SYrlPcpzBUjaoRfS4ixTjqnU0SGctyTpqQUQa8
-9yfj3H3q2nF+n7maLaGea4sjzjWz2wsmUT4lA7PRAoWdKj72S+k+wHY5EU8RFt1M
-rGvMAz/FmXkzElWCjgKX2A4qomcZj1ehJOhdTKC3rvcdm3/+rHWISOps98WnUWH6
-fPg2wMRDa01k3U5Tx328EsYD1F3A8vSuYEnkBTnzN975vMtpC12HZCTzWVtCxIEX
-p9ydPtmLMvujv2fCVXbNzK9WAkYco0UquBydwKTNu4oDwhjliV4=
-=EN+R
------END PGP SIGNATURE-----
-
---St7VIuEGZ6dlpu13--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
