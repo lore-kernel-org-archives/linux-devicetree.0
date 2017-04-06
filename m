@@ -1,91 +1,143 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: change fixup of dma-ranges size to error
-Date: Thu, 6 Apr 2017 17:41:35 -0500
-Message-ID: <CAL_Jsq+VreUFtA8ozs0Jcz45PTc-jTT=CEKuezeU7QYviiN-Jg@mail.gmail.com>
-References: <1491459529-31391-1-git-send-email-frowand.list@gmail.com>
- <CAL_Jsq+GLBtaezUiTbm0DAA2+MjcvxAcCsS-qJrr05YcTO5tdw@mail.gmail.com> <58E68ADC.6040603@gmail.com>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH v3 07/12] clk: mediatek: add clk support for MT6797
+Date: Fri, 7 Apr 2017 07:35:47 +0800
+Message-ID: <1491521747.17643.6.camel@mtkswgap22>
+References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
+         <1489937193-2953-8-git-send-email-mars.cheng@mediatek.com>
+         <20170406200852.GQ7065@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58E68ADC.6040603-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170406200852.GQ7065@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Michael Turquette <mturquette@baylibre.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-clk@vger.kernel.org, Kevin-CW Chen <kevin-cw.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 6, 2017 at 1:37 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 04/06/17 07:03, Rob Herring wrote:
->> On Thu, Apr 6, 2017 at 1:18 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>>
->>> of_dma_get_range() has workaround code to fixup a device tree that
->>> incorrectly specified a mask instead of a size for property
->>> dma-ranges.  That device tree was fixed a year ago in v4.6, so
->>> the workaround is no longer needed.  Leave a data validation
->>> check in place, but no longer do the fixup.  Move the check
->>> one level deeper in the call stack so that other possible users
->>> of dma-ranges will also be protected.
->>>
->>> The fix to the device tree was in
->>> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree").
->>
->> NACK.
->> This was by design. You can't represent a size of 2^64 or 2^32.
->
-> I agree that being unable to represent a size of 2^32 in a u32 and
-> a size of 2^64 in a u64 is the underlying issue.
->
-> But the code to convert a mask to a size is _not_ design, it is a
-> hack that temporarily worked around a device tree that did not follow
-> the dma-ranges binding in the ePAPR.
+Hi Stephen
 
-Since when is (2^64 - 1) not a size. It's a perfectly valid size in
-DT. And there's probably not a system in the world that needs access
-to that last byte. Is it completely accurate description if we
-subtract off 1? No, but it is still a valid range (so would be
-subtracting 12345).
+On Thu, 2017-04-06 at 13:08 -0700, Stephen Boyd wrote:
+> On 03/19, Mars Cheng wrote:
+> > From: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
+> > 
+> > Add MT6797 clock support, include topckgen, apmixedsys, infracfg
+> > and subsystem clocks
+> > 
+> > Signed-off-by: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
+> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> > Tested-by: Matthias Brugger <matthias.bgg@gmail.com>
+> 
+> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+> 
+> Looks fine to me except for the one comment below. Did you want
+> me to merge it into clk tree?
 
-> That device tree was corrected a year ago to provide a size instead of
-> a mask.
+To prevent another run, I really like you to merge it.
+However, I also want to make the patch set more cleaner.
+So I will send v4 later. :-)  
 
-You are letting Linux implementation details influence your DT
-thinking. DT is much more flexible in that it supports a base address
-and size (and multiple of them) while Linux can only deal with a
-single address mask. If Linux dealt with base + size, then we wouldn't
-be having this conversation. As long as Linux only deals with masks,
-we're going to have to have some sort of work-around to deal with
-them.
+> 
+> > diff --git a/drivers/clk/mediatek/clk-mt6797.c b/drivers/clk/mediatek/clk-mt6797.c
+> > new file mode 100644
+> > index 0000000..7ebb7f1
+> > --- /dev/null
+> > +++ b/drivers/clk/mediatek/clk-mt6797.c
+> > @@ -0,0 +1,716 @@
+> > +/*
+> > + * Copyright (c) 2016 MediaTek Inc.
+> > + * Author: Kevin Chen <kevin-cw.chen@mediatek.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> 
+> Is this include used? Please include clk-provider if the file is
+> a clk driver. Same comment applies to other files in this patch.
+> 
 
->> Well, technically you can for the latter, but then you have to grow
->> #size-cells to 2 for an otherwise all 32-bit system which seems kind
->> of pointless and wasteful. You could further restrict this to only
->> allow ~0 and not just any case with bit 0 set.
->>
->> I'm pretty sure AMD is not the only system. There were 32-bit systems too.
->
-> I examined all instances of property dma-ranges in in tree dts files in
-> Linux 4.11-rc1.  There are none that incorrectly specify mask instead of
-> size.
+Should be removed. Will be done in v4.
 
-Okay, but there are ones for ranges at least. See ecx-2000.dts.
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include "clk-mtk.h"
+> > +#include "clk-gate.h"
+> > +
+> > +#include <dt-bindings/clock/mt6797-clk.h>
+> > +
+> > +/*
+> > + * For some clocks, we don't care what their actual rates are. And these
+> > + * clocks may change their rate on different products or different scenarios.
+> > + * So we model these clocks' rate as 0, to denote it's not an actual rate.
+> > + */
+> > +
+> > +static DEFINE_SPINLOCK(mt6797_clk_lock);
+> > +
+> > +static const struct mtk_fixed_factor top_fixed_divs[] = {
+> > +	FACTOR(CLK_TOP_SYSPLL_CK, "syspll_ck", "mainpll", 1, 1),
+> > +	FACTOR(CLK_TOP_SYSPLL_D2, "syspll_d2", "mainpll", 1, 2),
+> > +	FACTOR(CLK_TOP_SYSPLL1_D2, "syspll1_d2", "syspll_d2", 1, 2),
+> [...]
+> > +	clk_init = of_device_get_match_data(&pdev->dev);
+> > +	if (!clk_init)
+> > +		return -EINVAL;
+> > +
+> > +	r = clk_init(pdev);
+> > +	if (r)
+> > +		dev_err(&pdev->dev,
+> > +			"could not register clock provider: %s: %d\n",
+> > +			pdev->name, r);
+> > +
+> > +	return r;
+> > +}
+> > +
+> > +static struct platform_driver clk_mt6797_drv = {
+> > +	.probe = clk_mt6797_probe,
+> > +	.driver = {
+> > +		.name = "clk-mt6797",
+> > +		.owner = THIS_MODULE,
+> 
+> This can be removed, platform_driver_register() does it already.
+> 
 
-> #size-cells only changes to 2 for the dma-ranges property and the ranges
-> property when size is 2^32, so that is a very small amount of space.
->
-> The patch does not allow for a size of 2^64.  If a system requires a
-> size of 2^64 then the type of size needs to increase to be larger
-> than a u64.  If you would like for the code to be defensive and
-> detect a device tree providing a size of 2^64 then I can add a
-> check to of_dma_get_range() to return -EINVAL if #size-cells > 2.
-> When that error triggers, the type of size can be changed.
+got it, will be removed.
 
-#size-cells > 2 is completely broken for anything but PCI. I doubt it
-is easily fixed without some special casing (i.e. a different hack)
-until we have 128-bit support. I hope to retire before we need to
-support that.
+> > +		.of_match_table = of_match_clk_mt6797,
+> > +	},
+> > +};
+> > +
+> > +static int __init clk_mt6797_init(void)
+> > +{
+> > +	return platform_driver_register(&clk_mt6797_drv);
+> > +}
+> > +
+> > +arch_initcall(clk_mt6797_init);
+> > diff --git a/include/dt-bindings/clock/mt6797-clk.h b/include/dt-bindings/clock/mt6797-clk.h
+> > new file mode 100644
+> > index 0000000..e48aa47
+> > --- /dev/null
+> > +++ b/include/dt-bindings/clock/mt6797-clk.h
+> > @@ -0,0 +1,281 @@
+> 
+> I think arm-soc folks don't want us merging whole drivers into
+> the DT branch anymore, so please split off the dt-bindings header
+> into a different patch that we can apply directly. Then we can
+> layer the driver on top and just send off the header to arm-soc
+> via a stable clk branch.
+> 
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Got it. Will be done in v4.
+
+Thanks for your review.
+
