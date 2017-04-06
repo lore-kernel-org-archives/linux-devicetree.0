@@ -1,100 +1,109 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 2/9] ARM: dts: imx6ul-geam: Add Sound card with codec node
-Date: Thu,  6 Apr 2017 23:32:08 +0530
-Message-ID: <1491501735-1649-3-git-send-email-jagan@openedev.com>
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH v3 4/9] ARM: dts: imx6dl-icore-rqs: Add sgtl5000 codec node
+Date: Thu,  6 Apr 2017 23:32:10 +0530
+Message-ID: <1491501735-1649-5-git-send-email-jagan@openedev.com>
 References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491501735-1649-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1491501735-1649-1-git-send-email-jagan@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-Add support for Sound card and related codec(via i2c1) nodes
-on Engicam GEAM6UL variant module boards.
+- Moved sound card node to imx6qdl-icore-rqs.dtsi
+- Added codec node in imx6dl-icore-rqs
+- Replace codec: sgtl5000@0a => sgtl5000: codec@a
+  on imx6q-icore-rqs.dts to [label:] node-name[@unit-address]
+  according to devicetree specification from ePAPER v1.1
 
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v3:
-- Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
+- squash previous [PATCH v2 10/15] and [PATCH v2 11/15]
 Changes for v2:
-- Use proper [label:] node-name[@unit-address] for codec
-- Remove incorrect codec property 'wlf,shared-lrclk'
-- Remove 'gpr' from sound card node
+- Newly added patch
 
- arch/arm/boot/dts/imx6ul-geam-kit.dts | 12 ++++++++++++
- arch/arm/boot/dts/imx6ul-geam.dtsi    | 26 ++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ arch/arm/boot/dts/imx6dl-icore-rqs.dts   | 11 +++++++++++
+ arch/arm/boot/dts/imx6q-icore-rqs.dts    | 15 +--------------
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 13 +++++++++++++
+ 3 files changed, 25 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-geam-kit.dts b/arch/arm/boot/dts/imx6ul-geam-kit.dts
-index 142e60c..02edcba 100644
---- a/arch/arm/boot/dts/imx6ul-geam-kit.dts
-+++ b/arch/arm/boot/dts/imx6ul-geam-kit.dts
-@@ -58,6 +58,18 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6dl-icore-rqs.dts b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
+index cf42c2f..053e7cb 100644
+--- a/arch/arm/boot/dts/imx6dl-icore-rqs.dts
++++ b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
+@@ -49,3 +49,14 @@
+ 	model = "Engicam i.CoreM6 DualLite/Solo RQS Starter Kit";
+ 	compatible = "engicam,imx6-icore-rqs", "fsl,imx6dl";
  };
- 
-+&i2c1 {
++
++&i2c3 {
 +	sgtl5000: codec@a {
 +		compatible = "fsl,sgtl5000";
 +		reg = <0x0a>;
-+		clocks = <&clks IMX6UL_CLK_OSC>;
-+		clock-names = "mclk";
-+		VDDA-supply = <&reg_3p3v>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_2p5v>;
 +		VDDIO-supply = <&reg_3p3v>;
 +		VDDD-supply = <&reg_1p8v>;
 +	};
 +};
-+
- &lcdif {
- 	display = <&display0>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dtsi b/arch/arm/boot/dts/imx6ul-geam.dtsi
-index eb94d95..3bc3238 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-geam.dtsi
-@@ -87,6 +87,32 @@
- 		regulator-always-on;
- 		regulator-boot-on;
+diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
+index e451b4c..d45e4f5 100644
+--- a/arch/arm/boot/dts/imx6q-icore-rqs.dts
++++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
+@@ -47,23 +47,10 @@
+ / {
+ 	model = "Engicam i.CoreM6 Quad/Dual RQS Starter Kit";
+ 	compatible = "engicam,imx6-icore-rqs", "fsl,imx6q";
+-
+-	sound {
+-		compatible = "fsl,imx-audio-sgtl5000";
+-		model = "imx-audio-sgtl5000";
+-		ssi-controller = <&ssi1>;
+-		audio-codec = <&codec>;
+-		audio-routing =
+-			"MIC_IN", "Mic Jack",
+-			"Mic Jack", "Mic Bias",
+-			"Headphone Jack", "HP_OUT";
+-		mux-int-port = <1>;
+-		mux-ext-port = <4>;
+-	};
+ };
+ 
+ &i2c3 {
+-	codec: sgtl5000@0a {
++	sgtl5000: codec@a {
+ 		compatible = "fsl,sgtl5000";
+ 		reg = <0x0a>;
+ 		clocks = <&clks IMX6QDL_CLK_CKO>;
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+index 5fab5be..d24e531 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+@@ -118,6 +118,19 @@
+ 		clocks = <&clks IMX6QDL_CLK_LVDS2_GATE>;
+ 		clock-names = "refclk";
  	};
 +
 +	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx6ul-geam-sgtl5000";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&dailink_master>;
-+		simple-audio-card,frame-master = <&dailink_master>;
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic Jack",
-+			"Line", "Line In",
-+			"Line", "Line Out",
-+			"Headphone", "Headphone Jack";
-+		simple-audio-card,routing =
++		compatible = "fsl,imx-audio-sgtl5000";
++		model = "imx-audio-sgtl5000";
++		ssi-controller = <&ssi1>;
++		audio-codec = <&sgtl5000>;
++		audio-routing =
 +			"MIC_IN", "Mic Jack",
 +			"Mic Jack", "Mic Bias",
 +			"Headphone Jack", "HP_OUT";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&sai2>;
-+		};
-+
-+		dailink_master: simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+			clocks = <&clks IMX6UL_CLK_SAI2>;
-+		};
++		mux-int-port = <1>;
++		mux-ext-port = <4>;
 +	};
  };
  
- &can1 {
+ &clks {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
