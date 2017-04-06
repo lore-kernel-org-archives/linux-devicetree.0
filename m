@@ -1,56 +1,47 @@
-From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 1/4] Documentation: dt-bindings: iio: Add max9611 ADC
-Date: Thu,  6 Apr 2017 16:20:51 +0200
-Message-ID: <1491488454-22468-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v5 2/4] iio: Documentation: Add max9611 sysfs documentation
+Date: Thu,  6 Apr 2017 16:20:52 +0200
+Message-ID: <1491488454-22468-3-git-send-email-jacopo+renesas@jmondi.org>
 References: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491488454-22468-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: geert@linux-m68k.org, wsa+renesas@sang-engineering.com, magnus.damm@gmail.com, laurent.pinchart@ideasonboard.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Maxim max9611/max9612 current
-sense amplifier.
+Add documentation for max9611 driver.
+Document attributes describing value of shunt resistor installed between
+RS+ and RS- voltage sense inputs.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- .../devicetree/bindings/iio/adc/max9611.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/max9611.txt
+ Documentation/ABI/testing/sysfs-bus-iio-adc-max9611 | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max9611.txt b/Documentation/devicetree/bindings/iio/adc/max9611.txt
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611 b/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
 new file mode 100644
-index 0000000..ffb046a
+index 0000000..6d2d2b0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/max9611.txt
-@@ -0,0 +1,27 @@
-+* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
++++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
+@@ -0,0 +1,17 @@
++What:		/sys/bus/iio/devices/iio:deviceX/in_power_shunt_resistor
++Date:		March 2017
++KernelVersion:	4.12
++Contact:	linux-iio@vger.kernel.org
++Description: 	The value of the shunt resistor used to compute power drain on
++                common input voltage pin (RS+). In Ohms.
 +
-+Maxim max9611/max9612 is an high-side current sense amplifier with integrated
-+12-bits ADC communicating over I2c bus.
-+The device node for this driver shall be a child of a I2c controller.
++What:		/sys/bus/iio/devices/iio:deviceX/in_current_shunt_resistor
++Date:		March 2017
++KernelVersion:	4.12
++Contact:	linux-iio@vger.kernel.org
++Description: 	The value of the shunt resistor used to compute current flowing
++                between RS+ and RS- voltage sense inputs. In Ohms.
 +
-+Required properties
-+  - compatible: Should be "maxim,max9611" or "maxim,max9612"
-+  - reg: The 7-bits long I2c address of the device
-+  - shunt-resistor-micro-homs: Value, in micro Ohms, of the current sense shunt
-+			        resistor
-+
-+Example:
-+
-+&i2c4 {
-+	csa: adc@7c {
-+		compatible = "maxim,max9611";
-+		reg = <0x7c>;
-+
-+		shunt-resistor-micro-ohms = <5000>;
-+	};
-+};
-+
-+This device node describes a current sense amplifier sitting on I2c4 bus
-+with address 0x7c (read address is 0xf9, write address is 0xf8).
-+A sense resistor of 0,005 Ohm is installed between RS+ and RS- current-sensing
-+inputs.
---
++These attributes describe a single physical component, exposed as two distinct
++attributes as it is used to calculate two different values: power load and
++current flowing between RS+ and RS- inputs.
+-- 
 2.7.4
