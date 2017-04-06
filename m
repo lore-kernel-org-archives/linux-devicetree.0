@@ -1,78 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 07/16] regulator: madera-micsupp: Mic
- supply for Cirrus Logic Madera codecs
-Date: Thu, 6 Apr 2017 11:57:44 +0100
-Message-ID: <20170406105744.f5qpmmi2pjvc7n2z@sirena.org.uk>
-References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1491386884-30689-8-git-send-email-rf@opensource.wolfsonmicro.com>
- <20170405134054.kz3j56vza4pqki75@sirena.org.uk>
- <1491400437.4096.5.camel@rf-debian.wolfsonmicro.main>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH V10 06/12] of: device: Fix overflow of coherent_dma_mask
+Date: Thu, 6 Apr 2017 16:31:30 +0530
+Message-ID: <b77e3405-f060-bcd5-99f6-7d76f9edf08a@codeaurora.org>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
+ <1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+ <1491301105-5274-7-git-send-email-sricharan@codeaurora.org>
+ <58E5E7B7.1050400@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6717022043634860279=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1491400437.4096.5.camel@rf-debian.wolfsonmicro.main>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <58E5E7B7.1050400@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, robin.murphy@arm.com, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Frank,
 
---===============6717022043634860279==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5wfkgd3jlpzi3vd7"
-Content-Disposition: inline
+On 4/6/2017 12:31 PM, Frank Rowand wrote:
+> On 04/04/17 03:18, Sricharan R wrote:
+>> Size of the dma-range is calculated as coherent_dma_mask + 1
+>> and passed to arch_setup_dma_ops further. It overflows when
+>> the coherent_dma_mask is set for full 64 bits 0xFFFFFFFFFFFFFFFF,
+>> resulting in size getting passed as 0 wrongly. Fix this by
+>> passsing in max(mask, mask + 1). Note that in this case
+>> when the mask is set to full 64bits, we will be passing the mask
+>> itself to arch_setup_dma_ops instead of the size. The real fix
+>> for this should be to make arch_setup_dma_ops receive the
+>> mask and handle it, to be done in the future.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  drivers/of/device.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>> index c17c19d..c2ae6bb 100644
+>> --- a/drivers/of/device.c
+>> +++ b/drivers/of/device.c
+>> @@ -107,7 +107,7 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>>  	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>>  	if (ret < 0) {
+>>  		dma_addr = offset = 0;
+>> -		size = dev->coherent_dma_mask + 1;
+>> +		size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+>>  	} else {
+>>  		offset = PFN_DOWN(paddr - dma_addr);
+>>  		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>>
+>
+> NACK.
+>
+> Passing an invalid size to arch_setup_dma_ops() is only part of the problem.
+> size is also used in of_dma_configure() before calling arch_setup_dma_ops():
+>
+>         dev->coherent_dma_mask = min(dev->coherent_dma_mask,
+>                                      DMA_BIT_MASK(ilog2(dma_addr + size)));
+>         *dev->dma_mask = min((*dev->dma_mask),
+>                              DMA_BIT_MASK(ilog2(dma_addr + size)));
+>
+> which would be incorrect for size == 0xffffffffffffffffULL when
+> dma_addr != 0.  So the proposed fix really is not papering over
+> the base problem very well.
+>
 
+Ok, but with your fix for of_dma_get_range and the above fix,
+dma_addr will be '0' when size = 0xffffffffffffffffULL,
+but DMA_BIT_MASK(ilog2(dma_addr + size)) would be wrong though,
+making coherent_dma_mask to be smaller 0x7fffffffffffffffULL.
 
---5wfkgd3jlpzi3vd7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Regards,
+  Sricharan
 
-On Wed, Apr 05, 2017 at 02:53:57PM +0100, Richard Fitzgerald wrote:
-> On Wed, 2017-04-05 at 14:40 +0100, Mark Brown wrote:
+> I agree that the proper solution involves passing a mask instead
+> of a size to arch_setup_dma_ops().
+>
 
-> > Again, this appears to have only data and minor code style changes
-> > relative to the existing arizona driver - is there no opportunity for
-> > code sharing here?
-
-> I'll have a look at how it would work out.
-> My thought was that these two regulator drivers are so small it wasn't
-> worth creating an entanglement between arizona and madera for so little
-> code.
-
-It's a fairly small amount of code but it's an extremely high proportion
-of the code in the driver and doing something a bit unusual, not just
-boilerplate.
-
---5wfkgd3jlpzi3vd7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljmHycACgkQJNaLcl1U
-h9DhaAf+MgOeQ1O1F7YETxiO6bPPXlueOsp5OuXiyDXFjzO/9ekNHkmsjxrSQvpT
-8dcJVUx8lEHEvBB5zDs608/EobDSl+TKPT6Ud1O2ouczXHFxj627/6+bU8s9avNi
-V593V8cSNP9/9qzB60+iBOsLRvtICY2YPGmIuftVBI1bJFIDbxzMZvYApY1+q99Q
-KZiUuGM2VRlHPfDQhHODX1dlN8HNtVzMHmN1ldE1u2Catl3VAus9Cjo62g69tCkM
-7KuHk3plxKPLdZD/lej8/OW1GB1qy/gS03Ui4eRgOJJz4jBGDzty4zQP1myiIXW2
-MevGyBfDke4KCZNx3kQ7V6Y4AgTRBg==
-=/bkc
------END PGP SIGNATURE-----
-
---5wfkgd3jlpzi3vd7--
-
---===============6717022043634860279==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6717022043634860279==--
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
