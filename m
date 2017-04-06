@@ -1,11 +1,14 @@
 From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v5 0/5] STM32 Independent watchdog
-Date: Thu, 6 Apr 2017 14:19:23 +0200
-Message-ID: <1491481168-22213-1-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v5 4/5] ARM: dts: stm32: Add watchdog support for STM32F429
+ eval board
+Date: Thu, 6 Apr 2017 14:19:27 +0200
+Message-ID: <1491481168-22213-5-git-send-email-yannick.fertre@st.com>
+References: <1491481168-22213-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1491481168-22213-1-git-send-email-yannick.fertre@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,49 +22,28 @@ To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob He
 Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Version 5:
-- Update bindings (add field timeout-sec)
-- Update driver (rework start, rework settings & remove max_timeout)
+This patch adds watchdog support for STM32x9I-Eval board.
 
-Version 4:
-- Update bindings (iwdg > watchdog)
-- Update typo
-- Update commit header
-- remove gerrit tags
-- Update driver (remove unnecessary tests) a add watchdog_init_timeout
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+---
+ arch/arm/boot/dts/stm32429i-eval.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Version 3:
-- Update typo into  bindings file
-- Reorder node in devicetree (ordering by address)
-- Remove unnecessary lines in commits
-
-Version 2:
-- Add commit messages
-
-Version 1:
-- Initial commit
-
-The purpose of this set of patches is to add a new watchdog driver for
-stm32f429.
-This driver was developed and tested on evaluation board stm32429i.
-
-Yannick Fertre (5):
-  dt-bindings: watchdog: Document STM32 IWDG bindings
-  drivers: watchdog: Add STM32 IWDG driver
-  ARM: dts: stm32: Add watchdog support for STM32F429 SoC
-  ARM: dts: stm32: Add watchdog support for STM32F429 eval board
-  ARM: configs: stm32: Add watchdog support in STM32 defconfig
-
- .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  19 ++
- arch/arm/boot/dts/stm32429i-eval.dts               |   5 +
- arch/arm/boot/dts/stm32f429.dtsi                   |   9 +-
- arch/arm/configs/stm32_defconfig                   |   1 +
- drivers/watchdog/Kconfig                           |  12 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/stm32_iwdg.c                      | 253 +++++++++++++++++++++
- 7 files changed, 299 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
- create mode 100644 drivers/watchdog/stm32_iwdg.c
-
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 6e4b42a..ff29980 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -144,6 +144,11 @@
+ 	};
+ };
+ 
++&iwdg {
++	status = "okay";
++	timeout-sec = <32>;
++};
++
+ &adc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&adc3_in8_pin>;
 -- 
 1.9.1
