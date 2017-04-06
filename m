@@ -1,14 +1,11 @@
 From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v5 5/5] ARM: configs: stm32: Add watchdog support in STM32
- defconfig
-Date: Thu, 6 Apr 2017 14:19:28 +0200
-Message-ID: <1491481168-22213-6-git-send-email-yannick.fertre@st.com>
-References: <1491481168-22213-1-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v5 0/5] STM32 Independent watchdog
+Date: Thu, 6 Apr 2017 14:19:23 +0200
+Message-ID: <1491481168-22213-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1491481168-22213-1-git-send-email-yannick.fertre@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,24 +19,49 @@ To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob He
 Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds STM32 watchdog support in stm32_defconfig file
+Version 5:
+- Update bindings (add field timeout-sec)
+- Update driver (rework start, rework settings & remove max_timeout)
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
----
- arch/arm/configs/stm32_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Version 4:
+- Update bindings (iwdg > watchdog)
+- Update typo
+- Update commit header
+- remove gerrit tags
+- Update driver (remove unnecessary tests) a add watchdog_init_timeout
 
-diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-index 29ac5a4..1fb901c 100644
---- a/arch/arm/configs/stm32_defconfig
-+++ b/arch/arm/configs/stm32_defconfig
-@@ -51,6 +51,7 @@ CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_STM32F4=y
- # CONFIG_HWMON is not set
-+CONFIG_WATCHDOG=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- # CONFIG_USB_SUPPORT is not set
+Version 3:
+- Update typo into  bindings file
+- Reorder node in devicetree (ordering by address)
+- Remove unnecessary lines in commits
+
+Version 2:
+- Add commit messages
+
+Version 1:
+- Initial commit
+
+The purpose of this set of patches is to add a new watchdog driver for
+stm32f429.
+This driver was developed and tested on evaluation board stm32429i.
+
+Yannick Fertre (5):
+  dt-bindings: watchdog: Document STM32 IWDG bindings
+  drivers: watchdog: Add STM32 IWDG driver
+  ARM: dts: stm32: Add watchdog support for STM32F429 SoC
+  ARM: dts: stm32: Add watchdog support for STM32F429 eval board
+  ARM: configs: stm32: Add watchdog support in STM32 defconfig
+
+ .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  19 ++
+ arch/arm/boot/dts/stm32429i-eval.dts               |   5 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |   9 +-
+ arch/arm/configs/stm32_defconfig                   |   1 +
+ drivers/watchdog/Kconfig                           |  12 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/stm32_iwdg.c                      | 253 +++++++++++++++++++++
+ 7 files changed, 299 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+ create mode 100644 drivers/watchdog/stm32_iwdg.c
+
 -- 
 1.9.1
