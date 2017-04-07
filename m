@@ -1,101 +1,93 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: aspeed: add a fastread property
-Date: Fri, 7 Apr 2017 11:40:25 +0930
-Message-ID: <CACPK8XedrYaeBq5P5g0XUzXS6WHzPLwXAMF5V7cp9ntuxC=0hQ@mail.gmail.com>
-References: <1491498153-26564-1-git-send-email-clg@kaod.org>
+From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Device Tree Binding for Intel FPGA Video and Image Processing Suite
+Date: Fri, 07 Apr 2017 10:13:37 +0800
+Message-ID: <1491531217.2232.3.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491498153-26564-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 7, 2017 at 2:32 AM, C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
-> All chips on OpenPOWER platforms support the fastread SPI command.
->
-> Signed-off-by: C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
 
-Thanks, applied.
+Hi Rob,
 
-Cheers,
+I am resubmitting the patch again since the last doesn't comply with
+the rules of the community.
 
-Joel
+>From 23a9e274bb517b8e232c5aa4cf9737de1644b708 Mon Sep 17 00:00:00 2001
+From: Ong, Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Date: Thu, 30 Mar 2017 17:59:37 +0800
+Subject: [PATCHv0] Intel FPGA Video and Image Processing Suite device
+tree binding
 
-> ---
->  arch/arm/boot/dts/aspeed-ast2500-evb.dts      | 2 ++
->  arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 2 ++
->  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts  | 2 ++
->  3 files changed, 6 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts=
-/aspeed-ast2500-evb.dts
-> index 8f82e8ab1875..7c90dac99822 100644
-> --- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> +++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> @@ -24,6 +24,7 @@
->         status =3D "okay";
->         flash@0 {
->                 status =3D "okay";
-> +               m25p,fast-read;
->                 label =3D "bmc";
->         };
->  };
-> @@ -32,6 +33,7 @@
->         status =3D "okay";
->         flash@0 {
->                 status =3D "okay";
-> +               m25p,fast-read;
->                 label =3D "pnor";
->         };
->  };
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boo=
-t/dts/aspeed-bmc-opp-palmetto.dts
-> index aab1889f702f..112551766275 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-> @@ -35,6 +35,7 @@
->         status =3D "okay";
->         flash@0 {
->                 status =3D "okay";
-> +               m25p,fast-read;
->                 label =3D "bmc";
->         };
->  };
-> @@ -43,6 +44,7 @@
->         status =3D "okay";
->         flash@0 {
->                 status =3D "okay";
-> +               m25p,fast-read;
->                 label =3D "pnor";
->         };
->  };
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot=
-/dts/aspeed-bmc-opp-romulus.dts
-> index e3c6358bc7d9..b82f67eb3dae 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-> @@ -35,6 +35,7 @@
->         status =3D "okay";
->         flash@0 {
->                 status =3D "okay";
-> +               m25p,fast-read;
->                 label =3D "bmc";
->         };
->  };
-> @@ -43,6 +44,7 @@
->         status =3D "okay";
->         flash@0 {
->                 status =3D "okay";
-> +               m25p,fast-read;
->                 label =3D "pnor";
->         };
->  };
-> --
-> 2.7.4
->
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Device tree binding for Int=
+el FPGA Video and Image
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Processing Suite. The bindi=
+ng involved would be generated
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0from the Altera (Intel) Qsy=
+s system. The bindings would
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0set the max width, max heig=
+ht, buts per pixel and memory
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0port width. The device tree=
+ binding only supports the Intel
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Arria10 devkit and its vari=
+ants. Vendor name retained as
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0altr.
+
+Signed-off-by: Ong, Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+=C2=A0.../devicetree/bindings/gpu/altr,vip-fb2.txt=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A024
+++++++++++++++++++++
+=C2=A01 files changed, 24 insertions(+), 0 deletions(-)
+=C2=A0create mode 100644 Documentation/devicetree/bindings/gpu/altr,vip-
+fb2.txt
+
+diff --git a/Documentation/devicetree/bindings/gpu/altr,vip-fb2.txt
+b/Documentation/devicetree/bindings/gpu/altr,vip-fb2.txt
+new file mode 100644
+index 0000000..9ba3209
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/altr,vip-fb2.txt
+@@ -0,0 +1,24 @@
++Intel Video and Image Processing(VIP) Frame Buffer II bindings
++
++Supported hardware:=C2=A0=C2=A0Arria 10 and above with display port IP
++
++Required properties:
++- compatible: "altr,vip-frame-buffer-2.0"
++- reg: Physical base address and length of the framebuffer
+controller's
++=C2=A0=C2=A0registers.
++- max-width: The width of the framebuffer in pixels.
++- max-height: The height of the framebuffer in pixels.
++- bits-per-symbol: only "8" is currently supported
++- mem-port-width =3D the bus width of the avalon master port on the
+frame reader
++
++Example:
++
++dp_0_frame_buf: vip@0x100000280 {
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "altr,vip-frame-b=
+uffer-2.0";
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0reg =3D <0x00000001 0x00000280 0=
+x00000040>;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0altr,max-width =3D <1280>;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0altr,max-height =3D <720>;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0altr,bits-per-symbol =3D <8>;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0altr,mem-port-width =3D <128>;
++};
++
+--=C2=A0
+1.7.1
+
+--=20
+BR
+
+Hean-Loong
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
