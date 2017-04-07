@@ -1,46 +1,46 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] clk: Add support for IDT 5P49V5935
-Date: Fri, 7 Apr 2017 12:40:13 -0700
-Message-ID: <20170407194013.GD7065@codeaurora.org>
-References: <1491556344-9465-1-git-send-email-alexey_firago@mentor.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 07/12] clk: mediatek: add clk support for MT6797
+Date: Fri, 7 Apr 2017 12:41:07 -0700
+Message-ID: <20170407194107.GE7065@codeaurora.org>
+References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
+ <1489937193-2953-8-git-send-email-mars.cheng@mediatek.com>
+ <20170406200852.GQ7065@codeaurora.org>
+ <1491521747.17643.6.camel@mtkswgap22>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1491556344-9465-1-git-send-email-alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1491521747.17643.6.camel@mtkswgap22>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Michael Turquette <mturquette@baylibre.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-clk@vger.kernel.org, Kevin-CW Chen <kevin-cw.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/07, Alexey Firago wrote:
-> This series adds support for IDT VersaClock 5P49V5935 programmable clock
-> generator to the existing clk-versaclock5 driver. Driver is also updated to
-> simplify addition of support for more VersaClock 5 models. 
+On 04/07, Mars Cheng wrote:
+> Hi Stephen
 > 
-> Patches were verified on Avnet UltraZed-EG board with IO Carrier Card.
+> On Thu, 2017-04-06 at 13:08 -0700, Stephen Boyd wrote:
+> > On 03/19, Mars Cheng wrote:
+> > > From: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
+> > > 
+> > > Add MT6797 clock support, include topckgen, apmixedsys, infracfg
+> > > and subsystem clocks
+> > > 
+> > > Signed-off-by: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
+> > > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> > > Tested-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > 
+> > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+> > 
+> > Looks fine to me except for the one comment below. Did you want
+> > me to merge it into clk tree?
 > 
-> Changes in V2:
-> - Introduce vc5_chip_info structure describing chip features
-> - Set vc5_chip_info for the supported chips using clk_vc5_of_match[].data
-> - Add 5P49V5935 support using vc5_chip_info approach
-> - Fix idx comparison in vc5_of_clk_get ('>' to '>=')
-> 
-> Changes in V3:
-> - Change type of clk_fod_cnt and clk_out_cnt to unsigned int
-> - Add missed 'const' to vc5_chip_info instance declaration
-> - Use of_device_get_match_data() to initialize vc5_chip_info on probe 
-> 
-> Changes in V4:
-> - Add 'const' to vc5_chip_info.flags
+> To prevent another run, I really like you to merge it.
+> However, I also want to make the patch set more cleaner.
+> So I will send v4 later. :-)  
 
-Could any Reviewed-by tags get carried over? I'll wait for Marek
-to resend them I guess.
+Ok I'll merge v4 patch then.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
