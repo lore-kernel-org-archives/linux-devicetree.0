@@ -1,61 +1,163 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 01/16] mfd: madera: Add register definitions for Cirrus
- Logic Madera codecs
-Date: Fri, 7 Apr 2017 09:48:23 +0100
-Message-ID: <20170407084823.GB3412@localhost.localdomain>
-References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1491386884-30689-2-git-send-email-rf@opensource.wolfsonmicro.com>
- <CACRpkdaYzPSVqqhbi2Zop7J9vzCqZZiN=9pAEw1vcWy_ove9Tg@mail.gmail.com>
- <CACRpkdY=cOhw59O8EE6J82aq897YKZkLsmUzeEnzkC5jtT6yyA@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] v4l: flash led class: Use fwnode_handle instead of device_node in init
+Date: Fri, 07 Apr 2017 11:49:56 +0300
+Message-ID: <3129720.GhXEqohgpp@avalon>
+References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com> <1491484330-12040-2-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY=cOhw59O8EE6J82aq897YKZkLsmUzeEnzkC5jtT6yyA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491484330-12040-2-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 10:30:12AM +0200, Linus Walleij wrote:
-> On Fri, Apr 7, 2017 at 10:27 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Wed, Apr 5, 2017 at 12:07 PM, Richard Fitzgerald
-> > <rf@opensource.wolfsonmicro.com> wrote:
-> >
-> >> This patch adds a header file of register definitions for Cirrus
-> >> Logic "Madera" class codecs. These codecs are all based off a common
-> >> set of hardware IP so have a common register map (with a few minor
-> >> device-to-device variations). These are complex devices with a large
-> >> mber of features and so have a correspondingly large register set.
-> >> The registers.h file has been auto-generated from the hardware register
-> >> definitions, stripped down to only registers we need to access from
-> >> the driver.
-> >>
-> >> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> >
-> > This:
-> >  include/linux/mfd/madera/registers.h | 8832 ++++++++++++++++++++++++++++++++++
-> >
-> > Get included in all subdrivers I suppose?
-> >
-> > So you are broadcasting 8800+ lines into every subdriver across the
-> > entire kernel.
-> >
-> > Just the time spent in the preprocessor parsing this will affect compilation
-> > time.
-> 
-> Or maybe this is a necessary sacrifice to get the regmap cache
-> centralized in MFD. I don't know. I feel stupid.
-> 
-> I guess I should focus on "my" subsystems...
-> 
+Hi Sakari,
 
-This only gets included in files that are part of this driver, it
-shouldn't affect compilation time for anyone not building the
-madera driver and even then it should only affect compilation
-times for the 10 or so C files that make up the driver. Also I
-don't really see any other way to specify the registers for the
-device.
+Thank you for the patch.
 
-Thanks,
-Charles
+On Thursday 06 Apr 2017 16:12:03 Sakari Ailus wrote:
+> Pass the more generic fwnode_handle to the init function than the
+> device_node.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  drivers/leds/leds-aat1290.c                    |  5 +++--
+>  drivers/leds/leds-max77693.c                   |  5 +++--
+>  drivers/media/v4l2-core/v4l2-flash-led-class.c | 11 ++++++-----
+>  include/media/v4l2-flash-led-class.h           |  4 ++--
+>  4 files changed, 14 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-aat1290.c b/drivers/leds/leds-aat1290.c
+> index def3cf9..a21e192 100644
+> --- a/drivers/leds/leds-aat1290.c
+> +++ b/drivers/leds/leds-aat1290.c
+> @@ -503,8 +503,9 @@ static int aat1290_led_probe(struct platform_device
+> *pdev) aat1290_init_v4l2_flash_config(led, &led_cfg, &v4l2_sd_cfg);
+> 
+>  	/* Create V4L2 Flash subdev. */
+> -	led->v4l2_flash = v4l2_flash_init(dev, sub_node, fled_cdev, NULL,
+> -					  &v4l2_flash_ops, &v4l2_sd_cfg);
+> +	led->v4l2_flash = v4l2_flash_init(dev, of_fwnode_handle(sub_node),
+> +					  fled_cdev, NULL, &v4l2_flash_ops,
+> +					  &v4l2_sd_cfg);
+>  	if (IS_ERR(led->v4l2_flash)) {
+>  		ret = PTR_ERR(led->v4l2_flash);
+>  		goto error_v4l2_flash_init;
+> diff --git a/drivers/leds/leds-max77693.c b/drivers/leds/leds-max77693.c
+> index 1eb58ef..2d3062d 100644
+> --- a/drivers/leds/leds-max77693.c
+> +++ b/drivers/leds/leds-max77693.c
+> @@ -930,8 +930,9 @@ static int max77693_register_led(struct max77693_sub_led
+> *sub_led, max77693_init_v4l2_flash_config(sub_led, led_cfg, &v4l2_sd_cfg);
+> 
+>  	/* Register in the V4L2 subsystem. */
+> -	sub_led->v4l2_flash = v4l2_flash_init(dev, sub_node, fled_cdev, NULL,
+> -					      &v4l2_flash_ops, &v4l2_sd_cfg);
+> +	sub_led->v4l2_flash = v4l2_flash_init(dev, of_fwnode_handle(sub_node),
+> +					      fled_cdev, NULL, 
+&v4l2_flash_ops,
+> +					      &v4l2_sd_cfg);
+>  	if (IS_ERR(sub_led->v4l2_flash)) {
+>  		ret = PTR_ERR(sub_led->v4l2_flash);
+>  		goto err_v4l2_flash_init;
+> diff --git a/drivers/media/v4l2-core/v4l2-flash-led-class.c
+> b/drivers/media/v4l2-core/v4l2-flash-led-class.c index 794e563..f430c89
+> 100644
+> --- a/drivers/media/v4l2-core/v4l2-flash-led-class.c
+> +++ b/drivers/media/v4l2-core/v4l2-flash-led-class.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/of.h>
+
+I think you can drop linux/of.h.
+
+> +#include <linux/property.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  #include <media/v4l2-flash-led-class.h>
+> @@ -612,7 +613,7 @@ static const struct v4l2_subdev_internal_ops
+> v4l2_flash_subdev_internal_ops = { static const struct v4l2_subdev_ops
+> v4l2_flash_subdev_ops;
+> 
+>  struct v4l2_flash *v4l2_flash_init(
+> -	struct device *dev, struct device_node *of_node,
+> +	struct device *dev, struct fwnode_handle *fwn,
+>  	struct led_classdev_flash *fled_cdev,
+>  	struct led_classdev_flash *iled_cdev,
+>  	const struct v4l2_flash_ops *ops,
+> @@ -638,7 +639,7 @@ struct v4l2_flash *v4l2_flash_init(
+>  	v4l2_flash->iled_cdev = iled_cdev;
+>  	v4l2_flash->ops = ops;
+>  	sd->dev = dev;
+> -	sd->of_node = of_node ? of_node : led_cdev->dev->of_node;
+> +	sd->fwnode = fwn ? fwn : dev_fwnode(led_cdev->dev);
+
+v4l2_subdev will only have a fwnode field in patch 3/8.
+
+>  	v4l2_subdev_init(sd, &v4l2_flash_subdev_ops);
+>  	sd->internal_ops = &v4l2_flash_subdev_internal_ops;
+>  	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> @@ -654,7 +655,7 @@ struct v4l2_flash *v4l2_flash_init(
+>  	if (ret < 0)
+>  		goto err_init_controls;
+> 
+> -	of_node_get(sd->of_node);
+> +	fwnode_handle_get(sd->fwnode);
+> 
+>  	ret = v4l2_async_register_subdev(sd);
+>  	if (ret < 0)
+> @@ -663,7 +664,7 @@ struct v4l2_flash *v4l2_flash_init(
+>  	return v4l2_flash;
+> 
+>  err_async_register_sd:
+> -	of_node_put(sd->of_node);
+> +	fwnode_handle_put(sd->fwnode);
+>  	v4l2_ctrl_handler_free(sd->ctrl_handler);
+>  err_init_controls:
+>  	media_entity_cleanup(&sd->entity);
+> @@ -683,7 +684,7 @@ void v4l2_flash_release(struct v4l2_flash *v4l2_flash)
+> 
+>  	v4l2_async_unregister_subdev(sd);
+> 
+> -	of_node_put(sd->of_node);
+> +	fwnode_handle_put(sd->fwnode);
+> 
+>  	v4l2_ctrl_handler_free(sd->ctrl_handler);
+>  	media_entity_cleanup(&sd->entity);
+> diff --git a/include/media/v4l2-flash-led-class.h
+> b/include/media/v4l2-flash-led-class.h index b0fe4d6..5695853 100644
+> --- a/include/media/v4l2-flash-led-class.h
+> +++ b/include/media/v4l2-flash-led-class.h
+> @@ -108,7 +108,7 @@ static inline struct v4l2_flash
+> *v4l2_ctrl_to_v4l2_flash(struct v4l2_ctrl *c) /**
+>   * v4l2_flash_init - initialize V4L2 flash led sub-device
+>   * @dev:	flash device, e.g. an I2C device
+> - * @of_node:	of_node of the LED, may be NULL if the same as device's
+> + * @fwn:	fwnode_handle of the LED, may be NULL if the same as device's
+>   * @fled_cdev:	LED flash class device to wrap
+>   * @iled_cdev:	LED flash class device representing indicator LED 
+associated
+> *		with fled_cdev, may be NULL
+> @@ -122,7 +122,7 @@ static inline struct v4l2_flash
+> *v4l2_ctrl_to_v4l2_flash(struct v4l2_ctrl *c) * PTR_ERR() to obtain the
+> numeric return value.
+>   */
+>  struct v4l2_flash *v4l2_flash_init(
+> -	struct device *dev, struct device_node *of_node,
+> +	struct device *dev, struct fwnode_handle *fwn,
+>  	struct led_classdev_flash *fled_cdev,
+>  	struct led_classdev_flash *iled_cdev,
+>  	const struct v4l2_flash_ops *ops,
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
