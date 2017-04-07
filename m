@@ -1,197 +1,657 @@
-From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 09/16] pinctrl: madera: Add driver for Cirrus Logic
- Madera codecs
-Date: Fri, 7 Apr 2017 10:43:04 +0100
-Message-ID: <1491558184.4096.35.camel@rf-debian.wolfsonmicro.main>
-References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
-         <1491386884-30689-10-git-send-email-rf@opensource.wolfsonmicro.com>
-         <CACRpkdZK3QXu4t2jud0-LPDj0LDVruAm33N4Lazjk44C3ndwwQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 2/8] v4l: fwnode: Support generic fwnode for parsing standardised properties
+Date: Fri, 07 Apr 2017 12:44:27 +0300
+Message-ID: <2366571.B7YdK6QUO2@avalon>
+References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com> <1491484330-12040-3-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZK3QXu4t2jud0-LPDj0LDVruAm33N4Lazjk44C3ndwwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1491484330-12040-3-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-04-07 at 10:54 +0200, Linus Walleij wrote:
-> On Wed, Apr 5, 2017 at 12:07 PM, Richard Fitzgerald
-> <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> 
-> > These codecs have a variable number of I/O lines each of which
-> > is individually selectable to a wide range of possible functions.
-> >
-> > The functionality is slightly different from the traditional muxed
-> > GPIO since most of the functions can be mapped to any pin (and even
-> > the same function to multiple pins). Most pins have a dedicated
-> > "alternate" function that is only available on that pin. The
-> > alternate functions are usually a group of signals, though it is
-> > not always necessary to enable the full group, depending on the
-> > alternate function and how it is to be used. The mapping between
-> > alternate functions and GPIO pins varies between codecs depending
-> > on the number of alternate functions and available pins.
-> >
-> > Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> 
-> >  .../bindings/pinctrl/cirrus,madera-pinctrl.txt     |  103 ++
-> 
-> This should ideally be split into its own patch but I don't care
-> much if the DT people are happy.
-> 
-> > +See also
-> > +  the core bindings for the parent MFD driver:
-> > +    Documentation/devicetree/bindings/mfd/madera.txt
-> > +
-> > +  the generic pinmix bindings:
-> > +    Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> 
-> Nice.
-> 
-> > +Required properties of parent mfd node:
-> > +  - pinctrl-names : must be "defaults"
-> 
-> Do you mean "default"
+Hi Sakari,
 
-Yes. I'll fix that.
+Thank you for the patch.
 
-> 
-> Apart from this the bindings and example look very good to
-> me, good job! I like it when people "just get it" with pin control
-> and that is where we need to be with this subsystem.
-> 
-> > +config PINCTRL_MADERA
-> > +       bool
-> > +       default y if MFD_MADERA=y
-> 
+On Thursday 06 Apr 2017 16:12:04 Sakari Ailus wrote:
+> The fwnode_handle is a more generic way than OF device_node to describe
+> firmware nodes. Instead of the OF API, use more generic fwnode API to
+> obtain the same information.
 
-There was something special to do with the way dependencies are
-processed, but I can't remember right now what that was. I'd have to
-take another look at this to see if this "default y" pattern is still
-necessary for this driver.
+I would mention that this is a copy of v4l2-of.c with the OF API replaced with 
+the fwnode API.
 
-> Isn't it even proper for MFD_MADERA to explicitly
-> select this driver. I see it hard how the chip would even
-> work without this. (Maybe it already does select it but then
-> default y is not necessary.)
-> > +config PINCTRL_CS47L35
-> > +       bool
-> > +       default y if MFD_CS47L35=y
+> As the V4L2 fwnode support will be required by a small minority of e.g.
+> ACPI based systems (the same might actually go for OF), make this a module
+> instead of embedding it in the videodev module.
 > 
-> Similar comment for the subdrivers.
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/media/v4l2-core/Kconfig       |   3 +
+>  drivers/media/v4l2-core/Makefile      |   1 +
+>  drivers/media/v4l2-core/v4l2-fwnode.c | 353 +++++++++++++++++++++++++++++++
+>  include/media/v4l2-fwnode.h           | 104 ++++++++++
+>  4 files changed, 461 insertions(+)
+>  create mode 100644 drivers/media/v4l2-core/v4l2-fwnode.c
+>  create mode 100644 include/media/v4l2-fwnode.h
 > 
-> > @@ -17,6 +17,7 @@ obj-$(CONFIG_PINCTRL_AMD)     += pinctrl-amd.o
-> >  obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
-> >  obj-$(CONFIG_PINCTRL_DIGICOLOR)        += pinctrl-digicolor.o
-> >  obj-$(CONFIG_PINCTRL_FALCON)   += pinctrl-falcon.o
-> > +obj-$(CONFIG_PINCTRL_MADERA)   += pinctrl-madera.o
+> diff --git a/drivers/media/v4l2-core/Kconfig
+> b/drivers/media/v4l2-core/Kconfig index 6b1b78f..a35c336 100644
+> --- a/drivers/media/v4l2-core/Kconfig
+> +++ b/drivers/media/v4l2-core/Kconfig
+> @@ -55,6 +55,9 @@ config V4L2_FLASH_LED_CLASS
 > 
-> Is it all in one file... despite all the Kconfig symbols... hm.
-> I guess we can create drivers/pinctrl/cirrus the day we need more
-> space.
+>  	  When in doubt, say N.
 > 
+> +config V4L2_FWNODE
+> +	tristate
+> +
+>  # Used by drivers that need Videobuf modules
+>  config VIDEOBUF_GEN
+>  	tristate
+> diff --git a/drivers/media/v4l2-core/Makefile
+> b/drivers/media/v4l2-core/Makefile index 795a535..cf77a63 100644
+> --- a/drivers/media/v4l2-core/Makefile
+> +++ b/drivers/media/v4l2-core/Makefile
+> @@ -13,6 +13,7 @@ endif
+>  ifeq ($(CONFIG_OF),y)
+>    videodev-objs += v4l2-of.o
+>  endif
+> +obj-$(CONFIG_V4L2_FWNODE) += v4l2-fwnode.o
+>  ifeq ($(CONFIG_TRACEPOINTS),y)
+>    videodev-objs += vb2-trace.o v4l2-trace.o
+>  endif
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c
+> b/drivers/media/v4l2-core/v4l2-fwnode.c new file mode 100644
+> index 0000000..4f69b11
+> --- /dev/null
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -0,0 +1,353 @@
+> +/*
+> + * V4L2 fwnode binding parsing library
+> + *
+> + * Copyright (c) 2016 Intel Corporation.
+> + * Author: Sakari Ailus <sakari.ailus@linux.intel.com>
+> + *
+> + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
+> + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> + *
+> + * Copyright (C) 2012 Renesas Electronics Corp.
+> + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of version 2 of the GNU General Public License as
+> + * published by the Free Software Foundation.
+> + */
+> +#include <linux/acpi.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/property.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include <linux/types.h>
+> +
+> +#include <media/v4l2-fwnode.h>
+> +
+> +static int v4l2_fwnode_endpoint_parse_csi_bus(struct fwnode_handle *fwn,
+> +					      struct v4l2_fwnode_endpoint 
+*vfwn)
+> +{
+> +	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vfwn->bus.mipi_csi2;
+> +	bool have_clk_lane = false;
+> +	unsigned int flags = 0, lanes_used = 0;
+> +	unsigned int i;
+> +	u32 v;
+> +	int rval;
 
-I have no objection to moving the source into pinctrl/cirrus
+I would have used "ret" instead of "rval" ;-)
 
-> > +/*
-> > + * Pins are named after their GPIO number
-> 
-> So don't they have real names? Like the pin name on the underside of
-> the chip? That is what this naming convention is actually for.
-> 
+> +	rval = fwnode_property_read_u32_array(fwn, "data-lanes", NULL, 0);
+> +	if (rval > 0) {
+> +		u32 array[ARRAY_SIZE(bus->data_lanes)];
+> +
+> +		bus->num_data_lanes =
+> +			min_t(int, ARRAY_SIZE(bus->data_lanes), rval);
+> +
+> +		fwnode_property_read_u32_array(
+> +			fwn, "data-lanes", array, bus->num_data_lanes);
 
-Those are real names. Each pin is dual labelled with a "GPIOn" name and
-also its alternate function (if it has one). The mapping of alternate
-functions to GPIO pins isn't 1:1 across codecs. The GPIOn name is
-consistent across codecs. If your pinctrl config is needing to refer to
-the pin name, instead of the alternate function group, it can only be to
-use it as a GPIO so the GPIO name is more relevant. This is what I was
-trying to imply in my comment but using fewer words.
+Is there anything wrong with the usual way to wrap code ?
 
-> > +/*
-> > + * All single-pin functions can be mapped to any GPIO, however pinmux applies
-> > + * functions to pin groups and only those groups declared as supporting that
-> > + * function. To make this work we must put each pin in its own dummy group so
-> > + * that the functions can be described as applying to all pins.
-> > + * Since these do not correspond to anything in the actual hardware - they are
-> > + * merely an adaptation to pinctrl's view of the world - we use the same name
-> > + * as the pin to avoid confusion when comparing with datasheet instructions
-> > + */
-> > +static const char * const madera_pin_single_group_names[] = {
-> > +       "gpio1",  "gpio2",  "gpio3",  "gpio4",  "gpio5",  "gpio6",  "gpio7",
-> > +       "gpio8",  "gpio9",  "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
-> > +       "gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
-> > +       "gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28",
-> > +       "gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio35",
-> > +       "gpio36", "gpio37", "gpio38", "gpio39", "gpio40",
-> > +};
-> 
-> If they are called "gpioN" in the datasheet I guess it is all right.
-> That is how e.g. the Qualcomm driver is done.
-> 
-> > +#ifdef CONFIG_PINCTRL_CS47L85
-> 
-> So this makes me feel maybe we should create drivers/pinctrl/cirrus
-> and split this driver into subdrivers per chip like others do.
-> 
-> The coding style document does say that ifdefs are ugly.
-> 
-> Would you consider splitting it up?
-> 
+		fwnode_property_read_u32_array(fwn, "data-lanes", array,
+					       bus->num_data_lanes);
 
-I can do that.
+> +
+> +		for (i = 0; i < bus->num_data_lanes; i++) {
+> +			if (lanes_used & BIT(array[i]))
+> +				pr_warn("duplicated lane %u in data-lanes\n",
+> +					array[i]);
+> +			lanes_used |= BIT(array[i]);
+> +
+> +			bus->data_lanes[i] = array[i];
+> +		}
+> +	}
+> +
+> +	rval = fwnode_property_read_u32_array(fwn, "lane-polarities", NULL, 
+0);
+> +	if (rval > 0) {
+> +		u32 array[ARRAY_SIZE(bus->lane_polarities)];
+> +
+> +		if (rval < 1 + bus->num_data_lanes /* clock + data */) {
+> +			pr_warn("too few lane-polarities entries (need %u, got 
+%u)\n",
+> +				1 + bus->num_data_lanes, rval);
+> +			return -EINVAL;
+> +		}
+> +
+> +		fwnode_property_read_u32_array(
+> +			fwn, "lane-polarities", array, 1 + bus-
+>num_data_lanes);
 
-> > +static void madera_pin_dbg_show(struct pinctrl_dev *pctldev,
-> > +                               struct seq_file *s,
-> > +                               unsigned int offset)
-> > +{
-> > +       seq_puts(s, " madera-pinctrl");
-> > +}
-> 
-> I don't think the pinctrl debugfs callback is compulsory.
-> It would be nice if this added some actual useful information
-> about the pin.
-> 
+Ditto with
 
-Yes, I'll add some info
+		fwnode_property_read_u32_array(fwn, "lane-polarities", array,
+					       1 + bus->num_data_lanes);
 
-> 
-> > +               case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +                       mask[0] |= MADERA_GP1_OP_CFG_MASK;
-> > +                       conf[0] |= MADERA_GP1_OP_CFG;
-> > +                       break;
-> > +               case PIN_CONFIG_DRIVE_PUSH_PULL:
-> > +                       mask[0] |= MADERA_GP1_OP_CFG_MASK;
-> > +                       conf[0] &= ~MADERA_GP1_OP_CFG;
-> > +                       break;
-> 
-> This will be possible to reuse from a GPIO driver as back-end, nice!
-> 
-> 
-> > +               case PIN_CONFIG_INPUT_DEBOUNCE:
-> > +                       mask[0] |= MADERA_GP1_DB_MASK;
-> > +
-> > +                       /*
-> > +                        * we can't configure debounce time per-pin so value
-> > +                        * is just a flag
-> > +                        */
-> > +                       val = pinconf_to_config_argument(*configs);
-> > +                       if (val)
-> > +                               conf[0] |= MADERA_GP1_DB;
-> > +                       else
-> > +                               conf[0] &= ~MADERA_GP1_DB;
-> > +                       break;
-> 
-> This too.
-> 
-> Overall it looks very nice.
-> 
-> Yours,
-> Linus Walleij
+> +		for (i = 0; i < 1 + bus->num_data_lanes; i++)
+> +			bus->lane_polarities[i] = array[i];
+> +	}
+> +
+> +	if (!fwnode_property_read_u32(fwn, "clock-lanes", &v)) {
+> +		if (lanes_used & BIT(v))
+> +			pr_warn("duplicated lane %u in clock-lanes\n", v);
+> +		lanes_used |= BIT(v);
+> +
+> +		bus->clock_lane = v;
+> +		have_clk_lane = true;
+> +	}
+> +
+> +	if (fwnode_property_present(fwn, "clock-noncontinuous"))
+> +		flags |= V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
+> +	else if (have_clk_lane || bus->num_data_lanes > 0)
+> +		flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
+> +
+> +	bus->flags = flags;
+> +	vfwn->bus_type = V4L2_MBUS_CSI2;
+> +
+> +	return 0;
+> +}
+> +
+> +static void v4l2_fwnode_endpoint_parse_parallel_bus(
+> +	struct fwnode_handle *fwn, struct v4l2_fwnode_endpoint *vfwn)
+> +{
+> +	struct v4l2_fwnode_bus_parallel *bus = &vfwn->bus.parallel;
+> +	unsigned int flags = 0;
+> +	u32 v;
+> +
+> +	if (!fwnode_property_read_u32(fwn, "hsync-active", &v))
+> +		flags |= v ? V4L2_MBUS_HSYNC_ACTIVE_HIGH :
+> +			V4L2_MBUS_HSYNC_ACTIVE_LOW;
+> +
+> +	if (!fwnode_property_read_u32(fwn, "vsync-active", &v))
+> +		flags |= v ? V4L2_MBUS_VSYNC_ACTIVE_HIGH :
+> +			V4L2_MBUS_VSYNC_ACTIVE_LOW;
+> +
+> +	if (!fwnode_property_read_u32(fwn, "field-even-active", &v))
+> +		flags |= v ? V4L2_MBUS_FIELD_EVEN_HIGH :
+> +			V4L2_MBUS_FIELD_EVEN_LOW;
+> +	if (flags)
+> +		vfwn->bus_type = V4L2_MBUS_PARALLEL;
+> +	else
+> +		vfwn->bus_type = V4L2_MBUS_BT656;
+> +
+> +	if (!fwnode_property_read_u32(fwn, "pclk-sample", &v))
+> +		flags |= v ? V4L2_MBUS_PCLK_SAMPLE_RISING :
+> +			V4L2_MBUS_PCLK_SAMPLE_FALLING;
+> +
+> +	if (!fwnode_property_read_u32(fwn, "data-active", &v))
+> +		flags |= v ? V4L2_MBUS_DATA_ACTIVE_HIGH :
+> +			V4L2_MBUS_DATA_ACTIVE_LOW;
+> +
+> +	if (fwnode_property_present(fwn, "slave-mode"))
+> +		flags |= V4L2_MBUS_SLAVE;
+> +	else
+> +		flags |= V4L2_MBUS_MASTER;
+> +
+> +	if (!fwnode_property_read_u32(fwn, "bus-width", &v))
+> +		bus->bus_width = v;
+> +
+> +	if (!fwnode_property_read_u32(fwn, "data-shift", &v))
+> +		bus->data_shift = v;
+> +
+> +	if (!fwnode_property_read_u32(fwn, "sync-on-green-active", &v))
+> +		flags |= v ? V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH :
+> +			V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW;
+> +
+> +	bus->flags = flags;
+> +
+> +}
+> +
+> +/**
+> + * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
+> + * @fwn: pointer to fwnode_handle
 
+I would say "the endpoint's fwnode handle", or "pointer to the endpoint's 
+fwnode handle". Otherwise which fwnode handle should be passed won't be clear.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> + * @vfwn: pointer to the V4L2 fwnode data structure
+> + *
+> + * All properties are optional. If none are found, we don't set any flags.
+> + * This means the port has a static configuration and no properties have
+> + * to be specified explicitly.
+> + * If any properties that identify the bus as parallel are found and
+> + * slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if we
+> recognise
+> + * the bus as serial CSI-2 and clock-noncontinuous isn't set, we set the
+> + * V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag.
+> + * The caller should hold a reference to @node.
+
+s/@node/@fwn/
+
+By the way, have you tried to compile the documentation ?
+
+> + *
+> + * NOTE: This function does not parse properties the size of which is
+> + * variable without a low fixed limit. Please use
+> + * v4l2_fwnode_endpoint_alloc_parse() in new drivers instead.
+> + *
+> + * Return: 0 on success or a negative error code on failure.
+> + */
+> +int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwn,
+> +			       struct v4l2_fwnode_endpoint *vfwn)
+
+Is there a specific reason not to keep the original parameter name "endpoint" 
+? vfwn seems to stand for v4l2_fwnode, not v4l2_fwnode_endpoint. Same comment 
+for all other locations in this patch.
+
+> +{
+> +	int rval;
+> +
+> +	fwnode_graph_parse_endpoint(fwn, &vfwn->base);
+> +
+> +	/* Zero fields from bus_type to until the end */
+> +	memset(&vfwn->bus_type, 0, sizeof(*vfwn) -
+> +	       offsetof(typeof(*vfwn), bus_type));
+> +
+> +	rval = v4l2_fwnode_endpoint_parse_csi_bus(fwn, vfwn);
+> +	if (rval)
+> +		return rval;
+> +	/*
+> +	 * Parse the parallel video bus properties only if none
+> +	 * of the MIPI CSI-2 specific properties were found.
+> +	 */
+> +	if (vfwn->bus.mipi_csi2.flags == 0)
+> +		v4l2_fwnode_endpoint_parse_parallel_bus(fwn, vfwn);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(v4l2_fwnode_endpoint_parse);
+
+According to Mauro in http://www.mail-archive.com/linux-media@vger.kernel.org/msg110809.html you should use EXPORT_SYMBOL_GPL.
+
+> +
+> +/*
+> + * v4l2_fwnode_endpoint_free() - free the V4L2 fwnode acquired by
+> + * v4l2_fwnode_endpoint_alloc_parse()
+> + * @fwn - the V4L2 fwnode the resources of which are to be released
+
+Mayeb "the V4L2 fwnode whose resources are to be released" ?
+
+> + *
+> + * It is safe to call this function with NULL argument or on an
+
+s/on an/on a/
+
+> + * V4L2 fwnode the parsing of which failed.
+
+"whose parsing failed" ?
+
+> + */
+> +void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vfwn)
+> +{
+> +	if (IS_ERR_OR_NULL(vfwn))
+> +		return;
+> +
+> +	kfree(vfwn->link_frequencies);
+> +	kfree(vfwn);
+> +}
+> +EXPORT_SYMBOL(v4l2_fwnode_endpoint_free);
+> +
+> +/**
+> + * v4l2_fwnode_endpoint_alloc_parse() - parse all fwnode node properties
+> + * @node: pointer to fwnode_handle
+
+s/@node/@fwn/
+
+Here too, I would say "the endpoint's fwnode handle", or "pointer to the 
+endpoint's fwnode handle".
+
+> + *
+> + * All properties are optional. If none are found, we don't set any flags.
+> + * This means the port has a static configuration and no properties have
+> + * to be specified explicitly.
+> + * If any properties that identify the bus as parallel are found and
+> + * slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if we
+> recognise
+> + * the bus as serial CSI-2 and clock-noncontinuous isn't set, we set the
+> + * V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag.
+> + * The caller should hold a reference to @node.
+
+s/@node/@fwn/
+
+> + *
+> + * v4l2_fwnode_endpoint_alloc_parse() has two important differences to
+> + * v4l2_fwnode_endpoint_parse():
+> + *
+> + * 1. It also parses variable size data and
+
+Nitpicking, a valid sentence doesn't end with "and$". You could write
+
+1. It also parses variable size data.
+2. The memory it has allocated to store the variable size data must
+   be freed using v4l2_fwnode_endpoint_free() when no longer needed.
+
+or
+
+1. it also parses variable size data; and
+2. the memory it has allocated to store the variable size data must
+   be freed using v4l2_fwnode_endpoint_free() when no longer needed.
+
+> + *
+> + * 2. The memory it has allocated to store the variable size data must
+> + *    be freed using v4l2_fwnode_endpoint_free() when no longer needed.
+> + *
+> + * Return: Pointer to v4l2_fwnode_endpoint if successful, on error a
+> + * negative error code.
+
+The function returns an error pointer on error.
+
+> + */
+> +struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+> +	struct fwnode_handle *fwn)
+> +{
+> +	struct v4l2_fwnode_endpoint *vfwn;
+> +	int rval;
+
+ret ? :-)
+
+> +
+> +	vfwn = kzalloc(sizeof(*vfwn), GFP_KERNEL);
+> +	if (!vfwn)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	rval = v4l2_fwnode_endpoint_parse(fwn, vfwn);
+> +	if (rval < 0)
+> +		goto out_err;
+> +
+> +	rval = fwnode_property_read_u64_array(fwn, "link-frequencies",
+> +					      NULL, 0);
+> +
+
+No need for a blank line.
+
+> +	if (rval < 0)
+> +		goto out_err;
+> +
+> +	vfwn->link_frequencies =
+> +		kmalloc_array(rval, sizeof(*vfwn->link_frequencies),
+> +			      GFP_KERNEL);
+> +	if (!vfwn->link_frequencies) {
+> +		rval = -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+> +	vfwn->nr_of_link_frequencies = rval;
+> +
+> +	rval = fwnode_property_read_u64_array(
+> +		fwn, "link-frequencies", vfwn->link_frequencies,
+> +		vfwn->nr_of_link_frequencies);
+
+	rval = fwnode_property_read_u64_array(fwn, "link-frequencies",
+					      vfwn->link_frequencies,
+					      vfwn->nr_of_link_frequencies);
+
+> +	if (rval < 0)
+> +		goto out_err;
+> +
+> +	return vfwn;
+> +
+> +out_err:
+> +	v4l2_fwnode_endpoint_free(vfwn);
+> +	return ERR_PTR(rval);
+> +}
+> +EXPORT_SYMBOL(v4l2_fwnode_endpoint_alloc_parse);
+> +
+> +/**
+> + * v4l2_fwnode_endpoint_parse_link() - parse a link between two endpoints
+> + * @node: pointer to the fwnode at the local end of the link
+
+The parameter is called __fwn. I believe you should rename it to fwn, 
+otherwise the documentation will look weird.
+
+As explained before, you should mention that this is an endpoint fwnode 
+handle.
+
+> + * @link: pointer to the V4L2 fwnode link data structure
+> + *
+> + * Fill the link structure with the local and remote nodes and port
+> numbers.
+> + * The local_node and remote_node fields are set to point to the local and
+> + * remote port's parent nodes respectively (the port parent node being the
+> + * parent node of the port node if that node isn't a 'ports' node, or the
+> + * grand-parent node of the port node otherwise).
+> + *
+> + * A reference is taken to both the local and remote nodes, the caller
+> + * must use v4l2_fwnode_endpoint_put_link() to drop the references
+> + * when done with the link.
+
+Just curious, is there a reason to wrap earlier than the 80 columns limit ?
+
+ * A reference is taken to both the local and remote nodes, the caller must 
+use 
+ * v4l2_fwnode_endpoint_put_link() to drop the references when done with the
+ * link.
+
+would work.
+
+> + * Return: 0 on success, or -ENOLINK if the remote fwnode can't be found.
+
+Here too you should mention remote endpoint.
+
+> + */
+> +int v4l2_fwnode_parse_link(struct fwnode_handle *__fwn,
+> +			   struct v4l2_fwnode_link *link)
+> +{
+> +	struct fwnode_handle *fwn;
+> +	const char *port_prop = is_of_node(__fwn) ? "reg" : "port";
+> +
+> +	memset(link, 0, sizeof(*link));
+> +
+> +	fwn = fwnode_get_parent(__fwn);
+> +	fwnode_property_read_u32(fwn, port_prop, &link->local_port);
+> +	fwn = fwnode_get_next_parent(fwn);
+> +	if (is_of_node(fwn)) {
+> +		if (of_node_cmp(to_of_node(fwn)->name, "ports") == 0)
+> +			fwn = fwnode_get_next_parent(fwn);
+> +	} else {
+> +		/* The "ports" node is always there in ACPI. */
+> +		fwn = fwnode_get_next_parent(fwn);
+> +	}
+
+To avoid duplicating the fwnode_get_next_parent(fwn) call, you could write
+
+	if (!is_of_node(fwn) ||
+	    of_node_cmp(to_of_node(fwn)->name, "ports") == 0) {
+		/* The "ports" node is always there in ACPI. */
+		fwn = fwnode_get_next_parent(fwn);
+	}
+
+> +	link->local_node = fwn;
+> +
+> +	fwn = fwnode_graph_get_remote_endpoint(fwn);
+> +	if (!fwn) {
+> +		fwnode_handle_put(fwn);
+> +		return -ENOLINK;
+> +	}
+> +
+> +	fwn = fwnode_get_parent(fwn);
+> +	fwnode_property_read_u32(fwn, port_prop, &link->remote_port);
+> +	fwn = fwnode_get_next_parent(fwn);
+> +	if (is_of_node(fwn)) {
+> +		if (of_node_cmp(to_of_node(fwn)->name, "ports") == 0)
+> +			fwn = fwnode_get_next_parent(fwn);
+> +	} else {
+> +		/* The "ports" node is always there in ACPI. */
+> +		fwn = fwnode_get_next_parent(fwn);
+> +	}
+
+Same comment here.
+
+> +	link->remote_node = fwn;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(v4l2_fwnode_parse_link);
+> +
+> +/**
+> + * v4l2_fwnode_put_link() - drop references to nodes in a link
+> + * @link: pointer to the V4L2 fwnode link data structure
+> + *
+> + * Drop references to the local and remote nodes in the link. This
+> + * function must be called on every link parsed with
+> + * v4l2_fwnode_parse_link().
+> + */
+> +void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+> +{
+> +	fwnode_handle_put(link->local_node);
+> +	fwnode_handle_put(link->remote_node);
+> +}
+> +EXPORT_SYMBOL(v4l2_fwnode_put_link);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
+> +MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+> +MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski@gmx.de>");
+> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> new file mode 100644
+> index 0000000..a675d8a
+> --- /dev/null
+> +++ b/include/media/v4l2-fwnode.h
+> @@ -0,0 +1,104 @@
+> +/*
+> + * V4L2 fwnode binding parsing library
+> + *
+> + * Copyright (c) 2016 Intel Corporation.
+> + * Author: Sakari Ailus <sakari.ailus@linux.intel.com>
+> + *
+> + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
+> + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> + *
+> + * Copyright (C) 2012 Renesas Electronics Corp.
+> + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of version 2 of the GNU General Public License as
+> + * published by the Free Software Foundation.
+> + */
+> +#ifndef _V4L2_FWNODE_H
+> +#define _V4L2_FWNODE_H
+> +
+> +#include <linux/list.h>
+> +#include <linux/types.h>
+> +#include <linux/errno.h>
+> +#include <linux/of_graph.h>
+
+Alphabetical order please.
+
+> +#include <media/v4l2-mediabus.h>
+> +
+> +struct fwnode_handle;
+> +
+> +/**
+> + * struct v4l2_fwnode_bus_mipi_csi2 - MIPI CSI-2 bus data structure
+> + * @flags: media bus (V4L2_MBUS_*) flags
+> + * @data_lanes: an array of physical data lane indexes
+> + * @clock_lane: physical lane index of the clock lane
+> + * @num_data_lanes: number of data lanes
+> + * @lane_polarities: polarity of the lanes. The order is the same of
+> + *		   the physical lanes.
+> + */
+> +struct v4l2_fwnode_bus_mipi_csi2 {
+> +	unsigned int flags;
+> +	unsigned char data_lanes[4];
+> +	unsigned char clock_lane;
+> +	unsigned short num_data_lanes;
+> +	bool lane_polarities[5];
+> +};
+> +
+> +/**
+> + * struct v4l2_fwnode_bus_parallel - parallel data bus data structure
+> + * @flags: media bus (V4L2_MBUS_*) flags
+> + * @bus_width: bus width in bits
+> + * @data_shift: data shift in bits
+> + */
+> +struct v4l2_fwnode_bus_parallel {
+> +	unsigned int flags;
+> +	unsigned char bus_width;
+> +	unsigned char data_shift;
+> +};
+> +
+> +/**
+> + * struct v4l2_fwnode_endpoint - the endpoint data structure
+> + * @base: fwnode endpoint of the v4l2_fwnode
+> + * @bus_type: bus type
+> + * @bus: bus configuration data structure
+> + * @link_frequencies: array of supported link frequencies
+> + * @nr_of_link_frequencies: number of elements in link_frequenccies array
+> + */
+> +struct v4l2_fwnode_endpoint {
+> +	struct fwnode_endpoint base;
+> +	/*
+> +	 * Fields below this line will be zeroed by
+> +	 * v4l2_fwnode_parse_endpoint()
+> +	 */
+> +	enum v4l2_mbus_type bus_type;
+> +	union {
+> +		struct v4l2_fwnode_bus_parallel parallel;
+> +		struct v4l2_fwnode_bus_mipi_csi2 mipi_csi2;
+> +	} bus;
+> +	u64 *link_frequencies;
+> +	unsigned int nr_of_link_frequencies;
+> +};
+> +
+> +/**
+> + * struct v4l2_fwnode_link - a link between two endpoints
+> + * @local_node: pointer to device_node of this endpoint
+> + * @local_port: identifier of the port this endpoint belongs to
+> + * @remote_node: pointer to device_node of the remote endpoint
+> + * @remote_port: identifier of the port the remote endpoint belongs to
+> + */
+> +struct v4l2_fwnode_link {
+> +	struct fwnode_handle *local_node;
+> +	unsigned int local_port;
+> +	struct fwnode_handle *remote_node;
+> +	unsigned int remote_port;
+> +};
+> +
+> +int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwn,
+> +			       struct v4l2_fwnode_endpoint *vfwn);
+> +struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+> +	struct fwnode_handle *fwn);
+> +void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vfwn);
+> +int v4l2_fwnode_parse_link(struct fwnode_handle *fwn,
+> +			   struct v4l2_fwnode_link *link);
+> +void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+> +
+> +#endif /* _V4L2_FWNODE_H */
+
+-- 
+Regards,
+
+Laurent Pinchart
+
