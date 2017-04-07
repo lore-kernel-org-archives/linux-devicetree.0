@@ -1,46 +1,39 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3] regulator: Add driver for voltage controlled
- regulators
-Date: Fri, 7 Apr 2017 11:44:09 -0700
-Message-ID: <20170407184409.GD78690@google.com>
-References: <20170331205035.126001-1-mka@chromium.org>
- <20170406182136.yrwdoyqeuz4qxc6d@sirena.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] bluetooth: hci_uart: add LL protocol serdev driver support
+Date: Fri, 7 Apr 2017 13:48:52 -0500
+Message-ID: <CAL_Jsq+aM+xxbu=3v8_w9Ce+=t_pXmVWuisnckA8_8LOS-ftVA@mail.gmail.com>
+References: <20170407143516.9945-1-robh@kernel.org> <1491584978.2136.21.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170406182136.yrwdoyqeuz4qxc6d-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1491584978.2136.21.camel@redhat.com>
+Sender: netdev-owner@vger.kernel.org
+To: Dan Williams <dcbw@redhat.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Eyal Reizer <eyalr@ti.com>, Satish Patel <satish.patel@linaro.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Fri, Apr 7, 2017 at 12:09 PM, Dan Williams <dcbw@redhat.com> wrote:
+> On Fri, 2017-04-07 at 09:35 -0500, Rob Herring wrote:
+>> Turns out that the LL protocol and the TI-ST are the same thing
+>> AFAICT.
+>> The TI-ST adds firmware loading, GPIO control, and shared access for
+>> NFC, FM radio, etc. For now, we're only implementing what is needed
+>> for
+>> BT. This mirrors other drivers like BCM and Intel, but uses the new
+>> serdev bus.
+>>
+>> The firmware loading is greatly simplified by using existing
+>> infrastructure to send commands. It may be a bit slower than the
+>> original code using synchronous functions, but the real bottleneck is
+>> likely doing firmware load at 115.2kbps.
+>
+> Is there no way to put the TI-specific stuff into a TI UART module
+> rather than building it into the generic one?
 
-Thanks for the review!
+In case it's not clear, all of HCI_LL is the TI specific part, not
+just what I'm adding. So you are talking about putting each UART BT
+protocol into a separate module. I'd assume that is doable, but seems
+orthogonal to this patch set. I'd also assume there was some reason
+that was not done already.
 
-El Thu, Apr 06, 2017 at 07:21:36PM +0100 Mark Brown ha dit:
-
-> On Fri, Mar 31, 2017 at 01:50:35PM -0700, Matthias Kaehlcke wrote:
-> 
-> > +- compatible		  : must be "vctrl-regulator".
-> > +- regulator-min-microvolt : smallest voltage consumers may set
-> > +- regulator-max-microvolt : largest voltage consumers may set
-> > +- ctrl-regulator:	  : the name of the regulator supplying the control
-> > +			    voltage.
-> 
-> This looks good except for this bit where we read the regulator name out
-> of the DT, that's generally a sign of bad practice for things that are
-> less simple passives than things like this or fixed voltage regulators.
-> As with the supplies for fixed voltage regulators just pick a name for
-> the supply (ctrl seems fine to me) and use that, neither option is
-> perfect but at elast this less typing for everyone and it's consistent
-> with what other similar things are already doing.
-
-Sounds good, I will send out an updated version shortly.
-
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
