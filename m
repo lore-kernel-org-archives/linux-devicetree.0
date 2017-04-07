@@ -1,214 +1,80 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] v4l: Switch from V4L2 OF not V4L2 fwnode API
-Date: Fri, 07 Apr 2017 14:09:16 +0300
-Message-ID: <1895617.xparv3opoe@avalon>
-References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com> <14918382.izlyCngq8n@avalon> <20170407105805.GG4192@valkosipuli.retiisi.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/16] mfd: madera: Add register definitions for Cirrus
+ Logic Madera codecs
+Date: Fri, 7 Apr 2017 12:14:58 +0100
+Message-ID: <20170407111458.vw7oxemasqhcfepq@sirena.org.uk>
+References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1491386884-30689-2-git-send-email-rf@opensource.wolfsonmicro.com>
+ <CACRpkdaYzPSVqqhbi2Zop7J9vzCqZZiN=9pAEw1vcWy_ove9Tg@mail.gmail.com>
+ <CACRpkdY=cOhw59O8EE6J82aq897YKZkLsmUzeEnzkC5jtT6yyA@mail.gmail.com>
+ <20170407084823.GB3412@localhost.localdomain>
+ <CACRpkdZLfL+dxMN-uaRp57u4yW4cLfLFoZVkNWFZL4eECOyR1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k4nxp35gqq27j42m"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170407105805.GG4192-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZLfL+dxMN-uaRp57u4yW4cLfLFoZVkNWFZL4eECOyR1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
 
-On Friday 07 Apr 2017 13:58:06 Sakari Ailus wrote:
-> On Fri, Apr 07, 2017 at 01:32:54PM +0300, Laurent Pinchart wrote:
-> > On Thursday 06 Apr 2017 16:12:07 Sakari Ailus wrote:
-> > > Switch users of the v4l2_of_ APIs to the more generic v4l2_fwnode_ APIs.
-> > > 
-> > > Existing OF matching continues to be supported. omap3isp and smiapp
-> > > drivers are converted to fwnode matching as well.
-> > > 
-> > > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > > Acked-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> # i2c/ov2569.c,
-> > > am437x/am437x-vpfe.c and ti-vpe/cal.c ---
-> > > 
-> > >  drivers/media/i2c/Kconfig                      |  9 ++++
-> > >  drivers/media/i2c/adv7604.c                    |  7 +--
-> > >  drivers/media/i2c/mt9v032.c                    |  7 +--
-> > >  drivers/media/i2c/ov2659.c                     |  8 +--
-> > >  drivers/media/i2c/s5c73m3/s5c73m3-core.c       |  7 +--
-> > >  drivers/media/i2c/s5k5baf.c                    |  6 +--
-> > >  drivers/media/i2c/smiapp/Kconfig               |  1 +
-> > >  drivers/media/i2c/smiapp/smiapp-core.c         | 29 ++++++-----
-> > >  drivers/media/i2c/tc358743.c                   | 11 ++--
-> > >  drivers/media/i2c/tvp514x.c                    |  6 +--
-> > >  drivers/media/i2c/tvp5150.c                    |  7 +--
-> > >  drivers/media/i2c/tvp7002.c                    |  6 +--
-> > >  drivers/media/platform/Kconfig                 |  3 ++
-> > >  drivers/media/platform/am437x/Kconfig          |  1 +
-> > >  drivers/media/platform/am437x/am437x-vpfe.c    |  8 +--
-> > >  drivers/media/platform/atmel/Kconfig           |  1 +
-> > >  drivers/media/platform/atmel/atmel-isc.c       |  8 +--
-> > >  drivers/media/platform/exynos4-is/Kconfig      |  2 +
-> > >  drivers/media/platform/exynos4-is/media-dev.c  |  6 +--
-> > >  drivers/media/platform/exynos4-is/mipi-csis.c  |  6 +--
-> > >  drivers/media/platform/omap3isp/isp.c          | 71  +++++++++---------
-> > >  drivers/media/platform/pxa_camera.c            |  7 +--
-> > >  drivers/media/platform/rcar-vin/Kconfig        |  1 +
-> > >  drivers/media/platform/rcar-vin/rcar-core.c    |  6 +--
-> > >  drivers/media/platform/soc_camera/Kconfig      |  1 +
-> > >  drivers/media/platform/soc_camera/atmel-isi.c  |  7 +--
-> > >  drivers/media/platform/soc_camera/soc_camera.c |  3 +-
-> > >  drivers/media/platform/ti-vpe/cal.c            | 11 ++--
-> > >  drivers/media/platform/xilinx/Kconfig          |  1 +
-> > >  drivers/media/platform/xilinx/xilinx-vipp.c    | 59  +++++++++---------
-> > >  include/media/v4l2-fwnode.h                    |  4 +-
-> > >  31 files changed, 176 insertions(+), 134 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> > > index cee1dae..6b2423a 100644
-> > > --- a/drivers/media/i2c/Kconfig
-> > > +++ b/drivers/media/i2c/Kconfig
-> > > @@ -210,6 +210,7 @@ config VIDEO_ADV7604
-> > > 
-> > >  	depends on GPIOLIB || COMPILE_TEST
-> > >  	select HDMI
-> > >  	select MEDIA_CEC_EDID
-> > > 
-> > > +	select V4L2_FWNODE
-> > 
-> > What happens when building the driver on a platform that includes neither
-> > OF nor ACPI support ?
-> 
-> You need either in practice, also for the V4L2 fwnode to be meaningful.
-> 
-> Do you have something in particular in mind?
+--k4nxp35gqq27j42m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I will obviously need either OF or ACPI to use the fwnode API, but some 
-drivers still support platform data (either on non-OF embedded systems, or 
-when the I2C device is part of a PCI card for instance). Compile-testing is 
-also a use case I'm concerned about.
+On Fri, Apr 07, 2017 at 11:12:53AM +0200, Linus Walleij wrote:
+> On Fri, Apr 7, 2017 at 10:48 AM, Charles Keepax
+> > On Fri, Apr 07, 2017 at 10:30:12AM +0200, Linus Walleij wrote:
 
-[snip]
+> >> > Get included in all subdrivers I suppose?
 
-> > > diff --git a/drivers/media/platform/omap3isp/isp.c
-> > > b/drivers/media/platform/omap3isp/isp.c index 084ecf4a..95850b9 100644
-> > > --- a/drivers/media/platform/omap3isp/isp.c
-> > > +++ b/drivers/media/platform/omap3isp/isp.c
-> > 
-> > [snip]
-> > 
-> > > @@ -2024,43 +2025,42 @@ enum isp_of_phy {
-> > >  	ISP_OF_PHY_CSIPHY2,
-> > >  };
-> > > 
-> > > -static int isp_of_parse_node(struct device *dev, struct device_node
-> > > *node,
-> > > -			     struct isp_async_subdev *isd)
-> > > +static int isp_fwnode_parse(struct device *dev, struct fwnode_handle
-> > > *fwn,
-> > > +			    struct isp_async_subdev *isd)
-> > >  {
-> > >  	struct isp_bus_cfg *buscfg = &isd->bus;
-> > > -	struct v4l2_of_endpoint vep;
-> > > +	struct v4l2_fwnode_endpoint vfwn;
-> > 
-> > vfwn is confusing to me, I think the variable name should show that it
-> > refers to an endpoint.
-> 
-> How about adding ep to tell it's an endpoint?
+> >> > So you are broadcasting 8800+ lines into every subdriver across the
+> >> > entire kernel.
 
-I'd name is vep or endpoint.
+> >> > Just the time spent in the preprocessor parsing this will affect compilation
+> >> > time.
 
-> > >  	unsigned int i;
-> > >  	int ret;
-> > > 
-> > > -	ret = v4l2_of_parse_endpoint(node, &vep);
-> > > +	ret = v4l2_fwnode_endpoint_parse(fwn, &vfwn);
-> > >  	if (ret)
-> > >  		return ret;
-> > > 
-> > > -	dev_dbg(dev, "parsing endpoint %s, interface %u\n", node->full_name,
-> > > -		vep.base.port);
-> > > +	dev_dbg(dev, "interface %u\n", vfwn.base.port);
-> > 
-> > Is there no way to keep the node name in the error message ?
-> 
-> There's no generic fwnode means to do something similar currently, possibly
-> because I understand ACPI doesn't do that. One could check whether the node
-> is an OF node and then use the full_name field but I wonder if it's worth
-> it.
+> >> Or maybe this is a necessary sacrifice to get the regmap cache
+> >> centralized in MFD. I don't know. I feel stupid.
 
-My ACPI knowledge is limited, but don't ACPI nodes have 4 character names that 
-can be combined in a string to create a full path ?
+> >> I guess I should focus on "my" subsystems...
 
-[snip]
+> > This only gets included in files that are part of this driver, it
+> > shouldn't affect compilation time for anyone not building the
+> > madera driver and even then it should only affect compilation
+> > times for the 10 or so C files that make up the driver. Also I
+> > don't really see any other way to specify the registers for the
+> > device.
 
-> > > -static int isp_of_parse_nodes(struct device *dev,
-> > > -			      struct v4l2_async_notifier *notifier)
-> > > +static int isp_fwnodes_parse(struct device *dev,
-> > > +			     struct v4l2_async_notifier *notifier)
-> > >  {
-> > > -	struct device_node *node = NULL;
-> > > +	struct fwnode_handle *fwn = NULL;
-> > 
-> > As explained in the review of another patch from the same series, I
-> > wouldn't rename the variable.
-> 
-> Most pointers to struct fwnode_handle are actually called fwnode and some
-> fw_node. fwn is just shorter. :-)
-> 
-> There are also cases pointers to struct device_node and struct fwnode_handle
-> are needed in the same function.
+> No when using regmap cache this seems necessary.
+> I was just wrong.
 
-When both are needed in the same function it certainly makes sense to use more 
-detailed names. My point is that, in a function that exclusively processes 
-fw*, I find calling variables fwn or vfwep more confusing that calling them 
-node or endpoint.
+Right.  The other thing to bear in mind with things like this is that
+often if it's the chip vendor they've got mechanisms to generate the
+register definitions directly from the chip design so if we take the
+complete thing with minimal edits it's a great way of ensuring we've got
+information about the chip in the upstream kernel to support future
+development.
 
-> > >  	notifier->subdevs = devm_kcalloc(
-> > >  	
-> > >  		dev, ISP_MAX_SUBDEVS, sizeof(*notifier->subdevs), GFP_KERNEL);
+--k4nxp35gqq27j42m
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[snip]
+-----BEGIN PGP SIGNATURE-----
 
-> > > diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c
-> > > b/drivers/media/platform/xilinx/xilinx-vipp.c index feb3b2f..6a2721b
-> > > 100644
-> > > --- a/drivers/media/platform/xilinx/xilinx-vipp.c
-> > > +++ b/drivers/media/platform/xilinx/xilinx-vipp.c
-> > 
-> > [snip]
-> > 
-> > > @@ -103,9 +103,10 @@ static int xvip_graph_build_one(struct
-> > > xvip_composite_device *xdev, * the link.
-> > >  		 */
-> > >  		
-> > >  		if (link.local_port >= local->num_pads) {
-> > > 
-> > > -			dev_err(xdev->dev, "invalid port number %u on %s\n",
-> > > -				link.local_port, link.local_node->full_name);
-> > > -			v4l2_of_put_link(&link);
-> > > +			dev_err(xdev->dev, "invalid port number %u for %s\n",
-> > > +				link.local_port,
-> > > +				to_of_node(link.local_node)->full_name);
-> > 
-> > This makes me believe that we're missing a fwnode_full_name() function.
-> 
-> It'd be nice to have that, I agree. What should it do on non-OF nodes?
-> Return a pointers to an empty string?
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljndK4ACgkQJNaLcl1U
+h9AcrQf/fG+V7Yqvtyj+A9tD0Pa38YObImkcpc/f14hebTVi+wnwaAb31NfjLeZx
+MTN45CwPQBj80UhTFhFaYKeOOPAmtmH7QWr0PqW33f99e/Qcvv2nyQOTaw6Mqef8
+p8JwoPBdrejXb+sftbbMhMt1Ti6ZIOGvV/v64REmHwxNp/nL5DkiqjEjHD2DgoKl
+ZrE4ayBB5w6YQgaWruaEuTEJQRL5R3HK9v8AyFtdY12iMlTsd+UTevqoJmi0vrLW
+hx2AdajwjehAC/n8rSY9vE+Gc+KAKcEHjYCNVWClP4hQ1y4vecVE6/bLsKDlze9C
+RTA+TF7mDZWi2Vokx9b+JqAZXk4NaQ==
+=4XT0
+-----END PGP SIGNATURE-----
 
-See above.
-
-> > > +			v4l2_fwnode_put_link(&link);
-> > > 
-> > >  			ret = -EINVAL;
-> > >  			break;
-> > >  		
-> > >  		}
-> > 
-> > [snip]
-
--- 
-Regards,
-
-Laurent Pinchart
-
+--k4nxp35gqq27j42m--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
