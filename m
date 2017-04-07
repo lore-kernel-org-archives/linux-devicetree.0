@@ -1,66 +1,48 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/4] pinctrl: stm32: set pin to gpio input when used as interrupt
-Date: Fri, 7 Apr 2017 17:10:08 +0200
-Message-ID: <1491577811-26989-2-git-send-email-alexandre.torgue@st.com>
-References: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH 0/4] Add fixes to STM32 pintrl
+Date: Fri, 7 Apr 2017 17:10:07 +0200
+Message-ID: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491577811-26989-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch ensures that pin is correctly set as gpio input when it is used
-as an interrupt.
+This series add several fixes to STM32 pinctrl:
+ - Set input mode when PIN is used as interrupt
+ - Implement .get_direction() gpio_chip callback  
+ - In DT: set each gpio controller as a interrupt controller. User who
+   wants to use gpio as interrupt will have choice to use either "gpiolib"
+   interface or "common" interrupt interface.
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Regards
+Alex
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index abc405b..c8825e5 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -207,12 +207,35 @@ static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
- 	.to_irq			= stm32_gpio_to_irq,
- };
- 
-+static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
-+{
-+	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
-+	u32 ret;
-+
-+	if (!gpiochip_is_requested(&bank->gpio_chip, irq_data->hwirq)) {
-+		ret = stm32_gpio_request(&bank->gpio_chip, irq_data->hwirq);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return stm32_gpio_direction_input(&bank->gpio_chip, irq_data->hwirq);
-+}
-+
-+static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
-+{
-+	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
-+
-+	stm32_gpio_free(&bank->gpio_chip, irq_data->hwirq);
-+}
-+
- static struct irq_chip stm32_gpio_irq_chip = {
- 	.name           = "stm32gpio",
- 	.irq_eoi	= irq_chip_eoi_parent,
- 	.irq_mask       = irq_chip_mask_parent,
- 	.irq_unmask     = irq_chip_unmask_parent,
- 	.irq_set_type   = irq_chip_set_type_parent,
-+	.irq_request_resources = stm32_gpio_irq_request_resources,
-+	.irq_release_resources = stm32_gpio_irq_release_resources,
- };
- 
- static int stm32_gpio_domain_translate(struct irq_domain *d,
+Alexandre TORGUE (4):
+  pinctrl: stm32: set pin to gpio input when used as interrupt
+  pinctrl: stm32: replace device_initcall() with arch_initcall()
+  pinctrl: stm32: Implement .get_direction gpio_chip callback
+  ARM: dts: stm32: Set gpio controller also as interrupt controller
+
+ arch/arm/boot/dts/stm32f429.dtsi          | 22 +++++++++++++++
+ arch/arm/boot/dts/stm32f746.dtsi          | 22 +++++++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.c     | 47 +++++++++++++++++++++++++++++--
+ drivers/pinctrl/stm32/pinctrl-stm32.h     |  5 +++-
+ drivers/pinctrl/stm32/pinctrl-stm32f429.c |  6 +++-
+ drivers/pinctrl/stm32/pinctrl-stm32f746.c |  7 ++++-
+ drivers/pinctrl/stm32/pinctrl-stm32h743.c |  6 +++-
+ 7 files changed, 109 insertions(+), 6 deletions(-)
+
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
