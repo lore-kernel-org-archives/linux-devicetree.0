@@ -1,98 +1,63 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 4/4] pwm: tegra: Add support to configure pin state in
- suspends/resume
-Date: Fri, 7 Apr 2017 08:51:54 +0100
-Message-ID: <38e8b3bf-404c-ddca-acf9-aab6248f61a7@nvidia.com>
-References: <1491488461-24621-1-git-send-email-ldewangan@nvidia.com>
- <1491488461-24621-5-git-send-email-ldewangan@nvidia.com>
- <e6eef15a-45e4-002b-dd45-38c268070241@nvidia.com>
- <58E66F8F.1030802@nvidia.com>
+From: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/3] Add Mediatek CIRQ interrupt controller
+Date: Fri, 7 Apr 2017 16:06:34 +0800
+Message-ID: <1491552397-7893-1-git-send-email-youlin.pei@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58E66F8F.1030802-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+In Mediatek SOCs, the CIRQ is a low power interrupt controller designed to
+works outside MCUSYS which comprises with Cortex-Ax cores,CCI and GIC.
 
-On 06/04/17 17:40, Laxman Dewangan wrote:
-> Oops, it was actually v2.
-> 
-> On Thursday 06 April 2017 08:47 PM, Jon Hunter wrote:
->> On 06/04/17 15:21, Laxman Dewangan wrote:
->>> In some of NVIDIA Tegra's platform, PWM controller is used to
->>> control the PWM controlled regulators. PWM signal is connected to
->>> the VID pin of the regulator where duty cycle of PWM signal decide
->>> the voltage level of the regulator output.
->>>
->>> The tristate (high impedance of PWM pin form Tegra) also define
->>> one of the state of PWM regulator which needs to be configure in
->>> suspend state of system.
->>>
->>> Add support to configure the pin state via pinctrl frameworks in
->>> suspend and active state of the system.
->>>
->>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>> Changes from v1:
->>> - Use standard pinctrl names for sleep and active state.
->>> - Use API pinctrl_pm_select_*()
->>>
->>>   drivers/pwm/pwm-tegra.c | 22 ++++++++++++++++++++++
->>>   1 file changed, 22 insertions(+)
->>>
->>> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
->>> index e9c4de5..af1bd4f 100644
->>> --- a/drivers/pwm/pwm-tegra.c
->>> +++ b/drivers/pwm/pwm-tegra.c
->>> @@ -29,6 +29,7 @@
->>>   #include <linux/of_device.h>
->>>   #include <linux/pwm.h>
->>>   #include <linux/platform_device.h>
->>> +#include <linux/pinctrl/consumer.h>
->>>   #include <linux/slab.h>
->>>   #include <linux/reset.h>
->>>   @@ -256,6 +257,22 @@ static int tegra_pwm_remove(struct
->>> platform_device *pdev)
->>>       return pwmchip_remove(&pc->chip);
->>>   }
->>>   +#ifdef CONFIG_PM_SLEEP
->>> +static int tegra_pwm_suspend(struct device *dev)
->>> +{
->>> +    pinctrl_pm_select_sleep_state(dev);
->> Why not return the error code here?
-> 
-> As the pin state in suspend is optional, I dont  want to return error if
-> the sleep state is not available.
-> 
-> However, it seems pinctrl take care of retuning success if there is no
-> sleep state. By seeing code.
+The CIRQ controller is integrated in between MCUSYS and interrupt sources
+as the second level interrupt controller. The external interrupts which 
+outside MCUSYS will feed through CIRQ then bypass to GIC.
 
-Exactly, that is what I did for i2c because pinctrl it is also optional
-for i2c.
+In normal mode(where MCUSYS is active), CIRQ is disabled and interrupts
+will directly issue to MCUSYS. When MCUSYS enters sleep mode, where GIC
+is power downed. CIRQ will be enabled and monitor all edge trigger
+interrupts(only edge trigger interrupts will be lost in this scenario).
+When an edge interrupt is triggered, CIRQ will record the status and
+generated a pulse signal to GIC when flush command is executed. 
 
-> Let me test this on different condition and it it works fine then we can
-> return the return of pinctrl_pm_select_*()
-> 
-> 
-> BTW, it should be OK to have pwm_tegra_resume/suspend wrapper, not
-> directly use the pinctrl_pm_select_* in pm ops suspend/resume. The
-> prototype matches.
+With CIRQ, MCUSYS can be completely turned off to improve the system 
+power consumption without losing interrupts.
 
-I think that I would keep the wrapper.
+change in v4:
+1. add some comment to explain CIRQ suspend callback.
+2. rebase on 4.11
 
->> By the way, do you plan to include patches to populate the bindings for
->> the pwm devices?
-> 
-> I am planning to populate the GPU regulator which is PWM based. This
-> will only populate the regulator.
+change in v3:
+1. add an explicit cirq range in DT and do the range check in driver.
+2. change the option "mediatek,ext-irq-start" to s"mediatek,ext-irq-range".
+3. remove mtk_cirq_eoi and clear the irq status in suspend callback.
+4. remove some pure copy code.
+5. rebase on 4.10-rc2.
 
-Ok.
+change in v2:
+1. fix coding style issue.
+2. change the compatible string.
+3. resolve IRQ offset at alloc time.
+4. clear irq status in irq_eoi function.
+5. rebase on 4.9-rc1.
 
-Jon
+v1:
+http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007213.html
+v2:
+http://lists.infradead.org/pipermail/linux-mediatek/2016-November/007350.html
+v3:
+http://lists.infradead.org/pipermail/linux-mediatek/2017-February/008134.html
 
--- 
-nvpublic
+Youlin Pei (3):
+  binding: irqchip: mtk-cirq: Add binding document
+  irqchip: mtk-cirq: Add mediatek mtk-cirq implement
+  ARM: dts: mt2701: Add mtk-cirq node for mt2701 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
