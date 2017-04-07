@@ -1,85 +1,165 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
-Date: Fri, 7 Apr 2017 15:32:23 +0200
-Message-ID: <20170407133223.GE4756@amd>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323203749.GB8563@amd>
- <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
- <20170329190725.GN20094@minitux>
- <20170329222301.GB7977@amd>
- <20170330000955.GP20094@minitux>
- <20170330074309.GA28533@amd>
- <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
- <20170403190032.GX20094@minitux>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH v2 1/6] clk: sunxi-ng: Add sun4i/sun7i
+ CCU driver
+Date: Fri, 7 Apr 2017 15:38:05 +0200
+Message-ID: <20170407133805.aiythp3hdvuyhcrc@lukather>
+References: <cover.a58841efb571d44013658505f3fa140536a89d1c.1490545262.git-series.plaes@plaes.org>
+ <ac8c4dab4f160ec605d52120517774bf1de87c2e.1490545262.git-series.plaes@plaes.org>
+ <20170327075438.cw3d6s7zyeemenwr@lukather>
+ <20170404200919.GA22159@plaes.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="T6xhMxlHU34Bk0ad"
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lqy2yxkxvenv3klk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPVMT3DQKGQEYN7PWUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170403190032.GX20094@minitux>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20170404200919.GA22159-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---T6xhMxlHU34Bk0ad
-Content-Type: text/plain; charset=us-ascii
+--lqy2yxkxvenv3klk
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi Priit,
 
-> > In both RGB and pattern approaches we should assess
-> > if it is acceptable to provide a pattern for trigger name,
-> > e.g. blink-pattern-{num_intervals}.
-> >=20
-> > If so, then "echo transition-pattern-15" would create a directory
-> > e.g. transition_intervals with files interval_0 to interval_14,
-> > that could be adjusted by userspace.
->=20
-> Having a RGB-trigger that proxy a accepts a userspace request of a
-> brightness-tripple and sets the brightness on the individual associated
-> LEDs sounds reasonable - but should probably be generalized to any
-> number of LEDs.
+On Tue, Apr 04, 2017 at 08:09:19PM +0000, Priit Laes wrote:
+> > > +/* Not documented on A10 */
+> > > +static SUNXI_CCU_GATE(pll_periph_sata_clk, "pll-periph-sata", "pll-periph",
+> > > +		      0x028, BIT(14), 0);
+> > 
+> > The rate doesn't come from pll-periph directly, does it?
+> 
+> So it uses hosc (24MHz parent clock) instead of pll-periph?
 
-Well..  Generalizing for any number of leds would be nice -- because
-hardware can do that. OTOH, if we do that, we'll not have a place
-where to do "white-adjustment".
+I never looked too much at this, but it looks more like the input is
+pll-periph-sata itself.
 
-> A slightly related matter is the question on how to use a single LED for
-> multiple trigger sources, e.g. how do I get a single LED to show
-> activity of two MMCs?.
+> > > +/* Undocumented on A10 */
+> > > +static SUNXI_CCU_PHASE(mmc0_output_clk, "mmc0_output", "mmc0",
+> > > +		       0x088, 8, 3, 0);
+> > > +/* Undocumented on A10 */
+> > > +static SUNXI_CCU_PHASE(mmc0_sample_clk, "mmc0_sample", "mmc0",
+> > > +		       0x088, 20, 3, 0);
+> > 
+> > The A10 doesn't have them.
+> 
+> Are you sure? Although, they weren't listed in datasheet, they are defined
+> in the sun4i-a10.dtsi:
+> 
+> mmc0_clk: clk@01c20088 {
+>         #clock-cells = <1>;
+>         compatible = "allwinner,sun4i-a10-mmc-clk";
+>         reg = <0x01c20088 0x4>;
+>         clocks = <&osc24M>, <&pll6 1>, <&pll5 1>;
+>         clock-output-names = "mmc0",
+>                              "mmc0_output",
+>                              "mmc0_sample";
+> };
 
-We normally don't do that. We'd either have a trigger for a single
-MMC, or trigger of all the MMCs..
+Yes, those clocks have been introduced in the A20, but we didn't find
+out until much later, which is why there's still left overs in the
+DT. We're not using them in the driver for the A10 either (but we do
+for the A20, obviously).
 
-> For the patterns I don't know how a trigger for this would look like,
-> how would setting the pattern of a trigger be propagated down to the
-> hardware?
+> > > +/* TODO: Check whether A10 actually supports osc32k as 4th parent? */
+> > > +static const char *const ir_parents_sun4i[] = { "hosc", "pll-periph",
+> > > +						"pll-ddr-other" };
+> > 
+> > What does the BSP say about this?
+> 
+> sun7i datasheet mentions osc32k, but BSP code for sun4i, sun5i and sun7i
+> is identical and supports only 3 first parents without osc32k.
 
-Well... I'm not sure if we _want_ to do triggers for
-patterns. LED triggers change rather quickly (100 times a second?) so
-doing them in kernel makes sense. Patterns take 10s of seconds, so we
-do not need to handle them in kernel.=20
+Ok. Leave the TODO for now, we'll fix it if relevant.
 
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> > > +/* Undocumented on A10 */
+> > > +static SUNXI_CCU_MUX_WITH_GATE(spdif_clk, "spdif", audio_parents,
+> > > +			       0x0c0, 16, 2, BIT(31), CLK_SET_RATE_PARENT);
+> > 
+> > This doesn't seem to exist at all on the A10
+> 
+> Wasn't listed in datasheet, but it's in BSP and also in sun4i-a10.dtsi:
+> 
+> spdif_clk: clk@01c200c0 {
+>         #clock-cells = <0>;
+>         compatible = "allwinner,sun4i-a10-mod1-clk";
+>         reg = <0x01c200c0 0x4>;
+>         clocks = <&pll2 SUN4I_A10_PLL2_8X>,
+>                  <&pll2 SUN4I_A10_PLL2_4X>,
+>                  <&pll2 SUN4I_A10_PLL2_2X>,
+>                  <&pll2 SUN4I_A10_PLL2_1X>;
+>         clock-output-names = "spdif";
+> };
 
---T6xhMxlHU34Bk0ad
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Ack.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> > > +/*
+> > > + * TODO: SATA clock also supports external clock as parent via BIT(24)
+> > > + * The external clock is probably an optional crystal or oscillator
+> > > + * that can be connected to the SATA-CLKM / SATA-CLKP pins.
+> > > + */
+> > > +static SUNXI_CCU_GATE(sata_clk, "sata", "pll-periph-sata",
+> > > +		      0x0c8, BIT(31), 0);
+> > 
+> > The rate won't be good here either. This is supposed to be 100MHz.
+> 
+> Hmm.. I tested SATA with Cubietruck. Or what do you mean?
 
-iEYEARECAAYFAljnlOcACgkQMOfwapXb+vJCeQCaA8Ubkvy5deDBVVyCPP1kjPiy
-uHYAn0lZxGn18ENXi0Naj8B/TOsS5NyX
-=nJm0
------END PGP SIGNATURE-----
+As long as you don't have any dependency on the rate itself, as long
+as the gate is opened, I expect it to work. But the rate itself will
+be reported wrong.
 
---T6xhMxlHU34Bk0ad--
+> > > +static const char *const csi_isp_parents[] = { "pll-video0", "pll-ve",
+> > > +					       "pll-ddr-other", "pll-sata" };
+> > > +
+> > > +static SUNXI_CCU_M_WITH_MUX_GATE(csi_isp_clk, "csi-isp",
+> > > +				 csi_isp_parents,
+> > > +				 0x120, 0, 4, 24, 2, BIT(31), 0);
+> > 
+> > We've been calling it sclk in the other SoC iirc. Any particular
+> > reason to call it differently?
+> 
+> It's called ISP in BSP and A10 manual.
+> In A20 it's indeed Special Clock Register (SCLK).
+
+Let's call it SCLK too then, for consistency.
+
+> > > +static const char *const out_parents[] = { "hosc", "osc32k", "hosc" };
+> > > +static SUNXI_CCU_MP_WITH_MUX_GATE(out_a_clk, "out-a", out_parents,
+> > > +				  0x1f0, 8, 5, 20, 2, 24, 2, BIT(31), 0);
+> > > +static SUNXI_CCU_MP_WITH_MUX_GATE(out_b_clk, "out-b", out_parents,
+> > > +				  0x1f4, 8, 5, 20, 2, 24, 2, BIT(31), 0);
+> > 
+> > There's a fixed pre-divider on the first hosc of 750.
+> 
+> Nice catch.
+> 
+> So it should be something like this:
+> 
+> [snip]
+> static const char *const out_parents[] = { "osc24M", "osc32k", "osc24M" };
+> static const struct ccu_mux_fixed_prediv out_prediv = {
+>         .index = 0, .div = 750
+> };
+
+I think it shoud still be hosc (or at least, the name that you used
+for the gate controlling the 24MHz oscillator input).
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--lqy2yxkxvenv3klk--
