@@ -1,32 +1,39 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: ARTPEC-6: Add pinctrl configuration
-Date: Fri, 7 Apr 2017 11:51:15 +0200
-Message-ID: <CACRpkdZbWvoKHNqokxSqw=XM8g2P3voHJ-=8iJY0kVoe8tDbBA@mail.gmail.com>
-References: <20170330113349.GG29118@axis.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3 0/4] pwm: tegra: Pin configuration in suspend/resume and cleanups
+Date: Fri, 7 Apr 2017 15:03:58 +0530
+Message-ID: <1491557642-15940-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170330113349.GG29118-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>
-Cc: Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 1:33 PM, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org> wrote:
+This patch series have following fixes:
+- Add more precession in PWM period register value calculation
+  for lower pwm frequency.
+- Add support to configure PWM pins in different state in the
+  suspend/resume.
 
-> Enable the pinctrl driver for ARTPEC-6 in the artpec6.dtsi
-> with all main pinmux functions.
-> Add pinctrl information to the relevant (uart) nodes.
->
-> Signed-off-by: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>
+Changes from v1:
+- Use standard pinctrl names for sleep and active state.
+- Use API pinctrl_pm_select_*()
 
-Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Changes from V2:
+- Type fixes, rephrases commit message and use pinctrl_pm_state* return
+  value.
 
-Please get this applied through the ARM SoC tree.
+Laxman Dewangan (4):
+  pwm: tegra: Use DIV_ROUND_CLOSEST_ULL() instead of local
+    implementation
+  pwm: tegra: Increase precision in pwm rate calculation
+  pwm: tegra: Add DT binding details to configure pin in suspends/resume
+  pwm: tegra: Add support to configure pin state in suspends/resume
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 43 ++++++++++++
+ drivers/pwm/pwm-tegra.c                            | 77 ++++++++++++++++++++--
+ 2 files changed, 116 insertions(+), 4 deletions(-)
+
+-- 
+2.1.4
