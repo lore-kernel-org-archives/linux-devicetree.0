@@ -1,56 +1,37 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
-Date: Fri, 7 Apr 2017 13:36:49 -0700
-Message-ID: <20170407203649.GD15143@minitux>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323203749.GB8563@amd>
- <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
- <20170329190725.GN20094@minitux>
- <20170329222301.GB7977@amd>
- <20170330000955.GP20094@minitux>
- <20170330074309.GA28533@amd>
- <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
- <20170403190032.GX20094@minitux>
- <20170407133223.GE4756@amd>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net-next v4 0/5] net-next: dsa: add Mediatek MT7530
+ support
+Date: Fri, 07 Apr 2017 13:53:02 -0700 (PDT)
+Message-ID: <20170407.135302.1534365936334263631.davem@davemloft.net>
+References: <1491554709-9723-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170407133223.GE4756@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491554709-9723-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 07 Apr 06:32 PDT 2017, Pavel Machek wrote:
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Date: Fri, 7 Apr 2017 16:45:04 +0800
 
-> > For the patterns I don't know how a trigger for this would look like,
-> > how would setting the pattern of a trigger be propagated down to the
-> > hardware?
+> MT7530 is a 7-ports Gigabit Ethernet Switch that could be found on
+> Mediatek router platforms such as MT7623A or MT7623N which includes 7-port
+> Gigabit Ethernet MAC and 5-port Gigabit Ethernet PHY. Among these ports,
+> The port from 0 to 4 are the user ports connecting with the remote devices
+> while the port 5 and 6 are the CPU ports connecting into Mediatek Ethernet
+> GMAC.
 > 
-> Well... I'm not sure if we _want_ to do triggers for
-> patterns. LED triggers change rather quickly (100 times a second?) so
-> doing them in kernel makes sense. Patterns take 10s of seconds, so we
-> do not need to handle them in kernel. 
-> 
+> The patch series integrated Mediatek MT7530 into DSA support which
+> includes the most of the essential callbacks such as tag insertion for
+> port distinguishing, port control, bridge offloading, STP setup and
+> ethtool operations to allow DSA to model each user port into independently
+> standalone netdevice as the other DSA driver had done.
 
-On any current Qualcomm based phone (using the Qualcomm PMIC to drive
-the RGB notification LED) the patterns are hard coded in DeviceTree and
-the option you have in runtime is to enable/disable the usage of the
-configured pattern and a few knobs of how to traverse the configured
-pattern.
-
-When you enter e.g. a low-battery scenario you trigger the red LED to
-run its low-battery-pattern and you don't touch it until there's a
-higher prio notification (e.g. someone connects the charger).
-
-So in the current implementation patterns "never" changes and they are
-triggered only every time you get some event/notification.
-
-
-A benefit of not using triggers for patterns is that I can assign
-patterns to triggered events, e.g. I can configure my LEDs to flash &
-fade out when some trigger happens.
-
-Regards,
-Bjorn
+Series applied, thanks Sean.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
