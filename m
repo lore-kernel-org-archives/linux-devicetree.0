@@ -1,56 +1,363 @@
-From: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 3/3] ARM: dts: mt2701: Add mtk-cirq node for mt2701
-Date: Fri, 7 Apr 2017 16:06:37 +0800
-Message-ID: <1491552397-7893-4-git-send-email-youlin.pei@mediatek.com>
-References: <1491552397-7893-1-git-send-email-youlin.pei@mediatek.com>
+From: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] arm64: dts: Add coresight DT nodes for hi6220-hikey
+Date: Fri, 7 Apr 2017 16:06:58 +0800
+Message-ID: <1491552418-74386-1-git-send-email-lipengcheng8@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491552397-7893-1-git-send-email-youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lizhong11-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit add mtk-cirq node to mt2701 dtsi.
+Add coresight DT nodes for hikey board.
 
-Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Li Zhong <lizhong11-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 ---
- arch/arm/boot/dts/mt2701.dtsi |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ .../arm64/boot/dts/hisilicon/hi6220-coresight.dtsi | 318 +++++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   1 +
+ 2 files changed, 319 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 8037210..5daacfe 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -22,7 +22,7 @@
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
+new file mode 100644
+index 0000000..a523e43
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
+@@ -0,0 +1,318 @@
++/*
++ * Hisilicon Ltd. Hi6220 SoC
++ *
++ * Copyright (C) 2015-2016 Hisilicon Ltd.
++ * Author: lipengcheng  <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * publishhed by the Free Software Foundation.
++ */
++/ {
++	amba {
++		/* A53 cluster0 internal coresight */
++		#address-cells = <2>;
++		#size-cells = <2>;
++		compatible = "arm,amba-bus";
++		ranges;
++		etm@0,f659c000 {
++			compatible = "arm,coresight-etm4x","arm,primecell";
++			reg = <0 0xf659c000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu0>;
++			port {
++				etm0_out_port: endpoint {
++					remote-endpoint = <&funnel0_in_port0>;
++				};
++			};
++		};
++
++		etm@1,f659d000 {
++			compatible = "arm,coresight-etm4x","arm,primecell";
++			reg = <0 0xf659d000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu1>;
++			port {
++				etm1_out_port: endpoint {
++					remote-endpoint = <&funnel0_in_port1>;
++				};
++			};
++
++		};
++
++		etm@2,f659e000 {
++			compatible = "arm,coresight-etm4x","arm,primecell";
++			reg = <0 0xf659e000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu2>;
++			port {
++				etm2_out_port: endpoint {
++					remote-endpoint = <&funnel0_in_port2>;
++				};
++			};
++		};
++
++		etm@3,f659f000 {
++			compatible = "arm,coresight-etm4x","arm,primecell";
++			reg = <0 0xf659f000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu3>;
++			port {
++				etm3_out_port: endpoint {
++					remote-endpoint = <&funnel0_in_port3>;
++				};
++			};
++		};
++
++		/* A53 cluster1 internal coresight */
++		etm@4,f65dc000 {
++			compatible = "arm,coresight-etm4x","arm,primecell";
++			reg = <0 0xf65dc000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu4>;
++			port {
++				etm4_out_port: endpoint {
++				remote-endpoint = <&funnel0_in_port4>;
++				};
++			};
++		};
++
++		etm@5,f65dd000 {
++			compatible = "arm,coresight-etm4x","arm,primecell";
++			reg = <0 0xf65dd000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu5>;
++			port {
++				etm5_out_port: endpoint {
++				remote-endpoint = <&funnel0_in_port5>;
++				};
++			};
++		};
++
++		etm@6,f65de000 {
++			compatible = "arm,coresight-etm4x","arm,primecell";
++			reg = <0 0xf65de000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu6>;
++			port {
++				etm6_out_port: endpoint {
++					remote-endpoint = <&funnel0_in_port6>;
++				};
++			};
++		};
++
++		etm@7,f65df000 {
++			compatible = "arm,coresight-etm4x","arm,primecell";
++			reg = <0 0xf65df000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu7>;
++			port {
++				etm7_out_port: endpoint {
++					remote-endpoint = <&funnel0_in_port7>;
++				};
++			};
++		};
++
++		funnel0:funnel@0,f6501000 {
++			compatible = "arm,coresight-funnel","arm,primecell";
++			reg = <0 0xf6501000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/* funnel output port */
++				port@0 {
++					reg = <0>;
++					funnel0_out_port: endpoint {
++						remote-endpoint = <&funnel1_in_port>;
++					};
++				};
++
++				/* funnel input ports */
++				port@1 {
++					reg = <0>;
++					funnel0_in_port0: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm0_out_port>;
++					};
++				};
++
++				port@2 {
++					reg = <1>;
++					funnel0_in_port1: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm1_out_port>;
++					};
++				};
++
++				port@3 {
++					reg = <2>;
++					funnel0_in_port2: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm2_out_port>;
++					};
++				};
++
++				port@4 {
++					reg = <3>;
++					funnel0_in_port3: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm3_out_port>;
++					};
++				};
++
++				port@5 {
++					reg = <4>;
++					funnel0_in_port4: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm4_out_port>;
++					};
++				};
++
++				port@6 {
++					reg = <5>;
++					funnel0_in_port5: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm5_out_port>;
++					};
++				};
++
++				port@7 {
++					reg = <6>;
++					funnel0_in_port6: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm6_out_port>;
++					};
++				};
++
++				port@8 {
++					reg = <7>;
++					funnel0_in_port7: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm7_out_port>;
++					};
++				};
++			};
++		};
++
++		funnel1:funnel@1,f6401000 {
++			compatible = "arm,coresight-funnel","arm,primecell";
++			reg = <0 0xf6401000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				/* funnel1 output port */
++				port@0 {
++					reg = <0>;
++					funnel1_out_port: endpoint {
++						remote-endpoint = <&etf_in_port>;
++					};
++				};
++
++				/* funnel1 input port */
++				port@1 {
++					reg = <0>;
++					funnel1_in_port: endpoint {
++						slave-mode;
++						remote-endpoint = <&funnel0_out_port>;
++					};
++				};
++			};
++		};
++		etf:etf@0,f6402000 {
++			compatible = "arm,coresight-tmc","arm,primecell";
++			reg = <0 0xf6402000 0 0x1000>;
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				/* etf input port */
++				port@0 {
++					reg = <0>;
++					etf_in_port: endpoint {
++						slave-mode;
++						remote-endpoint = <&funnel1_out_port>;
++					};
++				};
++				/* etf output port */
++				port@1 {
++					reg = <0>;
++					etf_out_port: endpoint {
++						remote-endpoint = <&replicator0_in_port>;
++					};
++				};
++			};
++		};
++
++		replicator@0{
++			compatible = "arm,coresight-replicator";
++
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				/* replicator input port  */
++				port@0 {
++					reg = <0>;
++					replicator0_in_port: endpoint{
++					slave-mode;
++					remote-endpoint = <&etf_out_port>;
++					};
++				};
++				/* replicator out port  */
++				port@1 {
++					reg = <0>;
++					replicator0_out_port: endpoint {
++						remote-endpoint = <&etr0_in_port>;
++					};
++				};
++			};
++		};
++
++		etr@0,f6404000 {
++			compatible = "arm,coresight-tmc","arm,primecell";
++			reg = <0 0xf6404000 0 0x1000>;
++
++			coresight-default-sink;
++			clocks = <&sys_ctrl HI6220_CS_ATB>;
++			clock-names = "apb_pclk";
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				/* etr input port  */
++				port@0 {
++					etr0_in_port: endpoint{
++					slave-mode;
++					remote-endpoint = <&replicator0_out_port>;
++					};
++				};
++			};
++		};
++	};
++};
++
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index dba3c13..fb70c9b 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -8,6 +8,7 @@
+ /dts-v1/;
+ #include "hi6220.dtsi"
+ #include "hikey-pinctrl.dtsi"
++#include "hi6220-coresight.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
  
  / {
- 	compatible = "mediatek,mt2701";
--	interrupt-parent = <&sysirq>;
-+	interrupt-parent = <&cirq>;
- 
- 	cpus {
- 		#address-cells = <1>;
-@@ -210,6 +210,16 @@
- 		reg = <0 0x10200100 0 0x1c>;
- 	};
- 
-+	cirq: interrupt-controller@10204000 {
-+		compatible = "mediatek,mt2701-cirq",
-+			     "mediatek,mtk-cirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&sysirq>;
-+		reg = <0 0x10204000 0 0x400>;
-+		mediatek,ext-irq-range = <32 200>;
-+	};
-+
- 	iommu: mmsys_iommu@10205000 {
- 		compatible = "mediatek,mt2701-m4u";
- 		reg = <0 0x10205000 0 0x1000>;
 -- 
-1.7.9.5
+2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
