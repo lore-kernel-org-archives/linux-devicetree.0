@@ -1,49 +1,64 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/4] arm64: renesas: enable M3ULCB board peripherals
-Date: Fri, 7 Apr 2017 09:52:13 -0400
-Message-ID: <20170407135212.GA24096@verge.net.au>
-References: <1485442422-18259-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1489788135.8957.2.camel@collabora.co.uk>
- <CAMuHMdX9caECvsBnfUQhbQKdW_uGJ_VXAUksMMXw7EAGP8QUCQ@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 06/14] MIPS: jz4740: DTS: Add nodes for ingenic pinctrl
+ and gpio drivers
+Date: Fri, 07 Apr 2017 15:57:11 +0200
+Message-ID: <e4aaf8c3e8a54df2c5878f8e873e290f@crapouillou.net>
+References: <20170125185207.23902-2-paul@crapouillou.net>
+ <20170402204244.14216-1-paul@crapouillou.net>
+ <20170402204244.14216-7-paul@crapouillou.net>
+ <CACRpkdbXe1Xxk93jqLXBdEDwWOnWD+CkZrqvok-PcmWxzBbSZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdX9caECvsBnfUQhbQKdW_uGJ_VXAUksMMXw7EAGP8QUCQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbXe1Xxk93jqLXBdEDwWOnWD+CkZrqvok-PcmWxzBbSZA@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux MIPS <linux-mips@linux-mips.org>, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 11:53:45AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
+Le 2017-04-07 11:44, Linus Walleij a écrit :
+> On Sun, Apr 2, 2017 at 10:42 PM, Paul Cercueil <paul@crapouillou.net> 
+> wrote:
 > 
-> On Fri, Mar 17, 2017 at 11:02 PM, Sjoerd Simons
-> <sjoerd.simons@collabora.co.uk> wrote:
-> > On Thu, 2017-01-26 at 17:53 +0300, Vladimir Barinov wrote:
-> >> This adds the folowing:
-> >> - R8A7796 SoC based M3ULCB board peripherals
-> >>
-> >> Vladimir Barinov (4):
-> >> [1/4] arm64: dts: m3ulcb: enable I2C
-> >> [2/4] arm64: dts: m3ulcb: Update memory node to 2 GiB map
-
-I have queued up the above two patches.
-> >> [3/4] arm64: dts: m3ulcb: enable EthernetAVB
-
-Please update the above patch to reflect the changes made in
-ef3f08c83fd1 ("arm64: dts: r8a7796: salvator-x: Fix EthernetAVB PHY timing")
-
-> >> [4/4] arm64: dts: m3ulcb: enable HS200 for eMMC
-
-I will look at queuing this up in the near future
-with other HS200 enablement patches.
-
-> > Seems these didn't hit -next just yet, for this series (tested on a
-> > M3ULCB)
-> >
-> > Tested-By: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+>> For a description of the pinctrl devicetree node, please read
+>> Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+>> 
+>> For a description of the gpio devicetree nodes, please read
+>> Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+>> 
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>  arch/mips/boot/dts/ingenic/jz4740.dtsi | 61 
+>> ++++++++++++++++++++++++++++++++++
+>>  1 file changed, 61 insertions(+)
+>> 
+>>  v2: Changed the devicetree bindings to match the new driver
+>>  v3: No changes
+>>  v4: Update the bindings for the v4 version of the drivers
+> (...)
 > 
-> It seems this series is still pending? Any reason (not) to apply it?
+>> +       pinctrl: ingenic-pinctrl@10010000 {
+>> +               compatible = "ingenic,jz4740-pinctrl";
+>> +               reg = <0x10010000 0x400>;
+>> +
+>> +               gpa: gpio-controller@0 {
+>> +                       compatible = "ingenic,gpio-bank-a", 
+>> "ingenic,jz4740-gpio";
+> 
+> As Sergei and Rob notes, the bank compatible properties look
+> a bit strange. Especially if they are all the same essentially.
+> 
+> I like Sergei's idea to simply use the reg property if what you want
+> is really a unique ID number. What do you think about this?
+> 
+> Yours,
+> Linus Walleij
 
-Sorry for the extended delay.
+I think the 'reg' property makes more sense, yes. I'll fix this in the 
+v5, this
+week-end. Do you think it can go in 4.12?
+
+Thanks,
+-Paul
