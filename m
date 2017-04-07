@@ -1,28 +1,90 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: dts: imx6q-utilite-pro: add hpd gpio
-Date: Fri, 7 Apr 2017 20:42:37 +0800
-Message-ID: <20170407124236.GF16503@dragon>
-References: <95646809a50c48f4939b4da547f3a6f3@rwthex-s1-b.rwth-ad.de>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH v2 0/7] Add STM32F469 pinctrl and fix issues in STM32 pinctrl
+Date: Fri, 7 Apr 2017 14:42:57 +0200
+Message-ID: <1491568984-20169-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <95646809a50c48f4939b4da547f3a6f3-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 04, 2017 at 09:41:30PM +0200, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
-> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> 
-> The hpd pin of the second hdmi connector of the Utilite Pro is wired
-> up to a gpio pin of the SoC. Reflect this in the device tree.
-> 
-> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+This series adds support of a dedicated driver for STM32F469 MCU pinctroller.
+This add generates some changes inside STM32 pinctrl driver and inside STM32
+device tree.
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in STM32 pinctrl driver:
+-------------------------------
+	
+	- Add STM32F469 driver.
+	
+	- Change STM32 pinctrl core in order to use "gpio-ranges" devicetree definitions.
+	  Indeed, on STM32F469 there an hole in BANK J. We need to declare a gpio-ranges
+	  in gpioj controller node to handle this hole.
+
+Changes in STM32 device tree:
+----------------------------
+I propose a new architecture (a new file split) for pinmux definition:
+	
+	- Create a common stm32f4-pinctrl.dtsi for pinmuxing definitions
+	  which are common between STM32F429 and STM32F469 MCU. 
+	
+	- Create dedicated stm32fxxx-pinctrl.dtsi file for each MCU
+	  (stm32f429-pinctrl.dtsi and stm32f469-pinctrl.dtsi) each one will
+	  include stm32f4-pinctrl.dtsi. All differences (pinmuxing or GPIO
+	  bank holes) will be put inside the dedicated files.
+
+This series fix a locking issue when a gpio is used as IRQ.
+
+Changes since v1:
+ -Rebase on 4.11-rc1.
+ -Fix issues for "gpio-ranges" patch.
+
+Regards
+Alex
+
+Alexandre TORGUE (7):
+  pinctrl: stm32: add possibility to use gpio-ranges to declare bank
+    range
+  Documentation: dt: Remove bindings for STM32 pinctrl
+  includes: dt-bindings: Rename STM32F429 pinctrl DT bindings
+  pinctrl: stm32: Add STM32F469 MCU support
+  Documentation: dt: Add new compatible to STM32 pinctrl driver bindings
+  ARM: Kconfig: Introduce MACH_STM32F469 flag
+  ARM: dts: stm32: create dedicated files for pinctrl definitions
+
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |    3 +-
+ arch/arm/Kconfig                                   |    5 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |    1 +
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |  243 +++
+ arch/arm/boot/dts/stm32f429-disco.dts              |    1 +
+ arch/arm/boot/dts/stm32f429-pinctrl.dtsi           |   95 ++
+ arch/arm/boot/dts/stm32f429.dtsi                   |  196 ---
+ arch/arm/boot/dts/stm32f469-disco.dts              |    1 +
+ arch/arm/boot/dts/stm32f469-pinctrl.dtsi           |   96 ++
+ drivers/pinctrl/stm32/Kconfig                      |    6 +
+ drivers/pinctrl/stm32/Makefile                     |    1 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  115 +-
+ drivers/pinctrl/stm32/pinctrl-stm32f469.c          | 1578 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/stm32f4-pinfunc.h      | 1302 ++++++++++++++++
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1239 ---------------
+ 15 files changed, 3395 insertions(+), 1487 deletions(-)
+ create mode 100644 arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stm32f429-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stm32f469-pinctrl.dtsi
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f469.c
+ create mode 100644 include/dt-bindings/pinctrl/stm32f4-pinfunc.h
+ delete mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+
+-- 
+1.9.1
