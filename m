@@ -1,104 +1,97 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: default-state LED property (was Re: [PATCH v2] Extend pca9532 device
- tree support)
-Date: Fri, 7 Apr 2017 13:57:54 +0200
-Message-ID: <20170407115754.GA4756@amd>
-References: <1490880833-22199-1-git-send-email-fb@ltec.ch>
- <b54c77d5-b4f7-9517-8c5b-9200c766204a@gmail.com>
- <20170406155005.GA10363@amd>
- <a8509d26-6e35-e2f7-9784-90f3c54accbf@gmail.com>
- <ec012568-f540-4e87-d8c4-4065fbcd1c2a@ltec.ch>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: at91: Document new TCB bindings
+Date: Fri, 7 Apr 2017 14:15:36 +0200
+Message-ID: <a8d541f0-e70a-a12d-5a7e-b1b72eddbe65@linaro.org>
+References: <1467039901-11297-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <20160701012743.GA16698@rob-hp-laptop> <20160704151058.44b679bf@bbrezillon>
+ <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
+ <20170125161129.41acaa9a@bbrezillon>
+ <fd4a2797-d8eb-ac80-36fc-01240fb0e944@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ec012568-f540-4e87-d8c4-4065fbcd1c2a-GovowT2ENgg@public.gmane.org>
+In-Reply-To: <fd4a2797-d8eb-ac80-36fc-01240fb0e944-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felix Brack <fb-GovowT2ENgg@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 13/03/2017 16:18, Nicolas Ferre wrote:
+> Le 25/01/2017 à 16:11, Boris Brezillon a écrit :
+>> Hi Rob,
+>>
+>> Sorry to revive this old discussion, but there's still one aspect I'm
+>> not sure about.
+>>
+>> On Tue, 5 Jul 2016 10:40:22 -0500
+>> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>
+>>>>>> +   - compatible: Should be "atmel,tcb-free-running-timer"
+>>>>>> +   - reg: Should contain the TCB channels to be used. If the
+>>>>>> +     counter width is 16 bits (at91rm9200-tcb), two consecutive
+>>>>>> +     channels are needed. Else, only one channel will be used.
+>>>>>> +
+>>>>>> + * a clockevent device
+>>>>>> +   - compatible: Should be "atmel,tcb-programmable-timer"  
+>>>>>
+>>>>> This still looks like assigning usage in DT. As I'm willing to accept
+>>>>> that for PWM, either timer channels should be whatever channels are not
+>>>>> assigned to PWM (i.e. not in DT) or they should just be "timer" and let
+>>>>> the kernel decide their usage.  
+>>>>
+>>>> I just reviewed Alexandre's new binding, and it makes the whole thing
+>>>> a lot more obscure: on older SoCs, we have to chain 2 channels to
+>>>> create an acceptable wraparound time (16 bits at 5MHz is generating too
+>>>> much interrupts to be acceptable).
+>>>>
+>>>> If we don't assign the mode from the DT, how should we know which
+>>>> channels should be chained to create the free-running timer? Note that
+>>>> not all channels can be chained together: they have to be part of the
+>>>> same timer counter block and have to be consecutive (0+1, 1+2 or 3+0).  
+>>>
+>>> The driver can have this knowledge if it is just picking 2 consecutive
+>>> timers. It should already know it has 16-bit timers based on the
+>>> compatible string. If it gets more complicated then the features or
+>>> limitations of the channels should be listed so the driver can make a
+>>> choice. OMAP is a good example of lots of timers with differing
+>>> features.
+>>
+>> Yes it's possible to do that, but what about DT overlays then? Say you
+>> have some TCB channels you'd like to reserve because they are connected
+>> to pins that are exposed on your board. Those pins are not connected to
+>> any device yet, but extension boards can be added, and in this case you
+>> might want to expose new PWM devices by dynamically loading DT overlays.
+>>
+>> If your clksource/clkevent driver parsed the initial DT and picked X
+>> free channels randomly, it may conflicts with the one requested by the
+>> DT overlay.
+>>
+>> What's your solution for this case?
+> 
+> It seems that we don't have any progress on this topic for more than 6
+> months which is a pity as we now experience an issue that would have
+> been addressed completely by the TC rework [1].
+> 
+> aka "ping"... ;-)
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi Nicolas, Boris,
 
-> >> This seems to look for "pwm0" and "pwm1" strings, which do not seem to
-> >> be documented.
-> >>
-> >> Plus... is it useful to have default-state? We already have default
-> >> trigger. If we keep the value by default (on PC, we do something like
-> >> that) this patch should not be neccessary?
-> >=20
-> > Thanks for the heads-up. Dropping the patch for now.
->=20
-> No, please do not drop the patch.
->=20
-> > I guess that pwm0/1 got propagated to v2 by an omission.
->=20
-> Yes, I agree. However the two strings do not break anything and behave
-> analog to the 'on' or 'keep' string. Though this code could be removed
-> if absolutely necessary. An alternative would be to add a description
-> for the strings. Just to be clear: these strings have nothing to with
-> the exposition of device specific registers to the DT.
+is there any news from your side ?
 
-Well, they should be removed. No need to keep surprises in code.
+Thanks.
 
-> > Regarding default-on: Felix, do you have any use case that require
-> > default-on set to "keep"?
->=20
-> This patch is not about 'default-on' which is a value that could be
-> assigned to the property 'linux,default-trigger' (according to DT
-> bindings documentation file 'common.txt').
-> My patch does not introduce anything new with the'keep' state, it rather
-> completes the existing bindings according to the description in
-> Documentation/devicetree/bindings/leds/common.txt which states:
+  -- Daniel
 
-Hmm, that was introduce by 1d1a77ddc8acfa3d506f1958e09a12085e71fc69
-=2E I don't quite like the patch -- it duplicates default-trigger
-functionality without good reason.
 
-IMO we should
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-1) keep the led state by default
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-2) deprecate the default-state property
-
-3) use default-triggers to emulate the functionality if someone really
-needs it.
-
-> One of my use cases is to turn a LED on by U-Boot. This LED must remain
-> on until eventually, under certain conditions, some userland code
-> changes it's state.
-> Setting 'default-state' to 'keep' is how you can sort of tell the
-> kernel, or better the driver, 'not to initialize the LED' which would
-> turn it off.
-
-Yes, that's reasonable. Perhaps 'keep' should be the default.
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljnfsIACgkQMOfwapXb+vLSfgCfUtCyK2wJYuIWZ0Rr01Jo1oE1
-NWoAn1Vhp5Q+Ts3E8ZIMvdRQlIaR3edO
-=sx3p
------END PGP SIGNATURE-----
-
---3MwIy2ne0vdjdPXF--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
