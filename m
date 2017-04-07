@@ -1,131 +1,138 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v2 4/4] drm: zte: add VGA driver support
-Date: Fri, 7 Apr 2017 10:43:02 -0400
-Message-ID: <20170407144302.ge7afh5bq7eyy3s4@art_vandelay>
-References: <1491490870-6330-1-git-send-email-shawnguo@kernel.org>
- <1491490870-6330-5-git-send-email-shawnguo@kernel.org>
- <20170406171251.qlzdjmzalunplbdt@art_vandelay>
- <20170407030231.GH3394@dragon>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH V10 06/12] of: device: Fix overflow of coherent_dma_mask
+Date: Fri, 7 Apr 2017 15:46:27 +0100
+Message-ID: <b38312b0-268b-ed86-a5b3-886f86ea13f5@arm.com>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
+ <1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+ <1491301105-5274-7-git-send-email-sricharan@codeaurora.org>
+ <58E5E7B7.1050400@gmail.com>
+ <b77e3405-f060-bcd5-99f6-7d76f9edf08a@codeaurora.org>
+ <58E69831.6010306@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170407030231.GH3394@dragon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Xin Zhou <zhou.xin8@zte.com.cn>, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <58E69831.6010306@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, Sricharan R <sricharan@codeaurora.org>, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMDcsIDIwMTcgYXQgMTE6MDI6MzNBTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
-Ogo+IE9uIFRodSwgQXByIDA2LCAyMDE3IGF0IDAxOjEyOjUxUE0gLTA0MDAsIFNlYW4gUGF1bCB3
-cm90ZToKPiA+IE9uIFRodSwgQXByIDA2LCAyMDE3IGF0IDExOjAxOjEwUE0gKzA4MDAsIFNoYXdu
-IEd1byB3cm90ZToKPiA+ID4gK3N0YXRpYyBpbnQgenhfdmdhX2Nvbm5lY3Rvcl9nZXRfbW9kZXMo
-c3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3Qg
-enhfdmdhICp2Z2EgPSB0b196eF92Z2EoY29ubmVjdG9yKTsKPiA+ID4gKwl1bnNpZ25lZCBsb25n
-IGZsYWdzOwo+ID4gPiArCXN0cnVjdCBlZGlkICplZGlkOwo+ID4gPiArCWludCByZXQ7Cj4gPiA+
-ICsKPiA+ID4gKwkvKgo+ID4gPiArCSAqIENsZWFyIGJvdGggZGV0ZWN0aW9uIGJpdHMgdG8gc3dp
-dGNoIEkyQyBidXMgZnJvbSBkZXZpY2UKPiA+ID4gKwkgKiBkZXRlY3RpbmcgdG8gRURJRCByZWFk
-aW5nLgo+ID4gPiArCSAqLwo+ID4gPiArCXNwaW5fbG9ja19pcnFzYXZlKCZ2Z2EtPmxvY2ssIGZs
-YWdzKTsKPiA+ID4gKwl6eF93cml0ZWwodmdhLT5tbWlvICsgVkdBX0FVVE9fREVURUNUX1NFTCwg
-MCk7Cj4gPiA+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdmdhLT5sb2NrLCBmbGFncyk7Cj4g
-PiA+ICsKPiA+ID4gKwllZGlkID0gZHJtX2dldF9lZGlkKGNvbm5lY3RvciwgJnZnYS0+ZGRjLT5h
-ZGFwKTsKPiA+ID4gKwlpZiAoIWVkaWQpCj4gPiA+ICsJCXJldHVybiAwOwo+ID4gPiArCj4gPiA+
-ICsJLyoKPiA+ID4gKwkgKiBBcyBlZGlkIHJlYWRpbmcgc3VjY2VlZHMsIGRldmljZSBtdXN0IGJl
-IGNvbm5lY3RlZCwgc28gd2Ugc2V0Cj4gPiA+ICsJICogdXAgZGV0ZWN0aW9uIGJpdCBmb3IgdW5w
-bHVnIGludGVycnVwdCBoZXJlLgo+ID4gPiArCSAqLwo+ID4gPiArCXNwaW5fbG9ja19pcnFzYXZl
-KCZ2Z2EtPmxvY2ssIGZsYWdzKTsKPiA+ID4gKwl6eF93cml0ZWwodmdhLT5tbWlvICsgVkdBX0FV
-VE9fREVURUNUX1NFTCwgVkdBX0RFVEVDVF9TRUxfSEFTX0RFVklDRSk7Cj4gPiA+ICsJc3Bpbl91
-bmxvY2tfaXJxcmVzdG9yZSgmdmdhLT5sb2NrLCBmbGFncyk7Cj4gPiA+ICsKPiA+ID4gKwlkcm1f
-bW9kZV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPiA+
-ID4gKwlyZXQgPSBkcm1fYWRkX2VkaWRfbW9kZXMoY29ubmVjdG9yLCBlZGlkKTsKPiA+ID4gKwlr
-ZnJlZShlZGlkKTsKPiA+ID4gKwo+ID4gPiArCXJldHVybiByZXQ7Cj4gPiA+ICt9Cj4gCj4gPHNu
-aXA+Cj4gCj4gPiA+ICtzdGF0aWMgaXJxcmV0dXJuX3QgenhfdmdhX2lycV9oYW5kbGVyKGludCBp
-cnEsIHZvaWQgKmRldl9pZCkKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3QgenhfdmdhICp2Z2EgPSBk
-ZXZfaWQ7Cj4gPiA+ICsJdTMyIHN0YXR1czsKPiA+ID4gKwo+ID4gPiArCXN0YXR1cyA9IHp4X3Jl
-YWRsKHZnYS0+bW1pbyArIFZHQV9JMkNfU1RBVFVTKTsKPiA+ID4gKwo+ID4gPiArCS8qIENsZWFy
-IGludGVycnVwdCBzdGF0dXMgKi8KPiA+ID4gKwl6eF93cml0ZWxfbWFzayh2Z2EtPm1taW8gKyBW
-R0FfSTJDX1NUQVRVUywgVkdBX0NMRUFSX0lSUSwKPiA+ID4gKwkJICAgICAgIFZHQV9DTEVBUl9J
-UlEpOwo+ID4gPiArCj4gPiA+ICsJaWYgKHN0YXR1cyAmIFZHQV9ERVZJQ0VfQ09OTkVDVEVEKSB7
-Cj4gPiA+ICsJCS8qCj4gPiA+ICsJCSAqIFNpbmNlIFZHQV9ERVRFQ1RfU0VMIGJpdHMgbmVlZCB0
-byBiZSByZXNldCBmb3Igc3dpdGNoaW5nIEREQwo+ID4gPiArCQkgKiBidXMgZnJvbSBkZXZpY2Ug
-ZGV0ZWN0aW9uIHRvIEVESUQgcmVhZCwgcmF0aGVyIHRoYW4gc2V0dGluZwo+ID4gPiArCQkgKiB1
-cCBIQVNfREVWSUNFIGJpdCBoZXJlLCB3ZSBuZWVkIHRvIGRvIHRoYXQgaW4gLmdldF9tb2Rlcwo+
-ID4gPiArCQkgKiBob29rIGZvciB1bnBsdWcgZGV0ZWN0aW5nIGFmdGVyIEVESUQgcmVhZCBzdWNj
-ZWVkcy4KPiA+ID4gKwkJICovCj4gPiA+ICsJCXZnYS0+Y29ubmVjdGVkID0gdHJ1ZTsKPiA+ID4g
-KwkJcmV0dXJuIElSUV9XQUtFX1RIUkVBRDsKPiA+ID4gKwl9Cj4gPiA+ICsKPiA+ID4gKwlpZiAo
-c3RhdHVzICYgVkdBX0RFVklDRV9ESVNDT05ORUNURUQpIHsKPiA+ID4gKwkJc3Bpbl9sb2NrKCZ2
-Z2EtPmxvY2spOwo+ID4gPiArCQl6eF93cml0ZWwodmdhLT5tbWlvICsgVkdBX0FVVE9fREVURUNU
-X1NFTCwKPiA+ID4gKwkJCSAgVkdBX0RFVEVDVF9TRUxfTk9fREVWSUNFKTsKPiA+ID4gKwkJc3Bp
-bl91bmxvY2soJnZnYS0+bG9jayk7Cj4gPiAKPiA+IEkgdGhpbmsgeW91IHN0aWxsIGhhdmUgdGhl
-IHJhY2UgaGVyZS4gSWYgeW91IGdldCBhIGRpc2Nvbm5lY3QgYmV0d2VlbiBnZXRfZWRpZAo+ID4g
-c3VjY2Vzc2Z1bGx5IGZpbmlzaGluZywgYW5kIHJlc2V0dGluZyB0aGUgREVURUNUX1NFTCByZWdp
-c3RlciwgeW91IHdpbGwgZW5kIHVwCj4gPiB3aXRoIHRoZSBkZXZpY2UgYmVpbmcgZGlzY29ubmVj
-dGVkIGFuZCBERVRFQ1RfU0VMID09IFZHQV9ERVRFQ1RfU0VMX0hBU19ERVZJQ0UuCj4gPiAKPiA+
-IEluIG9yZGVyIHRvIGNsb3NlIHRoaXMsIHlvdSdsbCBuZWVkIHRvIGhvbGQgdGhlIGxvY2sgYWNy
-b3NzIHRoZSBlZGlkIHJlYWQuCj4gCj4gV2UgY2Fubm90IGhvbGQgYSBzcGluIGxvY2sgYWNyb3Nz
-IHRoZSBFRElEIHJlYWQgcHJvY2VkdXJlLCB3aGljaCBkb2VzCj4gc2xlZXAuCgpZZWFoLCB0aGlz
-IGlzIGEgcHJldHR5IGNvbW1vbiBwcm9ibGVtLiBXZSB1c3VhbGx5IHVzZSBhIG11dGV4IGluIGNv
-bmp1bmN0aW9uCndpdGggYSB3b3JrIGZ1bmN0aW9uIHRvIGhhbmRsZSB0aGlzIHR5cGUgb2YgdGhp
-bmcuCgo+IAo+IFdoZW4geW91IHN1Z2dlc3RlZCB0byBoYXZlIGEgbG9jayBmb3IgREVURUNUX1NF
-TCByZWdpc3RlciBhY2Nlc3MsIEkKPiB0aG91Z2h0IHdlIGFyZSBhY2Nlc3NpbmcgaXQgaW4gYSBy
-ZWFkLW1vZGlmeS13cml0ZSB3YXkgYW5kIHRodXMgYWdyZWVkCj4gdG8gYWRkIGEgbG9jay4gIEhv
-d2V2ZXIsIEkganVzdCBmb3VuZCB0aGF0IGl0J3Mgbm90IHRoZSBjYXNlIGFjdHVhbGx5Lgo+IEFs
-bCB0aGUgYWNjZXNzZXMgdG8gdGhlIHJlZ2lzdGVyIGFyZSBzaW5nbGUgZGlyZWN0IHdyaXRlLgo+
-IAo+IEFuZCBoZXJlIGlzIG15IHVuZGVyc3RhbmRpbmcgYWJvdXQgdGhlIGNvbmRpdGlvbiB5b3Ug
-ZGVzY3JpYmVkIGFib3ZlLgo+IE9uY2UgREVURUNUX1NFTCByZWdpc3RlciBnZXRzIHJlc2V0IChi
-b3RoIGJpdHMgY2xlYXJlZCksIHRoZSBoYXJkd2FyZQo+IHN3aXRjaGVzIEREQyBidXMgZm9yIEVE
-SUQgcmVhZCwgYW5kIGhvdHBsdWcgZGV0ZWN0aW9uIHdpbGwgc3RvcCB3b3JraW5nCj4gcmlnaHQg
-YXdheSAodGhpcyBpcyBob3cgWlRFIGhhcmR3YXJlIHdvcmtzKS4gIFRoYXQgc2FpZCwgaWYgd2Ug
-Z2V0IGEKPiBkaXNjb25uZWN0IGJlZm9yZSBkcm1fZ2V0X2VkaWQoKSBzdWNjZXNzZnVsbHkgZmlu
-aXNoZXMsIHR3byBwb2ludHM6Cj4gCj4gLSBUaGUgaXJxIGhhbmRsZXIgd2lsbCBub3QgYmUgdHJp
-Z2dlcmVkLCBzbyBpdCB3aWxsIG5vdCBnZXQgYSBjaGFuY2UgdG8KPiAgIHVwZGF0ZSBERVRFQ1Rf
-U0VMIHJlZ2lzdGVyLgoKQWgsIHRoaXMgd2FzIHRoZSBtaXNzaW5nIHBpZWNlIEkgbmVlZGVkLiBJ
-IGhhZG4ndCByZWFsaXplZCB0aGF0IHRoZSBmaXJzdApWR0FfQVVUT19ERVRFQ1RfU0VMIHdyaXRl
-IGluIGdldF9tb2RlcyBkaXNhYmxlZCB0aGUgaXJxLiAKCgo+IC0gVGhlIGRybV9nZXRfZWRpZCgp
-IGZhaWxzLCBhbmQgLmdldF9tb2RlcyByZXR1cm5zIHdpdGggYm90aCBkZXRlY3QgYml0cwo+ICAg
-a2VwdCBjbGVhcmVkLgo+IAo+IEkgdGhpbmsgd2hhdCB3ZSBjYW4gZG8gYmV0dGVyIGluIHRoaXMg
-Y2FzZSBpcyB0aGF0IHdlIHNob3VsZCBzZXQgdGhlCj4gZGV2aWNlIHN0YXRlIGludG8gZGlzY29u
-bmVjdGVkLCBiZWZvcmUgcmV0dXJuaW5nIGZyb20gLmdldF9tb2RlcywKPiBzb21ldGhpbmcgbGlr
-ZSB0aGUgY29kZSBiZWxvdy4gIEJ1dCBzdGlsbCwgSSBkbyBub3Qgc2VlIHdlIG5lZWQgYSBsb2Nr
-Cj4gZm9yIHRoYXQuCgpZZXAsIGFncmVlZC4gQ2FuIHlvdSBhbHNvIHBsZWFzZSBhZGQgdG8geW91
-ciBjb21tZW50IGluIHRoZSAhZWRpZCBjYXNlLApzb21ldGhpbmcgbGlrZToKCiogTG9ja2luZyBp
-cyBub3QgcmVxdWlyZWQgaGVyZSBzaW5jZSB0aGUgb25seSBvdGhlciBwbGFjZSB0byB3cml0ZSB0
-aGlzIHJlZ2lzdGVyCiogKGFuZCBjb25uZWN0ZWQgdmFyKSBpcyB0aGUgaXJxIGhhbmRsZXIuIFRo
-ZSBpcnEgaGFuZGxlciBpcyBkaXNhYmxlZCBiZWNhdXNlCiogd2UndmUgY2xlYXJlZCBBVVRPX0RF
-VEVDVF9TRUwgYWJvdmUuCgpUaGFua3MgZm9yIHdhbGtpbmcgbWUgdGhyb3VnaCB0aGlzLgoKU2Vh
-bgoKPiAKPiBTaGF3bgo+IAo+IHN0YXRpYyBpbnQgenhfdmdhX2Nvbm5lY3Rvcl9nZXRfbW9kZXMo
-c3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiB7Cj4gICAgICAgICBzdHJ1Y3Qgenhf
-dmdhICp2Z2EgPSB0b196eF92Z2EoY29ubmVjdG9yKTsKPiAgICAgICAgIHVuc2lnbmVkIGxvbmcg
-ZmxhZ3M7Cj4gICAgICAgICBzdHJ1Y3QgZWRpZCAqZWRpZDsKPiAgICAgICAgIGludCByZXQ7Cj4g
-Cj4gICAgICAgICAvKgo+ICAgICAgICAgICogQ2xlYXIgYm90aCBkZXRlY3Rpb24gYml0cyB0byBz
-d2l0Y2ggSTJDIGJ1cyBmcm9tIGRldmljZQo+ICAgICAgICAgICogZGV0ZWN0aW5nIHRvIEVESUQg
-cmVhZGluZy4KPiAgICAgICAgICAqLwo+ICAgICAgICAgenhfd3JpdGVsKHZnYS0+bW1pbyArIFZH
-QV9BVVRPX0RFVEVDVF9TRUwsIDApOwo+IAo+ICAgICAgICAgZWRpZCA9IGRybV9nZXRfZWRpZChj
-b25uZWN0b3IsICZ2Z2EtPmRkYy0+YWRhcCk7Cj4gICAgICAgICBpZiAoIWVkaWQpIHsKPiAgICAg
-ICAgICAgICAgICAgLyoKPiAgICAgICAgICAgICAgICAgICogSWYgRURJRCByZWFkaW5nIGZhaWxz
-LCB3ZSBzZXQgdGhlIGRldmljZSBzdGF0ZSBpbnRvCj4gICAgICAgICAgICAgICAgICAqIGRpc2Nv
-bm5lY3RlZC4KPiAgICAgICAgICAgICAgICAgICovCj4gICAgICAgICAgICAgICAgIHp4X3dyaXRl
-bCh2Z2EtPm1taW8gKyBWR0FfQVVUT19ERVRFQ1RfU0VMLAo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgVkdBX0RFVEVDVF9TRUxfTk9fREVWSUNFKTsKPiAgICAgICAgICAgICAgICAgdmdhLT5j
-b25uZWN0ZWQgPSBmYWxzZTsKPiAgICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4gICAgICAgICB9
-Cj4gCj4gICAgICAgICAvKgo+ICAgICAgICAgICogQXMgZWRpZCByZWFkaW5nIHN1Y2NlZWRzLCBk
-ZXZpY2UgbXVzdCBiZSBjb25uZWN0ZWQsIHNvIHdlIHNldAo+ICAgICAgICAgICogdXAgZGV0ZWN0
-aW9uIGJpdCBmb3IgdW5wbHVnIGludGVycnVwdCBoZXJlLgo+ICAgICAgICAgICovCj4gICAgICAg
-ICB6eF93cml0ZWwodmdhLT5tbWlvICsgVkdBX0FVVE9fREVURUNUX1NFTCwgVkdBX0RFVEVDVF9T
-RUxfSEFTX0RFVklDRSk7Cj4gCj4gICAgICAgICBkcm1fbW9kZV9jb25uZWN0b3JfdXBkYXRlX2Vk
-aWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPiAgICAgICAgIHJldCA9IGRybV9hZGRfZWRp
-ZF9tb2Rlcyhjb25uZWN0b3IsIGVkaWQpOwo+ICAgICAgICAga2ZyZWUoZWRpZCk7Cj4gCj4gICAg
-ICAgICByZXR1cm4gcmV0Owo+IH0KCi0tIApTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBH
-b29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On 06/04/17 20:34, Frank Rowand wrote:
+> On 04/06/17 04:01, Sricharan R wrote:
+>> Hi Frank,
+>>
+>> On 4/6/2017 12:31 PM, Frank Rowand wrote:
+>>> On 04/04/17 03:18, Sricharan R wrote:
+>>>> Size of the dma-range is calculated as coherent_dma_mask + 1
+>>>> and passed to arch_setup_dma_ops further. It overflows when
+>>>> the coherent_dma_mask is set for full 64 bits 0xFFFFFFFFFFFFFFFF,
+>>>> resulting in size getting passed as 0 wrongly. Fix this by
+>>>> passsing in max(mask, mask + 1). Note that in this case
+>>>> when the mask is set to full 64bits, we will be passing the mask
+>>>> itself to arch_setup_dma_ops instead of the size. The real fix
+>>>> for this should be to make arch_setup_dma_ops receive the
+>>>> mask and handle it, to be done in the future.
+>>>>
+>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>>>> ---
+>>>>  drivers/of/device.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>>>> index c17c19d..c2ae6bb 100644
+>>>> --- a/drivers/of/device.c
+>>>> +++ b/drivers/of/device.c
+>>>> @@ -107,7 +107,7 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>>>>      ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>>>>      if (ret < 0) {
+>>>>          dma_addr = offset = 0;
+>>>> -        size = dev->coherent_dma_mask + 1;
+>>>> +        size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+>>>>      } else {
+>>>>          offset = PFN_DOWN(paddr - dma_addr);
+>>>>          dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>>>>
+>>>
+>>> NACK.
+>>>
+>>> Passing an invalid size to arch_setup_dma_ops() is only part of the problem.
+>>> size is also used in of_dma_configure() before calling arch_setup_dma_ops():
+>>>
+>>>         dev->coherent_dma_mask = min(dev->coherent_dma_mask,
+>>>                                      DMA_BIT_MASK(ilog2(dma_addr + size)));
+>>>         *dev->dma_mask = min((*dev->dma_mask),
+>>>                              DMA_BIT_MASK(ilog2(dma_addr + size)));
+>>>
+>>> which would be incorrect for size == 0xffffffffffffffffULL when
+>>> dma_addr != 0.  So the proposed fix really is not papering over
+>>> the base problem very well.
+>>>
+>>
+>> Ok, but with your fix for of_dma_get_range and the above fix,
+>> dma_addr will be '0' when size = 0xffffffffffffffffULL,
+>> but DMA_BIT_MASK(ilog2(dma_addr + size)) would be wrong though,
+>> making coherent_dma_mask to be smaller 0x7fffffffffffffffULL.
+> 
+> Yes, that was my point.  Setting size to 0x7fffffffffffffffULL
+> affects several places.  Another potential location (based only
+> on the function header comment, not from reading the code) is
+> iommu_dma_init_domain().  The header comment says:
+> 
+>     * @base and @size should be exact multiples of IOMMU page granularity to
+>     * avoid rounding surprises.
+
+That is really only referring to the fact that some of the work done
+therein involves truncation to PFNs, so anyone passing in non-exact
+values expecting them to round a particular way may get things off by a
+page one way or the other. It's not going to have much practical
+significance for real devices (in particular since size is used more as
+a sanity check than any kind of actual limit there).
+
+> I have not read enough context to really understand of_dma_configure(), but
+> it seems there is yet another issue in how the error return case from
+> of_dma_get_range() is handled (with the existing code, as well as if
+> my patch gets accepted).  An error return value can mean _either_
+> there is no dma-ranges property _or_ "an other problem occurred".  Should
+> the "an other problem occurred" case be handled by defaulting size to
+> a value based on dev->coherent_dma_mask (the current case) or should the
+> attempt to set up the DMA configuration just fail?
+
+There is indeed a lot wrong with of_dma_configure() and
+arch_setup_dma_ops(), but fixing those is beyond the scope of this
+series. This is just working around a latent bug in the one specific
+case where a value is *not* derived from DT. Any DT which worked before
+still works; any DT which made of_dma_configure() go wrong before still
+makes of_dma_configure() go wrong exactly the same.
+
+Whilst it's not ideal, since a DMA mask basically represents the maximum
+size of address that that particular device can be given, I can't see it
+making any practical difference for a full 64-bit DMA mask to be trimmed
+down to 63 bits upon re-probing - no system is likely to have that many
+physical address bits anyway, and I don't think any IOMMUs support that
+large an IOVA space either, so as long as it's still big enough to cover
+"everything", it'll be OK.
+
+Of course, whether DMA_BIT_MASK(ilog2(dma_addr + size)) is the right
+thing to do in the first place is yet another matter, as there are
+plenty of cases where it results in something which can't reach the
+given range at all, but again, this isn't the place. Much as I'm keen to
+get the behaviour of of_dma_configure() sorted out properly, it doesn't
+seem reasonable that that should suddenly block this
+almost-entirely-orthogonal series that various other work has been
+waiting on for some time now. The WIP patch I have for
+arch_setup_dma_ops() already touches 3 architectures and 4 other
+subsystems...
+
+Robin.
+
+> 
+>>
+>> Regards,
+>>  Sricharan
+>>
+>>> I agree that the proper solution involves passing a mask instead
+>>> of a size to arch_setup_dma_ops().
+>>>
+>>
+> 
+
