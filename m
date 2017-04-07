@@ -1,103 +1,121 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] pwm: tegra: Add DT binding details to configure pin
- in suspends/resume
-Date: Fri, 7 Apr 2017 12:19:47 +0200
-Message-ID: <CACRpkdZXQNkQX1gYO3KEq8vc2+QD2h7JhjPHV-J+bu-tZULyYA@mail.gmail.com>
-References: <1491401626-31303-1-git-send-email-ldewangan@nvidia.com>
- <1491401626-31303-4-git-send-email-ldewangan@nvidia.com> <33445b27-ae0b-b28e-afca-e7b776b4b7c0@nvidia.com>
- <20170406130315.GB7784@ulmo.ba.sec> <58E6405E.5020402@nvidia.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] v4l: flash led class: Use fwnode_handle instead
+ of device_node in init
+Date: Fri, 7 Apr 2017 13:20:38 +0300
+Message-ID: <20170407102038.GC4192@valkosipuli.retiisi.org.uk>
+References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1491484330-12040-2-git-send-email-sakari.ailus@linux.intel.com>
+ <3129720.GhXEqohgpp@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58E6405E.5020402-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3129720.GhXEqohgpp@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 6, 2017 at 3:19 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On Thursday 06 April 2017 06:33 PM, Thierry Reding wrote:
->> On Thu, Apr 06, 2017 at 09:57:09AM +0100, Jon Hunter wrote:
->>> On 05/04/17 15:13, Laxman Dewangan wrote:
->>>>
->>>> +state of the system. The configuration of pin is provided via the
->>>> pinctrl
->>>> +DT node as detailed in the pinctrl DT binding document
->>>> +       Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->>>> +
->>>> +The PWM node will have following optional properties.
->>>> +pinctrl-names: Pin state names. Must be "suspend" and "resume".
->>>
->>> Why not just use the pre-defined names here? There is a pre-defined name
->>> for "default", "idle" and "sleep" and then you can use the following
->>> APIs and avoid the lookup of the state ...
->>>
->>> pinctrl_pm_select_default_state()
->>> pinctrl_pm_select_idle_state()
->>> pinctrl_pm_select_sleep_state()
->>>
->>> Note for i2c [0][1], I used "default" as the active/on state (which I
->>> know is not that descriptive) and then used 'idle' as the suspended
->>> state. This way we don't need any custom names.
->>
->> Agreed, I think that's how these states are meant to be used.
->
-> I did quick grep for the pinctrl_pm_select_* functions in the code tree and
-> found usage of these APIs in some of the places.
-> I am taking the reference of i2c-st, i2c-nomadic and
-> extcon/extcon-usb-gpio.c drivers and from this the interpretation is
->
-> default state: When interface active and transfer need to be done in IO
-> interface.
-> idle state: Active state of the system but interface is not active, put in
-> non-active state of the interface.
-> sleep state: When system entering into suspend and IO interface is going to
-> be inactive.
->
-> So in PWM case, we will need the "default" and "sleep" state.
->
-> In suspend(), set the "sleep" state and in resume, set the "default" state.
->
-> + Linus W as I refereed his st/nomadik driver for reference.
+Hi Laurent,
 
-It is actually documented:
-include/linux/pinctrl/pinctrl-state.h
+Thank you for the review!
 
-/*
- * Standard pin control state definitions
- */
+On Fri, Apr 07, 2017 at 11:49:56AM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> Thank you for the patch.
+> 
+> On Thursday 06 Apr 2017 16:12:03 Sakari Ailus wrote:
+> > Pass the more generic fwnode_handle to the init function than the
+> > device_node.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > ---
+> >  drivers/leds/leds-aat1290.c                    |  5 +++--
+> >  drivers/leds/leds-max77693.c                   |  5 +++--
+> >  drivers/media/v4l2-core/v4l2-flash-led-class.c | 11 ++++++-----
+> >  include/media/v4l2-flash-led-class.h           |  4 ++--
+> >  4 files changed, 14 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/leds/leds-aat1290.c b/drivers/leds/leds-aat1290.c
+> > index def3cf9..a21e192 100644
+> > --- a/drivers/leds/leds-aat1290.c
+> > +++ b/drivers/leds/leds-aat1290.c
+> > @@ -503,8 +503,9 @@ static int aat1290_led_probe(struct platform_device
+> > *pdev) aat1290_init_v4l2_flash_config(led, &led_cfg, &v4l2_sd_cfg);
+> > 
+> >  	/* Create V4L2 Flash subdev. */
+> > -	led->v4l2_flash = v4l2_flash_init(dev, sub_node, fled_cdev, NULL,
+> > -					  &v4l2_flash_ops, &v4l2_sd_cfg);
+> > +	led->v4l2_flash = v4l2_flash_init(dev, of_fwnode_handle(sub_node),
+> > +					  fled_cdev, NULL, &v4l2_flash_ops,
+> > +					  &v4l2_sd_cfg);
+> >  	if (IS_ERR(led->v4l2_flash)) {
+> >  		ret = PTR_ERR(led->v4l2_flash);
+> >  		goto error_v4l2_flash_init;
+> > diff --git a/drivers/leds/leds-max77693.c b/drivers/leds/leds-max77693.c
+> > index 1eb58ef..2d3062d 100644
+> > --- a/drivers/leds/leds-max77693.c
+> > +++ b/drivers/leds/leds-max77693.c
+> > @@ -930,8 +930,9 @@ static int max77693_register_led(struct max77693_sub_led
+> > *sub_led, max77693_init_v4l2_flash_config(sub_led, led_cfg, &v4l2_sd_cfg);
+> > 
+> >  	/* Register in the V4L2 subsystem. */
+> > -	sub_led->v4l2_flash = v4l2_flash_init(dev, sub_node, fled_cdev, NULL,
+> > -					      &v4l2_flash_ops, &v4l2_sd_cfg);
+> > +	sub_led->v4l2_flash = v4l2_flash_init(dev, of_fwnode_handle(sub_node),
+> > +					      fled_cdev, NULL, 
+> &v4l2_flash_ops,
+> > +					      &v4l2_sd_cfg);
+> >  	if (IS_ERR(sub_led->v4l2_flash)) {
+> >  		ret = PTR_ERR(sub_led->v4l2_flash);
+> >  		goto err_v4l2_flash_init;
+> > diff --git a/drivers/media/v4l2-core/v4l2-flash-led-class.c
+> > b/drivers/media/v4l2-core/v4l2-flash-led-class.c index 794e563..f430c89
+> > 100644
+> > --- a/drivers/media/v4l2-core/v4l2-flash-led-class.c
+> > +++ b/drivers/media/v4l2-core/v4l2-flash-led-class.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/of.h>
+> 
+> I think you can drop linux/of.h.
 
-/**
- * @PINCTRL_STATE_DEFAULT: the state the pinctrl handle shall be put
- *      into as default, usually this means the pins are up and ready to
- *      be used by the device driver. This state is commonly used by
- *      hogs to configure muxing and pins at boot, and also as a state
- *      to go into when returning from sleep and idle in
- *      .pm_runtime_resume() or ordinary .resume() for example.
- * @PINCTRL_STATE_INIT: normally the pinctrl will be set to "default"
- *      before the driver's probe() function is called.  There are some
- *      drivers where that is not appropriate becausing doing so would
- *      glitch the pins.  In those cases you can add an "init" pinctrl
- *      which is the state of the pins before drive probe.  After probe
- *      if the pins are still in "init" state they'll be moved to
- *      "default".
- * @PINCTRL_STATE_IDLE: the state the pinctrl handle shall be put into
- *      when the pins are idle. This is a state where the system is relaxed
- *      but not fully sleeping - some power may be on but clocks gated for
- *      example. Could typically be set from a pm_runtime_suspend() or
- *      pm_runtime_idle() operation.
- * @PINCTRL_STATE_SLEEP: the state the pinctrl handle shall be put into
- *      when the pins are sleeping. This is a state where the system is in
- *      its lowest sleep state. Could typically be set from an
- *      ordinary .suspend() function.
- */
-#define PINCTRL_STATE_DEFAULT "default"
-#define PINCTRL_STATE_INIT "init"
-#define PINCTRL_STATE_IDLE "idle"
-#define PINCTRL_STATE_SLEEP "sleep"
+Correct. Will fix.
 
-Yours,
-Linus Walleij
+> 
+> > +#include <linux/property.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/types.h>
+> >  #include <media/v4l2-flash-led-class.h>
+> > @@ -612,7 +613,7 @@ static const struct v4l2_subdev_internal_ops
+> > v4l2_flash_subdev_internal_ops = { static const struct v4l2_subdev_ops
+> > v4l2_flash_subdev_ops;
+> > 
+> >  struct v4l2_flash *v4l2_flash_init(
+> > -	struct device *dev, struct device_node *of_node,
+> > +	struct device *dev, struct fwnode_handle *fwn,
+> >  	struct led_classdev_flash *fled_cdev,
+> >  	struct led_classdev_flash *iled_cdev,
+> >  	const struct v4l2_flash_ops *ops,
+> > @@ -638,7 +639,7 @@ struct v4l2_flash *v4l2_flash_init(
+> >  	v4l2_flash->iled_cdev = iled_cdev;
+> >  	v4l2_flash->ops = ops;
+> >  	sd->dev = dev;
+> > -	sd->of_node = of_node ? of_node : led_cdev->dev->of_node;
+> > +	sd->fwnode = fwn ? fwn : dev_fwnode(led_cdev->dev);
+> 
+> v4l2_subdev will only have a fwnode field in patch 3/8.
+
+I think I've rearranged the set after writing the patch and missed the
+dependency. I'll move it third unless there are other dependencies.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
