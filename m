@@ -1,97 +1,228 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 3/4] pinctrl: stm32: Implement .get_direction gpio_chip callback
-Date: Fri, 7 Apr 2017 17:10:10 +0200
-Message-ID: <1491577811-26989-4-git-send-email-alexandre.torgue@st.com>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH 4/4] ARM: dts: stm32: Set gpio controller also as interrupt controller
+Date: Fri, 7 Apr 2017 17:10:11 +0200
+Message-ID: <1491577811-26989-5-git-send-email-alexandre.torgue@st.com>
 References: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491577811-26989-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add .get_direction() gpiochip callback in STM32 pinctrl driver.
+This patch set each gpio controller as a interrupt controller. User who
+wants to use gpio as interrupt will have choice to use either "gpiolib"
+interface or "common" interrupt interface.
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index c8825e5..fdde60f 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -25,6 +25,7 @@
- #include <linux/regmap.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
-+#include <linux/gpio.h>
- 
- #include "../core.h"
- #include "../pinconf.h"
-@@ -197,6 +198,24 @@ static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
- 	return irq_create_fwspec_mapping(&fwspec);
- }
- 
-+static int stm32_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
-+	int pin = stm32_gpio_pin(offset);
-+	int ret;
-+	u32 mode, alt;
-+
-+	stm32_pmx_get_mode(bank, pin, &mode, &alt);
-+	if ((alt == 0) && (mode == 0))
-+		ret = GPIOF_DIR_IN;
-+	else if ((alt == 0) && (mode == 1))
-+		ret = GPIOF_DIR_OUT;
-+	else
-+		ret = -EINVAL;
-+
-+	return ret;
-+}
-+
- static const struct gpio_chip stm32_gpio_template = {
- 	.request		= stm32_gpio_request,
- 	.free			= stm32_gpio_free,
-@@ -205,6 +224,7 @@ static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
- 	.direction_input	= stm32_gpio_direction_input,
- 	.direction_output	= stm32_gpio_direction_output,
- 	.to_irq			= stm32_gpio_to_irq,
-+	.get_direction		= stm32_gpio_get_direction,
- };
- 
- static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
-@@ -569,8 +589,8 @@ static void stm32_pmx_set_mode(struct stm32_gpio_bank *bank,
- 	clk_disable(bank->clk);
- }
- 
--static void stm32_pmx_get_mode(struct stm32_gpio_bank *bank,
--		int pin, u32 *mode, u32 *alt)
-+void stm32_pmx_get_mode(struct stm32_gpio_bank *bank, int pin, u32 *mode,
-+			u32 *alt)
- {
- 	u32 val;
- 	int alt_shift = (pin % 8) * 4;
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
-index 35ebc94..8702a99 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.h
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
-@@ -45,7 +45,10 @@ struct stm32_pinctrl_match_data {
- 	const unsigned int npins;
- };
- 
--int stm32_pctl_probe(struct platform_device *pdev);
-+struct stm32_gpio_bank;
- 
-+int stm32_pctl_probe(struct platform_device *pdev);
-+void stm32_pmx_get_mode(struct stm32_gpio_bank *bank,
-+			int pin, u32 *mode, u32 *alt);
- #endif /* __PINCTRL_STM32_H */
- 
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index ee0da97..12c6b70 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -555,6 +555,8 @@
+ 			gpioa: gpio@40020000 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x0 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOA)>;
+ 				st,bank-name = "GPIOA";
+@@ -563,6 +565,8 @@
+ 			gpiob: gpio@40020400 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x400 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOB)>;
+ 				st,bank-name = "GPIOB";
+@@ -571,6 +575,8 @@
+ 			gpioc: gpio@40020800 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x800 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOC)>;
+ 				st,bank-name = "GPIOC";
+@@ -579,6 +585,8 @@
+ 			gpiod: gpio@40020c00 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0xc00 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOD)>;
+ 				st,bank-name = "GPIOD";
+@@ -587,6 +595,8 @@
+ 			gpioe: gpio@40021000 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x1000 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOE)>;
+ 				st,bank-name = "GPIOE";
+@@ -595,6 +605,8 @@
+ 			gpiof: gpio@40021400 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x1400 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOF)>;
+ 				st,bank-name = "GPIOF";
+@@ -603,6 +615,8 @@
+ 			gpiog: gpio@40021800 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x1800 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOG)>;
+ 				st,bank-name = "GPIOG";
+@@ -611,6 +625,8 @@
+ 			gpioh: gpio@40021c00 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x1c00 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOH)>;
+ 				st,bank-name = "GPIOH";
+@@ -619,6 +635,8 @@
+ 			gpioi: gpio@40022000 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x2000 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOI)>;
+ 				st,bank-name = "GPIOI";
+@@ -627,6 +645,8 @@
+ 			gpioj: gpio@40022400 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x2400 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOJ)>;
+ 				st,bank-name = "GPIOJ";
+@@ -635,6 +655,8 @@
+ 			gpiok: gpio@40022800 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x2800 0x400>;
+ 				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOK)>;
+ 				st,bank-name = "GPIOK";
+diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
+index f321ffe..8f2525f 100644
+--- a/arch/arm/boot/dts/stm32f746.dtsi
++++ b/arch/arm/boot/dts/stm32f746.dtsi
+@@ -190,6 +190,8 @@
+ 			gpioa: gpio@40020000 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x0 0x400>;
+ 				clocks = <&rcc 0 256>;
+ 				st,bank-name = "GPIOA";
+@@ -198,6 +200,8 @@
+ 			gpiob: gpio@40020400 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x400 0x400>;
+ 				clocks = <&rcc 0 257>;
+ 				st,bank-name = "GPIOB";
+@@ -206,6 +210,8 @@
+ 			gpioc: gpio@40020800 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x800 0x400>;
+ 				clocks = <&rcc 0 258>;
+ 				st,bank-name = "GPIOC";
+@@ -214,6 +220,8 @@
+ 			gpiod: gpio@40020c00 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0xc00 0x400>;
+ 				clocks = <&rcc 0 259>;
+ 				st,bank-name = "GPIOD";
+@@ -222,6 +230,8 @@
+ 			gpioe: gpio@40021000 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x1000 0x400>;
+ 				clocks = <&rcc 0 260>;
+ 				st,bank-name = "GPIOE";
+@@ -230,6 +240,8 @@
+ 			gpiof: gpio@40021400 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x1400 0x400>;
+ 				clocks = <&rcc 0 261>;
+ 				st,bank-name = "GPIOF";
+@@ -238,6 +250,8 @@
+ 			gpiog: gpio@40021800 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x1800 0x400>;
+ 				clocks = <&rcc 0 262>;
+ 				st,bank-name = "GPIOG";
+@@ -246,6 +260,8 @@
+ 			gpioh: gpio@40021c00 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x1c00 0x400>;
+ 				clocks = <&rcc 0 263>;
+ 				st,bank-name = "GPIOH";
+@@ -254,6 +270,8 @@
+ 			gpioi: gpio@40022000 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x2000 0x400>;
+ 				clocks = <&rcc 0 264>;
+ 				st,bank-name = "GPIOI";
+@@ -262,6 +280,8 @@
+ 			gpioj: gpio@40022400 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x2400 0x400>;
+ 				clocks = <&rcc 0 265>;
+ 				st,bank-name = "GPIOJ";
+@@ -270,6 +290,8 @@
+ 			gpiok: gpio@40022800 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
+ 				reg = <0x2800 0x400>;
+ 				clocks = <&rcc 0 266>;
+ 				st,bank-name = "GPIOK";
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
