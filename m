@@ -1,78 +1,85 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH V3 0/5] iommu/arm-smmu: Add runtime pm/sleep support
-Date: Fri, 7 Apr 2017 12:01:05 -0600
-Message-ID: <20170407180105.GA22050@jcrouse-lnx.qualcomm.com>
-References: <1489073748-3659-1-git-send-email-sricharan@codeaurora.org>
- <20170331175457.GD4897@arm.com>
- <CAF6AEGv_1pNvhCc-mVP5S28Yt5kTJmTRfe8tKSJpEmxfOKM7Jg@mail.gmail.com>
- <20170403172307.GI5706@arm.com>
- <20170404193914.GF18246@codeaurora.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 00/11] AXP803 PMIC support for Pine64
+Date: Sat,  8 Apr 2017 02:34:30 +0800
+Message-ID: <20170407183441.58750-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170404193914.GF18246@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBV5XT7DQKGQECXP6WSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 04, 2017 at 12:39:14PM -0700, Stephen Boyd wrote:
-> On 04/03, Will Deacon wrote:
-> > On Fri, Mar 31, 2017 at 10:58:16PM -0400, Rob Clark wrote:
-> > > On Fri, Mar 31, 2017 at 1:54 PM, Will Deacon <will.deacon@arm.com> wrote:
-> > > > On Thu, Mar 09, 2017 at 09:05:43PM +0530, Sricharan R wrote:
-> > > >> This series provides the support for turning on the arm-smmu's
-> > > >> clocks/power domains using runtime pm. This is done using the
-> > > >> recently introduced device links patches, which lets the symmu's
-> > > >> runtime to follow the master's runtime pm, so the smmu remains
-> > > >> powered only when the masters use it.
-> > > >
-> > > > Do you have any numbers for the power savings you achieve with this?
-> > > > How often do we actually manage to stop the SMMU clocks on an SoC with
-> > > > a handful of masters?
-> > > >
-> > > > In other words, is this too coarse-grained to be useful, or is it common
-> > > > that all the devices upstream of the SMMU are suspended?
-> > > 
-> > > well, if you think about a phone/tablet with a command mode panel,
-> > > pretty much all devices will be suspended most of the time ;-)
-> > 
-> > Well, that's really what I was asking about. I assumed that periodic
-> > modem/radio transactions would keep the SMMU clocked, so would like to get a
-> > rough idea of the power savings achieved with this coarse-grained approach.
-> 
-> Sometimes we distribute SMMUs to each IP block in the system and
-> let each one of those live in their own clock + power domain. In
-> these cases, the SMMU can be powered down along with the only IP
-> block that uses it. Furthermore, sometimes we put the IP block
-> and the SMMU inside the same power domain to really tie the two
-> together, so we definitely have cases where all devices (device?)
-> upstream of the SMMU are suspended. And in the case of
-> multimedia, it could be very often that something like the camera
-> app isn't open and thus the SMMU dedicated for the camera can be
-> powered down.
-> 
-> Other times we have two SMMUs in the system where one is
-> dedicated to GPU and the other is "everything else". Even in
-> these cases, we can suspend the GPU one when the GPU is inactive
-> because it's the only consumer. The other SMMU might not be as
-> fine grained, but I think we still power it down quite often
-> because the consumers are mostly multimedia devices that aren't
-> active when the display is off.
+The Pine64 (including Pine64+) boards have an AXP803 PMIC, which is a PMIC
+similar to AXP288, but tweaked to use with Allwinner SoCs rather than Intel
+tablets (with DCIN and Vbus re-splitted like other AXP PMICs, and RSB bus
+support added).
 
-And just to confuse things even further: with per-instance pagetables we have an
-interest in forcing the SMMU clocks *on* because we don't know when the GPU
-might try to hit the registers to switch a pagetable and if somebody in the
-pipeline is actively trying to do power management at the same time hilarity
-will ensue.
+This patchset adds support for it and enabled it in Pine64 device tree.
 
-The alternative to pm_runtime is the downstream driver that probes the SMMU
-clocks from DT and frobs them itself. I think we can agree that is far less
-reasonable.
+This patchset can be splitted into two big parts:
 
-Jordan
+- Part1: PATCH 1/11 to PATCH 5/11, which are enabling the MFD (and the
+  power key functionality) of AXP803.
+
+- Part2: PATCH 6/11 to PATCH 11/11, which are enabling the regulator
+  function of the AXP803 PMIC. Finally Wi-Fi function is added
+  as a usage of regulators function.
+
+PATCH 1 and 2 added RSB and NMI device nodes, which are used for the
+communication between A64 and AXP803.
+
+PATCH 3 adds basical devicetree binding for AXP803.
+
+PATCH 4 adds support for the AXP803 variant in axp20x-rsb mfd driver.
+
+PATCH 5 enabled the AXP803 MFD in Pine64 device tree.
+
+PATCH 6 adds devicetree binding for the regulators in AXP803.
+
+PATCH 7 adds support for the regulators in AXP803 in the axp20x-regulator
+driver.
+
+PATCH 8 enabled the regulator MFD cell in AXP803.
+
+PATCH 9 adds a DTSI file for AXP803, just like what have been done for other
+AXPs.
+
+PATCH 10 enabled the regulators on Pine64.
+
+PATCH 11 enabled Wi-Fi support on Pine64, which required DLDO4 and ELDO1
+regulators.
+
+Icenowy Zheng (11):
+  arm64: allwinner: a64: enable RSB on A64
+  arm64: allwinner: a64: add NMI controller on A64
+  dt-bindings: add device tree binding for X-Powers AXP803 PMIC
+  mfd: axp20x: support AXP803 variant
+  arm64: allwinner: a64: add AXP803 node to Pine64 device tree
+  dt-bindings: add AXP803's regulator info
+  regulator: axp20x-regulator: add support for AXP803
+  mfd: axp20x: add axp20x-regulator cell for AXP803
+  arm64: allwinner: a64: add DTSI file for AXP803 PMIC
+  arm64: allwinner: a64: enable AXP803 regulators for Pine64
+  arm64: allwinner: a64: enable Wi-Fi for Pine64
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt   |  32 ++++-
+ arch/arm64/boot/dts/allwinner/axp803.dtsi          | 150 ++++++++++++++++++++
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 136 +++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  27 ++++
+ drivers/mfd/axp20x-rsb.c                           |   1 +
+ drivers/mfd/axp20x.c                               |  81 +++++++++++
+ drivers/regulator/axp20x-regulator.c               | 151 ++++++++++++++++++---
+ include/linux/mfd/axp20x.h                         |  77 ++++++++++-
+ 8 files changed, 631 insertions(+), 24 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/axp803.dtsi
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.12.2
