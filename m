@@ -1,46 +1,48 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3 07/12] clk: mediatek: add clk support for MT6797
-Date: Fri, 7 Apr 2017 12:41:07 -0700
-Message-ID: <20170407194107.GE7065@codeaurora.org>
-References: <1489937193-2953-1-git-send-email-mars.cheng@mediatek.com>
- <1489937193-2953-8-git-send-email-mars.cheng@mediatek.com>
- <20170406200852.GQ7065@codeaurora.org>
- <1491521747.17643.6.camel@mtkswgap22>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next v4 5/5] net-next: dsa: add dsa support for
+ Mediatek MT7530 switch
+Date: Fri, 7 Apr 2017 12:45:09 -0700
+Message-ID: <030c4e95-e604-9864-fce3-9d52561e9a95@gmail.com>
+References: <1491554709-9723-1-git-send-email-sean.wang@mediatek.com>
+ <1491554709-9723-6-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1491521747.17643.6.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Michael Turquette <mturquette@baylibre.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-clk@vger.kernel.org, Kevin-CW Chen <kevin-cw.chen@mediatek.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1491554709-9723-6-git-send-email-sean.wang@mediatek.com>
+Sender: netdev-owner@vger.kernel.org
+To: sean.wang@mediatek.com, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, davem@davemloft.net, Landen.Chao@mediatek.com, keyhaede@gmail.com, objelf@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/07, Mars Cheng wrote:
-> Hi Stephen
-> 
-> On Thu, 2017-04-06 at 13:08 -0700, Stephen Boyd wrote:
-> > On 03/19, Mars Cheng wrote:
-> > > From: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
-> > > 
-> > > Add MT6797 clock support, include topckgen, apmixedsys, infracfg
-> > > and subsystem clocks
-> > > 
-> > > Signed-off-by: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
-> > > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> > > Tested-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > 
-> > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-> > 
-> > Looks fine to me except for the one comment below. Did you want
-> > me to merge it into clk tree?
-> 
-> To prevent another run, I really like you to merge it.
-> However, I also want to make the patch set more cleaner.
-> So I will send v4 later. :-)  
 
-Ok I'll merge v4 patch then.
 
+On 04/07/2017 01:45 AM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> MT7530 is a 7-ports Gigabit Ethernet Switch that could be found on
+> Mediatek router platforms such as MT7623A or MT7623N platform which
+> includes 7-port Gigabit Ethernet MAC and 5-port Gigabit Ethernet PHY.
+> Among these ports, The port from 0 to 4 are the user ports connecting
+> with the remote devices while the port 5 and 6 are the CPU ports
+> connecting into Mediatek Ethernet GMAC.
+> 
+> For port 6, it can communicate with the CPU via Mediatek Ethernet GMAC
+> through either the TRGMII or RGMII which could be controlled by phy-mode
+> in the dt-bindings to specify which mode is preferred to use. And for
+> port 5, only RGMII can be specified. However, currently, only port 6 is
+> being supported in this DSA driver.
+> 
+> The driver is made with the reference to qca8k and other existing DSA
+> driver. The most of the essential callbacks of the DSA are already
+> support in the driver, including tag insert for user port distinguishing,
+> port control, bridge offloading, STP setup and ethtool operation to allow
+> DSA to model each user port into a standalone netdevice as the other DSA
+> driver had done.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Landen Chao <Landen.Chao@mediatek.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Florian
