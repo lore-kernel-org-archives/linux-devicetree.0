@@ -1,215 +1,85 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/9] ARM: dts: imx6qdl-icore: Add Sound card with
- codec node
-Date: Fri, 7 Apr 2017 21:23:05 +0800
-Message-ID: <20170407132304.GJ16503@dragon>
-References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
- <1491501735-1649-4-git-send-email-jagan@openedev.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Fri, 7 Apr 2017 15:32:23 +0200
+Message-ID: <20170407133223.GE4756@amd>
+References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
+ <20170323203749.GB8563@amd>
+ <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+ <20170329190725.GN20094@minitux>
+ <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux>
+ <20170330074309.GA28533@amd>
+ <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
+ <20170403190032.GX20094@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="T6xhMxlHU34Bk0ad"
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1491501735-1649-4-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20170403190032.GX20094@minitux>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 11:32:09PM +0530, Jagan Teki wrote:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> 
-> Add support for Sound card and related codec(via i2c1) nodes
-> on below Engicam module boards.
-> - i.CoreM6 DualLite/Solo Starter kit
-> - i.CoreM6 Quad/Dual Starter kit
-> - i.CoreM6 Quad/Dual OpenFrame Cap touch 10.1
-> - i.CoreM6 Quad/Dual OpenFrame Cap touch 12.3
-> 
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Changes for v3:
-> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
-> Changes for v2:
-> - Use proper [label:] node-name[@unit-address] for codec
-> 
->  arch/arm/boot/dts/imx6dl-icore.dts        | 11 +++++++
->  arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 11 +++++++
->  arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 11 +++++++
->  arch/arm/boot/dts/imx6q-icore.dts         | 11 +++++++
->  arch/arm/boot/dts/imx6qdl-icore.dtsi      | 48 +++++++++++++++++++++++++++++++
 
-Why cannot you just add sgtl5000 node into dtsi rather than keeping the
-same copy for 4 dts files?
+--T6xhMxlHU34Bk0ad
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
+Hi!
 
->  5 files changed, 92 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
-> index 6de83c7..0562ce4 100644
-> --- a/arch/arm/boot/dts/imx6dl-icore.dts
-> +++ b/arch/arm/boot/dts/imx6dl-icore.dts
-> @@ -57,3 +57,14 @@
->  &can2 {
->  	status = "okay";
->  };
-> +
-> +&i2c3 {
-> +	sgtl5000: codec@a {
-> +		compatible = "fsl,sgtl5000";
-> +		reg = <0x0a>;
-> +		clocks = <&clks IMX6QDL_CLK_CKO>;
-> +		VDDA-supply = <&reg_2p5v>;
-> +		VDDIO-supply = <&reg_3p3v>;
-> +		VDDD-supply = <&reg_1p8v>;
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-> index 49b60ca..f63b87f 100644
-> --- a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-> +++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-> @@ -50,6 +50,17 @@
->  	compatible = "engicam,imx6-icore", "fsl,imx6q";
->  };
->  
-> +&i2c3 {
-> +	sgtl5000: codec@a {
-> +		compatible = "fsl,sgtl5000";
-> +		reg = <0x0a>;
-> +		clocks = <&clks IMX6QDL_CLK_CKO>;
-> +		VDDA-supply = <&reg_2p5v>;
-> +		VDDIO-supply = <&reg_3p3v>;
-> +		VDDD-supply = <&reg_1p8v>;
-> +	};
-> +};
-> +
->  &ldb {
->  	status = "okay";
->  
-> diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-> index 9e230f5..68ca828 100644
-> --- a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-> +++ b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
-> @@ -50,6 +50,17 @@
->  	compatible = "engicam,imx6-icore", "fsl,imx6q";
->  };
->  
-> +&i2c3 {
-> +	sgtl5000: codec@a {
-> +		compatible = "fsl,sgtl5000";
-> +		reg = <0x0a>;
-> +		clocks = <&clks IMX6QDL_CLK_CKO>;
-> +		VDDA-supply = <&reg_2p5v>;
-> +		VDDIO-supply = <&reg_3p3v>;
-> +		VDDD-supply = <&reg_1p8v>;
-> +	};
-> +};
-> +
->  &ldb {
->  	status = "okay";
->  
-> diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
-> index 5613dd9..1ae7294 100644
-> --- a/arch/arm/boot/dts/imx6q-icore.dts
-> +++ b/arch/arm/boot/dts/imx6q-icore.dts
-> @@ -67,6 +67,17 @@
->  	};
->  };
->  
-> +&i2c3 {
-> +	sgtl5000: codec@a {
-> +		compatible = "fsl,sgtl5000";
-> +		reg = <0x0a>;
-> +		clocks = <&clks IMX6QDL_CLK_CKO>;
-> +		VDDA-supply = <&reg_2p5v>;
-> +		VDDIO-supply = <&reg_3p3v>;
-> +		VDDD-supply = <&reg_1p8v>;
-> +	};
-> +};
-> +
->  &ldb {
->  	status = "okay";
->  
-> diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> index 56d0c5d..1bd7cdb 100644
-> --- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> @@ -55,6 +55,25 @@
->  		default-brightness-level = <7>;
->  	};
->  
-> +	reg_1p8v: regulator-1p8v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "1P8V";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +
-> +
-> +	reg_2p5v: regulator-3p3v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "2P5V";
-> +		regulator-min-microvolt = <2500000>;
-> +		regulator-max-microvolt = <2500000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +
->  	reg_3p3v: regulator-3p3v {
->  		compatible = "regulator-fixed";
->  		regulator-name = "3P3V";
-> @@ -87,6 +106,31 @@
->  		#clock-cells = <0>;
->  		clock-frequency = <25000000>;  /* 25MHz for example */
->  	};
-> +
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "imx6qdl-icore-sgtl5000";
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,bitclock-master = <&dailink_master>;
-> +		simple-audio-card,frame-master = <&dailink_master>;
-> +		simple-audio-card,widgets =
-> +			"Microphone", "Mic Jack",
-> +			"Line", "Line In",
-> +			"Line", "Line Out",
-> +			"Headphone", "Headphone Jack";
-> +		simple-audio-card,routing =
-> +			"MIC_IN", "Mic Jack",
-> +			"Mic Jack", "Mic Bias",
-> +			"Headphone Jack", "HP_OUT";
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&ssi1>;
-> +		};
-> +
-> +		dailink_master: simple-audio-card,codec {
-> +			sound-dai = <&sgtl5000>;
-> +		};
-> +	};
->  };
->  
->  &can1 {
-> @@ -149,6 +193,10 @@
->  	status = "okay";
->  };
->  
-> +&ssi1 {
-> +	status = "okay";
-> +};
-> +
->  &uart4 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_uart4>;
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > In both RGB and pattern approaches we should assess
+> > if it is acceptable to provide a pattern for trigger name,
+> > e.g. blink-pattern-{num_intervals}.
+> >=20
+> > If so, then "echo transition-pattern-15" would create a directory
+> > e.g. transition_intervals with files interval_0 to interval_14,
+> > that could be adjusted by userspace.
+>=20
+> Having a RGB-trigger that proxy a accepts a userspace request of a
+> brightness-tripple and sets the brightness on the individual associated
+> LEDs sounds reasonable - but should probably be generalized to any
+> number of LEDs.
+
+Well..  Generalizing for any number of leds would be nice -- because
+hardware can do that. OTOH, if we do that, we'll not have a place
+where to do "white-adjustment".
+
+> A slightly related matter is the question on how to use a single LED for
+> multiple trigger sources, e.g. how do I get a single LED to show
+> activity of two MMCs?.
+
+We normally don't do that. We'd either have a trigger for a single
+MMC, or trigger of all the MMCs..
+
+> For the patterns I don't know how a trigger for this would look like,
+> how would setting the pattern of a trigger be propagated down to the
+> hardware?
+
+Well... I'm not sure if we _want_ to do triggers for
+patterns. LED triggers change rather quickly (100 times a second?) so
+doing them in kernel makes sense. Patterns take 10s of seconds, so we
+do not need to handle them in kernel.=20
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--T6xhMxlHU34Bk0ad
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljnlOcACgkQMOfwapXb+vJCeQCaA8Ubkvy5deDBVVyCPP1kjPiy
+uHYAn0lZxGn18ENXi0Naj8B/TOsS5NyX
+=nJm0
+-----END PGP SIGNATURE-----
+
+--T6xhMxlHU34Bk0ad--
