@@ -1,396 +1,199 @@
-From: Dan Williams <dcbw@redhat.com>
-Subject: Re: [PATCH v2 3/4] bluetooth: hci_uart: add LL protocol serdev
- driver support
-Date: Fri, 07 Apr 2017 12:09:38 -0500
-Message-ID: <1491584978.2136.21.camel@redhat.com>
-References: <20170407143516.9945-1-robh@kernel.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: change fixup of dma-ranges size to error
+Date: Fri, 7 Apr 2017 12:09:25 -0500
+Message-ID: <CAL_Jsq+8PoR5ikPbTbHgd-8rkGFmvorLrS9hHpmkVynkh69e-A@mail.gmail.com>
+References: <1491459529-31391-1-git-send-email-frowand.list@gmail.com>
+ <CAL_Jsq+GLBtaezUiTbm0DAA2+MjcvxAcCsS-qJrr05YcTO5tdw@mail.gmail.com>
+ <58E68ADC.6040603@gmail.com> <CAL_Jsq+VreUFtA8ozs0Jcz45PTc-jTT=CEKuezeU7QYviiN-Jg@mail.gmail.com>
+ <58E72123.4040607@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170407143516.9945-1-robh@kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Eyal Reizer <eyalr@ti.com>, Satish Patel <satish.patel@linaro.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58E72123.4040607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-04-07 at 09:35 -0500, Rob Herring wrote:
-> Turns out that the LL protocol and the TI-ST are the same thing
-> AFAICT.
-> The TI-ST adds firmware loading, GPIO control, and shared access for
-> NFC, FM radio, etc. For now, we're only implementing what is needed
-> for
-> BT. This mirrors other drivers like BCM and Intel, but uses the new
-> serdev bus.
-> 
-> The firmware loading is greatly simplified by using existing
-> infrastructure to send commands. It may be a bit slower than the
-> original code using synchronous functions, but the real bottleneck is
-> likely doing firmware load at 115.2kbps.
++ Robin, Sricharan
 
-Is there no way to put the TI-specific stuff into a TI UART module
-rather than building it into the generic one?
+On Fri, Apr 7, 2017 at 12:18 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 04/06/17 15:41, Rob Herring wrote:
+>> On Thu, Apr 6, 2017 at 1:37 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On 04/06/17 07:03, Rob Herring wrote:
+>>>> On Thu, Apr 6, 2017 at 1:18 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>>>>>
+>>>>> of_dma_get_range() has workaround code to fixup a device tree that
+>>>>> incorrectly specified a mask instead of a size for property
+>>>>> dma-ranges.  That device tree was fixed a year ago in v4.6, so
+>>>>> the workaround is no longer needed.  Leave a data validation
+>>>>> check in place, but no longer do the fixup.  Move the check
+>>>>> one level deeper in the call stack so that other possible users
+>>>>> of dma-ranges will also be protected.
+>>>>>
+>>>>> The fix to the device tree was in
+>>>>> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree").
+>>>>
+>>>> NACK.
+>>>> This was by design. You can't represent a size of 2^64 or 2^32.
+>>>
+>>> I agree that being unable to represent a size of 2^32 in a u32 and
+>>> a size of 2^64 in a u64 is the underlying issue.
+>>>
+>>> But the code to convert a mask to a size is _not_ design, it is a
+>>> hack that temporarily worked around a device tree that did not follow
+>>> the dma-ranges binding in the ePAPR.
+>>
+>> Since when is (2^64 - 1) not a size. It's a perfectly valid size in
+>
+> I did not say (2^64 -1) is not a size.
+>
+> I said that the existing code has a hack that converts what is perceived
+> to be a mask into a size.  The existing code is:
+>
+> @@ 110,21 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>                 size = dev->coherent_dma_mask + 1;
+>         } else {
+>                 offset = PFN_DOWN(paddr - dma_addr);
+>
+>                 /*
+>                  * Add a work around to treat the size as mask + 1 in case
+>                  * it is defined in DT as a mask.
+>                  */
+>                 if (size & 1) {
+>                         dev_warn(dev, "Invalid size 0x%llx for dma-range\n",
+>                                  size);
+>                         size = size + 1;
+>                 }
+>
+>                 if (!size) {
+>                         dev_err(dev, "Adjusted size 0x%llx invalid\n", size);
+>                         return;
+>                 }
+>                 dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>         }
+>
+> Note the comment that says "in case it is defined in DT as a mask."
+>
+> And as you stated in a review comment is 2015: "Also, we need a WARN
+> here so DTs get fixed."
 
-Dan
+Indeed. I agree that "let me put a mask in the DT so Linux (at some
+version) works" is wrong. I still think (2^32 - 1) and (2^64 - 1)
+should be allowed to avoid growing #size-cells and because
+#size-cells=3 doesn't work.
 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Marcel Holtmann <marcel@holtmann.org>
-> Cc: Gustavo Padovan <gustavo@padovan.org>
-> Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> Cc: linux-bluetooth@vger.kernel.org
-> ---
-> v2:
-> - Use IS_ENABLED() to fix module build
-> 
->  drivers/bluetooth/hci_ll.c | 261
-> ++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 260 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
-> index 02692fe30279..77648adfd5c9 100644
-> --- a/drivers/bluetooth/hci_ll.c
-> +++ b/drivers/bluetooth/hci_ll.c
-> @@ -34,20 +34,23 @@
->  #include <linux/sched.h>
->  #include <linux/types.h>
->  #include <linux/fcntl.h>
-> +#include <linux/firmware.h>
->  #include <linux/interrupt.h>
->  #include <linux/ptrace.h>
->  #include <linux/poll.h>
->  
->  #include <linux/slab.h>
-> -#include <linux/tty.h>
->  #include <linux/errno.h>
->  #include <linux/string.h>
->  #include <linux/signal.h>
->  #include <linux/ioctl.h>
-> +#include <linux/serdev.h>
->  #include <linux/skbuff.h>
-> +#include <linux/ti_wilink_st.h>
->  
->  #include <net/bluetooth/bluetooth.h>
->  #include <net/bluetooth/hci_core.h>
-> +#include <linux/gpio/consumer.h>
->  
->  #include "hci_uart.h"
->  
-> @@ -76,6 +79,12 @@ struct hcill_cmd {
->  	u8 cmd;
->  } __packed;
->  
-> +struct ll_device {
-> +	struct hci_uart hu;
-> +	struct serdev_device *serdev;
-> +	struct gpio_desc *enable_gpio;
-> +};
-> +
->  struct ll_struct {
->  	unsigned long rx_state;
->  	unsigned long rx_count;
-> @@ -136,6 +145,9 @@ static int ll_open(struct hci_uart *hu)
->  
->  	hu->priv = ll;
->  
-> +	if (hu->serdev)
-> +		serdev_device_open(hu->serdev);
-> +
->  	return 0;
->  }
->  
-> @@ -164,6 +176,13 @@ static int ll_close(struct hci_uart *hu)
->  
->  	kfree_skb(ll->rx_skb);
->  
-> +	if (hu->serdev) {
-> +		struct ll_device *lldev =
-> serdev_device_get_drvdata(hu->serdev);
-> +		gpiod_set_value_cansleep(lldev->enable_gpio, 0);
-> +
-> +		serdev_device_close(hu->serdev);
-> +	}
-> +
->  	hu->priv = NULL;
->  
->  	kfree(ll);
-> @@ -505,9 +524,245 @@ static struct sk_buff *ll_dequeue(struct
-> hci_uart *hu)
->  	return skb_dequeue(&ll->txq);
->  }
->  
-> +#if IS_ENABLED(CONFIG_SERIAL_DEV_BUS)
-> +static int read_local_version(struct hci_dev *hdev)
-> +{
-> +	int err = 0;
-> +	unsigned short version = 0;
-> +	struct sk_buff *skb;
-> +	struct hci_rp_read_local_version *ver;
-> +
-> +	skb = __hci_cmd_sync(hdev, HCI_OP_READ_LOCAL_VERSION, 0,
-> NULL, HCI_INIT_TIMEOUT);
-> +	if (IS_ERR(skb)) {
-> +		bt_dev_err(hdev, "Reading TI version information
-> failed (%ld)",
-> +			   PTR_ERR(skb));
-> +		err = PTR_ERR(skb);
-> +		goto out;
-> +	}
-> +	if (skb->len != sizeof(*ver)) {
-> +		err = -EILSEQ;
-> +		goto out;
-> +	}
-> +
-> +	ver = (struct hci_rp_read_local_version *)skb->data;
-> +	if (le16_to_cpu(ver->manufacturer) != 13) {
-> +		err = -ENODEV;
-> +		goto out;
-> +	}
-> +
-> +	version = le16_to_cpu(ver->lmp_subver);
-> +
-> +out:
-> +	if (err) bt_dev_err(hdev, "Failed to read TI version info:
-> %d", err);
-> +	kfree_skb(skb);
-> +	return err ? err : version;
-> +}
-> +
-> +/**
-> + * download_firmware -
-> + *	internal function which parses through the .bts firmware
-> + *	script file intreprets SEND, DELAY actions only as of now
-> + */
-> +static int download_firmware(struct ll_device *lldev)
-> +{
-> +	unsigned short chip, min_ver, maj_ver;
-> +	int version, err, len;
-> +	unsigned char *ptr, *action_ptr;
-> +	unsigned char bts_scr_name[40];	/* 40 char long bts
-> scr name? */
-> +	const struct firmware *fw;
-> +	struct sk_buff *skb;
-> +	struct hci_command *cmd;
-> +
-> +	version = read_local_version(lldev->hu.hdev);
-> +	if (version < 0)
-> +		return version;
-> +
-> +	chip = (version & 0x7C00) >> 10;
-> +	min_ver = (version & 0x007F);
-> +	maj_ver = (version & 0x0380) >> 7;
-> +	if (version & 0x8000)
-> +		maj_ver |= 0x0008;
-> +
-> +	snprintf(bts_scr_name, sizeof(bts_scr_name),
-> +		 "ti-connectivity/TIInit_%d.%d.%d.bts",
-> +		 chip, maj_ver, min_ver);
-> +
-> +	err = request_firmware(&fw, bts_scr_name, &lldev->serdev-
-> >dev);
-> +	if (err || !fw->data || !fw->size) {
-> +		bt_dev_err(lldev->hu.hdev, "request_firmware
-> failed(errno %d) for %s",
-> +			   err, bts_scr_name);
-> +		return -EINVAL;
-> +	}
-> +	ptr = (void *)fw->data;
-> +	len = fw->size;
-> +	/* bts_header to remove out magic number and
-> +	 * version
-> +	 */
-> +	ptr += sizeof(struct bts_header);
-> +	len -= sizeof(struct bts_header);
-> +
-> +	while (len > 0 && ptr) {
-> +		bt_dev_dbg(lldev->hu.hdev, " action size %d, type %d
-> ",
-> +			   ((struct bts_action *)ptr)->size,
-> +			   ((struct bts_action *)ptr)->type);
-> +
-> +		action_ptr = &(((struct bts_action *)ptr)->data[0]);
-> +
-> +		switch (((struct bts_action *)ptr)->type) {
-> +		case ACTION_SEND_COMMAND:	/* action send */
-> +			bt_dev_dbg(lldev->hu.hdev, "S");
-> +			cmd = (struct hci_command *)action_ptr;
-> +			if (cmd->opcode == 0xff36) {
-> +				/* ignore remote change
-> +				 * baud rate HCI VS command */
-> +				bt_dev_warn(lldev->hu.hdev, "change
-> remote baud rate command in firmware");
-> +				break;
-> +			}
-> +			if (cmd->prefix != 1)
-> +				bt_dev_dbg(lldev->hu.hdev, "command
-> type %d\n", cmd->prefix);
-> +
-> +			skb = __hci_cmd_sync(lldev->hu.hdev, cmd-
-> >opcode, cmd->plen, &cmd->speed, HCI_INIT_TIMEOUT);
-> +			if (IS_ERR(skb)) {
-> +				bt_dev_err(lldev->hu.hdev, "send
-> command failed\n");
-> +				goto out_rel_fw;
-> +			}
-> +			kfree_skb(skb);
-> +			break;
-> +		case ACTION_WAIT_EVENT:  /* wait */
-> +			/* no need to wait as command was
-> synchronous */
-> +			bt_dev_dbg(lldev->hu.hdev, "W");
-> +			break;
-> +		case ACTION_DELAY:	/* sleep */
-> +			bt_dev_info(lldev->hu.hdev, "sleep command
-> in scr");
-> +			mdelay(((struct bts_action_delay
-> *)action_ptr)->msec);
-> +			break;
-> +		}
-> +		len -= (sizeof(struct bts_action) +
-> +			((struct bts_action *)ptr)->size);
-> +		ptr += sizeof(struct bts_action) +
-> +			((struct bts_action *)ptr)->size;
-> +	}
-> +
-> +out_rel_fw:
-> +	/* fw download complete */
-> +	release_firmware(fw);
-> +	return err;
-> +}
-> +
-> +static int ll_setup(struct hci_uart *hu)
-> +{
-> +	int err, retry = 3;
-> +	struct ll_device *lldev;
-> +	struct serdev_device *serdev = hu->serdev;
-> +	u32 speed;
-> +
-> +	if (!serdev)
-> +		return 0;
-> +
-> +	lldev = serdev_device_get_drvdata(serdev);
-> +
-> +	serdev_device_set_flow_control(serdev, true);
-> +
-> +	do {
-> +		/* Configure BT_EN to HIGH state */
-> +		gpiod_set_value_cansleep(lldev->enable_gpio, 0);
-> +		msleep(5);
-> +		gpiod_set_value_cansleep(lldev->enable_gpio, 1);
-> +		msleep(100);
-> +
-> +		err = download_firmware(lldev);
-> +		if (!err)
-> +			break;
-> +
-> +		/* Toggle BT_EN and retry */
-> +		bt_dev_err(hu->hdev, "download firmware failed,
-> retrying...");
-> +	} while (retry--);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	/* Operational speed if any */
-> +	if (hu->oper_speed)
-> +		speed = hu->oper_speed;
-> +	else if (hu->proto->oper_speed)
-> +		speed = hu->proto->oper_speed;
-> +	else
-> +		speed = 0;
-> +
-> +	if (speed) {
-> +		struct sk_buff *skb = __hci_cmd_sync(hu->hdev,
-> 0xff36, sizeof(speed), &speed, HCI_INIT_TIMEOUT);
-> +		if (!IS_ERR(skb)) {
-> +			kfree_skb(skb);
-> +			serdev_device_set_baudrate(serdev, speed);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hci_uart_proto llp;
-> +
-> +static int hci_ti_probe(struct serdev_device *serdev)
-> +{
-> +	struct hci_uart *hu;
-> +	struct ll_device *lldev;
-> +	u32 max_speed = 3000000;
-> +
-> +	lldev = devm_kzalloc(&serdev->dev, sizeof(struct ll_device),
-> GFP_KERNEL);
-> +	if (!lldev)
-> +		return -ENOMEM;
-> +	hu = &lldev->hu;
-> +
-> +	serdev_device_set_drvdata(serdev, lldev);
-> +	lldev->serdev = hu->serdev = serdev;
-> +
-> +	lldev->enable_gpio = devm_gpiod_get_optional(&serdev->dev,
-> "enable", GPIOD_OUT_LOW);
-> +	if (IS_ERR(lldev->enable_gpio))
-> +		return PTR_ERR(lldev->enable_gpio);
-> +
-> +	of_property_read_u32(serdev->dev.of_node, "max-speed",
-> &max_speed);
-> +	hci_uart_set_speeds(hu, 115200, max_speed);
-> +
-> +	return hci_uart_register_device(hu, &llp);
-> +}
-> +
-> +static void hci_ti_remove(struct serdev_device *serdev)
-> +{
-> +	struct ll_device *lldev = serdev_device_get_drvdata(serdev);
-> +	struct hci_uart *hu = &lldev->hu;
-> +	struct hci_dev *hdev = hu->hdev;
-> +
-> +	cancel_work_sync(&hu->write_work);
-> +
-> +	hci_unregister_dev(hdev);
-> +	hci_free_dev(hdev);
-> +	hu->proto->close(hu);
-> +}
-> +
-> +static const struct of_device_id hci_ti_of_match[] = {
-> +	{ .compatible = "ti,wl1831-st" },
-> +	{ .compatible = "ti,wl1835-st" },
-> +	{ .compatible = "ti,wl1837-st" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, hci_ti_of_match);
-> +
-> +static struct serdev_device_driver hci_ti_drv = {
-> +	.driver		= {
-> +		.name	= "hci-ti",
-> +		.of_match_table = of_match_ptr(hci_ti_of_match),
-> +	},
-> +	.probe	= hci_ti_probe,
-> +	.remove	= hci_ti_remove,
-> +};
-> +#else
-> +#define ll_setup NULL
-> +#endif
-> +
->  static const struct hci_uart_proto llp = {
->  	.id		= HCI_UART_LL,
->  	.name		= "LL",
-> +	.setup		= ll_setup,
->  	.open		= ll_open,
->  	.close		= ll_close,
->  	.recv		= ll_recv,
-> @@ -518,10 +773,14 @@ static const struct hci_uart_proto llp = {
->  
->  int __init ll_init(void)
->  {
-> +	serdev_device_driver_register(&hci_ti_drv);
-> +
->  	return hci_uart_register_proto(&llp);
->  }
->  
->  int __exit ll_deinit(void)
->  {
-> +	serdev_device_driver_unregister(&hci_ti_drv);
-> +
->  	return hci_uart_unregister_proto(&llp);
->  }
+>> DT. And there's probably not a system in the world that needs access
+>> to that last byte. Is it completely accurate description if we
+>> subtract off 1? No, but it is still a valid range (so would be
+>> subtracting 12345).
+>>
+>>> That device tree was corrected a year ago to provide a size instead of
+>>> a mask.
+>>
+>> You are letting Linux implementation details influence your DT
+>> thinking. DT is much more flexible in that it supports a base address
+>> and size (and multiple of them) while Linux can only deal with a
+>> single address mask. If Linux dealt with base + size, then we wouldn't
+>
+> No.  of_dma_get_range() returns two addresses and a size from the
+> dma-ranges property, just as it is defined in the spec.
+>
+> of_dma_configure() then interprets an odd size as meaning that the
+> device tree incorrectly contains a mask, and then converts that mask
+> to a size by adding one to it.  Linux is _still_ using address and
+> size at this point.  It does _not_ convert this size into a mask,
+> but instead passes size on into arch_setup_dma_ops().
+
+It doesn't really matter where in the implementation, but at some
+point we end up with only a mask in Linux was my point.
+
+> The proposed patch is to quit accepting a mask as valid data in
+> dma-ranges.
+>
+>
+>> be having this conversation. As long as Linux only deals with masks,
+>> we're going to have to have some sort of work-around to deal with
+>> them.
+>>
+>>>> Well, technically you can for the latter, but then you have to grow
+>>>> #size-cells to 2 for an otherwise all 32-bit system which seems kind
+>>>> of pointless and wasteful. You could further restrict this to only
+>>>> allow ~0 and not just any case with bit 0 set.
+>>>>
+>>>> I'm pretty sure AMD is not the only system. There were 32-bit systems too.
+>>>
+>>> I examined all instances of property dma-ranges in in tree dts files in
+>>> Linux 4.11-rc1.  There are none that incorrectly specify mask instead of
+>>> size.
+>>
+>> Okay, but there are ones for ranges at least. See ecx-2000.dts.
+>
+> The patch does not impact the ranges property.  It only impacts the
+> dma-ranges property.
+
+Yes, I know. I'm only pointing out we have other cases of size=~0 to
+avoid growing #size-cells.
+
+>>> #size-cells only changes to 2 for the dma-ranges property and the ranges
+>>> property when size is 2^32, so that is a very small amount of space.
+>>>
+>>> The patch does not allow for a size of 2^64.  If a system requires a
+>>> size of 2^64 then the type of size needs to increase to be larger
+>>> than a u64.  If you would like for the code to be defensive and
+>>> detect a device tree providing a size of 2^64 then I can add a
+>>> check to of_dma_get_range() to return -EINVAL if #size-cells > 2.
+>>> When that error triggers, the type of size can be changed.
+>>
+>> #size-cells > 2 is completely broken for anything but PCI. I doubt it
+>
+> Yes, that is what I said.  The current code does not support #size-cells > 2
+> for dma-ranges.
+
+It's not just dma-ranges. It's everywhere with reg and ranges and any
+code that parses those too. If someone needs to truly specify sizes of
+2^64 in DT (for reg, ranges, or dma-ranges), they are SOL.
+
+> #size-cells > 2 for dma-ranges will lead to a problem in
+> of_dma_get_range(), which stuffs the value of the size into a u64.
+> Clearly, a 3 cell size will not fit into a u64.
+>
+>
+>> is easily fixed without some special casing (i.e. a different hack)
+>> until we have 128-bit support. I hope to retire before we need to
+>> support that.
+>>
+>> Rob
+>>
+>
+> Can we get back to the basic premise of the proposed patch?
+>
+> The current code in of_dma_configure() contains a hack that allows the
+> dma-ranges property to specify a mask instead of a size.  The binding
+> in the specification allows a size and does not allow a mask.
+>
+> The hack was added to account for one or more dts files that did not
+> follow the specification.  In the mail list discussion of the hack
+> you said "Also, we need a WARN here so DTs get fixed."
+>
+> The hack was first present in Linux 4.1.  The only in-tree dts that
+> incorrectly contained a mask instead of a size in dma-ranges was
+> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+>
+> That .dtsi was fixed by
+> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree")
+> The fix was present in Linux 4.6, May 15, 2016.
+>
+> I would like to remove the hack.  I think that enough time has
+> elapsed to allow this change.
+
+If we have no cases of what I'm concerned about, then removing it is
+fine. Is this a dependency for iommu series? Doesn't look like it to
+me.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
