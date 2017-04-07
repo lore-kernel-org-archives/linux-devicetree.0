@@ -1,369 +1,131 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 3/4] bluetooth: hci_uart: add LL protocol serdev driver support
-Date: Fri,  7 Apr 2017 09:35:16 -0500
-Message-ID: <20170407143516.9945-1-robh@kernel.org>
-References: <20170405183005.20570-4-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170405183005.20570-4-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, Satish Patel <satish.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v2 4/4] drm: zte: add VGA driver support
+Date: Fri, 7 Apr 2017 10:43:02 -0400
+Message-ID: <20170407144302.ge7afh5bq7eyy3s4@art_vandelay>
+References: <1491490870-6330-1-git-send-email-shawnguo@kernel.org>
+ <1491490870-6330-5-git-send-email-shawnguo@kernel.org>
+ <20170406171251.qlzdjmzalunplbdt@art_vandelay>
+ <20170407030231.GH3394@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170407030231.GH3394@dragon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Xin Zhou <zhou.xin8@zte.com.cn>, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Turns out that the LL protocol and the TI-ST are the same thing AFAICT.
-The TI-ST adds firmware loading, GPIO control, and shared access for
-NFC, FM radio, etc. For now, we're only implementing what is needed for
-BT. This mirrors other drivers like BCM and Intel, but uses the new
-serdev bus.
-
-The firmware loading is greatly simplified by using existing
-infrastructure to send commands. It may be a bit slower than the
-original code using synchronous functions, but the real bottleneck is
-likely doing firmware load at 115.2kbps.
-
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Cc: Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>
-Cc: Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-v2:
-- Use IS_ENABLED() to fix module build
-
- drivers/bluetooth/hci_ll.c | 261 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 260 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
-index 02692fe30279..77648adfd5c9 100644
---- a/drivers/bluetooth/hci_ll.c
-+++ b/drivers/bluetooth/hci_ll.c
-@@ -34,20 +34,23 @@
- #include <linux/sched.h>
- #include <linux/types.h>
- #include <linux/fcntl.h>
-+#include <linux/firmware.h>
- #include <linux/interrupt.h>
- #include <linux/ptrace.h>
- #include <linux/poll.h>
- 
- #include <linux/slab.h>
--#include <linux/tty.h>
- #include <linux/errno.h>
- #include <linux/string.h>
- #include <linux/signal.h>
- #include <linux/ioctl.h>
-+#include <linux/serdev.h>
- #include <linux/skbuff.h>
-+#include <linux/ti_wilink_st.h>
- 
- #include <net/bluetooth/bluetooth.h>
- #include <net/bluetooth/hci_core.h>
-+#include <linux/gpio/consumer.h>
- 
- #include "hci_uart.h"
- 
-@@ -76,6 +79,12 @@ struct hcill_cmd {
- 	u8 cmd;
- } __packed;
- 
-+struct ll_device {
-+	struct hci_uart hu;
-+	struct serdev_device *serdev;
-+	struct gpio_desc *enable_gpio;
-+};
-+
- struct ll_struct {
- 	unsigned long rx_state;
- 	unsigned long rx_count;
-@@ -136,6 +145,9 @@ static int ll_open(struct hci_uart *hu)
- 
- 	hu->priv = ll;
- 
-+	if (hu->serdev)
-+		serdev_device_open(hu->serdev);
-+
- 	return 0;
- }
- 
-@@ -164,6 +176,13 @@ static int ll_close(struct hci_uart *hu)
- 
- 	kfree_skb(ll->rx_skb);
- 
-+	if (hu->serdev) {
-+		struct ll_device *lldev = serdev_device_get_drvdata(hu->serdev);
-+		gpiod_set_value_cansleep(lldev->enable_gpio, 0);
-+
-+		serdev_device_close(hu->serdev);
-+	}
-+
- 	hu->priv = NULL;
- 
- 	kfree(ll);
-@@ -505,9 +524,245 @@ static struct sk_buff *ll_dequeue(struct hci_uart *hu)
- 	return skb_dequeue(&ll->txq);
- }
- 
-+#if IS_ENABLED(CONFIG_SERIAL_DEV_BUS)
-+static int read_local_version(struct hci_dev *hdev)
-+{
-+	int err = 0;
-+	unsigned short version = 0;
-+	struct sk_buff *skb;
-+	struct hci_rp_read_local_version *ver;
-+
-+	skb = __hci_cmd_sync(hdev, HCI_OP_READ_LOCAL_VERSION, 0, NULL, HCI_INIT_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		bt_dev_err(hdev, "Reading TI version information failed (%ld)",
-+			   PTR_ERR(skb));
-+		err = PTR_ERR(skb);
-+		goto out;
-+	}
-+	if (skb->len != sizeof(*ver)) {
-+		err = -EILSEQ;
-+		goto out;
-+	}
-+
-+	ver = (struct hci_rp_read_local_version *)skb->data;
-+	if (le16_to_cpu(ver->manufacturer) != 13) {
-+		err = -ENODEV;
-+		goto out;
-+	}
-+
-+	version = le16_to_cpu(ver->lmp_subver);
-+
-+out:
-+	if (err) bt_dev_err(hdev, "Failed to read TI version info: %d", err);
-+	kfree_skb(skb);
-+	return err ? err : version;
-+}
-+
-+/**
-+ * download_firmware -
-+ *	internal function which parses through the .bts firmware
-+ *	script file intreprets SEND, DELAY actions only as of now
-+ */
-+static int download_firmware(struct ll_device *lldev)
-+{
-+	unsigned short chip, min_ver, maj_ver;
-+	int version, err, len;
-+	unsigned char *ptr, *action_ptr;
-+	unsigned char bts_scr_name[40];	/* 40 char long bts scr name? */
-+	const struct firmware *fw;
-+	struct sk_buff *skb;
-+	struct hci_command *cmd;
-+
-+	version = read_local_version(lldev->hu.hdev);
-+	if (version < 0)
-+		return version;
-+
-+	chip = (version & 0x7C00) >> 10;
-+	min_ver = (version & 0x007F);
-+	maj_ver = (version & 0x0380) >> 7;
-+	if (version & 0x8000)
-+		maj_ver |= 0x0008;
-+
-+	snprintf(bts_scr_name, sizeof(bts_scr_name),
-+		 "ti-connectivity/TIInit_%d.%d.%d.bts",
-+		 chip, maj_ver, min_ver);
-+
-+	err = request_firmware(&fw, bts_scr_name, &lldev->serdev->dev);
-+	if (err || !fw->data || !fw->size) {
-+		bt_dev_err(lldev->hu.hdev, "request_firmware failed(errno %d) for %s",
-+			   err, bts_scr_name);
-+		return -EINVAL;
-+	}
-+	ptr = (void *)fw->data;
-+	len = fw->size;
-+	/* bts_header to remove out magic number and
-+	 * version
-+	 */
-+	ptr += sizeof(struct bts_header);
-+	len -= sizeof(struct bts_header);
-+
-+	while (len > 0 && ptr) {
-+		bt_dev_dbg(lldev->hu.hdev, " action size %d, type %d ",
-+			   ((struct bts_action *)ptr)->size,
-+			   ((struct bts_action *)ptr)->type);
-+
-+		action_ptr = &(((struct bts_action *)ptr)->data[0]);
-+
-+		switch (((struct bts_action *)ptr)->type) {
-+		case ACTION_SEND_COMMAND:	/* action send */
-+			bt_dev_dbg(lldev->hu.hdev, "S");
-+			cmd = (struct hci_command *)action_ptr;
-+			if (cmd->opcode == 0xff36) {
-+				/* ignore remote change
-+				 * baud rate HCI VS command */
-+				bt_dev_warn(lldev->hu.hdev, "change remote baud rate command in firmware");
-+				break;
-+			}
-+			if (cmd->prefix != 1)
-+				bt_dev_dbg(lldev->hu.hdev, "command type %d\n", cmd->prefix);
-+
-+			skb = __hci_cmd_sync(lldev->hu.hdev, cmd->opcode, cmd->plen, &cmd->speed, HCI_INIT_TIMEOUT);
-+			if (IS_ERR(skb)) {
-+				bt_dev_err(lldev->hu.hdev, "send command failed\n");
-+				goto out_rel_fw;
-+			}
-+			kfree_skb(skb);
-+			break;
-+		case ACTION_WAIT_EVENT:  /* wait */
-+			/* no need to wait as command was synchronous */
-+			bt_dev_dbg(lldev->hu.hdev, "W");
-+			break;
-+		case ACTION_DELAY:	/* sleep */
-+			bt_dev_info(lldev->hu.hdev, "sleep command in scr");
-+			mdelay(((struct bts_action_delay *)action_ptr)->msec);
-+			break;
-+		}
-+		len -= (sizeof(struct bts_action) +
-+			((struct bts_action *)ptr)->size);
-+		ptr += sizeof(struct bts_action) +
-+			((struct bts_action *)ptr)->size;
-+	}
-+
-+out_rel_fw:
-+	/* fw download complete */
-+	release_firmware(fw);
-+	return err;
-+}
-+
-+static int ll_setup(struct hci_uart *hu)
-+{
-+	int err, retry = 3;
-+	struct ll_device *lldev;
-+	struct serdev_device *serdev = hu->serdev;
-+	u32 speed;
-+
-+	if (!serdev)
-+		return 0;
-+
-+	lldev = serdev_device_get_drvdata(serdev);
-+
-+	serdev_device_set_flow_control(serdev, true);
-+
-+	do {
-+		/* Configure BT_EN to HIGH state */
-+		gpiod_set_value_cansleep(lldev->enable_gpio, 0);
-+		msleep(5);
-+		gpiod_set_value_cansleep(lldev->enable_gpio, 1);
-+		msleep(100);
-+
-+		err = download_firmware(lldev);
-+		if (!err)
-+			break;
-+
-+		/* Toggle BT_EN and retry */
-+		bt_dev_err(hu->hdev, "download firmware failed, retrying...");
-+	} while (retry--);
-+
-+	if (err)
-+		return err;
-+
-+	/* Operational speed if any */
-+	if (hu->oper_speed)
-+		speed = hu->oper_speed;
-+	else if (hu->proto->oper_speed)
-+		speed = hu->proto->oper_speed;
-+	else
-+		speed = 0;
-+
-+	if (speed) {
-+		struct sk_buff *skb = __hci_cmd_sync(hu->hdev, 0xff36, sizeof(speed), &speed, HCI_INIT_TIMEOUT);
-+		if (!IS_ERR(skb)) {
-+			kfree_skb(skb);
-+			serdev_device_set_baudrate(serdev, speed);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct hci_uart_proto llp;
-+
-+static int hci_ti_probe(struct serdev_device *serdev)
-+{
-+	struct hci_uart *hu;
-+	struct ll_device *lldev;
-+	u32 max_speed = 3000000;
-+
-+	lldev = devm_kzalloc(&serdev->dev, sizeof(struct ll_device), GFP_KERNEL);
-+	if (!lldev)
-+		return -ENOMEM;
-+	hu = &lldev->hu;
-+
-+	serdev_device_set_drvdata(serdev, lldev);
-+	lldev->serdev = hu->serdev = serdev;
-+
-+	lldev->enable_gpio = devm_gpiod_get_optional(&serdev->dev, "enable", GPIOD_OUT_LOW);
-+	if (IS_ERR(lldev->enable_gpio))
-+		return PTR_ERR(lldev->enable_gpio);
-+
-+	of_property_read_u32(serdev->dev.of_node, "max-speed", &max_speed);
-+	hci_uart_set_speeds(hu, 115200, max_speed);
-+
-+	return hci_uart_register_device(hu, &llp);
-+}
-+
-+static void hci_ti_remove(struct serdev_device *serdev)
-+{
-+	struct ll_device *lldev = serdev_device_get_drvdata(serdev);
-+	struct hci_uart *hu = &lldev->hu;
-+	struct hci_dev *hdev = hu->hdev;
-+
-+	cancel_work_sync(&hu->write_work);
-+
-+	hci_unregister_dev(hdev);
-+	hci_free_dev(hdev);
-+	hu->proto->close(hu);
-+}
-+
-+static const struct of_device_id hci_ti_of_match[] = {
-+	{ .compatible = "ti,wl1831-st" },
-+	{ .compatible = "ti,wl1835-st" },
-+	{ .compatible = "ti,wl1837-st" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hci_ti_of_match);
-+
-+static struct serdev_device_driver hci_ti_drv = {
-+	.driver		= {
-+		.name	= "hci-ti",
-+		.of_match_table = of_match_ptr(hci_ti_of_match),
-+	},
-+	.probe	= hci_ti_probe,
-+	.remove	= hci_ti_remove,
-+};
-+#else
-+#define ll_setup NULL
-+#endif
-+
- static const struct hci_uart_proto llp = {
- 	.id		= HCI_UART_LL,
- 	.name		= "LL",
-+	.setup		= ll_setup,
- 	.open		= ll_open,
- 	.close		= ll_close,
- 	.recv		= ll_recv,
-@@ -518,10 +773,14 @@ static const struct hci_uart_proto llp = {
- 
- int __init ll_init(void)
- {
-+	serdev_device_driver_register(&hci_ti_drv);
-+
- 	return hci_uart_register_proto(&llp);
- }
- 
- int __exit ll_deinit(void)
- {
-+	serdev_device_driver_unregister(&hci_ti_drv);
-+
- 	return hci_uart_unregister_proto(&llp);
- }
--- 
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBBcHIgMDcsIDIwMTcgYXQgMTE6MDI6MzNBTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
+Ogo+IE9uIFRodSwgQXByIDA2LCAyMDE3IGF0IDAxOjEyOjUxUE0gLTA0MDAsIFNlYW4gUGF1bCB3
+cm90ZToKPiA+IE9uIFRodSwgQXByIDA2LCAyMDE3IGF0IDExOjAxOjEwUE0gKzA4MDAsIFNoYXdu
+IEd1byB3cm90ZToKPiA+ID4gK3N0YXRpYyBpbnQgenhfdmdhX2Nvbm5lY3Rvcl9nZXRfbW9kZXMo
+c3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3Qg
+enhfdmdhICp2Z2EgPSB0b196eF92Z2EoY29ubmVjdG9yKTsKPiA+ID4gKwl1bnNpZ25lZCBsb25n
+IGZsYWdzOwo+ID4gPiArCXN0cnVjdCBlZGlkICplZGlkOwo+ID4gPiArCWludCByZXQ7Cj4gPiA+
+ICsKPiA+ID4gKwkvKgo+ID4gPiArCSAqIENsZWFyIGJvdGggZGV0ZWN0aW9uIGJpdHMgdG8gc3dp
+dGNoIEkyQyBidXMgZnJvbSBkZXZpY2UKPiA+ID4gKwkgKiBkZXRlY3RpbmcgdG8gRURJRCByZWFk
+aW5nLgo+ID4gPiArCSAqLwo+ID4gPiArCXNwaW5fbG9ja19pcnFzYXZlKCZ2Z2EtPmxvY2ssIGZs
+YWdzKTsKPiA+ID4gKwl6eF93cml0ZWwodmdhLT5tbWlvICsgVkdBX0FVVE9fREVURUNUX1NFTCwg
+MCk7Cj4gPiA+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdmdhLT5sb2NrLCBmbGFncyk7Cj4g
+PiA+ICsKPiA+ID4gKwllZGlkID0gZHJtX2dldF9lZGlkKGNvbm5lY3RvciwgJnZnYS0+ZGRjLT5h
+ZGFwKTsKPiA+ID4gKwlpZiAoIWVkaWQpCj4gPiA+ICsJCXJldHVybiAwOwo+ID4gPiArCj4gPiA+
+ICsJLyoKPiA+ID4gKwkgKiBBcyBlZGlkIHJlYWRpbmcgc3VjY2VlZHMsIGRldmljZSBtdXN0IGJl
+IGNvbm5lY3RlZCwgc28gd2Ugc2V0Cj4gPiA+ICsJICogdXAgZGV0ZWN0aW9uIGJpdCBmb3IgdW5w
+bHVnIGludGVycnVwdCBoZXJlLgo+ID4gPiArCSAqLwo+ID4gPiArCXNwaW5fbG9ja19pcnFzYXZl
+KCZ2Z2EtPmxvY2ssIGZsYWdzKTsKPiA+ID4gKwl6eF93cml0ZWwodmdhLT5tbWlvICsgVkdBX0FV
+VE9fREVURUNUX1NFTCwgVkdBX0RFVEVDVF9TRUxfSEFTX0RFVklDRSk7Cj4gPiA+ICsJc3Bpbl91
+bmxvY2tfaXJxcmVzdG9yZSgmdmdhLT5sb2NrLCBmbGFncyk7Cj4gPiA+ICsKPiA+ID4gKwlkcm1f
+bW9kZV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPiA+
+ID4gKwlyZXQgPSBkcm1fYWRkX2VkaWRfbW9kZXMoY29ubmVjdG9yLCBlZGlkKTsKPiA+ID4gKwlr
+ZnJlZShlZGlkKTsKPiA+ID4gKwo+ID4gPiArCXJldHVybiByZXQ7Cj4gPiA+ICt9Cj4gCj4gPHNu
+aXA+Cj4gCj4gPiA+ICtzdGF0aWMgaXJxcmV0dXJuX3QgenhfdmdhX2lycV9oYW5kbGVyKGludCBp
+cnEsIHZvaWQgKmRldl9pZCkKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3QgenhfdmdhICp2Z2EgPSBk
+ZXZfaWQ7Cj4gPiA+ICsJdTMyIHN0YXR1czsKPiA+ID4gKwo+ID4gPiArCXN0YXR1cyA9IHp4X3Jl
+YWRsKHZnYS0+bW1pbyArIFZHQV9JMkNfU1RBVFVTKTsKPiA+ID4gKwo+ID4gPiArCS8qIENsZWFy
+IGludGVycnVwdCBzdGF0dXMgKi8KPiA+ID4gKwl6eF93cml0ZWxfbWFzayh2Z2EtPm1taW8gKyBW
+R0FfSTJDX1NUQVRVUywgVkdBX0NMRUFSX0lSUSwKPiA+ID4gKwkJICAgICAgIFZHQV9DTEVBUl9J
+UlEpOwo+ID4gPiArCj4gPiA+ICsJaWYgKHN0YXR1cyAmIFZHQV9ERVZJQ0VfQ09OTkVDVEVEKSB7
+Cj4gPiA+ICsJCS8qCj4gPiA+ICsJCSAqIFNpbmNlIFZHQV9ERVRFQ1RfU0VMIGJpdHMgbmVlZCB0
+byBiZSByZXNldCBmb3Igc3dpdGNoaW5nIEREQwo+ID4gPiArCQkgKiBidXMgZnJvbSBkZXZpY2Ug
+ZGV0ZWN0aW9uIHRvIEVESUQgcmVhZCwgcmF0aGVyIHRoYW4gc2V0dGluZwo+ID4gPiArCQkgKiB1
+cCBIQVNfREVWSUNFIGJpdCBoZXJlLCB3ZSBuZWVkIHRvIGRvIHRoYXQgaW4gLmdldF9tb2Rlcwo+
+ID4gPiArCQkgKiBob29rIGZvciB1bnBsdWcgZGV0ZWN0aW5nIGFmdGVyIEVESUQgcmVhZCBzdWNj
+ZWVkcy4KPiA+ID4gKwkJICovCj4gPiA+ICsJCXZnYS0+Y29ubmVjdGVkID0gdHJ1ZTsKPiA+ID4g
+KwkJcmV0dXJuIElSUV9XQUtFX1RIUkVBRDsKPiA+ID4gKwl9Cj4gPiA+ICsKPiA+ID4gKwlpZiAo
+c3RhdHVzICYgVkdBX0RFVklDRV9ESVNDT05ORUNURUQpIHsKPiA+ID4gKwkJc3Bpbl9sb2NrKCZ2
+Z2EtPmxvY2spOwo+ID4gPiArCQl6eF93cml0ZWwodmdhLT5tbWlvICsgVkdBX0FVVE9fREVURUNU
+X1NFTCwKPiA+ID4gKwkJCSAgVkdBX0RFVEVDVF9TRUxfTk9fREVWSUNFKTsKPiA+ID4gKwkJc3Bp
+bl91bmxvY2soJnZnYS0+bG9jayk7Cj4gPiAKPiA+IEkgdGhpbmsgeW91IHN0aWxsIGhhdmUgdGhl
+IHJhY2UgaGVyZS4gSWYgeW91IGdldCBhIGRpc2Nvbm5lY3QgYmV0d2VlbiBnZXRfZWRpZAo+ID4g
+c3VjY2Vzc2Z1bGx5IGZpbmlzaGluZywgYW5kIHJlc2V0dGluZyB0aGUgREVURUNUX1NFTCByZWdp
+c3RlciwgeW91IHdpbGwgZW5kIHVwCj4gPiB3aXRoIHRoZSBkZXZpY2UgYmVpbmcgZGlzY29ubmVj
+dGVkIGFuZCBERVRFQ1RfU0VMID09IFZHQV9ERVRFQ1RfU0VMX0hBU19ERVZJQ0UuCj4gPiAKPiA+
+IEluIG9yZGVyIHRvIGNsb3NlIHRoaXMsIHlvdSdsbCBuZWVkIHRvIGhvbGQgdGhlIGxvY2sgYWNy
+b3NzIHRoZSBlZGlkIHJlYWQuCj4gCj4gV2UgY2Fubm90IGhvbGQgYSBzcGluIGxvY2sgYWNyb3Nz
+IHRoZSBFRElEIHJlYWQgcHJvY2VkdXJlLCB3aGljaCBkb2VzCj4gc2xlZXAuCgpZZWFoLCB0aGlz
+IGlzIGEgcHJldHR5IGNvbW1vbiBwcm9ibGVtLiBXZSB1c3VhbGx5IHVzZSBhIG11dGV4IGluIGNv
+bmp1bmN0aW9uCndpdGggYSB3b3JrIGZ1bmN0aW9uIHRvIGhhbmRsZSB0aGlzIHR5cGUgb2YgdGhp
+bmcuCgo+IAo+IFdoZW4geW91IHN1Z2dlc3RlZCB0byBoYXZlIGEgbG9jayBmb3IgREVURUNUX1NF
+TCByZWdpc3RlciBhY2Nlc3MsIEkKPiB0aG91Z2h0IHdlIGFyZSBhY2Nlc3NpbmcgaXQgaW4gYSBy
+ZWFkLW1vZGlmeS13cml0ZSB3YXkgYW5kIHRodXMgYWdyZWVkCj4gdG8gYWRkIGEgbG9jay4gIEhv
+d2V2ZXIsIEkganVzdCBmb3VuZCB0aGF0IGl0J3Mgbm90IHRoZSBjYXNlIGFjdHVhbGx5Lgo+IEFs
+bCB0aGUgYWNjZXNzZXMgdG8gdGhlIHJlZ2lzdGVyIGFyZSBzaW5nbGUgZGlyZWN0IHdyaXRlLgo+
+IAo+IEFuZCBoZXJlIGlzIG15IHVuZGVyc3RhbmRpbmcgYWJvdXQgdGhlIGNvbmRpdGlvbiB5b3Ug
+ZGVzY3JpYmVkIGFib3ZlLgo+IE9uY2UgREVURUNUX1NFTCByZWdpc3RlciBnZXRzIHJlc2V0IChi
+b3RoIGJpdHMgY2xlYXJlZCksIHRoZSBoYXJkd2FyZQo+IHN3aXRjaGVzIEREQyBidXMgZm9yIEVE
+SUQgcmVhZCwgYW5kIGhvdHBsdWcgZGV0ZWN0aW9uIHdpbGwgc3RvcCB3b3JraW5nCj4gcmlnaHQg
+YXdheSAodGhpcyBpcyBob3cgWlRFIGhhcmR3YXJlIHdvcmtzKS4gIFRoYXQgc2FpZCwgaWYgd2Ug
+Z2V0IGEKPiBkaXNjb25uZWN0IGJlZm9yZSBkcm1fZ2V0X2VkaWQoKSBzdWNjZXNzZnVsbHkgZmlu
+aXNoZXMsIHR3byBwb2ludHM6Cj4gCj4gLSBUaGUgaXJxIGhhbmRsZXIgd2lsbCBub3QgYmUgdHJp
+Z2dlcmVkLCBzbyBpdCB3aWxsIG5vdCBnZXQgYSBjaGFuY2UgdG8KPiAgIHVwZGF0ZSBERVRFQ1Rf
+U0VMIHJlZ2lzdGVyLgoKQWgsIHRoaXMgd2FzIHRoZSBtaXNzaW5nIHBpZWNlIEkgbmVlZGVkLiBJ
+IGhhZG4ndCByZWFsaXplZCB0aGF0IHRoZSBmaXJzdApWR0FfQVVUT19ERVRFQ1RfU0VMIHdyaXRl
+IGluIGdldF9tb2RlcyBkaXNhYmxlZCB0aGUgaXJxLiAKCgo+IC0gVGhlIGRybV9nZXRfZWRpZCgp
+IGZhaWxzLCBhbmQgLmdldF9tb2RlcyByZXR1cm5zIHdpdGggYm90aCBkZXRlY3QgYml0cwo+ICAg
+a2VwdCBjbGVhcmVkLgo+IAo+IEkgdGhpbmsgd2hhdCB3ZSBjYW4gZG8gYmV0dGVyIGluIHRoaXMg
+Y2FzZSBpcyB0aGF0IHdlIHNob3VsZCBzZXQgdGhlCj4gZGV2aWNlIHN0YXRlIGludG8gZGlzY29u
+bmVjdGVkLCBiZWZvcmUgcmV0dXJuaW5nIGZyb20gLmdldF9tb2RlcywKPiBzb21ldGhpbmcgbGlr
+ZSB0aGUgY29kZSBiZWxvdy4gIEJ1dCBzdGlsbCwgSSBkbyBub3Qgc2VlIHdlIG5lZWQgYSBsb2Nr
+Cj4gZm9yIHRoYXQuCgpZZXAsIGFncmVlZC4gQ2FuIHlvdSBhbHNvIHBsZWFzZSBhZGQgdG8geW91
+ciBjb21tZW50IGluIHRoZSAhZWRpZCBjYXNlLApzb21ldGhpbmcgbGlrZToKCiogTG9ja2luZyBp
+cyBub3QgcmVxdWlyZWQgaGVyZSBzaW5jZSB0aGUgb25seSBvdGhlciBwbGFjZSB0byB3cml0ZSB0
+aGlzIHJlZ2lzdGVyCiogKGFuZCBjb25uZWN0ZWQgdmFyKSBpcyB0aGUgaXJxIGhhbmRsZXIuIFRo
+ZSBpcnEgaGFuZGxlciBpcyBkaXNhYmxlZCBiZWNhdXNlCiogd2UndmUgY2xlYXJlZCBBVVRPX0RF
+VEVDVF9TRUwgYWJvdmUuCgpUaGFua3MgZm9yIHdhbGtpbmcgbWUgdGhyb3VnaCB0aGlzLgoKU2Vh
+bgoKPiAKPiBTaGF3bgo+IAo+IHN0YXRpYyBpbnQgenhfdmdhX2Nvbm5lY3Rvcl9nZXRfbW9kZXMo
+c3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiB7Cj4gICAgICAgICBzdHJ1Y3Qgenhf
+dmdhICp2Z2EgPSB0b196eF92Z2EoY29ubmVjdG9yKTsKPiAgICAgICAgIHVuc2lnbmVkIGxvbmcg
+ZmxhZ3M7Cj4gICAgICAgICBzdHJ1Y3QgZWRpZCAqZWRpZDsKPiAgICAgICAgIGludCByZXQ7Cj4g
+Cj4gICAgICAgICAvKgo+ICAgICAgICAgICogQ2xlYXIgYm90aCBkZXRlY3Rpb24gYml0cyB0byBz
+d2l0Y2ggSTJDIGJ1cyBmcm9tIGRldmljZQo+ICAgICAgICAgICogZGV0ZWN0aW5nIHRvIEVESUQg
+cmVhZGluZy4KPiAgICAgICAgICAqLwo+ICAgICAgICAgenhfd3JpdGVsKHZnYS0+bW1pbyArIFZH
+QV9BVVRPX0RFVEVDVF9TRUwsIDApOwo+IAo+ICAgICAgICAgZWRpZCA9IGRybV9nZXRfZWRpZChj
+b25uZWN0b3IsICZ2Z2EtPmRkYy0+YWRhcCk7Cj4gICAgICAgICBpZiAoIWVkaWQpIHsKPiAgICAg
+ICAgICAgICAgICAgLyoKPiAgICAgICAgICAgICAgICAgICogSWYgRURJRCByZWFkaW5nIGZhaWxz
+LCB3ZSBzZXQgdGhlIGRldmljZSBzdGF0ZSBpbnRvCj4gICAgICAgICAgICAgICAgICAqIGRpc2Nv
+bm5lY3RlZC4KPiAgICAgICAgICAgICAgICAgICovCj4gICAgICAgICAgICAgICAgIHp4X3dyaXRl
+bCh2Z2EtPm1taW8gKyBWR0FfQVVUT19ERVRFQ1RfU0VMLAo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgVkdBX0RFVEVDVF9TRUxfTk9fREVWSUNFKTsKPiAgICAgICAgICAgICAgICAgdmdhLT5j
+b25uZWN0ZWQgPSBmYWxzZTsKPiAgICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4gICAgICAgICB9
+Cj4gCj4gICAgICAgICAvKgo+ICAgICAgICAgICogQXMgZWRpZCByZWFkaW5nIHN1Y2NlZWRzLCBk
+ZXZpY2UgbXVzdCBiZSBjb25uZWN0ZWQsIHNvIHdlIHNldAo+ICAgICAgICAgICogdXAgZGV0ZWN0
+aW9uIGJpdCBmb3IgdW5wbHVnIGludGVycnVwdCBoZXJlLgo+ICAgICAgICAgICovCj4gICAgICAg
+ICB6eF93cml0ZWwodmdhLT5tbWlvICsgVkdBX0FVVE9fREVURUNUX1NFTCwgVkdBX0RFVEVDVF9T
+RUxfSEFTX0RFVklDRSk7Cj4gCj4gICAgICAgICBkcm1fbW9kZV9jb25uZWN0b3JfdXBkYXRlX2Vk
+aWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPiAgICAgICAgIHJldCA9IGRybV9hZGRfZWRp
+ZF9tb2Rlcyhjb25uZWN0b3IsIGVkaWQpOwo+ICAgICAgICAga2ZyZWUoZWRpZCk7Cj4gCj4gICAg
+ICAgICByZXR1cm4gcmV0Owo+IH0KCi0tIApTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBH
+b29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
