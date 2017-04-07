@@ -1,25 +1,29 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/9] ARM: dts: imx6ul-geam: Add Sound card with codec
- node
-Date: Fri, 7 Apr 2017 21:19:15 +0800
-Message-ID: <20170407131914.GI16503@dragon>
+Subject: Re: [PATCH v3 3/9] ARM: dts: imx6qdl-icore: Add Sound card with
+ codec node
+Date: Fri, 7 Apr 2017 21:23:05 +0800
+Message-ID: <20170407132304.GJ16503@dragon>
 References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
- <1491501735-1649-3-git-send-email-jagan@openedev.com>
+ <1491501735-1649-4-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1491501735-1649-3-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1491501735-1649-4-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 11:32:08PM +0530, Jagan Teki wrote:
+On Thu, Apr 06, 2017 at 11:32:09PM +0530, Jagan Teki wrote:
 > From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > 
 > Add support for Sound card and related codec(via i2c1) nodes
-> on Engicam GEAM6UL variant module boards.
+> on below Engicam module boards.
+> - i.CoreM6 DualLite/Solo Starter kit
+> - i.CoreM6 Quad/Dual Starter kit
+> - i.CoreM6 Quad/Dual OpenFrame Cap touch 10.1
+> - i.CoreM6 Quad/Dual OpenFrame Cap touch 12.3
 > 
 > Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
@@ -30,54 +34,143 @@ On Thu, Apr 06, 2017 at 11:32:08PM +0530, Jagan Teki wrote:
 > - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
 > Changes for v2:
 > - Use proper [label:] node-name[@unit-address] for codec
-> - Remove incorrect codec property 'wlf,shared-lrclk'
-> - Remove 'gpr' from sound card node
 > 
->  arch/arm/boot/dts/imx6ul-geam-kit.dts | 12 ++++++++++++
->  arch/arm/boot/dts/imx6ul-geam.dtsi    | 26 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx6dl-icore.dts        | 11 +++++++
+>  arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 11 +++++++
+>  arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 11 +++++++
+>  arch/arm/boot/dts/imx6q-icore.dts         | 11 +++++++
+>  arch/arm/boot/dts/imx6qdl-icore.dtsi      | 48 +++++++++++++++++++++++++++++++
 
-Same question here: why is sgtl5000 added to imx6ul-geam-kit.dts, while
-sound code that references to sgtl5000 is added to imx6ul-geam.dtsi?
+Why cannot you just add sgtl5000 node into dtsi rather than keeping the
+same copy for 4 dts files?
 
 Shawn
 
->  2 files changed, 38 insertions(+)
+>  5 files changed, 92 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/imx6ul-geam-kit.dts b/arch/arm/boot/dts/imx6ul-geam-kit.dts
-> index 142e60c..02edcba 100644
-> --- a/arch/arm/boot/dts/imx6ul-geam-kit.dts
-> +++ b/arch/arm/boot/dts/imx6ul-geam-kit.dts
-> @@ -58,6 +58,18 @@
+> diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
+> index 6de83c7..0562ce4 100644
+> --- a/arch/arm/boot/dts/imx6dl-icore.dts
+> +++ b/arch/arm/boot/dts/imx6dl-icore.dts
+> @@ -57,3 +57,14 @@
+>  &can2 {
 >  	status = "okay";
 >  };
->  
-> +&i2c1 {
+> +
+> +&i2c3 {
 > +	sgtl5000: codec@a {
 > +		compatible = "fsl,sgtl5000";
 > +		reg = <0x0a>;
-> +		clocks = <&clks IMX6UL_CLK_OSC>;
-> +		clock-names = "mclk";
-> +		VDDA-supply = <&reg_3p3v>;
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> +		VDDA-supply = <&reg_2p5v>;
+> +		VDDIO-supply = <&reg_3p3v>;
+> +		VDDD-supply = <&reg_1p8v>;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+> index 49b60ca..f63b87f 100644
+> --- a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+> +++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+> @@ -50,6 +50,17 @@
+>  	compatible = "engicam,imx6-icore", "fsl,imx6q";
+>  };
+>  
+> +&i2c3 {
+> +	sgtl5000: codec@a {
+> +		compatible = "fsl,sgtl5000";
+> +		reg = <0x0a>;
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> +		VDDA-supply = <&reg_2p5v>;
 > +		VDDIO-supply = <&reg_3p3v>;
 > +		VDDD-supply = <&reg_1p8v>;
 > +	};
 > +};
 > +
->  &lcdif {
->  	display = <&display0>;
+>  &ldb {
 >  	status = "okay";
-> diff --git a/arch/arm/boot/dts/imx6ul-geam.dtsi b/arch/arm/boot/dts/imx6ul-geam.dtsi
-> index eb94d95..3bc3238 100644
-> --- a/arch/arm/boot/dts/imx6ul-geam.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul-geam.dtsi
-> @@ -87,6 +87,32 @@
->  		regulator-always-on;
->  		regulator-boot-on;
+>  
+> diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+> index 9e230f5..68ca828 100644
+> --- a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+> +++ b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+> @@ -50,6 +50,17 @@
+>  	compatible = "engicam,imx6-icore", "fsl,imx6q";
+>  };
+>  
+> +&i2c3 {
+> +	sgtl5000: codec@a {
+> +		compatible = "fsl,sgtl5000";
+> +		reg = <0x0a>;
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> +		VDDA-supply = <&reg_2p5v>;
+> +		VDDIO-supply = <&reg_3p3v>;
+> +		VDDD-supply = <&reg_1p8v>;
+> +	};
+> +};
+> +
+>  &ldb {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
+> index 5613dd9..1ae7294 100644
+> --- a/arch/arm/boot/dts/imx6q-icore.dts
+> +++ b/arch/arm/boot/dts/imx6q-icore.dts
+> @@ -67,6 +67,17 @@
+>  	};
+>  };
+>  
+> +&i2c3 {
+> +	sgtl5000: codec@a {
+> +		compatible = "fsl,sgtl5000";
+> +		reg = <0x0a>;
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> +		VDDA-supply = <&reg_2p5v>;
+> +		VDDIO-supply = <&reg_3p3v>;
+> +		VDDD-supply = <&reg_1p8v>;
+> +	};
+> +};
+> +
+>  &ldb {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+> index 56d0c5d..1bd7cdb 100644
+> --- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+> @@ -55,6 +55,25 @@
+>  		default-brightness-level = <7>;
+>  	};
+>  
+> +	reg_1p8v: regulator-1p8v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1P8V";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +
+> +	reg_2p5v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "2P5V";
+> +		regulator-min-microvolt = <2500000>;
+> +		regulator-max-microvolt = <2500000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+>  	reg_3p3v: regulator-3p3v {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "3P3V";
+> @@ -87,6 +106,31 @@
+>  		#clock-cells = <0>;
+>  		clock-frequency = <25000000>;  /* 25MHz for example */
 >  	};
 > +
 > +	sound {
 > +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "imx6ul-geam-sgtl5000";
+> +		simple-audio-card,name = "imx6qdl-icore-sgtl5000";
 > +		simple-audio-card,format = "i2s";
 > +		simple-audio-card,bitclock-master = <&dailink_master>;
 > +		simple-audio-card,frame-master = <&dailink_master>;
@@ -92,17 +185,27 @@ Shawn
 > +			"Headphone Jack", "HP_OUT";
 > +
 > +		simple-audio-card,cpu {
-> +			sound-dai = <&sai2>;
+> +			sound-dai = <&ssi1>;
 > +		};
 > +
 > +		dailink_master: simple-audio-card,codec {
 > +			sound-dai = <&sgtl5000>;
-> +			clocks = <&clks IMX6UL_CLK_SAI2>;
 > +		};
 > +	};
 >  };
 >  
 >  &can1 {
+> @@ -149,6 +193,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&ssi1 {
+> +	status = "okay";
+> +};
+> +
+>  &uart4 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_uart4>;
 > -- 
 > 1.9.1
 > 
