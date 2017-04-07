@@ -1,74 +1,52 @@
-From: Alexandre TORGUE <alexandre.torgue@st.com>
-Subject: [PATCH 2/4] pinctrl: stm32: replace device_initcall() with
- arch_initcall()
-Date: Fri, 7 Apr 2017 17:10:09 +0200
-Message-ID: <1491577811-26989-3-git-send-email-alexandre.torgue@st.com>
-References: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH net-next] bindings: net: stmmac: add missing note about
+ LPI interrupt
+Date: Fri, 7 Apr 2017 19:48:16 +0300
+Message-ID: <c1e78674-64d1-0e51-3ca4-48d8500a3528@cogentembedded.com>
+References: <20170407143100.21536-1-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170407143100.21536-1-niklass@axis.com>
+Sender: netdev-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Joao Pinto <Joao.Pinto@synopsys.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Niklas Cassel <niklass@axis.com>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Thierry Reding <treding@nvidia.com>, Eric Engestrom <eric@engestrom.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pinctrl has to be registered earlier. Mainly to register bank irqdomain
-earlier as other devices could use interrupts from those irqdomain.
+Hello!
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+On 04/07/2017 05:30 PM, Niklas Cassel wrote:
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32f429.c b/drivers/pinctrl/stm32/pinctrl-stm32f429.c
-index 990b867..4bbade2 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32f429.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32f429.c
-@@ -1584,4 +1584,8 @@
- 	},
- };
- 
--builtin_platform_driver(stm32f429_pinctrl_driver);
-+static int __init stm32f429_pinctrl_init(void)
-+{
-+	return platform_driver_register(&stm32f429_pinctrl_driver);
-+}
-+arch_initcall(stm32f429_pinctrl_init);
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32f746.c b/drivers/pinctrl/stm32/pinctrl-stm32f746.c
-index c0b4462..a2fae73 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32f746.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32f746.c
-@@ -1678,4 +1678,9 @@
- 		.of_match_table = stm32f746_pctrl_match,
- 	},
- };
--builtin_platform_driver(stm32f746_pinctrl_driver);
-+
-+static int __init stm32f746_pinctrl_init(void)
-+{
-+	return platform_driver_register(&stm32f746_pinctrl_driver);
-+}
-+arch_initcall(stm32f746_pinctrl_init);
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32h743.c b/drivers/pinctrl/stm32/pinctrl-stm32h743.c
-index f7f9eac..e34b2b9 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32h743.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32h743.c
-@@ -1977,4 +1977,8 @@
- 	},
- };
- 
--builtin_platform_driver(stm32h743_pinctrl_driver);
-+static int __init stm32h743_pinctrl_init(void)
-+{
-+	return platform_driver_register(&stm32h743_pinctrl_driver);
-+}
-+arch_initcall(stm32h743_pinctrl_init);
--- 
-1.9.1
+> From: Niklas Cassel <niklas.cassel@axis.com>
+>
+> The hardware has a LPI interrupt.
+> There is already code in the stmmac driver to parse and handle the
+> interrupt. However, this information was missing from the DT binding.
+>
+> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+> ---
+>  Documentation/devicetree/bindings/net/stmmac.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index f652b0c384ce..8977abc266ac 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -8,8 +8,8 @@ Required properties:
+>    that services interrupts for this device
+>  - interrupts: Should contain the STMMAC interrupts
+>  - interrupt-names: Should contain the interrupt names "macirq"
+> -  "eth_wake_irq" if this interrupt is supported in the "interrupts"
+> -  property
+> +  "eth_wake_irq" if this interrupt is supported in the "interrupts property
+
+    Missed closing quote?
+
+> +  "eth_lpi" if this interrupt is supported in the "interrupts" property
+>  - phy-mode: See ethernet.txt file in the same directory.
+>  - snps,reset-gpio 	gpio number for phy reset.
+>  - snps,reset-active-low boolean flag to indicate if phy reset is active low.
+[...]
+
+MBR, Sergei
