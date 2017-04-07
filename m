@@ -1,93 +1,63 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx: ventana: fix DTC warnings
-Date: Fri, 7 Apr 2017 20:33:13 +0800
-Message-ID: <20170407123312.GE16503@dragon>
-References: <1491252168-7934-1-git-send-email-tharvey@gateworks.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 1/2] mfd: arizona: Add GPIO maintain state flag
+Date: Fri, 7 Apr 2017 13:38:44 +0100
+Message-ID: <1491568725-14882-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1491252168-7934-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: "devicetree @ vger . kernel . org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, lee.jones@linaro.org
+Cc: gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 03, 2017 at 01:42:48PM -0700, Tim Harvey wrote:
-> Remove the sky2 ethernet device node from the pcie controller which was
-> invalid to begin with.
-> 
-> The original intent was to allow the bootloader to populate the MAC via
-> dt but this requires the PCI bus topology to be complete in dt as well
-> and as these boards have an expansion connector that topology is dynamic
-> and can't be represented here.
-> 
-> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q-gw5400-a.dts  | 4 ----
->  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 4 ----
->  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 4 ----
->  3 files changed, 12 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-gw5400-a.dts b/arch/arm/boot/dts/imx6q-gw5400-a.dts
-> index 8e84713..5b066c0 100644
-> --- a/arch/arm/boot/dts/imx6q-gw5400-a.dts
-> +++ b/arch/arm/boot/dts/imx6q-gw5400-a.dts
-> @@ -347,10 +347,6 @@
->  &pcie {
->  	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
->  	status = "okay";
-> -
-> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-> -		compatible = "marvell,sky2";
-> -	};
+The Arizona devices only maintain the state of output GPIOs whilst the
+CODEC is active, this can cause issues if the CODEC suspends whilst
+something is relying on the state of one of its GPIOs. However, in
+many systems the CODEC GPIOs are used for audio related features
+and thus the state of the GPIOs is unimportant whilst the CODEC is
+suspended. Often keeping the CODEC resumed in such a system would
+incur a power impact that is unacceptable.
 
-The label 'eth1' is referenced by aliases, and so DTC complains as
-below.
+Add a flag through the second cell of the GPIO specifier in device
+tree, to allow the user to select whether a GPIO being configured as
+an output should keep the CODEC resumed.
 
-ERROR (path_references): Reference to non-existent node or label "eth1".
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ Documentation/devicetree/bindings/mfd/arizona.txt | 5 ++++-
+ include/dt-bindings/mfd/arizona.h                 | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-Please test before submitting.
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 8f2e282..6af0d82 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -30,7 +30,10 @@ Required properties:
+ 
+   - gpio-controller : Indicates this device is a GPIO controller.
+   - #gpio-cells : Must be 2. The first cell is the pin number and the
+-    second cell is used to specify optional parameters (currently unused).
++    second cell is used to specify optional parameters, the following flags
++    are supported:
++      "ARIZONA_GP_MAINTAIN" the output of the GPIO must be maintained, this
++      prevents the CODEC going into low power mode.
+ 
+   - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
+     as covered in Documentation/devicetree/bindings/regulator/regulator.txt
+diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/mfd/arizona.h
+index dedf46f..68f3782 100644
+--- a/include/dt-bindings/mfd/arizona.h
++++ b/include/dt-bindings/mfd/arizona.h
+@@ -77,6 +77,9 @@
+ #define ARIZONA_GP_INPUT               (ARIZONA_GP_FN_GPIO | \
+ 					ARIZONA_GPN_DIR)
+ 
++/* Flags for the GPIO driver properties */
++#define ARIZONA_GP_MAINTAIN 0x80000000
++
+ #define ARIZONA_32KZ_MCLK1 1
+ #define ARIZONA_32KZ_MCLK2 2
+ #define ARIZONA_32KZ_NONE  3
+-- 
+2.1.4
 
-Shawn
-
->  };
->  
->  &ssi1 {
-> diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-> index a208e7e..420a2f6 100644
-> --- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-> @@ -342,10 +342,6 @@
->  	pinctrl-0 = <&pinctrl_pcie>;
->  	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
->  	status = "okay";
-> -
-> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-> -		compatible = "marvell,sky2";
-> -	};
->  };
->  
->  &pwm2 {
-> diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> index 968fda9..e742153 100644
-> --- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> @@ -379,10 +379,6 @@
->  	pinctrl-0 = <&pinctrl_pcie>;
->  	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
->  	status = "okay";
-> -
-> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-> -		compatible = "marvell,sky2";
-> -	};
->  };
->  
->  &pwm1 {
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
