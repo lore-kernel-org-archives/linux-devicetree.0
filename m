@@ -1,91 +1,78 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset properties
-Date: Fri, 07 Apr 2017 15:55:19 +0300
-Message-ID: <2015685.1dmalSy0Yr@avalon>
-References: <1488817556-21410-1-git-send-email-geert+renesas@glider.be> <20170316205639.xufbtbnqgy72bwyc@rob-hp-laptop> <CAMuHMdU0=WfkUUjXTYpp4JWM4mzFcV3AwSwf_7p+YnQQh=uE-w@mail.gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Fri, 7 Apr 2017 14:54:40 +0200
+Message-ID: <20170407125440.GD4756@amd>
+References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
+ <20170323203749.GB8563@amd>
+ <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+ <20170329190725.GN20094@minitux>
+ <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux>
+ <20170330074309.GA28533@amd>
+ <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU0=WfkUUjXTYpp4JWM4mzFcV3AwSwf_7p+YnQQh=uE-w@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EP0wieDxd4TSJjHq"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <bf999f34-4509-6f0b-602c-f82d50a18e97-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert and Rob,
 
-On Thursday 16 Mar 2017 21:59:04 Geert Uytterhoeven wrote:
-> On Thu, Mar 16, 2017 at 9:56 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Thu, Mar 16, 2017 at 09:13:16AM +0100, Geert Uytterhoeven wrote:
-> >> On Wed, Mar 15, 2017 at 6:01 PM, Rob Herring <robh@kernel.org> wrote:
-> >>> On Mon, Mar 06, 2017 at 05:25:56PM +0100, Geert Uytterhoeven wrote:
-> >>>> Document the optional properties for describing module resets, to
-> >>>> support resetting display channels and LVDS encoders on R-Car Gen2 and
-> >>>> Gen3.
-> >>>> 
-> >>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >>>> ---
-> >>>> See "[v2,1/4] dt-bindings: clock: renesas: cpg-mssr: Document reset
-> >>>> control support" (https://patchwork.kernel.org/patch/9536627/) for the
-> >>>> format of a reset specifier in the Renesas CPG/MSSR case.
-> >>>> 
-> >>>> E.g. "resets = <&cpg 310>;"
-> >>>> 
-> >>>> v2:
-> >>>>   - s/phandles/phandle/.
-> >>>> 
-> >>>> ---
-> >>>> 
-> >>>>  Documentation/devicetree/bindings/display/renesas,du.txt | 10 ++++++++
-> >>>>  1 file changed, 10 insertions(+)
-> >>>> 
-> >>>> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt
-> >>>> b/Documentation/devicetree/bindings/display/renesas,du.txt index
-> >>>> 1a02f099a0ff0a3a..3db418c827193e82 100644
-> >>>> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> >>>> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> >>>> @@ -36,6 +36,16 @@ Required Properties:
-> >>>>        When supplied they must be named "dclkin.x" with "x" being the
-> >>>>        input clock numerical index.
-> >>>> 
-> >>>> +Optional properties:
-> >>>> +  - resets: A list of phandle + reset-specifier pairs, one for each
-> >>>> entry in
-> >>>> +    the reset-names property.
-> >>>> +  - reset-names: Names of the resets. This property is
-> >>>> model-dependent.
-> >>>> +    - R8A779[0123456] use one reset for a group of one or more
-> >>>> successive
-> >>>> +      channels, and one reset per LVDS encoder (if available). The
-> >>>> resets
-> >>>> +      must be named "du.x" with "x" being the numerical index of the
-> >>>> lowest
-> >>>> +      channel in the group. The LVDS resets must be named "lvds.x"
-> >>>> with "x"
-> >>>> +      being the LVDS encoder numerical index.
-> >>> 
-> >>> LVDS is not a separate block?
-> >> 
-> >> Well... from a hardware point of view, the LVDS encoders and DU channels
-> >> are all separate blocks (they have separate reg blocks, clocks, and
-> >> resets). But due to the dependencies between the blocks, they're modeled
-> >> in DT as a single device, with multiple reg, clocks, and resets
-> >> properties.
-> >
-> > Dependencies being DRM requirement of wanting a single device with
-> > sub-devices or some h/w dependencies? The former shouldn't define your
-> > binding.
-> 
-> Hardware dependencies. Laurent can tell you more about them (when he'll
-> be back).
+--EP0wieDxd4TSJjHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I believe we could model the LVDS encoder as a separate DT node. It was 
-probably a historical mistake (that would however need to be confirmed, I 
-haven't double-checked all details). Obviously I can't break backward 
-compatibility, so we're kind of stuck :-S
+Hi!
 
--- 
-Regards,
+> > Second, there are more issues than just patterns with the RGB
+> > LED. Most important is ability to set particular colors. You want to
+> > set the RGB LED to "white", but that does not mean you can set
+> > red=3Dgreen=3Dblue=3D1.0. You want color to look the same on LCD and on=
+ the
+> > LED, which means coefficients for white and some kind of function for
+> > brightness-to-PWM conversion.
+>=20
+> Shouldn't we leave that entirely to the userspace? Can we come up
+> with coefficients that will guarantee the same result on all existing
+> LCD devices?
 
-Laurent Pinchart
+I don't think we should. We want (red =3D 70%, green =3D 80%, blue =3D 20%)
+to look approximately the same on all the hardware. That's currently
+not the case; even (red =3D green =3D blue =3D 100%) is not white.
+
+I believe easiest solution is "the kernel does the work", as it does
+for LCD screens.
+
+[Now... as long as userspace has enough information to display white
+and specific colors, I don't care much -- having kernel present
+coefficients for userspace would work, too.]
+
+								Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EP0wieDxd4TSJjHq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljnjBAACgkQMOfwapXb+vIsPwCaAuSwGfzfcVoXSxU/XgiNB0gs
+sPkAn1HXmiqsDLIGCLDlb9+jgz+FuLYE
+=paYp
+-----END PGP SIGNATURE-----
+
+--EP0wieDxd4TSJjHq--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
