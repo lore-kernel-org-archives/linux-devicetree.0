@@ -1,81 +1,69 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/16] mfd: madera: Add register definitions for Cirrus
- Logic Madera codecs
-Date: Fri, 7 Apr 2017 12:14:58 +0100
-Message-ID: <20170407111458.vw7oxemasqhcfepq@sirena.org.uk>
-References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1491386884-30689-2-git-send-email-rf@opensource.wolfsonmicro.com>
- <CACRpkdaYzPSVqqhbi2Zop7J9vzCqZZiN=9pAEw1vcWy_ove9Tg@mail.gmail.com>
- <CACRpkdY=cOhw59O8EE6J82aq897YKZkLsmUzeEnzkC5jtT6yyA@mail.gmail.com>
- <20170407084823.GB3412@localhost.localdomain>
- <CACRpkdZLfL+dxMN-uaRp57u4yW4cLfLFoZVkNWFZL4eECOyR1A@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC 4/8] regulator: core: Check enabling bypass respects
+ constraints
+Date: Fri, 7 Apr 2017 12:22:12 +0100
+Message-ID: <20170407112212.gzv3p7ldkh62657m@sirena.org.uk>
+References: <cover.1490199005.git.leonard.crestez@nxp.com>
+ <1edff9bc610969b0c53fa1080d5db021c8e00b2d.1490199005.git.leonard.crestez@nxp.com>
+ <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
+ <1490704781.3546.57.camel@nxp.com>
+ <20170328164754.z2c2ttovs3sxbcos@sirena.org.uk>
+ <1490730595.15830.1.camel@nxp.com>
+ <20170406185202.uixxcv3dgucrddgc@sirena.org.uk>
+ <1491562312.9365.41.camel@nxp.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k4nxp35gqq27j42m"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="4zx65g25cvfcfr47"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZLfL+dxMN-uaRp57u4yW4cLfLFoZVkNWFZL4eECOyR1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491562312.9365.41.camel@nxp.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Shawn Guo <shawnguo@kernel.org>, Robin Gong <yibin.gong@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Irina Tirdea <irina.tirdea@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---k4nxp35gqq27j42m
+--4zx65g25cvfcfr47
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Apr 07, 2017 at 11:12:53AM +0200, Linus Walleij wrote:
-> On Fri, Apr 7, 2017 at 10:48 AM, Charles Keepax
-> > On Fri, Apr 07, 2017 at 10:30:12AM +0200, Linus Walleij wrote:
+On Fri, Apr 07, 2017 at 01:51:52PM +0300, Leonard Crestez wrote:
 
-> >> > Get included in all subdrivers I suppose?
+> It currently seems to work how I expect but from your statement it's
+> not clear if it's entirely intentional.
 
-> >> > So you are broadcasting 8800+ lines into every subdriver across the
-> >> > entire kernel.
+The current behaviour of bypassed regulators is intentional.
 
-> >> > Just the time spent in the preprocessor parsing this will affect compilation
-> >> > time.
+> > > Or should a bypassed regulator ignore all other requests? One of the
+> > > behaviors that this patch series relies on is that calling set_voltage
+> > > on a bypassed regulator propagates this request to the supply and picks
+> > > the minimum voltage there. An alternative implementation would be to
 
-> >> Or maybe this is a necessary sacrifice to get the regmap cache
-> >> centralized in MFD. I don't know. I feel stupid.
+> > Yes, the expectation is that if anything is being changed it won't have
+> > any effect until regulation is reenabled but we're not particularly
+> > expecting much activity on bypassed regulators.
 
-> >> I guess I should focus on "my" subsystems...
+> OK, so it is up to consumers to ensure the supply voltage is acceptable
+> before allowing bypass. If they want to do something clever they should
+> register as a consumer to the supply as well.
 
-> > This only gets included in files that are part of this driver, it
-> > shouldn't affect compilation time for anyone not building the
-> > madera driver and even then it should only affect compilation
-> > times for the 10 or so C files that make up the driver. Also I
-> > don't really see any other way to specify the registers for the
-> > device.
+No, that's not expected either - one or the other is fine but both isn't
+expected.  What you're looking for here is something logically different
+to bypass even if the hardware implementation ends up the same.
 
-> No when using regmap cache this seems necessary.
-> I was just wrong.
-
-Right.  The other thing to bear in mind with things like this is that
-often if it's the chip vendor they've got mechanisms to generate the
-register definitions directly from the chip design so if we take the
-complete thing with minimal edits it's a great way of ensuring we've got
-information about the chip in the upstream kernel to support future
-development.
-
---k4nxp35gqq27j42m
+--4zx65g25cvfcfr47
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljndK4ACgkQJNaLcl1U
-h9AcrQf/fG+V7Yqvtyj+A9tD0Pa38YObImkcpc/f14hebTVi+wnwaAb31NfjLeZx
-MTN45CwPQBj80UhTFhFaYKeOOPAmtmH7QWr0PqW33f99e/Qcvv2nyQOTaw6Mqef8
-p8JwoPBdrejXb+sftbbMhMt1Ti6ZIOGvV/v64REmHwxNp/nL5DkiqjEjHD2DgoKl
-ZrE4ayBB5w6YQgaWruaEuTEJQRL5R3HK9v8AyFtdY12iMlTsd+UTevqoJmi0vrLW
-hx2AdajwjehAC/n8rSY9vE+Gc+KAKcEHjYCNVWClP4hQ1y4vecVE6/bLsKDlze9C
-RTA+TF7mDZWi2Vokx9b+JqAZXk4NaQ==
-=4XT0
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljndmMACgkQJNaLcl1U
+h9BcIgf/ZsOPVfPsZiVz2U9+lvqbOjpW//v/n4HprjRifIPA5hoqQ8UTzXy91fGh
+mKZTUsgEEjG+SY+nT1BzUnDqh753Ty1aJ/Y6F+VILbSy9ttsHKW1LDwhFkH2weiR
+iM3ZLK2bsor4L0QcEpxVH9Y0wd3vmjQmqr4f5IaxtRxu4lsW3mDmnZq1w52SeIPk
+tlirL2iriyKhUbEL0XQssBUnO9n9BW5dk1LKOkvy+lRNwTTzgOgbdvluHaHq8dJg
+stVUjuqMCjU7HAsv/su99PlUr3sLuM4t+P6GS0H2hPDtqjhtdwb1/zJa+c6UHQyy
+8QKyWNYEA0PkWnjmyKsfcmcnCcn2aA==
+=LXtA
 -----END PGP SIGNATURE-----
 
---k4nxp35gqq27j42m--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--4zx65g25cvfcfr47--
