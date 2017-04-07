@@ -1,90 +1,65 @@
-From: Alexey Firago <alexey_firago@mentor.com>
-Subject: [PATCH v4 3/3] clk: vc5: Add support for IDT VersaClock 5P49V5935
-Date: Fri, 7 Apr 2017 12:12:24 +0300
-Message-ID: <1491556344-9465-4-git-send-email-alexey_firago@mentor.com>
-References: <1491556344-9465-1-git-send-email-alexey_firago@mentor.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 01/16] mfd: madera: Add register definitions for Cirrus
+ Logic Madera codecs
+Date: Fri, 7 Apr 2017 11:12:53 +0200
+Message-ID: <CACRpkdZLfL+dxMN-uaRp57u4yW4cLfLFoZVkNWFZL4eECOyR1A@mail.gmail.com>
+References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1491386884-30689-2-git-send-email-rf@opensource.wolfsonmicro.com>
+ <CACRpkdaYzPSVqqhbi2Zop7J9vzCqZZiN=9pAEw1vcWy_ove9Tg@mail.gmail.com>
+ <CACRpkdY=cOhw59O8EE6J82aq897YKZkLsmUzeEnzkC5jtT6yyA@mail.gmail.com> <20170407084823.GB3412@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1491556344-9465-1-git-send-email-alexey_firago@mentor.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, marek.vasut@gmail.com, geert@linux-m68k.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Alexey Firago <alexey_firago@mentor.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170407084823.GB3412@localhost.localdomain>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Update IDT VersaClock 5 driver to support 5P49V5935. This chip has
-two clock inputs (internal XTAL or external CLKIN), four fractional
-dividers (FODs) and five clock outputs (four universal clock outputs
-and one reference clock output at OUT0_SELB_I2C).
+On Fri, Apr 7, 2017 at 10:48 AM, Charles Keepax
+<ckeepax@opensource.wolfsonmicro.com> wrote:
+> On Fri, Apr 07, 2017 at 10:30:12AM +0200, Linus Walleij wrote:
+>> On Fri, Apr 7, 2017 at 10:27 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> > On Wed, Apr 5, 2017 at 12:07 PM, Richard Fitzgerald
+>> > <rf@opensource.wolfsonmicro.com> wrote:
+>> >
+>> >> This patch adds a header file of register definitions for Cirrus
+>> >> Logic "Madera" class codecs. These codecs are all based off a common
+>> >> set of hardware IP so have a common register map (with a few minor
+>> >> device-to-device variations). These are complex devices with a large
+>> >> mber of features and so have a correspondingly large register set.
+>> >> The registers.h file has been auto-generated from the hardware register
+>> >> definitions, stripped down to only registers we need to access from
+>> >> the driver.
+>> >>
+>> >> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+>> >
+>> > This:
+>> >  include/linux/mfd/madera/registers.h | 8832 ++++++++++++++++++++++++++++++++++
+>> >
+>> > Get included in all subdrivers I suppose?
+>> >
+>> > So you are broadcasting 8800+ lines into every subdriver across the
+>> > entire kernel.
+>> >
+>> > Just the time spent in the preprocessor parsing this will affect compilation
+>> > time.
+>>
+>> Or maybe this is a necessary sacrifice to get the regmap cache
+>> centralized in MFD. I don't know. I feel stupid.
+>>
+>> I guess I should focus on "my" subsystems...
+>>
+>
+> This only gets included in files that are part of this driver, it
+> shouldn't affect compilation time for anyone not building the
+> madera driver and even then it should only affect compilation
+> times for the 10 or so C files that make up the driver. Also I
+> don't really see any other way to specify the registers for the
+> device.
 
-Current driver supports up to 2 FODs and up to 3 clock outputs. This
-patch sets max number of supported FODs to 4 and max number of supported
-clock outputs to 5.
+No when using regmap cache this seems necessary.
+I was just wrong.
 
-Signed-off-by: Alexey Firago <alexey_firago@mentor.com>
----
- drivers/clk/clk-versaclock5.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
-index 2b1cc69..ea7d552 100644
---- a/drivers/clk/clk-versaclock5.c
-+++ b/drivers/clk/clk-versaclock5.c
-@@ -114,10 +114,10 @@
- #define VC5_MUX_IN_CLKIN	BIT(1)
- 
- /* Maximum number of clk_out supported by this driver */
--#define VC5_MAX_CLK_OUT_NUM	3
-+#define VC5_MAX_CLK_OUT_NUM	5
- 
- /* Maximum number of FODs supported by this driver */
--#define VC5_MAX_FOD_NUM	2
-+#define VC5_MAX_FOD_NUM	4
- 
- /* flags to describe chip features */
- /* chip has built-in oscilator */
-@@ -127,6 +127,7 @@
- enum vc5_model {
- 	IDT_VC5_5P49V5923,
- 	IDT_VC5_5P49V5933,
-+	IDT_VC5_5P49V5935,
- };
- 
- /* Structure to describe features of a particular VC5 model */
-@@ -594,6 +595,7 @@ static int vc5_map_index_to_output(const enum vc5_model model,
- 	case IDT_VC5_5P49V5933:
- 		return (n == 0) ? 0 : 3;
- 	case IDT_VC5_5P49V5923:
-+	case IDT_VC5_5P49V5935:
- 	default:
- 		return n;
- 	}
-@@ -790,9 +792,17 @@ static const struct vc5_chip_info idt_5p49v5933_info = {
- 	.flags = VC5_HAS_INTERNAL_XTAL,
- };
- 
-+static const struct vc5_chip_info idt_5p49v5935_info = {
-+	.model = IDT_VC5_5P49V5935,
-+	.clk_fod_cnt = 4,
-+	.clk_out_cnt = 5,
-+	.flags = VC5_HAS_INTERNAL_XTAL,
-+};
-+
- static const struct i2c_device_id vc5_id[] = {
- 	{ "5p49v5923", .driver_data = IDT_VC5_5P49V5923 },
- 	{ "5p49v5933", .driver_data = IDT_VC5_5P49V5933 },
-+	{ "5p49v5935", .driver_data = IDT_VC5_5P49V5935 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, vc5_id);
-@@ -800,6 +810,7 @@ MODULE_DEVICE_TABLE(i2c, vc5_id);
- static const struct of_device_id clk_vc5_of_match[] = {
- 	{ .compatible = "idt,5p49v5923", .data = &idt_5p49v5923_info },
- 	{ .compatible = "idt,5p49v5933", .data = &idt_5p49v5933_info },
-+	{ .compatible = "idt,5p49v5935", .data = &idt_5p49v5935_info },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, clk_vc5_of_match);
--- 
-2.7.4
-
+Yours,
+Linus Walleij
