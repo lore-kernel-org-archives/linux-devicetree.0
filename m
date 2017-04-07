@@ -1,25 +1,25 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec
+Subject: Re: [PATCH v3 2/9] ARM: dts: imx6ul-geam: Add Sound card with codec
  node
-Date: Fri, 7 Apr 2017 21:16:51 +0800
-Message-ID: <20170407131649.GH16503@dragon>
+Date: Fri, 7 Apr 2017 21:19:15 +0800
+Message-ID: <20170407131914.GI16503@dragon>
 References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
- <1491501735-1649-2-git-send-email-jagan@openedev.com>
+ <1491501735-1649-3-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1491501735-1649-2-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1491501735-1649-3-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
+On Thu, Apr 06, 2017 at 11:32:08PM +0530, Jagan Teki wrote:
 > From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > 
 > Add support for Sound card and related codec(via i2c1) nodes
-> on Engicam Is.IoT MX6UL variant module boards.
+> on Engicam GEAM6UL variant module boards.
 > 
 > Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
@@ -33,24 +33,25 @@ On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
 > - Remove incorrect codec property 'wlf,shared-lrclk'
 > - Remove 'gpr' from sound card node
 > 
->  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 +++++++
->  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 44 ++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx6ul-geam-kit.dts | 12 ++++++++++++
+>  arch/arm/boot/dts/imx6ul-geam.dtsi    | 26 ++++++++++++++++++++++++++
 
-Can you help me understand how these two files are related?  Why is
-sgtl5000 added into one and sound node added into the other?
+Same question here: why is sgtl5000 added to imx6ul-geam-kit.dts, while
+sound code that references to sgtl5000 is added to imx6ul-geam.dtsi?
 
 Shawn
 
->  2 files changed, 54 insertions(+)
+>  2 files changed, 38 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-> index 2beaab6..d456080 100644
-> --- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
-> @@ -41,6 +41,16 @@
->   */
+> diff --git a/arch/arm/boot/dts/imx6ul-geam-kit.dts b/arch/arm/boot/dts/imx6ul-geam-kit.dts
+> index 142e60c..02edcba 100644
+> --- a/arch/arm/boot/dts/imx6ul-geam-kit.dts
+> +++ b/arch/arm/boot/dts/imx6ul-geam-kit.dts
+> @@ -58,6 +58,18 @@
+>  	status = "okay";
+>  };
 >  
->  &i2c1 {
+> +&i2c1 {
 > +	sgtl5000: codec@a {
 > +		compatible = "fsl,sgtl5000";
 > +		reg = <0x0a>;
@@ -60,40 +61,23 @@ Shawn
 > +		VDDIO-supply = <&reg_3p3v>;
 > +		VDDD-supply = <&reg_1p8v>;
 > +	};
+> +};
 > +
->  	stmpe811: gpio-expander@44 {
->  		compatible = "st,stmpe811";
->  		reg = <0x44>;
-> diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-> index ea30380..7e947e5 100644
-> --- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-> @@ -69,6 +69,50 @@
->  				    100>;
->  		default-brightness-level = <100>;
+>  &lcdif {
+>  	display = <&display0>;
+>  	status = "okay";
+> diff --git a/arch/arm/boot/dts/imx6ul-geam.dtsi b/arch/arm/boot/dts/imx6ul-geam.dtsi
+> index eb94d95..3bc3238 100644
+> --- a/arch/arm/boot/dts/imx6ul-geam.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul-geam.dtsi
+> @@ -87,6 +87,32 @@
+>  		regulator-always-on;
+>  		regulator-boot-on;
 >  	};
-> +
-> +	reg_1p8v: regulator-1p8v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "1P8V";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	reg_3p3v: regulator-3p3v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3P3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
 > +
 > +	sound {
 > +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "imx6ul-isiot-sgtl5000";
+> +		simple-audio-card,name = "imx6ul-geam-sgtl5000";
 > +		simple-audio-card,format = "i2s";
 > +		simple-audio-card,bitclock-master = <&dailink_master>;
 > +		simple-audio-card,frame-master = <&dailink_master>;
@@ -118,7 +102,7 @@ Shawn
 > +	};
 >  };
 >  
->  &i2c1 {
+>  &can1 {
 > -- 
 > 1.9.1
 > 
