@@ -1,153 +1,128 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2 2/8] v4l: fwnode: Support generic fwnode for parsing
- standardised properties
-Date: Fri, 7 Apr 2017 16:03:20 +0300
-Message-ID: <20170407130320.GI4192@valkosipuli.retiisi.org.uk>
-References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com>
- <2366571.B7YdK6QUO2@avalon>
- <20170407103633.GD4192@valkosipuli.retiisi.org.uk>
- <1761689.CzVR5YAybi@avalon>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec
+ node
+Date: Fri, 7 Apr 2017 21:16:51 +0800
+Message-ID: <20170407131649.GH16503@dragon>
+References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
+ <1491501735-1649-2-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1761689.CzVR5YAybi@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1491501735-1649-2-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
+> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> 
+> Add support for Sound card and related codec(via i2c1) nodes
+> on Engicam Is.IoT MX6UL variant module boards.
+> 
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+> Changes for v3:
+> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
+> Changes for v2:
+> - Use proper [label:] node-name[@unit-address] for codec
+> - Remove incorrect codec property 'wlf,shared-lrclk'
+> - Remove 'gpr' from sound card node
+> 
+>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 +++++++
+>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 44 ++++++++++++++++++++++++++++++
 
-On Fri, Apr 07, 2017 at 01:54:58PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Friday 07 Apr 2017 13:36:34 Sakari Ailus wrote:
-> > On Fri, Apr 07, 2017 at 12:44:27PM +0300, Laurent Pinchart wrote:
-> > > On Thursday 06 Apr 2017 16:12:04 Sakari Ailus wrote:
-> > > > The fwnode_handle is a more generic way than OF device_node to describe
-> > > > firmware nodes. Instead of the OF API, use more generic fwnode API to
-> > > > obtain the same information.
-> > > 
-> > > I would mention that this is a copy of v4l2-of.c with the OF API replaced
-> > > with the fwnode API.
-> > 
-> > I'll add that to the description.
-> > 
-> > > > As the V4L2 fwnode support will be required by a small minority of e.g.
-> > > > ACPI based systems (the same might actually go for OF), make this a
-> > > > module instead of embedding it in the videodev module.
-> > > > 
-> > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > ---
-> > > > 
-> > > >  drivers/media/v4l2-core/Kconfig       |   3 +
-> > > >  drivers/media/v4l2-core/Makefile      |   1 +
-> > > >  drivers/media/v4l2-core/v4l2-fwnode.c | 353 +++++++++++++++++++++++++++
-> > > >  include/media/v4l2-fwnode.h           | 104 ++++++++++
-> > > >  4 files changed, 461 insertions(+)
-> > > >  create mode 100644 drivers/media/v4l2-core/v4l2-fwnode.c
-> > > >  create mode 100644 include/media/v4l2-fwnode.h
-> 
-> [snip]
-> 
-> > > > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > > > b/drivers/media/v4l2-core/v4l2-fwnode.c new file mode 100644
-> > > > index 0000000..4f69b11
-> > > > --- /dev/null
-> > > > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > > > @@ -0,0 +1,353 @@
-> > > > +/*
-> > > > + * V4L2 fwnode binding parsing library
-> > > > + *
-> > > > + * Copyright (c) 2016 Intel Corporation.
-> > > > + * Author: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > + *
-> > > > + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
-> > > > + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > > > + *
-> > > > + * Copyright (C) 2012 Renesas Electronics Corp.
-> > > > + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > > > + *
-> > > > + * This program is free software; you can redistribute it and/or modify
-> > > > + * it under the terms of version 2 of the GNU General Public License as
-> > > > + * published by the Free Software Foundation.
-> > > > + */
-> > > > +#include <linux/acpi.h>
-> > > > +#include <linux/kernel.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/property.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/string.h>
-> > > > +#include <linux/types.h>
-> > > > +
-> > > > +#include <media/v4l2-fwnode.h>
-> > > > +
-> > > > +static int v4l2_fwnode_endpoint_parse_csi_bus(struct fwnode_handle
-> > > > *fwn,
-> > > > +					      struct v4l2_fwnode_endpoint
-> > > > *vfwn)
-> > > > +{
-> > > > +	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vfwn->bus.mipi_csi2;
-> > > > +	bool have_clk_lane = false;
-> > > > +	unsigned int flags = 0, lanes_used = 0;
-> > > > +	unsigned int i;
-> > > > +	u32 v;
-> > > > +	int rval;
-> > > 
-> > > I would have used "ret" instead of "rval" ;-)
-> > 
-> > I know. But
-> > 
-> > 1) there's no established convention in the file and
-> > 
-> > 2) "rval" has the benefit is easier to look up; one doesn't find a plethora
-> > of "return something". Therefore it is better than "ret" for the purpose.
-> 
-> The solution to that is
-> 
-> /ret\>
-> 
-> (and, of course, switching to vim :-D)
+Can you help me understand how these two files are related?  Why is
+sgtl5000 added into one and sound node added into the other?
 
-What's "\>" for?
+Shawn
 
-I don't think you can convince people to switch to vim this way. :-)
-
+>  2 files changed, 54 insertions(+)
 > 
-> [snip]
+> diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+> index 2beaab6..d456080 100644
+> --- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+> @@ -41,6 +41,16 @@
+>   */
+>  
+>  &i2c1 {
+> +	sgtl5000: codec@a {
+> +		compatible = "fsl,sgtl5000";
+> +		reg = <0x0a>;
+> +		clocks = <&clks IMX6UL_CLK_OSC>;
+> +		clock-names = "mclk";
+> +		VDDA-supply = <&reg_3p3v>;
+> +		VDDIO-supply = <&reg_3p3v>;
+> +		VDDD-supply = <&reg_1p8v>;
+> +	};
+> +
+>  	stmpe811: gpio-expander@44 {
+>  		compatible = "st,stmpe811";
+>  		reg = <0x44>;
+> diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+> index ea30380..7e947e5 100644
+> --- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+> @@ -69,6 +69,50 @@
+>  				    100>;
+>  		default-brightness-level = <100>;
+>  	};
+> +
+> +	reg_1p8v: regulator-1p8v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1P8V";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3P3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	sound {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "imx6ul-isiot-sgtl5000";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,bitclock-master = <&dailink_master>;
+> +		simple-audio-card,frame-master = <&dailink_master>;
+> +		simple-audio-card,widgets =
+> +			"Microphone", "Mic Jack",
+> +			"Line", "Line In",
+> +			"Line", "Line Out",
+> +			"Headphone", "Headphone Jack";
+> +		simple-audio-card,routing =
+> +			"MIC_IN", "Mic Jack",
+> +			"Mic Jack", "Mic Bias",
+> +			"Headphone Jack", "HP_OUT";
+> +
+> +		simple-audio-card,cpu {
+> +			sound-dai = <&sai2>;
+> +		};
+> +
+> +		dailink_master: simple-audio-card,codec {
+> +			sound-dai = <&sgtl5000>;
+> +			clocks = <&clks IMX6UL_CLK_SAI2>;
+> +		};
+> +	};
+>  };
+>  
+>  &i2c1 {
+> -- 
+> 1.9.1
 > 
-> > > > +/*
-> > > > + * v4l2_fwnode_endpoint_free() - free the V4L2 fwnode acquired by
-> > > > + * v4l2_fwnode_endpoint_alloc_parse()
-> > > > + * @fwn - the V4L2 fwnode the resources of which are to be released
-> > > 
-> > > Mayeb "the V4L2 fwnode whose resources are to be released" ?
-> > > 
-> > > > + *
-> > > > + * It is safe to call this function with NULL argument or on an
-> > > 
-> > > s/on an/on a/
-> > 
-> > Yes.
-> > 
-> > > > + * V4L2 fwnode the parsing of which failed.
-> > > 
-> > > "whose parsing failed" ?
-> > 
-> > Any particular reason? Do you like "whose"? :-)
-> 
-> "of which" sounds dubious in this context, but please consult a native English 
-> speaker in case of doubt.
-
-"Whose" is the possessive form of "who". Albeit nowadays it could probably
-be used for other purposes as well.
-
-In my opinion "of which" is perfectly appropriate language here.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
