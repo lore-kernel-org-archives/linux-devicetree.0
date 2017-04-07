@@ -1,44 +1,35 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 6/7] ARM: Kconfig: Introduce MACH_STM32F469 flag
-Date: Fri, 7 Apr 2017 14:43:03 +0200
-Message-ID: <1491568984-20169-7-git-send-email-alexandre.torgue@st.com>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH v2 2/7] Documentation: dt: Remove bindings for STM32 pinctrl
+Date: Fri, 7 Apr 2017 14:42:59 +0200
+Message-ID: <1491568984-20169-3-git-send-email-alexandre.torgue@st.com>
 References: <1491568984-20169-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491568984-20169-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1491568984-20169-1-git-send-email-alexandre.torgue@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces the MACH_STM32F469 to make possible to only select
-STM32F469 pinctrl driver
+Remove "ngpios" bindings definition as it is no more used in stm32 pinctrl
+driver.
 
-By default, all the MACH_STM32Fxxx flags will be set with STM32 defconfig.
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 0d4e71b..19c43e6 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -894,6 +894,11 @@ config MACH_STM32F429
- 	depends on ARCH_STM32
- 	default y
- 
-+config MACH_STM32F469
-+	bool "STMicrolectronics STM32F469"
-+	depends on ARCH_STM32
-+	default y
-+
- config MACH_STM32F746
- 	bool "STMicrolectronics STM32F746"
- 	depends on ARCH_STM32
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index eac20aa..e4cda3d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -38,8 +38,6 @@ Optional properties:
+  - st,syscfg: Should be phandle/offset pair. The phandle to the syscon node
+    which includes IRQ mux selection register, and the offset of the IRQ mux
+    selection register.
+- - ngpios: Number of gpios in a bank (to use if bank gpio numbers is less
+-   than 16).
+  - gpio-ranges: Define a dedicated mapping between a pin-controller and
+    a gpio controller. Format is <&phandle a b c> with:
+ 	-(phandle): phandle of pin-controller.
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
