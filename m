@@ -1,42 +1,35 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 4/4] gpio: aspeed: Add open-source and open-drain support
-Date: Fri,  7 Apr 2017 22:29:02 +0930
-Message-ID: <20170407125902.15960-5-andrew@aj.id.au>
+Subject: [PATCH v2 2/4] gpio: aspeed: dt: Add optional clocks property
+Date: Fri,  7 Apr 2017 22:29:00 +0930
+Message-ID: <20170407125902.15960-3-andrew@aj.id.au>
 References: <20170407125902.15960-1-andrew@aj.id.au>
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170407125902.15960-1-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-As per the datasheet, manage the IO and value states to implement
-open-source/open-drain, but do this by falling back to gpiolib's
-emulation.
-
-This commit simply makes the behaviour explicit for clarity, rather than
-relying on the implicit return of -ENOTSUPP to trigger the emulation.
+We need a reference to the HPLL to calculate debounce cycles. If the
+clocks property is not supplied in the GPIO node then the consumer
+should deny any debounce requests.
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/gpio/gpio-aspeed.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 3327a48df862..ccea609676ee 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -761,6 +761,10 @@ static int aspeed_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
- 			param == PIN_CONFIG_BIAS_PULL_DOWN ||
- 			param == PIN_CONFIG_DRIVE_STRENGTH)
- 		return pinctrl_gpio_set_config(offset, config);
-+	else if (param == PIN_CONFIG_DRIVE_OPEN_DRAIN ||
-+			param == PIN_CONFIG_DRIVE_OPEN_SOURCE)
-+		/* Return -ENOTSUPP to trigger emulation, as per datasheet */
-+		return -ENOTSUPP;
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+index 6f30b9a048da..c756afa88cc6 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+@@ -18,6 +18,7 @@ Required properties:
+ Optional properties:
  
- 	return -ENOTSUPP;
- }
+ - interrupt-parent      : The parent interrupt controller, optional if inherited
++- clocks                : A phandle to the HPLL clock node for debounce timings
+ 
+ The gpio and interrupt properties are further described in their respective
+ bindings documentation:
 -- 
 2.9.3
-
