@@ -1,34 +1,39 @@
-From: "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Subject: RE: [PATCH 2/5] media: Add support for CXD2880 SPI I/F
-Date: Fri, 7 Apr 2017 08:19:58 +0000
-Message-ID: <02699364973B424C83A42A84B04FDA8533BC79@JPYOKXMS113.jp.sony.com>
-References: <1491465339-9483-1-git-send-email-Yasunari.Takiguchi@sony.com>
- <201704071447.DmxQl53a%fengguang.wu@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] arm64: dts: rockchip: fix the memory size of PX5 Evaluation board
+Date: Fri,  7 Apr 2017 16:19:29 +0800
+Message-ID: <1491553169-21106-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201704071447.DmxQl53a%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Content-Language: ja-JP
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yamamoto, Masayuki" <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, "Yonezawa, Kota" <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>, "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear All
+Commit 122682b2abb6 ("arm64: dts: rockchip: Add PX5 Evaluation board")
+sets the memory size to 2 GB, but this board only has 1 GB DRAM, so change
+it to the correct value here.
 
-Our patches consists of the following items.
-  [PATCH 1/5] dt-bindings: media: Add document file for CXD2880 SPI I/F
-  [PATCH 2/5] media: Add support for CXD2880 SPI I/F
-  [PATCH 3/5] media: Add suppurt for CXD2880
-  [PATCH 4/5] media: Add suppurt for CXD2880 DVB-T2/T functions
-  [PATCH 5/5] media: Update MAINTAINERS file for CXD2880
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-It is necessary to apply all patches before compiling kernel with our code.
+ arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Could you re-compile after applying above the patches.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
+index 3ffa71d..a5fe600 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
+@@ -53,7 +53,7 @@
+ 	};
+ 
+ 	memory@0 {
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		reg = <0x0 0x0 0x0 0x40000000>;
+ 		device_type = "memory";
+ 	};
+ 
+-- 
+2.7.4
 
-Best Regards,
-Takiguchci
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
