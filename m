@@ -1,103 +1,138 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/3 RESEND] clocksource: Augment bindings for Faraday timer
-Date: Fri,  7 Apr 2017 23:55:13 +0200
-Message-ID: <20170407215513.25706-1-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: [PATCH 1/3] mfd: cros-ec: Add functions to read mapped memory
+Date: Fri,  7 Apr 2017 15:00:08 -0700
+Message-ID: <1491602410-31518-1-git-send-email-moritz.fischer@ettus.com>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: linux-hwmon@vger.kernel.org
+Cc: moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org, olof@lixom.net, linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-It turns out that the Cortina Gemini timer block is just a
-standard IP block from Faraday Technology named FTTMR010.
+From: Moritz Fischer <mdf@kernel.org>
 
-In order to make things clear and understandable, we rename the
-bindings with a Faraday compatible as primary and the Cortina
-gemini as a more specific case.
+The ChromeOS EC has mapped memory regions where things like temperature
+sensors and fan speed are stored. Provide access to those from the
+cros-ec mfd device.
 
-For the plain Faraday timer we require two clock references,
-while the Gemini can keep it's syscon lookup pattern.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
 ---
- .../bindings/timer/cortina,gemini-timer.txt        | 22 ---------------
- .../devicetree/bindings/timer/faraday,fttmr010.txt | 33 ++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
+ drivers/platform/chrome/cros_ec_proto.c | 55 +++++++++++++++++++++++++++++++++
+ include/linux/mfd/cros_ec.h             | 39 +++++++++++++++++++++++
+ 2 files changed, 94 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt b/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
-deleted file mode 100644
-index 16ea1d3b2e9e..000000000000
---- a/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--Cortina Systems Gemini timer
--
--This timer is embedded in the Cortina Systems Gemini SoCs.
--
--Required properties:
--
--- compatible : Must be "cortina,gemini-timer"
--- reg : Should contain registers location and length
--- interrupts : Should contain the three timer interrupts with
--  flags for rising edge
--- syscon : a phandle to the global Gemini system controller
--
--Example:
--
--timer@43000000 {
--	compatible = "cortina,gemini-timer";
--	reg = <0x43000000 0x1000>;
--	interrupts = <14 IRQ_TYPE_EDGE_RISING>, /* Timer 1 */
--		   <15 IRQ_TYPE_EDGE_RISING>, /* Timer 2 */
--		   <16 IRQ_TYPE_EDGE_RISING>; /* Timer 3 */
--	syscon = <&syscon>;
--};
-diff --git a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-new file mode 100644
-index 000000000000..b73ca6cd07f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-@@ -0,0 +1,33 @@
-+Faraday Technology timer
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index ed5dee7..28063de 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -494,3 +494,58 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev)
+ 		return get_keyboard_state_event(ec_dev);
+ }
+ EXPORT_SYMBOL(cros_ec_get_next_event);
 +
-+This timer is a generic IP block from Faraday Technology, embedded in the
-+Cortina Systems Gemini SoCs and other designs.
++static int __cros_ec_read_mapped_mem(struct cros_ec_device *ec, uint8_t offset,
++				     void *buf, size_t size)
++{
++	int ret;
++	struct ec_params_read_memmap *params;
++	struct cros_ec_command *msg;
 +
-+Required properties:
++	msg = kzalloc(sizeof(*msg) + max(sizeof(*params), size), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
 +
-+- compatible : Must be one of
-+  "faraday,fttmr010"
-+  "cortina,gemini-timer"
-+- reg : Should contain registers location and length
-+- interrupts : Should contain the three timer interrupts usually with
-+  flags for falling edge
++	msg->version = 0;
++	msg->command = EC_CMD_READ_MEMMAP;
++	msg->insize = size;
++	msg->outsize = sizeof(*params);
 +
-+Optionally required properties:
++	params = (struct ec_params_read_memmap *)msg->data;
++	params->offset = offset;
++	params->size = size;
 +
-+- clocks : a clock to provide the tick rate for "faraday,fttmr010"
-+- clock-names : should be "EXTCLK" and "PCLK" for the external tick timer
-+  and peripheral clock respectively, for "faraday,fttmr010"
-+- syscon : a phandle to the global Gemini system controller if the compatible
-+  type is "cortina,gemini-timer"
++	ret = cros_ec_cmd_xfer(ec, msg);
++	if (ret < 0 || msg->result != EC_RES_SUCCESS) {
++		dev_warn(ec->dev, "cannot read mapped reg: %d/%d\n",
++			 ret, msg->result);
++		goto out_free;
++	}
 +
-+Example:
++	memcpy(buf, msg->data, size);
 +
-+timer@43000000 {
-+	compatible = "faraday,fttmr010";
-+	reg = <0x43000000 0x1000>;
-+	interrupts = <14 IRQ_TYPE_EDGE_FALLING>, /* Timer 1 */
-+		   <15 IRQ_TYPE_EDGE_FALLING>, /* Timer 2 */
-+		   <16 IRQ_TYPE_EDGE_FALLING>; /* Timer 3 */
-+	clocks = <&extclk>, <&pclk>;
-+	clock-names = "EXTCLK", "PCLK";
-+};
++out_free:
++	kfree(msg);
++	return ret;
++}
++
++int cros_ec_read_mapped_mem32(struct cros_ec_device *ec, const uint8_t offset,
++			      uint32_t *data)
++{
++	return __cros_ec_read_mapped_mem(ec, offset, data, sizeof(*data));
++}
++EXPORT_SYMBOL_GPL(cros_ec_read_mapped_mem32);
++
++int cros_ec_read_mapped_mem16(struct cros_ec_device *ec, const uint8_t offset,
++			      uint16_t *data)
++{
++	return __cros_ec_read_mapped_mem(ec, offset, data, sizeof(*data));
++}
++EXPORT_SYMBOL_GPL(cros_ec_read_mapped_mem16);
++
++int cros_ec_read_mapped_mem8(struct cros_ec_device *ec, const uint8_t offset,
++			     uint8_t *data)
++{
++	return __cros_ec_read_mapped_mem(ec, offset, data, sizeof(*data));
++}
++EXPORT_SYMBOL_GPL(cros_ec_read_mapped_mem8);
+diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+index b3d04de..c2de878 100644
+--- a/include/linux/mfd/cros_ec.h
++++ b/include/linux/mfd/cros_ec.h
+@@ -190,6 +190,45 @@ struct cros_ec_dev {
+ };
+ 
+ /**
++ * cros_ec_read_mapped_mem8 - Read mapped memory in the ChromeOS EC
++ *
++ * This can be called by drivers to access the mapped memory in the EC
++ *
++ * @ec_dev: Device to read from
++ * @offset: Offset to read
++ * @data: Return data
++ * @return: 0 if Ok, -ve on error
++ */
++int cros_ec_read_mapped_mem8(struct cros_ec_device *ec, const uint8_t offset,
++			     uint8_t *data);
++
++/**
++ * cros_ec_read_mapped_mem16 - Read mapped memory in the ChromeOS EC
++ *
++ * This can be called by drivers to access the mapped memory in the EC
++ *
++ * @ec_dev: Device to read from
++ * @offset: Offset to read
++ * @data: Return data
++ * @return: 0 if Ok, -ve on error
++ */
++int cros_ec_read_mapped_mem16(struct cros_ec_device *ec, const uint8_t offset,
++			      uint16_t *data);
++
++/**
++ * cros_ec_read_mapped_mem32 - Read mapped memory in the ChromeOS EC
++ *
++ * This can be called by drivers to access the mapped memory in the EC
++ *
++ * @ec_dev: Device to read from
++ * @offset: Offset to read
++ * @data: Return data
++ * @return: 0 if Ok, -ve on error
++ */
++int cros_ec_read_mapped_mem32(struct cros_ec_device *ec, const uint8_t offset,
++			      uint32_t *data);
++
++/**
+  * cros_ec_suspend - Handle a suspend operation for the ChromeOS EC device
+  *
+  * This can be called by drivers to handle a suspend event.
 -- 
-2.9.3
+2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
