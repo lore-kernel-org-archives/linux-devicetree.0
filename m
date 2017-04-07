@@ -1,39 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] bluetooth: hci_uart: add LL protocol serdev driver support
-Date: Fri, 7 Apr 2017 13:48:52 -0500
-Message-ID: <CAL_Jsq+aM+xxbu=3v8_w9Ce+=t_pXmVWuisnckA8_8LOS-ftVA@mail.gmail.com>
-References: <20170407143516.9945-1-robh@kernel.org> <1491584978.2136.21.camel@redhat.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 6/9] ASoC: add snd_soc_get_dai_id()
+Date: Fri, 7 Apr 2017 14:16:54 -0500
+Message-ID: <CAL_JsqJrcG+zczxdjjBXU17EDGANR9Exet5h5R08dStXiV9zzg@mail.gmail.com>
+References: <8760jdivfm.wl%kuninori.morimoto.gx@renesas.com>
+ <87wpbthgir.wl%kuninori.morimoto.gx@renesas.com> <CAL_JsqKx9qj=ACowGapaT5hdYcevY6urLn_ntFUxAJVrzhc2AA@mail.gmail.com>
+ <87h92nbdgy.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1491584978.2136.21.camel@redhat.com>
-Sender: netdev-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Eyal Reizer <eyalr@ti.com>, Satish Patel <satish.patel@linaro.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87h92nbdgy.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 7, 2017 at 12:09 PM, Dan Williams <dcbw@redhat.com> wrote:
-> On Fri, 2017-04-07 at 09:35 -0500, Rob Herring wrote:
->> Turns out that the LL protocol and the TI-ST are the same thing
->> AFAICT.
->> The TI-ST adds firmware loading, GPIO control, and shared access for
->> NFC, FM radio, etc. For now, we're only implementing what is needed
->> for
->> BT. This mirrors other drivers like BCM and Intel, but uses the new
->> serdev bus.
->>
->> The firmware loading is greatly simplified by using existing
->> infrastructure to send commands. It may be a bit slower than the
->> original code using synchronous functions, but the real bottleneck is
->> likely doing firmware load at 115.2kbps.
+On Mon, Mar 20, 2017 at 8:59 PM, Kuninori Morimoto
+<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
 >
-> Is there no way to put the TI-specific stuff into a TI UART module
-> rather than building it into the generic one?
+> Hi Rob
+>
+> Thank you for your review
+>
+>> > +{
+>> > +       struct device_node *node;
+>> > +       struct device_node *endpoint;
+>> > +       int i, id;
+>> > +
+>> > +       node = of_graph_get_port_parent(ep);
+>> > +
+>> > +       i = 0;
+>> > +       id = -1;
+>> > +       for_each_endpoint_of_node(node, endpoint) {
+>> > +               if (endpoint == ep)
+>> > +                       id = i;
+>>
+>> I don't see how this works when you have 1 DAI controller with
+>> multiple endpoints versus multiple DAI controllers with a single
+>> endpoint each. All the IDs will be 0 in the latter case.
+>
+> It support 1:1 endpoint pattern only.
 
-In case it's not clear, all of HCI_LL is the TI specific part, not
-just what I'm adding. So you are talking about putting each UART BT
-protocol into a separate module. I'd assume that is doable, but seems
-orthogonal to this patch set. I'd also assume there was some reason
-that was not done already.
+Then the endpoint id is always 0 and this function is pointless.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
