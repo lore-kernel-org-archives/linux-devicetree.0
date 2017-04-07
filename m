@@ -1,70 +1,690 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
-Date: Fri, 7 Apr 2017 12:51:52 -0700
-Message-ID: <20170407195152.GH7065@codeaurora.org>
-References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
- <20170405223233.GJ7065@codeaurora.org>
- <bd680d0a-0b2f-91fc-a940-b2fef4300ca3@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v4] regulator: Add driver for voltage controlled regulators
+Date: Fri,  7 Apr 2017 12:51:58 -0700
+Message-ID: <20170407195158.63546-1-mka@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <bd680d0a-0b2f-91fc-a940-b2fef4300ca3-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/06, Gabriel Fernandez wrote:
-> On 04/06/2017 12:32 AM, Stephen Boyd wrote:
-> >On 03/15, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
-> >>diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
-> >>new file mode 100644
-> >>index 0000000..9d4b587
-> >>--- /dev/null
-> >>+++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
-> >>@@ -0,0 +1,152 @@
-> >>+
-> >>+	rcc: rcc@58024400 {
-> >>+		#reset-cells = <1>;
-> >>+		#clock-cells = <2>
-> >>+		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
-> >>+		reg = <0x58024400 0x400>;
-> >>+		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
-> >>+
-> >>+		st,syscfg = <&pwrcfg>;
-> >>+
-> >>+		#address-cells = <1>;
-> >>+		#size-cells = <0>;
-> >>+
-> >>+		vco1@58024430 {
-> >>+			#clock-cells = <0>;
-> >>+			compatible = "stm32,pll";
-> >>+			reg = <0>;
-> >reg is super confusing and doesn't match unit address.
-> ok i fixed it in the v2
-> 
-> >
-> >>+		};
-> >Why? Shouldn't we know this from the compatible string how many
-> >PLLs there are and where they're located? Export the PLLs through
-> >rcc node's clock-cells?
-> >
-> Because i need to offer the possibility to change the PLL VCO
-> frequencies at the start-up of this driver clock.
-> The VCO algorithm needs a division factor, a multiplication factor
-> and a fractional factor.
-> Lot's of solution are possible for one frequency and it's nightmare
-> to satisfy the 3 output dividers of the PLL.
+The output voltage of a voltage controlled regulator can be controlled
+through the voltage of another regulator. The current version of this
+driver assumes that the output voltage is a linear function of the control
+voltage.
 
-Sure, but do we need to configure that on a per-board basis or a
-per-SoC basis? If it's just some configuration, I wonder why we
-don't put that into the driver and base it off some compatible
-string that includes the SoC the device is for. 
+Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes in v4:
+- Use phandle to configure control regulator instead of the regulator name
 
+Changes in v3:
+- Pre-calculate limits for OVP-safe downward transitions with a discrete
+  control regulator
+- Use regulator_get_linear_step() and regulator_count_voltages() to
+  determine if the control regulator is continuous or discrete
+- Changed some log messages to start with lowercase character for
+  consistency
+- Misc formatting fixes
+
+Changes in v2:
+- Don't configure control regulator as supply
+- Added enable/disable ops to turn control regulator on/off
+- Use regulator_has_continuous_voltage_range() to determine if control
+  regulator is continuous or discrete
+- Use regulator-min/max-microvolt as output voltage range
+- Updated and fixed example in DT bindings
+- Updated commit message
+
+ .../devicetree/bindings/regulator/vctrl.txt        |  49 ++
+ drivers/regulator/Kconfig                          |   7 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/vctrl-regulator.c                | 546 +++++++++++++++++++++
+ 4 files changed, 603 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/vctrl.txt
+ create mode 100644 drivers/regulator/vctrl-regulator.c
+
+diff --git a/Documentation/devicetree/bindings/regulator/vctrl.txt b/Documentation/devicetree/bindings/regulator/vctrl.txt
+new file mode 100644
+index 000000000000..601328d7fdbb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/vctrl.txt
+@@ -0,0 +1,49 @@
++Bindings for Voltage controlled regulators
++==========================================
++
++Required properties:
++--------------------
++- compatible		  : must be "vctrl-regulator".
++- regulator-min-microvolt : smallest voltage consumers may set
++- regulator-max-microvolt : largest voltage consumers may set
++- ctrl-supply		  : The regulator supplying the control voltage.
++- ctrl-voltage-range	  : an array of two integer values describing the range
++			    (min/max) of the control voltage. The values specify
++			    the control voltage needed to generate the corresponding
++			    regulator-min/max-microvolt output voltage.
++
++Optional properties:
++--------------------
++- ovp-threshold-percent	: overvoltage protection (OVP) threshold of the
++			  regulator in percent. Some regulators have an OVP
++			  circuitry which shuts down the regulator when the
++			  actual output voltage deviates beyond a certain
++			  margin from the expected value for a given control
++			  voltage. On larger voltage decreases this can occur
++			  undesiredly since the output voltage does not adjust
++			  inmediately to changes in the control voltage. To
++			  avoid this situation the vctrl driver breaks down
++			  larger voltage decreases into multiple steps, where
++			  each step is within the OVP threshold.
++- min-slew-down-rate	: Describes how slowly the regulator voltage will decay
++			  down in the worst case (lightest expected load).
++			  Specified in uV / us (like main regulator ramp rate).
++			  This value is required when ovp-threshold-percent is
++			  specified.
++
++Example:
++
++	vctrl-reg {
++		compatible = "vctrl-regulator";
++		regulator-name = "vctrl_reg";
++
++		ctrl-supply = <&ctrl_reg>;
++
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1500000>;
++
++		ctrl-voltage-range = <200000 500000>;
++
++		min-slew-down-rate = <225>;
++		ovp-threshold-percent = <16>;
++	};
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index be06eb29c681..9a090e338a19 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -850,6 +850,13 @@ config REGULATOR_TWL4030
+ 	  This driver supports the voltage regulators provided by
+ 	  this family of companion chips.
+ 
++config REGULATOR_VCTRL
++	tristate "Voltage controlled regulators"
++	depends on OF
++	help
++	  This driver provides support for voltage regulators whose output
++	  voltage is controlled by the voltage of another regulator.
++
+ config REGULATOR_VEXPRESS
+ 	tristate "Versatile Express regulators"
+ 	depends on VEXPRESS_CONFIG
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index ef7725e2592a..891dd287f26b 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -106,6 +106,7 @@ obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65912) += tps65912-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS80031) += tps80031-regulator.o
+ obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o twl6030-regulator.o
++obj-$(CONFIG_REGULATOR_VCTRL) += vctrl-regulator.o
+ obj-$(CONFIG_REGULATOR_VEXPRESS) += vexpress-regulator.o
+ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-dcdc.o
+ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-isink.o
+diff --git a/drivers/regulator/vctrl-regulator.c b/drivers/regulator/vctrl-regulator.c
+new file mode 100644
+index 000000000000..6baadef0ed74
+--- /dev/null
++++ b/drivers/regulator/vctrl-regulator.c
+@@ -0,0 +1,546 @@
++/*
++ * Driver for voltage controller regulators
++ *
++ * Copyright (C) 2017 Google, Inc.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/sort.h>
++
++struct vctrl_voltage_range {
++	int min_uV;
++	int max_uV;
++};
++
++struct vctrl_voltage_ranges {
++	struct vctrl_voltage_range ctrl;
++	struct vctrl_voltage_range out;
++};
++
++struct vctrl_voltage_table {
++	int ctrl;
++	int out;
++	int ovp_min_sel;
++};
++
++struct vctrl_data {
++	struct regulator_dev *rdev;
++	struct regulator_desc desc;
++	struct regulator *ctrl_reg;
++	bool enabled;
++	unsigned int min_slew_down_rate;
++	unsigned int ovp_threshold;
++	struct vctrl_voltage_ranges vrange;
++	struct vctrl_voltage_table *vtable;
++	unsigned int sel;
++};
++
++static int vctrl_calc_ctrl_voltage(struct vctrl_data *vctrl, int out_uV)
++{
++	struct vctrl_voltage_range *ctrl = &vctrl->vrange.ctrl;
++	struct vctrl_voltage_range *out = &vctrl->vrange.out;
++
++	return ctrl->min_uV +
++		DIV_ROUND_CLOSEST_ULL((s64)(out_uV - out->min_uV) *
++				      (ctrl->max_uV - ctrl->min_uV),
++				      out->max_uV - out->min_uV);
++}
++
++static int vctrl_calc_output_voltage(struct vctrl_data *vctrl, int ctrl_uV)
++{
++	struct vctrl_voltage_range *ctrl = &vctrl->vrange.ctrl;
++	struct vctrl_voltage_range *out = &vctrl->vrange.out;
++
++	if (ctrl_uV < 0) {
++		pr_err("vctrl: failed to get control voltage\n");
++		return ctrl_uV;
++	}
++
++	if (ctrl_uV < ctrl->min_uV)
++		return out->min_uV;
++
++	if (ctrl_uV > ctrl->max_uV)
++		return out->max_uV;
++
++	return out->min_uV +
++		DIV_ROUND_CLOSEST_ULL((s64)(ctrl_uV - ctrl->min_uV) *
++				      (out->max_uV - out->min_uV),
++				      ctrl->max_uV - ctrl->min_uV);
++}
++
++static int vctrl_get_voltage(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	int ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
++
++	return vctrl_calc_output_voltage(vctrl, ctrl_uV);
++}
++
++static int vctrl_set_voltage(struct regulator_dev *rdev,
++			     int req_min_uV, int req_max_uV,
++			     unsigned int *selector)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	struct regulator *ctrl_reg = vctrl->ctrl_reg;
++	int orig_ctrl_uV = regulator_get_voltage(ctrl_reg);
++	int uV = vctrl_calc_output_voltage(vctrl, orig_ctrl_uV);
++	int ret;
++
++	if (req_min_uV >= uV || !vctrl->ovp_threshold)
++		/* voltage rising or no OVP */
++		return regulator_set_voltage(
++			ctrl_reg,
++			vctrl_calc_ctrl_voltage(vctrl, req_min_uV),
++			vctrl_calc_ctrl_voltage(vctrl, req_max_uV));
++
++	while (uV > req_min_uV) {
++		int max_drop_uV = (uV * vctrl->ovp_threshold) / 100;
++		int next_uV;
++		int next_ctrl_uV;
++		int delay;
++
++		/* Make sure no infinite loop even in crazy cases */
++		if (max_drop_uV == 0)
++			max_drop_uV = 1;
++
++		next_uV = max_t(int, req_min_uV, uV - max_drop_uV);
++		next_ctrl_uV = vctrl_calc_ctrl_voltage(vctrl, next_uV);
++
++		ret = regulator_set_voltage(ctrl_reg,
++					    next_ctrl_uV,
++					    next_ctrl_uV);
++		if (ret)
++			goto err;
++
++		delay = DIV_ROUND_UP(uV - next_uV, vctrl->min_slew_down_rate);
++		usleep_range(delay, delay + DIV_ROUND_UP(delay, 10));
++
++		uV = next_uV;
++	}
++
++	return 0;
++
++err:
++	/* Try to go back to original voltage */
++	regulator_set_voltage(ctrl_reg, orig_ctrl_uV, orig_ctrl_uV);
++
++	return ret;
++}
++
++static int vctrl_get_voltage_sel(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++
++	return vctrl->sel;
++}
++
++static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
++				 unsigned int selector)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	struct regulator *ctrl_reg = vctrl->ctrl_reg;
++	unsigned int orig_sel = vctrl->sel;
++	int ret;
++
++	if (selector >= rdev->desc->n_voltages)
++		return -EINVAL;
++
++	if (selector >= vctrl->sel || !vctrl->ovp_threshold) {
++		/* voltage rising or no OVP */
++		ret = regulator_set_voltage(ctrl_reg,
++					    vctrl->vtable[selector].ctrl,
++					    vctrl->vtable[selector].ctrl);
++		if (!ret)
++			vctrl->sel = selector;
++
++		return ret;
++	}
++
++	while (vctrl->sel != selector) {
++		unsigned int next_sel;
++		int delay;
++
++		if (selector >= vctrl->vtable[vctrl->sel].ovp_min_sel)
++			next_sel = selector;
++		else
++			next_sel = vctrl->vtable[vctrl->sel].ovp_min_sel;
++
++		ret = regulator_set_voltage(ctrl_reg,
++					    vctrl->vtable[next_sel].ctrl,
++					    vctrl->vtable[next_sel].ctrl);
++		if (ret) {
++			dev_err(&rdev->dev,
++				"failed to set control voltage to %duV\n",
++				vctrl->vtable[next_sel].ctrl);
++			goto err;
++		}
++		vctrl->sel = next_sel;
++
++		delay = DIV_ROUND_UP(vctrl->vtable[vctrl->sel].out -
++				     vctrl->vtable[next_sel].out,
++				     vctrl->min_slew_down_rate);
++		usleep_range(delay, delay + DIV_ROUND_UP(delay, 10));
++	}
++
++	return 0;
++
++err:
++	if (vctrl->sel != orig_sel) {
++		/* Try to go back to original voltage */
++		if (!regulator_set_voltage(ctrl_reg,
++					   vctrl->vtable[orig_sel].ctrl,
++					   vctrl->vtable[orig_sel].ctrl))
++			vctrl->sel = orig_sel;
++		else
++			dev_warn(&rdev->dev,
++				 "failed to restore original voltage\n");
++	}
++
++	return ret;
++}
++
++static int vctrl_list_voltage(struct regulator_dev *rdev,
++			      unsigned int selector)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++
++	if (selector >= rdev->desc->n_voltages)
++		return -EINVAL;
++
++	return vctrl->vtable[selector].out;
++}
++
++static int vctrl_parse_dt(struct platform_device *pdev,
++			  struct vctrl_data *vctrl)
++{
++	int ret;
++	struct device_node *np = pdev->dev.of_node;
++	u32 pval;
++	u32 vrange_ctrl[2];
++
++	vctrl->ctrl_reg = devm_regulator_get(&pdev->dev, "ctrl");
++	if (IS_ERR(vctrl->ctrl_reg))
++		return PTR_ERR(vctrl->ctrl_reg);
++
++	ret = of_property_read_u32(np, "ovp-threshold-percent", &pval);
++	if (!ret) {
++		vctrl->ovp_threshold = pval;
++		if (vctrl->ovp_threshold > 100) {
++			dev_err(&pdev->dev,
++				"ovp-threshold-percent (%u) > 100\n",
++				vctrl->ovp_threshold);
++			return -EINVAL;
++		}
++	}
++
++	ret = of_property_read_u32(np, "min-slew-down-rate", &pval);
++	if (!ret) {
++		vctrl->min_slew_down_rate = pval;
++
++		/* We use the value as int and as divider; sanity check */
++		if (vctrl->min_slew_down_rate == 0) {
++			dev_err(&pdev->dev,
++				"min-slew-down-rate must not be 0\n");
++			return -EINVAL;
++		} else if (vctrl->min_slew_down_rate > INT_MAX) {
++			dev_err(&pdev->dev, "min-slew-down-rate (%u) too big\n",
++				vctrl->min_slew_down_rate);
++			return -EINVAL;
++		}
++	}
++
++	if (vctrl->ovp_threshold && !vctrl->min_slew_down_rate) {
++		dev_err(&pdev->dev,
++			"ovp-threshold-percent requires min-slew-down-rate\n");
++		return -EINVAL;
++	}
++
++	ret = of_property_read_u32(np, "regulator-min-microvolt", &pval);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to read regulator-min-microvolt: %d\n", ret);
++		return ret;
++	}
++	vctrl->vrange.out.min_uV = pval;
++
++	ret = of_property_read_u32(np, "regulator-max-microvolt", &pval);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to read regulator-max-microvolt: %d\n", ret);
++		return ret;
++	}
++	vctrl->vrange.out.max_uV = pval;
++
++	ret = of_property_read_u32_array(np, "ctrl-voltage-range", vrange_ctrl,
++					 2);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to read ctrl-voltage-range: %d\n",
++			ret);
++		return ret;
++	}
++
++	if (vrange_ctrl[0] >= vrange_ctrl[1]) {
++		dev_err(&pdev->dev, "ctrl-voltage-range is invalid: %d-%d\n",
++			vrange_ctrl[0], vrange_ctrl[1]);
++		return -EINVAL;
++	}
++
++	vctrl->vrange.ctrl.min_uV = vrange_ctrl[0];
++	vctrl->vrange.ctrl.max_uV = vrange_ctrl[1];
++
++	return 0;
++}
++
++static int vctrl_cmp_ctrl_uV(const void *a, const void *b)
++{
++	const struct vctrl_voltage_table *at = a;
++	const struct vctrl_voltage_table *bt = b;
++
++	return at->ctrl - bt->ctrl;
++}
++
++static int vctrl_init_vtable(struct platform_device *pdev)
++{
++	struct vctrl_data *vctrl = platform_get_drvdata(pdev);
++	struct regulator_desc *rdesc = &vctrl->desc;
++	struct regulator *ctrl_reg = vctrl->ctrl_reg;
++	struct vctrl_voltage_range *vrange_ctrl = &vctrl->vrange.ctrl;
++	int n_voltages;
++	int ctrl_uV;
++	int i, idx_vt;
++
++	n_voltages = regulator_count_voltages(ctrl_reg);
++
++	rdesc->n_voltages = n_voltages;
++
++	/* determine number of steps within the range of the vctrl regulator */
++	for (i = 0; i < n_voltages; i++) {
++		ctrl_uV = regulator_list_voltage(ctrl_reg, i);
++
++		if (ctrl_uV < vrange_ctrl->min_uV ||
++		    ctrl_uV > vrange_ctrl->max_uV) {
++			rdesc->n_voltages--;
++			continue;
++		}
++	}
++
++	if (rdesc->n_voltages == 0) {
++		dev_err(&pdev->dev, "invalid configuration\n");
++		return -EINVAL;
++	}
++
++	vctrl->vtable = devm_kmalloc_array(
++		&pdev->dev, sizeof(struct vctrl_voltage_table),
++		rdesc->n_voltages, GFP_KERNEL | __GFP_ZERO);
++	if (!vctrl->vtable)
++		return -ENOMEM;
++
++	/* create mapping control <=> output voltage */
++	for (i = 0, idx_vt = 0; i < n_voltages; i++) {
++		ctrl_uV = regulator_list_voltage(ctrl_reg, i);
++
++		if (ctrl_uV < vrange_ctrl->min_uV ||
++		    ctrl_uV > vrange_ctrl->max_uV)
++			continue;
++
++		vctrl->vtable[idx_vt].ctrl = ctrl_uV;
++		vctrl->vtable[idx_vt].out =
++			vctrl_calc_output_voltage(vctrl, ctrl_uV);
++		idx_vt++;
++	}
++
++	/* we rely on the table to be ordered by ascending voltage */
++	sort(vctrl->vtable, rdesc->n_voltages,
++	     sizeof(struct vctrl_voltage_table), vctrl_cmp_ctrl_uV,
++	     NULL);
++
++	/* pre-calculate OVP-safe downward transitions */
++	for (i = n_voltages - 1; i > 0; i--) {
++		int j;
++		int ovp_min_uV = (vctrl->vtable[i].out *
++				  (100 - vctrl->ovp_threshold)) / 100;
++
++		for (j = 0; j < i; j++) {
++			if (vctrl->vtable[j].out >= ovp_min_uV) {
++				vctrl->vtable[i].ovp_min_sel = j;
++				break;
++			}
++		}
++
++		if (j == i) {
++			dev_warn(&pdev->dev, "switching down from %duV may cause OVP shutdown\n",
++				vctrl->vtable[i].out);
++			/* use next lowest voltage */
++			vctrl->vtable[i].ovp_min_sel = i - 1;
++		}
++	}
++
++	return 0;
++}
++
++static int vctrl_enable(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	int ret = regulator_enable(vctrl->ctrl_reg);
++
++	if (!ret)
++		vctrl->enabled = true;
++
++	return ret;
++}
++
++static int vctrl_disable(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++	int ret = regulator_disable(vctrl->ctrl_reg);
++
++	if (!ret)
++		vctrl->enabled = false;
++
++	return ret;
++}
++
++static int vctrl_is_enabled(struct regulator_dev *rdev)
++{
++	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
++
++	return vctrl->enabled;
++}
++
++static const struct regulator_ops vctrl_ops_cont = {
++	.enable		  = vctrl_enable,
++	.disable	  = vctrl_disable,
++	.is_enabled	  = vctrl_is_enabled,
++	.get_voltage	  = vctrl_get_voltage,
++	.set_voltage	  = vctrl_set_voltage,
++};
++
++static const struct regulator_ops vctrl_ops_non_cont = {
++	.enable		  = vctrl_enable,
++	.disable	  = vctrl_disable,
++	.is_enabled	  = vctrl_is_enabled,
++	.set_voltage_sel = vctrl_set_voltage_sel,
++	.get_voltage_sel = vctrl_get_voltage_sel,
++	.list_voltage    = vctrl_list_voltage,
++	.map_voltage     = regulator_map_voltage_iterate,
++};
++
++static int vctrl_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct vctrl_data *vctrl;
++	const struct regulator_init_data *init_data;
++	struct regulator_desc *rdesc;
++	struct regulator_config cfg = { };
++	struct vctrl_voltage_range *vrange_ctrl;
++	int ctrl_uV;
++	int ret;
++
++	vctrl = devm_kzalloc(&pdev->dev, sizeof(struct vctrl_data),
++			     GFP_KERNEL);
++	if (!vctrl)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, vctrl);
++
++	ret = vctrl_parse_dt(pdev, vctrl);
++	if (ret)
++		return ret;
++
++	vrange_ctrl = &vctrl->vrange.ctrl;
++
++	rdesc = &vctrl->desc;
++	rdesc->name = "vctrl";
++	rdesc->type = REGULATOR_VOLTAGE;
++	rdesc->owner = THIS_MODULE;
++
++	if ((regulator_get_linear_step(vctrl->ctrl_reg) == 1) ||
++	    (regulator_count_voltages(vctrl->ctrl_reg) == -EINVAL)) {
++		rdesc->continuous_voltage_range = true;
++		rdesc->ops = &vctrl_ops_cont;
++	} else {
++		rdesc->ops = &vctrl_ops_non_cont;
++	}
++
++	init_data = of_get_regulator_init_data(&pdev->dev, np, rdesc);
++	if (!init_data)
++		return -ENOMEM;
++
++	cfg.of_node = np;
++	cfg.dev = &pdev->dev;
++	cfg.driver_data = vctrl;
++	cfg.init_data = init_data;
++
++	if (!rdesc->continuous_voltage_range) {
++		ret = vctrl_init_vtable(pdev);
++		if (ret)
++			return ret;
++
++		ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
++		if (ctrl_uV < 0) {
++			dev_err(&pdev->dev, "failed to get control voltage\n");
++			return ctrl_uV;
++		}
++
++		/* determine current voltage selector from control voltage */
++		if (ctrl_uV < vrange_ctrl->min_uV) {
++			vctrl->sel = 0;
++		} else if (ctrl_uV > vrange_ctrl->max_uV) {
++			vctrl->sel = rdesc->n_voltages - 1;
++		} else {
++			int i;
++
++			for (i = 0; i < rdesc->n_voltages; i++) {
++				if (ctrl_uV == vctrl->vtable[i].ctrl) {
++					vctrl->sel = i;
++					break;
++				}
++			}
++		}
++	}
++
++	vctrl->rdev = devm_regulator_register(&pdev->dev, rdesc, &cfg);
++	if (IS_ERR(vctrl->rdev)) {
++		ret = PTR_ERR(vctrl->rdev);
++		dev_err(&pdev->dev, "failed to register regulator: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id vctrl_of_match[] = {
++	{ .compatible = "vctrl-regulator", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, vctrl_of_match);
++
++static struct platform_driver vctrl_driver = {
++	.probe		= vctrl_probe,
++	.driver		= {
++		.name		= "vctrl-regulator",
++		.of_match_table = of_match_ptr(vctrl_of_match),
++	},
++};
++
++module_platform_driver(vctrl_driver);
++
++MODULE_DESCRIPTION("Voltage Controlled Regulator Driver");
++MODULE_AUTHOR("Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>");
++MODULE_LICENSE("GPL v2");
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.12.2.715.g7642488e1d-goog
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
