@@ -1,118 +1,195 @@
-From: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
-Subject: Re: [RFC 4/8] regulator: core: Check enabling bypass respects
- constraints
-Date: Fri, 7 Apr 2017 13:51:52 +0300
-Message-ID: <1491562312.9365.41.camel@nxp.com>
-References: <cover.1490199005.git.leonard.crestez@nxp.com>
-         <1edff9bc610969b0c53fa1080d5db021c8e00b2d.1490199005.git.leonard.crestez@nxp.com>
-         <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
-         <1490704781.3546.57.camel@nxp.com>
-         <20170328164754.z2c2ttovs3sxbcos@sirena.org.uk>
-         <1490730595.15830.1.camel@nxp.com>
-         <20170406185202.uixxcv3dgucrddgc@sirena.org.uk>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 2/8] v4l: fwnode: Support generic fwnode for parsing standardised properties
+Date: Fri, 07 Apr 2017 13:54:58 +0300
+Message-ID: <1761689.CzVR5YAybi@avalon>
+References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com> <2366571.B7YdK6QUO2@avalon> <20170407103633.GD4192@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170406185202.uixxcv3dgucrddgc-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Gong <yibin.gong-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170407103633.GD4192@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-04-06 at 19:52 +0100, Mark Brown wrote:
-> On Tue, Mar 28, 2017 at 10:49:55PM +0300, Leonard Crestez wrote:
-> > On Tue, 2017-03-28 at 17:47 +0100, Mark Brown wrote:
+Hi Sakari,
 
-> > > To repeat what I said previously the whole point of bypassing is to not
-> > > do regulation and generally the constraints in the unregulated idle case
-> > > are substantially more relaxed.  This would break use cases relying on
-> > > the existing behaviour which wouldn't expect to affect the parent
-> > > voltage at all, either stopping things working or making them less
-> > > efficient by needlessly regulating the voltage down which defeats the
-> > > main point of bypassing.
-
-> > So what you want is to prevent voltage changes unless strictly
-> > required, even lowering? What I want is to get the minimum voltage in
-> > the SOC because that's where power is being consumed.
-
-> So your end goal here is to bypass a regulator which is forced into your
-> system design by being integrated into the SoC which isn't able to
-> regulate down to a low enough voltage for your use case?  I guess one
-> question is if you need to use the regulator at all?
-
-Both the PMIC and the LDOs can provide the required voltage range. LDO
-bypass mode is a design tradeoff: the PMIC provides more efficient
-conversion but with more fluctuations.
-
-My question was about how the regulator framework handles constraints
-and consumer voltage requests. What I want is for the output to be set
-to the minimum value that meets all constraints. Maybe other users
-would prefer regulators to keep their output as much as possible?
-
-This is relevant even if LDOs are enabled, it's still preferable to
-have PMIC output as low as possible because then less of the voltage
-reduction is performed in the LDO.
-
-It currently seems to work how I expect but from your statement it's
-not clear if it's entirely intentional.
-
-> > It's not at all obvious that in bypass mode the output constraints of a
-> > regulator need not be respected by the core. I expected the opposite,
-> > this is something that should be documented.
-
-> SubmittingPatches...  Bear in mind that most regulators are fixed
-> voltage in a given system so bypass would be very difficult to use if it
-> tried to pass the constraints upstream.
-
-> > But if the bypassed regulator has a downstream consumer then it's
-> > requirements should definitely still be met in bypass mode, right? I
-> > could set my maximum voltage directly from cpufreq in that case.
-
-> What we're interpreting bypass mode as meaning is "stop regulating".
-> There will still be some limits but we're expecting them to be enforced
-> in the extremes of the constraints in the parent regulators.
-
-> > Or should a bypassed regulator ignore all other requests? One of the
-> > behaviors that this patch series relies on is that calling set_voltage
-> > on a bypassed regulator propagates this request to the supply and picks
-> > the minimum voltage there. An alternative implementation would be to
-
-> Yes, the expectation is that if anything is being changed it won't have
-> any effect until regulation is reenabled but we're not particularly
-> expecting much activity on bypassed regulators.
-
-OK, so it is up to consumers to ensure the supply voltage is acceptable
-before allowing bypass. If they want to do something clever they should
-register as a consumer to the supply as well.
-
+On Friday 07 Apr 2017 13:36:34 Sakari Ailus wrote:
+> On Fri, Apr 07, 2017 at 12:44:27PM +0300, Laurent Pinchart wrote:
+> > On Thursday 06 Apr 2017 16:12:04 Sakari Ailus wrote:
+> > > The fwnode_handle is a more generic way than OF device_node to describe
+> > > firmware nodes. Instead of the OF API, use more generic fwnode API to
+> > > obtain the same information.
 > > 
-> > call set_voltage directly on the supply regulator by changing the
-> > "{arm,soc,pu}-supply" references in DT to point to the PMIC instead.
-> > Would that be better?
+> > I would mention that this is a copy of v4l2-of.c with the OF API replaced
+> > with the fwnode API.
+> 
+> I'll add that to the description.
+> 
+> > > As the V4L2 fwnode support will be required by a small minority of e.g.
+> > > ACPI based systems (the same might actually go for OF), make this a
+> > > module instead of embedding it in the videodev module.
+> > > 
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > ---
+> > > 
+> > >  drivers/media/v4l2-core/Kconfig       |   3 +
+> > >  drivers/media/v4l2-core/Makefile      |   1 +
+> > >  drivers/media/v4l2-core/v4l2-fwnode.c | 353 +++++++++++++++++++++++++++
+> > >  include/media/v4l2-fwnode.h           | 104 ++++++++++
+> > >  4 files changed, 461 insertions(+)
+> > >  create mode 100644 drivers/media/v4l2-core/v4l2-fwnode.c
+> > >  create mode 100644 include/media/v4l2-fwnode.h
 
-> That's more what's expected here.
+[snip]
 
-Ok, I will try that approach instead.
+> > > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > b/drivers/media/v4l2-core/v4l2-fwnode.c new file mode 100644
+> > > index 0000000..4f69b11
+> > > --- /dev/null
+> > > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > @@ -0,0 +1,353 @@
+> > > +/*
+> > > + * V4L2 fwnode binding parsing library
+> > > + *
+> > > + * Copyright (c) 2016 Intel Corporation.
+> > > + * Author: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > + *
+> > > + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
+> > > + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > > + *
+> > > + * Copyright (C) 2012 Renesas Electronics Corp.
+> > > + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or modify
+> > > + * it under the terms of version 2 of the GNU General Public License as
+> > > + * published by the Free Software Foundation.
+> > > + */
+> > > +#include <linux/acpi.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/property.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/string.h>
+> > > +#include <linux/types.h>
+> > > +
+> > > +#include <media/v4l2-fwnode.h>
+> > > +
+> > > +static int v4l2_fwnode_endpoint_parse_csi_bus(struct fwnode_handle
+> > > *fwn,
+> > > +					      struct v4l2_fwnode_endpoint
+> > > *vfwn)
+> > > +{
+> > > +	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vfwn->bus.mipi_csi2;
+> > > +	bool have_clk_lane = false;
+> > > +	unsigned int flags = 0, lanes_used = 0;
+> > > +	unsigned int i;
+> > > +	u32 v;
+> > > +	int rval;
+> > 
+> > I would have used "ret" instead of "rval" ;-)
+> 
+> I know. But
+> 
+> 1) there's no established convention in the file and
+> 
+> 2) "rval" has the benefit is easier to look up; one doesn't find a plethora
+> of "return something". Therefore it is better than "ret" for the purpose.
 
-> > Both approaches work. Relying on propagation feels like it is the
-> > "right way" to handle this, even if it's harder to get right and the
-> > regulator core does not entirely support it. But it's possible that
-> > this is based on a misunderstanding of what "bypass" is actually
-> > supposed to do.
+The solution to that is
 
-> Another option would be to add a regulator configuration which allowed
-> the regulator to transparently go into bypass mode if the parent could
-> do things directly, only enabling regulation if the parent couldn't
-> support.  That would mean you'd loose the supply cleanup function which
-> is typically part of why there are LDOs in the system but it sounds like
-> you're OK with that in at least your use case.
+/ret\>
 
-Dynamic enabling of bypass mode in the core seems very complex and not
-terribly useful for my case. I pretty much want them always in bypass
-or always enabled.
+(and, of course, switching to vim :-D)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+
+> > > +/*
+> > > + * v4l2_fwnode_endpoint_free() - free the V4L2 fwnode acquired by
+> > > + * v4l2_fwnode_endpoint_alloc_parse()
+> > > + * @fwn - the V4L2 fwnode the resources of which are to be released
+> > 
+> > Mayeb "the V4L2 fwnode whose resources are to be released" ?
+> > 
+> > > + *
+> > > + * It is safe to call this function with NULL argument or on an
+> > 
+> > s/on an/on a/
+> 
+> Yes.
+> 
+> > > + * V4L2 fwnode the parsing of which failed.
+> > 
+> > "whose parsing failed" ?
+> 
+> Any particular reason? Do you like "whose"? :-)
+
+"of which" sounds dubious in this context, but please consult a native English 
+speaker in case of doubt.
+
+[snip]
+
+> > > +/**
+> > > + * v4l2_fwnode_endpoint_parse_link() - parse a link between two
+> > > endpoints
+> > > + * @node: pointer to the fwnode at the local end of the link
+> > 
+> > The parameter is called __fwn. I believe you should rename it to fwn,
+> > otherwise the documentation will look weird.
+> > 
+> > As explained before, you should mention that this is an endpoint fwnode
+> > handle.
+> 
+> Agreed.
+> 
+> > > + * @link: pointer to the V4L2 fwnode link data structure
+> > > + *
+> > > + * Fill the link structure with the local and remote nodes and port
+> > > numbers.
+> > > + * The local_node and remote_node fields are set to point to the local
+> > > and
+> > > + * remote port's parent nodes respectively (the port parent node being
+> > > the
+> > > + * parent node of the port node if that node isn't a 'ports' node, or
+> > > the
+> > > + * grand-parent node of the port node otherwise).
+> > > + *
+> > > + * A reference is taken to both the local and remote nodes, the caller
+> > > + * must use v4l2_fwnode_endpoint_put_link() to drop the references
+> > > + * when done with the link.
+> > 
+> > Just curious, is there a reason to wrap earlier than the 80 columns limit
+> > ?
+> > 
+> >  * A reference is taken to both the local and remote nodes, the caller
+> >  must use
+> >  * v4l2_fwnode_endpoint_put_link() to drop the references when done with
+> >  the
+> >  * link.
+> > 
+> > would work.
+> 
+> It is like a speed limit, you can perfectly legally drive slower than 80
+> characters per line, right? :-)
+
+That reminds me of a particular road trip in California that should probably 
+not be mentioned here, but whose participants certainly remember :-)
+
+> Albeit the conditions seem pretty good in this file, I can try pushing it
+> closer to the limit.
+> 
+> > > + * Return: 0 on success, or -ENOLINK if the remote fwnode can't be
+> > > found.
+> > 
+> > Here too you should mention remote endpoint.
+> 
+> Oh yes.
+> 
+> > > + */
+
+-- 
+Regards,
+
+Laurent Pinchart
