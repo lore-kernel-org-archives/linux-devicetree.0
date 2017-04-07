@@ -1,49 +1,93 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2] ARM: at91: Document new TCB bindings
-Date: Fri, 7 Apr 2017 14:31:32 +0200
-Message-ID: <20170407123132.ety26gj7sak5lr6t@piout.net>
-References: <1467039901-11297-1-git-send-email-alexandre.belloni@free-electrons.com>
- <20160701012743.GA16698@rob-hp-laptop>
- <20160704151058.44b679bf@bbrezillon>
- <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
- <20170125161129.41acaa9a@bbrezillon>
- <fd4a2797-d8eb-ac80-36fc-01240fb0e944@atmel.com>
- <a8d541f0-e70a-a12d-5a7e-b1b72eddbe65@linaro.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: ventana: fix DTC warnings
+Date: Fri, 7 Apr 2017 20:33:13 +0800
+Message-ID: <20170407123312.GE16503@dragon>
+References: <1491252168-7934-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <a8d541f0-e70a-a12d-5a7e-b1b72eddbe65@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh@kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1491252168-7934-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: "devicetree @ vger . kernel . org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/2017 at 14:15:36 +0200, Daniel Lezcano wrote:
-> >> What's your solution for this case?
-> > 
-> > It seems that we don't have any progress on this topic for more than 6
-> > months which is a pity as we now experience an issue that would have
-> > been addressed completely by the TC rework [1].
-> > 
-> > aka "ping"... ;-)
+On Mon, Apr 03, 2017 at 01:42:48PM -0700, Tim Harvey wrote:
+> Remove the sky2 ethernet device node from the pcie controller which was
+> invalid to begin with.
 > 
+> The original intent was to allow the bootloader to populate the MAC via
+> dt but this requires the PCI bus topology to be complete in dt as well
+> and as these boards have an expansion connector that topology is dynamic
+> and can't be represented here.
 > 
-> Hi Nicolas, Boris,
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6q-gw5400-a.dts  | 4 ----
+>  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 4 ----
+>  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 4 ----
+>  3 files changed, 12 deletions(-)
 > 
-> is there any news from your side ?
+> diff --git a/arch/arm/boot/dts/imx6q-gw5400-a.dts b/arch/arm/boot/dts/imx6q-gw5400-a.dts
+> index 8e84713..5b066c0 100644
+> --- a/arch/arm/boot/dts/imx6q-gw5400-a.dts
+> +++ b/arch/arm/boot/dts/imx6q-gw5400-a.dts
+> @@ -347,10 +347,6 @@
+>  &pcie {
+>  	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
+> -
+> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
+> -		compatible = "marvell,sky2";
+> -	};
+
+The label 'eth1' is referenced by aliases, and so DTC complains as
+below.
+
+ERROR (path_references): Reference to non-existent node or label "eth1".
+
+Please test before submitting.
+
+Shawn
+
+>  };
+>  
+>  &ssi1 {
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> index a208e7e..420a2f6 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> @@ -342,10 +342,6 @@
+>  	pinctrl-0 = <&pinctrl_pcie>;
+>  	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
+> -
+> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
+> -		compatible = "marvell,sky2";
+> -	};
+>  };
+>  
+>  &pwm2 {
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> index 968fda9..e742153 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> @@ -379,10 +379,6 @@
+>  	pinctrl-0 = <&pinctrl_pcie>;
+>  	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
+> -
+> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
+> -		compatible = "marvell,sky2";
+> -	};
+>  };
+>  
+>  &pwm1 {
+> -- 
+> 2.7.4
 > 
-
-I'm planning to resubmit news bindings and the full rework when I'll
-have time to work on that. But I must admit I don't quite see the issue
-with the proposed bindings.
-
-Also, we are starting to see more and more flexible timer IPs that can
-be used as RTC, timer, pwm, counters, quad decoders. I'm starting to
-think we may need a new subsystem.
-
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
