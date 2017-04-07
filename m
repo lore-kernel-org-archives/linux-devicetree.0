@@ -1,59 +1,121 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3 RESEND] clocksource: Augment bindings for Faraday
- timer
-Date: Sat, 8 Apr 2017 00:08:59 +0200
-Message-ID: <20170407220859.GR2078@mai>
-References: <20170407215513.25706-1-linus.walleij@linaro.org>
- <CAL_JsqJ6HWRiU2iQtJapRLwuWdUM6KCgYfseJzMtie-xG_UKxw@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v2 4/8] v4l: async: Provide interoperability between OF
+ and fwnode matching
+Date: Sat, 8 Apr 2017 01:10:47 +0300
+Message-ID: <20170407221047.GL4192@valkosipuli.retiisi.org.uk>
+References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1491484330-12040-5-git-send-email-sakari.ailus@linux.intel.com>
+ <4169138.83VydnvH0Q@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ6HWRiU2iQtJapRLwuWdUM6KCgYfseJzMtie-xG_UKxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4169138.83VydnvH0Q@avalon>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 05:01:53PM -0500, Rob Herring wrote:
-> On Fri, Apr 7, 2017 at 4:55 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > It turns out that the Cortina Gemini timer block is just a
-> > standard IP block from Faraday Technology named FTTMR010.
-> >
-> > In order to make things clear and understandable, we rename the
-> > bindings with a Faraday compatible as primary and the Cortina
-> > gemini as a more specific case.
-> >
-> > For the plain Faraday timer we require two clock references,
-> > while the Gemini can keep it's syscon lookup pattern.
-> >
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Laurent,
+
+On Fri, Apr 07, 2017 at 01:07:48PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> Thank you for the patch.
+> 
+> On Thursday 06 Apr 2017 16:12:06 Sakari Ailus wrote:
+> > OF and fwnode support are separated in V4L2 and individual drivers may
+> > implement one of them. Sub-devices do not match with a notifier
+> > expecting sub-devices with fwnodes, nor the other way around.
+> 
+> Shouldn't we instead convert all drivers to fwnode matching ? What's missing 
+> after the mass conversion in patch 5/8 ?
+
+A lot of drivers use the OF frame work and thus do not deal with fwnodes
+directly. I haven't entirely converted them to use the fwnode API since
+making additional, unnecessary changes increases the likelihood of errors.
+
+> 
+> > Fix this by checking for sub-device's of_node field in fwnode match and
+> > fwnode field in OF match.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > > ---
-> >  .../bindings/timer/cortina,gemini-timer.txt        | 22 ---------------
-> >  .../devicetree/bindings/timer/faraday,fttmr010.txt | 33 ++++++++++++++++++++++
-> >  2 files changed, 33 insertions(+), 22 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
-> >  create mode 100644 Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
+> >  drivers/media/v4l2-core/v4l2-async.c | 26 +++++++++++++++++++++++---
+> >  include/media/v4l2-async.h           |  2 +-
+> >  2 files changed, 24 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> > b/drivers/media/v4l2-core/v4l2-async.c index 384ad5e..7f5d804 100644
+> > --- a/drivers/media/v4l2-core/v4l2-async.c
+> > +++ b/drivers/media/v4l2-core/v4l2-async.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/list.h>
+> >  #include <linux/module.h>
+> >  #include <linux/mutex.h>
+> > +#include <linux/of.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/types.h>
+> > @@ -40,15 +41,34 @@ static bool match_devname(struct v4l2_subdev *sd,
+> >  	return !strcmp(asd->match.device_name.name, dev_name(sd->dev));
+> >  }
+> > 
+> > +static bool fwnode_cmp(struct fwnode_handle *one,
+> > +		       struct fwnode_handle *theother)
+> > +{
+> > +	if (!one || !theother)
+> > +		return false;
+> > +
+> > +	if (one->type != theother->type)
+> > +		return false;
+> > +
+> > +	if (is_of_node(one))
+> > +		return !of_node_cmp(of_node_full_name(to_of_node(one)),
+> > +				    of_node_full_name(to_of_node(theother)));
+> > +	else
+> > +		return one == theother;
+> > +}
+> > +
+> >  static bool match_of(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+> > {
+> > -	return !of_node_cmp(of_node_full_name(sd->of_node),
+> > -			    of_node_full_name(asd->match.of.node));
+> > +	return fwnode_cmp(sd->of_node ?
+> > +			  of_fwnode_handle(sd->of_node) : sd->fwnode,
+> > +			  of_fwnode_handle(asd->match.of.node));
+> >  }
+> > 
+> >  static bool match_fwnode(struct v4l2_subdev *sd, struct v4l2_async_subdev
+> > *asd)
+> >  {
+> > -	return sd->fwnode == asd->match.fwnode.fwn;
+> > +	return fwnode_cmp(sd->of_node ?
+> > +			  of_fwnode_handle(sd->of_node) : sd->fwnode,
+> > +					   asd->match.fwnode.fwn);
+> >  }
+> > 
+> >  static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev
+> > *asd) diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+> > index 8f552d2..df8b682 100644
+> > --- a/include/media/v4l2-async.h
+> > +++ b/include/media/v4l2-async.h
+> > @@ -57,7 +57,7 @@ struct v4l2_async_subdev {
+> >  	enum v4l2_async_match_type match_type;
+> >  	union {
+> >  		struct {
+> > -			const struct device_node *node;
+> > +			struct device_node *node;
 > 
-> Does the -M option not work here?
-> 
-> In any case,
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> That seems to be a bit of a hack :-( I'd rather make everything const and cast 
+> to non-const pointers explicitly where the API requires us to. Or, better, add 
+> a to_of_node_const() function.
 
-Thanks.
-
+I'll see what I can do to the matter, but if you don't mind, I'll base it on
+this patchset.
 
 -- 
+Kind regards,
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
