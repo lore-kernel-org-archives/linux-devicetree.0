@@ -1,37 +1,58 @@
-From: "Mr. Mudi Feez" <mudifee2010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: I expect your urgent communication.
-Date: Sat, 8 Apr 2017 11:39:43 +0000
-Message-ID: <CAJ+Hd3j1BqO-z5Cw272C03ZBX60j1efGGSukZ_eBsdEv3AnD=A@mail.gmail.com>
-Reply-To: mfeez366-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/6] dma: pl08x: Add Faraday FTDMAC020 to compatible list
+Date: Sat,  8 Apr 2017 14:04:53 +0200
+Message-ID: <20170408120457.22750-2-linus.walleij@linaro.org>
+References: <20170408120457.22750-1-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170408120457.22750-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuo-Jung Su <dantesu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This augments the PL08x bindings to include the Faraday Technology
+FTDMAC020 DMA engine, as it is clearly a derivative of the PL08x
+PrimeCell. Also specify that it needs the special peripheral ID
+specified to work properly.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+Seeking a DT maintainer ACK on this.
+---
+ Documentation/devicetree/bindings/dma/arm-pl08x.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.txt b/Documentation/devicetree/bindings/dma/arm-pl08x.txt
+index 8a0097a029d3..0ba81f79266f 100644
+--- a/Documentation/devicetree/bindings/dma/arm-pl08x.txt
++++ b/Documentation/devicetree/bindings/dma/arm-pl08x.txt
+@@ -3,6 +3,11 @@
+ Required properties:
+ - compatible: "arm,pl080", "arm,primecell";
+ 	      "arm,pl081", "arm,primecell";
++	      "faraday,ftdmac020", "arm,primecell"
++- arm,primecell-periphid: on the FTDMAC020 the primecell ID is not hard-coded
++  in the hardware and must be specified here as <0x0003b080>. This number
++  follows the PrimeCell standard numbering using the JEP106 vendor code 0x38
++  for Faraday Technology.
+ - reg: Address range of the PL08x registers
+ - interrupt: The PL08x interrupt number
+ - clocks: The clock running the IP core clock
+@@ -20,8 +25,8 @@ Optional properties:
+ - dma-requests: contains the total number of DMA requests supported by the DMAC
+ - memcpy-burst-size: the size of the bursts for memcpy: 1, 4, 8, 16, 32
+   64, 128 or 256 bytes are legal values
+-- memcpy-bus-width: the bus width used for memcpy: 8, 16 or 32 are legal
+-  values
++- memcpy-bus-width: the bus width used for memcpy in bits: 8, 16 or 32 are legal
++  values, the Faraday FTDMAC020 can also accept 64 bits
+ 
+ Clients
+ Required properties:
 -- 
-Dear Friend,
+2.9.3
 
-Good day. I am Mr. Mudi Feez. I am working with one of the prime banks
-in Burkina Faso. I have decided to contact you for a financial
-transaction which values $14,500,000.00 (Fourteen Million Five Hundred
-Thousand USA Dollars). This is an abandoned fund that belongs to a
-late foreign customer of our bank. I want a foreign account where the
-bank will transfer this fund.
-
-I was very fortunate to come across the deceased customer's security
-file; during documentation of old and abandoned customers files for an
-official re-documentation and audit of the year 2017.
-
-If you are really sure of your trustworthiness, accountability and
-confidentiality over this transaction, contact me urgently. I will let
-you know the next step and procedure to follow in order to finalize
-this transaction successfully.
-
-I expect your urgent communication.
-
-Yours sincerely,
-Mr. Mudi Feez
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
