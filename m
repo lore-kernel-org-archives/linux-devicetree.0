@@ -1,48 +1,60 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH 0/5] arm64: dts: hisi: add NIC, RoCE and SAS support for
- hip07
-Date: Sat, 8 Apr 2017 14:51:48 +0800
-Message-ID: <58E88884.2090702@hisilicon.com>
-References: <1491530876-109791-1-git-send-email-xuwei5@hisilicon.com>
+From: <john.faust-H4SBLDCxrCifRvmTrFJqzg@public.gmane.org>
+Subject: 33011 devicetree
+Date: Sat, 08 Apr 2017 07:03:59 -0000
+Message-ID: <149163503932.7747.14653488351874574633@zaural.ru>
+Reply-To: <john.faust-H4SBLDCxrCifRvmTrFJqzg@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1491530876-109791-1-git-send-email-xuwei5@hisilicon.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
-Cc: wangkefeng.wang@huawei.com, gabriele.paoloni@huawei.com, charles.chenxin@huawei.com, linuxarm@huawei.com, guohanjun@huawei.com, yankejian@huawei.com, yimin@huawei.com, huangdaode@hisilicon.com, liudongdong3@huawei.com, yisen.zhuang@huawei.com, devicetree@vger.kernel.org, john.garry@huawei.com, tanxiaofei@huawei.com, lipeng321@huawei.com, linux-arm-kernel@lists.infradead.org, salil.mehta@huawei.com, chenxiang66@hisilicon.com, linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com, wangzhou1@hisilicon.com, liguozhu@hisilicon.com, majun258@huawei.com
+Content-Type: application/zip; name="886869958978.zip"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: attachment
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
-
-On 2017/4/7 10:07, Wei.Xu wrote:
-> This patch series adds Mbigen, NIC, RoCE and SAS nodes for the hip07
-> SoC and enables the NIC, RoCE and SAS on the hip07 d05 board.
->
-> Wei Xu (5):
->    arm64: dts: hisi: add mbigen nodes for the hip07 SoC
->    arm64: dts: hisi: add network related nodes for the hip07 SoC
->    arm64: dts: hisi: add RoCE nodes for the hip07 SoC
->    arm64: dts: hisi: add SAS nodes for the hip07 SoC
->    arm64: dts: hisi: enalbe the NIC and SAS for the hip07-d05 board
->
->   arch/arm64/boot/dts/hisilicon/hip07-d05.dts |  24 ++
->   arch/arm64/boot/dts/hisilicon/hip07.dtsi    | 479 ++++++++++++++++++++++++++++
->   2 files changed, 503 insertions(+)
->
-After removed the PCIe node in the patch 5, the series has been applied 
-to the hisilicon arm64
-dt tree since this series patches just to add the nodes and the binding 
-has been reviewed before.
-
-Best Regards,
-Wei
+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
+AAEAAQBOAAAAzAgAAAAA
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
