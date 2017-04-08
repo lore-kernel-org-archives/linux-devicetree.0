@@ -1,53 +1,34 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 4/8] iio: adc: sun4i-gpadc-iio: add support for A33
- thermal sensor
-Date: Sat, 8 Apr 2017 17:36:52 +0100
-Message-ID: <6560f4ea-e8f6-e89f-a0b7-4cb044d15254@kernel.org>
-References: <20170405090634.4649-1-quentin.schulz@free-electrons.com>
- <20170405090634.4649-5-quentin.schulz@free-electrons.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3 v5] iio: xoadc: augment DT bindings a bit
+Date: Sat, 8 Apr 2017 17:40:34 +0100
+Message-ID: <32991d83-3622-1923-3fc2-d0292d4d40b5@kernel.org>
+References: <20170404120819.6921-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170405090634.4649-5-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>, dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, lee.jones@linaro.org, linux@armlinux.org.uk, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, icenowy@aosc.xyz, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170404120819.6921-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/17 10:06, Quentin Schulz wrote:
-> This adds support for the Allwinner A33 thermal sensor.
+On 04/04/17 13:08, Linus Walleij wrote:
+> In order to accommodate in a logical manner for the premuxed channels
+> in PM8921 and the similarly addressed channels in later PMICs, we
+> need a twocell arrangement with premux and analog mux setting as
+> a tuple to uniquely identify a hardware channel.
 > 
-> Unlike the A10, A13 and A31, the Allwinner A33 only has one channel
-> which is dedicated to the thermal sensor. Moreover, its thermal sensor
-> does not generate interruptions, thus we only need to directly read the
-> register storing the temperature value.
+> These bindings are not yet in use, so it should be fine to augment
+> them before we actually start using it in drivers and device trees.
 > 
-> The MFD used by the A10, A13 and A31, was created to avoid breaking the
-> DT binding, but since the nodes for the ADC weren't there for the A33,
-> it is not needed.
+> This scheme came out of lengthy discussions and reverse-engineering
+> and reading of the few information sources we have.
 > 
-> Though the A33 does not have an internal ADC, it has a thermal sensor
-> which shares the same registers with GPADC of the already supported SoCs
-> and almost the same bits, for the same purpose (thermal sensor).
-> 
-> The thermal sensor behaves exactly the same (except the presence of
-> interrupts or not) on the different SoCs.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-A small amount of fuzz turned up with a fix from Arnd for thermal
-dependencies.
-
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Suggested-by: Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Applied to the togreg branch of iio.git and pushed out as testing
 for the autobuilders to play with it.
 
@@ -55,229 +36,166 @@ Thanks,
 
 Jonathan
 > ---
+> ChangeLog v3->v5:
+> - Some nitpicky spelling fixes. Added Rob's ACK.
+> ChangeLog v2->v3:
+> - Drop leading zeroes on unit addresses.
+> ChangeLog v1->v2:
+> - Name nodes with <01 02> in a foo@0102 pattern.
+> - Minor spelling nits.
+> - Delete flimsy leftover docs from an interrim development path.
+> ---
+>  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 76 ++++++++++++----------
+>  1 file changed, 42 insertions(+), 34 deletions(-)
 > 
-> v3:
->   - switched compatible from allwinner,sun8i-a33-gpadc-iio to
->   allwinner,sun8i-a33-ths to better reflect the datasheet's name,
->   - fixed the non-working if (!IS_ENABLED(THERMAL_OF)) by prefixing it with
->   CONFIG,
-> 
-> v2:
->   - removed added comments in Kconfig,
->   - simplified Kconfig depends on condition,
->   - removed THERMAL_OF requirement for sun8i,
->   - renamed sun8i_gpadc_channels to sun8i_a33_gpadc_channels,
->   - renamed use_dt boolean in no_irq as it reflects better why we need it,
->   - removed spurious/unneeded modifications done in v1,
-> 
->  drivers/iio/adc/Kconfig           |   2 +-
->  drivers/iio/adc/sun4i-gpadc-iio.c | 100 ++++++++++++++++++++++++++++++++++++--
->  include/linux/mfd/sun4i-gpadc.h   |   4 ++
->  3 files changed, 102 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index d0af51d..d9b6101 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -561,7 +561,7 @@ config STX104
->  config SUN4I_GPADC
->  	tristate "Support for the Allwinner SoCs GPADC"
->  	depends on IIO
-> -	depends on MFD_SUN4I_GPADC
-> +	depends on MFD_SUN4I_GPADC || MACH_SUN8I
->  	help
->  	  Say yes here to build support for Allwinner (A10, A13 and A31) SoCs
->  	  GPADC. This ADC provides 4 channels which can be used as an ADC or as
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index 7cb997a..74705aa 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -85,6 +85,12 @@ static const struct gpadc_data sun6i_gpadc_data = {
->  	.adc_chan_mask = SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> index 53cd146d8096..3ae06127789e 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> @@ -19,32 +19,42 @@ Required properties:
+>    with PMIC variant but is typically something like 2.2 or 1.8V.
+>  
+>  The following required properties are standard for IO channels, see
+> -iio-bindings.txt for more details:
+> +iio-bindings.txt for more details, but notice that this particular
+> +ADC has a special addressing scheme that require two cells for
+> +identifying each ADC channel:
+>  
+> -- #address-cells: should be set to <1>
+> +- #address-cells: should be set to <2>, the first cell is the
+> +  prescaler (on PM8058) or premux (on PM8921) with two valid bits
+> +  so legal values are 0x00, 0x01 or 0x02. The second cell
+> +  is the main analog mux setting (0x00..0x0f). The combination
+> +  of prescaler/premux and analog mux uniquely addresses a hardware
+> +  channel on all systems.
+>  
+>  - #size-cells: should be set to <0>
+>  
+> -- #io-channel-cells: should be set to <1>
+> +- #io-channel-cells: should be set to <2>, again the cells are
+> +  precaler or premux followed by the analog muxing line.
+>  
+>  - interrupts: should refer to the parent PMIC interrupt controller
+>    and reference the proper ADC interrupt.
+>  
+>  Required subnodes:
+>  
+> -The ADC channels are configured as subnodes of the ADC. Since some of
+> -them are used for calibrating the ADC, these nodes are compulsory:
+> +The ADC channels are configured as subnodes of the ADC.
+> +
+> +Since some of them are used for calibrating the ADC, these nodes are
+> +compulsory:
+>  
+>  adc-channel@c {
+> -	reg = <0x0c>;
+> +	reg = <0x00 0x0c>;
 >  };
 >  
-> +static const struct gpadc_data sun8i_a33_gpadc_data = {
-> +	.temp_offset = -1662,
-> +	.temp_scale = 162,
-> +	.tp_mode_en = SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
-> +};
-> +
->  struct sun4i_gpadc_iio {
->  	struct iio_dev			*indio_dev;
->  	struct completion		completion;
-> @@ -96,6 +102,7 @@ struct sun4i_gpadc_iio {
->  	unsigned int			temp_data_irq;
->  	atomic_t			ignore_temp_data_irq;
->  	const struct gpadc_data		*data;
-> +	bool				no_irq;
->  	/* prevents concurrent reads of temperature and ADC */
->  	struct mutex			mutex;
->  };
-> @@ -138,6 +145,23 @@ static const struct iio_chan_spec sun4i_gpadc_channels_no_temp[] = {
->  	SUN4I_GPADC_ADC_CHANNEL(3, "adc_chan3"),
+>  adc-channel@d {
+> -	reg = <0x0d>;
+> +	reg = <0x00 0x0d>;
 >  };
 >  
-> +static const struct iio_chan_spec sun8i_a33_gpadc_channels[] = {
-> +	{
-> +		.type = IIO_TEMP,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				      BIT(IIO_CHAN_INFO_SCALE) |
-> +				      BIT(IIO_CHAN_INFO_OFFSET),
-> +		.datasheet_name = "temp_adc",
-> +	},
-> +};
-> +
-> +static const struct regmap_config sun4i_gpadc_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.fast_io = true,
-> +};
-> +
->  static int sun4i_prepare_for_irq(struct iio_dev *indio_dev, int channel,
->  				 unsigned int irq)
->  {
-> @@ -247,6 +271,17 @@ static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val)
->  {
->  	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
+>  adc-channel@f {
+> -	reg = <0x0f>;
+> +	reg = <0x00 0x0f>;
+>  };
 >  
-> +	if (info->no_irq) {
-> +		pm_runtime_get_sync(indio_dev->dev.parent);
-> +
-> +		regmap_read(info->regmap, SUN4I_GPADC_TEMP_DATA, val);
-> +
-> +		pm_runtime_mark_last_busy(indio_dev->dev.parent);
-> +		pm_runtime_put_autosuspend(indio_dev->dev.parent);
-> +
-> +		return 0;
-> +	}
-> +
->  	return sun4i_gpadc_read(indio_dev, 0, val, info->temp_data_irq);
->  }
+>  These three nodes are used for absolute and ratiometric calibration
+> @@ -52,13 +62,13 @@ and only need to have these reg values: they are by hardware definition
+>  1:1 ratio converters that sample 625, 1250 and 0 milliV and create
+>  an interpolation calibration for all other ADCs.
 >  
-> @@ -454,6 +489,58 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
->  	return 0;
->  }
+> -Optional subnodes: any channels other than channel 0x0c, 0x0d and
+> -0x0f are optional.
+> +Optional subnodes: any channels other than channels [0x00 0x0c],
+> +[0x00 0x0d] and [0x00 0x0f] are optional.
 >  
-> +static const struct of_device_id sun4i_gpadc_of_id[] = {
-> +	{
-> +		.compatible = "allwinner,sun8i-a33-ths",
-> +		.data = &sun8i_a33_gpadc_data,
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
-> +				struct iio_dev *indio_dev)
-> +{
-> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
-> +	const struct of_device_id *of_dev;
-> +	struct thermal_zone_device *tzd;
-> +	struct resource *mem;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	of_dev = of_match_device(sun4i_gpadc_of_id, &pdev->dev);
-> +	if (!of_dev)
-> +		return -ENODEV;
-> +
-> +	info->no_irq = true;
-> +	info->data = (struct gpadc_data *)of_dev->data;
-> +	indio_dev->num_channels = ARRAY_SIZE(sun8i_a33_gpadc_channels);
-> +	indio_dev->channels = sun8i_a33_gpadc_channels;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, mem);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-> +					     &sun4i_gpadc_regmap_config);
-> +	if (IS_ERR(info->regmap)) {
-> +		ret = PTR_ERR(info->regmap);
-> +		dev_err(&pdev->dev, "failed to init regmap: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (!IS_ENABLED(CONFIG_THERMAL_OF))
-> +		return 0;
-> +
-> +	tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, info,
-> +						   &sun4i_ts_tz_ops);
-> +	if (IS_ERR(tzd))
-> +		dev_err(&pdev->dev, "could not register thermal sensor: %ld\n",
-> +			PTR_ERR(tzd));
-> +
-> +	return PTR_ERR_OR_ZERO(tzd);
-> +}
-> +
->  static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
->  				 struct iio_dev *indio_dev)
->  {
-> @@ -462,6 +549,7 @@ static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
->  		dev_get_drvdata(pdev->dev.parent);
->  	int ret;
+>  Required channel node properties:
 >  
-> +	info->no_irq = false;
->  	info->regmap = sun4i_gpadc_dev->regmap;
+>  - reg: should contain the hardware channel number in the range
+> -  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
+> +  0 .. 0xff (8 bits).
 >  
->  	indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
-> @@ -561,7 +649,11 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  	indio_dev->info = &sun4i_gpadc_iio_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  Optional channel node properties:
 >  
-> -	ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
-> +	if (pdev->dev.of_node)
-> +		ret = sun4i_gpadc_probe_dt(pdev, indio_dev);
-> +	else
-> +		ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
-> +
->  	if (ret)
->  		return ret;
+> @@ -94,56 +104,54 @@ Example:
+>  xoadc: xoadc@197 {
+>  	compatible = "qcom,pm8058-adc";
+>  	reg = <0x197>;
+> -	interrupt-parent = <&pm8058>;
+> -	interrupts = <76 1>;
+> -	#address-cells = <1>;
+> +	interrupts-extended = <&pm8058 76 IRQ_TYPE_EDGE_RISING>;
+> +	#address-cells = <2>;
+>  	#size-cells = <0>;
+> -	#io-channel-cells = <1>;
+> +	#io-channel-cells = <2>;
 >  
-> @@ -580,7 +672,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  	return 0;
+>  	vcoin: adc-channel@0 {
+> -		reg = <0x00>;
+> +		reg = <0x00 0x00>;
+>  	};
+>  	vbat: adc-channel@1 {
+> -		reg = <0x01>;
+> +		reg = <0x00 0x01>;
+>  	};
+>  	dcin: adc-channel@2 {
+> -		reg = <0x02>;
+> +		reg = <0x00 0x02>;
+>  	};
+>  	ichg: adc-channel@3 {
+> -		reg = <0x03>;
+> +		reg = <0x00 0x03>;
+>  	};
+>  	vph_pwr: adc-channel@4 {
+> -		reg = <0x04>;
+> +		reg = <0x00 0x04>;
+>  	};
+>  	usb_vbus: adc-channel@a {
+> -		reg = <0x0a>;
+> +		reg = <0x00 0x0a>;
+>  	};
+>  	die_temp: adc-channel@b {
+> -		reg = <0x0b>;
+> +		reg = <0x00 0x0b>;
+>  	};
+>  	ref_625mv: adc-channel@c {
+> -		reg = <0x0c>;
+> +		reg = <0x00 0x0c>;
+>  	};
+>  	ref_1250mv: adc-channel@d {
+> -		reg = <0x0d>;
+> +		reg = <0x00 0x0d>;
+>  	};
+>  	ref_325mv: adc-channel@e {
+> -		reg = <0x0e>;
+> +		reg = <0x00 0x0e>;
+>  	};
+>  	ref_muxoff: adc-channel@f {
+> -		reg = <0x0f>;
+> +		reg = <0x00 0x0f>;
+>  	};
+>  };
 >  
->  err_map:
-> -	if (IS_ENABLED(CONFIG_THERMAL_OF))
-> +	if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))
->  		iio_map_array_unregister(indio_dev);
->  
->  	pm_runtime_put(&pdev->dev);
-> @@ -592,10 +684,11 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  static int sun4i_gpadc_remove(struct platform_device *pdev)
->  {
->  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
->  
->  	pm_runtime_put(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (IS_ENABLED(CONFIG_THERMAL_OF))
-> +	if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))
->  		iio_map_array_unregister(indio_dev);
->  
->  	return 0;
-> @@ -611,6 +704,7 @@ static const struct platform_device_id sun4i_gpadc_id[] = {
->  static struct platform_driver sun4i_gpadc_driver = {
->  	.driver = {
->  		.name = "sun4i-gpadc-iio",
-> +		.of_match_table = sun4i_gpadc_of_id,
->  		.pm = &sun4i_gpadc_pm_ops,
->  	},
->  	.id_table = sun4i_gpadc_id,
-> diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-> index 509e736..139872c 100644
-> --- a/include/linux/mfd/sun4i-gpadc.h
-> +++ b/include/linux/mfd/sun4i-gpadc.h
-> @@ -38,6 +38,10 @@
->  #define SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(x)		(GENMASK(3, 0) & BIT(x))
->  #define SUN6I_GPADC_CTRL1_ADC_CHAN_MASK			GENMASK(3, 0)
->  
-> +/* TP_CTRL1 bits for sun8i SoCs */
-> +#define SUN8I_GPADC_CTRL1_CHOP_TEMP_EN			BIT(8)
-> +#define SUN8I_GPADC_CTRL1_GPADC_CALI_EN			BIT(7)
-> +
->  #define SUN4I_GPADC_CTRL2				0x08
->  
->  #define SUN4I_GPADC_CTRL2_TP_SENSITIVE_ADJUST(x)	((GENMASK(3, 0) & (x)) << 28)
+> -
+>  /* IIO client node */
+>  iio-hwmon {
+>  	compatible = "iio-hwmon";
+> -	io-channels = <&xoadc 0x01>, /* Battery */
+> -		    <&xoadc 0x02>, /* DC in (charger) */
+> -		    <&xoadc 0x04>, /* VPH the main system voltage */
+> -		    <&xoadc 0x0b>, /* Die temperature */
+> -		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
+> -		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
+> -		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
+> +	io-channels = <&xoadc 0x00 0x01>, /* Battery */
+> +		    <&xoadc 0x00 0x02>, /* DC in (charger) */
+> +		    <&xoadc 0x00 0x04>, /* VPH the main system voltage */
+> +		    <&xoadc 0x00 0x0b>, /* Die temperature */
+> +		    <&xoadc 0x00 0x0c>, /* Reference voltage 1.25V */
+> +		    <&xoadc 0x00 0x0d>, /* Reference voltage 0.625V */
+> +		    <&xoadc 0x00 0x0e>; /* Reference voltage 0.325V */
+>  };
 > 
