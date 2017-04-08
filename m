@@ -1,93 +1,95 @@
-From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: Device Tree Binding for Intel FPGA Video and Image Processing
- Suite
-Date: Sat, 8 Apr 2017 05:25:00 +0000
-Message-ID: <FB1B748C9B55D647AEE382CBB370D20F06B80B@PGSMSX109.gar.corp.intel.com>
-References: <1490949905.21575.8.camel@intel.com>
- <CAL_JsqJa6rdk=fxHVkHdjFrkBx-E6hGUfoZt2cAzaMvq2TJkNw@mail.gmail.com>
- <FB1B748C9B55D647AEE382CBB370D20F064744@PGSMSX109.gar.corp.intel.com>
- <1491460951.2483.2.camel@intel.com>
- <CAL_JsqLFbHHcVYs4a+-WS7yUEMsFR6-Y_4gootxoAwxD+RRF1A@mail.gmail.com>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH] ARM: dts: hi6220: Reset the mmc hosts
+Date: Sat, 8 Apr 2017 14:38:23 +0800
+Message-ID: <58E8855F.5060200@hisilicon.com>
+References: <1489673004-11075-1-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLFbHHcVYs4a+-WS7yUEMsFR6-Y_4gootxoAwxD+RRF1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1489673004-11075-1-git-send-email-daniel.lezcano@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkZpcnN0IG9mIGFsbCB0aGFuayB5b3UgUm9iIGZvciB5b3VyIHRpbWUgYW5kIHBhdGll
-bmNlLiBFc3BlY2lhbGx5IG9uIGhvdyB0aGlzIHBhdGNoIHdhcyBzZW50IG91dC4gSSB3b3VsZCBl
-bnN1cmUgaXQgd291bGQgbm90IGhhcHBlbiBhZ2FpbiBmb3IgdGhlIHN1YnNlcXVlbnQgcGF0Y2hl
-cy4gDQoNCk9uIHRoZSBpc3N1ZSBvZiB3aHkgdGhlIERUIGhhcyBjZXJ0YWluIHJlc29sdXRpb24g
-Zml4ZWQgaXMgZHVlIHRvIHRoZSBmYWN0IHRoYXQgb3VyIFF1YXJ0dXMgc3lzdGVtIGdlbmVyYXRl
-cyB0aGVzZSBhdHRyaWJ1dGVzIGluIGFjY29yZGluZyB0byB0aGUgc3BlY2lmaWMgZGlzcGxheSBy
-ZXNvbHV0aW9uIGFzIGRlc2lyZWQgYnkgdGhlIHVzZXIuIFRoZSB2YWx1ZXMgaGVyZSBhcmUgdGhl
-IGlkZWFsIHJlc29sdXRpb24gc3VwcG9ydGVkIGJ5IHRoZSBoYXJkd2FyZSBmb3IgdGhlIHJlZmVy
-ZW5jZSBkZXNpZ24uIA0KDQpPbiB0aGUgb3RoZXIgaGFuZCBteSBiYWQgb24gdGhlIHZlbmRvciBw
-cmVmaXggYXMgSSBtaXN1bmRlcnN0b29kIHRoZSAiYWx0ciwiIGFzIHRoZSB2ZW5kb3IgcHJlZml4
-DQoNClRoYW5rcw0KDQpIZWFuIExvb25nDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PkZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaCtkdEBrZXJuZWwub3JnXQ0KPlNlbnQ6IFNh
-dHVyZGF5LCBBcHJpbCA4LCAyMDE3IDU6NTMgQU0NCj5UbzogT25nLCBIZWFuIExvb25nIDxoZWFu
-Lmxvb25nLm9uZ0BpbnRlbC5jb20+DQo+Q2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+
-U3ViamVjdDogUmU6IERldmljZSBUcmVlIEJpbmRpbmcgZm9yIEludGVsIEZQR0EgVmlkZW8gYW5k
-IEltYWdlIFByb2Nlc3NpbmcgU3VpdGUNCj4NCj5PbiBUaHUsIEFwciA2LCAyMDE3IGF0IDE6NDIg
-QU0sIE9uZywgSGVhbiBMb29uZyA8aGVhbi5sb29uZy5vbmdAaW50ZWwuY29tPg0KPndyb3RlOg0K
-Pj4gSGkgUm9iLA0KPj4NCj4+IEFueSBjb21tZW50cyBvbiB0aGUgcGF0Y2g/DQo+DQo+WWVzLCB0
-aGUgc2FtZSBvbmVzIEkgcHJvdmlkZWQgNSBtb250aHMgYWdvIHRvIHlvdS4gUmVwZWF0ZWQgYmVs
-b3cuDQo+DQo+Pg0KPj4gQlINCj4+DQo+PiBIZWFuIExvb25nDQo+Pg0KPj4gT24gVHVlLCAyMDE3
-LTA0LTA0IGF0IDAzOjU3ICswMDAwLCBPbmcsIEhlYW4gTG9vbmcgd3JvdGU6DQo+Pj4gSGkgUm9i
-LA0KPj4+DQo+Pj4gQXBvbG9naWVzIGZvciB0aGUgbWlzdGFrZS4gQmVsb3cgYXJlIHRoZSBiaW5k
-aW5ncw0KPj4+DQo+Pj4gRnJvbSAyM2E5ZTI3NGJiNTE3YjhlMjMyYzVhYTRjZjk3MzdkZTE2NDRi
-NzA4IE1vbiBTZXAgMTcgMDA6MDA6MDANCj4+PiAyMDAxDQo+Pj4gRnJvbTogT25nLCBIZWFuIExv
-b25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+DQo+Pj4gRGF0ZTogVGh1LCAzMCBNYXIgMjAx
-NyAxNzo1OTozNyArMDgwMA0KPj4+IFN1YmplY3Q6IFtQQVRDSHYwXSBJbnRlbCBGUEdBIFZpZGVv
-IGFuZCBJbWFnZSBQcm9jZXNzaW5nIFN1aXRlIGRldmljZQ0KPj4+IHRyZWUgYmluZGluZw0KPg0K
-PlRoaXMgaXMgc3RpbGwgbm90IGhvdyB5b3UgZW1haWwgcGF0Y2hlcy4gVGhlIGVhc2llc3Qgd2F5
-IGlzIGdpdC1zZW5kLWVtYWlsLg0KPg0KPj4+ICAgICAgICAgRGV2aWNlIHRyZWUgYmluZGluZyBm
-b3IgSW50ZWwgRlBHQSBWaWRlbyBhbmQgSW1hZ2UNCj4+PiAgICAgICAgIFByb2Nlc3NpbmcgU3Vp
-dGUuIFRoZSBiaW5kaW5nIGludm9sdmVkIHdvdWxkIGJlIGdlbmVyYXRlZA0KPj4+ICAgICAgICAg
-ZnJvbSB0aGUgQWx0ZXJhIChJbnRlbCkgUXN5cyBzeXN0ZW0uIFRoZSBiaW5kaW5ncyB3b3VsZA0K
-Pj4+ICAgICAgICAgc2V0IHRoZSBtYXggd2lkdGgsIG1heCBoZWlnaHQsIGJ1dHMgcGVyIHBpeGVs
-IGFuZCBtZW1vcnkNCj4+PiAgICAgICAgIHBvcnQgd2lkdGguIFRoZSBkZXZpY2UgdHJlZSBiaW5k
-aW5nIG9ubHkgc3VwcG9ydHMgdGhlIEludGVsDQo+Pj4gICAgICAgICBBcnJpYTEwIGRldmtpdCBh
-bmQgaXRzIHZhcmlhbnRzLiBWZW5kb3IgbmFtZSByZXRhaW5lZCBhcw0KPj4+ICAgICAgICAgYWx0
-ci4NCj4NCj5UaGVyZSBzaG91bGQgYmUgbm8gaW5kZW50YXRpb24gaGVyZS4NCj4NCj4+Pg0KPj4+
-IFNpZ25lZC1vZmYtYnk6IE9uZywgSGVhbiBMb29uZyA8aGVhbi5sb29uZy5vbmdAaW50ZWwuY29t
-Pg0KPj4+IC0tLQ0KPj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYWx0cix2aXAtZmIy
-LnR4dCAgICAgICB8ICAgMjQNCj4+PiArKysrKysrKysrKysrKysrKysrKw0KPg0KPmJpbmRpbmdz
-L2Rpc3BsYXkvLiBUaGlzIGlzIG5vdCBhIEdQVS4NCj4NCj4+PiAgMSBmaWxlcyBjaGFuZ2VkLCAy
-NCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUNCj4+PiAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hbHRyLHZpcC0NCj4+PiBmYjIu
-dHh0DQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2dwdS9hbHRyLHZpcC1mYjIudHh0DQo+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZ3B1L2FsdHIsdmlwLWZiMi50eHQNCj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0K
-Pj4+IGluZGV4IDAwMDAwMDAuLjliYTMyMDkNCj4+PiAtLS0gL2Rldi9udWxsDQo+Pj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hbHRyLHZpcC1mYjIudHh0DQo+
-Pj4gQEAgLTAsMCArMSwyNCBAQA0KPj4+ICtJbnRlbCBWaWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2lu
-ZyhWSVApIEZyYW1lIEJ1ZmZlciBJSSBiaW5kaW5ncw0KPj4+ICsNCj4+PiArU3VwcG9ydGVkIGhh
-cmR3YXJlOiAgQXJyaWEgMTAgYW5kIGFib3ZlIHdpdGggZGlzcGxheSBwb3J0IElQDQo+Pj4gKw0K
-Pj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPj4+ICstIGNvbXBhdGlibGU6ICJhbHRyLHZpcC1m
-cmFtZS1idWZmZXItMi4wIg0KPj4+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBs
-ZW5ndGggb2YgdGhlIGZyYW1lYnVmZmVyDQo+Pj4gY29udHJvbGxlcidzDQo+Pj4gKyAgcmVnaXN0
-ZXJzLg0KPg0KPj4+ICstIG1heC13aWR0aDogVGhlIHdpZHRoIG9mIHRoZSBmcmFtZWJ1ZmZlciBp
-biBwaXhlbHMuDQo+Pj4gKy0gbWF4LWhlaWdodDogVGhlIGhlaWdodCBvZiB0aGUgZnJhbWVidWZm
-ZXIgaW4gcGl4ZWxzLg0KPj4+ICstIGJpdHMtcGVyLXN5bWJvbDogb25seSAiOCIgaXMgY3VycmVu
-dGx5IHN1cHBvcnRlZA0KPg0KPldoeSBkbyB0aGVzZSBuZWVkIHRvIGJlIGluIERUPw0KPg0KPj4+
-ICstIG1lbS1wb3J0LXdpZHRoID0gdGhlIGJ1cyB3aWR0aCBvZiB0aGUgYXZhbG9uIG1hc3RlciBw
-b3J0IG9uIHRoZQ0KPj4+IGZyYW1lIHJlYWRlcg0KPg0KPlN0aWxsIG5lZWRzIGEgdmVuZG9yIHBy
-ZWZpeC4NCj4NCj4+PiArDQo+Pj4gK0V4YW1wbGU6DQo+Pj4gKw0KPj4+ICtkcF8wX2ZyYW1lX2J1
-ZjogdmlwQDB4MTAwMDAwMjgwIHsNCj4NCj5kaXNwbGF5LWNvbnRyb2xsZXJAMTAwMDAwMjgwDQo+
-DQo+Pj4gKyAgICAgICBjb21wYXRpYmxlID0gImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0yLjAiOw0K
-Pj4+ICsgICAgICAgcmVnID0gPDB4MDAwMDAwMDEgMHgwMDAwMDI4MCAweDAwMDAwMDQwPjsNCj4+
-PiArICAgICAgIGFsdHIsbWF4LXdpZHRoID0gPDEyODA+Ow0KPj4+ICsgICAgICAgYWx0cixtYXgt
-aGVpZ2h0ID0gPDcyMD47DQo+Pj4gKyAgICAgICBhbHRyLGJpdHMtcGVyLXN5bWJvbCA9IDw4PjsN
-Cj4+PiArICAgICAgIGFsdHIsbWVtLXBvcnQtd2lkdGggPSA8MTI4PjsNCj4+PiArfTsNCj4+PiAr
-DQo+Pj4gLS0NCj4+PiAxLjcuMQ0KPj4+DQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Daniel,
+
+On 2017/3/16 22:03, Daniel Lezcano wrote:
+> The MMC hosts could be left in an unconsistent or uninitialized state from
+> the firmware. Instead of assuming, the firmware did the right things, let's
+> reset the host controllers.
+>
+> This change fixes a bug when the mmc2/sdio is initialized leading to a hung
+> task:
+>
+> [  242.704294] INFO: task kworker/7:1:675 blocked for more than 120 seconds.
+> [  242.711129]       Not tainted 4.9.0-rc8-00017-gcf0251f #3
+> [  242.716571] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  242.724435] kworker/7:1     D    0   675      2 0x00000000
+> [  242.729973] Workqueue: events_freezable mmc_rescan
+> [  242.734796] Call trace:
+> [  242.737269] [<ffff00000808611c>] __switch_to+0xa8/0xb4
+> [  242.742437] [<ffff000008d07c04>] __schedule+0x1c0/0x67c
+> [  242.747689] [<ffff000008d08254>] schedule+0x40/0xa0
+> [  242.752594] [<ffff000008d0b284>] schedule_timeout+0x1c4/0x35c
+> [  242.758366] [<ffff000008d08e38>] wait_for_common+0xd0/0x15c
+> [  242.763964] [<ffff000008d09008>] wait_for_completion+0x28/0x34
+> [  242.769825] [<ffff000008a1a9f4>] mmc_wait_for_req_done+0x40/0x124
+> [  242.775949] [<ffff000008a1ab98>] mmc_wait_for_req+0xc0/0xf8
+> [  242.781549] [<ffff000008a1ac3c>] mmc_wait_for_cmd+0x6c/0x84
+> [  242.787149] [<ffff000008a26610>] mmc_io_rw_direct_host+0x9c/0x114
+> [  242.793270] [<ffff000008a26aa0>] sdio_reset+0x34/0x7c
+> [  242.798347] [<ffff000008a1d46c>] mmc_rescan+0x2fc/0x360
+>
+> [ ... ]
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+Thanks!
+Applied to the hisilicon arm64 dt tree.
+
+Best Regards,
+Wei
+
+> ---
+>   arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index 470461d..1e5129b 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -774,6 +774,7 @@
+>   			clocks = <&sys_ctrl 2>, <&sys_ctrl 1>;
+>   			clock-names = "ciu", "biu";
+>   			resets = <&sys_ctrl PERIPH_RSTDIS0_MMC0>;
+> +			reset-names = "reset";
+>   			bus-width = <0x8>;
+>   			vmmc-supply = <&ldo19>;
+>   			pinctrl-names = "default";
+> @@ -797,6 +798,7 @@
+>   			clocks = <&sys_ctrl 4>, <&sys_ctrl 3>;
+>   			clock-names = "ciu", "biu";
+>   			resets = <&sys_ctrl PERIPH_RSTDIS0_MMC1>;
+> +			reset-names = "reset";
+>   			vqmmc-supply = <&ldo7>;
+>   			vmmc-supply = <&ldo10>;
+>   			bus-width = <0x4>;
+> @@ -815,6 +817,7 @@
+>   			clocks = <&sys_ctrl HI6220_MMC2_CIUCLK>, <&sys_ctrl HI6220_MMC2_CLK>;
+>   			clock-names = "ciu", "biu";
+>   			resets = <&sys_ctrl PERIPH_RSTDIS0_MMC2>;
+> +			reset-names = "reset";
+>   			bus-width = <0x4>;
+>   			broken-cd;
+>   			pinctrl-names = "default", "idle";
