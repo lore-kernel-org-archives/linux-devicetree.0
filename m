@@ -1,64 +1,84 @@
-From: "Han, Nandor (GE Healthcare)" <nandor.han-JJi787mZWgc@public.gmane.org>
-Subject: [PATCH 1/3] gpio - Add EXAR XRA1403 SPI GPIO expander driver
-Date: Sat, 8 Apr 2017 07:38:50 +0000
-Message-ID: <HE1P101MB01883D37543C63B3B020F91DE60F0@HE1P101MB0188.NAMP101.PROD.OUTLOOK.COM>
-References: <cover.1490595641.git.nandor.han@ge.com>
- <6bf04ba1761f0692cb461558f0c8836f0d1f7ad8.1490595641.git.nandor.han@ge.com>
- <CACRpkdZB_cxqw0=M4YOhcwdZe7BxJtVKA290yGH-jxPU2MDgBg@mail.gmail.com>
- <HE1P101MB01883B516828F26921267A4FE60A0@HE1P101MB0188.NAMP101.PROD.OUTLOOK.COM>
- <CACRpkdYZVy2t9=K0jVm5=BxhWWUwiNsGDTMVBbSiB9+1+uafJQ@mail.gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Sat, 8 Apr 2017 11:33:50 +0200
+Message-ID: <20170408093350.GA17007@amd>
+References: <20170323203749.GB8563@amd>
+ <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+ <20170329190725.GN20094@minitux>
+ <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux>
+ <20170330074309.GA28533@amd>
+ <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
+ <20170403190032.GX20094@minitux>
+ <20170407133223.GE4756@amd>
+ <20170407203649.GD15143@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYZVy2t9=K0jVm5=BxhWWUwiNsGDTMVBbSiB9+1+uafJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170407203649.GD15143@minitux>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Malinen, Semi (GE Healthcare)" <semi.malinen-JJi787mZWgc@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMgV2FsbGVpaiBb
-bWFpbHRvOmxpbnVzLndhbGxlaWpAbGluYXJvLm9yZ10NCj4gU2VudDogMDcgQXByaWwgMjAxNyAx
-MzowNw0KPiBUbzogSGFuLCBOYW5kb3IgKEdFIEhlYWx0aGNhcmUpIDxuYW5kb3IuaGFuQGdlLmNv
-bT4NCj4gQ2M6IEFsZXhhbmRyZSBDb3VyYm90IDxnbnVyb3VAZ21haWwuY29tPjsgUm9iIEhlcnJp
-bmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFy
-bS5jb20+OyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IE1hbGluZW4sIFNlbWkgKEdF
-IEhlYWx0aGNhcmUpIDxzZW1pLm1hbGluZW5AZ2UuY29tPg0KPiBTdWJqZWN0OiBFWFQ6IFJlOiBb
-UEFUQ0ggMS8zXSBncGlvIC0gQWRkIEVYQVIgWFJBMTQwMyBTUEkgR1BJTyBleHBhbmRlciBkcml2
-ZXINCj4gDQo+IE9uIFdlZCwgQXByIDUsIDIwMTcgYXQgMzoyNCBQTSwgSGFuLCBOYW5kb3IgKEdF
-IEhlYWx0aGNhcmUpDQo+IDxuYW5kb3IuaGFuQGdlLmNvbT4gd3JvdGU6DQo+ID4gW01lXQ0KPiA+
-PiA+ICsgICAgICAgLyogYnJpbmcgdGhlIGNoaXAgb3V0IG9mIHJlc2V0ICovDQo+ID4+ID4gKyAg
-ICAgICByZXNldF9ncGlvID0gZ3Bpb2RfZ2V0X29wdGlvbmFsKCZzcGktPmRldiwgInJlc2V0Iiwg
-R1BJT0RfT1VUX0xPVyk7DQo+ID4+ID4gKyAgICAgICBpZiAoSVNfRVJSKHJlc2V0X2dwaW8pKQ0K
-PiA+PiA+ICsgICAgICAgICAgICAgICBkZXZfd2Fybigmc3BpLT5kZXYsICJjb3VsZCBub3QgZ2V0
-IHJlc2V0LWdwaW9zXG4iKTsNCj4gPj4gPiArICAgICAgIGVsc2UgaWYgKHJlc2V0X2dwaW8pDQo+
-ID4+ID4gKyAgICAgICAgICAgICAgIGdwaW9kX3B1dChyZXNldF9ncGlvKTsNCj4gPj4NCj4gPj4g
-SSBkb24ndCB0aGluayB5b3Ugc2hvdWxkIHB1dCBpdCwgb3RoZXIgdGhhbiBpbiB0aGUgcmVtb3Zl
-KCkNCj4gPj4gZnVuY3Rpb24gYW5kIGluIHRoYXQgY2FzZSB5b3UgbmVlZCB0byBoYXZlIGl0IGlu
-IHRoZQ0KPiA+PiBzdGF0ZSBjb250YWluZXIuDQo+ID4NCj4gPiBDYW4geW91IHBsZWFzZSBiZSBt
-b3JlIGV4cGxpY2l0IGhlcmUuDQo+ID4NCj4gPiBDdXJyZW50bHkgSSdtIHRyeWluZyB0byBicmlu
-ZyB0aGUgZGV2aWNlIG91dCBmcm9tIHJlc2V0IGluIGNhc2UgcmVzZXQgR1BJTyBpcyBwcm92aWRl
-ZC4NCj4gPiBJIGRvbid0IHNlZSBob3cgdGhpcyBjb3VsZCBiZSBkb25lIGluIHJlbW92ZSgpICA6
-KQ0KPiANCj4gSWYgeW91IGlzc3VlIGdwaW9kX3B1dCgpIHlvdSByZWxlYXNlIHRoZSBHUElPIGhh
-bmRlIHNvIHNvbWV0aGluZyBlbHNlDQo+IGNhbiBnbyBpbiBhbmQgZ3JhYiB0aGUgR1BJTyBhbmQg
-YXNzZXJ0IHRoZSByZXNldC4NCj4gDQo+IFRoaXMgaXMgbm90IHdoYXQgeW91IHdhbnQgdG8gbWFr
-ZSBwb3NzaWJsZTogeW91IHdhbnQgdG8gaG9sZCB0aGlzIGdwaW9kIGhhbmRsZQ0KPiBhcyBsb25n
-IGFzIHRoZSBkcml2ZXIgaXMgcnVubmluZy4gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoKSB3aWxs
-IGRvIHRoZQ0KPiB0cmljayBpZiB5b3UgZG9uJ3Qgd2FudCB0byBwdXQgdGhlIGhhbmRsZSB1bmRl
-ciBleHBsaWNpdCBjb250cm9sLg0KPiANCg0KVGhhdCB3YXMgbXkgZmlyc3QgaW50ZW50aW9uIHRv
-IHJlbGVhc2UgdGhlIHJlc2V0IGxpbmUgaW4gY2FzZSBzb21lYm9keSBlbHNlIHdhbnRzIHRvIGNv
-bnRyb2wgaXQuIEkgZGlkIGl0DQpsaWtlIHRoYXQgYmVjYXVzZSB1c3VhbGx5IHJlc2V0IGxpbmUg
-Y29udHJvbHMgbXVsdGlwbGUgZGV2aWNlcyBhbmQgcHJvYmFibHkgc29tZSB1cHBlciBsYXllciB3
-YW50cyB0bw0KY29udHJvbCB0aGF0LiANCg0KQWZ0ZXIgeW91ciBjb21tZW50IEkgZGlkIHNvbWUg
-YW5hbHlzaW5nIGFuZCBJIHdpbGwgZm9sbG93IHlvdXIgYWR2aWNlIGFuZCBjaGFuZ2UgdGhlIHJl
-c2V0IGxpbmUgaGFuZGxpbmcuIA0KT25jZSB0aGUgR1BJTyBpcyBwcm92aWRlZCB0byB0aGUgZHJp
-dmVyIHRoZSBkcml2ZXIgd2lsbCBvd24gaXQgYW5kIGJyaW5nIG91dCB0aGUgZGV2aWNlIGZyb20g
-cmVzZXQuIEluIGNhc2Ugbm90DQpwcm92aWRlZCB0aGUgcmVzZXQgbGluZSBpcyBzb21lYm9keSBl
-bHNlIHJlc3BvbnNpYmlsaXR5LiANCg0KVGhpcyB3YXkgd2UgYXJlIGFibGUgdG8gY292ZXIgbXVs
-dGlwbGUgdXNlLWNhc2VzLiANCg0KVGhhbmtzIExpbnVzLA0KTmFuZHkNCg0KPiBZb3VycywNCj4g
-TGludXMgV2FsbGVpag0K
+
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri 2017-04-07 13:36:49, Bjorn Andersson wrote:
+> On Fri 07 Apr 06:32 PDT 2017, Pavel Machek wrote:
+>=20
+> > > For the patterns I don't know how a trigger for this would look like,
+> > > how would setting the pattern of a trigger be propagated down to the
+> > > hardware?
+> >=20
+> > Well... I'm not sure if we _want_ to do triggers for
+> > patterns. LED triggers change rather quickly (100 times a second?) so
+> > doing them in kernel makes sense. Patterns take 10s of seconds, so we
+> > do not need to handle them in kernel.=20
+> >=20
+>=20
+> On any current Qualcomm based phone (using the Qualcomm PMIC to drive
+> the RGB notification LED) the patterns are hard coded in DeviceTree and
+> the option you have in runtime is to enable/disable the usage of the
+> configured pattern and a few knobs of how to traverse the configured
+> pattern.
+
+Yes... that's easy, but I believe too limiting. Users will want to
+configure their own patterns for their own events.
+
+> When you enter e.g. a low-battery scenario you trigger the red LED to
+> run its low-battery-pattern and you don't touch it until there's a
+> higher prio notification (e.g. someone connects the charger).
+
+Yes, I have something like that, too.
+
+https://gitlab.com/tui/tui/blob/master/ofone/watchdog.py
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljorn4ACgkQMOfwapXb+vLeNQCePZEaXBPoXM2ZXlFPKDAjCY5V
+Ab8AnRZhUGpFAvd4QjKrPM7/KFPbdUfY
+=fwee
+-----END PGP SIGNATURE-----
+
+--W/nzBZO5zC0uMSeA--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
