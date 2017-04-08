@@ -1,196 +1,275 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 3/8] iio: adc: sun4i-gpadc-iio: move code used in MFD
- probing to new function
-Date: Sat, 8 Apr 2017 18:26:20 +0100
-Message-ID: <696b29b8-da60-1ac1-047e-204c6ce1efa7@kernel.org>
-References: <20170405090634.4649-1-quentin.schulz@free-electrons.com>
- <20170405090634.4649-4-quentin.schulz@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170405090634.4649-4-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>, dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, lee.jones@linaro.org, linux@armlinux.org.uk, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, icenowy@aosc.xyz, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
+Date: Sat,  8 Apr 2017 22:30:12 +0200
+Message-ID: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/17 10:06, Quentin Schulz wrote:
-> This moves code used in MFD probing to a new sun4i_gpadc_probe_mfd
-> function.
-> 
-> This driver was initially written for A10, A13 and A31 SoCs which
-> already had a DT binding for this IP, thus we needed to use an MFD to
-> probe the different drivers without changing the DT binding of these
-> SoCs.
-> 
-> For SoCs that will require to create a DT binding for this IP, we can
-> avoid using an MFD, thus we need two separate functions: one for probing
-> via MFD and one for probing without MFD.
-> 
-> This split the code specific to MFD probing in a function separated from
-> the driver probe function.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-Clearly the series is getting split up and going via different trees
-which is fine. I'll drop my Ack and apply it to the togreg branch of iio.git
-with a signed-off.
+The hi655x multi function device is a PMIC providing regulators.
 
-Thanks,
+The PMIC also provides a clock for the WiFi and the Bluetooth, let's implement
+this clock in order to add it in the hi655x MFD and allow proper wireless
+initialization.
 
-Jonathan
-> ---
-> 
-> v3:
->   - updated commit log,
-> 
-> added in v2
-> 
->  drivers/iio/adc/sun4i-gpadc-iio.c | 78 ++++++++++++++++++++++-----------------
->  1 file changed, 45 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index a8e134f..7cb997a 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -454,31 +454,16 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
->  	return 0;
->  }
->  
-> -static int sun4i_gpadc_probe(struct platform_device *pdev)
-> +static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
-> +				 struct iio_dev *indio_dev)
->  {
-> -	struct sun4i_gpadc_iio *info;
-> -	struct iio_dev *indio_dev;
-> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
-> +	struct sun4i_gpadc_dev *sun4i_gpadc_dev =
-> +		dev_get_drvdata(pdev->dev.parent);
->  	int ret;
-> -	struct sun4i_gpadc_dev *sun4i_gpadc_dev;
-> -
-> -	sun4i_gpadc_dev = dev_get_drvdata(pdev->dev.parent);
-> -
-> -	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-> -	if (!indio_dev)
-> -		return -ENOMEM;
->  
-> -	info = iio_priv(indio_dev);
-> -	platform_set_drvdata(pdev, indio_dev);
-> -
-> -	mutex_init(&info->mutex);
->  	info->regmap = sun4i_gpadc_dev->regmap;
-> -	info->indio_dev = indio_dev;
-> -	init_completion(&info->completion);
-> -	indio_dev->name = dev_name(&pdev->dev);
-> -	indio_dev->dev.parent = &pdev->dev;
-> -	indio_dev->dev.of_node = pdev->dev.of_node;
-> -	indio_dev->info = &sun4i_gpadc_iio_info;
-> -	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
->  	indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
->  	indio_dev->channels = sun4i_gpadc_channels;
->  
-> @@ -519,8 +504,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  			dev_err(&pdev->dev,
->  				"could not register thermal sensor: %ld\n",
->  				PTR_ERR(tzd));
-> -			ret = PTR_ERR(tzd);
-> -			goto err;
-> +			return PTR_ERR(tzd);
->  		}
->  	} else {
->  		indio_dev->num_channels =
-> @@ -528,36 +512,65 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  		indio_dev->channels = sun4i_gpadc_channels_no_temp;
->  	}
->  
-> -	pm_runtime_set_autosuspend_delay(&pdev->dev,
-> -					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
-> -	pm_runtime_use_autosuspend(&pdev->dev);
-> -	pm_runtime_set_suspended(&pdev->dev);
-> -	pm_runtime_enable(&pdev->dev);
-> -
->  	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
->  		ret = sun4i_irq_init(pdev, "TEMP_DATA_PENDING",
->  				     sun4i_gpadc_temp_data_irq_handler,
->  				     "temp_data", &info->temp_data_irq,
->  				     &info->ignore_temp_data_irq);
->  		if (ret < 0)
-> -			goto err;
-> +			return ret;
->  	}
->  
->  	ret = sun4i_irq_init(pdev, "FIFO_DATA_PENDING",
->  			     sun4i_gpadc_fifo_data_irq_handler, "fifo_data",
->  			     &info->fifo_data_irq, &info->ignore_fifo_data_irq);
->  	if (ret < 0)
-> -		goto err;
-> +		return ret;
->  
->  	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
->  		ret = iio_map_array_register(indio_dev, sun4i_gpadc_hwmon_maps);
->  		if (ret < 0) {
->  			dev_err(&pdev->dev,
->  				"failed to register iio map array\n");
-> -			goto err;
-> +			return ret;
->  		}
->  	}
->  
-> +	return 0;
-> +}
-> +
-> +static int sun4i_gpadc_probe(struct platform_device *pdev)
-> +{
-> +	struct sun4i_gpadc_iio *info;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	info = iio_priv(indio_dev);
-> +	platform_set_drvdata(pdev, indio_dev);
-> +
-> +	mutex_init(&info->mutex);
-> +	info->indio_dev = indio_dev;
-> +	init_completion(&info->completion);
-> +	indio_dev->name = dev_name(&pdev->dev);
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->dev.of_node = pdev->dev.of_node;
-> +	indio_dev->info = &sun4i_gpadc_iio_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pm_runtime_set_autosuspend_delay(&pdev->dev,
-> +					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
-> +	pm_runtime_use_autosuspend(&pdev->dev);
-> +	pm_runtime_set_suspended(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +
->  	ret = devm_iio_device_register(&pdev->dev, indio_dev);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "could not register the device\n");
-> @@ -570,7 +583,6 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  	if (IS_ENABLED(CONFIG_THERMAL_OF))
->  		iio_map_array_unregister(indio_dev);
->  
-> -err:
->  	pm_runtime_put(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
->  
-> 
+Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+
+Changelog:
+
+ V2:
+    - Added COMPILE_TEST option, compiled on x86
+    - Removed useless parenthesis
+    - Used of_clk_hw_simple_get() instead of deref dance
+    - Do bailout if the clock-names is not specified
+    - Rollback on error
+    - Folded mfd line change and binding
+    - Added #clock-cells binding documentation
+    - Added #clock-cells in the DT
+
+ V1: initial post
+---
+---
+ .../devicetree/bindings/mfd/hisilicon,hi655x.txt   |   6 +
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   1 +
+ drivers/clk/Kconfig                                |   8 ++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-hi655x.c                           | 140 +++++++++++++++++++++
+ drivers/mfd/hi655x-pmic.c                          |   3 +-
+ 6 files changed, 158 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/clk-hi655x.c
+
+diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt b/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
+index 0548569..194e2a9fd 100644
+--- a/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
++++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
+@@ -16,6 +16,11 @@ Required properties:
+ - reg:                  Base address of PMIC on Hi6220 SoC.
+ - interrupt-controller: Hi655x has internal IRQs (has own IRQ domain).
+ - pmic-gpios:           The GPIO used by PMIC IRQ.
++- #clock-cells:		From common clock binding; shall be set to 0
++
++Optional properties:
++- clock-output-names: From common clock binding to override the
++  default output clock name
+ 
+ Example:
+ 	pmic: pmic@f8000000 {
+@@ -24,4 +29,5 @@ Example:
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++		clock-cells = <0>;
+ 	}
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index dba3c13..bb9afb1 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -328,6 +328,7 @@
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++		#clock-cells = <0>;
+ 
+ 		regulators {
+ 			ldo2: LDO2 {
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 9356ab4..36cfea3 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -47,6 +47,14 @@ config COMMON_CLK_RK808
+ 	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
+ 	  by control register.
+ 
++config COMMON_CLK_HI655X
++	tristate "Clock driver for Hi655x"
++	depends on MFD_HI655X_PMIC || COMPILE_TEST
++	---help---
++	  This driver supports the hi655x PMIC clock. This
++	  multi-function device has one fixed-rate oscillator, clocked
++	  at 32KHz.
++
+ config COMMON_CLK_SCPI
+ 	tristate "Clock driver controlled via SCPI interface"
+ 	depends on ARM_SCPI_PROTOCOL || COMPILE_TEST
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 92c12b8..c19983a 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
+ obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+ obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
+ obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
++obj-$(CONFIG_COMMON_CLK_HI655X)		+= clk-hi655x.o
+ obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
+ obj-$(CONFIG_COMMON_CLK_SCPI)           += clk-scpi.o
+ obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
+diff --git a/drivers/clk/clk-hi655x.c b/drivers/clk/clk-hi655x.c
+new file mode 100644
+index 0000000..b2bea32
+--- /dev/null
++++ b/drivers/clk/clk-hi655x.c
+@@ -0,0 +1,140 @@
++/*
++ * Clock driver for Hi655x
++ *
++ * Copyright (c) 2016, Linaro Ltd.
++ *
++ * Author: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/hi655x-pmic.h>
++
++#define HI655X_CLK_BASE	HI655X_BUS_ADDR(0x1c)
++#define HI655X_CLK_SET	BIT(6)
++
++struct hi655x_clk {
++	struct hi655x_pmic *hi655x;
++	struct clk_hw       clk_hw;
++};
++
++static unsigned long hi655x_clk_recalc_rate(struct clk_hw *hw,
++					    unsigned long parent_rate)
++{
++	return 32768;
++}
++
++static int hi655x_clk_enable(struct clk_hw *hw, bool enable)
++{
++	struct hi655x_clk *hi655x_clk =
++		container_of(hw, struct hi655x_clk, clk_hw);
++
++	struct hi655x_pmic *hi655x = hi655x_clk->hi655x;
++
++	return regmap_update_bits(hi655x->regmap, HI655X_CLK_BASE,
++				  HI655X_CLK_SET, enable ? HI655X_CLK_SET : 0);
++}
++
++static int hi655x_clk_prepare(struct clk_hw *hw)
++{
++	return hi655x_clk_enable(hw, true);
++}
++
++static void hi655x_clk_unprepare(struct clk_hw *hw)
++{
++	hi655x_clk_enable(hw, false);
++}
++
++static int hi655x_clk_is_prepared(struct clk_hw *hw)
++{
++	struct hi655x_clk *hi655x_clk =
++		container_of(hw, struct hi655x_clk, clk_hw);
++	struct hi655x_pmic *hi655x = hi655x_clk->hi655x;
++	int ret;
++	uint32_t val;
++
++	ret = regmap_read(hi655x->regmap, HI655X_CLK_BASE, &val);
++	if (ret < 0)
++		return ret;
++
++	return val & HI655X_CLK_BASE;
++}
++
++static const struct clk_ops hi655x_clk_ops = {
++	.prepare     = hi655x_clk_prepare,
++	.unprepare   = hi655x_clk_unprepare,
++	.is_prepared = hi655x_clk_is_prepared,
++	.recalc_rate = hi655x_clk_recalc_rate,
++};
++
++static int hi655x_clk_probe(struct platform_device *pdev)
++{
++	struct device *parent = pdev->dev.parent;
++	struct hi655x_pmic *hi655x = dev_get_drvdata(parent);
++	struct clk_init_data *hi655x_clk_init;
++	struct hi655x_clk *hi655x_clk;
++	const char *clk_name = "hi655x-clk";
++	int ret;
++
++	hi655x_clk = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk), GFP_KERNEL);
++	if (!hi655x_clk)
++		return -ENOMEM;
++
++	hi655x_clk_init = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk_init),
++				       GFP_KERNEL);
++	if (!hi655x_clk_init)
++		return -ENOMEM;
++
++	of_property_read_string_index(parent->of_node, "clock-output-names",
++				      0, &clk_name);
++
++	hi655x_clk_init->name	= clk_name;
++	hi655x_clk_init->ops	= &hi655x_clk_ops;
++
++	hi655x_clk->clk_hw.init	= hi655x_clk_init;
++	hi655x_clk->hi655x	= hi655x;
++
++	platform_set_drvdata(pdev, hi655x_clk);
++
++	ret = devm_clk_hw_register(&pdev->dev, &hi655x_clk->clk_hw);
++	if (ret)
++		return ret;
++
++	ret = of_clk_add_hw_provider(parent->of_node, of_clk_hw_simple_get,
++				     &hi655x_clk->clk_hw);
++	if (ret)
++		return ret;
++
++	ret = clk_hw_register_clkdev(&hi655x_clk->clk_hw, clk_name, NULL);
++	if (ret)
++		of_clk_del_provider(parent->of_node);
++
++	return ret;
++}
++
++static struct platform_driver hi655x_clk_driver = {
++	.probe =  hi655x_clk_probe,
++	.driver		= {
++		.name	= "hi655x-clk",
++	},
++};
++
++module_platform_driver(hi655x_clk_driver);
++
++MODULE_DESCRIPTION("Clk driver for the hi655x series PMICs");
++MODULE_AUTHOR("Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:hi655x-clk");
+diff --git a/drivers/mfd/hi655x-pmic.c b/drivers/mfd/hi655x-pmic.c
+index ba706ad..c37ccbf 100644
+--- a/drivers/mfd/hi655x-pmic.c
++++ b/drivers/mfd/hi655x-pmic.c
+@@ -77,7 +77,8 @@
+ 		.num_resources	= ARRAY_SIZE(pwrkey_resources),
+ 		.resources	= &pwrkey_resources[0],
+ 	},
+-	{	.name		= "hi655x-regulator", },
++	{	.name		= "hi655x-regulator",	},
++	{	.name		= "hi655x-clk",		},
+ };
+ 
+ static void hi655x_local_irq_clear(struct regmap *map)
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
