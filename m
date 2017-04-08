@@ -1,102 +1,61 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
-Date: Sat, 8 Apr 2017 15:39:05 +0200
-Message-ID: <20170408133904.GA9020@amd>
-References: <20170323203749.GB8563@amd>
- <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
- <20170329190725.GN20094@minitux>
- <20170329222301.GB7977@amd>
- <20170330000955.GP20094@minitux>
- <20170330074309.GA28533@amd>
- <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
- <20170403190032.GX20094@minitux>
- <dce7f2b1-8d1d-1c5d-5fa5-54c22b6f4758@gmail.com>
- <20170407202603.GC15143@minitux>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] Documentation: dt-bindings: iio: Add max9611 ADC
+Date: Sat, 8 Apr 2017 16:59:39 +0100
+Message-ID: <e7a53314-2e57-ae3a-af53-0d22ab445f5a@kernel.org>
+References: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1491488454-22468-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdUNWJ2C9b9Xzod5HRU_ZG3mVamN6a-ZdOywODJqv6TxQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170407202603.GC15143@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUNWJ2C9b9Xzod5HRU_ZG3mVamN6a-ZdOywODJqv6TxQw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/04/17 15:43, Geert Uytterhoeven wrote:
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Thu, Apr 6, 2017 at 4:20 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/max9611.txt
+>> @@ -0,0 +1,27 @@
+>> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
+>> +
+>> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
+>> +12-bits ADC communicating over I2c bus.
+>> +The device node for this driver shall be a child of a I2c controller.
+>> +
+>> +Required properties
+>> +  - compatible: Should be "maxim,max9611" or "maxim,max9612"
+>> +  - reg: The 7-bits long I2c address of the device
+>> +  - shunt-resistor-micro-homs: Value, in micro Ohms, of the current sense shunt
+> 
+> s/homs/ohms/
+I'll fix the title as Rob requested and this.  
 
-Hi!
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-> [..]
-> > > For the patterns I don't know how a trigger for this would look like,
-> > > how would setting the pattern of a trigger be propagated down to the
-> > > hardware?
-> >=20
-> > We'd need a new op and API similar to blink_set()/led_blink_set().
-> >=20
->=20
-> I've tried to find different LED circuits with some sort of pattern
-> generator in an attempt to figure out how to design this interface, but
-> turned out to be quite hard to find examples; the three I can compare
-> are:
->=20
-> * LP5xx series "implements" pattern generation by executing code.
->=20
-> * Qualcomm LPG iterates over 2-64 brightness-values in a pattern, at a
->   fixed rate with knobs to configure what happens before starting and
->   after finishing iterating over the defined values. It does not support
->   smooth transitions between values.
->=20
-> * AS3676 supports a pattern of 32 values controlling if the output
->   should be enabled or disabled for each 32.5ms (or 250ms) time period.
->   The delay before repeating the pattern can be configured. It support
->   smooth transitions between the states.
->=20
->=20
-> So, while I think I see how you would like to architect this interface I
-> am not sure how to figure out the details.
->=20
-> The pattern definition would have to be expressive enough to support the
-> features of LP5xx and direct enough to support the limited AS3676. It
-> would likely have to express transitions, so that the LPG could generate
-> intermediate steps (and we will have to adapt the resolution of the
-> ramps based on the other LPGs in the system).
->=20
-> How do we do with patterns that are implementable by the LP5xx but are
-> not with the LPG? Should we reject those or should we do some sort of
-> best-effort approach in the kernel?
+Thanks for your hard work on this one!
 
-Lets say you get series of
-
-(red, green, blue, delta_t )
-
-points, meaning "in delta_t msec, change color to red, green,
-blue. Lets ignore other channels for now. delta_t of 0 would be step
-change. Would such interface work for you?
-
-Simple compiler from this to LP5XX code should not be hard to
-do. AS3676 ... I'm not sure what to do, AFAICT it is too limited.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljo5/gACgkQMOfwapXb+vLxwgCeOwfVmQNSl83HtFrRiD5l2Zpy
-L9sAmwdcic4hv/Mm9RqXUcQVUS1AmjX+
-=yQ0E
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
+Jonathan
+> 
+>> +                               resistor
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
