@@ -1,67 +1,38 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] arm64: dts: salvator-x: Add current sense
- amplifiers
-Date: Sat, 8 Apr 2017 17:02:53 +0100
-Message-ID: <8cc2a7a4-57be-15d7-2190-eb3d3cad3972@kernel.org>
-References: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org>
- <1491488454-22468-5-git-send-email-jacopo+renesas@jmondi.org>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3 5/9] arm, arm64: factorize common cpu capacity default
+ code
+Date: Sat, 8 Apr 2017 18:25:48 +0200
+Message-ID: <20170408162548.GA18881@kroah.com>
+References: <20170327131825.32134-1-juri.lelli@arm.com>
+ <20170327131825.32134-6-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491488454-22468-5-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170327131825.32134-6-juri.lelli-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/04/17 15:20, Jacopo Mondi wrote:
-> Add device nodes for two Maxim max961x current sense amplifiers
-> sensing VDD_08 and DVFS_08 lines.
+On Mon, Mar 27, 2017 at 02:18:21PM +0100, Juri Lelli wrote:
+> arm and arm64 share lot of code relative to parsing CPU capacity
+> information from DT, using that information for appropriate scaling and
+> exposing a sysfs interface for chaging such values at runtime.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Driver now applied and should make the coming merge window easily,
-so I'll assume this will head upstream via an appropriate tree.
-
-Thanks,
-
-Jonathan
-> ---
->  arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> Factorize such code in a common place (driver/base/arch_topology.c) in
+> preparation for further additions.
 > 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts
-> index c7f40f8..c4860a1 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts
-> @@ -257,6 +257,24 @@
->  	status = "okay";
->  };
->  
-> +&i2c4 {
-> +	status = "okay";
-> +
-> +	csa_vdd: adc@7c {
-> +		compatible = "maxim,max9611";
-> +		reg = <0x7c>;
-> +
-> +		shunt-resistor-micro-ohms = <5000>;
-> +	};
-> +
-> +	csa_dvfs: adc@7f {
-> +		compatible = "maxim,max9611";
-> +		reg = <0x7f>;
-> +
-> +		shunt-resistor-micro-ohms = <5000>;
-> +	};
-> +};
-> +
->  &wdt0 {
->  	timeout-sec = <60>;
->  	status = "okay";
-> 
+> Suggested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Suggested-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 
+I need some acks here from the arm maintainers before I can take this
+series...
+
+thanks,
+
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
