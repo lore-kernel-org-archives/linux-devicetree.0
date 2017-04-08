@@ -1,80 +1,58 @@
-From: jmondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] Documentation: dt-bindings: iio: Add max9611 ADC
-Date: Sat, 8 Apr 2017 18:45:03 +0200
-Message-ID: <20170408164503.GB9459@w540>
-References: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org>
- <1491488454-22468-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdUNWJ2C9b9Xzod5HRU_ZG3mVamN6a-ZdOywODJqv6TxQw@mail.gmail.com>
- <e7a53314-2e57-ae3a-af53-0d22ab445f5a@kernel.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCHv3 02/10] serdev: add serdev_device_wait_until_sent
+Date: Sat, 8 Apr 2017 18:57:40 +0200
+Message-ID: <20170408165740.GA20058@kroah.com>
+References: <20170328155939.31566-1-sre@kernel.org>
+ <20170328155939.31566-3-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e7a53314-2e57-ae3a-af53-0d22ab445f5a-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170328155939.31566-3-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+On Tue, Mar 28, 2017 at 05:59:31PM +0200, Sebastian Reichel wrote:
+> Add method, which waits until the transmission buffer has been sent.
+> Note, that the change in ttyport_write_wakeup is related, since
+> tty_wait_until_sent will hang without that change.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> ---
+> Changes since PATCHv2:
+>  * Avoid goto in ttyport_write_wakeup
+> ---
+>  drivers/tty/serdev/core.c           | 11 +++++++++++
+>  drivers/tty/serdev/serdev-ttyport.c | 18 ++++++++++++++----
+>  include/linux/serdev.h              |  3 +++
+>  3 files changed, 28 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index f4c6c90add78..a63b74031e22 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -173,6 +173,17 @@ void serdev_device_set_flow_control(struct serdev_device *serdev, bool enable)
+>  }
+>  EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
+>  
+> +void serdev_device_wait_until_sent(struct serdev_device *serdev, long timeout)
+> +{
+> +	struct serdev_controller *ctrl = serdev->ctrl;
+> +
+> +	if (!ctrl || !ctrl->ops->wait_until_sent)
+> +		return;
+> +
+> +	ctrl->ops->wait_until_sent(ctrl, timeout);
+> +}
+> +EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
 
-On Sat, Apr 08, 2017 at 04:59:39PM +0100, Jonathan Cameron wrote:
-> On 06/04/17 15:43, Geert Uytterhoeven wrote:
->
-> > On Thu, Apr 6, 2017 at 4:20 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/adc/max9611.txt
-> >> @@ -0,0 +1,27 @@
-> >> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
-> >> +
-> >> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
-> >> +12-bits ADC communicating over I2c bus.
-> >> +The device node for this driver shall be a child of a I2c controller.
-> >> +
-> >> +Required properties
-> >> +  - compatible: Should be "maxim,max9611" or "maxim,max9612"
-> >> +  - reg: The 7-bits long I2c address of the device
-> >> +  - shunt-resistor-micro-homs: Value, in micro Ohms, of the current sense shunt
-> >
-> > s/homs/ohms/
-> I'll fix the title as Rob requested and this.
->
+Is this still needed now that we have serdev_device_write() with an
+unlimited timeout available?
 
-Uh! I missed that title thing! Sorry about this, and thank you
-Jonathan for doing that!
+thanks,
 
-> Applied to the togreg branch of iio.git and pushed out as testing
-> for the autobuilders to play with it.
->
-> Thanks for your hard work on this one!
->
-
-Thank you all for your effort in reviewing this
-
-Thanks
-   j
-
-> Jonathan
-> >
-> >> +                               resistor
-> >
-> > Gr{oetje,eeting}s,
-> >
-> >                         Geert
-> >
-> > --
-> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> >
-> > In personal conversations with technical people, I call myself a hacker. But
-> > when I'm talking to journalists I just say "programmer" or something like that.
-> >                                 -- Linus Torvalds
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
