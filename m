@@ -1,15 +1,14 @@
 From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: hisilicon: add bindings for
- hi3798cv200 SoC and Poplar board
-Date: Sat, 8 Apr 2017 14:46:58 +0800
-Message-ID: <58E88762.6060000@hisilicon.com>
-References: <1490769009-12552-1-git-send-email-xuejiancheng@hisilicon.com>
- <1490769009-12552-2-git-send-email-xuejiancheng@hisilicon.com>
+Subject: Re: [PATCH 0/5] arm64: dts: hisi: add NIC, RoCE and SAS support for
+ hip07
+Date: Sat, 8 Apr 2017 14:51:48 +0800
+Message-ID: <58E88884.2090702@hisilicon.com>
+References: <1491530876-109791-1-git-send-email-xuwei5@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1490769009-12552-2-git-send-email-xuejiancheng@hisilicon.com>
+In-Reply-To: <1491530876-109791-1-git-send-email-xuwei5@hisilicon.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,41 +18,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jiancheng Xue <xuejiancheng@hisilicon.com>, robh+dt@kernel.org, arnd@arndb.de, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, peter.griffin@linaro.org, elder@linaro.org, hermit.wangheming@hisilicon.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
+Cc: wangkefeng.wang@huawei.com, gabriele.paoloni@huawei.com, charles.chenxin@huawei.com, linuxarm@huawei.com, guohanjun@huawei.com, yankejian@huawei.com, yimin@huawei.com, huangdaode@hisilicon.com, liudongdong3@huawei.com, yisen.zhuang@huawei.com, devicetree@vger.kernel.org, john.garry@huawei.com, tanxiaofei@huawei.com, lipeng321@huawei.com, linux-arm-kernel@lists.infradead.org, salil.mehta@huawei.com, chenxiang66@hisilicon.com, linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com, wangzhou1@hisilicon.com, liguozhu@hisilicon.com, majun258@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jiancheng,
+Hi All,
 
-On 2017/3/29 14:30, Jiancheng Xue wrote:
-> Add bindings for HiSilicon hi3798cv200 SoC and Poplar Board.
+On 2017/4/7 10:07, Wei.Xu wrote:
+> This patch series adds Mbigen, NIC, RoCE and SAS nodes for the hip07
+> SoC and enables the NIC, RoCE and SAS on the hip07 d05 board.
 >
-> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Reviewed-by: Alex Elder <elder@linaro.org>
-> Acked-by: Peter Griffin <peter.griffin@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-Thanks!
-Applied both to the hisilicon arm64 dt tree but added hi3798cv200 soc
-binding to avoid the patch checking warning.
+> Wei Xu (5):
+>    arm64: dts: hisi: add mbigen nodes for the hip07 SoC
+>    arm64: dts: hisi: add network related nodes for the hip07 SoC
+>    arm64: dts: hisi: add RoCE nodes for the hip07 SoC
+>    arm64: dts: hisi: add SAS nodes for the hip07 SoC
+>    arm64: dts: hisi: enalbe the NIC and SAS for the hip07-d05 board
+>
+>   arch/arm64/boot/dts/hisilicon/hip07-d05.dts |  24 ++
+>   arch/arm64/boot/dts/hisilicon/hip07.dtsi    | 479 ++++++++++++++++++++++++++++
+>   2 files changed, 503 insertions(+)
+>
+After removed the PCIe node in the patch 5, the series has been applied 
+to the hisilicon arm64
+dt tree since this series patches just to add the nodes and the binding 
+has been reviewed before.
 
 Best Regards,
 Wei
-> ---
->   Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> index f1c1e21..1fd3dd7 100644
-> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> @@ -4,6 +4,10 @@ Hi3660 SoC
->   Required root node properties:
->   	- compatible = "hisilicon,hi3660";
->   
-> +Hi3798cv200 Poplar Board
-> +Required root node properties:
-> +	- compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
-> +
->   Hi4511 Board
->   Required root node properties:
->   	- compatible = "hisilicon,hi3620-hi4511";
