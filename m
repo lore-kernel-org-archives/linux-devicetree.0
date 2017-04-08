@@ -1,95 +1,62 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH] ARM: dts: hi6220: Reset the mmc hosts
-Date: Sat, 8 Apr 2017 14:38:23 +0800
-Message-ID: <58E8855F.5060200@hisilicon.com>
-References: <1489673004-11075-1-git-send-email-daniel.lezcano@linaro.org>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: add drive-strength levels of pin for
+ Hi3660 SoC
+Date: Sat, 8 Apr 2017 14:42:32 +0800
+Message-ID: <58E88658.20805@hisilicon.com>
+References: <20170330064803.18648-1-hw.wangxiaoyin@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489673004-11075-1-git-send-email-daniel.lezcano@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170330064803.18648-1-hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: chenya99-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Xiaoyin,
 
-On 2017/3/16 22:03, Daniel Lezcano wrote:
-> The MMC hosts could be left in an unconsistent or uninitialized state from
-> the firmware. Instead of assuming, the firmware did the right things, let's
-> reset the host controllers.
+On 2017/3/30 14:48, Wang Xiaoyin wrote:
+> Add drive-strength levels of pin for Hi3660 Soc.
 >
-> This change fixes a bug when the mmc2/sdio is initialized leading to a hung
-> task:
->
-> [  242.704294] INFO: task kworker/7:1:675 blocked for more than 120 seconds.
-> [  242.711129]       Not tainted 4.9.0-rc8-00017-gcf0251f #3
-> [  242.716571] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [  242.724435] kworker/7:1     D    0   675      2 0x00000000
-> [  242.729973] Workqueue: events_freezable mmc_rescan
-> [  242.734796] Call trace:
-> [  242.737269] [<ffff00000808611c>] __switch_to+0xa8/0xb4
-> [  242.742437] [<ffff000008d07c04>] __schedule+0x1c0/0x67c
-> [  242.747689] [<ffff000008d08254>] schedule+0x40/0xa0
-> [  242.752594] [<ffff000008d0b284>] schedule_timeout+0x1c4/0x35c
-> [  242.758366] [<ffff000008d08e38>] wait_for_common+0xd0/0x15c
-> [  242.763964] [<ffff000008d09008>] wait_for_completion+0x28/0x34
-> [  242.769825] [<ffff000008a1a9f4>] mmc_wait_for_req_done+0x40/0x124
-> [  242.775949] [<ffff000008a1ab98>] mmc_wait_for_req+0xc0/0xf8
-> [  242.781549] [<ffff000008a1ac3c>] mmc_wait_for_cmd+0x6c/0x84
-> [  242.787149] [<ffff000008a26610>] mmc_io_rw_direct_host+0x9c/0x114
-> [  242.793270] [<ffff000008a26aa0>] sdio_reset+0x34/0x7c
-> [  242.798347] [<ffff000008a1d46c>] mmc_rescan+0x2fc/0x360
->
-> [ ... ]
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
 Thanks!
-Applied to the hisilicon arm64 dt tree.
+Applied both to the hisilicon arm64 dt tree.
 
 Best Regards,
 Wei
-
 > ---
->   arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 3 +++
->   1 file changed, 3 insertions(+)
+>   include/dt-bindings/pinctrl/hisi.h | 15 +++++++++++++++
+>   1 file changed, 15 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index 470461d..1e5129b 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -774,6 +774,7 @@
->   			clocks = <&sys_ctrl 2>, <&sys_ctrl 1>;
->   			clock-names = "ciu", "biu";
->   			resets = <&sys_ctrl PERIPH_RSTDIS0_MMC0>;
-> +			reset-names = "reset";
->   			bus-width = <0x8>;
->   			vmmc-supply = <&ldo19>;
->   			pinctrl-names = "default";
-> @@ -797,6 +798,7 @@
->   			clocks = <&sys_ctrl 4>, <&sys_ctrl 3>;
->   			clock-names = "ciu", "biu";
->   			resets = <&sys_ctrl PERIPH_RSTDIS0_MMC1>;
-> +			reset-names = "reset";
->   			vqmmc-supply = <&ldo7>;
->   			vmmc-supply = <&ldo10>;
->   			bus-width = <0x4>;
-> @@ -815,6 +817,7 @@
->   			clocks = <&sys_ctrl HI6220_MMC2_CIUCLK>, <&sys_ctrl HI6220_MMC2_CLK>;
->   			clock-names = "ciu", "biu";
->   			resets = <&sys_ctrl PERIPH_RSTDIS0_MMC2>;
-> +			reset-names = "reset";
->   			bus-width = <0x4>;
->   			broken-cd;
->   			pinctrl-names = "default", "idle";
+> diff --git a/include/dt-bindings/pinctrl/hisi.h b/include/dt-bindings/pinctrl/hisi.h
+> index 38f1ea879ea1..0359bfdc9119 100644
+> --- a/include/dt-bindings/pinctrl/hisi.h
+> +++ b/include/dt-bindings/pinctrl/hisi.h
+> @@ -56,4 +56,19 @@
+>   #define DRIVE4_08MA	(4 << 4)
+>   #define DRIVE4_10MA	(6 << 4)
+>   
+> +/* drive strength definition for hi3660 */
+> +#define DRIVE6_MASK	(15 << 4)
+> +#define DRIVE6_04MA	(0 << 4)
+> +#define DRIVE6_12MA	(4 << 4)
+> +#define DRIVE6_19MA	(8 << 4)
+> +#define DRIVE6_27MA	(10 << 4)
+> +#define DRIVE6_32MA	(15 << 4)
+> +#define DRIVE7_02MA	(0 << 4)
+> +#define DRIVE7_04MA	(1 << 4)
+> +#define DRIVE7_06MA	(2 << 4)
+> +#define DRIVE7_08MA	(3 << 4)
+> +#define DRIVE7_10MA	(4 << 4)
+> +#define DRIVE7_12MA	(5 << 4)
+> +#define DRIVE7_14MA	(6 << 4)
+> +#define DRIVE7_16MA	(7 << 4)
+>   #endif
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
