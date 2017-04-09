@@ -1,43 +1,54 @@
-From: Benjamin Herrenschmidt <benh-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: Re: [PATCH v4 19/23] drivers/fsi: Add GPIO based FSI master
-Date: Mon, 10 Apr 2017 07:55:37 +1000
-Message-ID: <1491774937.4166.198.camel@au1.ibm.com>
+Date: Mon, 10 Apr 2017 07:41:32 +1000
+Message-ID: <1491774092.4166.195.camel@kernel.crashing.org>
 References: <20170329174340.89109-1-cbostic@linux.vnet.ibm.com>
-         <20170329174340.89109-20-cbostic@linux.vnet.ibm.com>
-         <CACPK8XfOSYPidHF6=psC4mP-tkRyWTu0psdcK6EwA2E6FF53Uw@mail.gmail.com>
-         <0e1bcf3a-e8d7-9f50-bdf7-2a1e7466665b@linux.vnet.ibm.com>
-         <1490907014.3177.207.camel@kernel.crashing.org>
-         <93b21624-11fc-b71b-aa78-6cb4371c87ae@linux.vnet.ibm.com>
-         <1491344360.4166.68.camel@kernel.crashing.org>
-         <5344146a-f450-7959-4688-a83ee022574b@linux.vnet.ibm.com>
-         <1491774092.4166.195.camel@kernel.crashing.org>
-         <1491774835.4166.197.camel@au1.ibm.com>
-Reply-To: benh-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org
+ <20170329174340.89109-20-cbostic@linux.vnet.ibm.com>
+ <CACPK8XfOSYPidHF6=psC4mP-tkRyWTu0psdcK6EwA2E6FF53Uw@mail.gmail.com>
+ <0e1bcf3a-e8d7-9f50-bdf7-2a1e7466665b@linux.vnet.ibm.com>
+ <1490907014.3177.207.camel@kernel.crashing.org>
+ <93b21624-11fc-b71b-aa78-6cb4371c87ae@linux.vnet.ibm.com>
+ <1491344360.4166.68.camel@kernel.crashing.org>
+ <5344146a-f450-7959-4688-a83ee022574b@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491774835.4166.197.camel-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5344146a-f450-7959-4688-a83ee022574b@linux.vnet.ibm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christopher Bostic <cbostic@linux.vnet.ibm.com>, Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Greg KH <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, rostedt@goodmis.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, "Edward A .
+ James" <eajames@us.ibm.com>, Alistair Popple <alistair@popple.id.au>, mingo@redhat.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-04-10 at 07:53 +1000, Benjamin Herrenschmidt wrote:
-> FYI. pdbg in userspace operates without any  delays in practice, the
-> overhead between the various load/store instructions seems
-> sufficient.
-> 
-> The only delay that's needed is when going through the FSI2PIB (to do
-> SCOMs) where it seems like back-2-back accesses can be problematic.
-
-Note: This isn't an objection to merging the patches. We can look at
-doing an improved backend later.
-
-Cheers,
-Ben.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCAyMDE3LTA0LTA5IGF0IDE2OjIyIC0wNTAwLCBDaHJpc3RvcGhlciBCb3N0aWMgd3Jv
+dGU6Cj4gQSAzIG1pY3Jvc2Vjb25kIGRlbGF5IGlzIHJlcXVpcmVkLCBob3dldmVyLCB0byBwcmV2
+ZW50IG9jY2FzaW9uYWwgaXNzdWVzwqAKPiBkdXJpbmcgaGVhdnkgRlNJIGJ1cyBsb2FkIHN0cmVz
+cyB0ZXN0aW5nLgo+IEEgMSBuYW5vc2Vjb25kIGRlbGF5IHVzaW5nIG5kZWxheSgxKSBoYWQgYmVl
+biBzcGVjaWZpZWQgcHJpb3IgdG8gdGhpc8KgCj4gYnV0IGFmdGVyIGxvb2tpbmcgbW9yZSBjbG9z
+ZWx5IGF0IHJlYWwgdGltZSBwZXJmb3JtYW5jZSBpdCB0dXJuZWQgb3V0IHRvwqAKPiBhY3R1YWxs
+eSBiZSByb3VnaGx5IDEtMiBtaWNyb3NlY29uZHMuwqDCoCBUaGlzIGFwcGVhcnMgdG8gYmUgdGhl
+IG1pbmltdW3CoAo+IHJlc29sdXRpb24gdXNpbmcgdGhlIGRlbGF5KCkgbGludXggbGlicmFyaWVz
+IG9uIHRoZSBBU1QyNDAwLzI1MDAuwqDCoMKgCj4gR2l2ZW4gdGhpcywgaW5jcmVhc2luZyBkZWxh
+eSB0byAzIG1pY3Jvc2Vjb25kcyBkb2Vzbid0IGltcGFjdMKgCj4gcGVyZm9ybWFuY2UgbXVjaCBj
+b25zaWRlcmluZyBJIGNhbiBub3cgcmVtb3ZlIHRoZSBzYW1wbGUgaW5wdXQgZGVsYXnCoAo+IGJh
+c2VkIG9uIHlvdXIgcmVjb21tZW5kYXRpb25zIHRvIHJlLW9yZGVyIHRoZSB0d28gY2xvY2sgZGVs
+YXlzLgoKVGhpcyBpcyBodWdlIGRlbGF5cy4gV2Ugc2hvdWxkIGNvbnNpZGVyIGEgQVNUMnh4eCBz
+cGVjaWZpYyB2YXJpYW50IG9mCnRoZSBiYWNrZW5kIHRoYXQgdXNlcyBub3BzIG9yIHNpbWlsYXIg
+bGFiLWNhbGlicmF0ZWQgY29uc3RydWN0cwppbnN0ZWFkLiBPdGhlcndpc2Ugd2UgYXJlIHN0dWNr
+IGluIHRoZSBrSHogcmFuZ2UsIHRoaXMgaXMgYSA+MjAwTWh6IGJ1cwo6KQoKSSBkb24ndCB1bmRl
+cnN0YW5kIHdoeSAzdXMgZGVsYXkgd291bGQgdGh1cyBiZSBuZWNlc3NhcnkuCgpXaGVyZSBhYm91
+dCBkaWQgeW91IG9ic2VydmUgaXNzdWVzID8gQ291bGQgaXQgYmUgdGhhdCB5b3UgZG9uJ3Qgd2Fp
+dApsb25nIGVub3VnaCBpbiB0aGUgdHJhbnNpdGlvbnMgZnJvbSB3cml0ZSB0byByZWFkID8KCkNo
+ZWVycywKQmVuLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
