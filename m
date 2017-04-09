@@ -1,137 +1,63 @@
-From: Felix Brack <fb-GovowT2ENgg@public.gmane.org>
-Subject: Re: [PATCH v2] Extend pca9532 device tree support
-Date: Sun, 9 Apr 2017 15:11:32 +0200
-Message-ID: <e61cebbb-a947-d41f-2460-de5aacaeafd3@ltec.ch>
-References: <1490880833-22199-1-git-send-email-fb@ltec.ch>
- <b54c77d5-b4f7-9517-8c5b-9200c766204a@gmail.com> <20170406155005.GA10363@amd>
- <a8509d26-6e35-e2f7-9784-90f3c54accbf@gmail.com>
- <ec012568-f540-4e87-d8c4-4065fbcd1c2a@ltec.ch>
- <2f3815ab-71e1-b63d-aba8-167e11f719de@gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V3 2/3] mtd: add core code reading DT specified part
+ probes
+Date: Sun, 9 Apr 2017 15:28:21 +0200
+Message-ID: <20170409152821.585eb8a4@bbrezillon>
+References: <20170331114016.26858-1-zajec5@gmail.com>
+        <20170331114016.26858-2-zajec5@gmail.com>
+        <20170409130406.564802a4@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2f3815ab-71e1-b63d-aba8-167e11f719de-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170409130406.564802a4@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jacek,
+On Sun, 9 Apr 2017 13:04:06 +0200
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On 09.04.2017 14:37, Jacek Anaszewski wrote:
-> Hello Felix,
-> 
-> On 04/07/2017 10:22 AM, Felix Brack wrote:
->> Hello Jacek,
->>
->> On 06.04.2017 21:00, Jacek Anaszewski wrote:
->>> Hi Pavel,
->>>
->>> On 04/06/2017 05:50 PM, Pavel Machek wrote:
->>>> Hi!
->>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>>>>> index 198f3ba..8374075 100644
->>>>>> --- a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>>>>> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>>>>> @@ -17,6 +17,8 @@ Optional sub-node properties:
->>>>>>  	- label: see Documentation/devicetree/bindings/leds/common.txt
->>>>>>  	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
->>>>>>  	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
->>>>>> +	- default-state: see Documentation/devicetree/bindings/leds/common.txt
->>>>>> +	  This property is only valid for sub-nodes of type <PCA9532_TYPE_LED>.
->>>>>>  
->>>>>>  Example:
->>>>>>    #include <dt-bindings/leds/leds-pca9532.h>
->>>>>> @@ -33,6 +35,14 @@ Example:
->>>>>>        label = "pca:green:power";
->>>>>>        type = <PCA9532_TYPE_LED>;
->>>>>>      };
->>>>>> +    kernel-booting {
->>>>>> +    	type = <PCA9532_TYPE_LED>;
->>>>>> +    	default-state = "on";
->>>>>> +    };
->>>>>> +    sys-stat {
->>>>>> +    	type = <PCA9532_TYPE_LED>;
->>>>>> +    	default-state = "keep"; // don't touch, was set by U-Boot
->>>>>> +    };
->>>>>
->>>>> Adjusted above indentation to match the preceding lines.
->>>>
->>>>>> @@ -475,6 +494,16 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
->>>>>>  		of_property_read_u32(child, "type", &pdata->leds[i].type);
->>>>>>  		of_property_read_string(child, "linux,default-trigger",
->>>>>>  					&pdata->leds[i].default_trigger);
->>>>>> +		if (!of_property_read_string(child, "default-state", &state)) {
->>>>>> +			if (!strcmp(state, "on"))
->>>>>> +				pdata->leds[i].state = PCA9532_ON;
->>>>>> +			else if (!strcmp(state, "keep"))
->>>>>> +				pdata->leds[i].state = PCA9532_KEEP;
->>>>>> +			else if (!strcmp(state, "pwm0"))
->>>>>> +				pdata->leds[i].state = PCA9532_PWM0;
->>>>>> +			else if (!strcmp(state, "pwm1"))
->>>>>> +				pdata->leds[i].state = PCA9532_PWM1;
->>>>>> +		}
->>>>>>  		if (++i >= maxleds) {
->>>>>>  			of_node_put(child);
->>>>>>  			break;
->>>>
->>>> This seems to look for "pwm0" and "pwm1" strings, which do not seem to
->>>> be documented.
->>>>
->>>> Plus... is it useful to have default-state? We already have default
->>>> trigger. If we keep the value by default (on PC, we do something like
->>>> that) this patch should not be neccessary?
->>>
->>> Thanks for the heads-up. Dropping the patch for now.
->>
->> No, please do not drop the patch.
->>
->>> I guess that pwm0/1 got propagated to v2 by an omission.
->>>
->>
->> Yes, I agree. However the two strings do not break anything and behave
->> analog to the 'on' or 'keep' string. Though this code could be removed
->> if absolutely necessary. An alternative would be to add a description
->> for the strings. Just to be clear: these strings have nothing to with
->> the exposition of device specific registers to the DT.
->>
->>> Regarding default-on: Felix, do you have any use case that require
->>> default-on set to "keep"?
->>>
->>
->> This patch is not about 'default-on' which is a value that could be
->> assigned to the property 'linux,default-trigger' (according to DT
->> bindings documentation file 'common.txt').
->> My patch does not introduce anything new with the'keep' state, it rather
->> completes the existing bindings according to the description in
->> Documentation/devicetree/bindings/leds/common.txt which states:
->>
->> ....
->> - default-state : The initial state of the LED. Valid values are "on",
->> "off", and "keep". If the LED is already on or off and the default-state
->> property is set the to same value, then no glitch should be produced
->> where the LED momentarily turns off (or on). The "keep" setting will
->> keep the LED at whatever its current state is, without producing a
->> glitch.  The default is off if this property is not present.
->> ....
->>
->> One of my use cases is to turn a LED on by U-Boot. This LED must remain
->> on until eventually, under certain conditions, some userland code
->> changes it's state.
->> Setting 'default-state' to 'keep' is how you can sort of tell the
->> kernel, or better the driver, 'not to initialize the LED' which would
->> turn it off.
-> 
-> Thanks for the explanation. Could you please sent v3 with removed pwm*
-> cases then?
-> 
+> static char **mtd_alloc_part_type_table(int nentries)
 
-Yes, I will try to do so next week.
+Oops, s/char **/const char **/
 
---
-regards Felix
+> {
+> 	return kzalloc((nentries + 1) * sizeof(*res), GFP_KERNEL);
+> }
+> 
+> static void mtd_free_part_type_table(const char * const *table)
+> {
+> 	kfree(table);
+> }
+
+I realize this might not be suitable for all kind of part-probes
+definitions. Some might need to dynamically allocate each string and
+expect the core to free them in mtd_free_part_type_table() (the one I
+have in mind is the cmdline part-probes parser). Others already have
+the strings statically defined or allocated and maintained somewhere
+else (this is the case with DT which provides direct access to string
+definitions), which means the core shouldn't free them.
+
+I see 3 solutions to this problem:
+
+1/ go back to your initial solution with DT specific functions, and
+   wait until someone decides to implement another way to define
+   part-probes (cmdline or ACPI) before considering a more complex
+   solution
+2/ always allocate strings dynamically and let
+   mtd_free_part_type_table() free them. This implies using kstrdup() on
+   strings returned by of_property_read_string_array()
+3/ use something smarter to let the part-probes table creator free it,
+   for example, by using something like:
+
+	struct mtd_part_probes {
+		const char * const *types;
+		void (*free)(const char * const *types);
+	}
+
+#3 is overkill IMO. I'm fine with #1 and #2, pick the one you prefer.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
