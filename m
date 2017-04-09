@@ -1,219 +1,128 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: rockchip: Move cros-ec-sbs to
- rk3288-veyron-chromebook-sbs
-Date: Sun, 30 Apr 2017 22:56:52 +0200
-Message-ID: <1493585812.6493.4.camel@paulk.fr>
-References: <20170430183054.24563-1-contact@paulk.fr>
-         <2369975.a4dWayqU5d@phil>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-MC6i8wxNKqaTait/1NSV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2369975.a4dWayqU5d@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Subject: [PATCH v5 0/4] gpio: mvebu: Add PWM fan support
+Date: Sun,  9 Apr 2017 20:09:26 +0200
+Message-ID: <20170409180931.4884-1-ralph.sennhauser@gmail.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ralph Sennhauser <ralph.sennhauser@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Therry,
 
---=-MC6i8wxNKqaTait/1NSV
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Resending this as v5 with some minor changes since v4. What is missing is
+an ACK from you so Linus can merge the driver and Gregory the dts
+changes. For this driver to make it into 4.12 it would be nice to have
+it in next soon. I hope you can make some room in your schedule to have
+another look at this series.
 
-Le dimanche 30 avril 2017 =C3=A0 22:37 +0200, Heiko Stuebner a =C3=A9crit=
-=C2=A0:
-> Hi Paul,
->=20
-> Am Sonntag, 30. April 2017, 20:30:52 CEST schrieb Paul Kocialkowski:
-> > This moves the cros-ec-sbs dtsi to a new rk3288-veyron-chromebook-sbs
-> > dtsi since it only concerns rk3288 veyron Chromebooks.
-> >=20
-> > Other Chromebooks (such as the tegra124 nyans) also have sbs batteries
-> > and don't use this dtsi, that only makes sense when used with
-> > rk3288-veyron-chromebook anyway.
->=20
-> That isn't true. The gru series (rk3399-based) also uses the
-> sbs-battery [0]. And while it is currently limited to Rockchip-based
-> Chromebooks it is nevertheless used on more than one platform, so
-> the probability is high that it will be used in future series as well.
+Thanks
+Ralph
 
-That's good to know, but as pointed out, other cros devices are using a sbs
-battery without this header, so such a generic name isn't really a good fit=
-.
+---
 
-Note that &charger has to be defined (after my subsequent patches), which i=
-t is
-for devices that also include rk3288-veyron-chromebook, but not necessarily
-others.
+Notes:
 
-Overall, I think having one -sbs dtsi file makes sense here because there i=
-s
-already a rk3288-veyron-chromebook dtsi that veyron chromebooks use. That f=
-ile
-cannot contain the battery bindings because minnie has a different one and =
-it
-would be a bit silly to copy it over all devices. That definitely makes sen=
-se.
+  About npwm = 1:
+    The only way I can think of to achieve that requires reading the
+    GPIO line from the device tree. This would prevent a user to
+    dynamically choose a line. Which is fine for the fan found on Mamba
+    but let's take some development board with freely accessible GPIOs
+    and suddenly we limit the use of this driver. Given the above, npwm
+    = ngpio with only one usable at a time is a more accurate
+    description of the situation. The only downside is some "wasted"
+    space.
 
-As for other devices, I don't see why we should have a separate include fil=
-e for
-the battery instead of having it in the device's dts.=C2=A0I think this sho=
-uld be the
-case on gru/kevin.
+  About the new compatible string:
+    Orion was chosen for the SoC variant for the same reason as in
+    commit 5f79c651e81e ("arm: mvebu: use global interrupts for GPIOs on
+    Armada XP").
+    The "pwm" property remains optional for the new compatible string so
+    the compatiple string "marvell,armada-370-xp-gpio" can be used by
+    all and not just the first two GPIO chips. A property to select "Set
+    A" / "Set B" registers could be invented though.
 
-Also maybe not *all* gru-based devices will turn out to use a SBS battery, =
-so it
-seems early to include this header in the gru dtsi. One last point, gru/kev=
-in
-currently don't define a charger, which will break my subsequent patch (tha=
-t is
-however needed for the veyrons that use this file).
+---
 
-To me, it seems that there's little advantage and major drawbacks in keepin=
-g
-this file the way it is.
+Pending:
+  * Needs ACK from Thierry Reding to be merged via linux-gpio tree by Linus
+    Walleij. (fine with the general approach, requested changes which
+    should have been taken care of now)
 
-> Also, it might be nice to also include some Chromeos people (there should
-> be some in the git logs, like Brian who submitted the Gru patches), as th=
-ey
-> might be able to provide more detailed input.
+---
 
-That's a good point, thanks for including them.
+Changes v4->v5:
+  All
+    * add Tested-by: Andrew Lunn <andrew@lunn.ch>, thanks
+  Patch 2/4 mvebu: xp: Add PWM properties to .dtsi files
+    * keep the old compatible stings, we don't have to drop them,
+      therefore keep them (suggested by Gregory CLEMENT)
+    * subject starts with ARM: dts: mvebu: (suggested by Gregory CLEMENT)
+  Patch 4/4 mvebu: wrt1900ac: Use pwm-fan rather than gpio-fan
+    * subject starts with ARM: dts: armada-xp: (suggested by Gregory CLEMENT)
 
->=20
-> Heiko
->=20
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/t=
-ree/a
-> rch/arm64/boot/dts/rockchip/rk3399-gru.dtsi#n886
->=20
-> >=20
-> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-> > ---
-> > =C2=A0.../boot/dts/{cros-ec-sbs.dtsi =3D> rk3288-veyron-chromebook-sbs.=
-dtsi}=C2=A0=C2=A0=C2=A0=C2=A0| 0
-> > =C2=A0arch/arm/boot/dts/rk3288-veyron-jaq.dts=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0| 2
-> > +-
-> > =C2=A0arch/arm/boot/dts/rk3288-veyron-jerry.dts=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0| 2
-> > +-
-> > =C2=A0arch/arm/boot/dts/rk3288-veyron-pinky.dts=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0| 2
-> > +-
-> > =C2=A0arch/arm/boot/dts/rk3288-veyron-speedy.dts=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0| 2
-> > +-
-> > =C2=A05 files changed, 4 insertions(+), 4 deletions(-)
-> > =C2=A0rename arch/arm/boot/dts/{cros-ec-sbs.dtsi =3D> rk3288-veyron-chr=
-omebook-
-> > sbs.dtsi} (100%)
-> >=20
-> > diff --git a/arch/arm/boot/dts/cros-ec-sbs.dtsi b/arch/arm/boot/dts/rk3=
-288-
-> > veyron-chromebook-sbs.dtsi
-> > similarity index 100%
-> > rename from arch/arm/boot/dts/cros-ec-sbs.dtsi
-> > rename to arch/arm/boot/dts/rk3288-veyron-chromebook-sbs.dtsi
-> > diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-> > b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-> > index d33f5763c39c..f217a978e47a 100644
-> > --- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-> > +++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-> > @@ -45,7 +45,7 @@
-> > =C2=A0/dts-v1/;
-> > =C2=A0
-> > =C2=A0#include "rk3288-veyron-chromebook.dtsi"
-> > -#include "cros-ec-sbs.dtsi"
-> > +#include "rk3288-veyron-chromebook-sbs.dtsi"
-> > =C2=A0
-> > =C2=A0/ {
-> > =C2=A0	model =3D "Google Jaq";
-> > diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-> > b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-> > index cdea751f2a8c..bec607574165 100644
-> > --- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-> > +++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-> > @@ -44,7 +44,7 @@
-> > =C2=A0
-> > =C2=A0/dts-v1/;
-> > =C2=A0#include "rk3288-veyron-chromebook.dtsi"
-> > -#include "cros-ec-sbs.dtsi"
-> > +#include "rk3288-veyron-chromebook-sbs.dtsi"
-> > =C2=A0
-> > =C2=A0/ {
-> > =C2=A0	model =3D "Google Jerry";
-> > diff --git a/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-> > b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-> > index 995cff42fa43..c81ad5bf1121 100644
-> > --- a/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-> > +++ b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-> > @@ -44,7 +44,7 @@
-> > =C2=A0
-> > =C2=A0/dts-v1/;
-> > =C2=A0#include "rk3288-veyron-chromebook.dtsi"
-> > -#include "cros-ec-sbs.dtsi"
-> > +#include "rk3288-veyron-chromebook-sbs.dtsi"
-> > =C2=A0
-> > =C2=A0/ {
-> > =C2=A0	model =3D "Google Pinky";
-> > diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-> > b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-> > index cc0b78cefe34..8aea9c3ff6e2 100644
-> > --- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-> > +++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-> > @@ -44,7 +44,7 @@
-> > =C2=A0
-> > =C2=A0/dts-v1/;
-> > =C2=A0#include "rk3288-veyron-chromebook.dtsi"
-> > -#include "cros-ec-sbs.dtsi"
-> > +#include "rk3288-veyron-chromebook-sbs.dtsi"
-> > =C2=A0
-> > =C2=A0/ {
-> > =C2=A0	model =3D "Google Speedy";
-> >=20
->=20
->=20
---=20
-Paul Kocialkowski, developer of free digital technology and hardware suppor=
-t
+Changes v3->v4:
+  Patch 1/4 gpio: mvebu: Add limited PWM support:
+    * braces for both branches in if statement if one needs it. (suggested
+      by Andrew Lunn)
+    * introduce compatible string marvell,armada-370-xp-gpio (suggest by
+      Rob Herring)
+    * fix mvebu_pwmreg_blink_on_duration -> mvebu_pwmreg_blink_off_duration
+      for period callculation in mvebu_pwm_get_state()
+  Patch 4/4 mvebu: wrt1900ac: Use pwm-fan rather than gpio-fan
+    * Drop flags from pwms for Mamba, as no longer used (suggested by
+      Andrew Lunn)
+    * Use again #pwm-cell = 2, the second cell is actually the period.
 
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-MC6i8wxNKqaTait/1NSV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Changes v2->v3:
+  Patch 1/4 gpio: mvebu: Add limited PWM support:
+    * drop pin from mvebu_pwn, can be infered (suggested by Thierry Reding)
+    * rename pwm to mvpwm so pwm can be used for pwm_device as in the API,
+      avoids some mental gymnastic.
+    * drop id from struct mvebu_gpio_chip, select blink counter in
+      mvebu_pwm_probe for all lines instead. We do not care about the
+      unused ones. I think a clear improvement in readability.
+      Makes coming up with a good comment simple as well.
+    * Switch to new atomic PWM API (suggested by Thierry Reding)
+    * rename use mvebu_gpioreg_blink_select to
+      mvebu_gpioreg_blink_counter_select.
+    * mark *_suspend() / *_resume() as __maybe_unused (suggested by Linus
+      Walleij)
+    * document #pwm-cells = 1 (suggested by Thierry Reding)
+  Patch 2/4 mvebu: xp: Add PWM properties to .dtsi files
+    * add missing reg-names / #pwm-cell properties to
+      armada-xp-mv78260.dtsi gpio1 node
+    * set pwm-cells = 1 (suggested by Thierry Reding)
+  All:
+    * always uppercase GPIO/PWM in prose (suggested by Thierry Reding)
 
------BEGIN PGP SIGNATURE-----
+Changes v1 -> v2:
+  Patch 1/4 gpio: mvebu: Add limited PWM support:
+    * use BIT macro (suggested by Linus Walleij)
+    * move id from struct mvebu_pwm to struct mvebu_gpio_chip, implement
+      blink select as if else and comment on the chip id for code clarity
+      (to accommodate Linus Walleijs request for a code clarification /
+      comment. If you can word it better I'm all ears.)
+    * Move function comment mvebu_pwm_probe into the function itself.
 
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlkGT5QACgkQhP3B6o/u
-lQxtag/+PVCvhvfR3ldpBT/HeoJOwsMTHi8UnqZMhYpqMh6orXiG8MEjs6QKkJP1
-uNglULfGH4PJqoXctz9oxqLfm574B9CXSc76gELzv5k2jBg2050A1g4YkfK/2raB
-BhjPniT4/NyINs8XxhruSfWWhf6y2jViljrZJFNb11B2MOyvf06XfDUjJTLIps6E
-Lmc+QoPaTvrPoPBlyxArQwpXRz6erk05uuAJ9lAJpKzgsXylomZ4FPqn91+uSVmz
-dWig53X+bjiGegHXKMMRF0/kR9c74duA4VGkiszL4H3wAIyRf5B3LfdxsmtXgZ5z
-P5/LscExaKC+IHrM0PSxdX/3jVXzfe1PFAMYiBKprvUrOn9CYPSrzqnzdeIAOn5Q
-8bAzd3JgH6CDz9oHP6nB4c7v+NiqmdfPsYtQTCh0IIIwcUxhvAb14ZFklTnMOyxQ
-aZoXCNtShOVv+xExeUIGzRbsq2jay93HBIT7xzx3ktXgywjF3QquleM46EcsdBGn
-yXmv+KCZrpyUtHDF4w49GR7eyaC9BTnaNCRpASVOT2ae8CtO7FvHH3uOFbXliydY
-no5+6XlVKqNAFBMZ1iirCzn2JsClAXscjeZr9gwNykP5oMvdsvaz2zy2Opupnkg4
-2z46scc2ddkjTlugv0yQAS7H7te7mKOXvmdfZJ/+5cPnS+8ZK0w=
-=4+Ez
------END PGP SIGNATURE-----
+---
 
---=-MC6i8wxNKqaTait/1NSV--
+Andrew Lunn (4):
+  gpio: mvebu: Add limited PWM support
+  ARM: dts: mvebu: Add PWM properties to .dtsi files
+  ARM: mvebu: Enable SENSORS_PWM_FAN in defconfig
+  ARM: dts: armada-xp: Use pwm-fan rather than gpio-fan
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/gpio/gpio-mvebu.txt        |  32 ++
+ MAINTAINERS                                        |   2 +
+ arch/arm/boot/dts/armada-370.dtsi                  |  19 +-
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts      |   8 +-
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi           |  16 +-
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi           |  19 +-
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi           |  19 +-
+ arch/arm/configs/mvebu_v7_defconfig                |   2 +
+ drivers/gpio/gpio-mvebu.c                          | 324 ++++++++++++++++++++-
+ 9 files changed, 405 insertions(+), 36 deletions(-)
+
+-- 
+2.10.2
