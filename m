@@ -1,356 +1,469 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] iio: dac: stm32: add support for waveform
- generator
-Date: Sun, 9 Apr 2017 10:34:54 +0100
-Message-ID: <8fa183fe-42f1-dc27-efd9-1f7d2e5b5057@kernel.org>
-References: <1491495116-7209-1-git-send-email-fabrice.gasnier@st.com>
- <1491495116-7209-6-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2] iio: adc: add max1117/max1118/max1119 ADC driver
+Date: Sun, 9 Apr 2017 11:06:24 +0100
+Message-ID: <ba114c03-b178-7174-4967-356bd8301a98@kernel.org>
+References: <1490718888-4760-1-git-send-email-akinobu.mita@gmail.com>
+ <3e81cb76-90b9-841f-438b-b90752ad1901@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491495116-7209-6-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <3e81cb76-90b9-841f-438b-b90752ad1901-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/04/17 17:11, Fabrice Gasnier wrote:
-> STM32 DAC has built-in noise or triangle waveform generator.
-> - "wavetype" extended attribute selects noise or triangle.
-> - "amplitude" extended attribute selects amplitude for waveform generator
+On 02/04/17 11:23, Jonathan Cameron wrote:
+> On 28/03/17 17:34, Akinobu Mita wrote:
+>> This adds max1117/max1118/max1119 8-bit, dual-channel ADC driver.
+>>
+>> This new driver uses the zero length spi_transfers with the cs_change
+>> flag set and/or the non-zero delay_usecs.
+>>
+>> 1. The zero length transfer with the spi_transfer.cs_change set is
+>> required in order to select CH1.  The chip select line must be brought
+>> high and low again without transfer.
+>>
+>> 2. The zero length transfer with the spi_transfer.delay_usecs > 0 is
+>> required for waiting the conversion to be complete.  The conversion
+>> begins with the falling edge of the chip select.  During the conversion
+>> process, SCLK is ignored.
+>>
+>> These two usages are unusual.  But the spi controller drivers that use
+>> a default implementation of transfer_one_message() are likely to work.
+>> (I've tested this adc driver with spi-omap2-mcspi and spi-xilinx)
+>>
+>> On the other hand, some spi controller drivers that have their own
+>> transfer_one_message() may not work.  But at least for the zero length
+>> transfer with delay_usecs > 0, I'm proposing a new testcase for the
+>> spi-loopback-test that can test whether the delay_usecs setting has
+>> taken effect.
 > 
-> A DC offset can be added to waveform generator output. This can be done
-> using out_voltage[1/2]_offset
+> Thanks for the detailed description.  As you might imagine I'll
+> be looking for an Ack from Mark Brown on this one - or if the discussion
+> is proceeding elsewhere, please post a link.
 > 
-> Waveform generator requires a trigger to be configured, to increment /
-> decrement internal counter in case of triangle generator. Noise
-> generator is a bit different,  but also requires a trigger to generate
-> samples.
+> Otherwise driver looks great to me.
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> Give me a poke in a week or two if I seem to have forgotten it.
+I did a bit of digging and found that Mark has applied the tests
+for a zero length transfer - so presumably he is happy with them!
 
-Various bits inline.  Mostly I think the blockers on this will be
-making sure the ABI defined is generic enough to handle the more crazy
-DDS chips out there... (basically the ones doing frequency modulation).
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Will be interesting to see if we get reports of controllers that
+don't handle this correctly.
+
+Thanks,
 
 Jonathan
-> ---
-> Changes in v2:
-> - use _offset parameter to add DC offset to waveform generator
-Conceptually this offset is just the normal DAC output value (particularly
-in the flat case)  I guess we can paper over this by having the _raw
-and this always have th same value, but it's a little inelegant.
-Still people are going to expect _raw to control it when in DAC mode but
-that makes limited sense in DDS mode.
-
-Mind you nothing stops us defining all DDS channels as the sum of whatever
-the DDS is doing and whatever is _raw is set to. Perhaps we tidy this up
-purely through documentation.  Think of the DDS as a modulation on top
-of the DAC...
-
-> - Rework ABI to better fit existing DDS ABI: use out_voltageY_wavetype,
->   out_voltage_wavetype_available, out_voltageY_amplitude,
->   out_voltage_amplitude_available
-Hmm. I'm thinking those amplitude values aren't nice and don't fit well
-with the more general ABI.
-
-I suggested (but didn't really expand upon) having standard defined types
-for each waveform then using scale to control the amplitude.
-
-Is that something that might work here?
-
-So say we have our triangle standard form having an amplitude of 1V Peak to
-Peak. Then we can use scale to make it whatever we actually have in this
-case?  The docs for wave type will need to describe those standard forms
-though.
-
-Hmm. Whether this is worth doing is unclear however as we'll still have
-to describe the 'frequency' in terms of the clock ticks (here the triggers)
-So maybe amplitude is worth having.  Again, looking for input from ADI lot
-on this...  There are some really fiddly cases to describe were we are doing
-symbol encoding so have multiple waveforms that we are switching between based
-on some external signal. Any ABI needs to encompass that sort of usage.
-Parts like the AD9833 for example...
-
-> - Better explain trigger usage in case of waveform generator.
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio-dac-stm32 |  16 +++
->  drivers/iio/dac/stm32-dac-core.h                  |   4 +
->  drivers/iio/dac/stm32-dac.c                       | 158 +++++++++++++++++++++-
->  3 files changed, 177 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
-> new file mode 100644
-> index 0000000..8f1fa009
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
-Fair enough to initially introduced these for this part only, but I'd very
-much like to see us agree on these sufficiently to get them into the main
-docs asap so we have something to work with for getting the DDS chips out
-of staging...
-> @@ -0,0 +1,16 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_wavetype
-> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltage_wavetype_available
-> +KernelVersion:	4.12
-> +Contact:	fabrice.gasnier-qxv4g6HH51o@public.gmane.org
-> +Description:
-> +		List and/or select waveform generation provided by STM32 DAC:
-> +		- "flat": waveform generator disabled (default)
-> +		- "noise": select noise waveform
-> +		- "triangle": select triangle waveform
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_amplitude
-> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltage_amplitude_available
-> +KernelVersion:	4.12
-> +Contact:	fabrice.gasnier-qxv4g6HH51o@public.gmane.org
-> +Description:
-> +		List and/or select amplitude used for waveform generator
-> diff --git a/drivers/iio/dac/stm32-dac-core.h b/drivers/iio/dac/stm32-dac-core.h
-> index e51a468..0f02975 100644
-> --- a/drivers/iio/dac/stm32-dac-core.h
-> +++ b/drivers/iio/dac/stm32-dac-core.h
-> @@ -37,8 +37,12 @@
->  #define STM32H7_DAC_CR_TEN1		BIT(1)
->  #define STM32H7_DAC_CR_TSEL1_SHIFT	2
->  #define STM32H7_DAC_CR_TSEL1		GENMASK(5, 2)
-> +#define STM32_DAC_CR_WAVE1		GENMASK(7, 6)
-> +#define STM32_DAC_CR_MAMP1		GENMASK(11, 8)
->  #define STM32H7_DAC_CR_HFSEL		BIT(15)
->  #define STM32_DAC_CR_EN2		BIT(16)
-> +#define STM32_DAC_CR_WAVE2		GENMASK(23, 22)
-> +#define STM32_DAC_CR_MAMP2		GENMASK(27, 24)
->  
->  /* STM32_DAC_SWTRIGR bit fields */
->  #define STM32_DAC_SWTRIGR_SWTRIG1	BIT(0)
-> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
-> index a7a078e..2ed75db 100644
-> --- a/drivers/iio/dac/stm32-dac.c
-> +++ b/drivers/iio/dac/stm32-dac.c
-> @@ -42,10 +42,12 @@
->  /**
->   * struct stm32_dac - private data of DAC driver
->   * @common:		reference to DAC common data
-> + * @wavetype:		waveform generator
->   * @swtrig:		Using software trigger
->   */
->  struct stm32_dac {
->  	struct stm32_dac_common *common;
-> +	u32 wavetype;
->  	bool swtrig;
->  };
->  
-> @@ -222,6 +224,29 @@ static int stm32_dac_set_value(struct stm32_dac *dac, int channel, int val)
->  	return ret;
->  }
->  
-> +static int stm32_dac_get_offset(struct stm32_dac *dac, int channel, int *val)
-> +{
-> +	int ret;
-> +
-> +	/* Offset is only relevant in waveform generation mode. */
-> +	if (!dac->wavetype) {
-> +		*val = 0;
-> +		return IIO_VAL_INT;
-> +	}
-> +
-> +	/*
-> +	 * In waveform generation mode, DC offset in DHR is added to waveform
-> +	 * generator output, then stored to DOR (data output register).
-> +	 * Read offset from DHR.
-> +	 */
-Just thinking what fun we could have if we do the fifo based output to push
-this that I was suggesting for the previous patch ;) triangles on top
-of fun general waveforms..
-
-> +	if (STM32_DAC_IS_CHAN_1(channel))
-> +		ret = regmap_read(dac->common->regmap, STM32_DAC_DHR12R1, val);
-> +	else
-> +		ret = regmap_read(dac->common->regmap, STM32_DAC_DHR12R2, val);
-> +
-> +	return ret ? ret : IIO_VAL_INT;
-> +}
-> +
->  static int stm32_dac_read_raw(struct iio_dev *indio_dev,
->  			      struct iio_chan_spec const *chan,
->  			      int *val, int *val2, long mask)
-> @@ -231,6 +256,8 @@ static int stm32_dac_read_raw(struct iio_dev *indio_dev,
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
->  		return stm32_dac_get_value(dac, chan->channel, val);
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		return stm32_dac_get_offset(dac, chan->channel, val);
->  	case IIO_CHAN_INFO_SCALE:
->  		*val = dac->common->vref_mv;
->  		*val2 = chan->scan_type.realbits;
-> @@ -247,8 +274,16 @@ static int stm32_dac_write_raw(struct iio_dev *indio_dev,
->  	struct stm32_dac *dac = iio_priv(indio_dev);
->  
->  	switch (mask) {
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		/* Offset only makes sense in waveform generation mode */
-> +		if (dac->wavetype)
-> +			return stm32_dac_set_value(dac, chan->channel, val);
-> +		return -EBUSY;
-Yeah, I think I sent you down a blind alley here.  If people agree, lets
-just define DDS signals as always being the sum of _raw + the dds element.
-Then it's easy.
->  	case IIO_CHAN_INFO_RAW:
-> -		return stm32_dac_set_value(dac, chan->channel, val);
-> +		if (!dac->wavetype)
-> +			return stm32_dac_set_value(dac, chan->channel, val);
-> +		/* raw value is read only in waveform generation mode */
-> +		return -EBUSY;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -334,6 +369,122 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
->  	.set = stm32_dac_set_powerdown_mode,
->  };
->  
-> +/* waveform generator wave selection */
-> +static const char * const stm32_dac_wavetype_desc[] = {
-> +	"flat",
-> +	"noise",
-> +	"triangle",
-> +};
-> +
-> +static int stm32_dac_set_wavetype(struct iio_dev *indio_dev,
-> +				  const struct iio_chan_spec *chan,
-> +				  unsigned int wavetype)
-> +{
-> +	struct stm32_dac *dac = iio_priv(indio_dev);
-> +	u32 mask, val;
-> +	int ret;
-> +
-> +	/*
-> +	 * Waveform generator requires a trigger to be configured, to increment
-> +	 * or decrement internal counter in case of triangle generator. Noise
-> +	 * generator is a bit different, but also requires a trigger to
-> +	 * generate samples.
-> +	 */
-> +	if (wavetype && !indio_dev->trig)
-> +		dev_dbg(&indio_dev->dev, "Wavegen requires a trigger\n");
-> +
-> +	if (STM32_DAC_IS_CHAN_1(chan->channel)) {
-> +		val = FIELD_PREP(STM32_DAC_CR_WAVE1, wavetype);
-> +		mask = STM32_DAC_CR_WAVE1;
-> +	} else {
-> +		val = FIELD_PREP(STM32_DAC_CR_WAVE2, wavetype);
-> +		mask = STM32_DAC_CR_WAVE2;
-> +	}
-> +
-> +	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, mask, val);
-> +	if (ret)
-> +		return ret;
-> +	dac->wavetype = wavetype;
-> +
-> +	return 0;
-> +}
-> +
-> +static int stm32_dac_get_wavetype(struct iio_dev *indio_dev,
-> +				  const struct iio_chan_spec *chan)
-> +{
-> +	struct stm32_dac *dac = iio_priv(indio_dev);
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = regmap_read(dac->common->regmap, STM32_DAC_CR, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (STM32_DAC_IS_CHAN_1(chan->channel))
-> +		return FIELD_GET(STM32_DAC_CR_WAVE1, val);
-> +	else
-> +		return FIELD_GET(STM32_DAC_CR_WAVE2, val);
-> +}
-> +
-> +static const struct iio_enum stm32_dac_wavetype_enum = {
-> +	.items = stm32_dac_wavetype_desc,
-> +	.num_items = ARRAY_SIZE(stm32_dac_wavetype_desc),
-> +	.get = stm32_dac_get_wavetype,
-> +	.set = stm32_dac_set_wavetype,
-> +};
-> +
-> +/*
-> + * waveform generator mamp selection: mask/amplitude
-> + * - noise: LFSR mask (linear feedback shift register, umasks bit 0, [1:0]...)
-This needs breaking out into two attributes - for noise it isn't amplitude in
-any conventional sense...  Keep the result device specific for now. I'm not
-even sure what type of pseudo random source that actually is...
-If anyone wants to figure it out it would be great to document it in a general
-form!
-
-> + * - triangle: amplitude (equal to 1, 3, 5, 7... 4095)
-> + */
-> +static const char * const stm32_dac_amplitude_desc[] = {
-> +	"1", "3", "7", "15", "31", "63", "127", "255", "511", "1023", "2047",
-> +	"4095",
-> +};
-> +
-> +static int stm32_dac_set_amplitude(struct iio_dev *indio_dev,
-> +				   const struct iio_chan_spec *chan,
-> +				   unsigned int amplitude)
-> +{
-> +	struct stm32_dac *dac = iio_priv(indio_dev);
-> +	u32 mask, val;
-> +
-> +	if (STM32_DAC_IS_CHAN_1(chan->channel)) {
-> +		val = FIELD_PREP(STM32_DAC_CR_MAMP1, amplitude);
-> +		mask = STM32_DAC_CR_MAMP1;
-> +	} else {
-> +		val = FIELD_PREP(STM32_DAC_CR_MAMP2, amplitude);
-> +		mask = STM32_DAC_CR_MAMP2;
-> +	}
-> +
-> +	return regmap_update_bits(dac->common->regmap, STM32_DAC_CR, mask, val);
-> +}
-> +
-> +static int stm32_dac_get_amplitude(struct iio_dev *indio_dev,
-> +				   const struct iio_chan_spec *chan)
-> +{
-> +	struct stm32_dac *dac = iio_priv(indio_dev);
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = regmap_read(dac->common->regmap, STM32_DAC_CR, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (STM32_DAC_IS_CHAN_1(chan->channel))
-> +		return FIELD_GET(STM32_DAC_CR_MAMP1, val);
-> +	else
-> +		return FIELD_GET(STM32_DAC_CR_MAMP2, val);
-> +}
-> +
-> +static const struct iio_enum stm32_dac_amplitude_enum = {
-> +	.items = stm32_dac_amplitude_desc,
-> +	.num_items = ARRAY_SIZE(stm32_dac_amplitude_desc),
-> +	.get = stm32_dac_get_amplitude,
-> +	.set = stm32_dac_set_amplitude,
-> +};
-> +
->  static const struct iio_chan_spec_ext_info stm32_dac_ext_info[] = {
->  	{
->  		.name = "powerdown",
-> @@ -343,6 +494,10 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
->  	},
->  	IIO_ENUM("powerdown_mode", IIO_SEPARATE, &stm32_dac_powerdown_mode_en),
->  	IIO_ENUM_AVAILABLE("powerdown_mode", &stm32_dac_powerdown_mode_en),
-> +	IIO_ENUM("wavetype", IIO_SEPARATE, &stm32_dac_wavetype_enum),
-> +	IIO_ENUM_AVAILABLE("wavetype", &stm32_dac_wavetype_enum),
-> +	IIO_ENUM("amplitude", IIO_SEPARATE, &stm32_dac_amplitude_enum),
-> +	IIO_ENUM_AVAILABLE("amplitude", &stm32_dac_amplitude_enum),
->  	{},
->  };
->  
-> @@ -352,6 +507,7 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
->  	.output = 1,					\
->  	.channel = chan,				\
->  	.info_mask_separate =				\
-> +		BIT(IIO_CHAN_INFO_OFFSET) |		\
->  		BIT(IIO_CHAN_INFO_RAW) |		\
->  		BIT(IIO_CHAN_INFO_SCALE),		\
->  	/* scan_index is always 0 as num_channels is 1 */ \
+> Jonathan
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+>> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+>> Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>> * v2
+>> - move max1118_remove() after max1118_probe() for usual code ordering
+>> - make the probe() fail for max1118 if vref-supply isn't acquired
+>> - add acked-by line
+>>
+>>  .../devicetree/bindings/iio/adc/max1118.txt        |  21 ++
+>>  drivers/iio/adc/Kconfig                            |  12 +
+>>  drivers/iio/adc/Makefile                           |   1 +
+>>  drivers/iio/adc/max1118.c                          | 307 +++++++++++++++++++++
+>>  4 files changed, 341 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max1118.txt
+>>  create mode 100644 drivers/iio/adc/max1118.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/max1118.txt b/Documentation/devicetree/bindings/iio/adc/max1118.txt
+>> new file mode 100644
+>> index 0000000..cf33d0b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/max1118.txt
+>> @@ -0,0 +1,21 @@
+>> +* MAX1117/MAX1118/MAX1119 8-bit, dual-channel ADCs
+>> +
+>> +Required properties:
+>> + - compatible: Should be one of
+>> +	* "maxim,max1117"
+>> +	* "maxim,max1118"
+>> +	* "maxim,max1119"
+>> + - reg: spi chip select number for the device
+>> + - (max1118 only) vref-supply: The regulator supply for ADC reference voltage
+>> +
+>> +Recommended properties:
+>> + - spi-max-frequency: Definition as per
+>> +		Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +
+>> +Example:
+>> +adc@0 {
+>> +	compatible = "maxim,max1118";
+>> +	reg = <0>;
+>> +	vref-supply = <&vdd_supply>;
+>> +	spi-max-frequency = <1000000>;
+>> +};
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index dedae7a..66262d1 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -335,6 +335,18 @@ config MAX11100
+>>  	  To compile this driver as a module, choose M here: the module will be
+>>  	  called max11100.
+>>  
+>> +config MAX1118
+>> +	tristate "Maxim max1117/max1118/max1119 ADCs driver"
+>> +	depends on SPI
+>> +	select IIO_BUFFER
+>> +	select IIO_TRIGGERED_BUFFER
+>> +	help
+>> +	  Say yes here to build support for Maxim max1117/max1118/max1119
+>> +	  8-bit, dual-channel ADCs.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module will be
+>> +	  called max1118.
+>> +
+>>  config MAX1363
+>>  	tristate "Maxim max1363 ADC driver"
+>>  	depends on I2C
+>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+>> index d001262..5ef3470 100644
+>> --- a/drivers/iio/adc/Makefile
+>> +++ b/drivers/iio/adc/Makefile
+>> @@ -33,6 +33,7 @@ obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
+>>  obj-$(CONFIG_LTC2485) += ltc2485.o
+>>  obj-$(CONFIG_MAX1027) += max1027.o
+>>  obj-$(CONFIG_MAX11100) += max11100.o
+>> +obj-$(CONFIG_MAX1118) += max1118.o
+>>  obj-$(CONFIG_MAX1363) += max1363.o
+>>  obj-$(CONFIG_MCP320X) += mcp320x.o
+>>  obj-$(CONFIG_MCP3422) += mcp3422.o
+>> diff --git a/drivers/iio/adc/max1118.c b/drivers/iio/adc/max1118.c
+>> new file mode 100644
+>> index 0000000..2e9648a
+>> --- /dev/null
+>> +++ b/drivers/iio/adc/max1118.c
+>> @@ -0,0 +1,307 @@
+>> +/*
+>> + * MAX1117/MAX1118/MAX1119 8-bit, dual-channel ADCs driver
+>> + *
+>> + * Copyright (c) 2017 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This file is subject to the terms and conditions of version 2 of
+>> + * the GNU General Public License.  See the file COPYING in the main
+>> + * directory of this archive for more details.
+>> + *
+>> + * Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1117-MAX1119.pdf
+>> + *
+>> + * SPI interface connections
+>> + *
+>> + * SPI                MAXIM
+>> + * Master  Direction  MAX1117/8/9
+>> + * ------  ---------  -----------
+>> + * nCS        -->     CNVST
+>> + * SCK        -->     SCLK
+>> + * MISO       <--     DOUT
+>> + * ------  ---------  -----------
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/spi/spi.h>
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/buffer.h>
+>> +#include <linux/iio/triggered_buffer.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +#include <linux/regulator/consumer.h>
+>> +
+>> +enum max1118_id {
+>> +	max1117,
+>> +	max1118,
+>> +	max1119,
+>> +};
+>> +
+>> +struct max1118 {
+>> +	struct spi_device *spi;
+>> +	struct mutex lock;
+>> +	struct regulator *reg;
+>> +
+>> +	u8 data ____cacheline_aligned;
+>> +};
+>> +
+>> +#define MAX1118_CHANNEL(ch)						\
+>> +	{								\
+>> +		.type = IIO_VOLTAGE,					\
+>> +		.indexed = 1,						\
+>> +		.channel = (ch),					\
+>> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+>> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+>> +		.scan_index = ch,					\
+>> +		.scan_type = {						\
+>> +			.sign = 'u',					\
+>> +			.realbits = 8,					\
+>> +			.storagebits = 8,				\
+>> +		},							\
+>> +	}
+>> +
+>> +static const struct iio_chan_spec max1118_channels[] = {
+>> +	MAX1118_CHANNEL(0),
+>> +	MAX1118_CHANNEL(1),
+>> +	IIO_CHAN_SOFT_TIMESTAMP(2),
+>> +};
+>> +
+>> +static int max1118_read(struct spi_device *spi, int channel)
+>> +{
+>> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+>> +	struct max1118 *adc = iio_priv(indio_dev);
+>> +	struct spi_transfer xfers[] = {
+>> +		/*
+>> +		 * To select CH1 for conversion, CNVST pin must be brought high
+>> +		 * and low for a second time.
+>> +		 */
+>> +		{
+>> +			.len = 0,
+>> +			.delay_usecs = 1,	/* > CNVST Low Time 100 ns */
+>> +			.cs_change = 1,
+>> +		},
+>> +		/*
+>> +		 * The acquisition interval begins with the falling edge of
+>> +		 * CNVST.  The total acquisition and conversion process takes
+>> +		 * <7.5us.
+>> +		 */
+>> +		{
+>> +			.len = 0,
+>> +			.delay_usecs = 8,
+>> +		},
+>> +		{
+>> +			.rx_buf = &adc->data,
+>> +			.len = 1,
+>> +		},
+>> +	};
+>> +	int ret;
+>> +
+>> +	if (channel == 0)
+>> +		ret = spi_sync_transfer(spi, xfers + 1, 2);
+>> +	else
+>> +		ret = spi_sync_transfer(spi, xfers, 3);
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return adc->data;
+>> +}
+>> +
+>> +static int max1118_get_vref_mV(struct spi_device *spi)
+>> +{
+>> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+>> +	struct max1118 *adc = iio_priv(indio_dev);
+>> +	const struct spi_device_id *id = spi_get_device_id(spi);
+>> +	int vref_uV;
+>> +
+>> +	switch (id->driver_data) {
+>> +	case max1117:
+>> +		return 2048;
+>> +	case max1119:
+>> +		return 4096;
+>> +	case max1118:
+>> +		vref_uV = regulator_get_voltage(adc->reg);
+>> +		if (vref_uV < 0)
+>> +			return vref_uV;
+>> +		return vref_uV / 1000;
+>> +	}
+>> +
+>> +	return -ENODEV;
+>> +}
+>> +
+>> +static int max1118_read_raw(struct iio_dev *indio_dev,
+>> +			struct iio_chan_spec const *chan,
+>> +			int *val, int *val2, long mask)
+>> +{
+>> +	struct max1118 *adc = iio_priv(indio_dev);
+>> +
+>> +	switch (mask) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		mutex_lock(&adc->lock);
+>> +		*val = max1118_read(adc->spi, chan->channel);
+>> +		mutex_unlock(&adc->lock);
+>> +		if (*val < 0)
+>> +			return *val;
+>> +
+>> +		return IIO_VAL_INT;
+>> +	case IIO_CHAN_INFO_SCALE:
+>> +		*val = max1118_get_vref_mV(adc->spi);
+>> +		if (*val < 0)
+>> +			return *val;
+>> +		*val2 = 8;
+>> +
+>> +		return IIO_VAL_FRACTIONAL_LOG2;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static const struct iio_info max1118_info = {
+>> +	.read_raw = max1118_read_raw,
+>> +	.driver_module = THIS_MODULE,
+>> +};
+>> +
+>> +static irqreturn_t max1118_trigger_handler(int irq, void *p)
+>> +{
+>> +	struct iio_poll_func *pf = p;
+>> +	struct iio_dev *indio_dev = pf->indio_dev;
+>> +	struct max1118 *adc = iio_priv(indio_dev);
+>> +	u8 data[16] = { }; /* 2x 8-bit ADC data + padding + 8 bytes timestamp */
+>> +	int scan_index;
+>> +	int i = 0;
+>> +
+>> +	mutex_lock(&adc->lock);
+>> +
+>> +	for_each_set_bit(scan_index, indio_dev->active_scan_mask,
+>> +			indio_dev->masklength) {
+>> +		const struct iio_chan_spec *scan_chan =
+>> +				&indio_dev->channels[scan_index];
+>> +		int ret = max1118_read(adc->spi, scan_chan->channel);
+>> +
+>> +		if (ret < 0) {
+>> +			dev_warn(&adc->spi->dev,
+>> +				"failed to get conversion data\n");
+>> +			goto out;
+>> +		}
+>> +
+>> +		data[i] = ret;
+>> +		i++;
+>> +	}
+>> +	iio_push_to_buffers_with_timestamp(indio_dev, data,
+>> +					   iio_get_time_ns(indio_dev));
+>> +out:
+>> +	mutex_unlock(&adc->lock);
+>> +
+>> +	iio_trigger_notify_done(indio_dev->trig);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int max1118_probe(struct spi_device *spi)
+>> +{
+>> +	struct iio_dev *indio_dev;
+>> +	struct max1118 *adc;
+>> +	const struct spi_device_id *id = spi_get_device_id(spi);
+>> +	int ret;
+>> +
+>> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+>> +	if (!indio_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	adc = iio_priv(indio_dev);
+>> +	adc->spi = spi;
+>> +	mutex_init(&adc->lock);
+>> +
+>> +	if (id->driver_data == max1118) {
+>> +		adc->reg = devm_regulator_get(&spi->dev, "vref");
+>> +		if (IS_ERR(adc->reg)) {
+>> +			dev_err(&spi->dev, "failed to get vref regulator\n");
+>> +			return PTR_ERR(adc->reg);
+>> +		}
+>> +		ret = regulator_enable(adc->reg);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	spi_set_drvdata(spi, indio_dev);
+>> +
+>> +	indio_dev->name = spi_get_device_id(spi)->name;
+>> +	indio_dev->dev.parent = &spi->dev;
+>> +	indio_dev->info = &max1118_info;
+>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>> +	indio_dev->channels = max1118_channels;
+>> +	indio_dev->num_channels = ARRAY_SIZE(max1118_channels);
+>> +
+>> +	/*
+>> +	 * To reinitiate a conversion on CH0, it is necessary to allow for a
+>> +	 * conversion to be complete and all of the data to be read out.  Once
+>> +	 * a conversion has been completed, the MAX1117/MAX1118/MAX1119 will go
+>> +	 * into AutoShutdown mode until the next conversion is initiated.
+>> +	 */
+>> +	max1118_read(spi, 0);
+>> +
+>> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+>> +					max1118_trigger_handler, NULL);
+>> +	if (ret)
+>> +		goto err_reg_disable;
+>> +
+>> +	ret = iio_device_register(indio_dev);
+>> +	if (ret)
+>> +		goto err_buffer_cleanup;
+>> +
+>> +	return 0;
+>> +
+>> +err_buffer_cleanup:
+>> +	iio_triggered_buffer_cleanup(indio_dev);
+>> +err_reg_disable:
+>> +	if (id->driver_data == max1118)
+>> +		regulator_disable(adc->reg);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int max1118_remove(struct spi_device *spi)
+>> +{
+>> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+>> +	struct max1118 *adc = iio_priv(indio_dev);
+>> +	const struct spi_device_id *id = spi_get_device_id(spi);
+>> +
+>> +	iio_device_unregister(indio_dev);
+>> +	iio_triggered_buffer_cleanup(indio_dev);
+>> +	if (id->driver_data == max1118)
+>> +		return regulator_disable(adc->reg);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct spi_device_id max1118_id[] = {
+>> +	{ "max1117", max1117 },
+>> +	{ "max1118", max1118 },
+>> +	{ "max1119", max1119 },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(spi, max1118_id);
+>> +
+>> +#ifdef CONFIG_OF
+>> +
+>> +static const struct of_device_id max1118_dt_ids[] = {
+>> +	{ .compatible = "maxim,max1117" },
+>> +	{ .compatible = "maxim,max1118" },
+>> +	{ .compatible = "maxim,max1119" },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, max1118_dt_ids);
+>> +
+>> +#endif
+>> +
+>> +static struct spi_driver max1118_spi_driver = {
+>> +	.driver = {
+>> +		.name = "max1118",
+>> +		.of_match_table = of_match_ptr(max1118_dt_ids),
+>> +	},
+>> +	.probe = max1118_probe,
+>> +	.remove = max1118_remove,
+>> +	.id_table = max1118_id,
+>> +};
+>> +module_spi_driver(max1118_spi_driver);
+>> +
+>> +MODULE_AUTHOR("Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+>> +MODULE_DESCRIPTION("MAXIM MAX1117/MAX1118/MAX1119 ADCs driver");
+>> +MODULE_LICENSE("GPL v2");
+>>
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
