@@ -1,83 +1,84 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DT overlay issues - dtc flags
-Date: Mon, 10 Apr 2017 14:19:57 -0700
-Message-ID: <58EBF6FD.1090901@gmail.com>
-References: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC net-next] of: mdio: Honor hints from MDIO bus drivers
+Date: Mon, 10 Apr 2017 14:42:58 -0700
+Message-ID: <20170410214258.9409-1-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/17 09:16, Andreas Färber wrote:
-> Hi,
-> 
-> I've tried to play around with Device Tree overlays (.dtbo files):
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/overlay-notes.txt
-> 
-> First of all, that document refers to a non-existing
-> Documentation/devicetree/dt-object-internal.txt. Could someone please
-> fix that one way or another?
+A MDIO bus driver can set phy_mask to indicate which PHYs should be
+probed and which should not. Right now, of_mdiobus_register() always
+sets mdio->phy_mask to ~0 which means: don't probe anything yourself,
+and let the Device Tree scanning do it based on the availability of
+child nodes.
 
-I will.
+When MDIO buses are stacked together (on purpose, as is done by DSA), we
+run into possible double probing which is, at best unnecessary, and at
+worse, can cause problems if that's not expected (e.g: during probe
+deferral).
 
+Fix this by remember the original mdio->phy_mask, and make sure that if
+it was set to all 0xF, we set it to zero internally in order not to
+influence how the child PHY/MDIO device registration is going to behave.
+When the original mdio->phy_mask is set to something non-zero, we honor
+this value and utilize it as a hint to register only the child nodes
+that we have both found, and indicated to be necessary.
 
-> In my particular example I've tried to extend the &i2c1 and &gpio nodes
-> of 4.11-rc5 arm64 broadcom/bcm2837-rpi-3-b.dts. The above documentation
-> prominently claims that this can be done via target = <&foo> syntax, but
-> U-Boot's fdt apply command fails for such a file. If instead I use the
-> alternative target-path = "/soc/..." then it works just fine.
+Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Sending this as RFC because a quick look at the current tree makes
+me think we are fine, but I would appreciate some review/feedback
+before this gets merged.
 
-The "target = <&foo>" syntax is the internal dtb syntax that the kernel
-expects.  The plan is to hide this internal format so it is not visble
-at the source level, but that will require some more changes to the dtc
-compiler.
+Thank you!
 
+ drivers/of/of_mdio.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> As mentioned in the very bottom of the documentation, resolution of
-> phandle target references requires a __symbols__ node in the base .dtb.
-> IIUC this is only generated when passing the -@ dtc command line flag.
-> 
-> At first I thought this were an issue with how we build the .dtb files
-> in openSUSE [1], but by my reading of the kernel Makefiles not passing
-> -@ in DTC_FLAGS or cmd_dtc, you should run into the exact same issue.
-
-Yes, the kernel support for overlays is not complete.  This is one of
-the issues that has not been addressed yet.
-
-I don't have the rpi-3 documentation handy, so I'm going to take a wild
-guess that the &i2c1 and &gpio node changes that you need are for
-hardware on a hat.  If so, the plan for the kernel is to describe
-the signals available via the hat connectors in the device tree and
-then make those signals available through the connector node instead
-of having the hat overlay directly reference the signal node.  The
-connector abstraction has been discussed but is not implemented.
-
-
-> I could think of a few ARMv7-M systems where such DT bloat might be
-> undesired (small flash sector sizes), but then it would seem easier to
-> suppress -@ where needed than to have a feature that by all practical
-> means is half unusable by default.
-> 
-> U-Boot itself appears to face a similar issue in that its internal
-> Device Trees are built without -@, and via Alex' distro boot extensions
-> this internal DT is passed on via UEFI as fallback when no external .dtb
-> file is found. So in the non-SPL case the DT should probably be built
-> with -@, too.
-> 
-> Or am I misunderstanding something here?
-> 
-> Thanks,
-> Andreas
-> 
-> [1]
-> https://build.opensuse.org/package/view_file/Kernel:HEAD/dtb-aarch64/dtb-aarch64.spec?expand=1
-> 
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 0b2979816dbf..6bfbf00623cb 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -209,6 +209,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ {
+ 	struct device_node *child;
+ 	bool scanphys = false;
++	u32 orig_phy_mask;
+ 	int addr, rc;
+ 
+ 	/* Do not continue if the node is disabled */
+@@ -217,8 +218,15 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 
+ 	/* Mask out all PHYs from auto probing.  Instead the PHYs listed in
+ 	 * the device tree are populated after the bus has been registered */
++	orig_phy_mask = mdio->phy_mask;
+ 	mdio->phy_mask = ~0;
+ 
++	/* If the original phy_mask was all 0xf, we make it zero here in order
++	 * to get child Device Tree nodes to be probed successfully
++	 */
++	if (orig_phy_mask == mdio->phy_mask)
++		orig_phy_mask = 0;
++
+ 	mdio->dev.of_node = np;
+ 
+ 	/* Register the MDIO bus */
+@@ -234,6 +242,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 			continue;
+ 		}
+ 
++		/* Honor hints from the mdio bus */
++		if (orig_phy_mask & BIT(addr))
++			continue;
++
+ 		if (of_mdiobus_child_is_phy(child))
+ 			of_mdiobus_register_phy(mdio, child, addr);
+ 		else
+-- 
+2.9.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
