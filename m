@@ -1,331 +1,108 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 21/23] drivers/fsi: Add SCOM FSI client device driver
-Date: Mon, 10 Apr 2017 14:47:04 -0500
-Message-ID: <20170410194706.64280-22-cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v6 23/23] drivers/fsi: Use asynchronous slave mode
+Date: Mon, 10 Apr 2017 14:47:06 -0500
+Message-ID: <20170410194706.64280-24-cbostic@linux.vnet.ibm.com>
 References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170410194706.64280-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Create a simple SCOM engine device driver that reads and writes
-its control registers via an FSI bus.
+For slaves that are behind a software-clocked master, we want FSI CFAMs
+to run asynchronously to the FSI clock, so set up our slaves to be in
+async mode.
 
-Includes changes from Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>.
-
-Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
 ---
- drivers/fsi/Kconfig    |   5 +
- drivers/fsi/Makefile   |   1 +
- drivers/fsi/fsi-scom.c | 263 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 269 insertions(+)
- create mode 100644 drivers/fsi/fsi-scom.c
+ drivers/fsi/fsi-core.c        | 22 +++++++++++++++++++++-
+ drivers/fsi/fsi-master-gpio.c |  1 +
+ drivers/fsi/fsi-master.h      |  2 ++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
-index 448bc3b..e8dad25 100644
---- a/drivers/fsi/Kconfig
-+++ b/drivers/fsi/Kconfig
-@@ -18,6 +18,11 @@ config FSI_MASTER_GPIO
- 	---help---
- 	This option enables a FSI master driver using GPIO lines.
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 747d0e3..a6ed34f 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -47,6 +47,7 @@
+ #define FSI_SMODE		0x0	/* R/W: Mode register */
+ #define FSI_SISC		0x8	/* R/W: Interrupt condition */
+ #define FSI_SSTAT		0x14	/* R  : Slave status */
++#define FSI_LLMODE		0x100	/* R/W: Link layer mode register */
  
-+config FSI_SCOM
-+	tristate "SCOM FSI client device driver"
-+	---help---
-+	This option enables an FSI based SCOM device driver.
-+
- endif
+ /*
+  * SMODE fields
+@@ -62,6 +63,11 @@
+ #define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
+ #define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
  
- endmenu
-diff --git a/drivers/fsi/Makefile b/drivers/fsi/Makefile
-index ed28ac0..3466f08 100644
---- a/drivers/fsi/Makefile
-+++ b/drivers/fsi/Makefile
-@@ -1,3 +1,4 @@
- 
- obj-$(CONFIG_FSI) += fsi-core.o
- obj-$(CONFIG_FSI_MASTER_GPIO) += fsi-master-gpio.o
-+obj-$(CONFIG_FSI_SCOM) += fsi-scom.o
-diff --git a/drivers/fsi/fsi-scom.c b/drivers/fsi/fsi-scom.c
-new file mode 100644
-index 0000000..98d062f
---- /dev/null
-+++ b/drivers/fsi/fsi-scom.c
-@@ -0,0 +1,263 @@
 +/*
-+ * SCOM FSI Client device driver
-+ *
-+ * Copyright (C) IBM Corporation 2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERGCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * LLMODE fields
 + */
++#define FSI_LLMODE_ASYNC	0x1
 +
-+#include <linux/fsi.h>
-+#include <linux/module.h>
-+#include <linux/cdev.h>
-+#include <linux/delay.h>
-+#include <linux/fs.h>
-+#include <linux/uaccess.h>
-+#include <linux/slab.h>
-+#include <linux/miscdevice.h>
-+#include <linux/list.h>
-+#include <linux/idr.h>
-+
-+#define FSI_ENGID_SCOM		0x5
-+
-+#define SCOM_FSI2PIB_DELAY	50
-+
-+/* SCOM engine register set */
-+#define SCOM_DATA0_REG		0x00
-+#define SCOM_DATA1_REG		0x04
-+#define SCOM_CMD_REG		0x08
-+#define SCOM_RESET_REG		0x1C
-+
-+#define SCOM_RESET_CMD		0x80000000
-+#define SCOM_WRITE_CMD		0x80000000
-+
-+struct scom_device {
-+	struct list_head link;
-+	struct fsi_device *fsi_dev;
-+	struct miscdevice mdev;
-+	char	name[32];
-+	int idx;
-+};
-+
-+#define to_scom_dev(x)		container_of((x), struct scom_device, mdev)
-+
-+static struct list_head scom_devices;
-+
-+static DEFINE_IDA(scom_ida);
-+
-+static int put_scom(struct scom_device *scom_dev, uint64_t value,
-+			uint32_t addr)
-+{
-+	int rc;
-+	uint32_t data;
-+
-+	data = cpu_to_be32(SCOM_RESET_CMD);
-+	rc = fsi_device_write(scom_dev->fsi_dev, SCOM_RESET_REG, &data,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	data = cpu_to_be32((value >> 32) & 0xffffffff);
-+	rc = fsi_device_write(scom_dev->fsi_dev, SCOM_DATA0_REG, &data,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	data = cpu_to_be32(value & 0xffffffff);
-+	rc = fsi_device_write(scom_dev->fsi_dev, SCOM_DATA1_REG, &data,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	data = cpu_to_be32(SCOM_WRITE_CMD | addr);
-+	return fsi_device_write(scom_dev->fsi_dev, SCOM_CMD_REG, &data,
-+				sizeof(uint32_t));
-+}
-+
-+static int get_scom(struct scom_device *scom_dev, uint64_t *value,
-+			uint32_t addr)
-+{
-+	uint32_t result, data;
-+	int rc;
-+
-+	*value = 0ULL;
-+	data = cpu_to_be32(addr);
-+	rc = fsi_device_write(scom_dev->fsi_dev, SCOM_CMD_REG, &data,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	rc = fsi_device_read(scom_dev->fsi_dev, SCOM_DATA0_REG, &result,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	*value |= (uint64_t)cpu_to_be32(result) << 32;
-+	rc = fsi_device_read(scom_dev->fsi_dev, SCOM_DATA1_REG, &result,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	*value |= cpu_to_be32(result);
-+
-+	return 0;
-+}
-+
-+static ssize_t scom_read(struct file *filep, char __user *buf, size_t len,
-+			loff_t *offset)
-+{
-+	int rc;
-+	struct miscdevice *mdev =
-+				(struct miscdevice *)filep->private_data;
-+	struct scom_device *scom = to_scom_dev(mdev);
-+	struct device *dev = &scom->fsi_dev->dev;
-+	uint64_t val;
-+
-+	if (len != sizeof(uint64_t))
-+		return -EINVAL;
-+
-+	rc = get_scom(scom, &val, *offset);
-+	if (rc) {
-+		dev_dbg(dev, "get_scom fail:%d\n", rc);
-+		return rc;
+ #define FSI_SLAVE_SIZE_23b		0x800000
+ 
+ static DEFINE_IDA(master_ida);
+@@ -560,8 +566,8 @@ static void fsi_slave_release(struct device *dev)
+ 
+ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ {
++	uint32_t chip_id, llmode;
+ 	struct fsi_slave *slave;
+-	uint32_t chip_id;
+ 	uint8_t crc;
+ 	int rc;
+ 
+@@ -597,6 +603,20 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 		return -ENODEV;
+ 	}
+ 
++	/* If we're behind a master that doesn't provide a self-running bus
++	 * clock, put the slave into async mode
++	 */
++	if (master->flags & FSI_MASTER_FLAG_SWCLOCK) {
++		llmode = cpu_to_be32(FSI_LLMODE_ASYNC);
++		rc = fsi_master_write(master, link, id,
++				FSI_SLAVE_BASE + FSI_LLMODE,
++				&llmode, sizeof(llmode));
++		if (rc)
++			dev_warn(&master->dev,
++				"can't set llmode on slave:%02x:%02x %d\n",
++				link, id, rc);
 +	}
 +
-+	rc = copy_to_user(buf, &val, len);
-+	if (rc)
-+		dev_dbg(dev, "copy to user failed:%d\n", rc);
+ 	/* We can communicate with a slave; create the slave device and
+ 	 * register.
+ 	 */
+diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
+index 5d9e0b0..d5cce88 100644
+--- a/drivers/fsi/fsi-master-gpio.c
++++ b/drivers/fsi/fsi-master-gpio.c
+@@ -569,6 +569,7 @@ static int fsi_master_gpio_probe(struct platform_device *pdev)
+ 	master->gpio_mux = gpio;
+ 
+ 	master->master.n_links = 1;
++	master->master.flags = FSI_MASTER_FLAG_SWCLOCK;
+ 	master->master.read = fsi_master_gpio_read;
+ 	master->master.write = fsi_master_gpio_write;
+ 	master->master.term = fsi_master_gpio_term;
+diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
+index d6a4885..fd39924 100644
+--- a/drivers/fsi/fsi-master.h
++++ b/drivers/fsi/fsi-master.h
+@@ -19,6 +19,8 @@
+ 
+ #include <linux/device.h>
+ 
++#define FSI_MASTER_FLAG_SWCLOCK	0x1
 +
-+	return rc ? rc : len;
-+}
-+
-+static ssize_t scom_write(struct file *filep, const char __user *buf,
-+			size_t len, loff_t *offset)
-+{
-+	int rc;
-+	struct miscdevice *mdev = filep->private_data;
-+	struct scom_device *scom = to_scom_dev(mdev);
-+	struct device *dev = &scom->fsi_dev->dev;
-+	uint64_t val;
-+
-+	if (len != sizeof(uint64_t))
-+		return -EINVAL;
-+
-+	rc = copy_from_user(&val, buf, len);
-+	if (rc) {
-+		dev_dbg(dev, "copy from user failed:%d\n", rc);
-+		return -EINVAL;
-+	}
-+
-+	rc = put_scom(scom, val, *offset);
-+	if (rc) {
-+		dev_dbg(dev, "put_scom failed with:%d\n", rc);
-+		return rc;
-+	}
-+
-+	return len;
-+}
-+
-+static loff_t scom_llseek(struct file *file, loff_t offset, int whence)
-+{
-+	switch (whence) {
-+	case SEEK_CUR:
-+		break;
-+	case SEEK_SET:
-+		file->f_pos = offset;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return offset;
-+}
-+
-+static const struct file_operations scom_fops = {
-+	.owner	= THIS_MODULE,
-+	.llseek	= scom_llseek,
-+	.read	= scom_read,
-+	.write	= scom_write,
-+};
-+
-+static int scom_probe(struct device *dev)
-+{
-+	struct fsi_device *fsi_dev = to_fsi_dev(dev);
-+	struct scom_device *scom;
-+
-+	scom = devm_kzalloc(dev, sizeof(*scom), GFP_KERNEL);
-+	if (!scom)
-+		return -ENOMEM;
-+
-+	scom->idx = ida_simple_get(&scom_ida, 1, INT_MAX, GFP_KERNEL);
-+	snprintf(scom->name, sizeof(scom->name), "scom%d", scom->idx);
-+	scom->fsi_dev = fsi_dev;
-+	scom->mdev.minor = MISC_DYNAMIC_MINOR;
-+	scom->mdev.fops = &scom_fops;
-+	scom->mdev.name = scom->name;
-+	scom->mdev.parent = dev;
-+	list_add(&scom->link, &scom_devices);
-+
-+	return misc_register(&scom->mdev);
-+}
-+
-+static int scom_remove(struct device *dev)
-+{
-+	struct scom_device *scom, *scom_tmp;
-+	struct fsi_device *fsi_dev = to_fsi_dev(dev);
-+
-+	list_for_each_entry_safe(scom, scom_tmp, &scom_devices, link) {
-+		if (scom->fsi_dev == fsi_dev) {
-+			list_del(&scom->link);
-+			ida_simple_remove(&scom_ida, scom->idx);
-+			misc_deregister(&scom->mdev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct fsi_device_id scom_ids[] = {
-+	{
-+		.engine_type = FSI_ENGID_SCOM,
-+		.version = FSI_VERSION_ANY,
-+	},
-+	{ 0 }
-+};
-+
-+static struct fsi_driver scom_drv = {
-+	.id_table = scom_ids,
-+	.drv = {
-+		.name = "scom",
-+		.bus = &fsi_bus_type,
-+		.probe = scom_probe,
-+		.remove = scom_remove,
-+	}
-+};
-+
-+static int scom_init(void)
-+{
-+	INIT_LIST_HEAD(&scom_devices);
-+	return fsi_driver_register(&scom_drv);
-+}
-+
-+static void scom_exit(void)
-+{
-+	struct list_head *pos;
-+	struct scom_device *scom;
-+
-+	list_for_each(pos, &scom_devices) {
-+		scom = list_entry(pos, struct scom_device, link);
-+		misc_deregister(&scom->mdev);
-+		devm_kfree(&scom->fsi_dev->dev, scom);
-+	}
-+	fsi_driver_unregister(&scom_drv);
-+}
-+
-+module_init(scom_init);
-+module_exit(scom_exit);
-+MODULE_LICENSE("GPL");
+ struct fsi_master {
+ 	struct device	dev;
+ 	int		idx;
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
