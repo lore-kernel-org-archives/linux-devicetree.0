@@ -1,7 +1,7 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v6 04/23] drivers/fsi: Add crc4 helpers
-Date: Mon, 10 Apr 2017 14:46:47 -0500
-Message-ID: <20170410194706.64280-5-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v6 07/23] drivers/fsi: Implement slave initialisation
+Date: Mon, 10 Apr 2017 14:46:50 -0500
+Message-ID: <20170410194706.64280-8-cbostic@linux.vnet.ibm.com>
 References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
@@ -12,87 +12,107 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-Add some helpers for the crc checks for the slave configuration table.
-This works 4-bits-at-a-time, using a simple table approach.
+Implement fsi_slave_init: if we can read a chip ID, create fsi_slave
+devices and register with the driver core.
 
-We will need this in the FSI core code, as well as any master
-implementations that need to calculate CRCs in software.
-
-We add this to the fsi code (rather than lib/), as we need a specific
-polynomial for FSI CRCs.
+Includes changes from Chris Bostic <cbostic@linux.vnet.ibm.com>.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/fsi/fsi-core.c   | 24 ++++++++++++++++++++++++
- drivers/fsi/fsi-master.h | 21 +++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+ drivers/fsi/fsi-core.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 64 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index e90d45d..4bbca95 100644
+index 6e1cfdf..c705ca2 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -32,6 +32,30 @@ struct fsi_slave {
+@@ -17,9 +17,12 @@
+ #include <linux/fsi.h>
+ #include <linux/idr.h>
+ #include <linux/module.h>
++#include <linux/slab.h>
  
- #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
+ #include "fsi-master.h"
  
-+/* crc helpers */
-+static const uint8_t crc4_tab[] = {
-+	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
-+	0x1, 0x6, 0xf, 0x8, 0xa, 0xd, 0x4, 0x3,
-+};
++#define FSI_SLAVE_SIZE_23b		0x800000
 +
-+uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits)
+ static DEFINE_IDA(master_ida);
+ 
+ struct fsi_slave {
+@@ -114,11 +117,70 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			addr, val, size);
+ }
+ 
++static void fsi_slave_release(struct device *dev)
 +{
-+	int i;
++	struct fsi_slave *slave = to_fsi_slave(dev);
 +
-+	/* Align to 4-bits */
-+	bits = (bits + 3) & ~0x3;
-+
-+	/* mask off anything above the top bit */
-+	x &= (1ull << bits) - 1;
-+
-+	/* Calculate crc4 over four-bit nibbles, starting at the MSbit */
-+	for (i = bits - 4; i >= 0; i -= 4)
-+		c = crc4_tab[c ^ ((x >> i) & 0xf)];
-+
-+	return c;
++	kfree(slave);
 +}
-+EXPORT_SYMBOL_GPL(fsi_crc4);
 +
- /* FSI slave support */
  static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
  {
-diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
-index 7764b00..d6a4885 100644
---- a/drivers/fsi/fsi-master.h
-+++ b/drivers/fsi/fsi-master.h
-@@ -38,4 +38,25 @@ struct fsi_master {
- extern int fsi_master_register(struct fsi_master *master);
- extern void fsi_master_unregister(struct fsi_master *master);
- 
-+/**
-+ * crc4 helper: Given a starting crc4 state @c, calculate the crc4 vaue of @x,
-+ * which is @bits in length. This may be required by master implementations
-+ * that do not provide their own hardware checksums.
-+ *
-+ * The crc4 is performed on 4-bit chunks (which is all we need for FSI
-+ * calculations). Typically, we'll want a starting state of 0:
-+ *
-+ *  c = fsi_crc4(0, msg, len);
-+ *
-+ * To crc4 a message that includes a single start bit, initialise crc4 state
-+ * with:
-+ *
-+ *  c = fsi_crc4(0, 1, 1);
-+ *
-+ * Then update with message data:
-+ *
-+ *  c = fsi_crc4(c, msg, len);
-+ */
-+uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits);
+-	/* todo: initialise slave device, perform engine scan */
++	struct fsi_slave *slave;
++	uint32_t chip_id;
++	uint8_t crc;
++	int rc;
 +
- #endif /* DRIVERS_FSI_MASTER_H */
++	/* Currently, we only support single slaves on a link, and use the
++	 * full 23-bit address range
++	 */
++	if (id != 0)
++		return -EINVAL;
++
++	rc = fsi_master_read(master, link, id, 0, &chip_id, sizeof(chip_id));
++	if (rc) {
++		dev_warn(&master->dev, "can't read slave %02x:%02x %d\n",
++				link, id, rc);
++		return -ENODEV;
++	}
++	chip_id = be32_to_cpu(chip_id);
++
++	crc = fsi_crc4(0, chip_id, 32);
++	if (crc) {
++		dev_warn(&master->dev, "slave %02x:%02x invalid chip id CRC!\n",
++				link, id);
++		return -EIO;
++	}
++
++	dev_info(&master->dev, "fsi: found chip %08x at %02x:%02x:%02x\n",
++			chip_id, master->idx, link, id);
++
++	/* We can communicate with a slave; create the slave device and
++	 * register.
++	 */
++	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
++	if (!slave)
++		return -ENOMEM;
++
++	slave->master = master;
++	slave->dev.parent = &master->dev;
++	slave->dev.release = fsi_slave_release;
++	slave->link = link;
++	slave->id = id;
++	slave->size = FSI_SLAVE_SIZE_23b;
++
++	dev_set_name(&slave->dev, "slave@%02x:%02x", link, id);
++	rc = device_register(&slave->dev);
++	if (rc < 0) {
++		dev_warn(&master->dev, "failed to create slave device: %d\n",
++				rc);
++		put_device(&slave->dev);
++		return rc;
++	}
++
++	/* todo: perform engine scan */
+ 
+-	return -ENODEV;
++	return rc;
+ }
+ 
+ /* FSI master support */
 -- 
 1.8.2.2
