@@ -1,32 +1,43 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] clk: vc5: Add bindings for IDT VersaClock
- 5P49V5935
-Date: Mon, 10 Apr 2017 15:10:56 -0500
-Message-ID: <20170410201056.y46zbg4hbdpk2rks@rob-hp-laptop>
-References: <1491556344-9465-1-git-send-email-alexey_firago@mentor.com>
- <1491556344-9465-3-git-send-email-alexey_firago@mentor.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 3/4] pwm: tegra: Add DT binding details to configure
+ pin in suspends/resume
+Date: Mon, 10 Apr 2017 15:13:16 -0500
+Message-ID: <20170410201316.4rlf4bvt5jeagpsn@rob-hp-laptop>
+References: <1491557642-15940-1-git-send-email-ldewangan@nvidia.com>
+ <1491557642-15940-4-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1491556344-9465-3-git-send-email-alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1491557642-15940-4-git-send-email-ldewangan@nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 12:12:23PM +0300, Alexey Firago wrote:
-> IDT VersaClock 5 5P49V5935 has 4 clock outputs, 4 fractional dividers.
-> Input clock source can be taken from either integrated crystal or from
-> external reference clock.
+On Fri, Apr 07, 2017 at 03:04:01PM +0530, Laxman Dewangan wrote:
+> In some of NVIDIA Tegra's platform, PWM controller is used to
+> control the PWM controlled regulators. PWM signal is connected to
+> the VID pin of the regulator where duty cycle of PWM signal decide
+> the voltage level of the regulator output.
 > 
-> Signed-off-by: Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> When system enters suspend, some PWM client/slave regulator devices
+> require the PWM output to be tristated.
+> 
+> Add DT binding details to provide the pin configuration state
+> from PWM and pinctrl DT node in suspend and active state of
+> the system.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> 
 > ---
->  .../devicetree/bindings/clock/idt,versaclock5.txt        | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+> Changes from v1:
+> - Use standard pinctrl names for sleep and active state.
+> 
+> Changes from V2:
+> - Fix the commit message and details
+> ---
+>  .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org> 
