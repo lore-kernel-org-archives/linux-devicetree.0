@@ -1,104 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C multiplexer/switch
-Date: Mon, 10 Apr 2017 22:04:04 +0200
-Message-ID: <CACRpkdbECyEpD7b4OFxwAo6USnK_DGEbASMdTzOO=FQ9BAzRQA@mail.gmail.com>
-References: <1491397671-14675-1-git-send-email-michael.hennerich@analog.com> <1491397671-14675-2-git-send-email-michael.hennerich@analog.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] clk: vc5: Add bindings for IDT VersaClock
+ 5P49V5935
+Date: Mon, 10 Apr 2017 15:10:56 -0500
+Message-ID: <20170410201056.y46zbg4hbdpk2rks@rob-hp-laptop>
+References: <1491556344-9465-1-git-send-email-alexey_firago@mentor.com>
+ <1491556344-9465-3-git-send-email-alexey_firago@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1491397671-14675-2-git-send-email-michael.hennerich@analog.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Michael Hennerich <michael.hennerich@analog.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1491556344-9465-3-git-send-email-alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 3:07 PM,  <michael.hennerich@analog.com> wrote:
+On Fri, Apr 07, 2017 at 12:12:23PM +0300, Alexey Firago wrote:
+> IDT VersaClock 5 5P49V5935 has 4 clock outputs, 4 fractional dividers.
+> Input clock source can be taken from either integrated crystal or from
+> external reference clock.
+> 
+> Signed-off-by: Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/idt,versaclock5.txt        | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
 
-> From: Michael Hennerich <michael.hennerich@analog.com>
->
-> This patch adds support for the Analog Devices / Linear Technology
-> LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
-> The LTC4306 optionally provides two general purpose input/output pins
-> (GPIOs) that can be configured as logic inputs, opendrain outputs or
-> push-pull outputs via the generic GPIOLIB framework.
->
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-
-Okay!
-
-> +#include <linux/device.h>
-> +#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/gpio/driver.h>
-
-Why are you including all these?
-Normally a GPIO driver should just include
-<linux/gpio/driver.h>
-
-> +#include <linux/i2c-mux.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-
-> +static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct ltc4306 *data = gpiochip_get_data(chip);
-> +       unsigned int val;
-> +       int ret;
-> +
-> +       ret = regmap_read(data->regmap, LTC_REG_CONFIG, &val);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       return (val & BIT(1 - offset));
-
-Do this:
-
-return !!(val & BIT(1 - offset));
-
-So you clamp the return value to [0,1]
-
-> +static int ltc4306_gpio_set_config(struct gpio_chip *chip,
-> +                                  unsigned int offset, unsigned long config)
-> +{
-> +       struct ltc4306 *data = gpiochip_get_data(chip);
-> +       unsigned int val;
-> +
-> +       switch (pinconf_to_config_param(config)) {
-> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +               val = 0;
-> +               break;
-> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +               val = BIT(4 - offset);
-> +               break;
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +
-> +       return regmap_update_bits(data->regmap, LTC_REG_MODE,
-> +                                 BIT(4 - offset), val);
-> +}
-
-Nice!
-
-> +       data->gpiochip.label = dev_name(dev);
-> +       data->gpiochip.base = -1;
-> +       data->gpiochip.ngpio = data->chip->num_gpios;
-> +       data->gpiochip.parent = dev;
-> +       data->gpiochip.can_sleep = true;
-> +       data->gpiochip.direction_input = ltc4306_gpio_direction_input;
-> +       data->gpiochip.direction_output = ltc4306_gpio_direction_output;
-> +       data->gpiochip.get = ltc4306_gpio_get;
-> +       data->gpiochip.set = ltc4306_gpio_set;
-> +       data->gpiochip.set_config = ltc4306_gpio_set_config;
-> +       data->gpiochip.owner = THIS_MODULE;
-
-Please implement .get_direction().
-This is very helpful to userspace, have you tested to use tools/gpio/*
-from the kernel? Like lsgpio?
-
-Yours,
-Linus Walleij
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
