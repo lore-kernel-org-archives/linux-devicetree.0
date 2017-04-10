@@ -1,107 +1,192 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
-Date: Mon, 10 Apr 2017 14:07:44 +0530
-Message-ID: <1727318a-7ef8-1ea7-a657-241bbc96bc89@ti.com>
-References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
- <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
- <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com>
- <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
- <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3@ti.com>
- <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A@mail.gmail.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] Add support for DCMI camera interface of
+ STMicroelectronics STM32 SoC series
+Date: Mon, 10 Apr 2017 10:55:08 +0200
+Message-ID: <695c96ef-afbf-da4c-d9b3-7ce16067f7c0@xs4all.nl>
+References: <1491320678-17246-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1491320678-17246-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 04/04/2017 05:44 PM, Hugues Fruchet wrote:
+> This patchset introduces a basic support for Digital Camera Memory Interface
+> (DCMI) of STMicroelectronics STM32 SoC series.
+> 
+> This first basic support implements RGB565 & YUV frame grabbing.
+> Cropping and JPEG support will be added later on.
+> 
+> This has been tested on STM324x9I-EVAL evaluation board embedding
+> an OV2640 camera sensor.
+> 
+> This driver depends on:
+>   - [PATCHv6 00/14] atmel-isi/ov7670/ov2640: convert to standalone drivers http://www.spinics.net/lists/linux-media/msg113480.html
+> 
+> ===========
+> = history =
+> ===========
+> version 3:
+>   - stm32-dcmi: Add "Reviewed-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>"
+>   - dt-bindings: Fix remarks from Rob Herring:
+>     http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg110956.html
+> 
+> version 2:
+>   - Fix a Kbuild warning in probe:
+>     http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg110678.html
+>   - Fix a warning in dcmi_queue_setup()
+>   - dt-bindings: warn on sensor signals level inversion in board example
+>   - Typos fixing
+> 
+> version 1:
+>   - Initial submission
+> 
+> ===================
+> = v4l2-compliance =
+> ===================
+> Below is the v4l2-compliance report for this current version of the DCMI camera interface.
+> v4l2-compliance has been built from v4l-utils-1.12.3.
 
-On Wednesday 05 April 2017 07:40 PM, Raviteja Garimella wrote:
-> Hi Kishon,
-> 
-> On Wed, Apr 5, 2017 at 7:04 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->> Hi Ravi,
->>
->> On Wednesday 05 April 2017 06:30 PM, Raviteja Garimella wrote:
->>> Hi Kishon,
->>>
->>> On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->>>> Hi,
->>>>
->>>> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
->>>>> This is driver for USB DRD Phy used in Broadcom's Northstar2
->>>>> SoC. The phy can be configured to be in Device mode or Host
->>>>> mode based on the type of cable connected to the port. The
->>>>> driver registers to  extcon framework to get appropriate
->>>>> connect events for Host/Device cables connect/disconnect
->>>>> states based on VBUS and ID interrupts.
->>>>
->>>> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
->>>> Northstar2.
->>>>
->>>
->>> Will do.
->>>
->>>> Sorry for not letting you know this earlier. But I feel the design of the
->>>> driver should be changed. Extcon shouldn't be used here. The extcon
->>>> notifications should be sent to the consumer driver and the consumer driver
->>>> should be responsible for invoking the phy ops.
->>>>
->>>
->>> The consumer drivers here would be a UDC driver (USB device
->>> controller), EHCI and OHCI host controller drivers.
->>> I was already suggested in UDC driver review to deal with extcon in Phy driver.
->>>
->>> This phy connects to 2 host controllers, and one device controller.
->>> That's the design in Broadcom Northstar2
->>> platform. The values of the VBUS and ID pins of this port are
->>> determined based on the type of the cable (device cable
->>> or host cable). And. phy has to be configured accordingly.
->>>
->>>> The phy ops being invoked during extcon events doesn't look right.
->>>
->>> Could you please elaborate on the concern, so that we can think of
->>> mitigating those issues in this driver?
->>> Since we are dealing with phy init/shutdown in this driver itself, are
->>> you okay with moving the extcon handling code
->>> out of phy ops ?
->>
->> yeah, For e.g., ns2_drd_phy_init is part of phy_ops and is being invoked from
->> extcon events too. Can a phy which is initialized by a phy consumer (say your
->> UDC invokes phy_init) can be shutdown by an extcon event?
->>
->> Maybe a clear explanation of when phy_ops here will be invoked and when it will
->> set using extcon events might help.
->>
-> 
-> Say, we have a USB pendrive which is connected to the DRD port through
-> a host cable.
-> Now the PHY will be initialized to be in host mode.
-> When the pendrive is unplugged, and we now connect the NS2 device to
-> some linux PC,
-> now the PHY has to be shutdown, and re-initialized to be in Device mode.
-> 
-> On unplug event, it is set neither to Host nor Device mode (basically
-> shutdown). Next time which ever cable is connected, the PHY is
-> initialized to the respective
-> mode.
-> 
-> Please let me know if it's fine to do these initializations outside
-> phy ops, because those will
-> be irrelevant for phy consumers (the controllers) as it's anyways
-> dealt in the phy driver through
-> extcon.
+Please test with 'v4l2-compliance -s -f' as well and mail me the output of
+that test.
 
-Yes. We shouldn't add phy_ops just for the sake of it. I think this should be
-made as a purely extcon driver (though there are a couple of bits that looks
-like initializing PHY) and keep it in drivers/extcon.
+Once you have the Acks for the DT/bindings patches just let me know and I'll
+make a pull request.
 
-Thanks
-Kishon
+Regards,
+
+	Hans
+
+> 
+> v4l2-compliance SHA   : f5f45e17ee98a0ebad7836ade2b34ceec909d751
+> 
+> Driver Info:
+>         Driver name   : stm32-dcmi
+>         Card type     : STM32 Digital Camera Memory Int
+>         Bus info      : platform:dcmi
+>         Driver version: 4.11.0
+>         Capabilities  : 0x85200001
+>                 Video Capture
+>                 Read/Write
+>                 Streaming
+>                 Extended Pix Format
+>                 Device Capabilities
+>         Device Caps   : 0x05200001
+>                 Video Capture
+>                 Read/Write
+>                 Streaming
+>                 Extended Pix Format
+> 
+> Compliance test for device /dev/video0 (not using libv4l2):
+> 
+> Required ioctls:
+>         test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+>         test second video open: OK
+>         test VIDIOC_QUERYCAP: OK
+>         test VIDIOC_G/S_PRIORITY: OK
+>         test for unlimited opens: OK
+> 
+> Debug ioctls:
+>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>         test VIDIOC_LOG_STATUS: OK
+> 
+> Input ioctls:
+>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMINPUT: OK
+>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>         Inputs: 1 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>         test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Test input 0:
+> 
+>         Control ioctls:
+>                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+>                 test VIDIOC_QUERYCTRL: OK
+>                 test VIDIOC_G/S_CTRL: OK
+>                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>                 Standard Controls: 3 Private Controls: 0
+> 
+>         Format ioctls:
+>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>                 test VIDIOC_G/S_PARM: OK (Not Supported)
+>                 test VIDIOC_G_FBUF: OK (Not Supported)
+>                 test VIDIOC_G_FMT: OK
+>                 test VIDIOC_TRY_FMT: OK
+>                 test VIDIOC_S_FMT: OK
+>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>                 test Cropping: OK (Not Supported)
+>                 test Composing: OK (Not Supported)
+>                 test Scaling: OK
+> 
+>         Codec ioctls:
+>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> 
+>         Buffer ioctls:
+>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>                 test VIDIOC_EXPBUF: OK
+> 
+> Test input 0:
+> 
+> Streaming ioctls:
+>         test read/write: OK
+>         test MMAP: OK
+>         test USERPTR: OK (Not Supported)
+>         test DMABUF: Cannot test, specify --expbuf-device
+> 
+> 
+> Total: 46, Succeeded: 46, Failed: 0, Warnings: 0
+> 
+> Hugues Fruchet (8):
+>   dt-bindings: Document STM32 DCMI bindings
+>   [media] stm32-dcmi: STM32 DCMI camera interface driver
+>   ARM: dts: stm32: Enable DCMI support on STM32F429 MCU
+>   ARM: dts: stm32: Enable DCMI camera interface on STM32F429-EVAL board
+>   ARM: dts: stm32: Enable STMPE1600 gpio expander of STM32F429-EVAL
+>     board
+>   ARM: dts: stm32: Enable OV2640 camera support of STM32F429-EVAL board
+>   ARM: configs: stm32: STMPE1600 GPIO expander
+>   ARM: configs: stm32: DCMI + OV2640 camera support
+> 
+>  .../devicetree/bindings/media/st,stm32-dcmi.txt    |   46 +
+>  arch/arm/boot/dts/stm32429i-eval.dts               |   56 +
+>  arch/arm/boot/dts/stm32f429.dtsi                   |   37 +
+>  arch/arm/configs/stm32_defconfig                   |    9 +
+>  drivers/media/platform/Kconfig                     |   12 +
+>  drivers/media/platform/Makefile                    |    2 +
+>  drivers/media/platform/stm32/Makefile              |    1 +
+>  drivers/media/platform/stm32/stm32-dcmi.c          | 1419 ++++++++++++++++++++
+>  8 files changed, 1582 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+>  create mode 100644 drivers/media/platform/stm32/Makefile
+>  create mode 100644 drivers/media/platform/stm32/stm32-dcmi.c
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
