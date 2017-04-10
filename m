@@ -1,64 +1,52 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: DT overlay issues - dtc flags
-Date: Mon, 10 Apr 2017 18:16:19 +0200
-Message-ID: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397@suse.de>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: [git:media_tree/master] [media] s5p-cec.txt: document the HDMI
+ controller phandle
+Date: Mon, 10 Apr 2017 16:13:07 +0000
+Message-ID: <E1cxc0o-0003Qv-NT@www.linuxtv.org>
+Reply-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
+List-Unsubscribe: <https://www.linuxtv.org/cgi-bin/mailman/options/linuxtv-commits>,
+ <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=unsubscribe>
+List-Post: <mailto:linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
+List-Help: <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=help>
+List-Subscribe: <https://www.linuxtv.org/cgi-bin/mailman/listinfo/linuxtv-commits>,
+ <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=subscribe>
+Sender: "linuxtv-commits" <linuxtv-commits-bounces-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
+Errors-To: linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
+To: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-I've tried to play around with Device Tree overlays (.dtbo files):
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/overlay-notes.txt
-
-First of all, that document refers to a non-existing
-Documentation/devicetree/dt-object-internal.txt. Could someone please
-fix that one way or another?
-
-In my particular example I've tried to extend the &i2c1 and &gpio nodes
-of 4.11-rc5 arm64 broadcom/bcm2837-rpi-3-b.dts. The above documentation
-prominently claims that this can be done via target = <&foo> syntax, but
-U-Boot's fdt apply command fails for such a file. If instead I use the
-alternative target-path = "/soc/..." then it works just fine.
-
-As mentioned in the very bottom of the documentation, resolution of
-phandle target references requires a __symbols__ node in the base .dtb.
-IIUC this is only generated when passing the -@ dtc command line flag.
-
-At first I thought this were an issue with how we build the .dtb files
-in openSUSE [1], but by my reading of the kernel Makefiles not passing
--@ in DTC_FLAGS or cmd_dtc, you should run into the exact same issue.
-
-I could think of a few ARMv7-M systems where such DT bloat might be
-undesired (small flash sector sizes), but then it would seem easier to
-suppress -@ where needed than to have a feature that by all practical
-means is half unusable by default.
-
-U-Boot itself appears to face a similar issue in that its internal
-Device Trees are built without -@, and via Alex' distro boot extensions
-this internal DT is passed on via UEFI as fallback when no external .dtb
-file is found. So in the non-SPL case the DT should probably be built
-with -@, too.
-
-Or am I misunderstanding something here?
-
-Thanks,
-Andreas
-
-[1]
-https://build.opensuse.org/package/view_file/Kernel:HEAD/dtb-aarch64/dtb-aarch64.spec?expand=1
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBpcyBhbiBhdXRvbWF0aWMgZ2VuZXJhdGVkIGVtYWlsIHRvIGxldCB5b3Uga25vdyB0aGF0
+IHRoZSBmb2xsb3dpbmcgcGF0Y2ggd2VyZSBxdWV1ZWQ6CgpTdWJqZWN0OiBbbWVkaWFdIHM1cC1j
+ZWMudHh0OiBkb2N1bWVudCB0aGUgSERNSSBjb250cm9sbGVyIHBoYW5kbGUKQXV0aG9yOiAgSGFu
+cyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgpEYXRlOiAgICBUdWUgRGVjIDEzIDEy
+OjM3OjE2IDIwMTYgLTAyMDAKClVwZGF0ZSB0aGUgYmluZGluZ3MgZG9jdW1lbnRpbmcgdGhlIG5l
+dyBoZG1pIHBoYW5kbGUuCgpTaWduZWQtb2ZmLWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3Vp
+bEBjaXNjby5jb20+CkFja2VkLWJ5OiBLcnp5c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5v
+cmc+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpDQzogbGludXgtc2Ft
+c3VuZy1zb2NAdmdlci5rZXJuZWwub3JnCkNDOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpT
+aWduZWQtb2ZmLWJ5OiBNYXVybyBDYXJ2YWxobyBDaGVoYWIgPG1jaGVoYWJAcy1vcGVuc291cmNl
+LmNvbT4KCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLWNlYy50
+eHQgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgotLS0KCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLWNlYy50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLWNlYy50eHQKaW5k
+ZXggOTI1YWI0ZDcyZWFhLi40YmIwOGQ5ZDk0MGIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zNXAtY2VjLnR4dAorKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLWNlYy50eHQKQEAgLTE1LDYgKzE1LDcgQEAg
+UmVxdWlyZWQgcHJvcGVydGllczoKICAgLSBjbG9jay1uYW1lcyA6IGZyb20gY29tbW9uIGNsb2Nr
+IGJpbmRpbmc6IG11c3QgY29udGFpbiAiaGRtaWNlYyIsCiAJCSAgY29ycmVzcG9uZGluZyB0byBl
+bnRyeSBpbiB0aGUgY2xvY2tzIHByb3BlcnR5LgogICAtIHNhbXN1bmcsc3lzY29uLXBoYW5kbGUg
+LSBwaGFuZGxlIHRvIHRoZSBQTVUgc3lzdGVtIGNvbnRyb2xsZXIKKyAgLSBoZG1pLXBoYW5kbGUg
+LSBwaGFuZGxlIHRvIHRoZSBIRE1JIGNvbnRyb2xsZXIKIAogRXhhbXBsZToKIApAQCAtMjUsNiAr
+MjYsNyBAQCBoZG1pY2VjOiBjZWNAMTAwQjAwMDAgewogCWNsb2NrcyA9IDwmY2xvY2sgQ0xLX0hE
+TUlfQ0VDPjsKIAljbG9jay1uYW1lcyA9ICJoZG1pY2VjIjsKIAlzYW1zdW5nLHN5c2Nvbi1waGFu
+ZGxlID0gPCZwbXVfc3lzdGVtX2NvbnRyb2xsZXI+OworCWhkbWktcGhhbmRsZSA9IDwmaGRtaT47
+CiAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JmhkbWlfY2VjPjsK
+IAlzdGF0dXMgPSAib2theSI7CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eHR2LWNvbW1pdHMgbWFpbGluZyBsaXN0CmxpbnV4dHYtY29tbWl0c0Bs
+aW51eHR2Lm9yZwpodHRwczovL3d3dy5saW51eHR2Lm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGlu
+Zm8vbGludXh0di1jb21taXRz
