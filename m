@@ -1,132 +1,38 @@
-From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
-Date: Mon, 10 Apr 2017 14:00:11 +0530
-Message-ID: <CAEHZuqMLDssCjka-yArKE8H8S-3_rvJiwO4gh=CYYa1NwCu1zg@mail.gmail.com>
-References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
- <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
- <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com> <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
- <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3@ti.com> <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A@mail.gmail.com>
- <9fbef986-721c-05aa-28a1-4c49016fe2ca@ti.com> <CAEHZuqMJU=ZLL2xsbtpHLC6SU4uzNBpZmPPADs-g7=OXJyCbBQ@mail.gmail.com>
- <a78f6948-0900-56f9-dc0c-5b161c470847@ti.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v3 7/9] arm,arm64,drivers: reduce scope of
+ cap_parsing_failed
+Date: Mon, 10 Apr 2017 09:31:05 +0100
+Message-ID: <20170410083104.GC27538@e104818-lin.cambridge.arm.com>
+References: <20170327131825.32134-1-juri.lelli@arm.com>
+ <20170327131825.32134-8-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a78f6948-0900-56f9-dc0c-5b161c470847-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170327131825.32134-8-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, peterz@infradead.org, broonie@kernel.org, will.deacon@arm.com, gregkh@linuxfoundation.org, dietmar.eggemann@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Mon, Mar 27, 2017 at 02:18:23PM +0100, Juri Lelli wrote:
+> Reduce the scope of cap_parsing_failed (making it static in
+> drivers/base/arch_topology.c) by slightly changing {arm,arm64} DT
+> parsing code.
+> 
+> For arm checking for !cap_parsing_failed before calling normalize_
+> cpu_capacity() is superfluous, as returning an error from parse_
+> cpu_capacity() (above) means cap_from _dt is set to false.
+> 
+> For arm64 we can simply check if raw_capacity points to something,
+> which is not if capacity parsing has failed.
+> 
+> Suggested-by: Morten Rasmussen <morten.rasmussen@arm.com>
+> Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+> ---
+>  arch/arm/kernel/topology.c   | 3 +--
+>  arch/arm64/kernel/topology.c | 5 +----
+>  drivers/base/arch_topology.c | 4 ++--
+>  3 files changed, 4 insertions(+), 8 deletions(-)
 
-On Mon, Apr 10, 2017 at 1:57 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> Hi,
->
-> On Monday 10 April 2017 12:57 PM, Raviteja Garimella wrote:
->> Hi,
->>
->> On Mon, Apr 10, 2017 at 10:55 AM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->>> Hi,
->>>
->>> On Wednesday 05 April 2017 07:40 PM, Raviteja Garimella wrote:
->>>> Hi Kishon,
->>>>
->>>> On Wed, Apr 5, 2017 at 7:04 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->>>>> Hi Ravi,
->>>>>
->>>>> On Wednesday 05 April 2017 06:30 PM, Raviteja Garimella wrote:
->>>>>> Hi Kishon,
->>>>>>
->>>>>> On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->>>>>>> Hi,
->>>>>>>
->>>>>>> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
->>>>>>>> This is driver for USB DRD Phy used in Broadcom's Northstar2
->>>>>>>> SoC. The phy can be configured to be in Device mode or Host
->>>>>>>> mode based on the type of cable connected to the port. The
->>>>>>>> driver registers to  extcon framework to get appropriate
->>>>>>>> connect events for Host/Device cables connect/disconnect
->>>>>>>> states based on VBUS and ID interrupts.
->>>>>>>
->>>>>>> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
->>>>>>> Northstar2.
->>>>>>>
->>>>>>
->>>>>> Will do.
->>>>>>
->>>>>>> Sorry for not letting you know this earlier. But I feel the design of the
->>>>>>> driver should be changed. Extcon shouldn't be used here. The extcon
->>>>>>> notifications should be sent to the consumer driver and the consumer driver
->>>>>>> should be responsible for invoking the phy ops.
->>>>>>>
->>>>>>
->>>>>> The consumer drivers here would be a UDC driver (USB device
->>>>>> controller), EHCI and OHCI host controller drivers.
->>>>>> I was already suggested in UDC driver review to deal with extcon in Phy driver.
->>>>>>
->>>>>> This phy connects to 2 host controllers, and one device controller.
->>>>>> That's the design in Broadcom Northstar2
->>>>>> platform. The values of the VBUS and ID pins of this port are
->>>>>> determined based on the type of the cable (device cable
->>>>>> or host cable). And. phy has to be configured accordingly.
->>>>>>
->>>>>>> The phy ops being invoked during extcon events doesn't look right.
->>>>>>
->>>>>> Could you please elaborate on the concern, so that we can think of
->>>>>> mitigating those issues in this driver?
->>>>>> Since we are dealing with phy init/shutdown in this driver itself, are
->>>>>> you okay with moving the extcon handling code
->>>>>> out of phy ops ?
->>>>>
->>>>> yeah, For e.g., ns2_drd_phy_init is part of phy_ops and is being invoked from
->>>>> extcon events too. Can a phy which is initialized by a phy consumer (say your
->>>>> UDC invokes phy_init) can be shutdown by an extcon event?
->>>>>
->>>>> Maybe a clear explanation of when phy_ops here will be invoked and when it will
->>>>> set using extcon events might help.
->>>>>
->>>>
->>>> Say, we have a USB pendrive which is connected to the DRD port through
->>>> a host cable.
->>>> Now the PHY will be initialized to be in host mode.
->>>> When the pendrive is unplugged, and we now connect the NS2 device to
->>>> some linux PC,
->>>> now the PHY has to be shutdown, and re-initialized to be in Device mode.
->>>>
->>>> On unplug event, it is set neither to Host nor Device mode (basically
->>>> shutdown). Next time which ever cable is connected, the PHY is
->>>> initialized to the respective
->>>> mode.
->>>>
->>>> Please let me know if it's fine to do these initializations outside
->>>> phy ops, because those will
->>>> be irrelevant for phy consumers (the controllers) as it's anyways
->>>> dealt in the phy driver through
->>>> extcon.
->>>
->>> How does the consumer get to know whether they have to operate in host mode or
->>> device mode?
->>>
->> In NS2, we have host controllers and device controller (not OTG/other
->> that can switch
->> between host and device mode). It's only phy that can be in host/device mode.
->> Since both Host Controllers and Device Controller are connected to the same PHY,
->> it is based on the extcon logic (the type of cable connected) that PHY
->> will be in one
->> of the modes host/device and the respective controller will operate.
->
-> So at a point of time either the host controller or the device controller will
-> be active? and the PHY decides which of them should be active? Is that right?
->
-
-Yes
-
-Thanks,
-Ravi
-
-> Thanks
-> Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
