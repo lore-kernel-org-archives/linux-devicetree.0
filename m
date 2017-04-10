@@ -1,33 +1,47 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: document: add firefly-rk3399 board
- support
-Date: Mon, 10 Apr 2017 11:25:17 -0500
-Message-ID: <20170410162517.jk2um6b4ckixt3yx@rob-hp-laptop>
-References: <1491384800-22412-1-git-send-email-kever.yang@rock-chips.com>
- <1491384800-22412-2-git-send-email-kever.yang@rock-chips.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 6/9] drivers: remove useless comment from
+ base/arch_topology.c
+Date: Mon, 10 Apr 2017 17:33:25 +0100
+Message-ID: <20170410163325.GU17774@n2100.armlinux.org.uk>
+References: <20170327131825.32134-1-juri.lelli@arm.com>
+ <20170327131825.32134-7-juri.lelli@arm.com>
+ <20170410135103.GR17774@n2100.armlinux.org.uk>
+ <20170410140214.GE30804@e106622-lin>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1491384800-22412-2-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170410140214.GE30804@e106622-lin>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 05, 2017 at 05:33:20PM +0800, Kever Yang wrote:
-> Use "firefly,firefly-rk3399" compatible string for firefly-rk3399 board.
+On Mon, Apr 10, 2017 at 03:02:14PM +0100, Juri Lelli wrote:
+> Hi,
 > 
-> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
+> On 10/04/17 14:51, Russell King - ARM Linux wrote:
+> > On Mon, Mar 27, 2017 at 02:18:22PM +0100, Juri Lelli wrote:
+> > > Printing out an error message when we failed to get the cpu device is
+> > > not helping anyone. Remove it.
+> > 
+> > (1) the subject line talks about removing a "comment" but you're
+> >     actually removing an error printk
+> > (2) I don't think it's "not helping anyone", although the description
+> >     above doesn't say _why_ - it's reporting the lack of a missing CPU
+> >     device that we expect to be present.  If it's not present, then
+> >     we're not going to end up with the cpu capacity attribute, and the
+> >     error message answers the "why is that sysfs file missing" question.
 > 
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> That's the same I was thinking when I put the error message there in the
+> first place. But, then Greg didn't seem to like it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't think it was a case of "not liking it" - Greg asked what use it
+was.  Greg also pointed out the race with userspace.
+
+I think dropping this patch is the quickest way to move forward.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
