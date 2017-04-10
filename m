@@ -1,65 +1,106 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DT overlay issues - dtc flags
-Date: Mon, 10 Apr 2017 13:44:04 -0700
-Message-ID: <58EBEE94.2080803@gmail.com>
-References: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: imx: ventana: fix DTC warnings
+Date: Mon, 10 Apr 2017 13:58:10 -0700
+Message-ID: <1491857890-10554-1-git-send-email-tharvey@gateworks.com>
+References: <1491252168-7934-1-git-send-email-tharvey@gateworks.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <1491252168-7934-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-adding cc to myself so I will see replies.
+Remove the sky2 ethernet device node from the pcie controller which was
+invalid to begin with.
 
+The original intent was to allow the bootloader to populate the MAC via
+dt but this requires the PCI bus topology to be complete in dt as well
+and as these boards have an expansion connector that topology is dynamic
+and can't be represented here.
 
-On 04/10/17 09:16, Andreas Färber wrote:
-> Hi,
-> 
-> I've tried to play around with Device Tree overlays (.dtbo files):
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/overlay-notes.txt
-> 
-> First of all, that document refers to a non-existing
-> Documentation/devicetree/dt-object-internal.txt. Could someone please
-> fix that one way or another?
-> 
-> In my particular example I've tried to extend the &i2c1 and &gpio nodes
-> of 4.11-rc5 arm64 broadcom/bcm2837-rpi-3-b.dts. The above documentation
-> prominently claims that this can be done via target = <&foo> syntax, but
-> U-Boot's fdt apply command fails for such a file. If instead I use the
-> alternative target-path = "/soc/..." then it works just fine.
-> 
-> As mentioned in the very bottom of the documentation, resolution of
-> phandle target references requires a __symbols__ node in the base .dtb.
-> IIUC this is only generated when passing the -@ dtc command line flag.
-> 
-> At first I thought this were an issue with how we build the .dtb files
-> in openSUSE [1], but by my reading of the kernel Makefiles not passing
-> -@ in DTC_FLAGS or cmd_dtc, you should run into the exact same issue.
-> 
-> I could think of a few ARMv7-M systems where such DT bloat might be
-> undesired (small flash sector sizes), but then it would seem easier to
-> suppress -@ where needed than to have a feature that by all practical
-> means is half unusable by default.
-> 
-> U-Boot itself appears to face a similar issue in that its internal
-> Device Trees are built without -@, and via Alex' distro boot extensions
-> this internal DT is passed on via UEFI as fallback when no external .dtb
-> file is found. So in the non-SPL case the DT should probably be built
-> with -@, too.
-> 
-> Or am I misunderstanding something here?
-> 
-> Thanks,
-> Andreas
-> 
-> [1]
-> https://build.opensuse.org/package/view_file/Kernel:HEAD/dtb-aarch64/dtb-aarch64.spec?expand=1
-> 
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+---
+v2:
+ - remove eth1 aliases
+
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-gw5400-a.dts  | 5 -----
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 5 -----
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 5 -----
+ 3 files changed, 15 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6q-gw5400-a.dts b/arch/arm/boot/dts/imx6q-gw5400-a.dts
+index 8e84713..687ab91 100644
+--- a/arch/arm/boot/dts/imx6q-gw5400-a.dts
++++ b/arch/arm/boot/dts/imx6q-gw5400-a.dts
+@@ -19,7 +19,6 @@
+ 
+ 	/* these are used by bootloader for disabling nodes */
+ 	aliases {
+-		ethernet1 = &eth1;
+ 		i2c0 = &i2c1;
+ 		i2c1 = &i2c2;
+ 		i2c2 = &i2c3;
+@@ -347,10 +346,6 @@
+ &pcie {
+ 	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+-
+-	eth1: sky2@8 { /* MAC/PHY on bus 8 */
+-		compatible = "marvell,sky2";
+-	};
+ };
+ 
+ &ssi1 {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+index a208e7e..5bc6ed1 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+@@ -14,7 +14,6 @@
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+ 	aliases {
+-		ethernet1 = &eth1;
+ 		led0 = &led0;
+ 		led1 = &led1;
+ 		led2 = &led2;
+@@ -342,10 +341,6 @@
+ 	pinctrl-0 = <&pinctrl_pcie>;
+ 	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+-
+-	eth1: sky2@8 { /* MAC/PHY on bus 8 */
+-		compatible = "marvell,sky2";
+-	};
+ };
+ 
+ &pwm2 {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+index 968fda9..66fcf838 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+@@ -14,7 +14,6 @@
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+ 	aliases {
+-		ethernet1 = &eth1;
+ 		led0 = &led0;
+ 		led1 = &led1;
+ 		led2 = &led2;
+@@ -379,10 +378,6 @@
+ 	pinctrl-0 = <&pinctrl_pcie>;
+ 	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+-
+-	eth1: sky2@8 { /* MAC/PHY on bus 8 */
+-		compatible = "marvell,sky2";
+-	};
+ };
+ 
+ &pwm1 {
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
