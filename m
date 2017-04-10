@@ -1,223 +1,168 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] of: change fixup of dma-ranges size to error
-Date: Mon, 10 Apr 2017 14:11:09 +0100
-Message-ID: <829cd7e9-1d74-ba44-240c-28cb64d8c8fe@arm.com>
-References: <1491459529-31391-1-git-send-email-frowand.list@gmail.com>
- <CAL_Jsq+GLBtaezUiTbm0DAA2+MjcvxAcCsS-qJrr05YcTO5tdw@mail.gmail.com>
- <58E68ADC.6040603@gmail.com>
- <CAL_Jsq+VreUFtA8ozs0Jcz45PTc-jTT=CEKuezeU7QYviiN-Jg@mail.gmail.com>
- <58E72123.4040607@gmail.com>
- <CAL_Jsq+8PoR5ikPbTbHgd-8rkGFmvorLrS9hHpmkVynkh69e-A@mail.gmail.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V10 06/12] of: device: Fix overflow of coherent_dma_mask
+Date: Mon, 10 Apr 2017 14:25:22 +0100
+Message-ID: <c740e7e6-9a36-51fe-c207-980e8e077e94@arm.com>
+References: <1489086061-9356-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-1-git-send-email-sricharan@codeaurora.org>
+	<1491301105-5274-7-git-send-email-sricharan@codeaurora.org>
+	<58E5E7B7.1050400@gmail.com>
+	<b77e3405-f060-bcd5-99f6-7d76f9edf08a@codeaurora.org>
+	<58E69831.6010306@gmail.com>
+	<b38312b0-268b-ed86-a5b3-886f86ea13f5@arm.com>
+	<58E81D01.8030606@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+8PoR5ikPbTbHgd-8rkGFmvorLrS9hHpmkVynkh69e-A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sricharan <sricharan@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <58E81D01.8030606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/17 18:09, Rob Herring wrote:
-> + Robin, Sricharan
-> 
-> On Fri, Apr 7, 2017 at 12:18 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->> On 04/06/17 15:41, Rob Herring wrote:
->>> On Thu, Apr 6, 2017 at 1:37 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>> On 04/06/17 07:03, Rob Herring wrote:
->>>>> On Thu, Apr 6, 2017 at 1:18 AM,  <frowand.list@gmail.com> wrote:
->>>>>> From: Frank Rowand <frank.rowand@sony.com>
+On 08/04/17 00:13, Frank Rowand wrote:
+> On 04/07/17 07:46, Robin Murphy wrote:
+>> On 06/04/17 20:34, Frank Rowand wrote:
+>>> On 04/06/17 04:01, Sricharan R wrote:
+>>>> Hi Frank,
+>>>>
+>>>> On 4/6/2017 12:31 PM, Frank Rowand wrote:
+>>>>> On 04/04/17 03:18, Sricharan R wrote:
+>>>>>> Size of the dma-range is calculated as coherent_dma_mask + 1
+>>>>>> and passed to arch_setup_dma_ops further. It overflows when
+>>>>>> the coherent_dma_mask is set for full 64 bits 0xFFFFFFFFFFFFFFFF,
+>>>>>> resulting in size getting passed as 0 wrongly. Fix this by
+>>>>>> passsing in max(mask, mask + 1). Note that in this case
+>>>>>> when the mask is set to full 64bits, we will be passing the mask
+>>>>>> itself to arch_setup_dma_ops instead of the size. The real fix
+>>>>>> for this should be to make arch_setup_dma_ops receive the
+>>>>>> mask and handle it, to be done in the future.
 >>>>>>
->>>>>> of_dma_get_range() has workaround code to fixup a device tree that
->>>>>> incorrectly specified a mask instead of a size for property
->>>>>> dma-ranges.  That device tree was fixed a year ago in v4.6, so
->>>>>> the workaround is no longer needed.  Leave a data validation
->>>>>> check in place, but no longer do the fixup.  Move the check
->>>>>> one level deeper in the call stack so that other possible users
->>>>>> of dma-ranges will also be protected.
+>>>>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>>> ---
+>>>>>>  drivers/of/device.c | 2 +-
+>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>>>>>
->>>>>> The fix to the device tree was in
->>>>>> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree").
+>>>>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>>>>>> index c17c19d..c2ae6bb 100644
+>>>>>> --- a/drivers/of/device.c
+>>>>>> +++ b/drivers/of/device.c
+>>>>>> @@ -107,7 +107,7 @@ void of_dma_configure(struct device *dev, struct device_node *np)
+>>>>>>      ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>>>>>>      if (ret < 0) {
+>>>>>>          dma_addr = offset = 0;
+>>>>>> -        size = dev->coherent_dma_mask + 1;
+>>>>>> +        size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+>>>>>>      } else {
+>>>>>>          offset = PFN_DOWN(paddr - dma_addr);
+>>>>>>          dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>>>>>>
 >>>>>
 >>>>> NACK.
->>>>> This was by design. You can't represent a size of 2^64 or 2^32.
+>>>>>
+>>>>> Passing an invalid size to arch_setup_dma_ops() is only part of the problem.
+>>>>> size is also used in of_dma_configure() before calling arch_setup_dma_ops():
+>>>>>
+>>>>>         dev->coherent_dma_mask = min(dev->coherent_dma_mask,
+>>>>>                                      DMA_BIT_MASK(ilog2(dma_addr + size)));
+>>>>>         *dev->dma_mask = min((*dev->dma_mask),
+>>>>>                              DMA_BIT_MASK(ilog2(dma_addr + size)));
+>>>>>
+>>>>> which would be incorrect for size == 0xffffffffffffffffULL when
+>>>>> dma_addr != 0.  So the proposed fix really is not papering over
+>>>>> the base problem very well.
+>>>>>
 >>>>
->>>> I agree that being unable to represent a size of 2^32 in a u32 and
->>>> a size of 2^64 in a u64 is the underlying issue.
->>>>
->>>> But the code to convert a mask to a size is _not_ design, it is a
->>>> hack that temporarily worked around a device tree that did not follow
->>>> the dma-ranges binding in the ePAPR.
+>>>> Ok, but with your fix for of_dma_get_range and the above fix,
+>>>> dma_addr will be '0' when size = 0xffffffffffffffffULL,
+>>>> but DMA_BIT_MASK(ilog2(dma_addr + size)) would be wrong though,
+>>>> making coherent_dma_mask to be smaller 0x7fffffffffffffffULL.
 >>>
->>> Since when is (2^64 - 1) not a size. It's a perfectly valid size in
+>>> Yes, that was my point.  Setting size to 0x7fffffffffffffffULL
+>>> affects several places.  Another potential location (based only
+>>> on the function header comment, not from reading the code) is
+>>> iommu_dma_init_domain().  The header comment says:
+>>>
+>>>     * @base and @size should be exact multiples of IOMMU page granularity to
+>>>     * avoid rounding surprises.
 >>
->> I did not say (2^64 -1) is not a size.
+>> That is really only referring to the fact that some of the work done
+>> therein involves truncation to PFNs, so anyone passing in non-exact
+>> values expecting them to round a particular way may get things off by a
+>> page one way or the other. It's not going to have much practical
+>> significance for real devices (in particular since size is used more as
+>> a sanity check than any kind of actual limit there).
 >>
->> I said that the existing code has a hack that converts what is perceived
->> to be a mask into a size.  The existing code is:
+>>> I have not read enough context to really understand of_dma_configure(), but
+>>> it seems there is yet another issue in how the error return case from
+>>> of_dma_get_range() is handled (with the existing code, as well as if
+>>> my patch gets accepted).  An error return value can mean _either_
+>>> there is no dma-ranges property _or_ "an other problem occurred".  Should
+>>> the "an other problem occurred" case be handled by defaulting size to
+>>> a value based on dev->coherent_dma_mask (the current case) or should the
+>>> attempt to set up the DMA configuration just fail?
 >>
->> @@ 110,21 @@ void of_dma_configure(struct device *dev, struct device_node *np)
->>                 size = dev->coherent_dma_mask + 1;
->>         } else {
->>                 offset = PFN_DOWN(paddr - dma_addr);
+>> There is indeed a lot wrong with of_dma_configure() and
+>> arch_setup_dma_ops(), but fixing those is beyond the scope of this
+>> series. This is just working around a latent bug in the one specific
+>> case where a value is *not* derived from DT. Any DT which worked before
+>> still works; any DT which made of_dma_configure() go wrong before still
+>> makes of_dma_configure() go wrong exactly the same.
 >>
->>                 /*
->>                  * Add a work around to treat the size as mask + 1 in case
->>                  * it is defined in DT as a mask.
->>                  */
->>                 if (size & 1) {
->>                         dev_warn(dev, "Invalid size 0x%llx for dma-range\n",
->>                                  size);
->>                         size = size + 1;
->>                 }
+>> Whilst it's not ideal, since a DMA mask basically represents the maximum
+>> size of address that that particular device can be given, I can't see it
+>> making any practical difference for a full 64-bit DMA mask to be trimmed
+>> down to 63 bits upon re-probing - no system is likely to have that many
+>> physical address bits anyway, and I don't think any IOMMUs support that
+>> large an IOVA space either, so as long as it's still big enough to cover
+>> "everything", it'll be OK.
 >>
->>                 if (!size) {
->>                         dev_err(dev, "Adjusted size 0x%llx invalid\n", size);
->>                         return;
->>                 }
->>                 dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->>         }
->>
->> Note the comment that says "in case it is defined in DT as a mask."
->>
->> And as you stated in a review comment is 2015: "Also, we need a WARN
->> here so DTs get fixed."
+>> Of course, whether DMA_BIT_MASK(ilog2(dma_addr + size)) is the right
+>> thing to do in the first place is yet another matter, as there are
+>> plenty of cases where it results in something which can't reach the
+>> given range at all, but again, this isn't the place. Much as I'm keen to
+>> get the behaviour of of_dma_configure() sorted out properly, it doesn't
+>> seem reasonable that that should suddenly block this
+>> almost-entirely-orthogonal series that various other work has been
+>> waiting on for some time now. The WIP patch I have for
+>> arch_setup_dma_ops() already touches 3 architectures and 4 other
+>> subsystems...
 > 
-> Indeed. I agree that "let me put a mask in the DT so Linux (at some
-> version) works" is wrong. I still think (2^32 - 1) and (2^64 - 1)
-> should be allowed to avoid growing #size-cells and because
-> #size-cells=3 doesn't work.
-
-Realistically, in the context of dma-ranges, the only case we might ever
-actually need to support is 2^32 with #size-cells=1, i.e. an 32-bit
-child bus mastering onto a n>32-bit parent bus at some non-zero offset.
-The only way a size of 2^64 would be valid for Linux-capable hardware
-would be for a 64-bit child bus mastering onto a 64-bit parent bus with
-no address offset, and that can be expressed by simply leaving the
-property empty.
-
->>> DT. And there's probably not a system in the world that needs access
->>> to that last byte. Is it completely accurate description if we
->>> subtract off 1? No, but it is still a valid range (so would be
->>> subtracting 12345).
->>>
->>>> That device tree was corrected a year ago to provide a size instead of
->>>> a mask.
->>>
->>> You are letting Linux implementation details influence your DT
->>> thinking. DT is much more flexible in that it supports a base address
->>> and size (and multiple of them) while Linux can only deal with a
->>> single address mask. If Linux dealt with base + size, then we wouldn't
->>
->> No.  of_dma_get_range() returns two addresses and a size from the
->> dma-ranges property, just as it is defined in the spec.
->>
->> of_dma_configure() then interprets an odd size as meaning that the
->> device tree incorrectly contains a mask, and then converts that mask
->> to a size by adding one to it.  Linux is _still_ using address and
->> size at this point.  It does _not_ convert this size into a mask,
->> but instead passes size on into arch_setup_dma_ops().
+> In a reply to my original NACK email, I just now retracted the NACK,
+> but with a requested change for readability.
 > 
-> It doesn't really matter where in the implementation, but at some
-> point we end up with only a mask in Linux was my point.
+> I buy your analysis and argument here.  The patch will improve things
+> a little, but it will be good to revisit of_dma_configure() in the
+> future to further clean things up.
 
-Note that of_dma_configure() *does* use the size itself to generate the
-device's default DMA mask, but also passes it unmodified to
-arch_setup_dma_ops() to potentially do finer-grained things with as
-well. FWIW there exist plenty of things for which a single mask doesn't
-really cut it - it's already pretty busted for cases when base + size
-(legitimately) doesn't come out to a power of two, let alone when there
-are multiple ranges with unusable gaps in-between.
-
->From the of_dma_get_range() work I have so far, it starts to look like
-the cleanest change is actually going to be to treat the DMA range in
-terms of (start, end) instead of (base, size) or (base, mask). I'll
-probably spin that into my patches before I try to post anything.
+Thanks! As mentioned, I have some patches brewing in this area which
+should hopefully help somewhat; I'll try to get them posted this week.
 
 Robin.
 
->> The proposed patch is to quit accepting a mask as valid data in
->> dma-ranges.
+> 
+> -Frank
+> 
 >>
+>> Robin.
 >>
->>> be having this conversation. As long as Linux only deals with masks,
->>> we're going to have to have some sort of work-around to deal with
->>> them.
 >>>
->>>>> Well, technically you can for the latter, but then you have to grow
->>>>> #size-cells to 2 for an otherwise all 32-bit system which seems kind
->>>>> of pointless and wasteful. You could further restrict this to only
->>>>> allow ~0 and not just any case with bit 0 set.
+>>>>
+>>>> Regards,
+>>>>  Sricharan
+>>>>
+>>>>> I agree that the proper solution involves passing a mask instead
+>>>>> of a size to arch_setup_dma_ops().
 >>>>>
->>>>> I'm pretty sure AMD is not the only system. There were 32-bit systems too.
 >>>>
->>>> I examined all instances of property dma-ranges in in tree dts files in
->>>> Linux 4.11-rc1.  There are none that incorrectly specify mask instead of
->>>> size.
->>>
->>> Okay, but there are ones for ranges at least. See ecx-2000.dts.
->>
->> The patch does not impact the ranges property.  It only impacts the
->> dma-ranges property.
-> 
-> Yes, I know. I'm only pointing out we have other cases of size=~0 to
-> avoid growing #size-cells.
-> 
->>>> #size-cells only changes to 2 for the dma-ranges property and the ranges
->>>> property when size is 2^32, so that is a very small amount of space.
->>>>
->>>> The patch does not allow for a size of 2^64.  If a system requires a
->>>> size of 2^64 then the type of size needs to increase to be larger
->>>> than a u64.  If you would like for the code to be defensive and
->>>> detect a device tree providing a size of 2^64 then I can add a
->>>> check to of_dma_get_range() to return -EINVAL if #size-cells > 2.
->>>> When that error triggers, the type of size can be changed.
->>>
->>> #size-cells > 2 is completely broken for anything but PCI. I doubt it
->>
->> Yes, that is what I said.  The current code does not support #size-cells > 2
->> for dma-ranges.
-> 
-> It's not just dma-ranges. It's everywhere with reg and ranges and any
-> code that parses those too. If someone needs to truly specify sizes of
-> 2^64 in DT (for reg, ranges, or dma-ranges), they are SOL.
-> 
->> #size-cells > 2 for dma-ranges will lead to a problem in
->> of_dma_get_range(), which stuffs the value of the size into a u64.
->> Clearly, a 3 cell size will not fit into a u64.
->>
->>
->>> is easily fixed without some special casing (i.e. a different hack)
->>> until we have 128-bit support. I hope to retire before we need to
->>> support that.
->>>
->>> Rob
 >>>
 >>
->> Can we get back to the basic premise of the proposed patch?
 >>
->> The current code in of_dma_configure() contains a hack that allows the
->> dma-ranges property to specify a mask instead of a size.  The binding
->> in the specification allows a size and does not allow a mask.
->>
->> The hack was added to account for one or more dts files that did not
->> follow the specification.  In the mail list discussion of the hack
->> you said "Also, we need a WARN here so DTs get fixed."
->>
->> The hack was first present in Linux 4.1.  The only in-tree dts that
->> incorrectly contained a mask instead of a size in dma-ranges was
->> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
->>
->> That .dtsi was fixed by
->> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree")
->> The fix was present in Linux 4.6, May 15, 2016.
->>
->> I would like to remove the hack.  I think that enough time has
->> elapsed to allow this change.
-> 
-> If we have no cases of what I'm concerned about, then removing it is
-> fine. Is this a dependency for iommu series? Doesn't look like it to
-> me.
-> 
-> Rob
 > 
