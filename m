@@ -1,47 +1,47 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: [git:media_tree/master] [media] ARM: dts: exynos: add HDMI controller
- phandle to exynos4.dtsi
-Date: Mon, 10 Apr 2017 16:12:41 +0000
-Message-ID: <E1cxc0o-0003RE-PP@www.linuxtv.org>
-Reply-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v3 0/9] Fix issues and factorize arm/arm64 capacity
+ information code
+Date: Mon, 10 Apr 2017 17:21:48 +0100
+Message-ID: <20170410162148.GG30804@e106622-lin>
+References: <20170327131825.32134-1-juri.lelli@arm.com>
+ <20170410150503.GS17774@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://www.linuxtv.org/cgi-bin/mailman/options/linuxtv-commits>,
- <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=unsubscribe>
-List-Post: <mailto:linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Help: <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=help>
-List-Subscribe: <https://www.linuxtv.org/cgi-bin/mailman/listinfo/linuxtv-commits>,
- <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=subscribe>
-Sender: "linuxtv-commits" <linuxtv-commits-bounces-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-Errors-To: linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-To: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170410150503.GS17774@n2100.armlinux.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBpcyBhbiBhdXRvbWF0aWMgZ2VuZXJhdGVkIGVtYWlsIHRvIGxldCB5b3Uga25vdyB0aGF0
-IHRoZSBmb2xsb3dpbmcgcGF0Y2ggd2VyZSBxdWV1ZWQ6CgpTdWJqZWN0OiBbbWVkaWFdIEFSTTog
-ZHRzOiBleHlub3M6IGFkZCBIRE1JIGNvbnRyb2xsZXIgcGhhbmRsZSB0byBleHlub3M0LmR0c2kK
-QXV0aG9yOiAgSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgpEYXRlOiAgICBU
-dWUgRGVjIDEzIDEyOjM3OjE2IDIwMTYgLTAyMDAKCkFkZCB0aGUgbmV3IGhkbWkgcGhhbmRsZSB0
-byBleHlub3M0LmR0c2kuIFRoaXMgcGhhbmRsZSBpcyBuZWVkZWQgYnkgdGhlCnM1cC1jZWMgZHJp
-dmVyIHRvIGluaXRpYWxpemUgdGhlIENFQyBub3RpZmllciBmcmFtZXdvcmsuCgpUZXN0ZWQgd2l0
-aCBteSBPZHJvaWQgVTMuCgpTaWduZWQtb2ZmLWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3Vp
-bEBjaXNjby5jb20+ClRlc3RlZC1ieTogTWFyZWsgU3p5cHJvd3NraSA8bS5zenlwcm93c2tpQHNh
-bXN1bmcuY29tPgpDQzogbGludXgtc2Ftc3VuZy1zb2NAdmdlci5rZXJuZWwub3JnCkNDOiBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZwpDQzogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJu
-ZWwub3JnPgpTaWduZWQtb2ZmLWJ5OiBNYXVybyBDYXJ2YWxobyBDaGVoYWIgPG1jaGVoYWJAcy1v
-cGVuc291cmNlLmNvbT4KCiBhcmNoL2FybS9ib290L2R0cy9leHlub3M0LmR0c2kgfCAxICsKIDEg
-ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQoKLS0tCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvZXh5bm9zNC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNC5kdHNpCmlu
-ZGV4IDE4ZGVmMWM3NzRkNS4uODRmY2RmZjE0MGFlIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290
-L2R0cy9leHlub3M0LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNC5kdHNpCkBA
-IC03NzEsNiArNzcxLDcgQEAKIAkJY2xvY2tzID0gPCZjbG9jayBDTEtfSERNSV9DRUM+OwogCQlj
-bG9jay1uYW1lcyA9ICJoZG1pY2VjIjsKIAkJc2Ftc3VuZyxzeXNjb24tcGhhbmRsZSA9IDwmcG11
-X3N5c3RlbV9jb250cm9sbGVyPjsKKwkJaGRtaS1waGFuZGxlID0gPCZoZG1pPjsKIAkJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKIAkJcGluY3RybC0wID0gPCZoZG1pX2NlYz47CiAJCXN0YXR1
-cyA9ICJkaXNhYmxlZCI7CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eHR2LWNvbW1pdHMgbWFpbGluZyBsaXN0CmxpbnV4dHYtY29tbWl0c0BsaW51
-eHR2Lm9yZwpodHRwczovL3d3dy5saW51eHR2Lm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGluZm8v
-bGludXh0di1jb21taXRz
+Hi,
+
+On 10/04/17 16:05, Russell King - ARM Linux wrote:
+> On Mon, Mar 27, 2017 at 02:18:16PM +0100, Juri Lelli wrote:
+> > arm and arm64 topology.c share a lot of code related to parsing of capacity
+> > information. This is v3 of a solution [1] (based on Will's, Catalin's and
+> > Mark's off-line suggestions) to move such common code in a single place:
+> > drivers/base/arch_topology.c (by creating such file and conditionally compiling
+> > it for arm and arm64 only).
+> 
+> I think overall this is okay, with the exception of one patch which seems
+> to be wrongly worded.
+
+As I said in reply to your comments, we could also consider dropping
+that patch entirely. What's your opinion?
+
+> Once that's resolved, then:
+> 
+> Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> for the series.
+> 
+
+Also, I'd like to update 3/9 as suggested by Vincent.
+
+Thanks for the review.
+
+Best,
+
+- Juri
