@@ -1,70 +1,85 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 2/2] ARM: dts: imx7: add USDHC NAND and IPG clock to SDHC instances
-Date: Mon, 10 Apr 2017 14:00:15 -0700
-Message-ID: <20170410210015.1620-2-stefan@agner.ch>
-References: <20170410210015.1620-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170410210015.1620-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, sboyd@codeaurora.org
-Cc: aisheng.dong@nxp.com, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: DT overlay issues - dtc flags
+Date: Mon, 10 Apr 2017 14:19:57 -0700
+Message-ID: <58EBF6FD.1090901@gmail.com>
+References: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The USDHC instances need the USDHC NAND and IPG clock in order to
-operate. Reference them properly by replacing the dummy clocks with
-the actual clocks.
+On 04/10/17 09:16, Andreas Färber wrote:
+> Hi,
+> 
+> I've tried to play around with Device Tree overlays (.dtbo files):
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/overlay-notes.txt
+> 
+> First of all, that document refers to a non-existing
+> Documentation/devicetree/dt-object-internal.txt. Could someone please
+> fix that one way or another?
 
-Note that both clocks are currently implicitly enabled since they
-are part of the i.MX 7 clock drivers init_on list. This might
-change in the future.
+I will.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
-This patch depends on "clk: imx7d: add the missing ipg_root_clk"
-which adds the IPG clock.
+
+> In my particular example I've tried to extend the &i2c1 and &gpio nodes
+> of 4.11-rc5 arm64 broadcom/bcm2837-rpi-3-b.dts. The above documentation
+> prominently claims that this can be done via target = <&foo> syntax, but
+> U-Boot's fdt apply command fails for such a file. If instead I use the
+> alternative target-path = "/soc/..." then it works just fine.
+
+The "target = <&foo>" syntax is the internal dtb syntax that the kernel
+expects.  The plan is to hide this internal format so it is not visble
+at the source level, but that will require some more changes to the dtc
+compiler.
+
+
+> As mentioned in the very bottom of the documentation, resolution of
+> phandle target references requires a __symbols__ node in the base .dtb.
+> IIUC this is only generated when passing the -@ dtc command line flag.
+> 
+> At first I thought this were an issue with how we build the .dtb files
+> in openSUSE [1], but by my reading of the kernel Makefiles not passing
+> -@ in DTC_FLAGS or cmd_dtc, you should run into the exact same issue.
+
+Yes, the kernel support for overlays is not complete.  This is one of
+the issues that has not been addressed yet.
+
+I don't have the rpi-3 documentation handy, so I'm going to take a wild
+guess that the &i2c1 and &gpio node changes that you need are for
+hardware on a hat.  If so, the plan for the kernel is to describe
+the signals available via the hat connectors in the device tree and
+then make those signals available through the connector node instead
+of having the hat overlay directly reference the signal node.  The
+connector abstraction has been discussed but is not implemented.
+
+
+> I could think of a few ARMv7-M systems where such DT bloat might be
+> undesired (small flash sector sizes), but then it would seem easier to
+> suppress -@ where needed than to have a feature that by all practical
+> means is half unusable by default.
+> 
+> U-Boot itself appears to face a similar issue in that its internal
+> Device Trees are built without -@, and via Alex' distro boot extensions
+> this internal DT is passed on via UEFI as fallback when no external .dtb
+> file is found. So in the non-SPL case the DT should probably be built
+> with -@, too.
+> 
+> Or am I misunderstanding something here?
+> 
+> Thanks,
+> Andreas
+> 
+> [1]
+> https://build.opensuse.org/package/view_file/Kernel:HEAD/dtb-aarch64/dtb-aarch64.spec?expand=1
+> 
 
 --
-Stefan
-
- arch/arm/boot/dts/imx7s.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index c4f12fd2e044..843eb379e1ea 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -934,8 +934,8 @@
- 				compatible = "fsl,imx7d-usdhc", "fsl,imx6sl-usdhc";
- 				reg = <0x30b40000 0x10000>;
- 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
--					<&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-+					<&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>,
- 					<&clks IMX7D_USDHC1_ROOT_CLK>;
- 				clock-names = "ipg", "ahb", "per";
- 				bus-width = <4>;
-@@ -946,8 +946,8 @@
- 				compatible = "fsl,imx7d-usdhc", "fsl,imx6sl-usdhc";
- 				reg = <0x30b50000 0x10000>;
- 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
--					<&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-+					<&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>,
- 					<&clks IMX7D_USDHC2_ROOT_CLK>;
- 				clock-names = "ipg", "ahb", "per";
- 				bus-width = <4>;
-@@ -958,8 +958,8 @@
- 				compatible = "fsl,imx7d-usdhc", "fsl,imx6sl-usdhc";
- 				reg = <0x30b60000 0x10000>;
- 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
--					<&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-+					<&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>,
- 					<&clks IMX7D_USDHC3_ROOT_CLK>;
- 				clock-names = "ipg", "ahb", "per";
- 				bus-width = <4>;
--- 
-2.12.1
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
