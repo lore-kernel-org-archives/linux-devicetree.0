@@ -1,68 +1,263 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] drivers/serial: Add driver for Aspeed virtual UART
-Date: Mon, 10 Apr 2017 12:37:57 +0930
-Message-ID: <CACPK8XfJT-sGuTwDDSxevm50DLzh5qJ3+qa4qiA6f3enC6r_iw@mail.gmail.com>
-References: <20170405040352.5661-1-joel@jms.id.au> <20170405040352.5661-3-joel@jms.id.au>
- <CAHp75VckYiBccVN+_K+Tm38kcdC10=sekQZg7Uz_HwS4xyW2UA@mail.gmail.com>
+From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] arm64: dts: rk3399: add support for firefly-rk3399
+ board
+Date: Mon, 10 Apr 2017 11:43:27 +0800
+Message-ID: <438414b9-33fe-3cb0-9f44-e1e6cf94ea81@rock-chips.com>
+References: <1491384800-22412-1-git-send-email-kever.yang@rock-chips.com>
+ <2449203.Hv4EZXJUvX@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VckYiBccVN+_K+Tm38kcdC10=sekQZg7Uz_HwS4xyW2UA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <2449203.Hv4EZXJUvX@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 5, 2017 at 8:24 PM, Andy Shevchenko
-<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 5, 2017 at 7:03 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
->
->> +       port.port.irq = irq_of_parse_and_map(np, 0);
->
-> Isn't better to get this via platform_get_irq() ?
+Hi Heiko,
 
-I can't see the benefit.
 
+On 04/08/2017 07:01 AM, Heiko Stuebner wrote:
+> Hi Kever,
 >
->> +       port.port.irqflags = IRQF_SHARED;
->> +       port.port.iotype = UPIO_MEM;
+> Am Mittwoch, 5. April 2017, 17:33:19 CEST schrieb Kever Yang:
+>> Firefly-rk3399 is a bord from T-Firefly, you can find detail about
+>> it here:
+>> http://en.t-firefly.com/en/firenow/Firefly_RK3399/
+>>
+>> This patch add basic node for the board and make it able to bring
+>> up.
+>>
+>> Peripheral works:
+>> - usb hub which connect to ehci controller;
+>> - UART2 debug
+>> - eMMC
+>> - PCIe
+>>
+>> Not work:
+>> - USB 3.0 HOST, type-C port
+>> - sdio, sd-card
+>>
+>> Not test for other peripheral:
+>> - HDMI
+>> - Ethernet
+>> - OPTICAL
+>> - WiFi/BT
+>> - MIPI CSI/DSI
+>> - IR
+>> - EDP/DP
+>>
+>> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> [...]
 >
->> +       if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
->
-> I would still go with usual pattern.
->
->> +               switch (prop) {
->> +               case 1:
->> +                       port.port.iotype = UPIO_MEM;
->> +                       break;
->> +               case 4:
->
->> +                       port.port.iotype = of_device_is_big_endian(np) ?
->> +                                      UPIO_MEM32BE : UPIO_MEM32;
->
-> Hmm... And this one is not in align with IO accessors used in this
-> driver. (readx()/writex() are little endian IO accessors).
-
-We only perform readb/writeb, however you raise a good point that
-we're assuming LE in the register layout. I will remove checking of this
-optional property.
-
-I will send v3 with the other cleanups you mentioned.
-
-Cheers,
-
-Joel
-
->
->> +                       break;
->> +               default:
->> +                       dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
->> +                                prop);
->> +                       rc = -EINVAL;
->> +                       goto err_clk_disable;
->> +               }
->> +       }
+>> +	vdd_log: vdd-log {
+>> +		compatible = "pwm-regulator";
+>> +		pwms = <&pwm2 0 25000 1>;
+>> +		regulator-name = "vdd_log";
+>> +		regulator-min-microvolt = <800000>;
+>> +		regulator-max-microvolt = <1400000>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
 >> +
+>> +		/* for rockchip boot on */
+>> +		rockchip,pwm_id= <2>;
+>> +		rockchip,pwm_voltage = <1000000>;
+> Vendor-kernel stuff, needs to be dropped
+
+Will drop it next version.
+>
+> [...]
+>
+>> +&i2c0 {
+>> +	status = "okay";
+>> +	i2c-scl-rising-time-ns = <168>;
+>> +	i2c-scl-falling-time-ns = <4>;
+>> +	clock-frequency = <400000>;
+>> +
+>> +	vdd_cpu_b: pmic@40 {
+>> +		compatible = "silergy,syr827";
+>> +		reg = <0x40>;
+>> +		vin-supply = <&vcc5v0_sys>;
+>> +		regulator-compatible = "fan53555-reg";
+>> +		regulator-name = "vdd_cpu_b";
+>> +		regulator-min-microvolt = <712500>;
+>> +		regulator-max-microvolt = <1500000>;
+>> +		regulator-ramp-delay = <1000>;
+>> +		vsel-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_HIGH>;
+> non-mainline property
+
+Will drop it next version.
+>
+>> +		fcs,suspend-voltage-selector = <0>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		regulator-initial-state = <3>;
+> non-mainline property
+
+Will drop it next version.
+>
+>> +			regulator-state-mem {
+> indentation is wrong
+>
+>> +			regulator-off-in-suspend;
+>> +		};
+>> +	};
+>> +
+>> +	vdd_gpu: syr828@41 {
+>> +		compatible = "silergy,syr828";
+>> +		reg = <0x41>;
+>> +		vin-supply = <&vcc5v0_sys>;
+>> +		regulator-compatible = "fan53555-reg";
+>> +		regulator-name = "vdd_gpu";
+>> +		regulator-min-microvolt = <712500>;
+>> +		regulator-max-microvolt = <1500000>;
+>> +		regulator-ramp-delay = <1000>;
+>> +		fcs,suspend-voltage-selector = <1>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		regulator-initial-state = <3>;
+> non-mainline property
+
+Will drop it next version.
+>
+>> +			regulator-state-mem {
+> indentation is wrong
+>
+>> +			regulator-off-in-suspend;
+>> +		};
+>> +	};
+>> +
+>> +	rk808: pmic@1b {
+>> +		compatible = "rockchip,rk808";
+>> +		reg = <0x1b>;
+>> +		interrupt-parent = <&gpio1>;
+>> +		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pmic_int_l>;
+>> +		rockchip,system-power-controller;
+> system-power-controller without the "rockchip,"?
+
+The driver at drivers/mfd/rk808.c is using "rockchip, 
+system-power-controller".
+>
+>> +		wakeup-source;
+>> +		#clock-cells = <1>;
+>> +		clock-output-names = "xin32k", "rk808-clkout2";
+> [...]
+>
+>> +&i2c1 {
+>> +	status = "okay";
+>> +	i2c-scl-rising-time-ns = <300>;
+>> +	i2c-scl-falling-time-ns = <15>;
+>> +
+>> +	gsl3673: gsl3673@40 {
+> gsl3673: touchscreen@40
+>
+>> +		compatible = "GSL,GSL3673";
+> compatible lowercase?
+
+This is not using upstream driver, need porting, remove it now.
+>
+>> +		reg = <0x40>;
+>> +		screen_max_x = <1536>;
+>> +		screen_max_y = <2048>;
+>> +		irq_gpio_number = <&gpio1 RK_PC4 IRQ_TYPE_LEVEL_LOW>;
+>> +		rst_gpio_number = <&gpio4 RK_PC6 GPIO_ACTIVE_HIGH>;
+>> +	};
+>> +
+>> +	rt5640: rt5640@1c {
+>> +		#sound-dai-cells = <0>;
+>> +		compatible = "realtek,rt5640";
+>> +		reg = <0x1c>;
+>> +		clocks = <&cru SCLK_I2S_8CH_OUT>;
+>> +		clock-names = "mclk";
+>> +		realtek,in1-differential;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&rt5640_hpcon>;
+>> +		hp-con-gpio = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;
+>> +		io-channels = <&saradc 4>;
+>> +		hp-det-adc-value = <500>;
+> these last 3 properties are not contained in the rt5640 binding
+> document on linux-next-20170407 .
+
+Will drop these properties nex version.
+>
+>> +	};
+>> +};
+>> +
+>> +&i2c3 {
+>> +	status = "okay";
+>> +	i2c-scl-rising-time-ns = <450>;
+>> +	i2c-scl-falling-time-ns = <15>;
+>> +};
+>> +
+>> +&i2c4 {
+>> +	status = "okay";
+>> +	i2c-scl-rising-time-ns = <600>;
+>> +	i2c-scl-falling-time-ns = <20>;
+>> +
+>> +	fusb0: fusb30x@22 {
+> fusb0: usb-typec@22 or so
+>
+> Also that device is not in mainline yet, so has no approved binding
+> so should not be included right now.
+
+Yes, fusb302 driver is not upstreamed, will remove it next version.
+
+Thanks,
+- Kever
+>
+>> +		compatible = "fairchild,fusb302";
+>> +		reg = <0x22>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&fusb0_int>;
+>> +		int-n-gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
+>> +		vbus-5v-gpios = <&gpio2 RK_PA0 GPIO_ACTIVE_HIGH>;
+>> +		status = "okay";
+>> +	};
+>> +
+>> +	mpu6500@68 {
+> accelerometer@68
+>
+>> +		status = "okay";
+>> +		compatible = "invensense,mpu6500";
+>> +		reg = <0x68>;
+>> +		irq-gpio = <&gpio1 RK_PC6 IRQ_TYPE_EDGE_RISING>;
+>> +		mpu-int_config = <0x10>;
+>> +		mpu-level_shifter = <0>;
+>> +		mpu-orientation = <0 1 0 1 0 0 0 0 1>;
+>> +		orientation-x= <1>;
+>> +		orientation-y= <0>;
+>> +		orientation-z= <0>;
+>> +		mpu-debug = <1>;
+>> +	};
+>> +};
+>> +
+> [...]
+>
+>> +&u2phy0 {
+>> +	status = "okay";
+>> +	extcon = <&fusb0>;
+> see comment for fusb302
+>
+>> +
+>> +	u2phy0_otg: otg-port {
+>> +		status = "okay";
+>> +	};
+>> +
+>> +	u2phy0_host: host-port {
+>> +		phy-supply = <&vcc5v0_host>;
+>> +		status = "okay";
+>> +	};
+>> +};
+>> +
+>
+> Heiko
+>
+>
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
