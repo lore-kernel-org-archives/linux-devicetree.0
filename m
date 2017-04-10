@@ -1,67 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] nvmem: dt: document SNVS LPGPR binding
-Date: Mon, 10 Apr 2017 13:22:35 -0500
-Message-ID: <20170410182235.pmobyxn6kvyvcwsj@rob-hp-laptop>
-References: <20170406073107.32445-1-o.rempel@pengutronix.de>
- <20170406073107.32445-3-o.rempel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/5] dt-bindings: media: Add document file for CXD2880
+ SPI I/F
+Date: Mon, 10 Apr 2017 13:23:51 -0500
+Message-ID: <20170410182351.wkbaj46t3eomohwd@rob-hp-laptop>
+References: <1491465273-9338-1-git-send-email-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170406073107.32445-3-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1491465273-9338-1-git-send-email-Yasunari.Takiguchi@sony.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yasunari.Takiguchi@sony.com
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, tbird20d@gmail.com, frowand.list@gmail.com, Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>, Hideki Nozawa <Hideki.Nozawa@sony.com>, Kota Yonezawa <Kota.Yonezawa@sony.com>, Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>, Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 09:31:07AM +0200, Oleksij Rempel wrote:
-> Documenation bindings for the Low Power General Purpose Registe
-
-s/Registe/Register/
-
-> available on i.MX6 SoCs in the Secure Non-Volatile Storage.
+On Thu, Apr 06, 2017 at 04:54:33PM +0900, Yasunari.Takiguchi@sony.com wrote:
+> From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> This is the document file for Sony CXD2880 DVB-T2/T tuner + demodulator.
+> It contains the description of the SPI adapter binding.
+> 
+> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
+> Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
+> Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
+> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
+> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
 > ---
->  Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-> new file mode 100644
-> index 000000000000..9a8be1a2d12e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-> @@ -0,0 +1,15 @@
-> +Device tree bindings for Low Power General Purpose Registe found in i.MX6Q/D
-> +Secure Non-Volatile Storage.
-> +
-> +Required properties:
-> +- compatible: should be one of
-> +	"fsl,imx6q-snvs-lpgpr" (i.MX6Q/D/DL/S).
-> +- offset: Should contain the offset relative to syscon parrent node.
+>  .../devicetree/bindings/media/spi/sony-cxd2880.txt |   14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt
 
-typo
-
- +- regmap: Should contain a phandle pointing to syscon.
-> +
-> +Example:
-> +	snvs_lpgpr: snvs-lpgpr {
-> +		compatible = "fsl,imx6q-snvs-lpgpr";
-> +		regmap = <&snvs>;
-> +		offset = <0x68>;
-
-Why does this need to be in DT? Is something going to refer to this 
-node? If not, the &snvs node should be enough information for the OS.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
