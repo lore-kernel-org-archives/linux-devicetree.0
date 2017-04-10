@@ -1,29 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/7] Documentation: dt: Add new compatible to STM32
- pinctrl driver bindings
-Date: Mon, 10 Apr 2017 15:30:37 -0500
-Message-ID: <20170410203037.tpaejzcrjtb5lkay@rob-hp-laptop>
-References: <1491568984-20169-1-git-send-email-alexandre.torgue@st.com>
- <1491568984-20169-6-git-send-email-alexandre.torgue@st.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: DT overlay issues - dtc flags
+Date: Mon, 10 Apr 2017 13:44:04 -0700
+Message-ID: <58EBEE94.2080803@gmail.com>
+References: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1491568984-20169-6-git-send-email-alexandre.torgue@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1264bdc3-e61e-0256-0a0f-fdd8dbf50397-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 02:43:02PM +0200, Alexandre TORGUE wrote:
-> Add new compatible for stm32f469 MCU.
+adding cc to myself so I will see replies.
 
-Again, the subject is a bit generic. Something like:
 
-dt-bindings: pinctrl: Add st,stm32f469-pinctrl compatible to stm32-pinctrl
+On 04/10/17 09:16, Andreas Färber wrote:
+> Hi,
+> 
+> I've tried to play around with Device Tree overlays (.dtbo files):
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/overlay-notes.txt
+> 
+> First of all, that document refers to a non-existing
+> Documentation/devicetree/dt-object-internal.txt. Could someone please
+> fix that one way or another?
+> 
+> In my particular example I've tried to extend the &i2c1 and &gpio nodes
+> of 4.11-rc5 arm64 broadcom/bcm2837-rpi-3-b.dts. The above documentation
+> prominently claims that this can be done via target = <&foo> syntax, but
+> U-Boot's fdt apply command fails for such a file. If instead I use the
+> alternative target-path = "/soc/..." then it works just fine.
+> 
+> As mentioned in the very bottom of the documentation, resolution of
+> phandle target references requires a __symbols__ node in the base .dtb.
+> IIUC this is only generated when passing the -@ dtc command line flag.
+> 
+> At first I thought this were an issue with how we build the .dtb files
+> in openSUSE [1], but by my reading of the kernel Makefiles not passing
+> -@ in DTC_FLAGS or cmd_dtc, you should run into the exact same issue.
+> 
+> I could think of a few ARMv7-M systems where such DT bloat might be
+> undesired (small flash sector sizes), but then it would seem easier to
+> suppress -@ where needed than to have a feature that by all practical
+> means is half unusable by default.
+> 
+> U-Boot itself appears to face a similar issue in that its internal
+> Device Trees are built without -@, and via Alex' distro boot extensions
+> this internal DT is passed on via UEFI as fallback when no external .dtb
+> file is found. So in the non-SPL case the DT should probably be built
+> with -@, too.
+> 
+> Or am I misunderstanding something here?
+> 
+> Thanks,
+> Andreas
+> 
+> [1]
+> https://build.opensuse.org/package/view_file/Kernel:HEAD/dtb-aarch64/dtb-aarch64.spec?expand=1
+> 
 
-And this should come before the driver changes. 
-
-With that,
-
-Acked-by: Rob Herring <robh@kernel.org> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
