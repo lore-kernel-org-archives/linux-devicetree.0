@@ -1,704 +1,331 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: Add driver for voltage controlled regulators" to the regulator tree
-Date: Mon, 10 Apr 2017 19:43:02 +0100
-Message-ID: <E1cxeHG-0003w0-7w@debutante>
-References: <20170407195158.63546-1-mka@chromium.org>
+From: Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: stm32f7: add STM32f769I & stm32f746 discovery
+ board support
+Date: Mon, 10 Apr 2017 11:40:59 -0700
+Message-ID: <6e07ebcf-4463-523f-ea24-5a176efb0779@st.com>
+References: <1491613929-11485-1-git-send-email-vikas.manocha@st.com>
+ <6ea617a3-94bc-870f-dd52-a45ad45c6d26@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170407195158.63546-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <6ea617a3-94bc-870f-dd52-a45ad45c6d26-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Thanks Alex,
 
-   regulator: Add driver for voltage controlled regulators
+On 04/10/2017 12:23 AM, Alexandre Torgue wrote:
+> Hi
+> 
+> On 04/08/2017 03:12 AM, Vikas Manocha wrote:
+>> Stm32f769I & stm32f746 are MCUs of stm32f7 family. Here are the major
+>> spces of the two boards:
+>>
+>> stm32f769I discovery board:
+>>     - Cortex-M7 core @216MHz
+>>     - 2MB mcu internal flash
+>>     - 512KB internal sram
+>>     - 16MB sdram memory
+>>     - 64MB qspi flash memory
+>>     - 4 inch wvga LCD-TFT Display
+>>
+>> stm32f746 discovery board:
+>>     - Cortex-M7 core @216MHz
+>>     - 1MB mcu internal flash
+>>     - 320KB internal sram
+>>     - 8MB sdram memory
+>>     - 16MB qspi flash memory
+>>     - 4.3 inch 480x272 LCD-TFT display
+>>
+>> Signed-off-by: Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile            |   2 +
+>>  arch/arm/boot/dts/stm32f746-disco.dts | 101 ++++++++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/stm32f746.dtsi      |   2 +-
+>>  arch/arm/boot/dts/stm32f769-disco.dts | 101 ++++++++++++++++++++++++++++++++++
+>>  4 files changed, 205 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/stm32f746-disco.dts
+>>  create mode 100644 arch/arm/boot/dts/stm32f769-disco.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 0118084..a119f74 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -763,6 +763,8 @@ dtb-$(CONFIG_ARCH_STI) += \
+>>  dtb-$(CONFIG_ARCH_STM32)+= \
+>>      stm32f429-disco.dtb \
+>>      stm32f469-disco.dtb \
+>> +    stm32f746-disco.dtb \
+>> +    stm32f769-disco.dtb \
+>>      stm32429i-eval.dtb \
+>>      stm32746g-eval.dtb
+>>  dtb-$(CONFIG_MACH_SUN4I) += \
+>> diff --git a/arch/arm/boot/dts/stm32f746-disco.dts b/arch/arm/boot/dts/stm32f746-disco.dts
+>> new file mode 100644
+>> index 0000000..c0e313f
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/stm32f746-disco.dts
+>> @@ -0,0 +1,101 @@
+>> +/*
+>> + * Copyright 2017 - Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "stm32f746.dtsi"
+>> +#include <dt-bindings/input/input.h>
+>> +
+>> +/ {
+>> +    model = "STMicroelectronics STM32F746-DISCO board";
+>> +    compatible = "st,stm32f746-disco", "st,stm32f746";
+>> +
+>> +    chosen {
+>> +        bootargs = "root=/dev/ram";
+>> +        stdout-path = "serial0:115200n8";
+>> +    };
+>> +
+>> +    memory {
+>> +        reg = <0xC0000000 0x800000>;
+>> +    };
+>> +
+>> +    aliases {
+>> +        serial0 = &usart1;
+>> +    };
+>> +
+>> +};
+>> +
+>> +&clk_hse {
+>> +    clock-frequency = <25000000>;
+>> +};
+>> +
+>> +&pinctrl {
+> 
+> 
+> Pin muxing is not defined in board file. Please move it into SOC dtsi file.
 
-has been applied to the regulator tree at
+Pin muxing used is different for different boards. e.g. usart1_rx pad is PA10 for stm32f769-disco board while it is PB7 for stm32f746-disco board. 
+The other possibilities for same pad (usart1_rx) is PB15. To make situation bit more complex, it is only available in f769 device.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+Putting in SOC dtsi file means having lot of combinations for different pins in separate groups. 
+e.g. only for one instance of one ip (usart1), following groups might be required at one point of time:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+usart1_pa10_pa9 {..}
+usart1_pa10_pb14 {..}
+usart1_pa10_pb6 {..}
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+usart1_pb7_pa9 {..}
+usart1_pb7_pb14 {..}
+usart1_pb7_pb6 {..}
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+usart1_pb15_pa9 {..}
+usart1_pb15_pb14 {..}
+usart1_pb15_pb6 {..}
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+In case of boards based on stm32f746 device, all the above mentioned groups with pb14 & pb15 will not be available.
+One solution (to avoid using not available groups) could be to have separate dtsi (or separate pinmux.dtsi) for different devices of same family like one for stm32f746 & other for stm32f769. Still it does not resolve the need to have lot of groups combinations for each instance of every peripheral in dtsi as mentioned above.
 
-Thanks,
-Mark
+It seems cleaner solution would be pin muxing in board dts file. Please let me know if there is some drawback of this approach. One point which i can think of is : duplication of pinmux groups in different board dts files.
 
->From 9dee7a72d0c7cdfa2573c48b1e5f928c721d54d5 Mon Sep 17 00:00:00 2001
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Date: Fri, 7 Apr 2017 12:51:58 -0700
-Subject: [PATCH] regulator: Add driver for voltage controlled regulators
+Cheers,
+Vikas
 
-The output voltage of a voltage controlled regulator can be controlled
-through the voltage of another regulator. The current version of this
-driver assumes that the output voltage is a linear function of the control
-voltage.
-
-Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/regulator/vctrl.txt        |  49 ++
- drivers/regulator/Kconfig                          |   7 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/vctrl-regulator.c                | 546 +++++++++++++++++++++
- 4 files changed, 603 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/vctrl.txt
- create mode 100644 drivers/regulator/vctrl-regulator.c
-
-diff --git a/Documentation/devicetree/bindings/regulator/vctrl.txt b/Documentation/devicetree/bindings/regulator/vctrl.txt
-new file mode 100644
-index 000000000000..601328d7fdbb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/vctrl.txt
-@@ -0,0 +1,49 @@
-+Bindings for Voltage controlled regulators
-+==========================================
-+
-+Required properties:
-+--------------------
-+- compatible		  : must be "vctrl-regulator".
-+- regulator-min-microvolt : smallest voltage consumers may set
-+- regulator-max-microvolt : largest voltage consumers may set
-+- ctrl-supply		  : The regulator supplying the control voltage.
-+- ctrl-voltage-range	  : an array of two integer values describing the range
-+			    (min/max) of the control voltage. The values specify
-+			    the control voltage needed to generate the corresponding
-+			    regulator-min/max-microvolt output voltage.
-+
-+Optional properties:
-+--------------------
-+- ovp-threshold-percent	: overvoltage protection (OVP) threshold of the
-+			  regulator in percent. Some regulators have an OVP
-+			  circuitry which shuts down the regulator when the
-+			  actual output voltage deviates beyond a certain
-+			  margin from the expected value for a given control
-+			  voltage. On larger voltage decreases this can occur
-+			  undesiredly since the output voltage does not adjust
-+			  inmediately to changes in the control voltage. To
-+			  avoid this situation the vctrl driver breaks down
-+			  larger voltage decreases into multiple steps, where
-+			  each step is within the OVP threshold.
-+- min-slew-down-rate	: Describes how slowly the regulator voltage will decay
-+			  down in the worst case (lightest expected load).
-+			  Specified in uV / us (like main regulator ramp rate).
-+			  This value is required when ovp-threshold-percent is
-+			  specified.
-+
-+Example:
-+
-+	vctrl-reg {
-+		compatible = "vctrl-regulator";
-+		regulator-name = "vctrl_reg";
-+
-+		ctrl-supply = <&ctrl_reg>;
-+
-+		regulator-min-microvolt = <800000>;
-+		regulator-max-microvolt = <1500000>;
-+
-+		ctrl-voltage-range = <200000 500000>;
-+
-+		min-slew-down-rate = <225>;
-+		ovp-threshold-percent = <16>;
-+	};
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 936f7ccc9736..da83a3abe288 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -843,6 +843,13 @@ config REGULATOR_TWL4030
- 	  This driver supports the voltage regulators provided by
- 	  this family of companion chips.
- 
-+config REGULATOR_VCTRL
-+	tristate "Voltage controlled regulators"
-+	depends on OF
-+	help
-+	  This driver provides support for voltage regulators whose output
-+	  voltage is controlled by the voltage of another regulator.
-+
- config REGULATOR_VEXPRESS
- 	tristate "Versatile Express regulators"
- 	depends on VEXPRESS_CONFIG
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 14294692beb9..e246e148a7f9 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -105,6 +105,7 @@ obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
- obj-$(CONFIG_REGULATOR_TPS65912) += tps65912-regulator.o
- obj-$(CONFIG_REGULATOR_TPS80031) += tps80031-regulator.o
- obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o twl6030-regulator.o
-+obj-$(CONFIG_REGULATOR_VCTRL) += vctrl-regulator.o
- obj-$(CONFIG_REGULATOR_VEXPRESS) += vexpress-regulator.o
- obj-$(CONFIG_REGULATOR_WM831X) += wm831x-dcdc.o
- obj-$(CONFIG_REGULATOR_WM831X) += wm831x-isink.o
-diff --git a/drivers/regulator/vctrl-regulator.c b/drivers/regulator/vctrl-regulator.c
-new file mode 100644
-index 000000000000..6baadef0ed74
---- /dev/null
-+++ b/drivers/regulator/vctrl-regulator.c
-@@ -0,0 +1,546 @@
-+/*
-+ * Driver for voltage controller regulators
-+ *
-+ * Copyright (C) 2017 Google, Inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/sort.h>
-+
-+struct vctrl_voltage_range {
-+	int min_uV;
-+	int max_uV;
-+};
-+
-+struct vctrl_voltage_ranges {
-+	struct vctrl_voltage_range ctrl;
-+	struct vctrl_voltage_range out;
-+};
-+
-+struct vctrl_voltage_table {
-+	int ctrl;
-+	int out;
-+	int ovp_min_sel;
-+};
-+
-+struct vctrl_data {
-+	struct regulator_dev *rdev;
-+	struct regulator_desc desc;
-+	struct regulator *ctrl_reg;
-+	bool enabled;
-+	unsigned int min_slew_down_rate;
-+	unsigned int ovp_threshold;
-+	struct vctrl_voltage_ranges vrange;
-+	struct vctrl_voltage_table *vtable;
-+	unsigned int sel;
-+};
-+
-+static int vctrl_calc_ctrl_voltage(struct vctrl_data *vctrl, int out_uV)
-+{
-+	struct vctrl_voltage_range *ctrl = &vctrl->vrange.ctrl;
-+	struct vctrl_voltage_range *out = &vctrl->vrange.out;
-+
-+	return ctrl->min_uV +
-+		DIV_ROUND_CLOSEST_ULL((s64)(out_uV - out->min_uV) *
-+				      (ctrl->max_uV - ctrl->min_uV),
-+				      out->max_uV - out->min_uV);
-+}
-+
-+static int vctrl_calc_output_voltage(struct vctrl_data *vctrl, int ctrl_uV)
-+{
-+	struct vctrl_voltage_range *ctrl = &vctrl->vrange.ctrl;
-+	struct vctrl_voltage_range *out = &vctrl->vrange.out;
-+
-+	if (ctrl_uV < 0) {
-+		pr_err("vctrl: failed to get control voltage\n");
-+		return ctrl_uV;
-+	}
-+
-+	if (ctrl_uV < ctrl->min_uV)
-+		return out->min_uV;
-+
-+	if (ctrl_uV > ctrl->max_uV)
-+		return out->max_uV;
-+
-+	return out->min_uV +
-+		DIV_ROUND_CLOSEST_ULL((s64)(ctrl_uV - ctrl->min_uV) *
-+				      (out->max_uV - out->min_uV),
-+				      ctrl->max_uV - ctrl->min_uV);
-+}
-+
-+static int vctrl_get_voltage(struct regulator_dev *rdev)
-+{
-+	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
-+	int ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
-+
-+	return vctrl_calc_output_voltage(vctrl, ctrl_uV);
-+}
-+
-+static int vctrl_set_voltage(struct regulator_dev *rdev,
-+			     int req_min_uV, int req_max_uV,
-+			     unsigned int *selector)
-+{
-+	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
-+	struct regulator *ctrl_reg = vctrl->ctrl_reg;
-+	int orig_ctrl_uV = regulator_get_voltage(ctrl_reg);
-+	int uV = vctrl_calc_output_voltage(vctrl, orig_ctrl_uV);
-+	int ret;
-+
-+	if (req_min_uV >= uV || !vctrl->ovp_threshold)
-+		/* voltage rising or no OVP */
-+		return regulator_set_voltage(
-+			ctrl_reg,
-+			vctrl_calc_ctrl_voltage(vctrl, req_min_uV),
-+			vctrl_calc_ctrl_voltage(vctrl, req_max_uV));
-+
-+	while (uV > req_min_uV) {
-+		int max_drop_uV = (uV * vctrl->ovp_threshold) / 100;
-+		int next_uV;
-+		int next_ctrl_uV;
-+		int delay;
-+
-+		/* Make sure no infinite loop even in crazy cases */
-+		if (max_drop_uV == 0)
-+			max_drop_uV = 1;
-+
-+		next_uV = max_t(int, req_min_uV, uV - max_drop_uV);
-+		next_ctrl_uV = vctrl_calc_ctrl_voltage(vctrl, next_uV);
-+
-+		ret = regulator_set_voltage(ctrl_reg,
-+					    next_ctrl_uV,
-+					    next_ctrl_uV);
-+		if (ret)
-+			goto err;
-+
-+		delay = DIV_ROUND_UP(uV - next_uV, vctrl->min_slew_down_rate);
-+		usleep_range(delay, delay + DIV_ROUND_UP(delay, 10));
-+
-+		uV = next_uV;
-+	}
-+
-+	return 0;
-+
-+err:
-+	/* Try to go back to original voltage */
-+	regulator_set_voltage(ctrl_reg, orig_ctrl_uV, orig_ctrl_uV);
-+
-+	return ret;
-+}
-+
-+static int vctrl_get_voltage_sel(struct regulator_dev *rdev)
-+{
-+	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
-+
-+	return vctrl->sel;
-+}
-+
-+static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
-+				 unsigned int selector)
-+{
-+	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
-+	struct regulator *ctrl_reg = vctrl->ctrl_reg;
-+	unsigned int orig_sel = vctrl->sel;
-+	int ret;
-+
-+	if (selector >= rdev->desc->n_voltages)
-+		return -EINVAL;
-+
-+	if (selector >= vctrl->sel || !vctrl->ovp_threshold) {
-+		/* voltage rising or no OVP */
-+		ret = regulator_set_voltage(ctrl_reg,
-+					    vctrl->vtable[selector].ctrl,
-+					    vctrl->vtable[selector].ctrl);
-+		if (!ret)
-+			vctrl->sel = selector;
-+
-+		return ret;
-+	}
-+
-+	while (vctrl->sel != selector) {
-+		unsigned int next_sel;
-+		int delay;
-+
-+		if (selector >= vctrl->vtable[vctrl->sel].ovp_min_sel)
-+			next_sel = selector;
-+		else
-+			next_sel = vctrl->vtable[vctrl->sel].ovp_min_sel;
-+
-+		ret = regulator_set_voltage(ctrl_reg,
-+					    vctrl->vtable[next_sel].ctrl,
-+					    vctrl->vtable[next_sel].ctrl);
-+		if (ret) {
-+			dev_err(&rdev->dev,
-+				"failed to set control voltage to %duV\n",
-+				vctrl->vtable[next_sel].ctrl);
-+			goto err;
-+		}
-+		vctrl->sel = next_sel;
-+
-+		delay = DIV_ROUND_UP(vctrl->vtable[vctrl->sel].out -
-+				     vctrl->vtable[next_sel].out,
-+				     vctrl->min_slew_down_rate);
-+		usleep_range(delay, delay + DIV_ROUND_UP(delay, 10));
-+	}
-+
-+	return 0;
-+
-+err:
-+	if (vctrl->sel != orig_sel) {
-+		/* Try to go back to original voltage */
-+		if (!regulator_set_voltage(ctrl_reg,
-+					   vctrl->vtable[orig_sel].ctrl,
-+					   vctrl->vtable[orig_sel].ctrl))
-+			vctrl->sel = orig_sel;
-+		else
-+			dev_warn(&rdev->dev,
-+				 "failed to restore original voltage\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static int vctrl_list_voltage(struct regulator_dev *rdev,
-+			      unsigned int selector)
-+{
-+	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
-+
-+	if (selector >= rdev->desc->n_voltages)
-+		return -EINVAL;
-+
-+	return vctrl->vtable[selector].out;
-+}
-+
-+static int vctrl_parse_dt(struct platform_device *pdev,
-+			  struct vctrl_data *vctrl)
-+{
-+	int ret;
-+	struct device_node *np = pdev->dev.of_node;
-+	u32 pval;
-+	u32 vrange_ctrl[2];
-+
-+	vctrl->ctrl_reg = devm_regulator_get(&pdev->dev, "ctrl");
-+	if (IS_ERR(vctrl->ctrl_reg))
-+		return PTR_ERR(vctrl->ctrl_reg);
-+
-+	ret = of_property_read_u32(np, "ovp-threshold-percent", &pval);
-+	if (!ret) {
-+		vctrl->ovp_threshold = pval;
-+		if (vctrl->ovp_threshold > 100) {
-+			dev_err(&pdev->dev,
-+				"ovp-threshold-percent (%u) > 100\n",
-+				vctrl->ovp_threshold);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	ret = of_property_read_u32(np, "min-slew-down-rate", &pval);
-+	if (!ret) {
-+		vctrl->min_slew_down_rate = pval;
-+
-+		/* We use the value as int and as divider; sanity check */
-+		if (vctrl->min_slew_down_rate == 0) {
-+			dev_err(&pdev->dev,
-+				"min-slew-down-rate must not be 0\n");
-+			return -EINVAL;
-+		} else if (vctrl->min_slew_down_rate > INT_MAX) {
-+			dev_err(&pdev->dev, "min-slew-down-rate (%u) too big\n",
-+				vctrl->min_slew_down_rate);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (vctrl->ovp_threshold && !vctrl->min_slew_down_rate) {
-+		dev_err(&pdev->dev,
-+			"ovp-threshold-percent requires min-slew-down-rate\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32(np, "regulator-min-microvolt", &pval);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"failed to read regulator-min-microvolt: %d\n", ret);
-+		return ret;
-+	}
-+	vctrl->vrange.out.min_uV = pval;
-+
-+	ret = of_property_read_u32(np, "regulator-max-microvolt", &pval);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"failed to read regulator-max-microvolt: %d\n", ret);
-+		return ret;
-+	}
-+	vctrl->vrange.out.max_uV = pval;
-+
-+	ret = of_property_read_u32_array(np, "ctrl-voltage-range", vrange_ctrl,
-+					 2);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to read ctrl-voltage-range: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	if (vrange_ctrl[0] >= vrange_ctrl[1]) {
-+		dev_err(&pdev->dev, "ctrl-voltage-range is invalid: %d-%d\n",
-+			vrange_ctrl[0], vrange_ctrl[1]);
-+		return -EINVAL;
-+	}
-+
-+	vctrl->vrange.ctrl.min_uV = vrange_ctrl[0];
-+	vctrl->vrange.ctrl.max_uV = vrange_ctrl[1];
-+
-+	return 0;
-+}
-+
-+static int vctrl_cmp_ctrl_uV(const void *a, const void *b)
-+{
-+	const struct vctrl_voltage_table *at = a;
-+	const struct vctrl_voltage_table *bt = b;
-+
-+	return at->ctrl - bt->ctrl;
-+}
-+
-+static int vctrl_init_vtable(struct platform_device *pdev)
-+{
-+	struct vctrl_data *vctrl = platform_get_drvdata(pdev);
-+	struct regulator_desc *rdesc = &vctrl->desc;
-+	struct regulator *ctrl_reg = vctrl->ctrl_reg;
-+	struct vctrl_voltage_range *vrange_ctrl = &vctrl->vrange.ctrl;
-+	int n_voltages;
-+	int ctrl_uV;
-+	int i, idx_vt;
-+
-+	n_voltages = regulator_count_voltages(ctrl_reg);
-+
-+	rdesc->n_voltages = n_voltages;
-+
-+	/* determine number of steps within the range of the vctrl regulator */
-+	for (i = 0; i < n_voltages; i++) {
-+		ctrl_uV = regulator_list_voltage(ctrl_reg, i);
-+
-+		if (ctrl_uV < vrange_ctrl->min_uV ||
-+		    ctrl_uV > vrange_ctrl->max_uV) {
-+			rdesc->n_voltages--;
-+			continue;
-+		}
-+	}
-+
-+	if (rdesc->n_voltages == 0) {
-+		dev_err(&pdev->dev, "invalid configuration\n");
-+		return -EINVAL;
-+	}
-+
-+	vctrl->vtable = devm_kmalloc_array(
-+		&pdev->dev, sizeof(struct vctrl_voltage_table),
-+		rdesc->n_voltages, GFP_KERNEL | __GFP_ZERO);
-+	if (!vctrl->vtable)
-+		return -ENOMEM;
-+
-+	/* create mapping control <=> output voltage */
-+	for (i = 0, idx_vt = 0; i < n_voltages; i++) {
-+		ctrl_uV = regulator_list_voltage(ctrl_reg, i);
-+
-+		if (ctrl_uV < vrange_ctrl->min_uV ||
-+		    ctrl_uV > vrange_ctrl->max_uV)
-+			continue;
-+
-+		vctrl->vtable[idx_vt].ctrl = ctrl_uV;
-+		vctrl->vtable[idx_vt].out =
-+			vctrl_calc_output_voltage(vctrl, ctrl_uV);
-+		idx_vt++;
-+	}
-+
-+	/* we rely on the table to be ordered by ascending voltage */
-+	sort(vctrl->vtable, rdesc->n_voltages,
-+	     sizeof(struct vctrl_voltage_table), vctrl_cmp_ctrl_uV,
-+	     NULL);
-+
-+	/* pre-calculate OVP-safe downward transitions */
-+	for (i = n_voltages - 1; i > 0; i--) {
-+		int j;
-+		int ovp_min_uV = (vctrl->vtable[i].out *
-+				  (100 - vctrl->ovp_threshold)) / 100;
-+
-+		for (j = 0; j < i; j++) {
-+			if (vctrl->vtable[j].out >= ovp_min_uV) {
-+				vctrl->vtable[i].ovp_min_sel = j;
-+				break;
-+			}
-+		}
-+
-+		if (j == i) {
-+			dev_warn(&pdev->dev, "switching down from %duV may cause OVP shutdown\n",
-+				vctrl->vtable[i].out);
-+			/* use next lowest voltage */
-+			vctrl->vtable[i].ovp_min_sel = i - 1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int vctrl_enable(struct regulator_dev *rdev)
-+{
-+	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
-+	int ret = regulator_enable(vctrl->ctrl_reg);
-+
-+	if (!ret)
-+		vctrl->enabled = true;
-+
-+	return ret;
-+}
-+
-+static int vctrl_disable(struct regulator_dev *rdev)
-+{
-+	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
-+	int ret = regulator_disable(vctrl->ctrl_reg);
-+
-+	if (!ret)
-+		vctrl->enabled = false;
-+
-+	return ret;
-+}
-+
-+static int vctrl_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
-+
-+	return vctrl->enabled;
-+}
-+
-+static const struct regulator_ops vctrl_ops_cont = {
-+	.enable		  = vctrl_enable,
-+	.disable	  = vctrl_disable,
-+	.is_enabled	  = vctrl_is_enabled,
-+	.get_voltage	  = vctrl_get_voltage,
-+	.set_voltage	  = vctrl_set_voltage,
-+};
-+
-+static const struct regulator_ops vctrl_ops_non_cont = {
-+	.enable		  = vctrl_enable,
-+	.disable	  = vctrl_disable,
-+	.is_enabled	  = vctrl_is_enabled,
-+	.set_voltage_sel = vctrl_set_voltage_sel,
-+	.get_voltage_sel = vctrl_get_voltage_sel,
-+	.list_voltage    = vctrl_list_voltage,
-+	.map_voltage     = regulator_map_voltage_iterate,
-+};
-+
-+static int vctrl_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct vctrl_data *vctrl;
-+	const struct regulator_init_data *init_data;
-+	struct regulator_desc *rdesc;
-+	struct regulator_config cfg = { };
-+	struct vctrl_voltage_range *vrange_ctrl;
-+	int ctrl_uV;
-+	int ret;
-+
-+	vctrl = devm_kzalloc(&pdev->dev, sizeof(struct vctrl_data),
-+			     GFP_KERNEL);
-+	if (!vctrl)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, vctrl);
-+
-+	ret = vctrl_parse_dt(pdev, vctrl);
-+	if (ret)
-+		return ret;
-+
-+	vrange_ctrl = &vctrl->vrange.ctrl;
-+
-+	rdesc = &vctrl->desc;
-+	rdesc->name = "vctrl";
-+	rdesc->type = REGULATOR_VOLTAGE;
-+	rdesc->owner = THIS_MODULE;
-+
-+	if ((regulator_get_linear_step(vctrl->ctrl_reg) == 1) ||
-+	    (regulator_count_voltages(vctrl->ctrl_reg) == -EINVAL)) {
-+		rdesc->continuous_voltage_range = true;
-+		rdesc->ops = &vctrl_ops_cont;
-+	} else {
-+		rdesc->ops = &vctrl_ops_non_cont;
-+	}
-+
-+	init_data = of_get_regulator_init_data(&pdev->dev, np, rdesc);
-+	if (!init_data)
-+		return -ENOMEM;
-+
-+	cfg.of_node = np;
-+	cfg.dev = &pdev->dev;
-+	cfg.driver_data = vctrl;
-+	cfg.init_data = init_data;
-+
-+	if (!rdesc->continuous_voltage_range) {
-+		ret = vctrl_init_vtable(pdev);
-+		if (ret)
-+			return ret;
-+
-+		ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
-+		if (ctrl_uV < 0) {
-+			dev_err(&pdev->dev, "failed to get control voltage\n");
-+			return ctrl_uV;
-+		}
-+
-+		/* determine current voltage selector from control voltage */
-+		if (ctrl_uV < vrange_ctrl->min_uV) {
-+			vctrl->sel = 0;
-+		} else if (ctrl_uV > vrange_ctrl->max_uV) {
-+			vctrl->sel = rdesc->n_voltages - 1;
-+		} else {
-+			int i;
-+
-+			for (i = 0; i < rdesc->n_voltages; i++) {
-+				if (ctrl_uV == vctrl->vtable[i].ctrl) {
-+					vctrl->sel = i;
-+					break;
-+				}
-+			}
-+		}
-+	}
-+
-+	vctrl->rdev = devm_regulator_register(&pdev->dev, rdesc, &cfg);
-+	if (IS_ERR(vctrl->rdev)) {
-+		ret = PTR_ERR(vctrl->rdev);
-+		dev_err(&pdev->dev, "failed to register regulator: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id vctrl_of_match[] = {
-+	{ .compatible = "vctrl-regulator", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, vctrl_of_match);
-+
-+static struct platform_driver vctrl_driver = {
-+	.probe		= vctrl_probe,
-+	.driver		= {
-+		.name		= "vctrl-regulator",
-+		.of_match_table = of_match_ptr(vctrl_of_match),
-+	},
-+};
-+
-+module_platform_driver(vctrl_driver);
-+
-+MODULE_DESCRIPTION("Voltage Controlled Regulator Driver");
-+MODULE_AUTHOR("Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
-
+>> +    usart1_pins: usart1@0    {
+>> +        pins1 {
+>> +            pinmux = <STM32F746_PA9_FUNC_USART1_TX>;
+>> +                bias-disable;
+>> +                drive-push-pull;
+>> +                slew-rate = <2>;
+>> +        };
+>> +        pins2 {
+>> +            pinmux = <STM32F746_PB7_FUNC_USART1_RX>;
+>> +            bias-disable;
+>> +        };
+>> +    };
+>> +
+>> +    qspi_pins: qspi@0 {
+>> +        pins {
+>> +            pinmux = <STM32F746_PB2_FUNC_QUADSPI_CLK>,
+>> +                   <STM32F746_PB6_FUNC_QUADSPI_BK1_NCS>,
+>> +                   <STM32F746_PD11_FUNC_QUADSPI_BK1_IO0>,
+>> +                   <STM32F746_PD12_FUNC_QUADSPI_BK1_IO1>,
+>> +                   <STM32F746_PD13_FUNC_QUADSPI_BK1_IO3>,
+>> +                   <STM32F746_PE2_FUNC_QUADSPI_BK1_IO2>;
+>> +            slew-rate = <2>;
+>> +        };
+>> +    };
+>> +};
+>> +
+>> +&usart1 {
+>> +    pinctrl-0 = <&usart1_pins>;
+>> +    pinctrl-names = "default";
+>> +    status = "okay";
+>> +};
+>> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
+>> index f321ffe..826700f 100644
+>> --- a/arch/arm/boot/dts/stm32f746.dtsi
+>> +++ b/arch/arm/boot/dts/stm32f746.dtsi
+>> @@ -178,7 +178,7 @@
+>>              interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+>>          };
+>>
+>> -        pin-controller {
+>> +        pinctrl: pin-controller {
+>>              #address-cells = <1>;
+>>              #size-cells = <1>;
+>>              compatible = "st,stm32f746-pinctrl";
+>> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
+>> new file mode 100644
+>> index 0000000..5f8558e
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
+>> @@ -0,0 +1,101 @@
+>> +/*
+>> + * Copyright 2017 - Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "stm32f746.dtsi"
+>> +#include <dt-bindings/input/input.h>
+>> +
+>> +/ {
+>> +    model = "STMicroelectronics STM32F769-DISCO board";
+>> +    compatible = "st,stm32f769-disco", "st,stm32f7";
+>> +
+>> +    chosen {
+>> +        bootargs = "root=/dev/ram";
+>> +        stdout-path = "serial0:115200n8";
+>> +    };
+>> +
+>> +    memory {
+>> +        reg = <0xC0000000 0x1000000>;
+>> +    };
+>> +
+>> +    aliases {
+>> +        serial0 = &usart1;
+>> +    };
+>> +
+>> +};
+>> +
+>> +&clk_hse {
+>> +    clock-frequency = <25000000>;
+>> +};
+>> +
+>> +&pinctrl {
+> 
+> same.
+> 
+>> +    usart1_pins: usart1@0    {
+>> +        pins1 {
+>> +            pinmux = <STM32F746_PA9_FUNC_USART1_TX>;
+>> +                bias-disable;
+>> +                drive-push-pull;
+>> +                slew-rate = <2>;
+>> +        };
+>> +        pins2 {
+>> +            pinmux = <STM32F746_PA10_FUNC_USART1_RX>;
+>> +            bias-disable;
+>> +        };
+>> +    };
+>> +
+>> +    qspi_pins: qspi@0 {
+>> +        pins {
+>> +            pinmux = <STM32F746_PB2_FUNC_QUADSPI_CLK>,
+>> +                   <STM32F746_PB6_FUNC_QUADSPI_BK1_NCS>,
+>> +                   <STM32F746_PC9_FUNC_QUADSPI_BK1_IO0>,
+>> +                   <STM32F746_PC10_FUNC_QUADSPI_BK1_IO1>,
+>> +                   <STM32F746_PD13_FUNC_QUADSPI_BK1_IO3>,
+>> +                   <STM32F746_PE2_FUNC_QUADSPI_BK1_IO2>;
+>> +            slew-rate = <2>;
+>> +        };
+>> +    };
+>> +};
+>> +
+>> +&usart1 {
+>> +    pinctrl-0 = <&usart1_pins>;
+>> +    pinctrl-names = "default";
+>> +    status = "okay";
+>> +};
+>>
+> .
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
