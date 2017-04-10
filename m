@@ -1,121 +1,203 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Document STM32 I2S
-	bindings
-Date: Mon, 10 Apr 2017 14:48:32 -0500
-Message-ID: <20170410194832.iivnkyejtywbe2c7@rob-hp-laptop>
-References: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
- <1491493236-2574-2-git-send-email-olivier.moysan@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1491493236-2574-2-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: olivier moysan <olivier.moysan@st.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, alexandre.torgue@st.com, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, mcoquelin.stm32@gmail.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v6 09/23] drivers/fsi: scan slaves & register devices
+Date: Mon, 10 Apr 2017 14:46:52 -0500
+Message-ID: <20170410194706.64280-10-cbostic@linux.vnet.ibm.com>
+References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 05:40:35PM +0200, olivier moysan wrote:
-> Add documentation of device tree bindings for STM32 SPI/I2S.
-> 
-> Signed-off-by: olivier moysan <olivier.moysan@st.com>
-> ---
->  .../devicetree/bindings/sound/st,stm32h7-i2s.txt   | 71 ++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32h7-i2s.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/st,stm32h7-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32h7-i2s.txt
-> new file mode 100644
-> index 0000000..b99467a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/st,stm32h7-i2s.txt
-> @@ -0,0 +1,71 @@
-> +STMicroelectronics STM32 SPI/I2S Controller
-> +
-> +The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
-> +Only some SPI instances support I2S.
-> +
-> +Required properties:
-> +  - compatible: Must be "st,stm32h7-i2s"
-> +  - #sound-dai-cells: Must be 1. (one parameter)
-> +    This parameter allows to specify CPU DAI index in soundcard CPU dai link.
-> +	index 0: playback DAI
-> +	index 1: capture DAI
-> +	index 2: full duplex DAI
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Is this still needed for graph-card?
+Now that we have fsi_slave devices, scan each for endpoints, and
+register them on the fsi bus.
 
-> +  - reg: Offset and length of the device's register set.
-> +  - interrupts: Must contain the interrupt line id.
-> +  - clocks: Must contain phandle and clock specifier pairs for each entry
-> +	in clock-names.
-> +  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
-> +	"i2sclk": clock which feeds the internal clock generator
-> +	"pclk": clock which feeds the peripheral bus interface
-> +	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
-> +	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
-> +  - dmas: DMA specifiers for tx and rx dma.
-> +    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
-> +  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
-> +  - pinctrl-names: should contain only value "default"
-> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
-> +
-> +Optional properties:
-> +  - resets: Reference to a reset controller asserting the reset controller
-> +
-> +Example:
-> +sound_card {
-> +	compatible = "audio-graph-card";
-> +	dais = <&i2s2_port 0>;
-> +};
-> +
-> +i2s2: audio-controller@40003800 {
-> +	compatible = "st,stm32h7-i2s";
-> +	#sound-dai-cells = <1>;
-> +	reg = <0x40003800 0x400>;
-> +	interrupts = <36>;
-> +	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
-> +	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
-> +	dmas = <&dmamux2 2 39 0x400 0x1>,
-> +		       <&dmamux2 3 40 0x400 0x1>;
-> +	dma-names = "rx", "tx";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2s2>;
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2s2_port: port@0 {
-> +			reg = <0>;
-> +			cpu_endpoint: endpoint {
-> +				remote-endpoint = <&codec_endpoint>;
-> +				audio-graph-card,format = "i2s";
-> +				audio-graph-card,bitclock-master = <&codec_endpoint>;
-> +				audio-graph-card,frame-master = <&codec_endpoint>;
+Includes contributions from Chris Bostic <cbostic@linux.vnet.ibm.com>
 
-The 'audio-graph-card,' part has been dropped.
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ drivers/fsi/fsi-core.c | 127 +++++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/fsi.h    |   4 ++
+ 2 files changed, 128 insertions(+), 3 deletions(-)
 
-> +			};
-> +		};
-> +};
-> +
-> +audio-codec {
-> +		codec_port: port {
-> +			codec_endpoint: endpoint {
-> +				remote-endpoint = <&cpu_endpoint>;
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index b7b138b..a8faa89 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -21,6 +21,19 @@
+ 
+ #include "fsi-master.h"
+ 
++#define FSI_SLAVE_CONF_NEXT_MASK	0x80000000
++#define FSI_SLAVE_CONF_SLOTS_MASK	0x00ff0000
++#define FSI_SLAVE_CONF_SLOTS_SHIFT	16
++#define FSI_SLAVE_CONF_VERSION_MASK	0x0000f000
++#define FSI_SLAVE_CONF_VERSION_SHIFT	12
++#define FSI_SLAVE_CONF_TYPE_MASK	0x00000ff0
++#define FSI_SLAVE_CONF_TYPE_SHIFT	4
++#define FSI_SLAVE_CONF_CRC_SHIFT	4
++#define FSI_SLAVE_CONF_CRC_MASK		0x0000000f
++#define FSI_SLAVE_CONF_DATA_BITS	28
++
++static const int engine_page_size = 0x400;
++
+ #define FSI_SLAVE_BASE			0x800
+ 
+ /*
+@@ -61,6 +74,30 @@ static int fsi_master_read(struct fsi_master *master, int link,
+ static int fsi_master_write(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
+ 
++/* FSI endpoint-device support */
++
++static void fsi_device_release(struct device *_device)
++{
++	struct fsi_device *device = to_fsi_dev(_device);
++
++	kfree(device);
++}
++
++static struct fsi_device *fsi_create_device(struct fsi_slave *slave)
++{
++	struct fsi_device *dev;
++
++	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
++	if (!dev)
++		return NULL;
++
++	dev->dev.parent = &slave->dev;
++	dev->dev.bus = &fsi_bus_type;
++	dev->dev.release = fsi_device_release;
++
++	return dev;
++}
++
+ /* crc helpers */
+ static const uint8_t crc4_tab[] = {
+ 	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
+@@ -138,6 +175,91 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			addr, val, size);
+ }
+ 
++static int fsi_slave_scan(struct fsi_slave *slave)
++{
++	uint32_t engine_addr;
++	uint32_t conf;
++	int rc, i;
++
++	/*
++	 * scan engines
++	 *
++	 * We keep the peek mode and slave engines for the core; so start
++	 * at the third slot in the configuration table. We also need to
++	 * skip the chip ID entry at the start of the address space.
++	 */
++	engine_addr = engine_page_size * 3;
++	for (i = 2; i < engine_page_size / sizeof(uint32_t); i++) {
++		uint8_t slots, version, type, crc;
++		struct fsi_device *dev;
++
++		rc = fsi_slave_read(slave, (i + 1) * sizeof(conf),
++				&conf, sizeof(conf));
++		if (rc) {
++			dev_warn(&slave->dev,
++				"error reading slave registers\n");
++			return -1;
++		}
++		conf = be32_to_cpu(conf);
++
++		crc = fsi_crc4(0, conf, 32);
++		if (crc) {
++			dev_warn(&slave->dev,
++				"crc error in slave register at 0x%04x\n",
++				i);
++			return -1;
++		}
++
++		slots = (conf & FSI_SLAVE_CONF_SLOTS_MASK)
++			>> FSI_SLAVE_CONF_SLOTS_SHIFT;
++		version = (conf & FSI_SLAVE_CONF_VERSION_MASK)
++			>> FSI_SLAVE_CONF_VERSION_SHIFT;
++		type = (conf & FSI_SLAVE_CONF_TYPE_MASK)
++			>> FSI_SLAVE_CONF_TYPE_SHIFT;
++
++		/*
++		 * Unused address areas are marked by a zero type value; this
++		 * skips the defined address areas
++		 */
++		if (type != 0 && slots != 0) {
++
++			/* create device */
++			dev = fsi_create_device(slave);
++			if (!dev)
++				return -ENOMEM;
++
++			dev->slave = slave;
++			dev->engine_type = type;
++			dev->version = version;
++			dev->unit = i;
++			dev->addr = engine_addr;
++			dev->size = slots * engine_page_size;
++
++			dev_info(&slave->dev,
++			"engine[%i]: type %x, version %x, addr %x size %x\n",
++					dev->unit, dev->engine_type, version,
++					dev->addr, dev->size);
++
++			dev_set_name(&dev->dev, "%02x:%02x:%02x:%02x",
++					slave->master->idx, slave->link,
++					slave->id, i - 2);
++
++			rc = device_register(&dev->dev);
++			if (rc) {
++				dev_warn(&slave->dev, "add failed: %d\n", rc);
++				put_device(&dev->dev);
++			}
++		}
++
++		engine_addr += slots * engine_page_size;
++
++		if (!(conf & FSI_SLAVE_CONF_NEXT_MASK))
++			break;
++	}
++
++	return 0;
++}
++
+ /* Encode slave local bus echo delay */
+ static inline uint32_t fsi_smode_echodly(int x)
+ {
+@@ -253,9 +375,8 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 		return rc;
+ 	}
+ 
+-	/* todo: perform engine scan */
+-
+-	return rc;
++	fsi_slave_scan(slave);
++	return 0;
+ }
+ 
+ /* FSI master support */
+diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+index 273cbf6..efa55ba 100644
+--- a/include/linux/fsi.h
++++ b/include/linux/fsi.h
+@@ -21,6 +21,10 @@ struct fsi_device {
+ 	struct device		dev;
+ 	u8			engine_type;
+ 	u8			version;
++	u8			unit;
++	struct fsi_slave	*slave;
++	uint32_t		addr;
++	uint32_t		size;
+ };
+ 
+ struct fsi_device_id {
+-- 
+1.8.2.2
