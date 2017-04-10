@@ -1,57 +1,60 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
-Date: Mon, 10 Apr 2017 11:52:08 +0200
-Message-ID: <20170410095207.GA4475@xo-6d-61-c0.localdomain>
-References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
- <20170323203749.GB8563@amd>
- <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
- <20170329190725.GN20094@minitux>
- <20170329222301.GB7977@amd>
- <20170330000955.GP20094@minitux>
- <20170330074309.GA28533@amd>
- <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
- <1192806d-13bf-3b5c-4179-b7795737ed40@gmail.com>
- <20170403182158.GV20094@minitux>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2 5/8] v4l: Switch from V4L2 OF not V4L2 fwnode API
+Date: Mon, 10 Apr 2017 12:59:36 +0300
+Message-ID: <3e78d983-86da-3ac8-6c77-0720d8e0f534@linux.intel.com>
+References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com>
+ <14918382.izlyCngq8n@avalon>
+ <20170407105805.GG4192@valkosipuli.retiisi.org.uk>
+ <1895617.xparv3opoe@avalon>
+ <20170407225515.GM4192@valkosipuli.retiisi.org.uk>
+ <20170410092147.GE2957@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170403182158.GV20094@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170410092147.GE2957@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@intel.com>, Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hi Mika and Laurent,
 
-> > Actually we could achieve the goal by listing all available pattern
-> > configurations for given LED class device, so in case of Qualcomm LPG
-> > driver we could have transition-pattern-1 to transition-pattern-15
-> > listed after executing "cat trigger".
-> > 
+On 04/10/17 12:21, Mika Westerberg wrote:
+> On Sat, Apr 08, 2017 at 01:55:15AM +0300, Sakari Ailus wrote:
+>>> My ACPI knowledge is limited, but don't ACPI nodes have 4 character names that 
+>>> can be combined in a string to create a full path ?
+>>
+>> There is something, yes, but the ACPI framework currently has no such
+>> functionality. I believe it could be implemented though. Cc Mika.
 > 
-> There's a common pattern-table of 24 (or 64) entries, that is shared
-> among the 8 LPGs (each LPG simply has to indices pointing into the
-> shared table). Each entry in the table holds a value between 0 and 511.
-> So that's a lot of "available pattern configurations".
+> All ACPI node names are 32-bit integers and those are combined to form a
+> path, like \_SB.PCI0.I2C0 and so on. A single ACPI node name cannot be
+> larger than 4 chars, though.
 
-> > I wonder if I'm not missing some vital constraints here that could
-> > make this design unfeasible.
-> > 
-> 
-> Regardless of how we expose RGBs to userspace, the 8 LPG hardware blocks
-> are independent of each other. The fact that they end up controlling
-> something that is perceived by the human eye as some mixed color is to
-> me a matter of system integration, and as such should not convolute the
-> implementation of the individual instances.
+On OF, each node has a full_node string attached to it. You could
+produce a similar string on ACPI, it is not currently done. Adding such
+a string to each fwnode would require some extra memory as well. I
+wonder if that could be a Kconfig option.
 
-Well... the 8 LPG blocks share the pattern-table.. and the pattern-table is very
-limited. We could statically allocate 3 entries to each LPG block, but that
-would not be too useful. And if we dynamically allocate entries depending on
-patterns, then the LPG blocks are no longer independent.
+It would help debugging though.
 
-									Pavel
+Providing this information to the user space has been proposed as well:
+Devicetree spec defines the syntax for such strings. The user can use
+that information for recognising a particular device in the system.
+
+The ACPI spec does, too, but it is limited to ACPI nodes and does not
+address hierarchical data extensions. We'd define the syntax for those
+ourselves.
+
+Mika: what do you think?
+
+On omap3isp and other drivers --- I think the solution for now should be
+to assume OF instead. These drivers will be used on OF platforms only
+anyway.
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
