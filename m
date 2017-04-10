@@ -1,71 +1,80 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH V11 00/11] IOMMU probe deferral support
-Date: Mon, 10 Apr 2017 04:56:20 -0700
-Message-ID: <58EB72E4.6030009@gmail.com>
-References: <1491823266-1209-1-git-send-email-sricharan@codeaurora.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: change fixup of dma-ranges size to error
+Date: Mon, 10 Apr 2017 04:59:05 -0700
+Message-ID: <58EB7389.7020603@gmail.com>
+References: <1491459529-31391-1-git-send-email-frowand.list@gmail.com>
+ <CAL_Jsq+GLBtaezUiTbm0DAA2+MjcvxAcCsS-qJrr05YcTO5tdw@mail.gmail.com>
+ <58E68ADC.6040603@gmail.com>
+ <CAL_Jsq+VreUFtA8ozs0Jcz45PTc-jTT=CEKuezeU7QYviiN-Jg@mail.gmail.com>
+ <58E72123.4040607@gmail.com>
+ <CAL_Jsq+8PoR5ikPbTbHgd-8rkGFmvorLrS9hHpmkVynkh69e-A@mail.gmail.com>
+ <58E82008.7000102@gmail.com>
+ <19a2a28f-8338-970e-3b5f-05be3362fb9a@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1491823266-1209-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>, robin.murphy@arm.com, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, gregkh@linuxfoundation.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <19a2a28f-8338-970e-3b5f-05be3362fb9a-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/17 04:20, Sricharan R wrote:
-> This series calls the dma ops configuration for the devices
-> at a generic place so that it works for all busses.
-> The dma_configure_ops for a device is now called during
-> the device_attach callback just before the probe of the
-> bus/driver is called. Similarly dma_deconfigure is called during
-> device/driver_detach path.
+On 04/10/17 04:48, Sricharan R wrote:
+> Hi Frank,
 > 
-> pci_bus_add_devices    (platform/amba)(_device_create/driver_register)
->        |                         |
-> pci_bus_add_device     (device_add/driver_register)
->        |                         |
-> device_attach           device_initial_probe
->        |                         |
-> __device_attach_driver    __device_attach_driver
->        |
-> driver_probe_device
->        |
-> really_probe
->        |
-> dma_configure
+> <snip..>
 > 
-> Similarly on the device/driver_unregister path __device_release_driver is
-> called which inturn calls dma_deconfigure.
+>>>> Can we get back to the basic premise of the proposed patch?
+>>>>
+>>>> The current code in of_dma_configure() contains a hack that allows the
+>>>> dma-ranges property to specify a mask instead of a size.  The binding
+>>>> in the specification allows a size and does not allow a mask.
+>>>>
+>>>> The hack was added to account for one or more dts files that did not
+>>>> follow the specification.  In the mail list discussion of the hack
+>>>> you said "Also, we need a WARN here so DTs get fixed."
+>>>>
+>>>> The hack was first present in Linux 4.1.  The only in-tree dts that
+>>>> incorrectly contained a mask instead of a size in dma-ranges was
+>>>> arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+>>>>
+>>>> That .dtsi was fixed by
+>>>> commit c91cb9123cdd ("dtb: amd: Fix DMA ranges in device tree")
+>>>> The fix was present in Linux 4.6, May 15, 2016.
+>>>>
+>>>> I would like to remove the hack.  I think that enough time has
+>>>> elapsed to allow this change.
+>>>
+>>> If we have no cases of what I'm concerned about, then removing it is
+>>> fine. Is this a dependency for iommu series? Doesn't look like it to
+>>> me.
+>>
+>> This patch is a replacement for patch 03/12 in the iommu series.  I
+>> think that patch 03/12 of the iommu series could be dropped and my
+>> patch could be applied independently of the iommu series.
+>>
+>> There is likely a conflict between my patch and patch 06/12 of the
+>> iommu series because in my patch the first line of the patch chunk
+>> of drivers/of/device.c includes a line that is changed in 06/12
+>> of the iommu series.  If this is the case then the iommu series
+>> should take precedence over my patch (and I should subsequently
+>> fixup my patch).
+>>
 > 
-> Rebased the series against mainline 4.11-rc5. Applies and builds cleanly
-> against iommu-next and with 3-way merge applies on top of linux-next
-> as well (patch #8), because of "ACPI platform MSI support" from
-> Hanjun being merged.
->   
-> * Tested with platform and pci devices for probe deferral
->   and reprobe on arm64 based platform.
+> Ok, for which i just posted a V11 [1] with patch 03/12 from
+> V10 dropped.
 > 
-> Previous post of this series [8]. 
+> [1] https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1373638.html
 > 
-> Please note that, i have kept the tested/acked tags intact from V8
-> because V9/10/11 were for more fixes that was added, so the original
-> tags that was given for the functional testing remains the same.
+> Regards,
+>  Sricharan
 > 
->  [V11]
->      * No functional changes.
-> 
->      * Rebased on top of 4.11-rc6.
-> 
->      * Dropped patch#3 from V10, as a result have to make
->        a change in patch#7 to return a 'non-void' to fix a
->        build warning.
-> 
->      * Added Robin's and Rob's tags.
 
-< snip >
-
-The changes are good enough for me and you have Rob's acks, so the
-series looks good from the device tree standpoint.
+Thanks.  I'll revisit this patch after the iommu series gets merged.
 
 -Frank
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
