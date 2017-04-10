@@ -1,76 +1,61 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH 2/5] media: Add support for CXD2880 SPI I/F
-Date: Sun, 9 Apr 2017 22:38:03 -0300
-Message-ID: <20170409223803.25da1a43@vento.lan>
-References: <1491465339-9483-1-git-send-email-Yasunari.Takiguchi@sony.com>
-        <201704071447.DmxQl53a%fengguang.wu@intel.com>
-        <02699364973B424C83A42A84B04FDA8533BC79@JPYOKXMS113.jp.sony.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v4 0/9] Renesas RZ/A1 pin and gpio controller
+Date: Mon, 10 Apr 2017 02:33:36 +0000
+Message-ID: <SG2PR06MB1165D83E182D6B043C3C59928A010@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <02699364973B424C83A42A84B04FDA8533BC79@JPYOKXMS113.jp.sony.com>
-Sender: linux-media-owner@vger.kernel.org
-To: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
-Cc: kbuild test robot <lkp@intel.com>, "kbuild-all@01.org" <kbuild-all@01.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 7 Apr 2017 08:19:58 +0000
-"Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com> escreveu:
+Hi Jacopo,
 
-> Dear All
-> 
-> Our patches consists of the following items.
->   [PATCH 1/5] dt-bindings: media: Add document file for CXD2880 SPI I/F
->   [PATCH 2/5] media: Add support for CXD2880 SPI I/F
->   [PATCH 3/5] media: Add suppurt for CXD2880
->   [PATCH 4/5] media: Add suppurt for CXD2880 DVB-T2/T functions
->   [PATCH 5/5] media: Update MAINTAINERS file for CXD2880
+On Wednesday, April 05, 2017, Jacopo Mondi wrote:
+> v3 -> v4:
+> - use "pinmux" property in pmx sub-nodes in place of "renesas,pins"
+> - use pinconf standard properties to set pin mux additional flags
+> - add "bi-directional" and "output-enable" to pinconf generic properties
+> - perform pmx function parsing at dt_node_to_map() time
+> - change DT bindings to use GENERIC_PINCONF
+> - change DT bindings to allow sub-nodes to have "pinmux" property
+> specified
+> - several renames (register names, DT parse functions, set_mux() function=
+)
 
-Didn't review your patch series yet. It should take a while to
-review 14K lines ;)
 
-> It is necessary to apply all patches before compiling kernel with our code.
-> 
-> Could you re-compile after applying above the patches.
+I just tested this driver on the RZ/A1 RSK board.
+The following worked good.
 
-The kbuild test robot is... a machine. It won't read or answer to
-your reply :-)
+   SCIF2, I2C, SDHI, Ethernet
 
-It automatically tests all patches sent to the ML and apply them at the 
-order the patches are found at the tree, one by one.
 
-The rule is that no patch can cause compilation breakages, as
-this breaks Kernel bisectability.
+SDHI also has bi-direction pins. For your reference, here was my DT:
 
-So, you have to ensure, when sending a patch series, that every single
-patch is compilable, and won't cause runtime issues.
 
-In the specific case of this patch:
+	/* SHDI ch1 on CN1 */
+	sdhi1_pins: sdhi1 {
+		pins {
+			pinmux =3D <RZA1_PINMUX(3, 8, 7)>,	/* SD_CD_1 */
+				 <RZA1_PINMUX(3, 9, 7)>,	/* SD_WP_1 */
+				 <RZA1_PINMUX(3, 12, 7)>,	/* SD_CLK_1 */
+				 <RZA1_PINMUX(3, 13, 7)>;	/* SD_CMD_1 */
+		};
 
-> > drivers/media/spi/Kconfig       |   14 +
-> > drivers/media/spi/Makefile      |    5 +
-> > drivers/media/spi/cxd2880-spi.c |  727 +++++++++++++++++++++++++++++++++++++++
-> > 3 files changed, 746 insertions(+)
-> > create mode 100644 drivers/media/spi/cxd2880-spi.c
-
-If cxd2880-spi.c need something else in order to be built, you
-should not add it at Kconfig/Makefile yet. Just add the files, 
-using an order that makes it easier to be reviewed. In this
-particular case, if it needs a header file, the patch containing
-the header file should ideally be sent together with it
-(or a previous patch, if adding it together wouldn't work).
-
-Also, what I usually do when submitting drivers is that I don't
-touch Kconfig/Makefile too early, putting such changes by the end
-of the patch series.
-
-E. g. you could break this patch on two separate patches, where the
-first one would be just adding the cxd2880-spi.c (and cxd2880.h). Another
-possibility would be to move this patch to the end, if the other patches
-don't break git bisect (e. g. if they all compile without problems) and if
-they're good enough to be reviewed by someone using the patch order.
+		pins_bidir {
+			pinmux =3D <RZA1_PINMUX(3, 10, 7)>,	/* SD_D1_1 */
+				 <RZA1_PINMUX(3, 11, 7)>,	/* SD_D0_1 */
+				 <RZA1_PINMUX(3, 14, 7)>,	/* SD_D3_1 */
+				 <RZA1_PINMUX(3, 15, 7)>;	/* SD_D2_1 */
+			bi-directional;
+		};
+	};
 
 
 Thanks,
-Mauro
+Chris
