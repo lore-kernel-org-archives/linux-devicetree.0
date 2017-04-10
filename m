@@ -1,7 +1,7 @@
-From: Mika Westerberg <mika.westerberg@intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 Subject: Re: [PATCH v2 5/8] v4l: Switch from V4L2 OF not V4L2 fwnode API
-Date: Mon, 10 Apr 2017 13:11:28 +0300
-Message-ID: <20170410101128.GF2957@lahna.fi.intel.com>
+Date: Mon, 10 Apr 2017 13:17:39 +0300
+Message-ID: <5ac43628-da90-4a0d-dd3a-0ecc9693567b@linux.intel.com>
 References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com>
  <14918382.izlyCngq8n@avalon>
  <20170407105805.GG4192@valkosipuli.retiisi.org.uk>
@@ -9,48 +9,67 @@ References: <1491484330-12040-1-git-send-email-sakari.ailus@linux.intel.com>
  <20170407225515.GM4192@valkosipuli.retiisi.org.uk>
  <20170410092147.GE2957@lahna.fi.intel.com>
  <3e78d983-86da-3ac8-6c77-0720d8e0f534@linux.intel.com>
+ <20170410101128.GF2957@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3e78d983-86da-3ac8-6c77-0720d8e0f534@linux.intel.com>
+In-Reply-To: <20170410101128.GF2957@lahna.fi.intel.com>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@intel.com>
 Cc: Sakari Ailus <sakari.ailus@iki.fi>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 10, 2017 at 12:59:36PM +0300, Sakari Ailus wrote:
-> Hi Mika and Laurent,
-> 
-> On 04/10/17 12:21, Mika Westerberg wrote:
-> > On Sat, Apr 08, 2017 at 01:55:15AM +0300, Sakari Ailus wrote:
-> >>> My ACPI knowledge is limited, but don't ACPI nodes have 4 character names that 
-> >>> can be combined in a string to create a full path ?
-> >>
-> >> There is something, yes, but the ACPI framework currently has no such
-> >> functionality. I believe it could be implemented though. Cc Mika.
-> > 
-> > All ACPI node names are 32-bit integers and those are combined to form a
-> > path, like \_SB.PCI0.I2C0 and so on. A single ACPI node name cannot be
-> > larger than 4 chars, though.
-> 
-> On OF, each node has a full_node string attached to it. You could
-> produce a similar string on ACPI, it is not currently done. Adding such
-> a string to each fwnode would require some extra memory as well. I
-> wonder if that could be a Kconfig option.
-> 
-> It would help debugging though.
-> 
-> Providing this information to the user space has been proposed as well:
-> Devicetree spec defines the syntax for such strings. The user can use
-> that information for recognising a particular device in the system.
-> 
-> The ACPI spec does, too, but it is limited to ACPI nodes and does not
-> address hierarchical data extensions. We'd define the syntax for those
-> ourselves.
-> 
-> Mika: what do you think?
+Moi,
 
-There is a function acpi_get_name() which you can use to extract the
-full name of the node. Why not investigate how to use that instead of
-duplicating the name in an ACPI node.
+On 04/10/17 13:11, Mika Westerberg wrote:
+> On Mon, Apr 10, 2017 at 12:59:36PM +0300, Sakari Ailus wrote:
+>> Hi Mika and Laurent,
+>>
+>> On 04/10/17 12:21, Mika Westerberg wrote:
+>>> On Sat, Apr 08, 2017 at 01:55:15AM +0300, Sakari Ailus wrote:
+>>>>> My ACPI knowledge is limited, but don't ACPI nodes have 4 character names that 
+>>>>> can be combined in a string to create a full path ?
+>>>>
+>>>> There is something, yes, but the ACPI framework currently has no such
+>>>> functionality. I believe it could be implemented though. Cc Mika.
+>>>
+>>> All ACPI node names are 32-bit integers and those are combined to form a
+>>> path, like \_SB.PCI0.I2C0 and so on. A single ACPI node name cannot be
+>>> larger than 4 chars, though.
+>>
+>> On OF, each node has a full_node string attached to it. You could
+>> produce a similar string on ACPI, it is not currently done. Adding such
+>> a string to each fwnode would require some extra memory as well. I
+>> wonder if that could be a Kconfig option.
+>>
+>> It would help debugging though.
+>>
+>> Providing this information to the user space has been proposed as well:
+>> Devicetree spec defines the syntax for such strings. The user can use
+>> that information for recognising a particular device in the system.
+>>
+>> The ACPI spec does, too, but it is limited to ACPI nodes and does not
+>> address hierarchical data extensions. We'd define the syntax for those
+>> ourselves.
+>>
+>> Mika: what do you think?
+> 
+> There is a function acpi_get_name() which you can use to extract the
+> full name of the node. Why not investigate how to use that instead of
+> duplicating the name in an ACPI node.
+> 
+
+acpi_get_name() would obviously be needed to produce such a string in
+the first place.
+
+acpi_get_name() puts the string to an existing buffer so it cannot be
+used as such to return a pointer to a string (e.g. to be used for
+snprintf()). Also, it only contains the device path of the device. The
+data extension path matters here, too.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
