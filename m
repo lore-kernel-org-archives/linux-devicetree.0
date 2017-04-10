@@ -1,111 +1,136 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
-Date: Mon, 10 Apr 2017 10:55:37 +0530
-Message-ID: <9fbef986-721c-05aa-28a1-4c49016fe2ca@ti.com>
-References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
- <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
- <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com>
- <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
- <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3@ti.com>
- <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A@mail.gmail.com>
+From: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] of/fdt: introduce of_scan_flat_dt_subnodes and
+ of_get_flat_dt_phandle
+Date: Mon, 10 Apr 2017 15:43:48 +1000
+Message-ID: <20170410154348.051e7a34@roar.ozlabs.ibm.com>
+References: <20170405123706.6081-1-npiggin@gmail.com>
+        <20170405123706.6081-3-npiggin@gmail.com>
+        <CAL_JsqK4zbACwWVb-rsrvBb4hjBCexrqKRKrzSiZrZH5w=bKqQ@mail.gmail.com>
+        <20170406003251.533e2845@roar.ozlabs.ibm.com>
+        <CAL_JsqLEvjb8S-+-JEa4ALHeCWHiR1A_4ur9kd3pBRJaFYWVKw@mail.gmail.com>
+        <1491425881.4166.90.camel@kernel.crashing.org>
+        <20170406103829.67d462e1@roar.ozlabs.ibm.com>
+        <CAL_JsqKuomE41grhAvjFxkFbS4A3-M_TK8gP8FU=HdDpQ3TTkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKuomE41grhAvjFxkFbS4A3-M_TK8gP8FU=HdDpQ3TTkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 6 Apr 2017 09:09:41 -0500
+Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-On Wednesday 05 April 2017 07:40 PM, Raviteja Garimella wrote:
-> Hi Kishon,
+> On Wed, Apr 5, 2017 at 7:38 PM, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Given that it's quite a small addition to of/fdt code, hopefully
+> > that gives you a reasonable justification to accept it.
+> >
+> > If you prefer not to, that's okay, but I think we would have to carry
+> > it in arch/powerpc at least for a time, because of the schedule we're
+> > working to for POWER9 enablement. As a longer term item I agree with you
+> > and Ben, it would be worth considering unflattening earlier.  
 > 
-> On Wed, Apr 5, 2017 at 7:04 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> Hi Ravi,
->>
->> On Wednesday 05 April 2017 06:30 PM, Raviteja Garimella wrote:
->>> Hi Kishon,
->>>
->>> On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>> Hi,
->>>>
->>>> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
->>>>> This is driver for USB DRD Phy used in Broadcom's Northstar2
->>>>> SoC. The phy can be configured to be in Device mode or Host
->>>>> mode based on the type of cable connected to the port. The
->>>>> driver registers to  extcon framework to get appropriate
->>>>> connect events for Host/Device cables connect/disconnect
->>>>> states based on VBUS and ID interrupts.
->>>>
->>>> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
->>>> Northstar2.
->>>>
->>>
->>> Will do.
->>>
->>>> Sorry for not letting you know this earlier. But I feel the design of the
->>>> driver should be changed. Extcon shouldn't be used here. The extcon
->>>> notifications should be sent to the consumer driver and the consumer driver
->>>> should be responsible for invoking the phy ops.
->>>>
->>>
->>> The consumer drivers here would be a UDC driver (USB device
->>> controller), EHCI and OHCI host controller drivers.
->>> I was already suggested in UDC driver review to deal with extcon in Phy driver.
->>>
->>> This phy connects to 2 host controllers, and one device controller.
->>> That's the design in Broadcom Northstar2
->>> platform. The values of the VBUS and ID pins of this port are
->>> determined based on the type of the cable (device cable
->>> or host cable). And. phy has to be configured accordingly.
->>>
->>>> The phy ops being invoked during extcon events doesn't look right.
->>>
->>> Could you please elaborate on the concern, so that we can think of
->>> mitigating those issues in this driver?
->>> Since we are dealing with phy init/shutdown in this driver itself, are
->>> you okay with moving the extcon handling code
->>> out of phy ops ?
->>
->> yeah, For e.g., ns2_drd_phy_init is part of phy_ops and is being invoked from
->> extcon events too. Can a phy which is initialized by a phy consumer (say your
->> UDC invokes phy_init) can be shutdown by an extcon event?
->>
->> Maybe a clear explanation of when phy_ops here will be invoked and when it will
->> set using extcon events might help.
->>
-> 
-> Say, we have a USB pendrive which is connected to the DRD port through
-> a host cable.
-> Now the PHY will be initialized to be in host mode.
-> When the pendrive is unplugged, and we now connect the NS2 device to
-> some linux PC,
-> now the PHY has to be shutdown, and re-initialized to be in Device mode.
-> 
-> On unplug event, it is set neither to Host nor Device mode (basically
-> shutdown). Next time which ever cable is connected, the PHY is
-> initialized to the respective
-> mode.
-> 
-> Please let me know if it's fine to do these initializations outside
-> phy ops, because those will
-> be irrelevant for phy consumers (the controllers) as it's anyways
-> dealt in the phy driver through
-> extcon.
+> As I mentioned, keeping it in arch/powerpc I like even less. So this is fine.
 
-How does the consumer get to know whether they have to operate in host mode or
-device mode?
+Here is the patch with the change you suggested. Can I add your
+ack and send it via the powerpc tree with the change that uses
+these interfaces?
 
-Thanks
-Kishon
+Thanks,
+Nick
+
+---
+ drivers/of/fdt.c       | 38 ++++++++++++++++++++++++++++++++++++++
+ include/linux/of_fdt.h |  6 ++++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index e5ce4b59e162..961ca97072a9 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -754,6 +754,36 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ }
+ 
+ /**
++ * of_scan_flat_dt_subnodes - scan sub-nodes of a node call callback on each.
++ * @it: callback function
++ * @data: context data pointer
++ *
++ * This function is used to scan sub-nodes of a node.
++ */
++int __init of_scan_flat_dt_subnodes(unsigned long parent,
++				    int (*it)(unsigned long node,
++					      const char *uname,
++					      void *data),
++				    void *data)
++{
++	const void *blob = initial_boot_params;
++	int node;
++
++	fdt_for_each_subnode(node, blob, parent) {
++		const char *pathp;
++		int rc;
++
++		pathp = fdt_get_name(blob, node, NULL);
++		if (*pathp == '/')
++			pathp = kbasename(pathp);
++		rc = it(node, pathp, data);
++		if (rc)
++			return rc;
++	}
++	return 0;
++}
++
++/**
+  * of_get_flat_dt_subnode_by_name - get the subnode by given name
+  *
+  * @node: the parent node
+@@ -812,6 +842,14 @@ int __init of_flat_dt_match(unsigned long node, const char *const *compat)
+ 	return of_fdt_match(initial_boot_params, node, compat);
+ }
+ 
++/**
++ * of_get_flat_dt_prop - Given a node in the flat blob, return the phandle
++ */
++uint32_t __init of_get_flat_dt_phandle(unsigned long node)
++{
++	return fdt_get_phandle(initial_boot_params, node);
++}
++
+ struct fdt_scan_status {
+ 	const char *name;
+ 	int namelen;
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 271b3fdf0070..1dfbfd0d8040 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -54,6 +54,11 @@ extern char __dtb_end[];
+ extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
+ 				     int depth, void *data),
+ 			   void *data);
++extern int of_scan_flat_dt_subnodes(unsigned long node,
++				    int (*it)(unsigned long node,
++					      const char *uname,
++					      void *data),
++				    void *data);
+ extern int of_get_flat_dt_subnode_by_name(unsigned long node,
+ 					  const char *uname);
+ extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
+@@ -62,6 +67,7 @@ extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
+ extern int of_flat_dt_match(unsigned long node, const char *const *matches);
+ extern unsigned long of_get_flat_dt_root(void);
+ extern int of_get_flat_dt_size(void);
++extern uint32_t of_get_flat_dt_phandle(unsigned long node);
+ 
+ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
