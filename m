@@ -1,108 +1,201 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] devicetree: Document the max31760 device binding.
-Date: Mon, 10 Apr 2017 10:42:49 -0500
-Message-ID: <20170410154249.r77b6vf3ctzn4kua@rob-hp-laptop>
-References: <20170404192034.158901-1-john@jmuir.com>
- <20170404192034.158901-3-john@jmuir.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [GIT PULL] PCI: Support for configurable PCI endpoint
+Date: Mon, 10 Apr 2017 10:43:28 -0500
+Message-ID: <20170410154328.GB13170@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170405085243.18123-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170404192034.158901-3-john-eXjPKP/gKhgAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Muir <john-eXjPKP/gKhgAvxtiuMwx3w@public.gmane.org>
-Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Segal <segal-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170405085243.18123-1-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, hch@infradead.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 04, 2017 at 12:20:34PM -0700, John Muir wrote:
-> Signed-off-by: John Muir <john-eXjPKP/gKhgAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/hwmon/max31760.txt         | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/max31760.txt
+On Wed, Apr 05, 2017 at 02:22:20PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Bjorn,
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/max31760.txt b/Documentation/devicetree/bindings/hwmon/max31760.txt
-> new file mode 100644
-> index 000000000000..43787a77c322
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/max31760.txt
-> @@ -0,0 +1,58 @@
-> +MAX31760 fan controller
-> +-----------------------
-> +
-> +This device supports I2C only. Many properties of this device are configurable
-> +thorugh the hwmon interface. See also Documentation/hwmon/max31760.
+> Please find the pull request for PCI endpoint support below. I've
+> also included all the history here.
 
-I really think we need to describe the fans as separate nodes and 
-preferably with a common binding. This is the second fan controller 
-binding recently[1].
+Thanks, I applied these (with v7 of the first patch) to pci/host-designware
+for v4.12.
 
-Features of the "hwmon interface" are not relevant to the binding. 
-Bindings describe h/w.
-
-> +
-> +Required node properties:
-> +- compatible : "maxim,max31760"
-> +- reg : The I2C address of the device. This is 0x50 - 0x57 depending on the
-> +	hardware configuration.
-> +
-> +Optional node properties:
-> +- maxim,fan1-enabled		- 1 to enable, 0 to disable. Default: 1.
-> +- maxim,fan2-enabled		- 1 to enable, 0 to disable. Default: 1.
-> +- maxim,fan1-label		- String: Hwmon fan1_label.
-> +- maxim,fan2-label		- String: Hwmon fan2_label.
-
-Perhaps 2 fan sub nodes. reg for fan number, status for enabled, and 
-label for label.
-
-> +- maxim,fan-fail-full-only	- Set to 1 to assert a fan failure only when the
-> +				  PWM is at 100%. Default: 0.
-
-Make this a boolean.
-
-> +- maxim,fan-rd-signal		- Set to 1 if fan(s) provide a rotation
-> +				  detection (RD) signal, or 0 if the fan
-> +				  generates square-wave pulses. Default: 0.
-
-Make this a boolean.
-
-> +- maxim,fan-rd-polarity		- 0: RD is low when the fan is running.
-> +				  1: RD is high when the fan is running.
-> +				  Only relevant when fan-rd-signal is 1.
-> +				  Default: 0.
-> +- maxim,fan-signal-enabled	- Set to 1 if externally driving FF/FS low
-> +				  should force PWM output to 100%. Default: 0.
-> +- maxim,fan-spin-up-enabled     - For fan startup: Set to 1 to set the PWM to
-> +				  100% until tach is detected or two seconds
-> +				  have passed before reducing to the target
-> +				  value. Default: 0.
-> +- maxim,pwm-polarity		- 0: 100% PWM is when PWM is high.
-> +				  1: 100% PWM is when PWM is low.
-> +				  Default: 0.
-> +- maxim,pwm-pulse-stretch-enabled
-> +				- 1 to enable PWM pulse stretching, 0 to
-> +				  disable. Default: 0.
-> +- maxim,pwm-zero-fan-can-fail	- 0: Fan failure detection disabled when PWM is
-> +				     ramping to 0%.
-> +				  1: Fan failure detection enabled for all PWM
-> +				     values.
-> +				  Default: 0.
-
-All these can be boolean...
-
-> +- maxim,temp1-label		- String: Hwmon temp1_label.
-> +- maxim,temp2-label		- String: Hwmon temp2_label.
-> +- maxim,temp2-ideality		- Set ideality factor for the remote temperature
-> +				  sensor. Integer with range 0 to 63,
-> +				  representing a multiplication factor of 0.9844
-> +				  to 1.0489. Default: 24 (1.0080).
-
-No maxim,temp1-ideality? Not sure what to do with these, but perhaps 
-also as sub-nodes. Surely we have some bindings already for devices with 
-multiple temp sensors. Don't invent something custom here.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Changes from v5:
+> *) remove #syscon-cells property added in v5 and used 
+>    of_parse_phandle_with_fixed_args
+> *) fix compilation error in make.cross ARCH=blackfin that was because
+>    pci_endpoint_test.c driver depends on COMPILE_TEST.
+> 
+> Changes from v4:
+> *) add #syscon-cells property and used of_parse_phandle_with_args
+>    to perform a configuration in syscon module (as suggested by
+>    Rob Herring)
+> *) Remove unnecessary white space.
+> 
+> Changes from v3:
+> *) fixed a typo and adapted to https://lkml.org/lkml/2017/3/13/562.
+> 
+> Changes from v2:
+> *) changed the configfs structure as suggested by Christoph Hellwig. With
+>    this change the framework creates configfs entry for EP function driver
+>    and EP controller. Previously these entries have to be created by the
+>    the user. (Haven't changed the epc core or epf core except for invoking
+>    configfs APIs to create entries for EP function driver and EP controller.
+>    That's mostly because the EP function device can still be created by
+>    directly invoking the epf core API without using configfs).
+> *) Now the user has to use configfs entry 'start' to start the link.
+>    This was previously done by the function driver. However in the case of
+>    multi function EP, the function driver shouldn't start the link.
+> 
+> Changes from v1:
+> *) The preparation patches for adding EP support is removed and is sent
+>    separately
+> *) Added device ID for DRA74x/DRA72x and used it instead of
+>    using "PCI_ANY_ID"
+> *) Added userguide for PCI endpoint test function
+> 
+> Major Improvements from RFC:
+>  *) support multi-function devices (hw supported not virtual)
+>  *) Access host side buffers
+>  *) Raise MSI interrupts
+>  *) Add user space program to use the host side PCI driver
+>  *) Adapt all other users of designware to use the new design (only
+>     compile tested. Since I have only dra7xx boards, the new design
+>     has only been tested in dra7xx. I'd require the help of others
+>     to test the platforms they have access to).
+> 
+> This is based on
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+> pci/host-designware
+> 
+> Thanks
+> Kishon
+> 
+> The following changes since commit 7ea64dcf602c21b3e5062ca90111ca4459fab403:
+> 
+>   __end__ (2017-04-04 15:29:37 -0500)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/pci-endpoint.git tags/pci-endpoint-for-4.12
+> 
+> for you to fetch changes up to a5c85ba45c9682456077d7277196e91f8ea5fd5c:
+> 
+>   ARM: DRA7: clockdomain: Change the CLKTRCTRL of CM_PCIE_CLKSTCTRL to SW_WKUP (2017-04-05 14:05:28 +0530)
+> 
+> ----------------------------------------------------------------
+> pci: endpoint: for 4.12
+> 
+>  *) Add PCI endpoint core layer
+>  *) Modify designware and dra7xx driver to be configured in EP mode
+>  *) Add a PCI endpoint *test* function driver and corresponding host
+>     driver
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> ----------------------------------------------------------------
+> Kishon Vijay Abraham I (23):
+>       PCI: endpoint: Add EP core layer to enable EP controller and EP functions
+>       Documentation: PCI: Guide to use PCI Endpoint Core Layer
+>       PCI: endpoint: Introduce configfs entry for configuring EP functions
+>       Documentation: PCI: Guide to use PCI endpoint configfs
+>       PCI: endpoint: Create configfs entry for EPC device and EPF driver
+>       Documentation: PCI: Add specification for the *PCI test* function device
+>       PCI: endpoint: functions: Add an EP function to test PCI
+>       Documentation: PCI: Add binding documentation for pci-test endpoint function
+>       PCI: dwc: designware: Add EP mode support
+>       dt-bindings: PCI: Add DT bindings for PCI designware EP mode
+>       PCI: dwc: dra7xx: Facilitate wrapper and MSI interrupts to be enabled independently
+>       PCI: dwc: dra7xx: Add EP mode support
+>       dt-bindings: PCI: dra7xx: Add DT bindings for PCI dra7xx EP mode
+>       PCI: dwc: dra7xx: Workaround for errata id i870
+>       dt-bindings: PCI: dra7xx: Add DT bindings to enable unaligned access
+>       PCI: Add device IDs for DRA74x and DRA72x
+>       misc: Add host side PCI driver for PCI test function device
+>       Documentation: misc-devices: Add Documentation for pci-endpoint-test driver
+>       tools: PCI: Add a userspace tool to test PCI endpoint
+>       tools: PCI: Add sample test script to invoke pcitest
+>       Documentation: PCI: Add userguide for PCI endpoint test function
+>       MAINTAINERS: Add PCI Endpoint maintainer
+>       ARM: DRA7: clockdomain: Change the CLKTRCTRL of CM_PCIE_CLKSTCTRL to SW_WKUP
+> 
+>  Documentation/PCI/00-INDEX                                |  10 +++
+>  Documentation/PCI/endpoint/function/binding/pci-test.txt  |  17 +++++
+>  Documentation/PCI/endpoint/pci-endpoint-cfs.txt           | 105 ++++++++++++++++++++++++++
+>  Documentation/PCI/endpoint/pci-endpoint.txt               | 215 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  Documentation/PCI/endpoint/pci-test-function.txt          |  66 ++++++++++++++++
+>  Documentation/PCI/endpoint/pci-test-howto.txt             | 179 +++++++++++++++++++++++++++++++++++++++++++
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt |  26 +++++--
+>  Documentation/devicetree/bindings/pci/ti-pci.txt          |  42 +++++++++--
+>  Documentation/misc-devices/pci-endpoint-test.txt          |  35 +++++++++
+>  MAINTAINERS                                               |   9 +++
+>  arch/arm/mach-omap2/clockdomains7xx_data.c                |   2 +-
+>  drivers/Makefile                                          |   2 +
+>  drivers/misc/Kconfig                                      |   7 ++
+>  drivers/misc/Makefile                                     |   1 +
+>  drivers/misc/pci_endpoint_test.c                          | 534 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/Kconfig                                       |   1 +
+>  drivers/pci/dwc/Kconfig                                   |  36 ++++++++-
+>  drivers/pci/dwc/Makefile                                  |   5 +-
+>  drivers/pci/dwc/pci-dra7xx.c                              | 270 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+>  drivers/pci/dwc/pcie-designware-ep.c                      | 342 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/dwc/pcie-designware.c                         | 125 ++++++++++++++++++++++++++++++
+>  drivers/pci/dwc/pcie-designware.h                         | 112 +++++++++++++++++++++++++++
+>  drivers/pci/endpoint/Kconfig                              |  31 ++++++++
+>  drivers/pci/endpoint/Makefile                             |   7 ++
+>  drivers/pci/endpoint/functions/Kconfig                    |  12 +++
+>  drivers/pci/endpoint/functions/Makefile                   |   5 ++
+>  drivers/pci/endpoint/functions/pci-epf-test.c             | 510 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/endpoint/pci-ep-cfs.c                         | 509 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/endpoint/pci-epc-core.c                       | 579 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/endpoint/pci-epc-mem.c                        | 143 +++++++++++++++++++++++++++++++++++
+>  drivers/pci/endpoint/pci-epf-core.c                       | 351 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mod_devicetable.h                           |  10 +++
+>  include/linux/pci-ep-cfs.h                                |  41 ++++++++++
+>  include/linux/pci-epc.h                                   | 144 +++++++++++++++++++++++++++++++++++
+>  include/linux/pci-epf.h                                   | 162 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci_ids.h                                   |   2 +
+>  include/uapi/linux/Kbuild                                 |   1 +
+>  include/uapi/linux/pcitest.h                              |  19 +++++
+>  tools/pci/pcitest.c                                       | 186 +++++++++++++++++++++++++++++++++++++++++++++
+>  tools/pci/pcitest.sh                                      |  56 ++++++++++++++
+>  40 files changed, 4869 insertions(+), 40 deletions(-)
+>  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
+>  create mode 100644 Documentation/PCI/endpoint/pci-endpoint-cfs.txt
+>  create mode 100644 Documentation/PCI/endpoint/pci-endpoint.txt
+>  create mode 100644 Documentation/PCI/endpoint/pci-test-function.txt
+>  create mode 100644 Documentation/PCI/endpoint/pci-test-howto.txt
+>  create mode 100644 Documentation/misc-devices/pci-endpoint-test.txt
+>  create mode 100644 drivers/misc/pci_endpoint_test.c
+>  create mode 100644 drivers/pci/dwc/pcie-designware-ep.c
+>  create mode 100644 drivers/pci/endpoint/Kconfig
+>  create mode 100644 drivers/pci/endpoint/Makefile
+>  create mode 100644 drivers/pci/endpoint/functions/Kconfig
+>  create mode 100644 drivers/pci/endpoint/functions/Makefile
+>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-test.c
+>  create mode 100644 drivers/pci/endpoint/pci-ep-cfs.c
+>  create mode 100644 drivers/pci/endpoint/pci-epc-core.c
+>  create mode 100644 drivers/pci/endpoint/pci-epc-mem.c
+>  create mode 100644 drivers/pci/endpoint/pci-epf-core.c
+>  create mode 100644 include/linux/pci-ep-cfs.h
+>  create mode 100644 include/linux/pci-epc.h
+>  create mode 100644 include/linux/pci-epf.h
+>  create mode 100644 include/uapi/linux/pcitest.h
+>  create mode 100644 tools/pci/pcitest.c
+>  create mode 100644 tools/pci/pcitest.sh
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
