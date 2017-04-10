@@ -1,249 +1,134 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH v2 2/2] mtd: spi-nor: add driver for STM32 quad spi flash
- controller
-Date: Mon, 10 Apr 2017 18:52:19 +0200
-Message-ID: <f9b4b8b0-4987-7f67-df3b-d32d6c130818@st.com>
-References: <1490979724-10905-1-git-send-email-ludovic.Barre@st.com>
- <1490979724-10905-3-git-send-email-ludovic.Barre@st.com>
- <5ec38e39-661d-8a83-4168-b9f3d986bcd1@gmail.com>
- <601e2aa5-7cd3-34fb-660e-359f2a016b65@st.com>
- <9a0c5f8e-01dc-3d2b-5ebb-069752594e8e@gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv3 02/10] serdev: add serdev_device_wait_until_sent
+Date: Mon, 10 Apr 2017 19:10:45 +0200
+Message-ID: <20170410171045.xzqr2n5hzyfzyyru@earth>
+References: <20170328155939.31566-1-sre@kernel.org>
+ <20170328155939.31566-3-sre@kernel.org>
+ <20170408165740.GA20058@kroah.com>
+ <CAL_JsqLK=pbF7Nx-2w98t62N53zbL1oGZpGEbZUK-xg5ms4AZw@mail.gmail.com>
+ <20170410140313.GA31894@kroah.com>
+ <CAL_JsqJCjob6NDfHe0r7X3dXPEniKh5vChXhBxfyHZRu7Fov7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <9a0c5f8e-01dc-3d2b-5ebb-069752594e8e@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qftuitvjemplad6x"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJCjob6NDfHe0r7X3dXPEniKh5vChXhBxfyHZRu7Fov7A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-hi Marek
 
-tomorrow, I send a v3 with your/Rob reviews.
+--qftuitvjemplad6x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-BR
+Hi,
 
-Ludo
+On Mon, Apr 10, 2017 at 11:12:39AM -0500, Rob Herring wrote:
+> On Mon, Apr 10, 2017 at 9:03 AM, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Mon, Apr 10, 2017 at 08:46:57AM -0500, Rob Herring wrote:
+> >> On Sat, Apr 8, 2017 at 11:57 AM, Greg Kroah-Hartman
+> >> <gregkh@linuxfoundation.org> wrote:
+> >> > On Tue, Mar 28, 2017 at 05:59:31PM +0200, Sebastian Reichel wrote:
+> >> >> Add method, which waits until the transmission buffer has been sent.
+> >> >> Note, that the change in ttyport_write_wakeup is related, since
+> >> >> tty_wait_until_sent will hang without that change.
+> >> >>
+> >> >> Acked-by: Rob Herring <robh@kernel.org>
+> >> >> Acked-by: Pavel Machek <pavel@ucw.cz>
+> >> >> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> >> >> ---
+> >> >> Changes since PATCHv2:
+> >> >>  * Avoid goto in ttyport_write_wakeup
+> >> >> ---
+> >> >>  drivers/tty/serdev/core.c           | 11 +++++++++++
+> >> >>  drivers/tty/serdev/serdev-ttyport.c | 18 ++++++++++++++----
+> >> >>  include/linux/serdev.h              |  3 +++
+> >> >>  3 files changed, 28 insertions(+), 4 deletions(-)
+> >> >>
+> >> >> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> >> >> index f4c6c90add78..a63b74031e22 100644
+> >> >> --- a/drivers/tty/serdev/core.c
+> >> >> +++ b/drivers/tty/serdev/core.c
+> >> >> @@ -173,6 +173,17 @@ void serdev_device_set_flow_control(struct ser=
+dev_device *serdev, bool enable)
+> >> >>  }
+> >> >>  EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
+> >> >>
+> >> >> +void serdev_device_wait_until_sent(struct serdev_device *serdev, l=
+ong timeout)
+> >> >> +{
+> >> >> +     struct serdev_controller *ctrl =3D serdev->ctrl;
+> >> >> +
+> >> >> +     if (!ctrl || !ctrl->ops->wait_until_sent)
+> >> >> +             return;
+> >> >> +
+> >> >> +     ctrl->ops->wait_until_sent(ctrl, timeout);
+> >> >> +}
+> >> >> +EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
+> >> >
+> >> > Is this still needed now that we have serdev_device_write() with an
+> >> > unlimited timeout available?
+> >>
+> >> Yes, because only this waits until the data is on the wire.
+> >
+> > What "wire" is that?  The serial wire?  How do you know this?  Many usb
+> > to serial devices have no way to determine this, given that there is
+> > another uart hanging off of the end of a USB connection.
+>=20
+> Okay, maybe it's just out of linux s/w buffers for h/w which you don't
+> know. It is the same semantics as tty_wait_until_sent which is
+> documented as: "Wait for characters pending in a tty driver to hit the
+> wire, or for a timeout to occur (eg due to flow control)"
 
+For embedded h/w it usually means the serial wire. tty_wait_until_sent()
+first waits for the tty buffer to be empty and then calls wait_until_sent()
+in the driver providing the tty. In case of serial-core that is
+implemented by uart_wait_until_sent(), which waits for the serial
+driver's tx_empty() operation becoming true (grepping for
+".tx_empty" returned 81 hits for me). Also at least some of the usb to
+serial adapters seem to support this using usb_serial_generic_wait_until_se=
+nt()
+and ".tx_empty":
 
-On 04/10/2017 06:15 PM, Marek Vasut wrote:
-> On 04/10/2017 11:08 AM, Ludovic BARRE wrote:
->> On 04/07/2017 01:55 AM, Marek Vasut wrote:
->>> On 03/31/2017 07:02 PM, Ludovic Barre wrote:
->>>> From: Ludovic Barre <ludovic.barre@st.com>
->>>>
->>>> The quadspi is a specialized communication interface targeting single,
->>>> dual or quad SPI Flash memories.
->>>>
->>>> It can operate in any of the following modes:
->>>> -indirect mode: all the operations are performed using the quadspi
->>>>    registers
->>>> -read memory-mapped mode: the external Flash memory is mapped to the
->>>>    microcontroller address space and is seen by the system as if it was
->>>>    an internal memory
->>>>
->>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->>>> ---
->>>>    drivers/mtd/spi-nor/Kconfig         |   7 +
->>>>    drivers/mtd/spi-nor/Makefile        |   1 +
->>>>    drivers/mtd/spi-nor/stm32-quadspi.c | 690
->>>> ++++++++++++++++++++++++++++++++++++
->>>>    3 files changed, 698 insertions(+)
->>>>    create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
->>>>
->>> [...]
->>>
->>>> +struct stm32_qspi_flash {
->>>> +    struct spi_nor nor;
->>>> +    u32 cs;
->>>> +    u32 fsize;
->>>> +    u32 presc;
->>>> +    struct stm32_qspi *qspi;
->>>> +};
->>> [...]
->>>
->>>> +struct stm32_qspi_cmd {
->>>> +    struct {
->>>> +        u8 addr_width;
->>>> +        u8 dummy;
->>>> +        u8 data;
->>>> +    } conf;
->>> Is there any benefit in having this structure here or could you just
->>> make the struct stm32_qspi_cmd flat ?
->> no benefit, it was just to regroup,  so I can do a flat structure
-> Well, as you like, but I think it does make sense to just make it flat.
->
->>>> +    u8 opcode;
->>>> +    u32 framemode;
->>>> +    u32 qspimode;
->>>> +    u32 addr;
->>>> +    size_t len;
->>>> +    void *buf;
->>>> +};
->>> [...]
->>>
->>>> +static ssize_t stm32_qspi_read(struct spi_nor *nor, loff_t from,
->>>> size_t len,
->>>> +                   u_char *buf)
->>>> +{
->>>> +    struct stm32_qspi_flash *flash = nor->priv;
->>>> +    struct stm32_qspi *qspi = flash->qspi;
->>>> +    struct stm32_qspi_cmd cmd;
->>>> +    int err;
->>>> +
->>>> +    dev_dbg(qspi->dev, "read(%#.2x): buf:%p from:%#.8x len:%#x\n",
->>>> +        nor->read_opcode, buf, (u32)from, len);
->>>> +
->>>> +    memset(&cmd, 0, sizeof(cmd));
->>>> +    cmd.opcode = nor->read_opcode;
->>>> +    cmd.conf.addr_width = nor->addr_width;
->>>> +    cmd.addr = (u32)from;
->>> loff_t (from) can be 64bit ... how do we handle this ?
->> I'm surprise by the question,
->> the SPI NOR device uses 3 Bytes or 4 bytes address mode.
->> So, the stm32 qspi controller has a 32 bit register for NOR address.
->> On the other hand the framework and other drivers used this variable
->> (from) like
->> a 32 bits.
-> Hmmm, (rhetorical question) then why do we even use loff_t in the
-> framework ?
->
-> Anyway, this is no problem then.
-In fact, the loff_t 64 bit come from mtd interface
-(needed to address biggest device constraint) but not needed for spi-nor 
-devices.
->>>> +    cmd.conf.data = 1;
->>>> +    cmd.conf.dummy = nor->read_dummy;
->>>> +    cmd.len = len;
->>>> +    cmd.buf = buf;
->>>> +    cmd.qspimode = qspi->read_mode;
->>>> +
->>>> +    stm32_qspi_set_framemode(nor, &cmd, true);
->>>> +    err = stm32_qspi_send(flash, &cmd);
->>>> +
->>>> +    return err ? err : len;
->>>> +}
->>> [...]
->>>
->>>> +static irqreturn_t stm32_qspi_irq(int irq, void *dev_id)
->>>> +{
->>>> +    struct stm32_qspi *qspi = (struct stm32_qspi *)dev_id;
->>>> +    u32 cr, sr, fcr = 0;
->>>> +
->>>> +    cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
->>>> +    sr = readl_relaxed(qspi->io_base + QUADSPI_SR);
->>>> +
->>>> +    if ((cr & CR_TCIE) && (sr & SR_TCF)) {
->>>> +        /* tx complete */
->>>> +        fcr |= FCR_CTCF;
->>>> +        complete(&qspi->cmd_completion);
->>>> +    } else {
->>>> +        dev_info(qspi->dev, "spurious interrupt\n");
->>> You probably want to ratelimit this one ...
->> yes it's better if there is an issue.
-> Yep
->
->>>> +    }
->>>> +
->>>> +    writel_relaxed(fcr, qspi->io_base + QUADSPI_FCR);
->>>> +
->>>> +    return IRQ_HANDLED;
->>>> +}
->>>> +
->>>> +static int stm32_qspi_prep(struct spi_nor *nor, enum spi_nor_ops ops)
->>>> +{
->>>> +    struct stm32_qspi_flash *flash = nor->priv;
->>>> +    struct stm32_qspi *qspi = flash->qspi;
->>>> +
->>>> +    mutex_lock(&qspi->lock);
->>>> +    return 0;
->>>> +}
->>>> +
->>>> +static void stm32_qspi_unprep(struct spi_nor *nor, enum spi_nor_ops
->>>> ops)
->>>> +{
->>>> +    struct stm32_qspi_flash *flash = nor->priv;
->>>> +    struct stm32_qspi *qspi = flash->qspi;
->>>> +
->>>> +    mutex_unlock(&qspi->lock);
->>>> +}
->>>> +
->>>> +static int stm32_qspi_flash_setup(struct stm32_qspi *qspi,
->>>> +                  struct device_node *np)
->>>> +{
->>>> +    u32 width, flash_read, presc, cs_num, max_rate = 0;
->>>> +    struct stm32_qspi_flash *flash;
->>>> +    struct mtd_info *mtd;
->>>> +    int ret;
->>>> +
->>>> +    of_property_read_u32(np, "reg", &cs_num);
->>>> +    if (cs_num >= STM32_MAX_NORCHIP)
->>>> +        return -EINVAL;
->>>> +
->>>> +    of_property_read_u32(np, "spi-max-frequency", &max_rate);
->>>> +    if (!max_rate)
->>>> +        return -EINVAL;
->>>> +
->>>> +    presc = DIV_ROUND_UP(qspi->clk_rate, max_rate) - 1;
->>>> +
->>>> +    if (of_property_read_u32(np, "spi-rx-bus-width", &width))
->>>> +        width = 1;
->>>> +
->>>> +    if (width == 4)
->>>> +        flash_read = SPI_NOR_QUAD;
->>>> +    else if (width == 2)
->>>> +        flash_read = SPI_NOR_DUAL;
->>>> +    else if (width == 1)
->>>> +        flash_read = SPI_NOR_NORMAL;
->>>> +    else
->>>> +        return -EINVAL;
->>>> +
->>>> +    flash = &qspi->flash[cs_num];
->>>> +    flash->qspi = qspi;
->>>> +    flash->cs = cs_num;
->>>> +    flash->presc = presc;
->>>> +
->>>> +    flash->nor.dev = qspi->dev;
->>>> +    spi_nor_set_flash_node(&flash->nor, np);
->>>> +    flash->nor.priv = flash;
->>>> +    mtd = &flash->nor.mtd;
->>>> +    mtd->priv = &flash->nor;
->>>> +
->>>> +    flash->nor.read = stm32_qspi_read;
->>>> +    flash->nor.write = stm32_qspi_write;
->>>> +    flash->nor.erase = stm32_qspi_erase;
->>>> +    flash->nor.read_reg = stm32_qspi_read_reg;
->>>> +    flash->nor.write_reg = stm32_qspi_write_reg;
->>>> +    flash->nor.prepare = stm32_qspi_prep;
->>>> +    flash->nor.unprepare = stm32_qspi_unprep;
->>>> +
->>>> +    writel_relaxed(LPTR_DFT_TIMEOUT, qspi->io_base + QUADSPI_LPTR);
->>>> +
->>>> +    writel_relaxed(CR_PRESC(presc) | CR_FTHRES(3) | CR_TCEN | CR_SSHIFT
->>>> +               | CR_EN, qspi->io_base + QUADSPI_CR);
->>>> +
->>>> +    /*
->>>> +     * in stm32 qspi controller, QUADSPI_DCR register has a fsize field
->>>> +     * which define the size of nor flash.
->>>> +     * if fsize is NULL, the controller can't sent spi-nor command.
->>>> +     * set a temporary value just to discover the nor flash with
->>>> +     * "spi_nor_scan". After, the right value (mtd->size) can be set.
->>>> +     */
->>> Is 25 the smallest value ? Use a macro for this ...
->> 25 is an arbitrary choice, I will define a smallest value
-> Cool, thanks!
->
+$ git grep "\.tx_empty"
+cp210x.c:       .tx_empty               =3D cp210x_tx_empty,
+f81534.c:       .tx_empty =3D             f81534_tx_empty,
+ftdi_sio.c:     .tx_empty =3D             ftdi_tx_empty,
+io_ti.c:        .tx_empty               =3D edge_tx_empty,
+io_ti.c:        .tx_empty               =3D edge_tx_empty,
+mxuport.c:      .tx_empty               =3D mxuport_tx_empty,
+ti_usb_3410_5052.c:     .tx_empty               =3D ti_tx_empty,
+ti_usb_3410_5052.c:     .tx_empty               =3D ti_tx_empty,
 
+The other ones will only wait for empty s/w buffer, but that's
+already the case for tty_wait_until_sent(), so IMHO a different
+problem.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- Sebastian
+
+--qftuitvjemplad6x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljrvJMACgkQ2O7X88g7
++pqfyQ//eRgPEGVb9ShFmv8yUuzo4/CiSl9cgKiDcOaDDw+NPYQ36FO5kbN4ScMy
+mkCtpMzZi5BvX5c0fhDxCFsp9aQiLX5R5EvjmgYf2TSO5gNmgiglA1HFPOG85Xl8
+TCY8g40W8knLD2pEfKPWrYOKTU5QmTBu/rgnBElv3IsUhE/sfTzJJNrfof6XhcPZ
+VlMrjQvwnA6XBMTpIM+Wo3RHzD9cGub4inGYPoVCS7E5saZvIKdR1G0QYtSejp/i
+edyJcTTJe+wnwTVxT+RL05orfBEffOpWWrOQQxwcOAJjdXobG3lp/mGmGzlvR5aU
+5XLjfZPK8mjzmZuoGOX7fVEFtRqZ0m8P0fp2/YOcXmomUspmD7fYda7yv2SCrjzb
+Fy2kbdpLoEQxbNQoKU7EZle2ffcI7WanAeV4iJO789NMoUV3Jf2KwnGTmHXY8sNS
+nOLKs1DWuZQ5PKkC6pOMv1Bw3ZZeE9RLcujMihoaXCFdVaFh8T3yHS/x0DpRj1Rm
+47EShWDWqWCA+FiWbgAY8Uo9ZkYcY1yX2ajAdjdXZj79XoYl0qd2UcM7lFnJi/g5
+6zxgucgoRyMNl/xiUnUo3tQUJQ1WWaVmBW3lmHUBBv5ErydN0LU4NJOeRCfFDCIl
+LrKgs+xktNSr+JPTE5+aPPIA996EsL5PlNUKEigK6ZYA35UdIeo=
+=0rjz
+-----END PGP SIGNATURE-----
+
+--qftuitvjemplad6x--
