@@ -1,56 +1,55 @@
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH net-next v2] bindings: net: stmmac: add missing note about LPI interrupt
-Date: Mon, 10 Apr 2017 09:43:19 +0200
-Message-ID: <20170410074320.9506-1-niklass@axis.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v3 5/9] arm, arm64: factorize common cpu capacity default
+ code
+Date: Mon, 10 Apr 2017 09:18:07 +0100
+Message-ID: <20170410081806.GB27538@e104818-lin.cambridge.arm.com>
+References: <20170327131825.32134-1-juri.lelli@arm.com>
+ <20170327131825.32134-6-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-Cc: Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170327131825.32134-6-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, peterz@infradead.org, broonie@kernel.org, will.deacon@arm.com, gregkh@linuxfoundation.org, dietmar.eggemann@arm.com, Russell King <linux@armlinux.org.uk>, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+On Mon, Mar 27, 2017 at 02:18:21PM +0100, Juri Lelli wrote:
+> arm and arm64 share lot of code relative to parsing CPU capacity
+> information from DT, using that information for appropriate scaling and
+> exposing a sysfs interface for chaging such values at runtime.
+> 
+> Factorize such code in a common place (driver/base/arch_topology.c) in
+> preparation for further additions.
+> 
+> Suggested-by: Will Deacon <will.deacon@arm.com>
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+> ---
+> 
+> Changes from v2:
+>  - make capacity_scale and raw_capacity static
+>  - added SPDX header
+>  - improved indent
+>  - misc. whitespaces/newlines fixes
+> 
+> Changes from v1:
+>  - keep the original GPLv2 header
+> ---
+>  arch/arm/Kconfig             |   1 +
+>  arch/arm/kernel/topology.c   | 213 ++-----------------------------------
+>  arch/arm64/Kconfig           |   1 +
+>  arch/arm64/kernel/topology.c | 219 +--------------------------------------
+>  drivers/base/Kconfig         |   8 ++
+>  drivers/base/Makefile        |   1 +
+>  drivers/base/arch_topology.c | 242 +++++++++++++++++++++++++++++++++++++++++++
 
-The hardware has a LPI interrupt.
-There is already code in the stmmac driver to parse and handle the
-interrupt. However, this information was missing from the DT binding.
+For arm64:
 
-Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
----
- Documentation/devicetree/bindings/net/stmmac.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index f652b0c384ce..84e4cbfd3b0f 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -8,8 +8,8 @@ Required properties:
-   that services interrupts for this device
- - interrupts: Should contain the STMMAC interrupts
- - interrupt-names: Should contain the interrupt names "macirq"
--  "eth_wake_irq" if this interrupt is supported in the "interrupts"
--  property
-+  "eth_wake_irq" if this interrupt is supported in the "interrupts" property
-+  "eth_lpi" if this interrupt is supported in the "interrupts" property
- - phy-mode: See ethernet.txt file in the same directory.
- - snps,reset-gpio 	gpio number for phy reset.
- - snps,reset-active-low boolean flag to indicate if phy reset is active low.
-@@ -152,8 +152,8 @@ Examples:
- 		compatible = "st,spear600-gmac";
- 		reg = <0xe0800000 0x8000>;
- 		interrupt-parent = <&vic1>;
--		interrupts = <24 23>;
--		interrupt-names = "macirq", "eth_wake_irq";
-+		interrupts = <24 23 22>;
-+		interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
- 		mac-address = [000000000000]; /* Filled in by U-Boot */
- 		max-frame-size = <3800>;
- 		phy-mode = "gmii";
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
