@@ -1,90 +1,59 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: clock: gxbb: expose UART clocks
-Date: Tue, 04 Apr 2017 10:40:20 +0200
-Message-ID: <149129522024.91618.13395564164212234056@resonance>
-References: <20170331165437.26227-1-hgkr.klein@gmail.com>
- <20170331165437.26227-2-hgkr.klein@gmail.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: Re: [PATCH net-next] bindings: net: stmmac: add missing note about
+ LPI interrupt
+Date: Mon, 10 Apr 2017 09:43:08 +0200
+Message-ID: <379cb3b6-4b4f-b4f0-d5e2-1896c7b677b1@axis.com>
+References: <20170407143100.21536-1-niklass@axis.com>
+ <c1e78674-64d1-0e51-3ca4-48d8500a3528@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170331165437.26227-2-hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Helmut Klein <hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c1e78674-64d1-0e51-3ca4-48d8500a3528@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Joao Pinto <Joao.Pinto@synopsys.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Thierry Reding <treding@nvidia.com>, Eric Engestrom <eric@engestrom.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Helmut Klein (2017-03-31 18:54:34)
-> Expose the clock ids of the three none AO uarts to the dt-bindings
-> =
+On 04/07/2017 06:48 PM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 04/07/2017 05:30 PM, Niklas Cassel wrote:
+> 
+>> From: Niklas Cassel <niklas.cassel@axis.com>
+>>
+>> The hardware has a LPI interrupt.
+>> There is already code in the stmmac driver to parse and handle the
+>> interrupt. However, this information was missing from the DT binding.
+>>
+>> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+>> ---
+>>  Documentation/devicetree/bindings/net/stmmac.txt | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+>> index f652b0c384ce..8977abc266ac 100644
+>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+>> @@ -8,8 +8,8 @@ Required properties:
+>>    that services interrupts for this device
+>>  - interrupts: Should contain the STMMAC interrupts
+>>  - interrupt-names: Should contain the interrupt names "macirq"
+>> -  "eth_wake_irq" if this interrupt is supported in the "interrupts"
+>> -  property
+>> +  "eth_wake_irq" if this interrupt is supported in the "interrupts property
+> 
+>    Missed closing quote?
 
-> Signed-off-by: Helmut Klein <hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Thanks for pointing it out.
+Will send a v2.
 
-Acked-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-> ---
->  drivers/clk/meson/gxbb.h              | 6 +++---
->  include/dt-bindings/clock/gxbb-clkc.h | 3 +++
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> =
-
-> diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
-> index 8ee2022ce5d5..1edfaa5fe307 100644
-> --- a/drivers/clk/meson/gxbb.h
-> +++ b/drivers/clk/meson/gxbb.h
-> @@ -194,7 +194,7 @@
->  /* #define CLKID_SAR_ADC */
->  #define CLKID_SMART_CARD         24
->  #define CLKID_RNG0               25
-> -#define CLKID_UART0              26
-> +/* CLKID_UART0 */
->  #define CLKID_SDHC               27
->  #define CLKID_STREAM             28
->  #define CLKID_ASYNC_FIFO         29
-> @@ -216,7 +216,7 @@
->  #define CLKID_ADC                45
->  #define CLKID_BLKMV              46
->  #define CLKID_AIU                47
-> -#define CLKID_UART1              48
-> +/* CLKID_UART1 */
->  #define CLKID_G2D                49
->  /* CLKID_USB0 */
->  /* CLKID_USB1 */
-> @@ -236,7 +236,7 @@
->  /* CLKID_USB0_DDR_BRIDGE */
->  #define CLKID_MMC_PCLK           66
->  #define CLKID_DVIN               67
-> -#define CLKID_UART2              68
-> +/* CLKID_UART2 */
->  /* #define CLKID_SANA */
->  #define CLKID_VPU_INTR           70
->  #define CLKID_SEC_AHB_AHB3_BRIDGE 71
-> diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/=
-clock/gxbb-clkc.h
-> index 692846c7941b..7b329df47752 100644
-> --- a/include/dt-bindings/clock/gxbb-clkc.h
-> +++ b/include/dt-bindings/clock/gxbb-clkc.h
-> @@ -15,13 +15,16 @@
->  #define CLKID_SPI              34
->  #define CLKID_I2C              22
->  #define CLKID_SAR_ADC          23
-> +#define CLKID_UART0            26
->  #define CLKID_ETH              36
-> +#define CLKID_UART1            48
->  #define CLKID_USB0             50
->  #define CLKID_USB1             51
->  #define CLKID_USB              55
->  #define CLKID_HDMI_PCLK                63
->  #define CLKID_USB1_DDR_BRIDGE  64
->  #define CLKID_USB0_DDR_BRIDGE  65
-> +#define CLKID_UART2            68
->  #define CLKID_SANA             69
->  #define CLKID_GCLK_VENCI_INT0  77
->  #define CLKID_AO_I2C           93
-> --
-> 2.11.0
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> +  "eth_lpi" if this interrupt is supported in the "interrupts" property
+>>  - phy-mode: See ethernet.txt file in the same directory.
+>>  - snps,reset-gpio     gpio number for phy reset.
+>>  - snps,reset-active-low boolean flag to indicate if phy reset is active low.
+> [...]
+> 
+> MBR, Sergei
+> 
