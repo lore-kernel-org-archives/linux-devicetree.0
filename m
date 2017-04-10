@@ -1,47 +1,341 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 6/9] drivers: remove useless comment from
- base/arch_topology.c
-Date: Mon, 10 Apr 2017 17:33:25 +0100
-Message-ID: <20170410163325.GU17774@n2100.armlinux.org.uk>
-References: <20170327131825.32134-1-juri.lelli@arm.com>
- <20170327131825.32134-7-juri.lelli@arm.com>
- <20170410135103.GR17774@n2100.armlinux.org.uk>
- <20170410140214.GE30804@e106622-lin>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 4/5] iio: dac: stm32: add support for trigger events
+Date: Mon, 10 Apr 2017 18:37:39 +0200
+Message-ID: <dd8e4325-57f5-01db-1f37-d59d6bf782c4@st.com>
+References: <1491495116-7209-1-git-send-email-fabrice.gasnier@st.com>
+ <1491495116-7209-5-git-send-email-fabrice.gasnier@st.com>
+ <14dfe2a9-d459-0074-532e-d44daf336406@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170410140214.GE30804@e106622-lin>
-Sender: linux-pm-owner@vger.kernel.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <14dfe2a9-d459-0074-532e-d44daf336406@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 10, 2017 at 03:02:14PM +0100, Juri Lelli wrote:
-> Hi,
+On 04/09/2017 11:04 AM, Jonathan Cameron wrote:
+> On 06/04/17 17:11, Fabrice Gasnier wrote:
+>> STM32 DAC supports triggers to synchronize conversions. When trigger
+>> occurs, data is transferred from DHR (data holding register) to DOR
+>> (data output register) so output voltage is updated.
+>> Both hardware and software triggers are supported.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Hmm. I'm really not sure on how to handle this...  The problem to my mind
+> is knowing when it has triggered so we can know that it makes sense to
+> put the next reading in.... Anyhow bear with me...
 > 
-> On 10/04/17 14:51, Russell King - ARM Linux wrote:
-> > On Mon, Mar 27, 2017 at 02:18:22PM +0100, Juri Lelli wrote:
-> > > Printing out an error message when we failed to get the cpu device is
-> > > not helping anyone. Remove it.
-> > 
-> > (1) the subject line talks about removing a "comment" but you're
-> >     actually removing an error printk
-> > (2) I don't think it's "not helping anyone", although the description
-> >     above doesn't say _why_ - it's reporting the lack of a missing CPU
-> >     device that we expect to be present.  If it's not present, then
-> >     we're not going to end up with the cpu capacity attribute, and the
-> >     error message answers the "why is that sysfs file missing" question.
+> I think the same arguement holds for this as equivalent input devices.
+> There we have always argued that if you need multichannel synchronized
+> capture (which is 'kind' of what we are looking at here) then you have
+> to use the buffered interface.
 > 
-> That's the same I was thinking when I put the error message there in the
-> first place. But, then Greg didn't seem to like it.
+> I think we need buffered output for this to fit nicely in the subsystem.
+> It definitely isn't a correct use of the event triggers.
+> 
+> That means we really need to figure out the ABI for buffered output and
+> get that sorted.  To my mind it shouldn't be too tricky and should look
+> much like buffered input, just with us writing to a fifo from userspace
+> rather than reading from it.
+> 
+> The DMA side of that can come later, in a similar fashion to how it is
+> added for the ADC side of things.  We can also have 'providers'
+> (equivalent of 'consumers' on the ADC side), perhaps giving a neat way
+> of describing DDS devices (I'm not so sure on this yet).
+> 
+> So to my mind, if you are not in buffered mode and do a sysfs write it
+> should be 'instant'. If in buffered mode, then it will wait on the
+> trigger.
+> 
+> So the complex side of things is what we 'know' about the data flow.
+> 1) Case you have here.  We want to do direct write through to the device,
+> but have no way of knowing (or do we?) that it has triggered and written
+> the data to the output.  So we have no way of knowing we can push the next
+> value in from a fifo yet...  In this case I guess the solution might be to
+> have a fifo length of 0.  That is data flows straight to hardware.
+> 
+> 2) Simple stream case - always enough data in the fifo and we get an interrupt
+> to signify that the previous trigger happened.
+> 
+> 3) Case where we are only just keeping up.  So we won't have data in the fifo
+> until sometime after the previous trigger.  In this case we need the fifo to
+> push straight through if there isn't data ready to go.
+> 
+> 4) Case where we are not pushing data fast enough.  Just don't update?
+> 
+> That last case 4 is nasty as the reason we typically want to do triggered
+> DAC updates is to ensure we always have valid states in some control loop,
+> but we might get a race here where one DAC has a value ready to go on a trigger
+> and another one isn't quite ready.  In this case we might want to hold off
+> until all are ready... So there might need to be a sanity check that everyone
+> on a given trigger is ready to go - an extra callback.
+> 
+> So a bit fiddly and I'm not sure I like the representation of through flow as
+> a fifo of 0 length... (can't think of a neater way though atm)
+> 
+> Anyhow, time to sort output buffers out once and for all I think if we can
+> get a reasonable group of people together who have the time.
+> 
+> Sorry Fabrice that this has hit your driver!  Perhaps we can figure
+> enough out to be able to at least get the basics (i.e. patches 1,2) in as
+> asap.
 
-I don't think it was a case of "not liking it" - Greg asked what use it
-was.  Greg also pointed out the race with userspace.
+Hi Jonathan,
 
-I think dropping this patch is the quickest way to move forward.
+Thanks for sharing your view on this.
+I sent patches 1,2 updated with your comments. I dropped following
+patches for the time being, as it obviously require additions...
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+I agree with your analysis and concerns above.
+I hope Lars or others can give some feedback or guidelines on output
+buffer? Is there something already, we may start to work on ?
+
+Thanks all in advance.
+Best Regards,
+Fabrice
+
+> 
+> Jonathan
+>> ---
+>> Changes in v2:
+>> - Fix issue with trigger, by using set_trigger callback
+>> - trigger can now be assigned, no matters powerdown state
+>> ---
+>>  drivers/iio/dac/Kconfig          |   3 +
+>>  drivers/iio/dac/stm32-dac-core.h |   8 +++
+>>  drivers/iio/dac/stm32-dac.c      | 127 ++++++++++++++++++++++++++++++++++++++-
+>>  3 files changed, 137 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+>> index 7198648..786c38b 100644
+>> --- a/drivers/iio/dac/Kconfig
+>> +++ b/drivers/iio/dac/Kconfig
+>> @@ -278,6 +278,9 @@ config STM32_DAC
+>>  	tristate "STMicroelectronics STM32 DAC"
+>>  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+>>  	depends on REGULATOR
+>> +	select IIO_TRIGGERED_EVENT
+>> +	select IIO_STM32_TIMER_TRIGGER
+>> +	select MFD_STM32_TIMERS
+>>  	select STM32_DAC_CORE
+>>  	help
+>>  	  Say yes here to build support for STMicroelectronics STM32 Digital
+>> diff --git a/drivers/iio/dac/stm32-dac-core.h b/drivers/iio/dac/stm32-dac-core.h
+>> index daf0993..e51a468 100644
+>> --- a/drivers/iio/dac/stm32-dac-core.h
+>> +++ b/drivers/iio/dac/stm32-dac-core.h
+>> @@ -26,6 +26,7 @@
+>>  
+>>  /* STM32 DAC registers */
+>>  #define STM32_DAC_CR		0x00
+>> +#define STM32_DAC_SWTRIGR	0x04
+>>  #define STM32_DAC_DHR12R1	0x08
+>>  #define STM32_DAC_DHR12R2	0x14
+>>  #define STM32_DAC_DOR1		0x2C
+>> @@ -33,9 +34,16 @@
+>>  
+>>  /* STM32_DAC_CR bit fields */
+>>  #define STM32_DAC_CR_EN1		BIT(0)
+>> +#define STM32H7_DAC_CR_TEN1		BIT(1)
+>> +#define STM32H7_DAC_CR_TSEL1_SHIFT	2
+>> +#define STM32H7_DAC_CR_TSEL1		GENMASK(5, 2)
+>>  #define STM32H7_DAC_CR_HFSEL		BIT(15)
+>>  #define STM32_DAC_CR_EN2		BIT(16)
+>>  
+>> +/* STM32_DAC_SWTRIGR bit fields */
+>> +#define STM32_DAC_SWTRIGR_SWTRIG1	BIT(0)
+>> +#define STM32_DAC_SWTRIGR_SWTRIG2	BIT(1)
+>> +
+>>  /**
+>>   * struct stm32_dac_common - stm32 DAC driver common data (for all instances)
+>>   * @regmap: DAC registers shared via regmap
+>> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+>> index c0d993a..a7a078e 100644
+>> --- a/drivers/iio/dac/stm32-dac.c
+>> +++ b/drivers/iio/dac/stm32-dac.c
+>> @@ -23,6 +23,10 @@
+>>  #include <linux/bitfield.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/iio/iio.h>
+>> +#include <linux/iio/timer/stm32-timer-trigger.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +#include <linux/iio/triggered_event.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>>  #include <linux/platform_device.h>
+>> @@ -32,15 +36,113 @@
+>>  #define STM32_DAC_CHANNEL_1		1
+>>  #define STM32_DAC_CHANNEL_2		2
+>>  #define STM32_DAC_IS_CHAN_1(ch)		((ch) & STM32_DAC_CHANNEL_1)
+>> +/* channel2 shift */
+>> +#define STM32_DAC_CHAN2_SHIFT		16
+>>  
+>>  /**
+>>   * struct stm32_dac - private data of DAC driver
+>>   * @common:		reference to DAC common data
+>> + * @swtrig:		Using software trigger
+>>   */
+>>  struct stm32_dac {
+>>  	struct stm32_dac_common *common;
+>> +	bool swtrig;
+>>  };
+>>  
+>> +/**
+>> + * struct stm32_dac_trig_info - DAC trigger info
+>> + * @name: name of the trigger, corresponding to its source
+>> + * @tsel: trigger selection, value to be configured in DAC_CR.TSELx
+>> + */
+>> +struct stm32_dac_trig_info {
+>> +	const char *name;
+>> +	u32 tsel;
+>> +};
+>> +
+>> +static const struct stm32_dac_trig_info stm32h7_dac_trinfo[] = {
+>> +	{ "swtrig", 0 },
+>> +	{ TIM1_TRGO, 1 },
+>> +	{ TIM2_TRGO, 2 },
+>> +	{ TIM4_TRGO, 3 },
+>> +	{ TIM5_TRGO, 4 },
+>> +	{ TIM6_TRGO, 5 },
+>> +	{ TIM7_TRGO, 6 },
+>> +	{ TIM8_TRGO, 7 },
+>> +	{},
+>> +};
+>> +
+>> +static irqreturn_t stm32_dac_trigger_handler(int irq, void *p)
+>> +{
+>> +	struct iio_poll_func *pf = p;
+>> +	struct iio_dev *indio_dev = pf->indio_dev;
+>> +	struct stm32_dac *dac = iio_priv(indio_dev);
+>> +	int channel = indio_dev->channels[0].channel;
+>> +
+>> +	/* Using software trigger? Then, trigger it now */
+> Can we get here otherwise?
+> If not I'd prefer to either see an error on the other case
+> (perhaps simply return IRQ_NONE) 
+>> +	if (dac->swtrig) {
+>> +		u32 swtrig;
+>> +
+>> +		if (STM32_DAC_IS_CHAN_1(channel))
+>> +			swtrig = STM32_DAC_SWTRIGR_SWTRIG1;
+>> +		else
+>> +			swtrig = STM32_DAC_SWTRIGR_SWTRIG2;
+>> +		regmap_update_bits(dac->common->regmap, STM32_DAC_SWTRIGR,
+>> +				   swtrig, swtrig);
+>> +	}
+>> +
+>> +	iio_trigger_notify_done(indio_dev->trig);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static unsigned int stm32_dac_get_trig_tsel(struct stm32_dac *dac,
+>> +					    struct iio_trigger *trig)
+>> +{
+>> +	unsigned int i;
+>> +
+>> +	/* skip 1st trigger that should be swtrig */
+>> +	for (i = 1; stm32h7_dac_trinfo[i].name; i++) {
+>> +		/*
+>> +		 * Checking both stm32 timer trigger type and trig name
+>> +		 * should be safe against arbitrary trigger names.
+>> +		 */
+>> +		if (is_stm32_timer_trigger(trig) &&
+>> +		    !strcmp(stm32h7_dac_trinfo[i].name, trig->name)) {
+>> +			return stm32h7_dac_trinfo[i].tsel;
+>> +		}
+>> +	}
+>> +
+>> +	/* When no trigger has been found, default to software trigger */
+>> +	dac->swtrig = true;
+>> +
+>> +	return stm32h7_dac_trinfo[0].tsel;
+>> +}
+>> +
+>> +static int stm32_dac_set_trigger(struct iio_dev *indio_dev,
+>> +				 struct iio_trigger *trig)
+>> +{
+>> +	struct stm32_dac *dac = iio_priv(indio_dev);
+>> +	int channel = indio_dev->channels[0].channel;
+>> +	u32 shift = STM32_DAC_IS_CHAN_1(channel) ? 0 : STM32_DAC_CHAN2_SHIFT;
+>> +	u32 val = 0, tsel;
+>> +	u32 msk = (STM32H7_DAC_CR_TEN1 | STM32H7_DAC_CR_TSEL1) << shift;
+>> +
+>> +	dac->swtrig = false;
+>> +	if (trig) {
+>> +		/* select & enable trigger (tsel / ten) */
+>> +		tsel = stm32_dac_get_trig_tsel(dac, trig);
+>> +		val = tsel << STM32H7_DAC_CR_TSEL1_SHIFT;
+>> +		val = (val | STM32H7_DAC_CR_TEN1) << shift;
+>> +	}
+>> +
+>> +	if (trig)
+>> +		dev_dbg(&indio_dev->dev, "enable trigger: %s\n", trig->name);
+>> +	else
+>> +		dev_dbg(&indio_dev->dev, "disable trigger\n");
+>> +
+>> +	return regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, val);
+>> +}
+>> +
+>>  static int stm32_dac_is_enabled(struct iio_dev *indio_dev, int channel)
+>>  {
+>>  	struct stm32_dac *dac = iio_priv(indio_dev);
+>> @@ -167,6 +269,7 @@ static int stm32_dac_debugfs_reg_access(struct iio_dev *indio_dev,
+>>  static const struct iio_info stm32_dac_iio_info = {
+>>  	.read_raw = stm32_dac_read_raw,
+>>  	.write_raw = stm32_dac_write_raw,
+>> +	.set_trigger = stm32_dac_set_trigger,
+>>  	.debugfs_reg_access = stm32_dac_debugfs_reg_access,
+>>  	.driver_module = THIS_MODULE,
+>>  };
+>> @@ -326,7 +429,28 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>>  	if (ret < 0)
+>>  		return ret;
+>>  
+>> -	return devm_iio_device_register(&pdev->dev, indio_dev);
+>> +	ret = iio_triggered_event_setup(indio_dev, NULL,
+>> +					stm32_dac_trigger_handler);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = iio_device_register(indio_dev);
+>> +	if (ret) {
+>> +		iio_triggered_event_cleanup(indio_dev);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int stm32_dac_remove(struct platform_device *pdev)
+>> +{
+>> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>> +
+>> +	iio_triggered_event_cleanup(indio_dev);
+>> +	iio_device_unregister(indio_dev);
+>> +
+>> +	return 0;
+>>  }
+>>  
+>>  static const struct of_device_id stm32_dac_of_match[] = {
+>> @@ -337,6 +461,7 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>>  
+>>  static struct platform_driver stm32_dac_driver = {
+>>  	.probe = stm32_dac_probe,
+>> +	.remove = stm32_dac_remove,
+>>  	.driver = {
+>>  		.name = "stm32-dac",
+>>  		.of_match_table = stm32_dac_of_match,
+>>
+> 
