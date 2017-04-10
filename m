@@ -1,73 +1,76 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCHv3 02/10] serdev: add serdev_device_wait_until_sent
-Date: Mon, 10 Apr 2017 16:03:13 +0200
-Message-ID: <20170410140313.GA31894@kroah.com>
-References: <20170328155939.31566-1-sre@kernel.org>
- <20170328155939.31566-3-sre@kernel.org>
- <20170408165740.GA20058@kroah.com>
- <CAL_JsqLK=pbF7Nx-2w98t62N53zbL1oGZpGEbZUK-xg5ms4AZw@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv5] mfd: cpcap: implement irq sense helper
+Date: Mon, 10 Apr 2017 16:27:49 +0200
+Message-ID: <20170410142748.jxqd65jrcz2ijp47@earth>
+References: <20170329080423.ijbl4seczla2s4nm@dell>
+ <20170329121820.14237-1-sre@kernel.org>
+ <20170403102615.h7i53ow2dqzpxox2@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dk2jctpdm2lzmjcm"
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLK=pbF7Nx-2w98t62N53zbL1oGZpGEbZUK-xg5ms4AZw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Samuel Thibault <samuel.thibault@ens-lyon.org>, Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20170403102615.h7i53ow2dqzpxox2@dell>
+Sender: linux-input-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 10, 2017 at 08:46:57AM -0500, Rob Herring wrote:
-> On Sat, Apr 8, 2017 at 11:57 AM, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Mar 28, 2017 at 05:59:31PM +0200, Sebastian Reichel wrote:
-> >> Add method, which waits until the transmission buffer has been sent.
-> >> Note, that the change in ttyport_write_wakeup is related, since
-> >> tty_wait_until_sent will hang without that change.
-> >>
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> >> Acked-by: Pavel Machek <pavel@ucw.cz>
-> >> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> >> ---
-> >> Changes since PATCHv2:
-> >>  * Avoid goto in ttyport_write_wakeup
-> >> ---
-> >>  drivers/tty/serdev/core.c           | 11 +++++++++++
-> >>  drivers/tty/serdev/serdev-ttyport.c | 18 ++++++++++++++----
-> >>  include/linux/serdev.h              |  3 +++
-> >>  3 files changed, 28 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> >> index f4c6c90add78..a63b74031e22 100644
-> >> --- a/drivers/tty/serdev/core.c
-> >> +++ b/drivers/tty/serdev/core.c
-> >> @@ -173,6 +173,17 @@ void serdev_device_set_flow_control(struct serdev_device *serdev, bool enable)
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
-> >>
-> >> +void serdev_device_wait_until_sent(struct serdev_device *serdev, long timeout)
-> >> +{
-> >> +     struct serdev_controller *ctrl = serdev->ctrl;
-> >> +
-> >> +     if (!ctrl || !ctrl->ops->wait_until_sent)
-> >> +             return;
-> >> +
-> >> +     ctrl->ops->wait_until_sent(ctrl, timeout);
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
-> >
-> > Is this still needed now that we have serdev_device_write() with an
-> > unlimited timeout available?
-> 
-> Yes, because only this waits until the data is on the wire.
 
-What "wire" is that?  The serial wire?  How do you know this?  Many usb
-to serial devices have no way to determine this, given that there is
-another uart hanging off of the end of a USB connection.
+--dk2jctpdm2lzmjcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Doesn't serdev_device_write() return when the write is finished?  I
-think we need some good documentation here for all of the different
-variants of how to send data, as I'm sure confused...
+Hi Lee,
 
-thanks,
+On Mon, Apr 03, 2017 at 11:26:15AM +0100, Lee Jones wrote:
+> On Wed, 29 Mar 2017, Sebastian Reichel wrote:
+>=20
+> > CPCAP can sense if IRQ is currently set or not. This
+> > functionality is required for a few subdevices, such
+> > as the power button and usb phy modules.
+> >=20
+> > Acked-by: Tony Lindgren <tony@atomide.com>
+> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> > ---
+> > Changes since PATCHv3:
+> >  - add extern to function definition
+> >  - use BIT macro for mask variable
+> >  - avoid magic numbers
+> > Changes since PATCHv4:
+> >  - rename base to irq_base
+> > ---
+> >  drivers/mfd/motorola-cpcap.c       | 28 ++++++++++++++++++++++++++++
+> >  include/linux/mfd/motorola-cpcap.h |  2 ++
+> >  2 files changed, 30 insertions(+)
+>=20
+> Applied, thanks.
 
-greg k-h
+Thanks, will you also pick up the input patch?
+
+https://patchwork.kernel.org/patch/9637807/
+
+-- Sebastian
+
+--dk2jctpdm2lzmjcm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljrlmIACgkQ2O7X88g7
++poBfg//ZSpjRMZz+mYrBNoDv1MzlJbdP03h+HZhG53ciaYaDM7mdcR+IIKcZxmp
+EYSBeP+9I8jBUBeAInBCOQdCc0rty5C+BmvYvu3xYjiqDpmiWkE7nEGxh6D4lhGF
+zvOhkArJ2hQBP2ZIFI4zg/aDlJi1++//ces3jRnW0V+XJ4aFmFCr1Rk5nftnlEwu
+s06laxGMNK22s2yj91hf69m2stuIIJmS83Mm9AZjJlvVK7ZCAL03cLI4irThsK89
+XiDGqLs/chg/PHWtT9M95Iq3kbEsHHIORTc3HIN+P8BJGwbIUzcviUOg8WOstMP1
+0In1BFNlKER4lENYwLsXO+09UzGQ9aVEoNvvm1ka4FDJySgGt7i91SGihQQ9AKjT
+rQ7m3i9M+qSgTk1CNFL0J8ZYYHRXTjDzdU0ox3OSWZf+XRUnwHCWdD0ERrJ5HyLh
+gu6Qi76HmSu13OznLCBSXzPqGvObMPFZnmZ9UH3ml5S6RRBQPraippklCulyaQmY
+fjg1FQE+DMnnSEzUj21qQx04US1EO7t3AlTauxgYUSodjz9W7wfldAF/1nBPF7bp
+xpMJPKvH86gm6mpSab7/zUHqKjzdD0xobWG19WcXWblWSZk4fvgTNcTpxwgFOsvF
+UCckzU1zqKQ9F+VNe2a75hZYXNBe2UtPNHa4vzLSo4AeAd+JKdM=
+=txJq
+-----END PGP SIGNATURE-----
+
+--dk2jctpdm2lzmjcm--
