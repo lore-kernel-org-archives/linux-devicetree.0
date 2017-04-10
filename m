@@ -1,69 +1,77 @@
-From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 5/9] arm, arm64: factorize common cpu capacity default
- code
-Date: Mon, 10 Apr 2017 17:23:06 +0100
-Message-ID: <20170410162306.GH30804@e106622-lin>
-References: <20170327131825.32134-1-juri.lelli@arm.com>
- <20170327131825.32134-6-juri.lelli@arm.com>
- <20170410081806.GB27538@e104818-lin.cambridge.arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/6] clk: qcom: Add CPU clock driver for msm8996
+Date: Mon, 10 Apr 2017 11:23:38 -0500
+Message-ID: <20170410162338.lfdkkyp36lcptqex@rob-hp-laptop>
+References: <1491368129-24721-1-git-send-email-rnayak@codeaurora.org>
+ <1491368129-24721-4-git-send-email-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170410081806.GB27538-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1491368129-24721-4-git-send-email-rnayak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: sboyd@codeaurora.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 10/04/17 09:18, Catalin Marinas wrote:
-> On Mon, Mar 27, 2017 at 02:18:21PM +0100, Juri Lelli wrote:
-> > arm and arm64 share lot of code relative to parsing CPU capacity
-> > information from DT, using that information for appropriate scaling and
-> > exposing a sysfs interface for chaging such values at runtime.
-> > 
-> > Factorize such code in a common place (driver/base/arch_topology.c) in
-> > preparation for further additions.
-> > 
-> > Suggested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> > Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Suggested-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> > Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> > Signed-off-by: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> > 
-> > Changes from v2:
-> >  - make capacity_scale and raw_capacity static
-> >  - added SPDX header
-> >  - improved indent
-> >  - misc. whitespaces/newlines fixes
-> > 
-> > Changes from v1:
-> >  - keep the original GPLv2 header
-> > ---
-> >  arch/arm/Kconfig             |   1 +
-> >  arch/arm/kernel/topology.c   | 213 ++-----------------------------------
-> >  arch/arm64/Kconfig           |   1 +
-> >  arch/arm64/kernel/topology.c | 219 +--------------------------------------
-> >  drivers/base/Kconfig         |   8 ++
-> >  drivers/base/Makefile        |   1 +
-> >  drivers/base/arch_topology.c | 242 +++++++++++++++++++++++++++++++++++++++++++
+On Wed, Apr 05, 2017 at 10:25:26AM +0530, Rajendra Nayak wrote:
+> Each of the CPU clusters (Power and Perf) on msm8996 are
+> clocked via 2 PLLs, a primary and alternate. There are also
+> 2 Mux'es, a primary and secondary all connected together
+> as shown below
 > 
-> For arm64:
+>                              +-------+
+>               XO             |       |
+>           +------------------>0      |
+>                              |       |
+>                    PLL/2     | SMUX  +----+
+>                      +------->1      |    |
+>                      |       |       |    |
+>                      |       +-------+    |    +-------+
+>                      |                    +---->0      |
+>                      |                         |       |
+> +---------------+    |             +----------->1      | CPU clk
+> |Primary PLL    +----+ PLL_EARLY   |           |       +------>
+> |               +------+-----------+    +------>2 PMUX |
+> +---------------+      |                |      |       |
+>                        |   +------+     |   +-->3      |
+>                        +--^+  ACD +-----+   |  +-------+
+> +---------------+          +------+         |
+> |Alt PLL        |                           |
+> |               +---------------------------+
+> +---------------+         PLL_EARLY
 > 
-> Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> The primary PLL is what drives the CPU clk, except for times
+> when we are reprogramming the PLL itself (for rate changes) when
+> we temporarily switch to an alternate PLL. A subsequent patch adds
+> support to switch between primary and alternate PLL during rate
+> changes.
+> 
+> The primary PLL operates on a single VCO range, between 600Mhz
+> and 3Ghz. However the CPUs do support OPPs with frequencies
+> between 300Mhz and 600Mhz. In order to support running the CPUs
+> at those frequencies we end up having to lock the PLL at twice
+> the rate and drive the CPU clk via the PLL/2 output and SMUX.
+> 
+> So for frequencies above 600Mhz we follow the following path
+>  Primary PLL --> PLL_EARLY --> PMUX(1) --> CPU clk
+> and for frequencies between 300Mhz and 600Mhz we follow
+>  Primary PLL --> PLL/2 --> SMUX(1) --> PMUX(0) --> CPU clk
+> Support for this is added in a subsequent patch as well.
+> 
+> ACD stands for Adaptive Clock Distribution and is used to
+> detect voltage droops. We do not add support for ACD as yet.
+> This can be added at a later point as needed.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
 
-Thanks for reviewing the series.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Best,
-
-- Juri
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/clk/qcom/Kconfig                           |   8 +
+>  drivers/clk/qcom/Makefile                          |   1 +
+>  drivers/clk/qcom/clk-cpu-8996.c                    | 388 +++++++++++++++++++++
+>  4 files changed, 414 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+>  create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
