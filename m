@@ -1,48 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 13/16] ASoC: madera: Add common support for Cirrus Logic
- Madera codecs
-Date: Mon, 10 Apr 2017 13:03:47 -0500
-Message-ID: <20170410180347.y4sazqpxzcyn2je3@rob-hp-laptop>
-References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1491386884-30689-14-git-send-email-rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 1/9] pinctrl: generic: Add bi-directional and
+ output-enable
+Date: Mon, 10 Apr 2017 13:06:06 -0500
+Message-ID: <20170410180606.jb4tkwipj4rruwsr@rob-hp-laptop>
+References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1491401247-7030-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1491386884-30689-14-git-send-email-rf@opensource.wolfsonmicro.com>
+In-Reply-To: <1491401247-7030-2-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, lee.jones@linaro.org, broonie@kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: linus.walleij@linaro.org, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, mark.rutland@arm.com, linux@armlinux.org.uk, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 05, 2017 at 11:08:01AM +0100, Richard Fitzgerald wrote:
-> The Cirrus Logic Madera codecs are a family of related codecs with
-> extensive digital and analogue I/O, digital mixing and routing,
-> signal processing and programmable DSPs.
+On Wed, Apr 05, 2017 at 04:07:19PM +0200, Jacopo Mondi wrote:
+> Add bi-directional and output-enable pin configuration properties.
 > 
-> This patch adds common support code shared by all Madera codecs.
+> bi-directional allows to specify when a pin shall operate in input and
+> output mode at the same time. This is particularly useful in platforms
+> where input and output buffers have to be manually enabled.
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> Signed-off-by: Nariman Poushin <nariman@opensource.wolfsonmicro.com>
-> Signed-off-by: Nikesh Oswal <Nikesh.Oswal@wolfsonmicro.com>
-> Signed-off-by: Piotr Stankiewicz <piotrs@opensource.wolfsonmicro.com>
-> Signed-off-by: Ajit Pandey <ajit.pandey@incubesol.com>
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> output-enable is just syntactic sugar to specify that a pin shall
+> operate in output mode, ignoring the provided argument.
+> This pairs with input-enable pin configuration option.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->  Documentation/devicetree/bindings/sound/madera.txt |   63 +
->  MAINTAINERS                                        |    5 +
->  include/dt-bindings/sound/madera.h                 |   18 +
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 2 ++
+>  drivers/pinctrl/pinconf-generic.c                              | 3 +++
+>  include/linux/pinctrl/pinconf-generic.h                        | 3 +++
+>  3 files changed, 8 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  include/sound/madera-pdata.h                       |   70 +
->  sound/soc/codecs/Kconfig                           |    5 +
->  sound/soc/codecs/Makefile                          |    2 +
->  sound/soc/codecs/madera.c                          | 4430 ++++++++++++++++++++
->  sound/soc/codecs/madera.h                          |  470 +++
->  8 files changed, 5063 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/madera.txt
->  create mode 100644 include/dt-bindings/sound/madera.h
->  create mode 100644 include/sound/madera-pdata.h
->  create mode 100644 sound/soc/codecs/madera.c
->  create mode 100644 sound/soc/codecs/madera.h
