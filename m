@@ -1,93 +1,129 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] dt-bindings: Document STM32 DCMI bindings
-Date: Mon, 10 Apr 2017 10:20:25 -0500
-Message-ID: <20170410152025.nx4zrnbth6wgamro@rob-hp-laptop>
-References: <1491320678-17246-1-git-send-email-hugues.fruchet@st.com>
- <1491320678-17246-2-git-send-email-hugues.fruchet@st.com>
+From: olivier moysan <olivier.moysan@st.com>
+Subject: [PATCH v3 1/2] ASoC: stm32: add bindings for SAI
+Date: Mon, 10 Apr 2017 17:19:55 +0200
+Message-ID: <1491837596-2924-2-git-send-email-olivier.moysan@st.com>
+References: <1491837596-2924-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1491320678-17246-2-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1491837596-2924-1-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
+Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 04, 2017 at 05:44:31PM +0200, Hugues Fruchet wrote:
-> This adds documentation of device tree bindings for the STM32 DCMI
-> (Digital Camera Memory Interface).
-> 
-> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/st,stm32-dcmi.txt    | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+This patch adds documentation of device tree bindings for the
+STM32 SAI ASoC driver.
 
-One nit below, otherwise:
+Signed-off-by: olivier moysan <olivier.moysan@st.com>
+---
+ .../devicetree/bindings/sound/st,stm32-sai.txt     | 89 ++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-> new file mode 100644
-> index 0000000..c0f6f4b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-> @@ -0,0 +1,46 @@
-> +STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
-> +
-> +Required properties:
-> +- compatible: "st,stm32-dcmi"
-> +- reg: physical base address and length of the registers set for the device
-> +- interrupts: should contain IRQ line for the DCMI
-> +- resets: reference to a reset controller,
-> +          see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
-> +- clocks: list of clock specifiers, corresponding to entries in
-> +          the clock-names property
-> +- clock-names: must contain "mclk", which is the DCMI peripherial clock
-> +- pinctrl: the pincontrol settings to configure muxing properly
-> +           for pins that connect to DCMI device.
-> +           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt.
-> +- dmas: phandle to DMA controller node,
-> +        see Documentation/devicetree/bindings/dma/stm32-dma.txt
-> +- dma-names: must contain "tx", which is the transmit channel from DCMI to DMA
-> +
-> +DCMI supports a single port node with parallel bus. It should contain one
-> +'port' child node with child 'endpoint' node. Please refer to the bindings
-> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	dcmi: dcmi@50050000 {
-> +		compatible = "st,stm32-dcmi";
-> +		reg = <0x50050000 0x400>;
-> +		interrupts = <78>;
-> +		resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
-> +		clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
-> +		clock-names = "mclk";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&dcmi_pins>;
-> +		dmas = <&dma2 1 1 0x414 0x3>;
-> +		dma-names = "tx";
-> +		port {
-> +			dcmi_0: endpoint@0 {
-
-Unit address in not valid without a reg prop, so drop it.
-
-> +				remote-endpoint = <...>;
-> +				bus-width = <8>;
-> +				hsync-active = <0>;
-> +				vsync-active = <0>;
-> +				pclk-sample = <1>;
-> +			};
-> +		};
-> +	};
-> +
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+new file mode 100644
+index 0000000..c59a3d7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+@@ -0,0 +1,89 @@
++STMicroelectronics STM32 Serial Audio Interface (SAI).
++
++The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
++as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
++The SAI contains two independent audio sub-blocks. Each sub-block has
++its own clock generator and I/O lines controller.
++
++Required properties:
++  - compatible: Should be "st,stm32f4-sai"
++  - reg: Base address and size of SAI common register set.
++  - clocks: Must contain phandle and clock specifier pairs for each entry
++	in clock-names.
++  - clock-names: Must contain "x8k" and "x11k"
++	"x8k": SAI parent clock for sampling rates multiple of 8kHz.
++	"x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
++  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
++
++Optional properties:
++  - resets: Reference to a reset controller asserting the SAI
++
++SAI subnodes:
++Two subnodes corresponding to SAI sub-block instances A et B can be defined.
++Subnode can be omitted for unsused sub-block.
++
++SAI subnodes required properties:
++  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
++	for SAI sub-block A or B respectively.
++  - reg: Base address and size of SAI sub-block register set.
++  - clocks: Must contain one phandle and clock specifier pair
++	for sai_ck which feeds the internal clock generator.
++  - clock-names: Must contain "sai_ck".
++  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
++  - dma-names: identifier string for each DMA request line
++	"tx": if sai sub-block is configured as playback DAI
++	"rx": if sai sub-block is configured as capture DAI
++  - pinctrl-names: should contain only value "default"
++  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
++
++Example:
++sound_card {
++	compatible = "audio-graph-card";
++	dais = <&sai1b_port>;
++};
++
++sai1: sai1@40015800 {
++	compatible = "st,stm32f4-sai";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++	reg = <0x40015800 0x4>;
++	clocks = <&rcc 1 CLK_SAIQ_PDIV>, <&rcc 1 CLK_I2SQ_PDIV>;
++	clock-names = "x8k", "x11k";
++	interrupts = <87>;
++
++	sai1b: audio-controller@40015824 {
++		#sound-dai-cells = <0>;
++		compatible = "st,stm32-sai-sub-b";
++		reg = <0x40015824 0x1C>;
++		clocks = <&rcc 1 CLK_SAI2>;
++		clock-names = "sai_ck";
++		dmas = <&dma2 5 0 0x400 0x0>;
++		dma-names = "tx";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_sai1b>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			sai1b_port: port@0 {
++				reg = <0>;
++				cpu_endpoint: endpoint {
++					remote-endpoint = <&codec_endpoint>;
++					audio-graph-card,format = "i2s";
++					audio-graph-card,bitclock-master = <&codec_endpoint>;
++					audio-graph-card,frame-master = <&codec_endpoint>;
++				};
++			};
++		};
++	};
++};
++
++audio-codec {
++	codec_port: port {
++		codec_endpoint: endpoint {
++			remote-endpoint = <&cpu_endpoint>;
++		};
++	};
++};
+-- 
+1.9.1
