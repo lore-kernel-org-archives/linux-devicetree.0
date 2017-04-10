@@ -1,192 +1,133 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v4 6/9] ASoC: add snd_soc_get_dai_id()
-Date: Mon, 10 Apr 2017 14:43:56 -0500
-Message-ID: <CAL_JsqLp1cg_iJ1V9bk=GW6CF5BmsqkLc04D6EcQcaFaAAL+2g@mail.gmail.com>
-References: <8760jdivfm.wl%kuninori.morimoto.gx@renesas.com>
- <87wpbthgir.wl%kuninori.morimoto.gx@renesas.com> <CAL_JsqKx9qj=ACowGapaT5hdYcevY6urLn_ntFUxAJVrzhc2AA@mail.gmail.com>
- <87h92nbdgy.wl%kuninori.morimoto.gx@renesas.com> <CAL_JsqJrcG+zczxdjjBXU17EDGANR9Exet5h5R08dStXiV9zzg@mail.gmail.com>
- <874lxx5dcd.wl%kuninori.morimoto.gx@renesas.com> <8737dh5c26.wl%kuninori.morimoto.gx@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 01/23] drivers/fsi: Add fsi master definition
+Date: Mon, 10 Apr 2017 14:46:44 -0500
+Message-ID: <20170410194706.64280-2-cbostic@linux.vnet.ibm.com>
+References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8737dh5c26.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170410194706.64280-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 9, 2017 at 7:45 PM, Kuninori Morimoto
-<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> Hi Rob, again
->
->> > >> > +{
->> > >> > +       struct device_node *node;
->> > >> > +       struct device_node *endpoint;
->> > >> > +       int i, id;
->> > >> > +
->> > >> > +       node = of_graph_get_port_parent(ep);
->> > >> > +
->> > >> > +       i = 0;
->> > >> > +       id = -1;
->> > >> > +       for_each_endpoint_of_node(node, endpoint) {
->> > >> > +               if (endpoint == ep)
->> > >> > +                       id = i;
->> > >>
->> > >> I don't see how this works when you have 1 DAI controller with
->> > >> multiple endpoints versus multiple DAI controllers with a single
->> > >> endpoint each. All the IDs will be 0 in the latter case.
->> > >
->> > > It support 1:1 endpoint pattern only.
->> >
->> > Then the endpoint id is always 0 and this function is pointless.
->>
->> Sorry, I checked my patch-list, and I noticed that
->> this function will be expand to use callback function in next
->> patch-set (= HDMI support).
->> Thus, inded current function is pointless at this point.
->> I will merge this expansion patch in v5
->
-> 1 correction.
->
-> sound graph might have multi ports (= not multi endpoint), like below.
-> Each endpoints are 1:1.
->
-> ports {
->         port { endpoint }; /* ID = 0 */
+From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-port@0
+Add a `struct fsi_master` to represent a FSI master controller.
 
->         port { endpoint }; /* ID = 1 */
+FSI master drivers register one of these structs to provide
+device-specific of the standard operations: read/write/term/break and
+link control.
 
-port@1, etc.
+Includes changes from Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org> & Jeremy Kerr
+<jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>.
 
->         port { endpoint }; /* ID = 2 */
+Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+---
+ drivers/fsi/fsi-core.c   | 35 +++++++++++++++++++++++++++++++++++
+ drivers/fsi/fsi-master.h | 41 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
+ create mode 100644 drivers/fsi/fsi-master.h
 
-These ports are audio channels? If these are 3 separate data paths,
-then this is correct. If you have a single data path with multiple
-connections (e.g. a mux), then that should be a single port with
-multiple endpoints. For example, a design that routes the same I2S
-interface to HDMI and a codec and their use is mutually exclusive. I
-imagine you will need to support both.
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 3d55bd5..ca02913 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -15,8 +15,43 @@
+ 
+ #include <linux/device.h>
+ #include <linux/fsi.h>
++#include <linux/idr.h>
+ #include <linux/module.h>
+ 
++#include "fsi-master.h"
++
++static DEFINE_IDA(master_ida);
++
++/* FSI master support */
++int fsi_master_register(struct fsi_master *master)
++{
++	int rc;
++
++	if (!master)
++		return -EINVAL;
++
++	master->idx = ida_simple_get(&master_ida, 0, INT_MAX, GFP_KERNEL);
++	dev_set_name(&master->dev, "fsi%d", master->idx);
++
++	rc = device_register(&master->dev);
++	if (rc)
++		ida_simple_remove(&master_ida, master->idx);
++
++	return rc;
++}
++EXPORT_SYMBOL_GPL(fsi_master_register);
++
++void fsi_master_unregister(struct fsi_master *master)
++{
++	if (master->idx >= 0) {
++		ida_simple_remove(&master_ida, master->idx);
++		master->idx = -1;
++	}
++
++	device_unregister(&master->dev);
++}
++EXPORT_SYMBOL_GPL(fsi_master_unregister);
++
+ /* FSI core & Linux bus type definitions */
+ 
+ static int fsi_bus_match(struct device *dev, struct device_driver *drv)
+diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
+new file mode 100644
+index 0000000..7764b00
+--- /dev/null
++++ b/drivers/fsi/fsi-master.h
+@@ -0,0 +1,41 @@
++/*
++ * FSI master definitions. These comprise the core <--> master interface,
++ * to allow the core to interact with the (hardware-specific) masters.
++ *
++ * Copyright (C) IBM Corporation 2016
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef DRIVERS_FSI_MASTER_H
++#define DRIVERS_FSI_MASTER_H
++
++#include <linux/device.h>
++
++struct fsi_master {
++	struct device	dev;
++	int		idx;
++	int		n_links;
++	int		flags;
++	int		(*read)(struct fsi_master *, int link, uint8_t id,
++				uint32_t addr, void *val, size_t size);
++	int		(*write)(struct fsi_master *, int link, uint8_t id,
++				uint32_t addr, const void *val, size_t size);
++	int		(*term)(struct fsi_master *, int link, uint8_t id);
++	int		(*send_break)(struct fsi_master *, int link);
++	int		(*link_enable)(struct fsi_master *, int link);
++};
++
++#define dev_to_fsi_master(d) container_of(d, struct fsi_master, dev)
++
++extern int fsi_master_register(struct fsi_master *master);
++extern void fsi_master_unregister(struct fsi_master *master);
++
++#endif /* DRIVERS_FSI_MASTER_H */
+-- 
+1.8.2.2
 
-The pattern I prefer to see calling graph functions is that drivers
-are specific about which port and endpoint number for a parent node
-they want. Not just searching the graph for any match.
-
-> };
->
-> 1 question
->
-> It will support HDMI sound feature, thus I separated
-> it into OF-graph (= this patch-set) and HDMI (= next patch-set).
-> Should I merge it ?
-
-I think so if it affects the functions here. It seems better to let
-the driver controlling the DAI determine the id mapping than trying to
-do it in the core.
-
-> Below is the expansion patch for HDMI support
->
-> ----------------------
-> Subject: [PATCH 14/63] ASoC: add .of_xlate_dai_id() callback
->
-> ALSA SoC needs to know connected DAI ID for probing.
-> It is not a big problem if device/driver was only for sound,
-> but getting DAI ID will be difficult if device includes both
-> Video/Sound, like HDMI.
-> To solve this issue, this patch adds new .of_xlate_dai_id callback
-> on component driver, and use it from snd_soc_get_dai_id()
->
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  include/sound/soc.h  |  3 +++
->  sound/soc/soc-core.c | 33 +++++++++++++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
->
-> diff --git a/include/sound/soc.h b/include/sound/soc.h
-> index 95abbcb..0055fa0 100644
-> --- a/include/sound/soc.h
-> +++ b/include/sound/soc.h
-> @@ -14,6 +14,7 @@
->  #define __LINUX_SND_SOC_H
->
->  #include <linux/of.h>
-> +#include <linux/of_graph.h>
->  #include <linux/platform_device.h>
->  #include <linux/types.h>
->  #include <linux/notifier.h>
-> @@ -793,6 +794,8 @@ struct snd_soc_component_driver {
->         int (*of_xlate_dai_name)(struct snd_soc_component *component,
->                                  struct of_phandle_args *args,
->                                  const char **dai_name);
-> +       int (*of_xlate_dai_id)(struct snd_soc_component *comment,
-> +                              struct device_node *endpoint);
->         void (*seq_notifier)(struct snd_soc_component *, enum snd_soc_dapm_type,
->                 int subseq);
->         int (*stream_event)(struct snd_soc_component *, int event);
-> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-> index 7a10522..07e4eec 100644
-> --- a/sound/soc/soc-core.c
-> +++ b/sound/soc/soc-core.c
-> @@ -4042,12 +4042,45 @@ unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
->
->  int snd_soc_get_dai_id(struct device_node *ep)
->  {
-> +       struct snd_soc_component *pos;
->         struct device_node *node;
->         struct device_node *endpoint;
->         int i, id;
-> +       int ret;
->
->         node = of_graph_get_port_parent(ep);
->
-> +       /*
-> +        * For example HDMI case, HDMI has video/sound port,
-> +        * but ALSA SoC needs sound port number only.
-> +        * Thus counting HDMI DT port/endpoint doesn't work.
-> +        * Then, it should have .of_xlate_dai_id
-
-Perhaps you should always require this function and provide a default
-implementation (or several).
-
-> +        */
-> +       ret = -ENOTSUPP;
-> +       mutex_lock(&client_mutex);
-> +       list_for_each_entry(pos, &component_list, list) {
-> +               struct device_node *component_of_node = pos->dev->of_node;
-> +
-> +               if (!component_of_node && pos->dev->parent)
-> +                       component_of_node = pos->dev->parent->of_node;
-> +
-> +               if (component_of_node != node)
-> +                       continue;
-> +
-> +               if (pos->driver->of_xlate_dai_id)
-> +                       ret = pos->driver->of_xlate_dai_id(pos, ep);
-> +
-> +               break;
-> +       }
-> +       mutex_unlock(&client_mutex);
-> +
-> +       if (ret != -ENOTSUPP)
-> +               return ret;
-> +
-> +       /*
-> +        * Non HDMI sound case, counting port/endpoint on its DT
-> +        * is enough. Let's count it.
-> +        */
->         i = 0;
->         id = -1;
->         for_each_endpoint_of_node(node, endpoint) {
-> --
-> 1.9.1
->
-> ----------------------
->
-> Best regards
-> ---
-> Kuninori Morimoto
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
